@@ -112,19 +112,19 @@ You can use the following steps to separate the two workloads:
 
     ```yaml
     metadata:
-      namespace: team-a-gpu
+      namespace: gpu-training
       labels:
-        team: ml
+        workload: training
     ```
 
-3. Add network policies to isolate traffic, as shown in the following manifest that blocks cross-namespace traffic (except for what is explicitly allowed):
+3. Apply network policies to isolate traffic between workload types. The following manifest blocks all ingress and egress for the `gpu-training` namespace (unless explicitly allowed):
 
     ```yaml
     apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:
-      name: deny-other-namespaces
-      namespace: team-a-gpu
+      name: deny-cross-namespace
+      namespace: gpu-training
     spec:
       podSelector: {}
       policyTypes:
