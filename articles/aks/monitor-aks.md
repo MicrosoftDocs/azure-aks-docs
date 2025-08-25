@@ -327,10 +327,11 @@ Cilium exposes several metrics that Container Network Observability uses:
 
 For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
 
-The following table outlines the generated metrics.
-
 > [!NOTE]
 > Because of an identified bug, TCP resets temporarily aren't visible. As a result, the **networkobservability_tcp_flag_counters** metrics aren't published. We're actively working to resolve this issue.
+>
+
+The following table outlines the generated metrics.
 
 | Metric name                                    | Description | Extra labels | Linux | Windows |
 |------------------------------------------------|-------------|--------------|-------|---------|
@@ -346,6 +347,7 @@ The following table outlines the generated metrics.
 | **networkobservability_udp_connection_stats**  | UDP connection statistics | `statistic` | ✅ | ❌ |
 | **networkobservability_udp_active_sockets**    | UDP currently active socket count |  | ✅ | ❌ |
 | **networkobservability_interface_stats**       | Interface statistics | InterfaceName, `statistic` | ✅ | ✅ |
+
 ---
 
 ### Disabling Node Network Metrics Collection
@@ -366,11 +368,6 @@ To disable metrics collection on a node:
 kubectl label node <node-name> networking.azure.com/node-network-metrics=disabled
 ```
 
-To re-enable metrics collection, remove the label:
-
-```bash
-kubectl label node <node-name> networking.azure.com/node-network-metrics-
-```
 
 For detailed pod-level and DNS metrics, see [Advanced Container Networking Services](advanced-container-networking-services-overview.md).
 
