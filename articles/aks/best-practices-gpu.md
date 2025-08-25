@@ -23,16 +23,16 @@ Misconfigurations can lead to high costs, unexpected job failures, or GPU underu
 
 ## Enforce GPU workload placement
 
-Apply a taint, such as `[gpu-vendor].com/gpu: NoSchedule` (where `gpu-vendor` might be `nvidia`, `amd`, etc.), to your GPU nodes. This taint prevents any pod from running on the node, unless it is a GPU workload pod that has a matching toleration.
+By default, the AKS scheduler places pods on any available node with sufficient CPU and memory. Without guidance, this can lead to two key issues: 
 
-The AKS scheduler will attempt to run your pods on any node that has enough CPU and memory, if not told otherwise.
+1. GPU workloads may be scheduled on nodes without GPUs and fail to start, or
+2. General-purpose workloads may occupy GPU nodes, wasting costly resources.
 
-Without setting a specific rule: 
+To enforce correct placement:
 
-* A GPU workload might land on a non-GPU node and fail to start.
-* A general-purpose workload (like a web service) might land on a GPU node unintentionally and consume expensive GPU resources.
-
-To guarantee that your GPU-enabled workload targets a GPU node and receives access to the compute resource, you can set a resource limit such as:
+* Taint your GPU nodes using a key like `[gpu-vendor].com/gpu: NoSchedule` (e.g., nvidia.com/gpu: NoSchedule). This blocks non-GPU workloads from being scheduled there.
+* Add a matching toleration in your GPU workload pod spec so it can be scheduled on the tainted GPU nodes.
+* Define GPU resource requests and limits in your pod, to ensure the scheduler reserves GPU capacity, such as:
 
 ```bash
 resources:
