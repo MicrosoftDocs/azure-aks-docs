@@ -11,7 +11,7 @@ ms.author: sachidesai
 
 # GPU best practices for Azure Kubernetes Service (AKS)
 
-Running GPU workloads on an AKS cluster requires proper setup and continuous validation to ensure that compute resources are accessible, secure, and optimally utilized. This article outlines best practices for managing GPU-enabled nodes, validating configurations, and troubleshooting common issues using vendor-specific diagnostic commands.
+Running GPU workloads on an AKS cluster requires proper setup and continuous validation to ensure that compute resources are accessible, secure, and optimally utilized. This article outlines best practices for managing GPU-enabled nodes, validating configurations, and reducing workload interruptions using vendor-specific diagnostic commands.
 
 GPU workloads, like AI model training, real-time inference, simulations, and video processing, often depend on the following configurations:
 
