@@ -327,10 +327,12 @@ Cilium exposes several metrics that Container Network Observability uses:
 
 For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
 
-The following table outlines the generated metrics.
-
 > [!NOTE]
 > Because of an identified bug, TCP resets temporarily aren't visible. As a result, the **networkobservability_tcp_flag_counters** metrics aren't published. We're actively working to resolve this issue.
+>
+
+The following table outlines the generated metrics.
+
 
 | Metric name                                    | Description | Extra labels | Linux | Windows |
 |------------------------------------------------|-------------|--------------|-------|---------|
