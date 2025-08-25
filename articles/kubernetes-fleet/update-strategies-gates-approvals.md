@@ -288,10 +288,10 @@ Alternatively, you can list all gates across all update runs in a fleet.
 
 ## Cleaning up
 
-After your update run has completed, you may wish to clean up the gate resources that were created. Or if you see leftover approvals when listing all pending gates, then these steps can be used to remove them.
+After your update run is complete, you may wish to clean up the gate resources that were created. Or if you see leftover approvals when listing all pending gates, then these steps can be used to remove them.
 
 > [!NOTE]
-> Gates cannot be deleted directly. Instead, you must delete the update run associated with the gate. This will automatically delete **all** gates associated with the update run.
+> Gates cannot be deleted directly. Instead, you must delete the update run associated with the gate. This automatically deletes **all** gates associated with the update run.
 
 ### [Azure portal](#tab/azure-portal)
 
@@ -310,7 +310,7 @@ After your update run has completed, you may wish to clean up the gate resources
 
 ### [Azure CLI](#tab/cli)
 
-1. Identify the update run associated with the gate that you want to delete. The gate `target.id` field can be used for this.
+1. Identify the update run associated with the gate that you want to delete. The update run name can be found in the gate `target.updateRunProperties.name` field.
 
 1. Delete the update run:
 
@@ -321,7 +321,7 @@ After your update run has completed, you may wish to clean up the gate resources
      --name <run-name> 
     ```
 
-1. All gates associated with the update run will now be deleted.
+1. All gates associated with the update run are now deleted.
 
 ---
 

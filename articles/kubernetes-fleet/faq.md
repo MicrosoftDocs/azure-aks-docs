@@ -133,7 +133,7 @@ If you want to skip the member cluster upgrades together with the gating approva
 
 ### How do I delete an approval?
 
-As in the question above, if you want to proceed with an upgrade, then the only way to do so is to grant the approval. On the other hand, if you're trying to clean up the underlying gate resource, you can do so by deleting the associated update run. That deletes all gates linked to the update run automatically.
+As in the previous question, if you want to proceed with an upgrade, then the only way to do so is to grant the approval. On the other hand, if you're trying to clean up the underlying gate resource, you can do so by deleting the associated update run. That deletes all gates linked to the update run automatically.
 
 ### Can I configure an after stage approval together with an after stage wait?
 
