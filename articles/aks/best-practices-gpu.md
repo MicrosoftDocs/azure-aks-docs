@@ -134,12 +134,11 @@ You can use the following steps to separate the two workloads:
       egress: []
     ```
 
-    This policy:
+This policy:
+* Applies to all pods in the `gpu-training` namespace.
+* Denies all incoming and outgoing traffic by default, supporting strong isolation.
 
-    * Applies to all pods in `team-a-gpu`.
-    * Blocks all inbound and outbound traffic by default.
-
-You can add exceptions (e.g. allow traffic to a shared metrics service or to an internal API) as needed.
+This model enhances clarity, control, and safety in shared GPU environments, especially when workload types have different runtime profiles, risk levels, or operational requirements.
 
 ## Optimize resource usage on GPU nodes using multi-instance GPU (MIG)
 
