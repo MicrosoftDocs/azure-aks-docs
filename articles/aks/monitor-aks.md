@@ -348,6 +348,7 @@ The following table outlines the generated metrics.
 | **networkobservability_udp_connection_stats**  | UDP connection statistics | `statistic` | ✅ | ❌ |
 | **networkobservability_udp_active_sockets**    | UDP currently active socket count |  | ✅ | ❌ |
 | **networkobservability_interface_stats**       | Interface statistics | InterfaceName, `statistic` | ✅ | ✅ |
+
 ---
 
 ### Disabling Node Network Metrics Collection
