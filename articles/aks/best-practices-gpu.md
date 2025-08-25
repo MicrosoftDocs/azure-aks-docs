@@ -80,7 +80,7 @@ To ensure the performance, security, and compatibility of your GPU workloads on 
 * Address known vulnerabilities identified by GPU vendors.
 * Incorporate the latest OS and container runtime improvements for enhanced stability and efficiency.
 
-Upgrade your GPU node pool(s) to the latest recommended node OS image released by AKS, either by setting the [autoupgrade channel](./auto-upgrade-node-os-image) or through [manual upgrade](./node-image-upgrade). You can monitor and track the latest node image releases using the [AKS release tracker](https://releases.aks.azure.com/).
+Upgrade your GPU node pool(s) to the latest recommended node OS image released by AKS, either by setting the [autoupgrade channel](./auto-upgrade-node-os-image.md) or through [manual upgrade](./node-image-upgrade.md). You can monitor and track the latest node image releases using the [AKS release tracker](https://releases.aks.azure.com/).
 
 ## Separate GPU workloads when using shared clusters
 
