@@ -131,6 +131,10 @@ No, approvals wait until they're approved. You can't configure a limited time wi
 
 If you want to skip the member cluster upgrades together with the gating approval, then you can do so by skipping the encompassing group or stage. If you want to proceed with the upgrades, then the only way to do so is to grant the approval.
 
+### How do I delete an approval?
+
+As in the question above, if you want to proceed with an upgrade, then the only way to do so is to grant the approval. On the other hand, if you're trying to clean up the underlying gate resource, you can do so by deleting the associated update run. That deletes all gates linked to the update run automatically.
+
 ### Can I configure an after stage approval together with an after stage wait?
 
 Yes. The after stage wait begins at the same time as the approval. Both must be completed before the update run moves on. That is, the after stage wait needs to have run for the configured time period **and** the approval must be granted.

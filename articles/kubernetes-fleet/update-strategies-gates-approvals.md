@@ -286,6 +286,46 @@ Alternatively, you can list all gates across all update runs in a fleet.
 
 ---
 
+## Cleaning up
+
+After your update run has completed, you may wish to clean up the gate resources that were created. Or if you see leftover approvals when listing all pending gates, then these steps can be used to remove them.
+
+> [!NOTE]
+> Gates cannot be deleted directly. Instead, you must delete the update run associated with the gate. This will automatically delete **all** gates associated with the update run.
+
+### [Azure portal](#tab/azure-portal)
+
+1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource. 
+
+1. From the service menu, under **Settings**, select **Multi-cluster update**. 
+
+1. Select the update run associated with the gate that you want to delete.
+
+1. Select **Delete**.
+
+1. In the sidebar on the right, confirm that the correct update run is shown and then select **Delete**.
+
+1. In the popup, select **Delete**.
+
+
+### [Azure CLI](#tab/cli)
+
+1. Identify the update run associated with the gate that you want to delete. The gate `target.id` field can be used for this.
+
+1. Delete the update run:
+
+    ```azurecli-interactive
+    az fleet updaterun delete \ 
+     --resource-group $GROUP \ 
+     --fleet-name $FLEET \ 
+     --name <run-name> 
+    ```
+
+1. All gates associated with the update run will now be deleted.
+
+---
+
+
 ## Next steps
 
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
