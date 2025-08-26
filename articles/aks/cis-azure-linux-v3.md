@@ -13,13 +13,13 @@ ms.date: 08/26/2025
 # Center for Internet Security (CIS) Azure Linux 3.0 benchmark
 
 > [!IMPORTANT]
-> This article applies only to Azure Linux 3.0 and the Azure Linux 3.0 Container Host image used by AKS. The recommendation statuses and guidance below reflect the CIS Azure Linux 3.0 Benchmark v1.0 and a point-in-time Azure Linux 3.0 image (released July 2 2025). They may not apply to other Azure Linux releases (for example Azure Linux 2.0). Verify the OS version and benchmark version before applying guidance.
+> This article applies only to Azure Linux 3.0 and the Azure Linux 3.0 Container Host image used by AKS. The recommendation statuses and guidance reflect the CIS Azure Linux 3.0 Benchmark v1.0 and a point-in-time Azure Linux 3.0 image (released July 2 2025). They might not apply to other Azure Linux releases (for example Azure Linux 2.0). Verify the OS version and benchmark version before applying guidance.
 
-The security OS configuration applied to the Azure Linux Container Host for AKS image is based on the Azure Linux security baseline, which aligns with the CIS benchmark. As a secure service, AKS complies with SOC, ISO, PCI DSS, and HIPAA standards. For more information about the Azure Linux Container Host security, see [Security concepts for clusters in AKS][security-concepts-aks]. To learn more about the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
+The security OS configuration applied to the Azure Linux Container Host for AKS image is based on the Azure Linux security baseline, which aligns with the CIS benchmark. As a secure service, AKS complies with SOC, ISO, PCI DSS, and HIPAA standards. For more information about the Azure Linux Container Host security, see [Security concepts for clusters in Azure Kubernetes Service (AKS)][security-concepts-aks]. To learn more about the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
 
 ## Recommendations
 
-The below table has four sections:
+The table has four sections:
 
 * **CIS ID:** The associated rule ID with each of the baseline rules.
 * **Recommendation description:** A description of the recommendation issued by the CIS benchmark.
