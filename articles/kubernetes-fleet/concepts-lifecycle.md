@@ -36,9 +36,11 @@ The hub cluster has the following restrictions that ensure it functions as requi
 
 ## Requirements from customers
 
-In order for Fleet Manager to keep hub clusters up-to-date with the latest patches, ensure that:
+In order for Fleet Manager to create and keep hub clusters up-to-date with the latest patches, ensure that:
 
-- **Subscription has sufficient quota.** one extra VM instance of the hub cluster's node is required during the cluster upgrade process. For more information on increasing quota, see [documentation on quota][quotas-regional-quota-requests].
+- **Azure policy doesn't block cluster creation.** The hub cluster is a managed AKS cluster. If you are unable to create AKS clusters you can't create a Fleet Manager hub cluster.
+
+- **Subscription has sufficient quota.** One extra VM instance of the hub cluster's node is required during the cluster upgrade process. For more information on increasing quota, see [documentation on quota][quotas-regional-quota-requests].
 
 - **Hub cluster has internet access.** Outbound connectivity is required to install updates. Private hubs on networks with user-defined routing (UDR) or firewall rules might block outbound connectivity. For more information on outbound connectivity, see [documentation on AKS outbound network][aks-outbound-rules-control-egress].
 
