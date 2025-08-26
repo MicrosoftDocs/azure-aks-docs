@@ -750,6 +750,8 @@
             href: cis-kubernetes.md
           - name: CIS Azure Linux benchmark
             href: cis-azure-linux.md
+          - name: CIS Azure Linux 3.0 benchmark
+            href: cis-azure-linux3.md
           - name: CIS Windows Server benchmark
             href: cis-windows.md
         - name: Payment Card Industry Data Security Standard (PCI DSS)
