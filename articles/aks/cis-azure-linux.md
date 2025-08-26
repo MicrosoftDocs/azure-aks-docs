@@ -12,7 +12,8 @@ ms.date: 12/07/2023
 
 # Center for Internet Security (CIS) Azure Linux 2.0 benchmark
 
-Important: This article and the recommendations below apply only to Azure Linux 2.0. The configuration statuses and guidance reflect the CIS Azure Linux 2.0 Benchmark v1.0 and the Azure Linux 2.0 Container Host image used by AKS. They may not apply to other Azure Linux releases, custom images, or third-party distributions.
+> [!IMPORTANT]
+> This article and the recommendations below apply only to Azure Linux 2.0. The configuration statuses and guidance reflect the CIS Azure Linux 2.0 Benchmark v1.0 and the Azure Linux 2.0 Container Host image used by AKS. They may not apply to other Azure Linux releases, custom images, or third-party distributions.
 
 The security OS configuration applied to the Azure Linux 2.0 Container Host for AKS image is based on the Azure Linux security baseline, which aligns with the CIS benchmark. As a secure service, AKS complies with SOC, ISO, PCI DSS, and HIPAA standards. For more information about the Azure Linux Container Host security, see [Security concepts for clusters in AKS][security-concepts-aks]. To learn more about the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
 
