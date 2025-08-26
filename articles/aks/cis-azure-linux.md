@@ -333,7 +333,6 @@ The following are the results from the [CIS Azure Linux 3.0 Benchmark v1.0][cis-
 |7.2.8|Ensure local interactive user home directories are configured|Pass||
 |7.2.9|Ensure local interactive user dot files access is configured|Pass||
 
-
 ## Next steps
 
 For more information about Azure Linux Container Host security, see the following articles:
