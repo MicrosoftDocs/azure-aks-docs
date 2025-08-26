@@ -187,7 +187,7 @@ The following are the results from the [CIS Azure Linux 2.0 Benchmark v1.0][cis-
 
 The following are the results from the [CIS Azure Linux 3.0 Benchmark v1.0][cis-benchmark-azure-linux]  recommendations based on the CIS rules:
 
-> [!NOTE] These are point in time results using the Azure Linux 3.0 image released on July 2 2025. Benchmarks can audited using the CIS-CAT tool available on: [CIS Azure Linux 3.0 Benchmark v1.0][cis-benchmark-azure-linux]. 
+> [!NOTE] These are point in time results using the Azure Linux 3.0 image released on July 2, 2025. Benchmarks can be audited using the CIS-CAT tool available on: [CIS Azure Linux 3.0 Benchmark v1.0][cis-benchmark-azure-linux]. 
 
 | CIS ID | Recommendation description | Status | Reason |
 |---|---|---|---|
