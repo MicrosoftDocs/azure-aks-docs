@@ -282,6 +282,7 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 > [!NOTE]
 > If there are any issues encountered with deploying the Istio ingress gateway or configuring ingress traffic routing, refer to [article on troubleshooting Istio add-on ingress gateways][istio-ingress-tsg]
 
+* [Configure ingress for Istio service mesh add-on with the Kubernetes Gateway API][istio-gateway-api]
 * [Secure ingress gateway for Istio service mesh add-on][istio-secure-gateway]
 * [Configure ingress gateway Horizontal Pod Autoscaler (HPA)][istio-scaling-guide]
 * [Deploy egress gateways for the Istio service mesh add-on][istio-egress-gateway]
@@ -289,6 +290,7 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [istio-deploy-addon]: istio-deploy-addon.md
 [istio-secure-gateway]: istio-secure-gateway.md
 [istio-scaling-guide]: istio-scale.md#scaling
+[istio-gateway-api]: istio-gateway-api.md
 [istio-ingress-tsg]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-ingress-gateway
 [azure-nsg-docs]: /azure/virtual-network/network-security-groups-overview#augmented-security-rules
 [azure-service-tags]: /azure/virtual-network/service-tags-overview
