@@ -11,17 +11,17 @@ ms.author: nshankar
 
 # Configure Istio ingress with the Kubernetes Gateway API
 
-In addition to [Istio's own ingress traffic management API][istio-deploy-ingress], the Istio service mesh add-on also supports the Kubernetes Gateway API for ingress traffic management. In order to receive support from Azure for Gateway API-based deployments with the Istio add-on, you must have the [Managed Gateway API installation][managed-gateway-addon] enabled on your cluster. You can use both the Istio Gateway API [automated deployment model][istio-gateway-auto-deployment] or the [manual deployment model][istio-gateway-manual-deployment] for ingress traffic management, provided that ConfigMap customizations adhere to the [resource customization allowlist](#resource-customization-allowlist).
+In addition to [Istio's own ingress traffic management API][istio-deploy-ingress], the Istio service mesh add-on also supports the Kubernetes Gateway API for ingress traffic management. In order to receive support from Azure for Gateway API-based deployments with the Istio add-on, you must have the [Managed Gateway API installation][managed-gateway-addon] enabled on your cluster. You can use both the Istio Gateway API [automated deployment model][istio-gateway-auto-deployment] or the [manual deployment model][istio-gateway-manual-deployment] for ingress traffic management as long as ConfigMap customizations adhere to the [resource customization allowlist](#resource-customization-allowlist).
 
 ## Limitations
 
 * Using the Kubernetes Gateway API for [egress traffic management][istio-deploy-egress] with the Istio add-on is only supported for the [manual deployment model][istio-gateway-manual-deployment].
-* ConfigMap customizations for `Gateway` resources must adhere to the [resource customization allowlist](#resource-customization-allowlist). Fields not on the allowlist are disallowed and will be blocked via add-on managed webhooks. See the [Istio add-on support policy][istio-support-policy] for more information `allowed`, `blocked`, and `supported` features.  
+* ConfigMap customizations for `Gateway` resources must adhere to the [resource customization allowlist](#resource-customization-allowlist). Fields not on the allowlist are disallowed and blocked via add-on managed webhooks. See the [Istio add-on support policy][istio-support-policy] for more information `allowed`, `blocked`, and `supported` features.  
 
 ## Prerequisites
 
-* Install the [Managed Gateway CRD add-on][managed-gateway-addon].
-* Make sure that you have installed Istio add-on revision `asm-1-26` or higher. Follow the [installation guide][istio-deploy-addon] if you don't have the Istio add-on installed yet, or the [upgrade guide][istio-upgrade] if you are on a lower minor revision.
+* Enable the [Managed Gateway API Installation][managed-gateway-addon].
+* Install Istio add-on revision `asm-1-26` or higher. Follow the [installation guide][istio-deploy-addon] if you don't have the Istio add-on installed yet, or the [upgrade guide][istio-upgrade] if you are on a lower minor revision.
 
 ## Configure ingress using a Kubernetes Gateway
 
@@ -74,7 +74,7 @@ EOF
 ```
 
 > [!NOTE]
-> If you are performing a [minor revision upgrade][istio-upgrade] and have two Istio add-on revisions installed on your cluster simultaneously, by default the control plane for the higher minor revision will take ownership of the `Gateways`. You can add the `istio.io/rev` label to to control which control plane revision will own the `Gateway`. Make sure that you update the revision label accordingly to the appropriate control plane revision prior to rolling back or completing the upgrade operation.
+> If you are performing a [minor revision upgrade][istio-upgrade] and have two Istio add-on revisions installed on your cluster simultaneously, by default the control plane for the higher minor revision takes ownership of the `Gateways`. You can add the `istio.io/rev` label to to control which control plane revision owns the `Gateway`. Make sure that you update the revision label accordingly to the appropriate control plane revision before rolling back or completing the upgrade operation.
 
 Verify that a `Deployment`, `Service`, `HorizontalPodAutoscaler`, and `PodDisruptionBudget` get created for `httpbin-gateway`:
 
@@ -106,7 +106,7 @@ NAME                    MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   
 httpbin-gateway-istio   1               N/A               2                     36m
 ```
 
-You can [configure these resource settings](#resource-customizations) by modifying the `GatewayClass` defaults `ConfigMap` or by attaching a `ConfigMap` to a specific `Gateway`.
+You can [configure these resource settings](#resource-customizations) by modifying the `GatewayClass` defaults ConfigMap or by attaching a ConfigMap to a specific `Gateway`.
 
 ### Send request to sample application
 
@@ -127,18 +127,18 @@ You should see an `HTTP 200` response.
 
 ### Securing Istio ingress traffic with the Kubernetes Gateway API
 
-The Istio add-on supports syncing secrets from Azure Key Vault (AKV) for securing Gateway API-based ingress traffic with [TLS termination][istio-tls-termination] or [SNI passthrough][istio-sni-passthrough]. You can follow the guidance on the [secure ingress gateway][istio-secure-gateways] document for syncing secrets from AKV onto your AKS cluster using the [AKV Secrets Store CSI Driver add-on][aks-csi-driver].
+The Istio add-on supports syncing secrets from Azure Key Vault (AKV) for securing Gateway API-based ingress traffic with [Transport Layer Security (TLS) termination][istio-tls-termination] or [Server Name Indication (SNI) passthrough][istio-sni-passthrough]. You can follow the [secure ingress gateway][istio-secure-gateways] document for syncing secrets from AKV onto your AKS cluster using the [AKV Secrets Store Container Storage Interface (CSI) Driver add-on][aks-csi-driver].
 
 ## Resource customizations
 
-The Istio add-on also supports customizations of the resources generated for the `Gateways`, namely:
+The Istio add-on also [supports customizations of the resources][istio-gateway-auto-deployment] generated for the `Gateways`, namely:
 
 * Service
 * Deployment
 * Horizontal Pod Autoscaler (HPA)
 * Pod Disruption Budget (PDB)
 
-The default settings for these resources are set in the `istio-gateway-class-defaults` `ConfigMap` in the `aks-istio-system` namespace. This ConfigMap must have the `gateway.istio.io/defaults-for-class` label set to `istio` for the customizations to take effects for all `Gateways` with `spec.gatewayClassName: istio`. The `GatewayClass`-level ConfigMap is installed by default by the Istio add-on in the `aks-istio-system` namespace when the [Managed Gateway API installation][managed-gateway-addon] is enabled. 
+The [default settings for these resources][istio-gateway-class-cm] are set in the `istio-gateway-class-defaults` ConfigMap in the `aks-istio-system` namespace. This ConfigMap must have the `gateway.istio.io/defaults-for-class` label set to `istio` for the customizations to take effects for all `Gateways` with `spec.gatewayClassName: istio`. The `GatewayClass`-level ConfigMap is installed by default in the `aks-istio-system` namespace when the [Managed Gateway API installation][managed-gateway-addon] is enabled. 
 
 ```bash
 kubectl get configmap istio-gateway-class-defaults -n aks-istio-system -o yaml
@@ -157,11 +157,11 @@ data:
 ...
 ```
 
-As detailed in the subsequent sections, you can modify these settings for all Istio `Gateways` at a `GatewayClass` level by updating the `istio-gateway-class-defaults` `ConfigMap`, or you can set them for individual `Gateway` resources. For both the `GatewayClass`-level and `Gateway`-level `ConfigMaps`, fields must be allowlisted for the given resource. If there is customization both for the `GatewayClass` and an individual `Gateway`, the `Gateway`-level configuration will take precedence.
+As detailed in the subsequent sections, you can modify these settings for all Istio `Gateways` at a `GatewayClass` level by updating the `istio-gateway-class-defaults` ConfigMap, or you can set them for individual `Gateway` resources. For both the `GatewayClass`-level and `Gateway`-level `ConfigMaps`, fields must be allowlisted for the given resource. If there is customization both for the `GatewayClass` and an individual `Gateway`, the `Gateway`-level configuration takes precedence.
 
 ### Resource customization allowlist
 
-Fields not on the allowlist for the resource are disallowed and will be blocked via add-on managed webhooks. See the [Istio add-on support policy][istio-support-policy] for more information `allowed`, `blocked`, and `supported` features.
+Fields not on the allowlist for the resource are disallowed and blocked via add-on managed webhooks. See the [Istio add-on support policy][istio-support-policy] for more information `allowed`, `blocked`, and `supported` features.
 
 #### Deployment Fields
 
@@ -230,7 +230,7 @@ Fields not on the allowlist for the resource are disallowed and will be blocked 
 
 ### Configure GatewayClass-level settings
 
-Update the `GatewayClass`-level `ConfigMap` in the `aks-istio-system` namespace:
+Update the `GatewayClass`-level ConfigMap in the `aks-istio-system` namespace:
 
 ```bash
 kubectl edit cm istio-gateway-class-defaults -n aks-istio-system
@@ -255,7 +255,7 @@ data:
 ```
 
 > [!NOTE]
-> Only one `ConfigMap` per `GatewayClass` is allowed.
+> Only one ConfigMap per `GatewayClass` is allowed.
 
 Now, you should see the the `HPA` for `httpbin-gateway` that you created earlier get updated:
 
@@ -276,7 +276,7 @@ updated
 
 ### Configure settings for a specific gateway
 
-Create a `ConfigMap` with resource customizations for the `httpbin` `Gateway`:
+Create a ConfigMap with resource customizations for the `httpbin` `Gateway`:
 
 ```bash
 kubectl apply -f - <<EOF
@@ -296,7 +296,7 @@ data:
 EOF
 ```
 
-Update the `httpbin` `Gateway` to reference the `ConfigMap`:
+Update the `httpbin` `Gateway` to reference the ConfigMap:
 
 ```bash
 kubectl apply -f - <<EOF
@@ -341,7 +341,7 @@ updated-per-gateway
 ```
 ## Next steps
 
-* [Deploy egress gateways for the Istio service mesh add-on][istio-egress-gateway]
+* [Deploy egress gateways for the Istio service mesh add-on][istio-deploy-egress]
 
 [aks-csi-driver]: ./csi-secrets-store-driver.md
 [istio-deploy-addon]: istio-deploy-addon.md
@@ -354,6 +354,7 @@ updated-per-gateway
 
 [istio-gateway-auto-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#automated-deployment
 [istio-gateway-manual-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#manual-deployment
+[istio-gateway-class-cm]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#gatewayclass-defaults
 [istio-tls-termination]: https://istio.io/latest/docs/tasks/traffic-management/ingress/secure-ingress/
 [istio-sni-passthrough]: https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-sni-passthrough/
 [pdb-troubleshooting]: /troubleshoot/azure/azure-kubernetes/create-upgrade-delete/error-code-poddrainfailure

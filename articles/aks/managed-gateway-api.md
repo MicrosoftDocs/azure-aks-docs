@@ -1,6 +1,6 @@
 ---
 title: Azure Kubernetes Service (AKS) Managed Gateway API Installation
-description: Install Managed Kubernetes Gateway API onAzure Kubernetes Service
+description: Install Managed Kubernetes Gateway API on Azure Kubernetes Service
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 author: nshankar
@@ -13,24 +13,24 @@ ms.author: nshankar
 
 The [Kubernetes Gateway API][kubernetes-gateway-api] is a specification for traffic management on Kubernetes clusters. It was designed as a successor and enhancement of the [Ingress API][kubernetes-ingress-api], which lacked a unified and provider-agnostic approach for advanced traffic routing.
 
-The Managed Gateway API Installation for Azure Kubernetes Service (AKS) installs the Custom Resource Definitions (CRDs) for the Kubernetes Gateway API to allow users to leverage Gateway API functionality in a fully-supported mode on AKS. When using the Managed Gateway Installation on AKS, users are required to also have installed an add-on that implements the Gateway API, such as [the Istio add-on][istio-gateway-api].
+The Managed Gateway API Installation for Azure Kubernetes Service (AKS) installs the Custom Resource Definitions (CRDs) for the Kubernetes Gateway API. With the Managed Gateway API installation, you can use Gateway API functionality in a fully supported mode on AKS. However, you must also use an AKS add-on or extension that implements the Gateway API, such as [the Istio add-on][istio-gateway-api].
 
 ## Requirements and limitations
 
-* You must have at least one add-on installed, such as the [Istio add-on][istio-about], that implements the Gateway API. The add-on must be enabled prior to, or during enablement of the Managed Gateway Installation. 
-* If you already have an existing installation of the Gateway API CRDs on your cluster, then you must only have `standard` channel CRDs installed, your cluster must be on the minimum required Kubernetes version for that specific bundle version. See the [Gateway API bundle version and AKS Kubernetes version mapping](#gateway-api-bundle-version-and-aks-kubernetes-version-mapping) to see the minimum required Kubernetes version for each `standard` channel Gateway API bundle version.
+* You must have at least one add-on installed, such as the [Istio add-on][istio-about], that implements the Gateway API. The add-on must be enabled before, or during enablement of the Managed Gateway Installation. 
+* If you already have an existing installation of the Gateway API CRDs on your cluster, then you must only have `standard` channel CRDs installed, and the Gateway API bundle version must be compatible with your cluster's Kubernetes version. See the table for the [bundle version associated with each Kubernetes version](#gateway-api-bundle-version-and-aks-kubernetes-version-mapping).
 
 ### Gateway API bundle version and AKS Kubernetes version mapping
 
-The following table summarizes the minimum required Kubernetes version for your AKS cluster for each Gateway API bundle version for the `standard` channel. `Experimental` channel CRDs are disallowed and must be uninstalled prior to enabling the Managed Gateway API installation.
+The following table outlines the supported Kubernetes versions for your AKS cluster for each Gateway API bundle version for the `standard` channel. `Experimental` channel CRDs are disallowed and must be uninstalled before enabling the Managed Gateway API installation.
 
-| Gateway API Bundle Version | Minimum Kubernetes Version |
-|----------------------------|----------------------------|
-| v1.2.1                     | v1.26.0                    |
-| v1.3.0                     | v1.34.0                    |
+| Gateway API Bundle Version | Supported Kubernetes Versions |
+|----------------------------|-------------------------------|
+| v1.2.1                     | v1.26.0 - v1.33.x             |
+| v1.3.0                     | v1.34.0+                      |
 
 > [!NOTE]
-> If you upgrade your AKS cluster to a new minor version after installing the Managed Gateway API CRDs, the CRDs will automatically be upgraded to the new minimum Gateway API bundle version. For instance, if you upgrade from AKS `v1.33.0` to `v1.34.0` and previously had the Managed Gateway API installed for bundle version v1.2.1, the CRDs will automatically be upgraded to bundle version `v1.3.0`. 
+> If you upgrade your AKS cluster to a new minor version after installing the Managed Gateway API CRDs, the CRDs will automatically be upgraded to the new supported Gateway API bundle version for that Kubernetes version. For instance, if you upgrade from AKS `v1.33.0` to `v1.34.0` and previously had the Managed Gateway API installed for bundle version `v1.2.1`, the CRDs will automatically be upgraded to bundle version `v1.3.0`.
 
 ## Prerequisites
 
@@ -65,7 +65,7 @@ az feature register --namespace "Microsoft.ContainerService" --name "ManagedGate
 
 ## Install the Managed Gateway API CRDs
 
-Once you've fulfilled the prerequisite steps, you can run the `az aks ` command to install the Managed Gateway API CRDs on your cluster:
+Once you finish the prerequisite steps, you can run the `az aks ` command to install the Managed Gateway API CRDs on your cluster:
 
 ```azurecli-interactive
 
