@@ -752,8 +752,10 @@
             href: /compliance/regulatory/offering-CIS-Benchmark?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: CIS Kubernetes benchmark
             href: cis-kubernetes.md
-          - name: CIS Azure Linux benchmark
+          - name: CIS Azure Linux 2.0 benchmark
             href: cis-azure-linux.md
+          - name: CIS Azure Linux 3.0 benchmark
+            href: cis-azure-linux-v3.md
           - name: CIS Windows Server benchmark
             href: cis-windows.md
         - name: Payment Card Industry Data Security Standard (PCI DSS)
