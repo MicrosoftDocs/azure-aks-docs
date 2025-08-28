@@ -1,7 +1,7 @@
 ---
 title: AKS Communication Manager
 description: Learn how to set up and receive notices in Azure Resource Notifications for Azure Kubernetes Service maintenance events.
-ms.date: 07/30/2025
+ms.date: 08/28/2025
 ms.custom: aks communication manager
 ms.topic: concept-article
 author: kaarthis
@@ -39,7 +39,7 @@ The Azure Kubernetes Service (AKS) Communication Manager streamlines notificatio
 ### Query for cluster auto upgrade notifications
 
 ```kusto
-containerserviceeventresources
+arg("").containerserviceeventresources
 | where type == "microsoft.containerservice/managedclusters/scheduledevents"
 | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
 | where properties has "eventStatus"
@@ -47,6 +47,7 @@ containerserviceeventresources
 | extend status = substring(status, 0, indexof(status, ",") - 1)
 | where status != ""
 | where properties has "eventDetails"
+| extend details = parse_json(tostring(properties.eventDetails))
 | extend upgradeType = case(
                            properties has "K8sVersionUpgrade",
                            "K8sVersionUpgrade",
@@ -59,7 +60,7 @@ containerserviceeventresources
 | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
 | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
 | extend eventTime = todatetime(tostring(eventTime))
-| where eventTime >= ago(2h)
+| where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
 | where upgradeType == "K8sVersionUpgrade"
 | project
     eventTime,
@@ -74,7 +75,7 @@ containerserviceeventresources
 ### Query for Node OS auto upgrade notifications
 
 ```kusto
-containerserviceeventresources
+arg("").containerserviceeventresources
 | where type == "microsoft.containerservice/managedclusters/scheduledevents"
 | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
 | where properties has "eventStatus"
@@ -82,6 +83,7 @@ containerserviceeventresources
 | extend status = substring(status, 0, indexof(status, ",") - 1)
 | where status != ""
 | where properties has "eventDetails"
+| extend details = parse_json(tostring(properties.eventDetails))
 | extend upgradeType = case(
                            properties has "K8sVersionUpgrade",
                            "K8sVersionUpgrade",
@@ -94,7 +96,7 @@ containerserviceeventresources
 | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
 | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
 | extend eventTime = todatetime(tostring(eventTime))
-| where eventTime >= ago(2h)
+| where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
 | where upgradeType == "NodeOSUpgrade"
 | project
     eventTime,
@@ -139,9 +141,11 @@ containerserviceeventresources
 
 8.  Make sure to assign the appropriate Reader roles.
 
-    In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
+        In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
 
-    Choose the **Reader** role and assign it to the resource group. Repeat "Add role assignment" for the subscription if needed.
+        Choose the **Reader** role and assign it to the resource group. Repeat "Add role assignment" for the subscription if needed.
+
+    =======
 
     > [!NOTE]
     > After Communication Manager is set up, it sends advance notices one week before maintenance starts and one day before maintenance starts. It also sends you timely alerts during the maintenance operation.
