@@ -182,7 +182,7 @@ arg("").containerserviceeventresources
     | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
     | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
     | extend eventTime = todatetime(tostring(eventTime))
-    | where eventTime >= ago(2h)
+    | where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
     | where upgradeType == "K8sVersionUpgrade"
     | project
         eventTime,
@@ -217,7 +217,7 @@ arg("").containerserviceeventresources
     | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
     | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
     | extend eventTime = todatetime(tostring(eventTime))
-    | where eventTime >= ago(2h)
+    | where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
     | where upgradeType == "NodeOSUpgrade"
     | project
         eventTime,
