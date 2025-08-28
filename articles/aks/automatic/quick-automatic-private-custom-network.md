@@ -79,6 +79,8 @@ The following sample output resembles successful creation of the resource group:
 }
 ```
 
+:::zone target="docs" pivot="azure-cli"
+
 ## Create a virtual network
 
 Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
@@ -164,31 +166,6 @@ aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
 :::zone-end
 
 :::zone target="docs" pivot="bicep"
-
-## Create a resource group
-
-An [Azure resource group][azure-resource-group] is a logical group in which Azure resources are deployed and managed. When you create a resource group, you're prompted to specify a location. This location is the storage location of your resource group metadata and where your resources run in Azure if you don't specify another region during resource creation.
-
-Create a resource group using the [az group create][az-group-create] command.
-
-```azurecli-interactive
-az group create --name <resource-group> --location <location>
-```
-
-The following sample output resembles successful creation of the resource group:
-
-```output
-{
-  "id": "/subscriptions/<guid>/resourceGroups/myResourceGroup",
-  "location": "eastus",
-  "managedBy": null,
-  "name": "myResourceGroup",
-  "properties": {
-    "provisioningState": "Succeeded"
-  },
-  "tags": null
-}
-```
 
 ## Create a virtual network
 
