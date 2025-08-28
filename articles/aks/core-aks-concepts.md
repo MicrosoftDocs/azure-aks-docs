@@ -125,7 +125,7 @@ The following namespaces are created by default in an AKS cluster:
 
 ## Cluster modes
 
-In AKS, you can create a cluster with the Automatic (preview) or Standard mode. AKS Automatic provides a more fully managed experience. You can manage cluster configuration, including nodes, scaling, security, and other preconfigured settings. AKS Standard provides more control over the cluster configuration, including the ability to manage node pools, scaling, and other settings.
+In AKS, you can create a cluster with the Automatic or Standard mode. AKS Automatic provides a more fully managed experience. You can manage cluster configuration, including nodes, scaling, security, and other preconfigured settings. AKS Standard provides more control over the cluster configuration, including the ability to manage node pools, scaling, and other settings.
 
 For more information, see [AKS Automatic and Standard feature comparison][automatic-standard].
 
