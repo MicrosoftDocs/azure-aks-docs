@@ -164,6 +164,10 @@ Yes, AKS ensures that all supported Kubernetes versions are eligible for Long-Te
 
 LTS is available on the Premium tier refer to the [Premium tier pricing](https://azure.microsoft.com/pricing/details/kubernetes-service/) for more information.
 
+### Will enabling LTS disrupt workloads?
+
+No. It’s a configuration-only change; it doesn’t reimage nodes or disrupt workloads, so no downtime is expected.
+
 <!-- LINKS -->
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
