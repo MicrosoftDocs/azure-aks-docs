@@ -65,13 +65,49 @@ az feature register --namespace "Microsoft.ContainerService" --name "ManagedGate
 
 ## Install the Managed Gateway API CRDs
 
-Once you finish the prerequisite steps, you can run the `az aks ` command to install the Managed Gateway API CRDs on your cluster:
+Once you finish the prerequisite steps, you can run the `az aks create` command to install the Managed Gateway API CRDs on a newly created cluster:
 
 ```azurecli-interactive
-
+ az aks create -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-gateway-api
 ```
 
+To install the Managed Gateway API CRDs on an existing cluster, you can run:
 
+```azurecli-interactive
+ az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-gateway-api
+```
+
+You should now see the CRDs installed on your cluster:
+
+```bash
+$ kubectl get crds | grep "gateway.networking.k8s.io"
+gatewayclasses.gateway.networking.k8s.io                           2025-08-29T17:52:36Z
+gateways.gateway.networking.k8s.io                                 2025-08-29T17:52:36Z
+grpcroutes.gateway.networking.k8s.io                               2025-08-29T17:52:36Z
+httproutes.gateway.networking.k8s.io                               2025-08-29T17:52:37Z
+referencegrants.gateway.networking.k8s.io                          2025-08-29T17:52:37Z
+```
+
+Verify that the CRDs have the expected annotations and that the bundle version matches the [expected Kubernetes version](#gateway-api-bundle-version-and-aks-kubernetes-version-mapping) for your cluster.
+
+```bash
+$ kubectl get crd gateways.gateway.networking.k8s.io -ojsonpath={.metadata.annotations} | jq
+{
+  "api-approved.kubernetes.io": "https://github.com/kubernetes-sigs/gateway-api/pull/3328",
+  "app.kubernetes.io/managed-by": "aks",
+  "app.kubernetes.io/part-of": <hash>,
+  "gateway.networking.k8s.io/bundle-version": "v1.2.1",
+  "gateway.networking.k8s.io/channel": "standard"
+}
+```
+
+## Uninstall the Managed Gateway API CRDs
+
+To uninstall the Managed Gateway API CRDs, you can run the following command:
+
+```azurecli-interactive
+ az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --disable-gateway-api
+```
 
 ## Next Steps
 
