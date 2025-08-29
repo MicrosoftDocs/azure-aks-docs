@@ -128,27 +128,21 @@ aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
 
 :::zone target="docs" pivot="azure-portal"
 
-## Create Automatic Kubernetes Cluster
+## Create Automatic Kubernetes cluster
 
 1. To create an AKS Automatic cluster, search for **Kubernetes Services**, and select **Automatic Kubernetes cluster** from the drop-down options.
 
     :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/browse-dropdown-options.png" alt-text="The screenshot of the entry point for creating an AKS Automatic cluster in the Azure portal.":::
 
-2. On the **Basics** tab, fill in all the mandatory fields required to get started: 
-Subscription, Resource Group, Cluster name, and Region
+1. On the **Basics** tab, fill in all the mandatory fields (Subscription, Resource group, Kubernetes cluster name, and Region) required to get started:
 
-    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/create-basics.png" alt-text="The screenshot of the Create - Basics Tab for an AKS Automatic cluster in the Azure portal.":::
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/create-basics-automatic.png" alt-text="The screenshot of the Create - Basics Tab for an AKS Automatic cluster in the Azure portal.":::
 
-    If the prerequisites aren't met and the subscription requires registration of the preview flags, there will be an error shown under the Subscription field: 
-
-    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/register.png" alt-text="The screenshot of the error shown when a  subscription doesn't have preview flags registered while creating an AKS Automatic cluster in the Azure portal.":::
-
-
-3. On the **Monitoring** tab, choose your monitoring configurations from Azure Monitor, Managed Prometheus, Grafana Dashboards, and/or configure alerts. Enable Managed Grafana (optional), add tags (optional), and proceed to create the cluster.
+1. On the **Monitoring** tab, choose your monitoring configurations from Azure Monitor, Managed Prometheus, Grafana Dashboards, and/or configure alerts. Enable Managed Grafana (optional), add tags (optional), and proceed to create the cluster.
 
     :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/configure-monitoring-automatic.png" alt-text="The screenshot of the Monitoring Tab while creating an AKS Automatic cluster in the Azure portal.":::
 
-4. Get started with configuring your first application from GitHub and set up an automated deployment pipeline. 
+1. Get started with configuring your first application from GitHub and set up an automated deployment pipeline. 
 
     :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/automatic-overview.png" alt-text="The screenshot of the Get Started Tab on Overview Blade after creating an AKS Automatic cluster in the Azure portal.":::
 

@@ -41,11 +41,11 @@ In this quickstart, you learn to:
 
 To deploy an application from a code repository, start at the [Azure portal][azure-portal] home page.
 
-:::image type="content" source="../media/automatic/from-code/automatic-from-app-create-button.png" alt-text="Screenshot showing select 'Deploy application' on the Kubernetes services create menu." lightbox="../media/automatic/from-code/automatic-from-app-create-button.png" :::
+:::image type="content" source="../media/automatic/from-code/deploy-from-code-automatic.png" alt-text="Screenshot showing select 'Deploy application' on the Kubernetes services create menu." lightbox="../media/automatic/from-code/deploy-from-code-automatic.png" :::
 
 1. Search for **Kubernetes services** in the top search bar.
-1. Select [**Kubernetes services**][portal-kubernetes-services] in the search results.
-1. Select the **Create** button and select **Deploy application**.
+2. Select [**Kubernetes services**][portal-kubernetes-services] in the search results.
+3. Select the **Create** button and select **Deploy application**.
 
 ### Connect to source code repository
 
