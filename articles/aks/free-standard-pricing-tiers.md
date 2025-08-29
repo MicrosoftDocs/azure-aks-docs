@@ -285,7 +285,9 @@ This process takes several minutes to complete. You shouldn't experience any dow
   },
 ```
 
-## Update an existing cluster from the Base SKU to the Automatic SKU
+## Update the SKU of an existing cluster
+
+### Update an existing cluster from the Base SKU to the Automatic SKU
 
 > [!IMPORTANT]
 > Make sure all the [AKS Automatic features](./intro-aks-automatic.md) are enabled on your cluster before updating.
@@ -308,10 +310,32 @@ Results:
 }
 ```
 
+### Update an existing cluster from the Automatic SKU to the Base SKU
+
+```azurecli-interactive
+# Update an existing cluster from the Automatic SKU to the Base SKU
+az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --sku Base
+```
+
+Results:
+
+```output
+{
+  ...
+  "sku": {
+    "name": "Base",
+    "tier": "Standard"
+  },
+  ...
+}
+```
+
 ## Next steps
 
 * Use [Availability Zones][availability-zones] to increase high availability with your AKS cluster workloads.
 * Configure your cluster to [limit egress traffic](limit-egress-traffic.md).
+
+<!---LINKS--->
 
 [manage-resource-group-cli]: /azure/azure-resource-manager/management/manage-resource-groups-cli
 [availability-zones]: ./availability-zones.md
