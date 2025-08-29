@@ -4,14 +4,14 @@ description: Upgrade guidance for migrating Basic Load Balancer to Standard Load
 author: wdarko1
 ms.author: wilsondarko
 ms.topic: how-to
-ms.date: 08/5/2025
+ms.date: 08/29/2025
 # Customer intent: As an cloud engineer with Basic Load Balancer services, I need guidance and direction on migrating my workloads off Basic to Standard SKUs
 ---
 
-# Upgrading from Basic Load Balancer on AKS (preview)
+# Upgrading from Basic Load Balancer on AKS
 
 >[!Important]
->On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you are currently using Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date to avoid a forced migration and unscheduled downtime. This article will help guide you through the upgrade process. 
+>On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you are currently using Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date to avoid your cluster being out of support. This article will help guide you through the upgrade process. 
 
 In this article, we discuss AKS-specific guidance for upgrading your Basic Load Balancer instances to Standard Load Balancer. Standard Load Balancer is recommended for all production instances and provides many [key differences](/azure/load-balancer/load-balancer-basic-upgrade-guidance#basic-load-balancer-sku-vs-standard-load-balancer-sku) to your infrastructure. For guidance on upgrading your Basic Load Balancer instances to Standard Load Balancer, see the [official guidance for Basic load balancer upgrade][load-balancer-upgrade-guidance]
 
@@ -21,14 +21,12 @@ In this article, we discuss AKS-specific guidance for upgrading your Basic Load 
 ### Before You Begin
 
 >[!Important]
->Downtime occurs during migration. We recommend you test the migration in a development or test environment before trying it out with a production cluster.
+>Downtime occurs during migration. 
 >This process will also migrate your Basic IP to a Standard IP, while keeping the inbound IP addresses associated with the load balancer the same. New public IPs will be created and associated to the Standard Load Balancer outbound rules to serve cluster egress traffic.
-
 
 **Requirements**
 - The minimum Kubernetes version for this script is 1.27. If you need to upgrade your AKS cluster, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster).
-- You need the [Azure CLI installed](/cli/azure/install-azure-cli). Minimum version 2.72.0
-- [Install the `aks-preview` Azure CLI extension.  Minimum version 0.5.170](#install-the-aks-preview-cli-extension).
+- You need the [Azure CLI installed](/cli/azure/install-azure-cli). Minimum version 2.76.0
 - If the cluster is running Key Management Service with private key vault, this must be disabled for the duration of the migration
 - If the cluster is using any ValidatingAdmissionWebhooks or MutatingAdmissionWebhooks, these must be disabled for the duration of the migration.
 
@@ -36,48 +34,9 @@ In this article, we discuss AKS-specific guidance for upgrading your Basic Load 
 - Create a migration plan for planned downtime.
 - Once the migration is started, roll back is not allowed.
 
-### Install the `aks-preview` CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-
-### Register the `BasicLBMigrationToStandardLBPreview` feature flag
-
-1. Register the `BasicLBMigrationToStandardLBPreview` feature flag using the `az feature register` command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "BasicLBMigrationToStandardLBPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the `az feature show` command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "BasicLBMigrationToStandardLBPreview"
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the `az provider register` command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
-
 ### Run Command to Upgrade Basic load Balancer to Standard
 
-1. The following command initiates a script to upgrade your Basic load balancer to Standard using the `az aks update` command, and setting `--load-balancer-sku` to `Stanadard` and enabling the preview feature flag `BasicLBMigrationToStandardPreview`.
+1. The following command initiates a script to upgrade your Basic load balancer to Standard using the `az aks update` command, and setting `--load-balancer-sku` to `Stanadard`.
 
 ```azurecli-interactive
 az aks update \
@@ -112,7 +71,6 @@ Use the following command to get each IP address for the Resource ID:
   # get the new IP for each IP Resource ID
   az network public-ip show --ids <IPResourceID> --query ipAddress -o tsv
 ```
-   
 
 ### Related content
 
