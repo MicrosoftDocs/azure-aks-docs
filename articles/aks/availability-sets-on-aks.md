@@ -2,7 +2,7 @@
 title: About the Availability Sets deprecation in Azure Kubernetes Services (AKS)
 description: Learn about the deprecation of Availability Sets in Azure Kubernetes Service (AKS).
 ms.topic: overview
-ms.date: 06/30/2025
+ms.date: 08/29/2025
 ms.author: wilsondarko
 author: wdarko1
 # Customer intent: As a Kubernetes administrator, I want to migrate my workloads from Virtual Machine Availability Sets to Virtual Machine Node Pools, so that I can ensure ongoing support and take advantage of enhanced management features before the deprecation deadline.
@@ -24,23 +24,19 @@ This article details how Azure Kubernetes Service (AKS) is phasing out support f
 
 ## Availability Sets overview
 
-Availability sets are logical groupings of VMs that reduce the chance of correlated failures bringing down related VMs at the same time. Availability sets place VMs in different fault domains for better reliability.
+Availability sets are logical groupings of virtual machines(VM) that reduce the chance of correlated failures bringing down related VMs at the same time. Availability sets place VMs in different fault domains for better reliability.
 
 ### Phase out of Availability Sets
 
-As of 2019, we're no longer adding other features to Availability Sets in AKS. Any features introduced since 2019, such as AKS Backup, aren't supported in Availability Sets node pools.
+As of 2019, we're no longer adding other features to Availability Sets in AKS. Any features introduced since 2019, such as AKS Backup, aren't supported in Availability Sets.
 
 ### When will Availability Sets be fully deprecated?
 
-Availability Sets support will be **fully deprecated by September 30, 2025**. We recommend that you migrate all workloads currently on VMAS to Virtual Machine Node Pools. 
+Availability Sets support will be **fully deprecated by September 30, 2025**. We recommend that you migrate all workloads currently on VMAS to Virtual Machine Node Pools. After September 30th, the feature will no longer be supported. A cluster with Availability Sets after this date is considered out of support. 
 
-### Automatic migration
+## Migrate from Availability Sets to Virtual Machines node pools
 
-Starting September 30, 2025, we'll automatically migrate remaining Availability Sets node pools to Virtual Machines node pools. We recommend a planned migration using the Azure CLI command to minimize downtime for your workloads.
-
-## Migrate from Availability Sets to Virtual Machines node pools (Preview)
-
-There is now a way to use a script to migrate your AKS cluster from using Availability Sets to Virtual Machines node pools. This script will also automatically upgrade the Basic-tier load balancers in your cluster to Standard. 
+There is now a way to use a script to migrate your AKS cluster from using Availability Sets to Virtual Machines node pools. This script will also automatically upgrade the Basic-tier load balancers in your cluster to Standard.
 
 >[!IMPORTANT]
 >This process will also migrate your Basic IP to a Standard IP, while keeping the inbound IP addresses associated with the load balancer the same. New public IPs will be created and associated to the Standard Load Balancer outbound rules to serve cluster egress traffic.
@@ -50,7 +46,6 @@ There is now a way to use a script to migrate your AKS cluster from using Availa
 **Requirements**
 - The minimum Kubernetes version for this script is 1.27. If you need to upgrade your AKS cluster, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster).
 - You need the [Azure CLI installed](/cli/azure/install-azure-cli).
-- [Install the `aks-preview` Azure CLI extension.  Minimum version 0.5.170](#install-the-aks-preview-cli-extension).
 - If the cluster is running Key Management Service with private key vault, this must be [disabled][turn-off-kms] for the duration of the migration.
 - If the cluster is using any ValidatingAdmissionWebhooks or MutatingAdmissionWebhooks, these must be disabled for the duration of the migration.
 
@@ -59,47 +54,9 @@ There is now a way to use a script to migrate your AKS cluster from using Availa
 - Once the migration is started, roll back is not allowed.
 - While in preview, we recommend you start using this migration CLI command on your test environments. Should any issues arise, [file a support ticket][file-support-ticket].
 
-### Install the `aks-preview` CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `BasicLBMigrationToStandardLBPreview` feature flag
-
-1. Register the `BasicLBMigrationToStandardLBPreview` feature flag using the `az feature register` command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "BasicLBMigrationToStandardLBPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the `az feature show` command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "BasicLBMigrationToStandardLBPreview"
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the `az provider register` command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
-
 ### Run Migration Script for Availability Set Migration
 
-1. The following command initiates a script to migrate a cluster from using Availability Sets to Virtual Machines node pools using the `az aks update` command, and setting `--migrate-vmas-to-vms`and enabling the preview feature flag `BasicLBMigrationToStandardPreview`.
+1. The following command initiates a script to migrate a cluster from using Availability Sets to Virtual Machines node pools using the `az aks update` command, and setting `--migrate-vmas-to-vms`. This will also upgrade the Basic load Balancer and Basic IP to Standard Load Balancer and Standard IP, if applicable.
 
 ```azurecli-interactive
 az aks update \
