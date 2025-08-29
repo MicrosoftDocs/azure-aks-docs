@@ -61,10 +61,8 @@ You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to up
 az aks nodepool update \
     --resource-group myResourceGroup \
     --cluster-name myAKSCluster \
-    --os-type Linux \
     --os-sku Ubuntu \
-    --name npwin \
-    --node-count 1
+    --name myNodePool
 ```
 
 The [`az aks nodepool update`][az-aks-nodepool-update] command can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
@@ -123,11 +121,8 @@ You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to up
 az aks nodepool update \
     --resource-group myResourceGroup \
     --cluster-name myAKSCluster \
-    --os-type Linux \
     --os-sku Ubuntu2404 \
-    --kubernetes-version 1.32.0
-    --name npwin \
-    --node-count 1
+    --name myNodePool
 ```
 ---
 
@@ -152,10 +147,8 @@ You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to up
 az aks nodepool update \
     --resource-group myResourceGroup \
     --cluster-name myAKSCluster \
-    --os-type Linux \
     --os-sku Ubuntu2204 \
-    --name npwin \
-    --node-count 1
+    --name myNodePool
 ```
 
 The [`az aks nodepool update`][az-aks-nodepool-update] command can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
@@ -178,11 +171,8 @@ You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to up
 az aks nodepool update \
     --resource-group myResourceGroup \
     --cluster-name myAKSCluster \
-    --os-type Linux \
     --os-sku Ubuntu2204 \
-    --kubernetes-version 1.32.0
-    --name npwin \
-    --node-count 1
+    --name myNodePool
 ```
 ---
 
