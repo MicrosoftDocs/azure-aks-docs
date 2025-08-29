@@ -1019,17 +1019,17 @@
     - name: Monitor control plane metrics
       href: control-plane-metrics-monitor.md
     - name: Container Network Metrics
-       items:
-          - name: Overview
-            href: container-network-observability-metrics.md
-          - name: Configure Container Network Metrics
-            href: container-network-observability-how-to.md
+      items:
+        - name: Overview
+          href: container-network-observability-metrics.md
+        - name: Configure Container Network Metrics
+          href: container-network-observability-how-to.md
     - name: Container Network Logs
-        items:
-          - name: Overview
-            href: container-network-observability-logs.md
-          - name: Configure Container Network Logs
-            href: how-to-configure-container-network-logs.md      
+      items:
+        - name: Overview
+          href: container-network-observability-logs.md
+        - name: Configure Container Network Logs
+          href: how-to-configure-container-network-logs.md
     - name: Advanced Container Networking Services observability guide
       href: container-network-observability-guide.md
     - name: Proactive monitoring best practices
