@@ -132,7 +132,7 @@ aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
 
 1. To create an AKS Automatic cluster, search for **Kubernetes Services**, and select **Automatic Kubernetes cluster** from the drop-down options.
 
-    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/browse-dropdown-options.png" alt-text="The screenshot of the entry point for creating an AKS Automatic cluster in the Azure portal.":::
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/dropdown-options-automatic.png" alt-text="The screenshot of the entry point for creating an AKS Automatic cluster in the Azure portal.":::
 
 1. On the **Basics** tab, fill in all the mandatory fields (Subscription, Resource group, Kubernetes cluster name, and Region) required to get started:
 
