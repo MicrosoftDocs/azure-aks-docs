@@ -4,7 +4,7 @@ description: Learn how to create a private Azure Kubernetes Service (AKS) cluste
 ms.topic: how-to
 ms.author: schaffererin
 author: schaffererin
-ms.date: 09/23/2024
+ms.date: 09/01/2025
 ms.custom: references_regions, devx-track-azurecli
 ms.service: azure-kubernetes-service
 # Customer intent: "As a cloud administrator, I want to deploy a private Azure Kubernetes Service cluster, so that I can ensure secure network traffic and enhanced control over my Kubernetes resources."
@@ -12,7 +12,7 @@ ms.service: azure-kubernetes-service
 
 # Create a private Azure Kubernetes Service (AKS) cluster
 
-This article helps you deploy a private link-based AKS cluster. If you're interested in creating an AKS cluster without required private link or tunnel, see [Create an Azure Kubernetes Service cluster with API Server VNet Integration (Preview)][create-aks-cluster-api-vnet-integration].
+This article helps you deploy a private link-based AKS cluster. If you're interested in creating an AKS cluster without required private link or tunnel, see [Create an Azure Kubernetes Service cluster with API Server VNet Integration][create-aks-cluster-api-vnet-integration].
 
 ## Overview
 
