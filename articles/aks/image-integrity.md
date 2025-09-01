@@ -30,17 +30,13 @@ In these application environments, using signed container images helps verify th
 * `aks-preview` CLI extension version 0.5.96 or later.
 * Ensure that the Azure Policy add-on for AKS is enabled on your cluster. If you don't have this add-on installed, see [Install Azure Policy add-on for AKS](/azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks).
 * An AKS cluster enabled with OIDC Issuer. To create a new cluster or update an existing cluster, see [Configure an AKS cluster with OIDC Issuer](./use-oidc-issuer.md).
-* The `EnableImageIntegrityPreview` and `AKS-AzurePolicyExternalData` feature flags registered on your Azure subscription. Register the feature flags using the following commands:
+* The `EnableImageIntegrityPreview` feature flags registered on your Azure subscription. Register the feature flags using the following commands:
   
-    1. Register the `EnableImageIntegrityPreview` and `AKS-AzurePolicyExternalData` feature flags using the [`az feature register`][az-feature-register] command.
+    1. Register the `EnableImageIntegrityPreview` feature flags using the [`az feature register`][az-feature-register] command.
 
         ```azurecli-interactive
         # Register the EnableImageIntegrityPreview feature flag
         az feature register --namespace "Microsoft.ContainerService" --name "EnableImageIntegrityPreview"
-
-        # Register the AKS-AzurePolicyExternalData feature flag
-        az feature register --namespace "Microsoft.ContainerService" --name "AKS-AzurePolicyExternalData"
-        ```
 
         It may take a few minutes for the status to show as *Registered*.
 
@@ -49,10 +45,6 @@ In these application environments, using signed container images helps verify th
         ```azurecli-interactive
         # Verify the EnableImageIntegrityPreview feature flag registration status
         az feature show --namespace "Microsoft.ContainerService" --name "EnableImageIntegrityPreview"
-
-        # Verify the AKS-AzurePolicyExternalData feature flag registration status
-        az feature show --namespace "Microsoft.ContainerService" --name "AKS-AzurePolicyExternalData"
-        ```
 
     3. Once the status shows *Registered*, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`][az-provider-register] command.
 
