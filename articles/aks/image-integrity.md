@@ -1,9 +1,9 @@
 ---
 title: Use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters (Preview)
 description: Learn how to use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters.
-author: schaffererin
-ms.author: schaffererin
-ms.date: 09/26/2023
+author: charleswool
+ms.author: yuewu2
+ms.date: 09/01/2025
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.custom:
