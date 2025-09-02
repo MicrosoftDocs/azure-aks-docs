@@ -110,6 +110,10 @@ If you want all member clusters to use the same node image, then all member clus
 
 There's no consistency guarantee for node image versions across separate update runs.
 
+### How many Update Groups can I add to an Update Stage?
+
+An Update Stage supports adding up to 50 Update Groups.
+
 ### My update run is in a pending state for quite some time. What should I do?
 
 Fleet Manager update runs can be in a pending state for many reasons. You can view the status of an update run either via the Azure portal, or by following our [monitoring documentation](./howto-monitor-update-runs.md).
