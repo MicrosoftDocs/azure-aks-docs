@@ -11,7 +11,7 @@ zone_pivot_groups: bicep-azure-cli-portal
 
 # Use managed namespaces (preview) in Azure Kubernetes Service (AKS)
 
-**Applies to:** :heavy_check_mark: AKS Automatic (preview) :heavy_check_mark: AKS Standard
+**Applies to:** :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
 
 Managed namespaces in Azure Kubernetes Service (AKS) provide a way to logically isolate workloads and teams within a cluster. This feature enables administrators to enforce resource quotas, apply network policies, and manage access control at the namespace level. For a detailed overview of managed namespaces, see the [managed namespaces overview][aks-managed-namespaces-overview].
 
