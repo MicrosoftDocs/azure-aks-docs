@@ -36,6 +36,17 @@ The `MemberCluster` represents a cluster-scoped API established within the hub c
 
 You can join Azure Kubernetes Service (AKS) clusters to a fleet as member clusters. Member clusters must reside in the same Microsoft Entra tenant as the fleet, but they can be in different regions, different resource groups, and/or different subscriptions.
 
+### MemberCluster Labels
+
+Member clusters can have labels associated with their `MemberCluster` resource.
+
+**Label update restrictions:**
+
+- By default, labels on a `MemberCluster` can only be updated through the Azure CLI.
+- However, if a label key is prefixed with `kubernetes-fleet.io`, that label can be updated directly through the fleet's hub cluster.
+
+For example, a label such as `kubernetes-fleet.io/environment=dev` can be updated by connecting to the hub cluster, while a label like `team=platform` must be updated through Azure CLI.
+
 ### Taints
 
 Member clusters support the specification of taints, which apply to the `MemberCluster` resource. Each taint object consists of the following fields:
