@@ -27,7 +27,7 @@ The following image visualizes an upgrade run containing two update stages, each
 * **Update strategy**: An update strategy describes the update sequence with stages and groups and allows you to reuse an update run configuration instead of defining the sequence repeatedly in each run. An update strategy doesn't include desired Kubernetes or node image versions.
 
 > [!NOTE]
-> The maximum number of Groups in each Stage is **50**.
+> The maximum number of Update Groups in each Update Stage is **50**.
 
 Currently, the supported update operations on member cluster are upgrades. There are three types of upgrades you can choose from:
 

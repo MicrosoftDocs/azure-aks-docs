@@ -25,12 +25,6 @@ Fleet Manager (with or without a hub cluster) supports joining up to 100 AKS clu
 
 If you would like Fleet Manager to support more than 100 clusters, [add feedback](https://github.com/Azure/AKS/issues/5066).
 
-### How many groups can I join to a Fleet stage?
-
-A fleet stage (with or without a hub cluster) supports joining up to 50 groups.
-
-If you would like a fleet stage to support more than 50 groups, [add feedback](https://github.com/Azure/AKS/issues/5066).
-
 ### What AKS clusters can be joined as members?
 
 Fleet Manager allows appropriately authorized users to add any AKS cluster in any Azure subscription and region as long as the Azure subscription is associated with the same Microsoft Entra ID tenant as the Fleet Manager. 
@@ -106,6 +100,10 @@ Fleet Manager honors the per-cluster maintenance window settings for each member
 If you want all member clusters to use the same node image, then all member clusters must be in the same [update run][update-run] with the `consistent image` option selected. 
 
 There's no consistency guarantee for node image versions across separate update runs.
+
+### How many Update Groups can I add to an Update Stage?
+
+An Update Stage supports adding up to 50 Update Groups.
 
 ### My update run is in a pending state for quite some time. What should I do?
 
