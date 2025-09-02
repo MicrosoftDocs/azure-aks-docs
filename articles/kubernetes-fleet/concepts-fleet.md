@@ -38,7 +38,15 @@ You can join Azure Kubernetes Service (AKS) clusters to a fleet as member cluste
 
 ### Labels
 
-Member clusters can have labels associated with their `MemberCluster` resource. Member labels enable selection of clusters for workload placement scheduling decisions. When you define a `ClusterResourcePlacement`, you can use label selectors to target specific member clusters based on their labels. This allows you to deploy workloads only to clusters that match certain criteria, such as region, environment, team, or other custom attributes.
+Member clusters can have service-defined and user-defined labels associated with them, which can be used to select clusters for workload placement scheduling decisions. When you define a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#introduce-clusterresourceplacement-api), you can use label selectors to target specific member clusters based on their labels. This allows you to deploy workloads only to clusters that match certain criteria, such as region, environment, team, or other custom attributes.
+
+By default, Fleet populates the following service-defined labels on each member cluster:
+
+* `fleet.azure.com/location`: the location of the cluster
+* `fleet.azure.com/resource-group`: the resource group containing the cluster
+* `fleet.azure.com/subscription-id`: the ID of the subscription containing the cluster
+* `fleet.azure.com/cluster-name`: the name of the cluster
+* `fleet.azure.com/member-name`: the name of the Fleet member corresponding to the cluster
 
 Member labels should be modified using the Azure CLI or REST API. They may not be modified directly on the `MemberCluster` resource in the hub cluster.
 
