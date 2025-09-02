@@ -591,6 +591,29 @@ spec:
               number: 80
 ```
 
+## NGINX health probe path change starting in AKS 1.22
+
+Starting with AKS version 1.22, the default health probe path for the Azure Load Balancer associated with the NGINX ingress controller changed from "/" to "/healthz". If you upgrade a cluster from AKS 1.21 or earlier without adjusting this setting, ingress traffic may fail due to the Load Balancer not detecting the controller as healthy.
+
+To maintain availability and prevent probe failures, explicitly set the probe path by adding the following annotation to the ingress controller's Service resource:
+
+```yml
+metadata:
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: "/healthz"
+```
+
+If you're using Helm to manage your NGINX ingress controller, you can define the Azure Load Balancer health-probe annotation in a values file and apply it during an upgrade:
+
+```yml
+controller:
+  service:
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: "/healthz"
+```
+
+This configuration helps maintain service availability and avoids unexpected traffic disruption during upgrade.
+
 ## Next steps
 
 Learn about monitoring the ingress-nginx controller metrics included with the application routing add-on with [with Prometheus in Grafana][prometheus-in-grafana] as part of analyzing the performance and usage of your application.
