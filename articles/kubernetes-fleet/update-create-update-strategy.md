@@ -138,8 +138,12 @@ An update strategy consists of one or more stages, where a stage can contain one
     :::image type="content" source="./media/create-update-strategy/create-stage-basics-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage." lightbox="./media/create-update-strategy/create-stage-basics.png":::
 
 1. Assign one or more **Update Group** to the stage, and then select **Create**.
-
+> [!NOTE]
+> The maximum number of Groups in each Stage is **50**.
     :::image type="content" source="./media/create-update-strategy/create-stage-choose-groups-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage, selecting update groups to include." lightbox="./media/create-update-strategy/create-stage-choose-groups.png":::
+
+    
+
 
 ### [Azure CLI](#tab/cli)
 

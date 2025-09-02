@@ -26,6 +26,9 @@ The following image visualizes an upgrade run containing two update stages, each
 * **Update group**: Each update stage contains one or more update groups, which are used to select the member clusters to be updated. Update groups are also used to order the application of updates to member clusters. Within an update stage, updates are applied to all the different update groups in parallel; within an update group, member clusters update sequentially. Each member cluster of the fleet can only be a part of one update group.
 * **Update strategy**: An update strategy describes the update sequence with stages and groups and allows you to reuse an update run configuration instead of defining the sequence repeatedly in each run. An update strategy doesn't include desired Kubernetes or node image versions.
 
+> [!NOTE]
+> The maximum number of Groups in each Stage is **50**.
+
 Currently, the supported update operations on member cluster are upgrades. There are three types of upgrades you can choose from:
 
 - Upgrade Kubernetes versions for the Kubernetes control plane and the nodes (which includes upgrading the node images).

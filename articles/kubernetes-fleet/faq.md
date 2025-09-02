@@ -25,6 +25,12 @@ Fleet Manager (with or without a hub cluster) supports joining up to 100 AKS clu
 
 If you would like Fleet Manager to support more than 100 clusters, [add feedback](https://github.com/Azure/AKS/issues/5066).
 
+### How many groups can I join to a Fleet stage?
+
+A fleet stage (with or without a hub cluster) supports joining up to 50 groups.
+
+If you would like a fleet stage to support more than 50 groups, [add feedback](https://github.com/Azure/AKS/issues/5066).
+
 ### What AKS clusters can be joined as members?
 
 Fleet Manager allows appropriately authorized users to add any AKS cluster in any Azure subscription and region as long as the Azure subscription is associated with the same Microsoft Entra ID tenant as the Fleet Manager. 
