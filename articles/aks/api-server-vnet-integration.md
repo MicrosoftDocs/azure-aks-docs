@@ -27,7 +27,7 @@ API Server VNet Integration is supported for public or private clusters. You can
 ## Limited availability
 
 > [!IMPORTANT]
-> **API Server VNet Integration has limited availability and capacity in certain regions.**  
+> **API Server VNet Integration is supported in all regions but may have limited capacity in certain regions.**  
 > When creating or updating a cluster with API Server VNet Integration enabled, you may receive the following error:
 >
 > **`API Server VNet Integration is currently unavailable in region (_region_) due to high demand and limited capacity. AKS is actively expanding support for this feature. Check for other available regions at aka.ms/AksVnetIntegration.`**
@@ -36,11 +36,7 @@ API Server VNet Integration is supported for public or private clusters. You can
 >
 > **To proceed**, you can:
 > - Retry your request at a later time, as capacity may become available.
-> - Select an alternate region where this feature is currently supported.
-
-API Server VNet Integration is available in the following regions: 
-
-australiacentral, australiacentral2, australiaeast, australiasoutheast, austriaeast, brazilsouth, brazilsoutheast, canadacentral, canadaeast, centralindia, centralus, centraluseuap, chilecentral, eastasia, eastus2euap, francecentral, francesouth, germanynorth, germanywestcentral, indonesiacentral, israelcentral, israelnorthwest, italynorth, japaneast, japanwest, jioindiacentral, jioindiawest, koreacentral, koreasouth, malaysiawest, mexicocentral, newzealandnorth, northcentralus, northeurope, norwayeast, norwaywest, polandcentral, southafricanorth, southafricawest, southcentralus, southcentralus2, southeastasia, southeastus, southeastus3, southeastus5, southindia, southwestus, spaincentral, swedencentral, swedensouth, switzerlandnorth, switzerlandwest, taiwannorth, taiwannorthwest, uaecentral, uaenorth, uksouth, ukwest, usgovtexas, westcentralus, westeurope, westus, westus2, westus3
+> - OR select an alternate region.
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 
