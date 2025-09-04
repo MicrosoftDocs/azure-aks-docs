@@ -161,73 +161,73 @@ arg("").containerserviceeventresources
 
    The following query is for cluster autoupgrade notifications:
 
-   ```console
-    arg("").containerserviceeventresources
-    | where type == "microsoft.containerservice/managedclusters/scheduledevents"
-    | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
-    | where properties has "eventStatus"
-    | extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
-    | extend status = substring(status, 0, indexof(status, ",") - 1)
-    | where status != ""
-    | where properties has "eventDetails"
-    | extend upgradeType = case(
-                               properties has "K8sVersionUpgrade",
-                               "K8sVersionUpgrade",
-                               properties has "NodeOSUpgrade",
-                               "NodeOSUpgrade",
-                               ""
-                           )
-    | extend details = parse_json(tostring(properties.eventDetails))
-    | where properties has "lastUpdateTime"
-    | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
-    | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
-    | extend eventTime = todatetime(tostring(eventTime))
-    | where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
-    | where upgradeType == "K8sVersionUpgrade"
-    | project
-        eventTime,
-        upgradeType,
-        status,
-        properties,
-        name,
-        details
-    | order by eventTime asc
-   ```
+```console
+arg("").containerserviceeventresources
+| where type == "microsoft.containerservice/managedclusters/scheduledevents"
+| where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
+| where properties has "eventStatus"
+| extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+| extend status = substring(status, 0, indexof(status, ",") - 1)
+| where status != ""
+| where properties has "eventDetails"
+| extend upgradeType = case(
+                           properties has "K8sVersionUpgrade",
+                           "K8sVersionUpgrade",
+                           properties has "NodeOSUpgrade",
+                           "NodeOSUpgrade",
+                           ""
+                       )
+| extend details = parse_json(tostring(properties.eventDetails))
+| where properties has "lastUpdateTime"
+| extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+| extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+| extend eventTime = todatetime(tostring(eventTime))
+| where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
+| where upgradeType == "K8sVersionUpgrade"
+| project
+    eventTime,
+    upgradeType,
+    status,
+    properties,
+    name,
+    details
+| order by eventTime asc
+```
 
-   The following query is for Node OS autoupgrade notifications:
+The following query is for Node OS autoupgrade notifications:
 
-   ```console
-    arg("").containerserviceeventresources
-    | where type == "microsoft.containerservice/managedclusters/scheduledevents"
-    | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
-    | where properties has "eventStatus"
-    | extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
-    | extend status = substring(status, 0, indexof(status, ",") - 1)
-    | where status != ""
-    | where properties has "eventDetails"
-    | extend upgradeType = case(
-                               properties has "K8sVersionUpgrade",
-                               "K8sVersionUpgrade",
-                               properties has "NodeOSUpgrade",
-                               "NodeOSUpgrade",
-                               ""
-                           )
-    | extend details = parse_json(tostring(properties.eventDetails))
-    | where properties has "lastUpdateTime"
-    | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
-    | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
-    | extend eventTime = todatetime(tostring(eventTime))
-    | where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
-    | where upgradeType == "NodeOSUpgrade"
-    | project
-        eventTime,
-        upgradeType,
-        status,
-        properties,
-        name,
-        details
-    | order by eventTime asc
-   ```
+```console
+arg("").containerserviceeventresources
+| where type == "microsoft.containerservice/managedclusters/scheduledevents"
+| where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
+| where properties has "eventStatus"
+| extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+| extend status = substring(status, 0, indexof(status, ",") - 1)
+| where status != ""
+| where properties has "eventDetails"
+| extend upgradeType = case(
+                           properties has "K8sVersionUpgrade",
+                           "K8sVersionUpgrade",
+                           properties has "NodeOSUpgrade",
+                           "NodeOSUpgrade",
+                           ""
+                       )
+| extend details = parse_json(tostring(properties.eventDetails))
+| where properties has "lastUpdateTime"
+| extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+| extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+| extend eventTime = todatetime(tostring(eventTime))
+| where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
+| where upgradeType == "NodeOSUpgrade"
+| project
+    eventTime,
+    upgradeType,
+    status,
+    properties,
+    name,
+    details
+| order by eventTime asc
+```
 
 1. The interval should be 30 minutes, and the threshold should be 1.
 
