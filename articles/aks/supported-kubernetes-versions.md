@@ -53,7 +53,7 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 | 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1st, 2025 | Until 1.35 GA |
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Until 1.36 GA |
 | 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Until 1.37 GA |
-| 1.34 |  Aug 2025 | Aug 2025 | Sep 2025 | Sep 2026 | Until 1.38 GA |
+| 1.34 |  Aug 2025 | Sep 2025 | Oct 2025 | Oct 2026 | Until 1.38 GA |
 
 ### LTS Versions
 
