@@ -13,18 +13,17 @@ author: wdarko1
 This article details how Azure Kubernetes Service (AKS) is phasing out support for Virtual Machine Availability Sets (VMAS) in favor of Virtual Machines (VMs).
 
 > [!NOTE]
-> We recommend using [Virtual Machine Node Pools (Preview)](virtual-machines-node-pools.md) for AKS-optimized VMs.
+> We recommend using [Virtual Machine Node Pools](virtual-machines-node-pools.md) for AKS-optimized VMs.
 >
 > Virtual Machine Node Pools:
 >
 > - Allow VM instances to be centrally managed, configured, and updated.
 > - Allow an increase or decrease of the number of virtual machine instances in response to demand or a defined schedule.
 > - Allow single node-level controls and same-family mixing of different sized nodes, increasing flexibility and improving consistency.
->
 
 ## Availability Sets overview
 
-Availability sets are logical groupings of virtual machines(VM) that reduce the chance of correlated failures bringing down related VMs at the same time. Availability sets place VMs in different fault domains for better reliability.
+Availability sets are logical groupings of virtual machines (VM) that reduce the chance of correlated failures bringing down related VMs at the same time. Availability sets place VMs in different fault domains for better reliability.
 
 ### Phase out of Availability Sets
 
@@ -39,7 +38,7 @@ Availability Sets support will be **fully deprecated by September 30, 2025**. We
 There is now a way to use a script to migrate your AKS cluster from using Availability Sets to Virtual Machines node pools. This script also automatically upgrades the Basic-tier load balancers in your cluster to Standard-tier.
 
 >[!IMPORTANT]
->This process also migrates your Basic IP to a Standard IP, while keeping the inbound IP addresses associated with the load balancer the same. During this process, a new public IPs is created and associated to the Standard Load Balancer outbound rules to serve cluster egress traffic.
+>This process also migrates your Basic IP to a Standard IP, while keeping the inbound IP addresses associated with the load balancer the same. During this process, a new public IP is created and associated to the Standard Load Balancer outbound rules to serve cluster egress traffic.
 
 ### Before You Begin
 
@@ -52,11 +51,10 @@ There is now a way to use a script to migrate your AKS cluster from using Availa
 **Preparing for Migration**
 - Create a migration plan for planned downtime.
 - Once the migration is started, roll back is not allowed.
-- While in preview, we recommend you start using this migration CLI command on your test environments. Should any issues arise, [file a support ticket][file-support-ticket].
 
 ### Run Migration Script for Availability Set Migration
 
-1. The following command initiates a script to migrate a cluster from using Availability Sets to Virtual Machines node pools using the `az aks update` command, and setting `--migrate-vmas-to-vms`. This script will also upgrade the Basic load Balancer and Basic IP to Standard Load Balancer and Standard IP, if applicable.
+1. The following command initiates a script to migrate a cluster from using Availability Sets to Virtual Machines node pools using the `az aks update` command, and setting `--migrate-vmas-to-vms`. This script will also upgrade the Basic Load Balancer and Basic IP to Standard Load Balancer and Standard IP, if applicable.
 
 ```azurecli-interactive
 az aks update \
