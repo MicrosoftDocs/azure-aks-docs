@@ -29,7 +29,7 @@ Availability sets are logical groupings of virtual machines (VM) that reduce the
 
 As of 2019, we're no longer adding other features to Availability Sets in AKS. Any features introduced since 2019, such as AKS Backup, aren't supported in Availability Sets.
 
-### Availability Sets Retirement Date
+### Availability Sets retirement date
 
 Availability Sets support will be **fully deprecated by September 30, 2025**. We recommend that you migrate all workloads currently on VMAS to Virtual Machine Node Pools. After September 30th, the feature will no longer be supported. A cluster with Availability Sets after this date is considered out of support.
 
@@ -43,7 +43,7 @@ There is now a way to use a script to migrate your AKS cluster from using Availa
 ### Before You Begin
 
 **Requirements**
-- The minimum Kubernetes version for this script is 1.27. If you need to upgrade your AKS cluster, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster).
+- The minimum Kubernetes version for this script is 1.27. If you need to upgrade your AKS cluster, see [upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster).
 - You need the version 2.76.0 [Azure CLI installed](/cli/azure/install-azure-cli).
 - If the cluster is running Key Management Service with private key vault, Key Management Service must be [disabled][turn-off-kms] for the duration of the migration.
 - If the cluster is using any ValidatingAdmissionWebhooks or MutatingAdmissionWebhooks, these web hooks must be disabled before the migration.
