@@ -137,9 +137,9 @@ arg("").containerserviceeventresources
 
 8.  Make sure to assign the appropriate Reader roles.
 
-        After you create the alert rule, assign a managed identity. In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
+    After you create the alert rule, assign a managed identity. In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
 
-        Choose the **Reader** role and assign it to the resource group. Repeat "Add role assignment" for the subscription if needed.
+    Choose the **Reader** role and assign it to the resource group. Repeat "Add role assignment" for the subscription if needed.
 
     > [!TIP]
     > If you don't see the Identity option, make sure your alert rule has been created and you have the necessary permissions. Assigning the managed identity is always a separate step after alert rule creation.
