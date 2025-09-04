@@ -15,11 +15,41 @@ Cluster extensions provide an Azure Resource Manager driven experience for insta
 * Azure Resource Manager-based deployment of extensions, including at-scale deployments across AKS clusters.
 * Lifecycle management of the extension (Update, Delete) from Azure Resource Manager
 
+### Categories of cluster extensions
+
+There are two categories of cluster extensions - **Core and Standard** that can be deployed onto AKS clusters.
+
+#### Core Extensions:
+
+Core Kubernetes extensions have broader region availability, a more integrated AKS experience and release alignment to AKS version releases. Azure Backup is a core extension.
+
+**AKS Native experience:**
+
+Core extensions can be managed using 'az aks' CLI command. 
+
+```
+az aks extension create --name <core extension name> --extension-type <type> --cluster-name <name> --resource-group <group>  
+
+```
+
+**Release policy:** 
+
+Minor and major upgrades of core extensions occur alongside AKS minor and major version updates to avoid introducing breaking changes and provide better reliability.
+
+#### Standard Extensions:
+
+The rest of the cluster extensions listed [here](/azure/aks/cluster-extensions.md) and the [Kubernetes apps](deploy-marketplace.md) deployed via Azure Marketplace are of the Standard Extension type
+
+Standard extensions can be manager using the 'az k8s-extension' CLI command. Details are in this [article](/azure/aks/deploy-extensions-az-cli).
+
+
+```
+az k8s-extension create --name <standard extension name> --extension-type <extension-type> --scope cluster --cluster-name <clusterName> --resource-group <resourceGroupName> --cluster-type managedClusters 
+```
+
 ## Cluster extension requirements
 
-Cluster extensions can be used on AKS clusters in the regions listed in [Azure Arc enabled Kubernetes region support][arc-k8s-regions].
-
-For supported Kubernetes versions, refer to the corresponding documentation for each extension.
+The Cluster extensions platform is supported in all regions where AKS is deployed (Excluding Qatar Central and US airgapped clouds). Although the platform is available in all regions, please check the region availability for individual extensions
 
 > [!IMPORTANT]
 > Ensure that your AKS cluster is created with a managed identity, as cluster extensions won't work with service principal-based clusters.
@@ -32,7 +62,6 @@ For supported Kubernetes versions, refer to the corresponding documentation for 
 > recommendations and options to set up your cluster to use a Microsoft Entra Workload ID (preview).
 > This authentication method replaces pod-managed identity (preview), which integrates with the Kubernetes native capabilities
 > to federate with any external identity providers.
->
 > The open source Microsoft Entra pod-managed identity (preview) in Azure Kubernetes Service has been deprecated as of 10/24/2022.
 
 ## Currently available extensions
@@ -54,7 +83,7 @@ You can also [select and deploy Kubernetes applications available through Market
 ## Next steps
 
 * Learn how to [deploy cluster extensions by using Azure CLI](deploy-extensions-az-cli.md).
-* Read about [cluster extensions for Azure Arc-enabled Kubernetes clusters][arc-k8s-extensions].
+* Read about [cluster extensions][arc-k8s-extensions]
 
 <!-- LINKS -->
 <!-- INTERNAL -->
