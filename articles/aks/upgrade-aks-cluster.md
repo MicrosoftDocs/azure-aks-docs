@@ -101,6 +101,11 @@ The Azure portal highlights all the deprecated APIs between your current version
 
 ---
 
+## FAQ
+### I upgraded only the control plane. Why were my nodes upgraded too?
+AKS may trigger a rolling node (agent pool) upgrade alongside or after a control plane upgrade to keep the cluster compliant and healthy. This occurs when:
+typically when a previous node upgrade failed or left nodes on mixed versions.
+
 ## Troubleshoot AKS cluster upgrade error messages
 
 ### [Azure CLI](#tab/azure-cli)
