@@ -37,6 +37,9 @@ You can apply any of the built-in policies on both **ingress** and **egress** ru
 | Ingress | Allow same namespace |
 | Egress | Allow all |
 
+> [!NOTE]
+> Network policies an admin defines when creating a Managed Namespace are not immutable. Individuals with at least edit permissions/the `Azure Kubernetes Service RBAC Writer` role in the namespace can alter the policies to loosen or further restrict network policies.
+
 ## Resource quotas
 
 [Resource Quotas][aks-resource-quotas] are Kubernetes resources that are used to manage and limit the resource consumption of namespaces within a cluster. They allow administrators to define constraints on the amount of CPU, memory, storage, or other resources that will be used by workloads in a namespace. By applying resource quotas, you can ensure fair resource distribution, prevent resource overuse, and maintain cluster stability.
