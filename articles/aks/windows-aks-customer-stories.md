@@ -52,8 +52,6 @@ Duck Creek Technologies modernized its insurance software solutions by adopting 
 
 By containerizing their applications to Windows Containers, Duck Creek could maintain the flexibility and robustness of their products without extensive code rewriting, thereby ensuring high availability and scalability, especially critical during peak demand periods like natural disasters. This move represents Duck Creek's commitment to leveraging cutting-edge technology for Insurtech innovation. 
 
-For more information visit [Duck Creek’s Windows AKS customer story](https://customers.microsoft.com/story/1547298699206424647-duck-creek-insurance-core-systems-provide-evergreen-saas-solutions-using-windows-containers-aks). 
-
 ### Forza 
 
 ![Logo of Forza.](./media/windows-aks-customer-stories/forza.png)
@@ -61,8 +59,6 @@ For more information visit [Duck Creek’s Windows AKS customer story](https://c
 Forza Horizon 5, developed by Turn 10 Studios, achieved remarkable performance and scalability by transitioning to Azure Kubernetes Service (AKS) with Windows-based containers. This shift allowed the team to adapt swiftly to demand spikes, handling over 10 million concurrent players at launch, the biggest first week in Xbox Game Studios history.  
 
 By utilizing Windows AKS, they were able to significantly reduce infrastructure management tasks, enhancing both the development process and the gaming experience. The move to containerized architecture enabled rapid scaling from 600,000 to 3 million concurrent users and reduced infrastructure costs, demonstrating the effectiveness of AKS in high-demand, low-latency environments like gaming. 
-
- For more information visit [Forza’s Windows AKS customer story](https://customers.microsoft.com/story/1498781140435260527-forza-horizon-5-crosses-finish-line-fueled-by-azure-kubernetes-service). 
 
 ### Microsoft Experience + Devices 
 
