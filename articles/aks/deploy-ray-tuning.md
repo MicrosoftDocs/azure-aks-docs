@@ -83,4 +83,4 @@ To learn more about AI and machine learning workloads on AKS, see the following 
 
 * [Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)](./open-ai-quickstart.md)
 * [Build and deploy data and machine learning pipelines with Flyte on Azure Kubernetes Service (AKS)](./use-flyte.md)
-* [Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator](./ai-toolchain-operator.md)
+* [Tune an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator](./ai-toolchain-operator-fine-tune.md)
