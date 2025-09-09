@@ -52,8 +52,6 @@ Duck Creek Technologies modernized its insurance software solutions by adopting 
 
 By containerizing their applications to Windows Containers, Duck Creek could maintain the flexibility and robustness of their products without extensive code rewriting, thereby ensuring high availability and scalability, especially critical during peak demand periods like natural disasters. This move represents Duck Creek's commitment to leveraging cutting-edge technology for Insurtech innovation. 
 
-For more information visit [Duck Creek’s Windows AKS customer story](https://customers.microsoft.com/story/1547298699206424647-duck-creek-insurance-core-systems-provide-evergreen-saas-solutions-using-windows-containers-aks). 
-
 ### Forza 
 
 ![Logo of Forza.](./media/windows-aks-customer-stories/forza.png)
@@ -62,7 +60,7 @@ Forza Horizon 5, developed by Turn 10 Studios, achieved remarkable performance a
 
 By utilizing Windows AKS, they were able to significantly reduce infrastructure management tasks, enhancing both the development process and the gaming experience. The move to containerized architecture enabled rapid scaling from 600,000 to 3 million concurrent users and reduced infrastructure costs, demonstrating the effectiveness of AKS in high-demand, low-latency environments like gaming. 
 
- For more information visit [Forza’s Windows AKS customer story](https://customers.microsoft.com/story/1498781140435260527-forza-horizon-5-crosses-finish-line-fueled-by-azure-kubernetes-service). 
+For more information visit [Forza Horizon 5 runs on Windows containers on Azure Kubernetes Services](https://techcommunity.microsoft.com/blog/itopstalkblog/forza-horizon-5-runs-on-windows-containers-on-azure-kubernetes-services/3570404).
 
 ### Microsoft Experience + Devices 
 
@@ -72,4 +70,4 @@ Microsoft's E+D group, responsible for supporting products such as Teams and Off
 
 The transition enabled Microsoft 365 developers to focus more on innovation and iterating quickly, leveraging the benefits of AKS like security-optimized hosting, automated compliance checks, and centralized capacity management, thereby accelerating development while optimizing resource utilization and costs. 
 
-For more information visit [Microsoft’s E+D Windows AKS customer story](https://customers.microsoft.com/story/1536483517282553662-modernizing-microsoft-365-windows-containers-azure-kubernetes-service).
+
