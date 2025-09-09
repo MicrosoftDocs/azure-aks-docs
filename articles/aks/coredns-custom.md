@@ -287,6 +287,13 @@ metadata:
   resourceVersion: "..."
   creationTimestamp: "..."
 ```
+
+> [!NOTE] The configuration provided serves as a starting point, but you should customize the values based on your specific cluster requirements and workload patterns. To determine the appropriate number of replicas for your environment, you can use the linear scaling formula: `replicas = max( ceil( cores * 1/coresPerReplica ) , ceil( nodes * 1/nodesPerReplica ) )`
+> 
+> For example, if your cluster has 512 CPU cores and 32 nodes:
+> 1. With `coresPerReplica = 128` and `nodesPerReplica = 8`: `max( ceil(512/128), ceil(32/8) ) = max(4, 4) = 4 replicas`
+> 1. With `coresPerReplica = 200` and `nodesPerReplica = 10`: `max( ceil(512/200), ceil(32/10) ) = max(3, 4) = 4 replicas`
+
 ## CoreDNS vertical pod autoscaling behavior
 
 CoreDNS is an essential add-on managed by AKS and enabled by default. In order to maintain the CoreDNS service availability, CoreDNS maintains use of the original provided resource requests/limits when enabling the [add-on autoscaling feature](./optimized-addon-scaling.md) to prevent the CoreDNS pod restart process causing service unavailability.
