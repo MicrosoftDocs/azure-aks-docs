@@ -600,6 +600,11 @@
             "redirect_url": "/azure/aks/aks-virtual-machine-sizes",
             "redirect_document_id": false
         },
+                {
+            "source_path_from_root": "/articles/aks/azure-cni-overview.md",
+            "redirect_url": "/azure/aks/concepts-network-cni-overview",
+            "redirect_document_id": false
+        },
         {
             "source_path_from_root": "/articles/aks/container-network-security-concepts.md",
             "redirect_url": "/azure/aks/advanced-container-networking-services-overview?tabs=cilium#container-network-security",
