@@ -60,6 +60,8 @@ Forza Horizon 5, developed by Turn 10 Studios, achieved remarkable performance a
 
 By utilizing Windows AKS, they were able to significantly reduce infrastructure management tasks, enhancing both the development process and the gaming experience. The move to containerized architecture enabled rapid scaling from 600,000 to 3 million concurrent users and reduced infrastructure costs, demonstrating the effectiveness of AKS in high-demand, low-latency environments like gaming. 
 
+For more information visit [Forza’s Windows AKS customer story](https://techcommunity.microsoft.com/blog/itopstalkblog/forza-horizon-5-runs-on-windows-containers-on-azure-kubernetes-services/3570404).
+
 ### Microsoft Experience + Devices 
 
 ![Logo of Microsoft.](./media/windows-aks-customer-stories/microsoft.png)
@@ -68,4 +70,4 @@ Microsoft's E+D group, responsible for supporting products such as Teams and Off
 
 The transition enabled Microsoft 365 developers to focus more on innovation and iterating quickly, leveraging the benefits of AKS like security-optimized hosting, automated compliance checks, and centralized capacity management, thereby accelerating development while optimizing resource utilization and costs. 
 
-For more information visit [Microsoft’s E+D Windows AKS customer story](https://customers.microsoft.com/story/1536483517282553662-modernizing-microsoft-365-windows-containers-azure-kubernetes-service).
+
