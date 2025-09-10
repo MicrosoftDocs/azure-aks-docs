@@ -383,19 +383,19 @@ Create a Node OS maintenance schedule example (JSON + Azure CLI)
 2. Add the maintenance configuration to your cluster:
 
 ```azurecli-interactive
-az aks maintenanceconfiguration add --resource-group myResourceGroup --cluster-name myAKSCluster --name aksManagedNodeOSUpgradeSchedule --config-file ./nodeosMaintenance.json
+az aks maintenanceconfiguration add --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME} --name aksManagedNodeOSUpgradeSchedule --config-file ./nodeosMaintenance.json
 ```
 
 Update, view, list, and delete:
 
 ```azurecli-interactive
-az aks maintenanceconfiguration update --resource-group myResourceGroup --cluster-name myAKSCluster --name aksManagedNodeOSUpgradeSchedule --config-file ./nodeosMaintenance.json
+az aks maintenanceconfiguration update --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME} --name aksManagedNodeOSUpgradeSchedule --config-file ./nodeosMaintenance.json
 
-az aks maintenanceconfiguration show --resource-group myResourceGroup --cluster-name myAKSCluster --name aksManagedNodeOSUpgradeSchedule
+az aks maintenanceconfiguration show --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME} --name aksManagedNodeOSUpgradeSchedule
 
-az aks maintenanceconfiguration list --resource-group myResourceGroup --cluster-name myAKSCluster
+az aks maintenanceconfiguration list --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME}
 
-az aks maintenanceconfiguration delete --resource-group myResourceGroup --cluster-name myAKSCluster --name aksManagedNodeOSUpgradeSchedule
+az aks maintenanceconfiguration delete --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME} --name aksManagedNodeOSUpgradeSchedule
 ```
 
 Operational considerations
