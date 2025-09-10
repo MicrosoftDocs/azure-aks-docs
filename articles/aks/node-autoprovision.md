@@ -353,6 +353,8 @@ Key points:
 - Use a maintenance window of four hours or more for reliable operation.
 - If no maintenance configuration exists, AKS may use a fallback schedule to pick up new images, which can cause images to be picked up at unexpected times. Define an explicit `aksManagedNodeOSUpgradeSchedule` to avoid unexpected timing of new images, and upgrades.
 
+>[!NOTE] NAP will force the latest image version to be picked up, if the existing node image version is ever older than 90 days. This will bypass any existing maintenance window.
+
 Recommended schedule patterns for NAP-managed nodes:
 
 - Weekly cadence: recommended for routine node image rollouts (for example, "Every week on Sunday").
