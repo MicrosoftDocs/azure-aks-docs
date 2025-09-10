@@ -23,6 +23,9 @@ The AKS to ACR integration assigns the [**AcrPull** role][acr-pull] to the [Micr
 > [!NOTE]
 > This article covers automatic authentication between AKS and ACR. If you need to pull an image from a private external registry, use an [image pull secret][image-pull-secret].
 
+> [!NOTE]
+> The AKS-ACR integration through `az aks --attach-acr` is not supported for registries where the role assignment permissions mode is set to "RBAC Registry + ABAC Repository Permissions". This limitation will be addressed in the future. Please visit https://aka.ms/acr/auth/abac for more information on ABAC-enabled ACR registries.
+
 ## Before you begin
 
 * You need the [**Owner**][rbac-owner], [**Azure account administrator**][rbac-classic], or [**Azure co-administrator**][rbac-classic] role on your Azure subscription.

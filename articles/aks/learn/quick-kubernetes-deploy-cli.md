@@ -2,7 +2,7 @@
 title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Azure CLI'
 description: Learn how to deploy an Azure Kubernetes Service cluster (AKS) and deploy an application using Azure CLI.
 ms.topic: quickstart
-ms.date: 07/25/2025
+ms.date: 08/19/2025
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.custom: H1Hack27Feb2017, mvc, devcenter, devx-track-azurecli, mode-api, innovation-engine, linux-related-content, quarterly
@@ -32,6 +32,23 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
 - Make sure that the identity you're using to create your cluster has the appropriate minimum permissions. For more information on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
 - If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [az account set](/cli/azure/account#az-account-set) command. For more information, see [How to manage Azure subscriptions – Azure CLI](/cli/azure/manage-azure-subscriptions-azure-cli?tabs=bash#change-the-active-subscription).
+- Dependent upon your Azure subscription, you might need to request a vCPU quota increase. For more information, see [Increase VM-family vCPU quotas](/azure/quotas/per-vm-quota-requests).
+
+## Register resource providers
+
+You might need to register resource providers in your Azure subscription. For example, `Microsoft.ContainerService` is required. 
+
+Run the following command to check the registration status. 
+
+```azurecli-interactive
+az provider show --namespace Microsoft.ContainerService --query registrationState
+```
+
+If necessary, register the resource provider.
+
+```azurecli-interactive
+az provider register --namespace Microsoft.ContainerService
+```
 
 ## Define environment variables
 

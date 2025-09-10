@@ -50,10 +50,10 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 |--------------|-------------------|--------------|---------|-------------|-----------------------|
 | 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Until 1.33 GA |
 | 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22nd, 2025 | Until 1.34 GA |
-| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 21st, 2025 | Until 1.35 GA |
+| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1st, 2025 | Until 1.35 GA |
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Until 1.36 GA |
 | 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Until 1.37 GA |
-| 1.34 |  Aug 2025 | Aug 2025 | Sep 2025 | Sep 2026 | Until 1.38 GA |
+| 1.34 |  Aug 2025 | Sep 2025 | Oct 2025 | Oct 2026 | Until 1.38 GA |
 
 ### LTS Versions
 
@@ -71,7 +71,7 @@ Long-term support (LTS) needs to be enabled in order to get extended support. Yo
 | 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 21st, 2025 | Nov 2026|
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Mar 2027|
 | 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Jun 2027|
-| 1.34 | Aug 2025 | Aug 2025 | Sep 2025 | Sep 2026 | Sep 2026 |
+| 1.34 | Aug 2025 | Aug 2025 | Sep 2025 | Sep 2026 | Sep 2027 |
 
 ### AKS Kubernetes release schedule Gantt chart
 

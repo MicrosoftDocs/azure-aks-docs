@@ -51,7 +51,7 @@ BlobFuse (Azure Blob Storage) is the preferred option for Ray clusters running d
 * The Azure CLI installed on your local machine. You can install it using the instructions in [How to install the Azure CLI](/cli/azure/install-azure-cli).
 * The [Azure Kubernetes Service Preview extension](/azure/aks/draft#install-the-aks-preview-azure-cli-extension) installed.
 * [Helm](https://helm.sh/docs/intro/install/) installed.
-* [Terraform client tools](https://developer.hashicorp.com/terraform/install) or [OpenTofu](https://opentofu.org/) installed. This article uses Terrafrom, but the modules used should be compatible with OpenTofu.
+* [Terraform client tools](https://developer.hashicorp.com/terraform/install) or [OpenTofu](https://opentofu.org/) installed. This article uses Terraform, but the modules used should be compatible with OpenTofu.
 
 ### Deploy the Ray sample automatically
 
@@ -83,4 +83,4 @@ To learn more about AI and machine learning workloads on AKS, see the following 
 
 * [Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)](./open-ai-quickstart.md)
 * [Build and deploy data and machine learning pipelines with Flyte on Azure Kubernetes Service (AKS)](./use-flyte.md)
-* [Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator (preview)](./ai-toolchain-operator.md)
+* [Tune an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator](./ai-toolchain-operator-fine-tune.md)

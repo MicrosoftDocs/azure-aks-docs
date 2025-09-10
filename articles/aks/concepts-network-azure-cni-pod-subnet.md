@@ -11,6 +11,9 @@ ms.custom: references_regions, innovation-engine
 
 # Azure Container Networking Interface (CNI) Pod Subnet
 
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2331630)
+
 Azure CNI Pod Subnet assigns IP addresses to pods from a separate subnet from your cluster Nodes. This feature is available in two modes: Dynamic IP Allocation and Static Block Allocation.
 
 ## Prerequisites

@@ -1,83 +1,52 @@
 ---
-title: 'Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster (preview)'
-description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic (preview).
+title: 'Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster'
+description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic.
 ms.topic: quickstart
 ms.custom: build-2024, devx-track-azurecli, devx-track-bicep, ignite-2024
-ms.date: 05/21/2024
+ms.date: 08/28/2025
 author: sabbour
 ms.author: asabbour
 zone_pivot_groups: bicep-azure-cli-portal
 # Customer intent: As a DevOps engineer, I want to create and manage an Azure Kubernetes Service (AKS) Automatic cluster, so that I can efficiently deploy and operate containerized applications with best practice configurations automatically.
 ---
 
-# Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster (preview)
+# Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster
 
-**Applies to:** :heavy_check_mark: AKS Automatic (preview)
+**Applies to:** :heavy_check_mark: AKS Automatic
 
-[Azure Kubernetes Service (AKS) Automatic (preview)][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. 
+[Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. 
 
 In this quickstart, you learn to:
 
 - Deploy an AKS Automatic cluster.
 - Run a sample multi-container application with a group of microservices and web front ends simulating a retail scenario.
 
-
 ## Before you begin
 
 This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
 
+:::zone target="docs" pivot="azure-cli"
+
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-- This article requires version 2.57.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
-- This article requires the `aks-preview` Azure CLI extension version **9.0.0b4** or later.
-- If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [az account set](/cli/azure/account#az-account-set) command.
-- Register the `AutomaticSKUPreview` feature in your Azure subscription.
-- The identity creating the cluster should also have the [following permissions on the resource group][Azure-Policy-RBAC-permissions]:
-    - `Microsoft.Authorization/policyAssignments/write`
-    - `Microsoft.Authorization/policyAssignments/read`
-- AKS Automatic clusters require deployment in Azure regions that support at least 3 [availability zones][availability-zones].
+- This article requires version 2.77.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
+- If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [`az account set`](/cli/azure/account#az-account-set) command.
+
+:::zone-end
+
 :::zone target="docs" pivot="bicep"
 - To deploy a Bicep file, you need to write access on the resources you create and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to create a virtual machine, you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](/azure/role-based-access-control/built-in-roles).
 :::zone-end
 
+## Limitations
+
+- AKS Automatic clusters require deployment in Azure regions that support at least three [availability zones](/azure/reliability/regions-list).
+- You can only create AKS Automatic clusters in regions where [API Server VNet Integration](../api-server-vnet-integration.md#limited-availability) is generally available (GA).
+- You can't add non-[node auto provisioning node pools](../node-autoprovision.md) to AKS Automatic clusters. There's no effect on existing Automatic clusters that have non-node auto provisioning pools.
+- AKS Automatic only supports the [Azure Linux OS](/azure/azure-linux/intro-azure-linux).
+
 > [!IMPORTANT]
-> AKS Automatic tries to dynamically select a virtual machine size for the `system` node pool based on the capacity available in the subscription. Make sure your subscription has quota for 16 vCPUs of any of the following sizes in the region you're deploying the cluster to: [Standard_D4pds_v5](/azure/virtual-machines/sizes/general-purpose/dpsv5-series), [Standard_D4lds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series), [Standard_D4ads_v5](/azure/virtual-machines/sizes/general-purpose/dadsv5-series), [Standard_D4ds_v5](/azure/virtual-machines/sizes/general-purpose/ddsv5-series), [Standard_D4d_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v4](/azure/virtual-machines/sizes/general-purpose/ddv4-series), [Standard_DS3_v2](/azure/virtual-machines/sizes/general-purpose/dsv3-series), [Standard_DS12_v2](/azure/virtual-machines/sizes/memory-optimized/dv2-dsv2-series-memory). You can [view quotas for specific VM-families and submit quota increase requests](/azure/quotas/per-vm-quota-requests) through the Azure portal.
-
-### Install the aks-preview Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-To install the aks-preview extension, run the following command:
-
-```azurecli
-az extension add --name aks-preview
-```
-
-Run the following command to update to the latest version of the extension released:
-
-```azurecli
-az extension update --name aks-preview
-```
-
-### Register the feature flags
-
-To use AKS Automatic in preview, register the following flag using the [az feature register][az-feature-register] command.
-
-```azurecli-interactive
-az feature register --namespace Microsoft.ContainerService --name AutomaticSKUPreview
-```
-
-Verify the registration status by using the [az feature show][az-feature-show] command. It takes a few minutes for the status to show *Registered*:
-
-```azurecli-interactive
-az feature show --namespace Microsoft.ContainerService --name AutomaticSKUPreview
-```
-
-When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [az provider register][az-provider-register] command:
-
-```azurecli-interactive
-az provider register --namespace Microsoft.ContainerService
-```
+> AKS Automatic tries to dynamically select a virtual machine size for the `system` node pool based on the capacity available in the subscription. Make sure your subscription has quota for 16 vCPUs of any of the following sizes in the region you're deploying the cluster to: [Standard_D4lds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series), [Standard_D4ads_v5](/azure/virtual-machines/sizes/general-purpose/dadsv5-series), [Standard_D4ds_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v4](/azure/virtual-machines/sizes/general-purpose/dv4-series), [Standard_DS3_v2](/azure/virtual-machines/sizes/general-purpose/dsv3-series), [Standard_DS12_v2](/azure/virtual-machines/sizes/memory-optimized/dv2-dsv2-series-memory), [Standard_D4alds_v6](/azure/virtual-machines/sizes/general-purpose/daldsv6-series), [Standard_D4lds_v6](/azure/virtual-machines/sizes/general-purpose/dldsv6-series), or [Standard_D4alds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series). You can [view quotas for specific VM-families and submit quota increase requests](/azure/quotas/per-vm-quota-requests) through the Azure portal.
 
 :::zone target="docs" pivot="azure-cli"
 
@@ -87,7 +56,7 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
 
 The following example creates a resource group named *myResourceGroup* in the *eastus* location.
 
-Create a resource group using the [az group create][az-group-create] command.
+Create a resource group using the [`az group create`][az-group-create] command.
 
 ```azurecli
 az group create --name myResourceGroup --location eastus
@@ -110,7 +79,7 @@ The following sample output resembles successful creation of the resource group:
 
 ## Create an AKS Automatic cluster
 
-To create an AKS Automatic cluster, use the [az aks create][az-aks-create] command. The following example creates a cluster named *myAKSAutomaticCluster* with Managed Prometheus and Container Insights integration enabled.
+To create an AKS Automatic cluster, use the [`az aks create`][az-aks-create] command. The following example creates a cluster named *myAKSAutomaticCluster* with Managed Prometheus and Container Insights integration enabled.
 
 ```azurecli
 az aks create \
@@ -123,18 +92,18 @@ After a few minutes, the command completes and returns JSON-formatted informatio
 
 ## Connect to the cluster
 
-To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
+To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [`az aks install-cli`][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
 
 > [!NOTE]
 > When you create a cluster using the Azure CLI, your user is [assigned built-in roles][aks-entra-rbac-builtin-roles] for `Azure Kubernetes Service RBAC Cluster Admin`.
 
-Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
 ```azurecli
 az aks get-credentials --resource-group myResourceGroup --name myAKSAutomaticCluster
 ```
 
-Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
+Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
 
 ```bash
 kubectl get nodes
@@ -159,27 +128,21 @@ aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
 
 :::zone target="docs" pivot="azure-portal"
 
-## Create Automatic Kubernetes Cluster
+## Create Automatic Kubernetes cluster
 
 1. To create an AKS Automatic cluster, search for **Kubernetes Services**, and select **Automatic Kubernetes cluster** from the drop-down options.
 
-    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/browse-dropdown-options.png" alt-text="The screenshot of the entry point for creating an AKS Automatic cluster in the Azure portal.":::
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/dropdown-options-automatic.png" alt-text="The screenshot of the entry point for creating an AKS Automatic cluster in the Azure portal.":::
 
-2. On the **Basics** tab, fill in all the mandatory fields required to get started: 
-Subscription, Resource Group, Cluster name, and Region
+1. On the **Basics** tab, fill in all the mandatory fields (Subscription, Resource group, Kubernetes cluster name, and Region) required to get started:
 
-    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/create-basics.png" alt-text="The screenshot of the Create - Basics Tab for an AKS Automatic cluster in the Azure portal.":::
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/create-basics-automatic.png" alt-text="The screenshot of the Create - Basics Tab for an AKS Automatic cluster in the Azure portal.":::
 
-    If the prerequisites aren't met and the subscription requires registration of the preview flags, there will be an error shown under the Subscription field: 
+1. On the **Monitoring** tab, choose your monitoring configurations from Azure Monitor, Managed Prometheus, Grafana Dashboards, and/or configure alerts. Enable Managed Grafana (optional), add tags (optional), and proceed to create the cluster.
 
-    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/register.png" alt-text="The screenshot of the error shown when a  subscription doesn't have preview flags registered while creating an AKS Automatic cluster in the Azure portal.":::
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/configure-monitoring-automatic.png" alt-text="The screenshot of the Monitoring Tab while creating an AKS Automatic cluster in the Azure portal.":::
 
-
-3. On the **Monitoring** tab, choose your monitoring configurations from Azure Monitor, Managed Prometheus, Managed Grafana, and/or configure alerts. Add tags (optional), and proceed to create the cluster. 
-
-    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/create-monitoring.png" alt-text="The screenshot of the Monitoring Tab while creating an AKS Automatic cluster in the Azure portal.":::
-
-3. Get started with configuring your first application from GitHub and set up an automated deployment pipeline. 
+1. Get started with configuring your first application from GitHub and set up an automated deployment pipeline. 
 
     :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/automatic-overview.png" alt-text="The screenshot of the Get Started Tab on Overview Blade after creating an AKS Automatic cluster in the Azure portal.":::
 
@@ -188,13 +151,13 @@ Subscription, Resource Group, Cluster name, and Region
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac]. When you create a cluster using the Azure portal, your user is [assigned built-in roles][aks-entra-rbac-builtin-roles] for `Azure Kubernetes Service RBAC Cluster Admin`. 
 
-Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
 ```azurecli
 az aks get-credentials --resource-group myResourceGroup --name myAKSAutomaticCluster
 ```
 
-Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
+Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
 
 ```bash
 kubectl get nodes
@@ -224,7 +187,7 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
 
 The following example creates a resource group named *myResourceGroup* in the *eastus* location.
 
-Create a resource group using the [az group create][az-group-create] command.
+Create a resource group using the [`az group create`][az-group-create] command.
 
 ```azurecli
 az group create --name myResourceGroup --location eastus
@@ -301,13 +264,13 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
 > [!IMPORTANT]
 > When you create a cluster using Bicep, you need to [assign one of the built-in roles][aks-entra-rbac-builtin-roles] such as `Azure Kubernetes Service RBAC Reader`, `Azure Kubernetes Service RBAC Writer`, `Azure Kubernetes Service RBAC Admin`, or `Azure Kubernetes Service RBAC Cluster Admin` to your users, scoped to the cluster or a specific namespace, example using `az role assignment create --role "Azure Kubernetes Service RBAC Cluster Admin" --scope <AKS cluster resource id> --assignee user@contoso.com`. Also make sure your users have the `Azure Kubernetes Service Cluster User` built-in role to be able to do run `az aks get-credentials`, and then get the kubeconfig of your AKS cluster using the `az aks get-credentials` command.
 
-Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
 ```azurecli
-az aks get-credentials --resource-group myResourceGroup --name
+az aks get-credentials --resource-group myResourceGroup --name 
 ```
 
-Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
+Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
 
 ```bash
 kubectl get nodes
@@ -351,7 +314,7 @@ To deploy the application, you use a manifest file to create all the objects req
     kubectl create ns aks-store-demo
     ```
 
-1. Deploy the application using the [kubectl apply][kubectl-apply] command into the `aks-store-demo` namespace. The YAML file defining the deployment is on [GitHub](https://github.com/Azure-Samples/aks-store-demo).
+1. Deploy the application using the [`kubectl apply`][kubectl-apply] command into the `aks-store-demo` namespace. The YAML file defining the deployment is on [GitHub](https://github.com/Azure-Samples/aks-store-demo).
 
     ```bash
     kubectl apply -n aks-store-demo -f https://raw.githubusercontent.com/Azure-Samples/aks-store-demo/main/aks-store-ingress-quickstart.yaml
