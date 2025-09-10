@@ -372,7 +372,7 @@ Create a Node OS maintenance schedule example (JSON + Azure CLI)
           "dayOfWeek": "Sunday"
         }
       },
-      "startDate": "2025-09-14",
+      "startDate": "2025-01-01",
       "startTime": "01:00",
       "utcOffset": "+00:00"
     }
