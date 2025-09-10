@@ -100,7 +100,7 @@ You can elect to:
 * Allow Long Term Support (LTS) in the auto-upgrade profile and enable it for any clusters in your fleet you wish to retain on the specific minor. Ensure that only LTS clusters are included in the update strategy you use.
 * Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters will be updated to the most recent patch in that minor when it is released.
 
-For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-minor-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
+For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
 
 > [!NOTE]
 > To review detailed information if failures occur and to understand the specific actions to take, check the auto-upgrade profile status.
