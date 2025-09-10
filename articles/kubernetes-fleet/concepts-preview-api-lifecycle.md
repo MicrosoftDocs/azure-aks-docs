@@ -29,8 +29,8 @@ This article covers Azure Kubernetes Fleet Manager API deprecations. For Azure K
 
 | API version        | Announce Date     | Deprecation Date  |
 |--------------------|-------------------|-------------------|
-| 2024-05-02-preview | June 2025         | September 2025    |
-| 2024-02-02-preview | June 2025         | September 2025    |
+| 2024-05-02-preview | TBC               | TBC               |
+| 2024-02-02-preview | TBC               | TBC               |
 
 ## Completed API deprecations
 
@@ -41,6 +41,7 @@ This article covers Azure Kubernetes Fleet Manager API deprecations. For Azure K
 | 2023-03-15-preview | December 16, 2024 | April 14, 2025    |
 | 2022-09-02-preview | December 16, 2024 | April 14, 2025    |
 | 2022-07-02-preview | December 16, 2024 | April 14, 2025    |
+| 2022-06-02-preview | December 16, 2024 | April 14, 2025    |
 
 ## How to check API versions in use
 

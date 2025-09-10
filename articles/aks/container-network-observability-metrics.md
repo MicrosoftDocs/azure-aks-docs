@@ -83,7 +83,7 @@ Generated metrics are outlined in the following table.
 
 ### Pod-level metrics (Hubble metrics)
 
-These Prometheus metrics include source and destination pod information so that you can pinpoint network-related issues at a granular level. Metrics cover information like traffic volume, dropped packets, TCP resets, and Layer 4/Layer 7 packet flows. DNS metrics also are collected (currently only for non-Cilium data planes), including DNS errors and DNS requests missing responses.
+These Prometheus metrics include source and destination pod information so that you can pinpoint network-related issues at a granular level. Metrics cover information like traffic volume, dropped packets, TCP resets, and Layer 4/Layer 7 packet flows. DNS metrics like DNS errors and DNS requests missing responses are collected by default for non-Cilium data planes. For Cilium data planes, a Cilium FQDN network policy is required to collect DNS metrics, or customers can also troubleshoot DNS using Hubble CLI and observing real-time logs.
 
 The following table describes the metrics that are aggregated per pod (node information is preserved).
 
@@ -110,7 +110,7 @@ All metrics include labels:
 * Pod-level metrics are available only on Linux.
 * Cilium data plane is supported starting with Kubernetes version 1.29.
 * Metric labels have subtle differences between Cilium and non-Cilium clusters.
-* For Cilium based clusters, DNS metrics are only available for pods that have Cilium Network policies (CNP) configured on their clusters.
+* For Cilium based clusters, DNS metrics are only available for pods that have Cilium Network policies (CNP) configured on their clusters, or customers can also troubleshoot DNS using Hubble CLI and observing real-time logs.
 * Flow logs are not currently available in the air gapped cloud.
 * Hubble relay may crash if one of the Hubble node agents goes down and may cause interruptions to Hubble CLI.
 * When using Advanced Container Networking Services (ACNS) on non-Cilium data planes, FIPS support isn't available on Ubuntu 20.04 nodes due to kernel restrictions. To enable FIPS in this scenario, you must use an Azure Linux node pool. This limitation is expected to be resolved with the release of Ubuntu 22 FIPS. For updates, see the [AKS issue tracker](https://github.com/Azure/AKS/issues/4857).

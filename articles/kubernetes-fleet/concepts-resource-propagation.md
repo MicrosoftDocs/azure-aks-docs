@@ -203,6 +203,8 @@ The following labels are automatically added to all member clusters and can be u
 | fleet.azure.com/location | Azure Region of the cluster (westus) |
 | fleet.azure.com/resource-group | Azure Resource Group of the cluster (rg_prodapps_01) |
 | fleet.azure.com/subscription-id | Azure Subscription Identifier the cluster resides in. Formatted as UUID/GUID. |
+| fleet.azure.com/cluster-name | The name of the cluster |
+| fleet.azure.com/member-name | The name of the Fleet member corresponding to the cluster |
 
 You can also use any custom labels you apply to your clusters.
 

@@ -10,7 +10,7 @@ author: jakjang
 
 # Overview of managed namespaces (preview) in Azure Kubernetes Service (AKS)
 
-**Applies to:** :heavy_check_mark: AKS Automatic (preview) :heavy_check_mark: AKS Standard
+**Applies to:** :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
 
 As you manage clusters in Azure Kubernetes Service (AKS), you often need to isolate teams and workloads. With logical isolation, you can use a single AKS cluster for multiple workloads, teams, or environments. Kubernetes namespaces form the logical isolation boundary for workloads and resources. Performing logical isolation involves implementing scripts and processes to create namespaces, set resource limits, apply network policies, and grant team access via role-based access control. Learn how to use managed namespaces in Azure Kubernetes Service (AKS) to simplify namespace management, cluster multi-tenancy, and resource isolation.
 

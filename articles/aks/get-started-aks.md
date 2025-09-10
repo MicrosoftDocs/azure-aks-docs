@@ -22,7 +22,7 @@ The resources in the following sections provide an introduction to the basics of
 ### AKS fundamentals
 
 * [What is AKS?](./what-is-aks.md)
-* [What is AKS Automatic (preview)?](./intro-aks-automatic.md)
+* [What is AKS Automatic?](./intro-aks-automatic.md)
 * [Core concepts](./core-aks-concepts.md)
 * [Kubernetes and AKS fundamentals lab](https://azure-samples.github.io/aks-labs/docs/getting-started/k8s-aks-fundamentals/)
 * Create an AKS cluster

@@ -194,7 +194,7 @@ With Spot Ocean, users gain:
 
 </details>
 
-For more information, see [Spot By NetApp Solutions](https://spot.io/product/ocean/) and [Spot By NetApp on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/netapp.spot?tab=Overview).
+For more information, see [Spot By NetApp Solutions](https://spot.io/product/ocean/).
 
 ### Sysdig
 
