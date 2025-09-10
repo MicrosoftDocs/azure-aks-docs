@@ -402,7 +402,7 @@ az aks maintenanceconfiguration delete --resource-group ${RG_NAME} --cluster-nam
 
 Operational considerations
 
-- Allow at least 15 minutes between creating or updating a maintenance configuration and the scheduled start time to ensure AKS has time to reconcile the new configuration.
+- Allow at least 30 minutes between creating or updating a maintenance configuration and the scheduled start time to ensure AKS has time to reconcile the new configuration.
 
 For complete details, examples, and advanced scenarios, see Use Planned Maintenance to schedule maintenance windows for your AKS cluster: [planned-maintenance][planned-maintenance].
 
