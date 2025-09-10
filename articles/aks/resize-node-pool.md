@@ -100,6 +100,8 @@ When resizing, make sure you consider all workload requirements, such as availab
     aks-nodepool1-12345678-vmss000002    Ready    agent   10d   v1.21.9
     ```
 
+---
+
 ## Cordon the existing nodes
 
 Cordoning marks specified nodes as unschedulable and prevents any more pods from being added to the nodes.
