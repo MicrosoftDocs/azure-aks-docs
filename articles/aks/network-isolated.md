@@ -119,14 +119,8 @@ Wait and ensure the reimage completes, then run the following command to update 
 az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-type none
 ```
 
-Keep in mind that you need to manually reimage all existing node pools again:
-
-```azurecli-interactive
-az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
-```
-
 >[!IMPORTANT]
-> Remember to reimage the cluster's node pools after you enable the network isolation mode for an existing cluster. Otherwise, the feature won't take effect for the cluster.
+> Remember to reimage the cluster's node pools after you update the artifact source and before manully cut off the egress network (update private subnet or deassociate the udr). Otherwise, the feature won't take effect for the cluster.
 
 ::: zone-end
 
