@@ -1,7 +1,7 @@
 ---
 title: "Update Kubernetes and node images across multiple member clusters"
 description: This article describes the concept of update orchestration across multiple clusters.
-ms.date: 06/16/2025
+ms.date: 09/10/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -11,7 +11,9 @@ ms.topic: concept-article
 
 # Update Kubernetes and node images across multiple member clusters
 
-Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager (Fleet) allows you to orchestrate updates across multiple clusters using update runs. 
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
+
+Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager allows you to orchestrate updates across multiple clusters using update runs. 
 
 Update runs consist of stages, groups, and strategies and can be applied either manually, for one-time updates, or automatically, for ongoing regular updates using auto-upgrade profiles. All update runs (manual or automated) honor member cluster [maintenance windows][aks-maintenance-windows].
 
@@ -48,7 +50,7 @@ You should choose `Latest` to use fresher image versions and minimize security r
 
 Update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the Azure Kubernetes Service (AKS) cluster level.
 
-AKS clusters support two distinct maintenance windows - one for Kubernetes (control plane) upgrades and one for node image upgrades.
+AKS clusters support two distinct maintenance windows - one for Kubernetes (control plane) upgrades and one for node image upgrades. Maintenance windows define periods when updates can be applied to a cluster, but are not an update trigger.
 
 Fleet Manager update runs will honor AKS maintenance windows as follows:
 
@@ -56,7 +58,7 @@ Fleet Manager update runs will honor AKS maintenance windows as follows:
 |------------------------------|--------------------| -------------------------------------|
 | Kubernetes Control Plane     | Kubernetes Version | AKSManagedAutoUpgradeSchedule        |
 | Kubernetes + Node Image      | Kubernetes Version | AKSManagedAutoUpgradeSchedule        |
-| Node Image Only              | Node Image         |  AKSManagedNodeOSAutoUpgradeSchedule | 
+| Node Image Only              | Node Image         | AKSManagedNodeOSAutoUpgradeSchedule  | 
 
 Update run prioritizes upgrading clusters based on planned maintenance in the following order: 
   1. Member with an open ongoing maintenance window.

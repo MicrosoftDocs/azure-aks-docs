@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 06/19/2025
+ms.date: 09/10/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,6 +10,8 @@ ms.topic: concept-article
 ---
 
 # Frequently Asked Questions - Azure Kubernetes Fleet Manager
+
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 This article covers the frequently asked questions for Azure Kubernetes Fleet Manager.
 
@@ -69,6 +71,12 @@ If you attempt to update or modify the hub cluster (which is a single node AKS c
 
 ## Multi-cluster updates - automated or manual FAQs
 
+### What triggers auto-upgrade profiles?
+
+When AKS releases new Kubernetes or node image versions that match the profile specification into at least one Azure region.
+
+If you don't have any clusters in the Azure region generating the trigger the auto-upgrade's update run will enter a pending state. For further information, see [my update run is in a pending state](#my-update-run-is-in-a-pending-state-for-quite-some-time-what-should-i-do). 
+
 ### What AKS update channels does Fleet Manager support?
 
 Supported AKS update channels:
@@ -85,14 +93,17 @@ Currently unsupported AKS channels:
 
 If you're using any of the channels that Fleet Manager doesn't support, we recommend you leave those channels enabled on your AKS clusters.
 
-### I am using fleet auto-upgrade with TargetKubernetesVersion channel. The target Kubernetes version is now out of community support. What can I do?
+### The target Kubernetes minor version in my auto-upgrade profile is out of community support. What can I do?
 
-In this scenario, for fleet auto-upgrade to keep working, you must either enable Long Term Support (LTS) in both the auto-upgrade profile and all managed clusters in your fleet, or use a newer target Kubernetes version.
+You can elect to:
 
-For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
+* Allow Long Term Support (LTS) in the auto-upgrade profile and enable it for any clusters in your fleet you wish to retain on the specific minor. Ensure that only LTS clusters are included in the update strategy you use.
+* Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters will be updated to the most recent patch in that minor when it is released.
+
+For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-minor-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
 
 > [!NOTE]
-> In this scenario, to review detailed information if failures occur and understand the specific actions to take, check the auto-upgrade profile status.
+> To review detailed information if failures occur and to understand the specific actions to take, check the auto-upgrade profile status.
 
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 
@@ -100,9 +111,13 @@ If you leave AKS cluster auto-upgrades enabled, then the update of that cluster 
 
 Fleet Manager doesn't alter the configuration of AKS cluster auto-upgrade settings. If you want Fleet Manager to manage auto-upgrades, you must disable auto-upgrade on each individual member AKS cluster.
 
-### Maintenance window support
+### AKS Cluster maintenance window support
 
 Fleet Manager honors the per-cluster maintenance window settings for each member cluster.
+
+Maintenance windows do not trigger updates - they only define when updates can be applied to a cluster.
+
+For further information, see the documentation for [AKS cluster maintenance windows][aks-maintenance-windows].
 
 ### What is the scope of consistent node image upgrades?
 
@@ -159,3 +174,4 @@ The roadmap for Azure Kubernetes Fleet Manager resource is available [on GitHub]
 
 <!-- INTERNAL LINKS -->
 [update-run]: ./concepts-update-orchestration.md#understanding-update-runs
+[aks-maintenance-windows]: /azure/aks/planned-maintenance
