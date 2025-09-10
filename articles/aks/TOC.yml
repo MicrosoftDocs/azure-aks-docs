@@ -513,7 +513,7 @@
             href: concepts-network-azure-cni-pod-subnet.md
           - name: Upgrade Azure CNI IPAM and dataplane
             href: upgrade-azure-cni.md
-          - name: Migrate from Network Policy Manager to Cilium Networ policy
+          - name: Migrate from Network Policy Manager to Cilium Network policy
             href: migrate-from-npm-to-cilium-network-policy.md
           - name: Use dual-stack networking
             href: configure-dual-stack.md
@@ -752,8 +752,10 @@
             href: /compliance/regulatory/offering-CIS-Benchmark?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: CIS Kubernetes benchmark
             href: cis-kubernetes.md
-          - name: CIS Azure Linux benchmark
+          - name: CIS Azure Linux 2.0 benchmark
             href: cis-azure-linux.md
+          - name: CIS Azure Linux 3.0 benchmark
+            href: cis-azure-linux-v3.md
           - name: CIS Windows Server benchmark
             href: cis-windows.md
         - name: Payment Card Industry Data Security Standard (PCI DSS)
@@ -942,6 +944,8 @@
           href: use-windows-gpu.md
         - name: Use AMD GPUs
           href: use-amd-gpus.md
+        - name: GPU best practices
+          href: best-practices-gpu.md
         - name: Multi-instance GPU node pool
           href: gpu-multi-instance.md
         - name: Monitor GPU metrics
@@ -1018,18 +1022,18 @@
       href: monitor-aks.md
     - name: Monitor control plane metrics
       href: control-plane-metrics-monitor.md
-    - name: Container Network Observability
+    - name: Container Network Metrics
       items:
-      - name: Set up Container Network Observability
-        href: container-network-observability-how-to.md
-      - name: Container Network Observability logs
-        items:
-          - name: Overview
-            href: container-network-observability-logs.md
-          - name: Configure Container Network Observability logs
-            href: how-to-configure-container-network-logs.md
-      - name: Use Container Network Observability metrics
-        href: container-network-observability-metrics.md
+        - name: Overview
+          href: container-network-observability-metrics.md
+        - name: Configure Container Network Metrics
+          href: container-network-observability-how-to.md
+    - name: Container Network Logs
+      items:
+        - name: Overview
+          href: container-network-observability-logs.md
+        - name: Configure Container Network Logs
+          href: how-to-configure-container-network-logs.md
     - name: Advanced Container Networking Services observability guide
       href: container-network-observability-guide.md
     - name: Proactive monitoring best practices

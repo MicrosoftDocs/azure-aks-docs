@@ -1,7 +1,7 @@
 ---
 title: "Azure Kubernetes Fleet Manager and member clusters"
 description: This article provides a conceptual overview of Azure Kubernetes Fleet Manager and member clusters.
-ms.date: 05/23/2025
+ms.date: 09/02/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -35,6 +35,14 @@ The hub cluster facilitates the orchestration of updates and resource management
 The `MemberCluster` represents a cluster-scoped API established within the hub cluster, serving as a representation of a cluster within the fleet. This API offers a dependable, uniform, and automated approach for multi-cluster applications to identify registered clusters within a fleet. It also facilitates applications in querying a list of clusters managed by the fleet or in observing cluster statuses for subsequent actions.
 
 You can join Azure Kubernetes Service (AKS) clusters to a fleet as member clusters. Member clusters must reside in the same Microsoft Entra tenant as the fleet, but they can be in different regions, different resource groups, and/or different subscriptions.
+
+### Labels
+
+Member clusters can have service-defined and user-defined labels associated with them, which can be used to select clusters for workload placement scheduling decisions. When you define a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#introduce-clusterresourceplacement-api), you can use label selectors to target specific member clusters based on their labels. This allows you to deploy workloads only to clusters that match certain criteria, such as region, environment, team, or other custom attributes.
+
+By default, Fleet populates these [service-defined labels](./concepts-resource-propagation.md#labels) on each member cluster.
+
+Member labels should be modified using the Azure CLI or REST API. They may not be modified directly on the `MemberCluster` resource in the hub cluster.
 
 ### Taints
 

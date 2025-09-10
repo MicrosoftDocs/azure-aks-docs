@@ -203,10 +203,10 @@ spec:
 To use Cilium Network Policy, your AKS cluster must be running Azure CNI powered by Cilium. When you enable Cilium in a cluster currently using NPM, the existing NPM engine is automatically uninstalled and replaced with Cilium.
 
 > [!Warning]
-> The upgrade process triggers each node pool to be reimaged simultaneously. Upgrading each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image upgrade or [Kubernetes version upgrade](/articles/aks/upgrade-cluster.md) where each node in a node pool is reimaged. Cilium will begin enforcing network policies only after all nodes are reimaged.
+> The upgrade process triggers each node pool to be reimaged simultaneously. Upgrading each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image upgrade or [Kubernetes version upgrade](upgrade-cluster.md) where each node in a node pool is reimaged. Cilium will begin enforcing network policies only after all nodes are reimaged.
 
 > [!IMPORTANT]
-> These instructions apply to clusters upgrading from Azure CNI to Azure CNI with the Cilium dataplane. Upgrades from bring-your-own CNIs or changes the IPAM mode aren't covered here. For more information, see [Upgrade Azure CNI documentation](/articles/aks/upgrade-azure-cni.md).
+> These instructions apply to clusters upgrading from Azure CNI to Azure CNI with the Cilium dataplane. Upgrades from bring-your-own CNIs or changes the IPAM mode aren't covered here. For more information, see [Upgrade Azure CNI documentation](upgrade-azure-cni.md).
 
 To perform the upgrade, you need Azure CLI version 2.52.0 or later. Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
@@ -218,9 +218,9 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> --networ
 ## Next steps
 
 
-- For more information about using Cilium FQDN network policy on AKS, see [Set up FQDN filtering feature for Container Network Security in Advanced Container Networking Services](/articles/aks/how-to-apply-fqdn-filtering-policies.md).
+- For more information about using Cilium FQDN network policy on AKS, see [Set up FQDN filtering feature for Container Network Security in Advanced Container Networking Services](how-to-apply-fqdn-filtering-policies.md).
 
-- For more information about using Cilium L7 network policy on AKS, see [Set up Layer 7(L7) policies with Advanced Container Networking Services](/articles/aks/how-to-apply-l7-policies.md).
+- For more information about using Cilium L7 network policy on AKS, see [Set up Layer 7(L7) policies with Advanced Container Networking Services](how-to-apply-l7-policies.md).
 
-- For more information about network policy best practices on aks, see [Best practices for network policies in Azure Kubernetes Service (AKS)](/articles/aks/network-policy-best-practices.md)
+- For more information about network policy best practices on aks, see [Best practices for network policies in Azure Kubernetes Service (AKS)](network-policy-best-practices.md)
 
