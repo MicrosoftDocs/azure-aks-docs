@@ -19,6 +19,9 @@ This article describes OS versions available for Azure Kubernetes Service (AKS) 
 >
 > - Starting on **17 March 2027**, AKS will no longer support Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. Migrate to a supported Ubuntu version by [upgrading your node pools](./upgrade-aks-cluster.md) to Kubernetes version 1.34+. For more information on this retirement, see [Retirement: Ubuntu 20.04 node pools on AKS](https://github.com/Azure/AKS/issues/4874).
 
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+
 ## Supported OS versions
 
 Each [node image][node-images] corresponds to an OS version, which you can specify using OS SKU. You can specify the following parameters when creating clusters and node pools:
@@ -47,7 +50,7 @@ Each [node image][node-images] corresponds to an OS version, which you can speci
 
 ## Migrate to a new OS version
 
-When a new OS version releases on AKS, it's supported in preview before it becomes generally available and default. We recommend testing your nonproduction workloads with the new OS version when it becomes available in preview.
+When a new OS version releases on AKS, it's supported in preview before it becomes generally available and default. We recommend testing your nonproduction workloads with the new OS version when it becomes available in preview. In order to access preview functions, make sure you have the preview extension installed. You can install the extension using the `az extension add --name aks-preview` command.
 
 ### Update OS SKU on an existing node pool
 
@@ -58,6 +61,8 @@ Update the `os-sku` on an existing node pool using the [`az aks nodepool update`
 >
 > - `--os-sku Windows2019`
 > - `--os-sku Windows2022`
+>
+> Instead, you need to create a cluster or add node pools to your cluster with the corresponding `--os-sku` you intend to use.
 
 ```azurecli-interactive
 az aks nodepool update \
@@ -80,7 +85,7 @@ Ubuntu 24.04 is available in preview by specifying `--os-sku Ubuntu2404`.
 >
 > - [FIPS](./enable-fips-nodes.md) and [CVM](./use-cvm.md) aren't supported.
 > - Ubuntu 24.04 is supported in Kubernetes versions 1.32 to 1.38.
-> - `--os-sku Ubuntu2404` is intended for testing the new OS version without upgrading your Kubernetes version. You need to update your OS SKU to a supported OS option before upgrading your Kubernetes version to 1.39+.
+> - You need to update your OS SKU to a supported OS option before upgrading your Kubernetes version to 1.39+. `--os-sku Ubuntu2404` is an option and is intended for testing the new OS Linux version without requiring you to upgrade your Kubernetes version.
 > - You need the Azure CLI version 18.0.0b5 or later installed and configured. To find your CLI version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 #### Install `aks-preview` extension
@@ -143,7 +148,7 @@ Azure Linux 3.0 is the default for `--os-sku AzureLinux` in Kubernetes versions 
 >
 > - `--os-sku AzureLinux3` is supported in Kubernetes versions 1.28 to 1.36.
 > - `--os-sku AzureLinux3` is intended for migrating to Azure Linux 3.0 without upgrading your Kubernetes version. You need to update your OS SKU to a supported OS option before upgrading your Kubernetes version to 1.37+.
-> - You need the Azure CLI version 18.0.0b5 or later installed and configured. To find your CLI version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+> - You need the Azure CLI version 18.0.0b36 or later for *preview* and version 2.78.0 or later for *GA* installed and configured. To find your CLI version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 #### Update your node pool to use Azure Linux 3.0
 
@@ -254,8 +259,8 @@ To learn more about node images, node pool upgrades, and node configurations on 
 <!-- LINKS - internal -->
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
 [github-schedule]: ./node-upgrade-github-actions.md
-[agent-pools-create-or-update]: /rest/api/aks/agent-pools/create-or-update?view=rest-aks-2024-09-01&tabs=HTTP#ossku
-[az-aks-create]: /cli/azure/aks?view=azure-cli-latest#az-aks-create
+[agent-pools-create-or-update]: /rest/api/aks/agent-pools/create-or-update#ossku
+[az-aks-create]: /cli/azure/aks#az-aks-create
 [aks-core-concepts]: ./core-aks-concepts.md
 [custom-node-configuration]: ./custom-node-configuration.md
 [node-images]: ./node-images.md
