@@ -75,7 +75,7 @@ If you attempt to update or modify the hub cluster (which is a single node AKS c
 
 When AKS releases new Kubernetes or node image versions that match the profile specification into at least one Azure region.
 
-If you don't have any clusters in the Azure region generating the trigger the auto-upgrade's update run will enter a pending state. For further information, see [my update run is in a pending state](#my-update-run-is-in-a-pending-state-for-quite-some-time-what-should-i-do). 
+If you don't have any clusters in the Azure region generating the trigger, the auto-upgrade's update run enters a pending state. For more information, see [my update run is in a pending state](#my-update-run-is-in-a-pending-state-for-quite-some-time-what-should-i-do). 
 
 ### What AKS update channels does Fleet Manager support?
 
@@ -84,7 +84,7 @@ Supported AKS update channels:
 * **Rapid**: Updates for the most recent AKS-supported Kubernetes release (N).
 * **Stable**: Updates for Kubernetes stable channel (N-1) where 'N' is the most recent AKS-supported Kubernetes release.
 * **NodeImage**: node image VHD patched (bug and security) with a weekly release schedule.
-* **TargetKubernetesVersion (preview)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that have moved to Long-Term Support (LTS).
+* **TargetKubernetesVersion (preview)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that are available only via AKS Long-Term Support (LTS).
 
 Currently unsupported AKS channels:
 
@@ -98,7 +98,7 @@ If you're using any of the channels that Fleet Manager doesn't support, we recom
 You can elect to:
 
 * Allow Long Term Support (LTS) in the auto-upgrade profile and enable it for any clusters in your fleet you wish to retain on the specific minor. Ensure that only LTS clusters are included in the update strategy you use.
-* Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters will be updated to the most recent patch in that minor when it is released.
+* Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters are updated to the most recent patch in that minor when it's released.
 
 For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
 
@@ -107,7 +107,7 @@ For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes
 
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 
-If you leave AKS cluster auto-upgrades enabled, then the update of that cluster could be performed by Fleet Manager or AKS cluster auto-upgrade, depending on which one runs first.
+If you leave AKS cluster auto-upgrades enabled, then the update of that cluster can be performed by either Fleet Manager or AKS cluster auto-upgrade, depending on which one runs first.
 
 Fleet Manager doesn't alter the configuration of AKS cluster auto-upgrade settings. If you want Fleet Manager to manage auto-upgrades, you must disable auto-upgrade on each individual member AKS cluster.
 
@@ -115,9 +115,9 @@ Fleet Manager doesn't alter the configuration of AKS cluster auto-upgrade settin
 
 Fleet Manager honors the per-cluster maintenance window settings for each member cluster.
 
-Maintenance windows do not trigger updates - they only define when updates can be applied to a cluster.
+Maintenance windows don't trigger updates, nor do updates begin immediately a window opens. Maintenance windows only define when updates can be applied to a cluster.
 
-For further information, see the documentation for [AKS cluster maintenance windows][aks-maintenance-windows].
+For more information, see the documentation for [AKS cluster maintenance windows][aks-maintenance-windows].
 
 ### What is the scope of consistent node image upgrades?
 
@@ -135,9 +135,9 @@ Fleet Manager update runs can be in a pending state for many reasons. You can vi
 
 The two most common reasons for long pending states are:
 
-* Member cluster maintenance windows: If a member cluster's maintenance window isn't open then the update run can enter a paused state. This pause can block completion of the update group or stage until the next maintenance window opens. If you wish to continue the update run, manually skip the cluster. If you skip the cluster, it is out of sync with the rest of the member clusters in the update run.
+* Member cluster maintenance windows: If a member cluster's maintenance window isn't open then the update run can enter a paused state. This pause can block completion of the update group or stage until the next maintenance window opens. If you wish to continue the update run, manually skip the cluster. If you skip the cluster, it's out of sync with the rest of the member clusters in the update run.
 
-* Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they'll also be unable to update.
+* Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they are also blocked.
 
 ### My auto-upgrade run started, then immediately entered a pending state. Why?
 
