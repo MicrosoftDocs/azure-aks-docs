@@ -448,10 +448,10 @@ accountname.file.core.windows.net:/accountname/pvc-fa72ec43-ae64-42e4-a8a2-55660
 > [!NOTE]
 > Note that because the NFS file share is in a Premium account, the minimum file share size is 100 GiB. If you create a PVC with a small storage size, you might encounter an error similar to the following: *failed to create file share ... size (5)...*.
 
-### Encryption in Transit for NFS file shares (Preview)
+### Encryption in Transit for NFS file shares
 
-**[Preview]** [Encryption in Transit (EiT)](/azure/storage/files/encryption-in-transit-for-nfs-shares) ensures that all read & writes to the NFS file shares within the VNET are encrypted providing an additional layer of security.
-By setting encryptInTransit: "true" in the storage class parameters, you can enable data encryption in transit for NFS Azure file volumes.
+[Encryption in Transit (EiT)](/azure/storage/files/encryption-in-transit-for-nfs-shares) ensures that all read and writes to the NFS file shares within the VNET are encrypted, providing an additional layer of security.
+By setting `encryptInTransit: "true"` in the storage class parameters, you can enable data encryption in transit for NFS Azure file shares.
 
 ```yml
 apiVersion: storage.k8s.io/v1
@@ -470,9 +470,7 @@ mountOptions:
 ```
 
 > [!NOTE]
-> The EiT feature is now available in preview starting with AKS version 1.33. Please note that ARM64 nodes are not currently supported.
->
-> Please find the EiT supported [Linux distributions](/azure/storage/files/encryption-in-transit-for-nfs-shares#overview), and [supported regions](/azure/storage/files/encryption-in-transit-for-nfs-shares#supported-regions), for those regions currently running preview, you must register your subscription follow [the instructions](/azure/storage/files/encryption-in-transit-for-nfs-shares#register-for-preview-not-needed-for-ga-regions) to use EiT in preview regions.
+> Encryption in Transit for NFS file shares is supported for the following [Linux distributions](/azure/storage/files/encryption-in-transit-for-nfs-shares#overview). ARM64 nodes aren't currently supported.
 
 ## Windows containers
 
