@@ -574,7 +574,7 @@
                   - name: Overview
                     href: container-network-security-wireguard-encryption-concepts.md
                   - name: Set up WireGuard encryption
-                    href: how-to-enable-wireguard-encryption.md
+                    href: how-to-apply-wireguard.md
               - name: FQDN-based filtering
                 items:
                   - name: Overview
