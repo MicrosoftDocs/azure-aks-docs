@@ -1,6 +1,6 @@
 ---
 title: Schedule and deploy batch jobs with Kueue on Azure Kubernetes Service (AKS)
-description: Learn how to define Kueue deployments and efficiently schedule batch workloads on your Azure Kubernetes Service (AKS) cluster
+description: Learn how to define Kueue deployments and efficiently schedule batch workloads on your Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 9/17/2025
@@ -11,21 +11,23 @@ ms.author: sachidesai
 
 # Schedule and deploy batch jobs with Kueue on Azure Kubernetes Service (AKS)
 
-## Introduction
+In this article, you learn how to schedule and deploy batch jobs on Azure Kubernetes Service (AKS) using the Kueue controller manager and custom resource definitions (CRDs). You also learn how to use Kueue to queue up sample general-purpose deployments and track the results with Kueue Prometheus metrics.
 
-Batch deployments are typically non-interactive workloads that are retryable, have a finite duration, and may experience spiky or bursty resource usage. These workloads include, but are not limited to:
+## What are batch deployments?
 
-* Data processing jobs
-* Security vulnerability scans
-* Media encoding or video transcoding
-* Report generation or financial analysis
-* GPU workloads that require all resources to be available, and may tolerate a delayed start but cannot tolerate partial GPU allocation
+Batch deployments are typically non-interactive workloads that are retriable, have a finite duration, and might experience spiky or bursty resource usage. These workloads include, but are not limited to:
 
-These workloads, often modeled using a Kubernetes Job, CronJob, or custom resource definition (CRD) like [RayJob](https://docs.ray.io/en/latest/cluster/kubernetes/getting-started/rayjob-quick-start.html) or [Kubeflow MPIJob](https://www.kubeflow.org/docs/components/trainer/legacy-v1/user-guides/mpi/). They present the following set of distinct requirements from general purpose deployments:
+* Data processing jobs.
+* Security vulnerability scans.
+* Media encoding or video transcoding.
+* Report generation or financial analysis.
+* GPU workloads that require all resources to be available and might tolerate a delayed start but can't tolerate partial GPU allocation.
 
-* Scheduling logic beyond selecting the first available node
-* Fairness, queueing, and resource awareness
-* Lifecycle awareness of jobs and pods
+These workloads are often modeled using a Kubernetes Job, CronJob, or custom resource definition (CRD) like [RayJob](https://docs.ray.io/en/latest/cluster/kubernetes/getting-started/rayjob-quick-start.html) or [Kubeflow MPIJob](https://www.kubeflow.org/docs/components/trainer/legacy-v1/user-guides/mpi/). Batch deployments present the following set of distinct requirements from general purpose deployments:
+
+* Scheduling logic beyond selecting the first available node.
+* Fairness, queueing, and resource awareness.
+* Lifecycle awareness of jobs and pods.
 
 The default AKS scheduler satisfies the requirements of Kubernetes services but provides limited configuration for batch workloads that require a job queueing system.
 
@@ -72,56 +74,56 @@ In this article, you learn how to schedule and deploy batch jobs on Azure Kubern
 
 ## Prerequisites
 
-* This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-* The Azure CLI installed on your local machine. You can install it using the instructions in [How to install the Azure CLI](/cli/azure/install-azure-cli).
+* An existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
+* Azure CLI installed on your local machine. To install or upgrade, see [Install the Azure CLI](/cli/azure/install-azure-cli).
 * [Helm version 3 or above](https://helm.sh/docs/intro/install/) installed.
 
 ## Install Kueue
 
-1. Add the Kueue helm repository and update it to the latest version:
+1. Add the Kueue Helm repository and update it to the latest version using the `helm repo add` and `helm repo update` commands.
 
-```bash
-helm repo add kueue https://kubernetes-sigs.github.io/kueue
-helm repo update
-```
+    ```bash
+    helm repo add kueue https://kubernetes-sigs.github.io/kueue
+    helm repo update
+    ```
 
-2. Install the Kueue controller and CRDs in a dedicated namespace:
+2. Install the Kueue controller and CRDs in a dedicated namespace using the `helm install` command.
 
-```bash
-helm install kueue kueue/kueue \
-  --namespace kueue-system \
-  --create-namespace
-```
+    ```bash
+    helm install kueue kueue/kueue \
+      --namespace kueue-system \
+      --create-namespace
+    ```
 
-3. Confirm deployment status using the helm release:
+3. Confirm the deployment status using the `helm list` command.
 
-```bash
-helm list -n kueue-system
-```
+    ```bash
+    helm list --namespace kueue-system
+    ```
 
-Your output should include a `Status` of `deployed` and look like:
+    Your output should include a `Status` of `deployed`, as shown in the following example output:
 
-```output
-NAME    NAMESPACE     	REVISION	UPDATED     STATUS  CHART   APP VERSION
-kueue	kueue-system  	1       	...         deployed    kueue-0.5.0 0.5.0
-```
+    ```output
+    NAME    NAMESPACE     REVISION   UPDATED   STATUS      CHART          APP VERSION
+    kueue	  kueue-system 	1       	       ...               deployed   kueue-0.5.0   0.5.0
+    ```
 
-4. Check the installation of Kueue CRDs on your AKS cluster:
+4. Check the installation of the Kueue CRDs on your AKS cluster using the `kubectl get` command.
 
-```bash
-kubectl get crds | grep kueue
-```
+    ```bash
+    kubectl get crds | grep kueue
+    ```
 
-The output should include all 4 Kueue CRDs, as shown below:
+    Your output should include all four Kueue CRDs, as shown in the following example output:
 
-```output
-clusterqueues.kueue.x-k8s.io         1234-56-78T00:00:00Z
-localqueues.kueue.x-k8s.io           1234-56-78T00:00:00Z
-resourceflavors.kueue.x-k8s.io       1234-56-78T00:00:00Z
-workloads.kueue.x-k8s.io             1234-56-78T00:00:00Z
-```
+    ```output
+    clusterqueues.kueue.x-k8s.io         1234-56-78T00:00:00Z
+    localqueues.kueue.x-k8s.io            1234-56-78T00:00:00Z
+    resourceflavors.kueue.x-k8s.io       1234-56-78T00:00:00Z
+    workloads.kueue.x-k8s.io               1234-56-78T00:00:00Z
+    ```
 
-In the following examples, we'll show how the difference in scheduling behavior between the AKS native scheduler and the Kueue system for queueing batch workloads.
+In the following examples, we show the difference in scheduling behavior between the AKS native scheduler and the Kueue system for queueing batch workloads.
 
 ## Schedule and Deploy General-Purpose Batch jobs with Kueue
 
