@@ -89,8 +89,6 @@ az aks create \
     --network-plugin azure \
     --network-plugin-mode overlay \
     --network-dataplane cilium \
-    --node-count 2 \
-    --pod-cidr 192.168.0.0/16 \
     --enable-acns \
     --acns-transit-encryption-type wireguard
 ```
