@@ -71,7 +71,7 @@ Long-term support (LTS) needs to be enabled in order to get extended support. Yo
 | 1.28 | Aug 2023 | Sep 2023 | Nov 2023 | Jan 2025 | Feb 2026|
 | 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Apr 2026|
 | 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22nd, 2025 | Jul 2026|
-| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 21st, 2025 | Nov 2026|
+| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1st, 2025 | Nov 2026|
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Mar 2027|
 | 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Jun 2027|
 | 1.34 | Aug 2025 | Aug 2025 | Sep 2025 | Sep 2026 | Sep 2027 |
