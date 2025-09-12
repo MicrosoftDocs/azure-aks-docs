@@ -31,7 +31,7 @@ On Kubernetes versions outside of the supported AKS or Arc-enabled Kubernetes ve
 
 On clusters running a supported AKS and Arc-enabled Kubernetes version, but which don't meet the minimum Kubernetes version required for a Fleet Manager feature, that feature isn't available.  Microsoft guarantees the cluster functions as expected.
 
-Where a Fleet Manager feature requires a minimum Kubernetes version, the minimum version is documented in the relevant Fleet Manager documentation.
+Where a Fleet Manager feature requires a minimum Kubernetes version, the minimum version is listed in the relevant Fleet Manager documentation.
 
 ## Next steps
 
