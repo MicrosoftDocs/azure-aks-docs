@@ -24,6 +24,8 @@
       items:
         - name: Fleets and member clusters
           href: concepts-fleet.md
+        - name: Fleet Kubernetes version support
+          href: concepts-fleet-kubernetes-version-support.md
         - name: Choosing a fleet type
           href: concepts-choosing-fleet.md
         - name: Fleet hub cluster overview
