@@ -37,40 +37,33 @@ The default AKS scheduler satisfies the requirements of Kubernetes services but 
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
+### Queuing model
+
 Kueue introduces a two-level queuing model:
 
-1. A `ClusterQueue` represents shared resource pools (such as CPU, memory, GPU quotas).
-2. A `LocalQueue` represents a tenant-facing queue in a namespace (where users submit their batch jobs).
+* A `ClusterQueue` represents shared resource pools (such as CPU, memory, GPU quotas).
+* A `LocalQueue` represents a tenant-facing queue in a namespace (where users submit their batch jobs).
 
 Workloads submitted to a `LocalQueue` are matched to a `ClusterQueue` to determine if they can be admitted.
 
 > [!NOTE]
-> A `LocalQueue` is always needed for users to submit batch workloads, and the `LocalQueue` tells Kueue about which ClusterQueue to assign the job to. The `ClusterQueue` determines if sufficient resources are available for the job to be admitted and run.
+> A `LocalQueue` is always needed for users to submit batch workloads. The `LocalQueue` tells Kueue which `ClusterQueue` to assign the job to. The `ClusterQueue` determines if sufficient resources are available to admit and run the job.
 
 ## Who can use Kueue?
 
-Batch workload administrators (including platform or cluster administrators and DevOps engineers) and batch users (data scientists, developers, and ML engineers) can benefit from deploying with Kueue on AKS.
+Batch workload administrators (including platform or cluster administrators and DevOps engineers) and batch users (data scientists, developers, and ML engineers) can benefit from deploying with Kueue on AKS. The following table outlines the focus and responsibilities for batch admins and users:
 
-A batch admin focuses on configuring, managing, and securing the platform-level infrastructure to support batch workloads, and have the following responsibilities:
+| Role | Focus | Job responsibilities |
+|------|--------|----------------------|
+| **Batch admin** | Configuring, managing, and securing the platform-level infrastructure to support batch workloads. | • Provision and manage AKS node pools. <br> • Define resource quotas, ClusterQueues, and policies for workload isolation. <br> • Tune autoscaling and cost-efficiency (e.g., Cluster Autoscaler, Kueue quotas). <br> • Monitor cluster and queue health. <br> • Create and maintain templates and reusable workflows. |
+| **Batch user** | Running compute-intensive or parallel jobs using the platform-level infrastructure configured by a batch admin. | • Submit batch jobs (e.g., Job, Workload, or custom controller CRDs) and monitor job status and outputs. <br> • Select appropriate queue or resource flavor for jobs based on guidance from batch admins. <br> • Optimize job specs for resource and performance needs. |
 
-* Provision and manage AKS node pools 
-* Define resource quotas, ClusterQueues, and policies for workload isolation
-* Tune autoscaling and cost-efficiency (e.g., Cluster Autoscaler, Kueue quotas)
-* Monitor cluster and queue health
-* Create and maintain templates and reusable workflows
+The following table outlines the scope, owner, and use for ClusterQueues and LocalQueues:
 
-A batch user runs compute-intensive or parallel jobs using the platform-level infrastructure configured by a batch admin, and typically:
-
-* Submit batch jobs (e.g., Job, Workload, or custom controller CRDs) and monitor job status and outputs
-* Select appropriate queue or resource flavor for jobs (based on guidance from batch admins)
-* Optimize job specs for resource and performance needs
-
-| Queue Type | Scope | Created By | Used For |
+| Queue type | Scope | Created by | Use |
 | -------- | -------- | --------- | ------- |
 | **ClusterQueue** | Cluster-wide | Platform admin | Define shared compute capacity and quota management |
 | **LocalQueue** | Namespace | Namespace owner | Enable workload submission, mapped to ClusterQueue |
-
-In this article, you learn how to schedule and deploy batch jobs on Azure Kubernetes Service (AKS) using the Kueue controller manager and custom resource definitions (CRDs). You also learn how to use Kueue to queue up sample general-purpose deployments and track the results with Kueue Prometheus metrics.
 
 ## Prerequisites
 
@@ -125,139 +118,166 @@ In this article, you learn how to schedule and deploy batch jobs on Azure Kubern
 
 In the following examples, we show the difference in scheduling behavior between the AKS native scheduler and the Kueue system for queueing batch workloads.
 
-## Schedule and Deploy General-Purpose Batch jobs with Kueue
+## Schedule and deploy general-purpose batch jobs with Kueue
 
-1. Create a Kueue `ClusterQueue` named `clusterqueue-sample.yaml`
+### Create a `ClusterQueue`
 
-```bash
-apiVersion: kueue.x-k8s.io/v1beta1
-kind: ClusterQueue
-metadata:
-  name: sample-jobs
-spec:
-  cohort: general
-  namespaceSelector: {}  # Accept workloads from any namespace
-  resourceGroups:
-    - coveredResources: ["cpu", "memory"]
-      flavors:
-        - name: on-demand
-          resources:
-            - name: "cpu"
-              nominalQuota: 4
-            - name: "memory"
-              nominalQuota: 8Gi
-```
+1. Create a Kueue `ClusterQueue` named `clusterqueue-sample.yaml` and paste in the following YAML manifest:
 
-This sample `ClusterQueue` defines:
+    ```yaml
+   apiVersion: kueue.x-k8s.io/v1beta1
+   kind: ClusterQueue
+   metadata:
+     name: sample-jobs
+   spec:
+     cohort: general
+     namespaceSelector: {}  # Accept workloads from any namespace
+     resourceGroups:
+       - coveredResources: ["cpu", "memory"]
+         flavors:
+           - name: on-demand
+             resources:
+               - name: "cpu"
+                 nominalQuota: 4
+               - name: "memory"
+                 nominalQuota: 8Gi
+    ```
 
-* A general `cohort` that can be used to group multiple `ClusterQueues` together to allow resource borrowing. If one `ClusterQueue` has unused quota, another in the **same** cohort may borrow it for pending jobs.
-* `namespaceSelector: {}`: Indicates that `sample-jobs` accepts workloads from any namespace that references this `ClusterQueue` via a `LocalQueue` (usage can be restricted (for example, to only team A's namespace) with a label selector).
-* `coveredResources: ["cpu", "memory"]` in `resourceGroups` defines the standard CPU and memory resource types managed by this `ClusterQueue`.
-* `flavor` of `on-demand` nodes with `4` CPUs, `8Gi` memory: Only workloads scheduled on `on-demand` nodes consume this quota. If this quota is used up in the cluster, no more workloads using this flavor will be admitted — unless borrowing from cohort is allowed.
+    This sample `ClusterQueue` defines:
 
-```bash
-kubectl apply -f clusterqueue-sample.yaml
-```
+    * A general **`cohort`**: Used to group multiple `ClusterQueues` together to allow resource borrowing. If one `ClusterQueue` has unused quota, another in the **same** cohort can borrow it for pending jobs.
+    * **`namespaceSelector: {}`**: Indicates that `sample-jobs` accepts workloads from any namespace that references this `ClusterQueue` via a `LocalQueue` (you can restrict usage (for example, to only team A's namespace) with a label selector).
+    * **`coveredResources: ["cpu", "memory"]` in `resourceGroups`**: Defines the standard CPU and memory resource types managed by this `ClusterQueue`.
+    * **`flavor` of `on-demand` nodes with `4` CPUs, `8Gi` memory**: Only workloads scheduled on `on-demand` nodes consume this quota. If the cluster uses up this quota, it won't admit any additional workloads using this flavor (unless you allow borrowing from the `cohort`).
 
-2. Create a `LocalQueue` named `localqueue-sample.yaml`
+2. Apply the `ClusterQueue` manifest using the `kubectl apply` command.
 
-```bash
-apiVersion: kueue.x-k8s.io/v1beta1
-kind: LocalQueue
-metadata:
-  name: sample-queue
-  namespace: batch-jobs
-spec:
-  clusterQueue: sample-jobs
-```
+    ```bash
+    kubectl apply -f clusterqueue-sample.yaml
+    ```
 
-This `LocalQueue` named `sample-queue` enables users in the `batch-jobs` namespace to submit batch workloads to Kueue. The workloads are then routed to the `sample-jobs` `ClusterQueue`, which manages the actual compute resource quotas and scheduling policies.
 
-```bash
-kubectl create ns batch-jobs
-kubectl apply -f localqueue-sample.yaml
-```
+### Create a `LocalQueue`
 
-Now, define 2 sample batch jobs to be deployed in the `batch-jobs` namespace with the following manifest named `batch-workloads.yaml`:
+1. Create a namespace named *batch-jobs* using the `kubectl create` command.
 
-```bash
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: batch-jobs
----
-apiVersion: kueue.x-k8s.io/v1beta1
-kind: LocalQueue
-metadata:
-  name: sample-queue
-  namespace: batch-jobs
-spec:
-  clusterQueue: sample-jobs
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: test-batch-1
-  namespace: batch-jobs
-  labels:
-    kueue.x-k8s.io/queue-name: sample-queue
-spec:
-  parallelism: 1
-  completions: 1
-  template:
+    ```bash
+    kubectl create ns batch-jobs
+    ```
+
+2. Create a `LocalQueue` named `localqueue-sample.yaml` and paste in the following YAML manifest:
+
+    ```yaml
+    apiVersion: kueue.x-k8s.io/v1beta1
+    kind: LocalQueue
+    metadata:
+      name: sample-queue
+      namespace: batch-jobs
     spec:
-      containers:
-        - name: [insert my container name]
-          image: [insert my container image path]
-          command: ["sh", "-c", "echo Running test-batch-1; sleep 60"]
-          resources:
-            requests:
-              cpu: "1"
-              memory: "500Mi"
-            limits:
-              cpu: "1"
-              memory: "500Mi"
-      restartPolicy: Never
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: test-batch-2
-  namespace: batch-jobs
-  labels:
-    kueue.x-k8s.io/queue-name: sample-queue
-spec:
-  parallelism: 1
-  completions: 1
-  template:
+      clusterQueue: sample-jobs
+    ```
+
+    This sample `LocalQueue` configures the following settings:
+
+    * Enables users in the `batch-jobs` namespace to submit batch workloads to Kueue.
+    * Route the batch workloads to the `sample-jobs` `ClusterQueue`, which manages the actual compute resource quotas and scheduling policies.
+
+3. Apply the `LocalQueue` manifest using the `kubectl apply` command.
+
+    ```bash
+    kubectl apply -f localqueue-sample.yaml
+    ```
+
+
+### Create batch jobs
+
+1. Create two sample batch jobs to deploy in the *batch-jobs* namespace using the following YAML manifest named `batch-workloads.yaml`:
+
+    ```yaml
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: batch-jobs
+    ---
+    apiVersion: kueue.x-k8s.io/v1beta1
+    kind: LocalQueue
+    metadata:
+      name: sample-queue
+      namespace: batch-jobs
     spec:
-      containers:
-        - name: [insert my container name]
-          image: [insert my container image path]
-          command: ["sh", "-c", "echo Waiting in queue for CPUs...; sleep 30"]
-          resources:
-            requests:
-              cpu: "2"
-              memory: "1Gi"
-            limits:
-              cpu: "2"
-              memory: "1Gi"
-      restartPolicy: Never
-```
+      clusterQueue: sample-jobs
+    ---
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: test-batch-1
+      namespace: batch-jobs
+      labels:
+        kueue.x-k8s.io/queue-name: sample-queue
+    spec:
+      parallelism: 1
+      completions: 1
+      template:
+        spec:
+          containers:
+            - name: [insert my container name]
+              image: [insert my container image path]
+              command: ["sh", "-c", "echo Running test-batch-1; sleep 60"]
+              resources:
+                requests:
+                  cpu: "1"
+                  memory: "500Mi"
+                limits:
+                  cpu: "1"
+                  memory: "500Mi"
+          restartPolicy: Never
+    ---
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: test-batch-2
+      namespace: batch-jobs
+      labels:
+        kueue.x-k8s.io/queue-name: sample-queue
+    spec:
+      parallelism: 1
+      completions: 1
+      template:
+        spec:
+          containers:
+            - name: [insert my container name]
+              image: [insert my container image path]
+              command: ["sh", "-c", "echo Waiting in queue for CPUs...; sleep 30"]
+              resources:
+                requests:
+                  cpu: "2"
+                  memory: "1Gi"
+                limits:
+                  cpu: "2"
+                  memory: "1Gi"
+          restartPolicy: Never
+    ```
 
-View the status of these batched workloads with Kueue:
+2. Apply the manifest for the batch jobs using the `kubectl apply` command.
 
-```bash
-kubectl get workloads -n batch-jobs
-```
+    ```bash
+    kubectl apply -f batch-workloads.yaml
+    ```
 
-Expected output:
+3. View the status of the batched workloads using the `kubectl get` command.
 
-```output
-NAME            ADMITTED   AGE
-test-batch-1    True       10s
-test-batch-2    False      5s
-```
+    ```bash
+    kubectl get workloads --namespace batch-jobs
+    ```
+
+    Your output should resemble the following example output:
+
+    ```output
+    NAME             ADMITTED   AGE
+    test-batch-1    True             10s
+    test-batch-2    False            5s
+    ```
+
 
 If you run the following command for `test-batch-2` while it is in `Pending` state, you should see an output which includes:
 
