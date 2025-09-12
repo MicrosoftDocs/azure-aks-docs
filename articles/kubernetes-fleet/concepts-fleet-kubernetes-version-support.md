@@ -15,7 +15,7 @@ ms.topic: concept-article
 
 Azure Kubernetes Fleet Manager follows the [Kubernetes version support policy][aks-version-policy] for Azure Kubernetes Service (AKS).
 
-Similar to AKS, which allows clusters already running older Kubernetes versions to operate without support, Fleet Manager also allows clusters on older Kubernetes version to join as member clusters. While these clusters continue to function, there's no guarantee that all Fleet Manager features are available or function as expected.
+Similar to AKS, which allows clusters already running older Kubernetes versions to operate without support, Fleet Manager also allows clusters on older Kubernetes version to join as member clusters. While these clusters continue to function, there's no guarantee that all Fleet Manager features are available.
 
 To ensure you can take advantage of the latest Fleet Manager, AKS and Kubernetes features, we recommend upgrading your clusters to a supported AKS or Arc-enabled Kubernetes version, including [AKS long term support (LTS)][aks-version-policy-lts].
 
