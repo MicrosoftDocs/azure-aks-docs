@@ -19,7 +19,7 @@ This article describes the Kubernetes version support policy for member clusters
 
 Azure Kubernetes Fleet Manager follows the [Kubernetes version support policy][aks-version-policy] for Azure Kubernetes Service (AKS).
 
-To ensure you can take advantage of the latest Fleet Manager, AKS and Kubernetes features, we recommend upgrading your clusters to a supported AKS Kubernetes version, including [AKS long term support (LTS)][aks-version-policy-lts].
+To ensure you can take advantage of the latest Fleet Manager, AKS, and Kubernetes features, we recommend upgrading your clusters to a supported AKS Kubernetes version, including [AKS long term support (LTS)][aks-version-policy-lts].
 
 ## Azure Arc-enabled Kubernetes member clusters
 
@@ -27,9 +27,9 @@ Azure Arc-enabled Kubernetes clusters are subject to the [version support policy
 
 ## Fleet Manager feature support
 
-Member clusters running supported AKS and Arc-enabled Kubernetes versions, but which don't meet the minimum Kubernetes version required for a Fleet Manager feature, won't have access to that feature.
+Member clusters running supported AKS and Arc-enabled Kubernetes versions, but that don't meet the minimum Kubernetes version required for a Fleet Manager feature, don't have access to that feature.
 
-Fleet Manager features requiring a minimum Kubernetes version will indicate the minimum version on their documentation page.
+Fleet Manager features requiring a minimum Kubernetes version indicates the minimum version on their documentation page.
 
 ## Next steps
 
