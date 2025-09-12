@@ -28,7 +28,7 @@ For more information on Istio and the service mesh add-on, see [Istio-based serv
     az aks mesh get-revisions --location <location> -o table
     ```
 
-    For more information on the Istio add-on's compatibility with AKS, refer to the [compatiblity support policy][istio-aks-compatibility].
+    For more information on the Istio add-on's compatibility with AKS, refer to the [compatibility support policy][istio-aks-compatibility].
 
 * In some cases, Istio CRDs from previous installations may not be automatically cleaned up on uninstall. Ensure existing Istio CRDs are deleted:
 
