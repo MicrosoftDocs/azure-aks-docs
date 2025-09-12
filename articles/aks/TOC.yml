@@ -1018,16 +1018,16 @@
           items:
             - name: About node auto provisioning (NAP)
               href: node-autoprovision.md
-            - name: node auto provisioning concepts
+            - name: Node auto provisioning configuration
               items:
+                - name: Configure networking with node auto provisioning
+                  href: node-autoprovision-networking.md
+                - name: Configure disruption policies with node auto provisioning
+                  href: node-autoprovision-disruption.md
                 - name: Configure NodePool custom resource
                   href: node-autoprovision-node-pools.md
                 - name: Configure AKSNodeClass custom resource
                   href: node-autoprovision-aksnodeclass.md
-                - name: Networking with node auto provisioning
-                  href: node-autoprovision-networking.md
-                - name: DIsruption with node auto provisioning
-                  href: node-autoprovision-disruption.md
 - name: Monitoring
   items:
     - name: Monitoring concepts and resources
