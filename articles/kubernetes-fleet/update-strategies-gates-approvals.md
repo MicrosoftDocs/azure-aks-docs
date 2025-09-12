@@ -194,7 +194,10 @@ Once an update run with a strategy containing approvals is started, the update r
      --name <run-name> 
     ```
 
-1. Under the `status` JSON object in the response, look for the stage or group where the approval was configured. Find the matching `beforeGates` or `afterGates` JSON object. For example: 
+1. Under the `status` JSON object in the response, look for the stage or group where the approval was configured. Find the matching `beforeGates` or `afterGates` JSON object. In the example below:
+
+  * The beforeGate with displayName `Do not start during business hours!` is in state **Pending**. It's waiting for approval. 
+  * The afterGate with displayName `Run health checks` is in state **NotStarted**. Because the update run isn't up to this gate yet, there's no linked `gateId`. 
 
     ```json
     { 
@@ -233,11 +236,6 @@ Once an update run with a strategy containing approvals is started, the update r
     }
     ```
 
-  In the example: 
-
-  * The beforeGate with displayName `Do not start during business hours!` is in state **Pending**. It's waiting for approval. 
-  * The afterGate with displayName `Run health checks` is in state **NotStarted**. Because the update run isn't up to this gate yet, there's no linked `gateId`. 
- 
 1. The output can be large, making it difficult to find the approval you want to grant. Using a tool like **jq** can make it easier to find the **beforeGate** or **afterGate** in the update run response. For example, to retrieve all stage gates that are awaiting approval use the following command: 
 
     ```azurecli-interactive
