@@ -9,13 +9,15 @@ ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a platform admin managing multiple Kubernetes clusters, I want to configure approvals before and/or after some of my clusters are updated in a Fleet Manager update run."
 ---
 
-# Add approvals to Azure Kubernetes Fleet Manager Update Strategies
+# Add approvals to Azure Kubernetes Fleet Manager Update Strategies (preview)
 
 Platform administrators often perform pre- and post-update checks when updating multiple clusters in an update run. These checks are to ensure that the clusters are ready to be updated, or that the update didn't adversely affect cluster operations.
 
 Fleet Manager provides approval gates that allow platform administrators to either manually, or via automation, perform any checks required to allow the update run to proceed. For example, an approval gate between the test and production stages of an update run means health checks can be run on test clusters to make sure it's safe to proceed to production.
 
 This article covers how to define approvals in update run and strategies, and how to approve them during update run execution.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-network.md)]
 
 ## Prerequisites
 
@@ -196,8 +198,8 @@ Once an update run with a strategy containing approvals is started, the update r
 
 1. Under the `status` JSON object in the response, look for the stage or group where the approval was configured. Find the matching `beforeGates` or `afterGates` JSON object. In the example below:
 
-  * The beforeGate with displayName `Do not start during business hours!` is in state **Pending**. It's waiting for approval. 
-  * The afterGate with displayName `Run health checks` is in state **NotStarted**. Because the update run isn't up to this gate yet, there's no linked `gateId`. 
+    * The beforeGate with displayName `Do not start during business hours!` is in state **Pending**. It's waiting for approval.
+    * The afterGate with displayName `Run health checks` is in state **NotStarted**. Because the update run isn't up to this gate yet, there's no linked `gateId`.
 
     ```json
     { 
