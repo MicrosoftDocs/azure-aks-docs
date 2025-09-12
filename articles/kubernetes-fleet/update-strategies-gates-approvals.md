@@ -34,7 +34,7 @@ This article covers how to define approvals in update run and strategies, and ho
 
 * If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.6.1 or later, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.6.0 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
@@ -69,8 +69,6 @@ Approvals can be placed on any update stage or update group in an update strateg
 1. Enter a name for the strategy and then under **Update sequence** select **Create Stage**.
 
 1. Enter a **Stage name** and then select **Set stage approvals**.
-
-TODO replace image with generic cluster names, etc
 
     :::image type="content" source="./media/update-orchestration/configure-stage-group-approvals.png" alt-text="Screenshot of the Azure portal pane for configuring approvals in a strategy. The create stage pane is shown." lightbox="./media/update-orchestration/configure-stage-group-approvals.png":::
 

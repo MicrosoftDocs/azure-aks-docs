@@ -34,7 +34,7 @@ This article covers how to define update strategies using groups and stages.
 
 * If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.6.1 or later, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.6.0 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
@@ -143,11 +143,8 @@ An update strategy consists of one or more stages, where a stage can contain one
     > [!NOTE]
     > The maximum number of Update Groups in each Update Stage is **50**.
 
-TODO: update image showing "Set group approvals" button.
-
     :::image type="content" source="./media/create-update-strategy/create-stage-choose-groups-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage, selecting update groups to include." lightbox="./media/create-update-strategy/create-stage-choose-groups.png":::
 
-    
 
 
 ### [Azure CLI](#tab/cli)

@@ -21,8 +21,6 @@ Update runs consist of stages, groups, and strategies and can be applied either 
 
 The following image visualizes an upgrade run containing two update stages, each containing two update groups with two member clusters. A wait period is configured between the first and second stages.
 
-TODO: update image with gates.
-
 :::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="A diagram showing an upgrade run containing two update stages, each containing two update groups with two member clusters." lightbox="./media/conceptual-update-orchestration.png":::
 
 * **Update run**: An update run represents an update being applied to a collection of AKS clusters, consisting of the update goal and sequence. The update goal describes the desired updates (for example, upgrading to Kubernetes version 1.28.3). The update sequence describes the exact order to apply the update to multiple member clusters, expressed using stages and groups. If unspecified, all the member clusters are updated one by one sequentially. An update run can be stopped and started.
