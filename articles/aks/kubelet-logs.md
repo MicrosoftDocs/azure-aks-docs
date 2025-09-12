@@ -12,6 +12,9 @@ ms.custom: innovation-engine,aks,logs,troubleshooting
 
 # Get kubelet logs from Azure Kubernetes Service cluster nodes
 
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2330229)
+
 You might need to review logs to troubleshoot a problem in your Azure Kubernetes Service (AKS) cluster. You can use tools in the Azure portal to view logs for AKS [main components][aks-main-logs] and [cluster containers][azure-container-logs]. Occasionally, you might need to get *kubelet* logs from AKS nodes to help you troubleshoot an issue.
 
 This article shows you how to use `journalctl` to view kubelet logs on an AKS node.

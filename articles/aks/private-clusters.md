@@ -4,7 +4,7 @@ description: Learn how to create a private Azure Kubernetes Service (AKS) cluste
 ms.topic: how-to
 ms.author: schaffererin
 author: schaffererin
-ms.date: 09/23/2024
+ms.date: 09/01/2025
 ms.custom: references_regions, devx-track-azurecli
 ms.service: azure-kubernetes-service
 # Customer intent: "As a cloud administrator, I want to deploy a private Azure Kubernetes Service cluster, so that I can ensure secure network traffic and enhanced control over my Kubernetes resources."
@@ -12,7 +12,7 @@ ms.service: azure-kubernetes-service
 
 # Create a private Azure Kubernetes Service (AKS) cluster
 
-This article helps you deploy a private link-based AKS cluster. If you're interested in creating an AKS cluster without required private link or tunnel, see [Create an Azure Kubernetes Service cluster with API Server VNet Integration (Preview)][create-aks-cluster-api-vnet-integration].
+This article helps you deploy a private link-based AKS cluster. If you're interested in creating an AKS cluster without required private link or tunnel, see [Create an Azure Kubernetes Service cluster with API Server VNet Integration][create-aks-cluster-api-vnet-integration].
 
 ## Overview
 
@@ -34,8 +34,8 @@ Private clusters are available in public regions, Azure Government, and Microsof
   * The cluster's DNS zone should be what you forward to 168.63.129.16. You can find more information on zone names in [Azure services DNS zone configuration][az-dns-zone].
 * Existing AKS clusters enabled with API Server VNet Integration can have private cluster mode enabled. For more information, see [Enable or disable private cluster mode on an existing cluster with API Server VNet Integration][api-server-vnet-integration].
 
-> [!NOTE]
-> The Azure Linux node pool is now generally available (GA). To learn about the benefits and deployment steps, see the [Introduction to the Azure Linux Container Host for AKS][intro-azure-linux].
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Limitations
 

@@ -74,6 +74,8 @@
           href: view-fleet-agent-logs.md
         - name: Migrate preview instances to supported instances 
           href: howto-migrate-preview-to-ga-fleets.md
+    - name: Use Azure Policy to enforce AKS cluster enrollment
+      href: howto-use-policy-to-add-clusters-to-fleet.md
     - name: Progressively upgrade Kubernetes and node images
       items:
         - name: Define reusable update strategies

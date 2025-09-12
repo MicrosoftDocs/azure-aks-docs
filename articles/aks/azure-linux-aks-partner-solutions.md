@@ -28,6 +28,9 @@ The third party partners featured in this article have introduction guides to he
 | **Migration** | • [Catalogic](#catalogic) |
 | **Monitoring** | • [VictoriaMetrics](#victoriametrics) |
 
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+
 ## DevOps
 
 DevOps streamlines the delivery process, improves collaboration across teams, and enhances software quality, ensuring swift, reliable, and continuous deployment of your applications.
@@ -191,7 +194,7 @@ With Spot Ocean, users gain:
 
 </details>
 
-For more information, see [Spot By NetApp Solutions](https://spot.io/product/ocean/) and [Spot By NetApp on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/netapp.spot?tab=Overview).
+For more information, see [Spot By NetApp Solutions](https://spot.io/product/ocean/).
 
 ### Sysdig
 
