@@ -17,7 +17,7 @@ Fleet Manager provides approval gates that allow platform administrators to eith
 
 This article covers how to define approvals in update run and strategies, and how to approve them during update run execution.
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-network.md)]
+[!INCLUDE [preview features note]]
 
 ## Prerequisites
 
