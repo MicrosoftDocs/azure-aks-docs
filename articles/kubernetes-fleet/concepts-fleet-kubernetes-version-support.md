@@ -13,25 +13,23 @@ ms.topic: concept-article
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
+This article describes the Kubernetes version support policy for member clusters in Azure Kubernetes Fleet Manager, along with how Kubernetes versions affect access to some Fleet Manager features.
+
+## Azure Kubernetes Service (AKS) member clusters
+
 Azure Kubernetes Fleet Manager follows the [Kubernetes version support policy][aks-version-policy] for Azure Kubernetes Service (AKS).
 
-Similar to AKS, which allows clusters already running older Kubernetes versions to operate without support, Fleet Manager also allows clusters on older Kubernetes versions to join as member clusters. While these clusters continue to function, there's no guarantee that all Fleet Manager features are available to them.
+To ensure you can take advantage of the latest Fleet Manager, AKS and Kubernetes features, we recommend upgrading your clusters to a supported AKS Kubernetes version, including [AKS long term support (LTS)][aks-version-policy-lts].
 
-To ensure you can take advantage of the latest Fleet Manager, AKS and Kubernetes features, we recommend upgrading your clusters to a supported AKS or Arc-enabled Kubernetes version, including [AKS long term support (LTS)][aks-version-policy-lts].
-
-## Azure Arc-enabled Kubernetes
+## Azure Arc-enabled Kubernetes member clusters
 
 Azure Arc-enabled Kubernetes clusters are subject to the [version support policy][arc-version-policy] of Azure Arc's Kubernetes agent.
 
-While Arc-enabled Kubernetes clusters may continue to function outside of this window, they won't be supported by Microsoft.
-
 ## Fleet Manager feature support
 
-On Kubernetes versions outside of the supported AKS or Arc-enabled Kubernetes versions, Fleet Manager features may not be available or function as expected.
+Member clusters running supported AKS and Arc-enabled Kubernetes versions, but which don't meet the minimum Kubernetes version required for a Fleet Manager feature, won't have access to that feature.
 
-On clusters running a supported AKS and Arc-enabled Kubernetes version, but which don't meet the minimum Kubernetes version required for a Fleet Manager feature, that feature isn't available.
-
-Where a Fleet Manager feature requires a minimum Kubernetes version, the minimum version is listed in the relevant Fleet Manager documentation.
+Fleet Manager features requiring a minimum Kubernetes version will indicate the minimum version on their documentation page.
 
 ## Next steps
 
