@@ -104,7 +104,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 
     ```bash
     kubectl apply -f - <<EOF
-    apiVersion: external-secrets.io/v1beta1
+    apiVersion: external-secrets.io/v1
     kind: SecretStore
     metadata:
       name: azure-store
