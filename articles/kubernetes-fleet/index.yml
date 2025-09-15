@@ -58,7 +58,7 @@ landingContent:
             url: quickstart-resource-propagation.md
       - linkListType: tutorial
         links:
-          - text: Use cluster properties, resources and cost with resourec placement
+          - text: Use cluster properties, resources utilization, and cost with resource placement
             url: intelligent-resource-placement.md
       - linkListType: tutorial
         links:
