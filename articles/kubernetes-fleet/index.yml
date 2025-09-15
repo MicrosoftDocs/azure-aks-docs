@@ -33,18 +33,22 @@ landingContent:
 
   - title: Safe multi-cluster updates
     linkLists:
-      - linkListType: quickstart
+      - linkListType: tutorial
         links:
-          - text: Create a Fleet Manager and join member clusters
-            url: quickstart-create-fleet-and-members.md
-      - linkListType: quickstart
-        links:
-          - text: Use Fleet Manager to deploy workloads across multiple clusters
+          - text: Use update runs to update Kubernetes and node images across multiple clusters
             url: quickstart-resource-propagation.md
       - linkListType: tutorial
         links:
-          - text: Use Automated Deployments to drive multi-cluster resource placement
-            url: howto-automated-deployments.md
+          - text: Define reusable update strategies
+            url: update-create-update-strategy.md
+      - linkListType: tutorial
+        links:
+          - text: Automate upgrades of Kubernetes and node images across multiple clusters
+            url: update-automation.md
+      - linkListType: tutorial
+        links:
+          - text: Monitoring and alerting for multi-cluster updates
+            url: howto-monitor-update-runs.md
 
   - title: Multi-cluster resource placement
     linkLists:
