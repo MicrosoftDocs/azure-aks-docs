@@ -84,13 +84,13 @@ export RESOURCE_GROUP="<resourcegroup-name>"
 az aks create \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
-    --generate-ssh-keys \
     --location eastus \
     --network-plugin azure \
     --network-plugin-mode overlay \
     --network-dataplane cilium \
     --enable-acns \
-    --acns-transit-encryption-type wireguard
+    --acns-transit-encryption-type wireguard \
+    --generate-ssh-keys
 ```
 
 
@@ -137,7 +137,7 @@ kubectl -n kube-system exec -ti ds/cilium -- bash
 2. Check that WireGuard is enabled
 
 ```bash
-cilium-dbg encrypt statush
+cilium-dbg encrypt status
 ```
 
 Expected output:
