@@ -1,14 +1,14 @@
 ### YamlMime:Landing
 title: Azure Kubernetes Fleet Manager
-summary: Learn how to address multi-cluster and at-scale scenarios for Azure Kubernetes Service (AKS) clusters
+summary: Azure Kubernetes Fleet Manager enables at-scale management of multiple Azure Kubernetes Service (AKS) clusters. Fleet Manager provides platform administrators with access to automated safe multi-cluster updates, intelligent Kubernetes resource placement, and a centralized location to access monitoring data for their clusters
 
 metadata:
   title: Azure Kubernetes Fleet Manager
-  description: Learn how to address multi-cluster and at-scale scenarios for Azure Kubernetes Service (AKS) clusters
+  description: Azure Kubernetes Fleet Manager enables at-scale management of multiple Azure Kubernetes Service (AKS) clusters. Fleet Manager provides platform administrators with access to automated safe multi-cluster updates, intelligent Kubernetes resource placement, and a centralized location to access monitoring data for their clusters.
   ms.service: azure-kubernetes-fleet-manager
   ms.author: simonwaight
   ms.topic: landing-page
-  ms.date: 05/09/2025
+  ms.date: 09/15/2025
 landingContent:
   - title: About Azure Kubernetes Fleet Manager
     linkLists:
