@@ -15,16 +15,11 @@ author: sanyakochhar
 This article shows you how to uninstall the Istio-based service mesh add-on for Azure Kubernetes Service (AKS) cluster and delete sample resources created in the [Getting Started][istio-getting-started] guide.
 
 ## Uninstall the add-on
-Disabling the service mesh add-on will completely remove the Istio control plane and ingress gateways from the cluster. It will also delete the corresponding managed namespaces such as `aks-istio-system` and `aks-istio-ingress` and resources created in them. Resources in user-managed namespaces will not be deleted. If you would like to uninstall the add-on, run the following command:
+
+Disabling the service mesh add-on will completely remove Istio CRDs, the Istio control plane, ingress gateways and egress gateway configurations from the cluster. It will also delete **Istio CRDs and therefore Istio Custom Resources**; the corresponding managed namespaces such as `aks-istio-system` and `aks-istio-ingress` and resources created in them. If you would like to uninstall the add-on, run the following command:
 
 ```azurecli-interactive
 az aks mesh disable --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
-```
-
-Istio `CustomResourceDefintion`s (CRDs) aren't be deleted by default. To clean them up, use:
-
-```bash
-kubectl delete crd $(kubectl get crd -A | grep "istio.io" | awk '{print $1}')
 ```
 
 ## Clean up sample resources
@@ -36,4 +31,5 @@ kubectl delete -f https://raw.githubusercontent.com/istio/istio/release-1.24/sam
 ```
 
 <!--- Internal Links --->
+
 [istio-getting-started]: istio-deploy-addon.md
