@@ -411,7 +411,7 @@ The CNPG operator automatically creates a PodMonitor for the primary instance us
      kind: PodMonitor
      metadata:
       annotations:
-        cnpg.io/operatorVersion: 1.23.1
+        cnpg.io/operatorVersion: 1.27.0
     ...
     ```
 

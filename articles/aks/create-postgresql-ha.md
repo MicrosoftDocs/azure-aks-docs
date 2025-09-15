@@ -48,25 +48,24 @@ export MY_PUBLIC_CLIENT_IP=$(dig +short myip.opendns.com @resolver3.opendns.com)
 
 ## Install required extensions
 
-The `aks-preview`, `k8s-extension` and `amg` extensions provide more functionality for managing Kubernetes clusters and querying Azure resources. Install these extensions using the following [`az extension add`][az-extension-add] commands:
+Install the extensions needed for Kubernetes integration and monitoring:
 
 ```bash
-az extension add --upgrade --name aks-preview --yes --allow-preview true
-az extension add --upgrade --name k8s-extension --yes --allow-preview false
-az extension add --upgrade --name amg --yes --allow-preview false
+az extension add --upgrade --name k8s-extension --yes
+az extension add --upgrade --name amg --yes
 ```
 
 As a prerequisite for using `kubectl`, you need to first install [Krew][install-krew], followed by the installation of the [CNPG plugin][cnpg-plugin]. These installations enable the management of the PostgreSQL operator using the subsequent commands.
 
 ```bash
 (
-  set -x; cd "$(mktemp -d)" &&
-  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
-  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
-  KREW="krew-${OS}_${ARCH}" &&
-  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
-  tar zxvf "${KREW}.tar.gz" &&
-  ./"${KREW}" install krew
+    set -x; cd "$(mktemp -d)" &&
+    OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+    ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+    KREW="krew-${OS}_${ARCH}" &&
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+    tar zxvf "${KREW}.tar.gz" &&
+    ./"${KREW}" install krew
 )
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
@@ -574,7 +573,7 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
     kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME \
         --namespace $PG_SYSTEM_NAMESPACE \
         --server-side -f \
-        https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.23/releases/cnpg-1.23.1.yaml
+        https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.27/releases/cnpg-1.27.0.yaml
     ```
 
 2. Verify the operator installation on the AKS cluster using the [`kubectl get`][kubectl-get] command.

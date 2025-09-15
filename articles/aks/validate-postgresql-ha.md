@@ -63,18 +63,16 @@ In this section, you create a table and insert some data into the app database t
     kubectl cnpg psql $PG_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE
     ```
 
-    ```sql
-    # Run the following PSQL commands to create a small dataset
-    # postgres=#
+  ```sql
+  -- Create a small dataset
+  CREATE TABLE datasample (id INTEGER, name VARCHAR(255));
+  INSERT INTO datasample (id, name) VALUES (1, 'John');
+  INSERT INTO datasample (id, name) VALUES (2, 'Jane');
+  INSERT INTO datasample (id, name) VALUES (3, 'Alice');
+  SELECT COUNT(*) FROM datasample;
+  ```
 
-    CREATE TABLE datasample (id INTEGER,name VARCHAR(255));
-    INSERT INTO datasample (id, name) VALUES (1, 'John');
-    INSERT INTO datasample (id, name) VALUES (2, 'Jane');
-    INSERT INTO datasample (id, name) VALUES (3, 'Alice');
-    SELECT COUNT(*) FROM datasample;
-
-    # Type \q to exit psql
-    ```
+  Type `\q` to exit psql when finished.
 
     Your output should resemble the following example output:
 
@@ -97,35 +95,31 @@ In this section, you create a table and insert some data into the app database t
     kubectl cnpg psql --replica $PG_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE
     ```
 
-    ```sql
-    #postgres=#
-    SELECT pg_is_in_recovery();
-    ```
+  ```sql
+  SELECT pg_is_in_recovery();
+  ```
 
     Example output
 
-    ```output
-    # pg_is_in_recovery
-    #-------------------
-    # t
-    #(1 row)
-    ```
+  ```output
+  pg_is_in_recovery
+  -------------------
+  t
+  (1 row)
+  ```
 
-    ```sql
-    #postgres=#
-    SELECT COUNT(*) FROM datasample;
-    ```
+  ```sql
+  SELECT COUNT(*) FROM datasample;
+  ```
 
     Example output
 
-    ```output
-    # count
-    #-------
-    #     3
-    #(1 row)
-
-    # Type \q to exit psql
-    ```
+  ```output
+  count
+  -------
+    3
+  (1 row)
+  ```
 
 ## Set up on-demand and scheduled PostgreSQL backups using Barman
 
@@ -351,18 +345,18 @@ You also create a second federated credential to map the new recovery cluster se
     ```
 
     ```sql
-    postgres=# SELECT COUNT(*) FROM datasample;
+    SELECT COUNT(*) FROM datasample;
     ```
 
     Example output
 
     ```output
-    # count
-    #-------
-    #     3
-    #(1 row)
+     count
+    -------
+         3
+    (1 row)
 
-    # Type \q to exit psql
+    Type \q to exit psql
     ```
 
 1. Delete the recovered cluster using the following command:
