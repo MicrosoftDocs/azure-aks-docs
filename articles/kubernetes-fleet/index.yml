@@ -31,6 +31,36 @@ landingContent:
           - text: Frequently asked questions
             url: faq.md
 
+  - title: Safe multi-cluster updates
+    linkLists:
+      - linkListType: quickstart
+        links:
+          - text: Create a Fleet Manager and join member clusters
+            url: quickstart-create-fleet-and-members.md
+      - linkListType: quickstart
+        links:
+          - text: Use Fleet Manager to deploy workloads across multiple clusters
+            url: quickstart-resource-propagation.md
+      - linkListType: tutorial
+        links:
+          - text: Use Automated Deployments to drive multi-cluster resource placement
+            url: howto-automated-deployments.md
+
+  - title: Multi-cluster resource placement
+    linkLists:
+      - linkListType: quickstart
+        links:
+          - text: Create a Fleet Manager and join member clusters
+            url: quickstart-create-fleet-and-members.md
+      - linkListType: quickstart
+        links:
+          - text: Use Fleet Manager to deploy workloads across multiple clusters
+            url: quickstart-resource-propagation.md
+      - linkListType: tutorial
+        links:
+          - text: Use Automated Deployments to drive multi-cluster resource placement
+            url: howto-automated-deployments.md
+
   - title: Get started
     linkLists:
       - linkListType: quickstart
