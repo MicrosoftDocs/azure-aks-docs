@@ -16,7 +16,7 @@ This article shows you how to uninstall the Istio-based service mesh add-on for 
 
 ## Uninstall the add-on
 
-Disabling the service mesh add-on will completely remove Istio CRDs, the Istio control plane, ingress gateways and egress gateway configurations from the cluster. It will also delete **Istio CRDs and therefore Istio Custom Resources**; the corresponding managed namespaces such as `aks-istio-system` and `aks-istio-ingress` and resources created in them. If you would like to uninstall the add-on, run the following command:
+Disabling the service mesh add-on removes all **Istio components** from your cluster. This includes **Istio CRDs and custom resources**, the **Istio control plane**, **ingress and egress gateway configurations**, and the managed namespaces `aks-istio-system` and `aks-istio-ingress` (along with any resources in them). To uninstall the add-on, run the following command:
 
 ```azurecli-interactive
 az aks mesh disable --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
