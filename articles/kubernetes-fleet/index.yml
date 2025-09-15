@@ -64,6 +64,10 @@ landingContent:
         links:
           - text: Use Automated Deployments to drive multi-cluster resource placement
             url: howto-automated-deployments.md
+      - linkListType: tutorial
+        links:
+          - text: Understanding multi-cluster resource placement status
+            url: howto-understand-placement.md        
 
   - title: Get started
     linkLists:
