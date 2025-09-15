@@ -932,6 +932,10 @@
               href: ai-toolchain-operator-monitoring.md
             - name: Onboard custom models for inference
               href: kaito-custom-inference-model.md
+            - name: Configure tool calling and LLM inference with AI toolchain operator
+              href: ai-toolchain-operator-tool-calling.md
+            - name: Deploy an MCP server with AI toolchain operator
+              href: ai-toolchain-operator-mcp.md
         - name: Deploy data and ML pipelines with Flyte
           href: use-flyte.md
     - name: Work with clusters using Copilot
