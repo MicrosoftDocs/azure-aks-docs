@@ -359,4 +359,4 @@ The generated update run is not automatically started, allowing you to review it
 [az-fleet-updaterun-start]: /cli/azure/fleet/updaterun#az-fleet-updaterun-start
 [az-fleet-updaterun-stop]: /cli/azure/fleet/updaterun#az-fleet-updaterun-stop
 [az-fleet-updaterun-skip]: /cli/azure/fleet/updaterun#az-fleet-updaterun-skip
-[az-fleet-updaterun-generate]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-generate-update-ru
+[az-fleet-updaterun-generate]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-generate-update-run
