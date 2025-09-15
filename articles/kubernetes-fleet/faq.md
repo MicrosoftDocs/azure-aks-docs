@@ -139,9 +139,38 @@ The two most common reasons for long pending states are:
 
 * Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they are also blocked.
 
+### Editing my update strategy didn't change the existing update runs that used it. Why not?
+
+Changes to an update strategy do not affect any update run that has already been created. At creation time, a copy of the strategy is made and stored on the update run itself. As such, the update run is immutable to strategy changes, so you can be sure that it doesn't change halfway through a run.
+
 ### My auto-upgrade run started, then immediately entered a pending state. Why?
 
 See the previous question.
+
+### Can I preapprove an approval?
+
+No. Approvals are only available once you can verify that the member clusters are ready for upgrade or that the upgrade is completed successfully. If you want to preapprove, consider not configuring an approval in your strategy at all.
+
+### Do approvals expire?
+
+No, approvals wait until they're approved. You can't configure a limited time window for approvals.
+
+### Can I skip an approval?
+
+If you want to skip the member cluster upgrades together with the gating approval, then you can do so by skipping the encompassing group or stage. If you want to proceed with the upgrades, then the only way to do so is to grant the approval.
+
+### How do I delete an approval?
+
+As in the previous question, if you want to proceed with an upgrade, then the only way to do so is to grant the approval. On the other hand, if you're trying to clean up the underlying gate resource, you can do so by deleting the associated update run. That deletes all gates linked to the update run automatically.
+
+### Can I configure an after stage approval together with an after stage wait?
+
+Yes. The after stage wait begins at the same time as the approval. Both must be completed before the update run moves on. That is, the after stage wait needs to have run for the configured time period **and** the approval must be granted.
+
+### Can approvals be added to existing update strategies?
+
+Yes. You can edit the existing strategy to include approvals. However, existing update runs that were created using that strategy aren't updated.
+
 
 ## Cluster resource placement FAQs
 
