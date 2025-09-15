@@ -62,7 +62,7 @@ To enable Azure Hybrid Benefit on an existing AKS cluster:
 RG_NAME='myResourceGroup'
 CLUSTER='myAKSCluster'
 
-az aks update --resouce-group $RG_NAME --name $CLUSTER--enable-ahub
+az aks update --resource-group $RG_NAME --name $CLUSTER--enable-ahub
 ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
@@ -91,7 +91,7 @@ az aks update --resource-group $RG_NAME --name $CLUSTER --disable-ahub
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-It is currently not possible to disable Azure Hybrid Benefit for AKS using Azure PowerShell.
+It's currently not possible to disable Azure Hybrid Benefit for AKS using Azure PowerShell.
 
 ---
 
@@ -102,4 +102,3 @@ To learn more about Windows containers on AKS, see the following resources:
 * [Learn how to deploy, manage, and monitor Windows containers on AKS](/training/paths/deploy-manage-monitor-wincontainers-aks).
 * Open an issue or provide feedback in the [Windows containers GitHub repository](https://github.com/microsoft/Windows-Containers/issues).
 * Review the [third-party partner solutions for Windows on AKS](windows-aks-partner-solutions.md).
-
