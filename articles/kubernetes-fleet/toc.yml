@@ -1,9 +1,7 @@
 - name: Azure Kubernetes Fleet Manager
   href: index.yml
-- name: Overview
-  items:
-  - name: About Azure Kubernetes Fleet Manager
-    href: overview.md
+- name: What is Azure Kubernetes Fleet Manager?
+  href: overview.md
 - name: Quickstarts
   items:
   - name: Create a fleet and join member clusters
