@@ -78,7 +78,7 @@ Supported AKS update channels:
 * **Rapid**: Updates for the most recent AKS-supported Kubernetes release (N).
 * **Stable**: Updates for Kubernetes stable channel (N-1) where 'N' is the most recent AKS-supported Kubernetes release.
 * **NodeImage**: node image VHD patched (bug and security) with a weekly release schedule.
-* **TargetKubernetesVersion (preview) (Patch)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that have moved to Long-Term Support (LTS).
+* **TargetKubernetesVersion (preview) (Patch)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that are available only via AKS Long-Term Support (LTS).
 
 Currently unsupported AKS channels:
 
@@ -132,6 +132,10 @@ The two most common reasons for long pending states are:
 ### My auto-upgrade run started, then immediately entered a pending state. Why?
 
 See the previous question.
+
+### Editing my update strategy didn't change the existing update runs that used it. Why not?
+
+This is by design to ensure consistency of update runs. When an update run is created, a copy of the chosen strategy is made and stored on the update run itself. 
 
 ### Can I preapprove an approval?
 
