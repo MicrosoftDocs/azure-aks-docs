@@ -589,8 +589,12 @@
       href: operator-best-practices-scheduler.md
     - name: Advanced scheduler features
       href: operator-best-practices-advanced-scheduler.md
+    - name: Learn about Kueue for batch scheduling
+      href: kueue-overview.md
     - name: Schedule and deploy batch jobs with Kueue
       href: deploy-batch-jobs-with-kueue.md
+    - name: Monitor batch deployments and queues with Kueue
+      href: kueue-monitoring.md
 - name: Security
   items:
     - name: Security concepts
