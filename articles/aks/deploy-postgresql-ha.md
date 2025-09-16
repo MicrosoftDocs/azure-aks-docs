@@ -391,7 +391,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
 > kubectl cnpg destroy [cnpg-cluster-name] [instance-number]  
 > ```
 
-### Validate the Prometheus PodMonitor is running
+## Validate the Prometheus PodMonitor is running
 
 The CNPG operator automatically creates a PodMonitor for the primary instance using the recording rules created during the [Prometheus Community installation](#install-the-prometheus-podmonitors).
 
@@ -447,13 +447,13 @@ kubectl --namespace $PG_NAMESPACE \
     -o yaml
 ```
 
-#### Option A - Azure Monitor workspace
+### Option A - Azure Monitor workspace
 
 Once you have deployed the Postgres cluster and the pod monitor, you can view the metrics using the Azure portal in an Azure Monitor workspace.
 
 :::image source="./media/deploy-postgresql-ha/prometheus-metrics.png" alt-text="Screenshot showing Postgres cluster metrics in an Azure Monitor workspace in the Azure portal." lightbox="./media/deploy-postgresql-ha/prometheus-metrics.png":::
 
-#### Option B - Managed Grafana
+### Option B - Managed Grafana
 
 Alternatively, Once you have deployed the Postgres cluster and pod monitors, you can create a metrics dashboard on the Managed Grafana instance created by the deployment script to visualize the metrics exported to the Azure Monitor workspace. You can access the Managed Grafana via the Azure portal. Navigate to the Managed Grafana instance created by the deployment script and select the Endpoint link as shown here:
 
