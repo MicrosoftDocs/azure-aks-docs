@@ -78,21 +78,6 @@ A batch user runs compute-intensive or parallel jobs using the platform-level in
 * Azure CLI installed on your local machine. To install or upgrade, see [Install the Azure CLI](/cli/azure/install-azure-cli).
 * [Helm version 3 or above](https://helm.sh/docs/intro/install/) installed.
 
-## Install Kueue with kubectl
-
-To install the latest version of Kueue in your cluster, run the following `kubectl` command:
-
-```shell
-LATEST_VERSION=$(curl -s https://api.github.com/repos/kubernetes-sigs/kueue/releases/latest | grep tag_name | cut -d '"' -f 4)
-kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/${LATEST_VERSION}/manifests.yaml
-```
-
-To wait for Kueue to be fully available, run the following `kubectl` command:
-
-```shell
-kubectl wait deploy/kueue-controller-manager -n kueue-system --for=condition=available --timeout=5m
-```
-
 ## Install Kueue with Helm
 
 While most features and scheduling policies that you may require are enabled by default, some are not like `TopologyAwareScheduling`. If needed, reconfigure your Kueue installation by changing the default [Feature Gates](https://kueue.sigs.k8s.io/docs/installation/#feature-gates-for-alpha-and-beta-features) or by configuring [Kueue paramater values](https://github.com/kubernetes-sigs/kueue/blob/main/charts/kueue/README.md#configuration) in the `values.yaml` file of the Helm chart.
