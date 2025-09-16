@@ -19,7 +19,7 @@ Ensuring clusters are kept updated in a timely and safe fashion is a key concern
 This article covers how to use auto-upgrade profiles to automatically create and execute update runs when new Kubernetes or node image versions are made available by AKS. 
 
 > [!NOTE]
-> Auto-upgrade triggered update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance) which explains how update runs handle member clusters with configured planned maintenance windows.
+> Auto-upgrade triggered update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance) that explains how update runs handle member clusters with configured planned maintenance windows.
 
 ## Before you begin
 
@@ -121,7 +121,7 @@ az fleet autoupgradeprofile create \
 Update to a defined target Kubernetes minor version using the `--target-kubernetes-version` parameter, supplying the version in the format {major version}.{minor version} (for example, 1.33). Fleet auto-upgrade automatically upgrades member clusters to the latest patch release of the specified target version when the patch is available.
 
 > [!NOTE]
-> * When using the `TargetKubernetesVersion` channel, you must specify the `--target-kubernetes-version` parameter. For other channels (Rapid, Stable, NodeImage), this parameter is not supported.
+> * When using the `TargetKubernetesVersion` channel, you must specify the `--target-kubernetes-version` parameter. For other channels (Rapid, Stable, NodeImage), this parameter isn't supported.
 >
 > * The `--long-term-support` (LTS) flag is only available when using the `TargetKubernetesVersion` channel. For other channels, this flag must be set to False.
 > * You can't set the target Kubernetes version to a future Kubernetes version not yet released by AKS.
@@ -154,7 +154,7 @@ az fleet autoupgradeprofile create \
 
 #### Node image updates
 
-Update nodes with a newly patched VHD containing security fixes and bug fixes.
+Update nodes with a newly patched machine image containing security fixes and bug fixes.
 
 Update node images for member clusters, processing clusters sequentially one-by-one.
 
@@ -237,7 +237,7 @@ az fleet autoupgradeprofile delete \
 1. If you select the **Target Kubernetes minor version (preview)** channel, you can choose the Kubernetes minor to use as a trigger:
 
     * **Allow LTS minor versions**: Allows the selection of Kubernetes minor versions only available for AKS long term support (LTS) clusters.
-    * **Target Kubernetes minor version**: Select the Kubernetes minor version trigger. Clusters at a lower minor will be updated to it first, then only patch updates will be applied.
+    * **Target Kubernetes minor version**: Select the Kubernetes minor version trigger. Clusters at a lower minor are updated to it first, then only patch updates are applied.
 
     :::image type="content" source="./media/auto-upgrade/create-auto-upgrade-profile-04.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for creating auto-upgrade profile, defining which Kubernetes minor to use as a trigger." lightbox="./media/auto-upgrade/create-auto-upgrade-profile-04.png":::
 
