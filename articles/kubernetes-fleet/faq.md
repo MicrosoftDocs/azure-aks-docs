@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 09/10/2025
+ms.date: 09/16/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -71,12 +71,6 @@ If you attempt to update or modify the hub cluster (which is a single node AKS c
 
 ## Multi-cluster updates - automated or manual FAQs
 
-### What triggers auto-upgrade profiles?
-
-When AKS releases new Kubernetes or node image versions that match the profile specification into at least one Azure region.
-
-If you don't have any clusters in the Azure region generating the trigger, the auto-upgrade's update run enters a pending state. For more information, see [my update run is in a pending state](#my-update-run-is-in-a-pending-state-for-quite-some-time-what-should-i-do). 
-
 ### What AKS update channels does Fleet Manager support?
 
 Supported AKS update channels:
@@ -84,12 +78,12 @@ Supported AKS update channels:
 * **Rapid**: Updates for the most recent AKS-supported Kubernetes release (N).
 * **Stable**: Updates for Kubernetes stable channel (N-1) where 'N' is the most recent AKS-supported Kubernetes release.
 * **NodeImage**: node image VHD patched (bug and security) with a weekly release schedule.
-* **TargetKubernetesVersion (preview)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that are available only via AKS Long-Term Support (LTS).
+* **TargetKubernetesVersion (preview) (Patch)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that are available only via AKS Long-Term Support (LTS).
 
 Currently unsupported AKS channels:
 
 * **SecurityPatch**: node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
-* **Unmanaged**: node image OS updates applied directly through OS in-built patching (Linux nodes only).M
+* **Unmanaged**: node image OS updates applied directly through OS in-built patching (Linux nodes only).
 
 If you're using any of the channels that Fleet Manager doesn't support, we recommend you leave those channels enabled on your AKS clusters.
 
@@ -98,18 +92,20 @@ If you're using any of the channels that Fleet Manager doesn't support, we recom
 You can elect to:
 
 * Allow Long Term Support (LTS) in the auto-upgrade profile and enable it for any clusters in your fleet you wish to retain on the specific minor. Ensure that only LTS clusters are included in the update strategy you use.
-* Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters are updated to the most recent patch in that minor when it's released.
+* Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters are updated to the most recent patch in the specified Kubernetes minor when released.
 
-For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
+For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-minor-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
 
 > [!NOTE]
 > To review detailed information if failures occur and to understand the specific actions to take, check the auto-upgrade profile status.
 
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 
-If you leave AKS cluster auto-upgrades enabled, then the update of that cluster can be performed by either Fleet Manager or AKS cluster auto-upgrade, depending on which one runs first.
+If you leave AKS cluster auto-upgrades enabled, then the update of that cluster is performed by either Fleet Manager or AKS cluster auto-upgrade, depending on which one runs first.
 
-Fleet Manager doesn't alter the configuration of AKS cluster auto-upgrade settings. If you want Fleet Manager to manage auto-upgrades, you must disable auto-upgrade on each individual member AKS cluster.
+Fleet Manager doesn't alter the configuration of AKS cluster auto-upgrade settings.
+
+If you want Fleet Manager to manage auto-upgrades, you must disable auto-upgrade on each individual member AKS cluster.
 
 ### AKS Cluster maintenance window support
 
@@ -121,13 +117,9 @@ For more information, see the documentation for [AKS cluster maintenance windows
 
 ### What is the scope of consistent node image upgrades?
 
-If you want all member clusters to use the same node image, then all member clusters must be in the same [update run][update-run] with the `consistent image` option selected. 
+Node consistency is only guaranteed for all clusters contained in a single [update run][update-run] where the `consistent image` option is chosen.
 
 There's no consistency guarantee for node image versions across separate update runs.
-
-### How many Update Groups can I add to an Update Stage?
-
-An Update Stage supports adding up to 50 Update Groups.
 
 ### My update run is in a pending state for quite some time. What should I do?
 
@@ -137,15 +129,15 @@ The two most common reasons for long pending states are:
 
 * Member cluster maintenance windows: If a member cluster's maintenance window isn't open then the update run can enter a paused state. This pause can block completion of the update group or stage until the next maintenance window opens. If you wish to continue the update run, manually skip the cluster. If you skip the cluster, it's out of sync with the rest of the member clusters in the update run.
 
-* Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they are also blocked.
-
-### Editing my update strategy didn't change the existing update runs that used it. Why not?
-
-Changes to an update strategy do not affect any update run that has already been created. At creation time, a copy of the strategy is made and stored on the update run itself. As such, the update run is immutable to strategy changes, so you can be sure that it doesn't change halfway through a run.
+* Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they'll also be unable to update.
 
 ### My auto-upgrade run started, then immediately entered a pending state. Why?
 
 See the previous question.
+
+### Editing my update strategy didn't change the existing update runs that used it. Why not?
+
+When an update run is created, a copy of the chosen strategy is made and stored on the update run itself so that changes to the strategy don't affect executing update runs.
 
 ### Can I preapprove an approval?
 
@@ -153,24 +145,23 @@ No. Approvals are only available once you can verify that the member clusters ar
 
 ### Do approvals expire?
 
-No, approvals wait until they're approved. You can't configure a limited time window for approvals.
+No, approvals wait until they're approved. You can't configure a time window for approvals.
 
 ### Can I skip an approval?
 
-If you want to skip the member cluster upgrades together with the gating approval, then you can do so by skipping the encompassing group or stage. If you want to proceed with the upgrades, then the only way to do so is to grant the approval.
+If you want to skip the member cluster upgrades together with the gating approval, skip the encompassing group or stage. If you want to proceed with the upgrades, you must grant the approval.
 
 ### How do I delete an approval?
 
-As in the previous question, if you want to proceed with an upgrade, then the only way to do so is to grant the approval. On the other hand, if you're trying to clean up the underlying gate resource, you can do so by deleting the associated update run. That deletes all gates linked to the update run automatically.
+As in the previous question, if you want to proceed with an upgrade, you must grant the approval. If you're trying to clean up the underlying gate resource, you must delete the associated update run which deletes all gates linked to the update run.
 
 ### Can I configure an after stage approval together with an after stage wait?
 
-Yes. The after stage wait begins at the same time as the approval. Both must be completed before the update run moves on. That is, the after stage wait needs to have run for the configured time period **and** the approval must be granted.
+Yes. The after stage wait begins at the same time as the approval. Both must be completed before the update run continues.
 
 ### Can approvals be added to existing update strategies?
 
-Yes. You can edit the existing strategy to include approvals. However, existing update runs that were created using that strategy aren't updated.
-
+Yes. You can edit the existing strategy to include approvals. However, existing update runs that were created using the strategy aren't updated.
 
 ## Cluster resource placement FAQs
 
