@@ -87,12 +87,12 @@ Currently unsupported AKS channels:
 
 If you're using any of the channels that Fleet Manager doesn't support, we recommend you leave those channels enabled on your AKS clusters.
 
-### I have a Fleet Manager auto-upgrade profile with the TargetKubernetesVersion channel. The target Kubernetes minor version is now out of community support. What can I do?
+### The target Kubernetes minor version in my auto-upgrade profile is out of community support. What can I do?
 
 You can elect to:
 
 * Allow Long Term Support (LTS) in the auto-upgrade profile and enable it for any clusters in your fleet you wish to retain on the specific minor. Ensure that only LTS clusters are included in the update strategy you use.
-* Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters will be updated to the most recent patch in that minor when it is released.get Kubernetes version.
+* Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters are updated to the most recent patch in that minor when it's released.
 
 For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-minor-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
 
@@ -101,13 +101,17 @@ For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes
 
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 
-If you leave AKS cluster auto-upgrades enabled, then the update of that cluster could be performed by Fleet Manager or AKS cluster auto-upgrade, depending on which one runs first.
+If you leave AKS cluster auto-upgrades enabled, then the update of that cluster can be performed by either Fleet Manager or AKS cluster auto-upgrade, depending on which one runs first.
 
 Fleet Manager doesn't alter the configuration of AKS cluster auto-upgrade settings. If you want Fleet Manager to manage auto-upgrades, you must disable auto-upgrade on each individual member AKS cluster.
 
-### Maintenance window support
+### AKS Cluster maintenance window support
 
 Fleet Manager honors the per-cluster maintenance window settings for each member cluster.
+
+Maintenance windows don't trigger updates, nor do updates begin immediately a window opens. Maintenance windows only define when updates can be applied to a cluster.
+
+For more information, see the documentation for [AKS cluster maintenance windows][aks-maintenance-windows].
 
 ### What is the scope of consistent node image upgrades?
 
@@ -128,6 +132,30 @@ The two most common reasons for long pending states are:
 ### My auto-upgrade run started, then immediately entered a pending state. Why?
 
 See the previous question.
+
+### Can I preapprove an approval?
+
+No. Approvals are only available once you can verify that the member clusters are ready for upgrade or that the upgrade is completed successfully. If you want to preapprove, consider not configuring an approval in your strategy at all.
+
+### Do approvals expire?
+
+No, approvals wait until they're approved. You can't configure a time window for approvals.
+
+### Can I skip an approval?
+
+If you want to skip the member cluster upgrades together with the gating approval, you can by skipping the encompassing group or stage. If you want to proceed with the upgrades, the only way to is to grant the approval.
+
+### How do I delete an approval?
+
+As in the previous question, if you want to proceed with an upgrade, the only way to is to grant the approval. If you're trying to clean up the underlying gate resource, you can by deleting the associated update run. That deletes all gates linked to the update run automatically.
+
+### Can I configure an after stage approval together with an after stage wait?
+
+Yes. The after stage wait begins at the same time as the approval. Both must be completed before the update run moves on. That is, the after stage wait needs to have run for the configured time period **and** the approval must be granted.
+
+### Can approvals be added to existing update strategies?
+
+Yes. You can edit the existing strategy to include approvals. However, existing update runs that were created using that strategy aren't updated.
 
 ## Cluster resource placement FAQs
 
@@ -160,3 +188,4 @@ The roadmap for Azure Kubernetes Fleet Manager resource is available [on GitHub]
 
 <!-- INTERNAL LINKS -->
 [update-run]: ./concepts-update-orchestration.md#understanding-update-runs
+[aks-maintenance-windows]: /azure/aks/planned-maintenance
