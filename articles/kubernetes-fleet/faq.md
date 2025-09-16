@@ -92,7 +92,7 @@ If you're using any of the channels that Fleet Manager doesn't support, we recom
 You can elect to:
 
 * Allow Long Term Support (LTS) in the auto-upgrade profile and enable it for any clusters in your fleet you wish to retain on the specific minor. Ensure that only LTS clusters are included in the update strategy you use.
-* Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters are updated to the most recent patch in that minor when it's released.
+* Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters are updated to the most recent patch in the specified Kubernetes minor when released.
 
 For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-minor-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
 
@@ -101,9 +101,11 @@ For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes
 
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 
-If you leave AKS cluster auto-upgrades enabled, then the update of that cluster can be performed by either Fleet Manager or AKS cluster auto-upgrade, depending on which one runs first.
+If you leave AKS cluster auto-upgrades enabled, then the update of that cluster is performed by either Fleet Manager or AKS cluster auto-upgrade, depending on which one runs first.
 
-Fleet Manager doesn't alter the configuration of AKS cluster auto-upgrade settings. If you want Fleet Manager to manage auto-upgrades, you must disable auto-upgrade on each individual member AKS cluster.
+Fleet Manager doesn't alter the configuration of AKS cluster auto-upgrade settings.
+
+If you want Fleet Manager to manage auto-upgrades, you must disable auto-upgrade on each individual member AKS cluster.
 
 ### AKS Cluster maintenance window support
 
@@ -125,7 +127,7 @@ Fleet Manager update runs can be in a pending state for many reasons. You can vi
 
 The two most common reasons for long pending states are:
 
-* Member cluster maintenance windows: If a member cluster's maintenance window isn't open then the update run can enter a paused state. This pause can block completion of the update group or stage until the next maintenance window opens. If you wish to continue the update run, manually skip the cluster. If you skip the cluster, it is out of sync with the rest of the member clusters in the update run.
+* Member cluster maintenance windows: If a member cluster's maintenance window isn't open then the update run can enter a paused state. This pause can block completion of the update group or stage until the next maintenance window opens. If you wish to continue the update run, manually skip the cluster. If you skip the cluster, it's out of sync with the rest of the member clusters in the update run.
 
 * Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they'll also be unable to update.
 
@@ -135,7 +137,7 @@ See the previous question.
 
 ### Editing my update strategy didn't change the existing update runs that used it. Why not?
 
-This is by design to ensure consistency of update runs. When an update run is created, a copy of the chosen strategy is made and stored on the update run itself. 
+When an update run is created, a copy of the chosen strategy is made and stored on the update run itself so that changes to the strategy don't affect executing update runs.
 
 ### Can I preapprove an approval?
 
@@ -147,19 +149,19 @@ No, approvals wait until they're approved. You can't configure a time window for
 
 ### Can I skip an approval?
 
-If you want to skip the member cluster upgrades together with the gating approval, you can by skipping the encompassing group or stage. If you want to proceed with the upgrades, the only way to is to grant the approval.
+If you want to skip the member cluster upgrades together with the gating approval, skip the encompassing group or stage. If you want to proceed with the upgrades, you must grant the approval.
 
 ### How do I delete an approval?
 
-As in the previous question, if you want to proceed with an upgrade, the only way to is to grant the approval. If you're trying to clean up the underlying gate resource, you can by deleting the associated update run. That deletes all gates linked to the update run automatically.
+As in the previous question, if you want to proceed with an upgrade, you must grant the approval. If you're trying to clean up the underlying gate resource, you must delete the associated update run which deletes all gates linked to the update run.
 
 ### Can I configure an after stage approval together with an after stage wait?
 
-Yes. The after stage wait begins at the same time as the approval. Both must be completed before the update run moves on. That is, the after stage wait needs to have run for the configured time period **and** the approval must be granted.
+Yes. The after stage wait begins at the same time as the approval. Both must be completed before the update run continues.
 
 ### Can approvals be added to existing update strategies?
 
-Yes. You can edit the existing strategy to include approvals. However, existing update runs that were created using that strategy aren't updated.
+Yes. You can edit the existing strategy to include approvals. However, existing update runs that were created using the strategy aren't updated.
 
 ## Cluster resource placement FAQs
 
