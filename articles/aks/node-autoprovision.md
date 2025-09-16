@@ -348,7 +348,7 @@ Node autoprovisioning (NAP) honors Node OS maintenance windows configured via th
 Key points:
 
 - The `aksManagedNodeOSUpgradeSchedule` maintenance configuration determines the window during which node autoprovisioning picks up a new image; it does not necessarily determine when existing nodes are disrupted.
-- The upgrade mechanism and decision criteria are specific to NAP/Karpenter and are evaluated by NAP's drift logic; NAP respects Karpenter Node Disruption Budgets, and .
+- The upgrade mechanism and decision criteria are specific to NAP/Karpenter and are evaluated by NAP's drift logic; NAP respects Karpenter Node Disruption Budgets, and Pod Disruption Budgets.
 - These NAP upgrade decisions are separate from the cluster `NodeImage` and `SecurityPatch` channels. However, the `aksManagedNodeOSUpgradeSchedule` maintenance configuration will apply them as well.
 - Use a maintenance window of four hours or more for reliable operation.
 - If no maintenance configuration exists, AKS may use a fallback schedule to pick up new images, which can cause images to be picked up at unexpected times. Define an explicit `aksManagedNodeOSUpgradeSchedule` to avoid unexpected timing of new images, and upgrades.
