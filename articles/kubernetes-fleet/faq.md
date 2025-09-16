@@ -115,7 +115,7 @@ For more information, see the documentation for [AKS cluster maintenance windows
 
 ### What is the scope of consistent node image upgrades?
 
-If you want all member clusters to use the same node image, then all member clusters must be in the same [update run][update-run] with the `consistent image` option selected. 
+Node consistency is only guaranteed for all clusters contained in a single [update run][update-run] where the `consistent image` option is chosen.
 
 There's no consistency guarantee for node image versions across separate update runs.
 
