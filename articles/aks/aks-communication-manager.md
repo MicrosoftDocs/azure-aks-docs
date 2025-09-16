@@ -1,7 +1,7 @@
 ---
 title: AKS Communication Manager
 description: Learn how to set up and receive notices in Azure Resource Notifications for Azure Kubernetes Service maintenance events.
-ms.date: 07/30/2025
+ms.date: 08/28/2025
 ms.custom: aks communication manager
 ms.topic: concept-article
 author: kaarthis
@@ -39,7 +39,7 @@ The Azure Kubernetes Service (AKS) Communication Manager streamlines notificatio
 ### Query for cluster auto upgrade notifications
 
 ```kusto
-containerserviceeventresources
+arg("").containerserviceeventresources
 | where type == "microsoft.containerservice/managedclusters/scheduledevents"
 | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
 | where properties has "eventStatus"
@@ -47,6 +47,7 @@ containerserviceeventresources
 | extend status = substring(status, 0, indexof(status, ",") - 1)
 | where status != ""
 | where properties has "eventDetails"
+| extend details = parse_json(tostring(properties.eventDetails))
 | extend upgradeType = case(
                            properties has "K8sVersionUpgrade",
                            "K8sVersionUpgrade",
@@ -59,7 +60,7 @@ containerserviceeventresources
 | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
 | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
 | extend eventTime = todatetime(tostring(eventTime))
-| where eventTime >= ago(2h)
+| where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
 | where upgradeType == "K8sVersionUpgrade"
 | project
     eventTime,
@@ -74,7 +75,7 @@ containerserviceeventresources
 ### Query for Node OS auto upgrade notifications
 
 ```kusto
-containerserviceeventresources
+arg("").containerserviceeventresources
 | where type == "microsoft.containerservice/managedclusters/scheduledevents"
 | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
 | where properties has "eventStatus"
@@ -82,6 +83,7 @@ containerserviceeventresources
 | extend status = substring(status, 0, indexof(status, ",") - 1)
 | where status != ""
 | where properties has "eventDetails"
+| extend details = parse_json(tostring(properties.eventDetails))
 | extend upgradeType = case(
                            properties has "K8sVersionUpgrade",
                            "K8sVersionUpgrade",
@@ -94,7 +96,7 @@ containerserviceeventresources
 | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
 | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
 | extend eventTime = todatetime(tostring(eventTime))
-| where eventTime >= ago(2h)
+| where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
 | where upgradeType == "NodeOSUpgrade"
 | project
     eventTime,
@@ -126,22 +128,21 @@ containerserviceeventresources
 
 :::image type="content" source="./media/auto-upgrade-cluster/action-group.png" alt-text="The screenshot of entering appropriate email or SMS into an action group.":::
 
-7.  Assign Managed System Identity: After you create the alert rule, assign a managed identity so it can access the necessary resources. This step is performed after the alert rule is created, not during initial setup. To assign a managed identity:
-    - In the Azure portal, go to **Monitor** > **Alerts** > **Alert rules**, then select your alert rule.
-    - In the alert rule pane, under **Settings**, select **Identity**.
-    - Set **System assigned managed identity** to **On**.
-    - Click **Save** to enable the managed identity for the alert rule.
+7.  Assign system assigned managed identity: while creating the alert, assign a managed identity so you can grant access to the necessary resources. To assign a managed identity during creation:
+    - In the **Create an alert rule** screen go to **Details** > **Identity**
+    - Select **System assigned managed identity**.
+    - Continue with the alert creation.
 
     :::image type="content" source="./media/auto-upgrade-cluster/system-assigned-identity.jpg" alt-text="The screenshot of where to assign Managed System Identity.":::
 
-    > [!TIP]
-    > If you don't see the Identity option, make sure your alert rule has been created and you have the necessary permissions. Assigning the managed identity is always a separate step after alert rule creation.
-
 8.  Make sure to assign the appropriate Reader roles.
 
-    In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
+    After you create the alert rule, assign a managed identity. In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
 
     Choose the **Reader** role and assign it to the resource group. Repeat "Add role assignment" for the subscription if needed.
+
+    > [!TIP]
+    > If you don't see the Identity option, make sure your alert rule has been created and you have the necessary permissions. Assigning the managed identity is always a separate step after alert rule creation.
 
     > [!NOTE]
     > After Communication Manager is set up, it sends advance notices one week before maintenance starts and one day before maintenance starts. It also sends you timely alerts during the maintenance operation.
@@ -159,71 +160,71 @@ containerserviceeventresources
    The following query is for cluster autoupgrade notifications:
 
    ```console
-    arg("").containerserviceeventresources
-    | where type == "microsoft.containerservice/managedclusters/scheduledevents"
-    | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
-    | where properties has "eventStatus"
-    | extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
-    | extend status = substring(status, 0, indexof(status, ",") - 1)
-    | where status != ""
-    | where properties has "eventDetails"
-    | extend upgradeType = case(
-                               properties has "K8sVersionUpgrade",
-                               "K8sVersionUpgrade",
-                               properties has "NodeOSUpgrade",
-                               "NodeOSUpgrade",
-                               ""
-                           )
-    | extend details = parse_json(tostring(properties.eventDetails))
-    | where properties has "lastUpdateTime"
-    | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
-    | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
-    | extend eventTime = todatetime(tostring(eventTime))
-    | where eventTime >= ago(2h)
-    | where upgradeType == "K8sVersionUpgrade"
-    | project
-        eventTime,
-        upgradeType,
-        status,
-        properties,
-        name,
-        details
-    | order by eventTime asc
+   arg("").containerserviceeventresources
+   | where type == "microsoft.containerservice/managedclusters/scheduledevents"
+   | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
+   | where properties has "eventStatus"
+   | extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+   | extend status = substring(status, 0, indexof(status, ",") - 1)
+   | where status != ""
+   | where properties has "eventDetails"
+   | extend upgradeType = case(
+                              properties has "K8sVersionUpgrade",
+                              "K8sVersionUpgrade",
+                              properties has "NodeOSUpgrade",
+                              "NodeOSUpgrade",
+                              ""
+                          )
+   | extend details = parse_json(tostring(properties.eventDetails))
+   | where properties has "lastUpdateTime"
+   | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+   | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+   | extend eventTime = todatetime(tostring(eventTime))
+   | where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
+   | where upgradeType == "K8sVersionUpgrade"
+   | project
+       eventTime,
+       upgradeType,
+       status,
+       properties,
+       name,
+       details
+   | order by eventTime asc
    ```
-
+   
    The following query is for Node OS autoupgrade notifications:
-
+   
    ```console
-    arg("").containerserviceeventresources
-    | where type == "microsoft.containerservice/managedclusters/scheduledevents"
-    | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
-    | where properties has "eventStatus"
-    | extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
-    | extend status = substring(status, 0, indexof(status, ",") - 1)
-    | where status != ""
-    | where properties has "eventDetails"
-    | extend upgradeType = case(
-                               properties has "K8sVersionUpgrade",
-                               "K8sVersionUpgrade",
-                               properties has "NodeOSUpgrade",
-                               "NodeOSUpgrade",
-                               ""
-                           )
-    | extend details = parse_json(tostring(properties.eventDetails))
-    | where properties has "lastUpdateTime"
-    | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
-    | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
-    | extend eventTime = todatetime(tostring(eventTime))
-    | where eventTime >= ago(2h)
-    | where upgradeType == "NodeOSUpgrade"
-    | project
-        eventTime,
-        upgradeType,
-        status,
-        properties,
-        name,
-        details
-    | order by eventTime asc
+   arg("").containerserviceeventresources
+   | where type == "microsoft.containerservice/managedclusters/scheduledevents"
+   | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
+   | where properties has "eventStatus"
+   | extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+   | extend status = substring(status, 0, indexof(status, ",") - 1)
+   | where status != ""
+   | where properties has "eventDetails"
+   | extend upgradeType = case(
+                              properties has "K8sVersionUpgrade",
+                              "K8sVersionUpgrade",
+                              properties has "NodeOSUpgrade",
+                              "NodeOSUpgrade",
+                              ""
+                          )
+   | extend details = parse_json(tostring(properties.eventDetails))
+   | where properties has "lastUpdateTime"
+   | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+   | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+   | extend eventTime = todatetime(tostring(eventTime))
+   | where eventTime >= ago(30m) // Ensure this matches aggregation granularity & frequency
+   | where upgradeType == "NodeOSUpgrade"
+   | project
+       eventTime,
+       upgradeType,
+       status,
+       properties,
+       name,
+       details
+   | order by eventTime asc
    ```
 
 1. The interval should be 30 minutes, and the threshold should be 1.
