@@ -246,17 +246,24 @@ Status:
 
 ### One or more of the Kueue CRDs are missing when I install via Helm. How can I ensure all of the custom resources are installed?
 
-1. After installing Kueue, confirm that all four CRDs are installed using the `kubectl get` command.
+1. After installing Kueue with the [Kueue overview on AKS](./kueue-overview.md) guidance, confirm that all of the CRDs are installed using the `kubectl get` command.
     
     ```bash
     kubectl get crds | grep kueue
     ```
-    All four of the CRDs should be listed, as shown in the following example output:
+    These CRDs should be listed, as shown in the following example output:
 
     ```output
+    admissionchecks.kueue.x-k8s.io         
     clusterqueues.kueue.x-k8s.io
+    cohorts.kueue.x-k8s.io
     localqueues.kueue.x-k8s.io
+    multikueueclusters.kueue.x-k8s.io
+    multikueueconfigs.kueue.x-k8s.io
+    provisioningrequestconfigs.kueue.x-k8s.io
     resourceflavors.kueue.x-k8s.io
+    topologies.kueue.x-k8s.io
+    workloadpriorityclasses.kueue.x-k8s.io
     workloads.kueue.x-k8s.io
     ```
 
@@ -265,16 +272,9 @@ Status:
     ```bash
     kubectl apply -f https://github.com/kubernetes-sigs/kueue/releases/latest/download/kueue-crds.yaml
     ```
+
     > [!NOTE]
     > Please note that if you manually install the CRDs, you need to manually delete them once you're finished using the `kubectl delete` command.
-    >
-    > ```bash
-    > kubectl delete crd clusterqueues.kueue.x-k8s.io \
-    >    localqueues.kueue.x-k8s.io \
-    >    workloads.kueue.x-k8s.io \
-    >    resourceflavors.kueue.x-k8s.io
-    > ```
-
 
 ## Next steps
 
@@ -284,7 +284,6 @@ In this article, you:
 * Configured `ClusterQueue` and `LocalQueue` for general-purpose workloads with resource quotas and flavors (e.g., on-demand).
 * Submitted two batch jobs to demonstrate queuing: one admitted immediately, the second held due to quota limits, then admitted when resources became available.
 * Monitored workload status and controller logs to confirm scheduling behavior and queuing logic.
-* Enabled observability via Prometheus metrics to track queue depth, resource usage, and admission events.
 
 To learn more about Kueue, visit the following resources:
 
