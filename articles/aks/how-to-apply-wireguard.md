@@ -10,7 +10,7 @@ ms.date: 05/02/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Deploy WireGuard Encryption with Advanced Container Networking Services (Public Preview)
+# Deploy WireGuard encryption with Advanced Container Networking Services (Public Preview)
 > [!IMPORTANT]
 > WireGuard encryption with Advanced Cluster Networking Services is currently in PREVIEW.  
 > See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
@@ -67,7 +67,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 * **Container Network Security:** Offers security features like Fully Qualified Domain Name (FQDN) filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md?tabs=cilium#container-network-security).
 
 
-#### [**Cilium**](#tab/cilium)
+
 
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
@@ -94,7 +94,6 @@ az aks create \
 ```
 
 
----
 
 ## Enable Advanced Container Networking Services and WireGuard on an existing cluster
 
@@ -121,7 +120,7 @@ Get your cluster credentials using the [`az aks get-credentials`](/cli/azure/aks
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 ```
 
-## Validate the Setup
+## Validate the setup
 
 Validate that WireGuard is enabled successfully using cilium-dbg cli
 
