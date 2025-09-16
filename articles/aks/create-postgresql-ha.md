@@ -30,7 +30,7 @@ export SUFFIX=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 8 | head -
 export LOCAL_NAME="cnpg"
 export TAGS="owner=user"
 export RESOURCE_GROUP_NAME="rg-${LOCAL_NAME}-${SUFFIX}"
-export PRIMARY_CLUSTER_REGION="eastus2"
+export PRIMARY_CLUSTER_REGION="canadacentral"
 export AKS_PRIMARY_CLUSTER_NAME="aks-primary-${LOCAL_NAME}-${SUFFIX}"
 export AKS_PRIMARY_MANAGED_RG_NAME="rg-${LOCAL_NAME}-primary-aksmanaged-${SUFFIX}"
 export AKS_PRIMARY_CLUSTER_FED_CREDENTIAL_NAME="pg-primary-fedcred1-${LOCAL_NAME}-${SUFFIX}"
