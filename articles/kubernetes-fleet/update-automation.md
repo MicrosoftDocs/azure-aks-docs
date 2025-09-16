@@ -120,6 +120,8 @@ az fleet autoupgradeprofile create \
 
 Update to a defined target Kubernetes minor version using the `--target-kubernetes-version` parameter, supplying the version in the format {major version}.{minor version} (for example, 1.33). Fleet auto-upgrade automatically upgrades member clusters to the latest patch release of the specified target version when the patch is available.
 
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
 > [!NOTE]
 > * When using the `TargetKubernetesVersion` channel, you must specify the `--target-kubernetes-version` parameter. For other channels (Rapid, Stable, NodeImage), this parameter isn't supported.
 >
@@ -149,9 +151,6 @@ az fleet autoupgradeprofile create \
   --target-kubernetes-version "1.29" \
   --long-term-support
 ```
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
-
 #### Node image updates
 
 Update nodes with a newly patched machine image containing security fixes and bug fixes.
