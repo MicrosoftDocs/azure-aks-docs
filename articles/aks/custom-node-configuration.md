@@ -170,10 +170,17 @@ When serving a lot of traffic, the traffic commonly comes from a large number of
 
 | Setting | Allowed values/interval | Default | Description |
 | ------- | ----------------------- | ------- | ----------- |
-| `fs.file-max` | 8192 - 12000500 | 709620 | Maximum number of file-handles that the Linux kernel will allocate, by increasing this value you can increase the maximum number of open files permitted. |
+| `fs.file-max` | 8192 - 9223372036854775807 | 9223372036854775807 | Maximum number of file-handles that the Linux kernel will allocate. This is set to the maximum possible value (2^63-1) to prevent file descriptor exhaustion and ensure unlimited system-wide file handles for containerized workloads. |
 | `fs.inotify.max_user_watches` | 781250 - 2097152 | 1048576 | Maximum number of file watches allowed by the system. Each *watch* is roughly 90 bytes on a 32-bit kernel, and roughly 160 bytes on a 64-bit kernel. |
 | `fs.aio-max-nr` | 65536 - 6553500 | 65536 | The aio-nr shows the current system-wide number of asynchronous io requests. aio-max-nr allows you to change the maximum value aio-nr can grow to. |
 | `fs.nr_open` | 8192 - 20000500 | 1048576 | The maximum number of file-handles a process can allocate. |
+
+> [!NOTE]
+> The `fs.file-max` parameter is set to 9223372036854775807 (the maximum value for a signed 64-bit integer) across Ubuntu and Azure Linux based on upstream defaults. This configuration:
+> - **Prevents denial-of-service attacks** based on system-wide file descriptor exhaustion.
+> - **Ensures container workloads** are never bottlenecked by system-wide file handle limits.
+> - **Maintains security** through per-process limits (`fs.nr_open` and `ulimit`) which still apply to individual processes.
+> - **Optimizes for container platforms** where many containers may run simultaneously, each potentially opening many files and network connection.
 
 ### Socket and network tuning
 
