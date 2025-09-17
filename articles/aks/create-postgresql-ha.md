@@ -301,7 +301,16 @@ You also add a user node pool to the AKS cluster to host the PostgreSQL cluster.
         --output table
     ```
 
-2. Add a user node pool to the AKS cluster using the [`az aks nodepool add`][az-aks-node-pool-add] command.
+2. Wait for the initial cluster operation to complete using the [`az aks wait`][az-aks-wait] command so additional updates, such as adding the user node pool, don’t collide with an in-progress managed-cluster update:
+
+    ```bash
+    az aks wait \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --name $AKS_PRIMARY_CLUSTER_NAME \
+        --created
+    ```
+
+3. Add a user node pool to the AKS cluster using the [`az aks nodepool add`][az-aks-node-pool-add] command.
 
     ```bash
     az aks nodepool add \
@@ -625,6 +634,7 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
 [az-aks-show]: /cli/azure/aks#az_aks_show
 [az-network-public-ip-create]: /cli/azure/network/public-ip#az_network_public_ip_create
 [az-network-public-ip-show]: /cli/azure/network/public-ip#az_network_public_ip_show
+[az-aks-wait]: /cli/azure/aks#az_aks_wait
 [az-group-show]: /cli/azure/group#az_group_show
 [helm-repo-add]: https://helm.sh/docs/helm/helm_repo_add/
 [helm-upgrade]: https://helm.sh/docs/helm/helm_upgrade/
