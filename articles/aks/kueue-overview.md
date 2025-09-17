@@ -15,7 +15,7 @@ In this article, you learn how to install and configure Kueue to schedule batch 
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
-## What are batch deployments?
+## What are batch workloads?
 
 Batch deployments are typically non-interactive workloads that are retriable, have a finite duration, and might experience spiky or bursty resource usage. These workloads include, but are not limited to:
 
@@ -41,8 +41,8 @@ The default AKS scheduler satisfies the requirements of Kubernetes services but 
 
 Kueue introduces a two-level queuing model:
 
-1. A `ClusterQueue` represents shared resource pools (such as CPU, memory, GPU quotas).
-2. A `LocalQueue` represents a tenant-facing queue in a namespace (where users submit their batch jobs).
+- A `ClusterQueue` represents shared resource pools (such as CPU, memory, GPU quotas).
+- A `LocalQueue` represents a tenant-facing queue in a namespace (where users submit their batch jobs).
 
 Workloads submitted to a `LocalQueue` are matched to a `ClusterQueue` to determine if they can be admitted.
 
@@ -55,11 +55,11 @@ Batch workload administrators (including platform or cluster administrators and 
 
 A batch admin focuses on configuring, managing, and securing the platform-level infrastructure to support batch workloads, and have the following responsibilities:
 
-* Provision and manage AKS node pools 
-* Define resource quotas, ClusterQueues, and policies for workload isolation
-* Tune autoscaling and cost-efficiency (e.g., Cluster Autoscaler, Kueue quotas)
-* Monitor cluster and queue health
-* Create and maintain templates and reusable workflows
+* Provision and manage AKS node pools.
+* Define resource quotas, ClusterQueues, and policies for workload isolation.
+* Tune autoscaling and cost-efficiency (e.g., Cluster Autoscaler, Kueue quotas).
+* Monitor cluster and queue health.
+* Create and maintain templates and reusable workflows.
 
 A batch user runs compute-intensive or parallel jobs using the platform-level infrastructure configured by a batch admin, and typically:
 
@@ -94,32 +94,32 @@ In this guide, Kueue is configured to include `LocalQueueMetrics` and `Topology 
 
 1. Create and save a `values.yaml` file to optionally customize your Kueue configuration. 
 
-```bash
-cat <<EOF > values.yaml
-controllerManager:
-  featureGates:
-    - name: TopologyAwareScheduling
-      enabled: true
-    - name: LocalQueueMetrics
-      enabled: true
-  managerConfig:
-    controllerManagerConfigYaml: |
-      apiVersion: config.kueue.x-k8s.io/v1beta1
-      kind: Configuration
-      integrations:
-        frameworks:
-          - batch/job
-          - kubeflow.org/mpijob
-          - ray.io/rayjob
-          - ray.io/raycluster
-          - jobset.x-k8s.io/jobset
-          - kubeflow.org/paddlejob
-          - kubeflow.org/pytorchjob
-          - kubeflow.org/tfjob
-          - kubeflow.org/xgboostjob
-          - kubeflow.org/jaxjob
-EOF
-```
+    ```bash
+    cat <<EOF > values.yaml
+    controllerManager:
+      featureGates:
+        - name: TopologyAwareScheduling
+          enabled: true
+        - name: LocalQueueMetrics
+          enabled: true
+      managerConfig:
+        controllerManagerConfigYaml: |
+          apiVersion: config.kueue.x-k8s.io/v1beta1
+          kind: Configuration
+          integrations:
+            frameworks:
+              - batch/job
+              - kubeflow.org/mpijob
+              - ray.io/rayjob
+              - ray.io/raycluster
+              - jobset.x-k8s.io/jobset
+              - kubeflow.org/paddlejob
+              - kubeflow.org/pytorchjob
+              - kubeflow.org/tfjob
+              - kubeflow.org/xgboostjob
+              - kubeflow.org/jaxjob
+    EOF
+    ```
 
 2. Install the latest version of the Kueue controller and CRDs in a dedicated namespace using the `helm install` command.
 
@@ -204,7 +204,7 @@ If you no longer need to use the Kueue controller manager or Kueue custom resour
     kubectl delete namespace kueue-system  
     ```  
 
-## Next Steps
+## Next steps
 
 * [Deploy sample batch jobs with Kueue on your AKS cluster](./deploy-batch-jobs-with-kueue.md).
 * [Monitor your Kueue deployments with key Prometheus metrics](./kueue-monitoring.md).
