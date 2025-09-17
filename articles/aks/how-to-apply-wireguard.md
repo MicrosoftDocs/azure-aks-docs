@@ -10,7 +10,7 @@ ms.date: 05/02/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Deploy WireGuard encryption with Advanced Container Networking Services (Public Preview)
+# Deploy WireGuard encryption with Advanced Container Networking Services (public preview)
 > [!IMPORTANT]
 > WireGuard encryption with Advanced Cluster Networking Services is currently in PREVIEW.  
 > See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.

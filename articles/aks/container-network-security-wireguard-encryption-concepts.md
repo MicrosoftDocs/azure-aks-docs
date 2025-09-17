@@ -9,7 +9,7 @@ ms.topic: concept-article
 ms.date:  09/11/2024
 ---
 
-# In transit encryption with WireGuard (Public Preview) 
+# In transit encryption with WireGuard (public preview) 
 
 As organizations increasingly rely on Azure Kubernetes Service (AKS) to run containerized workloads, ensuring the security of network traffic between applications and services becomes essential especially in regulated or security-sensitive environments. In-transit encryption with WireGuard protects data as it moves between pods and nodes, mitigating risks of interception or tampering. WireGuard is known for its simplicity, and robust cryptography, offers a powerful solution for securing communication within AKS clusters. 
 
