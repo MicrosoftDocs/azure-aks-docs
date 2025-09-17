@@ -501,6 +501,6 @@ Select the Save icon to save your dashboard.
 [kubectl-get]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/
 [kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/
 [helm-repo-add]: https://helm.sh/docs/helm/helm_repo_add/
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az_identity_federated_credential_create
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [cluster-crd]: https://cloudnative-pg.io/documentation/1.23/cloudnative-pg.v1/#postgresql-cnpg-io-v1-ClusterSpec

@@ -653,11 +653,11 @@ _Microsoft maintains this article. The following contributors originally wrote i
 
 [kubectl-get]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/
 [kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/
-[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az_identity_federated_credential_create
+[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [kubectl-describe]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_describe/
-[az-storage-blob-list]: /cli/azure/storage/blob/#az_storage_blob_list
-[az-identity-federated-credential-delete]: /cli/azure/identity/federated-credential#az_identity_federated_credential_delete
+[az-storage-blob-list]: /cli/azure/storage/blob/#az-storage-blob-list
+[az-identity-federated-credential-delete]: /cli/azure/identity/federated-credential#az-identity-federated-credential-delete
 [kubectl-delete]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_delete/
-[az-group-delete]: /cli/azure/group#az_group_delete
+[az-group-delete]: /cli/azure/group#az-group-delete
 [what-is-aks]: ./what-is-aks.md
 [deploy-postgresql-ha]: ./deploy-postgresql-ha.md
