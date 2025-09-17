@@ -207,6 +207,7 @@ This output shows the current state of WireGuard encryption on the node.
   - public-key: The public key of the remote peer.
   - transfer-rx / transfer-tx: The total number of bytes received/transmitted over the tunnel.
 - public-key: The local WireGuard interface’s public key.
+- node-encryption: Encrypts traffic originating from the node itself or from host-network pods. At present, only pod traffic is encrypted. Node encryption is not yet supported and remains disabled by default.
 
 ## Disabling WireGuard on an existing cluster
 
