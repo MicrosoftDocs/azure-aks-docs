@@ -288,11 +288,8 @@ metadata:
   creationTimestamp: "..."
 ```
 
-> [!NOTE] The configuration provided serves as a starting point, but you should customize the values based on your specific cluster requirements and workload patterns. To determine the appropriate number of replicas for your environment, you can use the linear scaling formula: `replicas = max( ceil( cores * 1/coresPerReplica ) , ceil( nodes * 1/nodesPerReplica ) )`
-> 
-> For example, if your cluster has 512 CPU cores and 32 nodes:
-> 1. With `coresPerReplica = 128` and `nodesPerReplica = 8`: `max( ceil(512/128), ceil(32/8) ) = max(4, 4) = 4 replicas`
-> 1. With `coresPerReplica = 200` and `nodesPerReplica = 10`: `max( ceil(512/200), ceil(32/10) ) = max(3, 4) = 4 replicas`
+> [!NOTE] 
+> The configuration provided serves as a potential starting point, but you should customize the values based on your specific cluster requirements and DNS traffic patterns. One way to determine the appropriate number of replicas for your environment is to use the linear scaling formula: `replicas = max( ceil( cores * 1/coresPerReplica ) , ceil( nodes * 1/nodesPerReplica ) )` to know how many coreDNS replicas to have based on core / node count in the cluster.
 
 ## CoreDNS vertical pod autoscaling behavior
 
