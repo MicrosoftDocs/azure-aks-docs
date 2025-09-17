@@ -168,14 +168,13 @@ In the following examples, we show the difference in scheduling behavior between
     kubectl get workloads --namespace batch-jobs
     ```
 
-    Your output should resemble the following example output:
+Your output should resemble the following example output:
 
     ```output
-    NAME             ADMITTED   AGE
-    test-batch-1    True             10s
-    test-batch-2    False            5s
+    NAME            ADMITTED    AGE
+    test-batch-1    True        10s
+    test-batch-2    False       5s
     ```
-
 
 If you run the following command for `test-batch-2` while it is in `Pending` state, you should see an output which includes:
 
@@ -183,7 +182,7 @@ If you run the following command for `test-batch-2` while it is in `Pending` sta
     kubectl get workloads test-batch-2 -o yaml
     ```
 
-    Expected output:
+Expected output:
 
     ```output
     ...
