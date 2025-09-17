@@ -28,7 +28,7 @@ In the following examples, we show the difference in scheduling behavior between
 
 ## Schedule and deploy general-purpose batch jobs with Kueue
 
-1. Create a Kueue `ClusterQueue` named `clusterqueue-sample.yaml` and paste in the following manifest:
+- Create a Kueue `ClusterQueue` named `clusterqueue-sample.yaml` and paste in the following manifest:
 
     ```yaml
    apiVersion: kueue.x-k8s.io/v1beta1
