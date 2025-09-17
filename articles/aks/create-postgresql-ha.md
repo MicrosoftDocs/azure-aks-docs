@@ -326,9 +326,6 @@ You also add a user node pool to the AKS cluster to host the PostgreSQL cluster.
         --output table
     ```
 
-> [!NOTE]
-> If you receive the error message `"(OperationNotAllowed) Operation is not allowed: Another operation (Updating) is in progress, please wait for it to finish before starting a new operation."` when adding the AKS node pool, wait a few minutes for the AKS cluster operations to complete and then run the `az aks nodepool add` command.
-
 ## Connect to the AKS cluster and create namespaces
 
 In this section, you get the AKS cluster credentials, which serve as the keys that allow you to authenticate and interact with the cluster. Once connected, you create two namespaces: one for the CNPG controller manager services and one for the PostgreSQL cluster and its related services.
