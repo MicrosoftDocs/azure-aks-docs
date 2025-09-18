@@ -120,7 +120,7 @@ az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-t
 ```
 
 >[!IMPORTANT]
-> Remember to reimage the cluster's node pools after you update the artifact source and before manully cut off the egress network (update private subnet or deassociate the udr). Otherwise, the feature won't take effect for the cluster.
+> Remember to reimage the cluster's node pools instantly after you update the artifact source to Cache. Otherwise, the feature won't take effect for the cluster.
 
 ::: zone-end
 
