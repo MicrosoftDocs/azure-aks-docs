@@ -360,7 +360,7 @@ Recommended schedule patterns for NAP-managed nodes:
 
 - Weekly cadence: recommended for routine node image rollouts (for example, "Every week on Sunday").
 
-Create a Node OS maintenance schedule example (JSON + Azure CLI)
+**Create a Node OS maintenance schedule example (JSON + Azure CLI)**
 
 1. Create a JSON file named `nodeosMaintenance.json` with a weekly maintenance window (Sunday at 01:00 UTC for 4 hours):
 
@@ -393,15 +393,21 @@ Update, view, list, and delete:
 
 ```azurecli-interactive
 az aks maintenanceconfiguration update --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME} --name aksManagedNodeOSUpgradeSchedule --config-file ./nodeosMaintenance.json
+```
 
+```azurecli-interactive
 az aks maintenanceconfiguration show --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME} --name aksManagedNodeOSUpgradeSchedule
+```
 
+```azurecli-interactive
 az aks maintenanceconfiguration list --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME}
+```
 
+```azurecli-interactive
 az aks maintenanceconfiguration delete --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME} --name aksManagedNodeOSUpgradeSchedule
 ```
 
-Operational considerations
+**Operational considerations**
 
 - Allow at least 30 minutes between creating or updating a maintenance configuration and the scheduled start time to ensure AKS has time to reconcile the new configuration.
 
@@ -530,6 +536,7 @@ Node auto provisioning can only be disabled when:
 [azure cli]: /cli/azure/get-started-with-azure-cli
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
+[planned-maintenance]: /azure/aks/planned-maintenance
 [planned-maintenance#schedule-configuration-types-for-planned-maintenance]: /azure/aks/planned-maintenance#schedule-configuration-types-for-planned-maintenance
 [Azure-Policy-RBAC-permissions]: /azure/governance/policy/overview#azure-rbac-permissions-in-azure-policy
 [aks-entra-rbac]: /azure/aks/manage-azure-rbac
