@@ -27,7 +27,7 @@ To learn about what LocalDNS is, including architecture details, and key capabil
 * This article requires the `aks-preview` Azure CLI extension version 18.0.0b19 or later.
 * Your AKS cluster can't have node autoprovisioning enabled to use LocalDNS.
 * LocalDNS requires your AKS cluster to be running Kubernetes version 1.31 or later.
-* LocalDNS is only supported on node pools running Ubuntu 22.04 or newer.
+* LocalDNS is only supported on node pools running Azure Linux or Ubuntu 22.04 or newer.
 * LocalDNS only supports Virtual Machine Scale Set node pools.
 * The Virtual Machine (VM) SKU used for your node pool must have at least 4 vCPUs (cores) to support LocalDNS.
 
