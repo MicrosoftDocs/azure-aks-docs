@@ -1110,7 +1110,7 @@
               href: create-valkey-infrastructure.md
             - name: Configure and deploy a Valkey cluster
               href: deploy-valkey-cluster.md
-            - name: Test Valkey with Locust
+            - name: Load test Valkey with Locust
               href: validate-valkey-cluster.md
             - name: Test resiliency during an AKS node pool upgrade
               href: upgrade-valkey-aks-nodepool.md
