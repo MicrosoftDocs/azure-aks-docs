@@ -33,9 +33,9 @@ When deployed on AKS, tool calling becomes scalable, secure, and production-read
 
 As a result, tool calling on AKS has become a foundational pattern for building modern AI apps that are context-aware, action-capable, and enterprise-ready.
 
-# Tool Calling in KAITO
+## Tool Calling with KAITO
 
-To streamline this deployment model, the AI toolchain operator (KAITO) add-on for AKS provides a managed solution for running inference services with tool calling support. By leveraging KAITO inference workspaces, developers can quickly spin up scalable, GPU-accelerated model endpoints with built-in support for tool calling and OpenAI-compatible APIs. This eliminates the operational overhead of configuring runtimes, managing dependencies, or scaling infrastructure manually. With native Kubernetes integration and curated model presets, KAITO makes it easier to build and operate tool-augmented AI applications in a secure, production-grade environment.
+To streamline this deployment model, the AI toolchain operator (KAITO) add-on for AKS provides a managed solution for running inference services with [tool calling support](https://kaito-project.github.io/kaito/docs/tool-calling/). By leveraging KAITO inference workspaces, developers can quickly spin up scalable, GPU-accelerated model endpoints with built-in support for tool calling and OpenAI-compatible APIs. This eliminates the operational overhead of configuring runtimes, managing dependencies, or scaling infrastructure manually. With native Kubernetes integration and curated model presets, KAITO makes it easier to build and operate tool-augmented AI applications in a secure, production-grade environment.
 
 ## Prerequisites
 
