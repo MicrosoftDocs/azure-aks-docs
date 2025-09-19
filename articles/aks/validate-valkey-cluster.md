@@ -1,9 +1,9 @@
 ---
-title: Validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS) with Locust.
+title: Validate the Resiliency of the Valkey Cluster on Azure Kubernetes Service (AKS) with Locust
 description: In this article, you learn how to test a Valkey cluster on Azure Kubernetes Service (AKS) using Locust.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 10/15/2024
+ms.date: 09/15/2025
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'
@@ -15,7 +15,7 @@ ms.custom: 'stateful-workloads'
 This article shows how to validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS).
 
 > [!NOTE]
-> This article contains references to the term *master*, which is a term that Microsoft no longer uses. When the term is removed from the Valkey software, we'll remove it from this article.
+> This article contains references to the term _master_, which is a term that Microsoft no longer uses. When the term is removed from the Valkey software, we'll remove it from this article.
 
 ## Build and run a sample client application for Valkey
 
@@ -23,7 +23,7 @@ The following steps show how to build a sample client application for Valkey and
 
 The sample client application uses the [Locust load testing framework](https://docs.locust.io/en/stable/) to simulate a workload on the Valkey cluster.
 
-1. Create the *Dockerfile* and *requirements.txt* and place them in a new directory using the following commands:
+1. Create the _Dockerfile_ and `requirements.txt` and place them in a new directory using the following commands:
 
     ```bash
     mkdir valkey-client
@@ -42,7 +42,7 @@ The sample client application uses the [Locust load testing framework](https://d
     EOF
     ```
 
-2. Create the `locustfile.py` file with the following content:
+1. Create the `locustfile.py` file with the following content:
 
     ```bash
     cat > locustfile.py <<EOF
@@ -140,13 +140,13 @@ The sample client application uses the [Locust load testing framework](https://d
 
     Microsoft recommends that you use the most secure authentication flow available. The authentication flow described in this procedure requires a very high degree of trust in the application, and carries risks that are not present in other flows. You should only use this flow when other more secure flows, such as managed identities, aren't viable.
 
-3. Build the Docker image and upload it to ACR using the [`az acr build`](/cli/azure/acr#az-acr-build) command.
+1. Build the Docker image and upload it to ACR using the [`az acr build`](/cli/azure/acr#az-acr-build) command.
 
     ```azurecli-interactive
     az acr build --image valkey-client --registry ${MY_ACR_REGISTRY} .
     ```
 
-## Test the Valkey cluster on Azure Kubernetes Service (AKS)
+## Test the Valkey cluster on AKS
 
 1. Create a `Pod` that uses the Valkey client image built in the previous step using the `kubectl apply` command. The pod spec contains the Secret Store CSI volume with the Valkey password the client uses to connect to the Valkey cluster.
 
@@ -185,30 +185,29 @@ The sample client application uses the [Locust load testing framework](https://d
     EOF
     ```
 
-2. Port forward the port 8089 to access the Locust web interface on your local machine using the `kubectl port-forward` command.
+1. Port forward the port 8089 to access the Locust web interface on your local machine using the `kubectl port-forward` command.
 
     ```bash
-     kubectl port-forward -n valkey valkey-client 8089:8089
+    kubectl port-forward -n valkey valkey-client 8089:8089
     ```
 
-3. Access the Locust web interface at `http://localhost:8089` and start the test. You can adjust the number of users and the spawn rate to simulate a workload on the Valkey cluster. The following graph uses 100 users and a 10 spawn rate:
+1. Access the Locust web interface at `http://localhost:8089` and start the test. You can adjust the number of users and the spawn rate to simulate a workload on the Valkey cluster. The following graph uses 100 users and a 10 spawn rate:
 
     :::image type="content" source="media/valkey-stateful-workload/locust.png" alt-text="Screenshot of a web page showing the Locust test dashboard.":::
 
-
-4. Simulate an outage by deleting the `StatefulSet` using the `kubectl delete` command with the [`--cascade=orphan`](https://kubernetes.io/docs/tasks/run-application/delete-stateful-set/) flag. The goal is to be able to delete a single Pod without the StatefulSet immediately recreating the deleted Pod.
+1. Simulate an outage by deleting the `StatefulSet` using the `kubectl delete` command with the [`--cascade=orphan`](https://kubernetes.io/docs/tasks/run-application/delete-stateful-set/) flag. The goal is to be able to delete a single Pod without the StatefulSet immediately recreating the deleted Pod.
 
     ```bash
     kubectl delete statefulset valkey-masters --cascade=orphan
     ```
 
-5. Delete the `valkey-masters-0` Pod using the `kubectl delete pod` command.
+1. Delete the `valkey-masters-0` Pod using the `kubectl delete pod` command.
 
     ```bash
     kubectl delete pod valkey-masters-0
     ```
 
-6. Check the list of Pods using the `kubectl get pods` command.
+1. Check the list of Pods using the `kubectl get pods` command.
 
     ```bash
     kubectl get pods
@@ -226,7 +225,7 @@ The sample client application uses the [Locust load testing framework](https://d
     valkey-replicas-2   1/1     Running   0          16m
     ```
 
-7. Get the logs of the `valkey-replicas-0` Pod using the `kubectl logs valkey-replicas-0` command.
+1. Get the logs of the `valkey-replicas-0` Pod using the `kubectl logs valkey-replicas-0` command.
 
     ```bash
     kubectl logs valkey-replicas-0
@@ -234,7 +233,7 @@ The sample client application uses the [Locust load testing framework](https://d
 
     In the output, we observe that the complete event lasts for about 18 seconds:
 
-    ```
+    ```output
     1:S 05 Nov 2024 12:18:53.961 * Connection with primary lost.
     1:S 05 Nov 2024 12:18:53.961 * Caching the disconnected primary state.
     1:S 05 Nov 2024 12:18:53.961 * Reconnecting to PRIMARY 10.224.0.250:6379
@@ -282,29 +281,20 @@ The sample client application uses the [Locust load testing framework](https://d
 
     After the new primary is elected, the Valkey cluster continues to serve requests with a latency of around 2 ms.
 
-## Next steps
-
-In this article, you learned how to build a test application with Locust and how to simulate a failure of a Valkey primary Pod. You observed that the Valkey cluster could recover from the failure and continue to serve requests with a short spike in latency.
-
-To learn more about stateful workloads using Azure Kubernetes Service (AKS), see the following articles:
-
-* [Deploy a MongoDB cluster on Azure Kubernetes Service (AKS)](./mongodb-overview.md)
-* [Deploy a highly available PostgreSQL database on AKS with Azure CLI](./postgresql-ha-overview.md)
-
+## Next step
 
 > [!div class="nextstepaction"]
 > [Validate Valkey resiliency during an AKS node pool upgrade][upgrade-valkey-aks-nodepool]
 
 ## Contributors
 
-*Microsoft maintains this article. The following contributors originally wrote it:*
+_Microsoft maintains this article. The following contributors originally wrote it:_
 
-* Nelly Kiboi | Service Engineer
-* Saverio Proto | Principal Customer Experience Engineer
+- Nelly Kiboi | Service Engineer
+- Saverio Proto | Principal Customer Experience Engineer
 
 <!-- Internal links -->
 [upgrade-valkey-aks-nodepool]: ./upgrade-valkey-aks-nodepool.md
 
 <!-- EXTERNAL LINKS -->
 [writing-a-locustfile]: https://docs.locust.io/en/stable/writing-a-locustfile.html
-
