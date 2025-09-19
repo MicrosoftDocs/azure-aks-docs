@@ -1,5 +1,5 @@
 ---
-title: Validate the Resiliency of the Valkey Cluster on Azure Kubernetes Service (AKS) with Locust
+title: Validate Valkey Cluster Resiliency on Azure Kubernetes Service (AKS) with Locust
 description: In this article, you learn how to test a Valkey cluster on Azure Kubernetes Service (AKS) using Locust.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -12,12 +12,12 @@ ms.custom: 'stateful-workloads'
 
 # Validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS)
 
-This article shows how to validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS).
+This guide demonstrates how to validate the resiliency of a Valkey cluster deployed on Azure Kubernetes Service (AKS) using the Locust load testing framework. It walks through building a test client, deploying it to AKS, simulating failures, and analyzing cluster behavior.
 
 > [!NOTE]
 > This article contains references to the term _master_, which is a term that Microsoft no longer uses. When the term is removed from the Valkey software, we'll remove it from this article.
 
-## Build and run a sample client application for Valkey
+## Build and push a sample client application for Valkey
 
 The following steps show how to build a sample client application for Valkey and push the Docker image of the application to Azure Container Registry (ACR).
 
@@ -146,7 +146,7 @@ The sample client application uses the [Locust load testing framework](https://d
     az acr build --image valkey-client --registry ${MY_ACR_REGISTRY} .
     ```
 
-## Test the Valkey cluster on AKS
+## Deploy the sample client pod to AKS
 
 1. Create a `Pod` that uses the Valkey client image built in the previous step using the `kubectl apply` command. The pod spec contains the Secret Store CSI volume with the Valkey password the client uses to connect to the Valkey cluster.
 
@@ -194,6 +194,8 @@ The sample client application uses the [Locust load testing framework](https://d
 1. Access the Locust web interface at `http://localhost:8089` and start the test. You can adjust the number of users and the spawn rate to simulate a workload on the Valkey cluster. The following graph uses 100 users and a 10 spawn rate:
 
     :::image type="content" source="media/valkey-stateful-workload/locust.png" alt-text="Screenshot of a web page showing the Locust test dashboard.":::
+
+## Simulate failure and observe Valkey cluster behavior
 
 1. Simulate an outage by deleting the `StatefulSet` using the `kubectl delete` command with the [`--cascade=orphan`](https://kubernetes.io/docs/tasks/run-application/delete-stateful-set/) flag. The goal is to be able to delete a single Pod without the StatefulSet immediately recreating the deleted Pod.
 
