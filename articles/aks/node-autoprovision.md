@@ -66,7 +66,6 @@ Key networking considerations:
 
 - Azure CNI Overlay with Cilium is recommended
 - Standard Load Balancer is required
-- Private clusters aren't currently supported
 
 ## Enable node autoprovisioning
 
