@@ -1,5 +1,5 @@
 ---
-title: "Trigger Notications and Integrations using Approval Gate Events for Azure Kubernetes Fleet Manager"
+title: "Trigger Notifications and Integrations using Approval Gate Events for Azure Kubernetes Fleet Manager"
 description: Learn how to set up Event Grid to use Approval Gate events to deliver notifications and provide triggers for automations such as health checks.
 ms.topic: how-to
 ms.date: 09/22/2025
@@ -9,13 +9,13 @@ ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a fleet administrator, I want to configure Event Grid Sytem Topics for Azure Kubernetes Fleet Manager update runs, so that I can use the events to deliver alerts or provide automation triggers."
 ---
 
-# Trigger Notications and Integrations using Approval Gate Events for Azure Kubernetes Fleet Manager (Preview)
+# Trigger Notifications and Integrations using Approval Gate Events for Azure Kubernetes Fleet Manager (Preview)
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
-Fleet Manager update run [approval gates](./update-strategies-gates-approvals.md) provide additional controls over when groups or stages in an update run are processed.
+Fleet Manager update run [approval gates](./update-strategies-gates-approvals.md) provide more controls over when groups or stages in an update run are processed.
 
-Approval gates publish events via an Event Grid System Topic, allowing you to configure event subscriptions to drive notifications via channles like email or trigger automated integration through custom health check endpoints. 
+Approval gates publish events via an Event Grid System Topic, allowing you to configure event subscriptions to drive notifications via channels like email or trigger automated integration through custom health check endpoints. 
 
 This article provides instructions on how to configure Event Grid so you can take advantage of the published events.
 
@@ -27,22 +27,22 @@ There are three update run gate event types that can be subscribed.
 
 | Event Grid Event Type                                         | Description |
 |---------------------------------------------------------------|-------------|
-| Microsoft.ResourceNotifications.AKSResources.FleetGateCreated | Raised when an update run reaches an instance of a Gate resource. |
-| Microsoft.ResourceNotifications.AKSResources.FleetGateUpdated | Raised when the status of a gate changes (Pending to Approved). |
+| Microsoft.ResourceNotifications.AKSResources.FleetGateCreated | Raised when an update run reaches an instance of a Gate resource.         |
+| Microsoft.ResourceNotifications.AKSResources.FleetGateUpdated | Raised when the status of a gate changes (Pending to Approved).           |
 | Microsoft.ResourceNotifications.AKSResources.FleetGateDeleted | Raised when an update run that contains an instance of a Gate is deleted. |
  
-To process events for a specific update run gate use the following properties to define an advanced Event Grid Event Subscription filter.   
+To process events for a specific update run gate, use the following properties to define an advanced Event Grid Event Subscription filter.   
 
 | Event property name | Example | Description |
 |---------------------|---------|-------------|
-| data.resourceInfo.properties.displayName | "Check with sales teams" | The optional name providided when defining the approval gate in the update strategy. |
-| data.resourceInfo.properties.gateType    | "Approval"               | The type of the gate. There is only one valid choice of "Approval" for now.          |
+| data.resourceInfo.properties.displayName | "Check with sales teams" | The optional name provided when defining the approval gate in the update strategy.   |
+| data.resourceInfo.properties.gateType    | "Approval"               | The type of the gate. There's only one valid choice of "Approval" for now.           |
 | data.resourceInfo.properties.state       | "Pending" / "Approved"   | The state of the gate. "Pending" = waiting approval; "Approved" = approval applied.  |
-| data.resourceInfo.target.id              | Azure Resource ID        | Full Azure resource identifier for the update run generating the event.              |
+| data.resourceInfo.target.id              | Azure Resource ID          | The full Azure resource identifier for the update run generating the event.        |
 | data.resourceinfo.target.updateRunProperties.name | "update-k8s-1.33" | The name of the update run generating the event.                                   |
 | data.resourceinfo.target.updateRunProperties.stage | "dev"            | The name of the update stage where the gate is applied. Only present for stages.   |
 | data.resourceinfo.target.updateRunProperties.group | "blue"           | The name of the update group where the gate is applied. Only present for groups.   |
-| data.resourceinfo.target.updateRunProperties.timing | "Before" / "After" | Denotes if the gate is applied before or after the stage or group.  |
+| data.resourceinfo.target.updateRunProperties.timing | "Before" / "After" | Denotes if the gate is applied before or after the stage or group.              |
 
 ## Before you begin
 
@@ -75,7 +75,7 @@ To process events for a specific update run gate use the following properties to
 
 ## Create Event Grid System Topic
 
-Approval Gates publish events via an Event Grid System Topic which can be created at the Azure Subscription level. If you try and create more than one Event Grid System Topic of this type (Microsoft.ResourceNotifications.AKSResources) at this scope you will recieve an error, which is expected.
+Approval Gates publish events via an Event Grid System Topic that can be created at the Azure Subscription level. Only one Event Grid System Topic of this type (Microsoft.ResourceNotifications.AKSResources) can be created.
 
 Create a new system topic by using the [az eventgrid system-topic create][azure-even-grid-topic-create] command as shown.
 
