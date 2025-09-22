@@ -82,6 +82,8 @@
           href: update-create-update-strategy.md
         - name: Add approvals to update groups and stages
           href: update-strategies-gates-approvals.md
+        - name: Configure event subscriptions for approvals
+          href: howto-configure-events-for-gates.md
         - name: Update Kubernetes and node images
           href: update-orchestration.md
         - name: Automate updates of Kubernetes and node images
