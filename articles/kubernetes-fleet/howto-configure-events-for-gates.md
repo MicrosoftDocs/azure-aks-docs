@@ -35,6 +35,7 @@ To process events for a specific update run gate, use the following properties t
 
 | Event property name | Example | Description |
 |---------------------|---------|-------------|
+| data.resourceInfo.id | Azure Resource ID |  The full Azure resource identifier for the approval gate instance generating the event.  |
 | data.resourceInfo.properties.displayName | "Check with sales teams" | The optional name provided when defining the approval gate in the update strategy.   |
 | data.resourceInfo.properties.gateType    | "Approval"               | The type of the gate. There's only one valid choice of "Approval" for now.           |
 | data.resourceInfo.properties.state       | "Pending" / "Approved"   | The state of the gate. "Pending" = waiting approval; "Approved" = approval applied.  |
