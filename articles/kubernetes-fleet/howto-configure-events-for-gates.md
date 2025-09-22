@@ -77,6 +77,8 @@ To process events for a specific update run gate use the following properties to
 
 Approval Gates publish events via an Event Grid System Topic which can be created at the Azure Subscription level. If you try and create more than one Event Grid System Topic of this type (Microsoft.ResourceNotifications.AKSResources) at this scope you will recieve an error, which is expected.
 
+Create a new system topic by using the [az eventgrid system-topic create][azure-even-grid-topic-create] command as shown.
+
   ```azurecli-interactive
   az eventgrid system-topic create \
     --name stpc-fleet-approvals-01 \
@@ -88,7 +90,11 @@ Approval Gates publish events via an Event Grid System Topic which can be create
 
 ## Create Event Subscription
 
-In this sample we create an event subscription that routes the event to the specified URL. This URL can be any service endpoint inside or outside of Azure. You could use Azure Functions, Azure Logic Apps, Function Apps, or even services hosted on AKS to process the raised event.
+In this sample we create a subscription for pending Approval Gate events named "Check with sales team" that applied before the "Dev" stage in any update run.
+
+TODO: that routes the event to the specified URL. This URL can be any service endpoint inside or outside of Azure. You could use Azure Functions, Azure Logic Apps, Function Apps, or even services hosted on AKS to process the raised event.
+
+Create a new subscription by using the [az eventgrid system-topic event-subscription create][azure-event-grid-sub-create] command as shown.
 
   ```azurecli-interactive
   az eventgrid system-topic event-subscription create \
@@ -117,6 +123,8 @@ In this sample we create an event subscription that routes the event to the spec
 [az-fleet-autoupgradeprofile-delete]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-delete
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-event-grid-sys-topics]: /azure/event-grid/system-topics
+[azure-even-grid-topic-create]: /cli/azure/eventgrid/system-topic#az-eventgrid-system-topic-create
+[azure-event-grid-sub-create]: /cli/azure/eventgrid/system-topic/event-subscription#az-eventgrid-system-topic-event-subscription-create
 [az-fleet-updaterun-generate]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-generate-update-run
 
 <!-- LINKS -->
