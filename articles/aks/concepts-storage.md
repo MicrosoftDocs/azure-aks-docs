@@ -49,7 +49,7 @@ When you create a new cluster or add a new node pool to an existing cluster, the
 | 64+ | P30/1024G | 5000 | 200 |
 
 > [!IMPORTANT]
-> Default Managed OS disk sizing is only used on new clusters or node pools when Ephemeral OS disks aren't supported and a default OS disk size isn't specified. The default OS disk size might impact the performance or cost of your cluster. You can't change the OS disk size after cluster or node pool creation. This default Managed sizing affects clusters or node pools created in July 2022 or later.
+> Default Managed OS disk sizing is only used on new clusters or node pools when Ephemeral OS disks aren't supported and a default OS disk size isn't specified. The default OS disk size might impact the performance or cost of your cluster. You can't change the OS disk size after cluster or node pool creation. We recommend a minimum disk size of 512G if ephemeral OS disk cannot be used. This default Managed sizing affects clusters or node pools created in July 2022 or later.
 
 ## Ephemeral OS disk
 
