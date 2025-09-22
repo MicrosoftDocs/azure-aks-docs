@@ -82,7 +82,7 @@
           href: update-create-update-strategy.md
         - name: Add approvals to update groups and stages
           href: update-strategies-gates-approvals.md
-        - name: Trigger notifications and integrations with approval events
+        - name: Use approval events to trigger notifications and integrations
           href: howto-configure-events-for-gates.md
         - name: Update Kubernetes and node images
           href: update-orchestration.md
