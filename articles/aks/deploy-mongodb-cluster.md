@@ -1,8 +1,8 @@
 ---
 title: 'Configure and deploy a MongoDB cluster on Azure Kubernetes Service (AKS)'
-description: In this article, you configure and deploy a MongoDB cluster on AKS.
+description: In this article, you learn how to configure and deploy a MongoDB cluster on AKS.
 ms.topic: how-to
-ms.date: 01/07/2025
+ms.date: 09/15/2025
 author: fossygirl
 ms.author: carols
 ms.custom: 'aks-related-content, stateful-workloads'
@@ -102,7 +102,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
     More information on the different types of SecretStores and how to configure them
     can be found in our Github: https://github.com/external-secrets/external-secrets
     ```
-3. Generate a random password using the below function:
+3. Generate a random password using the function:
 
     ```bash
     #MongoDB connection strings can contain special characters in the password, which need to be URL encoded. 

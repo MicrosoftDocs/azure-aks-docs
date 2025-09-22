@@ -1,8 +1,8 @@
 ---
-title: 'Solution overview for deploying a MongoDB cluster on Azure Kubernetes Service (AKS)'
+title: 'Overview of deploying a MongoDB cluster on Azure Kubernetes Service (AKS)'
 description: This article provides an overview for deploying a MongoDB cluster on AKS.
 ms.topic: overview
-ms.date: 01/07/2025
+ms.date: 09/15/2025
 author: fossygirl
 ms.author: carols
 ms.custom: 'aks-related-content, stateful-workloads'
@@ -17,10 +17,10 @@ This article walks through prerequisite information for deploying a MongoDB clus
 
 ## What is MongoDB?
 
-[MongoDB](https://www.mongodb.com/) is a popular NoSQL database management system that's designed to handle large volumes of unstructured data. Unlike traditional relational databases that use tables and rows, MongoDB uses a flexible, document-oriented approach.
+[MongoDB](https://www.mongodb.com/) is a popular NoSQL database management system that is designed to handle large volumes of unstructured data. Unlike traditional relational databases that use tables and rows, MongoDB uses a flexible, document-oriented approach.
 
 > [!NOTE]
-> MongoDB Community Edition isn't open-source software. It's licensed under the [Server Side Public License](https://www.mongodb.com/legal/licensing/server-side-public-license) with "source available."
+> MongoDB Community Edition isn't open-source software. It is licensed under the [Server Side Public License](https://www.mongodb.com/legal/licensing/server-side-public-license) with "source available."
 
 ### MongoDB sharded cluster
 
@@ -31,7 +31,7 @@ Here's a breakdown of its key components and how it works:
 * **Shards**: Individual MongoDB instances called [shards](https://www.mongodb.com/docs/manual/core/sharded-cluster-shards/) hold subsets of the data. Each shard is a replica set, or a group of MongoDB instances that replicate data among themselves. Replica sets help ensure high availability and fault tolerance.
 * **Config servers**: The servers that store metadata and configuration settings for the sharded cluster are called [config servers](https://www.mongodb.com/docs/manual/core/sharded-cluster-config-servers/). They keep track of the cluster's data distribution and routing information. A cluster typically has three config servers to provide redundancy.
 * **Mongos instances**: [Mongos](https://www.mongodb.com/docs/manual/core/sharded-cluster-query-router/) is a routing service that directs client requests to the appropriate shard. It acts as an intermediary between the client and the shards. An instance of Mongos manages query routing and aggregates results from shards.
-* **Shard key**: When data is distributed across shards, it's based on a [shard key](https://www.mongodb.com/docs/manual/core/sharding-shard-key/), which is either a single indexed field or multiple fields in the documents. The shard key determines how data is partitioned among the shards. A well-chosen shard key helps ensure even data distribution and efficient querying.
+* **Shard key**: When data is distributed across shards, it is based on a [shard key](https://www.mongodb.com/docs/manual/core/sharding-shard-key/), which is either a single indexed field or multiple fields in the documents. The shard key determines how data is partitioned among the shards. A well-chosen shard key helps ensure even data distribution and efficient querying.
 * **Data distribution**: Data is distributed across shards based on the shard key. This distribution helps balance the load and manage large datasets effectively. MongoDB uses a [range-based](https://www.mongodb.com/docs/manual/core/ranged-sharding/) or [hash-based](https://www.mongodb.com/docs/manual/core/hashed-sharding/) sharding strategy, depending on the shard key.
 * **High availability**: Each shard is a replica set, which means that it replicates its data across multiple nodes. This setup ensures that data remains available even if one or more nodes fail.
 
@@ -50,7 +50,7 @@ The goal of the proposed solution is to:
 * Ensure that the MongoDB cluster can effectively handle large datasets and high-throughput operations.
 * Maintain high availability and fault tolerance.
 
-The solution will accomplish this goal through the use of replica sets, anti-affinity rules, and proper resource allocation.
+The solution accomplishes this goal by using replica sets, anti-affinity rules, and proper resource allocation.
 
 ### Deployment strategy
 
