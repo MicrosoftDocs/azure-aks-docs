@@ -24,7 +24,7 @@ Platform administrators may use [resource quotas](../aks/concepts-managed-namesp
 * CPU requests and limits: Define the minimum and maximum amount of CPU resources that workloads in the namespace can request or consume. 
 * Memory requests and limits: Define the minimum and maximum amount of memory resources that workloads in the namespace can request or consume. 
 ## Labels and annotations
-Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) are key/value pairs that may attach to the managed namespace. Labels are used to organize and query subsets of objects, in this case, managed namespaces. By default, each managed namespace has a built-in label indicated it's a managed by ARM.
+Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) are key/value pairs users can attach to the managed namespace. Labels are used to organize and query subsets of objects, in this case, managed namespaces. By default, each managed namespace has a built-in label indicated it's a managed by ARM.
 
 On the other hand, [annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) are used to attach nonidentifying, potentially unstructured metadata to an object. Users may also apply annotations to their managed namespaces.
 
@@ -48,8 +48,7 @@ If the user specifies member clusters during namespace creation or update, the m
 3. Never: Never takes over unmanaged namespace.
 
 # Multi-cluster managed namespace built-in roles
-Multi-cluster managed namespaces use the existing ARM Role Based Access Control (RBAC) control plane roles to manage and access managed namespaces. The existing 
-data plane RBAC roles (TODO link) are applied to the managed namespace created on the Fleet Manager hub cluster. 
+Multi-cluster managed namespaces use the existing ARM Role Based Access Control (RBAC) control plane roles to manage and access managed namespaces. The existing data plane RBAC roles (TODO link) are applied to the managed namespace created on the Fleet Manager hub cluster. 
 
 To control access to a managed namespace on member clusters, managed namespaces use the following built-in roles:
 
@@ -59,3 +58,6 @@ To control access to a managed namespace on member clusters, managed namespaces 
 | Azure Kubernetes Fleet Manager Member Cluster RBAC Writer | Read and write access to most Kubernetes resources in the namespace. Cannot view or modify roles or role bindings. Can read Secrets (therefore can assume any ServiceAccount in the namespace). |
 | Azure Kubernetes Fleet Manager Member Cluster RBAC Admin | Read and write access to Kubernetes resources in the namespace on the member cluster. Cannot modify the `ResourceQuota` object or the namespace object itself. |
 | Azure Kubernetes Fleet Manager Member Cluster RBAC Cluster Admin | Full read/write access to all Kubernetes resources on the member cluster. |
+
+# Next steps
+Learn how to [create and use a multi-cluster managed namespace](./howto-managed-namespaces.md).
