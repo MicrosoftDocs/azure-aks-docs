@@ -47,7 +47,7 @@ The following are CIS rules implemented:
 | 1.1.1.3 | Ensure hfs kernel module is not available | Pass || 
 | 1.1.1.4 | Ensure hfsplus kernel module is not available | Pass || 
 | 1.1.1.5 | Ensure jffs2 kernel module is not available | Pass || 
-| 1.1.1.6 | Ensure udf filesystem is not available | (unchanged) || 
+| 1.1.1.6 | Ensure udf filesystem is not available | Fail || 
 | 1.1.1.9 | Ensure usb-storage kernel module is not available | Pass || 
 | 1.1.1.10 | Ensure unused filesystems kernel modules are not available | Manual || 
 | 1.1.2 | Ensure /tmp is configured ||| 
