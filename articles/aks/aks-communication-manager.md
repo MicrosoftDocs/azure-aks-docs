@@ -129,7 +129,7 @@ By following the steps in this article, you can set up notifications for all typ
    1. For **Notification type**, select **Email/SMS_message/Push/Voice**.
    1. Select the **Email** checkbox, and then enter the email address in the **Email** box.
 
-   :::image type="content" source="./media/auto-upgrade-cluster/action-group.png" alt-text="Screenshot of the pane for entering email information for an action group.":::
+      :::image type="content" source="./media/auto-upgrade-cluster/action-group.png" alt-text="Screenshot of the pane for entering email information for an action group.":::
 
 1. Go to the **Details** tab. Assign a managed identity so that you can grant access to the necessary resources. In the **Identity** area, select **System assigned managed identity**.
 
