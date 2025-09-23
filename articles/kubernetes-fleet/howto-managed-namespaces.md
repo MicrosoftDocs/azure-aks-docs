@@ -35,7 +35,6 @@ ms.service: azure-kubernetes-fleet-manager
 
 ## Creating a new multi-cluster managed namespace 
 #### [Azure portal](#tab/azure-portal)
-
 #### [Azure CLI](#tab/cli)
 
 ```azurecli-interactive
@@ -67,7 +66,6 @@ az fleet namespace create \
 ```
 ## Updating a multi-cluster managed namespace to be placed on a member cluster
 #### [Azure portal](#tab/azure-portal)
-
 #### [Azure CLI](#tab/cli)
 ```azurecli-interactive
 # Note: specify the name of the fleet member, not the AKS cluster
@@ -81,7 +79,6 @@ az fleet namespace create \
 ## Viewing the multi-cluster managed namespace
 
 #### [Azure portal](#tab/azure-portal)
-
 #### [Azure CLI](#tab/cli)
 After creation, we snould be able to view the member clusters that the managed namespace has been placed on.
 
@@ -95,7 +92,6 @@ az fleet namespace show \
 
 ## Delegating access to a user 
 #### [Azure portal](#tab/azure-portal)
-
 #### [Azure CLI](#tab/cli)
 ```azurecli-interactive
 
@@ -103,7 +99,16 @@ az role assignment create --role "Azure Kubernetes Fleet Manager Member Cluster 
 --assignee <USER-ENTRA-ID> --scope $FLEET_ID/managedNamespaces/myManagedNamespace
 ```
 
+## Deleting the multi-cluster managed namespace
 
+#### [Azure portal](#tab/azure-portal)
+#### [Azure CLI](#tab/cli)
+```azurecli-interactive
+az fleet namespace create \ 
+    --name myManagedNamespace \ 
+    --fleet-name $FLEET \ 
+    --resource-group $GROUP \ 
+```
 
 
 
