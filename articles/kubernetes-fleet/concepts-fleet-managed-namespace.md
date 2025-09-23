@@ -15,9 +15,9 @@ This article provides a conceptual overview of multi-cluster managed namespaces.
 ## Network policies
 [Network policies](../aks/concepts-managed-namespaces.md#network-policies) control traffic between pods, namespaces, and external endpoints. In multi‑cluster managed namespaces, jsers may choose a built‑in policy for each direction (ingress or egress traffic) and Azure applies it to the namespace on every selected member cluster. If omitted, no NetworkPolicy resource is created.
 
-- Allow all
-- Allow same namespace
-- Deny all
+* Allow all
+* Allow same namespace
+* Deny all
 
 ## Resource quotas
 Use [resource quotas](../aks/concepts-managed-namespaces.md#resource-quotas) to cap CPU and memory consumption at the namespace layer. In multi‑cluster managed namespaces, optionally set quota values once and Azure enforces the same limits on the namespace across selected member clusters.
@@ -36,11 +36,16 @@ Always: Always take over the existing namespace to be managed, even if some fiel
 ## Delete policy
 Control how the Kubernetes namespace is handled when the managed namespace resource is removed with the [delete policy](../aks/concepts-managed-namespaces.md#delete-policy).
 
-- Keep: Remove only the managed namespace resource; leave the Kubernetes namespace intact and clear the `ManagedByARM` label.
-- Delete: Remove both the managed namespace resource and the Kubernetes namespace.
+* Keep: Removes only the managed namespace resource. Leaves the Kubernetes namespace intact on the hub and member clusters but clears the `ManagedByARM` label.
+* Delete: Removes both the managed namespace resource and the Kubernetes namespace from the hub and member clusters. 
 
 # Cluster Resource Placement
-When specifying
+If the user specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object that propagates the namespace to the selected member clusters. The placement policy is [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type). If the managed namespace is created with a name that matches an 
+existing unmanaged namespace on the member cluster, whether or not the unmanaged namespace is taken over depends on the adoption policy. 
+If the adoption policy is 
+1. Always: Overwrites existing member cluster namespace with multi-cluster managed namespace using whenToTakeOver property of Always.
+2. IfIdentical: Overwrites existing member cluster namespace with multi-cluster managed namespace if there are no configuration differences using using whenToTakeOver property of IfNoDiff.
+3. Never: Will not take over unmanaged namespace.
 
 # Multi-cluster managed namespace built-in roles
 Multi-cluster managed namespaces use the existing ARM RBAC control plane roles to manage and access managed namespaces. The existing 
