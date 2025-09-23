@@ -5,9 +5,9 @@ description: Learn how to configure SSH and manage SSH keys on Azure Kubernetes 
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 09/02/2025
-author: shashankbarsin
-ms.author: shasb
+ms.date: 09/23/2025
+author: charleswool
+ms.author: yuewu2
 
 # Customer intent: As a Kubernetes administrator, I want to manage SSH keys and access for AKS cluster nodes, so that I can enhance security and control access to the nodes effectively.
 ---
@@ -202,25 +202,6 @@ az aks nodepool upgrade --cluster-name myManagedCluster --name mynodepool --reso
 
 > [!IMPORTANT]
 > To disable SSH on an existing cluster, you need to disable SSH for each node pool on this cluster. 
-
-### Re-enable SSH on an existing cluster
-
-Use the [`az aks update`][az-aks-update] command to update an existing cluster, and include the `--ssh-access localuser` argument to re-enable SSH (preview) on all the node pools in the cluster.
-
-```azurecli-interactive
-az aks update --resource-group myResourceGroup --name myManagedCluster --ssh-access localuser
-```
-
-The following message is returned while the process is performed:
-
-```output
-Only after all the nodes are reimaged, does the disable/enable SSH Access operation take effect."
-```
-
-After re-enabling SSH, the nodes won't be reimaged automatically. At any time, you can choose to perform a [reimage operation][node-image-upgrade].
-
->[!IMPORTANT]
->During this operation, all Virtual Machine Scale Set instances are upgraded and reimaged to use the new SSH public key.
 
 ### Re-enable SSH for a specific node pool
 
