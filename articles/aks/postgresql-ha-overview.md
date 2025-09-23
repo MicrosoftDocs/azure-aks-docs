@@ -28,7 +28,6 @@ This article walks through the prerequisites for setting up a PostgreSQL cluster
 * You also need the following resources installed:
 
   * [Azure CLI](/cli/azure/install-azure-cli) version 2.56 or later.
-  * [Azure Kubernetes Service (AKS) preview extension][aks-preview].
   * [jq][jq], version 1.5 or later.
   * [kubectl][install-kubectl] version 1.21.0 or later.
   * [Helm][install-helm] version 3.0.0 or later.
@@ -94,7 +93,6 @@ The type of storage you use can have large effects on PostgreSQL performance. La
 [postgresql]: https://www.postgresql.org/
 [core-kubernetes-concepts]: ./concepts-clusters-workloads.md
 [azure-roles]: /azure/role-based-access-control/built-in-roles
-[aks-preview]: ./draft.md#install-the-aks-preview-azure-cli-extension
 [jq]: https://jqlang.github.io/jq/
 [install-kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
 [install-helm]: https://helm.sh/docs/intro/install/

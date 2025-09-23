@@ -391,7 +391,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
 > kubectl cnpg destroy [cnpg-cluster-name] [instance-number]  
 > ```
 
-### Validate the Prometheus PodMonitor is running
+## Validate the Prometheus PodMonitor is running
 
 The CNPG operator automatically creates a PodMonitor for the primary instance using the recording rules created during the [Prometheus Community installation](#install-the-prometheus-podmonitors).
 
@@ -411,7 +411,7 @@ The CNPG operator automatically creates a PodMonitor for the primary instance us
      kind: PodMonitor
      metadata:
       annotations:
-        cnpg.io/operatorVersion: 1.23.1
+        cnpg.io/operatorVersion: 1.27.0
     ...
     ```
 
@@ -447,13 +447,13 @@ kubectl --namespace $PG_NAMESPACE \
     -o yaml
 ```
 
-#### Option A - Azure Monitor workspace
+### Option A - Azure Monitor workspace
 
 Once you have deployed the Postgres cluster and the pod monitor, you can view the metrics using the Azure portal in an Azure Monitor workspace.
 
 :::image source="./media/deploy-postgresql-ha/prometheus-metrics.png" alt-text="Screenshot showing Postgres cluster metrics in an Azure Monitor workspace in the Azure portal." lightbox="./media/deploy-postgresql-ha/prometheus-metrics.png":::
 
-#### Option B - Managed Grafana
+### Option B - Managed Grafana
 
 Alternatively, Once you have deployed the Postgres cluster and pod monitors, you can create a metrics dashboard on the Managed Grafana instance created by the deployment script to visualize the metrics exported to the Azure Monitor workspace. You can access the Managed Grafana via the Azure portal. Navigate to the Managed Grafana instance created by the deployment script and select the Endpoint link as shown here:
 
@@ -501,6 +501,6 @@ Select the Save icon to save your dashboard.
 [kubectl-get]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/
 [kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/
 [helm-repo-add]: https://helm.sh/docs/helm/helm_repo_add/
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az_identity_federated_credential_create
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [cluster-crd]: https://cloudnative-pg.io/documentation/1.23/cloudnative-pg.v1/#postgresql-cnpg-io-v1-ClusterSpec
