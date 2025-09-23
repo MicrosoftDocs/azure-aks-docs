@@ -1,5 +1,5 @@
 ---
-title: Use Azure Kubernetes Fleet Manager Managed Namespaces to manage workloads across multiple AKS clusters. 
+title: Use Azure Kubernetes Fleet Manager Managed Namespaces to manage workloads across multiple clusters. 
 description: Learn how to use multi-cluster managed namespace to isolate and manage workloads across multiple fleet members.
 author: audrastump
 ms.author: stumpaudra
@@ -8,7 +8,7 @@ ms.date: 09/22/2025
 ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a platform admin, I want to define a namespace and deploy it across selected fleet clusters so I can delegate application teams access to resources on any cluster where the namespace exists."
 ---
-# Use Azure Kubernetes Fleet Manager Managed Namespaces to manage workloads across multiple AKS clusters (preview).
+# Use Azure Kubernetes Fleet Manager Managed Namespaces to manage workloads across multiple clusters (preview).
 
 ## Prerequisites
 * You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
@@ -80,7 +80,7 @@ az fleet namespace create \
 
 #### [Azure portal](#tab/azure-portal)
 #### [Azure CLI](#tab/cli)
-After creation, we snould be able to view the member clusters that the managed namespace has been placed on.
+After creation, we should be able to view the member clusters that the managed namespace is placed on.
 
 ```azurecli-interactive
 az fleet namespace show \ 

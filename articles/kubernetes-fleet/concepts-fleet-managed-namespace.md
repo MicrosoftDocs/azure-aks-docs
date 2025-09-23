@@ -10,7 +10,7 @@ ms.topic: concept-article
 ---
 # Overview of Multi-cluster Managed Namespaces (preview)
 
-This article provides a conceptual overview of multi-cluster managed namespaces. AKS Managed Namespaces provides a way to logically isolate workloads within a single AKS cluster via managed namespaces. Multi-cluster managed namespaces now extend this capability to isolate workloads across multiple AKS clusters. Using multi-cluster managed namespaces, platform administrators can define resource quotas, enforce network policy, and control access to namespaces resources across multiple clusters within a fleet.
+This article provides a conceptual overview of multi-cluster managed namespaces. AKS Managed Namespaces provide a way to logically isolate workloads within a single AKS cluster via managed namespaces. Multi-cluster managed namespaces now extend this capability to isolate workloads across multiple AKS clusters. Using multi-cluster managed namespaces, platform administrators can define resource quotas, enforce network policy, and control access to namespaces resources across multiple clusters within a fleet.
 
 ## Network policies
 [Network policies](../aks/use-network-policies.md) control traffic between pods, namespaces, and external endpoints. Users may select from the three policies listed below for ingress and egress traffic. If omitted, no Network Policy is applied.
@@ -20,20 +20,20 @@ This article provides a conceptual overview of multi-cluster managed namespaces.
 * Deny all: Denies all network traffic 
 
 ## Resource quotas
-Platform administrators may use [resource quotas](../aks/concepts-managed-namespaces.md#resource-quotas) to cap CPU and memory consumption at the namespace layer. In multi‑cluster managed namespaces, admins can optionally set boundaries for the minimum and maximum amount of resources used by workloads in a namespcae. 
+Platform administrators may use [resource quotas](../aks/concepts-managed-namespaces.md#resource-quotas) to cap CPU and memory consumption at the namespace layer. In multi‑cluster managed namespaces, admins can optionally set boundaries for the minimum and maximum amount of resources used by workloads in a namespace. 
 * CPU requests and limits: Define the minimum and maximum amount of CPU resources that workloads in the namespace can request or consume. 
 * Memory requests and limits: Define the minimum and maximum amount of memory resources that workloads in the namespace can request or consume. 
 ## Labels and annotations
-Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) are key/value pairs that may attach to the managed namespace. Labels are used to organize and query subsets of objects, in this case, managed namespaces. By default, each managed namespace has a built-in label indicated it is a managed by ARM.
+Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) are key/value pairs that may attach to the managed namespace. Labels are used to organize and query subsets of objects, in this case, managed namespaces. By default, each managed namespace has a built-in label indicated it's a managed by ARM.
 
 On the other hand, [annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) are used to attach nonidentifying, potentially unstructured metadata to an object. Users may also apply annotations to their managed namespaces.
 
 ## Adoption Policy
 The adoption policy determines how an existing namespace in Kubernetes is handled when creating a managed namespace. Similar to a [single cluster namespace](../aks/concepts-managed-namespaces.md#adoption-policy), the following options are available:
 
-* Never: If the namespace already exists in the cluster, attempts to create that namespace as a managed namespace fails.
-* IfIdentical: Take over the existing namespace to be managed, provided there are no differences between the existing namespace and the desired configuration.
-* Always: Always take over the existing namespace to be managed, even if some fields in the namespace might be overwritten.
+* Never: Managed namespace creation will always fail if a namespace with the same name already exists in the cluster.
+* IfIdentical: Managed namespace creation will fail if a namespace with the same name already exists in the cluster unless the namespaces are identical. If identical, ARM will take over the existing namespace to be managed.
+* Always: ARM will always take over the existing namespace to be managed, even if some fields in the namespace might be overwritten.
 
 ## Delete policy
 The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) controls how the Kubernetes namespace is handled when the managed namespace resource is deleted. There are two built-in options:
@@ -46,7 +46,7 @@ If the user specifies member clusters during namespace creation or update, the m
 existing unmanaged namespace on the member cluster, whether or not the unmanaged namespace is taken over depends on the adoption policy. 
 If the adoption policy is 
 1. Always: Overwrites existing member cluster namespace with multi-cluster managed namespace using whenToTakeOver property of Always.
-2. IfIdentical: Overwrites existing member cluster namespace with multi-cluster managed namespace if there are no configuration differences using using whenToTakeOver property of IfNoDiff.
+2. IfIdentical: Overwrites existing member cluster namespace with multi-cluster managed namespace if there are no configuration differences using whenToTakeOver property of IfNoDiff.
 3. Never: Will not take over unmanaged namespace.
 
 # Multi-cluster managed namespace built-in roles
