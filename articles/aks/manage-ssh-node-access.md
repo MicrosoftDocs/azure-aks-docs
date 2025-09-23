@@ -5,9 +5,9 @@ description: Learn how to configure SSH and manage SSH keys on Azure Kubernetes 
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 09/02/2025
-author: shashankbarsin
-ms.author: shasb
+ms.date: 09/23/2025
+author: charleswool
+ms.author: yuewu2
 
 # Customer intent: As a Kubernetes administrator, I want to manage SSH keys and access for AKS cluster nodes, so that I can enhance security and control access to the nodes effectively.
 ---
