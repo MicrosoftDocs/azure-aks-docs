@@ -106,7 +106,7 @@ By following the steps in this article, you can set up notifications for all typ
    | order by eventTime asc
    ```
 
-1. Go to the **Actions** tab. Configure the alert conditions with the following settings:
+1. Go to the **Condition** tab. Configure the alert conditions with the following settings:
 
    - **Measure**: Select **Table rows**.
    - **Aggregation type**: Select **Count**.
@@ -123,14 +123,15 @@ By following the steps in this article, you can set up notifications for all typ
 
    :::image type="content" source="./media/auto-upgrade-cluster/by-dimension.jpg" alt-text="Screenshot of the dropdown list boxes in the area for splitting by dimensions.":::
 
-1. Make sure that an action group with the correct email address exists, so that you can receive the notifications.
+1. Go to the **Actions** tab. Make sure that an action group with the correct email address exists, so that you can receive the notifications:
+
+   1. Select **Use action groups** > **Create an action group**.
+   1. For **Notification type**, select **Email/SMS_message/Push/Voice**.
+   1. Select the **Email** checkbox, and then enter the email address in the **Email** box.
 
    :::image type="content" source="./media/auto-upgrade-cluster/action-group.png" alt-text="Screenshot of the pane for entering email information for an action group.":::
 
-1. Assign a managed identity so that you can grant access to the necessary resources:
-
-    1. On the **Create an alert rule** pane, go to the **Details** tab.
-    1. In the **Identity** area, select **System assigned managed identity**.
+1. Go to the **Details** tab. Assign a managed identity so that you can grant access to the necessary resources. In the **Identity** area, select **System assigned managed identity**.
 
     :::image type="content" source="./media/auto-upgrade-cluster/system-assigned-identity.jpg" alt-text="Screenshot that shows selections for assigning a system-assigned managed identity.":::
 
