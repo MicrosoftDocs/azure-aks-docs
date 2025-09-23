@@ -20,11 +20,13 @@ This article provides a conceptual overview of multi-cluster managed namespaces.
 * Deny all: Denies all network traffic 
 
 ## Resource quotas
-Use [resource quotas](../aks/concepts-managed-namespaces.md#resource-quotas) to cap CPU and memory consumption at the namespace layer. In multi‑cluster managed namespaces, optionally set quota values once and Azure enforces the same limits on the namespace across selected member clusters.
-
+Platform administrators may use [resource quotas](../aks/concepts-managed-namespaces.md#resource-quotas) to cap CPU and memory consumption at the namespace layer. In multi‑cluster managed namespaces, admins can optionally set boundaries for the minimum and maximum amount of resources used by workloads in a namespcae. 
+* CPU requests and limits: Define the minimum and maximum amount of CPU resources that workloads in the namespace can request or consume. 
+* Memory requests and limits: Define the minimum and maximum amount of memory resources that workloads in the namespace can request or consume. 
 ## Labels and annotations
-Add [labels and annotations](../aks/concepts-managed-namespaces.md#labels-and-annotations) to organize namespaces and attach nonidentifying metadata used by tools. In multi‑cluster managed namespaces, the values you specify are placed onto the namespace instance in each selected member cluster. Multi-cluster managed namespaces are created with a l
+Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) are key/value pairs that may attach to the managed namespace. Labels are used to organize and query subsets of objects, in this case, managed namespaces. By default, each managed namespace has a built-in label indicated it is a managed by ARM.
 
+On the other hand, [annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) are used to attach nonidentifying, potentially unstructured metadata to an object. Users may also apply annotations to their managed namespaces.
 
 ## Adoption Policy
 The adoption policy determines how an existing namespace in Kubernetes is handled when creating a managed namespace. Similar to a [single cluster namespace](../aks/concepts-managed-namespaces.md#adoption-policy), the following options are available:
