@@ -101,12 +101,15 @@ az fleet namespace show \
 ## Delegating access to a user 
 #### [Azure portal](#tab/azure-portal)
 #### [Azure CLI](#tab/cli)
+Now, we can assign a user access to the managed namespace across member clusters using one of the [built in roles](./concepts-fleet-managed-namespace.md#multi-cluster-managed-namespace-built-in-roles).
+
 ```azurecli-interactive
 az role assignment create --role "Azure Kubernetes Fleet Manager Member Cluster RBAC Writer" 
 --assignee <USER-ENTRA-ID> --scope $FLEET_ID/managedNamespaces/myManagedNamespace
 ```
 
 ## Deleting the multi-cluster managed namespace
+Finally, we can clean up our managed namespace resource.
 
 #### [Azure portal](#tab/azure-portal)
 #### [Azure CLI](#tab/cli)
