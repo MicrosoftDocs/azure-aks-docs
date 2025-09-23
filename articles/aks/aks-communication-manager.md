@@ -10,9 +10,9 @@ ms.subservice: aks-upgrade
 # Customer intent: As a Kubernetes administrator, I want to set up notifications for AKS maintenance events so that I can receive timely alerts and reduce operational issues related to monitoring upgrades and failures.
 ---
 
-# Set up an Azure Kubernetes Service communication manager
+# Set up the Azure Kubernetes Service communication manager
 
-An Azure Kubernetes Service (AKS) communication manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notifications and Azure Resource Graph frameworks. The communication manager gives you timely alerts on event triggers and outcomes, so that you can closely monitor your upgrades.
+The Azure Kubernetes Service (AKS) communication manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notifications and Azure Resource Graph frameworks. The communication manager gives you timely alerts on event triggers and outcomes, so that you can closely monitor your upgrades.
 
 If maintenance fails, the communication manager notifies you with the reasons for the failure. This information reduces operational hassles related to observability and follow-ups.
 
@@ -24,9 +24,7 @@ By following the steps in this article, you can set up notifications for all typ
 
 - Create a [planned maintenance window][planned-maintenance] for your configuration of automatic upgrades.
 
-After you set up automatic upgrades, the communication manager sends advance notices: one week before maintenance starts and one day before maintenance starts. This communication is in addition to the timely alerts during the maintenance operation.
-
-## Set up a communication manager
+## Set up the communication manager
 
 1. In the Azure portal, go to the resource.
 
@@ -108,7 +106,7 @@ After you set up automatic upgrades, the communication manager sends advance not
    | order by eventTime asc
    ```
 
-1. Go to the **Review + create** tab. Configure the alert conditions with the following settings:
+1. Go to the **Actions** tab. Configure the alert conditions with the following settings:
 
    - **Measure**: Select **Table rows**.
    - **Aggregation type**: Select **Count**.
@@ -136,16 +134,16 @@ After you set up automatic upgrades, the communication manager sends advance not
 
     :::image type="content" source="./media/auto-upgrade-cluster/system-assigned-identity.jpg" alt-text="Screenshot that shows selections for assigning a system-assigned managed identity.":::
 
-1. Select **Create** to finish creating the alert rule.
+1. Go to the **Review + create** tab, and then select **Create**.
 
-1. Assign the appropriate roles:
+1. Now that you've created the alert rule, you can assign the appropriate roles for the managed identity:
 
    1. In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments**.
    1. Select **Add role assignment**, select the **Reader** role, and assign it to the resource group.
    1. Select **Add role assignment** again, select the **Reader** role, and assign it to the subscription.
 
     > [!TIP]
-    > If you don't see the **Identity** option, make sure that you created your alert rule and that you have the necessary permissions. Assigning the managed identity is always a separate step after creation of the alert rule.
+    > If you don't see the **Identity** option, make sure that you created your alert rule and that you have the necessary permissions.
 
 After you set up the communication manager, it sends advance notices one week before maintenance starts and one day before maintenance starts. It also sends you timely alerts during the maintenance operation.
 
