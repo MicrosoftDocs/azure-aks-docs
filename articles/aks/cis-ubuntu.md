@@ -1,22 +1,21 @@
 ---
 title: Azure Kubernetes Service (AKS) Ubuntu image alignment with Center for Internet Security (CIS) benchmark
 description: Learn how AKS applies the CIS benchmark to Ubuntu image used by Azure Kubernetes Service.
-ms.topic: concept-article
+ms.date: 09/25/2025
 ms.subservice: aks-security
-ms.date: 09/27/2023
-author: davidsmatlak
-ms.author: davidsmatlak
-ms.reviewer: mattmcinnes
-# Customer intent: "As a cloud security engineer, I want to understand how AKS implements the CIS benchmark for its Ubuntu image, so that I can ensure my deployments comply with security best practices and reduce the attack surface for containerized applications."
+ms.topic: concept-article
+author: allyford
+ms.author: allyford
+# Customer intent: "As a security auditor, I want to verify the alignment of AKS Ubuntu images with CIS benchmarks, so that I can ensure compliance with industry standards and reduce vulnerabilities in our cloud-based applications."
 ---
 
 # Azure Kubernetes Service (AKS) Ubuntu image alignment with Center for Internet Security (CIS) benchmark
 
 As a secure service, Azure Kubernetes Service (AKS) complies with SOC, ISO, PCI DSS, and HIPAA standards. This article covers the security OS configuration applied to Ubuntu image used by AKS. This security configuration is based on the Azure Linux security baseline, which aligns with CIS benchmark. For more information about AKS security, see Security concepts for applications and clusters in Azure Kubernetes Service (AKS). For more information about AKS security, see [Security concepts for applications and clusters in Azure Kubernetes Service (AKS)][security-concepts-aks-apps-clusters]. For more information on the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
 
-## Ubuntu LTS 18.04
+## Ubuntu LTS 24.04
 
-AKS clusters are deployed on host virtual machines, which run an operating system with built-in secure configurations. This operating system is used for containers running on AKS. This host operating system is based on an **Ubuntu 18.04.LTS** image with security configurations applied. 
+AKS clusters are deployed on host virtual machines, which run an operating system with built-in secure configurations. This operating system is used for containers running on AKS. This host operating system is based on an **Ubuntu 24.04.LTS** image with security configurations applied. 
 
 As a part of the security-optimized operating system:
 
@@ -29,7 +28,7 @@ As a part of the security-optimized operating system:
 
 The goal of the secure configuration built into the host OS is to reduce the surface area of attack and optimize for the deployment of containers in a secure manner.
 
-The following are the results from the [CIS Ubuntu 18.04 LTS Benchmark v2.1.0][cis-benchmark-ubuntu] recommendations.
+The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v2.1.0][cis-benchmark-ubuntu] recommendations.
 
 Recommendations can have one of the following reasons:
 
