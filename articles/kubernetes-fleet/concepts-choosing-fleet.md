@@ -24,7 +24,7 @@ Let's compares the scenarios enabled by the using a hub cluster.
 |**Hub cluster hosting**| <span class='red-x'>&#10060;</span> |<span class='green-check'>&#9989;</span> |
 |**Kubernetes and node image updates**| <span class='green-check'>&#9989;</span> | <span class='green-check'>&#9989;</span> |
 |**Workload placement**| <span class='red-x'>&#10060;</span> | <span class='green-check'>&#9989;</span> |
-|**Managed namespaces**| <span class='red-x'>&#10060;</span> | <span class='green-check'>&#9989;</span> |
+|**Multi-cluster managed namespaces**| <span class='red-x'>&#10060;</span> | <span class='green-check'>&#9989;</span> |
 |**DNS load balancing**| <span class='red-x'>&#10060;</span> | <span class='green-check'>&#9989;</span> |
 |**Billing considerations**| No cost | You pay cost associated with the hub, which is a single node standard-tier AKS-cluster. |
 |**Converting fleet types**| Can upgrade to a Fleet Manager with a hub cluster. | Can't be downgraded to a Fleet Manager resource without a hub cluster.|
