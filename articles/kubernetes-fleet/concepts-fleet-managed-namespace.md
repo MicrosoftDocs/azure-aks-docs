@@ -41,13 +41,13 @@ The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) control
 * *Keep*: Removes only the managed namespace resource. Leaves the Kubernetes namespace intact on the hub and member clusters but removes the `ManagedByARM` label.
 * *Delete*: Removes both the managed namespace resource and the Kubernetes namespace from the hub and member clusters. 
 
-# Cluster Resource Placement
+## Cluster Resource Placement
 If the user specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object that propagates the namespace to the selected member clusters. The placement policy is [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type). The adoption policy determines whether an unmanaged namespace is taken over when a managed namespace with the same name is propagated to a member cluster.
 1. *Always*: Overwrites existing member cluster namespace with multi-cluster managed namespace using whenToTakeOver property of Always.
 2. *IfIdentical*: Overwrites existing member cluster namespace with multi-cluster managed namespace if there are no configuration differences using whenToTakeOver property of IfNoDiff.
 3. *Never*: Never takes over unmanaged namespace.
 
-# Multi-cluster managed namespace built-in roles
+## Multi-cluster managed namespace built-in roles
 Multi-cluster managed namespaces use the existing ARM Role Based Access Control (RBAC) [control plane roles](./concepts-rbac.md#control-plane) to manage and access managed namespaces. The existing [data plane RBAC roles](./concepts-rbac.md#data-plane) are applied to interact with the managed namespace created on the Fleet Manager hub cluster. 
 
 To control access to a managed namespace on member clusters, managed namespaces use the following built-in roles:
@@ -59,5 +59,5 @@ To control access to a managed namespace on member clusters, managed namespaces 
 | Azure Kubernetes Fleet Manager Member Cluster RBAC Admin | Read and write access to Kubernetes resources in the namespace on the member cluster. Cannot modify the `ResourceQuota` object or the namespace object itself. |
 | Azure Kubernetes Fleet Manager Member Cluster RBAC Cluster Admin | Full read/write access to all Kubernetes resources on the member cluster. |
 
-# Next steps
+## Next steps
 Learn how to [create and use a multi-cluster managed namespace](./howto-managed-namespaces.md).

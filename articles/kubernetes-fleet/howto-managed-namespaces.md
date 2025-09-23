@@ -14,9 +14,9 @@ Multi-cluster managed namespaces provide a centralized, Azure-native way to isol
 ## Prerequisites
 * You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 
-* To understand the concept of a managed namespace, read the [conceptual overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespaces.md).
+* To understand the concept of a managed namespace, read the [conceptual overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md).
 
-* You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
+* You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest).
 
 * You need the `fleet` Azure CLI extension. You can install it by running the following command:
 
@@ -24,13 +24,13 @@ Multi-cluster managed namespaces provide a centralized, Azure-native way to isol
   az extension add --name fleet
   ```
 
-  Run the [`az extension update`](https://learn.microsoft.com/en-us/cli/azure/extension?view=azure-cli-latest#az-extension-update) command to update to the latest version of the extension:
+  Run the [`az extension update`](https://learn.microsoft.com/cli/azure/extension?view=azure-cli-latest#az-extension-update) command to update to the latest version of the extension:
 
   ```azurecli-interactive
   az extension update --name fleet
   ```
 
-* You need a hubful fleet. This article includes instructions for configuring your managed namespace across member clusters. To follow this tutorial, [create and join at least one AKS cluster to the fleet](./quickstart-create-fleet-and-members.md).
+* You need a hubful fleet. This article includes instructions for configuring your managed namespace across member clusters. To follow this tutorial, [create and join at least one Azure Kubernetes Service (AKS) cluster to the fleet](./quickstart-create-fleet-and-members.md).
 
 ## Creating a new multi-cluster managed namespace 
 #### [Azure portal](#tab/azure-portal)
