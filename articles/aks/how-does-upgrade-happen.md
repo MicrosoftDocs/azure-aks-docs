@@ -32,7 +32,7 @@ The cluster starts with two nodes running version 1.30, each hosting application
 
 - **Node 1**: Pod A, Pod B
 - **Node 2**: Pod C, Pod D
-- **Surge Node**: Empty (newly created)
+- **Surge Node**: Empty (except for DaemonSets and system pods)
 
 ### Step 2: Cordon and drain first node
 
@@ -40,8 +40,8 @@ AKS cordons Node 1 to prevent new pod scheduling, then drains existing pods.
 
 ![Cordon and drain Node 1](./media/how-upgrade-happens/cordon-node-1.png)
 
-- **Pod A** → Rescheduled to Surge Node
-- **Pod B** → Rescheduled to Node 2
+- **Pod A** → Evicted and replaced on Surge Node
+- **Pod B** → Evicted and replaced on Node 2
 
 ### Step 3: Upgrade first node
 
@@ -49,18 +49,18 @@ Node 1 is reimaged with Kubernetes version 1.31 while pods continue running on o
 
 ![Reimage Node 1 to version 1.31](./media/how-upgrade-happens/reimage-node-1.png)
 
-- **Node 1**: Upgraded to v1.31 (empty)
+- **Node 1**: Upgraded to v1.31 
 - **Node 2**: Pod B, Pod C, Pod D
 - **Surge Node**: Pod A
 
 ### Step 4: Cordon and drain second node
 
-AKS repeats the process for Node 2, redistributing pods across available nodes.
+AKS repeats the process for Node 2, pods get evicted and the scheduler redistributes them to appropriate available nodes.
 
 ![Cordon and drain Node 2](./media/how-upgrade-happens/node-2-cordon-drain.png)
 
-- **Pod C** → Rescheduled to Node 1
-- **Pod D** → Rescheduled to Surge Node
+- **Pod C** → Evicted and replaced on Node 1
+- **Pod D** → Evicted and replaced on Surge Node
 - **Node 2**: Cordoned and reimaged to v1.31
 
 ### Step 5: Remove surge node
@@ -69,13 +69,13 @@ After all permanent nodes are upgraded, the surge node is drained and deleted.
 
 ![Drain and delete surge node](./media/how-upgrade-happens/drain-delete-surge.png)
 
-- **Pod A** → Rescheduled to Node 1
-- **Pod D** → Rescheduled to Node 2
+- **Pod A** → Evicted and replaced on Node 1
+- **Pod D** → Evicted and replaced on Node 2
 - **Surge Node**: Deleted
 
 ### Final state
 
-All nodes are now running Kubernetes version 1.31 with pods redistributed across the cluster.
+All nodes are now running Kubernetes version 1.31 with pods scheduled across the cluster.
 
 - **Node 1 (v1.31)**: Pod A, Pod C
 - **Node 2 (v1.31)**: Pod B, Pod D
@@ -98,7 +98,7 @@ The cluster starts with two nodes running version 1.30, with a PDB protecting Po
 
 - **Node 1**: Pod A (protected by PDB), Pod B
 - **Node 2**: Pod C, Pod D
-- **Surge Node**: Empty (newly created)
+- **Surge Node**: newly created
 - **PDB**: Prevents Pod A eviction
 
 ### Step 2: Attempt to drain first node (blocked)
@@ -108,7 +108,7 @@ AKS cordons Node 1 but cannot drain Pod A due to PDB restrictions.
 ![Node 1 cordoned but drain blocked by PDB](./media/how-upgrade-happens/pod-disruption-budget-drain-blocked.png)
 
 - **Node 1**: Cordoned and marked as quarantined (Pod A stuck)
-- **Pod B** → Rescheduled to Surge Node
+- **Pod B** → Evicted and replaced on Surge Node
 - **Status**: Node 1 upgrade blocked
 
 ### Step 3: Proceed to second node
@@ -119,8 +119,8 @@ With Node 1 quarantined, AKS continues upgrading Node 2.
 
 - **Node 1**: Remains quarantined (v1.30)
 - **Node 2**: Cordoned and drained successfully
-- **Pod C** → Rescheduled to Surge Node
-- **Pod D** → Rescheduled to Surge Node
+- **Pod C** → Evicted and replaced on Surge Node
+- **Pod D** → Evicted and replaced on Surge Node
 
 ### Step 4: Upgrade second node
 
@@ -189,8 +189,8 @@ The upgrade begins by creating a complete duplicate set of nodes (green) with th
 
 - **Blue Node 1 (v1.30)**: Pod A, Pod B
 - **Blue Node 2 (v1.30)**: Pod C, Pod D
-- **Green Node 1 (v1.31)**: Empty (newly created)
-- **Green Node 2 (v1.31)**: Empty (newly created)
+- **Green Node 1 (v1.31)**: newly created
+- **Green Node 2 (v1.31)**: newly created
 
 #### Step 2: Batch migration (Batch size = 1)
 
@@ -199,7 +199,7 @@ Nodes are drained in batches based on the configured batch size. With batch size
 ![First batch migration](./media/how-upgrade-happens/blue-green-batch-1.png)
 
 - **Blue Node 1**: Cordoned and drained
-- **Pod A, Pod B** → Migrated to Green nodes
+- **Pod A, Pod B** → Evicted and replaced on Green nodes
 - **Batch soak period**: System waits for validation
 
 #### Step 3: Continue batch migration
@@ -209,7 +209,7 @@ After the batch soak period, the next batch proceeds if no issues are detected.
 ![Second batch migration](./media/how-upgrade-happens/blue-green-batch-2.png)
 
 - **Blue Node 2**: Cordoned and drained
-- **Pod C, Pod D** → Migrated to Green nodes
+- **Pod C, Pod D** → Evicted and replaced on Green nodes
 - **All workloads** now running on Green nodes (v1.31)
 
 #### Step 4: Node pool soak period
@@ -220,7 +220,7 @@ After all nodes are drained, the node pool soak period begins. This is your fina
 
 During this period, you can:
 - **Validate**: Check application performance on green nodes
-- **Abort and rollback**: Return workloads to blue nodes if issues are found
+- **Abort and rollback**: Evict pods from green nodes and have them scheduled back to blue nodes if issues are found
 - **Commit**: Proceed to delete blue nodes if validation succeeds
 
 #### Step 5: Commit or rollback
@@ -234,13 +234,13 @@ Based on validation results, either commit to green nodes or rollback to blue.
 
 **Option B - Rollback (Issues detected):**
 ![Rollback to blue nodes](./media/how-upgrade-happens/blue-green-rollback.png)
-- Workloads return to blue nodes
+- Workloads are evicted from green nodes and rescheduled to blue nodes
 - Green nodes are deleted
 - Cluster remains on v1.30
 
 ### Advantages of Blue-Green upgrades
 
-- **Zero-downtime migration**: Complete infrastructure ready before workload migration
+- **Zero-downtime migration**: Complete infrastructure ready before workload transition
 - **Validation periods**: Multiple checkpoints to verify upgrade success
 - **Easy rollback**: Original nodes remain available until explicitly deleted
 - **Batch control**: Configure migration pace based on risk tolerance
