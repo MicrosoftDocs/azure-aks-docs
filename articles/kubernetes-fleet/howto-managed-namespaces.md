@@ -74,8 +74,8 @@ az fleet namespace create \
 ---
 
 ## Updating a multi-cluster managed namespace to add a member cluster
-#### [Azure portal](#tab=azure-portal-2)
-#### [Azure CLI](#tab=cli-2)
+#### [Azure portal](#tab=azure-portal)
+#### [Azure CLI](#tab=cli)
 ```azurecli-interactive
 az fleet namespace create \
     --name myManagedNamespace \
@@ -88,8 +88,8 @@ az fleet namespace create \
 ## Viewing the multi-cluster managed namespace
 After creation, you can view the member clusters where the managed namespace is placed.
 
-#### [Azure portal](#tab=azure-portal-3)
-#### [Azure CLI](#tab=cli-3)
+#### [Azure portal](#tab=azure-portal)
+#### [Azure CLI](#tab=cli)
 
 ```azurecli-interactive
 az fleet namespace show \
@@ -103,8 +103,8 @@ az fleet namespace show \
 
 ## Delegating access to a user
 You can now assign access to a user for the managed namespace across member clusters using one of the [built-in roles](./concepts-fleet-managed-namespace.md#multi-cluster-managed-namespace-built-in-roles).
-#### [Azure portal](#tab=azure-portal-4)
-#### [Azure CLI](#tab=cli-4)
+#### [Azure portal](#tab=azure-portal)
+#### [Azure CLI](#tab=cli)
 
 ```azurecli-interactive
 az role assignment create --role "Azure Kubernetes Fleet Manager Member Cluster RBAC Writer" --assignee <USER-ENTRA-ID> --scope $FLEET_ID/managedNamespaces/myManagedNamespace
@@ -115,8 +115,8 @@ az role assignment create --role "Azure Kubernetes Fleet Manager Member Cluster 
 ## Deleting the multi-cluster managed namespace
 To clean up, delete the managed namespace resource.
 
-#### [Azure portal](#tab=azure-portal-5)
-#### [Azure CLI](#tab=cli-5)
+#### [Azure portal](#tab=azure-portal)
+#### [Azure CLI](#tab=cli)
 ```azurecli-interactive
 az fleet namespace delete \
     --name myManagedNamespace \
