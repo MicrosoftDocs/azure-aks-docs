@@ -203,25 +203,6 @@ az aks nodepool upgrade --cluster-name myManagedCluster --name mynodepool --reso
 > [!IMPORTANT]
 > To disable SSH on an existing cluster, you need to disable SSH for each node pool on this cluster. 
 
-### Re-enable SSH on an existing cluster
-
-Use the [`az aks update`][az-aks-update] command to update an existing cluster, and include the `--ssh-access localuser` argument to re-enable SSH (preview) on all the node pools in the cluster.
-
-```azurecli-interactive
-az aks update --resource-group myResourceGroup --name myManagedCluster --ssh-access localuser
-```
-
-The following message is returned while the process is performed:
-
-```output
-Only after all the nodes are reimaged, does the disable/enable SSH Access operation take effect."
-```
-
-After re-enabling SSH, the nodes won't be reimaged automatically. At any time, you can choose to perform a [reimage operation][node-image-upgrade].
-
->[!IMPORTANT]
->During this operation, all Virtual Machine Scale Set instances are upgraded and reimaged to use the new SSH public key.
-
 ### Re-enable SSH for a specific node pool
 
 Use the [`az aks update`][az-aks-update] command to update a specific node pool, and include the `--ssh-access localuser` argument to re-enable SSH (preview) on that node pool in the cluster. In the following example, *nodepool1* is the target node pool.
