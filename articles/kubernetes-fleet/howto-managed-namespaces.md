@@ -16,7 +16,7 @@ Multi-cluster managed namespaces provide a centralized, Azure-native way to isol
 
 * To understand the concept of a managed namespace, read the [conceptual overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespaces.md).
 
-* You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+* You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
 
 * You need the `fleet` Azure CLI extension. You can install it by running the following command:
 
@@ -24,7 +24,7 @@ Multi-cluster managed namespaces provide a centralized, Azure-native way to isol
   az extension add --name fleet
   ```
 
-  Run the [`az extension update`][az-extension-update] command to update to the latest version of the extension:
+  Run the [`az extension update`](https://learn.microsoft.com/en-us/cli/azure/extension?view=azure-cli-latest#az-extension-update) command to update to the latest version of the extension:
 
   ```azurecli-interactive
   az extension update --name fleet
@@ -36,7 +36,7 @@ Multi-cluster managed namespaces provide a centralized, Azure-native way to isol
 #### [Azure portal](#tab/azure-portal)
 #### [Azure CLI](#tab/cli)
 
-1. Set the following environment variables for your subscription ID, resource group, and Kubernetes Fleet resource:
+1. Set the following environment variables for your subscription ID, resource group, Fleet, and Fleet Member:
 
 ```azurecli-interactive
 export SUBSCRIPTION_ID=<subscription-id>
@@ -76,7 +76,6 @@ az fleet namespace create \
 #### [Azure portal](#tab/azure-portal)
 #### [Azure CLI](#tab/cli)
 ```azurecli-interactive
-# Note: specify the name of the fleet member, not the AKS cluster
 az fleet namespace create \ 
     --name myManagedNamespace \ 
     --fleet-name $FLEET \ 
@@ -85,10 +84,10 @@ az fleet namespace create \
 ```
 
 ## Viewing the multi-cluster managed namespace
+After creation, we should be able to view the member clusters that the managed namespace is placed on.
 
 #### [Azure portal](#tab/azure-portal)
 #### [Azure CLI](#tab/cli)
-After creation, we should be able to view the member clusters that the managed namespace is placed on.
 
 ```azurecli-interactive
 az fleet namespace show \ 
@@ -99,9 +98,9 @@ az fleet namespace show \
 ```
 
 ## Delegating access to a user 
+Now, we can assign a user access to the managed namespace across member clusters using one of the [built in roles](./concepts-fleet-managed-namespace.md#multi-cluster-managed-namespace-built-in-roles).
 #### [Azure portal](#tab/azure-portal)
 #### [Azure CLI](#tab/cli)
-Now, we can assign a user access to the managed namespace across member clusters using one of the [built in roles](./concepts-fleet-managed-namespace.md#multi-cluster-managed-namespace-built-in-roles).
 
 ```azurecli-interactive
 az role assignment create --role "Azure Kubernetes Fleet Manager Member Cluster RBAC Writer" 
