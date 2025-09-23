@@ -10,14 +10,14 @@ ms.topic: concept-article
 ---
 # Overview of Multi-cluster Managed Namespaces (preview)
 
-This article provides a conceptual overview of multi-cluster managed namespaces. Previously, AKS Managed Namespaces provided a way to logically isolate workloads within a single AKS cluster via managed namespaces. Multi-cluster managed namespaces now extend this capability to isolate workloads across multiple AKS clusters. Multi-cluster managed namespaces enable platform administrators to delegate resource quotas, enforce network policy, and control access to namespaces across multiple clusters within a fleet.
+This article provides a conceptual overview of multi-cluster managed namespaces. AKS Managed Namespaces provides a way to logically isolate workloads within a single AKS cluster via managed namespaces. Multi-cluster managed namespaces now extend this capability to isolate workloads across multiple AKS clusters. Using multi-cluster managed namespaces, platform administrators can define resource quotas, enforce network policy, and control access to namespaces resources across multiple clusters within a fleet.
 
 ## Network policies
-[Network policies](../aks/concepts-managed-namespaces.md#network-policies) control traffic between pods, namespaces, and external endpoints. In multi‑cluster managed namespaces, jsers may choose a built‑in policy for each direction (ingress or egress traffic) and Azure applies it to the namespace on every selected member cluster. If omitted, no NetworkPolicy resource is created.
+[Network policies](../aks/use-network-policies.md) control traffic between pods, namespaces, and external endpoints. Users may select from the three policies listed below for ingress and egress traffic. If omitted, no Network Policy is applied.
 
-* Allow all
-* Allow same namespace
-* Deny all
+* Allow all: Allow all network traffic
+* Allow same namespace: Allow all network traffic within the same namespace
+* Deny all: Denies all network traffic 
 
 ## Resource quotas
 Use [resource quotas](../aks/concepts-managed-namespaces.md#resource-quotas) to cap CPU and memory consumption at the namespace layer. In multi‑cluster managed namespaces, optionally set quota values once and Azure enforces the same limits on the namespace across selected member clusters.
@@ -29,14 +29,14 @@ Add [labels and annotations](../aks/concepts-managed-namespaces.md#labels-and-an
 ## Adoption Policy
 The adoption policy determines how an existing namespace in Kubernetes is handled when creating a managed namespace. Similar to a [single cluster namespace](../aks/concepts-managed-namespaces.md#adoption-policy), the following options are available:
 
-Never: If the namespace already exists in the cluster, attempts to create that namespace as a managed namespace fails.
-IfIdentical: Take over the existing namespace to be managed, provided there are no differences between the existing namespace and the desired configuration.
-Always: Always take over the existing namespace to be managed, even if some fields in the namespace might be overwritten.
+* Never: If the namespace already exists in the cluster, attempts to create that namespace as a managed namespace fails.
+* IfIdentical: Take over the existing namespace to be managed, provided there are no differences between the existing namespace and the desired configuration.
+* Always: Always take over the existing namespace to be managed, even if some fields in the namespace might be overwritten.
 
 ## Delete policy
-Control how the Kubernetes namespace is handled when the managed namespace resource is removed with the [delete policy](../aks/concepts-managed-namespaces.md#delete-policy).
+The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) controls how the Kubernetes namespace is handled when the managed namespace resource is deleted. There are two built-in options:
 
-* Keep: Removes only the managed namespace resource. Leaves the Kubernetes namespace intact on the hub and member clusters but clears the `ManagedByARM` label.
+* Keep: Removes only the managed namespace resource. Leaves the Kubernetes namespace intact on the hub and member clusters but removes the `ManagedByARM` label.
 * Delete: Removes both the managed namespace resource and the Kubernetes namespace from the hub and member clusters. 
 
 # Cluster Resource Placement
