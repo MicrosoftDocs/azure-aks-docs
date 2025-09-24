@@ -1,5 +1,5 @@
 ---
-title: Deploy an MCP server with the AI Toolchain Operator
+title: Deploy an MCP Server with the AI Toolchain Operator on Azure Kubernetes Service (AKS)
 description: Learn how to deploy an AI inference service with MCP in Azure Kubernetes Service (AKS) by using the managed add-on for KAITO.
 ms.topic: how-to
 ms.author: sachidesai
@@ -9,64 +9,64 @@ ms.date: 9/19/2025
 # Customer intent: As an application developer, I want to integrate MCP-compliant tools with KAITO inference service(s) on an AKS cluster, so that my LLM-powered applications can securely and reliably invoke external APIs and services through standardized tool calling at scale."
 ---
 
-# Integrate an MCP Server and LLM Inference on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on
+# Integrate an MCP server and LLM Inference on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on
 
-In this article, you deploy an open-source MCP-compliant tool server alongside a KAITO inference workspace on Azure Kubernetes Service (AKS), enabling secure and modular tool calling for LLM applications. You also learn how to validate end-to-end tool invocation by integrating the model with the MCP server and monitoring real-time function execution through structured responses.
+In this article, you deploy an open-source MCP-compliant tool server alongside an AI toolchain operator (KAITO) inference workspace on Azure Kubernetes Service (AKS), enabling secure and modular tool calling for LLM applications. You also learn how to validate end-to-end tool invocation by integrating the model with the MCP server and monitoring real-time function execution through structured responses.
 
 ## Model Context Protocol (MCP)
 
-As an extension of [KAITO inference with tool calling](./ai-toolchain-operator-tool-calling.md), the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) provides a standardized way to define and expose tools for language models to call. 
+As an extension of [KAITO inference with tool calling](./ai-toolchain-operator-tool-calling.md), the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) provides a standardized way to define and expose tools for language models to call. 
 
-Tool calling with MCP makes it easier for AKS users to connect language models to real services and actions without tightly coupling logic into the model itself. Instead of embedding every function or API call into your application code, MCP lets you run a standalone **tool server** that exposes standardized tools or APIs that any compatible LLM can use. 
+Tool calling with MCP makes it easier to connect language models to real services and actions without tightly coupling logic into the model itself. Instead of embedding every function or API call into your application code, MCP lets you run a standalone tool server that exposes standardized tools or APIs that any compatible LLM can use. This clean separation means you can update tools independently, share them across models, and manage them like any other microservice.
 
-This clean separation means you can update tools independently, share them across models, and manage them like any other microservice. BYO or pre-defined, popular MCP servers deployed on AKS or hosted externally can be seamlessly connected to your KAITO inference workspace. 
+You can deploy bring-your-own (BYO) or pre-defined MCP servers on AKS or host them internally and seamlessly connect them to your KAITO inference workspace. 
 
 ## MCP with AI toolchain operator (KAITO) on AKS
 
-Once you have an MCP server deployed, you can register it in a uniform, schema-driven format and serve them to any compatible inference endpoint, including those [deployed with a KAITO workspace](https://kaito-project.github.io/kaito/docs/tool-calling/#model-context-protocol-mcp). This approach allows for externalizing business logic, decoupling model behavior from tool execution, and reusing tools across agents, models, and environments.
+Once you have an MCP server deployed, you can register it in a uniform, schema-driven format and serve it to any compatible inference endpoint, including those [deployed with a KAITO workspace](https://kaito-project.github.io/kaito/docs/tool-calling/#model-context-protocol-mcp). This approach allows for externalizing business logic, decoupling model behavior from tool execution, and reusing tools across agents, models, and environments.
 
-In this guide, you’ll registry a pre-deployed MCP server and test real calls issued by an LLM running in a KAITO inference workspace. You'll confirm the entire tool execution path (from model prompt to MCP function invocation) works as intended, with the flexibility to scale or swap tools independently of your model.
+In this guide, you register a pre-defined MCP server, test real calls issued by an LLM running in a KAITO inference workspace, and confirm the entire tool execution path (from model prompt to MCP function invocation) works as intended. You have flexibility to scale or swap tools independent of your model.
 
 ## Prerequisites
 
-* This article assumes that you have an existing AKS cluster. If you don't have a cluster, create one by using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-* Your AKS cluster is running on Kubernetes version `1.33` or higher. To upgrade your cluster, see [Upgrade your AKS cluster](./upgrade-aks-cluster.md).
-* Install and configure Azure CLI version `2.76.0` or later. To find your version, run `az --version`. To install or update, see [Install the Azure CLI](/cli/azure/install-azure-cli).
-* [AI toolchain operator addon is enabled](./ai-toolchain-operator.md) and a [KAITO workspace with tool calling support](./ai-toolchain-operator-tool-calling.md) is deployed on your AKS cluster.
-* An external MCP server available at an accessible URL (e.g., https://mcp.example.com/mcp) that returns valid `/list_tools` and has `stream` transport.
+- This article assumes that you have an existing AKS cluster. If you don't have a cluster, create one by using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
+- Your AKS cluster is running on Kubernetes version `1.33` or higher. To upgrade your cluster, see [Upgrade your AKS cluster](./upgrade-aks-cluster.md).
+- Install and configure Azure CLI version `2.76.0` or later. To find your version, run `az --version`. To install or update, see [Install the Azure CLI](/cli/azure/install-azure-cli).
+- You have the [AI toolchain operator add-on enabled](./ai-toolchain-operator.md) on your cluster and a [KAITO workspace with tool calling support](./ai-toolchain-operator-tool-calling.md) deployed on your cluster.
+- An external MCP server available at an accessible URL (e.g., `https://mcp.example.com/mcp`) that returns valid `/list_tools` and has `stream` transport.
 
 ## Connect to a reference MCP server
 
 In this example, we'll use a reference [Time MCP Server](https://github.com/modelcontextprotocol/servers/tree/main/src/time#time-mcp-server), which provides time zone conversion capabilities and enables LLMs to get current time information and perform conversions using standardized names.
 
-## Port-Forward the KAITO Inference Service
+## Port-forward the KAITO inference service
 
-Confirm that your KAITO workspace is ready and retrieve the inference service endpoint:
+1. Confirm that your KAITO workspace is ready and retrieve the inference service endpoint using the `kubectl get` command.
 
-```bash
-kubectl get svc workspace‑phi‑4-mini-toolcall
-```
+    ```bash
+    kubectl get svc workspace‑phi‑4-mini-toolcall
+    ```
 
-> [!NOTE]
-> The output may be a `ClusterIP` or internal address. Check which port(s) the service listens on; default KAITO inference API is on port `80` for HTTP. If it is only internal, you can port‑forward locally.
+    > [!NOTE]
+    > The output might be a `ClusterIP` or internal address. Check which port(s) the service listens on. The default KAITO inference API is on port `80` for HTTP. If it's only internal, you can port‑forward locally.
 
-Port forward the inference service for testing:
+2. Port-forward the inference service for testing using the `kubectl port-forward` command.
 
-```bash
-kubectl port-forward svc/workspace‑phi‑4‑mini-toolcall 8000:80
-```
+    ```bash
+    kubectl port-forward svc/workspace‑phi‑4‑mini-toolcall 8000:80
+    ```
 
-Check `/v1/models` endpoint to confirm that `Phi-4-mini-instruct` LLM is available:
+3. Check `/v1/models` endpoint to confirm that `Phi-4-mini-instruct` LLM is available using `curl`.
 
-```bash
-curl http://localhost:8000/v1/models
-```
+    ```bash
+    curl http://localhost:8000/v1/models
+    ```
 
-Your `Phi-4-mini-instruct` OpenAI-compatible inference API will be available at:
+    Your `Phi-4-mini-instruct` OpenAI-compatible inference API will be available at:
 
-```output
-http://localhost:8000/v1/chat/completions
-```
+    ```output
+    http://localhost:8000/v1/chat/completions
+    ```
 
 ### Confirm the Reference MCP Server is Valid
 
