@@ -54,7 +54,7 @@ To process events for a specific update run gate, use the following event proper
 
 * You must have a Fleet Manager with one or more member clusters. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
 
-* You must have a Update Strategy that contains at least one Approval Gate.
+* You must have an Update Strategy that contains at least one Approval Gate.
 
 * Set the following environment variables:
 
@@ -78,7 +78,7 @@ To process events for a specific update run gate, use the following event proper
   az extension update --name fleet
   ```
 
-* When automating the approvals process, any automation must be granted either the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role, or use a custom role that includes the `Microsoft.ContainerService/fleets/gates/write` Action.
+* Any automation must be granted either the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role, or use a custom role that includes the `Microsoft.ContainerService/fleets/gates/write` Action.
 
 ## Create Event Grid System Topic
 
@@ -119,11 +119,11 @@ Create a new subscription by using the [az eventgrid system-topic event-subscrip
 
 ## Handle Event Grid Subscription Event
 
-Azure Event Grid Event Subscriptions support a number of different [event handler endpoint types][azure-event-grid-event-handlers] including Azure Functions, Service Bus Queues or Azure Logic Apps via webhooks.
+Azure Event Grid Event Subscriptions support many different [event handler endpoint types][azure-event-grid-event-handlers] including Azure Functions, Service Bus Queues, or Azure Logic Apps via webhooks.
 
-In this example we use a Python Azure Function to process the event raised by the gate. The Azure Function also uses the [Fleet Manager Python library](https://pypi.org/project/azure-mgmt-containerservicefleet/) to mark the approval as completed.
+In this example, we use a Python Azure Function to process the event raised by the gate. The Azure Function also uses the [Fleet Manager Python library](https://pypi.org/project/azure-mgmt-containerservicefleet/) to mark the approval as completed.
 
-The identity executing the Azure Function must have been granted the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role.
+The identity executing the Azure Function must have the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role.
 
 ```python
 import logging
@@ -200,7 +200,7 @@ azure-mgmt-containerservicefleet==4.0.0b1
 azure-mgmt-core
 ```
 
-In this article we explored how you can configure Event Grid to deliver Approval Gate events to an Azure Function where the event is processed before we use a library to mark the Approval Gate as completed, allowing the update run to continue.  
+In this article we explored how you can configure Event Grid to deliver Approval Gate events to an Azure Function, before we use the Fleet Manager Python library to mark the Approval Gate as completed which allows the update run to continue.  
 
 ## Next steps
 
