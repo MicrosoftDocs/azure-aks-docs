@@ -127,146 +127,148 @@ Use the open-source [Autogen](https://microsoft.github.io/autogen/stable//index.
 uv pip install "autogen-ext[openai]" "autogen-agentchat" "autogen-ext[mcp]"
 ```
 
-Create a test file named `test.py` that:
-* Connects to the Time MCP server and loads `get_current_time` tool
-* Connects to your KAITO inference service running at `localhost:8000`
-* Sends an example query like “What time is it in Europe/Paris?”
-* Enables automatic selection and calling of the `get_current_time` tool
+4. Create a test file named `test.py` that:
 
-```python
-import asyncio
+    - Connects to the Time MCP server and loads `get_current_time` tool.
+    - Connects to your KAITO inference service running at `localhost:8000`.
+    - Sends an example query like “What time is it in Europe/Paris?”
+    - Enables automatic selection and calling of the `get_current_time` tool.
 
-from autogen_agentchat.agents import AssistantAgent
-from autogen_agentchat.ui import Console
-from autogen_core import CancellationToken
-from autogen_core.models import ModelFamily, ModelInfo
-from autogen_ext.models.openai import OpenAIChatCompletionClient
-from autogen_ext.tools.mcp import (StreamableHttpMcpToolAdapter,
-                                   StreamableHttpServerParams)
-from openai import OpenAI
+    ```python
+    import asyncio
+
+    from autogen_agentchat.agents import AssistantAgent
+    from autogen_agentchat.ui import Console
+    from autogen_core import CancellationToken
+    from autogen_core.models import ModelFamily, ModelInfo
+    from autogen_ext.models.openai import OpenAIChatCompletionClient
+    from autogen_ext.tools.mcp import (StreamableHttpMcpToolAdapter,
+                                    StreamableHttpServerParams)
+    from openai import OpenAI
 
 
-async def main() -> None:
-    # Create server params for the Time MCP service
-    server_params = StreamableHttpServerParams(
-        url="https://mcp.example.com/mcp",
-        timeout=30.0,
-        terminate_on_close=True,
-    )
-
-    # Load the get_current_time tool from the server
-    adapter = await StreamableHttpMcpToolAdapter.from_server_params(server_params, "get_current_time")
-
-    # Fetch model name from KAITO's local OpenAI-compatible API
-    model = OpenAI(base_url="http://localhost:8000/v1", api_key="dummy").models.list().data[0].id
-
-    model_info: ModelInfo = {
-        "vision": False,
-        "function_calling": True,
-        "json_output": True,
-        "family": ModelFamily.UNKNOWN,
-        "structured_output": True,
-        "multiple_system_messages": True,
-    }
-
-    # Connect to the KAITO inference workspace
-    model_client = OpenAIChatCompletionClient(
-        base_url="http://localhost:8000/v1",
-        api_key="dummy",
-        model=model,
-        model_info=model_info
-    )
-
-    # Define the assistant agent
-    agent = AssistantAgent(
-        name="time-assistant",
-        model_client=model_client,
-        tools=[adapter],
-        system_message="You are a helpful assistant that can provide time information."
-    )
-
-    # Run a test task that invokes the tool
-    await Console(
-        agent.run_stream(
-            task="What time is it in Europe/Paris?",
-            cancellation_token=CancellationToken()
+    async def main() -> None:
+        # Create server params for the Time MCP service
+        server_params = StreamableHttpServerParams(
+            url="https://mcp.example.com/mcp",
+            timeout=30.0,
+            terminate_on_close=True,
         )
-    )
 
-if __name__ == "__main__":
-    asyncio.run(main())
-```
+        # Load the get_current_time tool from the server
+        adapter = await StreamableHttpMcpToolAdapter.from_server_params(server_params, "get_current_time")
 
-Run this test script in your virtual environment:
+        # Fetch model name from KAITO's local OpenAI-compatible API
+        model = OpenAI(base_url="http://localhost:8000/v1", api_key="dummy").models.list().data[0].id
 
-```bash
-uv run test.py
-```
+        model_info: ModelInfo = {
+            "vision": False,
+            "function_calling": True,
+            "json_output": True,
+            "family": ModelFamily.UNKNOWN,
+            "structured_output": True,
+            "multiple_system_messages": True,
+        }
 
-In the output of this test, you should expect the following: 
-* The model correctly generates a tool call using the MCP name and expected arguments.
-* Autogen sends the tool call to the MCP server, the MCP server runs the logic and returns a result.
-* The `Phi-4-mini-instruct` LLM interprets the raw tool output and provides a natural language response.
+        # Connect to the KAITO inference workspace
+        model_client = OpenAIChatCompletionClient(
+            base_url="http://localhost:8000/v1",
+            api_key="dummy",
+            model=model,
+            model_info=model_info
+        )
 
-Expected Output:
+        # Define the assistant agent
+        agent = AssistantAgent(
+            name="time-assistant",
+            model_client=model_client,
+            tools=[adapter],
+            system_message="You are a helpful assistant that can provide time information."
+        )
 
-```output
----------- TextMessage (user) ----------
-What time is it in Europe/Paris?
+        # Run a test task that invokes the tool
+        await Console(
+            agent.run_stream(
+                task="What time is it in Europe/Paris?",
+                cancellation_token=CancellationToken()
+            )
+        )
 
----------- ToolCallRequestEvent (time-assistant) ----------
-[FunctionCall(id='chatcmpl-tool-xxxx', arguments='{"timezone": "Europe/Paris"}', name='get_current_time')]
+    if __name__ == "__main__":
+        asyncio.run(main())
+    ```
 
----------- ToolCallExecutionEvent (time-assistant) ----------
-[FunctionExecutionResult(content='{"timezone":"Europe/Paris","datetime":"2025-09-17T17:43:05+02:00","is_dst":true}', name='get_current_time', call_id='chatcmpl-tool-xxxx', is_error=False)]
+5. Run the test script in your virtual environment.
 
----------- ToolCallSummaryMessage (time-assistant) ----------
-The current time in Europe/Paris is 5:43 PM (CEST).
-```
+    ```bash
+    uv run test.py
+    ```
 
-### Experiment with more MCP tools
+    In the output of this test, you should expect the following:
 
-You can test the various tools available to this MCP server, such as `convert_time`:
+    - The model correctly generates a tool call using the MCP name and expected arguments.
+    - Autogen sends the tool call to the MCP server, the MCP server runs the logic and returns a result.
+    - The `Phi-4-mini-instruct` LLM interprets the raw tool output and provides a natural language response.
 
-In your `test.py` file from the previous step, update your `adapter` definition to the following:
+    ```output
+    ---------- TextMessage (user) ----------
+    What time is it in Europe/Paris?
+    
+    ---------- ToolCallRequestEvent (time-assistant) ----------
+    [FunctionCall(id='chatcmpl-tool-xxxx', arguments='{"timezone": "Europe/Paris"}', name='get_current_time')]
+    
+    ---------- ToolCallExecutionEvent (time-assistant) ----------
+    [FunctionExecutionResult(content='{"timezone":"Europe/Paris","datetime":"2025-09-17T17:43:05+02:00","is_dst":true}', name='get_current_time', call_id='chatcmpl-tool-xxxx', is_error=False)]
+    
+    ---------- ToolCallSummaryMessage (time-assistant) ----------
+    The current time in Europe/Paris is 5:43 PM (CEST).
+    ```
 
-```python
-adapter = await StreamableHttpMcpToolAdapter.from_server_params(server_params, "convert_time")
-```
+## Experiment with more MCP tools
 
-Update your `task` definition to invoke the new tool, such as the following request:
+You can test the various tools available to this MCP server, such as `convert_time`.
 
-```bash
-task="Convert 9:30 AM New York time to Tokyo time."
-```
+1. In your `test.py` file from the previous step, update your `adapter` definition to the following:
 
-Save and run the Python script again:
+    ```python
+    adapter = await StreamableHttpMcpToolAdapter.from_server_params(server_params, "convert_time")
+    ```
 
-```bash
-uv run test.py
-```
+2. Update your `task` definition to invoke the new tool. For example:
 
-Expected output should look like:
+    ```bash
+    task="Convert 9:30 AM New York time to Tokyo time."
+    ```
 
-```output
-9:30 AM in New York is 10:30 PM in Tokyo.
-```
+3. Save and run the Python script.
+
+    ```bash
+    uv run test.py
+    ```
+
+    Expected output:
+
+    ```output
+    9:30 AM in New York is 10:30 PM in Tokyo.
+    ```
 
 ## Troubleshooting
 
-Reference the following steps if you encounter these common errors when testing KAITO inference with your external MCP server:
+The following table outlines common errors when testing KAITO inference with an external MCP server and how to resolve them:
 
-* `Tool not found`: Ensure that your tool name matches the one declared in `/mcp/list_tools`.
-* `401 Unauthorized`: If your MCP server requires an Auth token, make sure to update `server_params` to include headers with the Auth token.
-* `connection refused`: Ensure the KAITO inference service is port-forwarded properly (e.g. to `localhost:8000`).
-* `tool call ignored`: Check [KAITO tool calling documentation](https://kaito-project.github.io/kaito/docs/tool-calling/#supported-models) for vLLM models that support tool calling
+| Error | How to resolve |
+| ----- | ----------------- |
+| `Tool not found` | Ensure that your tool name matches the one declared in `/mcp/list_tools`. |
+| `401 Unauthorized` | If your MCP server requires an Auth token, make sure to update `server_params` to include headers with the Auth token. |
+| `connection refused` | Ensure the KAITO inference service is port-forwarded properly (e.g. to `localhost:8000`). |
+| `tool call ignored` | Review the [KAITO tool calling documentation](https://kaito-project.github.io/kaito/docs/tool-calling/#supported-models) to find vLLM models that support tool calling. |
 
-## Next Steps
+## Next steps
 
-In this article, you learned how to connect a KAITO workspace to an external reference MCP server using Autogen to enable tool calling through the OpenAI-compatible API. You also validated that the LLM could discover, invoke, and integrate results from MCP-compliant tools on AKS. To learn more, visit:
+In this article, you learned how to connect a KAITO workspace to an external reference MCP server using Autogen to enable tool calling through the OpenAI-compatible API. You also validated that the LLM could discover, invoke, and integrate results from MCP-compliant tools on AKS. To learn more, see the following resources:
 
-* [Deploy and monitor tool calls](./ai-toolchain-operator-tool-calling.md) with the AI toolchain operator add-on on AKS.
-* KAITO tool calling and [MCP official documentation](https://kaito-project.github.io/kaito/docs/tool-calling).
+- [Deploy and monitor tool calls](./ai-toolchain-operator-tool-calling.md) with the AI toolchain operator add-on on AKS.
+- KAITO tool calling and [MCP official documentation](https://kaito-project.github.io/kaito/docs/tool-calling).
 
 <!-- Links -->
 
