@@ -48,7 +48,7 @@ To process events for an update run gate instance, use the following event prope
 | data.resourceInfo.properties.target.updateRunProperties.group | "blue"           | The name of the update group where the gate is applied. Only present for groups.   |
 | data.resourceInfo.properties.target.updateRunProperties.timing | "Before" / "After" | Denotes if the gate is applied before or after the stage or group.              |
 
-A raw Event Grid Event follows. Note that it is contained in a JSON array, though most event handlers will receive only a single event.
+A raw Event Grid Event follows. It's contained in a JSON array, though most event handlers will receive only a single event.
 
 ```json
 [
@@ -140,7 +140,7 @@ Create a new system topic by using the [az eventgrid system-topic create][azure-
 
 ## Create Event Subscription
 
-In this sample we create a subscription for events for instances of pending Approval Gates named "Check with sales team" that are applied "Before" the "Dev" stage in any update run. The events are routed to an existing Azure Function which processes the events. 
+In this example, we create a subscription for events for instances of pending Approval Gates named "Check with sales team" that are applied "Before" the "Dev" stage in any update run. The events are routed to an existing Azure Function which processes the events. 
 
 Create a new subscription by using the [az eventgrid system-topic event-subscription create][azure-event-grid-sub-create] command as shown.
 
@@ -162,7 +162,7 @@ Create a new subscription by using the [az eventgrid system-topic event-subscrip
 
 ## Handle Event Grid Subscription Event
 
-Azure Event Grid Event Subscriptions support many different [event handler endpoint types][azure-event-grid-event-handlers] including Azure Functions, Service Bus Queues, Azure Logic Apps or other third party systems via webhooks.
+Azure Event Grid Event Subscriptions support many different [event handler endpoint types][azure-event-grid-event-handlers] including Azure Functions, Service Bus Queues, Azure Logic Apps, or other third party systems via webhooks.
 
 In this example, we use a Python Azure Function to process the event raised by the gate. The Azure Function also uses the [Fleet Manager Python library](https://pypi.org/project/azure-mgmt-containerservicefleet/) to mark the approval as completed.
 
@@ -245,7 +245,7 @@ azure-mgmt-containerservicefleet==4.0.0b1
 azure-mgmt-core
 ```
 
-In this article we explored how you can configure Event Grid to deliver Approval Gate events to an Azure Function, before we use the Fleet Manager Python library to mark the Approval Gate as completed which allows the update run to continue.  
+In this article, we explored how you can configure Event Grid to deliver Approval Gate events to an Azure Function, before we use the Fleet Manager Python library to mark the Approval Gate as completed which allows the update run to continue.  
 
 ## Next steps
 
