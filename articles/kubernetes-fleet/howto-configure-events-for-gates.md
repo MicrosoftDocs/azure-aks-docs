@@ -13,13 +13,13 @@ ms.service: azure-kubernetes-fleet-manager
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
-Fleet Manager update run [approval gates](./update-strategies-gates-approvals.md) provide more control over when update groups or stages in are processed.
+Fleet Manager update run [approval gates](./update-strategies-gates-approvals.md) provide more control over when update groups or stages are processed.
 
-Approval gates publish events via an Event Grid System Topic, enabling configuration of event subscriptions. These event subscriptions can be used as a trigger for automation of the clearance of pending approvals. 
+Approval gates publish events via an Event Grid System Topic. Event subscriptions on the Topic can be used as a trigger for automations to control the clearance of pending approvals. 
 
-Automations can include integration with other Azure services, or with external systems to perform actions such as raising tickets, or calling health check APIs to see if cluster workloads are healthy before allowing an update run to continue.
+Automations can include integration with other Azure services, or with external systems to perform actions such as raising service desk tickets, or using health check APIs to ensure cluster workloads are healthy before allowing an update run to continue.
 
-This article provides instructions on how to configure Event Grid so you can build familiarity with how to work with these published events.
+This article provides instructions on how to configure Event Grid and event subscriptions to access published events.
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
