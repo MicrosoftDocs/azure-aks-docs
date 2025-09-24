@@ -1,5 +1,5 @@
 ---
-title: "Use Event Grid Events to Automate Approval Gates for Azure Kubernetes Fleet Manager"
+title: "Automate Azure Kubernetes Fleet Manager Approval Gates with Event Grid Events"
 description: Learn how to use Approval Gate events delivered via Event Grid to build automations to process approval gates using health checks and other integration types.
 ms.topic: how-to
 ms.date: 09/22/2025
