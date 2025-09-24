@@ -1,6 +1,6 @@
 ---
-title: Configure Scheduler Profiles on Azure Kubernetes Service (AKS)
-description: Learn how to set scheduling profiles to achieve advanced scheduling behaviors, such as node bin-packing and co-scheduling, on Azure Kubernetes Service (AKS)
+title: Configure Scheduler Profiles on Azure Kubernetes Service (AKS) (preview)
+description: Learn how to set scheduler profiles to achieve advanced scheduling behaviors, such as node bin-packing and co-scheduling, on Azure Kubernetes Service (AKS)
 ms.topic: how-to
 ms.subservice: aks-operator
 ms.date: 09/15/2025
@@ -9,39 +9,29 @@ author: sachidesai
 # Customer intent: "As a Kubernetes cluster operator, I want to implement advanced scheduling strategies using one or more configurable profiles, so that I can effectively manage workload distribution and resource allocation across my AKS clusters."
 ---
 
-# Configure advanced scheduler profiles on Azure Kubernetes Service (AKS)
+# Configure advanced scheduler profiles on Azure Kubernetes Service (AKS) (preview)
 
-On Azure Kubernetes Service (AKS), the default mechanism of workload placement across nodes within a cluster is via the kube-scheduler. The kube-scheduler is a control plane component responsible for assigning AKS deployment pods to nodes. When a pod is created without a specified node, the scheduler selects an optimal node based on several criteria, such as:
+On Azure Kubernetes Service (AKS), the default mechanism of workload placement across nodes within a cluster is via the scheduler. The default scheduler is a control plane component responsible for assigning AKS deployment pods to nodes. When a pod is created without a specified node, the scheduler selects an optimal node based on several criteria, including:
 
 * Available resources (CPU, memory)
-* Node affinity/anti-affinity
-* Pod affinity/anti-affinity
-* Taints and tolerations
+* [Node affinity/anti-affinity](./operator-best-practices-advanced-scheduler.md#node-affinity)
+* [Pod affinity/anti-affinity](./operator-best-practices-advanced-scheduler.md#inter-pod-affinity-and-anti-affinity)
+* [Taints and tolerations](./operator-best-practices-advanced-scheduler.md#provide-dedicated-nodes-using-taints-and-tolerations)
 
-Once the kube-scheduler selects a node, the deployment pod is bound to it, and the rest of the lifecycle continues. 
+Once the AKS scheduler selects a node, the deployment pod is bound to it, and the rest of the lifecycle continues. 
 
-By default, kube-scheduler comes with a set of built-in rules that work well for general-purpose workloads. However, advanced use cases may require custom scheduling strategies. For example,
+By default, the AKS scheduler comes with a set of built-in rules that work well for general-purpose workloads. However, advanced use cases may require custom scheduling strategies. For example,
 
-* Data processing workloads with flexible start times may benefit from co-scheduling.
 * Batch jobs might prioritize resource fairness over speed.
-* Cost-sensitive workloads may benefit from  node bin-packing to consolidate jobs and minimize idle compute node costs.
+* Cost-sensitive workloads may benefit from node binpacking to consolidate jobs and minimize idle compute node costs.
 
-To support these use cases, AKS allows you to set one or more in-tree scheduling plugins via a scheduler profile to configure the scheduling behavior (preview) on your cluster(s).
-
-## Limitations
-* Currently, AKS does not manage the deployment of third-party schedulers (out-of-tree scheduling plugins).
-
-## Prerequisites
-* The Azure CLI version `2.76.0` or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* The `aks-preview` Azure CLI extension version `18.0.0b27` or later.
-* Kubernetes version 1.33 or later on your AKS cluster.
-* Register the `UserDefinedSchedulerConfigurationPreview` feature in your Azure subscription.
+To support these use cases, AKS allows you to set one or more in-tree scheduling plugins via a scheduler profile (preview) to configure the scheduling behavior on your AKS cluster.
 
 ## Configurable scheduler profiles (preview)
 
-A scheduler profile is a set of in-tree scheduling plugins and configurations that dictate how a pod should be scheduled. Starting from Kubernetes v1.33, you can set a pre-defined scheduler profile to target AKS node(s) or an entire AKS cluster.
+A scheduler profile is a set of one or more in-tree scheduling plugins and configurations that dictate how a pod should be scheduled. Starting from Kubernetes version `1.33`, you can configure and set a scheduler profile (preview) to target AKS node pool(s) or your entire cluster.
 
-Each profile has:
+Each scheduler profile has:
 
 * A unique name.
 * A set of scheduling plugins.
@@ -143,6 +133,22 @@ AKS supports configuration of the following Kubernetes scheduling plugins:
 
 `VolumeZone`: Ensures that volumes are scheduled in the same availability zone as the pod. For example, if a pod requests a volume that must be in a specific zone, the plugin ensures that both the pod and the volume are in the same zone.
 
+Learn more about these plugins and configuration options with the [Official Kubernetes Scheduling Plugin documentation](https://kubernetes.io/docs/reference/scheduling/config/#scheduling-plugins).
+
+## Deploy a sample scheduler profile (preview)
+
+The following examples demonstrate how targeted scheduling mechanisms can be configured on your AKS cluster using one or a subset of in-tree scheduling plugins.
+
+## Limitations
+* AKS does not currently manage the deployment of third-party schedulers (out-of-tree scheduling plugins).
+* AKS **does not** support in-tree scheduling plugins targeting the `aks-system` scheduler, in order to prevent unexpected changes to AKS add-ons enabled on your cluster.
+
+## Prerequisites
+* The Azure CLI version `2.76.0` or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+* The `aks-preview` Azure CLI extension version `18.0.0b27` or later.
+* Kubernetes version `1.33` or later running on your AKS cluster.
+* Register the `UserDefinedSchedulerConfigurationPreview` feature flag in your Azure subscription.
+
 ### Install the aks-preview Azure CLI extension
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
@@ -181,7 +187,7 @@ az provider register --namespace "Microsoft.ContainerService"
 
 ## Deploy to a new cluster
 
-1. Create an AKS cluster using the [az aks create][az-aks-create] command and enable Scheduler Customization (preview) on the cluster.
+1. Create an AKS cluster using the [az aks create][az-aks-create] command and enable scheduler profile configuration (preview) on the cluster.
     
     ```azurecli-interactive
     az aks create \
@@ -199,11 +205,12 @@ az provider register --namespace "Microsoft.ContainerService"
 
 ## Deploy to an existing cluster
 
-1. Run the [az aks update][az-aks-update] command to enable Scheduler Customization (preview) on the cluster.
+1. Run the [az aks update][az-aks-update] command to enable scheduler profile configuration (preview) on the cluster.
 
     ```azurecli-interactive
-    az aks update \
-    --name myAKSCluster \
+    az aks update --subscription="${SUBSCRIPTION_ID}" \
+    --resource-group="${RESOURCEGROUP_NAME}" \
+    --name="${CLUSTER_NAME}" \
     --enable-upstream-kubescheduler-user-configuration
     ```
 
@@ -216,9 +223,7 @@ kubectl get crd schedulerconfigurations.aks.azure.com
 ```
 
 > [!NOTE]
-> This command will not succeed if the feature was not enabled in the previous step.
-
-The following examples demonstrate how targeted scheduling mechanisms can be configured on your AKS cluster using one or a subset of in-tree scheduling plugins:
+> This command will not succeed if the feature was not enabled in the previous section.
 
 ## Node binpacking strategy
 
@@ -227,7 +232,7 @@ Node binpacking is a scheduling strategy that aims to pack as many pods as possi
 > [!NOTE]
 > In environments where you want to optimize cost by using fewer nodes, this configuration helps ensure that the existing nodes are used more effectively by filling them up with workloads that match their current resource allocation.
 
-Create the following manifest in a file called `aks-scheduler-customization.yaml` to set up node bin-packing on your AKS cluster:
+Create the following manifest in a file called `aks-scheduler-customization.yaml` to set up node binpacking on your AKS cluster:
 
 ```bash
 apiVersion: aks.azure.com/v1alpha1
@@ -260,7 +265,6 @@ To target this scheduling mechanism for specific workload(s), update your pod de
 ...
     spec:
       schedulerName: node-binpacking-scheduler
-      containers:
 ...
 ...
 ```
@@ -269,8 +273,8 @@ To target this scheduling mechanism for specific workload(s), update your pod de
 
 This scheduler profile uses `NodeResourcesFit` to ensure that the scheduler checks if a node has enough resources to run the pod. 
 
-* **scoringStrategy: MostAllocated**: Tells the scheduler to prefer nodes that have already allocated the most resources for CPU. This helps achieve **better resource utilization** by placing new pods on nodes that are already "full".
-4. **Resources**: The configuration specifies that **CPU** is the primary resource being considered for scoring, and it assigns a weight of `1` to it (meaning that CPU usage prioritized with a relatively equal level of importance in the scheduling decision)
+* `scoringStrategy: MostAllocated`: Tells the scheduler to prefer nodes that have already allocated the most resources for CPU. This helps achieve **better resource utilization** by placing new pods on nodes that are already "full".
+* `Resources`: The configuration specifies that `CPU` is the primary resource being considered for scoring, and it assigns a weight of `1` to it (meaning that CPU usage prioritized with a relatively equal level of importance in the scheduling decision)
 
 ### What does this profile accomplish when applied to an AKS cluster?
 
@@ -314,18 +318,17 @@ To target this scheduling mechanism for specific workload(s), update your pod de
 ...
     spec:
       schedulerName: pod-distribution-scheduler
-      containers:
 ...
 ...
 ```
 
 ### What does this configuration do?
 
-The scheduler profile includes the PodTopologySpread plugin, which helps with pod distribution across failure domains. It uses `List` type, meaning it applies the default constraints as a list of rules. The scheduler will use the rules in the order they are defined, and they apply to all pods that don’t specify custom topology spread constraints.
+The scheduler profile includes the `PodTopologySpread` plugin, which helps with pod distribution across failure domains. It uses `List` type, meaning it applies the default constraints as a list of rules. The scheduler will use the rules in the order they are defined, and they apply to all pods that don’t specify custom topology spread constraints.
 
 In this profile, the setting `maxSkew: 1` means the number of pods can differ by at most 1 between any two zones, and `topologyKey: topology.kubernetes.io/zone` indicates that the scheduler should spread pods across availability zones.
 
-### What does this profile accomplished when applied to an AKS cluster?
+### What does this profile accomplish when applied to an AKS cluster?
 
 The `PodTopologySpread` plugin ensures that the scheduler will try to distribute pods as evenly as possible across availability zones. This helps ensure that the pods in your application are not all concentrated in a single zone, improving resilience in case of zone failure.
 
@@ -333,9 +336,9 @@ By spreading pods across different zones, you increase the availability and faul
 
 The `whenUnsatisfiable: ScheduleAnyway` setting ensures that if there are not enough resources to meet the topology constraints exactly, the pod will still be scheduled. This avoids pod scheduling failures when exact distribution is not feasible.
 
-## Set the scheduler profile for an entire AKS cluster
+## Configure a scheduler profile for an entire AKS cluster
 
-In your scheduler profile configuration update the following field:
+In your scheduler profile configuration, update the `schedulerName` field as follows:
 
 ```bash
 ...
@@ -353,11 +356,15 @@ kubectl apply -f aks-scheduler-customization.yaml
 
 Now, this configuration will become the **default** scheduling operation for your entire AKS cluster.
 
-## Disable AKS scheduler configuration
+## Disable AKS scheduler profile configuration
+
+1. To disable the AKS scheduler profile configuration and revert to AKS scheduler default configuration on the cluster, first delete the `schedulerconfiguration` resource:
 
 ```bash
-kubectl delete schedulerconfiguration upstream || true # This is a workaround for a known issue in AKS's reconciliation service
+kubectl delete schedulerconfiguration upstream || true
 ```
+
+2. Disable the feature:
 
     ```azurecli-interactive
     az aks update --subscription="${SUBSCRIPTION_ID}" \
@@ -366,25 +373,53 @@ kubectl delete schedulerconfiguration upstream || true # This is a workaround fo
     --disable-upstream-kubescheduler-user-configuration
     ```
 
+3. Verify that the feature has been disabled:
+
+    ```azurecli-interactive
+    az aks show --resource-group="${RESOURCEGROUP_NAME}" \
+    --name="${CLUSTER_NAME}" \
+    --query='properties.schedulerProfile'
+    ```
+
+    Your output should indicate that the feature is no longer enabled on your AKS cluster.
 
 ## FAQ
 
-Do not set `aks-system` to the `schedulerName` field in your scheduler profile manifest.
+1. If a misconfigured scheduler profile is applied to my AKS cluster, what will happen?
 
+Once a scheduler profile is applied, AKS will check if it contains a valid configuration of plugins and arguments. If the configuration targets a disallowed scheduler or sets the in-tree scheduling plugins improperly, AKS will reject this configuration and revert to the last known "accepted" scheduler configuration. This check aims to limit impact on new and existing AKS clusters due to scheduler misconfiguration.
+
+2. How can I monitor and validate that my configuration was honored by the scheduler?
+
+There are 3 recommended methods of observing the results of your applied scheduler profile:
+
+  1. View the AKS `kube-scheduler` control plane logs to ensure that the scheduler has received the configuration from the CRD.
+  2. Run `kubectl get schedulerconfiguration`. This will display the status of the `configuration: pending` during the rollout and `Succeeded` or `Failed` after the configuration is accepted or rejected by the scheduler.
+  3. Run `kubectl describe schedulerconfiguration`. This will display a more detailed state of the scheduler, including any error during the reconciliation, and the current scheduler configuration that is in effect. 
 
 ## Next Steps
 
-To learn more about the AKS scheduler, visit:
+To learn more about the AKS scheduler and best practices, visit:
 
 * [Azure Kubernetes Service Scheduler best practices](./operator-best-practices-scheduler.md)
 * [Best practices for advanced scheduling policies](./operator-best-practices-advanced-scheduler.md)
-* 
+* [Monitor your AKS resource metrics and logs](./monitor-aks.md)
 
 
-<!--- Links --->
+<!-- LINKS - internal -->
 [az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az_aks_nodepool_update
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-feature-register]: /cli/azure/feature#az_feature_register
+[aks-quickstart-cli]: ./learn/quick-windows-container-deploy-cli.md
+[aks-quickstart-portal]: ./learn/quick-windows-container-deploy-portal.md
+[aks-quickstart-powershell]: ./learn/quick-windows-container-deploy-powershell.md
+[install-azure-cli]: /cli/azure/install-azure-cli
+[azureml-aks]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
+[azureml-deploy]: /azure/machine-learning/how-to-deploy-managed-online-endpoints
+[azureml-triton]: /azure/machine-learning/how-to-deploy-with-triton
 [az-provider-register]: /cli/azure/provider#az-provider-register
+[az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
