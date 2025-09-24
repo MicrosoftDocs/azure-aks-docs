@@ -44,7 +44,7 @@ A scheduler profile is a set of in-tree scheduling plugins and configurations th
 Each profile has:
 
 * A unique name.
-* A set of plugins (e.g., filters, scorers, binders).
+* A set of scheduling plugins.
 * Custom arguments for fine-grained behavior (applicable to certain plugins)
 
 ### Supported in-tree scheduling plugins
@@ -187,7 +187,7 @@ az provider register --namespace "Microsoft.ContainerService"
     az aks create \
     --resource-group myResourceGroup \ 
     --name myAKSCluster \
-    --enable-scheduler-customization \
+    --enable-upstream-kubescheduler-user-configuration \
     --generate-ssh-keys
     ```
 
@@ -204,11 +204,21 @@ az provider register --namespace "Microsoft.ContainerService"
     ```azurecli-interactive
     az aks update \
     --name myAKSCluster \
-    --enable-scheduler-customization \
-    --generate-ssh-keys
+    --enable-upstream-kubescheduler-user-configuration
     ```
 
-The following examples demonstrate how targeted scheduling mechanisms can be configured on your AKS cluster using one or a subset of supported scheduling plugins:
+## Verify installation of the scheduler controller
+
+Once you have enabled the feature, verify that the custom resource definition (CRD) of the scheduler controller was successfully installed:
+
+```bash
+kubectl get crd schedulerconfigurations.aks.azure.com
+```
+
+> [!NOTE]
+> This command will not succeed if the feature was not enabled in the previous step.
+
+The following examples demonstrate how targeted scheduling mechanisms can be configured on your AKS cluster using one or a subset of in-tree scheduling plugins:
 
 ## Node binpacking strategy
 
@@ -343,9 +353,18 @@ kubectl apply -f aks-scheduler-customization.yaml
 
 Now, this configuration will become the **default** scheduling operation for your entire AKS cluster.
 
-## Delete a scheduler profile
+## Disable AKS scheduler configuration
 
-Simply delete the CRD
+```bash
+kubectl delete schedulerconfiguration upstream || true # This is a workaround for a known issue in AKS's reconciliation service
+```
+
+    ```azurecli-interactive
+    az aks update --subscription="${SUBSCRIPTION_ID}" \
+    --resource-group="${RESOURCEGROUP_NAME}" \
+    --name="${CLUSTER_NAME}" \
+    --disable-upstream-kubescheduler-user-configuration
+    ```
 
 
 ## FAQ
