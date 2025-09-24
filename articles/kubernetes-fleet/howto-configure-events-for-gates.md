@@ -33,7 +33,7 @@ There are three update run gate event types that can be used in event subscripti
 | Microsoft.ResourceNotifications.AKSResources.FleetGateUpdated | Raised when the status of a gate changes (Pending to Approved).           |
 | Microsoft.ResourceNotifications.AKSResources.FleetGateDeleted | Raised when an update run that contains an instance of a Gate is deleted. |
  
-To process events for a specific update run gate, use the following event properties when defining an advanced Event Grid Event Subscription filter.   
+To process events for an update run gate instance, use the following event properties in advanced Event Grid Event Subscription filters.   
 
 | Event property name | Example | Description |
 |---------------------|---------|-------------|
@@ -97,7 +97,7 @@ Create a new system topic by using the [az eventgrid system-topic create][azure-
 
 ## Create Event Subscription
 
-In this sample we create a subscription for pending Approval Gate events named "Check with sales team" that applied before the "Dev" stage in any update run, using an existing Azure Function process the events. 
+In this sample we create a subscription for events for instances of pending Approval Gates named "Check with sales team" that are applied "Before" the "Dev" stage in any update run. The events are routed to an existing Azure Function which processes the events. 
 
 Create a new subscription by using the [az eventgrid system-topic event-subscription create][azure-event-grid-sub-create] command as shown.
 
@@ -119,7 +119,7 @@ Create a new subscription by using the [az eventgrid system-topic event-subscrip
 
 ## Handle Event Grid Subscription Event
 
-Azure Event Grid Event Subscriptions support many different [event handler endpoint types][azure-event-grid-event-handlers] including Azure Functions, Service Bus Queues, or Azure Logic Apps via webhooks.
+Azure Event Grid Event Subscriptions support many different [event handler endpoint types][azure-event-grid-event-handlers] including Azure Functions, Service Bus Queues, Azure Logic Apps or other third party systems via webhooks.
 
 In this example, we use a Python Azure Function to process the event raised by the gate. The Azure Function also uses the [Fleet Manager Python library](https://pypi.org/project/azure-mgmt-containerservicefleet/) to mark the approval as completed.
 
@@ -151,13 +151,15 @@ def HandleFleetGateEvent(azeventgrid: func.EventGridEvent):
         resource_group = parts[4]   # resourceGroups/{resource_group}
         fleet_name = parts[8]       # fleets/{fleet_name}
 
+        # The UUID of the instance of the gate. This is required to
+        # integrate with just this instance.
         gate_name_uuid = event_data["resourceInfo"]["name"]
 
         #
         # Perform activities here to check if OK to proceed
         #
 
-        # Update the Gate to mark it as 'Completed'
+        # Update the Gate instance to mark it as 'Completed'
       
         # Create new Fleet Service Management client 
         # Requires v4.0.0b1 of azure-mgmt-containerservicefleet
