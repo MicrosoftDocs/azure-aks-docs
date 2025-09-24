@@ -2,8 +2,7 @@
 title: Configure Scheduler Profiles on Azure Kubernetes Service (AKS) (preview)
 description: Learn how to set scheduler profiles to achieve advanced scheduling behaviors, such as node bin-packing and co-scheduling, on Azure Kubernetes Service (AKS)
 ms.topic: how-to
-ms.subservice: aks-operator
-ms.date: 09/15/2025
+ms.date: 09/30/2025
 ms.author: sachidesai
 author: sachidesai
 # Customer intent: "As a Kubernetes cluster operator, I want to implement advanced scheduling strategies using one or more configurable profiles, so that I can effectively manage workload distribution and resource allocation across my AKS clusters."
