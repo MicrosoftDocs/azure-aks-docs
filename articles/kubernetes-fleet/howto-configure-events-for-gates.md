@@ -41,12 +41,55 @@ To process events for an update run gate instance, use the following event prope
 | data.resourceInfo.name | 1eb18051-fff5-4c09-a15f-9eebd2e3b906 |  A unique value that represents the instance of the approval gate.  |
 | data.resourceInfo.properties.displayName | "Check with sales teams" | The optional name provided when defining the approval gate in the update strategy.   |
 | data.resourceInfo.properties.gateType    | "Approval"               | The type of the gate. There's only one valid choice of "Approval" for now.           |
-| data.resourceInfo.properties.state       | "Pending" / "Approved"   | The state of the gate. "Pending" = waiting approval; "Approved" = approval applied.  |
+| data.resourceInfo.properties.state       | "Pending" / "Completed"   | The state of the gate. "Pending" = waiting approval; "Completed" = approval applied.  |
 | data.resourceInfo.properties.target.id              | Azure Resource ID          | The full Azure resource identifier for the update run generating the event.        |
 | data.resourceInfo.properties.target.updateRunProperties.name | "update-k8s-1.33" | The name of the update run generating the event.                                   |
 | data.resourceInfo.properties.target.updateRunProperties.stage | "dev"            | The name of the update stage. Can appear for stage gates and group gates within the stage. |
 | data.resourceInfo.properties.target.updateRunProperties.group | "blue"           | The name of the update group where the gate is applied. Only present for groups.   |
 | data.resourceInfo.properties.target.updateRunProperties.timing | "Before" / "After" | Denotes if the gate is applied before or after the stage or group.              |
+
+A raw Event Grid Event follows. Note that it is contained in a JSON array, though most event handlers will receive only a single event.
+
+```json
+[
+    {
+        "id": "1b6e818e-5ec3-4c22-9e9c-03c1fd05ac21",
+        "topic": "/subscriptions/xxxxxxxxxx",
+        "subject": "/subscriptions/xxxxxxxxxx/resourceGroups/sw-ms-demo-01/providers/Microsoft.ContainerService/fleets/flt-mgr-approvals-01/gates/1eb18051-fff5-4c09-a15f-9eebd2e3b906",
+        "data": {
+            "resourceInfo": {
+                "id": "/subscriptions/xxxxxxxxxx/resourceGroups/sw-ms-demo-01/providers/Microsoft.ContainerService/fleets/flt-mgr-approvals-01/gates/1eb18051-fff5-4c09-a15f-9eebd2e3b906",
+                "name": "1eb18051-fff5-4c09-a15f-9eebd2e3b906",
+                "type": "Microsoft.ContainerService/fleets/gates",
+                "properties": {
+                    "displayName": "Check with sales team",
+                    "gateType": "Approval",
+                    "provisioningState": "Succeeded",
+                    "state": "Pending",
+                    "target": {
+                        "id": "/subscriptions/xxxxxxxxxx/resourceGroups/sw-ms-demo-01/providers/Microsoft.ContainerService/fleets/flt-mgr-approvals-01/updateRuns/test-01",
+                        "updateRunProperties": {
+                            "name": "test-01",
+                            "stage": "west-eu-development",
+                            "timing": "Before"
+                        }
+                    }
+                }
+            },
+            "operationalInfo": {
+                "resourceEventTime": "2025-09-23T02:50:21.2604165+00:00"
+            },
+            "apiVersion": "2025-04-01-preview"
+        },
+        "eventType": "Microsoft.ResourceNotifications.AksResources.FleetGateCreated",
+        "dataVersion": "1",
+        "metadataVersion": "1",
+        "eventTime": "2025-09-23T02:50:21.2604165Z"
+    }
+]
+```
+  
+
 
 ## Before you begin
 
