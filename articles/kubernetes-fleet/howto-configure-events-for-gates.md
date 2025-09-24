@@ -97,15 +97,9 @@ A raw Event Grid Event follows. It's contained in a JSON array, though most even
 
 * You must have a Fleet Manager with one or more member clusters. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
 
-* You must have an Update Strategy that contains at least one Approval Gate.
+* You must have an Update Strategy that contains at least one [Approval Gate](./update-strategies-gates-approvals.md).
 
-* Set the following environment variables:
-
-    ```bash
-    export GROUP=<resource-group>
-    export FLEET=<fleet-name>
-    export SUBSCRIPTION_ID=<fleet-manager-subscriptionid>
-    ```
+* Ensure any automation holds either the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role, or a custom RBAC role that includes the `Microsoft.ContainerService/fleets/gates/write` Action.
 
 * You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
@@ -121,7 +115,13 @@ A raw Event Grid Event follows. It's contained in a JSON array, though most even
   az extension update --name fleet
   ```
 
-* Any automation must be granted either the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role, or use a custom role that includes the `Microsoft.ContainerService/fleets/gates/write` Action.
+* Set the following environment variables:
+
+    ```bash
+    export GROUP=<resource-group>
+    export FLEET=<fleet-name>
+    export SUBSCRIPTION_ID=<fleet-manager-subscriptionid>
+    ```
 
 ## Create Event Grid System Topic
 
@@ -129,36 +129,37 @@ Approval Gates publish events via an Event Grid System Topic that can be created
 
 Create a new system topic by using the [az eventgrid system-topic create][azure-even-grid-topic-create] command as shown.
 
-  ```azurecli-interactive
-  az eventgrid system-topic create \
-    --name stpc-fleet-approvals-01 \
-    --resource-group $GROUP \
-    --source /subscriptions/$SUBSCRIPTION_ID \
-    --topic-type Microsoft.ResourceNotifications.AKSResources \
-    --location Global
-  ```
+```azurecli-interactive
+az eventgrid system-topic create \
+  --name stpc-aks-resource-notifications \
+  --resource-group $GROUP \
+  --source /subscriptions/$SUBSCRIPTION_ID \
+  --topic-type Microsoft.ResourceNotifications.AKSResources \
+  --location Global
+```
 
 ## Create Event Subscription
 
-In this example, we create a subscription for events for instances of pending Approval Gates named "Check with sales team" that are applied "Before" the "Dev" stage in any update run. The events are routed to an existing Azure Function which processes the events. 
+In this example, we create a subscription for pending Approval Gate events originating from a specific Fleet Manager `flt-mgr-approvals-01`. The Approval Gate must be named `Check with sales teams` and be applied `Before` the `Dev` stage in any update run. Finally, the events are routed to an existing Azure Function which processes the events. 
 
 Create a new subscription by using the [az eventgrid system-topic event-subscription create][azure-event-grid-sub-create] command as shown.
 
-  ```azurecli-interactive
-  az eventgrid system-topic event-subscription create \
-    --name stes-fleet-gates-sales-before-dev \
-    --resource-group $GROUP \
-    --system-topic-name stpc-fleet-approvals-01 \
-    --included-event-types Microsoft.ResourceNotifications.AKSResources.FleetGateCreated \
-    --advanced-filter data.resourceInfo.properties.displayName StringContains "Check with sales teams" \
-    --advanced-filter data.resourceInfo.properties.state StringIn Pending \
-    --advanced-filter data.resourceInfo.properties.target.updateRunProperties.timing StringIn Before \
-    --advanced-filter data.resourceInfo.properties.target.updateRunProperties.stage StringIn Dev \
-    --endpoint-type azurefunction \
-    --endpoint /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$GROUP/providers/Microsoft.Web/sites/{functionappname}/functions/{functionname} \
-    --max-delivery-attempts 10 \
-    --event-ttl 120
-  ```
+```azurecli-interactive
+az eventgrid system-topic event-subscription create \
+  --name stes-fleet-gates-sales-before-dev \
+  --resource-group $GROUP \
+  --system-topic-name stpc-aks-resource-notifications \
+  --included-event-types Microsoft.ResourceNotifications.AKSResources.FleetGateCreated \
+  --advanced-filter data.resourceInfo.properties.target.id StringContains "fleets/flt-mgr-approvals-01" \
+  --advanced-filter data.resourceInfo.properties.displayName StringContains "Check with sales teams" \
+  --advanced-filter data.resourceInfo.properties.state StringIn Pending \
+  --advanced-filter data.resourceInfo.properties.target.updateRunProperties.timing StringIn Before \
+  --advanced-filter data.resourceInfo.properties.target.updateRunProperties.stage StringIn Dev \
+  --endpoint-type azurefunction \
+  --endpoint /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$GROUP/providers/Microsoft.Web/sites/fap-process-fleet-events/functions/fa-handle-pre-dev-events \
+  --max-delivery-attempts 10 \
+  --event-ttl 120
+```
 
 ## Handle Event Grid Subscription Event
 
@@ -245,7 +246,7 @@ azure-mgmt-containerservicefleet==4.0.0b1
 azure-mgmt-core
 ```
 
-In this article, we explored how you can configure Event Grid to deliver Approval Gate events to an Azure Function, before we use the Fleet Manager Python library to mark the Approval Gate as completed which allows the update run to continue.  
+In this article, we explored how you can configure Event Grid to deliver Approval Gate events to an Azure Function for processing, including how to use the Fleet Manager Python library to mark an Approval Gate as completed,  allowing the update run to continue.  
 
 ## Next steps
 
