@@ -168,12 +168,12 @@ Kubelet custom configuration is supported for Linux and Windows node pools. Supp
 
 When serving a lot of traffic, the traffic commonly comes from a large number of local files. You can adjust the below kernel settings and built-in limits to allow you to handle more, at the cost of some system memory.
 
-| Setting | Allowed values/interval | Default (Ubuntu 22.04) | Default (Azure Linux 3.0) | Description |
-| ------- | ----------------------- | ----------------------- | -------------------------- | ----------- |
-| `fs.file-max` | 8192 - 9223372036854775807 | 9223372036854775807 | 9223372036854775807 | Maximum number of file-handles that the Linux kernel will allocate. This is set to the maximum possible value (2^63-1) to prevent file descriptor exhaustion and ensure unlimited system-wide file handles for containerized workloads. |
-| `fs.inotify.max_user_watches` | 781250 - 2097152 | 1048576 | 1048576 | Maximum number of file watches allowed by the system. Each *watch* is roughly 90 bytes on a 32-bit kernel, and roughly 160 bytes on a 64-bit kernel. |
-| `fs.aio-max-nr` | 65536 - 6553500 | 65536 | 65536 | The aio-nr shows the current system-wide number of asynchronous io requests. aio-max-nr allows you to change the maximum value aio-nr can grow to. |
-| `fs.nr_open` | 8192 - 20000500 | 1048576 | 1073741816 | The maximum number of file-handles a process can allocate. |
+| Setting | Allowed values/interval | Default (Ubuntu 22.04) | Default (Ubuntu 24.04) | Default (Azure Linux 3.0) | Description |
+| ------- | ----------------------- | ----------------------- | ----------------------- | -------------------------- | ----------- |
+| `fs.file-max` | 8192 - 9223372036854775807 | 9223372036854775807 | 9223372036854775807 | 9223372036854775807 | Maximum number of file-handles that the Linux kernel will allocate. This is set to the maximum possible value (2^63-1) to prevent file descriptor exhaustion and ensure unlimited system-wide file handles for containerized workloads. |
+| `fs.inotify.max_user_watches` | 781250 - 2097152 | 1048576 | 1048576 | 1048576 | Maximum number of file watches allowed by the system. Each *watch* is roughly 90 bytes on a 32-bit kernel, and roughly 160 bytes on a 64-bit kernel. |
+| `fs.aio-max-nr` | 65536 - 6553500 | 65536 | 65536 | 65536 | The aio-nr shows the current system-wide number of asynchronous io requests. aio-max-nr allows you to change the maximum value aio-nr can grow to. |
+| `fs.nr_open` | 8192 - 20000500 | 1048576 | 1048576 | 1073741816 | The maximum number of file-handles a process can allocate. |
 
 > [!NOTE]
 > The `fs.file-max` parameter is set to 9223372036854775807 (the maximum value for a signed 64-bit integer) across Ubuntu and Azure Linux based on upstream defaults. This configuration:
@@ -186,47 +186,47 @@ When serving a lot of traffic, the traffic commonly comes from a large number of
 
 For agent nodes, which are expected to handle very large numbers of concurrent sessions, you can use the subset of TCP and network options below that you can tweak per node pool.
 
-| Setting | Allowed values/interval | Default (Ubuntu 22.04) | Default (Azure Linux 3.0) | Description |
-| ------- | ----------------------- | ----------------------- | -------------------------- | ----------- |
-| `net.core.somaxconn` | 4096 - 3240000 | 16384 | 16384 | Maximum number of connection requests that can be queued for any given listening socket. An upper limit for the value of the backlog parameter passed to the [listen(2)](http://man7.org/linux/man-pages/man2/listen.2.html) function. If the backlog argument is greater than the `somaxconn`, then it's silently truncated to this limit.
-| `net.core.netdev_max_backlog` | 1000 - 3240000 | 1000 | 1000 | Maximum number of packets, queued on the INPUT side, when the interface receives packets faster than kernel can process them. |
-| `net.core.rmem_max` | 212992 - 134217728 | 1048576 | 212992 | The maximum receive socket buffer size in bytes. |
-| `net.core.wmem_max` | 212992 - 134217728 | 212992 | 212992 | The maximum send socket buffer size in bytes. | 
-| `net.core.optmem_max` | 20480 - 4194304 | 20480 | 20480 | Maximum ancillary buffer size (option memory buffer) allowed per socket. Socket option memory is used in a few cases to store extra structures relating to usage of the socket. | 
-| `net.ipv4.tcp_max_syn_backlog` | 128 - 3240000 | 16384 | 16384 | The maximum number of queued connection requests that have still not received an acknowledgment from the connecting client. If this number is exceeded, the kernel will begin dropping requests. |
-| `net.ipv4.tcp_max_tw_buckets` | 8000 - 1440000 | 262144 | 131072 | Maximal number of `timewait` sockets held by system simultaneously. If this number is exceeded, time-wait socket is immediately destroyed and warning is printed. |
-| `net.ipv4.tcp_fin_timeout` | 5 - 120 | 60 | 60 | The length of time an orphaned (no longer referenced by any application) connection will remain in the FIN_WAIT_2 state before it's aborted at the local end. |
-| `net.ipv4.tcp_keepalive_time` | 30 - 432000 | 7200 | 7200 | How often TCP sends out `keepalive` messages when `keepalive` is enabled. |
-| `net.ipv4.tcp_keepalive_probes` | 1 - 15 | 9 | 9 | How many `keepalive` probes TCP sends out, until it decides that the connection is broken. |
-| `net.ipv4.tcp_keepalive_intvl` | 10 - 90 | 75 | 75 | How frequently the probes are sent out. Multiplied by `tcp_keepalive_probes` it makes up the time to kill a connection that isn't responding, after probes started. |
-| `net.ipv4.tcp_tw_reuse` | 0 or 1 | 2 | 2 | Allow to reuse `TIME-WAIT` sockets for new connections when it's safe from protocol viewpoint. | 
-| `net.ipv4.ip_local_port_range` | First: 1024 - 60999 and Last: 32768 - 65535] | First: 32768 and Last: 60999 | First: 32768 and Last: 60999 | The local port range that is used by TCP and UDP traffic to choose the local port. Comprised of two numbers: The first number is the first local port allowed for TCP and UDP traffic on the agent node, the second is the last local port number. | 
-| `net.ipv4.neigh.default.gc_thresh1`| 	128 - 80000 | 4096 | 4096 | Minimum number of entries that may be in the ARP cache. Garbage collection won't be triggered if the number of entries is below this setting. |
-| `net.ipv4.neigh.default.gc_thresh2`| 	512 - 90000 | 8192 | 8192 | Soft maximum number of entries that may be in the ARP cache. This setting is arguably the most important, as ARP garbage collection will be triggered about 5 seconds after reaching this soft maximum. |
-| `net.ipv4.neigh.default.gc_thresh3`| 	1024 - 100000 | 16384 | 16384 | Hard maximum number of entries in the ARP cache. |
-| `net.netfilter.nf_conntrack_max` | 131072 - 2097152 | 524288 | 262144 | `nf_conntrack` is a module that tracks connection entries for NAT within Linux. The `nf_conntrack` module uses a hash table to record the *established connection* record of the TCP protocol. `nf_conntrack_max` is the maximum number of nodes in the hash table, that is, the maximum number of connections supported by the `nf_conntrack` module or the size of connection tracking table. |
-| `net.netfilter.nf_conntrack_buckets` | 65536 - 524288 | 262144 | 262144 | `nf_conntrack` is a module that tracks connection entries for NAT within Linux. The `nf_conntrack` module uses a hash table to record the *established connection* record of the TCP protocol. `nf_conntrack_buckets` is the size of hash table. |
+| Setting | Allowed values/interval | Default (Ubuntu 22.04) | Default (Ubuntu 24.04) | Default (Azure Linux 3.0) | Description |
+| ------- | ----------------------- | ----------------------- | ----------------------- | -------------------------- | ----------- |
+| `net.core.somaxconn` | 4096 - 3240000 | 16384 | 16384 | 16384 | Maximum number of connection requests that can be queued for any given listening socket. An upper limit for the value of the backlog parameter passed to the [listen(2)](http://man7.org/linux/man-pages/man2/listen.2.html) function. If the backlog argument is greater than the `somaxconn`, then it's silently truncated to this limit.
+| `net.core.netdev_max_backlog` | 1000 - 3240000 | 1000 | 1000 | 1000 | Maximum number of packets, queued on the INPUT side, when the interface receives packets faster than kernel can process them. |
+| `net.core.rmem_max` | 212992 - 134217728 | 1048576 | 1048576 | 212992 | The maximum receive socket buffer size in bytes. |
+| `net.core.wmem_max` | 212992 - 134217728 | 212992 | 212992 | 212992 | The maximum send socket buffer size in bytes. | 
+| `net.core.optmem_max` | 20480 - 4194304 | 20480 | 131072 | 20480 | Maximum ancillary buffer size (option memory buffer) allowed per socket. Socket option memory is used in a few cases to store extra structures relating to usage of the socket. | 
+| `net.ipv4.tcp_max_syn_backlog` | 128 - 3240000 | 16384 | 16384 | 16384 | The maximum number of queued connection requests that have still not received an acknowledgment from the connecting client. If this number is exceeded, the kernel will begin dropping requests. |
+| `net.ipv4.tcp_max_tw_buckets` | 8000 - 1440000 | 262144 | 262144 | 131072 | Maximal number of `timewait` sockets held by system simultaneously. If this number is exceeded, time-wait socket is immediately destroyed and warning is printed. |
+| `net.ipv4.tcp_fin_timeout` | 5 - 120 | 60 | 60 | 60 | The length of time an orphaned (no longer referenced by any application) connection will remain in the FIN_WAIT_2 state before it's aborted at the local end. |
+| `net.ipv4.tcp_keepalive_time` | 30 - 432000 | 7200 | 7200 | 7200 | How often TCP sends out `keepalive` messages when `keepalive` is enabled. |
+| `net.ipv4.tcp_keepalive_probes` | 1 - 15 | 9 | 9 | 9 | How many `keepalive` probes TCP sends out, until it decides that the connection is broken. |
+| `net.ipv4.tcp_keepalive_intvl` | 10 - 90 | 75 | 75 | 75 | How frequently the probes are sent out. Multiplied by `tcp_keepalive_probes` it makes up the time to kill a connection that isn't responding, after probes started. |
+| `net.ipv4.tcp_tw_reuse` | 0 or 1 | 2 | 2 | 2 | Allow to reuse `TIME-WAIT` sockets for new connections when it's safe from protocol viewpoint. | 
+| `net.ipv4.ip_local_port_range` | First: 1024 - 60999 and Last: 32768 - 65535] | First: 32768 and Last: 60999 | First: 32768 and Last: 60999 | First: 32768 and Last: 60999 | The local port range that is used by TCP and UDP traffic to choose the local port. Comprised of two numbers: The first number is the first local port allowed for TCP and UDP traffic on the agent node, the second is the last local port number. | 
+| `net.ipv4.neigh.default.gc_thresh1`| 	128 - 80000 | 4096 | 4096 | 4096 | Minimum number of entries that may be in the ARP cache. Garbage collection won't be triggered if the number of entries is below this setting. |
+| `net.ipv4.neigh.default.gc_thresh2`| 	512 - 90000 | 8192 | 8192 | 8192 | Soft maximum number of entries that may be in the ARP cache. This setting is arguably the most important, as ARP garbage collection will be triggered about 5 seconds after reaching this soft maximum. |
+| `net.ipv4.neigh.default.gc_thresh3`| 	1024 - 100000 | 16384 | 16384 | 16384 | Hard maximum number of entries in the ARP cache. |
+| `net.netfilter.nf_conntrack_max` | 131072 - 2097152 | 524288 | 524288 | 262144 | `nf_conntrack` is a module that tracks connection entries for NAT within Linux. The `nf_conntrack` module uses a hash table to record the *established connection* record of the TCP protocol. `nf_conntrack_max` is the maximum number of nodes in the hash table, that is, the maximum number of connections supported by the `nf_conntrack` module or the size of connection tracking table. |
+| `net.netfilter.nf_conntrack_buckets` | 65536 - 524288 | 262144 | 262144 | 262144 | `nf_conntrack` is a module that tracks connection entries for NAT within Linux. The `nf_conntrack` module uses a hash table to record the *established connection* record of the TCP protocol. `nf_conntrack_buckets` is the size of hash table. |
 
 ### Worker limits
 
 Like file descriptor limits, the number of workers or threads that a process can create are limited by both a kernel setting and user limits. The user limit on AKS is unlimited.
 
-| Setting | Allowed values/interval | Default (Ubuntu 22.04) | Default (Azure Linux 3.0) | Description |
-| ------- | ----------------------- | ----------------------- | -------------------------- | ----------- |
-| `kernel.threads-max` | 20 - 513785 | 1030425 | 256596 | Processes can spin up worker threads. The maximum number of all threads that can be created is set with the kernel setting `kernel.threads-max`. |
+| Setting | Allowed values/interval | Default (Ubuntu 22.04) | Default (Ubuntu 24.04) | Default (Azure Linux 3.0) | Description |
+| ------- | ----------------------- | ----------------------- | ----------------------- | -------------------------- | ----------- |
+| `kernel.threads-max` | 20 - 513785 | 1030425 | 1030462 | 256596 | Processes can spin up worker threads. The maximum number of all threads that can be created is set with the kernel setting `kernel.threads-max`. |
 
 ### Virtual memory
 
 The settings below can be used to tune the operation of the virtual memory (VM) subsystem of the Linux kernel and the `writeout` of dirty data to disk.
 
-| Setting | Allowed values/interval | Default (Ubuntu 22.04) | Default (Azure Linux 3.0) | Description |
-| ------- | ----------------------- | ----------------------- | -------------------------- | ----------- |
-| `vm.max_map_count` | 	65530 - 262144 | 65530 | 1048576 | This file contains the maximum number of memory map areas a process may have. Memory map areas are used as a side-effect of calling `malloc`, directly by `mmap`, `mprotect`, and `madvise`, and also when loading shared libraries. |
-| `vm.vfs_cache_pressure` | 1 - 100 | 100 | 100 | This percentage value controls the tendency of the kernel to reclaim the memory, which is used for caching of directory and inode objects. |
-| `vm.swappiness` | 0 - 100 | 60 | 60 | This control is used to define how aggressive the kernel will swap memory pages. Higher values will increase aggressiveness, lower values decrease the amount of swap. A value of 0 instructs the kernel not to initiate swap until the amount of free and file-backed pages is less than the high water mark in a zone. |
-| `swapFileSizeMB` | 1 MB - Size of the [temporary disk](/azure/virtual-machines/managed-disks-overview#temporary-disk) (/dev/sdb) | None | None | SwapFileSizeMB specifies size in MB of a swap file will be created on the agent nodes from this node pool. |
-| `transparentHugePageEnabled` | `always`, `madvise`, `never` | `always` | `madvise` | [Transparent Hugepages](https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html#admin-guide-transhuge) is a Linux kernel feature intended to improve performance by making more efficient use of your processor's memory-mapping hardware. When enabled the kernel attempts to allocate `hugepages` whenever possible and any Linux process will receive 2-MB pages if the `mmap` region is 2 MB naturally aligned. In certain cases when `hugepages` are enabled system wide, applications may end up allocating more memory resources. An application may `mmap` a large region but only touch 1 byte of it, in that case a 2-MB page might be allocated instead of a 4k page for no good reason. This scenario is why it's possible to disable `hugepages` system-wide or to only have them inside `MADV_HUGEPAGE madvise` regions. |
-| `transparentHugePageDefrag` | `always`, `defer`, `defer+madvise`, `madvise`, `never` | `madvise` | `madvise` | This value controls whether the kernel should make aggressive use of memory compaction to make more `hugepages` available. |
+| Setting | Allowed values/interval | Default (Ubuntu 22.04) | Default (Ubuntu 24.04) | Default (Azure Linux 3.0) | Description |
+| ------- | ----------------------- | ----------------------- | ----------------------- | -------------------------- | ----------- |
+| `vm.max_map_count` | 	65530 - 262144 | 65530 | 1048576 | 1048576 | This file contains the maximum number of memory map areas a process may have. Memory map areas are used as a side-effect of calling `malloc`, directly by `mmap`, `mprotect`, and `madvise`, and also when loading shared libraries. |
+| `vm.vfs_cache_pressure` | 1 - 100 | 100 | 100 | 100 | This percentage value controls the tendency of the kernel to reclaim the memory, which is used for caching of directory and inode objects. |
+| `vm.swappiness` | 0 - 100 | 60 | 60 | 60 | This control is used to define how aggressive the kernel will swap memory pages. Higher values will increase aggressiveness, lower values decrease the amount of swap. A value of 0 instructs the kernel not to initiate swap until the amount of free and file-backed pages is less than the high water mark in a zone. |
+| `swapFileSizeMB` | 1 MB - Size of the [temporary disk](/azure/virtual-machines/managed-disks-overview#temporary-disk) (/dev/sdb) | None | None | None | SwapFileSizeMB specifies size in MB of a swap file will be created on the agent nodes from this node pool. |
+| `transparentHugePageEnabled` | `always`, `madvise`, `never` | `always` | `always` | `madvise` | [Transparent Hugepages](https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html#admin-guide-transhuge) is a Linux kernel feature intended to improve performance by making more efficient use of your processor's memory-mapping hardware. When enabled the kernel attempts to allocate `hugepages` whenever possible and any Linux process will receive 2-MB pages if the `mmap` region is 2 MB naturally aligned. In certain cases when `hugepages` are enabled system wide, applications may end up allocating more memory resources. An application may `mmap` a large region but only touch 1 byte of it, in that case a 2-MB page might be allocated instead of a 4k page for no good reason. This scenario is why it's possible to disable `hugepages` system-wide or to only have them inside `MADV_HUGEPAGE madvise` regions. |
+| `transparentHugePageDefrag` | `always`, `defer`, `defer+madvise`, `madvise`, `never` | `madvise` | `madvise` | `madvise` | This value controls whether the kernel should make aggressive use of memory compaction to make more `hugepages` available. |
 
 
 
