@@ -1,6 +1,6 @@
 ---
-title: "Trigger Notifications and Integrations using Approval Gate Events for Azure Kubernetes Fleet Manager"
-description: Learn how to set up Event Grid to use Approval Gate events to deliver notifications and provide triggers for automations such as health checks.
+title: "Use Event Grid Events to Automate Approval Gates for Azure Kubernetes Fleet Manager"
+description: Learn how to use Approval Gate events delivered via Event Grid to build automations to process approval gates using health checks and other integration types.
 ms.topic: how-to
 ms.date: 09/22/2025
 author: sjwaight
@@ -9,13 +9,15 @@ ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a fleet administrator, I want to configure Event Grid Sytem Topics for Azure Kubernetes Fleet Manager update runs, so that I can use the events to deliver alerts or provide automation triggers."
 ---
 
-# Trigger Notifications and Integrations using Approval Gate Events for Azure Kubernetes Fleet Manager (Preview)
+# Use Event Grid Events to Automate Approval Gates for Azure Kubernetes Fleet Manager (Preview)
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 Fleet Manager update run [approval gates](./update-strategies-gates-approvals.md) provide more controls over when groups or stages in an update run are processed.
 
-Approval gates publish events via an Event Grid System Topic, allowing you to configure event subscriptions to drive notifications via channels like email or trigger automated integration through custom health check endpoints. 
+Approval gates publish events via an Event Grid System Topic, enabling configuration of event subscriptions which can be used to trigger integrations to automate the clearance of approvals. 
+
+Integrations can include external systems to raise and approve tickets, or health check APIs to determine if cluster workloads are healthy before allowing an update run to continue.
 
 This article provides instructions on how to configure Event Grid so you can take advantage of the published events.
 
@@ -42,7 +44,7 @@ To process events for a specific update run gate, use the following properties t
 | data.resourceInfo.properties.state       | "Pending" / "Approved"   | The state of the gate. "Pending" = waiting approval; "Approved" = approval applied.  |
 | data.resourceInfo.properties.target.id              | Azure Resource ID          | The full Azure resource identifier for the update run generating the event.        |
 | data.resourceInfo.properties.target.updateRunProperties.name | "update-k8s-1.33" | The name of the update run generating the event.                                   |
-| data.resourceInfo.properties.target.updateRunProperties.stage | "dev"            | The name of the update stage where the gate is applied. Only present for stages.   |
+| data.resourceInfo.properties.target.updateRunProperties.stage | "dev"            | The name of the update stage. Can appear for stage gates and group gates within the stage. |
 | data.resourceInfo.properties.target.updateRunProperties.group | "blue"           | The name of the update group where the gate is applied. Only present for groups.   |
 | data.resourceInfo.properties.target.updateRunProperties.timing | "Before" / "After" | Denotes if the gate is applied before or after the stage or group.              |
 
@@ -79,7 +81,7 @@ To process events for a specific update run gate, use the following properties t
 
 ## Create Event Grid System Topic
 
-Approval Gates publish events via an Event Grid System Topic that can be created at the Azure Subscription level. Only one Event Grid System Topic of this type (Microsoft.ResourceNotifications.AKSResources) can be created.
+Approval Gates publish events via an Event Grid System Topic that can be created at the Azure Subscription level. Only one Event Grid System Topic of the type `Microsoft.ResourceNotifications.AKSResources` can be created.
 
 Create a new system topic by using the [az eventgrid system-topic create][azure-even-grid-topic-create] command as shown.
 
@@ -106,10 +108,10 @@ Create a new subscription by using the [az eventgrid system-topic event-subscrip
     --included-event-types Microsoft.ResourceNotifications.AKSResources.FleetGateCreated \
     --advanced-filter data.resourceInfo.properties.displayName StringContains "Check with sales teams" \
     --advanced-filter data.resourceInfo.properties.state StringIn Pending \
-    --advanced-filter data.resourceinfo.properties.target.updateRunProperties.timing StringIn Before \
-    --advanced-filter data.resourceinfo.properties.target.updateRunProperties.stage StringIn Dev \
-    --endpoint-type azurefunction
-    --endpoint /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$GROUP/providers/Microsoft.Web/sites/{functionappname}/functions/{functionname}
+    --advanced-filter data.resourceInfo.properties.target.updateRunProperties.timing StringIn Before \
+    --advanced-filter data.resourceInfo.properties.target.updateRunProperties.stage StringIn Dev \
+    --endpoint-type azurefunction \
+    --endpoint /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$GROUP/providers/Microsoft.Web/sites/{functionappname}/functions/{functionname} \
     --max-delivery-attempts 10 \
     --event-ttl 120
   ```
@@ -118,57 +120,86 @@ Create a new subscription by using the [az eventgrid system-topic event-subscrip
 
 Azure Event Grid Event Subscriptions support a number of different [event handler endpoint types][azure-event-grid-event-handlers] including Azure Functions, Service Bus Queues or Azure Logic Apps via webhooks.
 
-In this example we use a Python Azure Function to handle the event and mark the approval as completed.
+In this example we use a Python Azure Function to process the event raised by the gate before we use the [Fleet Manager Python library](https://pypi.org/project/azure-mgmt-containerservicefleet/) to mark the approval as completed.
 
-We can use the Fleet Manger Python libraries to simplfy the call back mark the gate as completed.
-
-As noted earlier, the identity for the Azure Function must have been granted the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role.
+The identity for the Azure Function must have been granted the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role.
 
 ```python
 import logging
 import azure.functions as func
 
-from types import SimpleNamespace
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.containerservicefleet import ContainerServiceFleetMgmtClient
+from azure.core.exceptions import AzureError
 
 app = func.FunctionApp()
 
 @app.event_grid_trigger(arg_name="azeventgrid")
-def HandleApprovalGateEvent(azeventgrid: func.EventGridEvent):
-    logging.info('Python EventGrid trigger processed an event')
+def HandleFleetGateEvent(azeventgrid: func.EventGridEvent):
+    logging.info('Processing gate created event.')
+    
+    try:
+        event_data = azeventgrid.get_json()
 
-    event = json.loads(json.dumps(azeventgrid.get_json()), object_hook=lambda d: SimpleNamespace(**d))
+        target_resource_id = event_data["resourceInfo"]["properties"]["target"]["id"]
+        parts = target_resource_id.split('/')
 
-    target_id = event.data.resourceInfo.properties.target.id
-    parts = target_id.split('/')
+        # Extract the values required to update gate resource later
 
-    # Extract the values
-    subscription_id = parts[2]  # subscriptions/{subscription_id}
-    resource_group = parts[4]   # resourceGroups/{resource_group}
-    fleet_name = parts[8]       # fleets/{fleet_name}
+        subscription_id = parts[2]  # subscriptions/{subscription_id}
+        resource_group = parts[4]   # resourceGroups/{resource_group}
+        fleet_name = parts[8]       # fleets/{fleet_name}
 
-    data = azeventgrid.get_json()
+        gate_name_uuid = event_data["resourceInfo"]["name"]
 
-    # read the name value for the gate
-    gate_name_uuid = data["resourceInfo"]["name"]
+        #
+        # Perform activities here to check if OK to proceed
+        #
 
-    # perform other functions
-    # ....
-    # ....
+        # Update the Gate to mark it as 'Completed'
+      
+        # Create new Fleet Service Management client 
+        # Requires v4.0.0b1 of azure-mgmt-containerservicefleet
+        client = ContainerServiceFleetMgmtClient(
+            credential=DefaultAzureCredential(),
+            subscription_id=subscription_id
+        )
 
-    client = ContainerServiceFleetMgmtClient(
-      credential=DefaultAzureCredential(),
-      subscription_id=subscription_id,
-    )
-
-    response = client.gates.begin_update(
-      resource_group_name="rg1",
-      fleet_name="fleet1",
-      gate_name=gate_name_uuid,
-      properties={"properties": {"state": "Completed"}},
-    ).result()
+        # End request to update gate status
+        response = client.gates.begin_update(
+            resource_group_name=resource_group,
+            fleet_name=fleet_name,
+            gate_name=gate_name_uuid,
+            properties={"properties": {"state": "Completed"}}
+        ).result()
+        
+        logging.info(f"Successfully updated gate {gate_name_uuid} to Completed state")
+        
+    except KeyError as e:
+        logging.error(f"Missing required field in event data: {e}")
+        
+    except IndexError as e:
+        logging.error(f"Error parsing target_id - unexpected format: {e}")
+        
+    except AzureError as e:
+        logging.error(f"Azure API error: {e}")
+        
+    except Exception as e:
+        logging.error(f"Unexpected error: {e}")
 ```
+
+Your `requirements.txt` must include the shown modules.
+
+```
+azure-common
+azure-core
+azure-functions
+azure-identity
+azure-mgmt-containerservicefleet==4.0.0b1
+azure-mgmt-core
+```
+
+In this sample we have seen how you can configure Event Grid to deliver Approval Gate events to an Azure Function where the event is processed before we use a library to mark the Approval Gate as completed, allowing the update run to continue.  
 
 ## Next steps
 
@@ -177,18 +208,11 @@ def HandleApprovalGateEvent(azeventgrid: func.EventGridEvent):
 
 <!-- INTERNAL LINKS -->
 [azure-rbac-fleet-manager-contributor-role]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-fleet-manager-contributor-role
-[gates-update-rest-api]: /rest/api/fleet/gates/update?view=rest-fleet-2025-04-01-preview&tabs=Python#gatestate
 
-[az-fleet-autoupgradeprofile-create]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-create
-[az-fleet-autoupgradeprofile-list]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-list
-[az-fleet-autoupgradeprofile-show]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-show
-[az-fleet-autoupgradeprofile-delete]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-delete
 [azure-cli-install]: /cli/azure/install-azure-cli
-[azure-event-grid-sys-topics]: /azure/event-grid/system-topics
 [azure-even-grid-topic-create]: /cli/azure/eventgrid/system-topic#az-eventgrid-system-topic-create
 [azure-event-grid-sub-create]: /cli/azure/eventgrid/system-topic/event-subscription#az-eventgrid-system-topic-event-subscription-create
 [azure-event-grid-event-handlers]: /azure/event-grid/event-handlers
-[az-fleet-updaterun-generate]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-generate-update-run
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md
