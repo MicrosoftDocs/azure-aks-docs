@@ -9,23 +9,23 @@ ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a fleet administrator, I want to configure Event Grid Sytem Topics for Azure Kubernetes Fleet Manager update runs, so that I can use the events to deliver alerts or provide automation triggers."
 ---
 
-# Use Event Grid Events to Automate Approval Gates for Azure Kubernetes Fleet Manager (Preview)
+# Automate Azure Kubernetes Fleet Manager Approval Gates with Event Grid Events (Preview)
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
-Fleet Manager update run [approval gates](./update-strategies-gates-approvals.md) provide more controls over when groups or stages in an update run are processed.
+Fleet Manager update run [approval gates](./update-strategies-gates-approvals.md) provide more control over when update groups or stages in are processed.
 
-Approval gates publish events via an Event Grid System Topic, enabling configuration of event subscriptions which can be used to trigger integrations to automate the clearance of approvals. 
+Approval gates publish events via an Event Grid System Topic, enabling configuration of event subscriptions. These event subscriptions can be used as a trigger for automation of the clearance of pending approvals. 
 
-Integrations can include external systems to raise and approve tickets, or health check APIs to determine if cluster workloads are healthy before allowing an update run to continue.
+Automations can include integration with other Azure services, or with external systems to perform actions such as raising tickets, or calling health check APIs to see if cluster workloads are healthy before allowing an update run to continue.
 
-This article provides instructions on how to configure Event Grid so you can take advantage of the published events.
+This article provides instructions on how to configure Event Grid so you can build familiarity with how to work with these published events.
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
-## Understanding Approval Gate Event Grid Event properties
+## Understanding Approval Gate Event Grid Events
 
-There are three update run gate event types that can be subscribed. 
+There are three update run gate event types that can be used in event subscriptions. 
 
 | Event Grid Event Type                                         | Description |
 |---------------------------------------------------------------|-------------|
@@ -33,7 +33,7 @@ There are three update run gate event types that can be subscribed.
 | Microsoft.ResourceNotifications.AKSResources.FleetGateUpdated | Raised when the status of a gate changes (Pending to Approved).           |
 | Microsoft.ResourceNotifications.AKSResources.FleetGateDeleted | Raised when an update run that contains an instance of a Gate is deleted. |
  
-To process events for a specific update run gate, use the following properties to define an advanced Event Grid Event Subscription filter.   
+To process events for a specific update run gate, use the following event properties when defining an advanced Event Grid Event Subscription filter.   
 
 | Event property name | Example | Description |
 |---------------------|---------|-------------|
@@ -52,7 +52,9 @@ To process events for a specific update run gate, use the following properties t
 
 * Read the [conceptual overview of Fleet updates](./concepts-update-orchestration.md), which provides an explanation of update runs, stages, groups, and strategies referenced in this guide.
 
-* You must have a Fleet resource with one or more member clusters. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
+* You must have a Fleet Manager with one or more member clusters. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
+
+* You must have a Update Strategy that contains at least one Approval Gate.
 
 * Set the following environment variables:
 
@@ -60,12 +62,11 @@ To process events for a specific update run gate, use the following properties t
     export GROUP=<resource-group>
     export FLEET=<fleet-name>
     export SUBSCRIPTION_ID=<fleet-manager-subscriptionid>
-    export STRATEGY=<strategy-name>
     ```
 
-* If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.6.0 or later, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.6.2 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
@@ -120,9 +121,9 @@ Create a new subscription by using the [az eventgrid system-topic event-subscrip
 
 Azure Event Grid Event Subscriptions support a number of different [event handler endpoint types][azure-event-grid-event-handlers] including Azure Functions, Service Bus Queues or Azure Logic Apps via webhooks.
 
-In this example we use a Python Azure Function to process the event raised by the gate before we use the [Fleet Manager Python library](https://pypi.org/project/azure-mgmt-containerservicefleet/) to mark the approval as completed.
+In this example we use a Python Azure Function to process the event raised by the gate. The Azure Function also uses the [Fleet Manager Python library](https://pypi.org/project/azure-mgmt-containerservicefleet/) to mark the approval as completed.
 
-The identity for the Azure Function must have been granted the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role.
+The identity executing the Azure Function must have been granted the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role.
 
 ```python
 import logging
@@ -199,7 +200,7 @@ azure-mgmt-containerservicefleet==4.0.0b1
 azure-mgmt-core
 ```
 
-In this sample we have seen how you can configure Event Grid to deliver Approval Gate events to an Azure Function where the event is processed before we use a library to mark the Approval Gate as completed, allowing the update run to continue.  
+In this article we explored how you can configure Event Grid to deliver Approval Gate events to an Azure Function where the event is processed before we use a library to mark the Approval Gate as completed, allowing the update run to continue.  
 
 ## Next steps
 
