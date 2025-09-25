@@ -15,17 +15,17 @@ ms.service: azure-kubernetes-fleet-manager
 
 Fleet Manager update run [approval gates](./update-strategies-gates-approvals.md) provide more control over when update groups or stages are processed.
 
-Approval gates publish events via an Event Grid System Topic. Event subscriptions on the Topic can be used as a trigger for automations to control the clearance of pending approvals. 
+Approval gates publish events via an Event Grid System Topic. Event subscriptions on the Topic can be used as a trigger for automations to mark pending approvals as completed. 
 
 Automations can include integration with other Azure services, or with external systems to perform actions such as raising service desk tickets, or using health check APIs to ensure cluster workloads are healthy before allowing an update run to continue.
 
-This article provides instructions on how to configure Event Grid and event subscriptions to access published events.
+This article provides instructions on how to configure Event Grid and event subscriptions to receive published events.
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 ## Understanding Approval Gate Event Grid Events
 
-There are three update run gate event types that can be used in event subscriptions. 
+There are three Fleet Manager gate event types that can be used for event subscriptions. 
 
 | Event Grid Event Type                                         | Description |
 |---------------------------------------------------------------|-------------|
@@ -97,7 +97,7 @@ A sample raw Event Grid Event follows. Most event handlers will receive only a s
 
 * You must have an Update Strategy that contains at least one [Approval Gate](./update-strategies-gates-approvals.md).
 
-* Ensure any automation holds either the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role, or a custom RBAC role that includes the `Microsoft.ContainerService/fleets/gates/write` Action.
+* Ensure any automation uses an identity which holds either the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role, or a custom RBAC role that includes the `Microsoft.ContainerService/fleets/gates/write` Action.
 
 * You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
@@ -138,7 +138,7 @@ az eventgrid system-topic create \
 
 ## Create Event Subscription
 
-In this example, we create a subscription for pending Approval Gate events originating from a specific Fleet Manager `flt-mgr-approvals-01`. The Approval Gate must be named `Check with sales teams` and be applied `Before` the `Dev` stage in any update run. Finally, the events are routed to an existing Azure Function which processes the events. 
+In this example, we create a subscription for pending Approval Gate events originating from a specific Fleet Manager `flt-mgr-approvals-01`. The `Approval` Gate must be named `Check with sales teams` and be applied `Before` the `Dev` stage in any update run. Finally, the events are routed to an existing Azure Function which processes the events. 
 
 Create a new subscription by using the [az eventgrid system-topic event-subscription create][azure-event-grid-sub-create] command as shown.
 
@@ -149,8 +149,9 @@ az eventgrid system-topic event-subscription create \
   --system-topic-name stpc-aks-resource-notifications \
   --included-event-types Microsoft.ResourceNotifications.AKSResources.FleetGateCreated \
   --advanced-filter data.resourceInfo.properties.target.id StringContains "fleets/flt-mgr-approvals-01" \
-  --advanced-filter data.resourceInfo.properties.displayName StringContains "Check with sales teams" \
+  --advanced-filterdata.resourceInfo.properties.gateType StringIn Approval \
   --advanced-filter data.resourceInfo.properties.state StringIn Pending \
+  --advanced-filter data.resourceInfo.properties.displayName StringContains "Check with sales teams" \
   --advanced-filter data.resourceInfo.properties.target.updateRunProperties.timing StringIn Before \
   --advanced-filter data.resourceInfo.properties.target.updateRunProperties.stage StringIn Dev \
   --endpoint-type azurefunction \
