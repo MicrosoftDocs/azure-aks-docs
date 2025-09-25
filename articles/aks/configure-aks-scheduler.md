@@ -431,26 +431,25 @@ kubectl delete schedulerconfiguration upstream || true
 
 ## FAQ
 
-1. If a misconfigured scheduler profile is applied to my AKS cluster, what will happen?
+### What happens if a misconfigured scheduler profile is applied to my AKS cluster?
 
-Once a scheduler profile is applied, AKS will check if it contains a valid configuration of plugins and arguments. If the configuration targets a disallowed scheduler or sets the in-tree scheduling plugins improperly, AKS will reject this configuration and revert to the last known "accepted" scheduler configuration. This check aims to limit impact on new and existing AKS clusters due to scheduler misconfiguration.
+Once you apply a scheduler profile, AKS checks if it contains a valid configuration of plugins and arguments. If the configuration targets a disallowed scheduler or sets the in-tree scheduling plugins improperly, AKS rejects the configuration and reverts to the last known "accepted" scheduler configuration. This check aims to limit impact on new and existing AKS clusters due to scheduler misconfiguration.
 
-2. How can I monitor and validate that my configuration was honored by the scheduler?
+### How can I monitor and validate that my configuration was honored by the scheduler?
 
-There are 3 recommended methods of observing the results of your applied scheduler profile:
+There are _three_ recommended methods for observing the results of your applied scheduler profile:
 
-  1. View the AKS `kube-scheduler` control plane logs to ensure that the scheduler has received the configuration from the CRD.
-  2. Run `kubectl get schedulerconfiguration`. This will display the status of the `configuration: pending` during the rollout and `Succeeded` or `Failed` after the configuration is accepted or rejected by the scheduler.
-  3. Run `kubectl describe schedulerconfiguration`. This will display a more detailed state of the scheduler, including any error during the reconciliation, and the current scheduler configuration that is in effect. 
+- View the AKS `kube-scheduler` control plane logs to ensure that the scheduler has received the configuration from the CRD.
+- Run the `kubectl get schedulerconfiguration` command. The output displays the status of the `configuration: pending` during the rollout and `Succeeded` or `Failed` after the configuration is accepted or rejected by the scheduler.
+- Run the `kubectl describe schedulerconfiguration` command. The output displays a more detailed state of the scheduler, including any error during the reconciliation, and the current scheduler configuration in effect. 
 
-## Next Steps
+## Next steps
 
-To learn more about the AKS scheduler and best practices, visit:
+To learn more about the AKS scheduler and best practices, see the following resources:
 
-* [Azure Kubernetes Service Scheduler best practices](./operator-best-practices-scheduler.md)
-* [Best practices for advanced scheduling policies](./operator-best-practices-advanced-scheduler.md)
-* [Monitor your AKS resource metrics and logs](./monitor-aks.md)
-
+- [Azure Kubernetes Service (AKS) scheduler best practices](./operator-best-practices-scheduler.md)
+- [Best practices for advanced scheduling policies](./operator-best-practices-advanced-scheduler.md)
+- [Monitor your AKS resource metrics and logs](./monitor-aks.md)
 
 <!-- LINKS - internal -->
 [az-aks-create]: /cli/azure/aks#az_aks_create
