@@ -8,6 +8,8 @@ author: sachidesai
 # Customer intent: "As a Kubernetes cluster operator, I want to learn about advanced scheduling strategies using one or more in-tree scheduling plugins, so that I can effectively manage workload distribution and resource allocation across my AKS clusters."
 ---
 
+# Scheduler configuration concepts for workload placement in Azure Kubernetes Service (AKS)
+
 On Azure Kubernetes Service (AKS), the default mechanism of workload placement across nodes within a cluster is via the scheduler. The default scheduler is a control plane component responsible for assigning AKS deployment pods to nodes. When a pod is created without a specified node, the scheduler selects an optimal node based on several criteria, including:
 
 * Available resources (CPU, memory)
