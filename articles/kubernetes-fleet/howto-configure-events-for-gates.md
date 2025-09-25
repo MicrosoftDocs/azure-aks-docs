@@ -9,7 +9,7 @@ ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a fleet administrator, I want to configure Event Grid Sytem Topics for Azure Kubernetes Fleet Manager update runs, so that I can use the events to deliver alerts or provide automation triggers."
 ---
 
-# Automate Azure Kubernetes Fleet Manager approval gates with Event Grid events (Preview)
+# Automate Azure Kubernetes Fleet Manager approval gates with Event Grid events (preview)
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
