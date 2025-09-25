@@ -271,146 +271,146 @@ The following examples demonstrate how you can configure targeted scheduling mec
     > [!NOTE]
     > This command won't succeed if the feature wasn't successfully enabled in the [previous section](#enable-scheduler-profile-configuration-on-an-aks-cluster).
 
-## Node binpacking strategy
+## Use the node bin-packing scheduling strategy
 
-Node binpacking is a scheduling strategy that aims to pack as many pods as possible onto a node to maximize resource utilization and reduce the number of underutilized nodes. This strategy helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes.
+Node bin-packing is a scheduling strategy that aims to pack as many pods as possible onto a node to maximize resource utilization and reduce the number of underutilized nodes. This strategy helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes.
 
 > [!NOTE]
 > In environments where you want to optimize cost by using fewer nodes, this configuration helps ensure that the existing nodes are used more effectively by filling them up with workloads that match their current resource allocation.
 
-Create the following manifest in a file called `aks-scheduler-customization.yaml` to set up node binpacking on your AKS cluster:
+1. Create a file named `aks-scheduler-customization.yaml` and paste in the following manifest:
 
-```bash
-apiVersion: aks.azure.com/v1alpha1
-kind: SchedulerConfiguration
-metadata:
-  name: upstream
-spec:
-  profiles:
-  - schedulerName: node-binpacking-scheduler
-    pluginConfig:
-    - name: NodeResourcesFit
-      args:
-        scoringStrategy:
-          type: MostAllocated
-          resources:
-          - name: cpu
-            weight: 1
-```
-
-Apply this scheduling configuration manifest:
-
-```bash
-kubectl apply -f aks-scheduler-customization.yaml
-```
-
-To target this scheduling mechanism for specific workload(s), update your pod deployment(s) with the following `schedulerName`:
-
-```bash
-...
-...
+    ```yaml
+    apiVersion: aks.azure.com/v1alpha1
+    kind: SchedulerConfiguration
+    metadata:
+      name: upstream
     spec:
-      schedulerName: node-binpacking-scheduler
-...
-...
-```
+      profiles:
+      - schedulerName: node-binpacking-scheduler
+        pluginConfig:
+        - name: NodeResourcesFit
+          args:
+            scoringStrategy:
+              type: MostAllocated
+              resources:
+              - name: cpu
+                weight: 1
+    ```
 
-### What does this configuration do?
+    This example scheduler profile helps place new pods on nodes that are already being heavily used in terms of CPU resources. This avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes.
 
-This scheduler profile uses `NodeResourcesFit` to ensure that the scheduler checks if a node has enough resources to run the pod. 
+    The profile uses `NodeResourcesFit` to ensure that the scheduler checks if a node has enough resources to run the pod. 
 
-* `scoringStrategy: MostAllocated`: Tells the scheduler to prefer nodes that have already allocated the most resources for CPU. This helps achieve **better resource utilization** by placing new pods on nodes that are already "full".
-* `Resources`: The configuration specifies that `CPU` is the primary resource being considered for scoring, and it assigns a weight of `1` to it (meaning that CPU usage prioritized with a relatively equal level of importance in the scheduling decision)
+    - `scoringStrategy: MostAllocated`: Tells the scheduler to prefer nodes that have already allocated the most resources for CPU. This helps achieve **better resource utilization** by placing new pods on nodes that are already "full".
+    - `Resources`: The configuration specifies that `CPU` is the primary resource being considered for scoring, and it assigns a weight of `1` to it (meaning that CPU usage prioritized with a relatively equal level of importance in the scheduling decision).
 
-### What does this profile accomplish when applied to an AKS cluster?
+    It also might direct the scheduler to balance out CPU usage across nodes more evenly, preventing some nodes from being too underutilized while others become overloaded.
 
-This example scheduler profile helps place new pods on nodes that are already being heavily used in terms of CPU resources. This avoids under-utilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes.
+1. Apply the scheduling configuration manifest using the `kubectl apply` command.
 
-It also may direct the scheduler to balance out CPU usage across nodes more evenly, preventing some nodes from being too underutilized while others become overloaded.
+    ```bash
+    kubectl apply -f aks-scheduler-customization.yaml
+    ```
 
-## Pod topology spread configuration
+1. To target this scheduling mechanism for specific workload(s), update your pod deployment(s) with the following `schedulerName`:
 
-Pod topology spread is a scheduling strategy that distributes pods evenly across failure domains (e.g., availability zones or regions) to ensure high availability and fault tolerance. This strategy helps prevent the risk of all replicas of a pod being placed in the same failure domain, and improves the resilience of applications in the event of zone or node failures.
+    ```yaml
+    ...
+    ...
+        spec:
+          schedulerName: node-binpacking-scheduler
+    ...
+    ...
+    ```
 
-Create the following manifest in a file called `aks-scheduler-customization.yaml` to configure pod topology spread on your AKS cluster:
 
-```bash
-apiVersion: aks.azure.com/v1alpha1
-kind: SchedulerConfiguration
-metadata:
-  name: upstream
-spec:
-  rawConfig: |
-    apiVersion: kubescheduler.config.k8s.io/v1
-    kind: KubeSchedulerConfiguration
-    profiles:
-    - schedulerName: pod-distribution-scheduler
-      - pluginConfig:
-          - name: PodTopologySpread
-            args:
-              apiVersion: kubescheduler.config.k8s.io/v1
-              kind: PodTopologySpreadArgs
-              defaultingType: List
-              defaultConstraints:
-                - maxSkew: 1
-                  topologyKey: topology.kubernetes.io/zone
-                  whenUnsatisfiable: ScheduleAnyway
-```
+## Use the pod topology spread scheduling strategy
 
-To target this scheduling mechanism for specific workload(s), update your pod deployment(s) with the following `schedulerName`:
+Pod topology spread is a scheduling strategy that distributes pods evenly across failure domains (e.g., availability zones or regions) to ensure high availability and fault tolerance. This strategy helps prevent the risk of all replicas of a pod being placed in the same failure domain and improves the resilience of applications in the event of zone or node failures.
 
-```bash
-...
-...
+1. Create a file named `aks-scheduler-customization.yaml` and paste in the following manifest:
+
+    ```yaml
+    apiVersion: aks.azure.com/v1alpha1
+    kind: SchedulerConfiguration
+    metadata:
+      name: upstream
     spec:
-      schedulerName: pod-distribution-scheduler
-...
-...
-```
+      rawConfig: |
+        apiVersion: kubescheduler.config.k8s.io/v1
+        kind: KubeSchedulerConfiguration
+        profiles:
+        - schedulerName: pod-distribution-scheduler
+          - pluginConfig:
+              - name: PodTopologySpread
+                args:
+                  apiVersion: kubescheduler.config.k8s.io/v1
+                  kind: PodTopologySpreadArgs
+                  defaultingType: List
+                  defaultConstraints:
+                    - maxSkew: 1
+                      topologyKey: topology.kubernetes.io/zone
+                      whenUnsatisfiable: ScheduleAnyway
+    ```
 
-### What does this configuration do?
+    The `PodTopologySpread` plugin ensures that the scheduler will try to distribute pods as evenly as possible across availability zones. This helps ensure that the pods in your application aren't all concentrated in a single zone, improving resilience in case of zone failure.
 
-The scheduler profile includes the `PodTopologySpread` plugin, which helps with pod distribution across failure domains. It uses `List` type, meaning it applies the default constraints as a list of rules. The scheduler will use the rules in the order they are defined, and they apply to all pods that don’t specify custom topology spread constraints.
+    By spreading pods across different zones, you increase the availability and fault tolerance of your application. If one zone goes down, the other zones still have pods running, which prevents complete application failure.
 
-In this profile, the setting `maxSkew: 1` means the number of pods can differ by at most 1 between any two zones, and `topologyKey: topology.kubernetes.io/zone` indicates that the scheduler should spread pods across availability zones.
+    The `whenUnsatisfiable: ScheduleAnyway` setting ensures that if there aren't enough resources to meet the topology constraints exactly, the pod will still be scheduled. This avoids pod scheduling failures when exact distribution isn't feasible.
 
-### What does this profile accomplish when applied to an AKS cluster?
+    The `List` type applies the default constraints as a list of rules. The scheduler uses the rules in the order they're defined, and they apply to all pods that don’t specify custom topology spread constraints.
 
-The `PodTopologySpread` plugin ensures that the scheduler will try to distribute pods as evenly as possible across availability zones. This helps ensure that the pods in your application are not all concentrated in a single zone, improving resilience in case of zone failure.
+    In this profile, the setting `maxSkew: 1` means the number of pods can differ by at most _1_ between any two zones, and `topologyKey: topology.kubernetes.io/zone` indicates that the scheduler should spread pods across availability zones.
 
-By spreading pods across different zones, you increase the availability and fault tolerance of your application. If one zone goes down, the other zones still have pods running, which prevents complete application failure.
+1. Apply the scheduling configuration manifest using the `kubectl apply` command.
 
-The `whenUnsatisfiable: ScheduleAnyway` setting ensures that if there are not enough resources to meet the topology constraints exactly, the pod will still be scheduled. This avoids pod scheduling failures when exact distribution is not feasible.
+    ```bash
+    kubectl apply -f aks-scheduler-customization.yaml
+    ```
+
+1. To target this scheduling mechanism for specific workload(s), update your pod deployment(s) with the following `schedulerName`:
+
+    ```yaml
+    ...
+    ...
+        spec:
+          schedulerName: pod-distribution-scheduler
+    ...
+    ...
+    ```
+
 
 ## Configure a scheduler profile for an entire AKS cluster
 
-In your scheduler profile configuration, update the `schedulerName` field as follows:
+1. In your scheduler profile configuration, update the `schedulerName` field as follows:
 
-```bash
-...
-...
-`- schedulerName: default_scheduler` 
-...
-...
-```
+    ```yaml
+    ...
+    ...
+    `- schedulerName: default_scheduler` 
+    ...
+    ...
+    ```
 
-Repply the manifest:
+1. Reapply the manifest using the `kubectl apply` command.
 
-```bash
-kubectl apply -f aks-scheduler-customization.yaml
-```
+    ```bash
+    kubectl apply -f aks-scheduler-customization.yaml
+    ```
 
-Now, this configuration will become the **default** scheduling operation for your entire AKS cluster.
+    Now, this configuration will become the **default** scheduling operation for your entire AKS cluster.
 
-## Disable AKS scheduler profile configuration
+## Disable an AKS scheduler profile configuration
 
-1. To disable the AKS scheduler profile configuration and revert to AKS scheduler default configuration on the cluster, first delete the `schedulerconfiguration` resource:
+1. To disable the AKS scheduler profile configuration and revert to AKS scheduler default configuration on the cluster, first delete the `schedulerconfiguration` resource using the `kubectl delete` command.
 
-```bash
-kubectl delete schedulerconfiguration upstream || true
-```
+    ```bash
+    kubectl delete schedulerconfiguration upstream || true
+    ```
 
-2. Disable the feature:
+1. Disable the feature using the [`az aks update`](/cli/azure/aks#az_aks_update) command with the `--disable-upstream-kubescheduler-user-configuration` flag.
 
     ```azurecli-interactive
     az aks update --subscription="${SUBSCRIPTION_ID}" \
@@ -419,7 +419,7 @@ kubectl delete schedulerconfiguration upstream || true
     --disable-upstream-kubescheduler-user-configuration
     ```
 
-3. Verify that the feature has been disabled:
+1. Verify the feature is disabled using the [`az aks show`](/cli/azure/aks#az_aks_show) command.
 
     ```azurecli-interactive
     az aks show --resource-group="${RESOURCEGROUP_NAME}" \
