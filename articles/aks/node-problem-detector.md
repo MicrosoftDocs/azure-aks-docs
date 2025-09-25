@@ -38,7 +38,7 @@ Node conditions indicate a permanent problem that makes the node unavailable. AK
 |SystemLogMonitor|ReadonlyFilesystem |FilesystemIsReadOnly| General purpose |
 
 > [!NOTE]
-> The `GPU only` node conditions currently apply to AKS node pools with `Standard_ND96asr_v4` or `Standard_ND96isr_H100_v5` VM size, and are supported on [MIG-enabled GPU node pools](./gpu-multi-instance.md).
+> The `GPU only` node conditions currently apply to AKS node pools with `Standard_ND96asr_v4` or `Standard_ND96isr_H100_v5` VM size, and are supported on standard GPU and [MIG-enabled GPU node pools](./gpu-multi-instance.md).
 
 ## Events
 
