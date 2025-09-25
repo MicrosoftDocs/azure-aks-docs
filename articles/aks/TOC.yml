@@ -426,6 +426,12 @@
               href: concepts-managed-namespaces.md
             - name: Use managed namespaces
               href: managed-namespaces.md  
+        - name: Scheduler profile configuration
+          items:
+            - name: Overview
+              href: concepts-scheduler-configuration.md
+            - name: Configure a scheduler profile
+              href: configure-aks-scheduler.md
     - name: Configure backup
       items:
         - name: Prerequisites
