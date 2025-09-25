@@ -23,7 +23,7 @@ This article provides instructions on how to configure Event Grid and event subs
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
-## Understanding Approval Gate Event Grid Events
+## Understanding approval gate Event Grid events
 
 There are three Fleet Manager gate event types that can be used for event subscriptions. 
 
@@ -136,7 +136,7 @@ az eventgrid system-topic create \
   --location Global
 ```
 
-## Create Event Subscription
+## Create event subscription
 
 In this example, we create a subscription for pending Approval Gate events originating from a specific Fleet Manager `flt-mgr-approvals-01`. The `Approval` Gate must be named `Check with sales teams` and be applied `Before` the `Dev` stage in any update run. Finally, the events are routed to an existing Azure Function which processes the events. 
 
@@ -160,7 +160,7 @@ az eventgrid system-topic event-subscription create \
   --event-ttl 120
 ```
 
-## Handle Event Grid Subscription Event
+## Handle Event Grid subscription event
 
 Azure Event Grid Event Subscriptions support many different [event handler endpoint types][azure-event-grid-event-handlers] including Azure Functions, Service Bus Queues, Azure Logic Apps, or other third party systems via webhooks.
 
