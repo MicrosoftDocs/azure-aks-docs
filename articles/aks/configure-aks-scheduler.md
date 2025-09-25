@@ -10,7 +10,11 @@ author: sachidesai
 
 # Configure advanced scheduler profiles on Azure Kubernetes Service (AKS) (preview)
 
-On Azure Kubernetes Service (AKS), the default mechanism of workload placement across nodes within a cluster is via the scheduler. The default scheduler is a control plane component responsible for assigning AKS deployment pods to nodes. When a pod is created without a specified node, the scheduler selects an optimal node based on several criteria, including:
+This article shows you how to set one or more in-tree scheduling plugins via a scheduler profile to configure the scheduling behavior on your Azure Kubernetes Service (AKS) clusters.
+
+## About workload placement in AKS
+
+The default mechanism of workload placement across nodes within an AKS cluster is via the scheduler. The default scheduler is a control plane component responsible for assigning AKS deployment pods to nodes. When a pod is created without a specified node, the scheduler selects an optimal node based on several criteria, including:
 
 * Available resources (CPU, memory)
 * [Node affinity/anti-affinity](./operator-best-practices-advanced-scheduler.md#node-affinity)
@@ -19,60 +23,70 @@ On Azure Kubernetes Service (AKS), the default mechanism of workload placement a
 
 Once the AKS scheduler selects a node, the deployment pod is bound to it, and the rest of the lifecycle continues. 
 
-By default, the AKS scheduler comes with a set of built-in rules that work well for general-purpose workloads. However, advanced use cases may require custom scheduling strategies. For example,
+By default, the AKS scheduler comes with a set of built-in rules that work well for general-purpose workloads. However, advanced use cases might require custom scheduling strategies. For example:
 
 * Batch jobs might prioritize resource fairness over speed.
-* Cost-sensitive workloads may benefit from node binpacking to consolidate jobs and minimize idle compute node costs.
+* Cost-sensitive workloads might benefit from node bin-packing to consolidate jobs and minimize idle compute node costs.
 
-To support these use cases, AKS allows you to set one or more in-tree scheduling plugins via a scheduler profile (preview) to configure the scheduling behavior on your AKS cluster.
+## What are configurable scheduler profiles?
 
-## Configurable scheduler profiles (preview)
-
-A scheduler profile is a set of one or more in-tree scheduling plugins and configurations that dictate how a pod should be scheduled. Starting from Kubernetes version `1.33`, you can configure and set a scheduler profile (preview) to target AKS node pool(s) or your entire cluster.
+A scheduler profile is a set of one or more in-tree scheduling plugins and configurations that dictate how a pod should be scheduled. Starting from Kubernetes version `1.33`, you can configure and set a scheduler profile (preview) to target AKS node pools or entire clusters.
 
 Each scheduler profile has:
 
 * A unique name.
 * A set of scheduling plugins.
-* Custom arguments for fine-grained behavior (applicable to certain plugins)
+* Custom arguments for fine-grained behavior (applicable to certain plugins).
 
-### Supported in-tree scheduling plugins
+## Supported in-tree scheduling plugins
 
-AKS supports configuration of the following Kubernetes scheduling plugins:
+The following sections outline the supported Kubernetes scheduling plugins you can configure on AKS.
 
-`DefaultBinder`: Responsible for binding the pod to a node after the scheduler has selected a suitable node. Once the node is chosen, the `DefaultBinder` ensures that the pod is scheduled onto that node by creating a binding object.
+For more information about these plugins and configuration options, see the [Official Kubernetes scheduling plugin documentation](https://kubernetes.io/docs/reference/scheduling/config/#scheduling-plugins).
 
-`DefaultPreemption`: Handles preemption, which is the process of evicting lower-priority pods to make room for higher-priority pods. If a pod cannot be scheduled because there aren’t enough resources on the node, this plugin will preempt other pods to make space.
+### `DefaultBinder`
 
-**Arguments it may receive**:
+`DefaultBinder` is responsible for binding the pod to a node after the scheduler has selected a suitable node. Once the node is chosen, the `DefaultBinder` ensures that the pod is scheduled onto that node by creating a binding object.
 
-  * `PodPriority`: Defines the priority of the pod being scheduled.
-  * `PreemptionPolicy`: The policy for handling pod preemption (e.g., "PreemptLowerPriority" or "DoNotPreempt").
-  * `PodPriorityClass`: The priority class associated with the pod.
-  * `PodInfo`: Information about the pods that are candidates for preemption.
-  * `Node`: Information about the node on which preemption is considered.
+### `DefaultPreemption`
 
-`ImageLocality`: Helps the scheduler decide whether to schedule a pod onto a node based on the presence of a required container image. It tries to schedule pods on nodes where the required image is already present, reducing the time needed to pull the image.
+`DefaultPreemption` handles preemption, which is the process of evicting lower-priority pods to make room for higher-priority pods. If a pod can't be scheduled because there aren’t enough resources on the node, this plugin preempts other pods to make space.
 
-`InterPodAffinity`: Takes into account *affinity* rules specified by the user that influence scheduling based on the proximity of other pods. If a pod has affinity rules, it will try to schedule the pod on the same node or in the same topology as other pods that it has an affinity for. (e.g., for performance reasons or tight coupling).
+`DefaultPreemption` might receive any of the following arguments:
 
-**Arguments it may receive**:
+- **`PodPriority`**: Defines the priority of the pod being scheduled.
+- **`PreemptionPolicy`**: The policy for handling pod preemption (e.g., "PreemptLowerPriority" or "DoNotPreempt").
+- **`PodPriorityClass`**: The priority class associated with the pod.
+- **`PodInfo`**: Information about the pods that are candidates for preemption.
+- **`Node`**: Information about the node on which preemption is considered.
 
-  * `Affinity`: Defines the affinity rules (required or preferred) for the pod, which specifies other pods the pod should or should not be scheduled near.
-  * `TopologyKey`: The key representing the failure domain to which the affinity rule applies (e.g., "kubernetes.io/hostname" for node-level affinity or "topology.kubernetes.io/zone" for zone-level).
-  * `Weight`: Defines how strongly the scheduler should consider a specific affinity rule.
-  * `Pod`: The pod being scheduled.
-  * `OtherPods`: List of other pods to consider in relation to the affinity rules.
+### `ImageLocality`
 
-`NodeAffinity`: Enables scheduling based on node labels. It allows users to specify rules for which nodes a pod can be scheduled on, based on the node's labels, and provides fine-grained control over pod placement on nodes.
+`ImageLocality` helps the scheduler decide whether to schedule a pod onto a node based on the presence of a required container image. It tries to schedule pods on nodes where the required image is already present, reducing the time needed to pull the image.
 
-**Arguments it may receive**:
+### `InterPodAffinity`
 
-  * `NodeAffinity`: Defines the required or preferred node affinity rules, such as `requiredDuringSchedulingIgnoredDuringExecution` or `preferredDuringSchedulingIgnoredDuringExecution`.
-  * `NodeSelectorTerms`: Defines the set of node labels and values that must match.
-  * `Pod`: The pod being scheduled.
-  * `Node`: A potential node for scheduling.
-  * `LabelSelector`: A selector for choosing nodes based on labels.
+`InterPodAffinity` takes into account *affinity* rules specified by the user that influence scheduling based on the proximity of other pods. If a pod has affinity rules, it tries to schedule the pod on the same node or in the same topology as other pods that it has an affinity for. (e.g., for performance reasons or tight coupling).
+
+`InterPodAffinity` might receive any of the following arguments:
+
+- **`Affinity`**: Defines the affinity rules (required or preferred) for the pod, which specifies other pods the pod should or shouldn't be scheduled close to.
+- **`TopologyKey`**: The key representing the failure domain to which the affinity rule applies (e.g., "kubernetes.io/hostname" for node-level affinity or "topology.kubernetes.io/zone" for zone-level).
+- **`Weight`**: Defines how strongly the scheduler should consider a specific affinity rule.
+- **`Pod`**: The pod being scheduled.
+- **`OtherPods`**: List of other pods to consider in relation to the affinity rules.
+
+### `NodeAffinity`
+
+`NodeAffinity` enables scheduling based on node labels. It allows users to specify rules for which nodes a pod can be scheduled on based on the node's labels and provides fine-grained control over pod placement on nodes.
+
+`NodeAffinity` might receive any of the following arguments:
+
+- **`NodeAffinity`**: Defines the required or preferred node affinity rules, such as `requiredDuringSchedulingIgnoredDuringExecution` or `preferredDuringSchedulingIgnoredDuringExecution`.
+- **`NodeSelectorTerms`**: Defines the set of node labels and values that must match.
+- **`Pod`**: The pod being scheduled.
+- **`Node`**: A potential node for scheduling.
+- **`LabelSelector`**: A selector for choosing nodes based on labels.
 
 `NodeName`: Used to force a pod to be scheduled on a specific node. When you specify the exact node name, the scheduler will place the pod on that node if possible.
 
