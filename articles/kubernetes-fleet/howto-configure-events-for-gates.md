@@ -33,7 +33,7 @@ There are three update run gate event types that can be used in event subscripti
 | Microsoft.ResourceNotifications.AKSResources.FleetGateUpdated | Raised when the status of a gate changes (Pending to Completed).           |
 | Microsoft.ResourceNotifications.AKSResources.FleetGateDeleted | Raised when an update run that contains an instance of a Gate is deleted. |
  
-To process events for an update run gate instance, use the following event properties in advanced Event Grid Event Subscription filters.   
+Use the following event properties to define advanced Event Grid Event Subscription filters to receive only those events of interest.
 
 | Event property name | Example | Description |
 |---------------------|---------|-------------|
@@ -48,7 +48,7 @@ To process events for an update run gate instance, use the following event prope
 | data.resourceInfo.properties.target.updateRunProperties.group | "blue"           | The name of the update group where the gate is applied. Only present for groups.   |
 | data.resourceInfo.properties.target.updateRunProperties.timing | "Before" / "After" | Denotes if the gate is applied before or after the stage or group.              |
 
-A raw Event Grid Event follows. It's contained in a JSON array, though most event handlers will receive only a single event.
+A sample raw Event Grid Event follows. Most event handlers will receive only a single event, making the `data` payload available for processing.
 
 ```json
 [
@@ -89,8 +89,6 @@ A raw Event Grid Event follows. It's contained in a JSON array, though most even
 ]
 ```
   
-
-
 ## Before you begin
 
 * Read the [conceptual overview of Fleet updates](./concepts-update-orchestration.md), which provides an explanation of update runs, stages, groups, and strategies referenced in this guide.
