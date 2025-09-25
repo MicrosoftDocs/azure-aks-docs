@@ -47,7 +47,7 @@ NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies
   * NVLink is a high-speed interconnect used to facilitate data transfer between multiple GPUs.
   * If NVLink is inactive or degraded, multi-GPU workloads might experience reduced performance or communication bottlenecks.
 
-  For more information, see [NVIDIA NVLink](https://www.nvidia.com/data-center/nvlink/).
+  For more information, see [NVIDIA NVLink](https://www.nvidia.com/en-us/data-center/nvlink/).
 
 * **InfiniBand Link Flapping**: NPD monitors for InfiniBand (IB) link flapping, or intermittent connectivity of the IB network device.
   * Link flapping shouldn't occur under normal operating conditions and might result in degraded inter-node communication for distributed workloads.
