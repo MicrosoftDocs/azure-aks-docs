@@ -30,7 +30,7 @@ There are three update run gate event types that can be used in event subscripti
 | Event Grid Event Type                                         | Description |
 |---------------------------------------------------------------|-------------|
 | Microsoft.ResourceNotifications.AKSResources.FleetGateCreated | Raised when an update run reaches an instance of a Gate resource.         |
-| Microsoft.ResourceNotifications.AKSResources.FleetGateUpdated | Raised when the status of a gate changes (Pending to Approved).           |
+| Microsoft.ResourceNotifications.AKSResources.FleetGateUpdated | Raised when the status of a gate changes (Pending to Completed).           |
 | Microsoft.ResourceNotifications.AKSResources.FleetGateDeleted | Raised when an update run that contains an instance of a Gate is deleted. |
  
 To process events for an update run gate instance, use the following event properties in advanced Event Grid Event Subscription filters.   
@@ -257,6 +257,7 @@ In this article, we explored how you can configure Event Grid to deliver Approva
 [azure-rbac-fleet-manager-contributor-role]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-fleet-manager-contributor-role
 
 [azure-cli-install]: /cli/azure/install-azure-cli
+[az-extension-update]: /cli/azure/extension#az-extension-update
 [azure-even-grid-topic-create]: /cli/azure/eventgrid/system-topic#az-eventgrid-system-topic-create
 [azure-event-grid-sub-create]: /cli/azure/eventgrid/system-topic/event-subscription#az-eventgrid-system-topic-event-subscription-create
 [azure-event-grid-event-handlers]: /azure/event-grid/event-handlers
