@@ -960,6 +960,8 @@
           href: autoscale-gpu-workloads-with-keda.md
         - name: Set up NVIDIA GPU Operator
           href: nvidia-gpu-operator.md
+        - name: GPU health checking with NPD
+          href: gpu-health-monitoring.md
 - name: Manage and optimize costs
   items:
     - name: Cost optimization best practices
