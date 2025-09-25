@@ -88,119 +88,149 @@ For more information about these plugins and configuration options, see the [Off
 - **`Node`**: A potential node for scheduling.
 - **`LabelSelector`**: A selector for choosing nodes based on labels.
 
-`NodeName`: Used to force a pod to be scheduled on a specific node. When you specify the exact node name, the scheduler will place the pod on that node if possible.
+### `NodeName`
 
-`NodePorts`: Ensures that a pod with a service of type `NodePort` can be scheduled on a node that has the required ports available for binding. It checks whether the node has enough resources to support the node port allocations for the service.
+`NodeName` forces a pod to be scheduled on a specific node. When you specify the exact node name, the scheduler will place the pod on that node if possible.
 
-`NodeResourcesBalancedAllocation`: Aims to balance the resource allocation on nodes. When scheduling a pod, it considers how resources like CPU and memory are allocated across nodes to avoid over-provisioning or under-utilizing resources.
+### `NodePorts`
 
-**Arguments it may receive**:
+`NodePorts` ensures that a pod with a service of type `NodePort` can be scheduled on a node that has the required ports available for binding. It checks whether the node has enough resources to support the node port allocations for the service.
 
-  * `ResourceRequests`: The resource requests (CPU, memory, etc.) of the pod being scheduled.
-  * `Node`: A candidate node for scheduling.
-  * `NodeResources`: The available resources (CPU, memory, etc.) of the node.
-  * `ClusterResourceUsage`: Cluster-wide resource usage metrics to help decide the best node to balance resources.
+### `NodeResourcesBalancedAllocation`
 
-`NodeResourcesFit`: Checks whether a node has enough available resources (CPU, memory, etc.) to run the pod. It ensures that a pod is only scheduled on a node that has sufficient resources available.
+`NodeResourcesBalancedAllocation` helps balance the resource allocation on nodes. When scheduling a pod, it considers how resources like CPU and memory are allocated across nodes to avoid over-provisioning or under-utilizing resources.
 
-**Arguments it may receive**:
+`NodeResourcesBalancedAllocation` might receive any of the following arguments:
 
-  * `ResourceRequests`: The resource requests of the pod.
-  * `Node`: The candidate node being considered for scheduling.
-  * `NodeCapacity`: The available capacity of resources on the node.
-  * `Pod`: The pod being scheduled, with its resource requests.
+ - **`ResourceRequests`**: The resource requests (CPU, memory, etc.) of the pod being scheduled.
+ - **`Node`**: A candidate node for scheduling.
+ - **`NodeResources`**: The available resources (CPU, memory, etc.) of the node.
+ - **`ClusterResourceUsage`**: Cluster-wide resource usage metrics to help decide the best node to balance resources.
 
-`NodeUnschedulable`: Ensures that pods are not scheduled on nodes that are marked as unschedulable. If a node has been tainted with `node.kubernetes.io/unschedulable`, the scheduler will not place any new pods on that node.
+### `NodeResourcesFit`
 
-`NodeVolumeLimits`: Checks whether a node has exceeded its volume limit. Each node has a maximum number of volumes it can attach, and this plugin ensures that the pod is not scheduled on a node that has already reached that supported limit.
+`NodeResourcesFit` checks whether a node has enough available resources (CPU, memory, etc.) to run the pod. It ensures that a pod is only scheduled on a node that has sufficient resources available.
 
-`PodTopologySpread`: Ensures that pods are spread evenly across the topology (like zones or regions) to achieve high availability and fault tolerance. It tries to avoid placing multiple replicas of a pod in the same failure domain.
+`NodeResourcesFit` might receive any of the following arguments:
 
-**Arguments it may receive**:
+ - **`ResourceRequests`**: The resource requests of the pod.
+ - **`Node`**: The candidate node being considered for scheduling.
+ - **`NodeCapacity`**: The available capacity of resources on the node.
+ - **`Pod`**: The pod being scheduled, with its resource requests.
+ 
+ ### `NodeUnschedulable`
 
-  * `TopologySpreadConstraints`: Defines the constraints for how pods should be spread across failure domains, including the key (e.g., `topology.kubernetes.io/zone`) and the number of pods to be placed in each domain.
-  * `Pod`: The pod being scheduled.
-  * `FailureDomain`: The failure domain key (e.g., zone or region).
-  * `PodAffinity`: Information about pod affinity, which could also impact how the pods are distributed.
-  * `Node`: Potential nodes for placement.
-  * `PodSpreadScore`: Used to determine how much "spread" the pod should have across domains (higher scores indicate better spreading).
+`NodeUnschedulable` ensures that pods aren't scheduled on nodes marked as unschedulable. If a node is tainted with `node.kubernetes.io/unschedulable`, the scheduler won't place any new pods on that node.
 
-`PrioritySort`: Sorts the list of pods according to their priority class. Pods with higher priority will be scheduled first. It helps with the preemption decision-making and determines which pods should be considered for scheduling first.
+### `NodeVolumeLimits`
 
-`SchedulingGates`: Introduces the concept of scheduling gates, which are conditions that must be satisfied before a pod is scheduled. For example, it can enforce the completion of certain tasks or operations before the scheduler attempts to schedule a pod.
+`NodeVolumeLimits` checks whether a node has exceeded its volume limit. Each node has a maximum number of volumes it can attach, and this plugin ensures that the pod isn't scheduled on a node that has already reached that supported limit.
 
-`TaintToleration`: Checks if a pod has the required tolerations to be scheduled on a node that has taints. Taints on nodes prevent pods from being scheduled unless the pod has a matching toleration.
+### `PodTopologySpread`
 
-`VolumeBinding`: Ensures that persistent volumes (PVs) are properly bound to pods. It checks whether the volume that a pod requires can be bound to a node and ensures the volume is available on the selected node.
+`PodTopologySpread` ensures that pods are spread evenly across the topology (like zones or regions) to achieve high availability and fault tolerance. It tries to avoid placing multiple replicas of a pod in the same failure domain.
 
-**Arguments it may receive**:
+`PodTopologySpread` might receive any of the following arguments:
 
-  * `VolumeClaims`: The persistent volume claims (PVCs) made by the pod being scheduled.
-  * `Node`: The candidate node being considered for scheduling.
-  * `VolumeAvailable`: Checks if the persistent volume is available on the node or within the appropriate zone.
-  * `Pod`: The pod that is requesting volume binding.
-  * `StorageClass`: The storage class associated with the persistent volume.
-  * `VolumeBindingMode`: Defines whether the volume binding mode is `Immediate` or `WaitForFirstConsumer` (for delayed binding until a pod is scheduled).
+ - **`TopologySpreadConstraints`**: Defines the constraints for how pods should be spread across failure domains, including the key (e.g., `topology.kubernetes.io/zone`) and the number of pods to be placed in each domain.
+ - **`Pod`**: The pod being scheduled.
+ - **`FailureDomain`**: The failure domain key (e.g., zone or region).
+ - **`PodAffinity`**: Information about pod affinity, which could also impact how the pods are distributed.
+ - **`Node`**: Potential nodes for placement.
+ - **`PodSpreadScore`**: Used to determine how much "spread" the pod should have across domains (higher scores indicate better spreading).
 
-`VolumeRestrictions`: Ensures that volume restrictions (such as limitations on the number of volumes a node can have attached) are respected when scheduling a pod. It prevents scheduling a pod on a node where the volume restrictions would be violated.
+### `PrioritySort`
 
-`VolumeZone`: Ensures that volumes are scheduled in the same availability zone as the pod. For example, if a pod requests a volume that must be in a specific zone, the plugin ensures that both the pod and the volume are in the same zone.
+`PrioritySort` sorts the list of pods according to their priority class. Pods with higher priority are scheduled first. It helps with the preemption decision-making and determines which pods should be considered for scheduling first.
 
-Learn more about these plugins and configuration options with the [Official Kubernetes Scheduling Plugin documentation](https://kubernetes.io/docs/reference/scheduling/config/#scheduling-plugins).
+### `SchedulingGates`
+
+`SchedulingGates` introduces the concept of scheduling gates, which are conditions that must be satisfied before a pod is scheduled. For example, it can enforce the completion of certain tasks or operations before the scheduler attempts to schedule a pod.
+
+### `TaintToleration`
+
+`TaintToleration` checks if a pod has the required tolerations to be scheduled on a node that has taints. Taints on nodes prevent pods from being scheduled unless the pod has a matching toleration.
+
+### `VolumeBinding`
+
+`VolumeBinding` ensures that persistent volumes (PVs) are properly bound to pods. It checks whether the volume that a pod requires can be bound to a node and ensures the volume is available on the selected node.
+
+`VolumeBinding` might receive any of the following arguments:
+
+ - **`VolumeClaims`**: The persistent volume claims (PVCs) made by the pod being scheduled.
+ - **`Node`**: The candidate node being considered for scheduling.
+ - **`VolumeAvailable`**: Checks if the persistent volume is available on the node or within the appropriate zone.
+ - **`Pod`**: The pod that is requesting volume binding.
+ - **`StorageClass`**: The storage class associated with the persistent volume.
+ - **`VolumeBindingMode`**: Defines whether the volume binding mode is `Immediate` or `WaitForFirstConsumer` (for delayed binding until a pod is scheduled).
+ 
+ ### `VolumeRestrictions`
+
+`VolumeRestrictions` ensures that volume restrictions (such as limitations on the number of volumes a node can have attached) are respected when scheduling a pod. It prevents scheduling a pod on a node where the volume restrictions would be violated.
+
+### `VolumeZone`
+
+`VolumeZone` ensures that volumes are scheduled in the same availability zone as the pod. For example, if a pod requests a volume that must be in a specific zone, the plugin ensures that both the pod and the volume are in the same zone.
 
 ## Deploy a sample scheduler profile (preview)
 
-The following examples demonstrate how targeted scheduling mechanisms can be configured on your AKS cluster using one or a subset of in-tree scheduling plugins.
+The following examples demonstrate how you can configure targeted scheduling mechanisms on your AKS cluster using one or a subset of in-tree scheduling plugins.
 
 ## Limitations
-* AKS does not currently manage the deployment of third-party schedulers (out-of-tree scheduling plugins).
-* AKS **does not** support in-tree scheduling plugins targeting the `aks-system` scheduler, in order to prevent unexpected changes to AKS add-ons enabled on your cluster.
+
+- AKS currently doesn't manage the deployment of third-party schedulers (out-of-tree scheduling plugins).
+- AKS doesn't support in-tree scheduling plugins targeting the `aks-system` scheduler. This restriction is in place to help prevent unexpected changes to AKS add-ons enabled on your cluster.
 
 ## Prerequisites
-* The Azure CLI version `2.76.0` or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* The `aks-preview` Azure CLI extension version `18.0.0b27` or later.
-* Kubernetes version `1.33` or later running on your AKS cluster.
-* Register the `UserDefinedSchedulerConfigurationPreview` feature flag in your Azure subscription.
 
-### Install the aks-preview Azure CLI extension
+- The Azure CLI version `2.76.0` or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- Kubernetes version `1.33` or later running on your AKS cluster.
+- The [`aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) version `18.0.0b27` or later.
+- [Register the `UserDefinedSchedulerConfigurationPreview` feature flag](#register-the-user-defined-scheduler-configuration-preview-feature-flag) in your Azure subscription.
+
+### Install the `aks-preview` Azure CLI extension
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-To install the `aks-preview` extension, run the following command:
+- Install the `aks-preview` extension using the [`az extension add`](/cli/azure/extension#az_extension_add) command.
 
-```azurecli-interactive
-az extension add --name aks-preview
-```
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
 
-Run the following command to update to the latest version of the `aks-preview` extension:
+- Update to the latest version of the `aks-preview` extension using the [`az extension update`](/cli/azure/extension#az_extension_update) command.
 
-```azurecli-interactive
-az extension update --name aks-preview
-```
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
 
-### Register the UserDefinedSchedulerConfigurationPreview feature flag
+### Register the user defined scheduler configuration preview feature flag
 
-1. Register the `UserDefinedSchedulerConfigurationPreview` feature flag by using the [az feature register][az-feature-register] command, as shown in the following example:
+1. Register the `UserDefinedSchedulerConfigurationPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
-```azurecli-interactive
-az feature register --namespace "Microsoft.ContainerService" --name "UserDefinedSchedulerConfigurationPreview"
-```
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "UserDefinedSchedulerConfigurationPreview"
+    ```
 
-1. It takes a few minutes for the status to show *Registered*. Verify the registration status by using the [az feature show][az-feature-show] command:
+    It takes a few minutes for the status to show *Registered*.
 
-```azurecli-interactive
-az feature show --namespace "Microsoft.ContainerService" --name "UserDefinedSchedulerConfigurationPreview"
-```
+1. Verify the registration status using the [`az feature show`][az-feature-show] command.
 
-1. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [az provider register][az-provider-register] command:
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "UserDefinedSchedulerConfigurationPreview"
+`    ``
 
-```azurecli-interactive
-az provider register --namespace "Microsoft.ContainerService"
-```
+1. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
 
-## Deploy to a new cluster
+    ```azurecli-interactive
+    az provider register --namespace "Microsoft.ContainerService"
+    ```
 
-1. Create an AKS cluster using the [az aks create][az-aks-create] command and enable scheduler profile configuration (preview) on the cluster.
+## Enable scheduler profile configuration on an AKS cluster
+
+### [Enable on a new cluster](#tab/new-cluster)
+
+1. Create an AKS cluster with scheduler profile configuration enabled using the [`az aks create`][az-aks-create] command with the `--enable-upstream-kubescheduler-user-configuration` flag.
     
     ```azurecli-interactive
     az aks create \
@@ -210,15 +240,15 @@ az provider register --namespace "Microsoft.ContainerService"
     --generate-ssh-keys
     ```
 
-1. When the cluster is ready, get the cluster credentials using the [az aks get-credentials][az-aks-get-credentials] command.
+1. Once the creation process completes, connect to the cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
     ```azurecli-interactive
     az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
     ```
 
-## Deploy to an existing cluster
+### [Enable on an existing cluster](#tab/existing-cluster)
 
-1. Run the [az aks update][az-aks-update] command to enable scheduler profile configuration (preview) on the cluster.
+- Enable scheduler profile configuration on an existing cluster using the [`az aks update`][az-aks-update] command.
 
     ```azurecli-interactive
     az aks update --subscription="${SUBSCRIPTION_ID}" \
@@ -227,16 +257,19 @@ az provider register --namespace "Microsoft.ContainerService"
     --enable-upstream-kubescheduler-user-configuration
     ```
 
+---
+
+
 ## Verify installation of the scheduler controller
 
-Once you have enabled the feature, verify that the custom resource definition (CRD) of the scheduler controller was successfully installed:
+- After enabling the feature on your AKS cluster, verify the custom resource definition (CRD) of the scheduler controller was successfully installed using the `kubectl get` command.
 
-```bash
-kubectl get crd schedulerconfigurations.aks.azure.com
-```
+    ```bash
+    kubectl get crd schedulerconfigurations.aks.azure.com
+    ```
 
-> [!NOTE]
-> This command will not succeed if the feature was not enabled in the previous section.
+    > [!NOTE]
+    > This command won't succeed if the feature wasn't successfully enabled in the [previous section](#enable-scheduler-profile-configuration-on-an-aks-cluster).
 
 ## Node binpacking strategy
 
