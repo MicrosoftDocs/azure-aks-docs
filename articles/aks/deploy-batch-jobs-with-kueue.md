@@ -3,7 +3,7 @@ title: Schedule and Deploy Batch Jobs with Kueue on Azure Kubernetes Service (AK
 description: Learn how to define Kueue deployments and efficiently schedule batch workloads on your Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 9/17/2025
+ms.date: 9/26/2025
 author: sachidesai
 ms.author: sachidesai
 # Customer intent: "As a platform admin, I want to quickly schedule and deploy batch jobs to ensure efficient resource utilization and cost optimization on AKS cluster(s), enabling platform developers to run bursty workloads to completion without impacting the performance of other services."
@@ -28,17 +28,18 @@ In the following examples, we show the difference in scheduling behavior between
 
 ## Schedule and deploy general-purpose batch jobs with Kueue
 
-- Create a Kueue `ClusterQueue` named `clusterqueue-sample.yaml` and paste in the following manifest:
+- Create and save a Kueue `ClusterQueue` in a file named `clusterqueue-sample.yaml` with the following manifest:
 
     ```yaml
-   apiVersion: kueue.x-k8s.io/v1beta1
-   kind: ClusterQueue
-   metadata:
-     name: sample-jobs
-   spec:
-     cohort: general
-     namespaceSelector: {}  # Accept workloads from any namespace
-     resourceGroups:
+    cat <<EOF > clusterqueue-sample.yaml
+    apiVersion: kueue.x-k8s.io/v1beta1
+    kind: ClusterQueue
+    metadata:
+       name: sample-jobs
+    spec:
+       cohort: general
+      namespaceSelector: {}  # Accept workloads from any namespace
+      resourceGroups:
        - coveredResources: ["cpu", "memory"]
          flavors:
            - name: on-demand
@@ -47,6 +48,7 @@ In the following examples, we show the difference in scheduling behavior between
                  nominalQuota: 4
                - name: "memory"
                  nominalQuota: 8Gi
+    EOF
     ```
 
     This sample `ClusterQueue` defines:
@@ -64,9 +66,10 @@ In the following examples, we show the difference in scheduling behavior between
     kubectl create ns batch-jobs
     ```
 
-2. Create a `LocalQueue` named `localqueue-sample.yaml` and paste in the following YAML manifest:
+2. Create and save a `LocalQueue` in a file named `localqueue-sample.yaml` with the following YAML manifest:
 
     ```yaml
+    cat <<EOF > localqueue-sample.yaml
     apiVersion: kueue.x-k8s.io/v1beta1
     kind: LocalQueue
     metadata:
@@ -74,6 +77,7 @@ In the following examples, we show the difference in scheduling behavior between
       namespace: batch-jobs
     spec:
       clusterQueue: sample-jobs
+    EOF
     ```
 
     This sample `LocalQueue` configures the following settings:
@@ -92,6 +96,7 @@ In the following examples, we show the difference in scheduling behavior between
 1. Create two sample batch jobs to deploy in the *batch-jobs* namespace using the following YAML manifest named `batch-workloads.yaml`:
 
     ```yaml
+    cat <<EOF > batch-workloads.yaml
     apiVersion: kueue.x-k8s.io/v1beta1
     kind: LocalQueue
     metadata:
@@ -113,8 +118,8 @@ In the following examples, we show the difference in scheduling behavior between
       template:
         spec:
           containers:
-            - name: [insert my container name]
-              image: [insert my container image path]
+            - name: dummy-job
+              image: registry.k8s.io/e2e-test-images/agnhost:2.53
               command: ["sh", "-c", "echo Running test-batch-1; sleep 60"]
               resources:
                 requests:
@@ -138,8 +143,8 @@ In the following examples, we show the difference in scheduling behavior between
       template:
         spec:
           containers:
-            - name: [insert my container name]
-              image: [insert my container image path]
+            - name: dummy-job
+              image: registry.k8s.io/e2e-test-images/agnhost:2.53
               command: ["sh", "-c", "echo Waiting in queue for CPUs...; sleep 30"]
               resources:
                 requests:
@@ -149,6 +154,7 @@ In the following examples, we show the difference in scheduling behavior between
                   cpu: "2"
                   memory: "1Gi"
           restartPolicy: Never
+    EOF
     ```
 
 2. Apply the manifest for the batch jobs using the `kubectl apply` command.

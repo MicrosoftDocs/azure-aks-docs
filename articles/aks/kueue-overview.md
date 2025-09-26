@@ -2,7 +2,7 @@
 title: Install Kueue on Azure Kubernetes Service (AKS)
 description: Install and configure Kueue on your Azure Kubernetes Service (AKS) cluster, including enabling advanced features and verifying deployment.
 ms.topic: how-to
-ms.date: 09/17/2025
+ms.date: 09/26/2025
 author: colinmixonn
 ms.author: colinmixon
 ms.service: azure-kubernetes-service

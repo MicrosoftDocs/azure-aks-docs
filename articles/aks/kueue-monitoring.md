@@ -2,7 +2,7 @@
 title: Monitor Kueue Deployments and Queues on Azure Kubernetes Service (AKS)
 description: Monitor key resource and performance metrics for batch workloads scheduled with Kueue on an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
-ms.date: 09/17/2025
+ms.date: 09/26/2025
 author: sachidesai
 ms.author: sachidesai
 ms.service: azure-kubernetes-service

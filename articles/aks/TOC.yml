@@ -585,15 +585,15 @@
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
 - name: Scheduling
   items:
-    - name: Basic scheduler features
-      href: operator-best-practices-scheduler.md
-    - name: Advanced scheduler features
-      href: operator-best-practices-advanced-scheduler.md
-    - name: Kueue
-       items:
-         - name: Learn about Kueue for batch scheduling
+      - name: Basic scheduler features
+        href: operator-best-practices-scheduler.md
+      - name: Advanced scheduler features
+        href: operator-best-practices-advanced-scheduler.md
+      - name: Kueue
+        items:
+          - name: Learn about Kueue for batch scheduling
             href: kueue-overview.md
-         - name: Schedule and deploy batch jobs with Kueue
+          - name: Schedule and deploy batch jobs with Kueue
             href: deploy-batch-jobs-with-kueue.md
           - name: Monitor Kueue deployments and queues
             href: kueue-monitoring.md
