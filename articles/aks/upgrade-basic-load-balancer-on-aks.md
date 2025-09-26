@@ -111,7 +111,7 @@ The Load Balancer object lost the reference to your public IP resource during mi
 To resolve this:
 
 1. Ensure the new Standard public IP exists in the correct resource group.
-2. Reassociate it in the service manifest using the following configuration:
+1. Reassociate it in the service manifest using the following configuration:
 
     ```yaml
     annotations:
@@ -125,7 +125,7 @@ If `outboundType` is `LoadBalancer`, AKS automatically provisions a public IP (P
 To resolve this:
 
 1. Change `outboundType` to `userDefinedRouting` for a fully private cluster.
-2. Ensure custom outbound routing is configured via Azure Firewall/NVA.
+1. Ensure custom outbound routing is configured via Azure Firewall/NVA.
 
 ### Why does migration fail in my internal Load Balancer setup?
 
@@ -134,7 +134,7 @@ Current migration tooling doesn’t support internal virtual network (VNet) Load
 To resolve this:
 
 1. Recreate the cluster in the same VNet with Standard Load Balancer.
-2. Deploy workloads and validate internal name resolution.
+1. Deploy workloads and validate internal name resolution.
 
 ### My node pools are using Availability Sets. Will I still have issues even after Load Balancer migration?
 
@@ -143,7 +143,50 @@ Yes. If your node pools use Availability Sets, they're also deprecated in AKS af
 To resolve this:
 
 1. For clusters using both Availability Sets and the Basic Load Balancer, there's a separate `az aks update` command you must run to perform both migrations at once (Availability Sets to Virtual Machine node pools, and Basic Load Balancer to Standard Load Balancer). For steps on performing this migration, see the [Availability Sets migration](./availability-sets-on-aks.md) guidance.
-2. After the upgrade, Azure CLI or REST APIs must be used to perform CRUD operations or manage the pool. Check the [limitations](./virtual-machines-node-pools.md#limitations).
+1. After the upgrade, Azure CLI or REST APIs must be used to perform CRUD operations or manage the pool. Check the [limitations](./virtual-machines-node-pools.md#limitations).
+
+### Do I need to delete default webhooks before upgrading?
+
+No. If no other `ValidatingAdmissionWebhooks` or `MutatingAdmissionWebhooks` are present in the cluster, the default webhooks in the control plane should be fine to keep during the migration.
+
+Default webhooks include:
+
+- `aks-node-mutating-webhook`
+- `webhook-admission-controller`
+- `node-validating-webhook`
+
+### What access is required to run the migration commands?
+
+To run the migration commands, you need:
+
+- Either the Contributor or Owner role on the subscription or resource group.
+- The Azure CLI version must be ≥ 2.72.0.
+- The AKS preview extension version must be ≥ 0.5.170.
+
+### How can I see if Key Management Service (KMS) encryption is disabled?
+
+You can check whether KMS encryption is enabled on your AKS cluster using the [`az aks list`](/cli/azure/aks#az_aks_list) command.
+
+```azurecli-interactive
+az aks list --query "[].{Name:name, KmsEnabled:securityProfile.azureKeyVaultKms.enabled, KeyId:securityProfile.azureKeyVaultKms.keyId}"
+```
+
+- If the output shows `"KmsEnabled": null`, it means KMS encryption isn't enabled for that cluster, and you can skip any steps to disable it. For example:
+
+    ```output
+      {
+    
+        "KeyId": null,
+    
+        "KmsEnabled": null,
+    
+        "Name": "myAKSCluster"
+    
+      },
+    ...
+    ```
+
+- If KMS is enabled and you want to disable it, see [Turn off KMS encryption](./use-kms-etcd-encryption.md#turn-off-kms).
 
 ## Next steps
 
