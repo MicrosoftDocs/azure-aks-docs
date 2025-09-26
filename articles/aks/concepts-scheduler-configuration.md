@@ -10,7 +10,7 @@ author: sachidesai
 
 # Scheduler configuration concepts for workload placement in Azure Kubernetes Service (AKS)
 
-On Azure Kubernetes Service (AKS), the default mechanism of workload placement across nodes within a cluster is via the scheduler. The default scheduler is a control plane component responsible for assigning AKS deployment pods to nodes. When a pod is created without a specified node, the scheduler selects an optimal node based on several criteria, including:
+On Azure Kubernetes Service (AKS), the default mechanism of workload placement across nodes within a cluster is via the scheduler. The default scheduler is a control plane component responsible for assigning AKS deployment pods to nodes. When a pod is created without a specified node, the scheduler selects an optimal node based on several criteria, including (but not limited to):
 
 * Available resources (CPU, memory)
 * [Node affinity/anti-affinity](./operator-best-practices-advanced-scheduler.md#node-affinity)
@@ -21,14 +21,14 @@ Once the AKS scheduler selects a node, the deployment pod is bound to it, and th
 
 By default, the AKS scheduler comes with a set of built-in rules that work well for general-purpose workloads. However, advanced use cases may require custom scheduling strategies. For example,
 
-* Batch jobs might prioritize resource fairness over speed.
+* Batch jobs might prefer collocating in a few nodes (for better performance) over topology-aware spreading (for reliability).
 * Cost-sensitive workloads may benefit from node binpacking to consolidate jobs and minimize idle compute node costs.
 
-To support these use cases, AKS allows you to set one or more in-tree scheduling plugins via a scheduler profile (preview) to configure the scheduling behavior on your AKS cluster.
+To support these use cases, AKS allows you to set one or more in-tree scheduling plugins via a Kubernetes custom resource (CRD) to configure the scheduling behavior on your AKS cluster.
 
 ## Configurable scheduler profiles (preview)
 
-A scheduler profile is a set of one or more in-tree scheduling plugins and configurations that dictate how a pod should be scheduled. Starting from Kubernetes version `1.33`, you can configure and set a scheduler profile (preview) to target AKS node pool(s) or your entire cluster.
+A scheduler profile is a set of one or more in-tree scheduling plugins and configurations that dictate how a pod should be scheduled. Previously, the scheduler configuration was managed by AKS and not accessible to the users. Starting from Kubernetes version `1.33`, you can now configure and set a scheduler profile (preview) used by the Kubernetes scheduler on your cluster.
 
 Each scheduler profile has:
 
