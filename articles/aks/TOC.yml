@@ -587,6 +587,14 @@
                     href: container-network-security-l7-policy-concepts.md
                   - name: Set up Layer 7 policies
                     href: how-to-apply-l7-policies.md
+      - name: Performance
+        items:
+          - name: Container Network Performance
+            items:
+              - name: Overview
+                href: container-network-performance-ebpf-host-routing.md
+              - name: Set up eBPF Host routing
+                href: how-to-enable-ebpf-host-routing.md
       - name: Improve network fault tolerance using TCP keep-alive
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
 - name: Security
