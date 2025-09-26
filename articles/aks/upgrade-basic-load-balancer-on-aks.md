@@ -118,7 +118,7 @@ To resolve this:
       service.beta.kubernetes.io/azure-load-balancer-ipv4: <your-ip>
     ```
 
-### Why does Load Balancer upgrade on a private cluster without a public IP still create a public IP during the migration?
+### When migrating the load balancer on a private cluster without a public IP, why is a public IP still created during the migration?
 
 If `outboundType` is `LoadBalancer`, AKS automatically provisions a public IP (PIP), regardless of Load Balancer SKU.
 
