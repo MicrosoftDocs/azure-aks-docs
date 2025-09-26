@@ -53,6 +53,7 @@ Like Azure CNI Overlay, Kubenet assigns IP addresses to pods from an address spa
     - The same pod CIDR space can be used on multiple independent AKS clusters in the same VNet.
     - Pod CIDR space must not overlap with the cluster subnet range.
     - Pod CIDR space must not overlap with directly connected networks (like VNet peering, ExpressRoute, or VPN). If external traffic has source IPs in the podCIDR range, it needs translation to a non-overlapping IP via SNAT to communicate with the cluster.
+    - Pod CIDR space can only be expanded.
 - **Kubernetes service address range**: The size of the service address CIDR depends on the number of cluster services you plan to create. It must be smaller than `/12`. This range shouldn't overlap with the pod CIDR range, cluster subnet range, and IP range used in peered VNets and on-premises networks.
 - **Kubernetes DNS service IP address**: This IP address is within the Kubernetes service address range that's used by cluster service discovery. Don't use the first IP address in your address range, as this address is used for the `kubernetes.default.svc.cluster.local` address.
 
@@ -413,6 +414,64 @@ az aks nodepool add \
     --os-type Windows \
     --name winpool1 \
     --node-count 2
+```
+
+## Pod CIDR Expansion - (Preview)
+
+You can expand your Pod CIDR space on AKS Overlay clusters with Linux nodes only. The operation uses `az aks update`, and allows expansions without recreating your AKS cluster.
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+### Limitations
+
+ - Windows nodes and hybrid node scenarios are not supported.
+ - Only expansion is allowed. Shrinking or changing the Pod CIDR returns an error.
+ - IPv6 Pod CIDR expansion is not supproted.
+ - Changing multiple Pod CIDR blocks via `--pod-cidrs` is not supported.
+ - If an [Azure Availability Zone](./availability-zones.md) is down during the expansion operation, new nodes may appear as unready. These nodes are expected to reconcile once the Availability Zone is up.
+
+### Register the `EnableAzureCNIOverlayPodCIDRExpansion` feature flag
+
+Register the `EnableAzureCNIOverlayPodCIDRExpansion` feature flag using the  [`az feature register`](/cli/azure/feature#az_feature_register) command.
+
+```azurecli-interactive
+az feature register --namespace Microsoft.ContainerService --name EnableAzureCNIOverlayPodCIDRExpansion
+```
+
+Verify successful registration using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for the registration to complete.
+
+```azurecli-interactive
+az feature show --namespace "Microsoft.ContainerService" --name "EnableAzureCNIOverlayPodCIDRExpansion"
+```
+
+Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
+
+###  Expand Pod CIDR on an Overlay cluster - Preview
+
+Starting from a Pod CIDR block of `10.244.0.0/18`, the `az aks update` operation allows expanding the Pod CIDR space.
+
+```azurecli-interactive
+az aks update \
+    --name $clusterName \
+    --resource-group $resourceGroup \
+    --pod-cidr 10.244.0.0/16
+```
+
+> [!NOTE]
+> Although the update command may successfully complete and show the new Pod CIDR in the network profile, make sure to validate the new cluster state through the `NodeNetworkConfig`.
+
+### Validate new Pod CIDR Block
+
+Verify the state of the upgrade operation by checking the `NodeNetworkConfig` to view the state.
+
+```bash-interactive
+kubectl get nnc -A -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.status.networkContainers[0].subnetAddressSpace}{"\n"}{end}'
+```
+
+```output
+aks-nodepool1-13347454-vmss000000 10.244.0.0/16
+aks-nodepool1-13347454-vmss000001 10.244.0.0/16
+aks-nodepool1-13347454-vmss000002 10.244.0.0/16
 ```
 
 ## Next steps
