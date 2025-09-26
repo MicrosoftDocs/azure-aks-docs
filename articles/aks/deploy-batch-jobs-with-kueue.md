@@ -1,5 +1,5 @@
 ---
-title: Schedule and deploy batch jobs with Kueue on Azure Kubernetes Service (AKS)
+title: Schedule and Deploy Batch Jobs with Kueue on Azure Kubernetes Service (AKS)
 description: Learn how to define Kueue deployments and efficiently schedule batch workloads on your Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -92,11 +92,6 @@ In the following examples, we show the difference in scheduling behavior between
 1. Create two sample batch jobs to deploy in the *batch-jobs* namespace using the following YAML manifest named `batch-workloads.yaml`:
 
     ```yaml
-    apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: batch-jobs
-    ---
     apiVersion: kueue.x-k8s.io/v1beta1
     kind: LocalQueue
     metadata:
@@ -168,7 +163,7 @@ In the following examples, we show the difference in scheduling behavior between
     kubectl get workloads --namespace batch-jobs
     ```
 
-Your output should resemble the following example output:
+    Your output should resemble the following example output:
 
     ```output
     NAME            ADMITTED    AGE
@@ -176,13 +171,13 @@ Your output should resemble the following example output:
     test-batch-2    False       5s
     ```
 
-If you run the following command for `test-batch-2` while it is in `Pending` state, you should see an output which includes:
+    If you run the following command for `test-batch-2` while it is in `Pending` state, you should see an output which includes:
 
     ```bash
     kubectl get workloads test-batch-2 -o yaml
     ```
 
-Expected output:
+    Expected output:
 
     ```output
     ...
@@ -198,27 +193,27 @@ Expected output:
     ...
     ```
 
-After `test-batch-1` completes, `test-batch-2` will be admitted and run.
+    After `test-batch-1` completes, `test-batch-2` will be admitted and run.
 
-Now, the output should look like the following:
+    Now, the output should look like the following:
 
-```output
-Status:
-  Conditions:
-    Type:              Admitted
-    Status:            True
-    Last Transition Time:  1234-56-78T00:00:00Z
-  Admission:
-    ClusterQueue:      sample-jobs
-    PodSetAssignments:
-      Name:            main
-      Flavors:
-        cpu:           on-demand
-        memory:        on-demand
-      ResourceUsage:
-        cpu:           2
-        memory:        1Gi
-```
+    ```output
+    Status:
+      Conditions:
+        Type:              Admitted
+        Status:            True
+        Last Transition Time:  1234-56-78T00:00:00Z
+      Admission:
+        ClusterQueue:      sample-jobs
+        PodSetAssignments:
+          Name:            main
+          Flavors:
+            cpu:           on-demand
+            memory:        on-demand
+          ResourceUsage:
+            cpu:           2
+            memory:        1Gi
+    ```
 
 ## FAQ
 
