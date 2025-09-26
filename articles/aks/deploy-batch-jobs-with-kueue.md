@@ -56,7 +56,7 @@ In the following examples, we show the difference in scheduling behavior between
     * A general **`cohort`**: Used to group multiple `ClusterQueues` together to allow resource borrowing. If one `ClusterQueue` has unused quota, another in the **same** cohort can borrow it for pending jobs.
     * **`namespaceSelector: {}`**: Indicates that `sample-jobs` accepts workloads from any namespace that references this `ClusterQueue` via a `LocalQueue` (you can restrict usage (for example, to only team A's namespace) with a label selector).
     * **`coveredResources: ["cpu", "memory"]` in `resourceGroups`**: Defines the standard CPU and memory resource types managed by this `ClusterQueue`.
-    * **`flavor` of `on-demand` nodes with `4` CPUs, `8Gi` memory**: Only workloads scheduled on `on-demand` nodes consume this quota. If the cluster uses up this quota, it won't admit any additional workloads using this flavor (unless you allow borrowing from the `cohort`).
+    * **`flavor` of `on-demand` nodes with `4` CPUs, `8Gi` memory**: Only workloads scheduled on `on-demand` nodes consume this quota. If the cluster uses up this quota, it doesn't admit any other workloads using this flavor (unless you allow borrowing from the `cohort`).
 
 ### Create a `LocalQueue`
 
@@ -177,7 +177,7 @@ In the following examples, we show the difference in scheduling behavior between
     test-batch-2    False       5s
     ```
 
-    If you run the following command for `test-batch-2` while it is in `Pending` state, you should see an output which includes:
+    If you run the following command for `test-batch-2` while it is in `Pending` state, you should see an output that includes:
 
     ```bash
     kubectl get workloads test-batch-2 -o yaml
@@ -201,7 +201,7 @@ In the following examples, we show the difference in scheduling behavior between
 
     After `test-batch-1` completes, `test-batch-2` will be admitted and run.
 
-    Now, the output should look like the following:
+    Now, the output should look like the following example output:
 
     ```output
     Status:
@@ -274,14 +274,14 @@ In the following examples, we show the difference in scheduling behavior between
     ```
 
     > [!NOTE]
-    > Please note that if you manually install the CRDs, you need to manually delete them once you're finished using the `kubectl delete` command.
+    > Note that if you manually install the CRDs, you need to manually delete them once you're finished using the `kubectl delete` command.
 
 ## Next steps
 
 In this article, you:
 
 * Installed Kueue on your Azure Kubernetes Service (AKS) cluster using Helm and verified CRDs, controller health, and namespace setup.
-* Configured `ClusterQueue` and `LocalQueue` for general-purpose workloads with resource quotas and flavors (e.g., on-demand).
+* Configured `ClusterQueue` and `LocalQueue` for general-purpose workloads with resource quotas and flavors (such as on-demand).
 * Submitted two batch jobs to demonstrate queuing: one admitted immediately, the second held due to quota limits, then admitted when resources became available.
 * Monitored workload status and controller logs to confirm scheduling behavior and queuing logic.
 

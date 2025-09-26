@@ -11,7 +11,7 @@ ms.service: azure-kubernetes-service
 
 # Monitor Kueue deployments and queues with Prometheus metrics on Azure Kubernetes Service (AKS)
 
-In this article, you learn how to install and configure Kueue to schedule batch workloads on an Azure Kubernetes Service (AKS) cluster. You'll explore different installation methods to enable advanced Kueue features, verify your deployment, and monitor with Prometheus metrics exposed by Kueue.
+In this article, you learn how to install and configure Kueue to schedule batch workloads on an Azure Kubernetes Service (AKS) cluster. You also explore different installation methods to enable advanced Kueue features, verify your deployment, and monitor with Prometheus metrics exposed by Kueue.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
@@ -24,7 +24,7 @@ Kueue [exposes Prometheus metrics](https://kueue.sigs.k8s.io/docs/reference/metr
 The most commonly used Kueue Prometheus metrics provide insight into queue length, resource availability, and admission status, such as:
 
 * **`kueue_workload_admitted_total`**: Total number of workloads admitted (scheduled to run) by Kueue since the controller started. This metric helps track how many jobs Kueue allows to move from `Pending` to `Running`.
-* **`kueue_workload_pending_total`**: Current number of workloads waiting in queues (i.e., pending due to lack of resources or quota). This is a useful indicator for alerting on backlogs or diagnosing scheduling delays.
+* **`kueue_workload_pending_total`**: Current number of workloads waiting in queues (for example, workloads pending due to lack of resources or quota). This metric is a useful indicator for alerting on backlogs or diagnosing scheduling delays.
 * **`kueue_clusterqueue_available_resources`**: Amount of available resources (such as CPU, GPU, memory) in each `ClusterQueue`, after accounting for admitted workloads, to indicate how much headroom remains for new jobs.
 * **`kueue_clusterqueue_used_resources`**: Amount of resources currently in use by admitted workloads in a given `ClusterQueue`. This metric helps correlate actual usage versus quota.
 

@@ -11,13 +11,13 @@ ms.service: azure-kubernetes-service
 
 # Install and Configure Kueue on Azure Kubernetes Service (AKS)
 
-In this article, you learn how to install and configure Kueue to schedule batch workloads on an Azure Kubernetes Service (AKS) cluster. You'll explore different installation methods to enable advanced Kueue features, verify your deployment, and monitor with Prometheus metrics exposed by Kueue.
+In this article, you learn how to install and configure Kueue to schedule batch workloads on an Azure Kubernetes Service (AKS) cluster. You also explore different installation methods to enable advanced Kueue features, verify your deployment, and monitor with Prometheus metrics exposed by Kueue.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
 ## What are batch workloads?
 
-Batch deployments are typically non-interactive workloads that are retriable, have a finite duration, and might experience spiky or bursty resource usage. These workloads include, but are not limited to:
+Batch deployments are typically non-interactive workloads that are retriable, have a finite duration, and might experience spiky or bursty resource usage. These workloads include, but aren't limited to:
 
 * Data processing jobs.
 * Security vulnerability scans.
@@ -57,13 +57,13 @@ A batch admin focuses on configuring, managing, and securing the platform-level 
 
 * Provision and manage AKS node pools.
 * Define resource quotas, ClusterQueues, and policies for workload isolation.
-* Tune autoscaling and cost-efficiency (e.g., Cluster Autoscaler, Kueue quotas).
+* Tune autoscaling and cost-efficiency (such as the Cluster Autoscaler or Kueue quotas).
 * Monitor cluster and queue health.
 * Create and maintain templates and reusable workflows.
 
 A batch user runs compute-intensive or parallel jobs using the platform-level infrastructure configured by a batch admin, and typically:
 
-* Submit batch jobs (e.g., Job, Workload, or custom controller CRDs) and monitor job status and outputs
+* Submit batch jobs (such as Job, Workload, or custom controller CRDs) and monitor job status and outputs
 * Select appropriate queue or resource flavor for jobs (based on guidance from batch admins)
 * Optimize job specs for resource and performance needs
 
@@ -80,9 +80,9 @@ A batch user runs compute-intensive or parallel jobs using the platform-level in
 
 ## Install Kueue with Helm
 
-While most features and scheduling policies that you may require are enabled by default, some are not like `TopologyAwareScheduling`. If needed, reconfigure your Kueue installation by changing the default [Feature Gates](https://kueue.sigs.k8s.io/docs/installation/#feature-gates-for-alpha-and-beta-features) or by configuring [Kueue paramater values](https://github.com/kubernetes-sigs/kueue/blob/main/charts/kueue/README.md#configuration) in the `values.yaml` file of the Helm chart.
+While most features and scheduling policies that you might require are enabled by default, some aren't like `TopologyAwareScheduling`. If needed, reconfigure your Kueue installation by changing the default [Feature Gates](https://kueue.sigs.k8s.io/docs/installation/#feature-gates-for-alpha-and-beta-features) or by configuring [Kueue paramater values](https://github.com/kubernetes-sigs/kueue/blob/main/charts/kueue/README.md#configuration) in the `values.yaml` file of the Helm chart.
 
-Kueue supports multiple workload [Frameworks](https://kueue.sigs.k8s.io/docs/tasks/run/) that need to be explicitly enabled to leverage Kueue’s scheduling and resource management capabilities when running [MPI Operator](https://www.kubeflow.org/docs/components/training/mpi/) MPIJobs, [KubeRay's](https://github.com/ray-project/kuberay) [RayJob](https://docs.ray.io/en/latest/cluster/kubernetes/getting-started/rayjob-quick-start.html) and more.
+Kueue supports multiple workload [Frameworks](https://kueue.sigs.k8s.io/docs/tasks/run/) that you need to explicitly enable to use Kueue’s scheduling and resource management capabilities when running [MPI Operator](https://www.kubeflow.org/docs/components/training/mpi/) MPIJobs, [KubeRay's](https://github.com/ray-project/kuberay) [RayJob](https://docs.ray.io/en/latest/cluster/kubernetes/getting-started/rayjob-quick-start.html) and more.
 
 In this guide, Kueue is configured to include `LocalQueueMetrics` and `Topology Aware Scheduling` and frameworks from Kubeflow, Ray, and [JobSet](https://jobset.sigs.k8s.io/docs/concepts/).
 
@@ -172,7 +172,7 @@ In this guide, Kueue is configured to include `LocalQueueMetrics` and `Topology 
     kubectl get crds | grep kueue
     ```
 
-    Your output should include the following Kueue CRDs, as shown below:
+    Your output should include the following Kueue CRDs:
 
     ```output
     admissionchecks.kueue.x-k8s.io                   2025-09-11T18:20:48Z
