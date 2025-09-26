@@ -78,14 +78,16 @@
       href: howto-use-policy-to-add-clusters-to-fleet.md
     - name: Progressively upgrade Kubernetes and node images
       items:
-        - name: Define reusable update strategies
-          href: update-create-update-strategy.md
-        - name: Add approvals to update groups and stages
-          href: update-strategies-gates-approvals.md
         - name: Update Kubernetes and node images
           href: update-orchestration.md
         - name: Automate updates of Kubernetes and node images
           href: update-automation.md
+        - name: Define reusable update strategies
+          href: update-create-update-strategy.md
+        - name: Add approvals to update groups and stages
+          href: update-strategies-gates-approvals.md
+        - name: Automate approvals using events
+          href: howto-configure-events-for-gates.md
         - name: Configure monitoring and alerting of update runs
           href: howto-monitor-update-runs.md       
     - name: Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform
