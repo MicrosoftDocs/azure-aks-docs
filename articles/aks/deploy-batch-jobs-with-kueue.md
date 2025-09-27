@@ -11,7 +11,7 @@ ms.author: sachidesai
 
 # Schedule and deploy batch jobs with Kueue on Azure Kubernetes Service (AKS)
 
-In this article, you learn how to schedule and deploy sample batch jobs on Azure Kubernetes Service (AKS) using the Kueue controller manager and custom resources. You also learn how to use Kueue to queue up sample general-purpose deployments and track the results with Kueue Prometheus metrics.
+In this article, you learn how to schedule and deploy sample batch jobs on Azure Kubernetes Service (AKS) using Kueue. Also, this guide covers installing Kueue, configuring ResourceFlavors and ClusterQueues for fine-grained resource management, and submitting jobs via LocalQueues. You also learn how to use Kueue to queue up a sample batch job and track the results across Pending, Running, and Finished states.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
@@ -24,13 +24,50 @@ To learn more about Kueue and common uses cases for batch workload administrator
 * [Helm version 3 or above](https://helm.sh/docs/intro/install/) installed.
 * [The latest version of Kueue installed in a dedicated namespace on your cluster](./kueue-overview.md#prerequisites).
 
-In the following examples, we show the difference in scheduling behavior between the AKS native scheduler and the Kueue system for queueing batch workloads.
+## Define a ResourceFlavor object
 
-## Schedule and deploy general-purpose batch jobs with Kueue
+In Kueue, a ResourceFlavors enables fine-grained resource management by associating workloads with specific nodes, taints, tolerations, or availability zones. For nodes, `ResourceFlavors` can define the characteristics like pricing, availability, architecture (for example, x86 versus ARM CPUs), brands, and models.  A ClusterQueue uses these flavors to manage quotas and admission policies for workloads.
 
-- Create and save a Kueue `ClusterQueue` in a file named `clusterqueue-sample.yaml` with the following manifest:
+This configuration defines a ResourceFlavor without any labels or taints, known as an empty `ResourceFlavor`. This configuration is perfect when quotas for different flavors don't need to be managed.
 
-    ```yaml
+1. Create and save a `ResourceFlavor` in a file named `resourceflavor-sample.yaml` with the following manifest:
+      ```bash
+     cat << EOF > resourceflavor-sample.yaml
+     apiVersion: kueue.x-k8s.io/v1beta1
+     kind: ResourceFlavor
+     metadata:
+       name: on-demand
+     EOF
+     ```
+2. apply
+     ```bash
+     kubectl apply -f resourceflavor-sample.yaml
+     ```
+3. verify
+     ```bash
+     kubectl get resourceflavors
+     ```
+     
+     Example output
+   
+     ```output
+     NAME        AGE
+     on-demand   5m32s
+     ```
+
+## Create a ClusterQueue
+
+A ClusterQueue is a cluster-scoped resource that governs a pool of resources, defining usage limits and Fair Sharing rules. Where applicable, Fair Sharing rules allow another ClusterQueue in the **same** cohort to unused quota for pending jobs. Each ClusterQueue specifies which flavors it supports and how much quota is available for each. 
+
+This sample `ClusterQueue` defines:
+
+* **`namespaceSelector: {}`**: Indicates that `sample-jobs` accepts workloads from any namespace that references this `ClusterQueue` via a `LocalQueue` (you can restrict usage (for example, to only team A's namespace) with a label selector).
+* **`coveredResources: ["cpu", "memory"]` in `resourceGroups`**: Defines the standard CPU and memory resource types managed by this `ClusterQueue`.
+* **`flavor` of `on-demand` nodes with `4` CPUs, `8Gi` memory**: Only workloads scheduled on `on-demand` nodes consume this quota. If the cluster uses up this quota, it doesn't admit any other workloads using this flavor (unless you allow borrowing from the `cohort`).
+
+1. Create and save a Kueue `ClusterQueue` in a file named `clusterqueue-sample.yaml` with the following manifest:
+
+    ```batch
     cat <<EOF > clusterqueue-sample.yaml
     apiVersion: kueue.x-k8s.io/v1beta1
     kind: ClusterQueue
@@ -50,16 +87,35 @@ In the following examples, we show the difference in scheduling behavior between
                  nominalQuota: 8Gi
     EOF
     ```
+2. Apply the `ClusterQueue` manifest using the `kubectl apply` command.
 
-    This sample `ClusterQueue` defines:
+    ```bash
+    kubectl apply -f clusterqueue-sample.yaml
+    ```
+3. Verify the ClusterQueue` manifest was applied
 
-    * A general **`cohort`**: Used to group multiple `ClusterQueues` together to allow resource borrowing. If one `ClusterQueue` has unused quota, another in the **same** cohort can borrow it for pending jobs.
-    * **`namespaceSelector: {}`**: Indicates that `sample-jobs` accepts workloads from any namespace that references this `ClusterQueue` via a `LocalQueue` (you can restrict usage (for example, to only team A's namespace) with a label selector).
-    * **`coveredResources: ["cpu", "memory"]` in `resourceGroups`**: Defines the standard CPU and memory resource types managed by this `ClusterQueue`.
-    * **`flavor` of `on-demand` nodes with `4` CPUs, `8Gi` memory**: Only workloads scheduled on `on-demand` nodes consume this quota. If the cluster uses up this quota, it doesn't admit any other workloads using this flavor (unless you allow borrowing from the `cohort`).
+   ```bash
+   kubectl get clusterqueues
+   ```
+   
+   Example output
+   
+   ```output
+   NAME          COHORT    PENDING WORKLOADS
+   sample-jobs   general   0
+   ```
+> [!NOTE]
+> The ClusterQueue is not ready for use until a `ResourceFlavor` object has also been configured. If you create a ClusterQueue without any existing ResourceFlavor, workloads referencing it will be marked as `Inadmissible`.
 
-### Create a `LocalQueue`
+## Create a LocalQueue
 
+A LocalQueue is a namespace-scoped resource that acts as a gateway for users to submit jobs. A `LocalQueue` is assigned to one `ClusterQueue` from which resources are allocated to run its workloads.
+
+This sample `LocalQueue` configures the following settings:
+
+* Enables users in the `batch-jobs` namespace to submit batch workloads to Kueue.
+* Route the batch workloads to the `sample-jobs` `ClusterQueue`, which manages the actual compute resource quotas and scheduling policies.
+    
 1. Create a namespace named *batch-jobs* using the `kubectl create` command.
 
     ```bash
@@ -68,7 +124,7 @@ In the following examples, we show the difference in scheduling behavior between
 
 2. Create and save a `LocalQueue` in a file named `localqueue-sample.yaml` with the following YAML manifest:
 
-    ```yaml
+    ```bash
     cat <<EOF > localqueue-sample.yaml
     apiVersion: kueue.x-k8s.io/v1beta1
     kind: LocalQueue
@@ -80,31 +136,34 @@ In the following examples, we show the difference in scheduling behavior between
     EOF
     ```
 
-    This sample `LocalQueue` configures the following settings:
-
-    * Enables users in the `batch-jobs` namespace to submit batch workloads to Kueue.
-    * Route the batch workloads to the `sample-jobs` `ClusterQueue`, which manages the actual compute resource quotas and scheduling policies.
-
 3. Apply the `LocalQueue` manifest using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f localqueue-sample.yaml
     ```
 
-### Create batch jobs
+4. Verify the `LocalQueue` manifest was applied
+   ```bash
+   kubectl get localqueues --all-namespaces
+   ```
+   Exampmle output
+   
+   ```output
+   NAMESPACE    NAME           CLUSTERQUEUE   PENDING WORKLOADS   ADMITTED WORKLOADS
+   batch-jobs   sample-queue   sample-jobs    0                   0
+   ```
+
+## Create 2 batch jobs
+
+This configuration defines two Kubernetes batch jobs submitted to the batch-jobs namespace and assigned to the sample-queue managed by Kueue. Both jobs are single-instance (parallelism: 1, completions: 1) and are configured with `Never` restart policy. The fields `parallelism` and `completions` control how many pods are run and how the job is considered complete. So `parallelism` and `completions` of 1 menas 1 pod can run at once, and the job will be marked complete once 1 pod finishes successfully, per batch job.
+
+* Job test-batch-1: Requests 1 CPU and 500Mi memory
+* Job test-batch-2: Requests 2 CPUs and 1Gi memory
 
 1. Create two sample batch jobs to deploy in the *batch-jobs* namespace using the following YAML manifest named `batch-workloads.yaml`:
 
-    ```yaml
+    ```bash
     cat <<EOF > batch-workloads.yaml
-    apiVersion: kueue.x-k8s.io/v1beta1
-    kind: LocalQueue
-    metadata:
-      name: sample-queue
-      namespace: batch-jobs
-    spec:
-      clusterQueue: sample-jobs
-    ---
     apiVersion: batch/v1
     kind: Job
     metadata:
@@ -162,29 +221,29 @@ In the following examples, we show the difference in scheduling behavior between
     ```bash
     kubectl apply -f batch-workloads.yaml
     ```
-
-3. View the status of the batched workloads using the `kubectl get` command.
+## Verify Batch Jobs have been submitted to `LocalQueue`
+1. View the status of the batched workloads using the `kubectl get` command.
 
     ```bash
     kubectl get workloads --namespace batch-jobs
     ```
 
-    Your output should resemble the following example output:
-
+    Example output
+   
     ```output
     NAME            ADMITTED    AGE
     test-batch-1    True        10s
     test-batch-2    False       5s
     ```
-
-    If you run the following command for `test-batch-2` while it is in `Pending` state, you should see an output that includes:
+    
+2. Run the following command for `test-batch-2` while it is in a `Pending` state
 
     ```bash
     kubectl get workloads test-batch-2 -o yaml
     ```
 
-    Expected output:
-
+    Expected output
+   
     ```output
     ...
     ...
@@ -202,7 +261,6 @@ In the following examples, we show the difference in scheduling behavior between
     After `test-batch-1` completes, `test-batch-2` will be admitted and run.
 
     Now, the output should look like the following example output:
-
     ```output
     Status:
       Conditions:
@@ -220,10 +278,31 @@ In the following examples, we show the difference in scheduling behavior between
             cpu:           2
             memory:        1Gi
     ```
+3. View the final status of the `batch-jobs` namespace using the `kubectl get` command.
+
+    ```bash
+    kubectl get job,deploy,rs,pod,workload --namespace batch-jobs
+    ```
+
+    Example output
+
+    ```output
+    NAME                     STATUS     COMPLETIONS   DURATION   AGE
+    job.batch/test-batch-1   Complete   1/1           97s        3m15s
+    job.batch/test-batch-2   Complete   1/1           35s        3m15s
+    
+    NAME                     READY   STATUS      RESTARTS   AGE
+    pod/test-batch-1-hb8zl   0/1     Completed   0          3m15s
+    pod/test-batch-2-dx9hk   0/1     Completed   0          3m15s
+    
+    NAME                                             QUEUE          RESERVED IN   ADMITTED   FINISHED   AGE
+    workload.kueue.x-k8s.io/job-test-batch-1-6fb85   sample-queue   sample-jobs   True       True       3m15s
+    workload.kueue.x-k8s.io/job-test-batch-2-84f49   sample-queue   sample-jobs   True       True       3m15s
+    ```
 
 ## FAQ
 
-### How can I confirm that the Kueue controller is available and running as expected?
+### Question 1: How can I confirm that the Kueue controller is available and running as expected?
 
 1. Confirm the Kueue controller manager pod is running using the `kubectl get` command.
     
@@ -244,7 +323,7 @@ In the following examples, we show the difference in scheduling behavior between
     kubectl logs --namespace kueue-system deployment/kueue-controller-manager
     ```
 
-### One or more of the Kueue CRDs are missing when I install via Helm. How can I ensure all of the custom resources are installed?
+### Question 2: One or more of the Kueue CRDs are missing when I install via Helm. How can I ensure all of the custom resources are installed?
 
 1. After installing Kueue with the [Kueue overview on AKS](./kueue-overview.md) guidance, confirm that all of the CRDs are installed using the `kubectl get` command.
     
@@ -275,6 +354,16 @@ In the following examples, we show the difference in scheduling behavior between
 
     > [!NOTE]
     > Note that if you manually install the CRDs, you need to manually delete them once you're finished using the `kubectl delete` command.
+### Question 3: What's the difference between a LocalQueue and a ClusterQueue
+
+A ClusterQueue is a cluster-scoped resource that defines and governs a pool of compute resources like CPU, memory, pods, and accelerators across the entire Kubernetes cluster. A LocalQueue is a namespace-scoped resource that acts as a gateway for users to submit jobs within the defined Kubernetes cluster. This separation allows for fine-grained control over resource allocation and multi-tenant scheduling without exposing cluster-wide quotas directly to users. 
+
+How They Work Together:
+
+1. A user submits a job to a LocalQueue in their namespace.
+2. Kueue routes the job to the referenced ClusterQueue.
+3. The ClusterQueue checks resource availability and quota limits.
+4. If admitted, the job is unsuspended and scheduled.
 
 ## Next steps
 
@@ -296,3 +385,4 @@ To learn more about Kueue, visit the following resources:
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
+
