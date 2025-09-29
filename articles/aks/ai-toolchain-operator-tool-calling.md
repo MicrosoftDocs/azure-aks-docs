@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.author: sachidesai
 author: sachidesai
 ms.service: azure-kubernetes-service
-ms.date: 9/19/2025
+ms.date: 10/1/2025
 # Customer intent: As an AI app developer, I want to integrate tool calling with inference services on Azure Kubernetes Service (AKS), so that my LLM-powered applications can dynamically interact with external APIs and perform real-world tasks at scale in a secure, reliable, and maintainable manner."
 ---
 
@@ -41,7 +41,7 @@ To streamline this deployment model, the AI toolchain operator (KAITO) add-on fo
 
 - This article assumes that you have an existing AKS cluster. If you don't have a cluster, create one by using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 - Your AKS cluster is running on Kubernetes version `1.33` or higher. To upgrade your cluster, see [Upgrade your AKS cluster](./upgrade-aks-cluster.md).
-- Install and configure Azure CLI version `2.76.0` or later. To find your version, run `az --version`. To install or update, see [Install the Azure CLI](/cli/azure/install-azure-cli).
+- Install and configure Azure CLI version `2.77.0` or later. To find your version, run `az --version`. To install or update, see [Install the Azure CLI](/cli/azure/install-azure-cli).
 - The [AI toolchain operator add-on enabled](./ai-toolchain-operator.md) on your cluster.
 - A deployed KAITO inference workspace that supports tool calling. Refer to the official [KAITO tool calling](https://kaito-project.github.io/kaito/docs/tool-calling/) documentation for the tool calling supported models with vLLM.
 - You deployed the `workspace‑phi‑4-mini-toolcall` [KAITO workspace](https://github.com/kaito-project/kaito/blob/main/examples/inference/kaito_workspace_tool_calling.yaml) with the default configuration.
