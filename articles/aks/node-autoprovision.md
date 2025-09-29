@@ -3,7 +3,7 @@ title: Node auto provisioning
 description: Learn about Azure Kubernetes Service (AKS) node autoprovisioning.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 07/23/2025
+ms.date: 09/29/2025
 ms.author: wilsondarko
 author: wdarko1
 
@@ -45,7 +45,6 @@ Node auto provisioning provisions, scales, and manages virtual machines (nodes) 
 - [Service Principals](./kubernetes-service-principal.md)
    > [!NOTE]
    > You can use either a system-assigned or user-assigned managed identity.
-- Disk encryption sets
 - CustomCATrustCertificates
 - Clusters with node autoprovisioning can't be [stopped](./start-stop-cluster.md)
 - [HTTP proxy](./http-proxy.md)
