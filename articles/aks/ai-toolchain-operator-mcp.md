@@ -68,64 +68,66 @@ In this example, we'll use a reference [Time MCP Server](https://github.com/mode
     http://localhost:8000/v1/chat/completions
     ```
 
-### Confirm the Reference MCP Server is Valid
+## Confirm the reference MCP server is valid
 
-This example assumes that the Time MCP server is hosted at `https://mcp.example.com`.  Run the following `curl` command to confirm that it returns tools:
+This example assumes that the Time MCP server is hosted at `https://mcp.example.com`.
 
-```bash
-curl https://mcp.example.com/mcp/list_tools
-```
+- Confirm the server returns tools using `curl`.
 
-Expected output:
+    ```bash
+    curl https://mcp.example.com/mcp/list_tools
+    ```
 
-```json
-{
-  "tools": [
+    Expected output:
+
+    ```output
     {
-      "name": "get_current_time",
-      "description": "Get the current time in a specific timezone",
-      "arguments": {
-        "timezone": "string"
-      }
-    },
-    {
-      "name": "convert_time",
-      "description": "Convert time between two timezones",
-      "arguments": {
-        "source_timezone": "string",
-        "time": "string",
-        "target_timezone": "string"
-      }
+      "tools": [
+        {
+          "name": "get_current_time",
+          "description": "Get the current time in a specific timezone",
+          "arguments": {
+            "timezone": "string"
+          }
+        },
+        {
+          "name": "convert_time",
+          "description": "Convert time between two timezones",
+          "arguments": {
+            "source_timezone": "string",
+            "time": "string",
+            "target_timezone": "string"
+          }
+        }
+      ]
     }
-  ]
-}
-```
+    ```
 
-### Connect MCP Server to the KAITO Workspace Using API
+## Connect MCP server to the KAITO workspace using API request
 
 KAITO automatically fetches tool definitions from **tools declared in API requests** or registered dynamically inside the inference runtime (vLLM + MCP tool loader).
 
-We'll create a Python virtual environment to send a tool-calling request to the `Phi-4-mini-instruct` inference endpoint using the MCP definition and pointing to the server.
+In this guide, we create a Python virtual environment to send a tool-calling request to the `Phi-4-mini-instruct` inference endpoint using the MCP definition and pointing to the server.
 
-Define a new working directory for this test project:
+1. Define a new working directory for this test project.
 
-```bash
-mkdir kaito-mcp
-cd kaito-mcp
-```
+    ```bash
+    mkdir kaito-mcp
+    cd kaito-mcp
+    ```
 
-Create a Python virtual environment and activate it so that all packages are local to your test project:
+2. Create a Python virtual environment and activate it so that all packages are local to your test project.
 
-```bash
-uv venv
-source .venv/bin/activate
-```
+    ```bash
+    uv venv
+    source .venv/bin/activate
+    ```
 
-Use the open-source [Autogen](https://microsoft.github.io/autogen/stable//index.html) framework to test the tool calling functionality and install its dependencies:
+3. Use the open-source [Autogen](https://microsoft.github.io/autogen/stable//index.html) framework to test the tool calling functionality and install its dependencies:
 
-```bash
-uv pip install "autogen-ext[openai]" "autogen-agentchat" "autogen-ext[mcp]"
-```
+    ```bash
+    uv pip install "autogen-ext[openai]" "autogen-agentchat" "autogen-ext[mcp]"
+    ```
 
 4. Create a test file named `test.py` that:
 
