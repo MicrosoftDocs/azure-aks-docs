@@ -44,7 +44,7 @@ To learn more about Azure Linux, see the [Azure Linux documentation][azurelinuxd
 [azurelinux-doc]: /azure/azure-linux/intro-azure-linux
 [azurelinux-capabilities]: /azure/azure-linux/intro-azure-linux#azure-linux-container-host-key-benefits
 [azurelinux-cluster-config]: /azure/azure-linux/quickstart-azure-cli
-[azurelinux-node-pool]: create-node-pools.md#add-an-azure-linux-node-pool
+[azurelinux-node-pool]: ./create-node-pools.md#create-an-aks-cluster-with-a-single-azure-linux-node-pool
 [ubuntu-to-azurelinux]: create-node-pools.md#migrate-ubuntu-nodes-to-azure-linux-nodes
 [auto-upgrade-aks]: auto-upgrade-cluster.md
 [kured]: node-updates-kured.md

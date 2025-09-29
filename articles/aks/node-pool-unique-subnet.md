@@ -18,8 +18,8 @@ In this article, you learn how to create node pools with unique subnets in Azure
 
 ## Prerequisites
 
-- [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli) version 2.35.0 or later. Run `az version` to find the version. If you need to install or upgrade, see [Install Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli).
-- An existing AKS cluster with a system node pool. If you need to create one, see [Create an AKS cluster with a single node pool](./create-node-pools.md#create-an-aks-cluster-with-a-single-node-pool).
+- [Azure CLI](/cli/azure/install-azure-cli) version 2.35.0 or later. Run `az version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+- An existing AKS cluster with a system node pool. If you need to create one, see [Create an AKS cluster with a single node pool](./create-node-pools.md#create-an-aks-cluster-with-a-single-node-pool-using-the-azure-cli).
 
 ## Limitations
 
