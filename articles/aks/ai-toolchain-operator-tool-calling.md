@@ -164,72 +164,27 @@ The Python snippet we use in this section is from the [KAITO documentation](http
 
     The “tool_calls” field comes back, meaning the `Phi-4-mini` LLM decided to invoke the function. Now, a sample tool call has been successfully parsed and executed based on the model’s decision to confirm end-to-end tool calling behavior with the KAITO inference deployment.
 
-## Monitor tool calling with KAITO
-
-To understand the effectiveness of tool calling when using vLLM inference in KAITO, you can monitor specific vLLM inference metrics exposed via the KAITO `/metrics` endpoint. These metrics provide visibility into how often tool calling is used, how well it's performing, and whether tool calling improves the responsiveness and accuracy of your AI-enabled application.
-
-The following table outlines relevant tool calling vLLM metrics:
-
-| Metric | Definition |
-| ------- | ----------- |
-| `vllm_tool_call_count` | Count tool calls. High counts indicate that tool calling is actively used and invoked by the LLM in response to user inputs. |
-| `vllm_tool_call_success_count` | Compare successful tool executions with total tool calls to understand tool call reliability or failure rate. |
-| `vllm_tool_call_latency_seconds` | Track the time taken to generate tool calls for performance bottlenecks to help identify if tools are causing slow inference. |
-| `vllm_tool_choice_rate{name="auto"}` | Frequency of "auto" tool choice usage can confirm whether the model is autonomously choosing to use tools (versus forced invocation). |
-| `vllm_function_call_parse_error_total` | Count tool call parsing errors. A high number of failed or malformed tool call parses indicate schema mismatch, LLM hallucination, or function description issues. |
-| `vllm_completion_tokens_total` | Compare token count (with and without tool calling) generation lengths, as tool usage might reduce tokens needed per response if external logic is used. |
-
-## Access tool calling metrics in KAITO
-
-### Prometheus and Grafana dashboards
-
-If you set KAITO with monitoring, vLLM exposes metrics via Prometheus. You can scrape and visualize them in Grafana. If you configured Azure Monitor for your AKS cluster, you can ingest these metrics for long-term analysis and alerting. 
-
-- Port-forward to the KAITO `/metrics` endpoint to access the raw metrics from the inference service using the `kubectl port-forward` command and `curl`.
-
-    ```bash
-    kubectl port-forward svc/<workspace-service-name> 8000:80
-    curl http://localhost:8000/metrics
-    ```
-
-## Tool calling observability recommendations
-
-Monitoring the metrics specific to tool calling with LLM inference allows you to:
-
-- Quantify the value tool calling adds to your app (e.g., more accurate or actionable responses).
-- Detect tool call failures early, before they affect production behavior.
-- Optimize for performance, reliability, and cost, especially when tools are external APIs or slow-running services.
-
-The following table outlines tool calling observability recommendations:
-
-| Recommendation | Benefit |
-| ------------------- | -------- |
-| Measure tool calling usage | Monitoring `vllm_tool_call_count` vs. `total completions` helps you understand how frequently tool calling is being triggered and shows whether your LLM is identifying relevant tasks for tool invocation. |
-| Assess tool execution reliability | Tracking `vllm_tool_call_success_count` alongside errors like `vllm_function_call_parse_error_total` helps you identify potential reliability issues. A high failure rate might indicate malformed tool specifications, incorrect parameter handling, or LLM misunderstanding. |
-| Evaluate inference performance impact | Using `vllm_tool_call_latency_seconds` and overall latency metrics to analyze the cost of tool calling on response time helps you optimize tool server performance or decide when to inline results. |
-| Understand model autonomy | Checking `vllm_tool_choice_rate{name="auto"}` to see how often the LLM is autonomously choosing tools, which indicates effective prompting and integration with the tool calling interface. |
-
 ## Troubleshooting
 
 ### Model preset doesn’t support tool calling
 
-If you pick a model that isn't on the supported list, tool calling might not work. Make sure you review the KAITO documentation, which explicitly lists which presets support tool calling.
+If you pick a model that isn't on the supported list, tool calling might not work. Make sure you [review the KAITO documentation](https://kaito-project.github.io/kaito/docs/tool-calling/), which explicitly lists which presets support tool calling.
 
 ### Misaligned runtime
 
-The KAITO inference must use vLLM runtime for tool calling (transformers runtime generally doesn’t support tool calling in KAITO).
+The KAITO inference must use [vLLM runtime for tool calling](https://kaito-project.github.io/kaito/docs/tool-calling/#supported-inference-runtimes) (HuggingFace Transformers runtime generally doesn’t support tool calling in KAITO).
 
 ### Network / endpoint issues
 
-If port-forwarding, ensure service ports are correctly forwarded. If the MCP server is unreachable, will error out.
+If port-forwarding, ensure the service ports are correctly forwarded. If the external MCP server is unreachable, will error out.
 
 ### Timeouts
 
-MCP server calls might take time. Make sure the adapter / client timeout is sufficiently high.
+External MCP server calls might take time. Make sure the adapter or client timeout is sufficiently high.
 
 ### Authentication
 
-If the MCP server requires auth (API key, header, etc.), ensure you supply correct credentials.
+If the external MCP server requires authentication (API key, header, etc.), ensure you supply correct credentials.
 
 ## Next steps
 

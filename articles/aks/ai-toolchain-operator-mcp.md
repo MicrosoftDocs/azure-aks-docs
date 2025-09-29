@@ -269,7 +269,7 @@ The following table outlines common errors when testing KAITO inference with an 
 
 In this article, you learned how to connect a KAITO workspace to an external reference MCP server using Autogen to enable tool calling through the OpenAI-compatible API. You also validated that the LLM could discover, invoke, and integrate results from MCP-compliant tools on AKS. To learn more, see the following resources:
 
-- [Deploy and monitor tool calls](./ai-toolchain-operator-tool-calling.md) with the AI toolchain operator add-on on AKS.
+- [Deploy and test tool calls](./ai-toolchain-operator-tool-calling.md) with the AI toolchain operator add-on on AKS.
 - KAITO tool calling and [MCP official documentation](https://kaito-project.github.io/kaito/docs/tool-calling).
 
 <!-- Links -->
