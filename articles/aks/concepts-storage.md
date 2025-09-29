@@ -84,7 +84,7 @@ Ephemeral NVMe data disks provide high-performance, low-latency storage directly
 
 Ephemeral NVMe data disks were initially available only on Azure VM L-series, E-series, and GPU VMs. With the introduction of Azure VM v6 and v7 generations, support for ephemeral NVMe data disks has expanded to a much wider range of VM sizes, including D-series, F-series, H-series, and more. NVMe disks deliver significantly higher IOPS and throughput compared to traditional HDD or SSD options. However, data stored on these disks is temporary and will be lost if the VM is deallocated or redeployed.
 
-To simplify management and provisioning of ephemeral NVMe data disks in AKS, use [Azure Container Storage][/azure/storage/container-storage/container-storage-introduction.md]. Azure Container Storage can automatically detect and orchestrate NVMe data disks, allowing you to create and manage persistent volumes for your Kubernetes workloads with minimal configuration. This approach is recommended for scenarios where high-performance, temporary storage is required, such as:
+To simplify management and provisioning of ephemeral NVMe data disks in AKS, use [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction). Azure Container Storage can automatically detect and orchestrate NVMe data disks, allowing you to create and manage persistent volumes for your Kubernetes workloads with minimal configuration. This approach is recommended for scenarios where high-performance, temporary storage is required, such as:
 
 - High-speed caching layers, such as datasets and checkpoints for AI training, or model files used for AI inference
 - High-performance, self-hosted databases that include built-in replication and backup features
@@ -94,7 +94,7 @@ To simplify management and provisioning of ephemeral NVMe data disks in AKS, use
 > [!IMPORTANT]
 > Ephemeral NVMe data disks are not suitable for storing critical or persistent data. Ensure your application can tolerate data loss and that important data is stored on persistent volumes backed by Azure Disk, Azure Files, or other durable storage options.
 
-For more information on using Azure Container Storage with ephemeral NVMe data disks, see [Use Azure Container Storage with AKS][/azure/storage/container-storage/use-container-storage-with-local-disk.md].
+For more information on using Azure Container Storage with ephemeral NVMe data disks, see [Use Azure Container Storage with AKS](/azure/storage/container-storage/use-container-storage-with-local-disk).
 
 ## Volumes
 
