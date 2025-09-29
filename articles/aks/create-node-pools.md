@@ -24,8 +24,6 @@ This article shows you how to create one or more node pools in an AKS cluster.
 
 ## Prerequisites
 
-- Review the [Overview of node pools in Azure Kubernetes Service (AKS)](node-pools-overview.md) to understand important considerations before creating node pools.
-
 :::zone pivot="azure-cli"
 
 - You need Azure CLI version 2.2.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].

@@ -94,3 +94,12 @@ groups:
     title: AKS-managed Azure Container Registry
   - id: byo-acr
     title: Bring your own (BYO) Azure Container Registry
+# Owner: schaffererin
+- id: azure-cli-or-arm
+  title: Choose a deployment method
+  prompt: Choose a deployment method
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: arm
+    title: ARM template
