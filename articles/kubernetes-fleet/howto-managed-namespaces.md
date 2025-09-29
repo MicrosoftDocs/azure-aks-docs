@@ -6,6 +6,8 @@ ms.author: stumpaudra
 ms.topic: how-to
 ms.date: 09/22/2025
 ms.service: azure-kubernetes-fleet-manager
+zone_pivot_groups: azure-portal-azure-cli
+
 # Customer intent: "As a platform admin, I want to define a namespace and deploy it across selected fleet clusters so I can delegate application teams access to resources on any cluster where the namespace exists."
 ---
 # Use Azure Kubernetes Fleet Manager Managed Namespaces for multi-tenancy across multiple clusters (preview).
@@ -38,7 +40,7 @@ This enables teams to work within their allocated resources across any member cl
   az extension update --name fleet
   ```
   
-  Confirm the fleet extension version is 1.7.0
+  Confirm the fleet extension version is 1.7.0:
 
   ```azurecli-interactive
   az extension show --name fleet
@@ -62,8 +64,7 @@ This enables teams to work within their allocated resources across any member cl
   az account set --subscription ${SUBSCRIPTION_ID}
   ```
 
-zone_pivot_groups: azure-portal-azure-CLI
-:::zone target="docs" pivot="azure-CLI"
+:::zone target="docs" pivot="azure-cli"
 
 ## Creating a new multi-cluster managed namespace 
 
@@ -103,6 +104,8 @@ Specify the full list of member clusters you want the namespace deployed to, inc
 **To remove member clusters:**
 Specify the list of member clusters you want the namespace to remain on, excluding any clusters you wish to remove. The namespace will be removed from clusters not in the list.
 
+In this example, the namespace will be deployed to `clusterA`, `clusterB`, and `clusterC`.
+
 ```azurecli-interactive
 az fleet namespace create \
     --name myManagedNamespace \
@@ -110,8 +113,6 @@ az fleet namespace create \
     --resource-group $GROUP \
     --member-cluster-names clusterA clusterB clusterC
 ```
-
-In this example, the namespace will be deployed to `clusterA`, `clusterB`, and `clusterC`. To remove a cluster, simply omit it from the `--member-cluster-names` list when you run the command again.
 
 ## Viewing the multi-cluster managed namespace
 After creation, you can view the member clusters where the managed namespace is placed.
@@ -136,6 +137,12 @@ az fleet namespace delete \
 :::zone-end
 
 :::zone target="docs" pivot="azure-portal"
+## Creating a new multi-cluster managed namespace 
+## Delegating access to a user
+## Manage member clusters the namespace is deployed to
+## Viewing the multi-cluster managed namespace
+## Deleting the multi-cluster managed namespace
+
 :::zone-end
 
 

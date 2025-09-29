@@ -20,6 +20,9 @@ This article provides a conceptual overview of multi-cluster managed namespaces.
 * *Allow same namespace*: Allow all network traffic within the same namespace
 * *Deny all*: Deny all network traffic
 
+> [!NOTE]
+> Network policies are applied to each cluster individually and do not control cross-cluster network traffic for the namespace. Each member cluster enforces its own network policy independently within its local namespace instance.
+
 ## Resource quotas
 Platform administrators may use [resource quotas](../aks/concepts-managed-namespaces.md#resource-quotas) to cap CPU and memory consumption at the namespace layer. In multi-cluster managed namespaces, admins can optionally set minimum and maximum boundaries for resources used by workloads in a namespace.
 * CPU requests and limits: Set the minimum and maximum CPU resources that workloads in the namespace can request or consume.
