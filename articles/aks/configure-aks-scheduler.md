@@ -20,7 +20,7 @@ The following examples demonstrate how targeted scheduling mechanisms can be con
 
 ## Limitations
 
-- AKS currently doesn't manage the deployment of third-party schedulers (out-of-tree scheduling plugins).
+- AKS currently doesn't manage the deployment of third-party schedulers or out-of-tree scheduling plugins.
 - AKS doesn't support in-tree scheduling plugins targeting the `aks-system` scheduler. This restriction is in place to help prevent unexpected changes to AKS add-ons enabled on your cluster.
 
 ## Prerequisites
@@ -120,7 +120,7 @@ The following examples demonstrate how targeted scheduling mechanisms can be con
 
 ## Use the node bin-packing scheduling strategy
 
-Node bin-packing is a scheduling strategy that aims to pack as many pods as possible onto a node to maximize resource utilization and reduce the number of underutilized nodes. This strategy helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes.
+Node bin-packing is a scheduling strategy that aims to pack as many pods as possible onto a node to maximize resource utilization and reduce the number of underutilized nodes, within the set configuration. This strategy helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes.
 
 > [!NOTE]
 > In environments where you want to optimize cost by using fewer nodes, this configuration helps ensure that the existing nodes are used more effectively by filling them up with workloads that match their current resource allocation.
