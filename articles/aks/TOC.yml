@@ -246,6 +246,8 @@
           href: generation-2-vm.md
         - name: Add an Azure Spot node pool
           href: spot-node-pool.md
+        - name: Add a node pool with a unique subnet
+          href: node-pool-unique-subnet.md
         - name: Node pool snapshot
           href: node-pool-snapshot.md
         - name: Add a Virtual Machines node pool
@@ -280,6 +282,8 @@
           href: windows-faq.yml
         - name: Connect remotely
           href: rdp.md
+        - name: Create Windows Server node pools with `containerd`
+          href: windows-containerd.md
         - name: Use HostProcess containers
           href: use-windows-hpc.md
         - name: Use Windows Annual Channel for Containers
