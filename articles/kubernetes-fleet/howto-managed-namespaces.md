@@ -62,7 +62,8 @@ This enables teams to work within their allocated resources across any member cl
   az account set --subscription ${SUBSCRIPTION_ID}
   ```
 
-:::zone target="docs" pivot="azure-cli"
+zone_pivot_groups: azure-portal-azure-CLI
+:::zone target="docs" pivot="azure-CLI"
 
 ## Creating a new multi-cluster managed namespace 
 
@@ -85,7 +86,6 @@ az fleet namespace create \
     --delete-policy keep \
     --adoption-policy never
 ```
----
 
 ## Delegating access to a user
 You can now assign access to a user for the managed namespace across member clusters using one of the [built-in roles](./concepts-fleet-managed-namespace.md#multi-cluster-managed-namespace-built-in-roles).
@@ -93,7 +93,6 @@ You can now assign access to a user for the managed namespace across member clus
 ```azurecli-interactive
 az role assignment create --role "Azure Kubernetes Fleet Manager Member Cluster RBAC Writer" --assignee <USER-ENTRA-ID> --scope $FLEET_ID/managedNamespaces/myManagedNamespace
 ```
----
 
 ## Manage member clusters the namespace is deployed to
 Control which member clusters the managed namespace is deployed to by specifying the desired list of member cluster names. Ensure the clusters specified are already members of the fleet.
@@ -111,8 +110,8 @@ az fleet namespace create \
     --resource-group $GROUP \
     --member-cluster-names clusterA clusterB clusterC
 ```
+
 In this example, the namespace will be deployed to `clusterA`, `clusterB`, and `clusterC`. To remove a cluster, simply omit it from the `--member-cluster-names` list when you run the command again.
----
 
 ## Viewing the multi-cluster managed namespace
 After creation, you can view the member clusters where the managed namespace is placed.
@@ -124,8 +123,6 @@ az fleet namespace show \
    --name myManagedNamespace \
    -o table
 ```
----
-
 
 ## Deleting the multi-cluster managed namespace
 To clean up, delete the managed namespace resource.
@@ -136,7 +133,6 @@ az fleet namespace delete \
     --fleet-name $FLEET \
     --resource-group $GROUP
 ```
-
 :::zone-end
 
 :::zone target="docs" pivot="azure-portal"
