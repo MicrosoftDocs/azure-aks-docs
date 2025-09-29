@@ -211,21 +211,21 @@ The following table outlines tool calling observability recommendations:
 
 ## Troubleshooting
 
-### Model preset doesn’t support tool calling: 
+### Model preset doesn’t support tool calling
 
-If you pick a model not on the supported list, tool calling may not work. KAITO docs explicitly list which presets do. (Kaito Project)
+If you pick a model that isn't on the supported list, tool calling might not work. Make sure you review the KAITO documentation, which explicitly lists which presets support tool calling.
 
 ### Misaligned runtime
 
-KAITO inference must be using vLLM runtime for tool calling (transformers runtime generally doesn’t support tool calling in KAITO). (Kaito Project)
+The KAITO inference must use vLLM runtime for tool calling (transformers runtime generally doesn’t support tool calling in KAITO).
 
 ### Network / endpoint issues
 
-If port forwarding, ensure service ports are correctly forwarded. If MCP server unreachable, will error out.
+If port-forwarding, ensure service ports are correctly forwarded. If the MCP server is unreachable, will error out.
 
 ### Timeouts
 
-MCP server calls might take time; make sure the adapter / client timeout is sufficiently high.
+MCP server calls might take time. Make sure the adapter / client timeout is sufficiently high.
 
 ### Authentication
 
