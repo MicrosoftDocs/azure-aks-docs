@@ -1,6 +1,6 @@
 ---
-title: Use Azure Kubernetes Fleet Manager Managed Namespaces to manage workloads across multiple clusters. 
-description: Learn how to use multi-cluster managed namespace to isolate and manage workloads across multiple fleet members.
+title: Use Azure Kubernetes Fleet Manager Managed Namespaces for multi-tenancy across multiple clusters.
+description: Learn how to use multi-cluster managed namespaces to define resource quotas and network policies as well as delegating user access for namespaces on multiple clusters.
 author: audrastump
 ms.author: stumpaudra
 ms.topic: how-to
@@ -8,7 +8,7 @@ ms.date: 09/22/2025
 ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a platform admin, I want to define a namespace and deploy it across selected fleet clusters so I can delegate application teams access to resources on any cluster where the namespace exists."
 ---
-# Use Azure Kubernetes Fleet Manager Multi-Cluster Managed Namespaces to manage workloads across multiple clusters (preview).
+# Use Azure Kubernetes Fleet Manager Managed Namespaces for multi-tenancy across multiple clusters (preview).
 Multi-cluster managed namespaces provide a centralized, Azure-native way to isolate workloads across several member clusters within a fleet. Managed namespaces allow platform admins to configure resource quotas, user access, and network policies across all clusters where the namespace is placed. Teams or developers can access resources in namespaces to which they have been delegated access.
 
 ## Prerequisites

@@ -21,7 +21,7 @@ Fleet Manager supports the following scenarios:
 
 * Join AKS clusters across Azure regions and subscriptions as member clusters.
 
-* Enforce resource quotas, network policies, and assign role based access at the namespace level across multiple clusters with managed namespaces.
+* Use managed namespaces to enforce resource quotas, network policies, and assign role based access at the namespace level across multiple clusters.
 
 * Safely and consistently apply Kubernetes version and node image upgrades across multiple clusters with [update runs](./concepts-update-orchestration.md), attaching reusable update strategies to control the order and timing of cluster updates.
 

@@ -1,5 +1,5 @@
 ---
-title: "Multi-cluster Managed Namespaces"
+title: "Use Managed Namespaces to control user access and resource quotas across multiple clusters (preview)"
 description: This article provides a conceptual overview of multi-cluster managed namespaces (preview) using an Azure Kubernetes Service (AKS) Fleet Manager.
 ms.date: 09/16/2025
 author: audrastump
@@ -8,7 +8,7 @@ ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
 # Customer intent: "As a platform admin, I want to define a namespace and deploy it across selected fleet clusters so I can delegate application teams access to resources on any cluster where the namespace exists."
 ---
-# Overview of Multi-cluster Managed Namespaces (preview)
+# Use Managed Namespaces to control user access and resource quotas across multiple clusters (preview)
 
 This article provides a conceptual overview of multi-cluster managed namespaces. AKS managed namespaces provide a way to logically isolate workloads within a single cluster. Multi-cluster managed namespaces extend this capability across multiple AKS clusters in a fleet. Using multi-cluster managed namespaces, platform administrators can define resource quotas, enforce network policy, and control access to namespace resources across multiple clusters within a fleet.
 
