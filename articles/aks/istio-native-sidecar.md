@@ -22,7 +22,7 @@ Native sidecar mode became the default for Istio [starting in version 1.27][isti
 ## Default behavior
 Existing clusters with Istio add-on using the preview `IstioNativeSidecarModePreview` feature flag retain their current native sidecar status regardless of cluster version or Istio add-on revision.
 
-Starting with AKS 1.33 and Istio add-on `asm-1-28`, AKS service mesh add-on uses native sidecar by default for the Envoy proxy. Whether this setting applies depends on your cluster version, ASM add-on revision, and whether the add-on was newly installed or upgraded.
+Starting with AKS 1.33 and Istio add-on `asm-1-28`, AKS service mesh add-on uses native sidecar by default for the Envoy proxy. This setting's applicability is determined by your cluster version, the ASM add-on revision, and whether the add-on was newly installed or upgraded
 
 | AKS Version       | ASM Version       | Add-on Install Behavior                 | Upgrade Behavior                               |
 |-------------------|-------------------|--------------------------------------|------------------------------------------------|
@@ -50,15 +50,9 @@ For a new service mesh installation on an existing cluster >= version AKS 1.33, 
 
 
 ## Existing clusters
-This section describes how to check native sidecar feature status or enable it on an existing.
+This section describes how to check native sidecar feature status or enable it on an existing cluster.
 
 ### Check feature status
-
-The AKS cluster needs to be reconciled with the [az aks update][az-aks-update] command.
-
-```az
-az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER
-```
 
 When native sidecar mode is enabled, environment variable `ENABLE_NATIVE_SIDECARS` appears with value `true` in Istio's control plane pod template. Use the following command to check `istiod` deployment.
 
