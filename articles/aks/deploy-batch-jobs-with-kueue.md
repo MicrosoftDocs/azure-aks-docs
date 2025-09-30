@@ -26,7 +26,7 @@ To learn more about Kueue and common uses cases for batch workload administrator
 
 ## Define a ResourceFlavor object
 
-In Kueue, a ResourceFlavors enables fine-grained resource management by associating workloads with specific nodes, taints, tolerations, or availability zones. For nodes, `ResourceFlavors` can define the characteristics like pricing, availability, brands, models, and architecture (i.e. x86 versus ARM CPUs). A `ClusterQueue` uses these flavors to manage quotas and admission policies for workloads.
+In Kueue, a ResourceFlavors enables fine-grained resource management by associating workloads with specific nodes, taints, tolerations, or availability zones. For nodes, `ResourceFlavors` can define the characteristics like pricing, availability, brands, models, and architecture (that is, x86 versus ARM CPUs). A `ClusterQueue` uses these flavors to manage quotas and admission policies for workloads.
 
 This configuration defines a `ResourceFlavor` without any labels or taints, known as an empty `ResourceFlavor`. This configuration is perfect when quotas for different flavors don't need to be managed.
 
@@ -105,7 +105,7 @@ This sample `ClusterQueue` defines:
    sample-jobs   general   0
    ```
 > [!NOTE]
-> The ClusterQueue isn't ready for use until a `ResourceFlavor` object has also been configured. If you create a ClusterQueue without any existing ResourceFlavor, workloads referencing it will be marked as `Inadmissible`.
+> The `ClusterQueue` isn't ready for use until a `ResourceFlavor` object is configured. If you create a `ClusterQueue` without any existing `ResourceFlavor`, workloads referencing it are marked as `Inadmissible`.
 
 ## Create a LocalQueue
 
@@ -155,7 +155,7 @@ This sample `LocalQueue` configures the following settings:
 
 ## Create 2 batch jobs
 
-This configuration defines two Kubernetes batch jobs submitted to the batch-jobs namespace and assigned to the sample-queue managed by Kueue. Both jobs are single-instance (parallelism: 1, completions: 1) and are configured with `Never` restart policy. The fields `parallelism` and `completions` control how many pods are run and how the job is considered complete. So `parallelism` and `completions` of 1 means that one pod can run at once, and the job will be marked complete once one pod finishes successfully, per batch job.
+This configuration defines two Kubernetes batch jobs submitted to the batch-jobs namespace and assigned to the sample-queue managed by Kueue. Both jobs are single-instance (parallelism: 1, completions: 1) and are configured with `Never` restart policy. The fields `parallelism` and `completions` control how many pods are run and how the job is considered complete. So `parallelism` and `completions` of 1 means that one pod can run at once, and the job is marked as complete once one pod finishes successfully, per batch job.
 
 * Job test-batch-1: Requests one CPU and 500Mi memory
 * Job test-batch-2: Requests two CPUs and 1Gi memory
