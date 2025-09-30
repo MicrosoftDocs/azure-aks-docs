@@ -20,6 +20,8 @@ Starting from Kubernetes version 1.29, [sidecar containers][k8s-native-sidecar-s
 Native sidecar mode became the default for Istio [starting in version 1.27][istio-default-native-sidecar]. The Istio-based service mesh on AKS aligns with this behavior with minimal interruption for existing customers.
 
 ## Default Behavior
+Existing clusters with Istio add-on using the preview `IstioNativeSidecarModePreview` feature flag retain their current native sidecar status regardless of cluster version or Istio add-on revision.
+
 Starting with AKS 1.33 and Istio add-on `asm-1-28`, AKS service mesh add-on uses native sidecar by default for the Envoy proxy. Whether this setting applies depends on your cluster version, ASM add-on revision, and whether the add-on was newly installed or upgraded.
 
 | AKS Version       | ASM Version       | Add-on Install Behavior                 | Upgrade Behavior                               |
@@ -28,6 +30,7 @@ Starting with AKS 1.33 and Istio add-on `asm-1-28`, AKS service mesh add-on uses
 | 1.33+             | < `asm-1-27`       | Disabled                             | Disabled                                       |
 | 1.33+             | `asm-1-27`         | Enabled (transition release)         | Disabled (upgrade does not auto-enable)       |
 | 1.33+             | `asm-1-28`+        | Enabled                              | Enabled (by mesh or cluster upgrade to required versions)         |
+
 
 # New cluster
 When creating a new AKS cluster with the [az aks create][az-aks-create] command, choose version `1.33` or newer and Istio `asm-1-27` or newer. The new cluster will have native sidecar mode enabled automatically.
@@ -43,10 +46,42 @@ az aks create \
     ...
 ```
 
+
 # Existing cluster
 This section describes how to check native sidecar feature status or enable it on an existing.
 
+## Check native sidecar feature status on Istio control plane
+
+The AKS cluster needs to be reconciled with the [az aks update][az-aks-update] command.
+
+```bash
+az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER
+```
+
+When native sidecar mode is enabled, environment variable `ENABLE_NATIVE_SIDECARS` appears with value `true` in Istio's control plane pod template. Use the following command to check `istiod` deployment.
+
+```bash
+kubectl get deployment -l app=istiod -n aks-istio-system -o json | jq '.items[].spec.template.spec.containers[].env[] | select(.name=="ENABLE_NATIVE_SIDECARS")'
+```
+
+## Check sidecar injection
+
+If native sidecar mode is successfully enabled, the `istio-proxy` container is shown as an init container. Use the following command to check sidecar injection:
+
+```bash
+kubectl get pods -o "custom-columns=NAME:.metadata.name,INIT:.spec.initContainers[*].name,CONTAINERS:.spec.containers[*].name"
+```
+
+The `istio-proxy` container should be shown as an init container.
+
+```bash
+NAME                     INIT                     CONTAINERS
+sleep-7656cf8794-5b5j4   istio-init,istio-proxy   sleep
+```
+
 ## Check prerequisites
+If native sidecar is not enabled, it is likely one of the version prerequisites have not been met.
+
 1. Check that the AKS cluster's Kubernetes control plane version is 1.33 or higher using [az aks show][az-aks-show].
 
    ```azurecli-interactive
@@ -76,35 +111,6 @@ This section describes how to check native sidecar feature status or enable it o
     
 
 3. For a new service mesh installation, select `asm-1-27` or newer during [installation][install-istio-addon].
-
-### Check native sidecar feature status on Istio control plane
-
-The AKS cluster needs to be reconciled with the [az aks update][az-aks-update] command.
-
-```bash
-az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER
-```
-
-When native sidecar mode is enabled, environment variable `ENABLE_NATIVE_SIDECARS` appears with value `true` in Istio's control plane pod template. Use the following command to check `istiod` deployment.
-
-```bash
-kubectl get deployment -l app=istiod -n aks-istio-system -o json | jq '.items[].spec.template.spec.containers[].env[] | select(.name=="ENABLE_NATIVE_SIDECARS")'
-```
-
-### Check sidecar injection
-
-If native sidecar mode is successfully enabled, the `istio-proxy` container is shown as an init container. Use the following command to check sidecar injection:
-
-```bash
-kubectl get pods -o "custom-columns=NAME:.metadata.name,INIT:.spec.initContainers[*].name,CONTAINERS:.spec.containers[*].name"
-```
-
-The `istio-proxy` container should be shown as an init container.
-
-```bash
-NAME                     INIT                     CONTAINERS
-sleep-7656cf8794-5b5j4   istio-init,istio-proxy   sleep
-```
 
 ## Next steps
 
