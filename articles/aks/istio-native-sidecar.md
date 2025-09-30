@@ -56,13 +56,13 @@ This section describes how to check native sidecar feature status or enable it o
 
 The AKS cluster needs to be reconciled with the [az aks update][az-aks-update] command.
 
-```bash
+```az
 az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER
 ```
 
 When native sidecar mode is enabled, environment variable `ENABLE_NATIVE_SIDECARS` appears with value `true` in Istio's control plane pod template. Use the following command to check `istiod` deployment.
 
-```bash
+```azurecli-interactive
 kubectl get deployment -l app=istiod -n aks-istio-system -o json | jq '.items[].spec.template.spec.containers[].env[] | select(.name=="ENABLE_NATIVE_SIDECARS")'
 ```
 
