@@ -9,7 +9,7 @@ ms.date: 10/1/2025
 # Customer intent: As an application developer, I want to integrate MCP-compliant tools with KAITO inference service(s) on an AKS cluster, so that my LLM-powered applications can securely and reliably invoke external APIs and services through standardized tool calling at scale."
 ---
 
-# Integrate an MCP server and LLM Inference on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on
+# Integrate an MCP server with an LLM Inference Service on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on
 
 In this article, you connect an MCP-compliant tool server with an AI toolchain operator (KAITO) inference workspace on Azure Kubernetes Service (AKS), enabling secure and modular tool calling for LLM applications. You also learn how to validate end-to-end tool invocation by integrating the model with the MCP server and monitoring real-time function execution through structured responses.
 
