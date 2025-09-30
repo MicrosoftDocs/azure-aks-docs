@@ -4,7 +4,11 @@ description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to u
 ms.topic: tutorial
 ms.date: 06/10/2024
 ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell
-#Customer intent: As a developer, I want to learn how to use PaaS services with an Azure Kubernetes Service (AKS) cluster so that I can deploy and manage my applications.
+ms.author: schaffererin
+author: schaffererin
+
+# Customer intent: As a developer, I want to learn how to use PaaS services with an Azure Kubernetes Service (AKS) cluster so that I can deploy and manage my applications.
+
 ---
 
 # Tutorial - Use PaaS services with an Azure Kubernetes Service (AKS) cluster
@@ -189,6 +193,27 @@ In previous tutorials, you used a RabbitMQ container to store orders submitted b
               limits:
                 cpu: 75m
                 memory: 128Mi
+            startupProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 5
+              initialDelaySeconds: 20
+              periodSeconds: 10
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 3
+              initialDelaySeconds: 3
+              periodSeconds: 5
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 5
+              initialDelaySeconds: 3
+              periodSeconds: 3
     ```
 
     > [!NOTE]

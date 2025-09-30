@@ -6,6 +6,7 @@ ms.date: 01/03/2025
 author: davidsmatlak
 ms.author: davidsmatlak
 
+# Customer intent: As a cloud operations engineer, I want to implement node auto-drain in AKS, so that I can protect workloads from disruptions caused by scheduled VM maintenance events.
 ---
 
 # Azure Kubernetes Service (AKS) node auto-drain
@@ -24,6 +25,10 @@ The following table shows the node events for AKS node auto-drain and describes 
 | Redeploy | The VM is scheduled to move to another node. The VM's ephemeral disks are lost. | Cordon and drain. |
 | Preempt | The spot VM is being deleted. The VM's ephemeral disks are lost. | Cordon and drain |
 | Terminate | The VM is scheduled for deletion.| Cordon and drain. |
+
+
+> [!NOTE]
+> The set of events shown in the table and the corresponding actions are the default behavior. The default behavior doesn't require and configuration by the user and can't be disabled.
 
 ## Next steps
 

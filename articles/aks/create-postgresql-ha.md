@@ -1,16 +1,17 @@
 ---
-title: 'Create infrastructure for deploying a highly available PostgreSQL database on AKS'
-description: Create the infrastructure needed to deploy a highly available PostgreSQL database on AKS using the CloudNativePG operator.
+title: 'Create infrastructure for deploying a PostgreSQL database on AKS'
+description: Create the infrastructure needed to deploy a highly available PostgreSQL cluster on Azure Kubernetes Service (AKS) using Azure CLI and the CloudNativePG operator.
 ms.topic: how-to
-ms.date: 06/07/2024
+ms.date: 06/18/2025
 author: kenkilty
 ms.author: kkilty
 ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
+# Customer intent: As a database administrator, I want to create a highly available PostgreSQL database on a managed Kubernetes service, so that I can ensure reliability and scalability of my data storage and access.
 ---
 
-# Create infrastructure for deploying a highly available PostgreSQL database on AKS
+# Create infrastructure for deploying a highly available PostgreSQL database on Azure Kubernetes Service (AKS)
 
-In this article, you create the infrastructure needed to deploy a highly available PostgreSQL database on AKS using the [CloudNativePG (CNPG)](https://cloudnative-pg.io/) operator.
+In this article, you create the infrastructure resources needed to deploy a highly available PostgreSQL database on AKS using the [CloudNativePG (CNPG)](https://cloudnative-pg.io/) operator.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
@@ -29,7 +30,7 @@ export SUFFIX=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 8 | head -
 export LOCAL_NAME="cnpg"
 export TAGS="owner=user"
 export RESOURCE_GROUP_NAME="rg-${LOCAL_NAME}-${SUFFIX}"
-export PRIMARY_CLUSTER_REGION="eastus2"
+export PRIMARY_CLUSTER_REGION="canadacentral"
 export AKS_PRIMARY_CLUSTER_NAME="aks-primary-${LOCAL_NAME}-${SUFFIX}"
 export AKS_PRIMARY_MANAGED_RG_NAME="rg-${LOCAL_NAME}-primary-aksmanaged-${SUFFIX}"
 export AKS_PRIMARY_CLUSTER_FED_CREDENTIAL_NAME="pg-primary-fedcred1-${LOCAL_NAME}-${SUFFIX}"
@@ -47,25 +48,24 @@ export MY_PUBLIC_CLIENT_IP=$(dig +short myip.opendns.com @resolver3.opendns.com)
 
 ## Install required extensions
 
-The `aks-preview`, `k8s-extension` and `amg` extensions provide more functionality for managing Kubernetes clusters and querying Azure resources. Install these extensions using the following [`az extension add`][az-extension-add] commands:
+Install the extensions needed for Kubernetes integration and monitoring:
 
 ```bash
-az extension add --upgrade --name aks-preview --yes --allow-preview true
-az extension add --upgrade --name k8s-extension --yes --allow-preview false
-az extension add --upgrade --name amg --yes --allow-preview false
+az extension add --upgrade --name k8s-extension --yes
+az extension add --upgrade --name amg --yes
 ```
 
-As a prerequisite for utilizing kubectl, it is essential to first install [Krew][install-krew], followed by the installation of the [CNPG plugin][cnpg-plugin]. This will enable the management of the PostgreSQL operator using the subsequent commands.
+As a prerequisite for using `kubectl`, you need to first install [Krew][install-krew], followed by the installation of the [CNPG plugin][cnpg-plugin]. These installations enable the management of the PostgreSQL operator using the subsequent commands.
 
 ```bash
 (
-  set -x; cd "$(mktemp -d)" &&
-  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
-  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
-  KREW="krew-${OS}_${ARCH}" &&
-  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
-  tar zxvf "${KREW}.tar.gz" &&
-  ./"${KREW}" install krew
+    set -x; cd "$(mktemp -d)" &&
+    OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+    ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+    KREW="krew-${OS}_${ARCH}" &&
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+    tar zxvf "${KREW}.tar.gz" &&
+    ./"${KREW}" install krew
 )
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
@@ -152,7 +152,7 @@ The CNPG operator automatically generates a service account called *postgres* th
     ```
 
     > [!NOTE]
-    > If you encounter the error message: `The request may be blocked by network rules of storage account. Please check network rule set using 'az storage account show -n accountname --query networkRuleSet'. If you want to change the default action to apply when no rule matches, please use 'az storage account update'`. Please verify user permissions for Azure Blob Storage and, if **necessary**, elevate your role to `Storage Blob Data Owner` using the commands provided below and after retry the [`az storage container create`][az-storage-container-create] command.
+    > If you encounter the error message: `The request may be blocked by network rules of storage account. Please check network rule set using 'az storage account show -n accountname --query networkRuleSet'. If you want to change the default action to apply when no rule matches, please use 'az storage account update'`. Make sure to verify user permissions for Azure Blob Storage and, if **necessary**, elevate your role to `Storage Blob Data Owner` using the commands provided and after retry the [`az storage container create`][az-storage-container-create] command.
 
     ```bash
     export USER_ID=$(az ad signed-in-user show --query id --output tsv)
@@ -263,7 +263,7 @@ In this section, you create a multizone AKS cluster with a system node pool. The
 You also add a user node pool to the AKS cluster to host the PostgreSQL cluster. Using a separate node pool allows for control over the Azure VM SKUs used for PostgreSQL and enables the AKS system pool to optimize performance and costs. You apply a label to the user node pool that you can reference for node selection when deploying the CNPG operator later in this guide. This section might take some time to complete.
 
 > [!IMPORTANT]  
-> If you opt to use local NVMe as your PostgreSQL storage in the later parts of this guide, you need to choose a VM SKU that supports local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms]. Update `$USER_NODE_POOL_VMSKU` below accordingly.
+> If you opt to use local NVMe as your PostgreSQL storage in the later parts of this guide, you need to choose a VM SKU that supports local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms]. Update `$USER_NODE_POOL_VMSKU` accordingly.
 
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
@@ -301,7 +301,16 @@ You also add a user node pool to the AKS cluster to host the PostgreSQL cluster.
         --output table
     ```
 
-2. Add a user node pool to the AKS cluster using the [`az aks nodepool add`][az-aks-node-pool-add] command.
+2. Wait for the initial cluster operation to complete using the [`az aks wait`][az-aks-wait] command so additional updates, such as adding the user node pool, don’t collide with an in-progress managed-cluster update:
+
+    ```bash
+    az aks wait \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --name $AKS_PRIMARY_CLUSTER_NAME \
+        --created
+    ```
+
+3. Add a user node pool to the AKS cluster using the [`az aks nodepool add`][az-aks-node-pool-add] command.
 
     ```bash
     az aks nodepool add \
@@ -316,9 +325,6 @@ You also add a user node pool to the AKS cluster to host the PostgreSQL cluster.
         --labels workload=postgres \
         --output table
     ```
-
-> [!NOTE]
-> If you receive the error message `"(OperationNotAllowed) Operation is not allowed: Another operation (Updating) is in progress, please wait for it to finish before starting a new operation."` when adding the AKS node pool, please wait a few minutes for the AKS cluster operations to complete and then run the `az aks nodepool add` command.
 
 ## Connect to the AKS cluster and create namespaces
 
@@ -340,11 +346,11 @@ In this section, you get the AKS cluster credentials, which serve as the keys th
     kubectl create namespace $PG_SYSTEM_NAMESPACE --context $AKS_PRIMARY_CLUSTER_NAME
     ```
 
-We will define another environment variable based on your desired storage option, which we will later reference when deploying PostgreSQL.
+You can now define another environment variable based on your desired storage option, which you reference later in the guide when deploying PostgreSQL.
 
 ### [Premium SSD](#tab/pv1)
 
-You can reference the default pre-installed Premium SSD Azure Disks CSI driver storage class:
+You can reference the default preinstalled Premium SSD Azure Disks CSI driver storage class:
 
 ```bash
 export POSTGRES_STORAGE_CLASS="managed-csi-premium"
@@ -379,9 +385,9 @@ To use Premium SSD v2, you can create a custom storage class.
 ### [Local NVMe](#tab/acstor)
 
 > [!IMPORTANT]  
-> Ensure that your cluster is using VM SKUs that support local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms].
+> Ensure that your cluster is using VM SKUs that support local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms]. The below instructions requires Azure Container Storage v2.0.0 or later.
 
-1. Update AKS cluster to install Azure Container Storage on user nodepool
+1. Update AKS cluster to install Azure Container Storage on user node pool.
 
     ```bash
     az aks update \
@@ -393,7 +399,7 @@ To use Premium SSD v2, you can create a custom storage class.
         --azure-container-storage-nodepools $USER_NODE_POOL_NAME
     ```
 
-2. Use the provided Azure Container Storage storage class
+2. Use the provided Azure Container Storage storage class.
 
     ```bash
     cat <<EOF | kubectl apply -f -
@@ -401,14 +407,7 @@ To use Premium SSD v2, you can create a custom storage class.
     kind: StorageClass
     metadata:
         name: acstor-ephemeraldisk-nvme-db
-    parameters:
-        acstor.azure.com/storagepool: ephemeraldisk-nvme
-        hyperconverged: "true"
-        ioTimeout: "60"
-        proto: nvmf
-        repl: "1"
-        enableDBProfile: "true"
-    provisioner: containerstorage.csi.azure.com
+    provisioner: localdisk.csi.acstor.io
     reclaimPolicy: Delete
     volumeBindingMode: WaitForFirstConsumer
     EOF
@@ -573,7 +572,7 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
     kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME \
         --namespace $PG_SYSTEM_NAMESPACE \
         --server-side -f \
-        https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.23/releases/cnpg-1.23.1.yaml
+        https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.27/releases/cnpg-1.27.0.yaml
     ```
 
 2. Verify the operator installation on the AKS cluster using the [`kubectl get`][kubectl-get] command.
@@ -606,26 +605,27 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
 [az-identity-create]: /cli/azure/identity#az-identity-create
 [az-grafana-create]: /cli/azure/grafana#az-grafana-create
 [postgresql-ha-deployment-overview]: ./postgresql-ha-overview.md
-[az-extension-add]: /cli/azure/extension#az_extension_add
-[az-group-create]: /cli/azure/group#az_group_create
-[az-storage-account-create]: /cli/azure/storage/account#az_storage_account_create
-[az-storage-container-create]: /cli/azure/storage/container#az_storage_container_create
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-group-create]: /cli/azure/group#az-group-create
+[az-storage-account-create]: /cli/azure/storage/account#az-storage-account-create
+[az-storage-container-create]: /cli/azure/storage/container#az-storage-container-create
 [inherit-from-azuread]: https://cloudnative-pg.io/documentation/1.23/appendixes/object_stores/#azure-blob-storage
-[az-storage-account-show]: /cli/azure/storage/account#az_storage_account_show
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[az-monitor-account-create]: /cli/azure/monitor/account#az_monitor_account_create
-[az-monitor-log-analytics-workspace-create]: /cli/azure/monitor/log-analytics/workspace#az_monitor_log_analytics_workspace_create
+[az-storage-account-show]: /cli/azure/storage/account#az-storage-account-show
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[az-monitor-account-create]: /cli/azure/monitor/account#az-monitor-account-create
+[az-monitor-log-analytics-workspace-create]: /cli/azure/monitor/log-analytics/workspace#az-monitor-log-analytics-workspace-create
 [azure-managed-grafana-pricing]: https://azure.microsoft.com/pricing/details/managed-grafana/
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-node-pool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-node-pool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [kubectl-create-namespace]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_namespace/
-[az-aks-enable-addons]: /cli/azure/aks#az_aks_enable_addons
+[az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
 [kubectl-get]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-network-public-ip-create]: /cli/azure/network/public-ip#az_network_public_ip_create
-[az-network-public-ip-show]: /cli/azure/network/public-ip#az_network_public_ip_show
-[az-group-show]: /cli/azure/group#az_group_show
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-network-public-ip-create]: /cli/azure/network/public-ip#az-network-public-ip-create
+[az-network-public-ip-show]: /cli/azure/network/public-ip#az-network-public-ip-show
+[az-aks-wait]: /cli/azure/aks#az-aks-wait
+[az-group-show]: /cli/azure/group#az-group-show
 [helm-repo-add]: https://helm.sh/docs/helm/helm_repo_add/
 [helm-upgrade]: https://helm.sh/docs/helm/helm_upgrade/
 [kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/

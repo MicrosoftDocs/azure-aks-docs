@@ -6,6 +6,7 @@ ms.date: 06/20/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: As a developer migrating an event-driven workflow from AWS to Azure, I want to update the application code and implement Azure SDKs for data access and authentication, so that I can successfully replicate the workload and utilize Azure services effectively.
 ---
 
 # Update application code for the event-driven workflow (EDW) workload

@@ -7,7 +7,9 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: mvc, subject-armbicep, devx-track-bicep, devx-track-azurecli
-#Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+
+# Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Bicep
@@ -416,11 +418,11 @@ To deploy the application, you use a manifest file to create all the objects req
       type: LoadBalancer
     ```
 
-    For a breakdown of YAML manifest files, see [Deployments and YAML manifests](../concepts-clusters-workloads.md#deployments-and-yaml-manifests).
+    For a breakdown of YAML manifest files, see [Deployments and YAML manifests](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
 
     If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
-1. Deploy the application using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest.
+2. Deploy the application using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest.
 
     ```console
     kubectl apply -f aks-store-quickstart.yaml
@@ -531,4 +533,3 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [az-sshkey-create]: /cli/azure/sshkey#az_sshkey_create
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-

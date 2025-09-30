@@ -1,12 +1,13 @@
 ---
 title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Azure CLI'
-description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) using Azure CLI.
+description: Learn how to deploy an Azure Kubernetes Service cluster (AKS) and deploy an application using Azure CLI.
 ms.topic: quickstart
-ms.date: 04/09/2024
+ms.date: 08/19/2025
 author: davidsmatlak
 ms.author: davidsmatlak
-ms.custom: H1Hack27Feb2017, mvc, devcenter, devx-track-azurecli, mode-api, innovation-engine, linux-related-content
-#Customer intent: As a developer or cluster operator, I want to deploy an AKS cluster and deploy an application so I can see how to run applications using the managed Kubernetes service in Azure.
+ms.custom: H1Hack27Feb2017, mvc, devcenter, devx-track-azurecli, mode-api, innovation-engine, linux-related-content, quarterly
+
+# Customer intent: As a developer or cluster operator, I want to deploy an AKS cluster and deploy an application so I can see how to run applications using the managed Kubernetes service in Azure.
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Azure CLI
@@ -16,10 +17,10 @@ ms.custom: H1Hack27Feb2017, mvc, devcenter, devx-track-azurecli, mode-api, innov
 Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you quickly deploy and manage clusters. In this quickstart, you learn how to:
 
 - Deploy an AKS cluster using the Azure CLI.
-- Run a sample multi-container application with a group of microservices and web front ends simulating a retail scenario.
+- Run a sample multi-container application with a group of microservices and web front ends that simulate a retail scenario.
 
 > [!NOTE]
-> To get started with quickly provisioning an AKS cluster, this article includes steps to deploy a cluster with default settings for evaluation purposes only. Before deploying a production-ready cluster, we recommend that you familiarize yourself with our [baseline reference architecture][baseline-reference-architecture] to consider how it aligns with your business requirements.
+> This article includes steps to deploy a cluster with default settings for evaluation purposes only. Before you deploy a production-ready cluster, we recommend that you familiarize yourself with our [baseline reference architecture][baseline-reference-architecture] to consider how it aligns with your business requirements.
 
 ## Before you begin
 
@@ -29,40 +30,58 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-- This article requires version 2.0.64 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
-- Make sure that the identity you're using to create your cluster has the appropriate minimum permissions. For more details on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
+- Make sure that the identity you're using to create your cluster has the appropriate minimum permissions. For more information on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
 - If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [az account set](/cli/azure/account#az-account-set) command. For more information, see [How to manage Azure subscriptions – Azure CLI](/cli/azure/manage-azure-subscriptions-azure-cli?tabs=bash#change-the-active-subscription).
+- Dependent upon your Azure subscription, you might need to request a vCPU quota increase. For more information, see [Increase VM-family vCPU quotas](/azure/quotas/per-vm-quota-requests).
+
+## Register resource providers
+
+You might need to register resource providers in your Azure subscription. For example, `Microsoft.ContainerService` is required. 
+
+Run the following command to check the registration status. 
+
+```azurecli-interactive
+az provider show --namespace Microsoft.ContainerService --query registrationState
+```
+
+If necessary, register the resource provider.
+
+```azurecli-interactive
+az provider register --namespace Microsoft.ContainerService
+```
 
 ## Define environment variables
 
-Define the following environment variables for use throughout this quickstart:
+Define the following environment variables for use throughout this quickstart.
 
 ```azurecli-interactive
 export RANDOM_ID="$(openssl rand -hex 3)"
 export MY_RESOURCE_GROUP_NAME="myAKSResourceGroup$RANDOM_ID"
-export REGION="westeurope"
+export REGION="westus"
 export MY_AKS_CLUSTER_NAME="myAKSCluster$RANDOM_ID"
 export MY_DNS_LABEL="mydnslabel$RANDOM_ID"
 ```
+
+The `RANDOM_ID` variable's value is a six character alphanumeric value appended to the resource group and cluster name so that the names are unique. Use the `echo` command to view variable values like `echo $RANDOM_ID`.
 
 ## Create a resource group
 
 An [Azure resource group][azure-resource-group] is a logical group in which Azure resources are deployed and managed. When you create a resource group, you're prompted to specify a location. This location is the storage location of your resource group metadata and where your resources run in Azure if you don't specify another region during resource creation.
 
-Create a resource group using the [`az group create`][az-group-create] command.
+Create a resource group using the [az group create][az-group-create] command.
 
 ```azurecli-interactive
 az group create --name $MY_RESOURCE_GROUP_NAME --location $REGION
 ```
 
-Results:
+The result looks like the following example.
 <!-- expected_similarity=0.3 -->
-```JSON
+```output
 {
-  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myAKSResourceGroupxxxxxx",
-  "location": "eastus",
+  "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myAKSResourceGroup<randomIDValue>",
+  "location": "westus",
   "managedBy": null,
-  "name": "testResourceGroup",
+  "name": "myAKSResourceGroup<randomIDValue>",
   "properties": {
     "provisioningState": "Succeeded"
   },
@@ -73,14 +92,14 @@ Results:
 
 ## Create an AKS cluster
 
-Create an AKS cluster using the [`az aks create`][az-aks-create] command. The following example creates a cluster with one node and enables a system-assigned managed identity.
+Create an AKS cluster using the [az aks create][az-aks-create] command. The following example creates a cluster with one node and enables a system-assigned managed identity.
 
 ```azurecli-interactive
 az aks create \
-    --resource-group $MY_RESOURCE_GROUP_NAME \
-    --name $MY_AKS_CLUSTER_NAME \
-    --node-count 1 \
-    --generate-ssh-keys
+  --resource-group $MY_RESOURCE_GROUP_NAME \
+  --name $MY_AKS_CLUSTER_NAME \
+  --node-count 1 \
+  --generate-ssh-keys
 ```
 
 > [!NOTE]
@@ -88,7 +107,7 @@ az aks create \
 
 ## Connect to the cluster
 
-To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [`az aks install-cli`][az-aks-install-cli] command.
+To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [az aks install-cli][az-aks-install-cli] command.
 
 1. Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
@@ -104,19 +123,19 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
 
 ## Deploy the application
 
-To deploy the application, you use a manifest file to create all the objects required to run the [AKS Store application](https://github.com/Azure-Samples/aks-store-demo). A [Kubernetes manifest file][kubernetes-deployment] defines a cluster's desired state, such as which container images to run. The manifest includes the following Kubernetes deployments and services:
+To deploy the application, you use a manifest file to create all the objects required to run the [AKS Store application](https://github.com/Azure-Samples/aks-store-demo). A Kubernetes manifest file defines a cluster's desired state, such as which container images to run. The manifest includes the following Kubernetes deployments and services:
 
 :::image type="content" source="media/quick-kubernetes-deploy-portal/aks-store-architecture.png" alt-text="Screenshot of Azure Store sample architecture." lightbox="media/quick-kubernetes-deploy-portal/aks-store-architecture.png":::
 
-- **Store front**: Web application for customers to view products and place orders.
-- **Product service**: Shows product information.
-- **Order service**: Places orders.
-- **Rabbit MQ**: Message queue for an order queue.
+- Store front: Web application for customers to view products and place orders.
+- Product service: Shows product information.
+- Order service: Places orders.
+- `RabbitMQ`: Message queue for an order queue.
 
 > [!NOTE]
-> We don't recommend running stateful containers, such as Rabbit MQ, without persistent storage for production. These are used here for simplicity, but we recommend using managed services, such as Azure CosmosDB or Azure Service Bus.
+> We don't recommend running stateful containers, such as `RabbitMQ`, without persistent storage for production. We use it here for simplicity, but we recommend using managed services, such as Azure CosmosDB or Azure Service Bus.
 
-1. Create a file named `aks-store-quickstart.yaml` and copy in the following manifest:
+1. Create a file named _aks-store-quickstart.yaml_ and copy in the following manifest.
 
     ```yaml
     apiVersion: apps/v1
@@ -174,7 +193,7 @@ To deploy the application, you use a manifest file to create all the objects req
         [rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0].
     kind: ConfigMap
     metadata:
-      name: rabbitmq-enabled-plugins            
+      name: rabbitmq-enabled-plugins
     ---
     apiVersion: v1
     kind: Service
@@ -264,7 +283,7 @@ To deploy the application, you use a manifest file to create all the objects req
                 memory: 50Mi
               limits:
                 cpu: 75m
-                memory: 128Mi    
+                memory: 128Mi
     ---
     apiVersion: v1
     kind: Service
@@ -300,7 +319,7 @@ To deploy the application, you use a manifest file to create all the objects req
             image: ghcr.io/azure-samples/aks-store-demo/product-service:latest
             ports:
             - containerPort: 3002
-            env: 
+            env:
             - name: AI_SERVICE_URL
               value: "http://ai-service:5001/"
             resources:
@@ -360,7 +379,7 @@ To deploy the application, you use a manifest file to create all the objects req
             ports:
             - containerPort: 8080
               name: store-front
-            env: 
+            env:
             - name: VUE_APP_ORDER_SERVICE_URL
               value: "http://order-service:3000/"
             - name: VUE_APP_PRODUCT_SERVICE_URL
@@ -407,11 +426,11 @@ To deploy the application, you use a manifest file to create all the objects req
       type: LoadBalancer
     ```
 
-    For a breakdown of YAML manifest files, see [Deployments and YAML manifests](../concepts-clusters-workloads.md#deployments-and-yaml-manifests).
+    For a breakdown of YAML manifest files, see [Deployments and YAML manifests](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
 
-    If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
+    If you create and save the YAML file locally, then you can upload the manifest file to your default directory in Cloud Shell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
-1. Deploy the application using the [`kubectl apply`][kubectl-apply] command and specify the name of your YAML manifest.
+2. Deploy the application using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest.
 
     ```azurecli-interactive
     kubectl apply -f aks-store-quickstart.yaml
@@ -466,24 +485,29 @@ Results:
 </html>
 ```
 
-```OUTPUT
+```output
 echo "You can now visit your web server at $IP_ADDRESS"
 ```
+
+To view the application website, open a browser and enter the IP address. The page looks like the following example.
 
 :::image type="content" source="media/quick-kubernetes-deploy-cli/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="media/quick-kubernetes-deploy-cli/aks-store-application.png":::
 
 ## Delete the cluster
 
-If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up unnecessary resources to avoid Azure charges. You can remove the resource group, container service, and all related resources using the [`az group delete`][az-group-delete] command.
+If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up unnecessary resources to avoid Azure billing charges. You can remove the resource group, container service, and all related resources using the [az group delete][az-group-delete] command.
 
-> [!NOTE]
-> The AKS cluster was created with a system-assigned managed identity, which is the default identity option used in this quickstart. The platform manages this identity so you don't need to manually remove it.
+```azurecli-interactive
+az group delete --name $MY_RESOURCE_GROUP_NAME
+```
+
+The AKS cluster was created with a system-assigned managed identity, which is the default identity option used in this quickstart. The platform manages this identity so you don't need to manually remove it.
 
 ## Next steps
 
-In this quickstart, you deployed a Kubernetes cluster and then deployed a simple multi-container application to it. This sample application is for demo purposes only and doesn't represent all the best practices for Kubernetes applications. For guidance on creating full solutions with AKS for production, see [AKS solution guidance][aks-solution-guidance].
+In this quickstart, you deployed a Kubernetes cluster and then deployed a simple multi-container application to it. This sample application is for demo purposes only and doesn't represent all the best practices for Kubernetes applications. For guidance about how to create full solutions with AKS for production, see [AKS solution guidance][aks-solution-guidance].
 
-To learn more about AKS and walk through a complete code-to-deployment example, continue to the Kubernetes cluster tutorial.
+To learn more about AKS and do a complete code-to-deployment example, continue to the Kubernetes cluster tutorial.
 
 > [!div class="nextstepaction"]
 > [AKS tutorial][aks-tutorial]
@@ -502,6 +526,5 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-group-create]: /cli/azure/group#az-group-create
 [az-group-delete]: /cli/azure/group#az-group-delete
-[kubernetes-deployment]: ../concepts-clusters-workloads.md#deployments-and-yaml-manifests
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json

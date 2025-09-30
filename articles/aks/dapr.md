@@ -8,6 +8,7 @@ ms.topic: how-to
 ms.date: 01/16/2025
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
+# Customer intent: As a developer, I want to install the Dapr extension on my Azure Kubernetes Service (AKS) cluster, so that I can efficiently build and manage resilient microservices using Dapr's capabilities for communication and state management.
 ---
 
 # Install the Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes

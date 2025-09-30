@@ -1,46 +1,47 @@
 ---
-title: Create the infrastructure for running a Valkey cluster on Azure Kubernetes Service (AKS)
+title: Create the Infrastructure for Running a Valkey Cluster on Azure Kubernetes Service (AKS)
 description: In this article, you create the infrastructure for running a Valkey cluster on Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 08/15/2024
+ms.date: 09/15/2025
 author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-cli-or-terraform
 ms.custom: 'stateful-workloads'
+# Customer intent: As a cloud architect, I want to set up the infrastructure for a Valkey cluster on a Kubernetes service, so that I can deploy and manage stateful applications efficiently in a scalable environment.
 ---
 
 # Create the infrastructure for running a Valkey cluster on Azure Kubernetes Service (AKS)
 
-In this article, we create the infrastructure resources required to run a Valkey cluster on Azure Kubernetes Service (AKS).
+This guide walks through the complete setup process for running a Valkey cluster on AKS. This process includes configuring environment variables, provisioning core Azure resources (such as a resource group, Azure Key Vault, and Azure Container Registry (ACR)), creating an AKS cluster with integrated workload identity and managing secrets. It also covers the creation of a dedicated node pool for Valkey workloads and how to import Valkey images into your private registry. If you prefer infrastructure-as-code, the guide includes an alternative deployment path using Terraform with Azure Verified Modules, ensuring best practices and production readiness.
 
 ## Prerequisites
 
-* If you haven't already, review the [Overview for deploying a Valkey cluster on Azure Kubernetes Service (AKS)][valkey-solution-overview].
-* An Azure subscription. If you don't have one, create a [free account][azure-free-account].
-* Azure CLI version 2.61.0. To install or upgrade, see [Install Azure CLI][install-azure-cli].
-* Helm version 3 or later. To install, see [Installing Helm][install-helm].
-* `kubectl`, which the Azure Cloud Shell installs by default.
-* Docker installed on your local machine. To install, see [Get Docker][install-docker].
+- If you haven't already, review the [Overview for deploying a Valkey cluster on Azure Kubernetes Service (AKS)][valkey-solution-overview].
+- An Azure subscription. If you don't have one, create a [free account][azure-free-account].
+- Azure CLI version 2.61.0. To install or upgrade, see [Install Azure CLI][install-azure-cli].
+- Helm version 3 or later. To install, see [Installing Helm][install-helm].
+- `kubectl`, which the Azure Cloud Shell installs by default.
+- Docker installed on your local machine. To install, see [Get Docker][install-docker].
 
 :::zone pivot="azure-cli"
 
 ## Set environment variables
 
-* Set the required environment variables for use throughout this guide:
+- Set the required environment variables for use throughout this guide:
 
     ```bash
     random=$(echo $RANDOM | tr '[0-9]' '[a-z]')
-    export MY_RESOURCE_GROUP_NAME=myResourceGroup-rg
-    export MY_LOCATION=eastus
-    export MY_ACR_REGISTRY=mydnsrandomname$(echo $random)
+    export MY_RESOURCE_GROUP_NAME=myResourceGroup-rg-$(echo $random)
+    export MY_LOCATION=centralus
+    export MY_ACR_REGISTRY=mydns$(echo $random)
     export MY_KEYVAULT_NAME=vault-$(echo $random)-kv
     export MY_CLUSTER_NAME=cluster-aks
     ```
 
 ## Create a resource group
 
-* Create a resource group using the [`az group create`][az-group-create] command.
+- Create a resource group using the [`az group create`][az-group-create] command.
 
     ```azurecli-interactive
     az group create --name $MY_RESOURCE_GROUP_NAME --location $MY_LOCATION --output table
@@ -56,7 +57,7 @@ In this article, we create the infrastructure resources required to run a Valkey
 
 ## Create an Azure Key Vault instance
 
-* Create an Azure Key Vault instance using the [`az keyvault create`][az-keyvault-create]command.
+- Create an Azure Key Vault instance using the [`az keyvault create`][az-keyvault-create]command. Azure Key Vault securely stores and accessing secrets such as API keys, passwords, certificates, or cryptographic keys.
 
     ```azurecli-interactive
     az keyvault create --name $MY_KEYVAULT_NAME --resource-group $MY_RESOURCE_GROUP_NAME --location $MY_LOCATION --enable-rbac-authorization false --output table
@@ -72,7 +73,7 @@ In this article, we create the infrastructure resources required to run a Valkey
 
 ## Create an Azure Container Registry
 
-* Create an Azure Container Registry to store and manage your container images using the [`az acr create`][az-acr-create] command.
+- Create an Azure Container Registry to store and manage your container images using the [`az acr create`][az-acr-create] command.
 
     ```azurecli-interactive
     az acr create \
@@ -106,7 +107,7 @@ In this step, we create an AKS cluster. We enable the Azure KeyVault Secret Prov
      --tier standard \
      --resource-group $MY_RESOURCE_GROUP_NAME \
      --network-plugin azure  \
-     --node-vm-size Standard_DS4_v2 \
+     --node-vm-size Standard_D4_v3 \
      --node-count 3 \
      --auto-upgrade-channel stable \
      --node-os-upgrade-channel  NodeImage \
@@ -124,18 +125,17 @@ In this step, we create an AKS cluster. We enable the Azure KeyVault Secret Prov
     ```output
     Kind    KubernetesVersion    Location    MaxAgentPools    Name         NodeResourceGroup                         ProvisioningState    ResourceGroup       ResourceUid               SupportPlan
     -----------------------------------------------------------------------  --------------------------  ----------------------  ----------------------------------  ------------------------------------  -------------------------  ------------  ----------------------------------------------------------------  ------  -------------------  ----------  ---------------  -----------  ----------------------------------------  -------------------  ------------------  ------------------------  ------------------
-    cluster-ak-myresourcegroup--9b70ac-hhrizake.portal.hcp.eastus.azmk8s.io  1.28.9                      False                   cluster-ak-myResourceGroup--9b70ac  efecebf9-8894-46b9-9d68-09bfdadc474a  False                      True          cluster-ak-myresourcegroup--9b70ac-hhrizake.hcp.eastus.azmk8s.io Base     1.28                 eastus      100              cluster-aks  MC_myResourceGroup-rg_cluster-aks_eastus  Succeeded            myResourceGroup-rg  66681ad812cd770001814d32  KubernetesOfficial
+    cluster-ak-myresourcegroup--9b70ac-hhrizake.portal.hcp.eastus.azmk8s.io  1.28.9                      False                   cluster-ak-myResourceGroup--9b70ac  a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1  False                      True          cluster-ak-myresourcegroup--9b70ac-hhrizake.hcp.eastus.azmk8s.io Base     1.28                 eastus      100              cluster-aks  MC_myResourceGroup-rg_cluster-aks_eastus  Succeeded            myResourceGroup-rg  b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2  KubernetesOfficial
     ```
 
-2. Get the Identity ID and the Object ID created by the Azure KeyVault Secret Provider Addon, using the [`az aks show`][az-aks-show] command.
+1. Get the identity ID and the object ID created by the Azure KeyVault Secret Provider Add-on using the [`az aks show`][az-aks-show] command.
 
     ```azurecli-interactive
     export userAssignedIdentityID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId --output tsv)
     export userAssignedObjectID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId --output tsv)
-
     ```
 
-3. Assign the `AcrPull` role to the kubelet identity using the [`az role assignment create`][az-role-assignment-create] command.
+1. Assign the `AcrPull` role to the kubelet identity using the [`az role assignment create`][az-role-assignment-create] command.
 
     ```azurecli-interactive
     export KUBELET_IDENTITY=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --output tsv --query identityProfile.kubeletidentity.objectId)
@@ -151,14 +151,14 @@ In this step, we create an AKS cluster. We enable the Azure KeyVault Secret Prov
     ```output
     CreatedBy                             CreatedOn                         Name                                  PrincipalId                           PrincipalName                         PrincipalType     ResourceGroup       RoleDefinitionId                                                                                                                            RoleDefinitionName    Scope                                                                                                                                                        UpdatedBy                             UpdatedOn
     ------------------------------------  --------------------------------  ------------------------------------  ------------------------------------  ------------------------------------  ----------------  ------------------  ------------------------------------------------------------------------------------------------------------------------------------------  --------------------  -----------------------------------------------------------------------------------------------------------------------------------------------------------  ------------------------------------  --------------------------------
-    bbbb1b1b-cc2c-dd3d-ee4e-ffffff5f5f5f  2024-06-11T09:41:36.631310+00:00  04628c5e-371a-49b8-8462-4ecd7f90a43f  6a9a8328-7257-4db2-8c4f-169687f36556  94fa3265-4ac2-4e19-8516-f3e830642ca8  ServicePrincipal  myResourceGroup-rg  /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/providers/Microsoft.Authorization/roleDefinitions/7f951dda-4ed3-4680-a7ca-43fe172d538d  AcrPull               /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myResourceGroup-rg/providers/Microsoft.ContainerRegistry/registries/mydnsrandomnamebbbhe  bbbb1b1b-cc2c-dd3d-ee4e-ffffff5f5f5f  2024-06-11T09:41:36.631310+00:00
+    bbbb1b1b-cc2c-dd3d-ee4e-ffffff5f5f5f  2024-06-11T09:41:36.631310+00:00  00aa00aa-bb11-cc22-dd33-44ee44ee44ee  aaaaaaaa-bbbb-cccc-1111-222222222222  bbbbbbbb-cccc-dddd-2222-333333333333  ServicePrincipal  myResourceGroup-rg  /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/providers/Microsoft.Authorization/roleDefinitions/aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb  AcrPull               /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myResourceGroup-rg/providers/Microsoft.ContainerRegistry/registries/mydnsrandomnamebbbhe  bbbb1b1b-cc2c-dd3d-ee4e-ffffff5f5f5f  2024-06-11T09:41:36.631310+00:00
     ```
 
 ## Create a node pool for the Valkey workload
 
 In this section, we create a node pool dedicated to running the Valkey workload. This node pool has autoscaling disabled and is created with six nodes across two availability zones, because we want to have one secondary per primary in a different zone.
 
-* Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command.
+- Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
     ```azurecli-interactive
     while [ "$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --output tsv --query provisioningState)" != "Succeeded" ]; do echo "waiting for cluster to be ready"; sleep 10; done
@@ -167,7 +167,7 @@ In this section, we create a node pool dedicated to running the Valkey workload.
         --resource-group $MY_RESOURCE_GROUP_NAME \
         --cluster-name  $MY_CLUSTER_NAME \
         --name valkey \
-        --node-vm-size Standard_D4s_v3 \
+        --node-vm-size Standard_D4_v3 \
         --node-count 6 \
         --zones 1 2 3 \
         --output table
@@ -178,14 +178,14 @@ In this section, we create a node pool dedicated to running the Valkey workload.
     ```output
     Count    CurrentOrchestratorVersion    ETag                                  EnableAutoScaling    EnableCustomCaTrust    EnableEncryptionAtHost    EnableFips    EnableNodePublicIp    EnableUltraSsd    KubeletDiskType    MaxPods    Mode    Name    NodeImageVersion                          OrchestratorVersion    OsDiskSizeGb    OsDiskType    OsSku    OsType    ProvisioningState    ResourceGroup       ScaleDownMode    TypePropertiesType       VmSize           WorkloadRuntime
     -------  ----------------------------  ------------------------------------  -------------------  ---------------------  ------------------------  ------------  --------------------  ----------------  -----------------  ---------  ------  ------  ----------------------------------------  ---------------------  --------------  ------------  -------  --------  -------------------  ------------------  ---------------  -----------------------  ---------------  -----------------
-    6        1.28.9                        b7aa8e37-ff39-4ec7-bed0-cb37876416cc  False                False                  False                     False         False                 False             OS                 30         User    valkey  AKSUbuntu-2204gen2containerd-202405.27.0  1.28                   128             Managed       Ubuntu   Linux     Succeeded            myResourceGroup-rg  Delete           VirtualMachineScaleSets  Standard_D4s_v3  OCIContainer
+    6        1.28.9                        aaaa0000-bb11-2222-33cc-444444dddddd  False                False                  False                     False         False                 False             OS                 30         User    valkey  AKSUbuntu-2204gen2containerd-202405.27.0  1.28                   128             Managed       Ubuntu   Linux     Succeeded            myResourceGroup-rg  Delete           VirtualMachineScaleSets  Standard_D4s_v3  OCIContainer
     ```
 
 ## Upload Valkey images to your Azure Container Registry
 
 In this section, we download the Valkey image from Docker Hub and upload it to Azure Container Registry. This step ensures that the image is available in your private registry and can be used in your AKS cluster. We don't recommend consuming the public image in a production environment.
 
-* Import the Valkey image from Dockerhub and upload it to your Azure Container Registry using the [`az acr import`][az-acr-import] command.
+- Import the Valkey image from Dockerhub and upload it to your Azure Container Registry using the [`az acr import`][az-acr-import] command.
 
     ```azurecli-interactive
     az acr import \
@@ -199,7 +199,7 @@ In this section, we download the Valkey image from Docker Hub and upload it to A
 
 :::zone pivot="terraform"
 
-## Deploy the infrastructure with Terraform
+## Deploy Valkey infrastructure with Terraform
 
 To deploy the infrastructure using Terraform, we're going to use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/)[for AKS](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git).
 
@@ -213,7 +213,7 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
     cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads-valkey
     ```
 
-2. Set Valkey variables by creating a `valkey.tfvars` file with the following contents. You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) at this step:
+1. Set Valkey variables by creating a `valkey.tfvars` file with the following contents. You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) at this step:
 
     ```terraform
         acr_task_content = <<-EOF
@@ -236,9 +236,8 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
           }
         }
     ```
-    
 
-3. To deploy the infrastructure, run the Terraform commands.In this step, we set the required variables that will be used when deploying Valkey in the next step.
+1. To deploy the infrastructure, run the Terraform commands.In this step, we set the required variables that will be used when deploying Valkey in the next step.
 
     ```bash
     terraform init
@@ -251,10 +250,11 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
     terraform apply -var-file="valkey.tfvars"
     ```
 
-> [!NOTE]
-> In some cases, the container registry tasks that import Valkey images to the container registry might fail. For more information, see [container-registry-task]. In most cases, retrying resolves the problem.
+    > [!NOTE]
+    > In some cases, the container registry tasks that import Valkey images to the container registry might fail. For more information, see [container-registry-task]. In most cases, retrying resolves the problem.
 
-4. Run the following command to export the Terraform output values as environment variables in the terminal to use them in the next steps:
+1. Run the following command to export the Terraform output values as environment variables in the terminal to use them in the next steps:
+
     ```bash
     export MY_ACR_REGISTRY=$(terraform output -raw acr_registry_name)
     export MY_CLUSTER_NAME=$(terraform output -raw aks_cluster_name)
@@ -269,30 +269,28 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
 
 ## Contributors
 
-*Microsoft maintains this article. The following contributors originally wrote it:*
+_Microsoft maintains this article. The following contributors originally wrote it:_
 
-* Nelly Kiboi | Service Engineer
-* Saverio Proto | Principal Customer Experience Engineer
-* Don High | Principal Customer Engineer
-* LaBrina Loving | Principal Service Engineer
-* Ken Kilty | Principal TPM
-* Russell de Pina | Principal TPM
-* Colin Mixon | Product Manager
-* Ketan Chawda | Senior Customer Engineer
-* Naveed Kharadi | Customer Experience Engineer
-* Erin Schaffer | Content Developer 2
+- Nelly Kiboi | Service Engineer
+- Saverio Proto | Principal Customer Experience Engineer
+- Don High | Principal Customer Engineer
+- LaBrina Loving | Principal Service Engineer
+- Ken Kilty | Principal TPM
+- Russell de Pina | Principal TPM
+- Colin Mixon | Product Manager
+- Ketan Chawda | Senior Customer Engineer
+- Naveed Kharadi | Customer Experience Engineer
+- Erin Schaffer | Content Developer 2
 
 <!-- External links -->
 [install-helm]: https://helm.sh/docs/intro/install/
 [install-docker]: https://docs.docker.com/get-docker/
-[github-azure]: https://github.com/Azure/
 
 <!-- Internal links -->
 [valkey-solution-overview]: ./valkey-overview.md
 [azure-free-account]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-group-create]: /cli/azure/group#az-group-create
-[az-identity-create]: /cli/azure/identity#az-identity-create
 [az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create
 [az-acr-create]: /cli/azure/acr#az-acr-create
 [az-aks-create]: /cli/azure/aks#az-aks-create

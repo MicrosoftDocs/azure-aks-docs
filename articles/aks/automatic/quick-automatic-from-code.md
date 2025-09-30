@@ -1,48 +1,51 @@
 ---
-title: 'Quickstart: Deploy an application to a new Azure Kubernetes Service (AKS) Automatic cluster (preview) from a code repository using Automated Deployments'
-description: Learn how to quickly deploy an application from source code to a new Azure Kubernetes Service (AKS) Automatic (preview) cluster.
+title: 'Quickstart: Deploy an application to a new Azure Kubernetes Service (AKS) Automatic cluster from a code repository using Automated Deployments'
+description: Learn how to quickly deploy an application from source code to a new Azure Kubernetes Service (AKS) Automatic cluster.
 ms.topic: quickstart
 ms.custom: devx-track-azurecli, devx-track-bicepW
-ms.date: 02/07/2025
+ms.date: 08/28/2025
 author: sabbour
 ms.author: asabbour
+# Customer intent: As a developer, I want to automate the deployment of my application to an Azure Kubernetes Service cluster from a code repository, so that I can streamline my CI/CD process and improve the efficiency of my deployment workflows.
 ---
 
-# Quickstart: Deploy an application to a new Azure Kubernetes Service (AKS) Automatic cluster (preview) from a code repository
+# Quickstart: Deploy an application to a new Azure Kubernetes Service (AKS) Automatic cluster from a code repository
 
-**Applies to:** :heavy_check_mark: AKS Automatic (preview)
+**Applies to:** :heavy_check_mark: AKS Automatic
 
 Use [automated deployments][automated-deployments] to build and deploy an application from a code repository to a new or existing AKS Automatic cluster. Automated deployments simplify the process of setting up a GitHub Action workflow to build and deploy your code. Once connected, every new commit you make kicks off the pipeline. Automated deployments build on [draft.sh](https://draft.sh). When you create a new deployment workflow, you can use an existing Dockerfile, generate a Dockerfile, use existing Kubernetes manifests, or generate Kubernetes manifests. The generated manifests are created with security and resiliency best practices in mind.
 
 In this quickstart, you learn to:
 
-- Connect to a code repository
-- Containerize your application
-- Configure Kubernetes manifests
-- Create an AKS Automatic cluster
-- Deploy the application via a pull request
+- Connect to a code repository.
+- Containerize your application.
+- Configure Kubernetes manifests.
+- Create an AKS Automatic cluster.
+- Deploy the application via a pull request.
 
 ## Before you begin
 
-- Register the `AutomaticSKUPreview` feature in your Azure subscription.
 - Have a GitHub account with the application to deploy.
-- The identity creating the cluster should also have the [following permissions on the resource group][Azure-Policy-RBAC-permissions]:
-    - `Microsoft.Authorization/policyAssignments/write`
-    - `Microsoft.Authorization/policyAssignments/read`
-- AKS Automatic clusters require deployment in Azure regions that support at least three [availability zones][availability-zones].
+
+## Limitations
+
+- AKS Automatic clusters require deployment in Azure regions that support at least three [availability zones](/azure/reliability/regions-list).
+- You can only create AKS Automatic clusters in regions where [API Server VNet Integration](../api-server-vnet-integration.md#limited-availability) is generally available (GA).
+- You can't add non-[node auto provisioning node pools](../node-autoprovision.md) to AKS Automatic clusters. There's no effect on existing Automatic clusters that have non-node auto provisioning pools.
+- AKS Automatic only supports the [Azure Linux OS](/azure/azure-linux/intro-azure-linux).
 
 > [!IMPORTANT]
-> AKS Automatic tries to dynamically select a virtual machine size for the `system` node pool based on the capacity available in the subscription. Make sure your subscription has quota for 16 vCPUs of any of the following sizes in the region you're deploying the cluster to: [Standard_D4pds_v5](/azure/virtual-machines/sizes/general-purpose/dpsv5-series), [Standard_D4lds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series), [Standard_D4ads_v5](/azure/virtual-machines/sizes/general-purpose/dadsv5-series), [Standard_D4ds_v5](/azure/virtual-machines/sizes/general-purpose/ddsv5-series), [Standard_D4d_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v4](/azure/virtual-machines/sizes/general-purpose/ddv4-series), [Standard_DS3_v2](/azure/virtual-machines/sizes/general-purpose/dsv3-series), [Standard_DS12_v2](/azure/virtual-machines/sizes/memory-optimized/dv2-dsv2-series-memory). You can [view quotas for specific VM-families and submit quota increase requests](/azure/quotas/per-vm-quota-requests) through the Azure portal.
+> AKS Automatic tries to dynamically select a virtual machine size for the `system` node pool based on the capacity available in the subscription. Make sure your subscription has quota for 16 vCPUs of any of the following sizes in the region you're deploying the cluster to: [Standard_D4lds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series), [Standard_D4ads_v5](/azure/virtual-machines/sizes/general-purpose/dadsv5-series), [Standard_D4ds_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v4](/azure/virtual-machines/sizes/general-purpose/dv4-series), [Standard_DS3_v2](/azure/virtual-machines/sizes/general-purpose/dsv3-series), [Standard_DS12_v2](/azure/virtual-machines/sizes/memory-optimized/dv2-dsv2-series-memory), [Standard_D4alds_v6](/azure/virtual-machines/sizes/general-purpose/daldsv6-series), [Standard_D4lds_v6](/azure/virtual-machines/sizes/general-purpose/dldsv6-series), or [Standard_D4alds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series). You can [view quotas for specific VM-families and submit quota increase requests](/azure/quotas/per-vm-quota-requests) through the Azure portal.
 
 ## Bring your application source code
 
 To deploy an application from a code repository, start at the [Azure portal][azure-portal] home page.
 
-:::image type="content" source="../media/automatic/from-code/automatic-from-app-create-button.png" alt-text="Screenshot showing select 'Deploy application' on the Kubernetes services create menu." lightbox="../media/automatic/from-code/automatic-from-app-create-button.png" :::
+:::image type="content" source="../media/automatic/from-code/deploy-from-code-automatic.png" alt-text="Screenshot showing select 'Deploy application' on the Kubernetes services create menu." lightbox="../media/automatic/from-code/deploy-from-code-automatic.png" :::
 
 1. Search for **Kubernetes services** in the top search bar.
-1. Select [**Kubernetes services**][portal-kubernetes-services] in the search results.
-1. Select the **Create** button and select **Deploy application**.
+2. Select [**Kubernetes services**][portal-kubernetes-services] in the search results.
+3. Select the **Create** button and select **Deploy application**.
 
 ### Connect to source code repository
 
@@ -191,12 +194,12 @@ Once you're done with your cluster, can delete it to avoid incurring Azure charg
 
 ## Next steps
 
-In this quickstart, you deployed an application to a Kubernetes cluster using [AKS Automatic][what-is-aks-automatic] and set up a continuous integration/continious deployment (CI/CD) pipeline from a code repository.
+In this quickstart, you deployed an application to a Kubernetes cluster using [AKS Automatic][what-is-aks-automatic] and set up a continuous integration/continuous deployment (CI/CD) pipeline from a code repository.
 
 To learn more about AKS Automatic, continue to the introduction.
 
 > [!div class="nextstepaction"]
-> [Introduction to Azure Kubernetes Service (AKS) Automatic (preview)][what-is-aks-automatic]
+> [Introduction to Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic]
 
 [what-is-aks-automatic]: ../intro-aks-automatic.md
 [Azure-Policy-RBAC-permissions]: /azure/governance/policy/overview#azure-rbac-permissions-in-azure-policy

@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 02/21/2025
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: "As a Kubernetes administrator, I want to understand the available node images in Azure Kubernetes Service, so that I can select the appropriate OS version and ensure my clusters remain supported and secure."
 ---
 
 # Node images in Azure Kubernetes Service (AKS)
@@ -14,8 +15,15 @@ This article describes the node images available for Azure Kubernetes Service (A
 
 > [!CAUTION]
 > In this article, there are references to Ubuntu OS versions that are being deprecated for AKS.
->- Starting on 17 June 2025, AKS no longer supports Ubuntu 18.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. Migrate to a supported Ubuntu version by [upgrading your node pools](./upgrade-aks-cluster.md) to a supported kubernetes version.  For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues/4873).
->- Starting on 17 March 2027, AKS no longer supports Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. Migrate to a supported Ubuntu version by [upgrading your node pools](./upgrade-aks-cluster.md) to kubernetes version 1.34+. For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues/4874).
+>
+> - Starting on 17 June 2025, AKS no longer supports Ubuntu 18.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. Migrate to a supported Ubuntu version by [upgrading your node pools](./upgrade-aks-cluster.md) to a supported kubernetes version.  For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues/4873).
+> - Starting on 17 March 2027, AKS no longer supports Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. Migrate to a supported Ubuntu version by [upgrading your node pools](./upgrade-aks-cluster.md) to kubernetes version 1.34+. For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues/4874).
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [Retirement of Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Node image releases
 
@@ -72,7 +80,7 @@ The Ubuntu node images are fully validated by AKS and supported by Microsoft, Ca
 | **Ubuntu with containerd and Gen 1** | This is the standard node image for Ubuntu node pools using a VM size that only supports Generation 1. | N/A |
 | **Ubuntu with containerd and Gen 2** | This is the standard node image for Ubuntu node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, this node image is selected. | N/A |
 | **Ubuntu with containerd and FIPS** | This is a variant of the default node image for customers that enable [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md). These images support both Generation 1 and Generation 2. | Not yet supported for Ubuntu 22.04+. Can't be combined with Arm64, Trusted Launch, or CVM. |
-| **Ubuntu with containerd and Arm64** | This is a variant of the default node image for customers that use a VM size that supports [Arm64](./create-node-pools.md). These images support Generation 2 only. | Can't be combined with FIPS, CVM, or Trusted Launch. |
+| **Ubuntu with containerd and Arm64** | This is a variant of the default node image for customers that use a VM size that supports [Arm64](./use-arm64-vms.md). These images support Generation 2 only. | Can't be combined with FIPS, CVM, or Trusted Launch. |
 | **Ubuntu with containerd and CVM** | This is a variant of the default node image for customers that use a [Confidential VM](./use-cvm.md) size. These images support Generation 2 only. | Not yet supported for Ubuntu 22.04+. Can't be combined with FIPS, Arm64, or Trusted Launch. |
 | **Ubuntu with containerd and Trusted Launch** | This is a variant of the default node image for customers that enable [Trusted Launch](./use-trusted-launch.md). These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or CVM. |
 
@@ -84,8 +92,9 @@ The Azure Linux node images are fully validated by AKS and built from source, us
 |--|--|--|
 | **Azure Linux with containerd and Gen 1** | This is the standard node image for Azure Linux node pools using a VM size that only supports Generation 1. | N/A |
 | **Azure Linux with containerd and Gen 2** | This is the standard node image for Azure Linux node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, node image is selected. | N/A |
-| **Azure Linux with containerd and FIPS** | This is a variant of the default node image for customers that enable [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md). These images support both Generation 1 and Generation 2. | Can't be combined with Arm64, Trusted Launch, or Pod Sandboxing. |
-| **Azure Linux with containerd and Arm64** | This is a variant of the default node image for customers that use a VM size that supports [Arm64](./create-node-pools.md). These images support Generation 2 only. | Can't be combined with FIPS, Trusted Launch, or Pod Sandboxing. |
+| **Azure Linux with containerd and FIPS** | This is a variant of the default node image for customers that enable [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md). These images support both Generation 1 and Generation 2. | Can't be combined with Trusted Launch, or Pod Sandboxing. Azure Linux supports a separate image for FIPS and ARM64. |
+| **Azure Linux with containerd and Arm64** | This is a variant of the default node image for customers that use a VM size that supports [Arm64](./use-arm64-vms.md). These images support Generation 2 only. | Can't be combined with Trusted Launch or Pod Sandboxing. Azure Linux supports a separate image for FIPS and ARM64. |
+| **Azure Linux with containerd, FIPS, and Arm64** | This is a variant of the default node image for customers that enable [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md) and use a VM size that supports [Arm64](./use-arm64-vms.md). These images support Generation 2 only. | Can't be combined with Trusted Launch or Pod Sandboxing. |
 | **Azure Linux with containerd and Trusted Launch** | This is a variant of the default node image for customers that enable [Trusted Launch](./use-trusted-launch.md). These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or Pod Sandboxing. |
 | **Azure Linux with containerd and Pod Sandboxing** | This is a variant of the default node image for customers that enable [Pod Sandboxing](./use-pod-sandboxing.md). These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or Trusted Launch. |
 

@@ -6,6 +6,7 @@ ms.author: davidsmatlak
 ms.topic: how-to 
 ms.date: 02/29/2024
 ms.custom: template-how-to, linux-related-content
+# Customer intent: "As a cloud administrator, I want to enable FIPS compliance for AKS node pools, so that I can ensure the security of cryptographic modules and meet regulatory requirements while deploying applications."
 ---
 
 # Enable Federal Information Process Standard (FIPS) for Azure Kubernetes Service (AKS) node pools
@@ -17,6 +18,9 @@ The Federal Information Processing Standard (FIPS) 140-2 is a US government stan
 >- Starting on 17 June 2025, AKS will no longer support Ubuntu 18.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. [Upgrade your node pools](./upgrade-aks-cluster.md) to a supported kubernetes version to migrate to a supported Ubuntu version.
 >- Starting on 17 March 2027, AKS will no longer support Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. [Upgrade your node pools](./upgrade-aks-cluster.md) to kubernetes version 1.34+ to migrate to a supported Ubuntu version.
 >For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues)
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Prerequisites
 

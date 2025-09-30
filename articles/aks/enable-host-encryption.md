@@ -4,14 +4,17 @@ description: Learn how to configure a host-based encryption in an Azure Kubernet
 ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 07/17/2023 
-author: davidsmatlak
-ms.author: davidsmatlak
+author: nickomang
+ms.author: nickoman
 
 ms.custom: devx-track-azurecli
 ms.devlang: azurecli
 ---
 
 # Host-based encryption on Azure Kubernetes Service (AKS)
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2333445)
 
 With host-based encryption, the data stored on the VM host of your AKS agent nodes' VMs is encrypted at rest and flows encrypted to the Storage service. This means the temp disks are encrypted at rest with platform-managed keys. The cache of OS and data disks is encrypted at rest with either platform-managed keys or customer-managed keys depending on the encryption type set on those disks.
 
@@ -33,11 +36,26 @@ Before you begin, review the following prerequisites and limitations.
 - This feature can only be enabled in [Azure regions][supported-regions] that support server-side encryption of Azure managed disks and only with specific [supported VM sizes][supported-sizes].
 - This feature requires an AKS cluster and node pool based on Virtual Machine Scale Sets as *VM set type*.
 
+## Enable Encryption at Host for your AKS cluster
+
+Before adding a node pool with host-based encryption, ensure the EncryptionAtHost feature is enabled for your subscription:
+
+```azurecli
+# Register the EncryptionAtHost feature
+az feature register --namespace Microsoft.Compute --name EncryptionAtHost
+
+# Wait for registration to complete (this may take several minutes)
+az feature show --namespace Microsoft.Compute --name EncryptionAtHost --query "properties.state"
+
+# Refresh the provider registration
+az provider register --namespace Microsoft.Compute
+```
+
 ## Use host-based encryption on new clusters
 
 - Create a new cluster and configure the cluster agent nodes to use host-based encryption using the [`az aks create`][az-aks-create] command with the `--enable-encryption-at-host` flag.
 
-    ```azurecli-interactive
+    ```shell
     az aks create \
         --name myAKSCluster \
         --resource-group myResourceGroup \
@@ -52,7 +70,24 @@ Before you begin, review the following prerequisites and limitations.
 - Enable host-based encryption on an existing cluster by adding a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--enable-encryption-at-host` flag.
 
     ```azurecli
-    az aks nodepool add --name hostencrypt --cluster-name myAKSCluster --resource-group myResourceGroup -s Standard_DS2_v2 --enable-encryption-at-host
+    az aks nodepool add --name hostencrypt --cluster-name $MY_AKS_CLUSTER --resource-group $MY_RESOURCE_GROUP -s Standard_DS2_v2 --enable-encryption-at-host
+    ```
+
+    Results:
+
+    <!-- expected_similarity=0.3 -->
+
+    ```output
+    {
+        "agentPoolProfile": {
+            "enableEncryptionAtHost": true,
+            "name": "hostencrypt",
+            "nodeCount": 1,
+            "osDiskSizeGB": 30,
+            "vmSize": "Standard_DS2_v2"
+        },
+        ...
+    }
     ```
 
 ## Next steps
@@ -69,4 +104,3 @@ Before you begin, review the following prerequisites and limitations.
 [akv-built-in-roles]: ../key-vault/general/rbac-guide.md#azure-built-in-roles-for-key-vault-data-plane-operations
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
-

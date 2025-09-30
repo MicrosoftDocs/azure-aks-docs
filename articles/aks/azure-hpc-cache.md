@@ -7,6 +7,7 @@ ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 02/13/2024
 #Customer intent: As a cluster operator or developer, I want to learn how to integrate HPC Cache with AKS
+# Customer intent: As a cluster operator or developer, I want to integrate Azure HPC Cache with Azure Kubernetes Service, so that I can enhance data access and improve the performance of high-performance computing tasks.
 ---
 
 # Integrate Azure HPC Cache with Azure Kubernetes Service (AKS)

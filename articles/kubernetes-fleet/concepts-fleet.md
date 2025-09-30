@@ -1,11 +1,12 @@
 ---
 title: "Azure Kubernetes Fleet Manager and member clusters"
 description: This article provides a conceptual overview of Azure Kubernetes Fleet Manager and member clusters.
-ms.date: 05/23/2025
+ms.date: 09/02/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: "As a cloud administrator, I want to manage multiple AKS clusters as a single entity using a fleet resource, so that I can orchestrate updates and maintain consistency across clusters."
 ---
 
 # Azure Kubernetes Fleet Manager and member clusters
@@ -35,6 +36,14 @@ The `MemberCluster` represents a cluster-scoped API established within the hub c
 
 You can join Azure Kubernetes Service (AKS) clusters to a fleet as member clusters. Member clusters must reside in the same Microsoft Entra tenant as the fleet, but they can be in different regions, different resource groups, and/or different subscriptions.
 
+### Labels
+
+Member clusters can have service-defined and user-defined labels associated with them, which can be used to select clusters for workload placement scheduling decisions. When you define a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#introduce-clusterresourceplacement-api), you can use label selectors to target specific member clusters based on their labels. This allows you to deploy workloads only to clusters that match certain criteria, such as region, environment, team, or other custom attributes.
+
+By default, Fleet populates these [service-defined labels](./concepts-resource-propagation.md#labels) on each member cluster.
+
+Member labels should be modified using the Azure CLI or REST API. They may not be modified directly on the `MemberCluster` resource in the hub cluster.
+
 ### Taints
 
 Member clusters support the specification of taints, which apply to the `MemberCluster` resource. Each taint object consists of the following fields:
@@ -43,7 +52,7 @@ Member clusters support the specification of taints, which apply to the `MemberC
 * `value`: The value of the taint.
 * `effect`: The effect of the taint, such as `NoSchedule`.
 
-Once a `MemberCluster` is tainted, it lets the [scheduler](./concepts-scheduler-scheduling-framework.md) know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#introducing-clusterresourceplacement) to the `MemberCluster`.
+Once a `MemberCluster` is tainted, it lets the [scheduler](./concepts-scheduler-scheduling-framework.md) know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#introduce-clusterresourceplacement-api) to the `MemberCluster`.
 
 For more information, see the [KubeFleet components documentation](https://kubefleet.dev/docs/concepts/components/).
 

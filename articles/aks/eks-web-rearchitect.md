@@ -1,8 +1,8 @@
 ---
 title: Rearchitect AWS EKS web application for Azure Kubernetes Service (AKS)
 description: Understand the architectural differences and steps to replicate the AWS EKS web application workload and AWS WAF protection in Azure.
-author: paolosalvatori
-ms.author: paolos
+author: schaffererin
+ms.author: schaffererin
 ms.topic: how-to
 ms.date: 10/31/2024
 ms.service: azure-kubernetes-service
@@ -10,6 +10,7 @@ ms.custom:
     - migration
     - aws-to-azure
     - eks-to-aks
+# Customer intent: "As a cloud architect, I want to rearchitect an AWS EKS web application for Azure Kubernetes Service (AKS), so that I can leverage Azure's native services and ensure seamless functionality while maintaining security and performance."
 ---
 
 # Rearchitect AWS EKS web application for Azure Kubernetes Service (AKS)
@@ -106,7 +107,7 @@ The following table outlines advantages and disadvantages of the Application Gat
 
 | Advantages | Disadvantages |
 |---------------|-----------------|
-| • **Native integration**: AGIC provides native integration with Azure services, specifically Azure Application Gateway, which allows for seamless and efficient routing of traffic to services running on AKS. <br> • **Simplified deployments**: Deploying AGIC as an AKS add-on is straightforward and simpler compared to other methods. It enables a quick and easy setup of an Application Gateway and an AKS cluster with AGIC enabled. <br> • **Fully managed service**: AGIC as an add-on is a fully managed service, providing benefits such as automatic updates and increased support from Microsoft. It ensures the Ingress Controller remains up-to-date and adds an extra layer of support. | • **Single cloud approach**: AGIC is primarily adopted by customers who adopt a single-cloud approach. It might not be the best choice if you require a multicloud architecture where deployment across different cloud platforms is a requirement. In this case, you might want to use a cloud-agnostic ingress controller such as NGINX, Traefik, or HAProxy to avoid vendo-lockin issues.|
+| * **Native integration**: AGIC provides native integration with Azure services, specifically Azure Application Gateway, which allows for seamless and efficient routing of traffic to services running on AKS. <br> * **Simplified deployments**: Deploying AGIC as an AKS add-on is straightforward and simpler compared to other methods. It enables a quick and easy setup of an Application Gateway and an AKS cluster with AGIC enabled. <br> * **Fully managed service**: AGIC as an add-on is a fully managed service, providing benefits such as automatic updates and increased support from Microsoft. It ensures the Ingress Controller remains up-to-date and adds an extra layer of support. | * **Single cloud approach**: AGIC is primarily adopted by customers who adopt a single-cloud approach. It might not be the best choice if you require a multicloud architecture where deployment across different cloud platforms is a requirement. In this case, you might want to use a cloud-agnostic ingress controller such as NGINX, Traefik, or HAProxy to avoid vendo-lockin issues.|
 
 For more information, see the following resources:
 

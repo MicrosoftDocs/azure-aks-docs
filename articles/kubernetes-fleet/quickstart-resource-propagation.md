@@ -1,11 +1,12 @@
 ---
 title: "Use Azure Kubernetes Fleet Manager cluster resource placement to deploy workloads across multiple clusters"
 description: This article describes how to use Azure Kubernetes Fleet Manager cluster resource placement to deploy workloads across clusters in a fleet.
-ms.date: 05/23/2025
+ms.date: 06/16/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: how-to
+# Customer intent: As a cloud architect managing multiple Kubernetes clusters, I want to deploy workloads across a fleet of clusters using resource placement strategies, so that I can optimize resource utilization and simplify application management.
 ---
 
 # Use Azure Kubernetes Fleet Manager cluster resource placement to deploy workloads across multiple clusters
@@ -17,7 +18,7 @@ This article describes how to use Azure Kubernetes Fleet Manager cluster resourc
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 * Read the [conceptual overview of resource propagation](./concepts-resource-propagation.md) to understand the concepts and terminology used in this article.
 * You need a Fleet Manager with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
-* Member clusters must be labeled appropriately in the hub cluster to match the desired selection criteria. Example labels include region, environment, team, availability zones, node availability, or anything else that you want.
+* Member clusters must be [labeled](./concepts-fleet.md#labels) appropriately in the hub cluster to match the desired selection criteria. Example labels include region, environment, team, availability zones, node availability, or anything else that you want.
 * You need access to the Kubernetes API of the hub cluster. If you don't have access, see [Access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster](./access-fleet-hub-cluster-kubernetes-api.md).
 
 ## Use ClusterResourcePlacement to place resources onto member clusters
@@ -253,7 +254,9 @@ If you no longer want to use your cluster resource placement, you can delete it 
 
 To learn more about resource propagation, see the following resources:
 
-* [Intelligent cross-cluster Kubernetes resource placement based on member clusters' properties](./intelligent-resource-placement.md)
+* [Understanding resource placement status output](./howto-understand-placement.md).
+* [Intelligent cross-cluster Kubernetes resource placement based on member clusters' properties](./intelligent-resource-placement.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
+* [Cluster resource placement FAQs](./faq.md#cluster-resource-placement-faqs).
 * [Open-source KubeFleet documentation](https://kubefleet.dev/docs/concepts/crp/).

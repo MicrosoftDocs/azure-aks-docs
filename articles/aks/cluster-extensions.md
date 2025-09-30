@@ -1,44 +1,85 @@
 ---
 title: Cluster extensions for Azure Kubernetes Service (AKS)
-description: Learn how to deploy and manage the lifecycle of extensions on Azure Kubernetes Service (AKS)
-ms.date: 06/30/2023
+description: Learn how to deploy and manage the lifecycle of cluster extensions on Azure Kubernetes Service (AKS).
+ms.date: 09/09/2025
 ms.topic: overview
 author: davidsmatlak
 ms.author: davidsmatlak
+
+# Customer intent: As a Kubernetes administrator, I want to deploy and manage cluster extensions on Azure Kubernetes Service so that I can enhance my cluster's capabilities and streamline the lifecycle management of related applications and services.
 ---
 
 # Deploy and manage cluster extensions for Azure Kubernetes Service (AKS)
 
 Cluster extensions provide an Azure Resource Manager driven experience for installation and lifecycle management of services like Azure Machine Learning or Kubernetes applications on an AKS cluster. This feature enables:
 
-* Azure Resource Manager-based deployment of extensions, including at-scale deployments across AKS clusters.
-* Lifecycle management of the extension (Update, Delete) from Azure Resource Manager
+- Azure Resource Manager-based deployment of extensions, including at-scale deployments across AKS clusters.
+- Lifecycle management of the extension (Update, Delete) from Azure Resource Manager.
+
+## Categories of cluster extensions
+
+There are two categories of cluster extensions, _Core_ and _Standard_ that can be deployed onto AKS clusters.
+
+### Core extensions
+
+Core Kubernetes extensions have broader region availability, a more integrated AKS experience, and release alignment to AKS version releases. Azure Backup is a core extension.
+
+#### AKS native experience
+
+Core extensions can be managed using `az aks` CLI command.
+
+```azurecli
+az aks extension create \
+  --name <core extension name> \
+  --extension-type <type> \
+  --cluster-name <name> \
+  --resource-group <group>
+```
+
+For more information about the commands, see [`az aks`](/cli/azure/aks).
+
+#### Release policy
+
+Minor and major upgrades of core extensions occur alongside AKS minor and major version updates to avoid introducing breaking changes and provide better reliability.
+
+### Standard extensions
+
+For information about the other cluster extensions, see the table in [Currently available extensions](cluster-extensions.md#currently-available-extensions) and the [Kubernetes apps](deploy-marketplace.md) deployed via Azure Marketplace are of the Standard Extension type.
+
+Standard extensions can be managed using the `az k8s-extension` CLI command. For more information, see [Deploy and manage cluster extensions by using Azure CLI](deploy-extensions-az-cli.md).
+
+```azurecli
+az k8s-extension create \
+  --name <standard extension name> \
+  --extension-type <extension-type> \
+  --scope cluster \
+  --cluster-name <clusterName> \
+  --resource-group <resourceGroupName> \
+  --cluster-type managedClusters
+```
 
 ## Cluster extension requirements
 
-Cluster extensions can be used on AKS clusters in the regions listed in [Azure Arc enabled Kubernetes region support][arc-k8s-regions].
-
-For supported Kubernetes versions, refer to the corresponding documentation for each extension.
+The cluster extensions platform is supported in all regions where AKS is deployed, except Qatar Central and US air gapped clouds. Although the platform is available in all regions, check the region availability for individual extensions.
 
 > [!IMPORTANT]
-> Ensure that your AKS cluster is created with a managed identity, as cluster extensions won't work with service principal-based clusters.
+> Ensure that your AKS cluster is created with a managed identity, as cluster extensions don't work with service principal-based clusters.
 >
 > For new clusters created with `az aks create`, managed identity is configured by default. For existing service principal-based clusters that need to be switched over to managed identity, it can be enabled by running `az aks update` with the `--enable-managed-identity` flag. For more information, see [Use managed identity][use-managed-identity].
 
 > [!NOTE]
-> If you have enabled [Microsoft Entra pod-managed identity][use-azure-ad-pod-identity] on your AKS cluster or are considering implementing it,
+> If you enabled [Microsoft Entra pod-managed identity][use-azure-ad-pod-identity] on your AKS cluster or are considering implementing it,
 > we recommend you first review [Workload identity overview][workload-identity-overview] to understand our
 > recommendations and options to set up your cluster to use a Microsoft Entra Workload ID (preview).
 > This authentication method replaces pod-managed identity (preview), which integrates with the Kubernetes native capabilities
 > to federate with any external identity providers.
->
-> The open source Microsoft Entra pod-managed identity (preview) in Azure Kubernetes Service has been deprecated as of 10/24/2022.
+> The open source Microsoft Entra pod-managed identity (preview) in Azure Kubernetes Service was deprecated as of October 24, 2022.
 
 ## Currently available extensions
 
 | Extension | Description |
 | --------- | ----------- |
-| [Dapr][dapr-overview] | Dapr is a portable, event-driven runtime that makes it easy for any developer to build resilient, stateless and stateful applications that run on cloud and edge. |
+| [Dapr][dapr-overview] | `Dapr` is a portable, event-driven runtime that makes it easy for any developer to build resilient, stateless, and stateful applications that run on cloud and edge. |
 | [Azure App Configuration][app-config-overview] | Use Azure App Configuration to centrally manage application settings and feature flags. |
 | [Azure Machine Learning][azure-ml-overview] | Use Azure Kubernetes Service clusters to train, inference, and manage machine learning models in Azure Machine Learning. |
 | [Flux (GitOps)][gitops-overview] | Use GitOps with Flux to manage cluster configuration and application deployment. See also [supported versions of Flux (GitOps)][gitops-support] and [Tutorial: Deploy applications using GitOps with Flux v2][gitops-tutorial].|
@@ -48,15 +89,15 @@ For supported Kubernetes versions, refer to the corresponding documentation for 
 You can also [select and deploy Kubernetes applications available through Marketplace](deploy-marketplace.md).
 
 > [!NOTE]
-> Cluster extensions provides a platform for different extensions to be installed and managed on an AKS cluster. If you are facing issues while using any of these extensions, please open a support ticket with the respective service.
+> Cluster extensions provide a platform for different extensions to be installed and managed on an AKS cluster. If you're facing issues while using any of these extensions, open a support ticket with the respective service.
 
 ## Next steps
 
-* Learn how to [deploy cluster extensions by using Azure CLI](deploy-extensions-az-cli.md).
-* Read about [cluster extensions for Azure Arc-enabled Kubernetes clusters][arc-k8s-extensions].
+- Learn how to [deploy cluster extensions by using Azure CLI](deploy-extensions-az-cli.md).
+- Read about [cluster extensions][arc-k8s-extensions].
 
-<!-- LINKS -->
-<!-- INTERNAL -->
+
+<!-- INTERNAL LINKS -->
 [arc-k8s-extensions]: /azure/azure-arc/kubernetes/conceptual-extensions
 [app-config-overview]: ./azure-app-configuration-quickstart.md
 [azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
@@ -69,6 +110,5 @@ You can also [select and deploy Kubernetes applications available through Market
 [workload-identity-overview]: workload-identity-overview.md
 [use-azure-ad-pod-identity]: use-azure-ad-pod-identity.md
 
-<!-- EXTERNAL -->
+<!-- EXTERNAL LINKS -->
 [arc-k8s-regions]: https://azure.microsoft.com/global-infrastructure/services/?products=azure-arc&regions=all
-

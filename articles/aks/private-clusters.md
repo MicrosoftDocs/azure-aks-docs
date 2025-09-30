@@ -4,14 +4,15 @@ description: Learn how to create a private Azure Kubernetes Service (AKS) cluste
 ms.topic: how-to
 ms.author: schaffererin
 author: schaffererin
-ms.date: 09/23/2024
+ms.date: 09/01/2025
 ms.custom: references_regions, devx-track-azurecli
 ms.service: azure-kubernetes-service
+# Customer intent: "As a cloud administrator, I want to deploy a private Azure Kubernetes Service cluster, so that I can ensure secure network traffic and enhanced control over my Kubernetes resources."
 ---
 
 # Create a private Azure Kubernetes Service (AKS) cluster
 
-This article helps you deploy a private link-based AKS cluster. If you're interested in creating an AKS cluster without required private link or tunnel, see [Create an Azure Kubernetes Service cluster with API Server VNet Integration (Preview)][create-aks-cluster-api-vnet-integration].
+This article helps you deploy a private link-based AKS cluster. If you're interested in creating an AKS cluster without required private link or tunnel, see [Create an Azure Kubernetes Service cluster with API Server VNet Integration][create-aks-cluster-api-vnet-integration].
 
 ## Overview
 
@@ -33,8 +34,8 @@ Private clusters are available in public regions, Azure Government, and Microsof
   * The cluster's DNS zone should be what you forward to 168.63.129.16. You can find more information on zone names in [Azure services DNS zone configuration][az-dns-zone].
 * Existing AKS clusters enabled with API Server VNet Integration can have private cluster mode enabled. For more information, see [Enable or disable private cluster mode on an existing cluster with API Server VNet Integration][api-server-vnet-integration].
 
-> [!NOTE]
-> The Azure Linux node pool is now generally available (GA). To learn about the benefits and deployment steps, see the [Introduction to the Azure Linux Container Host for AKS][intro-azure-linux].
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Limitations
 
@@ -43,7 +44,7 @@ Private clusters are available in public regions, Azure Government, and Microsof
 * There's no support for Azure DevOps Microsoft-hosted Agents with private clusters. Consider using [self-hosted agents](/azure/devops/pipelines/agents/agents).
 * If you need to enable Azure Container Registry to work with a private AKS cluster, [set up a private link for the container registry in the cluster virtual network][container-registry-private-link] or set up peering between the container registry's virtual network and the private cluster's virtual network.
 * Deleting or modifying the private endpoint in the customer subnet will cause the cluster to stop functioning.
-* Azure Private Link service is supported on Standard Azure Load Balancer only. Basic Azure Load Balancer isn't supported.  
+* Azure Private Link service is supported on Standard Azure Load Balancer only. Basic Azure Load Balancer isn't supported.
 
 ## Create a private AKS cluster
 
@@ -89,7 +90,7 @@ Private clusters are available in public regions, Azure Government, and Microsof
         --network-plugin azure \
         --vnet-subnet-id <subnet-id> \
         --dns-service-ip 10.2.0.10 \
-        --service-cidr 10.2.0.0/24 
+        --service-cidr 10.2.0.0/24
         --generate-ssh-keys
     ```
 
@@ -188,7 +189,7 @@ You can configure private DNS zones using the following parameters:
 
     ```azurecli-interactive
     # The custom private DNS zone name should be in the following format: "<subzone>.privatelink.<region>.azmk8s.io"
-    
+
     az aks create \
         --name <private-cluster-name> \
         --resource-group <private-cluster-resource-group> \
@@ -205,7 +206,7 @@ You can configure private DNS zones using the following parameters:
 
     ```azurecli-interactive
     # The custom private DNS zone name should be in one of the following formats: "privatelink.<region>.azmk8s.io" or "<subzone>.privatelink.<region>.azmk8s.io"
-    
+
     az aks create \
         --name <private-cluster-name> \
         --resource-group <private-cluster-resource-group> \
@@ -322,8 +323,8 @@ When deploying an AKS cluster into such a networking environment, there are some
 
 * When a private cluster is provisioned, a private endpoint (1) and a private DNS zone (2) are created in the cluster-managed resource group by default. The cluster uses an `A` record in the private zone to resolve the IP of the private endpoint for communication to the API server.
 * The private DNS zone is linked only to the VNet that the cluster nodes are attached to (3). This means that the private endpoint can only be resolved by hosts in that linked VNet. In scenarios where no custom DNS is configured on the VNet (default), this works without issue as hosts point at *168.63.129.16* for DNS that can resolve records in the private DNS zone because of the link.
-* If you keep the default private‑DNS‑zone behavior, AKS tries to link the zone directly to the spoke VNet that hosts the cluster even when the zone is already linked to a hub VNet.  
-  In spoke VNets that use custom DNS servers, this action can fail if the cluster’s managed identity lacks **Network Contributor** on the spoke VNet.  
+* If you keep the default private‑DNS‑zone behavior, AKS tries to link the zone directly to the spoke VNet that hosts the cluster even when the zone is already linked to a hub VNet.
+  In spoke VNets that use custom DNS servers, this action can fail if the cluster’s managed identity lacks **Network Contributor** on the spoke VNet.
   To prevent the failure, choose **one** of the following supported configurations:
 
   * **Custom private DNS zone** – Provide a pre‑created private zone and set `privateDNSZone` to its resource ID. Link that zone to the appropriate VNet (for example, the hub VNet) and set `publicDNS` to `false`.
@@ -415,7 +416,7 @@ Once the private DNS zone is created, create an `A` record, which associates the
 
 Once the `A` record is created, link the private DNS zone to the virtual network that will access the private cluster:
 
-1. Go to the private DNS zone you created in previous steps.  
+1. Go to the private DNS zone you created in previous steps.
 1. In the service menu, under **DNS Management**, select **Virtual Network Links** > **Add**.
 1. On the **Add Virtual Network Link** page, configure the following settings:
    * **Link name**: Enter a name for your virtual network link.

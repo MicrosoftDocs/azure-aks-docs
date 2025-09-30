@@ -4,7 +4,11 @@ description: In this Azure Kubernetes Service (AKS) tutorial, you deploy a multi
 ms.topic: tutorial
 ms.date: 06/10/2024
 ms.custom: mvc, devx-track-extended-azdevcli
-#Customer intent: As a developer, I want to learn how to deploy apps to an Azure Kubernetes Service (AKS) cluster so that I can deploy and run my own applications.
+ms.author: schaffererin
+author: schaffererin
+
+# Customer intent: As a developer, I want to learn how to deploy apps to an Azure Kubernetes Service (AKS) cluster so that I can deploy and run my own applications.
+
 ---
 
 # Tutorial - Deploy an application to Azure Kubernetes Service (AKS)
@@ -267,7 +271,7 @@ In the next tutorial, you learn how to use PaaS services for stateful workloads 
 > [Use PaaS services for stateful workloads in AKS][aks-tutorial-paas]
 
 <!-- LINKS - external -->
-[azure-rg]:https://ms.portal.azure.com/#browse/resourcegroups
+[azure-rg]:https://portal.azure.com/#browse/resourcegroups
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 

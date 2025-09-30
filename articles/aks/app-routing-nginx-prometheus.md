@@ -1,48 +1,33 @@
 ---
-title: Monitor the ingress-nginx controller metrics in the application routing add-on with Prometheus (preview)
+title: Monitor the ingress-nginx controller metrics in the application routing add-on with Prometheus
 description: Configure Prometheus to scrape the ingress-nginx controller metrics.
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.custom:
 author: sabbour
 ms.topic: how-to
-ms.date: 07/12/2023
+ms.date: 09/15/2025
 ms.author: asabbour
+# Customer intent: As a Kubernetes operator, I want to configure Prometheus to scrape ingress-nginx controller metrics, so that I can monitor and analyze the performance and usage of my applications effectively.
 ---
 
-# Monitor the ingress-nginx controller metrics in the application routing add-on with Prometheus in Grafana (preview)
+# Monitor the ingress-nginx controller metrics in the application routing add-on with Prometheus and Grafana
 
 The ingress-nginx controller in the application routing add-on exposes many metrics for requests, the nginx process, and the controller that can be helpful in analyzing the performance and usage of your application.
 
-The application routing add-on exposes the Prometheus metrics endpoint at `/metrics` on port 10254.
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+The application routing add-on exposes the Prometheus metrics endpoint at `/metrics` on port 10254 and a private Service `nginx-metrics`.
 
 ## Prerequisites
 
 - An Azure Kubernetes Service (AKS) cluster with the [application routing add-on enabled][app-routing].
 - A Prometheus instance, such as Azure Monitor managed service for Prometheus.
-- A Grafana instance, such as [Azure Managed Grafana][managed-grafana].
 
 ## Validating the metrics endpoint
 
-To validate the metrics are being collected, you can set up a port forward to one of the ingress-nginx controller pods.
+To validate the metrics are being collected, you can set up a port forward from a local port to port 10254 on the `nginx-metrics` service.
 
 ```bash
-kubectl get pods -n app-routing-system
-```
-
-```bash
-NAME                            READY   STATUS    RESTARTS   AGE
-external-dns-667d54c44b-jmsxm   1/1     Running   0          4d6h
-nginx-657bb8cdcf-qllmx          1/1     Running   0          4d6h
-nginx-657bb8cdcf-wgcr7          1/1     Running   0          4d6h
-```
-
-Now forward a local port to port 10254 on one of the nginx pods.
-
-```bash
-kubectl port-forward nginx-657bb8cdcf-qllmx -n app-routing-system :10254
+kubectl port-forward -n app-routing-system service/nginx-metrics :10254
 ```
 
 ```bash 
@@ -56,81 +41,34 @@ Note the local port (`43307` in this case) and open http://localhost:43307/metri
 
 You can now terminate the `port-forward` process to close the forwarding.
 
-## Configuring Azure Monitor managed service for Prometheus and Azure Managed Grafana using Container Insights
+## Configuring Azure Monitor managed service for Prometheus
 
-Azure Monitor managed service for Prometheus is a fully managed Prometheus-compatible service that supports industry standard features such as PromQL, Grafana dashboards, and Prometheus alerts. This service requires configuring the metrics addon for the Azure Monitor agent, which sends data to Prometheus. If your cluster isn't configured with the add-on, you can follow this article to configure your Azure Kubernetes Service (AKS) cluster to send data to Azure Monitor managed service for Prometheus and send the collected metrics to [an Azure Managed Grafana instance][create-grafana].
+Azure Monitor managed service for Prometheus is a fully managed Prometheus-compatible service that supports industry standard features such as PromQL, Grafana dashboards, and Prometheus alerts. This service requires configuring the metrics addon for the Azure Monitor agent, which sends data to Prometheus. If your cluster isn't configured with the add-on, you can follow this article to configure your Azure Kubernetes Service (AKS) cluster to send data to Azure Monitor managed service for Prometheus.
 
-### Enable pod annotation based scraping
+### Enable Service Monitor based scraping
 
-Once your cluster is updated with the Azure Monitor agent, you need to configure the agent to enable scraping based on Pod annotations, which are added to the ingress-nginx pods. One way to set this setting is in the [`ama-metrics-settings-configmap`](https://aka.ms/azureprometheus-addon-settings-configmap) ConfigMap in the `kube-system` namespace.
+Once your cluster is updated with the Azure Monitor agent, you need to configure the agent to enable scraping the metrics endpoint. You can [create a Pod or a Service Monitor](/azure/azure-monitor/containers/prometheus-metrics-scrape-crd) to accomplish this.
 
-> [!CAUTION]
-> This will replace your existing `ama-metrics-settings-configmap` ConfigMap in the `kube-system`. If you already have a configuration, you may want to take a backup or merge it with this configuration.
->
-> You can backup an existing `ama-metrics-settings-config` ConfigMap if it exists by running `kubectl get configmap ama-metrics-settings-configmap -n kube-system -o yaml > ama-metrics-settings-configmap-backup.yaml`
-
-The following configuration sets the `podannotationnamespaceregex` parameter to `.*` to scrape all namespaces.
+The following creates a Service Monitor scrape metrics from the ingress-nginx controller deployed by the application routing add-on.
 
 ```bash
 kubectl apply -f - <<EOF
-kind: ConfigMap
-apiVersion: v1
+apiVersion: azmonitoring.coreos.com/v1
+kind: ServiceMonitor
 metadata:
-  name: ama-metrics-settings-configmap
-  namespace: kube-system
-data:
-  schema-version:
-    #string.used by agent to parse config. supported versions are {v1}. Configs with other schema versions will be rejected by the agent.
-    v1
-  config-version:
-    #string.used by customer to keep track of this config file's version in their source control/repository (max allowed 10 chars, other chars will be truncated)
-    ver1
-  prometheus-collector-settings: |-
-    cluster_alias = ""
-  default-scrape-settings-enabled: |-
-    kubelet = true
-    coredns = false
-    cadvisor = true
-    kubeproxy = false
-    apiserver = false
-    kubestate = true
-    nodeexporter = true
-    windowsexporter = false
-    windowskubeproxy = false
-    kappiebasic = true
-    prometheuscollectorhealth = false
-  # Regex for which namespaces to scrape through pod annotation based scraping.
-  # This is none by default. Use '.*' to scrape all namespaces of annotated pods.
-  pod-annotation-based-scraping: |-
-    podannotationnamespaceregex = ".*"
-  default-targets-metrics-keep-list: |-
-    kubelet = ""
-    coredns = ""
-    cadvisor = ""
-    kubeproxy = ""
-    apiserver = ""
-    kubestate = ""
-    nodeexporter = ""
-    windowsexporter = ""
-    windowskubeproxy = ""
-    podannotations = ""
-    kappiebasic = ""
-    minimalingestionprofile = true
-  default-targets-scrape-interval-settings: |-
-    kubelet = "30s"
-    coredns = "30s"
-    cadvisor = "30s"
-    kubeproxy = "30s"
-    apiserver = "30s"
-    kubestate = "30s"
-    nodeexporter = "30s"
-    windowsexporter = "30s"
-    windowskubeproxy = "30s"
-    kappiebasic = "30s"
-    prometheuscollectorhealth = "30s"
-    podannotations = "30s"
-  debug-mode: |-
-    enabled = false
+  name: nginx-monitor
+  namespace: app-routing-system
+spec:
+  labelLimit: 63
+  labelNameLengthLimit: 511
+  labelValueLengthLimit: 1023
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: ingress-controller
+      app.kubernetes.io/managed-by: aks-app-routing-operator
+      app.kubernetes.io/name: nginx
+  endpoints:
+  - port: prometheus
 EOF
 ```
 

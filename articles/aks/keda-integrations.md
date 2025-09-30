@@ -5,6 +5,7 @@ author: tomkerkhove
 ms.topic: concept-article
 ms.date: 09/27/2023
 ms.author: tomkerkhove
+# Customer intent: As a Kubernetes operator, I want to integrate KEDA with Azure services, so that I can efficiently manage application autoscaling based on various metrics and events.
 ---
 
 # Integrations with Kubernetes Event-driven Autoscaling (KEDA) on Azure Kubernetes Service (AKS)

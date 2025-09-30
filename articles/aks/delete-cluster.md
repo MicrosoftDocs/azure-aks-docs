@@ -5,9 +5,13 @@ ms.topic: overview
 ms.author: schaffererin
 author: schaffererin
 ms.date: 04/16/2024
+ms.custom: innovation-engine
 ---
 
 # Delete an Azure Kubernetes Service (AKS) cluster
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2333444)
 
 This article outlines cluster deletion in Azure Kubernetes Service (AKS), including what happens when you delete a cluster, alternatives to deleting a cluster, and how to delete a cluster.
 
@@ -32,12 +36,18 @@ If you want to delete a cluster to change its configuration, you can instead use
 
 > [!IMPORTANT]
 > **You can't recover a cluster after it's deleted**. If you need to recover a cluster, you need to create a new cluster and redeploy your applications.
+
 ### [Azure CLI](#tab/azure-cli)
 
-Delete a cluster using the [`az aks delete`][az-aks-delete] command. The following example deletes the `myAKSCluster` cluster in the `myResourceGroup` resource group:
+Delete a cluster using the [`az aks delete`][az-aks-delete] command. The following example deletes the `myAKSCluster` cluster in the `myResourceGroup` resource group.
+
+Declare environment variables with generic names and a random suffix to ensure uniqueness. This avoids conflicts and enables the commands to be re-used in different sessions or by different users.
 
 ```azurecli-interactive
-az aks delete --name myAKSCluster --resource-group myResourceGroup
+export RANDOM_SUFFIX=$(openssl rand -hex 3)
+export AKS_CLUSTER_NAME="myAKSCluster$RANDOM_SUFFIX"
+export RESOURCE_GROUP_NAME="myResourceGroup$RANDOM_SUFFIX"
+az aks delete --name $AKS_CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME --yes --no-wait
 ```
 
 ### [Azure PowerShell](#tab/azure-powershell)

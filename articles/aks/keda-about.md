@@ -5,6 +5,7 @@ author: tomkerkhove
 ms.topic: concept-article
 ms.date: 05/23/2025
 ms.author: tomkerkhove
+# Customer intent: As a cloud engineer, I want to implement event-driven autoscaling in my Kubernetes environment using KEDA, so that I can optimize my application performance and resource usage while ensuring cost efficiency.
 ---
 
 # Simplified application autoscaling with Kubernetes Event-driven Autoscaling (KEDA) add-on
@@ -99,7 +100,7 @@ For GA Kubernetes versions, AKS offers full support of the corresponding KEDA mi
 <!-- LINKS - external -->
 [keda]: https://keda.sh/
 [keda-architecture]: https://keda.sh/docs/latest/concepts/
-[keda-faq]: https://keda.sh/docs/2.14/faq/
+[keda-faq]: https://keda.sh/docs/2.14/reference/faq/
 [keda-sample]: https://github.com/kedacore/sample-dotnet-worker-servicebus-queue
 [keda-scalers]: https://keda.sh/docs/scalers/
 [keda-http-add-on]: https://github.com/kedacore/http-add-on

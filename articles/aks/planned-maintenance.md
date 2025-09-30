@@ -8,6 +8,7 @@ ms.date: 05/29/2024
 ms.author: kaarthis
 ms.subservice: aks-upgrade
 author: kaarthis
+# Customer intent: "As a Kubernetes administrator, I want to configure planned maintenance for my AKS cluster, so that I can schedule and control upgrades without impacting my workloads."
 ---
 
 # Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service cluster

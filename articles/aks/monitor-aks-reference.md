@@ -7,6 +7,7 @@ ms.topic: reference
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.subservice: aks-monitoring
+# Customer intent: As a cloud operations engineer, I want to reference supported metrics and logs for Azure Kubernetes Service monitoring, so that I can effectively collect and analyze data to ensure optimal performance and resource management in my environments.
 ---
 
 # Azure Kubernetes Service monitoring data reference
@@ -80,6 +81,7 @@ Following targets are **enabled/ON** by default - meaning you don't have to prov
 Following targets are available to scrape, but scraping isn't enabled (**disabled/OFF**) by default. Meaning you don't have to provide any scrape job configuration for scraping these targets, and you need to turn **ON/enable** scraping for these targets using the [ama-metrics-settings-configmap](https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) under the `default-scrape-settings-enabled` section.
 
 - `controlplane-cluster-autoscaler`
+- `controlplane-node-auto-provisioning`
 - `controlplane-kube-scheduler`
 - `controlplane-kube-controller-manager`
 
@@ -154,6 +156,16 @@ controlplane-cluster-autoscaler:
 - `cloudprovider_azure_api_request_errors`
 - `cloudprovider_azure_api_request_duration_seconds_bucket`
 - `cloudprovider_azure_api_request_duration_seconds_count`
+
+controlplane-node-auto-provisioning:
+
+- `karpenter_pods_state`
+- `karpenter_nodes_created_total`
+- `karpenter_nodes_terminated_total`
+- `karpenter_nodeclaims_disrupted_total`
+- `karpenter_voluntary_disruption_eligible_nodes`
+- `karpenter_voluntary_disruption_decisions_total`
+
 
 > [!NOTE]
 > The CPU and memory usage metrics for all control-plane targets are not exposed irrespective of the profile.

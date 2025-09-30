@@ -4,7 +4,10 @@ description: Learn how to enable Group Managed Service Accounts (GMSA) for your 
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 08/30/2023
+ms.date: 06/12/2025
+author: davidsmatlak
+ms.author: davidsmatlak
+# Customer intent: "As a DevOps engineer, I want to enable Group Managed Service Accounts for my Windows Server nodes in Azure Kubernetes Service, so that I can secure and manage access to my services effectively."
 ---
 
 # Enable Group Managed Service Accounts (GMSA) for your Windows Server nodes on your Azure Kubernetes Service (AKS) cluster
@@ -14,7 +17,7 @@ ms.date: 08/30/2023
 ## Prerequisites
 
 * Kubernetes 1.19 or greater. To check your version, see [Check for available upgrades](./upgrade-aks-cluster.md#check-for-available-aks-cluster-upgrades). To upgrade your version, see [Upgrade AKS cluster](./upgrade-aks-cluster.md).
-* Azure CLI version 2.35.0 or greater. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+* Azure CLI version 2.35.0 or greater. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 * [Managed identities][aks-managed-id] enabled on your AKS cluster.
 * Permissions to create or update an Azure Key Vault.
 * Permissions to configure GMSA on Active Directory Domain Service or on-premises Active Directory.
@@ -49,13 +52,13 @@ Your AKS cluster uses the standard domain user credentials to access the GMSA cr
     > [!NOTE]
     > Make sure to use the Fully Qualified Domain Name for the domain.
 
-### Optional: Use a custom VNet with custom DNS
+### Optional: Use a custom virtual network with custom DNS
 
-You need to configure your domain controller through DNS so it's reachable by the AKS cluster. You can configure your network and DNS outside of your AKS cluster to allow your cluster to access the domain controller. Alternatively, you can use Azure CNI to configure a custom VNet with a custom DNS on your AKS cluster to provide access to your domain controller. For more information, see [Configure Azure CNI networking in Azure Kubernetes Service (AKS)][aks-cni].
+You need to configure your domain controller through DNS so it's reachable by the AKS cluster. You can configure your network and DNS outside of your AKS cluster to allow your cluster to access the domain controller. Alternatively, you can use Azure CNI to configure a custom virtual network with a custom DNS on your AKS cluster to provide access to your domain controller. For more information, see [Configure Azure CNI networking in Azure Kubernetes Service (AKS)][aks-cni].
 
 ### Optional: Configure more than one DNS server
 
-If you want to configure more than one DNS server for Windows GMSA in your AKS cluster, don't specify `--gmsa-dns-server`or `v--gmsa-root-domain-name`. Instead, you can add multiple DNS servers in the VNet by selecting *Custom DNS* and adding the DNS servers.
+If you want to configure more than one DNS server for Windows GMSA in your AKS cluster, don't specify `--gmsa-dns-server`or `v--gmsa-root-domain-name`. Instead, you can add multiple DNS servers in the virtual network by selecting *Custom DNS* and adding the DNS servers.
 
 ### Optional: Use your own kubelet identity for your cluster
 
@@ -86,7 +89,7 @@ You can either [grant access to your key vault for the identity after cluster cr
 1. Create administrator credentials to use during cluster creation. The following commands prompt you for a username and set it to *WINDOWS_USERNAME* for use in a later command.
 
     ```azurecli-interactive
-    echo "Please enter the username to use as administrator credentials for Windows Server nodes on your cluster: " && read WINDOWS_USERNAME 
+    echo "Please enter the username to use as administrator credentials for Windows Server nodes on your cluster: " && read WINDOWS_USERNAME
     ```
 
 2. Create an AKS cluster using the [`az aks create`][az-aks-create] command with the following parameters:
@@ -114,7 +117,7 @@ You can either [grant access to your key vault for the identity after cluster cr
 
     > [!NOTE]
     >
-    > * If you're using a custom VNet, you need to specify the VNet ID using the `vnet-subnet-id` parameter, and you may need to also add the `docker-bridge-address`, `dns-service-ip`, and `service-cidr` parameters depending on your configuration.
+    > * If you're using a custom virtual network, you need to specify the virtual network ID using the `vnet-subnet-id` parameter, and you might need to also add the `docker-bridge-address`, `dns-service-ip`, and `service-cidr` parameters depending on your configuration.
     >
     > * If you created your own identity for the kubelet identity, use the `assign-kubelet-identity` parameter to specify your identity.
     > * When you specify the `--gmsa-dns-server` and `--gmsa-root-domain-name` parameters, a DNS forward rule is added to the `kube-system/coredns` ConfigMap. This rule forwards the DNS requests for `$ROOT_DOMAIN_NAME` from the pods to the `$DNS_SERVER`.
@@ -201,7 +204,7 @@ You can either [grant access to your key vault for the identity after cluster cr
     ```
 
 > [!NOTE]
-> AKS has upgraded the `apiVersion` of `GMSACredentialSpec` from `windows.k8s.io/v1alpha1` to `windows.k8s.io/v1` in release v20230903.
+> AKS upgraded the `apiVersion` of `GMSACredentialSpec` from `windows.k8s.io/v1alpha1` to `windows.k8s.io/v1` in release v20230903.
 
 3. Create a new YAML named *gmsa-role.yaml* and paste in the following YAML.
 
@@ -259,16 +262,16 @@ You can either [grant access to your key vault for the identity after cluster cr
     data:
       run.ps1: |
        $ErrorActionPreference = "Stop"
-    
+
        Write-Output "Configuring IIS with authentication."
-    
+
        # Add required Windows features, since they are not installed by default.
        Install-WindowsFeature "Web-Windows-Auth", "Web-Asp-Net45"
-    
+
        # Create simple ASP.NET page.
        New-Item -Force -ItemType Directory -Path 'C:\inetpub\wwwroot\app'
        Set-Content -Path 'C:\inetpub\wwwroot\app\default.aspx' -Value 'Authenticated as <B><%=User.Identity.Name%></B>, Type of Authentication: <B><%=User.Identity.AuthenticationType%></B>'
-    
+
        # Configure IIS with authentication.
        Import-Module IISAdministration
        Start-IISCommitDelay
@@ -276,9 +279,9 @@ You can either [grant access to your key vault for the identity after cluster cr
        (Get-IISConfigSection -SectionPath 'system.webServer/security/authentication/anonymousAuthentication').Attributes['enabled'].value = $false
        (Get-IISServerManager).Sites[0].Applications[0].VirtualDirectories[0].PhysicalPath = 'C:\inetpub\wwwroot\app'
        Stop-IISCommitDelay
-    
+
        Write-Output "IIS with authentication is ready."
-    
+
        C:\ServiceMonitor.exe w3svc
     ---
     apiVersion: apps/v1
@@ -375,7 +378,7 @@ You can either [grant access to your key vault for the identity after cluster cr
     az aks update \
         --resource-group myResourceGroup \
         --name myAKSCluster \
-        --disable-windows-gmsa 
+        --disable-windows-gmsa
     ```
 > [!NOTE]
 > You can re-enable GMSA on an existing cluster by using the [az aks update][az-aks-update] command.
@@ -387,7 +390,7 @@ You can either [grant access to your key vault for the identity after cluster cr
 If the page loads, but you aren't prompted to authenticate, use the `kubectl logs POD_NAME` command to display the logs of your pod and verify you see *IIS with authentication is ready*.
 
 > [!NOTE]
-> Windows containers won't show logs on kubectl by default. To enable Windows containers to show logs, you need to embed the Log Monitor tool on your Windows image. For more information, see [Windows Container Tools](https://github.com/microsoft/windows-container-tools).
+> Windows containers don't show logs on kubectl by default. To enable Windows containers to show logs, you need to embed the Log Monitor tool on your Windows image. For more information, see [Windows Container Tools](https://github.com/microsoft/windows-container-tools).
 
 ### Connection timeout when trying to load the page
 
@@ -396,6 +399,24 @@ If you receive a connection timeout when trying to load the page, verify the sam
 ### Pod fails to start and a *winapi error* shows in the pod events
 
 If your pod doesn't start after running the `kubectl get pods --watch`  command and waiting several minutes, use the `kubectl describe pod POD_NAME` command. If you see a *winapi error* in the pod events, it's likely an error in your GMSA cred spec configuration. Verify all the replacement values in *gmsa-spec.yaml* are correct, rerun `kubectl apply -f gmsa-spec.yaml`, and redeploy the sample application.
+
+### Container Credential Guard event logs show *The directory service is not available errors*
+
+If you see this error message, it might indicate that DNS queries are failing due to blocked TCP fallback.
+
+When gMSA is enabled, the system performs DNS lookups to locate domain controllers, for example `_ldap._tcp.dc._msdcs.<domain>`. In large Active Directory environments, these responses can exceed the 512-byte UDP limit. When the UDP limit is reached, the DNS server sets the truncated (TC) flag, prompting CoreDNS to retry the query over TCP, as required by [RFC5966](https://datatracker.ietf.org/doc/html/rfc5966). This fallback to TCP is essential for completing the authentication flow. If TCP traffic on port 53 is blocked by network security group (NSG) or firewall rules, the DNS resolution, and therefore gMSA login fails.
+
+To verify if this error is occurring in your environment, enable [CoreDNS query logging](./coredns-custom.md) and use the `kubectl logs --namespace kube-system -l k8s-app=kube-dns` command to view CoreDNS logs.
+
+Look for patterns like this, where UDP responses are truncated and TCP retries fail:
+
+```output
+[INFO] 10.123.123.200:62380 - 2 "ANY IN _ldap._tcp.dc._msdcs.contoso.com. udp 49 false 512" NOERROR qr,aa,tc,rd,ra 1357 0.003399698s
+[INFO] 10.123.123.200:64233 - 2 "ANY IN _ldap._tcp.dc._msdcs.contoso.com. tcp 49 false 65535" - - 0 6.009670817s
+[ERROR] plugin/errors: 2 _ldap._tcp.dc._msdcs.contoso.com. ANY: read tcp 10.123.123.11:55216-><DNS server IP>:53: i/o timeout
+```
+
+To resolve this error, we recommend updating your NSG or firewall rules to explicitly allow DNS traffic over TCP on port 53. This update will ensure that large DNS responses can be successfully retried over TCP, enabling the authentication flow to complete as expected.
 
 ## Next steps
 

@@ -8,6 +8,7 @@ ms.date: 06/24/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a Kubernetes administrator, I want to implement the Azure Blob storage CSI driver on AKS, so that I can efficiently manage and access unstructured data for containerized applications without modifying core Kubernetes code.
 ---
 
 # Use Azure Blob storage Container Storage Interface (CSI) driver
@@ -144,7 +145,7 @@ To have a storage volume persist for your workload, you can use a StatefulSet. T
             "kubernetes.io/os": linux
           containers:
             - name: statefulset-blob-nfs
-              image: mcr.microsoft.com/oss/nginx/nginx:1.22
+              image: mcr.microsoft.com/azurelinux/base/nginx:1.25
               volumeMounts:
                 - name: persistent-storage
                   mountPath: /mnt/blob
@@ -193,7 +194,7 @@ To have a storage volume persist for your workload, you can use a StatefulSet. T
             "kubernetes.io/os": linux
           containers:
             - name: statefulset-blob
-              image: mcr.microsoft.com/oss/nginx/nginx:1.22
+              image: mcr.microsoft.com/azurelinux/base/nginx:1.25
               volumeMounts:
                 - name: persistent-storage
                   mountPath: /mnt/blob

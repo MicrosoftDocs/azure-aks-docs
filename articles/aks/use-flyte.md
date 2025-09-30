@@ -7,6 +7,7 @@ ms.date: 06/06/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: As a data engineer, I want to deploy data and machine learning pipelines using Flyte on Azure Kubernetes Service, so that I can streamline workflow automation and focus on delivering business value without managing infrastructure.
 ---
 
 # Build and deploy data and machine learning pipelines with Flyte on Azure Kubernetes Service (AKS)

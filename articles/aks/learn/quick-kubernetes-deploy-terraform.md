@@ -6,11 +6,13 @@ author: schaffererin
 ms.topic: quickstart
 ms.date: 03/22/2024
 ms.custom: devx-track-terraform, devx-track-extended-azdevcli, devx-track-azurecli
-content_well_notification: 
+content_well_notification:
   - AI-contribution
 ai-usage: ai-assisted
 zone_pivot_groups: aks-azure-developer-cli
-#Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+
+# Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Terraform
@@ -33,8 +35,8 @@ Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you qui
 
 * To learn more about creating a Windows Server node pool, see [Create an AKS cluster that supports Windows Server containers](quick-windows-container-deploy-cli.md).
 
-> [!NOTE]
-> The Azure Linux node pool is now in general availablility (GA). To learn about the benefits and deployment steps, see the [Introduction to the Azure Linux Container Host for AKS][intro-azure-linux].
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 * [Install and configure Terraform](/azure/developer/terraform/quickstart-configure).
 * [Download kubectl](https://kubernetes.io/releases/download/).
@@ -42,14 +44,14 @@ Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you qui
 * Create an Azure resource group using [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group).
 * Access the configuration of the AzureRM provider to get the Azure Object ID using [azurerm_client_config](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config).
 * Create a Kubernetes cluster using [azurerm_kubernetes_cluster](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster).
-* Create an AzAPI resource [azapi_resource](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource).                                            
+* Create an AzAPI resource [azapi_resource](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource).
 * Create an AzAPI resource to generate an SSH key pair using [azapi_resource_action](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource_action).
 
 ## Login to your Azure account
 
 First, log into your Azure account and authenticate using one of the methods described in the following section.
 
-Terraform only supports authenticating to Azure with the Azure CLI. Authenticating using Azure PowerShell isn't supported. Therefore, while you can use the Azure PowerShell module when doing your Terraform work, you first need to [authenticate to Azure](/azure/developer/terraform/authenticate-to-azure).  
+Terraform only supports authenticating to Azure with the Azure CLI. Authenticating using Azure PowerShell isn't supported. Therefore, while you can use the Azure PowerShell module when doing your Terraform work, you first need to [authenticate to Azure](/azure/developer/terraform/authenticate-to-azure).
 
 ## Implement the Terraform code
 
@@ -213,7 +215,7 @@ To deploy the application, you use a manifest file to create all the objects req
         [rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0].
     kind: ConfigMap
     metadata:
-      name: rabbitmq-enabled-plugins            
+      name: rabbitmq-enabled-plugins
     ---
     apiVersion: v1
     kind: Service
@@ -282,7 +284,7 @@ To deploy the application, you use a manifest file to create all the objects req
                 memory: 50Mi
               limits:
                 cpu: 75m
-                memory: 128Mi    
+                memory: 128Mi
     ---
     apiVersion: v1
     kind: Service
@@ -361,7 +363,7 @@ To deploy the application, you use a manifest file to create all the objects req
             ports:
             - containerPort: 8080
               name: store-front
-            env: 
+            env:
             - name: VUE_APP_ORDER_SERVICE_URL
               value: "http://order-service:3000/"
             - name: VUE_APP_PRODUCT_SERVICE_URL
@@ -387,7 +389,7 @@ To deploy the application, you use a manifest file to create all the objects req
       type: LoadBalancer
     ```
 
-    For a breakdown of YAML manifest files, see [Deployments and YAML manifests](../concepts-clusters-workloads.md#deployments-and-yaml-manifests).
+    For a breakdown of YAML manifest files, see [Deployments and YAML manifests](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
 
     If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
@@ -523,7 +525,7 @@ The `azd` template contains all the code needed to create the services, but you 
 
 ## Create and deploy resources for your cluster
 
-To deploy the application, you use the `azd up` command to create all the objects required to run the [AKS Store application][aks-store-demo]. 
+To deploy the application, you use the `azd up` command to create all the objects required to run the [AKS Store application][aks-store-demo].
 
 * An `azure.yaml` file defines a cluster's desired state, such as which container images to fetch and includes the following Kubernetes deployments and services:
 
@@ -549,7 +551,7 @@ The `azd` template for this quickstart creates a new resource group with an AKS 
 
     `azd up` runs all the hooks inside of the [`azd-hooks` folder](https://github.com/Azure-Samples/aks-store-demo/tree/main/azd-hooks) to preregister, provision, and deploy the application services.
 
-    Customize hooks to add custom code into the `azd` workflow stages. For more information, see the [`azd` hooks][azd-hooks] reference.    
+    Customize hooks to add custom code into the `azd` workflow stages. For more information, see the [`azd` hooks][azd-hooks] reference.
 
 2. Select an Azure subscription for your billing usage.
 

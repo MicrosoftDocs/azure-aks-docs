@@ -7,6 +7,7 @@ ms.author: allensu
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 06/20/2023
+# Customer intent: As an advanced Kubernetes user, I want to deploy an AKS cluster with no preinstalled CNI plugin, so that I can use a custom CNI solution that aligns with my on-premises environment.
 ---
 
 # Bring your own Container Network Interface (CNI) plugin with Azure Kubernetes Service (AKS)
@@ -34,6 +35,7 @@ Support is still provided for non-CNI-related issues.
   * `Microsoft.Network/virtualNetworks/subnets/read`
 * The subnet assigned to the AKS node pool can't be a [delegated subnet](/azure/virtual-network/subnet-delegation-overview).
 * AKS doesn't apply Network Security Groups (NSGs) to its subnet or modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure the security rules in the NSGs allow traffic within the node CIDR range. For more information, see [Network security groups][aks-network-nsg].
+* No route table is created by AKS in the managed virtual network.
 
 ## Create an AKS cluster with no CNI plugin preinstalled
 

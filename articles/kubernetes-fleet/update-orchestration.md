@@ -2,7 +2,7 @@
 title: "Update Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to orchestrate updates across multiple clusters using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 03/26/2025
+ms.date: 06/16/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,6 +10,7 @@ ms.custom:
   - devx-track-azurecli
   - ignite-2023
   - build-2024
+# Customer intent: "As a platform admin managing multiple Kubernetes clusters, I want to orchestrate updates across those clusters, so that I can ensure safe and consistent upgrades while minimizing downtime and complexity."
 ---
 
 # Update Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager
@@ -31,7 +32,6 @@ This guide covers how to configure and manually execute update runs.
     ```bash
     export GROUP=<resource-group>
     export FLEET=<fleet-name>
-    export AKS_CLUSTER_ID=<aks-cluster-resource-id>
     ```
 
 * If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.58.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
@@ -140,7 +140,7 @@ az fleet updaterun start \
 
 ## Update clusters using groups and stages
 
-You can define an update run using update stages to sequentially order the application of updates to different update groups. For example, a first update stage might update test environment member clusters, and a second update stage would then update production environment member clusters. You can also specify a wait time between the update stages. You can store this sequence as a template in the form of an [update strategy](./update-create-update-strategy.md).
+You can define an update run using update stages to sequentially order the application of updates to different update groups. For example, a first update stage might update test environment member clusters, and a second update stage would then update production environment member clusters. You can also specify what approvals are required before or after each stage, and a wait time between the update stages. You can store this sequence as a template in the form of an [update strategy](./update-create-update-strategy.md).
 
 #### [Azure portal](#tab/azure-portal)
 
@@ -150,7 +150,7 @@ You can define an update run using update stages to sequentially order the appli
 
     :::image type="content" source="./media/update-orchestration/update-run-stages-inline.png" alt-text="Screenshot of the Azure portal page for choosing stages mode within update run." lightbox="./media/update-orchestration/update-run-stages-lightbox.png":::
 
-1. Select **Create stage**, and then enter a name for the stage and the wait time between stages.
+1. Select **Create stage**, and then enter a name for the stage and set approvals and a wait time between stages if desired.
 
     :::image type="content" source="./media/update-orchestration/create-stage-basics-inline.png" alt-text="Screenshot of the Azure portal page for creating a stage and defining wait time." lightbox="./media/update-orchestration/create-stage-basics.png":::
 
@@ -280,7 +280,7 @@ The following sections explain how to manage an update run using the Azure porta
 
      :::image type="content" source="./media/update-orchestration/run-start.png" alt-text="A screenshot of the Azure portal showing how to start an update run in the 'Not started' state." lightbox="./media/update-orchestration/run-start.png":::
 
-* On the **Multi-cluster update** page of the fleet resource, you can **Stop** a currently **Running** update run:
+* On the **Multi-cluster update** page of the fleet resource, you can **Stop** a currently **Running** or **Pending** update run:
 
     :::image type="content" source="./media/update-orchestration/run-stop.png" alt-text="A screenshot of the Azure portal showing how to stop an update run in the 'Running' state." lightbox="./media/update-orchestration/run-stop.png":::
 
@@ -349,6 +349,7 @@ The generated update run is not automatically started, allowing you to review it
 
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
 * [How-to: Monitor update runs for Azure Kubernetes Fleet Manager](./howto-monitor-update-runs.md).
+* [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md
@@ -358,4 +359,4 @@ The generated update run is not automatically started, allowing you to review it
 [az-fleet-updaterun-start]: /cli/azure/fleet/updaterun#az-fleet-updaterun-start
 [az-fleet-updaterun-stop]: /cli/azure/fleet/updaterun#az-fleet-updaterun-stop
 [az-fleet-updaterun-skip]: /cli/azure/fleet/updaterun#az-fleet-updaterun-skip
-[az-fleet-updaterun-generate]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-generate-update-ru
+[az-fleet-updaterun-generate]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-generate-update-run

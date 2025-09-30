@@ -7,6 +7,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli, build-2023
 ms.date: 04/06/2025
+# Customer intent: As a cloud architect, I want to configure an AKS cluster with Azure CNI Powered by Cilium, so that I can achieve high-performance networking and enhanced security for my containerized applications.
 ---
 
 # Configure Azure CNI Powered by Cilium in Azure Kubernetes Service (AKS)
@@ -48,6 +49,7 @@ If you aren't sure which option to select, read ["Choosing a network model to us
 | 1.30 (LTS)         | 1.14.19        |
 | 1.31               | 1.16.6         |
 | 1.32               | 1.17.0         |
+| 1.33               | 1.17.0         |
 
 See [Supported Kubernetes Versions](./supported-kubernetes-versions.md) for more information on AKS versioning and release timelines.
 
@@ -63,9 +65,7 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 * Network policies can't use `ipBlock` to allow access to node or pod IPs. See [frequently asked questions](#frequently-asked-questions) for details and recommended workaround.
 
-* Multiple Kubernetes services can't use the same host port with different protocols (for example, TCP or UDP) ([Cilium issue #14287](https://github.com/cilium/cilium/issues/14287)).
-
-* Network policies may be enforced on reply packets when a pod connects to itself via service cluster IP ([Cilium issue #19406](https://github.com/cilium/cilium/issues/19406)).
+* For Cilium versions 1.16 or earlier, multiple Kubernetes services can't use the same host port with different protocols (for example, TCP or UDP) ([Cilium issue #14287](https://github.com/cilium/cilium/issues/14287)).
 
 * Network policies aren't applied to pods using host networking (`spec.hostNetwork: true`) because these pods use the host identity instead of having individual identities.
 
@@ -159,6 +159,8 @@ az aks create \
     No, AKS manages the Cilium configuration and it can't be modified. We recommend that customers who require more control use [AKS BYO CNI](./use-byo-cni.md) and install Cilium manually.
 
 - **Can I use `CiliumNetworkPolicy` custom resources instead of Kubernetes `NetworkPolicy` resources?**
+
+    L3 and L4 `CiliumNetworkPolicy` are supported and can be used alongside Kubernetes `NetworkPolicy` resources.
 
     Customers may use FQDN filtering and Layer 7 Policies as part of the [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) feature bundle.
 

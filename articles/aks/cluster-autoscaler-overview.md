@@ -7,6 +7,7 @@ ms.date: 01/05/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a Kubernetes administrator, I want to configure cluster autoscaling for my AKS workloads, so that I can automatically adjust resources to meet application demands while optimizing performance and cost.
 ---
 
 # Cluster autoscaling in Azure Kubernetes Service (AKS) overview

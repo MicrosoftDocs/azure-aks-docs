@@ -1,15 +1,16 @@
 ---
-title: Configure and deploy Apache Airflow on Azure Kubernetes Service (AKS)
-description: In this article, you configure and deploy Apache Airflow on Azure Kubernetes Service (AKS) using Helm.
+title: Configure and deploy Apache Airflow on AKS using Helm
+description: Configure storage and secrets to deploy Apache Airflow on Azure Kubernetes Service (AKS) using Helm.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 12/19/2024
+ms.date: 07/14/2025
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'
+# Customer intent: "As a cloud engineer, I want to deploy Apache Airflow on Azure Kubernetes Service using Helm, so that I can efficiently manage and automate workflows in a scalable and production-grade environment."
 ---
 
-# Configure and deploy Airflow on Azure Kubernetes Service (AKS)
+# Configure and deploy Apache Airflow on Azure Kubernetes Service (AKS)
 
 In this article, you configure and deploy Apache Airflow on Azure Kubernetes Service (AKS) using Helm.
 
@@ -103,7 +104,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 
     ```bash
     kubectl apply -f - <<EOF
-    apiVersion: external-secrets.io/v1beta1
+    apiVersion: external-secrets.io/v1
     kind: SecretStore
     metadata:
       name: azure-store
@@ -129,7 +130,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 
     ```bash
     kubectl apply -f - <<EOF
-    apiVersion: external-secrets.io/v1beta1
+    apiVersion: external-secrets.io/v1
     kind: ExternalSecret
     metadata:
       name: airflow-aks-azure-logs-secrets

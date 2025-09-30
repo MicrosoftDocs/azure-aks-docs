@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 03/27/2025
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: "As a Kubernetes administrator, I want to monitor GPU metrics using NVIDIA DCGM Exporter with Managed Prometheus and Grafana, so that I can optimize resource utilization and ensure the performance of GPU-enabled workloads in my AKS cluster."
 ---
 
 # Monitor GPU metrics from NVIDIA DCGM exporter with Azure Managed Prometheus and Managed Grafana on Azure Kubernetes Service (AKS)
@@ -153,6 +154,6 @@ Once NVIDIA DCGM Exporter is successfully deployed to your GPU node pool, you ne
 
 ## Next steps
 
+- Track your [GPU node health](./gpu-health-monitoring.md) with Node Problem Detector (NPD)
 - Deploy a [multi-instance GPU (MIG)](./gpu-multi-instance.md) workload on AKS.
 - Explore the [AI toolchain operator add-on (preview)](./ai-toolchain-operator.md) for AI inferencing and fine-tuning.
-- Learn more about [Ray clusters on AKS](./ray-overview.md).

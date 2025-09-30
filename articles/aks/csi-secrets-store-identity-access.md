@@ -8,11 +8,12 @@ ms.subservice: aks-security
 ms.date: 12/19/2023
 ms.custom: devx-track-azurecli
 zone_pivot_groups: csi-secrets-store-identity-access
+# Customer intent: As a Kubernetes administrator, I want to configure the Azure Key Vault Secrets Store CSI Driver with identity-based access methods, so that I can securely manage secrets in my Azure Kubernetes Service (AKS) cluster.
 ---
 
 # Connect your Azure identity provider to the Azure Key Vault Secrets Store CSI Driver in Azure Kubernetes Service (AKS)
 
-The Secrets Store Container Storage Interface (CSI) Driver on Azure Kubernetes Service (AKS) provides various methods of identity-based access to your Azure Key Vault. This article outlines these methods and best practices for when to use Role-based access control (RBAC) or OpenID Connect (OIDC) security models to access your key vault and AKS cluster.
+The Secrets Store Container Storage Interface (CSI) Driver on Azure Kubernetes Service (AKS) provides various methods of identity-based access to your Azure Key Vault. This article outlines these methods and best practices for when to use Azure role-based access control (Azure RBAC) or OpenID Connect (OIDC) security models to access your key vault and AKS cluster.
 
 You can use one of the following access methods:
 
@@ -41,8 +42,8 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
 
 > [!NOTE]
 >
-> - This authentication method replaces Microsoft Entra pod-managed identity (preview). The open source Microsoft Entra pod-managed identity (preview) in Azure Kubernetes Service has been deprecated as of 10/24/2022.
-> - Microsoft Entra Workload ID is supports both Windows and Linux clusters.
+> - This authentication method replaces Microsoft Entra pod-managed identity (preview). The open source Microsoft Entra pod-managed identity (preview) in Azure Kubernetes Service was deprecated as of October 24, 2022.
+> - Microsoft Entra Workload ID supports both Windows and Linux clusters.
 
 ### Configure workload identity
 
@@ -61,7 +62,7 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
 2. Create a managed identity using the [`az identity create`][az-identity-create] command.
 
     > [!NOTE]
-    > This step assumes you have an existing AKS cluster with workload identity enabled. If you don't have it enabled, see [Enable workload identity on an existing AKS cluster](./workload-identity-deploy-cluster.md#update-an-existing-aks-cluster) to enable it.
+    > This step assumes you have an existing AKS cluster with workload identity enabled. If workload identity isn't enabled, see [Enable workload identity on an existing AKS cluster](./workload-identity-deploy-cluster.md#update-an-existing-aks-cluster) to enable it.
 
     ```azurecli-interactive
     az identity create --name $UAMI --resource-group $RESOURCE_GROUP
@@ -85,14 +86,14 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
     ```azurecli-interactive
     export KEYVAULT_SCOPE=$(az keyvault show --name $KEYVAULT_NAME --query id -o tsv)
 
-    # Example command for key vault with RBAC enabled using `key` type
+    # Example command for key vault with Azure RBAC enabled using `key` type
     az role assignment create --role "Key Vault Certificate User" --assignee $USER_ASSIGNED_CLIENT_ID --scope $KEYVAULT_SCOPE
     ```
 
 4. Get the AKS cluster OIDC Issuer URL using the [`az aks show`][az-aks-show] command.
 
     > [!NOTE]
-    > This step assumes you have an existing AKS cluster with the OIDC Issuer URL enabled. If you don't have it enabled, see [Update an AKS cluster with OIDC Issuer](./use-oidc-issuer.md#update-an-aks-cluster-with-oidc-issuer) to enable it.
+    > This step assumes you have an existing AKS cluster with the OIDC Issuer URL enabled. If the OIDC Issuer URL isn't enabled, see [Update an AKS cluster with OIDC Issuer](./use-oidc-issuer.md#update-an-aks-cluster-with-oidc-issuer) to enable it.
 
     ```bash
     export AKS_OIDC_ISSUER="$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query "oidcIssuerProfile.issuerUrl" -o tsv)"
@@ -203,13 +204,13 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
 
 ## Access with managed identity
 
-A [Microsoft Entra Managed ID][managed-identity] is an identity that an administrator uses to authenticate themselves against other Azure services. The managed identity uses RBAC to federate with external identity providers.
+A [Microsoft Entra Managed ID][managed-identity] is an identity that an administrator uses to authenticate themselves against other Azure services. The managed identity uses Azure RBAC to federate with external identity providers.
 
 In this security model, you can grant access to your cluster's resources to team members or tenants sharing a managed role. The role is checked for scope to access the keyvault and other credentials. When you [enabled the Azure Key Vault provider for Secrets Store CSI Driver on your AKS Cluster](./csi-secrets-store-driver.md#create-an-aks-cluster-with-azure-key-vault-provider-for-secrets-store-csi-driver-support), it created a user identity.
 
 ### Configure managed identity
 
-1. Access your key vault using the [`az aks show`][az-aks-show] command and the user-assigned managed identity created by the add-on. You should also retrieve the identity's `clientId`, which you'll use in later steps when creating a `SecretProviderClass`.
+1. Access your key vault using the [`az aks show`][az-aks-show] command and the user-assigned managed identity created by the add-on. You should also retrieve the identity's `clientId`, which you use in later steps when creating a `SecretProviderClass`.
 
     ```azurecli-interactive
     az aks show --resource-group <resource-group> --name <cluster-name> --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId -o tsv
@@ -242,7 +243,7 @@ In this security model, you can grant access to your cluster's resources to team
     export IDENTITY_OBJECT_ID="$(az identity show --resource-group <resource-group> --name <identity-name> --query 'principalId' -o tsv)"
     export KEYVAULT_SCOPE=$(az keyvault show --name <key-vault-name> --query id -o tsv)
 
-    # Example command for key vault with RBAC enabled using `key` type
+    # Example command for key vault with Azure RBAC enabled using `key` type
     az role assignment create --role "Key Vault Certificate User" --assignee $USER_ASSIGNED_CLIENT_ID --scope $KEYVAULT_SCOPE
     ```
 
@@ -277,7 +278,7 @@ In this security model, you can grant access to your cluster's resources to team
 
     > [!NOTE]
     > If you use `objectAlias` instead of `objectName`, make sure to update the YAML script.
-    
+
     > [!NOTE]
     > In order for the `SecretProviderClass` to function properly, make sure to populate your Azure Key Vault with secrets, keys, or certificates before referencing them in the `objects` section.
 
@@ -358,11 +359,11 @@ A key vault certificate also contains public x509 certificate metadata. The key 
 > [!NOTE]
 > Before you disable the add-on, ensure that *no* `SecretProviderClass` is in use. Trying to disable the add-on while a `SecretProviderClass` exists results in an error.
 
-- Disable the Azure Key Vault provider for Secrets Store CSI Driver capability in an existing cluster using the [`az aks disable-addons`][az-aks-disable-addons] command with the `azure-keyvault-secrets-provider` add-on.
+Disable the Azure Key Vault provider for Secrets Store CSI Driver capability in an existing cluster using the [`az aks disable-addons`][az-aks-disable-addons] command with the `azure-keyvault-secrets-provider` add-on.
 
-    ```azurecli-interactive
-    az aks disable-addons --addons azure-keyvault-secrets-provider --resource-group myResourceGroup --name myAKSCluster
-    ```
+```azurecli-interactive
+az aks disable-addons --addons azure-keyvault-secrets-provider --resource-group myResourceGroup --name myAKSCluster
+```
 
 > [!NOTE]
 > When you disable the add-on, existing workloads should have no issues or see any updates in the mounted secrets. If the pod restarts or a new pod is created as part of scale-up event, the pod fails to start because the driver is no longer running.
@@ -373,7 +374,7 @@ A key vault certificate also contains public x509 certificate metadata. The key 
 
 ## Next steps
 
-In this article, you learned how to create and provide an identity to access your Azure Key Vault. The [Service Connector](/azure/service-connector/overview) integration helps simplify the connection configuration for AKS workloads and Azure backing services. It securely handles authentication and network configurations and follows best practices for connecting to Azure services. For more information, see [Use the Azure Key Vault provider for Secrets Store CSI Driver in an AKS cluster](/azure/service-connector/tutorial-python-aks-keyvault-csi-driver) and the [Service Connector introduction](https://azure.github.io/AKS/2024/05/23/service-connector-intro).
+In this article, you learned how to create and provide an identity to access your Azure Key Vault. The [Service Connector](/azure/service-connector/overview) integration helps simplify the connection configuration for AKS workloads and Azure backing services. It securely handles authentication and network configurations and follows best practices for connecting to Azure services. For more information, see [Use the Azure Key Vault provider for Secrets Store CSI Driver in an AKS cluster](/azure/service-connector/tutorial-python-aks-keyvault-csi-driver) and the [Service Connector introduction](https://blog.aks.azure.com/2024/05/23/service-connector-introduction).
 
 If you want to configure extra configuration options or perform troubleshooting, see [Configuration options and troubleshooting resources for Azure Key Vault provider with Secrets Store CSI Driver in AKS](./csi-secrets-store-configuration-options.md).
 

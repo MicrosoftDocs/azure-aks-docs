@@ -1,12 +1,13 @@
 ---
-title: Solution overview for deploying a Kafka cluster on Azure Kubernetes Service (AKS) using Strimzi
+title: Solution Overview for Deploying a Kafka Cluster on Azure Kubernetes Service (AKS) using Strimzi
 description: In this article, we provide an overview of deploying a Kafka cluster on Azure Kubernetes Service (AKS) using the Strimzi Operator.
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 03/31/2025
+ms.date: 09/15/2025
 author: senavar
 ms.author: senavar
 ms.custom: 'stateful-workloads'
+# Customer intent: "As a cloud architect, I want to deploy a Kafka cluster on Azure Kubernetes Service using an automated operator, so that I can efficiently manage and scale our event streaming workloads in a robust and cost-effective manner."
 ---
 
 # Deploy a Kafka cluster on Azure Kubernetes Service (AKS) using Strimzi
@@ -17,7 +18,7 @@ In this guide, we review the prerequisites, architecture considerations, and key
 
 ## What is Apache Kafka and Strimzi?
 
-[Apache Kafka](https://kafka.apache.org/) is an open-source distributed event streaming platform designed to handle high-volume, high-throughput, and real-time streaming data. As a result, it is used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications. However, managing and scaling Kafka clusters can be challenging and often time-consuming.
+[Apache Kafka](https://kafka.apache.org/) is an open-source distributed event streaming platform designed to handle high-volume, high-throughput, and real-time streaming data. As a result, it's used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications. However, managing and scaling Kafka clusters can be challenging and often time-consuming.
 
 [Strimzi](https://strimzi.io) is an open-source project that simplifies the deployment, management, and operation of Apache Kafka on Kubernetes. It provides a set of Kubernetes Operators and container images that automate complex Kafka operational tasks through declarative configuration.
 
@@ -33,8 +34,8 @@ To learn more about Strimzi, review the [Strimzi documentation](https://strimzi.
 
 The Strimzi Cluster Operator is the central component that manages the entire Kafka ecosystem. When deployed, it can also provision the Entity Operator, which consists of:
 
-* **Topic Operator**: Automates the creation, modification, and deletion of Kafka topics based on `KafkaTopic` custom resources.  
-* **User Operator**: Manages Kafka users and their Access Control Lists (ACLs) through `KafkaUser` custom resources.  
+- **Topic Operator**: Automates the creation, modification, and deletion of Kafka topics based on `KafkaTopic` custom resources.  
+- **User Operator**: Manages Kafka users and their Access Control Lists (ACLs) through `KafkaUser` custom resources.  
 
 Together, these operators create a fully declarative management system where your Kafka infrastructure is defined as Kubernetes resources that you can version control, audit, and consistently deploy across environments.  
 
@@ -42,23 +43,23 @@ Together, these operators create a fully declarative management system where you
 
 The Strimzi Cluster Operator manages Kafka clusters through specialized custom resources:  
 
-* **KafkaNodePools**: Define groups of Kafka nodes with specific roles (broker, controller, or both).  
-* **Kafka**: The main custom resource that ties everything together, defining cluster-wide configurations.  
+- **KafkaNodePools**: Define groups of Kafka nodes with specific roles (broker, controller, or both).  
+- **Kafka**: The main custom resource that ties everything together, defining cluster-wide configurations.  
 
 A typical deployment of `KafkaNodePools` and `Kafka` includes:
 
-* Dedicated broker nodes that handle client traffic and data storage.
-* Dedicated controller nodes that manage cluster metadata and coordination.
-* Multiple replicas of each component distributed across availability zones.  
+- Dedicated broker nodes that handle client traffic and data storage.
+- Dedicated controller nodes that manage cluster metadata and coordination.
+- Multiple replicas of each component distributed across availability zones.  
 
-### Cruise Control 
+### Cruise Control
 
 [Cruise Control](https://github.com/linkedin/cruise-control) is an advanced component that provides automated workload balancing and monitoring for Kafka clusters. When deployed as part of a Strimzi-managed Kafka cluster, Cruise Control offers:  
 
-* **Automated partition rebalancing**: Redistributes partitions across brokers to optimize resource utilization.  
-* **Anomaly detection**: Identifies and alerts on abnormal cluster behavior.  
-* **Self-healing capabilities**: Automatically remedies common cluster imbalance issues.  
-* **Workload analysis**: Provides insights into cluster performance and resource usage.  
+- **Automated partition rebalancing**: Redistributes partitions across brokers to optimize resource utilization.  
+- **Anomaly detection**: Identifies and alerts on abnormal cluster behavior.  
+- **Self-healing capabilities**: Automatically remedies common cluster imbalance issues.  
+- **Workload analysis**: Provides insights into cluster performance and resource usage.  
 
 Cruise Control helps maintain optimal performance as your workload changes over time, reducing the need for manual intervention during scaling events or following broker failures.  
 
@@ -70,24 +71,21 @@ Cruise Control helps maintain optimal performance as your workload changes over 
 
 Consider running Kafka on AKS when:  
 
-* You need complete control over Kafka configuration and operations.  
-* Your use case requires specific Kafka features not available in managed offerings.  
-* You want to integrate Kafka with other containerized applications running on AKS.  
-* You need to deploy in regions where managed Kafka services aren't available.  
-* Your organization has existing expertise in Kubernetes and container orchestration.  
+- You need complete control over Kafka configuration and operations.  
+- Your use case requires specific Kafka features not available in managed offerings.  
+- You want to integrate Kafka with other containerized applications running on AKS.  
+- You need to deploy in regions where managed Kafka services aren't available.  
+- Your organization has existing expertise in Kubernetes and container orchestration.  
 
 For simpler use cases or when operational overhead is a concern, consider fully managed services like [Azure Event Hubs](/azure/event-hubs/event-hubs-about).
 
 ## Key considerations for Kafka on AKS  
 
-### Azure Container Storage
+### Azure Disk Storage
 
-[Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) is a managed Kubernetes storage solution that dynamically provisions persistent volumes for stateful applications like Kafka. Based on the OpenEBS open-source project, it provides enterprise-grade storage capabilities specifically optimized for containerized workloads.  
+For Kafka deployments on AKS, we use the Azure Disk CSI driver which provides persistent volumes backed by Azure managed disks. Strimzi leverages [(Just a Bunch of Disks (JBOD)](https://strimzi.io/docs/operators/latest/deploying#considerations-for-data-storage-str) configuration to manage data persistence.
 
-For Kafka deployments, Strimzi leverages [(Just a Bunch of Disks (JBOD)](https://strimzi.io/docs/operators/latest/deploying#considerations-for-data-storage-str) configuration to manage data persistence. To ensure high availability across infrastructure failures, a [zone-redundant storage pool](/azure/storage/container-storage/enable-multi-zone-redundancy) with Azure Container Storage should be configured to distribute underlying disks across all availability zones. Each zone will use Locally Redundant Storage (LRS) with Premium SSD v2 disks. Zone-Redundant Storage (ZRS) is unnecessary since Kafka provides built-in data replication at the application level. Premium SSD v2 can deliver the latency, high IOPS, and consistent throughput required by IO-intensive Kafka workloads at an optimized cost structure.  
-
-> [!NOTE]  
-> Ephemeral storage isn't recommended for production Kafka clusters. When using ephemeral storage, broker restarts trigger full data replication across the cluster, which can significantly impact performance and recovery times.  
+To ensure high availability across infrastructure failures, storage classes should be configured with Premium SSD v2 disks distributed across availability zones using the `WaitForFirstConsumer` volume binding mode. This ensures pods are scheduled in zones where their persistent volumes can be created. Premium SSD v2 can deliver the latency, high IOPS, and consistent throughput required by IO-intensive Kafka workloads at an optimized cost structure.
 
 The following table provides starting points for Premium SSD v2 disk configurations across different Kafka cluster sizes:
 
@@ -118,49 +116,49 @@ When sizing VMs for your Kafka deployment, consider these workload-specific fact
 | **Retention period** | Longer retention increases storage requirements. | - Calculate total storage needs based on throughput × retention. |  
 | **Consumer count** | More consumers increase CPU and network load. | - Each consumer group adds overhead. <br> - High fan-out patterns require additional resources. |  
 | **Topic partitioning** | Partition counts impact memory utilization. | - Each partition consumes memory resources. <br> - Over-partitioning can degrade performance. |  
-| **Infrastructure overhead** | Additional system components impact available resources for Kafka. | - Azure Container Storage requires a minimum of 1 vCPU per node. <br> - Monitoring agents, logging components, network policies, and security tools add extra overhead. <br> - Reserve an overhead for system components. |  
+| **Infrastructure overhead** | Additional system components impact available resources for Kafka. | - The Azure Disk CSI driver has minimal resource overhead. <br> - Monitoring agents, logging components, network policies, and security tools add extra overhead. <br> - Reserve an overhead for system components. |
 
 > [!IMPORTANT]
-> The following recommendations serve as starting guidance only. Your optimal VM SKU selection should be tailored to your specific Kafka workload characteristics, data patterns, and performance requirements. Each broker pod is estimated to have ~8GB of reserved memory. Each controller pod is estimated to have ~4GB of reserved memory. Your JVM and heap memory requirements may be larger or smaller.
+> The following recommendations serve as starting guidance only. Your optimal VM SKU selection should be tailored to your specific Kafka workload characteristics, data patterns, and performance requirements. Each broker pod is estimated to have ~8GB of reserved memory. Each controller pod is estimated to have ~4GB of reserved memory. Your JVM and heap memory requirements might be larger or smaller.
 
 **Small to medium Kafka clusters**  
 
 | VM SKU | vCPUs | RAM | Network | Broker density (Estimates) | Key benefits |  
 |--------|-------|-----|---------|----------------|-------------|  
-| **Standard_D8ds** | 8 | 32 GB | 12,500 Mbps | 1-3 per node | - Cost-effective for horizontal scaling but may require more nodes as scale increases. |  
-| **Standard_D16ds** | 16 | 64 GB | 12,500 Mbps | 3-6 per node | - More efficient resource utilization with additional vCPU and RAM, requiring less AKS nodes. |  
+| **Standard_D8ds** | 8 | 32 GB | 12,500 Mbps | 1-3 per node | Cost-effective for horizontal scaling but might require more nodes as scale increases. |  
+| **Standard_D16ds** | 16 | 64 GB | 12,500 Mbps | 3-6 per node | More efficient resource utilization with additional vCPU and RAM, requiring less AKS nodes. |  
 
 **Large Kafka clusters**  
 
 | VM SKU | vCPUs | RAM | Network | Broker density (Estimates) | Key benefits |  
 |--------|-------|-----|---------|----------------|-------------|  
-| **Standard_E16ds** | 16 | 128 GB | 12,500 Mbps | 6+ per node | - Better performance for data-intensive, large-scale operations with increased high memory-to-core ratios. Able to have larger memory heaps or more horizontal scaling |
+| **Standard_E16ds** | 16 | 128 GB | 12,500 Mbps | 6+ per node | - Better performance for data-intensive, large-scale operations with increased high memory-to-core ratios. <br> - Can support larger memory heaps or more horizontal scaling. |
 
 Before finalizing your production environment, we recommend taking the following steps:  
 
-* Perform load testing with representative data volumes and patterns.  
-* Monitor CPU, memory, disk, and network utilization during peak loads.  
-* Adjust AKS node pool SKUs based on observed bottlenecks.  
-* Review cost of node pool SKUs.
+- Perform load testing with representative data volumes and patterns.  
+- Monitor CPU, memory, disk, and network utilization during peak loads.  
+- Adjust AKS node pool SKUs based on observed bottlenecks.  
+- Review cost of node pool SKUs.
 
 ### High availability and resilience  
 
-To ensure high availability of your Kafka deployment:  
+To ensure the high availability of your Kafka deployment, you should:
 
-* Deploy across multiple availability zones.  
-* Configure proper replica distribution constraints.  
-* Implement appropriate pod disruption budgets.  
-* Configure Cruise Control for topic partition rebalancing.
-* Use Strimzi Drain Cleaner to handle node draining and maintenance operations.  
+- Deploy across multiple availability zones.  
+- Configure proper replica distribution constraints.  
+- Implement appropriate pod disruption budgets.  
+- Configure Cruise Control for topic partition rebalancing.
+- Use Strimzi Drain Cleaner to handle node draining and maintenance operations.  
 
-### Monitoring and operations 
+### Monitoring and operations
 
 Effective monitoring of Kafka clusters includes:  
 
-* JMX metrics collection configuration.
-* Consumer lag monitoring with Kafka Exporter.  
-* Integration with Azure Managed Prometheus and Azure Managed Grafana.  
-* Alerting on key performance indicators and health metrics.  
+- JMX metrics collection configuration.
+- Consumer lag monitoring with Kafka Exporter.  
+- Integration with Azure Managed Prometheus and Azure Managed Grafana.  
+- Alerting on key performance indicators and health metrics.  
 
 ## Next step  
 
@@ -169,7 +167,7 @@ Effective monitoring of Kafka clusters includes:
 
 ## Contributors  
 
-*Microsoft maintains this article. The following contributors originally wrote it:*  
+_Microsoft maintains this article. The following contributors originally wrote it:_  
 
-* Sergio Navar | Senior Customer Engineer  
-* Erin Schaffer | Content Developer 2  
+- Sergio Navar | Senior Customer Engineer  
+- Erin Schaffer | Content Developer 2

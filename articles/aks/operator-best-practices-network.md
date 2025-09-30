@@ -6,6 +6,7 @@ ms.topic: best-practice
 ms.date: 03/18/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a cluster operator, I want to implement best practices for network connectivity and security in Azure Kubernetes Service, so that I can ensure efficient resource management and safeguard my applications against potential security threats.
 ---
 
 # Best practices for network connectivity and security in Azure Kubernetes Service (AKS)

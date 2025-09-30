@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.author: alvinli
 author: alvinli
 ms.date: 05/09/2024
+# Customer intent: "As a cloud administrator managing an Azure Kubernetes Service cluster, I want to delete a node pool, so that I can optimize resource allocation and manage costs effectively."
 ---
 
 # Delete an Azure Kubernetes Service (AKS) node pool
@@ -71,7 +72,7 @@ If your cluster has PodDisruptionBudgets that are preventing the deletion of the
     az aks nodepool delete \
         --resource-group myResourceGroup \
         --cluster-name myAKSCluster \
-        --name nodepool1
+        --name nodepool1 \
         --ignore-pod-disruption-budget true
     ```
 
@@ -103,7 +104,7 @@ If your cluster has PodDisruptionBudgets that are preventing the deletion of the
     az aks nodepool delete-machines \
         --resource-group <resource-group-name> \
         --cluster-name <cluster-name> \
-        --name <node-pool-name>
+        --name <node-pool-name> \
         --machine-names <vm-name-1> <vm-name-2>
     ```
 
