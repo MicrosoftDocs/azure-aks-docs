@@ -1,6 +1,6 @@
 ---
-title: Enable native sidecar mode for Istio-based service mesh add-on in Azure Kubernetes Service (AKS) (preview)
-description: Enable native sidecar mode for Istio-based service mesh add-on in Azure Kubernetes Service (AKS) (preview).
+title: Enable native sidecar mode for Istio-based service mesh add-on in Azure Kubernetes Service (AKS)
+description: Enable native sidecar mode for Istio-based service mesh add-on in Azure Kubernetes Service (AKS)
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
@@ -32,7 +32,7 @@ Starting with AKS 1.33 and Istio add-on `asm-1-28`, AKS service mesh add-on uses
 | 1.33+             | `asm-1-28`+        | Enabled                              | Enabled (by mesh or cluster upgrade to required versions)         |
 
 
-# New clusters
+## New clusters
 When creating a new AKS cluster with the [az aks create][az-aks-create] command, choose version `1.33` or newer and Istio `asm-1-27` or newer. The new cluster will have native sidecar mode enabled automatically.
 
 ```azurecli-interactive
@@ -49,10 +49,10 @@ az aks create \
 For a new service mesh installation on an existing cluster >= version AKS 1.33, select `asm-1-27` or newer during [installation][install-istio-addon].
 
 
-# Existing clusters
+## Existing clusters
 This section describes how to check native sidecar feature status or enable it on an existing.
 
-## Check feature status
+### Check feature status
 
 The AKS cluster needs to be reconciled with the [az aks update][az-aks-update] command.
 
@@ -79,7 +79,7 @@ NAME                     INIT                     CONTAINERS
 sleep-7656cf8794-5b5j4   istio-init,istio-proxy   sleep
 ```
 
-## Check prerequisites
+### Check prerequisites
 If native sidecar is not enabled, it is likely one of the version prerequisites have not been met.
 
 1. Check that the AKS cluster's Kubernetes control plane version is 1.33 or higher using [az aks show][az-aks-show].

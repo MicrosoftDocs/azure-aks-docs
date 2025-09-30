@@ -924,7 +924,7 @@
                   href: istio-about.md
                 - name: Getting started
                   href: istio-deploy-addon.md
-                - name: Native sidecar mode (Preview)
+                - name: Native sidecar mode
                   href: istio-native-sidecar.md
                 - name: Mesh configuration
                   href: istio-meshconfig.md
