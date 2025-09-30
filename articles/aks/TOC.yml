@@ -595,8 +595,6 @@
             href: kueue-overview.md
           - name: Schedule and deploy batch jobs with Kueue
             href: deploy-batch-jobs-with-kueue.md
-          - name: Monitor Kueue deployments and queues
-            href: kueue-monitoring.md
 - name: Security
   items:
     - name: Security concepts

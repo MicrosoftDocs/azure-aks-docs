@@ -11,7 +11,7 @@ ms.service: azure-kubernetes-service
 
 # Install and Configure Kueue on Azure Kubernetes Service (AKS)
 
-In this article, you learn how to install and configure Kueue to schedule batch workloads on an Azure Kubernetes Service (AKS) cluster. You also explore different installation methods to enable advanced Kueue features, verify your deployment, and monitor with Prometheus metrics exposed by Kueue.
+In this article, you learn how to install and configure Kueue to schedule batch workloads on an Azure Kubernetes Service (AKS) cluster. You also explore different Kueue concepts, installation methods to enable advanced Kueue features, and learn how to verify your deployments.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
@@ -207,7 +207,6 @@ If you no longer need to use the Kueue controller manager or Kueue custom resour
 ## Next steps
 
 * [Deploy sample batch jobs with Kueue on your AKS cluster](./deploy-batch-jobs-with-kueue.md).
-* [Monitor your Kueue deployments with key Prometheus metrics](./kueue-monitoring.md).
 * [Deploy multi-cluster scheduling and resource placement with Kueue and KubeFleet on AKS](https://blog.aks.azure.com/2025/04/02/Scaling-Kubernetes-for-AI-and-Data-intensive-Workloads).
 
 <!-- LINKS -->
