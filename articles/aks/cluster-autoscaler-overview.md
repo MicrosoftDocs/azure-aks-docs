@@ -32,7 +32,7 @@ It's a common practice to enable cluster autoscaler for nodes and either the Ver
 
 * When implementing **availability zones with the cluster autoscaler**, we recommend using a single node pool for each zone. You can set the `--balance-similar-node-groups` parameter to `True` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations. When this approach isn't implemented, scale down operations can disrupt the balance of nodes across zones.
 * For **clusters with more than 400 nodes**, we recommend using Azure CNI or Azure CNI Overlay.
-* To **effectively run workloads concurrently on both Spot and Fixed node pools**, consider using [*priority expanders*](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/expander/priority/readme.md). This approach allows you to schedule pods based on the priority of the node pool. The following configuration illustrates this setup.
+* To **effectively run workloads concurrently on both Spot and On-demand node pools**, consider using [*priority expanders*](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/expander/priority/readme.md). This approach allows you to schedule pods based on the priority of the node pool. The following configuration illustrates this setup.
   ```yaml
   apiVersion: v1
   kind: ConfigMap
