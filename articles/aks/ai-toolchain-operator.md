@@ -177,7 +177,7 @@ Learn more about KAITO model deployment options below:
 * [Monitor your KAITO inference workload][kaito-monitoring].
 * [Fine tune a model][kaito-fine-tune] with the AI toolchain operator add-on on AKS.
 * Configure and test [tool calling with KAITO inference][kaito-tool-calling].
-* Deploy an [MCP server with AI toolchain operator][kaito-mcp] add-on on AKS.
+* Integrate an [MCP server with the AI toolchain operator][kaito-mcp] add-on on AKS.
 
 <!-- LINKS -->
 
