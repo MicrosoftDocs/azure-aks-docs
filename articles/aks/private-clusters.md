@@ -4,7 +4,7 @@ description: Learn how to create a private Azure Kubernetes Service (AKS) cluste
 ms.topic: how-to
 ms.author: schaffererin
 author: schaffererin
-ms.date: 09/01/2025
+ms.date: 09/30/2025
 ms.custom: references_regions, devx-track-azurecli
 ms.service: azure-kubernetes-service
 # Customer intent: "As a cloud administrator, I want to deploy a private Azure Kubernetes Service cluster, so that I can ensure secure network traffic and enhanced control over my Kubernetes resources."
@@ -236,16 +236,61 @@ You can only update from `byo` or `system` to `none`. No other combination of up
 
 ## Options for connecting to the private cluster
 
-The API server endpoint has no public IP address. To manage the API server, you need to use a VM that has access to the AKS cluster's Azure Virtual Network (VNet). There are several options for establishing network connectivity to the private cluster:
+The API server endpoint has no public IP address. To manage the API server, you need to use a VM or container that has access to the AKS cluster's Azure Virtual Network (VNet). There are several options for establishing network connectivity to the private cluster:
 
+* Use a [Cloud Shell][cloud-shell-vnet] instance deployed into a subnet that's connected to the API server for the cluster.
+* Use [Azure Bastion][azure-bastion]'s native client tunneling feature (Preview).
 * Create a VM in the same VNet as the AKS cluster using the [`az vm create`][az-vm-create] command with the `--vnet-name` flag.
 * Use a VM in a separate network and set up [virtual network peering][virtual-network-peering].
 * Use an [Express Route or VPN][express-route-or-VPN] connection.
 * Use the [AKS `command invoke` feature][command-invoke].
 * Use a [private endpoint][private-endpoint-service] connection.
-* Use a [Cloud Shell][cloud-shell-vnet] instance deployed into a subnet that's connected to the API server for the cluster.
 
-Creating a VM in the same VNet as the AKS cluster is the easiest option. Express Route and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges.
+Using Cloud Shell or Bastion (Preview) are the easiest options. Express Route and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges.
+
+| Option | Azure Cloud Shell | Azure Bastion (Preview) |
+|--------|-------------------|--------------------------|
+| Key differences | • Cost-effective, browser-based access <br> • Best for ad-hoc or infrequent use <br> • Preinstalled tools like `az cli` and `kubectl` | • Persistent, long-running access <br> • Suited for managing multiple clusters <br> • Use your own native client tooling |
+| Notable Limitations | • Not supported with AKS Automatic clusters or clusters with network resource group (NRG) lockdown <br> • A user cannot have multiple Cloud Shell sessions in different VNets at the same time| • Not supported with AKS Automatic clusters or clusters with NRG lockdown <br> • Not supported when public FQDN is disabled on the cluster |
+
+## Connect via Azure Cloud Shell
+
+### Deploy Required Resources
+
+While Cloud Shell is a free service, using Cloud Shell in a VNet requires some resources that incur cost, notably Azure Relay. To learn more about the resources that will be confiugred, see [Deploy Cloud Shell in a virtual network](cloud-shell-vnet-deploy).
+
+#### Deployment Prerequisites
+
+* The following resource providers must be registered in your subscription:
+    * Microsoft.CloudShell
+    * Microsoft.ContainerInstance
+    * Microsoft.Relay
+* The following RBAC permissions are required:
+    * `Microsoft.Resources/subscriptions/resourceGroups/write`
+    * `Microsoft.Authorization/roleAssignments/write`
+
+### [Quickstart in Portal (Preview)](#tab/Portal)
+
+This option creates a separate VNet with the necessary resources for Cloud Shell and configures VNet peering for you.
+
+1. In the [Azure portal](https://portal.azure.com), navigate to your private cluster resource.
+2. In the Overview page, select **Connect**.
+3. In the **Cloud Shell** tab, under **Prerequisites for private cluster connection**, select **Configure**.
+4. Once the deployment has succeeded, under **Set cluster context**, select **Open Cloud Shell** .
+
+If you have already configured Cloud Shell in a VNet using these steps for a particular cluster, following the same steps will simply ensure your Cloud Shell User Settings are properly configured to connect to deploy Cloud Shell in the correct VNet.
+
+### [ARM Template](#tab/ARM)
+
+To have more control over the deployment configuration, use the [provided ARM template](cloud-shell-vnet-deploy). You can set up Cloud Shell in the same VNet as the AKS private cluster with a dedicated subnet for Cloud Shell. Alternatively, you can deploy the resources in a new VNet and use [VNet peering](virtual-network-peering).
+
+### Configure Connection
+
+Once the required resources have been deployed, you can configure your Cloud Shell to deploy in the given VNet by following by following [Configure Cloud Shell to use a virtual network](cloud-shell-vnet-configure).
+
+## Connect via Azure Bastion (Preview)
+
+To use Bastion's native client tunneling feature, see [Connect to AKS private cluster using Azure Bastion](azure-bastion).
 
 ## Virtual network peering
 
@@ -466,7 +511,10 @@ For associated best practices, see [Best practices for network connectivity and 
 [az-network-vnet-peering-list]: /cli/azure/network/vnet/peering#az_network_vnet_peering_list
 [intro-azure-linux]: /azure/azure-linux/intro-azure-linux
 [cloud-shell-vnet]: /azure/cloud-shell/vnet/overview
+[cloud-shell-vnet-deploy]: /azure/cloud-shell/vnet/deployment
+[cloud-shell-vnet-configure]: /azure/cloud-shell/vnet/deployment#5-configure-cloud-shell-to-use-a-virtual-network
 [api-server-vnet-integration]: ./api-server-vnet-integration.md#enable-or-disable-private-cluster-mode-on-an-existing-cluster-with-api-server-vnet-integration
 [node-image-upgrade]: ./node-image-upgrade.md
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[azure-bastion]: /azure/bastion/bastion-connect-to-aks-private-cluster
