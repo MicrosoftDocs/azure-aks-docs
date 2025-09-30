@@ -30,10 +30,10 @@ New minor revisions and patches are rolled out as part of AKS releases. Announce
 | asm-1-21 | Mar 2024 | Apr 2024 | Oct 2024 | 1.26, 1.27, 1.28, 1.29, 1.30 | |
 | asm-1-22 | May 2024 | Jul 2024 | March 2025 | 1.27, 1.28, 1.29, 1.30 | |
 | asm-1-23 | Aug 2024 | Sept 2024 | June 2025 | 1.27, 1.28, 1.29, 1.30, 1.31, 1.32 | |
-| asm-1-24 | Nov 2024 | Feb 2025 | Sep 2025 | 1.28, 1.29, 1.30, 1.31, 1.32, 1.33 | |
+| asm-1-24 | Nov 2024 | Feb 2025 | Sept 2025 | 1.28, 1.29, 1.30, 1.31, 1.32, 1.33 | |
 | asm-1-25 | Mar 2025 | May 2025 | ~Jan 2026 (expected) | 1.29, 1.30, 1.31, 1.32, 1.33 | 1.28, 1.29, 1.30, 1.31, 1.32, 1.33 |
 | asm-1-26 | May 2025 | July 2025 | ~Feb 2026 (expected) | 1.29, 1.30, 1.31, 1.32, 1.33, 1.34 | 1.28, 1.29, 1.30, 1.31, 1.32, 1.33, 1.34 |
-| asm-1-27 | Aug 2025 | ~Sept 2025 (expected EOM) | ~May 2026 (expected) | 1.29, 1.30, 1.31, 1.32, 1.33, 1.34 | 1.29, 1.30, 1.31, 1.32, 1.33, 1.34 |
+| asm-1-27 | Aug 2025 | Sept 2025 | ~May 2026 (expected) | 1.29, 1.30, 1.31, 1.32, 1.33, 1.34 | 1.29, 1.30, 1.31, 1.32, 1.33, 1.34 |
 
 If using an AKS [long term-support (LTS) cluster][aks-lts], a newer revision may be declared as compatible when a previous compatible Istio revision reaches end of life before the AKS LTS version's end of life. For more details, read Istio's [AKS compatibility policy](#aks-compatibility).
 
