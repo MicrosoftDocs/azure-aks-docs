@@ -4,8 +4,8 @@ description: Learn how to define Kueue deployments and efficiently schedule batc
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 9/26/2025
-author: sachidesai
-ms.author: sachidesai
+author: colinmixonn
+ms.author: colinmixon
 # Customer intent: "As a platform admin, I want to quickly schedule and deploy batch jobs to ensure efficient resource utilization and cost optimization on AKS cluster(s), enabling platform developers to run bursty workloads to completion without impacting the performance of other services."
 ---
 
@@ -26,9 +26,9 @@ To learn more about Kueue and common uses cases for batch workload administrator
 
 ## Define a ResourceFlavor object
 
-In Kueue, a ResourceFlavors enables fine-grained resource management by associating workloads with specific nodes, taints, tolerations, or availability zones. For nodes, `ResourceFlavors` can define the characteristics like pricing, availability, architecture (for example, x86 versus ARM CPUs), brands, and models.  A ClusterQueue uses these flavors to manage quotas and admission policies for workloads.
+In Kueue, a ResourceFlavors enables fine-grained resource management by associating workloads with specific nodes, taints, tolerations, or availability zones. For nodes, `ResourceFlavors` can define the characteristics like pricing, availability, brands, models, and architecture (i.e. x86 versus ARM CPUs). A `ClusterQueue` uses these flavors to manage quotas and admission policies for workloads.
 
-This configuration defines a ResourceFlavor without any labels or taints, known as an empty `ResourceFlavor`. This configuration is perfect when quotas for different flavors don't need to be managed.
+This configuration defines a `ResourceFlavor` without any labels or taints, known as an empty `ResourceFlavor`. This configuration is perfect when quotas for different flavors don't need to be managed.
 
 1. Create and save a `ResourceFlavor` in a file named `resourceflavor-sample.yaml` with the following manifest:
       ```bash
@@ -75,7 +75,7 @@ This sample `ClusterQueue` defines:
        name: sample-jobs
     spec:
        cohort: general
-      namespaceSelector: {}  # Accept workloads from any namespace
+      namespaceSelector: {} # Accept workloads from any namespace
       resourceGroups:
        - coveredResources: ["cpu", "memory"]
          flavors:
@@ -105,7 +105,7 @@ This sample `ClusterQueue` defines:
    sample-jobs   general   0
    ```
 > [!NOTE]
-> The ClusterQueue is not ready for use until a `ResourceFlavor` object has also been configured. If you create a ClusterQueue without any existing ResourceFlavor, workloads referencing it will be marked as `Inadmissible`.
+> The ClusterQueue isn't ready for use until a `ResourceFlavor` object has also been configured. If you create a ClusterQueue without any existing ResourceFlavor, workloads referencing it will be marked as `Inadmissible`.
 
 ## Create a LocalQueue
 
@@ -155,10 +155,10 @@ This sample `LocalQueue` configures the following settings:
 
 ## Create 2 batch jobs
 
-This configuration defines two Kubernetes batch jobs submitted to the batch-jobs namespace and assigned to the sample-queue managed by Kueue. Both jobs are single-instance (parallelism: 1, completions: 1) and are configured with `Never` restart policy. The fields `parallelism` and `completions` control how many pods are run and how the job is considered complete. So `parallelism` and `completions` of 1 menas 1 pod can run at once, and the job will be marked complete once 1 pod finishes successfully, per batch job.
+This configuration defines two Kubernetes batch jobs submitted to the batch-jobs namespace and assigned to the sample-queue managed by Kueue. Both jobs are single-instance (parallelism: 1, completions: 1) and are configured with `Never` restart policy. The fields `parallelism` and `completions` control how many pods are run and how the job is considered complete. So `parallelism` and `completions` of 1 means that one pod can run at once, and the job will be marked complete once one pod finishes successfully, per batch job.
 
-* Job test-batch-1: Requests 1 CPU and 500Mi memory
-* Job test-batch-2: Requests 2 CPUs and 1Gi memory
+* Job test-batch-1: Requests one CPU and 500Mi memory
+* Job test-batch-2: Requests two CPUs and 1Gi memory
 
 1. Create two sample batch jobs to deploy in the *batch-jobs* namespace using the following YAML manifest named `batch-workloads.yaml`:
 
@@ -221,7 +221,7 @@ This configuration defines two Kubernetes batch jobs submitted to the batch-jobs
     ```bash
     kubectl apply -f batch-workloads.yaml
     ```
-## Verify Batch Jobs have been submitted to `LocalQueue`
+## Verify Batch Jobs are Submitted to `LocalQueue`
 1. View the status of the batched workloads using the `kubectl get` command.
 
     ```bash
@@ -323,7 +323,7 @@ This configuration defines two Kubernetes batch jobs submitted to the batch-jobs
     kubectl logs --namespace kueue-system deployment/kueue-controller-manager
     ```
 
-### Question 2: One or more of the Kueue CRDs are missing when I install via Helm. How can I ensure all of the custom resources are installed?
+### Question 2: One or more of the Kueue custom resources (CRDs) are missing when I install via Helm. How can I ensure all of the CRDs are installed?
 
 1. After installing Kueue with the [Kueue overview on AKS](./kueue-overview.md) guidance, confirm that all of the CRDs are installed using the `kubectl get` command.
     
@@ -333,7 +333,7 @@ This configuration defines two Kubernetes batch jobs submitted to the batch-jobs
     These CRDs should be listed, as shown in the following example output:
 
     ```output
-    admissionchecks.kueue.x-k8s.io         
+    admissionchecks.kueue.x-k8s.io
     clusterqueues.kueue.x-k8s.io
     cohorts.kueue.x-k8s.io
     localqueues.kueue.x-k8s.io
@@ -384,4 +384,3 @@ To learn more about Kueue, visit the following resources:
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
-
