@@ -82,7 +82,7 @@ If you set up self-hosted Prometheus or [Azure Managed Prometheus](/azure/azure-
 
 ## Next steps
 
-* Learn about [multi-cluster scheduling and resource placement with Kueue and KubeFleet on AKS](https://blog.aks.azure.com/2025/04/02/limitless-kubernetes-scaling-for-ai-and-data-intensive-workloads-the-aks-fleet-strategy).
+* Learn about [multi-cluster scheduling and resource placement with Kueue and KubeFleet on AKS](https://blog.aks.azure.com/2025/04/02/Scaling-Kubernetes-for-AI-and-Data-intensive-Workloads).
 * Visit [Kueue on AKS frequently asked questions](./deploy-batch-jobs-with-kueue.md#faq).
 * Catch up on the latest [Kueue community talks and presentations](https://kueue.sigs.k8s.io/docs/talks_and_presentations/).
 

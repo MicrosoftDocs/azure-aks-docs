@@ -159,7 +159,7 @@ In this guide, Kueue is configured to include `LocalQueueMetrics` and `Topology 
     kubectl get deploy -n kueue-system
     ```
 
-    Your output should look similar to the following:
+    Your output should look similar to the following example output:
 
     ```output
     NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
@@ -208,7 +208,7 @@ If you no longer need to use the Kueue controller manager or Kueue custom resour
 
 * [Deploy sample batch jobs with Kueue on your AKS cluster](./deploy-batch-jobs-with-kueue.md).
 * [Monitor your Kueue deployments with key Prometheus metrics](./kueue-monitoring.md).
-* [Deploy multi-cluster scheduling and resource placement with Kueue and KubeFleet on AKS](https://blog.aks.azure.com/2025/04/02/limitless-kubernetes-scaling-for-ai-and-data-intensive-workloads-the-aks-fleet-strategy).
+* [Deploy multi-cluster scheduling and resource placement with Kueue and KubeFleet on AKS](https://blog.aks.azure.com/2025/04/02/Scaling-Kubernetes-for-AI-and-Data-intensive-Workloads).
 
 <!-- LINKS -->
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials

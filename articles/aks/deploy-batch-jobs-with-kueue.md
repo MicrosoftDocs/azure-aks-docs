@@ -377,7 +377,7 @@ In this article, you:
 To learn more about Kueue, visit the following resources:
 
 * [Monitor your Kueue deployments with key Prometheus metrics](./kueue-monitoring.md)
-* [Multi-cluster scheduling and resource placement with Kueue and KubeFleet on AKS](https://blog.aks.azure.com/2025/04/02/limitless-kubernetes-scaling-for-ai-and-data-intensive-workloads-the-aks-fleet-strategy).
+* [Multi-cluster scheduling and resource placement with Kueue and KubeFleet on AKS](https://blog.aks.azure.com/2025/04/02/Scaling-Kubernetes-for-AI-and-Data-intensive-Workloads).
 * [Kueue developer tools](https://kueue.sigs.k8s.io/docs/tasks/dev/) official documentation.
 
 <!-- LINKS -->
