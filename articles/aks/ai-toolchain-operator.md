@@ -3,7 +3,7 @@ title: Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchai
 description: Learn how to enable the AI toolchain operator add-on on Azure Kubernetes Service (AKS) to simplify OSS AI model management and deployment.
 ms.topic: how-to
 ms.custom: azure-kubernetes-service, devx-track-azurecli
-ms.date: 04/30/2025
+ms.date: 9/19/2025
 author: schaffererin
 ms.author: schaffererin
 
@@ -28,7 +28,7 @@ Built on top of the open-source KAITO project, the AI toolchain operator managed
 
 * This article assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for AKS](./concepts-clusters-workloads.md).
 * For ***all hosted model preset images*** and default resource configuration, see the [KAITO GitHub repository](https://github.com/kaito-project/kaito/tree/main/presets).
-* The AI toolchain operator add-on currently supports KAITO **version 0.4.6**, please make a note of this in considering your choice of model from the KAITO model repository.
+* The AI toolchain operator add-on currently supports KAITO **version 0.6.0**, please make a note of this in considering your choice of model from the KAITO model repository.
 
 ## Limitations
 
@@ -176,7 +176,8 @@ Learn more about KAITO model deployment options below:
 * Deploy LLMs with your application on AKS using [KAITO in Visual Studio Code][kaito-vs-code].
 * [Monitor your KAITO inference workload][kaito-monitoring].
 * [Fine tune a model][kaito-fine-tune] with the AI toolchain operator add-on on AKS.
-* Learn about [MLOps best practices][mlops-best-practices] for your AI pipelines on AKS.
+* Configure and test [tool calling with KAITO inference][kaito-tool-calling].
+* Integrate an [MCP server with the AI toolchain operator][kaito-mcp] add-on on AKS.
 
 <!-- LINKS -->
 
@@ -196,4 +197,6 @@ Learn more about KAITO model deployment options below:
 [delete-node-pool]: ../aks/delete-node-pool.md
 [kaito-fine-tune]: ./ai-toolchain-operator-fine-tune.md
 [kaito-monitoring]: ./ai-toolchain-operator-monitoring.md
+[kaito-tool-calling]: ./ai-toolchain-operator-tool-calling.md
+[kaito-mcp]: ./ai-toolchain-operator-mcp.md
 [kaito-vs-code]: ./aks-extension-kaito.md

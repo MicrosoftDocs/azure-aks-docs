@@ -139,8 +139,9 @@ Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](h
 ## Related content
 
 * [Monitor and visualize](./monitor-aks.md) your AKS deployments at scale.
+* Test and monitor [tool calling with KAITO inference](./ai-toolchain-operator-tool-calling.md) on your cluster.
 * [Fine-tune an AI model](./ai-toolchain-operator-fine-tune.md) by using the AI toolchain operator add-on in AKS.
-* Learn about AKS GPU workload deployment options on [Linux](./gpu-cluster.md) and [Windows](./use-windows-gpu.md).
+* Learn about AKS GPU workload deployment options on [Linux](./gpu-cluster.md) and [Windows](./use-windows-gpu.md) nodes.
 
 <!-- Links -->
 
