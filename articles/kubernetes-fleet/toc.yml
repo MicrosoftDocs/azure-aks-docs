@@ -26,6 +26,8 @@
           href: concepts-choosing-fleet.md
         - name: Fleet hub cluster overview
           href: concepts-lifecycle.md
+        - name: Member cluster types and capability matrix
+          href: https://aka.ms/kubernetes-fleet/concepts-member-cluster-types-and-capability-matrix.md
         - name: Use Azure RBAC to control resource access
           href: concepts-rbac.md
         - name: Scheduler and scheduling framework
@@ -132,8 +134,6 @@
     href: https://azure.microsoft.com/pricing/details/kubernetes-fleet-manager/#pricing
   - name: Fleet Manager roadmap
     href: https://aka.ms/kubernetes-fleet/roadmap
-  - name: Member cluster types and capability matrix
-    href: https://aka.ms/kubernetes-fleet/resources-member-cluster-types-and-capability-matrix.md
 - name: Reference
   items:
   - name: Azure CLI

@@ -5,7 +5,7 @@ ms.date: 09/02/2025
 author: ealianis
 ms.author: sehobbs
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: include
+ms.topic: concept-article
 ---
 
 # Azure Fleet Manager Member cluster types
