@@ -269,7 +269,7 @@ While Cloud Shell is a free service, using Cloud Shell in a VNet requires some r
     * `Microsoft.Resources/subscriptions/resourceGroups/write`
     * `Microsoft.Authorization/roleAssignments/write`
 
-### [Quickstart in Portal (Preview)](#tab/Portal)
+#### [Quickstart in Portal (Preview)](#tab/Portal)
 
 This option creates a separate VNet with the necessary resources for Cloud Shell and configures VNet peering for you.
 
@@ -280,7 +280,7 @@ This option creates a separate VNet with the necessary resources for Cloud Shell
 
 If you have already configured Cloud Shell in a VNet using these steps for a particular cluster, following the same steps will simply ensure your Cloud Shell User Settings are properly configured to connect to deploy Cloud Shell in the correct VNet.
 
-### [ARM Template](#tab/ARM)
+#### [ARM Template](#tab/ARM)
 
 To have more control over the deployment configuration, use the [provided ARM template](cloud-shell-vnet-deploy). You can set up Cloud Shell in the same VNet as the AKS private cluster with a dedicated subnet for Cloud Shell. Alternatively, you can deploy the resources in a new VNet and use [VNet peering](virtual-network-peering).
 
