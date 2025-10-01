@@ -250,7 +250,7 @@ Using Cloud Shell or Bastion (Preview) are the easiest options. Express Route an
 
 | Option | Azure Cloud Shell | Azure Bastion (Preview) |
 |--------|-------------------|--------------------------|
-| Key differences | • Cost-effective, browser-based access <br> • Best for ad-hoc or infrequent use <br> • Preinstalled tools like `az cli` and `kubectl` | • Persistent, long-running access <br> • Suited for managing multiple clusters <br> • Use your own native client tooling |
+| Key differences | • Cost-effective, browser-based access <br> • Best for ad-hoc or infrequent use <br> • Comes with preinstalled tools like `az cli` and `kubectl` | • Persistent, long-running access <br> • Suited for managing multiple clusters <br> • Use your own native client tooling |
 | Notable Limitations | • Not supported with AKS Automatic clusters or clusters with network resource group (NRG) lockdown <br> • A user cannot have multiple Cloud Shell sessions in different VNets at the same time| • Not supported with AKS Automatic clusters or clusters with NRG lockdown <br> • Not supported when public FQDN is disabled on the cluster |
 
 ## Connect via Azure Cloud Shell
