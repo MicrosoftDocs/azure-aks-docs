@@ -190,7 +190,7 @@ When creating your LocalDNS configuration, be aware of these validation rules to
 - **Protocol and serveStale compatibility**: When `protocol` is set to `ForceTCP`, `serveStale` can't be set to `Verify`. Use `Immediate` instead.
 
 > [!NOTE]
-> These validation rules are enforced during configuration deployment. Violating them will cause the LocalDNS configuration to fail validation. 
+> These validation rules are enforced during configuration deployment. Violating them causes the LocalDNS configuration to fail validation. 
 
 ### Create a custom server block in LocalDNS
 
@@ -244,7 +244,7 @@ Check the output. If localDNS is working correctly, you should see a response wi
 
 ## Monitor LocalDNS
 
-LocalDNS exposes Prometheus metrics which you can use for monitoring and alerting. These [metrics](https://learn.microsoft.com/azure/azure-monitor/containers/prometheus-metrics-scrape-default#coredns) are exposed on port `9253` of the Node IP and can be scraped from there.
+LocalDNS exposes Prometheus metrics, which you can use for monitoring and alerting. These [metrics](https://learn.microsoft.com/azure/azure-monitor/containers/prometheus-metrics-scrape-default#coredns) are exposed on port `9253` of the Node IP and can be scraped from there.
 
 The following example YAML shows a scrape configuration you can use with the [Azure Managed Prometheus add on as a DaemonSet](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-scrape-configuration#advanced-setup-configure-custom-prometheus-scrape-jobs-for-the-daemonset):
 
@@ -290,7 +290,7 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 - **Start with a minimal configuration**: Begin with a simple configuration that uses the `Preferred` mode before moving to `Required` mode. This setup allows you to validate that LocalDNS works as expected without breaking your cluster.
 
 - **Implement proper caching strategies**: Configure cache settings based on your workload characteristics:
-  - For frequently changing records, use shorter `cacheDurationInSeconds` values. When doing so, it is important to note that cacheDurationInSeconds acts as a cap on the DNS record TTL but doesn't increase it. The resulting TTL is the smaller of what is returned from upstream or what it's set to in the cache plugin.
+  - For frequently changing records, use shorter `cacheDurationInSeconds` values. When doing so, it's important to note that cacheDurationInSeconds acts as a cap on the DNS record TTL but doesn't increase it. The resulting TTL is the smaller of what is returned from upstream or what is set in the cache plugin.
   - For stable records, use longer cache durations to reduce DNS queries.
   - Enable `serveStale` with appropriate settings to maintain service during DNS outages.
   - Caching with LocalDNS operates on a best effort basis and doesn't guarantee stale responses. The cache is divided into 256 shards and with a default maximum of 10,000 entries, allowing each shard to hold about 39 entries. When a shard is full and a new entry needs to be added, one of the existing entries is chosen at random to be evicted. There's no preference for older or expires entries. As a result, a stale record might not always be available, especially under high query volume.
