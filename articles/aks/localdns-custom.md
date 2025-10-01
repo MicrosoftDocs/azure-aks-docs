@@ -242,6 +242,12 @@ Check the output. If localDNS is working correctly, you should see a response wi
    Address 1: 10.0.0.1 kubernetes.default.svc.cluster.local
    ```
 
+## Monitor LocalDNS
+
+LocalDNS exposes Prometheus metrics which you can use for monitoring and alerting. These metrics are exposed on port `9253` of the Node IP and can be scraped from there.
+
+For a list of DNS metrics, you can refer to [CoreDNS scraped metrics](https://learn.microsoft.com/azure/azure-monitor/containers/prometheus-metrics-scrape-default#coredns).
+
 ## Disable LocalDNS
 
 To disable LocalDNS for a node pool, you must update your _localdnsconfig.json_ file by setting the `"mode"` property to `"Disabled"`. This change instructs AKS to turn off the local DNS proxy on all nodes in the specified pool, reverting DNS resolution to the default cluster behavior. After updating the configuration file, apply it to the node pool using the Azure CLI to ensure the change takes effect.
