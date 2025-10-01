@@ -257,7 +257,7 @@ Using Cloud Shell or Bastion (Preview) are the easiest options. Express Route an
 
 ### Deploy Required Resources
 
-While Cloud Shell is a free service, using Cloud Shell in a VNet requires some resources that incur cost, notably Azure Relay. To learn more about the resources that will be confiugred, see [Deploy Cloud Shell in a virtual network](cloud-shell-vnet-deploy).
+While Cloud Shell is a free service, using Cloud Shell in a VNet requires some resources that incur cost, notably Azure Relay. To learn more about the resources that will be confiugred, see [Deploy Cloud Shell in a virtual network][cloud-shell-vnet-deploy].
 
 #### Deployment Prerequisites
 
@@ -269,7 +269,7 @@ While Cloud Shell is a free service, using Cloud Shell in a VNet requires some r
     * `Microsoft.Resources/subscriptions/resourceGroups/write`
     * `Microsoft.Authorization/roleAssignments/write`
 
-#### [Quickstart in Portal (Preview)](#tab/Portal)
+### [Quickstart in Portal (Preview)](#tab/Portal)
 
 This option creates a separate VNet with the necessary resources for Cloud Shell and configures VNet peering for you.
 
@@ -280,17 +280,19 @@ This option creates a separate VNet with the necessary resources for Cloud Shell
 
 If you have already configured Cloud Shell in a VNet using these steps for a particular cluster, following the same steps will simply ensure your Cloud Shell User Settings are properly configured to connect to deploy Cloud Shell in the correct VNet.
 
-#### [ARM Template](#tab/ARM)
+### [ARM Template](#tab/ARM)
 
-To have more control over the deployment configuration, use the [provided ARM template](cloud-shell-vnet-deploy). You can set up Cloud Shell in the same VNet as the AKS private cluster with a dedicated subnet for Cloud Shell. Alternatively, you can deploy the resources in a new VNet and use [VNet peering](virtual-network-peering).
+To have more control over the deployment configuration, use the [provided ARM template][cloud-shell-vnet-deploy]. You can set up Cloud Shell in the same VNet as the AKS private cluster with a dedicated subnet for Cloud Shell. Alternatively, you can deploy the resources in a new VNet and use [VNet peering][virtual-network-peering].
+
+---
 
 ### Configure Connection
 
-Once the required resources have been deployed, you can configure your Cloud Shell to deploy in the given VNet by following by following [Configure Cloud Shell to use a virtual network](cloud-shell-vnet-configure).
+Once the required resources have been deployed, you can configure your Cloud Shell to deploy in the given VNet by following by following [Configure Cloud Shell to use a virtual network][cloud-shell-vnet-configure].
 
 ## Connect via Azure Bastion (Preview)
 
-To use Bastion's native client tunneling feature, see [Connect to AKS private cluster using Azure Bastion](azure-bastion).
+To use Bastion's native client tunneling feature, see [Connect to AKS private cluster using Azure Bastion][azure-bastion].
 
 ## Virtual network peering
 
