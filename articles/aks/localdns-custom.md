@@ -244,9 +244,35 @@ Check the output. If localDNS is working correctly, you should see a response wi
 
 ## Monitor LocalDNS
 
-LocalDNS exposes Prometheus metrics which you can use for monitoring and alerting. These metrics are exposed on port `9253` of the Node IP and can be scraped from there.
+LocalDNS exposes Prometheus metrics which you can use for monitoring and alerting. These [metrics](https://learn.microsoft.com/azure/azure-monitor/containers/prometheus-metrics-scrape-default#coredns) are exposed on port `9253` of the Node IP and can be scraped from there.
 
-For a list of DNS metrics, you can refer to [CoreDNS scraped metrics](https://learn.microsoft.com/azure/azure-monitor/containers/prometheus-metrics-scrape-default#coredns).
+The following example YAML shows a scrape configuration you can use with the [Azure Managed Prometheus add on as a DaemonSet](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-scrape-configuration#advanced-setup-configure-custom-prometheus-scrape-jobs-for-the-daemonset):
+
+```yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ama-metrics-prometheus-config-node
+  namespace: kube-system
+data:
+  prometheus-config: |-
+    global:
+      scrape_interval: 1m
+    scrape_configs:
+    - job_name: localdns-metrics
+      scrape_interval: 1m
+      scheme: http
+      metrics_path: /metrics
+      relabel_configs:
+      - source_labels: [__metrics_path__]
+        regex: (.*)
+        target_label: metrics_path
+      - source_labels: [__address__]
+        replacement: '$NODE_NAME'
+        target_label: instance
+      static_configs:
+      - targets: ['$NODE_IP:9253']
+```
 
 ## Disable LocalDNS
 
