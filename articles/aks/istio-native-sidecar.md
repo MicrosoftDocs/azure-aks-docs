@@ -88,7 +88,7 @@ If native sidecar is not enabled, it is likely one of the version prerequisites 
 1. Ensure node pools run version `1.33` or newer and the power state is running.
 
    ```azurecli-interactive
-   az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER -o json | jq ".agentPoolProfiles[] | { currentOrchestratorVersion, powerState}"
+   az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER --query "agentPoolProfiles[].{name:name,currentOrchestratorVersion:currentOrchestratorVersion,powerState:powerState.code}" -o table
    ```
 
    > [!CAUTION]
@@ -96,7 +96,7 @@ If native sidecar is not enabled, it is likely one of the version prerequisites 
 
    If any node pool version is too old, [upgrade the node image][upgrade-node-image] to version `1.33` or newer.
 
-1. If service mesh-addon is enabled, check the installed revision:
+1. If service mesh add-on is enabled, check the installed revision:
    
    ```azurecli-interactive
    az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER --query "serviceMeshProfile.istio.revisions" -o tsv
