@@ -257,14 +257,14 @@ Using Cloud Shell or Bastion (Preview) are the easiest options. Express Route an
 
 ### Deploy Required Resources
 
-While Cloud Shell is a free service, using Cloud Shell in a VNet requires some resources that incur cost, notably Azure Relay. To learn more about the resources that will be confiugred, see [Deploy Cloud Shell in a virtual network][cloud-shell-vnet-deploy].
+While Cloud Shell is a free service, using Cloud Shell in a VNet requires some resources that incur cost, notably Azure Relay. To learn more about the resources that will be configured, see [Deploy Cloud Shell in a virtual network][cloud-shell-vnet-deploy].
 
 #### Deployment Prerequisites
 
 * The following resource providers must be registered in your subscription:
-    * Microsoft.CloudShell
-    * Microsoft.ContainerInstance
-    * Microsoft.Relay
+    * `Microsoft.CloudShell`
+    * `Microsoft.ContainerInstance`
+    * `Microsoft.Relay`
 * The following RBAC permissions are required:
     * `Microsoft.Resources/subscriptions/resourceGroups/write`
     * `Microsoft.Authorization/roleAssignments/write`
@@ -275,24 +275,26 @@ This option creates a separate VNet with the necessary resources for Cloud Shell
 
 1. In the [Azure portal](https://portal.azure.com), navigate to your private cluster resource.
 2. In the Overview page, select **Connect**.
-3. In the **Cloud Shell** tab, under **Prerequisites for private cluster connection**, select **Configure**.
+3. In the **Cloud Shell** tab, under **Prerequisites for private cluster connection**, select **Configure** to deploy the necessary resources.
 4. Once the deployment has succeeded, under **Set cluster context**, select **Open Cloud Shell** .
 
-If you have already configured Cloud Shell in a VNet using these steps for a particular cluster, following the same steps will simply ensure your Cloud Shell User Settings are properly configured to connect to deploy Cloud Shell in the correct VNet.
+If Cloud Shell has already been configured in a VNet for a particular cluster, repeating these steps will ensure your Cloud Shell User Settings are correctly aligned with that VNet.
 
 ### [ARM Template](#tab/ARM)
 
-To have more control over the deployment configuration, use the [provided ARM template][cloud-shell-vnet-deploy]. You can set up Cloud Shell in the same VNet as the AKS private cluster with a dedicated subnet for Cloud Shell. Alternatively, you can deploy the resources in a new VNet and use [VNet peering][virtual-network-peering].
+To have more control over the deployment configuration, use the [provided ARM template][cloud-shell-vnet-deploy].
+
+You can deploy Cloud Shell in the same VNet as your AKS private cluster with a dedicated subnet, or you can deploy in a new VNet and connect via [VNet peering][virtual-network-peering].
 
 ---
 
 ### Configure Connection
 
-Once the required resources have been deployed, you can configure your Cloud Shell to deploy in the given VNet by following by following [Configure Cloud Shell to use a virtual network][cloud-shell-vnet-configure].
+Once the required resources have been deployed, you can configure your Cloud Shell to deploy in the given VNet by following [Configure Cloud Shell to use a virtual network][cloud-shell-vnet-configure].
 
 ## Connect via Azure Bastion (Preview)
 
-To use Bastion's native client tunneling feature, see [Connect to AKS private cluster using Azure Bastion][azure-bastion].
+Azure Bastion is a fully managed PaaS service that you provision to securely connect to private resources via private IP addresses. To use Bastion's native client tunneling feature, see [Connect to AKS private cluster using Azure Bastion][azure-bastion].
 
 ## Virtual network peering
 
