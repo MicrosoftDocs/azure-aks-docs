@@ -2,11 +2,10 @@
 title: "Azure Fleet Manager member cluster types & capability matrix"
 description: This article provides a conceptual overview of Azure Kubernetes Fleet Manager and member clusters.
 ms.date: 09/02/2025
-author: sjwaight
-ms.author: simonwaight
+author: ealianis
+ms.author: sehobbs
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: concept-article
-# Customer intent: "As a cloud administrator, I want to manage multiple AKS clusters as a single entity using a fleet resource, so that I can orchestrate updates and maintain consistency across clusters."
+ms.topic: include
 ---
 
 # Azure Fleet Manager Member cluster types
