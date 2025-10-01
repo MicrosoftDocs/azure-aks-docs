@@ -19,7 +19,7 @@ Azure Kubernetes Fleet Manager enables at-scale management of multiple Azure Kub
 
 Fleet Manager supports the following scenarios:
 
-* Join AKS clusters across Azure regions and subscriptions as member clusters.
+* Join AKS clusters or Arc-Enabled Kubernetes clusters (preview) across Azure regions and subscriptions as member clusters. Read [Azure Fleet Manager member cluster types & capability matrix](./resources-member-cluster-types-and-capability-matrix.md) to understand more.
 
 * Use [Fleet Manager managed namespaces](./concepts-fleet-managed-namespace.md) to enforce resource quotas, network policies, and assign role based access at the namespace level across multiple clusters.
 

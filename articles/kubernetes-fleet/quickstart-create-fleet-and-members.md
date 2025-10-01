@@ -68,7 +68,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create
   az aks install-cli
   ```
 
-* The AKS clusters you want to join as member clusters need to be running Kubernetes versions supported by AKS. Learn more about AKS version support policy [here](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy).
+* If the cluster you are joining is an AKS cluster, ensure it is running Kubernetes versions supported by AKS. Learn more about AKS version support policy [here](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy).
 
 ## Create a resource group
 
@@ -242,16 +242,22 @@ az fleet create \
 
 ## Join member clusters
 
-Fleet currently supports joining existing AKS clusters as member clusters.
+Fleet currently supports joining existing AKS clusters or Arc-Enabled Kubernetes clusters (Preview) as member clusters.
 
-1. Set the following environment variables for member clusters:
+1. Set the following environment variables for an AKS member cluster:
 
     ```azurecli-interactive
     export MEMBER_NAME_1=aks-member-1
     export MEMBER_CLUSTER_ID_1=/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${GROUP}/providers/Microsoft.ContainerService/managedClusters/${MEMBER_NAME_1}
     ```
 
-2. Join your existing AKS clusters to the Fleet resource using the [`az fleet member create`][az-fleet-member-create] command.
+> [!NOTE]
+> For Arc-Enabled Kubernetes clusters, you need to set the `MEMBER_CLUSTER_ID` variable to the resource ID of your Arc-Enabled Kubernetes cluster. For example:
+> `/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${GROUP}/providers/Microsoft.Kubernetes/connectedClusters/${MEMBER_NAME_1}`.
+>
+> Note the key difference is the provider and resource type: `Microsoft.Kubernetes/connectedClusters`.
+
+2. Join the existing clusters to the Fleet resource using the [`az fleet member create`][az-fleet-member-create] command.
 
     ```azurecli-interactive
     az fleet member create \
