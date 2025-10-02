@@ -55,7 +55,6 @@ This enables teams to work within their allocated resources across any member cl
   export GROUP=<resource-group-name>
   export FLEET=<fleet-name>
   export FLEET_ID=<fleet-id>
-  export FLEET_MEMBER_NAME=<member-cluster-name>
   ```
 
 * Set the default Azure subscription by using the [`az account set`][az-account-set] command:
@@ -142,7 +141,6 @@ az fleet namespace delete \
 ## Manage member clusters the namespace is deployed to
 ## Viewing the multi-cluster managed namespace
 ## Deleting the multi-cluster managed namespace
-
 :::zone-end
 
 

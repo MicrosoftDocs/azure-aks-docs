@@ -67,3 +67,4 @@ To control access to a managed namespace on member clusters, managed namespaces 
 
 ## Next steps
 Learn how to [create and use a multi-cluster managed namespace](./howto-managed-namespaces.md).
+Learn how to [view managed namespaces you have access to](./howto-managed-namespaces-access.md).
