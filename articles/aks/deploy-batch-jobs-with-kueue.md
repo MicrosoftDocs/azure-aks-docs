@@ -358,7 +358,8 @@ This configuration defines two Kubernetes batch jobs submitted to the batch-jobs
 
 A ClusterQueue is a cluster-scoped resource that defines and governs a pool of compute resources like CPU, memory, pods, and accelerators across the entire Kubernetes cluster. A LocalQueue is a namespace-scoped resource that acts as a gateway for users to submit jobs within the defined Kubernetes cluster. This separation allows for fine-grained control over resource allocation and multi-tenant scheduling without exposing cluster-wide quotas directly to users. 
 
-How They Work Together:
+How they work together:
+
 
 1. A user submits a job to a LocalQueue in their namespace.
 2. Kueue routes the job to the referenced ClusterQueue.
