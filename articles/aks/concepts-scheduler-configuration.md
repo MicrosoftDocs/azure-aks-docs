@@ -29,7 +29,7 @@ To support these use cases, AKS allows you to set one or more in-tree scheduling
 ## Configurable scheduler profiles (preview)
 
 A scheduler profile is a set of one or more in-tree scheduling plugins and configurations that dictate how a pod should be scheduled. Previously, the scheduler configuration was managed by AKS and not accessible to the users. Starting from Kubernetes version `1.33`, you can now configure and set a scheduler profile (preview) used by the Kubernetes scheduler on your cluster.
-
+In total, AKS supports configuration of 18 in-tree Kubernetes scheduling plugins that allows pods to be placed on specific nodes, ensure pods are matched with specific storage resources, optimize for nodes with container images and more. 
 Each scheduler profile has:
 
 * A unique name.
