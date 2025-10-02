@@ -259,12 +259,6 @@ Using Cloud Shell or Bastion (Preview) are the easiest options. Express Route an
 
 While Cloud Shell is a free service, using Cloud Shell in a VNet requires some resources that incur cost, notably Azure Relay. To learn more about the resources that will be configured, see [Deploy Cloud Shell in a virtual network][cloud-shell-vnet-deploy].
 
-#### Deployment Prerequisites
-
-* The following resource providers must be registered in your subscription:
-    * `Microsoft.CloudShell`
-    * `Microsoft.ContainerInstance`
-    * `Microsoft.Relay`
 * The following RBAC permissions are required:
     * `Microsoft.Resources/subscriptions/resourceGroups/write`
     * `Microsoft.Authorization/roleAssignments/write`
@@ -277,6 +271,9 @@ This option creates a separate VNet with the necessary resources for Cloud Shell
 2. In the Overview page, select **Connect**.
 3. In the **Cloud Shell** tab, under **Prerequisites for private cluster connection**, select **Configure** to deploy the necessary resources.
 4. Once the deployment has succeeded, under **Set cluster context**, select **Open Cloud Shell** .
+
+![Azure Portal Cloud Shell Connect Button](media/access-private-cluster/azure-portal-cloud-shell-connect.png)
+
 
 If Cloud Shell has already been configured in a VNet for a particular cluster, repeating these steps will ensure your Cloud Shell User Settings are correctly aligned with that VNet.
 
