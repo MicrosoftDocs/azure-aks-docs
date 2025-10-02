@@ -50,7 +50,7 @@ To secure access to the otherwise publicly accessible AKS control plane / API se
 > - The cluster egress IP address (firewall, NAT gateway, or other address, depending on your [outbound type][egress-outboundtype]).
 > - Any range that represents networks that you'll administer the cluster from.
 >
-> The upper limit for the number of IP ranges you can specify is 200.
+> You can specify up to 200 authorized IP ranges. To go beyond this limit, consider using [API Server VNet Integration](api-server-vnet-integration), which supports up to 2,000 authorized IP ranges.
 >
 > The rules can take up to two minutes to propagate. Please allow up to that time when testing the connection.
 
