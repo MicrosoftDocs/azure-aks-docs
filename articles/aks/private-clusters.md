@@ -260,8 +260,8 @@ Using Cloud Shell or Bastion (Preview) are the easiest options. Express Route an
 While Cloud Shell is a free service, using Cloud Shell in a VNet requires some resources that incur cost, notably Azure Relay. To learn more about the resources that will be configured, see [Deploy Cloud Shell in a virtual network][cloud-shell-vnet-deploy].
 
 The following RBAC permissions are required:
-    * `Microsoft.Resources/subscriptions/resourceGroups/write`
-    * `Microsoft.Authorization/roleAssignments/write`
+* `Microsoft.Resources/subscriptions/resourceGroups/write`
+* `Microsoft.Authorization/roleAssignments/write`
 
 ### [Quickstart in Portal (Preview)](#tab/Portal)
 
