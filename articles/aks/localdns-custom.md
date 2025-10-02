@@ -286,7 +286,6 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 
 When implementing LocalDNS in your AKS clusters, consider the following best practices:
 
-
 - **Start with a minimal configuration**: Begin with a simple configuration that uses the `Preferred` mode before moving to `Required` mode. This setup allows you to validate that LocalDNS works as expected without breaking your cluster.
 
 - **Implement proper caching strategies**: Configure cache settings based on your workload characteristics:
