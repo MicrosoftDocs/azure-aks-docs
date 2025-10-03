@@ -97,6 +97,9 @@ az role assignment create --role "Azure Kubernetes Fleet Manager Member Cluster 
 ## Manage member clusters the namespace is deployed to
 Control which member clusters the managed namespace is deployed to by specifying the desired list of member cluster names. Ensure the clusters specified are already members of the fleet.
 
+> [!NOTE]
+> Member clusters within a managed namespace must have a target Kubernetes version of at least 1.30.0.
+
 **To add member clusters:**
 Specify the full list of member clusters you want the namespace deployed to, including any new clusters you wish to add. The namespace will be propagated to all clusters in the list.
 

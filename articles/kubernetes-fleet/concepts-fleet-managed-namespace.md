@@ -20,7 +20,8 @@ This article provides a conceptual overview of multi-cluster managed namespaces.
 * *Allow same namespace*: Allow all network traffic within the same namespace
 * *Deny all*: Deny all network traffic
 
-While the platform admin may set a default network policy, users may be able to relax
+While platform administrators can set default network policies through the managed namespace configuration, users with sufficient permissions can modify or relax these policies directly on the member clusters.
+For example, anyone with "Azure Kubernetes Service RBAC Writer" role on the namespace can modify NetworkPolicy resources.
 
 > [!NOTE]
 > Network policies are applied to each cluster individually and do not control cross-cluster network traffic for the namespace. Each member cluster enforces its own network policy independently within its local namespace instance.
@@ -36,18 +37,23 @@ Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-ob
 Annotations, on the other hand, are used to attach nonidentifying, potentially unstructured metadata to an object. Users may also apply annotations to their managed namespaces.
 
 ## Adoption Policy
-
 The adoption policy determines how an existing namespace in Kubernetes is handled when you create a managed namespace. Similar to a [single cluster namespace](../aks/concepts-managed-namespaces.md#adoption-policy), the following options are available:
 
 * *Never*: Managed namespace creation fails if a namespace with the same name already exists in the cluster.
 * *IfIdentical*: Managed namespace creation fails if a namespace with the same name already exists in the cluster, unless the namespaces are identical. If the namespaces are identical, ARM takes over the existing namespace to be managed.
 * *Always*: ARM always takes over the existing namespace, even if some fields in the namespace are overwritten.
 
+> [!NOTE]
+> During adoption, ARM may take over a fields on a namespace on a member cluster, but it will not remove the resources from the namespace.
+
 ## Delete policy
 The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) controls how the Kubernetes namespace is handled when the managed namespace resource is deleted. There are two built-in options:
 
 * *Keep*: Removes only the managed namespace resource, leaving the Kubernetes namespace intact on the hub and member clusters, but removes the `ManagedByARM` label.
 * *Delete*: Removes both the managed namespace resource and the Kubernetes namespace from the hub and member clusters.
+
+> [!NOTE]
+> A delete policy of **Delete** will completely remove the Kubernetes namespace resource, even if it existed prior to, and was adopted by the multi-cluster managed namespace.
 
 ## Cluster Resource Placement
 If the user specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object to propagate the namespace to the selected member clusters. The placement policy used is [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type). The adoption policy determines whether an unmanaged namespace is taken over when a managed namespace with the same name is propagated to a member cluster.
@@ -62,10 +68,10 @@ To control access to a managed namespace on member clusters, managed namespaces 
 
 | Role | Description |
 |------|-------------|
-| Azure Kubernetes Fleet Manager Member Cluster RBAC Reader | Read-only access to most objects in the namespace on the member cluster. Cannot view roles or role bindings. Cannot view Secrets (prevents privilege escalation via ServiceAccount credentials). |
-| Azure Kubernetes Fleet Manager Member Cluster RBAC Writer | Read and write access to most Kubernetes resources in the namespace. Cannot view or modify roles or role bindings. Can read Secrets (therefore can assume any ServiceAccount in the namespace). |
-| Azure Kubernetes Fleet Manager Member Cluster RBAC Admin | Read and write access to Kubernetes resources in the namespace on the member cluster. |
-| Azure Kubernetes Fleet Manager Member Cluster RBAC Cluster Admin | Full read/write access to all Kubernetes resources on the member cluster. |
+| Azure Kubernetes Fleet Manager RBAC Reader for Member Clusters | Read-only access to most objects in the namespace on the member cluster. Cannot view roles or role bindings. Cannot view Secrets (prevents privilege escalation via ServiceAccount credentials). |
+| Azure Kubernetes Fleet Manager RBAC Writer for Member Clusters | Read and write access to most Kubernetes resources in the namespace. Cannot view or modify roles or role bindings. Can read Secrets (therefore can assume any ServiceAccount in the namespace). |
+| Azure Kubernetes Fleet Manager RBAC Admin for Member Clusters | Read and write access to Kubernetes resources in the namespace on the member cluster. |
+| Azure Kubernetes Fleet Manager RBAC Cluster Admin for Member Clusters | Full read/write access to all Kubernetes resources on the member cluster. |
 
 ## Next steps
 Learn how to [create and use a multi-cluster managed namespace](./howto-managed-namespaces.md).
