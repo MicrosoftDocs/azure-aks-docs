@@ -26,7 +26,7 @@ This enables teams to work within their allocated resources across any member cl
 
 * To understand the concept of a managed namespace, read the [conceptual overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md).
 
-* You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest).
+* You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install the Azure CLI][az-aks-install-cli].
 
 * You need the `fleet` Azure CLI extension. You can install it by running the following command:
 
@@ -34,7 +34,7 @@ This enables teams to work within their allocated resources across any member cl
   az extension add --name fleet
   ```
 
-  Run the [`az extension update`](https://learn.microsoft.com/cli/azure/extension?view=azure-cli-latest#az-extension-update) command to update to the latest version of the extension:
+  Run the [`az extension update`][az-extension-update] command to update to the latest version of the extension:
 
   ```azurecli-interactive
   az extension update --name fleet
@@ -143,7 +143,10 @@ az fleet namespace delete \
 ## Deleting the multi-cluster managed namespace
 :::zone-end
 
-
+<!-- INTERNAL LINKS -->
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-account-set]: /cli/azure/account#az_account_set
 
 
 

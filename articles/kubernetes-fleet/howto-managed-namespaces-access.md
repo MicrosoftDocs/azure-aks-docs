@@ -1,5 +1,5 @@
 ---
-title: View managed namespaces I have access to and the member clusters they are placed on (preview)
+title: View managed namespace access and the member clusters it is placed on (preview)
 description: Learn how to find managed namespaces you have access to, view their deployment locations, and monitor resource quota usage across multiple clusters.
 author: audrastump
 ms.author: stumpaudra
@@ -10,7 +10,7 @@ zone_pivot_groups: azure-portal-azure-cli
 
 # Customer intent: "As an application developer or team lead, I want to find the namespaces I have access to and monitor their resource usage across all clusters so I can understand deployment status and determine if quota adjustments are needed."
 ---
-## View managed namespaces I have access to and the member clusters they are placed on (preview)
+# View managed namespace access and the member clusters it is placed on (preview)
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
@@ -19,7 +19,7 @@ zone_pivot_groups: azure-portal-azure-cli
 
 * To understand the concept of a managed namespace, read the [conceptual overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md).
 
-* You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest).
+* You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install Azure CLI][az-aks-install-cli].
 
 * You need the `fleet` Azure CLI extension. You can install it by running the following command:
 
@@ -27,7 +27,7 @@ zone_pivot_groups: azure-portal-azure-cli
   az extension add --name fleet
   ```
 
-  Run the [`az extension update`](https://learn.microsoft.com/cli/azure/extension?view=azure-cli-latest#az-extension-update) command to update to the latest version of the extension:
+  Run the [`az extension update`][az-extension-update] command to update to the latest version of the extension:
 
   ```azurecli-interactive
   az extension update --name fleet
@@ -65,7 +65,7 @@ zone_pivot_groups: azure-portal-azure-cli
     -o table 
   ```
 
-## View the member clusters which the managed namespace is placed on
+## View the member clusters that the managed namespace is placed on
   ```azurecli-interactive
   az fleet namespace show \ 
     --fleet-name ${FLEET} \ 
@@ -79,3 +79,8 @@ zone_pivot_groups: azure-portal-azure-cli
 ## View the multi-cluster managed namespace I have access to 
 ## View the member clusters which the managed namespace is placed on
 :::zone-end
+
+<!-- INTERNAL LINKS -->
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-account-set]: /cli/azure/account#az_account_set

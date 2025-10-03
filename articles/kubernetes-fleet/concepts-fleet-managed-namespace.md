@@ -20,6 +20,8 @@ This article provides a conceptual overview of multi-cluster managed namespaces.
 * *Allow same namespace*: Allow all network traffic within the same namespace
 * *Deny all*: Deny all network traffic
 
+While the platform admin may set a default network policy, users may be able to relax
+
 > [!NOTE]
 > Network policies are applied to each cluster individually and do not control cross-cluster network traffic for the namespace. Each member cluster enforces its own network policy independently within its local namespace instance.
 
@@ -62,7 +64,7 @@ To control access to a managed namespace on member clusters, managed namespaces 
 |------|-------------|
 | Azure Kubernetes Fleet Manager Member Cluster RBAC Reader | Read-only access to most objects in the namespace on the member cluster. Cannot view roles or role bindings. Cannot view Secrets (prevents privilege escalation via ServiceAccount credentials). |
 | Azure Kubernetes Fleet Manager Member Cluster RBAC Writer | Read and write access to most Kubernetes resources in the namespace. Cannot view or modify roles or role bindings. Can read Secrets (therefore can assume any ServiceAccount in the namespace). |
-| Azure Kubernetes Fleet Manager Member Cluster RBAC Admin | Read and write access to Kubernetes resources in the namespace on the member cluster. Cannot modify the `ResourceQuota` object or the namespace object itself. |
+| Azure Kubernetes Fleet Manager Member Cluster RBAC Admin | Read and write access to Kubernetes resources in the namespace on the member cluster. |
 | Azure Kubernetes Fleet Manager Member Cluster RBAC Cluster Admin | Full read/write access to all Kubernetes resources on the member cluster. |
 
 ## Next steps
