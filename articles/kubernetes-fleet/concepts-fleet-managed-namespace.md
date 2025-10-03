@@ -32,7 +32,7 @@ Platform administrators may use [resource quotas](../aks/concepts-managed-namesp
 * Memory requests and limits: Set the minimum and maximum memory resources that workloads in the namespace can request or consume.
 
 ## Labels and annotations
-Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) are key/value pairs users can attach to the managed namespace. Labels are used to organize and query subsets of objects, in this case, managed namespaces. By default, each managed namespace has a built-in label indicating it is managed by ARM.
+Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) are key/value pairs users can attach to the managed namespace. Labels are used to organize and query subsets of objects, in this case, managed namespaces. By default, each managed namespace has a built-in label indicating it's managed by ARM.
 
 Annotations, on the other hand, are used to attach nonidentifying, potentially unstructured metadata to an object. Users may also apply annotations to their managed namespaces.
 
@@ -44,7 +44,7 @@ The adoption policy determines how an existing namespace in Kubernetes is handle
 * *Always*: ARM always takes over the existing namespace, even if some fields in the namespace are overwritten.
 
 > [!NOTE]
-> During adoption, ARM may take over a fields on a namespace on a member cluster, but it will not remove the resources from the namespace.
+> During adoption, ARM may take over fields on a namespace on a member cluster, but it doesn't remove the resources from the namespace.
 
 ## Delete policy
 The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) controls how the Kubernetes namespace is handled when the managed namespace resource is deleted. There are two built-in options:
@@ -53,7 +53,7 @@ The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) control
 * *Delete*: Removes both the managed namespace resource and the Kubernetes namespace from the hub and member clusters.
 
 > [!NOTE]
-> A delete policy of **Delete** will completely remove the Kubernetes namespace resource, even if it existed prior to, and was adopted by the multi-cluster managed namespace.
+> A delete policy of **Delete** completely removes the Kubernetes namespace resource, even if it existed prior to, and was adopted by the multi-cluster managed namespace.
 
 ## Cluster Resource Placement
 If the user specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object to propagate the namespace to the selected member clusters. The placement policy used is [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type). The adoption policy determines whether an unmanaged namespace is taken over when a managed namespace with the same name is propagated to a member cluster.

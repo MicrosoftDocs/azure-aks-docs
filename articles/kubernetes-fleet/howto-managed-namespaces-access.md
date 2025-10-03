@@ -1,5 +1,5 @@
 ---
-title: View managed namespace access and the member clusters it is placed on (preview)
+title: View a managed namespace and the member clusters it is placed on (preview)
 description: Learn how to find managed namespaces you have access to, view their deployment locations, and monitor resource quota usage across multiple clusters.
 author: audrastump
 ms.author: stumpaudra
@@ -10,7 +10,7 @@ zone_pivot_groups: azure-portal-azure-cli
 
 # Customer intent: "As an application developer or team lead, I want to find the namespaces I have access to and monitor their resource usage across all clusters so I can understand deployment status and determine if quota adjustments are needed."
 ---
-# View managed namespace access and the member clusters it is placed on (preview)
+# View a managed namespace and the member clusters it is placed on (preview)
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
@@ -77,7 +77,7 @@ zone_pivot_groups: azure-portal-azure-cli
 :::zone-end
 :::zone target="docs" pivot="azure-portal"
 ## View the multi-cluster managed namespace I have access to 
-## View the member clusters which the managed namespace is placed on
+## View the member clusters that the managed namespace is placed on
 :::zone-end
 
 <!-- INTERNAL LINKS -->
