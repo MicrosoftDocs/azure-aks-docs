@@ -32,9 +32,9 @@ Use cases for eBPF Host Routing are performance-critical workloads such as high-
 
 ## Components of eBPF Host Routing
 
-**`iptables monitor`** - Runs as a sidecar container in the Cilium DaemonSet. It monitors the BPF map to detect if any new iptables rules are added and emits a Kubernetes event if new rules are found based on 5-minute intervals.
+**`iptables blocker`** - Runs as an init container using LSM BPF to check for custom iptables rules and prevents Cilium agent from starting if rules are found are the host network namespace when eBPF Host Routing is enabled.
 
-**`iptables blocker`** - Runs as an init container before Cilium agent starts. It uses LSM BPF to check for custom iptables rules and prevents Cilium from starting if rules are found are the host network namespace.
+**`iptables monitor`** - Checks if `iptables blocker` has blocked iptables rules and checks nodes if user iptables rules are added. Runs an init container in Cilium daemonset to prevent start if user iptables rules are present.
 
 **`IP Masquerade Agent`** - When eBPF Host Routing is active, Cilium takes over SNAT responsibilities using BPF-based masquerading thus making ip-masq-agent technically redundant. This agent continues to run to ensure consistent network behavior if eBPF Host Routing is disabled.
 
