@@ -236,7 +236,7 @@ You can only update from `byo` or `system` to `none`. No other combination of up
 
 ## Options for connecting to the private cluster
 
-The API server endpoint has no public IP address. To manage the API server, you need to use a VM or container that has access to the AKS cluster's Azure Virtual Network (VNet). There are several options for establishing network connectivity to the private cluster:
+The API server endpoint has no public IP address. To manage the API server, you need to use a virtual machine (VM) or container that has access to the AKS cluster's virtual network (VNet). There are several options for establishing network connectivity to the private cluster:
 
 * Use a [Cloud Shell][cloud-shell-vnet] instance deployed into a subnet that's connected to the API server for the cluster.
 * Use [Azure Bastion][azure-bastion]'s native client tunneling feature (Preview).
