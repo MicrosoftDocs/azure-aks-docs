@@ -288,11 +288,11 @@ You can deploy Cloud Shell in the same VNet as your AKS private cluster with a d
 
 ---
 
-### Configure Connection
+### Configure connection
 
-Once the required resources have been deployed, you can configure your Cloud Shell to deploy in the given VNet by following [Configure Cloud Shell to use a virtual network][cloud-shell-vnet-configure].
+Once the required resources are deployed, you can configure your Cloud Shell to deploy in the given VNet by following [Configure Cloud Shell to use a virtual network][cloud-shell-vnet-configure].
 
-## Connect via Azure Bastion (Preview)
+## Connect via Azure Bastion (preview)
 
 Azure Bastion is a fully managed PaaS service that you provision to securely connect to private resources via private IP addresses. To use Bastion's native client tunneling feature, see [Connect to AKS private cluster using Azure Bastion][azure-bastion].
 
