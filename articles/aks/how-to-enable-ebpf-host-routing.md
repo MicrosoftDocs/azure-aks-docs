@@ -6,7 +6,7 @@ ms.author: samfoo
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 09/23/2024
+ms.date: 09/23/2025
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
@@ -68,7 +68,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 
 * **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
-* **Container Network Performance:** Improves latency and throughput between pod to pod traffic. To learn more visit [Container Network Performance](./advanced-container-networking-services-overview.md#container-network-performance)
+* **Container Network Performance:** Improves latency and throughput for pod to pod traffic. To learn more visit [Container Network Performance](./advanced-container-networking-services-overview.md#container-network-performance)
 
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Performance with eBPF Host Routing starting with Kubernetes version 1.33.
@@ -89,7 +89,7 @@ az aks create \
     --network-plugin-mode overlay \
     --network-dataplane cilium \
     --enable-acns \
-    --acns-datapath-acceleration-mode bpfveth \
+    --acns-datapath-acceleration-mode BpfVeth \
     --generate-ssh-keys
 ```
 
@@ -110,12 +110,12 @@ az aks update \
 
 ## Disabling eBPF Host Routing on an existing cluster
 
-eBPF Host Routing  can be disabled independently without affecting other ACNS features. To disable it, set the flag `--acns-transit-encryption-type=none`.
+eBPF Host Routing  can be disabled independently without affecting other ACNS features. To disable it, set the flag `--acns-datapath-acceleration-mode=None`.
 
 ```azurecli-interactive
 az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
     --enable-acns \
-    --acns-datapath-acceleration-mode none
+    --acns-datapath-acceleration-mode None
 ```

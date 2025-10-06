@@ -6,19 +6,29 @@ ms.author: samfoo
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
-ms.date:  09/23/2024
+ms.date:  09/23/2025
 ---
 
 # Overview of eBPF Host Routing (Public Preview)
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-As containerized workloads scale across distributed environments, the need for high-performance, low-latency networking becomes critical. eBPF Host Routing is a performance-focused feature within [Advanced Container Networking Services (ACNS)](advanced-container-networking-services-overview.md) that uses extended Berkeley Packet Filter (eBPF) technology to optimize traffic flow in Kubernetes clusters. Traditional routing in Kubernetes clusters relies on iptables and netfilter, which introduce overhead due to rule evaluation and context switching between kernel and user space. eBPF Host Routing has benefits over legacy host routing by:
+As containerized workloads scale across distributed environments, the need for high-performance, low-latency networking becomes critical. eBPF Host Routing is a performance-focused feature within [Advanced Container Networking Services (ACNS)](advanced-container-networking-services-overview.md) that uses extended Berkeley Packet Filter (eBPF) technology to optimize traffic flow in Kubernetes clusters. Legacy routing on Kubernetes hosts introduces overhead in the form of iptables and netfilter rule processing in the host network namespace. eBPF Host Routing has benefits over legacy host routing by:
 
- - Embedding routing logic directly into the kernel via eBPF programs.
+ - Implementing the routing logic in eBPF programs.
  - Allowing Cilium to make routing decisions without invoking iptables or the host stack.
 
 This direct path reduces the number of hops and processing layers, resulting in faster packet delivery.
+
+## Key Benefits
+
+Reduced latency - Bypassing iptables results in lower pod-to-pod latency
+
+Increased throughput - Compared to legacy routing, significant improvements can be observed for pod-to-pod traffic between nodes
+
+Reduced CPU usage - Due to removing iptables-based SNAT and routing logic, a modest reduction of CPU usage
+
+Use cases for eBPF Host Routing are performance-critical workloads such as high-throughput microservices, real-time services, or AI/ML workloads. Ensure deployment environment meets the requirements prior to enabling.
 
 ## Components of eBPF Host Routing
 
@@ -28,23 +38,13 @@ This direct path reduces the number of hops and processing layers, resulting in 
 
 **`IP Masquerade Agent`** - When eBPF Host Routing is active, Cilium takes over SNAT responsibilities using BPF-based masquerading thus making ip-masq-agent technically redundant. This agent continues to run to ensure consistent network behavior if eBPF Host Routing is disabled.
 
-## Key Benefits
-
-Reduced latency - Bypassing iptables results in lower pod-to-pod latency
-
-Increased throughput - Compared to legacy routing, significant improvements can be observed for pod-to-pod traffic between nodes.
-
-Reduced CPU usage - Due to removing iptables-based SNAT and routing logic, a modest reduction of CPU usage
-
-Use cases for eBPF Host Routing is for performance critical workloads such as high throughout microservices, real-time service, or AI/ML workloads. Ensure deployment environment meets the requirements prior to enabling.
-
 ## Considerations
 
- - There are iptables entries that block pod and node traffic to [Wireserver](/azure/virtual-network/what-is-ip-address-168-63-129-16). These entries are converted to [ClusterWideCiliumNetworkPolicy](https://docs.cilium.io/en/stable/network/kubernetes/policy/#ciliumclusterwidenetworkpolicy) that are managed by Azure.
+Enabling eBPF Host Routing causes iptables rules in the host network namespace to be bypassed. Hence, AKS will attempt to detect and block enablement of eBPF Host Routing on clusters where iptables rules are in use in the host network namespace.
 
- - LSM BPF is used to block iptables rule installation in the host network namespace. This eBPF module is required for enabling eBPF Host Routing and only available on Ubuntu 24.04 and Azure Linux 3.0.
+ - On clusters with eBPF host routing enabled, AKS will block attempts to install iptables rules in the host network namespace. Trying to bypass this block may cause the cluster to be inoperational.
 
- - Check for any existing incompatible iptables rules.
+ - eBPF host routing is currently incompatible with nodes running OSes other than Ubuntu 24.04, or Azure Linux 3.0. eBPF host routing is currently also not supported with Confidential VMs and Pod Sandboxing
 
 ## Limitations
 
@@ -55,6 +55,8 @@ Use cases for eBPF Host Routing is for performance critical workloads such as hi
  - Istio add-on cannot be used along with eBPF Host Routing enabled clusters.
 
  - Enabling eBPF Host Routing on an existing cluster may disrupt existing connections.
+
+ - Dual stack networking is not supported.
 
 ## Pricing
 
