@@ -246,12 +246,14 @@ The API server endpoint has no public IP address. To manage the API server, you 
 * Use the [AKS `command invoke` feature][command-invoke].
 * Use a [private endpoint][private-endpoint-service] connection.
 
-Using Cloud Shell or Bastion (Preview) are the easiest options. Express Route and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges.
+Using Cloud Shell or Bastion (preview) are the easiest options. Express Route and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges.
 
-| Option | Azure Cloud Shell | Azure Bastion (Preview) |
+The following table outlines the key differences and limitations of using Azure Cloud Shell and Azure Bastion:
+
+| Option | Azure Cloud Shell | Azure Bastion (preview) |
 |--------|-------------------|--------------------------|
-| Key differences | • Best for ad-hoc or infrequent use <br> • Cost-effective, browser-based access <br> • Comes with preinstalled tools like `az cli` and `kubectl` | • Persistent, long-running access <br> • Suited for managing multiple clusters <br> • Use your own native client tooling |
-| Notable Limitations | • Not supported with AKS Automatic clusters or clusters with network resource group (NRG) lockdown <br> • A user cannot have multiple Cloud Shell sessions in different VNets at the same time| • Not supported with AKS Automatic clusters or clusters with NRG lockdown <br> • Not supported when public FQDN is disabled on the cluster |
+| Key differences | • Best for ad-hoc or infrequent use. <br> • Cost-effective, browser-based access. <br> • Comes with preinstalled tools like `az cli` and `kubectl`. | • Persistent, long-running access. <br> • Suited for managing multiple clusters. <br> • Use your own native client tooling. |
+| Limitations | • Not supported with AKS Automatic clusters or clusters with network resource group (NRG) lockdown. <br> • You can't have multiple Cloud Shell sessions in different VNets at the same time. | • Not supported with AKS Automatic clusters or clusters with NRG lockdown. <br> • Not supported when public FQDN is disabled on the cluster. |
 
 ## Connect via Azure Cloud Shell
 
