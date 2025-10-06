@@ -19,7 +19,8 @@ Fleet's workload orchestration and load balancing capabilities. These agents gen
 - Workload orchestration configuration changes and operation updates 
 - Load balancing configuration changes and operation updates
 
-And you can retrieve these logs for monitoring, troubleshooting, and/or auditing purposes.
+> [!IMPORTANT]
+> While in Preview, Arc-enabled Kubernetes cluster members will not have log ingestion enabled, and therefore will not be viewable.
 
 ## Configure diagnostic settings on relevant resources
 
