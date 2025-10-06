@@ -266,21 +266,20 @@ The following RBAC permissions are required:
 - `Microsoft.Resources/subscriptions/resourceGroups/write`
 - `Microsoft.Authorization/roleAssignments/write`
 
-### [Quickstart in Portal (Preview)](#tab/Portal)
+#### [Azure portal (preview)](#tab/portal)
 
 This option creates a separate VNet with the necessary resources for Cloud Shell and configures VNet peering for you.
 
 1. In the [Azure portal](https://portal.azure.com), navigate to your private cluster resource.
 2. In the Overview page, select **Connect**.
 3. In the **Cloud Shell** tab, under **Prerequisites for private cluster connection**, select **Configure** to deploy the necessary resources.
-4. Once the deployment has succeeded, under **Set cluster context**, select **Open Cloud Shell** .
+4. Once the deployment has succeeded, under **Set cluster context**, select **Open Cloud Shell**.
 
 ![Azure Portal Cloud Shell Connect Button](media/access-private-cluster/azure-portal-cloud-shell-connect.png)
 
+If Cloud Shell has already been configured in a VNet for a particular cluster, repeating these steps ensures your Cloud Shell user settings are correctly aligned with that VNet.
 
-If Cloud Shell has already been configured in a VNet for a particular cluster, repeating these steps will ensure your Cloud Shell User Settings are correctly aligned with that VNet.
-
-### [ARM Template](#tab/ARM)
+#### [ARM template](#tab/arm)
 
 To have more control over the deployment configuration, use the [provided ARM template][cloud-shell-vnet-deploy].
 
