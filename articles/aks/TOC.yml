@@ -736,10 +736,14 @@
           href: use-azure-ad-pod-identity.md
         - name: Pod Sandboxing
           href: use-pod-sandboxing.md
-        - name: Network policy best practices
-          href: network-policy-best-practices.md
-        - name: Secure pod traffic with network policies
-          href: use-network-policies.md
+        - name: Network policies
+          items:
+            - name: Secure pod traffic with network policies
+              href: use-network-policies.md
+            - name: Network policy best practices
+              href: network-policy-best-practices.md
+            - name: Use network policies in the Azure portal
+              href: use-network-policies-in-the-azure-portal.md
         - name: Pod security policies
           href: use-pod-security-policies.md
         - name: Pod Security Admission
