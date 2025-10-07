@@ -17,7 +17,7 @@ This article shows you how to update the key vault mode from public to private o
 ## Prerequisites
 
 - An AKS cluster with KMS etcd encryption enabled. For more information, see [Add Key Management Service (KMS) etcd encryption to an Azure Kubernetes Service (AKS) cluster](./use-kms-etcd-encryption.md).
-- Azure CLI version 2.39.0 or later. Run `az --version` to find your version. If you need to install or upgrade, see [Install the Azure CLI][azure-cli-install].
+- Azure CLI version 2.39.0 or later. Find your version using the `az --version` command. If you need to install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
 ## Update a key vault mode
 
@@ -32,14 +32,14 @@ This article shows you how to update the key vault mode from public to private o
    az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --disable-azure-keyvault-kms
    ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, please still run the following command to avoid unexpected state for KMS plugin.
+    > [!WARNING]
+    > After you turn off KMS, the encryption key vault key is still needed. You can't delete or expire it.
+
+1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
-
-    > [!WARNING]
-    > After turning off KMS, the encryption key vault key is still needed. You can't delete or expire it.
 
 1. Update the key vault from public to private using the [`az keyvault update`][azure-keyvault-update] command with the `--public-network-access` parameter set to `Disabled`.
 
@@ -67,14 +67,14 @@ This article shows you how to update the key vault mode from public to private o
    az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --disable-azure-keyvault-kms
    ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, please still run the following command to avoid unexpected state for KMS plugin.
+    > [!WARNING]
+    > After you turn off KMS, the encryption key vault key is still needed. You can't delete or expire it.
+
+1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
-
-    > [!WARNING]
-    > After turning off KMS, the encryption key vault key is still needed. You can't delete or expire it.
 
 1. Update the key vault from public to private using the [`az keyvault update`][azure-keyvault-update] command with the `--public-network-access` parameter set to `Enabled`.
 

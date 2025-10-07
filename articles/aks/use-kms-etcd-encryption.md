@@ -28,11 +28,11 @@ For more information on using KMS, see [Using a KMS provider for data encryption
 ## Prerequisites
 
 - An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free).
-- Azure CLI version 2.39.0 or later. Run `az --version` to find your version. If you need to install or upgrade, see [Install the Azure CLI][azure-cli-install].
+- Azure CLI version 2.39.0 or later. Find your version using the `az --version` command. If you need to install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
 > [!WARNING]
 >
-> Starting on September 15, 2024, Konnectivity is no longer supported for private key vaults for new subscriptions or subscriptions that haven't previously used this configuration. For subscriptions that are currently using this configuration or have used it in the past 60 days, support will continue until AKS version 1.30 reaches end of life for community support.
+> Starting on September 15, 2024, Konnectivity is no longer supported for private key vaults for new subscriptions or subscriptions that didn't previously use this configuration. For subscriptions that currently use this configuration or used it in the past 60 days, support will continue until AKS version 1.30 reaches end of life for community support.
 >
 > KMS supports Konnectivity or [API Server VNet Integration][api-server-vnet-integration] for public key vaults.
 >
@@ -191,7 +191,7 @@ The following sections describe how to turn on KMS for a public key vault on a n
         --azure-keyvault-kms-key-id $KEY_ID
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, please still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -206,7 +206,7 @@ After you change the key ID (including changing either the key name or the key v
 >
 > KMS uses two keys at the same time. After the first key rotation, you need to ensure both the old and new keys are valid (not expired) until the next key rotation. After the second key rotation, the oldest key can be safely removed/expired.
 >
-> After rotating KMS key version with the new `keyId`, please check `securityProfile.azureKeyVaultKms.keyId` in AKS resource json. Ensure the new key version is in use.
+> After rotating KMS key version with the new `keyId`, check `securityProfile.azureKeyVaultKms.keyId` in AKS resource json. Ensure the new key version is in use.
 
 1. Rotate existing keys using the [`az aks update`][az-aks-update] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-id` parameters.
 
@@ -219,7 +219,7 @@ After you change the key ID (including changing either the key name or the key v
         --azure-keyvault-kms-key-id $NEW_KEY_ID
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, please still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -231,7 +231,7 @@ After you change the key ID (including changing either the key name or the key v
 
 ## Create a key vault and key for a private key vault
 
-If you turn on KMS for a private key vault, AKS automatically creates a private endpoint and a private link in the node resource group. The key vault is added a private endpoint connection with the AKS cluster.
+If you turn on KMS for a private key vault, AKS automatically creates a private endpoint and a private link in the node resource group. The key vault has a private endpoint connection with the AKS cluster.
 
 > [!WARNING]
 > Keep the following information in mind when using a private key vault:
@@ -290,7 +290,7 @@ The following sections describe how to assign decrypt and encrypt permissions fo
 ### [Assign permissions for a private key vault without Azure RBAC](#tab/non-rbac-kv)
 
 > [!NOTE]
-> When using a private key vault, AKS can't validate the permissions of the identity. Verify the identity has been granted permission to access the key vault before enabling KMS.
+> With a private key vault, AKS can't validate the permissions of the identity. Verify the identity has permission to access the key vault before enabling KMS.
 
 - Create an Azure Key Vault policy to give decrypt and encrypt permissions using the [`az keyvault set-policy`][azure-keyvault-set-policy] command.
 
@@ -344,7 +344,7 @@ The following sections describe how to turn on KMS for a private key vault on a 
         --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, please still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -359,7 +359,7 @@ After you change the key ID (including changing either the key name or the key v
 >
 > After you rotate the key, the previous key (key1) is still cached and shouldn't be deleted. If you want to delete the previous key (key1) immediately, you need to rotate the key twice. Then key2 and key3 are cached, and key1 can be deleted without affecting the existing cluster.
 >
-> After rotating KMS key version with the new `keyId`, please check `securityProfile.azureKeyVaultKms.keyId` in AKS resource json. Ensure the new key version is in use.
+> After rotating KMS key version with the new `keyId`, check `securityProfile.azureKeyVaultKms.keyId` in AKS resource json. Ensure the new key version is in use.
 
 1. Rotate existing keys in a private key vault using the [`az aks update`][az-aks-update] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-id`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-vault-resource-id` parameters.
 
@@ -373,7 +373,7 @@ After you change the key ID (including changing either the key name or the key v
         --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, please still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -395,7 +395,7 @@ After you change the key ID (including changing either the key name or the key v
     az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --disable-azure-keyvault-kms
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, please still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -414,4 +414,5 @@ For more information on using KMS with AKS, see the following articles:
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az_aks_update
 [api-server-vnet-integration]: api-server-vnet-integration.md
-[kms-v2-support]: use-kms-etcd-encryption.md#kms-v2-support
+[kms-v2-support]: ./use-kms-v2.md
+[update-a-key-vault-mode]: ./update-kms-key-vault.md

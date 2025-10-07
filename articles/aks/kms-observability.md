@@ -1,6 +1,6 @@
 ---
 title: Observability for Azure Kubernetes Service (AKS) Clusters with Key Management Service (KMS) Etcd Encryption
-description: Learn how to view observability metrics and improve observability for AKS clusters with KMS etc encryption.
+description: Learn how to view observability metrics and improve observability for AKS clusters with KMS etcd encryption.
 ms.date: 09/26/2024
 ms.subservice: aks-security
 ms.topic: how-to

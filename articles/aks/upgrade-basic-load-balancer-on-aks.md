@@ -194,6 +194,6 @@ For more information on AKS networking, see [Networking concepts for Azure Kuber
 
 <!-- LINKS - internal -->
 
-[turn-off-kms]: /azure/aks/use-kms-etcd-encryption#turn-off-kms
+[turn-off-kms]: /azure/aks/use-kms-etcd-encryption#disable-kms-on-an-aks-cluster
 [load-balancer-upgrade-guidance]: /azure/load-balancer/load-balancer-basic-upgrade-guidance
 [availability-sets]: availability-sets-on-aks.md
