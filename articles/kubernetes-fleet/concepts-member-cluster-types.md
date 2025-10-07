@@ -34,7 +34,7 @@ Depending on your environment and configuration, certain limitations may apply w
 
 ### Fleet Type
 
-- For **Private Fleets**, your Arc-enabled Kubernetes cluster **must** be configured to use [Azure Arc Gateway](https://learn.microsoft.com/azure/azure-arc/servers/arc-gateway).
+- For **Private Fleets**, your Arc-enabled Kubernetes cluster **must** be configured to use [Azure Arc Gateway](/azure/azure-arc/servers/arc-gateway).
 
 ### Cluster Configuration
 
@@ -47,4 +47,4 @@ Depending on your environment and configuration, certain limitations may apply w
 ### Networking
 
 - **TLS-terminating proxies are not supported.**  
-- If using a **passthrough proxy**, your Arc-enabled Kubernetes cluster **must** also be configured to use [Azure Arc Gateway](https://learn.microsoft.com/azure/azure-arc/servers/arc-gateway).
+- If using a **passthrough proxy**, your Arc-enabled Kubernetes cluster **must** also be configured to use [Azure Arc Gateway](/azure/azure-arc/servers/arc-gateway).
