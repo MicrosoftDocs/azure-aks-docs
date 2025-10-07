@@ -6,7 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
-# Customer intent: "As a cloud administrator, I want to manage multiple AKS clusters as a single entity using a fleet resource, so that I can orchestrate updates and maintain consistency across clusters."
+# Customer intent: "As a cloud administrator, I want to manage multiple Kubernetes clusters as a single entity using a fleet resource, so that I can orchestrate updates and maintain consistency across clusters."
 ---
 
 # Azure Kubernetes Fleet Manager and member clusters
@@ -15,7 +15,9 @@ This article provides a conceptual overview of fleets, member clusters, and hub 
 
 ## What are fleets?
 
-A fleet resource acts as a grouping entity for multiple AKS clusters. You can use them to manage multiple AKS clusters as a single entity, orchestrate updates across multiple clusters, propagate Kubernetes resources across multiple clusters, and provide a single pane of glass for managing multiple clusters. You can create a fleet with or without a [hub cluster](concepts-choosing-fleet.md).
+A fleet resource acts as a grouping entity for Kubernetes clusters. You can use them to manage multiple clusters as a single entity, orchestrate updates across multiple clusters, propagate Kubernetes resources across multiple clusters, and provide a single pane of glass for managing multiple clusters. You can create a fleet with or without a [hub cluster](concepts-choosing-fleet.md). To understand what type of Kubernetes clusters are supported as members, see [Azure Kubernetes Fleet Manager member cluster types](./concepts-member-cluster-types.md).
+
+ Fleets are implemented using [KubeFleet](https://kubefleet.dev/), an open-source project that provides multi-cluster management capabilities for Kubernetes clusters. KubeFleet is a CNCF Sandbox project.
 
 A fleet consists of the following components:
 
@@ -34,10 +36,10 @@ The hub cluster facilitates the orchestration of updates and resource management
 
 The `MemberCluster` represents a cluster-scoped API established within the hub cluster, serving as a representation of a cluster within the fleet. This API offers a dependable, uniform, and automated approach for multi-cluster applications to identify registered clusters within a fleet. It also facilitates applications in querying a list of clusters managed by the fleet or in observing cluster statuses for subsequent actions.
 
-You can join Azure Kubernetes Service (AKS) clusters and Arc-Enabled Kubernetes Clusters (currently in Preview). Member clusters must reside in the same Microsoft Entra tenant as the fleet, but they can be in different regions, different resource groups, and/or different subscriptions.
+You can join Azure Kubernetes Service (AKS) clusters and Arc-Enabled Kubernetes clusters (currently in Preview). Member clusters must reside in the same Microsoft Entra tenant as the fleet, but they can be in different regions, different resource groups, and/or different subscriptions.
 
 > [!IMPORTANT]
-> Fleet's capabilities vary by member cluster type. Read **[Azure Fleet Manager member cluster types](./concepts-member-cluster-types.md)** to understand more.
+> Fleet's capabilities vary by member cluster type. Read **[Azure KubernetesFleet Manager member cluster types](./concepts-member-cluster-types.md)** to understand more.
 
 ### Labels
 
