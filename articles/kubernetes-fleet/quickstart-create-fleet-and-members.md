@@ -68,7 +68,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create
   az aks install-cli
   ```
 
-* If the cluster you are joining is an AKS cluster, ensure it is running Kubernetes versions supported by AKS. Learn more about AKS version support policy [here](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy).
+* Ensure the clusters you desire to join as members to Fleet are running the officially supported versions of their respective platforms: see [AKS cluster version support policy](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy) and [Azure Arc-enabled Kubernetes validation](/azure-arc/kubernetes/validation-program).
 
 ## Create a resource group
 
