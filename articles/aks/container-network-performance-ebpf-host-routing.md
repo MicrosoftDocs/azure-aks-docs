@@ -28,21 +28,21 @@ Increased throughput - Compared to legacy routing, significant improvements can 
 
 Reduced CPU usage - Due to removing iptables-based SNAT and routing logic, a modest reduction of CPU usage
 
-Use cases for eBPF Host Routing are performance-critical workloads such as high-throughput microservices, real-time services, or AI/ML workloads. Ensure deployment environment meets the requirements prior to enabling.
+Use cases for eBPF Host Routing are performance-critical workloads such as high-throughput microservices, real-time services, or AI/ML workloads. Ensure deployment environment meets the requirements before enabling.
 
 ## Components of eBPF Host Routing
 
-**`iptables blocker`** - Runs as an init container using LSM BPF to check for custom iptables rules and prevents Cilium agent from starting if rules are found are the host network namespace when eBPF Host Routing is enabled.
+**`iptables blocker`** - Runs as an init container using LSM BPF to check for custom iptables rules and prevents Cilium agent from starting if rules are found in the host network namespace when eBPF Host Routing is enabled.
 
-**`iptables monitor`** - Checks if `iptables blocker` has blocked iptables rules and checks nodes if user iptables rules are added. Runs an init container in Cilium daemonset to prevent start if user iptables rules are present.
+**`iptables monitor`** - Checks if `iptables blocker` blocked iptables rules and checks nodes if user iptables rules are added. Runs an init container in Cilium DaemonSet to prevent start if user iptables rules are present.
 
 **`IP Masquerade Agent`** - When eBPF Host Routing is active, Cilium takes over SNAT responsibilities using BPF-based masquerading thus making ip-masq-agent technically redundant. This agent continues to run to ensure consistent network behavior if eBPF Host Routing is disabled.
 
 ## Considerations
 
-Enabling eBPF Host Routing causes iptables rules in the host network namespace to be bypassed. Hence, AKS will attempt to detect and block enablement of eBPF Host Routing on clusters where iptables rules are in use in the host network namespace.
+Enabling eBPF Host Routing causes iptables rules in the host network namespace to be bypassed. Hence, AKS attempts to detect and block enablement of eBPF Host Routing on clusters where iptables rules are in use in the host network namespace.
 
- - On clusters with eBPF host routing enabled, AKS will block attempts to install iptables rules in the host network namespace. Trying to bypass this block may cause the cluster to be inoperational.
+ - On clusters with eBPF host routing enabled, AKS blocks attempts to install iptables rules in the host network namespace. Trying to bypass this block may cause the cluster to be inoperational.
 
  - eBPF host routing is currently incompatible with nodes running OSes other than Ubuntu 24.04, or Azure Linux 3.0. eBPF host routing is currently also not supported with Confidential VMs and Pod Sandboxing
 
@@ -52,11 +52,11 @@ Enabling eBPF Host Routing causes iptables rules in the host network namespace t
 
  - Windows nodes aren't supported by Azure CNI Powered by Cilium, and by extension, eBPF Host Routing.
 
- - Istio add-on cannot be used along with eBPF Host Routing enabled clusters.
+ - Istio add-on can't be used along with eBPF Host Routing enabled clusters.
 
  - Enabling eBPF Host Routing on an existing cluster may disrupt existing connections.
 
- - Dual stack networking is not supported.
+ - Dual stack networking isn't supported.
 
 ## Pricing
 
