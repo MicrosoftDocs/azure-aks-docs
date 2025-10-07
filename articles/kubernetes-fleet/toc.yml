@@ -98,9 +98,9 @@
           href: quickstart-resource-propagation.md
         - name: Understand the placement status
           href: howto-understand-placement.md
-        - name: Use Azure Kubernetes Fleet Manager Managed Namespaces for multi-tenancy across multiple clusters
+        - name: Use managed namespaces for multi-tenancy across multiple clusters
           href: howto-managed-namespaces.md
-        - name: View multi-cluster managed namespace I have access to
+        - name: View multi-cluster managed namespaces I have access to
           href: howto-managed-namespaces-access.md
         - name: Intelligent multi-cluster resource placement using cluster properties
           href: intelligent-resource-placement.md
