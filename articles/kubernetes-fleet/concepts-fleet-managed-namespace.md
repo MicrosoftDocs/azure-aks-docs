@@ -10,11 +10,12 @@ ms.topic: concept-article
 ---
 # Use Managed Namespaces to control user access and resource quotas across multiple clusters (preview)
 
-This article provides a conceptual overview of multi-cluster managed namespaces. AKS managed namespaces provide a way to logically isolate workloads within a single cluster. Multi-cluster managed namespaces extend this capability across multiple AKS clusters in a fleet. 
+This article provides a conceptual overview of multi-cluster managed namespaces. 
+Using multi-cluster managed namespaces on targeted member clusters, platform administrators can define resource quotas, network policies, and control access to namespace resources. Fleet Manager then automatically places the namespace and its associated resources on the designated member clusters. This extends the capability of AKS managed namespaces, which provide a way to logically isolate workloads within a single cluster. 
 
-Using multi-cluster managed namespaces, platform administrators can define resource quotas, network policies, and control access to namespace resources, then specify which member clusters should receive the namespace. Fleet Manager automatically places the namespace and its associated resources on the hub cluster and designated member clusters.
+If the platform administrator specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object, with a [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type) placement policy, to propagate the namespace to the selected member clusters. 
 
-If the user specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object, with a [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type) placement policy, to propagate the namespace to the selected member clusters. 
+Administrators can also control two key behaviors: how conflicts are resolved when a managed namespace is placed on a member cluster that already has an unmanaged namespace with the same name, and whether Kubernetes resources are deleted upon managed namespace deletion.
 
 ## Resource quotas
 
@@ -29,15 +30,14 @@ Platform administrators may use [resource quotas](../aks/concepts-managed-namesp
 
 [Network policies](../aks/use-network-policies.md) control allowed traffic for pods within a namespace. Users may independently select one of three built-in network policies for ingress and egress traffic. If omitted, no network policy is applied to the namespace.
 
+Network policies are applied to each cluster individually and do not control cross-cluster network traffic for the namespace. Each member cluster enforces its own network policy independently within its local namespace instance.
+
 * *Allow all*: Allow all network traffic, including traffic between pods and external endpoints.
 * *Allow same namespace*: Allow all network traffic between pods within the same namespace.
 * *Deny all*: Deny all network traffic, including traffic between pods and external endpoints.
 
 > [!NOTE]
 > While platform administrators can set default network policies through the managed namespace configuration, users with sufficient permissions can create additional policies that relax the overall network policy for the namespace.
-
-> [!NOTE]
-> Network policies are applied to each cluster individually and do not control cross-cluster network traffic for the namespace. Each member cluster enforces its own network policy independently within its local namespace instance.
 
 ## Labels and annotations
 Platform administrators may apply both Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) and annotations to the managed namespace. By default, each managed namespace has a built-in label indicating it's managed by ARM.
@@ -46,8 +46,8 @@ Platform administrators may apply both Kubernetes [labels](https://kubernetes.io
 When a managed namespace is created, the adoption policy determines how existing unmanaged namespaces are handled if they already exist on the target cluster. Similar to a [single cluster namespace](../aks/concepts-managed-namespaces.md#adoption-policy), the following options are available:
 
 * *Never*: Managed namespace creation fails if a namespace with the same name already exists in the cluster.
-* *IfIdentical*: Managed namespace creation fails if a namespace with the same name already exists in the cluster, unless the namespaces are identical. If the namespaces are identical, ARM takes over the existing namespace to be managed.
-* *Always*: The managed namespace always takes over the existing namespace, even if some fields in the namespace are overwritten.
+* *IfIdentical*: Managed namespace creation fails if a namespace with the same name already exists in the cluster, unless the namespaces are identical. If the namespaces are identical, Fleet takes over the existing namespace to be managed.
+* *Always*: The managed namespace always takes over the existing namespace, even if some resources in the namespace are overwritten.
 
 During adoption a managed namespace may take over fields on a namespace on a member cluster, but it doesn't remove the resources from the namespace.
 
@@ -66,7 +66,7 @@ The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) control
 ## Multi-cluster managed namespace built-in roles
 Multi-cluster managed namespaces use the existing ARM Role Based Access Control (RBAC) [control plane roles](./concepts-rbac.md#control-plane) to manage and access managed namespaces. The existing [data plane RBAC roles](./concepts-rbac.md#data-plane) are applied to interact with the managed namespace created on the Fleet Manager hub cluster. 
 
-To control access to a managed namespace on member clusters, managed namespaces use the following built-in roles, applied at the namespace scope:
+To control access to a managed namespace on member clusters, managed namespaces use the following built-in roles, which can be applied at the namespace scope:
 
 | Role | Description |
 |------|-------------|
