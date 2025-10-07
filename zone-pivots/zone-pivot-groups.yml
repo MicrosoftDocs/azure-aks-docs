@@ -94,3 +94,12 @@ groups:
     title: AKS-managed Azure Container Registry
   - id: byo-acr
     title: Bring your own (BYO) Azure Container Registry
+# Owner: schaffererin
+- id: public-or-private-kv
+  title: Choose a key vault type
+  prompt: Choose a key vault type
+  pivots:
+  - id: public-kv
+    title: Public key vault
+  - id: private-kv
+    title: Private key vault
