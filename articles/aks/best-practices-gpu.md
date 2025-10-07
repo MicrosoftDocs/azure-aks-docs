@@ -163,7 +163,8 @@ To simplify provisioning and management, use [Azure Container Storage](/azure/st
 - Caching large datasets and model checkpoints for AI training and inference.
 
 - Caching model weights for AI inference. For example, [KAITO hosting model as OCI artifacts on local NVMe](https://kaito-project.github.io/kaito/docs/next/model-as-oci-artifacts/).
-- Providing fast scratch space for batch jobs and data pipelines
+- Providing fast scratch space for batch jobs and data pipelines.
+
 
 > [!IMPORTANT]
 > Data on ephemeral NVMe disks is temporary and will be lost if the VM is deallocated or redeployed. Use these disks only for non-critical, transient data, and store important information on persistent Azure storage solutions.
