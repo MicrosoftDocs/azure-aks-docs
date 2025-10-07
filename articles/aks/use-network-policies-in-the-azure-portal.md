@@ -3,7 +3,8 @@ title: Use network policies in the Azure Portal
 description: In this article, you learn how to create and manage network policies for Kubernetes clusters directly in the Azure Portal.
 author: sasper0ni
 ms.author: mirandawu
-ms.service: aks-networking
+ms.service: azure-kubernetes-service
+ms.subservice: aks-networking
 ms.topic: how-to #Required; leave this attribute/value as-is
 ms.date: 10/10/2025
 
