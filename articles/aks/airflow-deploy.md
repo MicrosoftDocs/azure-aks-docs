@@ -335,7 +335,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     postgresql:
       enabled: true
       image:
-        registry: $MY_ACR_REGISTRY.azurecr.io.azurecr.io
+        registry: $MY_ACR_REGISTRY.azurecr.io
         repository: postgresql
         tag: 16.1.0-debian-11-r15
     
