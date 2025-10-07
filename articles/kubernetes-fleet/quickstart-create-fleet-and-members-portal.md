@@ -13,7 +13,7 @@ ms.topic: quickstart
 
 # Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure portal
 
-Get started with Azure Kubernetes Fleet Manager (Fleet) by using the Azure portal to create a Fleet resource and later connect Azure Kubernetes Service (AKS) clusters as member clusters.
+Get started with Azure Kubernetes Fleet Manager (Fleet) by using the Azure portal to create a Fleet resource and later connect [supported Kubernetes clusters](./concepts-member-cluster-types.md) as member clusters.
 
 ## Prerequisites
 
@@ -32,8 +32,12 @@ Get started with Azure Kubernetes Fleet Manager (Fleet) by using the Azure porta
   * Microsoft.ContainerService/managedClusters/read
   * Microsoft.ContainerService/managedClusters/write
   * Microsoft.ContainerService/managedClusters/listClusterUserCredential/action
+  * Microsoft.Kubernetes/connectedClusters/read,
+  * Microsoft.KubernetesConfiguration/extensions/read,
+  * Microsoft.KubernetesConfiguration/extensions/write,
+  * Microsoft.KubernetesConfiguration/extensions/delete,
 
-* The AKS clusters that you want to join as member clusters to the Fleet resource need to be within the supported versions of AKS. Learn more about AKS version support policy [here](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy).
+* Clusters you desire to join as members to Fleet must use supported versions of their respective platforms: see [AKS cluster version support policy](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy) and [Azure Arc-enabled Kubernetes validation](/azure-arc/kubernetes/validation-program).
 
 ## Create a Fleet resource
 
@@ -53,7 +57,7 @@ Get started with Azure Kubernetes Fleet Manager (Fleet) by using the Azure porta
     :::image type="content" source="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png" alt-text="Screenshot of the Create Fleet resource basics tab in the Azure portal." lightbox="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png":::
 
 5. Select **Next: Member clusters**.
-6. On the **Member clusters** tab, select **Add** to add an existing AKS cluster as a member cluster to the Fleet resource. You can add multiple member clusters to the Fleet resource.
+6. On the **Member clusters** tab, select **Add** to add an existing cluster as a member cluster to the Fleet resource. You can add multiple member clusters to the Fleet resource.
 7. Select **Review + create** > **Create** to create the Fleet resource.
 
     It takes a few minutes to create the Fleet resource. When your deployment is complete, you can navigate to your resource by selecting **Go to resource**.
