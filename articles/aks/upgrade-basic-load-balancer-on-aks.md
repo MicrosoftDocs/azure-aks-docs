@@ -186,7 +186,7 @@ az aks list --query "[].{Name:name, KmsEnabled:securityProfile.azureKeyVaultKms.
     ...
     ```
 
-- If KMS is enabled and you want to disable it, see [Turn off KMS encryption](./use-kms-etcd-encryption.md#turn-off-kms).
+- If KMS is enabled and you want to disable it, see [Turn off KMS encryption][turn-off-kms].
 
 ## Next steps
 
