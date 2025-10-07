@@ -159,7 +159,8 @@ To simplify provisioning and management, use [Azure Container Storage](/azure/st
 
 **Recommended scenarios include:**
 
-- Caching large datasets and model checkpoints for AI training and inference
+- Caching large datasets and model checkpoints for AI training and inference.
+
 - Caching model weights for AI inference. For example, [KAITO hosting model as OCI artifacts on local NVMe](https://kaito-project.github.io/kaito/docs/next/model-as-oci-artifacts/).
 - Providing fast scratch space for batch jobs and data pipelines
 
