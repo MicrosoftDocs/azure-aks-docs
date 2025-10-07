@@ -152,7 +152,8 @@ For AI workloads running on GPU VMs in AKS, fast and reliable access to temporar
 
 When deploying GPU-enabled node pools for AI workloads, configure ephemeral NVMe data disks to serve as high-performance cache or scratch space. This approach helps eliminate I/O bottlenecks, accelerates data-intensive operations, and ensures that your GPU resources are not idling while waiting for data.
 
-Ephemeral NVMe data disks are supported across a wide range of Azure GPU VM families, providing high-throughput, low-latency storage for data-intensive workloads. Depending on the GPU VM size, it has up to 8 ephemeral NVMe data disks with a combined capacity of up to 28 TiB. For detailed configurations on VM sizes, refer to the [ND H100 v5-series documentation](/azure/virtual-machines/sizes/gpu-accelerated/ndh100v5-series) or the VM size documentation for your chosen GPU family.
+Ephemeral NVMe data disks are supported across a wide range of Azure GPU VM families. Depending on the GPU VM size, it has up to 8 ephemeral NVMe data disks with a combined capacity of up to 28 TiB. For detailed configurations on VM sizes, refer to the [ND H100 v5-series documentation](/azure/virtual-machines/sizes/gpu-accelerated/ndh100v5-series) or the VM size documentation for your chosen GPU family.
+
 
 To simplify provisioning and management, use [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction), which can automatically detect and orchestrate ephemeral NVMe disks for your Kubernetes workloads.
 
