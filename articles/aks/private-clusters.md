@@ -261,10 +261,7 @@ The following table outlines the key differences and limitations of using Azure 
 
 While Cloud Shell is a free service, using Cloud Shell in a VNet requires some resources that incur cost. For more information, see [Deploy Cloud Shell in a virtual network][cloud-shell-vnet-deploy].
 
-The following RBAC permissions are required:
-
-- `Microsoft.Resources/subscriptions/resourceGroups/write`
-- `Microsoft.Authorization/roleAssignments/write`
+To deploy and configure the required resources, you must have the **Owner** role assignment on the subscription. To view and assign roles, see [List Owners of a Subscription][list-owners-sub].
 
 #### [Azure portal (preview)](#tab/portal)
 
@@ -521,3 +518,4 @@ For associated best practices, see [Best practices for network connectivity and 
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [azure-bastion]: /azure/bastion/bastion-connect-to-aks-private-cluster
+[list-owners-sub]: /azure/role-based-access-control/role-assignments-list-portal#list-owners-of-a-subscription
