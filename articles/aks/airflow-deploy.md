@@ -334,6 +334,10 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     # yaml file.
     postgresql:
       enabled: true
+      image:
+        registry: $MY_ACR_REGISTRY.azurecr.io.azurecr.io
+        repository: postgresql
+        tag: 16.1.0-debian-11-r15
     
     # Enable pgbouncer. See https://airflow.apache.org/docs/helm-chart/stable/production-guide.html#pgbouncer
     pgbouncer:
