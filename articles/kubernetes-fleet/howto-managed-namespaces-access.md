@@ -33,7 +33,7 @@ zone_pivot_groups: azure-portal-azure-cli
   az extension update --name fleet
   ```
   
-  Confirm the fleet extension version is 1.7.0:
+  Confirm the fleet extension version is at least 1.7.0:
 
   ```azurecli-interactive
   az extension show --name fleet
@@ -60,16 +60,16 @@ zone_pivot_groups: azure-portal-azure-cli
 ## View the multi-cluster managed namespaces I have access to 
   ```azurecli-interactive
   az fleet namespace list  
-    --fleet-name ${FLEET} \ 
     --resource-group {GROUP} \ 
+    --fleet-name ${FLEET} \ 
     -o table 
   ```
 
 ## View the member clusters that the managed namespace is placed on
   ```azurecli-interactive
   az fleet namespace show \ 
-    --fleet-name ${FLEET} \ 
     --resource-group ${GROUP} \ 
+    --fleet-name ${FLEET} \ 
     --name ${FLEET_NAMESPACE_NAME}$ \ 
     -o table 
   ```

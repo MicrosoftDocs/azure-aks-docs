@@ -40,7 +40,7 @@ This enables teams to work within their allocated resources across any member cl
   az extension update --name fleet
   ```
   
-  Confirm the fleet extension version is 1.7.0:
+  Confirm the fleet extension version is at least 1.7.0:
 
   ```azurecli-interactive
   az extension show --name fleet
@@ -71,10 +71,10 @@ Create the multi-cluster managed namespace:
 
 ```azurecli-interactive
 # Note: Adoption policy and delete policy are required when creating a multi-cluster managed namespace.
-az fleet namespace create \ 
-    --name myManagedNamespace \ 
-    --fleet-name $FLEET \
+az fleet namespace create \
     --resource-group $GROUP \
+    --fleet-name $FLEET \
+    --name myManagedNamespace \ 
     --annotations annotation1=value1 annotation2=value2 \
     --labels team=myTeam label2=value2 \
     --cpu-requests 1m \
@@ -104,15 +104,18 @@ Control which member clusters the managed namespace is deployed to by specifying
 Specify the full list of member clusters you want the namespace deployed to, including any new clusters you wish to add. The namespace will be propagated to all clusters in the list.
 
 **To remove member clusters:**
-Specify the list of member clusters you want the namespace to remain on, excluding any clusters you wish to remove. The namespace will be removed from clusters not in the list.
+Specify the list of member clusters you want the namespace to remain on, excluding any clusters you wish to remove. The namespace will be removed from clusters not in the list. 
+
+> [!NOTE]
+> Unmanaged namespaces with the same name on member clusters not in the specified list will remain untouched.
 
 In this example, the namespace will be deployed to `clusterA`, `clusterB`, and `clusterC`.
 
 ```azurecli-interactive
 az fleet namespace create \
-    --name myManagedNamespace \
-    --fleet-name $FLEET \
     --resource-group $GROUP \
+    --fleet-name $FLEET \
+    --name myManagedNamespace \
     --member-cluster-names clusterA clusterB clusterC
 ```
 
@@ -121,8 +124,8 @@ After creation, you can view the member clusters where the managed namespace is 
 
 ```azurecli-interactive
 az fleet namespace show \
-   --fleet-name $FLEET \
    --resource-group $GROUP \
+   --fleet-name $FLEET \
    --name myManagedNamespace \
    -o table
 ```
@@ -132,9 +135,9 @@ To clean up, delete the managed namespace resource.
 
 ```azurecli-interactive
 az fleet namespace delete \
-    --name myManagedNamespace \
-    --fleet-name $FLEET \
     --resource-group $GROUP
+    --fleet-name $FLEET \
+    --name myManagedNamespace \
 ```
 :::zone-end
 

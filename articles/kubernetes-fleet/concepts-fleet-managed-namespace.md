@@ -14,6 +14,8 @@ This article provides a conceptual overview of multi-cluster managed namespaces.
 
 Using multi-cluster managed namespaces, platform administrators can define resource quotas, network policies, and control access to namespace resources, then specify which member clusters should receive the namespace. Fleet Manager automatically places the namespace and its associated resources on the hub cluster and designated member clusters.
 
+If the user specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object, with a [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type) placement policy, to propagate the namespace to the selected member clusters. 
+
 ## Resource quotas
 
 Platform administrators may use [resource quotas](../aks/concepts-managed-namespaces.md#resource-quotas) to cap CPU and memory consumption at the namespace layer.
@@ -47,28 +49,24 @@ When a managed namespace is created, the adoption policy determines how existing
 * *IfIdentical*: Managed namespace creation fails if a namespace with the same name already exists in the cluster, unless the namespaces are identical. If the namespaces are identical, ARM takes over the existing namespace to be managed.
 * *Always*: The managed namespace always takes over the existing namespace, even if some fields in the namespace are overwritten.
 
-> [!NOTE]
-> During adoption, a managed namespace may take over fields on a namespace on a member cluster, but it doesn't remove the resources from the namespace.
+During adoption a managed namespace may take over fields on a namespace on a member cluster, but it doesn't remove the resources from the namespace.
+
+> [!NOTE] 
+> Currently takeover behavior is limited to AKS cluster fleet members
 
 ## Delete policy
 The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) controls how the Kubernetes namespace is handled when the managed namespace resource is deleted. There are two built-in options:
 
-* *Keep*: Leaves the Kubernetes namespace intact on the hub and member clusters, but removes the `ManagedByARM` label.
-* *Delete*: Removes both the managed namespace resource and the Kubernetes namespace from the hub and member clusters.
+* *Keep*: Leaves the Kubernetes namespace intact on the member clusters, but removes the `ManagedByARM` label.
+* *Delete*: Removes the Kubernetes namespace and all resources within it from the member clusters.
 
 > [!NOTE]
-> A delete policy of **Delete** completely removes the Kubernetes namespace resource, even if it existed prior to, and was adopted by the multi-cluster managed namespace.
-
-## Cluster Resource Placement
-If the user specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object to propagate the namespace to the selected member clusters. The placement policy used is [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type). The adoption policy determines whether an unmanaged namespace is taken over when a managed namespace with the same name is propagated to a member cluster.
-1. *Always*: Overwrites the existing member cluster namespace with the multi-cluster managed namespace.
-2. *IfIdentical*: Overwrites the existing member cluster namespace with the multi-cluster managed namespace if there are no configuration differences.
-3. *Never*: Never takes over an unmanaged namespace.
+> A delete policy of **Delete** completely removes the Kubernetes namespace resource and the resources within it from the target member clusters, even if it existed prior to, and was adopted by the multi-cluster managed namespace.
 
 ## Multi-cluster managed namespace built-in roles
 Multi-cluster managed namespaces use the existing ARM Role Based Access Control (RBAC) [control plane roles](./concepts-rbac.md#control-plane) to manage and access managed namespaces. The existing [data plane RBAC roles](./concepts-rbac.md#data-plane) are applied to interact with the managed namespace created on the Fleet Manager hub cluster. 
 
-To control access to a managed namespace on member clusters, managed namespaces use the following built-in roles:
+To control access to a managed namespace on member clusters, managed namespaces use the following built-in roles, applied at the namespace scope:
 
 | Role | Description |
 |------|-------------|
