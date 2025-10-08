@@ -12,6 +12,8 @@ zone_pivot_groups: azure-portal-azure-cli
 ---
 # View a managed namespace and the member clusters it is placed on (preview)
 
+> This article is intended for **developers and team members** who need to discover and monitor managed namespaces they have access to. If you're a platform administrator looking to create and configure managed namespaces, see [Use multi-cluster managed namespaces for multi-tenancy](./howto-managed-namespaces.md).
+
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 ## Before you begin

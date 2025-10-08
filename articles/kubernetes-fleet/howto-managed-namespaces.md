@@ -19,6 +19,13 @@ Multi-cluster managed namespaces enable multi-tenancy across multiple clusters t
 
 This enables teams to work within their allocated resources across any member cluster where their managed namespace exists.
 
+# Use multi-cluster managed namespaces for multi-tenancy across multiple clusters (preview).
+
+> [!NOTE]
+> This article is intended for **platform administrators** who need to create, configure, and manage multi-cluster managed namespaces across a fleet. If you're a developer or team member looking to view and access existing managed namespaces, see [View managed namespaces you have access to](./howto-managed-namespaces-access.md).
+
+Multi-cluster managed namespaces enable multi-tenancy across multiple clusters through centralized, Azure-native namespace management. Platform administrators can:
+
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 ## Before you begin
