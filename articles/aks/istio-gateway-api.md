@@ -11,12 +11,12 @@ ms.author: nshankar
 
 # Configure Istio ingress with the Kubernetes Gateway API
 
-In addition to [Istio's own ingress traffic management API][istio-deploy-ingress], the Istio service mesh add-on also supports the Kubernetes Gateway API for ingress traffic management. In order to receive support from Azure for Gateway API-based deployments with the Istio add-on, you must have the [Managed Gateway API installation][managed-gateway-addon] enabled on your cluster. You can use both the Istio Gateway API [automated deployment model][istio-gateway-auto-deployment] or the [manual deployment model][istio-gateway-manual-deployment] for ingress traffic management as long as ConfigMap customizations adhere to the [resource customization allowlist](#resource-customization-allowlist).
+In addition to [Istio's own ingress traffic management API][istio-deploy-ingress], the Istio service mesh add-on also supports the Kubernetes Gateway API for ingress traffic management. In order to receive support from Azure for Gateway API-based deployments with the Istio add-on, you must have the [Managed Gateway API installation][managed-gateway-addon] enabled on your cluster. You can use both the Istio Gateway API [automated deployment model][istio-gateway-auto-deployment] or the [manual deployment model][istio-gateway-manual-deployment] for ingress traffic management. ConfigMap customizations must fall under the [resource customization allowlist](#resource-customization-allowlist).
 
 ## Limitations
 
 * Using the Kubernetes Gateway API for [egress traffic management][istio-deploy-egress] with the Istio add-on is only supported for the [manual deployment model][istio-gateway-manual-deployment].
-* ConfigMap customizations for `Gateway` resources must adhere to the [resource customization allowlist](#resource-customization-allowlist). Fields not on the allowlist are disallowed and blocked via add-on managed webhooks. See the [Istio add-on support policy][istio-support-policy] for more information `allowed`, `blocked`, and `supported` features.  
+* ConfigMap customizations for `Gateway` resources must fall within the [resource customization allowlist](#resource-customization-allowlist). Fields not on the allowlist are disallowed and blocked via add-on managed webhooks. See the [Istio add-on support policy][istio-support-policy] for more information `allowed`, `blocked`, and `supported` features.  
 
 ## Prerequisites
 
@@ -74,7 +74,7 @@ EOF
 ```
 
 > [!NOTE]
-> If you are performing a [minor revision upgrade][istio-upgrade] and have two Istio add-on revisions installed on your cluster simultaneously, by default the control plane for the higher minor revision takes ownership of the `Gateways`. You can add the `istio.io/rev` label to to control which control plane revision owns the `Gateway`. Make sure that you update the revision label accordingly to the appropriate control plane revision before rolling back or completing the upgrade operation.
+> If you are performing a [minor revision upgrade][istio-upgrade] and have two Istio add-on revisions installed on your cluster simultaneously, by default the control plane for the higher minor revision takes ownership of the `Gateways`. You can add the `istio.io/rev` label to the `Gateway` to control which control plane revision owns it. If you add the revision label, make sure that you update it accordingly to the appropriate control plane revision before rolling back or completing the upgrade operation.
 
 Verify that a `Deployment`, `Service`, `HorizontalPodAutoscaler`, and `PodDisruptionBudget` get created for `httpbin-gateway`:
 
@@ -138,7 +138,7 @@ The Istio add-on also [supports customizations of the resources][istio-gateway-a
 * Horizontal Pod Autoscaler (HPA)
 * Pod Disruption Budget (PDB)
 
-The [default settings for these resources][istio-gateway-class-cm] are set in the `istio-gateway-class-defaults` ConfigMap in the `aks-istio-system` namespace. This ConfigMap must have the `gateway.istio.io/defaults-for-class` label set to `istio` for the customizations to take effects for all `Gateways` with `spec.gatewayClassName: istio`. The `GatewayClass`-level ConfigMap is installed by default in the `aks-istio-system` namespace when the [Managed Gateway API installation][managed-gateway-addon] is enabled. It could take up to ~5 minutes for the `istio-gateway-class-defaults` ConfigMap to get deployed after installing the Managed Gateway API CRDs.
+The [default settings for these resources][istio-gateway-class-cm] are set in the `istio-gateway-class-defaults` ConfigMap in the `aks-istio-system` namespace. This ConfigMap must have the `gateway.istio.io/defaults-for-class` label set to `istio` for the customizations to take effect for all `Gateways` with `spec.gatewayClassName: istio`. The `GatewayClass`-level ConfigMap is installed by default in the `aks-istio-system` namespace when the [Managed Gateway API installation][managed-gateway-addon] is enabled. It could take up to ~5 minutes for the `istio-gateway-class-defaults` ConfigMap to get deployed after installing the Managed Gateway API CRDs.
 
 ```bash
 kubectl get configmap istio-gateway-class-defaults -n aks-istio-system -o yaml
@@ -157,7 +157,7 @@ data:
 ...
 ```
 
-As detailed in the subsequent sections, you can modify these settings for all Istio `Gateways` at a `GatewayClass` level by updating the `istio-gateway-class-defaults` ConfigMap, or you can set them for individual `Gateway` resources. For both the `GatewayClass`-level and `Gateway`-level `ConfigMaps`, fields must be allowlisted for the given resource. If there is customization both for the `GatewayClass` and an individual `Gateway`, the `Gateway`-level configuration takes precedence.
+As detailed in the subsequent sections, you can modify these settings for all Istio `Gateways` at a `GatewayClass` level by updating the `istio-gateway-class-defaults` ConfigMap, or you can set them for individual `Gateway` resources. For both the `GatewayClass`-level and `Gateway`-level `ConfigMaps`, fields must be allowlisted for the given resource. If there are customizations both for the `GatewayClass` and an individual `Gateway`, the `Gateway`-level configuration takes precedence.
 
 ### Resource customization allowlist
 

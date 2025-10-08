@@ -13,7 +13,7 @@ ms.author: nshankar
 
 The [Kubernetes Gateway API][kubernetes-gateway-api] is a specification for traffic management on Kubernetes clusters. It was designed as a successor and enhancement of the [Ingress API][kubernetes-ingress-api], which lacked a unified and provider-agnostic approach for advanced traffic routing.
 
-The Managed Gateway API Installation for Azure Kubernetes Service (AKS) installs the Custom Resource Definitions (CRDs) for the Kubernetes Gateway API. With the Managed Gateway API installation, you can use Gateway API functionality in a fully supported mode on AKS. However, you must also use an AKS add-on or extension that implements the Gateway API, such as [the Istio add-on][istio-gateway-api].
+The Managed Gateway API Installation for Azure Kubernetes Service (AKS) installs the Custom Resource Definitions (CRDs) for the Kubernetes Gateway API onto your cluster. With the Managed Gateway API installation, you can use Gateway API functionality in a fully supported mode on AKS. However, you must also use an AKS add-on or extension that implements the Gateway API, such as [the Istio add-on][istio-gateway-api].
 
 ## Requirements and limitations
 
@@ -37,23 +37,7 @@ The following table outlines the supported Kubernetes versions for your AKS clus
 ### Install supported Gateway API implementation
 
 Ensure that you have at least one of the following implementations of the Gateway API installed on your cluster:
-- [Istio add-on][istio-deploy] minor revision `asm-1-26` or higher. 
-
-### Install the `aks-preview` Azure CLI extension
-
-Install the `aks-preview` extension if you're using Azure CLI. You must use `aks-preview` version `` or higher.
-
-1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
+- [Istio add-on][istio-deploy] minor revision `asm-1-26` or higher.
 
 ### Register the Managed Gateway API preview feature
 
@@ -67,7 +51,7 @@ az feature register --namespace "Microsoft.ContainerService" --name "ManagedGate
 
 ### Azure Resource Manager (ARM) Template
 
-You can enable the Managed Gateway API CRDs on your cluster by creating a deployment using an[Azure Resource Manager (ARM) Template][azure-arm-template]. Add the following to the Managed Cluster resouce JSON under the `properties` spec, using the `2025-06-02-preview` API version or above:
+You can enable the Managed Gateway API CRDs on your cluster by deploying an [Azure Resource Manager (ARM) Template][azure-arm-template]. Add the following to an AR the Managed Cluster resource JSON under the `properties` spec, using the `2025-06-02-preview` API version or higher:
 
 ```json
 "resources": [
