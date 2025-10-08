@@ -393,10 +393,7 @@ To use Premium SSD v2, you can create a custom storage class.
     az aks update \
         --name $AKS_PRIMARY_CLUSTER_NAME \
         --resource-group $RESOURCE_GROUP_NAME \
-        --enable-azure-container-storage ephemeralDisk \
-        --storage-pool-option NVMe \
-        --ephemeral-disk-volume-type PersistentVolumeWithAnnotation \
-        --azure-container-storage-nodepools $USER_NODE_POOL_NAME
+        --enable-azure-container-storage
     ```
 
 2. Use the provided Azure Container Storage storage class.
@@ -605,7 +602,6 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
 [az-identity-create]: /cli/azure/identity#az-identity-create
 [az-grafana-create]: /cli/azure/grafana#az-grafana-create
 [postgresql-ha-deployment-overview]: ./postgresql-ha-overview.md
-[az-extension-add]: /cli/azure/extension#az-extension-add
 [az-group-create]: /cli/azure/group#az-group-create
 [az-storage-account-create]: /cli/azure/storage/account#az-storage-account-create
 [az-storage-container-create]: /cli/azure/storage/container#az-storage-container-create
