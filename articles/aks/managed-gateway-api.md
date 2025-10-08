@@ -65,18 +65,31 @@ az feature register --namespace "Microsoft.ContainerService" --name "ManagedGate
 
 ## Install the Managed Gateway API CRDs
 
-Once you finish the prerequisite steps, you can run the `az aks create` command to install the Managed Gateway API CRDs on a newly created cluster:
+### Azure Resource Manager (ARM) Template
 
-```azurecli-interactive
- az aks create -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-gateway-api
+You can enable the Managed Gateway API CRDs on your cluster by creating a deployment using an[Azure Resource Manager (ARM) Template][azure-arm-template]. Add the following to the Managed Cluster resouce JSON under the `properties` spec, using the `2025-06-02-preview` API version or above:
+
+```json
+"resources": [
+  {
+    "type": "Microsoft.ContainerService/managedClusters",
+    "apiVersion": "2025-06-02-preview",
+    "name": "[parameters('clusterName')]",
+    "location": "[parameters('location')]",
+    "properties": {
+      "ingressProfile": {
+        "gatewayAPI": {
+          "installation": "Standard"
+        }
+      }
+    }
+  }
+],
 ```
 
-To install the Managed Gateway API CRDs on an existing cluster, you can run:
+Follow the instructions in the documentation to [deploy the template][azure-arm-template-deploy].
 
-```azurecli-interactive
- az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-gateway-api
-```
-
+### Verify Installation 
 You should now see the CRDs installed on your cluster:
 
 ```bash
@@ -103,10 +116,26 @@ $ kubectl get crd gateways.gateway.networking.k8s.io -ojsonpath={.metadata.annot
 
 ## Uninstall the Managed Gateway API CRDs
 
-To uninstall the Managed Gateway API CRDs, you can run the following command:
+### ARM Template
 
-```azurecli-interactive
- az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --disable-gateway-api
+Deploy an [ARM template][azure-arm-template-deploy] with the following spec to disable the Managed Gateway API CRDs:
+
+```json
+"resources": [
+  {
+    "type": "Microsoft.ContainerService/managedClusters",
+    "apiVersion": "2025-06-02-preview",
+    "name": "[parameters('clusterName')]",
+    "location": "[parameters('location')]",
+    "properties": {
+      "ingressProfile": {
+        "gatewayAPI": {
+          "installation": "Disabled"
+        }
+      }
+    }
+  }
+],
 ```
 
 ## Next Steps
@@ -117,6 +146,8 @@ To uninstall the Managed Gateway API CRDs, you can run the following command:
 [istio-about]: ./istio-about.md
 [istio-deploy]: ./istio-deploy-addon.md
 [istio-gateway-api]: ./istio-gateway-api.md
+[azure-arm-template]: ./learn/quick-kubernetes-deploy-rm-template.md
+[azure-arm-template-deploy]: ./learn/quick-kubernetes-deploy-rm-template.md#deploy-the-template
 
 [kubernetes-gateway-api]: https://gateway-api.sigs.k8s.io/
 [kubernetes-ingress-api]: https://kubernetes.io/docs/concepts/services-networking/ingress/
