@@ -100,7 +100,7 @@ Kubernetes network policies are additive in effect. For example, if one policy a
 
 ### Are CiliumNetworkPolicy or CiliumClusterWideNetworkPolicy resources supported?
 
-At this time, the Azure portal only supports KubernetesNetworkPolicy creation and management: Layer 3 and Layer 4 policy control. To learn more about advanced container network security for AKS, see [What is Container Network Security?](./container-network-security-concepts.md)
+At this time, the Azure portal only supports Kubernetes NetworkPolicy creation and management: Layer 3 and Layer 4 policy control. To learn more about advanced container network security for AKS, see [What is Container Network Security?](./container-network-security-concepts.md)
 
 ### What happens if I create a network policy without a network policy engine installed?
 
