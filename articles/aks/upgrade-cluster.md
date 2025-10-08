@@ -133,7 +133,7 @@ Message: Drain node ... failed when evicting pod ... Cannot evict pod as it woul
 ```
 #### Option 1: Force upgrade (bypass PDB)
 
-Use this option when you know PDBs are misconfigured and need to force the upgrade to proceed.
+Use this option when PDBs are misconfigured and you need to force the upgrade to proceed. Requires Azure CLI 2.79.0+ or stable API version 2025-09-01+.
 
 ```azurecli-interactive
 az aks upgrade \
