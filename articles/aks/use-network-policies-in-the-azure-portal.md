@@ -12,7 +12,7 @@ ms.date: 10/10/2025
 
 # Use network policies for Azure Kubernetes Service (AKS) clusters in the Azure portal
 
-Kubernetes network policies are essential for controlling component-level communication in many modern, microservices-based applications. This article shows you how to create and manage network policies for AKS clusters directly in the Azure Portal.
+Kubernetes network policies are essential for controlling component-level communication in many modern, microservices-based applications. This article shows you how to create and manage network policies for AKS clusters directly in the Azure portal.
 
 For more information on network policies, you can visit the [Kubernetes documentation](https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource) or review the [Best practices for network policies in Azure Kubernetes Service (AKS)](./network-policy-best-practices.md).
 ## Prerequisites
@@ -21,7 +21,7 @@ For more information on network policies, you can visit the [Kubernetes document
 
     To confirm whether your cluster has a managed network policy engine installed, go to the Azure portal and navigate to your AKS cluster resource. From the service menu, select **Networking**. Under the **Network profile**, verify you have a **Network policy engine**. For example:
 
-    :::image type="content" source="media/use-network-policies-in-the-azure-portal/network-policy-engine.png" alt-text="A screenshot of Azure portal configuration showing Cilium network policy engine enabled":::
+    :::image type="content" source="media/use-network-policies-in-the-azure-portal/network-policy-engine.png" alt-text="A screenshot of Azure portal configuration showing Cilium network policy engine enabled.":::
 
 ## Create a network policy
 
@@ -77,6 +77,8 @@ For more information on network policies, you can visit the [Kubernetes document
     > [!IMPORTANT]
     > Any selector fields left blank under a source or destination allow traffic to or from all entities of this type (IP addresses, namespaces, pods, etc.). To prevent unintentionally allowing any traffic, delete any sources or destinations that shouldn't be allowed.
 
+         :::image type="content" source="media/use-network-policies-in-the-azure-portal/origin-types.png" alt-text="Screenshot showing configuration options for custom traffic.":::
+
 ### Specify allowed ports
 
 1. On the **Add rule** page, under **Ports**, the **Allow all ports** option is selected by default. This setting permits traffic on all ports. If you want to specify which ports can receive or send traffic, deselect **Allow all ports**, select a **Protocol**, and _optionally_ enter a **Port or port range**. 
@@ -104,7 +106,7 @@ At this time, the Azure portal only supports Kubernetes NetworkPolicy creation a
 
 ### What happens if I create a network policy without a network policy engine installed?
 
-You can create network policies without a network policy engine on your AKS cluster. However, these policies aren't enforced until you install a network policy engine. For more infomration, see [Secure traffic between pods using network policies in Azure Kubernetes Service (AKS)](./use-network-policies.md).
+You can create network policies without a network policy engine on your AKS cluster. However, these policies aren't enforced until you install a network policy engine. For more information, see [Secure traffic between pods using network policies in Azure Kubernetes Service (AKS)](./use-network-policies.md).
 
 ## Related content
 
