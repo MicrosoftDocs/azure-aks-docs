@@ -77,7 +77,7 @@ For more information on network policies, you can visit the [Kubernetes document
     > [!IMPORTANT]
     > Any selector fields left blank under a source or destination allow traffic to or from all entities of this type (IP addresses, namespaces, pods, etc.). To prevent unintentionally allowing any traffic, delete any sources or destinations that shouldn't be allowed.
 
-         :::image type="content" source="media/use-network-policies-in-the-azure-portal/origin-types.png" alt-text="Screenshot showing configuration options for custom traffic.":::
+:::image type="content" source="media/use-network-policies-in-the-azure-portal/origin-types.png" alt-text="Screenshot showing configuration options for custom traffic.":::
 
 ### Specify allowed ports
 
