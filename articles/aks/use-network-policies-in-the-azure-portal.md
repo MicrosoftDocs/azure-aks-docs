@@ -90,7 +90,7 @@ For more information on network policies, you can visit the [Kubernetes document
 
 Once you create your network policy, you can view your existing policies by selecting **Network policies** from the service menu. From here, you can create another network policy, delete network policies, or view more details about your network policy resources by selecting the policy.
 
-    :::image type="content" source="media/use-network-policies-in-the-azure-portal/manage-network-policies.png" alt-text="Screenshot showing a network policy in the AKS resource grid in the Azure portal.":::
+:::image type="content" source="media/use-network-policies-in-the-azure-portal/manage-network-policies.png" alt-text="Screenshot showing a network policy in the AKS resource grid in the Azure portal.":::
 
 ## Frequently asked questions (FAQ)
 
