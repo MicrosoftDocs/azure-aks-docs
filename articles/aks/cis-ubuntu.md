@@ -26,6 +26,7 @@ The table has four sections:
 * **Status:**
     * *Pass* - The recommendation has been applied.
     * *Fail* - The recommendation hasn't been applied.
+    * *Manual* - The recommendation can't be scanned automatically. There are instructions in the CIS benchmark to manually review.
     * *N/A* - The recommendation relates to manifest file permission requirements that aren't relevant to AKS.
     * *Depends on Environment* - The recommendation is applied in the user's specific environment and isn't controlled by AKS.
     * *Equivalent Control* - The recommendation has been implemented in a different equivalent manner.
@@ -62,11 +63,10 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1.1.1.3 | Ensure hfs kernel module is not available | Pass || 
 | 1.1.1.4 | Ensure hfsplus kernel module is not available | Pass || 
 | 1.1.1.5 | Ensure jffs2 kernel module is not available | Pass || 
-| 1.1.1.6 | Ensure udf filesystem is not available | Fail || 
 | 1.1.1.9 | Ensure usb-storage kernel module is not available | Pass || 
 | 1.1.1.10 | Ensure unused filesystems kernel modules are not available | Manual || 
 | 1.1.2 | Ensure /tmp is configured ||| 
-| 1.1.2.1.1 | Ensure /tmp is a separate partition | Fail || 
+| 1.1.2.1.1 | Ensure /tmp is a separate partition | Fail |Operational impact| 
 | 1.1.2.1.2 | Ensure nodev option set on /tmp partition | Pass || 
 | 1.1.2.1.3 | Ensure nosuid option set on /tmp partition | Pass || 
 | 1.1.2.1.4 | Ensure noexec option set on /tmp partition | Pass || 
@@ -95,12 +95,12 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1.1.2.7.4 | Ensure noexec option set on /var/log/audit partition | Pass || 
 | 1.2 | Configure Software Updates ||| 
 | 1.2.1.1 | Ensure GPG keys are configured | Manual || 
-| 1.2.1.2 | Ensure package manager repositories are configured | Manual || 
+| 1.2.1.2 | Ensure package manager repositories are configured | Pass || 
 | 1.2.2.1 | Ensure updates, patches, and additional security software are installed | Manual || 
 | 1.3 | Filesystem Integrity Checking ||| 
 | 1.3.1.1 | Ensure AppArmor is installed | Pass || 
 | 1.3.1.2 | Ensure AppArmor is enabled in the bootloader configuration | Pass || 
-| 1.3.1.3 | Ensure all AppArmor Profiles are in enforce or complain mode | Fail || 
+| 1.3.1.3 | Ensure all AppArmor Profiles are in enforce or complain mode | Fail | Operational impact | 
 | 1.4 | Secure Boot Settings ||| 
 | 1.4.1 | Ensure bootloader password is set | Pass || 
 | 1.4.2 | Ensure access to bootloader config is configured | Pass || 
@@ -140,7 +140,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 2.1.9 | Ensure network file system services are not in use | Pass || 
 | 2.1.10 | Ensure nis server services are not in use | Pass || 
 | 2.1.11 | Ensure print server services are not in use | Pass || 
-| 2.1.12 | Ensure rpcbind services are not in use | Fail || 
+| 2.1.12 | Ensure rpcbind services are not in use | Fail |Operational impact: rpcbind is a required dependency of NFS, used by the Azure CSI driver.| 
 | 2.1.13 | Ensure rsync services are not in use | Pass || 
 | 2.1.14 | Ensure samba file server services are not in use | Pass || 
 | 2.1.15 | Ensure snmp services are not in use | Pass || 
@@ -149,7 +149,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 2.1.18 | Ensure web server services are not in use | Pass || 
 | 2.1.19 | Ensure xinetd services are not in use | Pass || 
 | 2.1.21 | Ensure mail transfer agent is configured for local-only mode | Pass || 
-| 2.1.22 | Ensure only approved services are listening on a network interface | Manual || 
+| 2.1.22 | Ensure only approved services are listening on a network interface | Pass || 
 | 2.2 | Service Clients ||| 
 | 2.2.1 | Ensure NIS Client is not installed | Pass || 
 | 2.2.2 | Ensure rsh client is not installed | Pass || 
@@ -173,10 +173,10 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 2.4.1.7 | Ensure permissions on /etc/cron.d are configured | Pass || 
 | 2.4.1.8 | Ensure crontab is restricted to authorized users | Pass || 
 | 2.4.2.1 | Ensure at is restricted to authorized users | Pass || 
-| 3.1.1 | Ensure IPv6 status is identified | Manual || 
+| 3.1.1 | Ensure IPv6 status is identified | Pass|| 
 | 3.1.2 | Ensure wireless interfaces are disabled | Pass || 
 | 3.1.3 | Ensure bluetooth services are not in use | Pass || 
-| 3.3.1 | Ensure ip forwarding is disabled | Fail || 
+| 3.3.1 | Ensure ip forwarding is disabled | Fail | Operational impact: this is required for container networking to function.| 
 | 3.3.2 | Ensure packet redirect sending is disabled | Pass || 
 | 3.3.3 | Ensure bogus icmp responses are ignored | Pass || 
 | 3.3.4 | Ensure broadcast icmp requests are ignored | Pass || 
@@ -187,13 +187,13 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 3.3.9 | Ensure suspicious packets are logged | Pass || 
 | 3.3.10 | Ensure tcp syn cookies is enabled | Pass || 
 | 3.3.11 | Ensure ipv6 router advertisements are not accepted | Pass || 
-| 4.1.1 | Ensure a single firewall configuration utility is in use | Fail || 
-| 4.2.1 | Ensure ufw is installed | Fail || 
-| 4.2.2 | Ensure iptables-persistent is not installed with ufw | Pass || 
-| 4.2.3 | Ensure ufw service is enabled | Fail || 
-| 4.2.4 | Ensure ufw loopback traffic is configured | Fail || 
-| 4.2.5 | Ensure ufw outbound connections are configured | Manual || 
-| 4.2.6 | Ensure ufw firewall rules exist for all open ports | Fail || 
+| 4.1.1 | Ensure a single firewall configuration utility is in use |Covered elsewhere|| 
+| 4.2.1 | Ensure ufw is installed | Covered elsewhere || 
+| 4.2.2 | Ensure iptables-persistent is not installed with ufw | Covered elsewhere|| 
+| 4.2.3 | Ensure ufw service is enabled | Covered elsewhere|| 
+| 4.2.4 | Ensure ufw loopback traffic is configured | Covered elsewhere || 
+| 4.2.5 | Ensure ufw outbound connections are configured | Covered elsewhere || 
+| 4.2.6 | Ensure ufw firewall rules exist for all open ports | Covered elsewhere || 
 | 4.2.7 | Ensure ufw default deny firewall policy | Fail || 
 | 4.3.1 | Ensure nftables is installed | Pass || 
 | 4.3.2 | Ensure ufw is uninstalled or disabled with nftables | Pass || 
