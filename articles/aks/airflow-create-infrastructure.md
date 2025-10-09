@@ -220,7 +220,7 @@ In this section, we download the Apache Airflow images from Docker Hub and uploa
 * Import the Airflow images from Docker Hub and upload them to your container registry using the [`az acr import`](/cli/azure/acr#az-acr-import) command.
 
     ```azurecli-interactive
-    az acr import --name $MY_ACR_REGISTRY --source docker.io/apache/airflow:airflow-pgbouncer-2025.03.05-1.23.1 --image airflow:airflow-pgbouncer-2025.03.05-1.23.0
+    az acr import --name $MY_ACR_REGISTRY --source docker.io/apache/airflow:airflow-pgbouncer-2025.03.05-1.23.1 --image airflow:airflow-pgbouncer-2025.03.05-1.23.1
     az acr import --name $MY_ACR_REGISTRY --source docker.io/apache/airflow:airflow-pgbouncer-exporter-2025.03.05-0.18.0 --image airflow:airflow-pgbouncer-exporter-2025.03.05-0.18.0
     az acr import --name $MY_ACR_REGISTRY --source docker.io/bitnamilegacy/postgresql:16.1.0-debian-11-r15 --image postgresql:16.1.0-debian-11-r15
     az acr import --name $MY_ACR_REGISTRY --source quay.io/prometheus/statsd-exporter:v0.28.0 --image statsd-exporter:v0.28.0 
