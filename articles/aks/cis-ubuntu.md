@@ -1,7 +1,7 @@
 ---
 title: Azure Kubernetes Service (AKS) Ubuntu image alignment with Center for Internet Security (CIS) benchmark
 description: Learn how AKS applies the CIS benchmark to Ubuntu image used by Azure Kubernetes Service.
-ms.date: 09/25/2025
+ms.date: 10/10/2025
 ms.subservice: aks-security
 ms.topic: concept-article
 author: allyford
@@ -9,9 +9,29 @@ ms.author: allyford
 # Customer intent: "As a security auditor, I want to verify the alignment of AKS Ubuntu images with CIS benchmarks, so that I can ensure compliance with industry standards and reduce vulnerabilities in our cloud-based applications."
 ---
 
-# Azure Kubernetes Service (AKS) Ubuntu image alignment with Center for Internet Security (CIS) benchmark
+# Center for Internet Security (CIS) Ubuntu 24.04 benchmark
 
-As a secure service, Azure Kubernetes Service (AKS) complies with SOC, ISO, PCI DSS, and HIPAA standards. This article covers the security OS configuration applied to Ubuntu image used by AKS. This security configuration is based on the Azure Linux security baseline, which aligns with CIS benchmark. For more information about AKS security, see Security concepts for applications and clusters in Azure Kubernetes Service (AKS). For more information about AKS security, see [Security concepts for applications and clusters in Azure Kubernetes Service (AKS)][security-concepts-aks-apps-clusters]. For more information on the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
+> [!IMPORTANT]
+> This article applies only to the Ubuntu 24.04 image used by AKS. The recommendation statuses and guidance reflect the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][cis-benchmark-ubuntu] and a point-in-time Ubuntu 24.04 image (released Sept 18, 2025). They might not apply to other Ubuntu releases (for example Ubuntu 22.04). Verify the OS version and benchmark version before applying guidance.
+
+This article covers the security OS configuration applied to Ubuntu image used by AKS. As a secure service, AKS complies with SOC, ISO, PCI DSS, and HIPAA standards. For more information about the AKS security, see [Security concepts for clusters in Azure Kubernetes Service (AKS)][security-concepts-aks]. To learn more about the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
+
+## Recommendations
+
+The table has four sections:
+
+* **CIS ID:** The associated rule ID with each of the baseline rules.
+* **Recommendation description:** A description of the recommendation issued by the CIS benchmark.
+* **Level:** L1, or Level 1, recommends essential basic security requirements that can be configured on any system and should cause little or no interruption of service or reduced functionality.
+* **Status:**
+    * *Pass* - The recommendation has been applied.
+    * *Fail* - The recommendation hasn't been applied.
+    * *N/A* - The recommendation relates to manifest file permission requirements that aren't relevant to AKS.
+    * *Depends on Environment* - The recommendation is applied in the user's specific environment and isn't controlled by AKS.
+    * *Equivalent Control* - The recommendation has been implemented in a different equivalent manner.
+* **Reason:**
+    * *Potential Operation Impact* - The recommendation wasn't applied because it would have a negative effect on the service.
+    * *Covered Elsewhere* - The recommendation is covered by another control in Azure cloud compute.
 
 ## Ubuntu LTS 24.04
 
@@ -28,14 +48,9 @@ As a part of the security-optimized operating system:
 
 The goal of the secure configuration built into the host OS is to reduce the surface area of attack and optimize for the deployment of containers in a secure manner.
 
-The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v2.1.0][cis-benchmark-ubuntu] recommendations.
+### Ubuntu LTS 24.04 Benchmark
 
-Recommendations can have one of the following reasons:
-
-* *Potential Operation Impact* - Recommendation wasn't applied because it would have a negative effect on the service.
-* *Covered Elsewhere* - Recommendation is covered by another control in Azure cloud compute.
-
-The following are CIS rules implemented:
+The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][cis-benchmark-ubuntu] recommendations based on the CIS rules:
 
 | CIS paragraph number | Recommendation description|Status| Reason |
 |---|---|---|---|
