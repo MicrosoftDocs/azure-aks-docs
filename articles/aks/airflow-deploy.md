@@ -276,7 +276,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     images:
       airflow:
         repository: $MY_ACR_REGISTRY.azurecr.io/airflow
-        tag: 2.9.3
+        tag: 3.0.2
         # Specifying digest takes precedence over tag.
         digest: ~
         pullPolicy: IfNotPresent
@@ -293,27 +293,27 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
         # `config.kubernetes.worker_container_repository` and `config.kubernetes.worker_container_tag`
         # must be not set .
         repository: $MY_ACR_REGISTRY.azurecr.io/airflow
-        tag: 2.9.3
+        tag: 3.0.2
         pullPolicy: IfNotPresent
       flower:
         repository: $MY_ACR_REGISTRY.azurecr.io/airflow
-        tag: 2.9.3
+        tag: 3.0.2
         pullPolicy: IfNotPresent
       statsd:
         repository: $MY_ACR_REGISTRY.azurecr.io/statsd-exporter
-        tag: v0.26.1
+        tag: v0.28.0
         pullPolicy: IfNotPresent
       pgbouncer:
         repository: $MY_ACR_REGISTRY.azurecr.io/airflow
-        tag: airflow-pgbouncer-2024.01.19-1.21.0
+        tag: airflow-pgbouncer-2025.03.05-1.23.0
         pullPolicy: IfNotPresent
       pgbouncerExporter:
         repository: $MY_ACR_REGISTRY.azurecr.io/airflow
-        tag: airflow-pgbouncer-exporter-2024.06.18-0.17.0
+        tag: airflow-pgbouncer-exporter-2025.03.05-0.18.0
         pullPolicy: IfNotPresent
       gitSync:
         repository: $MY_ACR_REGISTRY.azurecr.io/git-sync
-        tag: v4.1.0
+        tag: v4.3.0
         pullPolicy: IfNotPresent
     
     
@@ -403,7 +403,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     <!-- expected_similarity=0.8 -->
     ```output
     NAME                    CHART VERSION   APP VERSION     DESCRIPTION
-    apache-airflow/airflow  1.15.0          2.9.3           The official Helm chart to deploy Apache Airflo...
+    apache-airflow/airflow  1.15.0          3.0.2           The official Helm chart to deploy Apache Airflo...
     ```
 
 4. Install the Apache Airflow chart using the `helm install` command.
@@ -422,7 +422,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     REVISION: 1
     TEST SUITE: None
     NOTES:
-    Thank you for installing Apache Airflow 2.9.3!
+    Thank you for installing Apache Airflow 3.0.2!
     
     Your release is named airflow.
     You can now access your dashboard(s) by executing the following command(s) and visiting the corresponding port at localhost in your browser:
