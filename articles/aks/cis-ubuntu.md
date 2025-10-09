@@ -253,7 +253,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 5.3.3.1.2 | Ensure password unlock time is configured | Pass || 
 | 5.3.3.2.1 | Ensure password number of changed characters is configured | Pass || 
 | 5.3.3.2.2 | Ensure minimum password length is configured | Pass || 
-| 5.3.3.2.3 | Ensure password complexity is configured | Manual || 
+| 5.3.3.2.3 | Ensure password complexity is configured | Manual |Configured by default by AKS| 
 | 5.3.3.2.4 | Ensure password same consecutive characters is configured | Pass || 
 | 5.3.3.2.5 | Ensure password maximum sequential characters is configured | Pass || 
 | 5.3.3.2.6 | Ensure password dictionary check is enabled | Pass || 
@@ -283,10 +283,10 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 5.4.3.3 | Ensure default user umask is configured | Pass || 
 | 6.1.1.1 | Ensure journald service is enabled and active | Pass || 
 | 6.1.1.2 | Ensure journald log file access is configured | Manual || 
-| 6.1.1.3 | Ensure journald log file rotation is configured | Manual || 
+| 6.1.1.3 | Ensure journald log file rotation is configured | Manual | Configured by default on AKS| 
 | 6.1.1.4 | Ensure only one logging system is in use | Pass || 
 | 6.1.2.1.1 | Ensure systemd-journal-remote is installed | Pass || 
-| 6.1.2.1.2 | Ensure systemd-journal-upload authentication is configured | Manual || 
+| 6.1.2.1.2 | Ensure systemd-journal-upload authentication is configured | Not applicable| AKS doesn't use log uploading and relies on rsyslog.| 
 | 6.1.2.1.3 | Ensure systemd-journal-upload is enabled and active | Pass || 
 | 6.1.2.1.4 | Ensure systemd-journal-remote service is not in use | Pass || 
 | 6.1.2.2 | Ensure journald ForwardToSyslog is disabled | Pass || 
@@ -296,13 +296,13 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 6.1.3.2 | Ensure rsyslog service is enabled and active | Pass || 
 | 6.1.3.3 | Ensure journald is configured to send logs to rsyslog | Pass || 
 | 6.1.3.4 | Ensure rsyslog log file creation mode is configured | Pass || 
-| 6.1.3.5 | Ensure rsyslog logging is configured | Manual || 
-| 6.1.3.6 | Ensure rsyslog is configured to send logs to a remote log host | Manual || 
+| 6.1.3.5 | Ensure rsyslog logging is configured | Pass || 
+| 6.1.3.6 | Ensure rsyslog is configured to send logs to a remote log host |Not applicable| AKS manages log upload itself.| 
 | 6.1.3.7 | Ensure rsyslog is not configured to receive logs from a remote client | Pass || 
-| 6.1.3.8 | Ensure logrotate is configured | Manual || 
+| 6.1.3.8 | Ensure logrotate is configured | Pass || 
 | 6.1.4.1 | Ensure access to all logfiles has been configured | Fail || 
-| 6.3.1 | Ensure AIDE is installed | Fail || 
-| 6.3.2 | Ensure filesystem integrity is regularly checked | Fail || 
+| 6.3.1 | Ensure AIDE is installed | Operational impact|Scanning would impact workloads periodically| 
+| 6.3.2 | Ensure filesystem integrity is regularly checked | Operational impact|Scanning would impact workloads periodically| 
 | 7.1.1 | Ensure permissions on /etc/passwd are configured | Pass || 
 | 7.1.2 | Ensure permissions on /etc/passwd- are configured | Pass || 
 | 7.1.3 | Ensure permissions on /etc/group are configured | Pass || 
@@ -325,7 +325,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 7.2.7 | Ensure no duplicate user names exist | Pass || 
 | 7.2.8 | Ensure no duplicate group names exist | Pass || 
 | 7.2.9 | Ensure local interactive user home directories are configured | Pass || 
-| 7.2.10 | Ensure local interactive user dot files access is configured | | |
+| 7.2.10 | Ensure local interactive user dot files access is configured | Pass| |
 
 ## Next steps  
 
