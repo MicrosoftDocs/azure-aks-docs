@@ -194,28 +194,28 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 4.2.4 | Ensure ufw loopback traffic is configured | Covered elsewhere || 
 | 4.2.5 | Ensure ufw outbound connections are configured | Covered elsewhere || 
 | 4.2.6 | Ensure ufw firewall rules exist for all open ports | Covered elsewhere || 
-| 4.2.7 | Ensure ufw default deny firewall policy | Fail || 
-| 4.3.1 | Ensure nftables is installed | Pass || 
-| 4.3.2 | Ensure ufw is uninstalled or disabled with nftables | Pass || 
-| 4.3.3 | Ensure iptables are flushed with nftables | Manual || 
-| 4.3.4 | Ensure a nftables table exists | Pass || 
-| 4.3.5 | Ensure nftables base chains exist | Fail || 
-| 4.3.6 | Ensure nftables loopback traffic is configured | Fail || 
-| 4.3.7 | Ensure nftables outbound and established connections are configured | Manual || 
-| 4.3.8 | Ensure nftables default deny firewall policy | Fail || 
-| 4.3.9 | Ensure nftables service is enabled | Fail || 
-| 4.3.10 | Ensure nftables rules are permanent | Fail || 
-| 4.4.1.1 | Ensure iptables packages are installed | Fail || 
-| 4.4.1.2 | Ensure nftables is not in use with iptables | Pass || 
-| 4.4.1.3 | Ensure ufw is not in use with iptables | Pass || 
-| 4.4.2.1 | Ensure iptables default deny firewall policy | Fail || 
-| 4.4.2.2 | Ensure iptables loopback traffic is configured | Fail || 
-| 4.4.2.3 | Ensure iptables outbound and established connections are configured | Manual || 
-| 4.4.2.4 | Ensure iptables firewall rules exist for all open ports | Fail || 
-| 4.4.3.1 | Ensure ip6tables default deny firewall policy | Fail || 
-| 4.4.3.2 | Ensure ip6tables loopback traffic is configured | Fail || 
-| 4.4.3.3 | Ensure ip6tables outbound and established connections are configured | Manual || 
-| 4.4.3.4 | Ensure ip6tables firewall rules exist for all open ports | Fail || 
+| 4.2.7 | Ensure ufw default deny firewall policy |Covered elsewhere|| 
+| 4.3.1 | Ensure nftables is installed | Covered elsewhere|| 
+| 4.3.2 | Ensure ufw is uninstalled or disabled with nftables | Covered elsewhere|| 
+| 4.3.3 | Ensure iptables are flushed with nftables | Covered elsewhere || 
+| 4.3.4 | Ensure a nftables table exists | Covered elsewhere || 
+| 4.3.5 | Ensure nftables base chains exist | Covered elsewhere|| 
+| 4.3.6 | Ensure nftables loopback traffic is configured | Covered elsewhere || 
+| 4.3.7 | Ensure nftables outbound and established connections are configured | Covered elsewhere|| 
+| 4.3.8 | Ensure nftables default deny firewall policy | Covered elsewhere || 
+| 4.3.9 | Ensure nftables service is enabled | Covered elsewhere || 
+| 4.3.10 | Ensure nftables rules are permanent | Covered elsewhere || 
+| 4.4.1.1 | Ensure iptables packages are installed | Covered elsewhere || 
+| 4.4.1.2 | Ensure nftables is not in use with iptables | Covered elsewhere|| 
+| 4.4.1.3 | Ensure ufw is not in use with iptables | Covered elsewhere|| 
+| 4.4.2.1 | Ensure iptables default deny firewall policy | Covered elsewhere || 
+| 4.4.2.2 | Ensure iptables loopback traffic is configured | Covered elsewhere || 
+| 4.4.2.3 | Ensure iptables outbound and established connections are configured | Covered elsewhere || 
+| 4.4.2.4 | Ensure iptables firewall rules exist for all open ports |Covered elsewhere || 
+| 4.4.3.1 | Ensure ip6tables default deny firewall policy | Covered elsewhere|| 
+| 4.4.3.2 | Ensure ip6tables loopback traffic is configured | Covered elsewhere || 
+| 4.4.3.3 | Ensure ip6tables outbound and established connections are configured | Covered elsewhere || 
+| 4.4.3.4 | Ensure ip6tables firewall rules exist for all open ports | Covered elsewhere|| 
 | 5.1.1 | Ensure permissions on /etc/ssh/sshd_config are configured | Pass || 
 | 5.1.2 | Ensure permissions on SSH private host key files are configured | Pass || 
 | 5.1.3 | Ensure permissions on SSH public host key files are configured | Pass || 
