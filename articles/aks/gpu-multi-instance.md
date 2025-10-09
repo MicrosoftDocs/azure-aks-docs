@@ -17,7 +17,7 @@ This article walks you through how to create a multi-instance GPU node pool usin
 
 ## Prerequisites and limitations
 
-* An Azure account with an active subscription. If you don't have one, you can [create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* An Azure account with an active subscription. If you don't have one, you can [create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * Azure CLI version 2.2.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * The Kubernetes command-line client, [kubectl](https://kubernetes.io/docs/reference/kubectl/), installed and configured. If you use Azure Cloud Shell, `kubectl` is already installed. If you want to install it locally, you can use the [`az aks install-cli`][az-aks-install-cli] command.
 * Helm v3 installed and configured. For more information, see [Installing Helm](https://helm.sh/docs/intro/install/).

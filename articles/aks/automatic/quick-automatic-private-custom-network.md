@@ -25,7 +25,7 @@ In this quickstart, you learn to:
 
 ### Prerequisites
 
-- If you don't have an Azure account, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- If you don't have an Azure account, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 :::zone pivot="azure-cli"
 

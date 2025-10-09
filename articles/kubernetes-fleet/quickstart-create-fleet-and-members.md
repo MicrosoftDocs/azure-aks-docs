@@ -27,7 +27,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create
 
 * Read the [conceptual overview of Fleet Manager](./concepts-fleet.md), which provides an explanation of fleets and member clusters referenced in this document.
 * Read the [conceptual overview of fleet types](./concepts-choosing-fleet.md), which provides a comparison of different fleet configuration options.
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * An identity (user or service principal) which can be used to [log in to Azure CLI](/cli/azure/authenticate-azure-cli). This identity needs to have the following permissions on the Fleet and AKS resource types for completing the steps listed in this quickstart:
 
   * Microsoft.ContainerService/fleets/read

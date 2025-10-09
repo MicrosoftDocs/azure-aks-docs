@@ -22,7 +22,7 @@ In this quickstart, you learn to:
 - Deploy an AKS Automatic cluster in the virtual network.
 - Run a sample multi-container application with a group of microservices and web front ends simulating a retail scenario.
 
-If you don't have an Azure account, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+If you don't have an Azure account, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 ### Prerequisites
 

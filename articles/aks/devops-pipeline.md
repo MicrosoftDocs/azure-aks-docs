@@ -20,7 +20,7 @@ In this article, you'll learn how to create a pipeline that continuously builds 
 
 ## Prerequisites
 
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * An Azure Resource Manager service connection. [Create an Azure Resource Manager service connection](/azure/devops/pipelines/library/connect-to-azure#create-an-azure-resource-manager-service-connection-using-automated-security).     
 * A GitHub account. Create a free [GitHub account](https://github.com/join) if you don't have one already.
 
