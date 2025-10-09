@@ -21,7 +21,7 @@ You can import the ingress TLS certificate to the cluster using one of the follo
 
 ## Prerequisites
 
-- If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
+- If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 - Before you start, ensure your Azure CLI version is >= `2.30.0`, or [install the latest version](/cli/azure/install-azure-cli).
 - An [AKS cluster with the Secrets Store CSI Driver configured][aks-cluster-secrets-csi].
 - An [Azure Key Vault instance][aks-akv-instance].

@@ -17,7 +17,7 @@ ms.custom: mvc, devx-track-azurecli
 ## Before you begin
 
 * This article assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)](./concepts-clusters-workloads.md).
-* You need an active Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/) before you begin.
+* You need an active Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 * You need an AKS cluster. If you don't have an existing cluster, you can create one using the [Azure CLI](./learn/quick-kubernetes-deploy-cli.md), [Azure PowerShell](./learn/quick-kubernetes-deploy-powershell.md), or [Azure portal](./learn/quick-kubernetes-deploy-portal.md).
 * You need to install the OpenFaaS CLI. For installation options, see the [OpenFaaS CLI documentation][open-faas-cli].
 
