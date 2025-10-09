@@ -41,11 +41,11 @@ Each [node image][node-images] corresponds to an OS version, which you can speci
 |--|--|--|--|
 | Linux | Ubuntu | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes version 1.25 to 1.32. |
 | Linux | Ubuntu2404 | This OS SKU will only be supported in Kubernetes 1.32 to 1.38. | Ubuntu 24.04 is available in preview with Kubernetes 1.32+ using `--os-sku Ubuntu2404`. We recommend this OS SKU if you want to test out the new OS version without upgrading your Kubernetes version. |
-| Linux | Ubuntu2204 | This OS SKU is supported in Kubernetes version 1.25 to 1.33. | Ubuntu 22.04 is currently default when using `--os-sku Ubuntu`. We recommend this OS SKU if you need to roll back to Ubuntu 22.04 after testing Ubuntu 24.04. |
+| Linux | Ubuntu2204 | This OS SKU is supported in Kubernetes version 1.25 to 1.36. | Ubuntu 22.04 is currently default when using `--os-sku Ubuntu`. We recommend this OS SKU if you need to roll back to Ubuntu 22.04 after testing Ubuntu 24.04. |
 | Linux | AzureLinux | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Azure Linux 2.0 is default for Kubernetes version 1.27 to 1.31. Azure Linux 3.0 is default for Kubernetes version 1.32+. When the `AzureLinuxV3Preview` feature flag is enabled on AKS 1.31, `--os-sku AzureLinux` defaults to 3.0. |
 | Linux | AzureLinux3 | This OS SKU is supported in Kubernetes 1.28 to 1.36. | We recommend this OS SKU if you want to test out the new OS version without upgrading your Kubernetes version. You can also use this OS SKU to migrate from Azure Linux 2.0 to Azure Linux 3.0. |
-| Windows | Windows2019 | 1.14-1.32 | Default for Windows OS Type in Kubernetes version 1.14 to 1.24. |
-| Windows | Windows2022 | 1.23 to 1.34 | Default for Windows OS Type in Kubernetes version 1.25 to 1.33. |
+| Windows | Windows2019 | 1.14 to 1.32 | Default for Windows OS Type in Kubernetes version 1.14 to 1.24. |
+| Windows | Windows2022 | 1.23 to 1.34 | Default for Windows OS Type in Kubernetes version 1.25 to 1.34. |
 
 ## Migrate to a new OS version
 
@@ -140,7 +140,7 @@ az aks nodepool update \
 
 ### Migrate to Azure Linux 3.0
 
-Azure Linux 3.0 is the default for `--os-sku AzureLinux` in Kubernetes versions 1.32-1.36. You can also use Azure Linux 3.0 by specifying `--os-sku AzureLinux3`.
+Azure Linux 3.0 is the default for `--os-sku AzureLinux` in Kubernetes versions 1.32 to 1.36. You can also use Azure Linux 3.0 by specifying `--os-sku AzureLinux3`.
 
 > [!NOTE]
 > Keep the following information in mind when migrating to `--os-sku AzureLinux3`:
@@ -185,8 +185,8 @@ You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to up
 
 | OS SKU | Default OS version |
 |--|--|
-| Ubuntu | When you have OS SKU `Ubuntu`, Ubuntu 22.04 is the default OS version if your Kubernetes version is 1.25-1.34. Ubuntu 24.04 is the default for Ubuntu in Kubernetes 1.35-1.37. |
-| AzureLinux | When you have OS SKU `AzureLinux`, Azure Linux 2.0 is the default for AzureLinux in Kubernetes 1.26-1.31. Azure Linux 3.0 is the default for AzureLinux in Kubernetes 1.32-1.36. |
+| Ubuntu | When you have OS SKU `Ubuntu`, Ubuntu 22.04 is the default OS version if your Kubernetes version is 1.25 to 1.34. Ubuntu 24.04 is the default for Ubuntu in Kubernetes 1.35 to 1.37. |
+| AzureLinux | When you have OS SKU `AzureLinux`, Azure Linux 2.0 is the default for AzureLinux in Kubernetes 1.26 to 1.31. Azure Linux 3.0 is the default for AzureLinux in Kubernetes 1.32 to 1.36. |
 
 #### Update your OS SKU to Ubuntu on an existing node pool
 
@@ -228,7 +228,7 @@ az aks nodepool update \
 > Keep the following information in mind when migrating to `--os-sku Ubuntu2204`:
 >
 > - [FIPS](./enable-fips-nodes.md) and [CVM](./use-cvm.md) aren't supported.
-> - Ubuntu 22.04 is supported in Kubernetes versions 1.25 to 1.33.
+> - Ubuntu 22.04 is supported in Kubernetes versions 1.25 to 1.36.
 > - `--os-sku Ubuntu2204` is intended for roll back to Ubuntu 22.04 on your current Kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your Kubernetes version to 1.34+.
 
 Roll back to `--os-sku Ubuntu2204` on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command.
