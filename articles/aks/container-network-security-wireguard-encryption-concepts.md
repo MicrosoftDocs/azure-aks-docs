@@ -65,6 +65,8 @@ Virtual network encryption has some limitations when it comes to aks pod network
 
 **Use WireGuard encryption When**
 
+- **You want to make sure that your application traffic is encrypted across all node** virtual network encryption does not encrypt traffic between nodes on the same physical host.
+
 - **You want to unify encryption across multi-cloud or hybrid environments:** 
 WireGuard offers a cloud-agnostic solution, enabling consistent encryption across clusters running in different cloud providers or on-premises. 
 
