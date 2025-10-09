@@ -305,7 +305,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
         pullPolicy: IfNotPresent
       pgbouncer:
         repository: $MY_ACR_REGISTRY.azurecr.io/airflow
-        tag: airflow-pgbouncer-2025.03.05-1.23.0
+        tag: airflow-pgbouncer-2025.03.05-1.23.1
         pullPolicy: IfNotPresent
       pgbouncerExporter:
         repository: $MY_ACR_REGISTRY.azurecr.io/airflow
