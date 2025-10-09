@@ -38,11 +38,11 @@ Depending on your environment and configuration, certain limitations may apply w
 
 ### Cluster Configuration
 
-- Azure Kubernetes Fleet Manager automatically creates a `fleet-system` namespace.  
-  – Do **not** delete or modify this namespace.  
-  – It’s managed by Fleet dataplane components and required for core functionality.  
-- Azure Kubernetes Fleet Manager requires **3 pods** to run on each Arc-enabled cluster.  
-  – Verify your cluster’s `max_pods` capacity supports this requirement.
+Cluster requirements:
+- At least **210 MB** memory and **~2 %** of one CPU core available
+- The cluster should reserve **3 pods** for the Azure Fleet Manager Arc extension agents
+- The namespace **fleet-system** will be created for related components.
+  - Do **not delete or modify** this namespace, it is required for core functionality.
 
 ### Networking
 
