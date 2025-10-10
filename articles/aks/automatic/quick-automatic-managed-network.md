@@ -3,9 +3,9 @@ title: 'Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster'
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic.
 ms.topic: quickstart
 ms.custom: build-2024, devx-track-azurecli, devx-track-bicep, ignite-2024
-ms.date: 08/28/2025
-author: sabbour
-ms.author: asabbour
+ms.date: 10/10/2025
+author: sabbour, wangamanda
+ms.author: asabbour, wangamanda
 zone_pivot_groups: bicep-azure-cli-portal
 # Customer intent: As a DevOps engineer, I want to create and manage an Azure Kubernetes Service (AKS) Automatic cluster, so that I can efficiently deploy and operate containerized applications with best practice configurations automatically.
 ---
@@ -38,15 +38,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - To deploy a Bicep file, you need to write access on the resources you create and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to create a virtual machine, you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](/azure/role-based-access-control/built-in-roles).
 :::zone-end
 
-## Limitations
-
-- AKS Automatic clusters require deployment in Azure regions that support at least three [availability zones](/azure/reliability/regions-list).
-- You can only create AKS Automatic clusters in regions where [API Server VNet Integration](../api-server-vnet-integration.md#limited-availability) is generally available (GA).
-- You can't add non-[node auto provisioning node pools](../node-autoprovision.md) to AKS Automatic clusters. There's no effect on existing Automatic clusters that have non-node auto provisioning pools.
-- AKS Automatic only supports the [Azure Linux OS](/azure/azure-linux/intro-azure-linux).
-
-> [!IMPORTANT]
-> AKS Automatic tries to dynamically select a virtual machine size for the `system` node pool based on the capacity available in the subscription. Make sure your subscription has quota for 16 vCPUs of any of the following sizes in the region you're deploying the cluster to: [Standard_D4lds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series), [Standard_D4ads_v5](/azure/virtual-machines/sizes/general-purpose/dadsv5-series), [Standard_D4ds_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v4](/azure/virtual-machines/sizes/general-purpose/dv4-series), [Standard_DS3_v2](/azure/virtual-machines/sizes/general-purpose/dsv3-series), [Standard_DS12_v2](/azure/virtual-machines/sizes/memory-optimized/dv2-dsv2-series-memory), [Standard_D4alds_v6](/azure/virtual-machines/sizes/general-purpose/daldsv6-series), [Standard_D4lds_v6](/azure/virtual-machines/sizes/general-purpose/dldsv6-series), or [Standard_D4alds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series). You can [view quotas for specific VM-families and submit quota increase requests](/azure/quotas/per-vm-quota-requests) through the Azure portal.
+[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations)]
 
 :::zone target="docs" pivot="azure-cli"
 
