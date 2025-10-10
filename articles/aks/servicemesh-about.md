@@ -30,7 +30,7 @@ Before you select a service mesh, make sure you understand your requirements and
 
 - **Is an ingress controller sufficient for my needs?**: Sometimes having a capability like A/B testing or traffic splitting at the ingress is sufficient to support the required scenario. Don't add complexity to your environment with no upside.
 
-- **Can my workloads and environment tolerate the additional overheads?**: All the components required to support the service mesh require resources like CPU and memory. All the proxies and their associated policy checks add latency to your traffic. If you have workloads that are very sensitive to latency or can't provide extra resources to cover service mesh components, you should reconsider using a service mesh.
+- **Can my workloads and environment tolerate the additional overheads?**: All the components required to support the service mesh require resources like CPU and memory. All the proxies and their associated policy checks add latency to your traffic. If you have workloads that are very sensitive to latency or can't provide extra resources to cover service mesh components, you should not reconsider using a service mesh.
 
 - **Is this adding unnecessary complexity?**: If you want to install a service mesh to use a capability that isn't critical to the business or operational teams, then consider whether the added complexity of installation, maintenance, and configuration is worth it.
 
