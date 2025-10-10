@@ -264,8 +264,9 @@ data:
 Now, you should see the the `HPA` for `httpbin-gateway` that you created earlier get updated:
 
 ```bash
-$ kubectl get hpa httpbin-gateway-istio
-
+kubectl get hpa httpbin-gateway-istio
+```
+```output
 NAME                    REFERENCE                          TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
 httpbin-gateway-istio   Deployment/httpbin-gateway-istio   cpu: 3%/80%   3         6         3          36m
 ```
@@ -273,8 +274,9 @@ httpbin-gateway-istio   Deployment/httpbin-gateway-istio   cpu: 3%/80%   3      
 Also verify that the `Deployment` is updated with the new label:
 
 ```bash
-$ kubectl get deployment httpbin-gateway-istio -ojsonpath='{.metadata.labels.test\.azureservicemesh\.io\/deployment-config}'
-
+kubectl get deployment httpbin-gateway-istio -ojsonpath='{.metadata.labels.test\.azureservicemesh\.io\/deployment-config}'
+```
+```output
 updated
 ```
 
