@@ -79,29 +79,33 @@ EOF
 Verify that a `Deployment`, `Service`, `HorizontalPodAutoscaler`, and `PodDisruptionBudget` get created for `httpbin-gateway`:
 
 ```bash
-$ kubectl get deployment httpbin-gateway-istio
-
+kubectl get deployment httpbin-gateway-istio
+```
+```output
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
 httpbin-gateway-istio   2/2     2            2           31m
 ```
 
 ```bash
-$ kubectl get service httpbin-gateway-istio
-
+kubectl get service httpbin-gateway-istio
+```
+```output
 NAME                    TYPE           CLUSTER-IP   EXTERNAL-IP      PORT(S)                        AGE
 httpbin-gateway-istio   LoadBalancer   10.0.65.45   <external-ip>    15021:32053/TCP,80:31587/TCP   33m
 ```
 
 ```bash
-$ kubectl get hpa httpbin-gateway-istio
-
+kubectl get hpa httpbin-gateway-istio
+```
+```output
 NAME                    REFERENCE                          TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
 httpbin-gateway-istio   Deployment/httpbin-gateway-istio   cpu: 3%/80%   2         5         3          34m
 ```
 
 ```bash
-$ kubectl get pdb httpbin-gateway-istio
-
+kubectl get pdb httpbin-gateway-istio
+```
+```output
 NAME                    MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
 httpbin-gateway-istio   1               N/A               2                     36m
 ```
@@ -324,8 +328,9 @@ EOF
 Verify that the `HPA` is updated with the new min/max values. If you also configured the `GatewayClass`-level ConfigMap, the `Gateway`-level settings should take precedence:
 
 ```bash
-$ kubectl get hpa httpbin-gateway-istio
-
+kubectl get hpa httpbin-gateway-istio
+```
+```output
 NAME                    REFERENCE                          TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
 httpbin-gateway-istio   Deployment/httpbin-gateway-istio   cpu: 3%/80%   2         4         2          4h14m
 ```
@@ -333,8 +338,9 @@ httpbin-gateway-istio   Deployment/httpbin-gateway-istio   cpu: 3%/80%   2      
 Also inspect the `Deployment` labels to ensure that the `test.azureservicemesh.io/deployment-config` is updated to the new value:
 
 ```bash
-$ kubectl get deployment httpbin-gateway-istio -ojsonpath='{.metadata.labels.test\.azureservicemesh\.io\/deployment-config}'
-
+kubectl get deployment httpbin-gateway-istio -ojsonpath='{.metadata.labels.test\.azureservicemesh\.io\/deployment-config}'
+```
+```output
 updated-per-gateway
 ```
 ## Next steps
