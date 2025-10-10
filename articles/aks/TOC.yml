@@ -166,6 +166,8 @@
                       href: istio-deploy-ingress.md
                     - name: Secure ingress gateways
                       href: istio-secure-gateway.md
+                    - name: Ingress with Kubernetes Gateway API
+                      href: istio-gateway-api.md
                 - name: Egress
                   items:
                     - name: Deploy egress gateways (preview)
@@ -452,6 +454,8 @@
         items:
           - name: Overview
             href: concepts-network-ingress.md
+          - name: Ingress with the Kubernetes Gateway API
+            href: managed-gateway-api.md
           - name: Use application routing add-on
             items:
               - name: Application routing add-on overview
