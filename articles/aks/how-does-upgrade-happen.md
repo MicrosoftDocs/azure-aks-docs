@@ -32,13 +32,13 @@ The cluster starts with two nodes running version 1.30, each hosting application
 
 - **Node 1**: Pod A, Pod B
 - **Node 2**: Pod C, Pod D
-- **Surge Node**: Empty (except for DaemonSets and system pods)
+- **Surge Node**: Empty (except for DaemonSets and new pods)
 
 ### Step 2: Cordon and drain first node
 
 AKS cordons Node 1 to prevent new pod scheduling, then drains existing pods.
 
-![Cordon and drain Node 1](./media/how-upgrade-happens/cordon-node-1.png)
+![Cordon and drain Node 1](./media/how-upgrade-happens/cordon-node-1.jpg)
 
 - **Pod A** → Evicted and replaced on Surge Node
 - **Pod B** → Evicted and replaced on Node 2
@@ -57,15 +57,15 @@ Node 1 is reimaged with Kubernetes version 1.31 while pods continue running on o
 
 AKS repeats the process for Node 2, pods get evicted and the scheduler redistributes them to appropriate available nodes.
 
-![Cordon and drain Node 2](./media/how-upgrade-happens/node-2-cordon-drain.png)
+![Cordon and drain Node 2](./media/how-upgrade-happens/node-2-cordon-drain.jpg)
 
-- **Pod C** → Evicted and replaced on Node 1
+- **Pod C, B** → Evicted and replaced on Node 1
 - **Pod D** → Evicted and replaced on Surge Node
 - **Node 2**: Cordoned and reimaged to v1.31
 
 ### Step 5: Remove surge node
 
-After all permanent nodes are upgraded, the surge node is drained and deleted.
+After all permanent nodes are upgraded, the surge node is cordoned, drained and deleted.
 
 ![Drain and delete surge node](./media/how-upgrade-happens/drain-delete-surge.png)
 
@@ -164,92 +164,129 @@ The upgrade completes with one quarantined node requiring manual intervention.
 - **Monitoring**: Track quarantined nodes through Azure Monitor or kubectl to ensure timely resolution
 
 
-## Blue-Green agent pool upgrades (Coming soon)
+## Blue-Green node pool upgrades (manual)
 
-Blue-Green upgrades offer a safer, more controlled upgrade approach by creating a complete set of new nodes before migrating workloads. This feature is currently in development and will be available soon.
+Blue-Green upgrades offer a safer, more controlled upgrade approach by manually creating a complete set of new node pools before migrating workloads. This manual approach gives you full control over the upgrade process and timing.
 
 ### Key concepts
 
-- **Blue nodes**: Your existing nodes running the current Kubernetes version
-- **Green nodes**: New nodes running the target Kubernetes version
-- **MaxSurge**: Always set to 100% for Blue-Green upgrades (ensure you have sufficient quota)
-- **Batch size**: Number of nodes to drain simultaneously during the migration
-- **Batch soak period**: Wait time between draining node batches for validation
-- **Node pool soak period**: Final validation period after all nodes are drained before committing or rolling back
+- **Blue node pool**: Your existing node pool running the current Kubernetes version
+- **Green node pool**: New node pool you create running the target Kubernetes version
+- **Manual control**: You manage all aspects of the migration process
+- **Validation checkpoints**: You decide when to proceed, pause, or rollback
 
-### Blue-Green upgrade process example
+### Manual Blue-Green upgrade process example
 
-This example demonstrates upgrading a two-node cluster from Kubernetes 1.30 to 1.31 using Blue-Green deployment.
+This example demonstrates manually upgrading a two-node cluster from Kubernetes 1.30 to 1.31 using Blue-Green deployment.
 
-#### Step 1: Initial state and green node creation
+#### Step 1: Create green node pool
 
-The upgrade begins by creating a complete duplicate set of nodes (green) with the new version.
+You begin by manually creating a new node pool with the target Kubernetes version alongside your existing node pool.
 
 ![Blue-Green initial setup](./media/how-upgrade-happens/blue-green-initial.png)
 
-- **Blue Node 1 (v1.30)**: Pod A, Pod B
-- **Blue Node 2 (v1.30)**: Pod C, Pod D
-- **Green Node 1 (v1.31)**: newly created
-- **Green Node 2 (v1.31)**: newly created
+- **Blue Node Pool (v1.30)**: Pod A, Pod B, Pod C, Pod D (existing)
+- **Green Node Pool (v1.31)**: Empty (manually created by you)
+- **Your action**: `az aks nodepool add` with new Kubernetes version
 
-#### Step 2: Batch migration (Batch size = 1)
+#### Step 2: Manually cordon blue nodes
 
-Nodes are drained in batches based on the configured batch size. With batch size = 1, one node drains at a time.
+You cordon the blue nodes to prevent new pod scheduling while keeping existing pods running.
 
-![First batch migration](./media/how-upgrade-happens/blue-green-batch-1.png)
 
-- **Blue Node 1**: Cordoned and drained
-- **Pod A, Pod B** → Evicted and replaced on Green nodes
-- **Batch soak period**: System waits for validation
+- **Your action**: `kubectl cordon` on each blue node
+- **Blue nodes**: Cordoned, no new pods scheduled
+- **Green nodes**: Ready to receive workloads
 
-#### Step 3: Continue batch migration
+#### Step 3: Manually drain blue nodes (controlled pace)
 
-After the batch soak period, the next batch proceeds if no issues are detected.
+You control the migration pace by manually draining nodes one at a time or in batches.
 
-![Second batch migration](./media/how-upgrade-happens/blue-green-batch-2.png)
+![Drain blue node 1](./media/how-upgrade-happens/blue-green-batch-1.png)
+![Second node drain](./media/how-upgrade-happens/blue-green-batch-2.png)
 
-- **Blue Node 2**: Cordoned and drained
-- **Pod C, Pod D** → Evicted and replaced on Green nodes
-- **All workloads** now running on Green nodes (v1.31)
+- **Your action**: `kubectl drain` on selected blue nodes
+- **Pod migration**: Pods automatically reschedule to green nodes
+- **Validation**: You verify workloads on green nodes before proceeding
 
-#### Step 4: Node pool soak period
+#### Step 4: Validate and decide
 
-After all nodes are drained, the node pool soak period begins. This is your final validation window.
+After migrating workloads, you validate application performance on green nodes.
 
-![Node pool soak validation](./media/how-upgrade-happens/blue-green-soak.png)
+![Validation phase](./media/how-upgrade-happens/blue-green-soak.png)
 
-During this period, you can:
-- **Validate**: Check application performance on green nodes
-- **Abort and rollback**: Evict pods from green nodes and have them scheduled back to blue nodes if issues are found
-- **Commit**: Proceed to delete blue nodes if validation succeeds
+During this phase, you can:
+- **Monitor**: Check application metrics and logs
+- **Test**: Run validation tests on green node pool
+- **Decide**: Commit to green or rollback to blue
 
 #### Step 5: Commit or rollback
 
-Based on validation results, either commit to green nodes or rollback to blue.
+Based on your validation, you manually complete the upgrade or rollback.
 
 **Option A - Commit (Success):**
 ![Commit to green nodes](./media/how-upgrade-happens/blue-green-commit.png)
-- Blue nodes are deleted
-- Green nodes become the new production nodes
+- **Your action**: Delete blue node pool using `az aks nodepool delete`
+- **Result**: Green node pool becomes primary
 
 **Option B - Rollback (Issues detected):**
 ![Rollback to blue nodes](./media/how-upgrade-happens/blue-green-rollback.png)
-- Workloads are evicted from green nodes and rescheduled to blue nodes
-- Green nodes are deleted
-- Cluster remains on v1.30
+- **Your action**: 
+    1. Uncordon blue nodes using `kubectl uncordon`
+    2. Drain green nodes using `kubectl drain`
+    3. Delete green node pool using `az aks nodepool delete`
+- **Result**: Workloads return to blue nodes
 
-### Advantages of Blue-Green upgrades
+### Manual Blue-Green upgrade commands
 
-- **Zero-downtime migration**: Complete infrastructure ready before workload transition
-- **Validation periods**: Multiple checkpoints to verify upgrade success
-- **Easy rollback**: Original nodes remain available until explicitly deleted
-- **Batch control**: Configure migration pace based on risk tolerance
+```bash
+# Step 1: Create green node pool
+az aks nodepool add \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name greennodepool \
+    --kubernetes-version 1.31 \
+    --node-count 2
+
+# Step 2: Cordon blue nodes
+kubectl cordon <blue-node-1>
+kubectl cordon <blue-node-2>
+
+# Step 3: Drain blue nodes (with your preferred options)
+kubectl drain <blue-node-1> --ignore-daemonsets --delete-emptydir-data
+kubectl drain <blue-node-2> --ignore-daemonsets --delete-emptydir-data
+
+# Step 4: Validate (your custom validation process)
+
+# Step 5A: Commit - Delete blue node pool
+az aks nodepool delete \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name bluenodepool
+
+# Step 5B: Rollback - Return to blue nodes
+kubectl uncordon <blue-node-1>
+kubectl uncordon <blue-node-2>
+kubectl drain <green-node-1> --ignore-daemonsets --delete-emptydir-data
+kubectl drain <green-node-2> --ignore-daemonsets --delete-emptydir-data
+az aks nodepool delete \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name greennodepool
+```
+
+### Advantages of manual Blue-Green upgrades
+
+- **Full control**: You decide exactly when each step occurs
+- **Custom validation**: Implement your own validation criteria and timing
+- **Gradual migration**: Move workloads at your preferred pace
+- **Easy rollback**: Original nodes remain available until you delete them
 
 ### Important considerations
 
+- **Manual effort**: Requires active management throughout the process
 - **Quota requirements**: Requires 2x the node capacity during upgrade
-- **Cost implications**: Temporary doubling of compute resources
-- **Configuration**: Batch size and soak periods should align with your validation requirements
+- **Planning**: Document your validation criteria and rollback procedures
 
 
 ## Next steps
