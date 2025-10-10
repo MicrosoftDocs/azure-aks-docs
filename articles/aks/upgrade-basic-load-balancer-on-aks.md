@@ -14,14 +14,14 @@ ms.service: azure-kubernetes-service
 In this article, you learn how to upgrade your Basic Load Balancer instances to Standard Load Balancer on Azure Kubernetes Services (AKS). We recommend using Standard Load Balancer for all production instances. It provides many [key differences](/azure/load-balancer/load-balancer-basic-upgrade-guidance#basic-load-balancer-sku-vs-standard-load-balancer-sku) to your infrastructure. For guidance on upgrading from Basic Load Balancer to Standard Load Balancer outside of AKS, see the [official guidance for Basic Load Balancer upgrade][load-balancer-upgrade-guidance].
 
 > [!IMPORTANT]
-> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you are currently using Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date to avoid your cluster being out of support. This article will help guide you through the upgrade process.
+> Basic Load Balancer retires on September 30, 2025. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you're currently using Basic Load Balancer, make sure to upgrade to Standard Load Balancer before the retirement date to avoid your cluster being out of support. This article helps guide you through the upgrade process.
 
 > [!NOTE]
 > For clusters using both Availability Sets and the Basic Load Balancer, there's a separate `az aks update` command you need to run to perform both migrations at once (Availability Sets to Virtual Machine node pools, and Basic Load Balancer to Standard Load Balancer). For steps on performing this migration, see the [Availability Sets migration][availability-sets] guidance.
 
 ## Before you begin
 
-Before you begin the migration, be aware of the following:
+Before you begin the migration, review the following information:
 
 - Downtime occurs during migration. Plan for downtime accordingly.
 - Once the migration begins, roll back isn't allowed.
@@ -29,7 +29,7 @@ Before you begin the migration, be aware of the following:
 
 ## Prerequisites
 
-If your cluster doesn't meet the following requirements, the migration tool will be blocked from running:
+Your cluster must meet the following prerequisites before you can perform the migration:
 
 - The minimum Kubernetes version for this script is 1.27. If you need to upgrade your AKS cluster, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster).
 - You need the [Azure CLI installed](/cli/azure/install-azure-cli). The minimum version you need is 2.76.0.
@@ -86,7 +86,7 @@ You can confirm the new IP addresses associated with outbound rules by confirmin
 
 Microsoft deprecated Basic Load Balancer SKU for certain AKS operations, and creation is now blocked in some regions.
 
-To resolve this, make sure you specify `--load-balancer-sku standard` when creating a new cluster. For example:
+To resolve this issue, make sure you specify `--load-balancer-sku standard` when creating a new cluster. For example:
 
 ```azurecli-interactive
 az aks create \
@@ -95,7 +95,7 @@ az aks create \
   --load-balancer-sku standard
 ```
 
-### Why can’t I simply change my Basic Load Balancer to Standard Load Balancer in-place?
+### Why can’t I change my Basic Load Balancer to Standard Load Balancer in-place?
 
 The Load Balancer SKU is immutable after creation in AKS, as it's a managed resource owned by the cluster.
 
@@ -104,11 +104,11 @@ You can resolve this using one of the following options:
 - **Option 1**: Use the `az aks update run` command to upgrade Basic Load Balancer to Standard. For more information, see [Upgrade Basic Load Balancer on Azure Kubernetes Service (AKS)](./upgrade-basic-load-balancer-on-aks.md).
 - **Option 2**: Create a new AKS cluster with Standard Load Balancer (blue-green migration) and move any existing workloads.
 
-### After changing to Standard Load Balancer, why can't I find my public IP?
+### Why can't I find my public IP after upgrading from Basic to Standard Load Balancer?
 
 The Load Balancer object lost the reference to your public IP resource during migration. This can occur if the IP was tied to the Basic SKU Load Balancer and wasn't rebound.
 
-To resolve this:
+To resolve this issue:
 
 1. Ensure the new Standard public IP exists in the correct resource group.
 1. Reassociate it in the service manifest using the following configuration:
@@ -122,7 +122,7 @@ To resolve this:
 
 If `outboundType` is `LoadBalancer`, AKS automatically provisions a public IP (PIP), regardless of Load Balancer SKU.
 
-To resolve this:
+To resolve this issue:
 
 1. Change `outboundType` to `userDefinedRouting` for a fully private cluster.
 1. Ensure custom outbound routing is configured via Azure Firewall/NVA.
@@ -131,7 +131,7 @@ To resolve this:
 
 Current migration tooling doesn’t support internal virtual network (VNet) Load Balancers with Basic to Standard in-place.
 
-To resolve this:
+To resolve this issue:
 
 1. Recreate the cluster in the same VNet with Standard Load Balancer.
 1. Deploy workloads and validate internal name resolution.
@@ -140,7 +140,7 @@ To resolve this:
 
 Yes. If your node pools use Availability Sets, they're also deprecated in AKS after September 30, 2025.
 
-To resolve this:
+To resolve this issue:
 
 1. For clusters using both Availability Sets and the Basic Load Balancer, there's a separate `az aks update` command you must run to perform both migrations at once (Availability Sets to Virtual Machine node pools, and Basic Load Balancer to Standard Load Balancer). For steps on performing this migration, see the [Availability Sets migration](./availability-sets-on-aks.md) guidance.
 1. After the upgrade, Azure CLI or REST APIs must be used to perform CRUD operations or manage the pool. Check the [limitations](./virtual-machines-node-pools.md#limitations).

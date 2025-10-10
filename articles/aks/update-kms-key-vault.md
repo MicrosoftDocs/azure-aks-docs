@@ -26,7 +26,7 @@ This article shows you how to update the key vault mode from public to private o
 
 ### [Update from a public to a private key vault](#tab/public-to-private)
 
-1. Turn off KMS on the existing cluster to release the key vault using the [`az aks update`][az-aks-update] command.
+1. Turn off KMS on the existing cluster and release the key vault using the [`az aks update`][az-aks-update] command with the `--disable-azure-keyvault-kms` parameter.
 
    ```azurecli-interactive
    az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --disable-azure-keyvault-kms

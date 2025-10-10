@@ -16,7 +16,7 @@ zone_pivot_groups: public-or-private-kv
 
 # Add Key Management Service (KMS) etcd encryption to an Azure Kubernetes Service (AKS) cluster
 
-This article shows you how to turn on encryption at rest for a public or private key vault for your Azure Kubernetes Service (AKS) secrets in an etcd key-value store using Azure Key Vault and the Key Management Service (KMS) plugin. You can use the KMS plugin to:
+This article shows you how to turn on encryption at rest for a public or private key vault using Azure Key Vault and the Key Management Service (KMS) plugin on AKS. You can use the KMS plugin to:
 
 - Use a key in a key vault for etcd encryption.
 - Bring your own keys.
@@ -32,7 +32,7 @@ For more information on using KMS, see [Using a KMS provider for data encryption
 
 > [!WARNING]
 >
-> Starting on September 15, 2024, Konnectivity is no longer supported for private key vaults for new subscriptions or subscriptions that didn't previously use this configuration. For subscriptions that currently use this configuration or used it in the past 60 days, support will continue until AKS version 1.30 reaches end of life for community support.
+> Starting on September 15, 2024, Konnectivity is no longer supported for private key vaults for new subscriptions or subscriptions that didn't previously use this configuration. For subscriptions currently using this configuration or used it in the past 60 days, support will continue until AKS version 1.30 reaches end of life for community support.
 >
 > KMS supports Konnectivity or [API Server VNet Integration][api-server-vnet-integration] for public key vaults.
 >
@@ -58,7 +58,7 @@ The following limitations apply when you integrate KMS etcd encryption with AKS:
 
 ## Create a key vault and key for a public key vault
 
-The following sections describe how to turn on KMS for a public key vault. You can use a public key vault **with or without Azure role-based access control (Azure RBAC)**.
+The following sections describe how to turn on KMS for a public key vault. You can use a public key vault with or without Azure role-based access control (Azure RBAC).
 
 > [!WARNING]
 > Deleting the key or the key vault isn't supported and causes the secrets in the cluster to be unrecoverable.
