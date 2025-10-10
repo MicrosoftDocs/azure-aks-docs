@@ -479,12 +479,17 @@ If you want to clean up all the resources created from the Istio how-to guidance
 az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 ```
 
+## Next Steps
+
+* [Configure ingress for Istio service mesh add-on with the Kubernetes Gateway API][istio-gateway-api]
+
 <!--- External Links --->
 [openssl]: https://man.openbsd.org/openssl.1
 
 <!--- Internal Links --->
 [istio-deploy-addon]: istio-deploy-addon.md
 [istio-deploy-ingress]: istio-deploy-ingress.md
+[istio-gateway-api]: istio-gateway-api.md
 [istio-addon-env-vars]: istio-deploy-addon.md#set-environment-variables
 [istio-deploy-existing-cluster]: istio-deploy-addon.md#install-mesh-for-existing-cluster
 [enable-sidecar-injection]: istio-deploy-addon.md#enable-sidecar-injection

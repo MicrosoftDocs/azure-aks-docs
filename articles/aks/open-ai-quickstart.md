@@ -30,7 +30,7 @@ To access the GitHub codebase for the sample application, see [AKS Store Demo][a
 
 ## Before you begin
 
-- You need an Azure account with an active subscription. If you don't have one, [create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- You need an Azure account with an active subscription. If you don't have one, [create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - For this demo, you can either use Azure OpenAI service or OpenAI service.
   - If you plan on using Azure OpenAI service, you need to request access to enable it on your Azure subscription using the [Request access to Azure OpenAI Service form][aoai-access].
   - If you plan on using OpenAI, sign up on the [OpenAI website][open-ai-landing].
