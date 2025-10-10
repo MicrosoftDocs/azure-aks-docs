@@ -5,13 +5,11 @@ ms.topic: overview
 ms.author: schaffererin
 author: schaffererin
 ms.date: 04/16/2024
-ms.custom: innovation-engine
+ms.custom: 
 ---
 
 # Delete an Azure Kubernetes Service (AKS) cluster
 
-> [!div class="nextstepaction"]
-> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2333444)
 
 This article outlines cluster deletion in Azure Kubernetes Service (AKS), including what happens when you delete a cluster, alternatives to deleting a cluster, and how to delete a cluster.
 
