@@ -4,8 +4,8 @@ description: Learn how to quickly deploy a Kubernetes cluster and deploy an appl
 ms.topic: quickstart
 ms.custom: build-2024, devx-track-azurecli, devx-track-bicep, ignite-2024
 ms.date: 10/10/2025
-author: sabbour, wangamanda
-ms.author: asabbour, wangamanda
+author: wangyira
+ms.author: wangamanda
 zone_pivot_groups: bicep-azure-cli-portal
 # Customer intent: As a DevOps engineer, I want to create and manage an Azure Kubernetes Service (AKS) Automatic cluster, so that I can efficiently deploy and operate containerized applications with best practice configurations automatically.
 ---
@@ -38,7 +38,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - To deploy a Bicep file, you need to write access on the resources you create and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to create a virtual machine, you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](/azure/role-based-access-control/built-in-roles).
 :::zone-end
 
-[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations)]
+[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
 :::zone target="docs" pivot="azure-cli"
 

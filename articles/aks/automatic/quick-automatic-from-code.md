@@ -4,8 +4,8 @@ description: Learn how to quickly deploy an application from source code to a ne
 ms.topic: quickstart
 ms.custom: devx-track-azurecli, devx-track-bicepW
 ms.date: 10/10/2025
-author: sabbour, wangamanda
-ms.author: asabbour, wangamanda
+author: wangyira
+ms.author: wangamanda
 # Customer intent: As a developer, I want to automate the deployment of my application to an Azure Kubernetes Service cluster from a code repository, so that I can streamline my CI/CD process and improve the efficiency of my deployment workflows.
 ---
 
@@ -27,7 +27,7 @@ In this quickstart, you learn to:
 
 - Have a GitHub account with the application to deploy.
 
-[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations)]
+[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
 ## Bring your application source code
 

@@ -3,8 +3,8 @@ title: 'Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster i
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic in a custom virtual network.
 ms.topic: quickstart
 ms.date: 10/10/2025
-author: sabbour, wangamanda
-ms.author: asabbour, wangamanda
+author: wangyira
+ms.author: wangamanda
 zone_pivot_groups: bicep-azure-cli
 # Customer intent: As a DevOps engineer, I want to deploy an AKS Automatic cluster within a custom virtual network, so that I can leverage managed Kubernetes for my applications while ensuring optimal network configuration and security.
 ---
@@ -39,7 +39,7 @@ If you don't have an Azure account, create a [free account](https://azure.micros
   - If there's a Network Security Group (NSG) attached to subnets, ensure that the [rules permit the following traffic](#network-security-group-rules) between the nodes and the API server, the Azure Load Balancer and the API server, and pod to pod communication.
   - If there's an Azure Firewall or other outbound restriction method or appliance, ensure the [required outbound network rules and FQDNs][outbound-rules-control-egress] are allowed.
 
-[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations)]
+[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
 ## Define variables
 

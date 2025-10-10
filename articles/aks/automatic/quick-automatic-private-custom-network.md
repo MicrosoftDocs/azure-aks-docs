@@ -3,8 +3,8 @@ title: 'Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cl
 description: Learn how to quickly deploy a private Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic in a custom virtual network.
 ms.topic: quickstart
 ms.date: 10/10/2025
-author: sabbour, wangamanda
-ms.author: asabbour, wangamanda
+author: wangyira
+ms.author: wangamanda
 zone_pivot_groups: bicep-azure-cli
 # Customer intent: As a cloud engineer, I want to deploy a private Kubernetes cluster in a custom virtual network using managed services, so that I can ensure secure and efficient management of modern applications in Azure.
 ---
@@ -40,7 +40,7 @@ In this quickstart, you learn to:
   - If there's a Network Security Group (NSG) attached to subnets, ensure that the [rules permit the following traffic](#network-security-group-rules) between the nodes and the API server, the Azure Load Balancer and the API server, and pod to pod communication.
   - If there's an Azure Firewall or other outbound restriction method or appliance, ensure the [required outbound network rules and FQDNs][outbound-rules-control-egress] are allowed.
 
-[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations)]
+[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
 ## Define variables
 

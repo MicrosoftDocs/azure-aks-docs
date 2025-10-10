@@ -2,7 +2,7 @@
 ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 10/10/2025
-author: wangamanda
+author: wangyira
 ms.author: wangamanda
 ---
 ## Limitations
