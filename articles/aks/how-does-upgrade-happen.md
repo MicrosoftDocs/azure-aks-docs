@@ -98,7 +98,7 @@ The cluster starts with two nodes running version 1.30, with a PDB protecting Po
 
 - **Node 1**: Pod A (protected by PDB), Pod B
 - **Node 2**: Pod C, Pod D
-- **Surge Node**: newly created
+- **Surge Nodes**: newly created 2 nodes.
 - **PDB**: Prevents Pod A eviction
 
 ### Step 2: Attempt to drain first node (blocked)
@@ -108,7 +108,7 @@ AKS cordons Node 1 but cannot drain Pod A due to PDB restrictions.
 ![Node 1 cordoned but drain blocked by PDB](./media/how-upgrade-happens/pod-disruption-budget-drain-blocked.png)
 
 - **Node 1**: Cordoned and marked as quarantined (Pod A stuck)
-- **Pod B** → Evicted and replaced on Surge Node
+- **Pod B** → Evicted and replaced on Surge Node 1, while Surge Node 2 temporarily is not used.
 - **Status**: Node 1 upgrade blocked
 
 ### Step 3: Proceed to second node
@@ -119,8 +119,8 @@ With Node 1 quarantined, AKS continues upgrading Node 2.
 
 - **Node 1**: Remains quarantined (v1.30)
 - **Node 2**: Cordoned and drained successfully
-- **Pod C** → Evicted and replaced on Surge Node
-- **Pod D** → Evicted and replaced on Surge Node
+- **Pod C** → Evicted and replaced on Surge Node 2
+- **Pod D** → Evicted and replaced on Surge Node 2
 
 ### Step 4: Upgrade second node
 
@@ -130,17 +130,19 @@ Node 2 is successfully reimaged to Kubernetes version 1.31.
 
 - **Node 1**: Still quarantined (v1.30) with Pod A
 - **Node 2**: Upgraded to v1.31
-- **Surge Node**: Pod B, Pod C, Pod D
+- **Surge Node 1**: Pod B
+- **Surge Node 2**: Pod C, Pod D
 
-### Step 5: Surge node becomes permanent replacement
+### Step 5: one Surge node becomes permanent replacement as another gets removed.
 
-Since Node 1 remains quarantined, the surge node becomes the permanent replacement running v1.31.
+Since Node 1 remains quarantined, the surge node 1 becomes the permanent replacement running v1.31 and surge node 2 gets deleted.
 
 ![Surge node replaces quarantined Node 1](./media/how-upgrade-happens/pod-disruption-budget-surge-replacement.png)
 
 - **Node 1**: Quarantined (v1.30) - requires manual intervention
-- **Node 2 (v1.31)**: Pod C, Pod D
-- **Surge Node (v1.31)**: Pod B (now permanent)
+- **Pod C, Pod D** → Evicted from Surge Node 2 and replaced on Node 2.
+- **Surge Node 1 (v1.31)**: Pod B (now permanent)
+- **Surge Node 2 (v1.31)**: Deleted.
 
 ### Final state with quarantined node
 
@@ -215,6 +217,7 @@ After migrating workloads, you validate application performance on green nodes.
 
 ![Validation phase](./media/how-upgrade-happens/blue-green-soak.png)
 
+
 During this phase, you can:
 - **Monitor**: Check application metrics and logs
 - **Test**: Run validation tests on green node pool
@@ -226,11 +229,15 @@ Based on your validation, you manually complete the upgrade or rollback.
 
 **Option A - Commit (Success):**
 ![Commit to green nodes](./media/how-upgrade-happens/blue-green-commit.png)
+
+
 - **Your action**: Delete blue node pool using `az aks nodepool delete`
 - **Result**: Green node pool becomes primary
 
 **Option B - Rollback (Issues detected):**
 ![Rollback to blue nodes](./media/how-upgrade-happens/blue-green-rollback.png)
+
+
 - **Your action**: 
     1. Uncordon blue nodes using `kubectl uncordon`
     2. Drain green nodes using `kubectl drain`
