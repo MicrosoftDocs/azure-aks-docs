@@ -30,7 +30,7 @@ For more information, see the [Kubernetes documentation on kube-proxy](https://k
 ## Before you begin
 
 - If using the Azure CLI, you need the `aks-preview` extension. See [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension).
-- If using ARM or the REST API, the AKS API version must be *2022-08-02-preview* or later. Specifically for ****nftables** mode, the version must be *2025-09-02-preview* or later.
+- If using ARM or the REST API, the AKS API version must be *2022-08-02-preview* or later. Specifically for **nftables** mode, the version must be *2025-09-02-preview* or later.
 - You need to register the `KubeProxyConfigurationPreview` feature flag. See [Register the `KubeProxyConfigurationPreview` feature flag](#register-the-kubeproxyconfigurationpreview-feature-flag).
 
 ### Install the `aks-preview` Azure CLI extension
