@@ -342,7 +342,7 @@ The `webAppRouting` profile has an optional `nginx` configuration with a `defaul
     aks-helloworld   webapprouting.kubernetes.azure.com   myapp.contoso.com   20.51.92.19   80, 443   4m
     ```
 
-### Clean up of ingress controllers
+## Remove ingress controllers
 
 - Remove the NGINX ingress controller using the [`kubectl delete nginxingresscontroller`][kubectl-delete] command.
 
