@@ -45,7 +45,7 @@ The following table lists properties you can set to configure an `NginxIngressCo
 | Field                                  | Type    | Description                                                                                                                                | Required | Default                               |
 |----------------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------------------------------|
 | `controllerNamePrefix`                 | string  | Name for the managed NGINX Ingress Controller resources.                                                                                   | Yes      | `nginx`                               |
-| `customHTTPErrors`                     | array   | Array of error codes to be sent to the default backend in case of an error.                                                                | No       |                                       |
+| `customHTTPErrors`                     | array   | Array of error codes to be sent to the default backend if there's an error.                                                                | No       |                                       |
 | `defaultBackendService`                | object  | Service to route unmatched HTTP traffic. Contains nested properties:                                                                     | No       |                                       |
 | &emsp;`name`                           | string  | Service name.                                                                                                                              | Yes      |                                       |
 | &emsp;`namespace`                      | string  | Service namespace.                                                                                                                         | Yes      |                                       |
@@ -71,7 +71,7 @@ You can also control if the default gets a public or an internal IP, or if it ge
 
 Possible configuration options include:
 
-- **`None`**: The default NGINX ingress controller isn't created and won't be deleted if it already exists. You should manually delete the default `NginxIngressController` custom resource if desired.
+- **`None`**: The default NGINX ingress controller isn't created and isn't deleted if it already exists. You should manually delete the default `NginxIngressController` custom resource if desired.
 - **`Internal`**: The default NGINX ingress controller is created with an internal load balancer. Any annotation changes on the `NginxIngressController` custom resource to make it external are overwritten.
 - **`External`**: The default NGINX ingress controller created with an external load balancer. Any annotation changes on the `NginxIngressController` custom resource to make it internal are overwritten.
 - **`AnnotationControlled`** (default): The default NGINX ingress controller is created with an external load balancer. You can edit the default `NginxIngressController` custom resource to configure load balancer annotations.)
@@ -402,15 +402,15 @@ spec:
         pathType: Prefix
 ```
 
-### Custom connection time out
+### Custom connection timeout
 
-You can change the time out that the NGINX ingress controller waits to close a connection with your workload. All time out values are unitless and in seconds. To override the default time out, use the following annotation to set a valid 120-seconds proxy read time out:
+You can change the timeout that the NGINX ingress controller waits to close a connection with your workload. All timeout values are unitless and in seconds. To override the default timeout, use the following annotation to set a valid 120-seconds proxy read timeout:
 
 ```yaml
 nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
 ```
 
-Review [custom time outs](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#custom-timeouts) for other configuration options.
+Review [custom timeouts](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#custom-timeouts) for other configuration options.
 
 Here's an example ingress configuration using this annotation:
 
