@@ -99,7 +99,7 @@ az fleet member reconcile -g $RG -f $FLEET -n $FLEET_MEMBER
 ```
 
 > [!NOTE]
-> Clusters being joined to the fleet for the first time after an upgrade do not warrant reconciliation.
+> Clusters being joined to the fleet for the first time after an upgrade don't require reconciliation.
 
 ## Verify member clusters joined successfully
 
@@ -130,7 +130,7 @@ aks-member-3   True     2m
 
 ## Clean up resources
 
-Once you're finished, you can remove the fleet resource and related resources by deleting the resource group. Keep in mind that this operation won't delete your clusters if they reside in a different resource group.
+Once you're finished, you can remove the fleet resource and related resources by deleting the resource group. This operation won't delete your clusters if they are in a different resource group.
 
 ```azurecli-interactive
 az group delete -n $RG

@@ -13,13 +13,13 @@ keywords: "Kubernetes, Azure, multi-cluster, multi, containers"
 
 # What is Azure Kubernetes Fleet Manager?
 
-Azure Kubernetes Fleet Manager enables at-scale management of multiple Azure Kubernetes Service (AKS) clusters. Fleet Manager provides platform administrators with access to automated safe multi-cluster updates, intelligent Kubernetes resource placement, and a centralized location to access monitoring data for their clusters.
+Azure Kubernetes Fleet Manager enables at-scale management of multiple [supported Kubernetes clusters](./concepts-member-cluster-types.md). Fleet Manager provides platform administrators with access to automated safe multi-cluster updates, intelligent Kubernetes resource placement, and a centralized location to access monitoring data for their clusters.
 
 :::image type="content" source="./media/overview/fleet-manager-portal-overview.png" alt-text="A screenshot of the Azure Kubernetes Fleet Manager overview page in the Azure portal. The overview shows there are five Kubernetes clusters running a supported Kubernetes version. There are 78 completed update runs with 29 failures and 49 successes. Across the five Kubernetes clusters there is a spread of node images." lightbox="./media/overview/fleet-manager-portal-overview.png":::
 
 Fleet Manager supports the following scenarios:
 
-* Join AKS clusters or Arc-Enabled Kubernetes clusters (preview) across Azure regions and subscriptions as member clusters. Read [Azure Kubernetes Fleet Manager member cluster types](./concepts-member-cluster-types.md) to understand more.
+* Join AKS clusters across regions and subscriptions, as well as Arc-enabled Kubernetes clusters (preview) across clouds and on-premises as member clusters. Read [Azure Kubernetes Fleet Manager member cluster types](./concepts-member-cluster-types.md) to understand more.
 
 * Use [Fleet Manager managed namespaces](./concepts-fleet-managed-namespace.md) to enforce resource quotas, network policies, and assign role based access at the namespace level across multiple clusters.
 
@@ -33,7 +33,7 @@ Fleet Manager supports the following scenarios:
 
 * Stage Kubernetes resources from Git repositories to Fleet Manager's hub cluster using [Automated Deployments](./concepts-automated-deployments.md) (preview).
 
-* Load balance incoming traffic across service endpoints on multiple clusters using [DNS-based load balancing](./concepts-dns-load-balancing.md) (preview).
+* Load balance incoming traffic across service endpoints on multiple **AKS** clusters using [DNS-based load balancing](./concepts-dns-load-balancing.md) (preview).
 
 ## Next steps
 

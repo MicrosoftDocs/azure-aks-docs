@@ -10,10 +10,6 @@ ms.author: chenyu1
 
 # View agent logs in Azure Kubernetes Fleet Manager
 
-> [!IMPORTANT]
-> AKS clusters fully support log ingestion. Arc-enabled Kubernetes clusters, however, is in public preview and does not currently support log ingestion.
-> See [Azure Kubernetes Fleet Manager member cluster types](./concepts-member-cluster-types.md) for more information.
-
 This article shows you how to view Fleet agent logs from your hub and member clusters in Azure Kubernetes Fleet Manager.
 If you have a Fleet with the hub cluster mode enabled, Azure Kubernetes Fleet Manager installs Fleet agents in both the
 hub cluster and the member clusters to facilitate communications and orchestrate operations across the Fleet, in support of
@@ -24,6 +20,10 @@ Fleet's workload orchestration and load balancing capabilities. These agents gen
 - Load balancing configuration changes and operation updates
 
 And you can retrieve these logs for monitoring, troubleshooting, and/or auditing purposes.
+
+> [!IMPORTANT]
+> This article applies only to AKS clusters which fully support log ingestion. Arc-enabled Kubernetes clusters (preview) don't currently support log ingestion.
+> See [Azure Kubernetes Fleet Manager member cluster types](./concepts-member-cluster-types.md) for more information.
 
 ## Configure diagnostic settings on relevant resources
 

@@ -36,10 +36,10 @@ The hub cluster facilitates the orchestration of updates and resource management
 
 The `MemberCluster` represents a cluster-scoped API established within the hub cluster, serving as a representation of a cluster within the fleet. This API offers a dependable, uniform, and automated approach for multi-cluster applications to identify registered clusters within a fleet. It also facilitates applications in querying a list of clusters managed by the fleet or in observing cluster statuses for subsequent actions.
 
-You can join different supported Kubernetes clusters](./concepts-member-cluster-types.md) as members. Member clusters must reside in the same Microsoft Entra tenant as the fleet, but they can be in different regions, different resource groups, and/or different subscriptions.
+You can join [supported Kubernetes clusters](./concepts-member-cluster-types.md) as members. Member clusters must reside in the same Microsoft Entra tenant as the fleet, but they can be in different regions, different resource groups, and/or different subscriptions.
 
 > [!IMPORTANT]
-> Fleet's capabilities vary by member cluster type. Read **[Azure KubernetesFleet Manager member cluster types](./concepts-member-cluster-types.md)** to understand more.
+> Fleet's capabilities vary by member cluster type. Read **[Azure Kubernetes Fleet Manager member cluster types](./concepts-member-cluster-types.md)** to understand more.
 
 ### Labels
 

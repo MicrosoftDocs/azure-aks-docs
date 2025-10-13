@@ -13,7 +13,7 @@ ms.custom:
 
 # Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager
 
-Application developers often need to deploy Kubernetes resources into multiple clusters, and across clouds. Fleet operators often need to pick the best clusters for workloads based on heuristics (such as cost of compute) or available resources (such as memory and CPU). It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how you can address these scenarios by using the intelligent Kubernetes resource placement capability in Azure Kubernetes Fleet Manager.
+Application developers often need to deploy Kubernetes resources into multiple clusters located in cloud and on-premises environments. Fleet operators often need to pick the best clusters for workloads based on heuristics (such as cost of compute) or available resources (such as memory and CPU). It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how you can address these scenarios by using the intelligent Kubernetes resource placement capability in Azure Kubernetes Fleet Manager.
 
 The resource placement capability of Fleet Manager can make scheduling decisions based on the following cluster properties:
 

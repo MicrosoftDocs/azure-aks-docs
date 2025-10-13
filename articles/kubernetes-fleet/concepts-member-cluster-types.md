@@ -13,34 +13,34 @@ ms.topic: concept-article
 Azure Kubernetes Fleet Manager supports two types of member clusters:
 
 - [Azure Kubernetes Service (AKS) clusters](/azure/aks/)
-- [Arc-Enabled Kubernetes clusters](/azure/azure-arc/kubernetes/overview) (Preview).
+- [Arc-enabled Kubernetes clusters](/azure/azure-arc/kubernetes/overview) (Preview).
 
 > [!IMPORTANT]
-> Azure Kubernetes Fleet Manager's support for Arc-Enabled Kubernetes clusters is currently in Preview. [See below for limitations and requirements](#arc-enabled-kubernetes-clusters-important-considerations).
+> Azure Kubernetes Fleet Manager's support for Arc-enabled Kubernetes clusters is currently in Preview. [See below for limitations and requirements](#arc-enabled-kubernetes-clusters-important-considerations).
 
 
 The following table outlines which Azure Kubernetes Fleet Manager capabilities are supported for each member cluster type.
 
-| Capability | AKS cluster | Arc-Enabled Kubernetes cluster |
+| Capability | AKS cluster | Arc-enabled Kubernetes cluster |
 |-----|----|-----------|
-| Managed Namespaces | ✅ Preview  | ✅ Preview  |
-| Multi-cluster networking | ✅ GA| ❌ Not supported|
-| Multi-cluster Kubernetes and node image upgrades |✅ GA | ❌ Not supported|
+| Managed Namespaces | ✅ Preview  | ❌ Unsupported  |
+| Multi-cluster networking | ✅ GA| ❌ Unsupported|
+| Multi-cluster Kubernetes and node image upgrades |✅ GA | ❌ Unsupported|
 | Multi-cluster workload management |✅ GA| ✅ Preview|
 
-## Arc-Enabled Kubernetes Clusters important considerations
+## Arc-enabled Kubernetes Clusters important considerations
 
 Depending on your environment and configuration, certain limitations may apply when connecting an Arc-enabled Kubernetes cluster to an Azure Kubernetes Fleet Manager hub. Review the following considerations:
 
-### Fleet Type
+### Private Fleet
 
 - For **Private Fleets**, your Arc-enabled Kubernetes cluster **must** be configured to use [Azure Arc Gateway](/azure/azure-arc/servers/arc-gateway).
 
-### Cluster Configuration
+### Cluster resource requirements
 
-Cluster requirements:
-- At least **210 MB** memory and **~2 %** of one CPU core available
-- The cluster should reserve **3 pods** for the Azure Fleet Manager Arc extension agents
+When adding an Arc-enabled Kubernetes cluster to Fleet Manager, the following conditions apply:
+- At least **210 MB** memory and **2%** of one CPU core available
+- The cluster should reserve **3 pods** for the Azure Kubernetes Fleet Manager Arc extension agents
 - The namespace **fleet-system** will be created for related components.
   - Do **not delete or modify** this namespace, it is required for core functionality.
 
