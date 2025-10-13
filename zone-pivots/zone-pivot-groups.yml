@@ -94,3 +94,12 @@ groups:
     title: AKS-managed Azure Container Registry
   - id: byo-acr
     title: Bring your own (BYO) Azure Container Registry
+# Owner: schaffererin
+- id: app-routing-nginx-configuration
+  title: Choose a configuration option
+  prompt: Choose a configuration option
+  pivots:
+  - id: nginx-ingress-controller
+    title: Configuration of the NGINX ingress controller
+  - id: ingress-resource-annotations
+    title: Configuration of ingress resource annotations
