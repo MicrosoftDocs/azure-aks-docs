@@ -57,7 +57,7 @@ Node 1 is reimaged with Kubernetes version 1.31 while pods continue running on o
 
 AKS repeats the process for Node 2, pods get evicted and the scheduler redistributes them to appropriate available nodes.
 
-![Cordon and drain Node 2](./media/how-upgrade-happens/node-2-cordon-drain.jpg)
+![Cordon and drain Node 2](./media/how-upgrade-happens/node-2-cordon-drain.png)
 
 - **Pod C, B** → Evicted and replaced on Node 1
 - **Pod D** → Evicted and replaced on Surge Node
