@@ -20,9 +20,9 @@ As containerized workloads scale across distributed environments, the need for h
 
 This direct path reduces the number of hops and processing layers, resulting in faster packet delivery.
 
-## Key Benefits
+## Key benefits
 
-Reduced latency - Bypassing iptables results in lower pod-to-pod latency
+Reduced latency - Bypassing iptables in host results in lower pod-to-pod latency
 
 Increased throughput - Compared to legacy routing, significant improvements can be observed for pod-to-pod traffic between nodes
 
@@ -32,11 +32,11 @@ Use cases for eBPF Host Routing are performance-critical workloads such as high-
 
 ## Components of eBPF Host Routing
 
-**`iptables blocker`** - Runs as an init container using LSM BPF to check for custom iptables rules and prevents Cilium agent from starting if rules are found in the host network namespace when eBPF Host Routing is enabled.
+**`iptables blocker`** - An init container that prevents any future installation of iptables rules in the host network namespace (such rules will be bypassed when eBPF host routing is enabled).
 
-**`iptables monitor`** - Checks if `iptables blocker` blocked iptables rules and checks nodes if user iptables rules are added. Runs an init container in Cilium DaemonSet to prevent start if user iptables rules are present.
+**`iptables monitor`** - Checks whether any user-installed iptables rules are already present in the host network namespace. If yes, this init container prevents Cilium agent from starting until the rules are removed.
 
-**`IP Masquerade Agent`** - When eBPF Host Routing is active, Cilium takes over SNAT responsibilities using BPF-based masquerading thus making ip-masq-agent technically redundant. This agent continues to run to ensure consistent network behavior if eBPF Host Routing is disabled.
+**`IP Masquerade Agent`** - When eBPF Host Routing is active, Cilium takes over SNAT responsibilities using BPF-based masquerading thus making ip-masq-agent technically redundant. This agent remains running to maintain consistent behavior if eBPF Host Routing is later disabled; however, its iptables rules are ignored while eBPF Host Routing is active.
 
 ## Considerations
 
@@ -54,8 +54,6 @@ Enabling eBPF Host Routing causes iptables rules in the host network namespace t
 
  - Istio add-on can't be used along with eBPF Host Routing enabled clusters.
 
- - Enabling eBPF Host Routing on an existing cluster may disrupt existing connections.
-
  - Dual stack networking isn't supported.
 
 ## Pricing
@@ -63,7 +61,7 @@ Enabling eBPF Host Routing causes iptables rules in the host network namespace t
 > [!IMPORTANT]
 > Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
 
-## Next Steps
+## Next steps
 
 - Learn how to enable [eBPF Host Routing](./how-to-enable-ebpf-host-routing.md) on AKS.
 
