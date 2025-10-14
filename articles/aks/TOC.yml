@@ -668,8 +668,16 @@
           href: deployment-safeguards.md
         - name: Create an OIDC Issuer for your cluster
           href: use-oidc-issuer.md
-        - name: Use KMS etcd encryption
-          href: use-kms-etcd-encryption.md
+        - name: KMS etcd encryption
+          items:
+            - name: Use KMS etcd encryption
+              href: use-kms-etcd-encryption.md
+            - name: Update key vault mode
+              href: update-kms-key-vault.md
+            - name: Migrate to KMS v2
+              href: use-kms-v2.md
+            - name: Observability for KMS etcd encryption
+              href: kms-observability.md
         - name: Secure container access to resources
           href: secure-container-access.md
     - name: Node security
