@@ -55,7 +55,9 @@
           - name: Taking over existing workloads
             href: concepts-placement-takeover.md
           - name: Detecting and managing workload drift
-            href: concepts-placement-drift.md        
+            href: concepts-placement-drift.md
+          - name: Using fleet managed namespaces
+            href: concepts-fleet-managed-namespace.md     
     - name: Multi-cluster networking 
       items:
         - name: DNS-based load balancing across multiple clusters
@@ -113,7 +115,7 @@
         - name: Use overrides to customize cluster-scoped resources
           href: cluster-resource-override.md
         - name: Use overrides to customize namespace-scope resources
-          href: resource-override.md
+          href: resource-override.md  
     - name: Load balance multi-cluster services
       items:
         - name: Use DNS-based load balancing across multiple clusters

@@ -1,5 +1,5 @@
 ---
-title: Use multi-cluster managed namespaces for multi-tenancy across multiple clusters (preview).
+title: Use multi-cluster managed namespaces for multi-tenancy across multiple clusters.
 description: Learn how to use multi-cluster managed namespaces to define resource quotas and network policies as well as delegate user access for namespaces on multiple clusters.
 author: audrastump
 ms.author: stumpaudra
@@ -11,6 +11,7 @@ zone_pivot_groups: azure-portal-azure-cli
 # Customer intent: "As a platform admin, I want to define a namespace and deploy it across selected fleet clusters so I can delegate application teams access to resources on any cluster where the namespace exists."
 ---
 # Use multi-cluster managed namespaces for multi-tenancy across multiple clusters (preview).
+
 Multi-cluster managed namespaces enable multi-tenancy across multiple clusters through centralized, Azure-native namespace management. Platform administrators can:
 
 * Define and enforce consistent resource quotas across all fleet member clusters
@@ -19,15 +20,18 @@ Multi-cluster managed namespaces enable multi-tenancy across multiple clusters t
 
 This enables teams to work within their allocated resources across any member cluster where their managed namespace exists.
 
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
+
+[!INCLUDE [preview_features_note](./includes/preview/preview-callout.md)]
+
+## Before you begin
+
 > [!NOTE]
 > This article is intended for **platform administrators** who need to create, configure, and manage multi-cluster managed namespaces across a fleet. If you're a developer or team member looking to view and access existing managed namespaces, see [View managed namespaces you have access to](./howto-managed-namespaces-access.md).
 
-Multi-cluster managed namespaces enable multi-tenancy across multiple clusters through centralized, Azure-native namespace management. Platform administrators can:
-
-**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
-
-## Before you begin
 * You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+
+* You need a fleet with a hub cluster. This article includes instructions for configuring your managed namespace across member clusters. To follow this tutorial, [create and join at least one Azure Kubernetes Service (AKS) cluster to the fleet](./quickstart-create-fleet-and-members.md).
 
 * To understand the concept of a managed namespace, read the [conceptual overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md).
 
@@ -50,8 +54,6 @@ Multi-cluster managed namespaces enable multi-tenancy across multiple clusters t
   ```azurecli-interactive
   az extension show --name fleet
   ```
-
-* You need a fleet with a hub cluster. This article includes instructions for configuring your managed namespace across member clusters. To follow this tutorial, [create and join at least one Azure Kubernetes Service (AKS) cluster to the fleet](./quickstart-create-fleet-and-members.md).
 
 * Set the following environment variables for your subscription ID, resource group, Fleet, and Fleet Member:
 

@@ -1,5 +1,5 @@
 ---
-title: "Use Managed Namespaces to control user access and resource quotas across multiple clusters (preview)"
+title: "Use Fleet Manager Managed Namespaces to control user access and resource quotas across multiple clusters"
 description: This article provides a conceptual overview of multi-cluster managed namespaces (preview) using Azure Kubernetes Service (AKS) Fleet Manager.
 ms.date: 09/16/2025
 author: audrastump
@@ -8,7 +8,7 @@ ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
 # Customer intent: "As a platform admin, I want to define a namespace and deploy it across selected fleet clusters so I can delegate application teams access to resources on any cluster where the namespace exists."
 ---
-# Use Managed Namespaces to control user access and resource quotas across multiple clusters (preview)
+# Use Fleet Manager Managed Namespaces to control user access and resource quotas across multiple clusters (preview)
 
 This article provides a conceptual overview of multi-cluster managed namespaces. 
 Using multi-cluster managed namespaces on targeted member clusters, platform administrators can define resource quotas, network policies, and control access to namespace resources. Fleet Manager then automatically places the namespace and its associated resources on the designated member clusters. This extends the capability of AKS managed namespaces, which provide a way to logically isolate workloads within a single cluster. 
@@ -16,6 +16,10 @@ Using multi-cluster managed namespaces on targeted member clusters, platform adm
 If the platform administrator specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object, with a [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type) placement policy, to propagate the namespace to the selected member clusters. 
 
 Administrators can also control two key behaviors: how conflicts are resolved when a managed namespace is placed on a member cluster that already has an unmanaged namespace with the same name, and whether Kubernetes resources are deleted upon managed namespace deletion.
+
+**Applies to** :heavy_check_mark: Fleet Manager with hub cluster
+
+[!INCLUDE [preview_features_note](./includes/preview/preview-callout.md)]
 
 ## Resource quotas
 

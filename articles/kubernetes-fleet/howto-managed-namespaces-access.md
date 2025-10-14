@@ -1,5 +1,5 @@
 ---
-title: View a managed namespace and the member clusters it is placed on (preview)
+title: View a managed namespace and the member clusters it is placed on.
 description: Learn how to find managed namespaces you have access to, view their deployment locations, and monitor resource quota usage across multiple clusters.
 author: audrastump
 ms.author: stumpaudra
@@ -12,12 +12,17 @@ zone_pivot_groups: azure-portal-azure-cli
 ---
 # View a managed namespace and the member clusters it is placed on (preview)
 
-> This article is intended for **developers and team members** who need to discover and monitor managed namespaces they have access to. If you're a platform administrator looking to create and configure managed namespaces, see [Use multi-cluster managed namespaces for multi-tenancy](./howto-managed-namespaces.md).
-
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-## Before you begin
+[!INCLUDE [preview_features_note](./includes/preview/preview-callout.md)]
+
+## Before you begin 
+
+> This article is intended for **developers and team members** who need to discover and monitor managed namespaces they have access to. If you're a platform administrator looking to create and configure managed namespaces, see [Use multi-cluster managed namespaces for multi-tenancy](./howto-managed-namespaces.md).
+
 * You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+
+* You need an existing multi-cluster managed namespace. See [guide](./howto-managed-namespaces.md) on how to create a multi-cluster managed namespace.
 
 * To understand the concept of a managed namespace, read the [conceptual overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md).
 
@@ -40,8 +45,6 @@ zone_pivot_groups: azure-portal-azure-cli
   ```azurecli-interactive
   az extension show --name fleet
   ```
-
-* You need an existing multi-cluster managed namespace. See [guide](./howto-managed-namespaces.md) on how to create a multi-cluster managed namespace.
 
 * Set the following environment variables for your subscription ID, resource group, and Fleet:
 
