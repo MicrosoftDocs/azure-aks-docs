@@ -10,14 +10,14 @@ ms.topic: concept-article
 ---
 # Use Fleet Manager Managed Namespaces to control user access and resource quotas across multiple clusters (preview)
 
+**Applies to** :heavy_check_mark: Fleet Manager with hub cluster
+
 This article provides a conceptual overview of multi-cluster managed namespaces. 
 Using multi-cluster managed namespaces on targeted member clusters, platform administrators can define resource quotas, network policies, and control access to namespace resources. Fleet Manager then automatically places the namespace and its associated resources on the designated member clusters. This extends the capability of AKS managed namespaces, which provide a way to logically isolate workloads within a single cluster. 
 
 If the platform administrator specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object, with a [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type) placement policy, to propagate the namespace to the selected member clusters. 
 
 Administrators can also control two key behaviors: how conflicts are resolved when a managed namespace is placed on a member cluster that already has an unmanaged namespace with the same name, and whether Kubernetes resources are deleted upon managed namespace deletion.
-
-**Applies to** :heavy_check_mark: Fleet Manager with hub cluster
 
 [!INCLUDE [preview_features_note](./includes/preview/preview-callout.md)]
 
@@ -56,7 +56,7 @@ When a managed namespace is created, the adoption policy determines how existing
 During adoption a managed namespace may take over fields on a namespace on a member cluster, but it doesn't remove the resources from the namespace.
 
 > [!NOTE] 
-> Currently takeover behavior is limited to AKS cluster fleet members
+> Currently takeover behavior is limited to AKS cluster fleet members.
 
 ## Delete policy
 The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) controls how the Kubernetes namespace is handled when the managed namespace resource is deleted. There are two built-in options:

@@ -12,6 +12,8 @@ zone_pivot_groups: azure-portal-azure-cli
 ---
 # Use multi-cluster managed namespaces for multi-tenancy across multiple clusters (preview).
 
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
+
 Multi-cluster managed namespaces enable multi-tenancy across multiple clusters through centralized, Azure-native namespace management. Platform administrators can:
 
 * Define and enforce consistent resource quotas across all fleet member clusters
@@ -19,8 +21,6 @@ Multi-cluster managed namespaces enable multi-tenancy across multiple clusters t
 * Delegate namespace access without granting full cluster access to users
 
 This enables teams to work within their allocated resources across any member cluster where their managed namespace exists.
-
-**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 [!INCLUDE [preview_features_note](./includes/preview/preview-callout.md)]
 

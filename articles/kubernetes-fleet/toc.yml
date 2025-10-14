@@ -56,7 +56,7 @@
             href: concepts-placement-takeover.md
           - name: Detecting and managing workload drift
             href: concepts-placement-drift.md
-          - name: Using fleet managed namespaces
+          - name: Fleet managed namespaces
             href: concepts-fleet-managed-namespace.md     
     - name: Multi-cluster networking 
       items:
