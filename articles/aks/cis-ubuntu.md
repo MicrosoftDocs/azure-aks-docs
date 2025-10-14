@@ -55,9 +55,9 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 
 | CIS paragraph number | Recommendation description|Status| Reason |
 |---|---|---|---|
-| 1 | Initial Setup ||| 
-| 1.1 | Filesystem Configuration ||| 
-| 1.1.1 | Disable unused filesystems ||| 
+| 1 | **Initial Setup** ||| 
+| 1.1 | **Filesystem Configuration** ||| 
+| 1.1.1 | **Disable unused filesystems** ||| 
 | 1.1.1.1 | Ensure cramfs kernel module is not available | Pass || 
 | 1.1.1.2 | Ensure freevxfs kernel module is not available | Pass || 
 | 1.1.1.3 | Ensure hfs kernel module is not available | Pass || 
@@ -65,59 +65,59 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1.1.1.5 | Ensure jffs2 kernel module is not available | Pass || 
 | 1.1.1.9 | Ensure usb-storage kernel module is not available | Pass || 
 | 1.1.1.10 | Ensure unused filesystems kernel modules are not available | Manual || 
-| 1.1.2 | Ensure /tmp is configured ||| 
+| 1.1.2 | **Ensure /tmp is configured** ||| 
 | 1.1.2.1.1 | Ensure /tmp is a separate partition | Fail |Operational impact| 
 | 1.1.2.1.2 | Ensure nodev option set on /tmp partition | Pass || 
 | 1.1.2.1.3 | Ensure nosuid option set on /tmp partition | Pass || 
 | 1.1.2.1.4 | Ensure noexec option set on /tmp partition | Pass || 
-| 1.1.2.2 | Ensure /dev/shm is configured ||| 
+| 1.1.2.2 | **Ensure /dev/shm is configured** ||| 
 | 1.1.2.2.1 | Ensure /dev/shm is a separate partition | Pass || 
 | 1.1.2.2.2 | Ensure nodev option set on /dev/shm partition | Pass || 
 | 1.1.2.2.3 | Ensure nosuid option set on /dev/shm partition | Pass || 
 | 1.1.2.2.4 | Ensure noexec option set on /dev/shm partition | Pass || 
-| 1.1.2.3 | Ensure /home is configured ||| 
+| 1.1.2.3 | **Ensure /home is configured** ||| 
 | 1.1.2.3.2 | Ensure nodev option set on /home partition | Pass || 
 | 1.1.2.3.3 | Ensure nosuid option set on /home partition | Pass || 
-| 1.1.2.4 | Ensure /var is configured ||| 
+| 1.1.2.4 | **Ensure /var is configured** ||| 
 | 1.1.2.4.2 | Ensure nodev option set on /var partition | Pass || 
 | 1.1.2.4.3 | Ensure nosuid option set on /var partition | Pass || 
-| 1.1.2.5 | Ensure /var/tmp is configured ||| 
+| 1.1.2.5 | **Ensure /var/tmp is configured** ||| 
 | 1.1.2.5.2 | Ensure nodev option set on /var/tmp partition | Pass || 
 | 1.1.2.5.3 | Ensure nosuid option set on /var/tmp partition | Pass || 
 | 1.1.2.5.4 | Ensure noexec option set on /var/tmp partition | Pass || 
-| 1.1.2.6 | Ensure /var/log is configured ||| 
+| 1.1.2.6 | **Ensure /var/log is configured** ||| 
 | 1.1.2.6.2 | Ensure nodev option set on /var/log partition | Pass || 
 | 1.1.2.6.3 | Ensure nosuid option set on /var/log partition | Pass || 
 | 1.1.2.6.4 | Ensure noexec option set on /var/log partition | Pass || 
-| 1.1.2.7 | Ensure /var/log/audit is configured ||| 
+| 1.1.2.7 | **Ensure /var/log/audit is configured** ||| 
 | 1.1.2.7.2 | Ensure nodev option set on /var/log/audit partition | Pass || 
 | 1.1.2.7.3 | Ensure nosuid option set on /var/log/audit partition | Pass || 
 | 1.1.2.7.4 | Ensure noexec option set on /var/log/audit partition | Pass || 
-| 1.2 | Configure Software Updates ||| 
+| 1.2 | **Configure Software Updates** ||| 
 | 1.2.1.1 | Ensure GPG keys are configured | Manual || 
 | 1.2.1.2 | Ensure package manager repositories are configured | Pass || 
 | 1.2.2.1 | Ensure updates, patches, and additional security software are installed | Depends on Environment| [Node OS Upgrade channels][auto-upgrade-node] can be used to automate updates and patches. | 
-| 1.3 | Filesystem Integrity Checking ||| 
+| 1.3 | **Filesystem Integrity Checking** ||| 
 | 1.3.1.1 | Ensure AppArmor is installed | Pass || 
 | 1.3.1.2 | Ensure AppArmor is enabled in the bootloader configuration | Pass || 
 | 1.3.1.3 | Ensure all AppArmor Profiles are in enforce or complain mode | Fail | Operational impact | 
-| 1.4 | Secure Boot Settings ||| 
+| 1.4 | **Secure Boot Settings** ||| 
 | 1.4.1 | Ensure bootloader password is set | Pass || 
 | 1.4.2 | Ensure access to bootloader config is configured | Pass || 
-| 1.5 | Additional Process Hardening ||| 
+| 1.5 | **Additional Process Hardening** ||| 
 | 1.5.1 | Ensure address space layout randomization is enabled | Pass || 
 | 1.5.2 | Ensure ptrace_scope is restricted | Pass || 
 | 1.5.3 | Ensure core dumps are restricted | Pass || 
 | 1.5.4 | Ensure prelink is not installed | Pass || 
 | 1.5.5 | Ensure Automatic Error Reporting is not enabled | Pass || 
-| 1.6 | Command Line Warning Banners ||| 
+| 1.6 | **Command Line Warning Banners** ||| 
 | 1.6.1 | Ensure message of the day is configured properly | Pass || 
 | 1.6.2 | Ensure local login warning banner is configured properly | Pass || 
 | 1.6.3 | Ensure remote login warning banner is configured properly | Pass || 
 | 1.6.4 | Ensure access to /etc/motd is configured | Pass || 
 | 1.6.5 | Ensure access to /etc/issue is configured | Pass || 
 | 1.6.6 | Ensure access to /etc/issue.net is configured | Pass || 
-| 1.7 | GNOME Display Manager ||| 
+| 1.7 | **GNOME Display Manager** ||| 
 | 1.7.2 | Ensure GDM login banner is configured | Pass || 
 | 1.7.3 | Ensure GDM disable-user-list option is enabled | Pass || 
 | 1.7.4 | Ensure GDM screen locks when the user is idle | Pass || 
@@ -127,8 +127,8 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1.7.8 | Ensure GDM autorun-never is enabled | Pass || 
 | 1.7.9 | Ensure GDM autorun-never is not overridden | Pass || 
 | 1.7.10 | Ensure XDMCP is not enabled | Pass || 
-| 2 | Services ||| 
-| 2.1 | Special Purpose Services ||| 
+| 2 | **Services** ||| 
+| 2.1 | **Special Purpose Services** ||| 
 | 2.1.1 | Ensure autofs services are not in use | Pass || 
 | 2.1.2 | Ensure avahi daemon services are not in use | Pass || 
 | 2.1.3 | Ensure dhcp server services are not in use | Pass || 
@@ -150,14 +150,14 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 2.1.19 | Ensure xinetd services are not in use | Pass || 
 | 2.1.21 | Ensure mail transfer agent is configured for local-only mode | Pass || 
 | 2.1.22 | Ensure only approved services are listening on a network interface | Pass || 
-| 2.2 | Service Clients ||| 
+| 2.2 | **Service Clients** ||| 
 | 2.2.1 | Ensure NIS Client is not installed | Pass || 
 | 2.2.2 | Ensure rsh client is not installed | Pass || 
 | 2.2.3 | Ensure talk client is not installed | Pass || 
 | 2.2.4 | Ensure telnet client is not installed | Pass || 
 | 2.2.5 | Ensure ldap client is not installed | Pass || 
 | 2.2.6 | Ensure ftp client is not installed | Pass || 
-| 2.3 | Time synchronization ||| 
+| 2.3 | **Time synchronization** ||| 
 | 2.3.1.1 | Ensure a single time synchronization daemon is in use | Pass || 
 | 2.3.2.1 | Ensure systemd-timesyncd configured with authorized timeserver | Pass || 
 | 2.3.2.2 | Ensure systemd-timesyncd is enabled and running | Pass || 
