@@ -96,7 +96,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1.2 | Configure Software Updates ||| 
 | 1.2.1.1 | Ensure GPG keys are configured | Manual || 
 | 1.2.1.2 | Ensure package manager repositories are configured | Pass || 
-| 1.2.2.1 | Ensure updates, patches, and additional security software are installed | Manual || 
+| 1.2.2.1 | Ensure updates, patches, and additional security software are installed | Depends on Environment| [Node OS Upgrade channels][auto-upgrade-node] can be used to automate updates and patches. | 
 | 1.3 | Filesystem Integrity Checking ||| 
 | 1.3.1.1 | Ensure AppArmor is installed | Pass || 
 | 1.3.1.2 | Ensure AppArmor is enabled in the bootloader configuration | Pass || 
@@ -161,7 +161,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 2.3.1.1 | Ensure a single time synchronization daemon is in use | Pass || 
 | 2.3.2.1 | Ensure systemd-timesyncd configured with authorized timeserver | Pass || 
 | 2.3.2.2 | Ensure systemd-timesyncd is enabled and running | Pass || 
-| 2.3.3.1 | Ensure chrony is configured with authorized timeserver | Fail || 
+| 2.3.3.1 | Ensure chrony is configured with authorized timeserver | Fail | AKS Nodes are configured to use chrony to sync to the hosts PTP hardware clock using a hypervisor interface. The PTP hardware clock is the authorized timeserver for Azure. For more information, see the configuration of chrony here: https://learn.microsoft.com/en-us/azure/virtual-machines/linux/time-sync#chrony| 
 | 2.3.3.2 | Ensure chrony is running as user _chrony | Pass || 
 | 2.3.3.3 | Ensure chrony is enabled and running | Pass || 
 | 2.4.1.1 | Ensure cron daemon is enabled and active | Pass || 
@@ -300,7 +300,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 6.1.3.6 | Ensure rsyslog is configured to send logs to a remote log host |Not applicable| AKS manages log upload itself.| 
 | 6.1.3.7 | Ensure rsyslog is not configured to receive logs from a remote client | Pass || 
 | 6.1.3.8 | Ensure logrotate is configured | Pass || 
-| 6.1.4.1 | Ensure access to all logfiles has been configured | Fail || 
+| 6.1.4.1 | Ensure access to all logfiles has been configured | Pass || 
 | 6.3.1 | Ensure AIDE is installed | Operational impact|Scanning would impact workloads periodically| 
 | 6.3.2 | Ensure filesystem integrity is regularly checked | Operational impact|Scanning would impact workloads periodically| 
 | 7.1.1 | Ensure permissions on /etc/passwd are configured | Pass || 
