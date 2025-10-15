@@ -23,7 +23,8 @@ In this quickstart, you learn to:
 
 ## Before you begin
 
-This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
+- This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
+- AKS Automatic will enable [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should ensure pre-register the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. See [Azure resource providers and types][az-provider-register] for more information.
 
 :::zone target="docs" pivot="azure-cli"
 
@@ -409,3 +410,5 @@ To learn more about AKS Automatic, continue to the introduction.
 [aks-entra-rbac]: /azure/aks/manage-azure-rbac
 [aks-entra-rbac-builtin-roles]: /azure/aks/manage-azure-rbac#create-role-assignments-for-users-to-access-the-cluster
 [availability-zones]: /azure/reliability/availability-zones-region-support
+[policy-for-kubernetes]: /azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks
+[az-provider-register]: /azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider
