@@ -10,10 +10,12 @@ zone_pivot_groups: public-hub-private-hub
 # Customer intent: As a Kubernetes administrator, I want to access the Kubernetes API for my Azure Kubernetes Fleet Manager hub cluster, so that I can manage resource propagation and monitor member clusters.
 ---
 
-:::zone target="docs" pivot="public-hub" 
-**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 # Access the Kubernetes API for a Azure Kubernetes Fleet Manager hub cluster
+
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
+
+:::zone target="docs" pivot="public-hub" 
 
 If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created with a hub cluster, you can use it to centrally control scenarios like Kubernetes resource propagation. In this article, you learn how to access the Kubernetes API for a Kubernetes Fleet hub cluster.
 
@@ -28,7 +30,6 @@ If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created w
 
 :::zone target="docs" pivot="private-hub"
 
-# Access the Kubernetes API for a Azure Kubernetes Fleet Manager hub cluster
 
 If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created with a private hub cluster, you can use it to centrally control scenarios like Kubernetes resource propagation. In this article, you learn how to access the Kubernetes API for a private Kubernetes Fleet hub cluster securely using Azure Bastion's native client tunneling feature.
 
@@ -155,8 +156,6 @@ Using Azure Bastion protects your private hub cluster from exposing endpoints to
     aks-member-2   True     2m
     aks-member-3   True     2m
     ```
-:::zone-end
-
 :::zone-end
 
 
