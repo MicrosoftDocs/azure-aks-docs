@@ -10,14 +10,14 @@ author: sachidesai
 
 # Scheduler configuration concepts for workload placement in Azure Kubernetes Service (AKS)
 
-On Azure Kubernetes Service (AKS), the default mechanism of workload placement across nodes within a cluster is via the scheduler. The default scheduler is a control plane component responsible for assigning AKS deployment pods to nodes. When a pod is created without a specified node, the scheduler selects an optimal node based on several criteria, including (but not limited to):
+On Azure Kubernetes Service (AKS), the default mechanism of workload placement across nodes within a cluster is via the scheduler. The default scheduler is a control plane component responsible for assigning AKS deployment pods to nodes. Once the AKS scheduler selects a node, the deployment pod is bound to it, and the rest of the lifecycle continues. 
+
+When a pod is created without a specified node, the scheduler selects an optimal node based on several criteria, including (but not limited to):
 
 * Available resources (CPU, memory)
 * [Node affinity/anti-affinity](./operator-best-practices-advanced-scheduler.md#node-affinity)
 * [Pod affinity/anti-affinity](./operator-best-practices-advanced-scheduler.md#inter-pod-affinity-and-anti-affinity)
 * [Taints and tolerations](./operator-best-practices-advanced-scheduler.md#provide-dedicated-nodes-using-taints-and-tolerations)
-
-Once the AKS scheduler selects a node, the deployment pod is bound to it, and the rest of the lifecycle continues. 
 
 By default, the AKS scheduler comes with a set of built-in rules that work well for general-purpose workloads. However, advanced use cases may require custom scheduling strategies. For example,
 
