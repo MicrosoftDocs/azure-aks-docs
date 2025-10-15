@@ -40,13 +40,15 @@ Use cases for eBPF Host Routing are performance-critical workloads such as high-
 
 ## Considerations
 
-Enabling eBPF Host Routing causes iptables rules in the host network namespace to be bypassed. Hence, AKS attempts to detect and block enablement of eBPF Host Routing on clusters where iptables rules are in use in the host network namespace.
+ - Enabling eBPF Host Routing causes iptables rules in the host network namespace to be bypassed. Hence, AKS attempts to detect and block enablement of eBPF Host Routing on clusters where iptables rules are in use in the host network namespace.
+
+ - When user-installed iptables are present in the host network namespace while enabling eBPF Host Routing, `iptables monitor` prevents Ciliam agent from reaching `Ready` which causes Cilium operator to taint the node.
 
  - On clusters with eBPF host routing enabled, AKS blocks attempts to install iptables rules in the host network namespace. Trying to bypass this block may cause the cluster to be inoperational.
 
- - eBPF host routing is currently incompatible with nodes running OSes other than Ubuntu 24.04, or Azure Linux 3.0. eBPF host routing is currently also not supported with Confidential VMs and Pod Sandboxing
-
 ## Limitations
+
+ - eBPF host routing is currently incompatible with nodes running OSes other than Ubuntu 24.04, or Azure Linux 3.0. eBPF host routing is currently also not supported with Confidential VMs and Pod Sandboxing
 
  - eBPF Host Routing can only be enabled for all nodes in a cluster. Hybrid node scenarios aren't supported.
 

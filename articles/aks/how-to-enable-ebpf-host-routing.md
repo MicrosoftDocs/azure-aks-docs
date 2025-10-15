@@ -105,12 +105,12 @@ az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
     --enable-acns \
-    --acns-datapath-acceleration-mode bpfveth
+    --acns-datapath-acceleration-mode BpfVeth
 ```
 
 ## Disabling eBPF Host Routing on an existing cluster
 
-eBPF Host Routing  can be disabled independently without affecting other ACNS features. To disable it, set the flag `--acns-datapath-acceleration-mode=None`.
+eBPF Host Routing can be disabled independently without affecting other ACNS features. To disable it, set the flag `--acns-datapath-acceleration-mode=None`.
 
 ```azurecli-interactive
 az aks update \
@@ -119,3 +119,8 @@ az aks update \
     --enable-acns \
     --acns-datapath-acceleration-mode None
 ```
+
+## Related content
+
+* Get more information about [Advanced Container Networking Services for AKS](advanced-container-networking-services-overview.md).
+* Explore the [Container Network Observability feature](./advanced-container-networking-services-overview.md#container-network-observability) in Advanced Container Networking Services.
