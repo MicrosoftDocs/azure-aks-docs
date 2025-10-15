@@ -26,6 +26,7 @@ In this quickstart, you learn to:
 ## Before you begin
 
 - Have a GitHub account with the application to deploy.
+- AKS Automatic will enable [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should ensure pre-register the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. See [Azure resource providers and types][az-provider-register] for more information.
 
 [!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
@@ -207,3 +208,5 @@ To learn more about AKS Automatic, continue to the introduction.
 [kubernetes-pod-security-standards]: https://kubernetes.io/docs/concepts/security/pod-security-standards/
 [pod-anti-affinity]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
 [topology-spread-constraints]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+[policy-for-kubernetes]: /azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks
+[az-provider-register]: /azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider
