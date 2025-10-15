@@ -30,7 +30,7 @@ After you configure Deployment Safeguards for 'Warn' or 'Enforce', Deployment Sa
 > [!NOTE]
 > Cluster admins don't need Azure Policy permissions to enable or disable Deployment Safeguards. However, it's required to have the Azure Policy add-on installed.
 
-* You need to enable the Azure Policy add-on for AKS. For more information, see [Enable Azure Policy on your AKS cluster][policy-for-kubernetes].
+* You need to enable the Azure Policy add-on for AKS. For more information, see [Enable Azure Policy on your AKS cluster][policy-for-kubernetes]. This includes registering the `Microsoft.PolicyInsights` resource provider in your subscription.
 
 ## Deployment Safeguards policies
 
