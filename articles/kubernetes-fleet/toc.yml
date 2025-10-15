@@ -95,7 +95,11 @@
     - name: Place and manage workloads on multiple clusters
       items:
         - name: Access Fleet hub cluster API
-          href: access-fleet-hub-cluster-kubernetes-api.md
+          items:
+            - name: Access the Kubernetes API for a Public Azure Kubernetes Fleet Manager hub cluster
+              href: access-fleet-hub-cluster-kubernetes-api.md
+            - name: Access the Kubernetes API for a Private Azure Kubernetes Fleet Manager hub cluster
+              href: access-private-fleet-hub-cluster-kubernetes-api.md
         - name: Multi-cluster resource placement using cluster resource placement
           href: quickstart-resource-propagation.md
         - name: Understand the placement status
