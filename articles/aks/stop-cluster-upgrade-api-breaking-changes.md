@@ -65,6 +65,9 @@ You have two options to mitigate the issue: you can [remove usage of deprecated 
     > [!NOTE]
     > `Z` is the zone designator for the zero UTC/GMT offset, also known as 'Zulu' time. This example sets the end of the window to `13:00:00` GMT. For more information, see [Combined date and time representations](https://wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations).
 
+## Need to add below note in this document ##
+Once customer use ```--upgrade-override-until 2023-10-01T13:00:00Z``` as shown above. They cannot unset the date or set --upgrade-override-until to 'null' please check https://wwcarchive.microsoft.com/viewthread/AAQkAGQwZWY5MDczLWEwYTEtNDk5NS1hYjZhLThhNDU3ZDhkYTAxMQAQAAXwfUC7zU6omfZpHh_3NQk= many users are asking these questions because document is not clear that unset is not possible https://learn.microsoft.com/en-us/answers/questions/5576549/upgrade-settings
+
 ## Next steps
 
 This article showed you how to stop AKS cluster upgrades automatically on API breaking changes. To learn more about more upgrade options for AKS clusters, see [Upgrade options for Azure Kubernetes Service (AKS) clusters](./upgrade-cluster.md).
