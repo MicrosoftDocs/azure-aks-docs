@@ -1,5 +1,5 @@
 --- 
-title: Node image updates for node auto-provisioning (NAP) in Azure Kubernetes Service (AKS)
+title: Node Image Updates for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS)
 description: Learn about node image updates for NAP in AKS, including how it works, recommended maintenance windows, and examples to get started.
 ms.topic: overview
 ms.service: azure-kubernetes-service
@@ -16,21 +16,21 @@ This article provides an overview of node image updates for node auto-provisioni
 
 ## How do node image updates work for node auto-provisioning nodes?
 
-By default, NAP node pool virtual machines (VMs) are automatically updated when a new image version is available. You can configure an [AKS-managed node OS upgrade schedule maintenance window](#node-os-upgrade-maintenance-windows-for-nap) to control when new images are picked up and applied to your NAP nodes, or [use Karpenter Node Disruption Budgets and Pod Disruption Budgets](#karpenter-node-disruption-budgets-and-pod-disruption-budgets-for-nap) to control how and when disruption occurs during upgrades.
+By default, NAP node pool virtual machines (VMs) are automatically updated when a new image version is available. You can configure an [AKS-managed node operating system (OS) upgrade schedule maintenance window](#node-os-upgrade-maintenance-windows-for-nap) to control when new images are picked up and applied to your NAP nodes, or [use Karpenter Node Disruption Budgets and Pod Disruption Budgets](#karpenter-node-disruption-budgets-and-pod-disruption-budgets-for-nap) to control how and when disruption occurs during upgrades.
 
 > [!NOTE]
 > NAP forces the latest image version to be picked up if the existing node image version is older than 90 days. This bypasses any existing maintenance window.
 
 ## Node OS upgrade maintenance windows for NAP
 
-You can use the [AKS planned maintenance feature](./planned-maintenance.md) with a [node operating system (OS) auto-upgrade channel](./auto-upgrade-node-os-image.md) to configure a `aksManagedNodeOSUpgradeSchedule` maintenance window that controls when to perform node OS security patching scheduled by your designated node OS auto-upgrade channel.
+You can use the [AKS planned maintenance feature](./planned-maintenance.md) with a [node OS auto-upgrade channel](./auto-upgrade-node-os-image.md) to configure a `aksManagedNodeOSUpgradeSchedule` maintenance window that controls when to perform node OS security patching scheduled by your designated node OS auto-upgrade channel.
 
 ### Node OS upgrade maintenance window behavior and considerations
 
 Keep the following information in mind when configuring a node OS upgrade maintenance window for NAP:
 
 - The `aksManagedNodeOSUpgradeSchedule` maintenance configuration determines the window during which NAP picks up a new image. This configuration doesn't necessarily determine when existing nodes are disrupted.
-- The upgrade mechanism and decision criteria are specific to NAP/Karpenter and are evaluated by NAP's drift logic. NAP respects Karpenter Node Disruption Budgets and Pod Disruption Budgets.
+- The upgrade mechanism and decision criteria are specific to NAP/Karpenter and are evaluated by NAP's drift logic. NAP respects Karpenter Node Disruption Budgets and Pod Disruption Budgets. For more information about drift, see the [Karpenter drift  documentation](https://karpenter.sh/docs/concepts/disruption/#drift).
 - These NAP upgrade decisions are separate from the cluster `NodeImage` and `SecurityPatch` channels. However, the `aksManagedNodeOSUpgradeSchedule` maintenance configuration applies them as well.
 - We recommend using a maintenance window of four hours or more for reliable operation.
 - If no maintenance configuration exists, AKS might use a fallback schedule to pick up new images, which can cause images to be picked up at unexpected times. You can avoid unexpected timing of new images and upgrades by defining an explicit `aksManagedNodeOSUpgradeSchedule`.
@@ -123,4 +123,16 @@ For complete details, examples, and advanced scenarios, see [Use Planned Mainten
 
 ## Karpenter Node Disruption Budgets and Pod Disruption Budgets for NAP
 
+For more information on configuring Karpenter Node Disruption Budgets and Pod Disruption Budgets for NAP, see the following resources from the official Karpenter documentation:
 
+- [Node pool disruption budgets](https://karpenter.sh/docs/concepts/disruption/#nodepool-disruption-budgets)
+- [Pod-level controls for disruption](https://karpenter.sh/docs/concepts/disruption/#pod-level-controls)
+
+## Next steps
+
+For more information on node auto-provisioning in AKS, see the following articles:
+
+- [Use node auto-provisioning in a custom virtual network](./node-autoprovisioning-custom-vnet.md)
+- [Configure networking for node auto-provisioning on AKS](./node-autoprovision-networking.md)
+- [Configure node pools for node auto-provisioning on AKS](./node-autoprovision-node-pools.md)
+- [Configure disruption policies for node auto-provisioning on AKS](./node-autoprovision-disruption.md)

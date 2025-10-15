@@ -1,3 +1,15 @@
+## Node auto provisioning Metrics
+You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to see the logs and operations from [node auto provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview)
+
+## Monitoring selection events
+
+Node auto provisioning produces cluster events that can be used to monitor deployment and scheduling decisions being made. You can view events through the Kubernetes events stream.
+
+```
+kubectl get events -A --field-selector source=karpenter -w
+```
+
+
 ## Custom Virtual Networks and node autoprovisioning
 
 AKS allows you to add a cluster with node autoprovisioning enabled in a custom virtual network via the `--vnet-subnet-id` parameter. The following sections detail how to:
