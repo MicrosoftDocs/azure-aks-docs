@@ -8,6 +8,42 @@ ms.author: bsoghigian
 author: bsoghigian
 ---
 
+## Node disruption
+
+### Disruption Controls
+
+Node Disruption, including Consolidation or Drift, can be controlled using different methods.
+
+### Consolidation
+When workloads on your nodes scale down, node autoprovisioning uses disruption rules. These rules decide when and how to remove nodes and reschedule workloads for better efficiency. Node auto provisioning primarily uses *consolidation* to delete or replace nodes for optimal pod placement. The state-based consideration uses `ConsolidationPolicy` such as `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
+
+You can remove a node manually using `kubectl delete node`, but node autoprovisioning can also control when it should optimize your nodes based on your specifications.
+
+```yaml
+  disruption:
+    # Describes which types of Nodes node autoprovisioning should consider for consolidation
+    consolidationPolicy: WhenEmptyorUnderutilized
+    # 'WhenEmptyorUnderutilized', node autoprovisioning will consider all nodes for consolidation and attempt to remove or replace Nodes when it discovers that the Node is empty or underutilized and could be changed to reduce cost
+
+    #  `WhenEmpty`, node autoprovisioning will only consider nodes for consolidation that contain no workload pods
+    
+    # The amount of time node autoprovisioning should wait after discovering a consolidation decision
+    # This value can currently only be set when the consolidationPolicy is 'WhenEmpty'
+    # You can choose to disable consolidation entirely by setting the string value 'Never'
+    consolidateAfter: 30s
+```
+
+### Disruption Controls
+
+Node autoprovisioning optimizes your cluster by:
+
+- Removing or replacing underutilized nodes
+- Consolidating workloads to reduce costs
+- Respecting disruption budgets and maintenance windows
+- Providing manual control when needed
+
+For detailed information about node disruption policies, upgrade mechanisms through drift, consolidation, and disruption budgets, see [Node autoprovisioning disruption policies](node-autoprovision-disruption.md).
+
 # Node auto provisioning disruption policies
 
 This article explains how to configure node disruption policies for Azure Kubernetes Service (AKS) node auto provisioning (NAP) to optimize resource utilization and cost efficiency.
@@ -368,3 +404,4 @@ spec:
 - [Configure node pools](node-autoprovision-node-pools.md)
 - [Learn about networking configuration](node-autoprovision-networking.md)
 - [Learn about Pod Disruption Budgets](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/)
+

@@ -8,6 +8,22 @@ ms.author: bsoghigian
 author: bsoghigian
 ---
 
+## Networking configuration
+
+The following network configurations are recommended for clusters enabled with node autoprovisioning:
+
+- [Azure Container Network Interface (CNI) Overlay](concepts-network-azure-cni-overlay.md) with [Cilium](azure-cni-powered-by-cilium.md)
+- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
+- [Azure CNI](configure-azure-cni.md) with [Cilium](azure-cni-powered-by-cilium.md)
+- [Azure CNI](configure-azure-cni.md)
+
+For detailed networking configuration requirements and recommendations, see [Node autoprovisioning networking configuration](node-autoprovision-networking.md).
+
+Key networking considerations:
+
+- Azure CNI Overlay with Cilium is recommended
+- Standard Load Balancer is required
+
 # Node autoprovisioning networking configuration
 
 This article covers the networking configuration requirements and recommendations for Azure Kubernetes Service (AKS) node autoprovisioning (NAP).
@@ -357,3 +373,4 @@ Karpenter for Azure allows bring-your-own Container Network Interface (CNI) conf
 - [Configure node pools](node-autoprovision-node-pools.md)
 - [Learn about Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
 - [Learn about Cilium networking](azure-cni-powered-by-cilium.md)
+

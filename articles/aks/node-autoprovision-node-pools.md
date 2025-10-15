@@ -8,6 +8,17 @@ ms.author: bsoghigian
 author: bsoghigian
 ---
 
+## Node pools
+
+For detailed node pool configuration including SKU selectors, limits, and weights, see [Node autoprovisioning node pools configuration](node-autoprovision-node-pools.md).
+
+Node autoprovisioning uses VM SKU requirements to decide the best virtual machine for pending workloads. You can configure:
+
+- SKU families and specific instance types
+- Resource limits and priorities
+- Spot vs on-demand instances
+- Architecture and capabilities requirements
+
 # Node auto provisioning node pools configuration
 
 This article explains how to configure node pools for Azure Kubernetes Service (AKS) node auto provisioning (NAP), including SKU selectors, resource limits, and priority weights.
@@ -410,3 +421,4 @@ spec:
 - [Configure node disruption policies](node-autoprovision-disruption.md)
 - [Learn about networking configuration](node-autoprovision-networking.md)
 - [Configure AKSNodeClass settings](node-autoprovision-aksnodeclass.md)
+
