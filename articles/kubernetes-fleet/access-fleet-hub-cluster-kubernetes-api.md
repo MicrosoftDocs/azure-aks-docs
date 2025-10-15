@@ -1,23 +1,53 @@
 ---
-title: "Access the Kubernetes API for a public Azure Kubernetes Fleet Manager Hub Cluster"
+title: "Access the Kubernetes API for a Azure Kubernetes Fleet Manager Hub Cluster"
 description: Learn how to access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster.
 ms.topic: how-to
 ms.date: 04/01/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-fleet-manager
+zone_pivot_groups: public-hub-private-hub
 # Customer intent: As a Kubernetes administrator, I want to access the Kubernetes API for my Azure Kubernetes Fleet Manager hub cluster, so that I can manage resource propagation and monitor member clusters.
 ---
 
-# Access the Kubernetes API for a public Azure Kubernetes Fleet Manager hub cluster
+:::zone target="docs" pivot="public-hub" 
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created with a public hub cluster, you can use it to centrally control scenarios like Kubernetes resource propagation. In this article, you learn how to access the Kubernetes API for a public Kubernetes Fleet hub cluster.
+# Access the Kubernetes API for a Azure Kubernetes Fleet Manager hub cluster
 
-## Prerequisites
+If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created with a hub cluster, you can use it to centrally control scenarios like Kubernetes resource propagation. In this article, you learn how to access the Kubernetes API for a Kubernetes Fleet hub cluster.
+
+## Before you begin
 
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 * You need a Kubernetes Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 * The identity (user or service principal) that you're using needs to have Microsoft.ContainerService/fleets/listCredentials/action permissions on the Kubernetes Fleet resource.
+
+:::zone-end
+
+
+:::zone target="docs" pivot="private-hub"
+
+# Access the Kubernetes API for a Azure Kubernetes Fleet Manager hub cluster
+
+If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created with a private hub cluster, you can use it to centrally control scenarios like Kubernetes resource propagation. In this article, you learn how to access the Kubernetes API for a private Kubernetes Fleet hub cluster securely using Azure Bastion's native client tunneling feature.
+
+Using Azure Bastion protects your private hub cluster from exposing endpoints to the outside world, while still providing secure access. For more information, see [What is Azure Bastion?](https://docs.azure.cn/en-us/bastion/bastion-overview)
+
+
+## Before you begin
+
+* [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
+* You need a Kubernetes Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
+* You need a virtual network with the Bastion host already installed.
+  * Ensure that you have set up an Azure Bastion host for the virtual network in which the Fleet Manager is located. To set up an Azure Bastion host, see [Quickstart: Deploy Bastion with default settings](https://docs.azure.cn/en-us/bastion/quickstart-host-portal).
+  * The Bastion must be Standard or Premium SKU and have native client support enabled under configuration settings.
+* The identity (user or service principal) that you're using needs to have:
+  * Microsoft.ContainerService/fleets/listCredentials/action permissions on the Kubernetes Fleet resource.
+  * Microsoft.Network/bastionHosts/read	on the Bastion Resource.
+  * Microsoft.Network/virtualNetworks/read on the virtual network of the private hub cluster.
+
+:::zone-end
 
 ## Access the Kubernetes API
 
@@ -86,7 +116,7 @@ If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created w
       "type": "Microsoft.Authorization/roleAssignments"
     }
     ```
-
+:::zone target="docs" pivot="public-hub"
 6. Verify that you can access the API server by using the `kubectl get memberclusters` command:
 
     ```bash
@@ -101,6 +131,34 @@ If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created w
     aks-member-2   True     2m
     aks-member-3   True     2m
     ```
+:::zone-end
+
+:::zone target="docs" pivot="private-hub"
+
+6. Open the tunnel to your Private Fleet Manager's hub cluster:
+    ```bash
+    export HUB_CLUSTER_ID=<hub-cluster-id-in-FL_resourceGroup>
+    az network bastion tunnel --name <BastionName> --resource-group ${GROUP} --target-resource-id ${HUB_CLUSTER_ID}$ --resource-port 443 --port <LocalMachinePort>
+    ```
+
+7. In a new terminal window, connect to the hub cluster through the Bastion tunnel and verify API server access:
+
+    ```bash
+    kubectl get memberclusters --server=https://localhost:<LocalMachinePort>
+    ```
+
+   If the command is successful, your output should look similar to the following example:
+
+    ```output
+    NAME           JOINED   AGE
+    aks-member-1   True     2m
+    aks-member-2   True     2m
+    aks-member-3   True     2m
+    ```
+:::zone-end
+
+:::zone-end
+
 
 ## Related content
 
