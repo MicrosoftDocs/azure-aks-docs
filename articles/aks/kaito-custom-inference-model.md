@@ -47,6 +47,7 @@ In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigsci
    - `instanceType`: The minimum VM size for this inference service deployment is `Standard_NC24ads_A100_v4`. For larger model sizes you can choose a VM in the [`Standard_NCads_A100_v4`](/azure/virtual-machines/sizes/gpu-accelerated/nca100v4-series) family with higher memory capacity.
    - `MODEL_ID`: Replace with your model's specific HuggingFace identifier, which can be found after `https://huggingface.co/` in the model card URL.
    - `"--torch_dtype"`: Set to `"float16"` for compatibility with V100 GPUs. For A100, H100 or newer GPUs, use `"bfloat16"`.
+   - (Optional) `HF_TOKEN`: Specify the values in this section only if you are deploying a private or gated Hugging Face model for inference.
 
     ```yml
     apiVersion: kaito.sh/v1beta1
@@ -54,37 +55,71 @@ In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigsci
     metadata:
       name: workspace-custom-llm
     resource:
-      instanceType: "Standard_NC24ads_A100_v4"
+      instanceType: "Standard_NC24ads_A100_v4" # Replace with the required VM SKU based on model requirements
       labelSelector:
         matchLabels:
           apps: custom-llm
     inference:
-      template: 
+      template:
         spec:
           containers:
-          - name: custom-llm-container
-            image: mcr.microsoft.com/aks/kaito/kaito-base:0.0.8 # KAITO base image which includes HuggingFace runtime
-            command: ["accelerate"]
-            args:
-              - "launch"
-              - "--num_processes"
-              - "1"
-              - "--num_machines"
-              - "1"
-              - "--gpu_ids"
-              - "all"
-              - "tfs/inference_api.py"
-              - "--pipeline"
-              - "text-generation"
-              - "--trust_remote_code"
-              - "--allow_remote_files"
-              - "--pretrained_model_name_or_path"
-              - "bigscience/bloom-1b7"
-              - "--torch_dtype"
-              - "bfloat16"
-            volumeMounts:
-            - name: dshm
-              mountPath: /dev/shm
+            - name: custom-llm-container
+              image: mcr.microsoft.com/aks/kaito/kaito-base:0.0.8 # KAITO base image which includes hf runtime
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /health
+                  port: 5000
+                  scheme: HTTP
+                initialDelaySeconds: 600
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /health
+                  port: 5000
+                  scheme: HTTP
+                initialDelaySeconds: 30
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 1
+              resources:
+                requests:
+                  nvidia.com/gpu: 1  # Request 1 GPU; adjust as needed
+                limits:
+                  nvidia.com/gpu: 1  # Optional: Limit to 1 GPU
+              command:
+                - "accelerate"
+              args:
+                - "launch"
+                - "--num_processes"
+                - "1"
+                - "--num_machines"
+                - "1"
+                - "--gpu_ids"
+                - "all"
+                - "tfs/inference_api.py"
+                - "--pipeline"
+                - "text-generation"
+                - "--trust_remote_code"
+                - "--allow_remote_files"
+                - "--pretrained_model_name_or_path"
+                - "<MODEL_ID>"  # Replace <MODEL_ID> with the specific HuggingFace model identifier
+                - "--torch_dtype"
+                - "float16"  # Set to "float16" for compatibility with V100 GPUs; use "bfloat16" for A100, H100 or newer GPUs
+              # env:
+              #   HF_TOKEN is required only for private or gated Hugging Face models
+              #   Uncomment and configure this block if needed
+              #   - name: HF_TOKEN
+              #     valueFrom:
+              #       secretKeyRef:
+              #         name: hf-token-secret     # Replace with your Kubernetes Secret name
+              #         key: HF_TOKEN             # Replace with the specific key holding the token
+              volumeMounts:
+                - name: dshm
+                  mountPath: /dev/shm
           volumes:
           - name: dshm
             emptyDir:
