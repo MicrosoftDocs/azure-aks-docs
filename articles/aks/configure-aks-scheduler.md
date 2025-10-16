@@ -239,6 +239,120 @@ Pod topology spread is a scheduling strategy that seeks to distribute pods evenl
 
     Now, this configuration will become the **default** scheduling operation for your entire AKS cluster.
 
+## Configure multiple scheduler profiles
+
+As stated previously, a scheduler profile is a set of one or more in-tree scheduling plugins and configurations that dictate how a pod should be scheduled. The following example demonstrates how to customize the upstream scheduler with multiple profiles and customize each profile with multiple plugins, while using the same configuration file.
+
+The scheduling profile, **scheduler-one** prioritizes placing pods across zones and nodes for balanced distribution. The scheduling profile, **scheduler-two** prioritizes placing pods on nodes with available storage, CPU, and memory resources for timely resource-efficient resource usage. Next, reapply the manifest using the `kubectl apply` command and assign different Deployments to each profile based on their unique requirements.
+
+**Scheduler-one:** 
+1. Enforces strict zonal distribution and _preferred_ node distribution using `PodTopologySpread`
+2. Honors hard pod affinity rules and considers their soft affinity rules with `InterPodAffinity`
+3. _Prefers_ nodes in specific zones to reduce cross-zone networking using `NodeAffinity`
+
+**Scheduler-two:** 
+1. Ensures pods are placed on nodes where PVC's can bind to PVs using `VolumeBinding`
+2. Validates that nodes and volumes satisfy zonal requirements using `VolumeZone` to avoid cross-zone storage access
+3. Prioritizes nodes based on CPU, memory, and ephemeral storage utilization, with `NodeResourcesFit` 
+4.  Favors nodes that already have the required container images using `ImageLocality`
+
+> Note: 
+> Change zones and other parameters as needed for your workloads.
+
+```yaml
+apiVersion: aks.azure.com/v1alpha1
+kind: SchedulerConfiguration
+metadata:
+  name: upstream
+spec:
+  rawConfig: |
+    apiVersion: kubescheduler.config.k8s.io/v1
+    kind: KubeSchedulerConfiguration
+    percentageOfNodesToScore: 40
+    podInitialBackoffSeconds: 1
+    podMaxBackoffSeconds: 8
+    profiles:
+      - schedulerName: scheduler-one
+        plugins:
+          multiPoint:
+            enabled:
+              - name: PodTopologySpread
+              - name: InterPodAffinity
+              - name: NodeAffinity
+        pluginConfig:
+          # PodTopologySpread with strict zonal distribution        
+          - name: PodTopologySpread
+            args:
+              defaultingType: List
+              defaultConstraints:
+                - maxSkew: 2
+                  topologyKey: topology.kubernetes.io/zone
+                  whenUnsatisfiable: DoNotSchedule
+                - maxSkew: 1
+                  topologyKey: kubernetes.io/hostname
+                  whenUnsatisfiable: ScheduleAnyway                  
+          - name: InterPodAffinity
+            args:
+              hardPodAffinityWeight: 1
+              ignorePreferredTermsOfExistingPods: false
+          - name: NodeAffinity
+            args:
+              addedAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                  - weight: 100
+                    preference:
+                      matchExpressions:
+                        - key: topology.kubernetes.io/zone
+                          operator: In
+                          values: [westus3-1, westus3-2, westus3-3]
+      - schedulerName: scheduler-two
+        plugins:
+          multiPoint:
+            enabled:
+              - name: VolumeBinding
+              - name: VolumeZone
+              - name: NodeAffinity
+              - name: NodeResourcesFit
+              - name: PodTopologySpread
+              - name: ImageLocality
+        pluginConfig:
+          - name: PodTopologySpread
+            args:
+              defaultingType: List
+              defaultConstraints:
+                - maxSkew: 1
+                  topologyKey: kubernetes.io/hostname
+                  whenUnsatisfiable: DoNotSchedule 
+          - name: VolumeBinding
+            args:
+              apiVersion: kubescheduler.config.k8s.io/v1
+              kind: VolumeBindingArgs
+              bindTimeoutSeconds: 300
+          - name: NodeAffinity
+            args:
+              apiVersion: kubescheduler.config.k8s.io/v1
+              kind: NodeAffinityArgs
+              addedAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                  - weight: 100
+                    preference:
+                      matchExpressions:
+                        - key: topology.kubernetes.io/zone
+                          operator: In
+                          values: [westus3-1, westus3-2]
+          - name: NodeResourcesFit
+            args:
+              apiVersion: kubescheduler.config.k8s.io/v1
+              kind: NodeResourcesFitArgs
+              scoringStrategy:
+                type: MostAllocated
+                resources:
+                  - name: cpu
+                    weight: 3
+                  - name: memory
+                    weight: 1
+                  - name: ephemeral-storage
+                    weight: 2
 ## Disable an AKS scheduler profile configuration
 
 1. To disable the AKS scheduler profile configuration and revert to AKS scheduler default configuration on the cluster, first delete the `schedulerconfiguration` resource using the `kubectl delete` command.
