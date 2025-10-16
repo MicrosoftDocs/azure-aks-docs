@@ -12,7 +12,7 @@ ms.author: allyford
 
 # Use Flatcar Container Linux for Azure Kubernetes Service (AKS) (preview)
 
-Flatcar Container Linux for AKS is Cloud Native Compute Foundation (CNCF) project that provides security, reliability, and cross-cloud capabilities. Flatcar Container Linux is available as an OS option on AKS in preview. You can deploy Flatcar Container Linux node pools in a new AKS cluster or add Flatcar Container Linux node pools to your existing clusters. To learn more about Flatcar Container Linux, see [Flatcar documentation][flatcar-docs].
+Flatcar Container Linux for AKS is a Cloud Native Compute Foundation (CNCF) project that provides security, reliability, and cross-cloud capabilities. Flatcar Container Linux is available as an OS option on AKS in preview. You can deploy Flatcar Container Linux node pools in a new AKS cluster or add Flatcar Container Linux node pools to your existing clusters. To learn more about Flatcar Container Linux, see [Flatcar documentation][flatcar-docs].
 
 ## Why use Flatcar Container Linux for AKS
 
@@ -39,7 +39,7 @@ Flatcar Container Linux for AKS does not support the following configurations:
 * [Pod Sandboxing (preview)][pod-sandboxing] is not supported for Flatcar Container Linux
 
 > [!NOTE]
-> If you have an existing cluster with the any of the above features enabled, you may not be able to add a node pool using Flatcar Container Linux.
+> If you have an existing cluster with any of the above features enabled, you may not be able to add a node pool using Flatcar Container Linux.
 
 ## OS Migrations and upgrades
 
@@ -51,14 +51,14 @@ Flatcar Container Linux for AKS will release weekly AKS node images. Versioning 
     az aks nodepool list --resource-group <resource-group-name> --cluster-name <aks-cluster-name> --query '[].{name: name, nodeImageVersion: nodeImageVersion}'
     ```
 
-```output
-[
-  {
-    "name": "nodes",
-    "nodeImageVersion": "AKSFlatcar-flatcargen2-202508.06.0"
-  }
-]
-```
+    ```output
+    [
+    {
+        "name": "nodes",
+        "nodeImageVersion": "AKSFlatcar-flatcargen2-202508.06.0"
+    }
+    ]
+    ```
 
 The Flatcar version number (e.g., Flatcar 4344.0.0) will be visible in the release notes and by using `kubectl get nodes` command.
 
@@ -66,10 +66,10 @@ The Flatcar version number (e.g., Flatcar 4344.0.0) will be visible in the relea
     kubectl get nodes -o wide
     ```
 
-```output
-NAME                            STATUS   ROLES    AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                             KERNEL-VERSION    CONTAINER-RUNTIME
-aks-nodes-16363508-vmss000000   Ready    <none>   2m33s   v1.32.6   10.224.0.4    <none>        Flatcar Container Linux by Kinvolk 4372.0.1 (Oklo)   6.12.35-flatcar   containerd://2.0.4
-```
+    ```output
+    NAME                            STATUS   ROLES    AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                             KERNEL-VERSION    CONTAINER-RUNTIME
+    aks-nodes-16363508-vmss000000   Ready    <none>   2m33s   v1.32.6   10.224.0.4    <none>        Flatcar Container Linux by Kinvolk 4372.0.1 (Oklo)   6.12.35-flatcar   containerd://2.0.4
+    ```
 
 ## Next steps
 
