@@ -25,7 +25,7 @@ For more information about the concepts in this article, see [Kubernetes resourc
 
 ## Prerequisites
 
-* You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 * You must have a Fleet Manager with a hub cluster and one or more member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
 

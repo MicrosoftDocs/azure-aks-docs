@@ -15,6 +15,16 @@ ms.custom:
 
 # Secure traffic between pods by using network policies in AKS
 
+> [!IMPORTANT] 
+> On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on **Windows** nodes in AKS.
+> 
+>  To ensure your setup continues to receive support, security updates, and deployment compatibility, please explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
+
+> [!IMPORTANT] 
+> On **30 September 2028**, we’ll end support for Azure Network Policy Manager (NPM) on **Linux** nodes in AKS.
+> 
+> To avoid service disruptions, you'll need to [migrate AKS clusters running Linux nodes from NPM to Cilium Network Policy](./migrate-from-npm-to-cilium-network-policy.md) by that date. 
+
 [!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
 
 When you run modern, microservices-based applications in Kubernetes, you often want to control which components can communicate with each other. The principle of least privilege should be applied to how traffic can flow between pods in an Azure Kubernetes Service (AKS) cluster. Let's say you want to block traffic directly to back-end applications. The network policy feature in Kubernetes lets you define rules for ingress and egress traffic between pods in a cluster.
@@ -125,6 +135,11 @@ az aks create \
 ```
 
 ### Create an AKS cluster with Azure Network Policy Manager enabled - Windows Server 2022 (preview)
+
+> [!IMPORTANT] 
+> On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on Windows nodes in AKS.
+> 
+>  To ensure your setup continues to receive support, security updates, and deployment compatibility, please explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
 
 In this section, you create a cluster with Windows node pools and Azure Network Policy Manager enabled.
 

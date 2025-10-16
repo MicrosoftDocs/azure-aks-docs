@@ -47,7 +47,7 @@ BlobFuse (Azure Blob Storage) is the preferred option for Ray clusters running d
 ### Prerequisites
 
 * Review the [Ray cluster on AKS overview](./ray-overview.md) to understand the components and deployment process.
-* An Azure subscription. If you don't have an Azure subscription, you can create a free account [here](https://azure.microsoft.com/free/).
+* An Azure subscription. If you don't have an Azure subscription, you can create a free account [here](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * The Azure CLI installed on your local machine. You can install it using the instructions in [How to install the Azure CLI](/cli/azure/install-azure-cli).
 * The [Azure Kubernetes Service Preview extension](/azure/aks/draft#install-the-aks-preview-azure-cli-extension) installed.
 * [Helm](https://helm.sh/docs/intro/install/) installed.

@@ -19,7 +19,7 @@ Learn how to connect to Azure Key Vault with the Secrets Store CSI Driver in an 
 
 ## Prerequisites
 
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/).
+* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * The [Azure CLI](/cli/azure/install-azure-cli). Sign in using the [`az login`][az-login] command.
 * [Docker](https://docs.docker.com/get-docker/) and [kubectl](https://kubernetes.io/docs/tasks/tools/). To install kubectl locally, use the [`az aks install-cli`][az-aks-install-cli] command.
 * A basic understanding of containers and AKS. Get started by [preparing an application for AKS](/azure/aks/tutorial-kubernetes-prepare-app).
