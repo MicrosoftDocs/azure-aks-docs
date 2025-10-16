@@ -7,6 +7,7 @@ ms.custom: devx-track-azurecli
 ms.date: 09/29/2025
 ms.author: wilsondarko
 author: wdarko1
+zone_pivot_groups: arm-azure-cli
 # Customer intent: As a cluster operator or developer, I want to automatically provision and manage the optimal VM configuration for my AKS workloads, so that I can efficiently scale my cluster while minimizing resource costs and complexities.
 ---
 
@@ -16,11 +17,7 @@ This article explains how to enable or disable node auto-provisioning (NAP) in A
 
 ## Before you begin
 
-Before you enable NAP on your AKS cluster, ensure that you complete the following steps:
-
-- Review the [Overview of node auto-provisioning (NAP) in AKS](./node-autoprovision.md) article for an introduction to NAP.
-- Ensure you meet the [prerequisites](./node-autoprovision.md#prerequisites) for using NAP in AKS.
-- Review the [limitations and unsupported features](./node-autoprovision.md#limitations-and-unsupported-features) for NAP in AKS.
+Before you begin, review the [Overview of node auto-provisioning (NAP) in AKS](./node-autoprovision.md) article, which details [how NAP works](./node-autoprovision.md#how-does-node-auto-provisioning-work), [prerequisites](./node-autoprovision.md#prerequisites) and [limitations](./node-autoprovision.md#limitations-and-unsupported-features).
 
 ## Enable node auto-provisioning (NAP) on an AKS cluster
 
@@ -28,7 +25,7 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
 
 ### Enable NAP on a new cluster
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
 - Enable node auto-provisioning on a new cluster using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--node-provisioning-mode` flag set to `Auto`. The following command also sets the `--network-plugin` to `azure`, `--network-plugin-mode` to `overlay`, and `--network-dataplane` to `cilium`.
 
@@ -43,7 +40,9 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
         --generate-ssh-keys
     ```
 
-### [ARM template](#tab/arm)
+:::zone-end
+
+:::zone pivot="arm"
 
 1. Create a file named `nap.json` and add the following ARM template configuration with the `properties.nodeProvisioningProfile.mode` field set to `Auto`, which enables NAP. (The default setting is `Manual`.)
 
@@ -99,7 +98,9 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
     az deployment group create --resource-group $RESOURCE_GROUP --template-file ./nap.json
     ```
 
----
+:::zone-end
+
+:::zone pivot="azure-cli"
 
 ### Enable NAP on an existing cluster
 
@@ -109,13 +110,15 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
     az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-provisioning-mode Auto
     ```
 
+:::zone-end
+
 ## Disable node auto-provisioning (NAP) on an AKS cluster
 
 > [!IMPORTANT]
 > You can only disable NAP on a cluster if the following conditions are met:
 >
 > - There are no existing NAP-managed nodes. You can use the `kubectl get nodes -l karpenter.sh/nodepool` command to check for existing NAP-managed nodes.
-> - All existing `karpenter.sh/NodePools` have their `spec.limits.cpu` field set to `0`. This action prevents new nodes from being created, but doesn't disrupt currently running nodes
+> - All existing `karpenter.sh/NodePools` have their `spec.limits.cpu` field set to `0`. This action prevents new nodes from being created, but doesn't disrupt currently running nodes.
 
 1. Set the `spec.limits.cpu` field to `0` for every existing `karpenter.sh/NodePool`. For example:
 
@@ -154,7 +157,71 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
 
 1. Scale up existing fixed-size `ManagedCluster AgentPools`, or create new fixed-size `AgentPools`, to take the load from the node NAP-managed nodes. As these nodes are added to the cluster, the node NAP-managed nodes are drained, and work is migrated to the fixed-scale nodes.
 1. Delete all NAP-managed nodes using the `kubectl get nodes -l karpenter.sh/nodepool` command. If NAP-managed nodes still exist, the cluster likely lacks fixed-scale capacity. In this case, you should add more nodes so the remaining workloads can be migrated.
-1. Update the NAP mode to `Manual` using the [`az aks update`](/cli/azure/aks#az-aks-update) Azure CLI command with the `--node-provisioning-mode` flag set to `Manual` or by updating the `properties.nodeProvisioningProfile.mode` field to `Manual` in your ARM template and redeploying it using the [`az deployment group create`](/cli/azure/deployment/group#az-deployment-group-create) command.
+
+:::zone pivot="azure-cli"
+
+1. Update the NAP mode to `Manual` using the [`az aks update`](/cli/azure/aks#az-aks-update) Azure CLI command with the `--node-provisioning-mode` flag set to `Manual`.
+
+    ```azurecli-interactive
+    az aks update \
+        --name $CLUSTER_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --node-provisioning-mode Manual
+    ```
+
+:::zone-end
+
+:::zone pivot="arm"
+
+1. Update the `properties.nodeProvisioningProfile.mode` field to `Manual` in your ARM template and redeploy it.
+
+    ```JSON
+    {
+      "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "metadata": {},
+      "parameters": {},
+      "resources": [
+        {
+          "type": "Microsoft.ContainerService/managedClusters",
+          "apiVersion": "2025-05-01",
+          "sku": {
+            "name": "Base",
+            "tier": "Standard"
+          },
+          "name": "napcluster",
+          "location": "uksouth",
+          "identity": {
+            "type": "SystemAssigned"
+          },
+          "properties": {
+            "networkProfile": {
+                "networkPlugin": "azure",
+                "networkPluginMode": "overlay",
+                "networkPolicy": "cilium",
+                "networkDataplane":"cilium",
+                "loadBalancerSku": "Standard"
+            },
+            "dnsPrefix": "napcluster",
+            "agentPoolProfiles": [
+              {
+                "name": "agentpool",
+                "count": 3,
+                "vmSize": "standard_d2s_v3",
+                "osType": "Linux",
+                "mode": "System"
+              }
+            ],
+            "nodeProvisioningProfile": {
+              "mode": "Auto"
+            }
+          }
+        }
+      ]
+    }
+    ```
+
+:::zone-end
 
 ## Next steps
 
