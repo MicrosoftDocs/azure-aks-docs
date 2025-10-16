@@ -18,7 +18,7 @@ ms.date: 09/15/2025
 AKS rotates the key automatically and periodically. If you don't want to wait, you can rotate the key manually and immediately. The maximum lifetime of the token issued by the OIDC provider is one day.
 
 > [!NOTE]
-> Starting with Kubernetes version **1.35+**, new AKS clusters have the OIDC issuer **enabled by default**. You no longer need to specify `--enable-oidc-issuer` when creating a new 1.35+ cluster. The flag is still accepted and treated as a no-op. For clusters created on versions earlier than 1.35 (or created before this change) where the OIDC issuer wasn't previously enabled, you must enable it manually.
+> Starting with Kubernetes version **1.34+**, new AKS clusters have the OIDC issuer **enabled by default**. You no longer need to specify `--enable-oidc-issuer` when creating a new 1.34+ cluster. The flag is still accepted and treated as a no-op. For clusters created on versions earlier than 1.34 (or created before this change) where the OIDC issuer wasn't previously enabled, you must enable it manually.
 
 > [!NOTE]
 > For clusters running Kubernetes **v1.30.0 and later**, AKS sets the API server flag `--service-account-extend-token-expiration=false`. Earlier supported versions had the default behavior (token auto extension) effectively enabled. With the flag set to `false`, projected service account tokens follow their configured expiration (and must be refreshed by workloads or libraries such as the Azure Identity SDK). Ensure any in-cluster components relying on long‑lived legacy service account tokens are updated to use projected tokens and to handle rotation appropriately.
