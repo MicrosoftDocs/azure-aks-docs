@@ -118,12 +118,15 @@ The following examples demonstrate how targeted scheduling mechanisms can be con
     > [!NOTE]
     > This command won't succeed if the feature wasn't successfully enabled in the [previous section](#enable-scheduler-profile-configuration-on-an-aks-cluster).
 
-## Use the node bin-packing scheduling strategy
+## Configure node bin-packing 
 
-Node bin-packing is a scheduling strategy that aims to pack as many pods as possible onto a node to maximize resource utilization and reduce the number of underutilized nodes, within the set configuration. This strategy helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes.
+Node bin-packing is a scheduling strategy that that maximizes resource utilization by increasing pod density on nodes, within the set configuration. This strategy helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes.
 
-> [!NOTE]
-> In environments where you want to optimize cost by using fewer nodes, this configuration helps ensure that the existing nodes are used more effectively by filling them up with workloads that match their current resource allocation.
+In this example, the configured scheduler prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. 
+
+    - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
+    - `scoringStrategy: MostAllocated`: tells the scheduler to prefer nodes with high CPU resource usage. This helps achieve **better resource utilization** by placing new pods on nodes that are already "highly used".
+    - `Resources`: specifies that `CPU` is the primary resource being considered for scoring, and with a weight of `1`, CPU usage is prioritized with a relatively equal level of importance in the scheduling decision.
 
 1. Create a file named `aks-scheduler-customization.yaml` and paste in the following manifest:
 
@@ -144,15 +147,6 @@ Node bin-packing is a scheduling strategy that aims to pack as many pods as poss
               - name: cpu
                 weight: 1
     ```
-
-    This example scheduler profile helps place new pods on nodes that are already being heavily used in terms of CPU resources. This avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes.
-
-    The profile uses `NodeResourcesFit` to ensure that the scheduler checks if a node has enough resources to run the pod. 
-
-    - `scoringStrategy: MostAllocated`: Tells the scheduler to prefer nodes that have already allocated the most resources for CPU. This helps achieve **better resource utilization** by placing new pods on nodes that are already "full".
-    - `Resources`: The configuration specifies that `CPU` is the primary resource being considered for scoring, and it assigns a weight of `1` to it (meaning that CPU usage prioritized with a relatively equal level of importance in the scheduling decision).
-
-    It also might direct the scheduler to balance out CPU usage across nodes more evenly, preventing some nodes from being too underutilized while others become overloaded.
 
 1. Apply the scheduling configuration manifest using the `kubectl apply` command.
 
