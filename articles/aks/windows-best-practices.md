@@ -51,7 +51,7 @@ AKS supports two options for the Windows Server operating system: Long Term Serv
 
 > **Best practice guidance**
 >
-> Windows Exporter is installed on all Windows nodes. With Managed Prometheus and Grafana, you can monitor default collectors included in Windows Exporter on AKS. For more information, see [default Prometheus metrics configured in Azure Monitor][default-prometheus].
+> Windows Exporter is installed on all Windows nodes in certain regions. To view regional rollout, see [AKS Github](https://github.com/Azure/AKS/issues/3465). With Managed Prometheus and Grafana, you can monitor default collectors included in Windows Exporter on AKS. For more information, see [default Prometheus metrics configured in Azure Monitor][default-prometheus].
 
 Windows Exporter allows customers to see their metrics through Managed Prometheus or Prometheus OSS deployments and enjoy enhanced observability around their node and pod performance, health, and resource usage. These metrics are also visible with Managed Grafana.
 - When enabling managed prometheus, add this required parameter for correct dashboard data presentation for windows: '--enable-windows-recording-rules'
