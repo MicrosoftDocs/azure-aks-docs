@@ -306,6 +306,10 @@
           href: use-azure-linux.md
         - name: Azure Linux AKS partner solutions
           href: azure-linux-aks-partner-solutions.md
+    - name: Use Flatcar Container Linux for AKS
+      items:
+        - name: Use Flatcar Container Linux for AKS
+          href: flatcar-container-linux-for-aks.md
 - name: Manage and optimize clusters
   items:
     - name: Upgrade
