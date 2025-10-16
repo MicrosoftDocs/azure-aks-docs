@@ -49,7 +49,7 @@ The following limitations apply when you create AKS clusters that support multip
 
 - You can delete the system node pool if you have another system node pool to take its place in the AKS cluster. Otherwise, you can't delete the system node pool.
 - System pools must contain at least one node. User node pools can contain zero or more nodes.
-- **If you create a cluster with a single node pool, the OS type must be `Linux`**. The OS SKU can be any Linux variation such as `Ubuntu`, `AzureLinux`, or `Flatcar`. You can't create a cluster with a single Windows node pool. If you want to run Windows containers, you must [add a Windows node pool](#add-a-windows-server-node-pool) to the cluster after creating it with a Linux system node pool.
+- **If you create a cluster with a single node pool, the OS type must be `Linux`**. The OS SKU can be any Linux variation such as `Ubuntu` or `AzureLinux`. You can't create a cluster with a single Windows node pool. If you want to run Windows containers, you must [add a Windows node pool](#add-a-windows-server-node-pool) to the cluster after creating it with a Linux system node pool.
 - The AKS cluster must use the Standard SKU load balancer to use multiple node pools. This feature isn't supported with Basic SKU load balancers.
 - The AKS cluster must use Virtual Machine Scale Sets for the nodes.
 - The name of a node pool can only contain lowercase alphanumeric characters and must begin with a lowercase letter.
@@ -135,37 +135,11 @@ If you want only one node pool in your AKS cluster, you can schedule application
     az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME
     ```
 
-### [Create an AKS cluster with a single Flatcar Container Linux (preview) node pool](#tab/flatcar)
-
-1. Create a cluster with a single Flatcar Container Linux node pool using the [`az aks create`][az-aks-create] command. This step specifies two nodes in the single node pool.
-
-    For more information about Flatcar, see [Flatcar Container Linux for AKS][flatcar].
-
-    ```azurecli-interactive
-    az aks create \
-        --resource-group $RESOURCE_GROUP_NAME \
-        --name $CLUSTER_NAME \
-        --vm-set-type VirtualMachineScaleSets \
-        --node-count 2 \
-        --os-sku Flatcar \
-        --location $LOCATION \
-        --load-balancer-sku standard \
-        --generate-ssh-keys
-    ```
-
-    It takes a few minutes to create the cluster.
-
-1. When the cluster is ready, get the cluster credentials using the [`az aks get-credentials`][az-aks-get-credentials] command.
-
-    ```azurecli-interactive
-    az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME
-    ```
-
 ---
 
 ## Add a second node pool using the Azure CLI
 
-The cluster created in the [previous section](#create-an-aks-cluster-with-a-single-node-pool-using-the-azure-cli) has a single node pool. In this section, we add a second node pool to the cluster. This second node pool can have an OS type of `Linux` with an OS SKU of `Ubuntu`, `AzureLinux`, or `Flatcar`, or an OS type of `Windows`.
+The cluster created in the [previous section](#create-an-aks-cluster-with-a-single-node-pool-using-the-azure-cli) has a single node pool. In this section, we add a second node pool to the cluster. This second node pool can have an OS type of `Linux` with an OS SKU of `Ubuntu` or `AzureLinux`, or an OS type of `Windows`.
 
 > [!NOTE]
 > If you want to add a node pool that uses **Ephemeral OS disks** to your AKS cluster, you can set the `--node-osdisk-type` flag to `Ephemeral` when running the `az aks nodepool add` command.
@@ -211,25 +185,6 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
     ```
 
     It takes a few minutes to create the node pool.
-
-#### [Add a Flatcar Container Linux (preview) node pool](#tab/flatcar)
-
-- Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Linux` node pool with the `Flatcar` OS SKU that runs _three_ nodes. If you don't specify an OS SKU, AKS defaults to `Ubuntu`.
-
-    For more information about Flatcar, see [Flatcar Container Linux for AKS][flatcar].
-
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group $RESOURCE_GROUP_NAME \
-        --cluster-name $CLUSTER_NAME \
-        --name $NODE_POOL_NAME \
-        --node-vm-size Standard_DS2_v2 \
-        --os-type Linux \
-        --os-sku Flatcar \
-        --node-count 3
-    ```
-
-    It takes a few minutes to create the cluster.
 
 ---
 
@@ -319,29 +274,11 @@ If you want only one node pool in your AKS cluster, you can schedule application
 
     For more information about Azure Linux, see [Azure Linux on AKS][azure-linux].
 
-### [Modify JSON to create a single Flatcar Container Linux (preview) node pool](#tab/flatcar-arm)
-
-- Create a single Flatcar Container Linux node pool in your AKS cluster by making the following modifications to your ARM template:
-
-    ```json
-      "properties": {
-        "agentPoolProfiles": [
-        {
-            "count": "1",
-            "osSKU": "Flatcar",
-            "osType": "linux"
-         } 
-         ],
-    }
-    ```
-
-    For more information about Flatcar, see [Flatcar Container Linux for AKS][flatcar].
-
 ---
 
 ## Add a second node pool using an ARM template
 
-The cluster created in the [previous section](#create-an-aks-cluster-with-a-single-node-pool-using-an-arm-template) has a single node pool. In this section, we add a second node pool to the cluster. This second node pool can have an OS type of `Linux` with an OS SKU of `Ubuntu`, `AzureLinux`, or `Flatcar`, or an OS type of `Windows`.
+The cluster created in the [previous section](#create-an-aks-cluster-with-a-single-node-pool-using-an-arm-template) has a single node pool. In this section, we add a second node pool to the cluster. This second node pool can have an OS type of `Linux` with an OS SKU of `Ubuntu` or `AzureLinux`, or an OS type of `Windows`.
 
 ### Add Linux node pools
 
@@ -378,24 +315,6 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
     ```
 
     For more information about Azure Linux, see [Azure Linux on AKS][azure-linux].
-
-#### [Modify JSON to create multiple Flatcar Container Linux (preview) node pools](#tab/flatcar-arm)
-
-- Create multiple Flatcar Container Linux node pools in your AKS cluster by making the following modifications to your ARM template:
-
-    ```json
-      "properties": {
-        "agentPoolProfiles": [
-        {
-            "count": "3",
-            "osSKU": "Flatcar",
-            "osType": "linux"
-         } 
-         ],
-    }
-    ```
-
-    For more information about Flatcar, see [Flatcar Container Linux for AKS][flatcar].
 
 ---
 
@@ -447,7 +366,6 @@ In this article, you learned how to create node pools in an AKS cluster using th
 [az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az_aks_nodepool_delete
 [az-group-create]: /cli/azure/group#az_group_create
 [install-azure-cli]: /cli/azure/install-azure-cli
-[flatcar]: ./flatcar-container-linux-for-aks.md
 [azure-linux]: ./use-azure-linux.md
 [windows]: ./windows-best-practices.md
 [managedclusters]: /azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-arm-template
