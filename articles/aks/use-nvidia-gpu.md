@@ -22,7 +22,15 @@ This article helps you provision nodes with schedulable GPUs on new and existing
 
 ## Supported GPU-enabled VMs
 
-To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-skus]. For AKS node pools, we recommend a minimum size of *Standard_NC6s_v3*. The NVv4 series (based on AMD GPUs) aren't supported on AKS.
+To view the available GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-skus]. AKS does not support all GPU-enabled VM sizes in Azure. If a GPU VM size is not in our list of supported VM sizes, we do not install the necessary GPU software components or provide support. AKS allows the use of unsupported GPU VM sizes after [skipping the automatic GPU driver installation](#skip-gpu-driver-installation).
+
+Check available and supported VM sizes using the [`az vm list-skus`][az-vm-list-skus] command.
+
+```azurecli-interactive
+az vm list-skus --location <your-location> --output table
+```
+
+For AKS node pools, we recommend a minimum size of *Standard_NC6s_v3*. The NVv4 series (based on AMD GPUs) aren't supported on AKS.
 
 > [!NOTE]
 > GPU-enabled VMs contain specialized hardware subject to higher pricing and region availability. For more information, see the [pricing][azure-pricing] tool and [region availability][azure-availability].
