@@ -149,7 +149,7 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
 > [!CAUTION]
 > AKS automatically reimages all node pools in the cluster when you update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command. You can use [Pod Disruption Budgets (PDBs)][operator-best-practices-scheduler] to safeguard disruption to critical pods during reimage. 
 
-1. Verify the HTTP proxy configuration is on the pods and nodes by checking that the environment variables contain the appropriate values for `http_proxy`, `https_proxy`, and `no_proxy` using the `kubectl describe pod` command.
+2. Verify the HTTP proxy configuration is on the pods and nodes by checking that the environment variables contain the appropriate values for `http_proxy`, `https_proxy`, and `no_proxy` using the `kubectl describe pod` command.
 
     ```bash
     kubectl describe {any pod} -n kube-system
@@ -212,7 +212,7 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
 > [!CAUTION]
 > AKS automatically reimages all node pools in the cluster when you update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command. You can use [Pod Disruption Budgets (PDBs)][operator-best-practices-scheduler] to safeguard disruption to critical pods during reimage. 
 
-1. Verify HTTP proxy is disabled by validating the HTTP proxy configuration isn't set on the pods and nodes using the `kubectl describe pod` command.
+2. Verify HTTP proxy is disabled by validating the HTTP proxy configuration isn't set on the pods and nodes using the `kubectl describe pod` command.
 
     ```bash
     kubectl describe {any pod} -n kube-system
@@ -316,12 +316,12 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
     }
     ```
 
-1. Deploy your ARM template with the updated HTTP Proxy configuration.
+2. Deploy your ARM template with the updated HTTP Proxy configuration.
 
 > [!CAUTION]
 > AKS automatically reimages all node pools in the cluster when you update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command. You can use [Pod Disruption Budgets (PDBs)][operator-best-practices-scheduler] to safeguard disruption to critical pods during reimage.
 
-1. Verify the HTTP proxy configuration is on the pods and nodes by checking that the environment variables contain the appropriate values for `http_proxy`, `https_proxy`, and `no_proxy` using the `kubectl describe pod` command.
+3. Verify the HTTP proxy configuration is on the pods and nodes by checking that the environment variables contain the appropriate values for `http_proxy`, `https_proxy`, and `no_proxy` using the `kubectl describe pod` command.
 
     ```bash
     kubectl describe {any pod} -n kube-system
@@ -391,7 +391,7 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
 > [!CAUTION]
 > AKS automatically reimages all node pools in the cluster when you update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command. You can use [Pod Disruption Budgets (PDBs)][operator-best-practices-scheduler] to safeguard disruption to critical pods during reimage.
 
-1. Verify HTTP proxy is disabled by validating that the HTTP Proxy configuration isn't set on the pods and nodes using the `kubectl describe pod` command.
+3. Verify HTTP proxy is disabled by validating that the HTTP Proxy configuration isn't set on the pods and nodes using the `kubectl describe pod` command.
 
     ```bash
     kubectl describe {any pod} -n kube-system
