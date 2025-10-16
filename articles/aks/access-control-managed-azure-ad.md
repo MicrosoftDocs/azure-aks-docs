@@ -6,14 +6,11 @@ ms.subservice: aks-integration
 ms.date: 06/25/2024
 author: nickomang
 ms.author: nickoman
-ms.custom: devx-track-azurecli, innovation-engine
+ms.custom: devx-track-azurecli
 # Customer intent: "As a cloud security administrator, I want to configure Conditional Access for my AKS clusters, so that I can manage access securely and ensure compliance for users accessing the clusters."
 ---
 
 # Control cluster access using Conditional Access with AKS-managed Microsoft Entra integration
-
-> [!div class="nextstepaction"]
-> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2333348)
 
 When you integrate Microsoft Entra ID with your AKS cluster, you can use [Conditional Access][aad-conditional-access] for just-in-time requests to control access to your cluster. This article shows you how to enable Conditional Access on your AKS clusters.
 
