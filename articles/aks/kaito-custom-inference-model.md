@@ -3,9 +3,9 @@ title: Onboard custom models for inferencing with the AI toolchain operator (KAI
 description: Learn how to onboard custom models for inferencing with the AI toolchain operator (KAITO) on AKS.
 ms.topic: how-to
 ms.custom: azure-kubernetes-service
-ms.date: 03/27/2025
-author: schaffererin
-ms.author: schaffererin
+ms.date: 10/16/2025
+author: sachidesai
+ms.author: sachidesai
 # Customer intent: As an AI engineer, I want to onboard custom models for inferencing on Azure Kubernetes Service using the AI toolchain operator, so that I can efficiently deploy and manage AI workloads without having to maintain custom images.
 ---
 
@@ -20,6 +20,9 @@ In this article, you learn how to onboard a sample HuggingFace model for inferen
 - An Azure account with an active subscription. If you don't have an account, you can [create one for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - An AKS cluster with the AI toolchain operator add-on enabled. For more information, see [Enable KAITO on an AKS cluster](./ai-toolchain-operator.md#enable-the-ai-toolchain-operator-add-on-on-an-aks-cluster).
 - This example deployment requires quota for the `Standard_NCads_A100_v4` virtual machine (VM) family in your Azure subscription. If you don't have quota for this VM family, please [request a quota increase](/azure/quotas/quickstart-increase-quota-portal).
+
+    > [!NOTE]  
+    > Currently, only the HuggingFace runtime supports inference with the KAITO custom model deployment template.
 
 ## Choose an open-source language model from HuggingFace
 
@@ -37,22 +40,16 @@ In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigsci
     git clone https://github.com/kaito-project/kaito.git
     ```
 
-3. Confirm that your `kaito-gpu-provisioner` pod is running successfully using the `kubectl get deployment` command.
-
-    ```bash
-    kubectl get deployment -n kube-system | grep kaito
-    ```
-
 ## Deploy your model inferencing workload using the KAITO workspace template
 
-1. Navigate to the `kaito` directory and open the `docs/custom-model-integration/reference_image_deployment.yaml` KAITO template. Replace the default values in the following fields with your model's requirements:
+1. Navigate to the `kaito` directory and copy the [sample deployment YAML](https://github.com/kaito-project/kaito/tree/main/examples/custom-model-integration/custom-model-deployment.yaml. Replace the default values in the following fields with your model's requirements:
 
    - `instanceType`: The minimum VM size for this inference service deployment is `Standard_NC24ads_A100_v4`. For larger model sizes you can choose a VM in the [`Standard_NCads_A100_v4`](/azure/virtual-machines/sizes/gpu-accelerated/nca100v4-series) family with higher memory capacity.
    - `MODEL_ID`: Replace with your model's specific HuggingFace identifier, which can be found after `https://huggingface.co/` in the model card URL.
    - `"--torch_dtype"`: Set to `"float16"` for compatibility with V100 GPUs. For A100, H100 or newer GPUs, use `"bfloat16"`.
 
     ```yml
-    apiVersion: kaito.sh/v1alpha1
+    apiVersion: kaito.sh/v1beta1
     kind: Workspace
     metadata:
       name: workspace-custom-llm
@@ -66,7 +63,7 @@ In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigsci
         spec:
           containers:
           - name: custom-llm-container
-            image: ghcr.io/kaito-project/kaito/llm-reference-preset:latest
+            image: mcr.microsoft.com/aks/kaito/kaito-base:0.0.8 # KAITO base image which includes HuggingFace runtime
             command: ["accelerate"]
             args:
               - "launch"
@@ -94,11 +91,11 @@ In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigsci
               medium: Memory
     ```
 
-2. Save these changes to your `docs/custom-model-integration/reference_image_deployment.yaml` file.
+2. Save these changes to your `custom-model-deployment.yaml` file.
 3. Run the deployment in your AKS cluster using the `kubectl apply` command.
 
     ```bash
-    kubectl apply -f docs/custom-model-integration/reference_image_deployment.yaml
+    kubectl apply -f custom-model-deployment.yaml
     ```
 
 ## Test your custom model inferencing service
@@ -139,8 +136,6 @@ If you no longer need these resources, you can delete them to avoid incurring ex
     ```bash
     kubectl delete workspace workspace-custom-llm
     ```
-
-2. Delete the GPU node pool created by KAITO in the same namespace as the `kaito-gpu-provisioner` deployment.
 
 ## Next steps
 
