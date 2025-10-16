@@ -8,6 +8,7 @@ ms.subservice: aks-storage
 ms.date: 06/28/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a Kubernetes administrator, I want to create and manage persistent volumes using Azure Disks in AKS, so that I can efficiently provide storage for my applications with necessary performance and redundancy features.
 ---
 
 # Create and use a volume with Azure Disks in Azure Kubernetes Service (AKS)
@@ -75,7 +76,7 @@ Each AKS cluster includes four precreated storage classes, two of them configure
     * Standard SSDs backs Standard storage and delivers cost-effective storage while still delivering reliable performance.
 2. The *managed-csi-premium* storage class provisions a premium Azure Disk.
     * SSD-based high-performance, low-latency disks back Premium disks. They're ideal for VMs running production workloads. When you use the Azure Disk CSI driver on AKS, you can also use the `managed-csi` storage class, which is backed by Standard SSD locally redundant storage (LRS).
-3. Effective starting with Kubernetes version 1.29, when you deploy Azure Kubernetes Service (AKS) clusters across multiple availability zones, AKS now utilizes zone-redundant storage (ZRS) to create managed disks within built-in storage classes. 
+3. Effective starting with Kubernetes version 1.29, when you deploy Azure Kubernetes Service (AKS) clusters across multiple availability zones, AKS now utilizes zone-redundant storage (ZRS) to create managed disks within built-in storage classes.
     * ZRS ensures synchronous replication of your Azure managed disks across multiple Azure availability zones in your chosen region. This redundancy strategy enhances the resilience of your applications and safeguards your data against datacenter failures.
     * However, it's important to note that zone-redundant storage (ZRS) comes at a higher cost compared to locally redundant storage (LRS). If cost optimization is a priority, you can create a new storage class with the LRS SKU name parameter and use it in your persistent volume claim.
 
@@ -118,8 +119,8 @@ A persistent volume claim automatically provisions storage based on a storage cl
             storage: 5Gi
       ```
 
-  > [!TIP]
-  > To create a disk that uses premium storage, use `storageClassName: managed-csi-premium` rather than *managed-csi*.
+   > [!TIP]
+   > To create a disk that uses premium storage, use `storageClassName: managed-csi-premium` rather than *managed-csi*.
 
 2. Create the persistent volume claim using the [`kubectl apply`][kubectl-apply] command and specify your *azure-pvc.yaml* file.
 
@@ -256,7 +257,7 @@ When you create an Azure disk for use with AKS, you can create the disk resource
     ```
 
     The output of the command resembles the following example:
-   
+
     ```output
     MC_myResourceGroup_myAKSCluster_eastus
     ```
@@ -304,6 +305,8 @@ When you create an Azure disk for use with AKS, you can create the disk resource
         volumeAttributes:
           fsType: ext4
     ```
+
+    As noted in [Create an Azure disk](#create-an-azure-disk), if the disk for the `volumeHandle` was created in a separate resource group, you need to grant the the Azure Kubernetes Service (AKS) cluster's managed identity the `Contributor` role to the disk's resource group.
 
 2. Create a *pvc-azuredisk.yaml* file with a *PersistentVolumeClaim* that uses the *PersistentVolume*.
 

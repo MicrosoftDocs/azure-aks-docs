@@ -6,6 +6,7 @@ ms.date: 02/25/2025
 author: allyford
 ms.author: allyford
 
+# Customer intent: As a cloud architect, I want to implement Arm64 virtual machines in an existing Kubernetes cluster, so that I can optimize costs while maintaining performance for scalable workloads.
 ---
 
 # Use Arm-based processor (Arm64) Virtual Machines (VMs) in an Azure Kubernetes Service (AKS) cluster for cost effectiveness
@@ -18,6 +19,9 @@ Because of their ability to scale workloads efficiently, Arm64 VMs are well-suit
 >While a combination of CPU, memory, and networking capacity configurations heavily influences the cost effectiveness of a SKU, Arm64 VM types are recommended for cost optimization.
 
 In this article, you'll learn how to add a Arm64 VM to an existing node pool.
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Prerequisites
 

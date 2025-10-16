@@ -6,9 +6,13 @@ ms.author: rayoflores
 ms.topic: how-to
 ms.date: 06/10/2024
 ms.custom: innovation-engine, devx-track-azurecli, linux-related-content, kubernetes, aks
+# Customer intent: As an AKS cluster operator, I want to understand how to use labels for node pools so that I can effectively manage scheduling and resource allocation within my Kubernetes environment.
 ---
 
 # Use labels in an Azure Kubernetes Service (AKS) cluster
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2330038)
 
 If you have multiple node pools, you may want to add a label during node pool creation. [Kubernetes labels][kubernetes-labels] handle the scheduling rules for nodes. You can add labels to a node pool anytime and apply them to all nodes in the node pool.
 

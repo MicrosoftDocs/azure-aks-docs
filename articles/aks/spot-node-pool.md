@@ -6,6 +6,7 @@ ms.date: 04/06/2025
 author: schaffererin
 ms.author: schaffererin
 ms.subservice: aks-nodes
+# Customer intent: As a Kubernetes administrator, I want to add an Azure Spot node pool to my existing AKS cluster, so that I can utilize unutilized Azure capacity for cost-effective workloads that can tolerate interruptions.
 ---
 
 # Add an Azure Spot node pool to an Azure Kubernetes Service (AKS) cluster
@@ -24,7 +25,7 @@ Spot nodes are great for workloads that can handle interruptions, early terminat
 ## Before you begin
 
 * This article assumes a basic understanding of Kubernetes and Azure Load Balancer concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
-* If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
+* If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 * When you create a cluster to use a Spot node pool, the cluster must use Virtual Machine Scale Sets for node pools and the *Standard* SKU load balancer. You must also add another node pool after you create your cluster, which is covered in this tutorial.
 * This article requires that you're running the Azure CLI version 2.14 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 

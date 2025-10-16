@@ -7,6 +7,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 05/19/2023
 ms.custom: references_regions, devx-track-azurecli
+# Customer intent: As a cloud architect, I want to configure an Azure Kubernetes Service cluster with API Server VNet Integration, so that I can ensure secure, private communication between the API server and cluster nodes without requiring external links or tunnels.
 ---
 
 # Create an Azure Kubernetes Service cluster with API Server VNet Integration 
@@ -39,7 +40,7 @@ API Server VNet Integration is supported for public or private clusters. You can
 
 API Server VNet Integration is available in the following regions: 
 
-australiacentral, australiacentral2, australiaeast, australiasoutheast, brazilsoutheast, canadacentral, canadaeast, centraluseuap, eastus2euap, francecentral, francesouth, germanynorth, indonesiacentral, israelcentral, italynorth, japaneast, japanwest, jioindiacentral, jioindiawest, koreacentral, koreasouth, mexicocentral, newzealandnorth, northcentralus, norwayeast, norwaywest, polandcentral, southafricanorth, southafricawest, southcentralus, southeastus, southindia, spaincentral, swedencentral, swedensouth, switzerlandnorth, switzerlandwest, taiwannorth, taiwannorthwest, uaecentral, uaenorth, ukwest, westcentralus, westus, westus3
+australiacentral, australiacentral2, australiaeast, australiasoutheast, austriaeast, brazilsouth, brazilsoutheast, canadacentral, canadaeast, centralindia, centralus, centraluseuap, chilecentral, eastasia, eastus, eastus2euap, francecentral, francesouth, germanynorth, germanywestcentral, indonesiacentral, israelcentral, israelnorthwest, italynorth, japaneast, japanwest, jioindiacentral, jioindiawest, koreacentral, koreasouth, malaysiawest, mexicocentral, newzealandnorth, northcentralus, northeurope, norwayeast, norwaywest, polandcentral, southafricanorth, southafricawest, southcentralus, southcentralus2, southeastasia, southeastus, southeastus3, southeastus5, southindia, southwestus, spaincentral, swedencentral, swedensouth, switzerlandnorth, switzerlandwest, taiwannorth, taiwannorthwest, uaecentral, uaenorth, uksouth, ukwest, usgovtexas, westcentralus, westeurope, westus, westus2, westus3
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 
@@ -263,7 +264,7 @@ You can expose the API server endpoint of a private cluster with API Server VNet
         --enable-apiserver-vnet-integration
     ```
 
-
+For more guidance on how to set up Private Link with API Server VNet Integration, see [Private Link with API Server VNet Integration][private-apiserver].
 
 ## NSG security rules
 
@@ -276,7 +277,9 @@ All traffic within the VNet is allowed by default. But if you have added NSG rul
 
 ## Next steps
 
-For associated best practices, see [Best practices for network connectivity and security in AKS][operator-best-practices-network].
+- For associated best practices, see [Best practices for network connectivity and security in AKS][operator-best-practices-network].
+- For guidance on how to set up private link with API Server VNet Integration, see [Private Link with API Server VNet Integration][private-apiserver].
+
 
 <!-- LINKS - internal -->
 [operator-best-practices-network]: operator-best-practices-network.md
@@ -289,4 +292,5 @@ For associated best practices, see [Best practices for network connectivity and 
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [ref-support-levels]: /cli/azure/reference-types-and-status
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[private-apiserver]: private-apiserver-vnet-integration-cluster.md
 

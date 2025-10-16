@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.date: 03/28/2024
 ms.author: shasb
 author: shashankbarsin
+# Customer intent: As a Kubernetes administrator, I want to deploy the Istio-based service mesh add-on for my Azure Kubernetes Service cluster, so that I can enhance traffic management and monitoring capabilities within my applications.
 ---
 
 # Deploy Istio-based service mesh add-on for Azure Kubernetes Service
@@ -21,11 +22,14 @@ For more information on Istio and the service mesh add-on, see [Istio-based serv
 ## Before you begin
 
 * The add-on requires Azure CLI version 2.57.0 or later installed. You can run `az --version` to verify version. To install or upgrade, see [Install Azure CLI][azure-cli-install].
-* To find information about which Istio add-on revisions are available in a region and their compatibility with AKS cluster versions, use the command [`az aks mesh get-revisions`][az-aks-mesh-get-revisions]:
+* To find information about which Istio add-on revisions are available in a region and their compatibility with AKS standard and LTS cluster versions, use the command [`az aks mesh get-revisions`][az-aks-mesh-get-revisions]:
 
     ```azurecli-interactive
     az aks mesh get-revisions --location <location> -o table
     ```
+
+    For more information on the Istio add-on's compatibility with AKS, refer to the [compatibility support policy][istio-aks-compatibility].
+
 * In some cases, Istio CRDs from previous installations may not be automatically cleaned up on uninstall. Ensure existing Istio CRDs are deleted:
 
     ```bash
@@ -70,7 +74,7 @@ az aks create \
     --resource-group ${RESOURCE_GROUP} \
     --name ${CLUSTER} \
     --enable-asm \
-    --generate-ssh-keys    
+    --generate-ssh-keys
 ```
 
 ### Install mesh for existing cluster
@@ -96,7 +100,7 @@ az aks show --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}  --query 'servi
 
 Confirm the output shows `Istio`.
 
-Use `az aks get-credentials` to the credentials for your AKS cluster:
+Use `az aks get-credentials` to get the credentials for your AKS cluster:
 
 ```azurecli-interactive
 az aks get-credentials --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
@@ -134,7 +138,7 @@ kubectl label namespace default istio.io/rev=asm-X-Y
 
 > [!IMPORTANT]
 > Explicit versioning matching the control plane revision (ex: `istio.io/rev=asm-1-24`) is required.
-> 
+>
 > The default `istio-injection=enabled` label will not work and will **cause the sidecar injection to skip the namespace** for the add-on.
 
 For manual injection of sidecar using `istioctl kube-inject`, you need to specify extra parameters for `istioNamespace` (`-i`) and `revision` (`-r`). For example:
@@ -252,3 +256,5 @@ To test this sample application against ingress, check out [next-steps](#next-st
 [istio-metrics-managed-prometheus]: istio-metrics-managed-prometheus.md
 [aks-system-nodes]: /azure/aks/use-system-pools
 [istio-egress-gateway]: istio-deploy-egress.md
+[istio-aks-compatibility]: istio-support-policy.md#aks-compatibility
+

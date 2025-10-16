@@ -203,6 +203,8 @@ The following labels are automatically added to all member clusters and can be u
 | fleet.azure.com/location | Azure Region of the cluster (westus) |
 | fleet.azure.com/resource-group | Azure Resource Group of the cluster (rg_prodapps_01) |
 | fleet.azure.com/subscription-id | Azure Subscription Identifier the cluster resides in. Formatted as UUID/GUID. |
+| fleet.azure.com/cluster-name | The name of the cluster |
+| fleet.azure.com/member-name | The name of the Fleet member corresponding to the cluster |
 
 You can also use any custom labels you apply to your clusters.
 
@@ -500,6 +502,7 @@ Events:
   Normal  PlacementSyncSuccess       3m28s (x7 over 3d22h)  cluster-resource-placement-controller  Successfully synchronized the placement
   Normal  PlacementRolloutCompleted  3m28s (x7 over 3d22h)  cluster-resource-placement-controller  Resources have been applied to the selected clusters
 ```
+For more information, see the [documentation on how to understand the placement result][fleet-status].
 
 ## Placement change triggers
 
@@ -530,3 +533,5 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 [fleet-staged-rollout]: ./concepts-rollout-strategy.md#staged-update-strategy-preview
 [fleet-tolerations]: ./use-taints-tolerations.md
 [fleet-snapshots]: ./concepts-placement-snapshots.md
+[fleet-status]: ./howto-understand-placement.md
+

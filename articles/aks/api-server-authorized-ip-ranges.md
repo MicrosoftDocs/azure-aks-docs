@@ -6,7 +6,9 @@ ms.custom: devx-track-azurecli, devx-track-azurepowershell, copilot-scenario-hig
 ms.date: 05/19/2024
 ms.author: schaffererin
 author: schaffererin
-#Customer intent: As a cluster operator, I want to increase the security of my cluster by limiting access to the API server to only the IP addresses that I specify.
+
+# Customer intent: As a cluster operator, I want to increase the security of my cluster by limiting access to the API server to only the IP addresses that I specify.
+
 ---
 
 # Secure access to the API server using authorized IP address ranges in Azure Kubernetes Service (AKS)

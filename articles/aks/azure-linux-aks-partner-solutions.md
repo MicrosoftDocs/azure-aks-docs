@@ -8,6 +8,7 @@ ms.service: azure-kubernetes-service
 ms.topic: concept-article
 ms.custom: linux-related-content
 ms.date: 12/02/2024
+# Customer intent: As a cloud engineer, I want to explore partner solutions for managing and monitoring my Azure Linux AKS environment, so that I can optimize deployment, enhance security, and improve observability of my applications.
 ---
 
 # Azure Linux AKS Container Host partner solutions
@@ -21,11 +22,14 @@ The third party partners featured in this article have introduction guides to he
 | **DevOps** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [Sysdig](#sysdig) <br> • [VictoriaMetrics](#victoriametrics) |
 | **Networking** | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) |
 | **Observability** | • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [New Relic](#new-relic) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) |
-| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Sysdig](#sysdig)  <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
+| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [CrowdStrike](#crowdstrike) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Sysdig](#sysdig)  <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
 | **Storage** | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) <br> • [VictoriaMetrics](#victoriametrics) |
 | **Config management** | • [Corent](#corent) <br> • [Sysdig](#sysdig) |
 | **Migration** | • [Catalogic](#catalogic) |
 | **Monitoring** | • [VictoriaMetrics](#victoriametrics) |
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## DevOps
 
@@ -190,7 +194,7 @@ With Spot Ocean, users gain:
 
 </details>
 
-For more information, see [Spot By NetApp Solutions](https://spot.io/product/ocean/) and [Spot By NetApp on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/netapp.spot?tab=Overview).
+For more information, see [Spot By NetApp Solutions](https://spot.io/product/ocean/).
 
 ### Sysdig
 
@@ -328,6 +332,24 @@ For more information, see [New Relic Solutions](https://newrelic.com/solutions/p
 
 Ensure the integrity and confidentiality of applications and foster trust and compliance across your infrastructure.
 
+### CrowdStrike
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/crowdstrike-logo.png":::
+
+| Solution | Categories |
+|----------|------------|
+| Falcon Cloud Security   | Security   |
+
+Powered by the CrowdStrike Security Cloud and world-class AI, the CrowdStrike Falcon® platform leverages real-time indicators of attack, threat intelligence, evolving adversary tradecraft and enriched telemetry from across the enterprise to deliver hyper-accurate detections, automated protection and remediation, elite threat hunting and prioritized observability of vulnerabilities.
+
+<details> <summary> See more </summary><br>
+
+Purpose-built in the cloud with a single lightweight-agent architecture, the Falcon platform delivers rapid and scalable deployment, superior protection and performance, reduced complexity and immediate time-to-value.
+
+</details>
+
+For more information, see [CrowdStrike](https://crowdstrike.com).
+
 ### Palo Alto Networks
 
 :::image type="icon" source="./media/azure-linux-aks-partner-solutions/palo-alto-networks.png":::
@@ -450,7 +472,7 @@ Automate and standardize the system settings across your environments to enhance
 
 Corent MaaS provides scanning to identify workloads that can be containerized, and automatically containerizes on AKS.
 
-For more information, see [Corent Solutions](https://www.corenttech.com/SurPaaS_MaaS_Product.html) and [Corent on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/corent-technology-pvt.corent_migration_as_a_service?tab=Overview).
+For more information, see [Corent Solutions](https://www.corenttech.com/SurPaaS_MaaS_Product.html).
 
 ## Migration
 

@@ -6,6 +6,7 @@ ms.date: 06/18/2025
 author: kenkilty
 ms.author: kkilty
 ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
+# Customer intent: "As a database administrator, I want to test and validate a highly available PostgreSQL database on AKS, so that I can ensure its reliability and performance in a production environment."
 ---
 
 # Validate and test a PostgreSQL database deployment on Azure Kubernetes Service (AKS)
@@ -62,18 +63,16 @@ In this section, you create a table and insert some data into the app database t
     kubectl cnpg psql $PG_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE
     ```
 
-    ```sql
-    # Run the following PSQL commands to create a small dataset
-    # postgres=#
+  ```sql
+  -- Create a small dataset
+  CREATE TABLE datasample (id INTEGER, name VARCHAR(255));
+  INSERT INTO datasample (id, name) VALUES (1, 'John');
+  INSERT INTO datasample (id, name) VALUES (2, 'Jane');
+  INSERT INTO datasample (id, name) VALUES (3, 'Alice');
+  SELECT COUNT(*) FROM datasample;
+  ```
 
-    CREATE TABLE datasample (id INTEGER,name VARCHAR(255));
-    INSERT INTO datasample (id, name) VALUES (1, 'John');
-    INSERT INTO datasample (id, name) VALUES (2, 'Jane');
-    INSERT INTO datasample (id, name) VALUES (3, 'Alice');
-    SELECT COUNT(*) FROM datasample;
-
-    # Type \q to exit psql
-    ```
+  Type `\q` to exit psql when finished.
 
     Your output should resemble the following example output:
 
@@ -96,35 +95,31 @@ In this section, you create a table and insert some data into the app database t
     kubectl cnpg psql --replica $PG_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE
     ```
 
-    ```sql
-    #postgres=#
-    SELECT pg_is_in_recovery();
-    ```
+  ```sql
+  SELECT pg_is_in_recovery();
+  ```
 
     Example output
 
-    ```output
-    # pg_is_in_recovery
-    #-------------------
-    # t
-    #(1 row)
-    ```
+  ```output
+  pg_is_in_recovery
+  -------------------
+  t
+  (1 row)
+  ```
 
-    ```sql
-    #postgres=#
-    SELECT COUNT(*) FROM datasample;
-    ```
+  ```sql
+  SELECT COUNT(*) FROM datasample;
+  ```
 
     Example output
 
-    ```output
-    # count
-    #-------
-    #     3
-    #(1 row)
-
-    # Type \q to exit psql
-    ```
+  ```output
+  count
+  -------
+    3
+  (1 row)
+  ```
 
 ## Set up on-demand and scheduled PostgreSQL backups using Barman
 
@@ -350,18 +345,18 @@ You also create a second federated credential to map the new recovery cluster se
     ```
 
     ```sql
-    postgres=# SELECT COUNT(*) FROM datasample;
+    SELECT COUNT(*) FROM datasample;
     ```
 
     Example output
 
     ```output
-    # count
-    #-------
-    #     3
-    #(1 row)
+     count
+    -------
+         3
+    (1 row)
 
-    # Type \q to exit psql
+    Type \q to exit psql
     ```
 
 1. Delete the recovered cluster using the following command:
@@ -658,11 +653,11 @@ _Microsoft maintains this article. The following contributors originally wrote i
 
 [kubectl-get]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/
 [kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/
-[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az_identity_federated_credential_create
+[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [kubectl-describe]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_describe/
-[az-storage-blob-list]: /cli/azure/storage/blob/#az_storage_blob_list
-[az-identity-federated-credential-delete]: /cli/azure/identity/federated-credential#az_identity_federated_credential_delete
+[az-storage-blob-list]: /cli/azure/storage/blob/#az-storage-blob-list
+[az-identity-federated-credential-delete]: /cli/azure/identity/federated-credential#az-identity-federated-credential-delete
 [kubectl-delete]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_delete/
-[az-group-delete]: /cli/azure/group#az_group_delete
+[az-group-delete]: /cli/azure/group#az-group-delete
 [what-is-aks]: ./what-is-aks.md
 [deploy-postgresql-ha]: ./deploy-postgresql-ha.md

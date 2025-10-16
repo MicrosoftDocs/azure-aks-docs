@@ -7,7 +7,9 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: mvc, subject-armbicep, devx-track-bicep, devx-track-azurecli
-#Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+
+# Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Bicep
@@ -23,7 +25,7 @@ Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you qui
 ## Before you begin
 
 * This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
-* You need an Azure account with an active subscription. If you don't have one, [create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* You need an Azure account with an active subscription. If you don't have one, [create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * To learn more about creating a Windows Server node pool, see [Create an AKS cluster that supports Windows Server containers](quick-windows-container-deploy-cli.md).
 * [!INCLUDE [About Bicep](~/reusable-content/ce-skilling/azure/includes/resource-manager-quickstart-bicep-introduction.md)]
 
@@ -531,4 +533,3 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [az-sshkey-create]: /cli/azure/sshkey#az_sshkey_create
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-

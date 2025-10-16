@@ -8,6 +8,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 03/14/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
+# Customer intent: As a Kubernetes administrator, I want to configure Layer 7 policies using Advanced Container Networking Services for my AKS cluster, so that I can enhance security and traffic management for my containerized applications.
 ---
 
 # Set up Layer 7(L7) policies with Advanced Container Networking Services (Preview)
@@ -16,7 +17,7 @@ This article demonstrates how to set up L7 policies with Advanced Container Netw
 
 ## Prerequisites
 
-* An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
+* An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
  The minimum version of Azure CLI required for the steps in this article is 2.71.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).

@@ -5,6 +5,7 @@ ms.reviewer: schaffererin
 ms.service: service-connector
 ms.topic: include
 ms.date: 09/01/2024
+# Customer intent: "As a DevOps engineer, I want to connect an AKS cluster to Azure Key Vault using the Secrets Store CSI Driver, so that I can securely manage and access secrets from the key vault in my containerized applications."
 ---
 
 Learn how to connect to Azure Key Vault with the Secrets Store CSI Driver in an Azure Kubernetes Service (AKS) cluster using Service Connector. In this article, you complete the following tasks:
@@ -18,7 +19,7 @@ Learn how to connect to Azure Key Vault with the Secrets Store CSI Driver in an 
 
 ## Prerequisites
 
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/).
+* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * The [Azure CLI](/cli/azure/install-azure-cli). Sign in using the [`az login`][az-login] command.
 * [Docker](https://docs.docker.com/get-docker/) and [kubectl](https://kubernetes.io/docs/tasks/tools/). To install kubectl locally, use the [`az aks install-cli`][az-aks-install-cli] command.
 * A basic understanding of containers and AKS. Get started by [preparing an application for AKS](/azure/aks/tutorial-kubernetes-prepare-app).

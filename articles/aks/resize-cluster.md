@@ -7,7 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: As a cluster operator, I want to resize my cluster so I can scale my workloads based on demand.
-ms.custom: innovation-engine, devx-track-azurecli, aks, scaling, cluster-management
+ms.custom: devx-track-azurecli, aks, scaling, cluster-management
 ---
 
 # Resize Azure Kubernetes Service (AKS) clusters

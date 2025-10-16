@@ -1,18 +1,19 @@
 ---
-title: 'Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network'
-description: Learn how to quickly deploy a private Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic (preview) in a custom virtual network.
+title: 'Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cluster in a custom virtual network'
+description: Learn how to quickly deploy a private Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic in a custom virtual network.
 ms.topic: quickstart
-ms.date: 06/13/2025
-author: sabbour
-ms.author: asabbour
+ms.date: 10/10/2025
+author: wangyira
+ms.author: wangamanda
 zone_pivot_groups: bicep-azure-cli
+# Customer intent: As a cloud engineer, I want to deploy a private Kubernetes cluster in a custom virtual network using managed services, so that I can ensure secure and efficient management of modern applications in Azure.
 ---
 
-# Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network
+# Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cluster in a custom virtual network
 
-**Applies to:** :heavy_check_mark: AKS Automatic (preview)
+**Applies to:** :heavy_check_mark: AKS Automatic
 
-[Azure Kubernetes Service (AKS) Automatic (preview)][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts]. 
+[Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts]. 
 
 In this quickstart, you learn to:
 
@@ -22,69 +23,25 @@ In this quickstart, you learn to:
 - Connect to the private cluster.
 - Run a sample multi-container application with a group of microservices and web front ends simulating a retail scenario.
 
-If you don't have an Azure account, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
-
 ### Prerequisites
 
-| Prerequisite                     | Notes                                                                 |
-|------------------------------|------------------------------------------------------------------------|
-| **Azure CLI**                | `2.68.0` or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli]. |
-| **Azure CLI `aks-preview` extension**                | `13.0.0b3` or later. To find the version, run `az --version`. If you need to install or upgrade, see [Manage Azure CLI extensions][azure-cli-extensions]. |
-| **Feature Flag(s)**             | `AutomaticSKUPreview` must be [registered on the subscription](#register-the-feature-flags) to use AKS Automatic.    |
-| **Required permission(s)**      | Cluster identity with a `Network Contributor` built-in role assignment on the API server subnet. |
-|                                  | Cluster identity with a `Network Contributor` built-in role assignment on the virtual network to support Node Auto Provisioning. |
-|                                  |  User identity creating the cluster with `Microsoft.Authorization/policyAssignments/write` and `Microsoft.Authorization/policyAssignments/read` permissions on the resource group. For more infomation, see [Azure Policy permissions][Azure-Policy-RBAC-permissions]. |
-|                                  | Users identity accessing the cluster with [`Azure Kubernetes Service Cluster User Role`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-cluster-user-role) and [`Azure Kubernetes Service RBAC Writer`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-writer) | 
-| **Network requirements**         | A virtual network with a dedicated API server subnet of at least `*/28` size that is delegated to `Microsoft.ContainerService/managedClusters` |
-|                                   | If there is a Network Security Group (NSG) attached to subnets, ensure that the [rules permit the following traffic](#network-security-group-rules) between the nodes and the API server, the Azure Load Balancer and the API server, and pod to pod communication. |
-|                                  | If there's an Azure Firewall or other outbound restriction method or appliance, ensure the [required outbound network rules and FQDNs][outbound-rules-control-egress] are allowed. |
+- If you don't have an Azure account, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
-## Limitations
-- AKS Automatic clusters with custom virtual networks only support user assigned managed identity.
-- AKS Automatic clusters with custom virtual networks don't support the Managed NAT Gateway outbound type.
-- AKS Automatic clusters require deployment in Azure regions that support at least [three availability zones][availability-zones] and [API Server VNet integration][api-server-vnet-integration-availability].
-- AKS Automatic clusters do not support using the [`command invoke` or Run command feature][access-private-cluster] to remotely invoke commands, like `kubectl` through the Azure API without directly connecting to the cluster.
+:::zone pivot="azure-cli"
 
-> [!IMPORTANT]
-> AKS Automatic tries to dynamically select a virtual machine size for the `system` node pool based on the capacity available in the subscription. Make sure your subscription has quota for 16 vCPUs of any of the following sizes in the region you're deploying the cluster to: [Standard_D4pds_v5](/azure/virtual-machines/sizes/general-purpose/dpsv5-series), [Standard_D4lds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series), [Standard_D4ads_v5](/azure/virtual-machines/sizes/general-purpose/dadsv5-series), [Standard_D4ds_v5](/azure/virtual-machines/sizes/general-purpose/ddsv5-series), [Standard_D4d_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v4](/azure/virtual-machines/sizes/general-purpose/ddv4-series), [Standard_DS3_v2](/azure/virtual-machines/sizes/general-purpose/dsv3-series), [Standard_DS12_v2](/azure/virtual-machines/sizes/memory-optimized/dv2-dsv2-series-memory). You can [view quotas for specific VM-families and submit quota increase requests](/azure/quotas/per-vm-quota-requests) through the Azure portal.
+- This article requires version 2.77.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
-### Install the aks-preview Azure CLI extension
+:::zone-end
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+- Cluster identity with a `Network Contributor` built-in role assignment on the API server subnet.
+- Cluster identity with a `Network Contributor` built-in role assignment on the virtual network to support [Node Autoprovisioning](../node-autoprovision.md).
+- User identity accessing the cluster with [`Azure Kubernetes Service Cluster User Role`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-cluster-user-role) and [`Azure Kubernetes Service RBAC Writer`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-writer).
+- A virtual network with a dedicated API server subnet of at least `*/28` size that is delegated to `Microsoft.ContainerService/managedClusters`.
+  - If there's a Network Security Group (NSG) attached to subnets, ensure that the [rules permit the following traffic](#network-security-group-rules) between the nodes and the API server, the Azure Load Balancer and the API server, and pod to pod communication.
+  - If there's an Azure Firewall or other outbound restriction method or appliance, ensure the [required outbound network rules and FQDNs][outbound-rules-control-egress] are allowed.
+- AKS Automatic will enable [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should pre-register the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. See [Azure resource providers and types][az-provider-register] for more information.
 
-To install the aks-preview extension, run the following command:
-
-```azurecli-interactive
-az extension add --name aks-preview
-```
-
-Run the following command to update to the latest version of the extension released:
-
-```azurecli-interactive
-az extension update --name aks-preview
-```
-
-### Register the feature flags
-
-To use AKS Automatic in preview, register the following flag using the [az feature register][az-feature-register] command.
-
-```azurecli-interactive
-az feature register --namespace Microsoft.ContainerService --name AutomaticSKUPreview
-```
-
-Verify the registration status by using the [az feature show][az-feature-show] command. It takes a few minutes for the status to show *Registered*:
-
-```azurecli-interactive
-az feature show --namespace Microsoft.ContainerService --name AutomaticSKUPreview
-```
-
-When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [az provider register][az-provider-register] command:
-
-```azurecli-interactive
-az provider register --namespace Microsoft.ContainerService
-```
-
-:::zone target="docs" pivot="azure-cli"
+[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
 ## Define variables
 
@@ -114,6 +71,8 @@ The following sample output resembles successful creation of the resource group:
   "tags": null
 }
 ```
+
+:::zone target="docs" pivot="azure-cli"
 
 ## Create a virtual network
 
@@ -200,31 +159,6 @@ aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
 :::zone-end
 
 :::zone target="docs" pivot="bicep"
-
-## Create a resource group
-
-An [Azure resource group][azure-resource-group] is a logical group in which Azure resources are deployed and managed. When you create a resource group, you're prompted to specify a location. This location is the storage location of your resource group metadata and where your resources run in Azure if you don't specify another region during resource creation.
-
-Create a resource group using the [az group create][az-group-create] command.
-
-```azurecli-interactive
-az group create --name <resource-group> --location <location>
-```
-
-The following sample output resembles successful creation of the resource group:
-
-```output
-{
-  "id": "/subscriptions/<guid>/resourceGroups/myResourceGroup",
-  "location": "eastus",
-  "managedBy": null,
-  "name": "myResourceGroup",
-  "properties": {
-    "provisioningState": "Succeeded"
-  },
-  "tags": null
-}
-```
 
 ## Create a virtual network
 
@@ -448,7 +382,7 @@ In this quickstart, you deployed a private Kubernetes cluster using [AKS Automat
 To learn more about AKS Automatic, continue to the introduction.
 
 > [!div class="nextstepaction"]
-> [Introduction to Azure Kubernetes Service (AKS) Automatic (preview)][what-is-aks-automatic]
+> [Introduction to Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic]
 
 
 <!-- LINKS - external -->
@@ -491,3 +425,5 @@ To learn more about AKS Automatic, continue to the introduction.
 [express-route-or-vpn]: /azure/expressroute/expressroute-about-virtual-network-gateways
 [private-endpoint-service]: ../private-apiserver-vnet-integration-cluster.md
 [access-private-cluster]: ../access-private-cluster.md
+[policy-for-kubernetes]: /azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks
+[az-provider-register]: /azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider

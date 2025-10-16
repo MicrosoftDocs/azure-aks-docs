@@ -1,9 +1,9 @@
 ---
-title: Configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS)
+title: Configure and Deploy a Valkey Cluster on Azure Kubernetes Service (AKS)
 description: In this article, you learn how to configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS) using the Kubernetes stateful framework.
 ms.topic: how-to
 ms.custom: azure-kubernetes-service
-ms.date: 08/15/2024
+ms.date: 09/15/2025
 author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-cli-or-terraform
@@ -16,13 +16,14 @@ zone_pivot_groups: azure-cli-or-terraform
 In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS), including the creation of a Valkey cluster ConfigMap, primary and secondary cluster pods to ensure redundancy and zone replication, and a Pod Disruption Budget (PDB) to ensure high availability.
 
 > [!NOTE]
-> This article contains references to the terms *master* and *slave*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
+> This article contains references to the terms _master_ and _slave_, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
 
 ## Connect to the AKS cluster
+
 > [!NOTE]
 > Ensure that if you're using Terraform, you've replaced the placeholders in the code with the actual outputs from the terraform commands that was deployed in the previous step [deploying the infrastructure][create-valkey-cluster]. 
 
-* Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
+- Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
     ```azurecli-interactive
     az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
@@ -57,6 +58,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     rm /tmp/valkey-password-file.conf
     az keyvault set-policy --name $MY_KEYVAULT_NAME --object-id $userAssignedObjectID --secret-permissions get --output table
     ```
+
 :::zone-end
 
 :::zone pivot="terraform"
@@ -68,9 +70,10 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     export userAssignedObjectID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId --output tsv)
 
     ```
+
 :::zone-end
 
-2. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
+1. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
 
     ```bash
     export TENANT_ID=$(az account show --query tenantId --output tsv)
@@ -129,7 +132,8 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     ```
 
 ## Create Valkey primary cluster pods
-1. Create a `StatefulSet` resource with a `spec.affinity` goal is to keep all primaries in zone 1 and zone 2, preferably in different nodes, using the `kubectl apply` command.
+
+- Create a `StatefulSet` resource with a `spec.affinity` goal is to keep all primaries in zone 1 and zone 2, preferably in different nodes, using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -274,7 +278,8 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     ```
 
 ## Create Valkey replica cluster pods
-1. Create a second `StatefulSet` resource for the Valkey secondaries with a `spec.affinity` goal to keep all replicas in zone 3, preferably in different nodes, using the `kubectl apply` command.
+
+- Create a second `StatefulSet` resource for the Valkey secondaries with a `spec.affinity` goal to keep all replicas in zone 3, preferably in different nodes, using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -386,9 +391,10 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     ```output
     statefulset.apps/valkey-replicas created
     ```
+
 ## Verify pod and node distribution
 
-1. Verify that `master-N` and `replica-N` are running in different nodes and zones using the `kubectl get nodes` and `kubectl get pods` commands.
+- Verify the `master-N` and `replica-N` are running in different nodes and zones using the `kubectl get nodes` and `kubectl get pods` commands.
 
     ```bash
     kubectl get pods -n valkey -o wide
@@ -417,10 +423,11 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     aks-valkey-18693609-vmss000005      centralus-3
     ```
 
-    Wait for all pods to be running before proceeding to the next step.
+    **Wait for around three minutes for all `master-N` and `replica-N` pods to be running before proceeding to the next step**.
 
 ## Create headless services
-1. Create three headless `Service` resources (the first for the entire cluster, the second for the primaries, and the third for the secondaries) to use to get the IP addresses of the Valkey pods using the `kubectl apply` command.
+
+- Create three headless `Service` resources (the first for the entire cluster, the second for the primaries, and the third for the secondaries) to use to get the IP addresses of the Valkey pods using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -493,7 +500,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Create Pod Disruption Budget (PDB)
 
-1. Create a Pod Disruption Budget (PDB) to ensure always that one pod at most is unavailable during voluntary disruptions, such as upgrades or maintenance. This helps maintain the stability and availability of the Valkey application within the Kubernetes cluster.
+- Create a Pod Disruption Budget (PDB) to ensure always that one pod at most is unavailable during voluntary disruptions, such as upgrades or maintenance. This helps maintain the stability and availability of the Valkey application within the Kubernetes cluster.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -518,7 +525,17 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Run the Valkey cluster
 
-1. Add the Valkey primaries, in zone 1 and 2, to the cluster using the `kubectl exec` command.
+In a Valkey cluster, slot allocation is a fundamental part of how data is distributed across nodes. Valkey Clusters (similar to Redis Clusters) divide the key space into _16,384 hash slots_, which are evenly distributed across the primary nodes in the cluster.
+
+In this section, we set up a three-node Valkey cluster with three replicas, ensuring:
+
+- Full slot coverage (all 16,384 slots).
+- High availability via replication.
+- Proper role assignment and cluster health verification.
+
+### Initialize Valkey cluster with primary nodes in zone 1 and 2 and configure slot distribution
+
+- Create the cluster with three primary nodes in zone 1 and 2 and evenly distribute all 16,384 hash slots across them using the `kubectl exec` command.
 
     ```bash
     kubectl exec -it -n valkey valkey-masters-0 -- valkey-cli --cluster create --cluster-yes --cluster-replicas 0 \
@@ -559,19 +576,21 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     [OK] All 16384 slots covered.
     ```
 
-2. Add the Valkey replicas, in zone 3, to the cluster using the `kubectl exec` command.
+### Add the Valkey replicas in zone 3 to enable high availability
+
+- Add one replica per primary node in a different zone to ensure fault tolerance and automatic failover capability using the following `kubectl exec` commands.
 
     ```bash
     kubectl exec -ti -n valkey valkey-masters-0 -- valkey-cli --cluster add-node \
                         valkey-replicas-0.valkey-replicas.valkey.svc.cluster.local:6379 \
                         valkey-masters-0.valkey-masters.valkey.svc.cluster.local:6379  --cluster-slave \
                         --pass ${SECRET}
-
+    
     kubectl exec -ti -n valkey valkey-masters-0 -- valkey-cli --cluster add-node \
                         valkey-replicas-1.valkey-replicas.valkey.svc.cluster.local:6379 \
                         valkey-masters-1.valkey-masters.valkey.svc.cluster.local:6379  --cluster-slave \
                         --pass ${SECRET}
-
+    
     kubectl exec -ti -n valkey valkey-masters-0 -- valkey-cli --cluster add-node \
                         valkey-replicas-2.valkey-replicas.valkey.svc.cluster.local:6379 \
                         valkey-masters-2.valkey-masters.valkey.svc.cluster.local:6379  --cluster-slave \
@@ -596,7 +615,6 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     Automatically selected master valkey-masters-0.valkey-masters.valkey.svc.cluster.local:6379
     >>> Send CLUSTER MEET to node valkey-replicas-0.valkey-replicas.valkey.svc.cluster.local:6379 to make it join the cluster.
     Waiting for the cluster to join
-
     >>> Configure node as replica of valkey-masters-0.valkey-masters.valkey.svc.cluster.local:6379.
     [OK] New node added correctly.
     >>> Adding node valkey-replicas-1.valkey-replicas.valkey.svc.cluster.local:6379 to cluster valkey-masters-1.valkey-masters.valkey.svc.cluster.local:6379
@@ -618,7 +636,6 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     Automatically selected master valkey-masters-1.valkey-masters.valkey.svc.cluster.local:6379
     >>> Send CLUSTER MEET to node valkey-replicas-1.valkey-replicas.valkey.svc.cluster.local:6379 to make it join the cluster.
     Waiting for the cluster to join
-
     >>> Configure node as replica of valkey-masters-1.valkey-masters.valkey.svc.cluster.local:6379.
     [OK] New node added correctly.
     >>> Adding node valkey-replicas-2.valkey-replicas.valkey.svc.cluster.local:6379 to cluster valkey-masters-2.valkey-masters.valkey.svc.cluster.local:6379
@@ -644,12 +661,13 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     Automatically selected master valkey-masters-2.valkey-masters.valkey.svc.cluster.local:6379
     >>> Send CLUSTER MEET to node valkey-replicas-2.valkey-replicas.valkey.svc.cluster.local:6379 to make it join the cluster.
     Waiting for the cluster to join
-
     >>> Configure node as replica of valkey-masters-2.valkey-masters.valkey.svc.cluster.local:6379.
     [OK] New node added correctly.
     ```
 
-3. Verify the roles of the pods using the following commands:
+### Verify the roles of the pods and replication status
+
+- Confirm each primary and replica is correctly configured and that replication relationships are established using the following `kubectl exec` commands.
 
     ```bash
     for x in $(seq 0 2); do echo "valkey-masters-$x"; kubectl exec -n valkey valkey-masters-$x  -- valkey-cli --pass ${SECRET} role; echo; done
@@ -665,35 +683,30 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     10.224.0.224
     6379
     84
-
     valkey-masters-1
     master
     84
     10.224.0.103
     6379
     84
-
     valkey-masters-2
     master
     70
     10.224.0.200
     6379
     70
-
     valkey-replicas-0
     slave
     10.224.0.14
     6379
     connected
     98
-
     valkey-replicas-1
     slave
     10.224.0.247
     6379
     connected
     98
-
     valkey-replicas-2
     slave
     10.224.0.176
@@ -709,27 +722,26 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 To learn more about deploying open-source software on Azure Kubernetes Service (AKS), see the following articles:
 
-* [Deploy a highly available PostgreSQL database on AKS][postgresql-aks]
-* [Build and deploy data and machine learning pipelines with Flyte on AKS][flyte-aks]
+- [Deploy a highly available PostgreSQL database on AKS][postgresql-aks]
+- [Build and deploy data and machine learning pipelines with Flyte on AKS][flyte-aks]
 
 ## Contributors
 
-*Microsoft maintains this article. The following contributors originally wrote it:*
+_Microsoft maintains this article. The following contributors originally wrote it:_
 
-* Nelly Kiboi | Service Engineer
-* Saverio Proto | Principal Customer Experience Engineer
-* Don High | Principal Customer Engineer
-* LaBrina Loving | Principal Service Engineer
-* Ken Kilty | Principal TPM
-* Russell de Pina | Principal TPM
-* Colin Mixon | Product Manager
-* Ketan Chawda | Senior Customer Engineer
-* Naveed Kharadi | Customer Experience Engineer
-* Erin Schaffer | Content Developer 2
+- Nelly Kiboi | Service Engineer
+- Saverio Proto | Principal Customer Experience Engineer
+- Don High | Principal Customer Engineer
+- LaBrina Loving | Principal Service Engineer
+- Ken Kilty | Principal TPM
+- Russell de Pina | Principal TPM
+- Colin Mixon | Product Manager
+- Ketan Chawda | Senior Customer Engineer
+- Naveed Kharadi | Customer Experience Engineer
+- Erin Schaffer | Content Developer 2
 
 <!-- Internal links -->
 [az-keyvault-secret-set]: /cli/azure/keyvault/secret#az-keyvault-secret-set
-[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [az-keyvault-set-policy]: /cli/azure/keyvault#az-keyvault-set-policy
 [postgresql-aks]: ./postgresql-ha-overview.md
 [flyte-aks]: ./use-flyte.md

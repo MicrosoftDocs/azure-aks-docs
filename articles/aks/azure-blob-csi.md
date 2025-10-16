@@ -8,6 +8,7 @@ ms.date: 06/24/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a Kubernetes administrator, I want to implement the Azure Blob storage CSI driver on AKS, so that I can efficiently manage and access unstructured data for containerized applications without modifying core Kubernetes code.
 ---
 
 # Use Azure Blob storage Container Storage Interface (CSI) driver
@@ -144,7 +145,7 @@ To have a storage volume persist for your workload, you can use a StatefulSet. T
             "kubernetes.io/os": linux
           containers:
             - name: statefulset-blob-nfs
-              image: mcr.microsoft.com/oss/nginx/nginx:1.22
+              image: mcr.microsoft.com/azurelinux/base/nginx:1.25
               volumeMounts:
                 - name: persistent-storage
                   mountPath: /mnt/blob
@@ -193,7 +194,7 @@ To have a storage volume persist for your workload, you can use a StatefulSet. T
             "kubernetes.io/os": linux
           containers:
             - name: statefulset-blob
-              image: mcr.microsoft.com/oss/nginx/nginx:1.22
+              image: mcr.microsoft.com/azurelinux/base/nginx:1.25
               volumeMounts:
                 - name: persistent-storage
                   mountPath: /mnt/blob
@@ -224,8 +225,8 @@ To have a storage volume persist for your workload, you can use a StatefulSet. T
 ## Next steps
 
 - To learn how to set up a static or dynamic persistent volume, see [Create and use a volume with Azure Blob storage][azure-csi-blob-storage-provision].
-- To learn how to use CSI driver for Azure Disks, see [Use Azure Disks with CSI driver][azure-disk-csi-driver]
-- To learn how to use CSI driver for Azure Files, see [Use Azure Files with CSI driver][azure-files-csi-driver]
+- To learn how to use CSI driver for Azure Disks, see [Use Azure Disks with CSI driver][azure-disk-csi-driver].
+- To learn how to use CSI driver for Azure Files, see [Use Azure Files with CSI driver][azure-files-csi-driver].
 - For more about storage best practices, see [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
 
 <!-- LINKS - external -->

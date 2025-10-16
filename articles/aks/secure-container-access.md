@@ -8,17 +8,23 @@ ms.subservice: aks-security
 ms.service: azure-kubernetes-service
 ms.date: 11/08/2024
 ms.author: allyford
+# Customer intent: As a cloud security administrator, I want to implement least privilege access for containers in Kubernetes so that I can minimize risks of unauthorized actions and potential attacks on our resources.
 ---
 
 # Security container access to resources using built-in Linux security features
 
 In this article, you learn how to secure container access to resources for your Azure Kubernetes Service (AKS) workloads.
 
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+
 ## Overview
 
 In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access. 
 
 You can use built-in Kubernetes *pod security contexts* to define more permissions, such as the user or group to run as, the Linux capabilities to expose, or setting `allowPrivilegeEscalation: false` in the pod manifest. For more best practices, see [Secure pod access to resources][pod-security-contexts].
+
+To improve the host isolation and decrease lateral movement on Linux, you can use *user-namespaces*.
 
 For even more granular control of container actions, you can use built-in Linux security features such as *AppArmor* and *seccomp*.
 
@@ -28,15 +34,112 @@ For even more granular control of container actions, you can use built-in Linux 
 Built-in Linux security features are only available on Linux nodes and pods.
 
 > [!NOTE]
-> Currently, Kubernetes environments aren't completely safe for hostile multitenant usage. Additional security features, like *Microsoft Defender for Containers*, *AppArmor*, *seccomp*, *Pod Security Admission*, or *Kubernetes RBAC for nodes*, efficiently block exploits.
+> Currently, Kubernetes environments aren't completely safe for hostile multitenant usage. Additional security features, like *Microsoft Defender for Containers*, *AppArmor*, *seccomp*, *user-namespaces*, *Pod Security Admission*, or *Kubernetes RBAC for nodes*, efficiently block exploits.
 >
 > For true security when running hostile multitenant workloads, only trust a hypervisor. The security domain for Kubernetes becomes the entire cluster, not an individual node. 
 >
 > For these types of hostile multitenant workloads, you should use physically isolated clusters.
 
+## User-namespaces
+
+Linux pods run using several namespaces by default: a network namespaces to isolate the network identity and a PID namespace to isolate the processes. A [user-namespace][userns-man] isolates the users inside the container from the users on the host. It also limits the scope of capabilities and the pod's interactions with the rest of the system.
+
+The UIDs and GIDs inside the container are mapped to unprivileged users on the host, so all interaction with the rest of the host happen as those unprivileged UID and GID. For example, root inside the container (UID 0) can be mapped to user 65536 on the host. Kubernetes creates the mapping to guarantee it doesn't overlap with other pods using user-namespaces on the system.
+
+The Kubernetes implementation has some key benefits:
+
+ * **Increased host isolation**: If a container escapes the pod boundaries, even if it runs as root inside the container, it has no privileges on the host. The reason is because the UIDs and GIDs of the container are mapped to unprivileged users on the host. If there's a container escape, user-namespaces greatly protects what files on the host a container can read/write, which process it can send signals to. Capabilities granted are only valid inside the user namespace and not on the host.
+
+ * **Prevention of lateral movement**: As the UIDs and GIDs for different containers are mapped to different, nonoverlapping UIDs and GIDs on the host, containers have a harder time attacking each other. For example, suppose container A runs with different UIDs and GIDs on the host than container B. In case of a container breakout, the operations it can do on container B's files and processes are limited: only read/write what a file allows to others. But not even that ends up being possible, as there's an extra prevention on the parent directory of the pod root volume to make sure only the pod GID can access it.
+
+ * **Honor Least-privilege principle**: As the UIDs and GIDs are mapped to unprivileged users on the host, only users that need the privilege on the host (and disable user namespaces) get it. Without user namespaces, there's no separation between container’s users and host’s users. We can’t avoid giving privileges on the host to processes that don't need it, when they need privilege just inside the container.
+
+ * **Enablement of new use cases**: User namespaces allow containers to gain certain capabilities inside their own user namespace without affecting the host. The capabilities granted restricted to the pod unlocks new possibilities, such as running applications that require privileged operations without granting full root access on the host. Common new use-cases that can be implemented securely are: running nested containers and unprivileged container builds.
+
+ * **Unprivileged container setup**: Most of the container creation and setup doesn't run as root on the host, which significantly limits the impact of many CVEs.
+
+None of these things are true when user-namespaces aren't used. If the container runs as root, when user-namespaces aren't used, the process is running as root on the host, the capabilities are valid on the host and the container setup is done as root on the host.
+
+### Before you begin
+
+Before you begin, make sure you have the following:
+
+* An existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
+* Minimum kubernetes version 1.33 for the control plane and worker nodes. If you're not using kubernetes version 1.33 or higher, you'll need to [upgrade your kubernetes version][upgrade-aks-cluster].
+* Worker nodes running Azure Linux 3.0 or Ubuntu 24.04. If you're not using these OS versions, you will not have the minimum [stack requirements][userns-requirements] to enable user-namespaces. You'll need to [upgrade your OS version][upgrade-os-version].
+
+### Limitations
+
+* User-namespaces is a linux kernel feature and is not supported for Windows node pools.
+* Don't hesitate to check the [Kubernetes documentation for user namespaces][k8s-userns], in particular the limitations section.
+
+### Enable user-namespaces
+
+There are no configurations needed to use this feature. If using the required AKS version, everything works out of the box.
+
+1. Create a file named `mypod.yaml` and copy in the following manifest:
+
+   To use user-namespaces, the yaml needs to have the field `hostUsers: false`.
+
+   ```yaml
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: userns
+   spec:
+     hostUsers: false
+     containers:
+     - name: shell
+       command: ["sleep", "infinity"]
+       image: debian
+   ```
+
+2. Deploy the application using the `kubectl apply` command and specify the name of your YAML manifest. 
+
+    ```console
+    kubectl apply -f mypod.yaml
+    ```
+
+3. Check the status of the deployed pods using the `kubectl get pods` command. 
+
+    ```console
+    kubectl get pods
+    ```
+
+4. Exec into the pod to check `/proc/self/uid_map` by using the `kubectl exec` command:
+
+   ```console
+   kubectl exec -ti userns -- bash
+   # Now inside the pod run
+   cat /proc/self/uid_map
+   ```
+
+The output should have 65536 in the last column. For example:
+
+   ```output
+   0  833617920      65536
+   ```
+
+### CVEs mitigated
+
+Here are some CVEs that are completely/partially mitigated with user-namespaces.
+
+Bear in mind the list isn't exhaustive, it's just a selection of CVEs with high score that are mitigated:
+
+* [CVE-2019-5736][cve-2019-5716] - Score 8.6 (HIGH)
+* [CVE 2024-21262][cve-2024-21262]: Score 8.6 (HIGH)
+* [CVE 2022-0492][cve-2022-0492]: Score 7.8 (HIGH)
+* [CVE-2021-25741][cve-2021-25741]: Score: 8.1 (HIGH) / 8.8 (HIGH)
+* [CVE-2017-1002101][cve-2017-1002101]: Score: 9.6 (CRITICAL) / 8.8(HIGH)
+
+To learn more, read this [blog post](https://kubernetes.io/blog/2025/04/25/userns-enabled-by-default/) with additional information around user-namespaces. 
+
 ## App Armor
 
 To limit container actions, you can use the [AppArmor][k8s-apparmor] Linux kernel security module. AppArmor is available as part of the underlying AKS node OS and is enabled by default. You create AppArmor profiles that restrict read, write, or execute actions, or system functions like mounting filesystems. Default AppArmor profiles restrict access to various `/proc` and `/sys` locations and provide a means to logically isolate containers from the underlying node. AppArmor works for any application that runs on Linux, not just Kubernetes pods.
+
+> [!NOTE]
+> Azure Linux 3.0 does not offer AppArmor support. For Azure Linux 3.0 nodes, the recommendation is to leverage SELinux instead of AppArmor for mandatory access control.
 
 ![AppArmor profiles in use in an AKS cluster to limit container actions](media/operator-best-practices-container-security/apparmor.png)
 
@@ -342,6 +445,14 @@ For associated best practices, see [Best practices for cluster security and upgr
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-exec]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
+[userns-man]: https://man7.org/linux/man-pages/man7/user_namespaces.7.html
+[cve-2019-5716]: https://nvd.nist.gov/vuln/detail/CVE-2019-5736
+[cve-2024-21262]: https://github.com/opencontainers/runc/security/advisories/GHSA-xr7r-f8xq-vfvv
+[cve-2022-0492]: https://unit42.paloaltonetworks.com/cve-2022-0492-cgroups/
+[cve-2021-25741]: https://nvd.nist.gov/vuln/detail/CVE-2021-25741
+[cve-2017-1002101]: https://nvd.nist.gov/vuln/detail/CVE-2017-1002101
+[k8s-userns]: https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/
+[userns-requirements]: https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/#before-you-begin
 
 <!-- LINKS - Internal -->
 [operator-best-practices-cluster-security]: operator-best-practices-cluster-security.md
@@ -356,4 +467,8 @@ For associated best practices, see [Best practices for cluster security and upgr
 [node-access]: node-access.md
 [security-container-access]: secure-container-access.md
 [troubleshoot-seccomp-profiles]: support\azure\azure-kubernetes\security\troubleshoot-seccomp-profiles.md
-
+[upgrade-os-version]: upgrade-os-version.md
+[aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
+[aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
+[aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
+[upgrade-aks-cluster]: ./upgrade-aks-cluster.md

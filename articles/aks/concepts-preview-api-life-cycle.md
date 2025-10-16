@@ -7,9 +7,13 @@ ms.date: 06/06/2024
 author: matthchr
 ms.author: matthchr
 
+# Customer intent: As a cloud developer, I want to stay informed about the lifecycle and deprecation schedule of AKS preview APIs, so that I can ensure my applications are using up-to-date versions and avoid disruptions in service.
 ---
 
 # AKS Preview API life cycle
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2331825)
 
 The Azure Kubernetes Service (AKS) preview APIs (APIs that end in `-preview`) have a lifespan of ~one year from their release date.
 This means that you can expect the 2023-01-02-preview API to be deprecated somewhere around January 1st, 2024. 

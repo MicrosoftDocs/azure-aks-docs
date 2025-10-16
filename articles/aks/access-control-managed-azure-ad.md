@@ -6,7 +6,8 @@ ms.subservice: aks-integration
 ms.date: 06/25/2024
 author: nickomang
 ms.author: nickoman
-ms.custom: devx-track-azurecli, innovation-engine
+ms.custom: devx-track-azurecli
+# Customer intent: "As a cloud security administrator, I want to configure Conditional Access for my AKS clusters, so that I can manage access securely and ensure compliance for users accessing the clusters."
 ---
 
 # Control cluster access using Conditional Access with AKS-managed Microsoft Entra integration

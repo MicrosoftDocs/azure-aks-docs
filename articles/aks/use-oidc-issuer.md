@@ -3,11 +3,12 @@ title: Create an OpenID Connect provider for your AKS cluster
 description: Learn how to configure the OpenID Connect (OIDC) provider for a cluster in Azure Kubernetes Service (AKS).
 author: davidsmatlak
 
-ms.author: davidsmatlak
+ms.author: yuewu2
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 05/13/2024
+ms.date: 10/16/2025
+# Customer intent: "As a Kubernetes administrator, I want to configure an OpenID Connect provider for my AKS cluster, so that I can implement secure authentication and enable single sign-on for applications running within the cluster."
 ---
 
 # Create an OpenID Connect provider on Azure Kubernetes Service (AKS)
@@ -15,6 +16,12 @@ ms.date: 05/13/2024
 [OpenID Connect][open-id-connect-overview] (OIDC) extends the OAuth 2.0 authorization protocol for use as another authentication protocol issued by Microsoft Entra ID. You can use OIDC to enable single sign-on (SSO) between OAuth-enabled applications on your Azure Kubernetes Service (AKS) cluster by using a security token called an ID token. With your AKS cluster, you can enable the OpenID Connect (OIDC) issuer, which allows Microsoft Entra ID, or another cloud provider's identity and access management platform, to discover the API server's public signing keys.
 
 AKS rotates the key automatically and periodically. If you don't want to wait, you can rotate the key manually and immediately. The maximum lifetime of the token issued by the OIDC provider is one day.
+
+> [!NOTE]
+> Starting with Kubernetes version **1.34+**, new AKS clusters have the OIDC issuer **enabled by default**. You no longer need to specify `--enable-oidc-issuer` when creating a new 1.34+ cluster. The flag is still accepted and treated as a no-op. For clusters created on versions earlier than 1.34 (or created before this change) where the OIDC issuer wasn't previously enabled, you must enable it manually.
+
+> [!NOTE]
+> For clusters running Kubernetes **v1.30.0 and later**, AKS sets the API server flag `--service-account-extend-token-expiration=false`. Earlier supported versions had the default behavior (token auto extension) effectively enabled. With the flag set to `false`, projected service account tokens follow their configured expiration (and must be refreshed by workloads or libraries such as the Azure Identity SDK). Ensure any in-cluster components relying on long‑lived legacy service account tokens are updated to use projected tokens and to handle rotation appropriately.
 
 > [!WARNING]
 > Enabling the OIDC issuer on an existing cluster changes the current service account token issuer to a new value, which can cause down time as it restarts the API server. If your application pods using a service token remain in a failed state after you enable the OIDC issuer, we recommend you manually restart the pods.

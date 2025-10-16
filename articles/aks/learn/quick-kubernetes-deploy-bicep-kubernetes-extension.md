@@ -1,6 +1,6 @@
 ---
 title: Deploy an AKS cluster using the Bicep Kubernetes extension
-description: Learn how to quickly deploy a Kubernetes cluster using the Bicep Kubernetes extension and deploy an application in Azure Kubernetes Service (AKS). 
+description: Learn how to quickly deploy a Kubernetes cluster using the Bicep Kubernetes extension and deploy an application in Azure Kubernetes Service (AKS).
 author: schaffererin
 
 ms.topic: quickstart
@@ -8,7 +8,8 @@ ms.custom: devx-track-bicep
 ms.date: 01/11/2024
 ms.author: schaffererin
 
-#Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+# Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using the Bicep Kubernetes extension (preview)
@@ -141,7 +142,7 @@ To deploy the application, you use a manifest file to create all the objects req
         [rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0].
     kind: ConfigMap
     metadata:
-      name: rabbitmq-enabled-plugins            
+      name: rabbitmq-enabled-plugins
     ---
     apiVersion: v1
     kind: Service
@@ -210,7 +211,7 @@ To deploy the application, you use a manifest file to create all the objects req
                 memory: 50Mi
               limits:
                 cpu: 75m
-                memory: 128Mi    
+                memory: 128Mi
     ---
     apiVersion: v1
     kind: Service
@@ -289,7 +290,7 @@ To deploy the application, you use a manifest file to create all the objects req
             ports:
             - containerPort: 8080
               name: store-front
-            env: 
+            env:
             - name: VUE_APP_ORDER_SERVICE_URL
               value: "http://order-service:3000/"
             - name: VUE_APP_PRODUCT_SERVICE_URL
@@ -441,4 +442,3 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [az-sshkey-create]: /cli/azure/sshkey#az_sshkey_create
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-

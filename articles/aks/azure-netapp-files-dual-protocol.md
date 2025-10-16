@@ -8,6 +8,7 @@ ms.date: 11/15/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a cloud engineer, I want to provision dual-protocol volumes for Azure Kubernetes Service using Azure NetApp Files, so that I can efficiently manage both NFS and SMB workloads in my Kubernetes environment.
 ---
 
 # Provision Azure NetApp Files dual-protocol volumes for Azure Kubernetes Service

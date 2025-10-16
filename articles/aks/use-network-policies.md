@@ -6,10 +6,24 @@ author: schaffererin
 ms.author: schaffererin
 ms.date: 06/10/2025
 ms.topic: how-to
-ms.custom: devx-track-azurecli, build-2025, biannual
+ms.custom:
+  - devx-track-azurecli
+  - build-2025
+  - biannual
+# Customer intent: As a DevOps engineer, I want to implement network policies in Azure Kubernetes Service, so that I can control and secure pod traffic by restricting communication according to the principle of least privilege.
 ---
 
 # Secure traffic between pods by using network policies in AKS
+
+> [!IMPORTANT] 
+> On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on **Windows** nodes in AKS.
+> 
+>  To ensure your setup continues to receive support, security updates, and deployment compatibility, please explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
+
+> [!IMPORTANT] 
+> On **30 September 2028**, we’ll end support for Azure Network Policy Manager (NPM) on **Linux** nodes in AKS.
+> 
+> To avoid service disruptions, you'll need to [migrate AKS clusters running Linux nodes from NPM to Cilium Network Policy](./migrate-from-npm-to-cilium-network-policy.md) by that date. 
 
 [!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
 
@@ -43,7 +57,7 @@ To enforce the specified policies, Azure Network Policy Manager for Linux uses L
 | Supported platforms                      | Linux, Windows Server 2022 (Preview).                     | Linux, Windows Server 2019 and 2022.  | Linux.
 | Supported networking options             | Azure Container Networking Interface (CNI).                  | Azure CNI (Linux, Windows Server 2019 and 2022) and kubenet (Linux). | Azure CNI.
 | Compliance with Kubernetes specification | All policy types supported | All policy types are supported. | All policy types are supported.
-| Other features                           | None.                       | While Calico has many features that AKS doesn't block, AKS does not test or Support them. [History](https://github.com/Azure/AKS/issues/4038) | [FQDN](./container-network-security-fqdn-filtering-concepts.md) and [L7](./container-network-security-l7-policy-concepts.md)
+| Other features                           | None.                       | While Calico has many features that AKS doesn't block, AKS does not test or Support them. [History](https://github.com/Azure/AKS/issues/4038) | [FQDN](./container-network-security-fqdn-filtering-concepts.md), L3/4, [L7](./container-network-security-l7-policy-concepts.md)
 | Support                                  | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team.
 
 ## Limitations of Azure Network Policy Manager
@@ -121,6 +135,11 @@ az aks create \
 ```
 
 ### Create an AKS cluster with Azure Network Policy Manager enabled - Windows Server 2022 (preview)
+
+> [!IMPORTANT] 
+> On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on Windows nodes in AKS.
+> 
+>  To ensure your setup continues to receive support, security updates, and deployment compatibility, please explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
 
 In this section, you create a cluster with Windows node pools and Azure Network Policy Manager enabled.
 

@@ -7,7 +7,8 @@ ms.topic: how-to
 ms.date: 03/03/2023
 ms.author: allensu
 
-#Customer intent: As a cluster operator or developer, I want to learn how to customize the CoreDNS configuration to add sub domains or extend to custom DNS endpoints within my network. I also want to learn how to customize the logic for CoreDNS pod scaling.
+# Customer intent: As a cluster operator or developer, I want to learn how to customize the CoreDNS configuration to add sub domains or extend to custom DNS endpoints within my network. I also want to learn how to customize the logic for CoreDNS pod scaling.
+
 ---
 
 # Customize CoreDNS with Azure Kubernetes Service
@@ -271,7 +272,7 @@ Sudden spikes in DNS traffic within AKS clusters are a common occurrence due to 
 CoreDNS uses [horizontal cluster proportional autoscaler][cluster-proportional-autoscaler] for pod auto scaling. The `coredns-autoscaler` ConfigMap can be edited to configure the scaling logic for the number of CoreDNS pods. The `coredns-autoscaler` ConfigMap currently supports two different ConfigMap key values: `linear` and `ladder` which correspond to two supported control modes. The `linear` controller yields a number of replicas in [min,max] range equivalent to `max( ceil( cores * 1/coresPerReplica ) , ceil( nodes * 1/nodesPerReplica ) )`. The `ladder` controller calculates the number of replicas by consulting two different step functions, one for core scaling and another for node scaling, yielding the max of the two replica values. For more information on the control modes and ConfigMap format, please consult the [upstream documentation][cluster-proportional-autoscaler-control-patterns].
 
 > [!IMPORTANT]
-> A minimum of 2 CoreDNS pod replicas per cluster is recommended. Configuring a minimum of 1 CoreDNS pod replica may result in failures during operations which require node draining, such as cluster upgrade operations.
+> A minimum of 2 CoreDNS pod replicas per cluster is recommended. Configuring a minimum of one CoreDNS pod replica may result in failures during operations, which require node draining, such as cluster upgrade operations.
 
 To retrieve the `coredns-autoscaler` ConfigMap, you can run the `kubectl get configmap coredns-autoscaler -n kube-system -o yaml` command which will return the following:
 
@@ -286,6 +287,10 @@ metadata:
   resourceVersion: "..."
   creationTimestamp: "..."
 ```
+
+> [!NOTE] 
+> The configuration provided serves as a potential starting point, but you should customize the values based on your specific cluster requirements and DNS traffic patterns. One way to determine the appropriate number of replicas for your environment is to use the linear scaling formula: `replicas = max( ceil( cores * 1/coresPerReplica ) , ceil( nodes * 1/nodesPerReplica ) )` to determine replica counts based on core / node count in the cluster.
+
 ## CoreDNS vertical pod autoscaling behavior
 
 CoreDNS is an essential add-on managed by AKS and enabled by default. In order to maintain the CoreDNS service availability, CoreDNS maintains use of the original provided resource requests/limits when enabling the [add-on autoscaling feature](./optimized-addon-scaling.md) to prevent the CoreDNS pod restart process causing service unavailability.

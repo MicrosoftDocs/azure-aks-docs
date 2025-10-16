@@ -7,6 +7,7 @@ ms.custom: linux-related-content
 ms.date: 01/12/2024
 ms.author: schaffererin
 author: schaffererin
+# Customer intent: As a cloud administrator using Azure Kubernetes Service, I want to understand the differences between Windows and Linux containers, so that I can effectively manage deployments and ensure compatibility in my containerized environment.
 ---
 
 # Windows container considerations with Azure Kubernetes Service

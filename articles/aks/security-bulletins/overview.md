@@ -6,6 +6,7 @@ author: bahe
 ms.author: bahe
 ms.topic: concept-article
 ms.subservice: aks-security
+# Customer intent: "As a Kubernetes administrator, I want to access updated security bulletins for Azure Kubernetes Service, so that I can address vulnerabilities and ensure the security of my clusters and applications."
 ---
 
 # Security bulletins for Azure Kubernetes Service (AKS)
@@ -21,6 +22,85 @@ These updates cover security information related to the following AKS components
 - Azure Kubernetes Service (AKS)
 - Azure Kubernetes Service Node Image (AKS Node Image)
 - Azure Kubernetes Service Addons (AKS add-ons)
+
+---
+
+## AKS-2025-0011  Malicious NPM Packages used in Supply Chain Attacks
+
+**Published Date**: October 1, 2025
+
+### Description
+This bulletin provides an update on Node Package Manager (NPM) packages being compromised. There has been a series of recent NPM supply chain attacks resulting in packages being used to perform malicious activity such as delivering malware or stealing credentials.
+The vulnerability **does not** impact Azure Kubernetes Service (AKS), as Node.js is **not used** in any AKS core or managed components.
+
+### References
+
+- [NPM Security Advisories](https://github.com/advisories?query=npm)
+- [Ongoing Supply Chain Attack Targets CrowdStrike NPM Packages](https://socket.dev/blog/ongoing-supply-chain-attack-targets-crowdstrike-npm-packages#Compromised-Packages-and-Versions)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- None
+
+**Resolutions**
+
+- AKS does not use Node.js in any core or managed components and is not affected by these attacks. **No customer action is required.** 
+
+---
+
+## AKS-2025-0010  Nodes can delete themselves by adding an OwnerReference
+
+**Published Date**: August 15, 2025
+
+### Description
+A security issue has been identified in the Kubernetes NodeRestriction admission controller that could allow node users to delete their own node object by patching it with an OwnerReference to a cluster-scoped resource. If the referenced resource or the node object is deleted, Kubernetes garbage collection may remove the node object.
+This issue arises because node users are authorized to perform create and patch operations, but not delete. A compromised node could exploit this to recreate its node object with modified taints or labels, potentially influencing pod scheduling and gaining control over workloads
+
+### References
+
+- [CVE-2025-5187](https://github.com/kubernetes/kubernetes/issues/133471)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- [All supported Kubernetes versions](../supported-kubernetes-versions.md)
+
+**Resolutions**
+
+- A security patch has been rolled out in 20250720 and 20250808 release. You can check the release status from [AKS release tracker][aks-release-tracker].
+- **No action is required**. The patch will be automatically applied to your cluster during your configured or default [maintenance window](../planned-maintenance.md).
+
+---
+## AKS-2025-009 Important Security Update for Calico Users
+
+**Published Date**: July 21, 2025
+
+### Description
+This bulletin provides an update on the security patching model for Calico in Azure Kubernetes Service (AKS). AKS-managed Calico and Tigera Operator are now fully aligned with upstream [Calico releases](https://github.com/projectcalico/calico/releases) and [Tigera Operator releases](https://github.com/tigera/operator/releases). This means that AKS will no longer independently patch Calico and Tigera operator images but will instead mirror upstream builds directly. 
+
+As a result, CVEs affecting Calico and Tigera Operator will remain unpatched in AKS until a fix is available upstream. This change ensures consistency with upstream behavior and improves transparency in patch timelines.
+
+### References
+- [Calico Release](https://github.com/projectcalico/calico/releases)
+- [Tigera Operator Release](https://github.com/tigera/operator/releases)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+- All AKS supported versions using AKS managed Calico
+
+**Resolutions**
+- No immediate action is required. Customers are encouraged to monitor upstream Calico releases and the [AKS CVE Status Tracker](https://releases.aks.azure.com/webpage/index.html) for updates.
+- If this creates an unreasonable security burden, you may [remove calico](/azure/aks/use-network-policies#uninstall-azure-network-policy-manager-or-calico) by setting network-policy to none.  
 
 ---
 

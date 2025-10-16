@@ -181,7 +181,7 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
     >   name: kuard
     >   namespace: kuard-demo
     >   annotations:
-    >      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    >      networking.fleet.azure.com/azure-load-balancer-internal: "true"
     >   ...
     > ```
 

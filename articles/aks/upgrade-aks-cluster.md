@@ -8,6 +8,7 @@ ms.date: 01/26/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a cloud administrator, I want to upgrade my Kubernetes clusters, so that I can ensure they have the latest features and security updates to maintain optimal performance and compliance."
 ---
 
 # Upgrade an Azure Kubernetes Service (AKS) cluster
@@ -99,6 +100,11 @@ The Azure portal highlights all the deprecated APIs between your current version
 :::image type="content" source="./media/upgrade-cluster/azure-portal-upgrade.png" alt-text="The screenshot of the upgrade blade for an AKS cluster in the Azure portal. The automatic upgrade field shows 'patch' selected, and several APIs deprecated between the selected Kubernetes version and the cluster's current version are described.":::
 
 ---
+
+## FAQ
+### I upgraded only the control plane. Why were my nodes upgraded too?
+AKS may trigger a rolling node (agent pool) upgrade alongside or after a control plane upgrade to keep the cluster compliant and healthy. This occurs when:
+typically when a previous node upgrade failed or left nodes on mixed versions.
 
 ## Troubleshoot AKS cluster upgrade error messages
 
@@ -323,6 +329,20 @@ A common pattern in this situation is to carry out a blue / green deployment of 
     default 9m22s Normal Surge node/aks-nodepool1-96663640-vmss000002 Created a surge node [aks-nodepool1-96663640-vmss000002 nodepool1] for agentpool nodepool1
     ...
     ```
+
+## Client-Server version compatibility for kubectl
+
+Ensure your `kubectl` client is within ±1 minor version of the AKS control plane (API server) to maintain compatibility. Exceeding this supported version skew can lead to command failures or unexpected behavior. The following command displays both the Client Version and Server Version and warns if they're out of sync:
+
+```shell
+kubectl version
+```
+
+If there's a version mismatch:
+
+- Update or downgrade your kubectl to align with the server's version.
+- Alternatively, if you're restricted from changing your local kubectl, consider using the [`az aks command invoke` command](/cli/azure/aks/command) in Azure CLI to run your kubectl commands remotely on your cluster.
+
 
 ## Next steps
 

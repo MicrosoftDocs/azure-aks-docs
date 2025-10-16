@@ -6,6 +6,7 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli, devx-track-arm-template
 ms.date: 09/26/2023
 ms.author: davidsmatlak
+# Customer intent: "As a cloud engineer, I want to deploy the Kubernetes Event-driven Autoscaling (KEDA) add-on using an ARM template, so that I can enable efficient autoscaling for my applications on Azure Kubernetes Service."
 ---
 
 # Install the Kubernetes Event-driven Autoscaling (KEDA) add-on using an ARM template

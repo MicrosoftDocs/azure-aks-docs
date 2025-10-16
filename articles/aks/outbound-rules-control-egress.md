@@ -17,15 +17,18 @@ This article provides the necessary details that allow you to secure outbound tr
 
 To see an example configuration using Azure Firewall, visit [Control egress traffic using Azure Firewall in AKS](limit-egress-traffic.md).
 
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+
 ## Background
 
-AKS clusters are deployed on a virtual network. This network can either be customized and pre-configured by you or it can be created and managed by AKS. In either case, the cluster has **outbound**, or egress, dependencies on services outside of the virtual network.
+AKS clusters are deployed on a virtual network. This network can either be customized and preconfigured by you or it can be created and managed by AKS. In either case, the cluster has **outbound**, or egress, dependencies on services outside of the virtual network.
 
 For management and operational purposes, nodes in an AKS cluster need to access certain ports and fully qualified domain names (FQDNs). These endpoints are required for the nodes to communicate with the API server or to download and install core Kubernetes cluster components and node security updates. For example, the cluster needs to pull container images from Microsoft Artifact Registry (MAR).
 
-The AKS outbound dependencies are almost entirely defined with FQDNs, which don't have static addresses behind them. The lack of static addresses means you can't use network security groups (NSGs) to lock down the outbound traffic from an AKS cluster.
+The AKS outbound dependencies are almost entirely defined with FQDNs, which don't have static addresses behind them. The lack of static addresses means you can't use network security groups (NSGs) to lock down the outbound traffic from an AKS cluster. 
 
-By default, AKS clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. 
+By default, AKS clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. For outbound internet traffic, it's not recommended to set all deny rules in an NSG.
 
 A [network isolated AKS cluster][network-isolated-cluster], provides the simplest and most secure solution for setting up outbound restrictions for a cluster out of the box. A network isolated cluster pulls the images for cluster components and add-ons from a private Azure Container Registry (ACR) instance connected to the cluster instead of pulling from MAR. If the images aren't present, the private ACR pulls them from MAR and serves them via its private endpoint, eliminating the need to enable egress from the cluster to the public MAR endpoint. The cluster operator can then incrementally set up allowed outbound traffic securely over a private network for each scenario they want to enable. This way the cluster operators have complete control over designing the allowed outbound traffic from their clusters right from the start, thus allowing them to reduce the risk of data exfiltration.
 
@@ -169,6 +172,7 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 | **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Microsoft Entra Authentication. |
 | **`*.ods.opinsights.azure.com`** <br/> **`*.ods.opinsights.azure.us`** (Azure Government) <br/> **`*.ods.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required for Microsoft Defender to upload security events to the cloud.|
 | **`*.oms.opinsights.azure.com`** <br/> **`*.oms.opinsights.azure.us`** (Azure Government) <br/> **`*.oms.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required to authenticate with Log Analytics workspaces.|
+|**`*.cloud.defender.microsoft.com`**|**`HTTPS:443`**|NEW: Required for Microsoft Defender to upload security events to the cloud.|
 
 ### Azure Key Vault provider for Secrets Store CSI Driver
 

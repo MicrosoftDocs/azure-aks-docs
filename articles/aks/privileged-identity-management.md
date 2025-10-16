@@ -147,15 +147,16 @@ You *can* use just the **default** and **admin** groups instead of creating a se
 
 In this section, we create two users in Microsoft Entra ID: a **normal** user with only the default role, and a **privileged** user who can approve or deny just-in-time requests from the *normal* user.
 
-1. Create the **normal** user using the [`az ad user create`][az-ad-user-create] command.
+1. Create the **normal** user using the [`az ad user create`][az-ad-user-create] command. For the password variable commands, the values are hidden so they aren't displayed on your console.
 
     ```azurecli-interactive
     DOMAIN=contoso.com
-    PASSWORD=Password1
+    read -sp 'Enter password for NUSER_ID: ' NUSERPASSWORD
+    read -sp 'Enter password for PUSER_ID: ' PUSERPASSWORD
 
     NUSER_ID=$(az ad user create \
         --display-name n01 \
-        --password ${PASSWORD} \
+        --password ${NUSERPASSWORD} \
         --user-principal-name n01@${DOMAIN} \
         --query id \
         --output tsv)
@@ -174,7 +175,7 @@ In this section, we create two users in Microsoft Entra ID: a **normal** user wi
     ```azurecli-interactive
     PUSER_ID=$(az ad user create \
         --display-name p01 \
-        --password ${PASSWORD} \
+        --password ${PUSERPASSWORD} \
         --user-principal-name p01@${DOMAIN} \
         --query id \
         --output tsv)
@@ -218,8 +219,14 @@ Now, we can try to access the AKS cluster using the **normal** user, who is a me
 1. Log in to the Azure portal as the **normal** user using the [`az login`][az-login] command.
 
     ```azurecli-interactive
-    az login --username n01@$DOMAIN --password ${PASSWORD}
+    az login --username n01@$DOMAIN --password ${NUSERPASSWORD}
     ```
+
+    Micorsoft recommends you use the most secure method available to sign in to Azure. For more information, see the following articles:
+
+    - [Sign in with credentials on the command line](/cli/azure/authenticate-azure-cli-interactively#sign-in-with-credentials-on-the-command-line)
+    - [Sign into Azure interactively using the Azure CLI](/cli/azure/authenticate-azure-cli-interactively)
+    - [Authenticate to Azure using Azure CLI](/cli/azure/authenticate-azure-cli)
 
 1. Get the user credentials to access the cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 

@@ -8,9 +8,13 @@ ms.date: 06/10/2025
 
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a cloud administrator, I want to access a private Azure Kubernetes Service cluster using the command invoke feature, so that I can run management commands without configuring complex network setups like VPNs or Express Routes.
 ---
 
 # Access a private Azure Kubernetes Service (AKS) cluster using the command invoke or Run command feature
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2331629)
 
 When you access a private AKS cluster, you need to connect to the cluster from the cluster virtual network, a peered network, or a configured private endpoint. These approaches require configuring a VPN, Express Route, deploying a *jumpbox* within the cluster virtual network, or creating a private endpoint inside of another virtual network.
 

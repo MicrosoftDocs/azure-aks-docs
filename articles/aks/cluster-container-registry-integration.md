@@ -3,11 +3,12 @@ title: Integrate Azure Container Registry with Azure Kubernetes Service (AKS)
 description: Learn how to integrate Azure Kubernetes Service (AKS) with Azure Container Registry (ACR).
 ms.topic: concept-article
 ms.date: 11/08/2024
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.tool: azure-cli, azure-powershell
 ms.devlang: azurecli
 ms.custom: devx-track-azurepowershell, devx-track-azurecli
-author: davidsmatlak
-ms.author: davidsmatlak
+# Customer intent: As a cloud administrator, I want to integrate Azure Container Registry with Azure Kubernetes Service, so that I can streamline the deployment of container images and manage access permissions efficiently.
 ---
 
 # Authenticate with Azure Container Registry (ACR) from Azure Kubernetes Service (AKS)
@@ -21,6 +22,9 @@ The AKS to ACR integration assigns the [**AcrPull** role][acr-pull] to the [Micr
 
 > [!NOTE]
 > This article covers automatic authentication between AKS and ACR. If you need to pull an image from a private external registry, use an [image pull secret][image-pull-secret].
+
+> [!NOTE]
+> The AKS-ACR integration through `az aks --attach-acr` is not supported for registries where the role assignment permissions mode is set to "RBAC Registry + ABAC Repository Permissions". This limitation will be addressed in the future. Please visit https://aka.ms/acr/auth/abac for more information on ABAC-enabled ACR registries.
 
 ## Before you begin
 

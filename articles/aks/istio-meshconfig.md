@@ -7,9 +7,13 @@ ms.service: azure-kubernetes-service
 ms.date: 06/13/2024
 ms.author: shasb
 author: shashankbarsin
+# Customer intent: As a Kubernetes administrator, I want to configure the Istio service mesh add-on for my AKS cluster, so that I can manage service communication and enhance observability in my applications.
 ---
 
 # Configure Istio-based service mesh add-on for Azure Kubernetes Service
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2331829)
 
 Open-source Istio uses [MeshConfig][istio-meshconfig] to define mesh-wide settings for the Istio service mesh. Istio-based service mesh add-on for AKS builds on top of MeshConfig and classifies different properties as supported, allowed, and blocked.
 
@@ -161,6 +165,7 @@ Fields present in [open source MeshConfig reference documentation](https://istio
 | holdApplicationUntilProxyStarts | Supported | - |
 | caCertificatesPem | Allowed | - |
 | privateKeyProvider | Allowed | - |
+| proxyHeaders | Allowed | - |
 
 > [!CAUTION]
 > **Support scope of configurations:** Mesh configuration allows for extension providers such as self-managed instances of Zipkin or Apache Skywalking to be configured with the Istio add-on. However, these extension providers are outside the support scope of the Istio add-on. Any issues associated with extension tools are outside the support boundary of the Istio add-on.

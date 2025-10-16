@@ -22,11 +22,11 @@ This article provides two methods to deploy the Ray cluster on AKS:
 ## Prerequisites
 
 * Review the [Ray cluster on AKS overview](./ray-overview.md) to understand the components and deployment process.
-* An Azure subscription. If you don't have an Azure subscription, you can create a free account [here](https://azure.microsoft.com/free/).
+* An Azure subscription. If you don't have an Azure subscription, you can create a free account [here](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * The Azure CLI installed on your local machine. You can install it using the instructions in [How to install the Azure CLI](/cli/azure/install-azure-cli).
 * The [Azure Kubernetes Service Preview extension](/azure/aks/draft#install-the-aks-preview-azure-cli-extension) installed.
 * [Helm](https://helm.sh/docs/intro/install/) installed.
-* [Terraform client tools](https://developer.hashicorp.com/terraform/install) or [OpenTofu](https://opentofu.org/) installed. This article uses Terrafrom, but the modules used should be compatible with OpenTofu.
+* [Terraform client tools](https://developer.hashicorp.com/terraform/install) or [OpenTofu](https://opentofu.org/) installed. This article uses Terraform, but the modules used should be compatible with OpenTofu.
 
 ## Deploy the Ray sample non-interactively
 
@@ -347,7 +347,7 @@ To learn more about AI and machine learning workloads on AKS, see the following 
 
 * [Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)](./open-ai-quickstart.md)
 * [Build and deploy data and machine learning pipelines with Flyte on Azure Kubernetes Service (AKS)](./use-flyte.md)
-* [Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator (preview)](./ai-toolchain-operator.md)
+* [Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator](./ai-toolchain-operator.md)
 
 ## Contributors
 

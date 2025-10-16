@@ -9,6 +9,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 12/11/2024
 ms.custom: references_regions, devx-track-azurecli
+# Customer intent: As a Kubernetes administrator, I want to configure Azure CNI networking for my AKS cluster, so that I can effectively manage virtual network subnets and optimize IP address allocation.
 ---
 
 # Configure Azure CNI networking in Azure Kubernetes Service (AKS)
@@ -19,11 +20,11 @@ This article shows you how to use Azure CNI networking to create and use a virtu
 
 ### [Azure portal](#tab/configure-networking-portal)
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 ### [Azure PowerShell](#tab/configure-networking-powershell)
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 - Azure Cloud Shell or Azure PowerShell.
 
@@ -35,7 +36,7 @@ This article shows you how to use Azure CNI networking to create and use a virtu
 
 ### [Azure CLI](#tab/configure-networking-cli)
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 

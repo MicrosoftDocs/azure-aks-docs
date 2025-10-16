@@ -7,6 +7,7 @@ ms.custom: devx-track-azurecli
 author: deveshdama
 ms.date: 02/12/2025
 ms.author: ddama
+# Customer intent: As a Kubernetes operator, I want to configure Azure Managed Prometheus to collect metrics from Istio service mesh workloads, so that I can monitor performance and ensure the reliability of my applications on Azure Kubernetes Service.
 ---
 
 # Collect metrics for Istio service mesh add-on workloads for Azure Kubernetes Service in Azure Managed Prometheus

@@ -7,6 +7,7 @@ ms.author: kaarthis
 author: kaarthis
 ms.subservice: aks-upgrade
 ms.date: 06/27/2025
+# Customer intent: As a cloud administrator, I want to select the appropriate node OS auto-upgrade channel for my Kubernetes cluster, so that I can ensure timely security updates and manage maintenance effectively while minimizing disruptions.
 ---
 
 # Autoupgrade node OS images
@@ -15,6 +16,9 @@ ms.date: 06/27/2025
 > [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321852)
 
 AKS provides multiple autoupgrade channels dedicated to timely node-level OS security updates. This channel is different from cluster-level Kubernetes version upgrades and supersedes it.
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Interactions between node OS autoupgrade and cluster autoupgrade
 

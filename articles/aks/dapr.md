@@ -39,7 +39,7 @@ Once Dapr is installed on your cluster, you can begin to develop using the Dapr 
 
 ## Prerequisites 
 
-- An Azure subscription. [Don't have one? Create a free account.](https://azure.microsoft.com/free/?WT.mc_id=A261C142F)
+- An Azure subscription. [Don't have one? Create a free account.](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn)
 - The latest version of the [Azure CLI][install-cli].
 - An existing [AKS cluster][deploy-cluster] or connected [Arc-enabled Kubernetes cluster][arc-k8s-cluster].
 - [An Azure Kubernetes Service Role-Based Access Control Admin role](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin) 

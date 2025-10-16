@@ -8,6 +8,7 @@ ms.date: 07/31/2023
 author: davidsmatlak
 ms.author: davidsmatlak
 
+# Customer intent: "As a Kubernetes administrator, I want to migrate my AKS pods from pod-managed identities to workload identity, so that I can enhance security and streamline authentication for my containerized applications."
 ---
 
 # Migrate from pod managed-identity to workload identity
