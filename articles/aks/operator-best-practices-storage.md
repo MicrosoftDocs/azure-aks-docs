@@ -96,6 +96,29 @@ Work with your application development team to understand their storage capacity
 
 For more information about available VM sizes, see [Sizes for Linux virtual machines in Azure][vm-sizes].
 
+### Evaluate ephemeral NVMe data disks for maximum performance
+
+> **Best practice guidance**
+>
+> Consider ephemeral NVMe data disks when you need the highest storage throughput and IOPS, and your workload can tolerate the temporary nature of local node storage.
+
+Ephemeral NVMe data disks provide low-latency, host-attached storage that delivers the highest IOPS and throughput available in Azure. NVMe disks are available on L-series, E-series, and GPU VMs, with expanding support for the newer Azure VM v6 and v7 families such as the D-series, F-series, H-series. 
+
+NVMe-backed storage enhances workloads that demand high-speed caching, temporary storage, or transient data processing. It eliminates the reliance on high-performance remote disks, which typically require the largest and most costly VM configurations to achieve optimal performance.
+
+Common scenarios that benefit from ephemeral NVMe data disks include:
+
+- AI training or inference pipelines that stage large datasets or checkpoints between iterations
+- High-performance databases or streaming engines that maintain replicas or logs across pods
+- Batch analytics jobs that require temporary scratch space or shuffle storage
+
+Because NVMe data is tied to the node instance, plan for pod disruption budgets and ensure your application can quickly rebuild from durable storage or replication. Data placed on these disks is lost whenever a node is deallocated, reimaged, or fails.
+
+To expose NVMe capacity to pods, use [Azure Container Storage][azure-container-storage], which will can orchestrate and create ephemeral **or** persistent volumes backed by local NVMe disks. For implementation guidance, see [Use Azure Container Storage with AKS][use-azure-container-storage].
+
+> [!IMPORTANT]
+> Use NVMe data disks only for workloads that can tolerate data loss and recover quickly. Keep business-critical data on durable storage such as Azure Disk or Azure Files.
+
 ## Dynamically provision volumes
 
 > **Best practice guidance** 
@@ -147,4 +170,5 @@ This article focused on storage best practices in AKS. For more information abou
 [managed-disks]: /azure/virtual-machines/managed-disks-overview
 [best-practices-multi-region]: operator-best-practices-multi-region.md
 [remove-state]: operator-best-practices-multi-region.md#remove-service-state-from-inside-containers
-
+[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[use-azure-container-storage]: /azure/storage/container-storage/container-storage-aks-quickstart
