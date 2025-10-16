@@ -12,9 +12,9 @@ ms.date: 08/16/2024
 
 # Configure Azure CNI Overlay networking in Azure Kubernetes Service (AKS)
 
-The traditional [Azure Container Networking Interface (CNI)](./configure-azure-cni.md) assigns a VNet IP address to every pod. It assigns this IP address from a pre-reserved set of IPs on every node *or* a separate subnet reserved for pods. This approach requires IP address planning and could lead to address exhaustion, which introduces difficulties scaling your clusters as your application demands grow.
+The traditional [Azure Container Networking Interface (CNI)](./configure-azure-cni.md) assigns a VNet IP address to every pod. It assigns this IP address from a prereserved set of IPs on every node *or* a separate subnet reserved for pods. This approach requires IP address planning and could lead to address exhaustion, which introduces difficulties scaling your clusters as your application demands grow.
 
-With Azure CNI Overlay, the cluster nodes are deployed into an Azure Virtual Network (VNet) subnet. Pods are assigned IP addresses from a private CIDR logically different from the VNet hosting the nodes. Pod and node traffic within the cluster use an Overlay network. Network Address Translation (NAT) uses the node's IP address to reach resources outside the cluster. This solution saves a significant amount of VNet IP addresses and enables you to scale your cluster to large sizes. An extra advantage is that you can reuse the private CIDR in different AKS clusters, which extends the IP space available for containerized applications in Azure Kubernetes Service (AKS).
+With Azure CNI Overlay, the cluster nodes are deployed into an Azure Virtual Network (VNet) subnet. Pods are assigned IP addresses from a private Classless Inter-Domain Routing (CIDR) logically different from the VNet hosting the nodes. Pod and node traffic within the cluster use an Overlay network. Network Address Translation (NAT) uses the node's IP address to reach resources outside the cluster. This solution saves a significant amount of VNet IP addresses and enables you to scale your cluster to large sizes. An extra advantage is that you can reuse the private CIDR in different AKS clusters, which extends the IP space available for containerized applications in Azure Kubernetes Service (AKS).
 
 > [!IMPORTANT]
 > Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
@@ -23,7 +23,7 @@ With Azure CNI Overlay, the cluster nodes are deployed into an Azure Virtual Net
 
 In Overlay networking, only the Kubernetes cluster nodes are assigned IPs from subnets. Pods receive IPs from a private CIDR provided at the time of cluster creation. Each node is assigned a `/24` address space carved out from the same CIDR. Extra nodes created when you scale out a cluster automatically receive `/24` address spaces from the same CIDR. Azure CNI assigns IPs to pods from this `/24` space.
 
-A separate routing domain is created in the Azure Networking stack for the pod's private CIDR space, which creates an Overlay network for direct communication between pods. There's no need to provision custom routes on the cluster subnet or use an encapsulation method to tunnel traffic between pods, which provides connectivity performance between pods on par with VMs in a VNet. Workloads running within the pods are not even aware that network address manipulation is happening.
+A separate routing domain is created in the Azure Networking stack for the pod's private CIDR space, which creates an Overlay network for direct communication between pods. There's no need to provision custom routes on the cluster subnet. Encapsulation methods to tunnel traffic between pods, which provides connectivity performance between pods on par with Virtual Machines (VMs) in a VNet, is also unnecessary. Workloads running within the pods aren't even aware that network address manipulation is happening.
 
 :::image type="content" source="media/azure-cni-Overlay/azure-cni-overlay.png" alt-text="A diagram showing two nodes with three pods each running in an Overlay network. Pod traffic to endpoints outside the cluster is routed via NAT.":::
 
@@ -35,11 +35,11 @@ You can configure ingress connectivity to the cluster using an ingress controlle
 
 ## Differences between Kubenet and Azure CNI Overlay
 
-Like Azure CNI Overlay, Kubenet assigns IP addresses to pods from an address space logically different from the VNet, but it has scaling and other limitations. The below table provides a detailed comparison between Kubenet and Azure CNI Overlay. If you don't want to assign VNet IP addresses to pods due to IP shortage, we recommend using Azure CNI Overlay.
+Like Azure CNI Overlay, Kubenet assigns IP addresses to pods from an address space logically different from the VNet, but it has scaling and other limitations. This table provides a detailed comparison between Kubenet and Azure CNI Overlay. If you don't want to assign VNet IP addresses to pods due to IP shortage, we recommend using Azure CNI Overlay.
 
 | Area                         | Azure CNI Overlay                                            | Kubenet                                                                       |
 |------------------------------|--------------------------------------------------------------|-------------------------------------------------------------------------------|
-| Cluster scale                | 5000 nodes and 250 pods/node                                 | 400 nodes and 250 pods/node                                                   |
+| Cluster scale                | 5,000 nodes and 250 pods/node                                | 400 nodes and 250 pods/node                                                   |
 | Network configuration        | Simple - no extra configurations required for pod networking | Complex - requires route tables and UDRs on cluster subnet for pod networking |
 | Pod connectivity performance | Performance on par with VMs in a VNet                        | Extra hop adds latency                                                  |
 | Kubernetes Network Policies  | Azure Network Policies, Calico, Cilium                       | Calico                                                                        |
@@ -52,7 +52,7 @@ Like Azure CNI Overlay, Kubenet assigns IP addresses to pods from an address spa
   - When planning IP address space for pods, consider the following factors:
     - The same pod CIDR space can be used on multiple independent AKS clusters in the same VNet.
     - Pod CIDR space must not overlap with the cluster subnet range.
-    - Pod CIDR space must not overlap with directly connected networks (like VNet peering, ExpressRoute, or VPN). If external traffic has source IPs in the podCIDR range, it needs translation to a non-overlapping IP via SNAT to communicate with the cluster.
+    - Pod CIDR space must not overlap with directly connected networks (like VNet peering, ExpressRoute, or VPN). If external traffic has source IPs in the podCIDR range, it needs translation to a nonoverlapping IP via SNAT to communicate with the cluster.
     - Pod CIDR space can only be expanded.
 - **Kubernetes service address range**: The size of the service address CIDR depends on the number of cluster services you plan to create. It must be smaller than `/12`. This range shouldn't overlap with the pod CIDR range, cluster subnet range, and IP range used in peered VNets and on-premises networks.
 - **Kubernetes DNS service IP address**: This IP address is within the Kubernetes service address range that's used by cluster service discovery. Don't use the first IP address in your address range, as this address is used for the `kubernetes.default.svc.cluster.local` address.
@@ -61,7 +61,7 @@ Like Azure CNI Overlay, Kubenet assigns IP addresses to pods from an address spa
 > The private CIDR ranges available for the Pod CIDR are defined in [RFC 1918](https://tools.ietf.org/html/rfc1918) and [RFC 6598](https://tools.ietf.org/html/rfc6598). While we don't block the use of public IP ranges, they are considered out of Microsoft's support scope. We recommend using private IP ranges for pod CIDR. 
 
 > [!IMPORTANT]
-> When using Azure CNI in Overlay mode, ensure that the Pod CIDR does not overlap with any external IP addresses or networks (such as on-premises networks, peered VNets, or ExpressRoute). If an external host uses an IP within the Pod CIDR, packets destined for that host from the Pod may be redirected into the overlay network and SNAT’d by the node, causing the external endpoint to become unreachable.
+> When using Azure CNI in Overlay mode, ensure that the Pod CIDR doesn't overlap with any external IP addresses or networks (such as on-premises networks, peered VNets, or ExpressRoute). If an external host uses an IP within the Pod CIDR, packets destined for that host from the Pod may be redirected into the overlay network and SNAT’d by the node, causing the external endpoint to become unreachable.
 
 ## Network security groups
 
@@ -85,7 +85,7 @@ Azure CNI offers two IP addressing options for pods: The traditional configurati
 
 **Use Overlay networking when**:
 
-- You would like to scale to a large number of pods, but have limited IP address space in your VNet.
+- You would like to scale to a large number of pods, but limited by IP address space in your VNet.
 - Most of the pod communication is within the cluster.
 - You don't need advanced AKS features, such as virtual nodes.
 
@@ -102,12 +102,12 @@ Azure CNI Overlay has the following limitations:
 
 - Virtual Machine Availability Sets (VMAS) aren't supported for Overlay.
 - You can't use [DCsv2-series](/azure/virtual-machines/dcv2-series) virtual machines in node pools. To meet Confidential Computing requirements, consider using [DCasv5 or DCadsv5-series confidential VMs](/azure/virtual-machines/dcasv5-dcadsv5-series) instead.
-- In case you are using your own subnet to deploy the cluster, the names of the subnet, VNET and resource group which contains the VNET, must be 63 characters or less. This comes from the fact that these names will be used as labels in AKS worker nodes, and are therefore subjected to [Kubernetes label syntax rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).
+- In case you're using your own subnet to deploy the cluster, the names of the subnet, VNET and resource group which contains the VNET, must be 63 characters or less. These names are used as labels in AKS worker nodes, and are therefore subjected to [Kubernetes label syntax rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).
 
 ## Set up Overlay clusters
 
 > [!NOTE]
-> You must have CLI version 2.48.0 or later to use the `--network-plugin-mode` argument. For Windows, you must have the latest aks-preview Azure CLI extension installed and can follow the instructions below.
+> You must have CLI version 2.48.0 or later to use the `--network-plugin-mode` argument. For Windows, you must have the latest aks-preview Azure CLI extension installed.
 
 Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command. Make sure to use the argument `--network-plugin-mode` to specify an overlay cluster. If the pod CIDR isn't specified, then AKS assigns a default space: `viz. 10.244.0.0/16`.
 
@@ -126,9 +126,9 @@ az aks create \
     --generate-ssh-keys
 ```
 
-## Add a new nodepool to a dedicated subnet
+## Add a new node pool to a dedicated subnet
 
-After you have created a cluster with Azure CNI Overlay, you can create another nodepool and assign the nodes to a new subnet of the same VNet.
+After you created a cluster with Azure CNI Overlay, you can create another node pool and assign the nodes to a new subnet of the same VNet.
 This approach can be useful if you want to control the ingress or egress IPs of the host from/ towards targets in the same VNET or peered VNets.
 
 ```azurecli-interactive
@@ -200,7 +200,7 @@ The following attributes are provided to support dual-stack clusters:
 
 ## Create an example workload
 
-Once the cluster has been created, you can deploy your workloads. This article walks you through an example workload deployment of an NGINX web server.
+Once the cluster is created, you can deploy your workloads. This article walks you through an example workload deployment of an NGINX web server.
 
 ### Deploy an NGINX web server
 
@@ -212,7 +212,6 @@ The application routing addon is the recommended way for ingress in an AKS clust
 > There are currently **two limitations** pertaining to IPv6 services in AKS.
 >
 > - Azure Load Balancer sends health probes to IPv6 destinations from a link-local address. In Azure Linux node pools, this traffic can't be routed to a pod, so traffic flowing to IPv6 services deployed with `externalTrafficPolicy: Cluster` fail. IPv6 services must be deployed with `externalTrafficPolicy: Local`, which causes `kube-proxy` to respond to the probe on the node.
-> - Prior to Kubernetes version 1.27, only the first IP address for a service will be provisioned to the load balancer, so a dual-stack service only receives a public IP for its first-listed IP family. To provide a dual-stack service for a single deployment, please create two services targeting the same selector, one for IPv4 and one for IPv6. This is no longer a limitation in kubernetes 1.27 or later.
 
 # [kubectl](#tab/kubectl)
 
@@ -223,7 +222,7 @@ The application routing addon is the recommended way for ingress in an AKS clust
     kubectl expose deployment nginx --name=nginx-ipv6 --port=80 --type=LoadBalancer --overrides='{"spec":{"ipFamilies": ["IPv6"]}}'
     ```
 
-    You receive an output that shows the services have been exposed.
+    You receive an output that shows the exposed services.
 
     ```output
     service/nginx-ipv4 exposed
@@ -322,7 +321,7 @@ You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. Th
 
 ### Set up Overlay clusters with Azure CNI Powered by Cilium
 
-Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command. Make sure to use the argument `--network-dataplane cilium` to specify the Cilium dataplane.
+Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command. Make sure to use the argument `--network-dataplane cilium` to specify the Cilium data plane.
 
 ```azurecli-interactive
 clusterName="myOverlayCluster"
@@ -342,9 +341,9 @@ az aks create \
 
 For more information on Azure CNI Powered by Cilium, see [Azure CNI Powered by Cilium][azure-cni-powered-by-cilium].
 
-## Dual-stack networking Windows nodepools - (Preview)
+## Dual-stack networking Windows node pools - (Preview)
 
-You can deploy your dual-stack AKS clusters with Windows nodepools.
+You can deploy your dual-stack AKS clusters with Windows node pools.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -403,9 +402,9 @@ az aks create \
     --generate-ssh-keys
 ```
 
-### Add a Windows nodepool to the cluster
+### Add a Windows node pool to the cluster
 
-Add a Windows nodepool to the cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command.
+Add a Windows node pool to the cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
 ```azurecli-interactive
 az aks nodepool add \
@@ -424,10 +423,10 @@ You can expand your Pod CIDR space on AKS Overlay clusters with Linux nodes only
 
 ### Limitations
 
- - Windows nodes and hybrid node scenarios are not supported.
+ - Windows nodes and hybrid node scenarios aren't supported.
  - Only expansion is allowed. Shrinking or changing the Pod CIDR returns an error.
- - IPv6 Pod CIDR expansion is not supproted.
- - Changing multiple Pod CIDR blocks via `--pod-cidrs` is not supported.
+ - IPv6 Pod CIDR expansion isn't supported.
+ - Changing multiple Pod CIDR blocks via `--pod-cidrs` isn't supported.
  - If an [Azure Availability Zone](./availability-zones.md) is down during the expansion operation, new nodes may appear as unready. These nodes are expected to reconcile once the Availability Zone is up.
 
 ### Register the `EnableAzureCNIOverlayPodCIDRExpansion` feature flag
