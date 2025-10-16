@@ -18,7 +18,7 @@ In this article, you learn how to create Windows Server node pools with `contain
 
 ## Prerequisites
 
-- [Azure CLI](/cli/azure/install-azure-cli) installed and configured. Run `az version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+- [Azure CLI](/cli/azure/install-azure-cli) installed and configured. Find the version using the `az version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - An existing AKS cluster with a system node pool. If you need to create one, see [Create an AKS cluster with a single node pool](./create-node-pools.md#create-an-aks-cluster-with-a-single-node-pool-using-the-azure-cli).
 
 ## Limitations and considerations
@@ -26,7 +26,7 @@ In this article, you learn how to create Windows Server node pools with `contain
 When using Windows Server node pools with `containerd`, keep the following limitations and considerations in mind:
 
 - Both the control plane and Windows Server 2019 node pools must use Kubernetes version 1.20 or greater.
-- When you create or update a node pool to run Windows Server containers, the default value for `--node-vm-size` is `Standard_D2s_v3`, which was the minimum recommended size for Windows Server 2019 node pools prior to Kubernetes version 1.20. The minimum recommended size for Windows Server 2019 node pools using `containerd` is `Standard_D4s_v3`. When setting the `--node-vm-size` parameter, check the [list of restricted VM sizes](/azure/virtual-machines/sizes/overview).
+- When you create or update a node pool to run Windows Server containers, the default value for `--node-vm-size` is `Standard_D2s_v3`, which was the minimum recommended size for Windows Server 2019 node pools up to Kubernetes version 1.20. The minimum recommended size for Windows Server 2019 node pools using `containerd` is `Standard_D4s_v3`. When setting the `--node-vm-size` parameter, check the [list of restricted virtual machine (VM) sizes](/azure/virtual-machines/sizes/overview).
 - We recommend using [taints or labels](./manage-node-pools.md#set-node-pool-taints) with your Windows Server 2019 node pools running `containerd` and tolerations or node selectors with your deployments to guarantee your workloads are scheduled correctly.
 
 ## Add a Windows Server node pool with `containerd`
