@@ -166,9 +166,15 @@ In this example, the configured scheduler prioritizes scheduling pods on nodes w
     ```
 
 
-## Use the pod topology spread scheduling strategy
+## Configure pod topology spread
 
-Pod topology spread is a scheduling strategy that distributes pods evenly across failure domains (e.g., availability zones or regions) to ensure high availability and fault tolerance. This strategy helps prevent the risk of all replicas of a pod being placed in the same failure domain and improves the resilience of applications in the event of zone or node failures.
+Pod topology spread is a scheduling strategy that seeks to distribute pods evenly across failure domains (e.g., availability zones or regions) to ensure high availability and fault tolerance in the event of zone or node failures. This strategy helps prevent the risk of all replicas of a pod being placed in the same failure domain. For more configuration guidance visit [Pod Topology Spread Constraints documentation] [https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/]
+
+    -`PodTopologySpread` plugin instructs the scheduler to try and distribute pods as evenly as possible across availability zones. 
+    -`whenUnsatisfiable: ScheduleAnyway` specifies schedule to schedule pods despite the inability to meet the topology constraints. This avoids pod scheduling failures when exact distribution isn't feasible.
+    -`List` type applies the default constraints as a list of rules. The scheduler uses the rules in the order they're defined, and they apply to all pods that don’t specify custom topology spread constraints.
+    - `maxSkew: 1` means the number of pods can differ by at most _1_ between any two zones
+    - `topologyKey: topology.kubernetes.io/zone` indicates that the scheduler should spread pods across availability zones.
 
 1. Create a file named `aks-scheduler-customization.yaml` and paste in the following manifest:
 
@@ -194,16 +200,6 @@ Pod topology spread is a scheduling strategy that distributes pods evenly across
                       topologyKey: topology.kubernetes.io/zone
                       whenUnsatisfiable: ScheduleAnyway
     ```
-
-    The `PodTopologySpread` plugin ensures that the scheduler will try to distribute pods as evenly as possible across availability zones. This helps ensure that the pods in your application aren't all concentrated in a single zone, improving resilience in case of zone failure.
-
-    By spreading pods across different zones, you increase the availability and fault tolerance of your application. If one zone goes down, the other zones still have pods running, which prevents complete application failure.
-
-    The `whenUnsatisfiable: ScheduleAnyway` setting ensures that if there aren't enough resources to meet the topology constraints exactly, the pod will still be scheduled. This avoids pod scheduling failures when exact distribution isn't feasible.
-
-    The `List` type applies the default constraints as a list of rules. The scheduler uses the rules in the order they're defined, and they apply to all pods that don’t specify custom topology spread constraints.
-
-    In this profile, the setting `maxSkew: 1` means the number of pods can differ by at most _1_ between any two zones, and `topologyKey: topology.kubernetes.io/zone` indicates that the scheduler should spread pods across availability zones.
 
 1. Apply the scheduling configuration manifest using the `kubectl apply` command.
 
