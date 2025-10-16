@@ -132,8 +132,12 @@ Code: UpgradeFailed
 Message: Drain node ... failed when evicting pod ... Cannot evict pod as it would violate the pod's disruption budget.
 ```
 #### Option 1: Force upgrade (bypass PDB)
+> [!WARNING]
+> Force upgrade bypasses Pod Disruption Budget (PDB) constraints and may cause service disruption by draining all pods simultaneously. Before using this option, first try to fix PDB misconfigurations (review the PDB minAvailable/maxUnavailable settings, ensure adequate pod replicas, verify PDBs aren't blocking all evictions).
 
-Use this option when PDBs are misconfigured and you need to force the upgrade to proceed. Requires Azure CLI 2.79.0+ or stable API version 2025-09-01+.
+Use force upgrade only when PDBs prevent critical upgrades and cannot be resolved. This will override PDB protections and potentially cause complete service unavailability during the upgrade.
+
+**Requirements:** Azure CLI 2.79.0+ or AKS API version 2025-09-01+
 
 ```azurecli-interactive
 az aks upgrade \
