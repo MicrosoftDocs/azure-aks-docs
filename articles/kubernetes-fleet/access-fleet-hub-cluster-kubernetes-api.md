@@ -1,5 +1,5 @@
 ---
-title: "Access the Kubernetes API for a Azure Kubernetes Fleet Manager Hub Cluster"
+title: "Access the Kubernetes API for an Azure Kubernetes Fleet Manager Hub Cluster"
 description: Learn how to access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster.
 ms.topic: how-to
 ms.date: 04/01/2024
@@ -11,7 +11,7 @@ zone_pivot_groups: public-hub-private-hub
 ---
 
 
-# Access the Kubernetes API for a Azure Kubernetes Fleet Manager hub cluster
+# Access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
