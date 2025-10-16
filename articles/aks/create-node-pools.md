@@ -369,4 +369,4 @@ In this article, you learned how to create node pools in an AKS cluster using th
 [azure-linux]: ./use-azure-linux.md
 [windows]: ./windows-best-practices.md
 [managedclusters]: /azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-arm-template
-[quick-arm]: ./learn/quick-kubernetes-deploy-arm-template.md
+[quick-arm]: ./learn/quick-kubernetes-deploy-rm-template.md
