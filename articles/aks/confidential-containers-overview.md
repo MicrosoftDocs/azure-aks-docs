@@ -96,7 +96,7 @@ With the local container filesystem backed by VM memory, writing to the containe
 [deploy-confidential-containers-default-aks]: deploy-confidential-containers-default-policy.md
 [confidential-containers-security-policy]: /azure/confidential-computing/confidential-containers-aks-security-policy
 [use-confidential-vms]: /azure/confidential-computing/confidential-node-pool-aks
-[intel-sgx-confidential-nodes]: /azure/confidential-computing/confidential-nodes-aks-overview.md
-[aci-confidential-containers]: /azure/confidential-computing/confidential-containers.md
-[aci-virtual-nodes]: /azure/container-instances/container-instances-virtual-nodes.md
+[intel-sgx-confidential-nodes]: /azure/confidential-computing/confidential-nodes-aks-overview
+[aci-confidential-containers]: /azure/confidential-computing/confidential-containers
+[aci-virtual-nodes]: /azure/container-instances/container-instances-virtual-nodes
 
