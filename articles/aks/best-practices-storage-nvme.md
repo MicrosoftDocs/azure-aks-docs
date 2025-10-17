@@ -13,7 +13,7 @@ ms.author: fhryo-msft
 
 # Best practices for ephemeral NVMe data disks in Azure Kubernetes Service (AKS)
 
-Ephemeral NVMe data disks provide high-performance, low-latency storage that is ideal for demanding workloads running on Azure Kubernetes Service (AKS). Many modern applications, such as AI/ML training, data analytics, and high-throughput databases, require fast temporary storage to process large volumes of intermediate data efficiently. By using ephemeral NVMe disks, you can significantly improve application responsiveness and throughput, while optimizing for cost and scalability in their AKS clusters.
+Ephemeral NVMe data disks provide high-performance, low-latency storage that's ideal for demanding workloads running on Azure Kubernetes Service (AKS). Many modern applications, such as AI/ML training, data analytics, and high-throughput databases, require fast temporary storage to process large volumes of intermediate data efficiently. By using ephemeral NVMe disks, you can significantly improve application responsiveness and throughput, while optimizing for cost and scalability in their AKS clusters.
 
 This best practices article focuses on storage considerations for cluster operators. In this article, you learn:
 
@@ -35,7 +35,7 @@ For databases such as PostgreSQL, especially in high-availability (HA) or read-i
 **Best practices:**
 - Use NVMe-backed volumes for PostgreSQL temp directories and WAL logs to maximize IOPS and minimize latency.
 - For HA scenarios, ensure that persistent data directories remain on durable storage, while using NVMe for non-persistent, high-churn data.
-- See [PostgreSQL HA on AKS](https://learn.microsoft.com/en-us/azure/aks/postgresql-ha-overview) for architecture guidance.
+- See [PostgreSQL HA on AKS](/azure/aks/postgresql-ha-overview) for architecture guidance.
 
 ### 2. AI Model Hosting and Inference (for example, KAITO)
 
@@ -49,7 +49,7 @@ AI model serving platforms like [KAITO](https://kaito-project.github.io/kaito) b
 
 ### 3. Data Analytics and ETL Pipelines
 
-Workloads that process large volumes of intermediate data, such as Spark, Dask, or custom ETL jobs, can apply NVMe disks for shuffle storage, temporary files, and scratch space. This approach reduces bottlenecks during data transformation and aggregation.
+Workloads that process large volumes of intermediate data, such as [Spark](https://spark.apache.org/), [Dask](https://www.dask.org/), or custom ETL jobs, can apply NVMe disks for shuffle storage, temporary files, and scratch space. This approach reduces bottlenecks during data transformation and aggregation.
 
 **Best practices:**
 - Configure shuffle and temp directories to use NVMe-backed storage.
@@ -60,7 +60,7 @@ Workloads that process large volumes of intermediate data, such as Spark, Dask, 
 In-memory databases and caching solutions (for example, Redis, Memcached, RocksDB) can use NVMe disks as a fast persistence layer or for overflow storage, providing a balance between speed and durability.
 
 **Best practices:**
-- Use NVMe for write-heavy cache workloads where persistence is not critical.
+- Use NVMe for write-heavy cache workloads where persistence isn't critical.
 - Monitor disk usage to avoid eviction or data loss due to node restarts.
 
 ### 5. High-Performance Computing (HPC) and Simulation
@@ -69,7 +69,7 @@ HPC workloads, including genomics, financial modeling, and scientific simulation
 
 ## Check VM sizes with ephemeral NVMe data disks
 
-Ephemeral NVMe data disks are available on select Azure VM sizes that offer local, high-performance storage directly attached to the physical host. These disks are ideal for temporary data, such as caches, scratch files, or intermediate processing, and are not persisted after a VM is deallocated or stopped. The number and capacity of NVMe disks vary by VM size and family.
+Ephemeral NVMe data disks are available on select Azure VM sizes that offer local, high-performance storage directly attached to the physical host. These disks are ideal for temporary data, such as caches, scratch files, or intermediate processing, and aren't persisted after a VM is deallocated or stopped. The number and capacity of NVMe disks vary by VM size and family.
 
 To determine which VM sizes support ephemeral NVMe data disks and their configurations, refer to the [Azure VM documentation](/azure/virtual-machines/sizes) and the [AKS supported VM sizes](https://learn.microsoft.com/azure/aks/quotas-skus-regions). Look for VM series such as [Lsv4](/azure/virtual-machines/sizes/storage-optimized/lsv4-series), and [Ddsv6](/azure/virtual-machines/sizes/general-purpose/ddsv6-series), which are designed for high-throughput, low-latency workloads.
 
@@ -206,7 +206,7 @@ For more information, see [Azure Container Storage documentation](https://learn.
 
 When deploying AKS nodes with local NVMe data disks, such as the `Standard_D2ads_v6` VM size (single 100-GiB NVMe disk) with ephemeral OS disks setting opt-in, you may observe that the ephemeral OS disk (for example, 60 GiB) is provisioned from the NVMe capacity. However, the unused NVMe space (like the extra 40 GiB) isn’t available to use, and there’s no supported way to access or recover it after the node is created.
 
-This behavior is by design, as the ephemeral OS disk requirements dictate how the NVMe device is partitioned at provisioning time. This can be confusing and frustrating, since you can’t use the full NVMe disk space you’ve paid for, especially with many VM sizes that come with only one NVMe disk.
+This behavior is by design, as the ephemeral OS disk requirements dictate how the NVMe device is partitioned at provisioning time. It can be confusing since you don’t get access to all of its storage, especially with many VM sizes that come with only one NVMe disk.
 
 Use the following example to validate this behavior:
 
@@ -230,8 +230,8 @@ When you use VM sizes with a single local NVMe data disk and enable ephemeral OS
 
 **Current limitations:**
 - The ephemeral OS disk consumes a portion of one local NVMe drive, with the remainder left inaccessible.
-- There is no supported way to access or mount the unused NVMe space after node creation.
-- You cannot update or repartition the NVMe disk post-deployment.
+- There's no supported way to access or mount the unused NVMe space after node creation.
+- You cann't update or repartition the NVMe disk post-deployment.
 
 **Customer impact:**
 - Reduced usable NVMe capacity compared to what is advertised for the VM size.
