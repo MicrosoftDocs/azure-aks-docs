@@ -1,7 +1,7 @@
 ---
 title: Best practices for ephemeral NVMe data disks
 titleSuffix: Azure Kubernetes Service
-description: Learn the cluster operator best practices for ephemeral NVMe data disks in Azure Kubernetes Service (AKS), across use cases, VM sizes, manage volumes, working with ephemeral OS disks etc.
+description: Learn the cluster operator best practices for ephemeral NVMe data disks in Azure Kubernetes Service (AKS), across use cases, virtual machine (VM) sizes, manage volumes, working with ephemeral OS disks etc.
 ms.topic: best-practice
 ms.subservice: aks-storage
 ms.date: 10/17/2025
@@ -13,7 +13,7 @@ ms.author: fhryo-msft
 
 # Best practices for ephemeral NVMe data disks in Azure Kubernetes Service (AKS)
 
-Ephemeral NVMe data disks provide high-performance, low-latency storage that is ideal for demanding workloads running on Azure Kubernetes Service (AKS). Many modern applications, such as AI/ML training, data analytics, and high-throughput databases, require fast temporary storage to process large volumes of intermediate data efficiently. By leveraging ephemeral NVMe disks, you can significantly improve application responsiveness and throughput, while optimizing for cost and scalability in their AKS clusters.
+Ephemeral NVMe data disks provide high-performance, low-latency storage that is ideal for demanding workloads running on Azure Kubernetes Service (AKS). Many modern applications, such as AI/ML training, data analytics, and high-throughput databases, require fast temporary storage to process large volumes of intermediate data efficiently. By using ephemeral NVMe disks, you can significantly improve application responsiveness and throughput, while optimizing for cost and scalability in their AKS clusters.
 
 This best practices article focuses on storage considerations for cluster operators. In this article, you learn:
 
@@ -28,28 +28,28 @@ This best practices article focuses on storage considerations for cluster operat
 
 Ephemeral NVMe data disks are ideal for workloads that demand high throughput, low latency, and fast access to temporary or intermediate data. The following scenarios highlight where local NVMe disks provide the most significant benefits:
 
-### 1. High-Performance Databases (e.g., PostgreSQL)
+### 1. High-Performance Databases (for example, PostgreSQL)
 
 For databases such as PostgreSQL, especially in high-availability (HA) or read-intensive deployments, local NVMe disks can dramatically improve transaction throughput and reduce query latency. When used for temporary tablespaces, write-ahead logs (WAL), or as a cache layer, NVMe disks help offload I/O from persistent storage, accelerating analytics and transactional workloads.
 
 **Best practices:**
 - Use NVMe-backed volumes for PostgreSQL temp directories and WAL logs to maximize IOPS and minimize latency.
-- For HA scenarios, ensure that persistent data directories remain on durable storage, while leveraging NVMe for non-persistent, high-churn data.
+- For HA scenarios, ensure that persistent data directories remain on durable storage, while using NVMe for non-persistent, high-churn data.
 - See [PostgreSQL HA on AKS](https://learn.microsoft.com/en-us/azure/aks/postgresql-ha-overview) for architecture guidance.
 
-### 2. AI Model Hosting and Inference (e.g., KAITO)
+### 2. AI Model Hosting and Inference (for example, KAITO)
 
-AI model serving platforms like [KAITO](https://kaito-project.github.io/kaito) benefit from NVMe disks for rapid model loading, artifact caching, and high-throughput inference. When models are stored as OCI artifacts and loaded on demand, local NVMe storage ensures minimal cold start times and efficient batch processing.
+AI model serving platforms like [KAITO](https://kaito-project.github.io/kaito) benefit from NVMe disks for rapid model loading, artifact caching, and high-throughput inference. When models are stored as Open Container Initiative (OCI) artifacts and loaded on demand, local NVMe storage ensures minimal cold start times and efficient batch processing.
 
 **Best practices:**
 - Use NVMe-backed volumes for model cache directories to accelerate model pulls and reduce inference latency.
 - For distributed inference, ensure each node has sufficient NVMe capacity to cache frequently used models.
-- Integrate with Kubernetes-native storage solutions (e.g., Azure Container Storage) for automated management and monitoring.
+- Integrate with Kubernetes-native storage solutions (for example, Azure Container Storage) for automated management and monitoring.
 - See [KAITO model as OCI artifacts](https://kaito-project.github.io/kaito/docs/next/model-as-oci-artifacts) for architecture guidance.
 
 ### 3. Data Analytics and ETL Pipelines
 
-Workloads that process large volumes of intermediate data—such as Spark, Dask, or custom ETL jobs—can leverage NVMe disks for shuffle storage, temporary files, and scratch space. This reduces bottlenecks during data transformation and aggregation.
+Workloads that process large volumes of intermediate data, such as Spark, Dask, or custom ETL jobs, can apply NVMe disks for shuffle storage, temporary files, and scratch space. This approach reduces bottlenecks during data transformation and aggregation.
 
 **Best practices:**
 - Configure shuffle and temp directories to use NVMe-backed storage.
@@ -57,7 +57,7 @@ Workloads that process large volumes of intermediate data—such as Spark, Dask,
 
 ### 4. Caching Layers and Key-Value Stores
 
-In-memory databases and caching solutions (e.g., Redis, Memcached, RocksDB) can use NVMe disks as a fast persistence layer or for overflow storage, providing a balance between speed and durability.
+In-memory databases and caching solutions (for example, Redis, Memcached, RocksDB) can use NVMe disks as a fast persistence layer or for overflow storage, providing a balance between speed and durability.
 
 **Best practices:**
 - Use NVMe for write-heavy cache workloads where persistence is not critical.
@@ -73,7 +73,7 @@ Ephemeral NVMe data disks are available on select Azure VM sizes that offer loca
 
 To determine which VM sizes support ephemeral NVMe data disks and their configurations, refer to the [Azure VM documentation](/azure/virtual-machines/sizes) and the [AKS supported VM sizes](https://learn.microsoft.com/azure/aks/quotas-skus-regions). Look for VM series such as [Lsv4](/azure/virtual-machines/sizes/storage-optimized/lsv4-series), and [Ddsv6](/azure/virtual-machines/sizes/general-purpose/ddsv6-series), which are designed for high-throughput, low-latency workloads.
 
-Below is a table with example VM sizes and their NVMe disk configurations:
+The following table lists example VM sizes and their NVMe disk configurations:
 
 | VM Size           | Number of NVMe Disks | Total NVMe Capacity (GiB) |
 |-------------------|----------------------|---------------------------|
@@ -147,13 +147,11 @@ sr0         0:0:0:2    750K            Virtual DVD-ROM
 nvme0n1                110G            Microsoft NVMe Direct Disk v2
 ```
 
-NVMe disks typically appear as `nvme*n1` and are configured with `Microsoft NVMe Direct Disk*` on model.
-
-This confirms the presence and configuration of ephemeral NVMe data disks on your AKS node.
+NVMe disks typically appear as `nvme*n1` and are configured with `Microsoft NVMe Direct Disk*` on model. This result confirms the presence and configuration of ephemeral NVMe data disks on your AKS node.
 
 ## Use ephemeral NVMe data disks in workloads
 
-There are several ways to leverage ephemeral NVMe data disks in your AKS workloads. The most common approaches are:
+There are several ways to use ephemeral NVMe data disks in your AKS workloads. The most common approaches are:
 
 ### 1. `emptyDir` Volumes
 
@@ -175,10 +173,10 @@ There are several ways to leverage ephemeral NVMe data disks in your AKS workloa
 - **How it works:**  
     `hostPath` mounts a specific directory or disk from the node’s filesystem into the Pod. You can target NVMe mount points directly.
 - **Usage:**  
-    Specify the NVMe disk path (e.g., `/mnt` or `/mnt/nvme0n1`) in the Pod spec.
+    Specify the NVMe disk path (for example, `/mnt` or `/mnt/nvme0n1`) in the Pod spec.
 - **Pros:**  
     - Direct access to NVMe disk.
-    - Useful for advanced scenarios (e.g., custom formatting, partitioning).
+    - Useful for advanced scenarios (for example, custom formatting, partitioning).
 - **Cons:**  
     - Tightly coupled to node layout; not portable.
     - Security risks if not properly restricted.
@@ -200,20 +198,20 @@ There are several ways to leverage ephemeral NVMe data disks in your AKS workloa
     - Requires installation of Azure Container Storage.
 
 **Recommendation:**  
-Azure Container Storage is the best option for Kubernetes workloads to orchestrate ephemeral NVMe data disks. It combines the raw performance of NVMe disks with Kubernetes-native management, security, and built-in integration with Azure’s monitoring features and Promethus. This approach reduces operational complexity, improves reliability, and enables advanced scenarios (such as scaling and failover) that are difficult to achieve with `emptyDir` or `hostPath`.
+Azure Container Storage is the best option for Kubernetes workloads to orchestrate ephemeral NVMe data disks. It combines the raw performance of NVMe disks with Kubernetes-native management, security, and built-in integration with Azure’s monitoring features and Prometheus. This approach reduces operational complexity, improves reliability, and enables advanced scenarios (such as scaling and failover) that are difficult to achieve with `emptyDir` or `hostPath`.
 
 For more information, see [Azure Container Storage documentation](https://learn.microsoft.com/azure/container-storage/).
 
 ## Ephemeral NVMe data disks with ephemeral OS disks
 
-When deploying AKS nodes with local NVMe data disks, such as the `Standard_D2ads_v6` VM size (single 100 GiB NVMe disk) with ephemeral OS disks setting opt-in, you may observe that the ephemeral OS disk (e.g., 60 GiB) is provisioned from the NVMe capacity. However, the remaining NVMe capacity (e.g., the other 40 GiB) is not exposed or accessible, and there is currently no supported method to reclaim or mount this space after node creation.
+When deploying AKS nodes with local NVMe data disks, such as the `Standard_D2ads_v6` VM size (single 100-GiB NVMe disk) with ephemeral OS disks setting opt-in, you may observe that the ephemeral OS disk (for example, 60 GiB) is provisioned from the NVMe capacity. However, the unused NVMe space (like the extra 40 GiB) isn’t available to use, and there’s no supported way to access or recover it after the node is created.
 
-This behavior is by design, as the ephemeral OS disk requirements dictate how the NVMe device is partitioned at provisioning time. However, this can be unintuitive and frustrating, as you are unable to utilize the full NVMe disk capacity they have paid for, especially with the growing number of v6 and v7 VM SKUs that offer only a single NVMe disk.
+This behavior is by design, as the ephemeral OS disk requirements dictate how the NVMe device is partitioned at provisioning time. This can be confusing and frustrating, since you can’t use the full NVMe disk space you’ve paid for, especially with many VM sizes that come with only one NVMe disk.
 
 Use the following example to validate this behavior:
 
 ```bash
-# Create Standard_D2ads_v6 (Single 100 GiB NVMe disk) node pool using ephemeral OS disk with 60 GiB capacity
+# Create Standard_D2ads_v6 (Single 100-GiB NVMe disk) node pool using ephemeral OS disk with 60 GiB capacity
 
 az aks nodepool add --resource-group $resourceGroup --cluster-name $clusterName --name $nodePoolName --node-count 1 --node-vm-size Standard_D2ads_v6 --node-osdisk-type Ephemeral --node-osdisk-size 60
 
@@ -228,7 +226,7 @@ nvme0n1                                          60G          MSFT NVMe Accelera
 `-nvme0n1p15 vfat   UEFI            /boot/efi   106M
 ```
 
-When using VM sizes with a single local NVMe data disk and configuring ephemeral OS disks, the entire NVMe disk is consumed by the OS, making it unavailable for persistent volume provisioning in Kubernetes workloads. For VM sizes with two or more local NVMe data disks, the first disk is allocated for the ephemeral OS disk, while the remaining NVMe disks are available for persistent volume provisioning and can be used by your workloads.
+When you use VM sizes with a single local NVMe data disk and enable ephemeral OS disk, the OS consumes the entire NVMe disk, leaving no space available for Kubernetes workloads to provision persistent volumes. For VM sizes with two or more local NVMe data disks, one disk is used for the ephemeral OS, and the others can be used to provision persistent volumes for your workloads.
 
 **Current limitations:**
 - The ephemeral OS disk consumes a portion of one local NVMe drive, with the remainder left inaccessible.
@@ -237,7 +235,7 @@ When using VM sizes with a single local NVMe data disk and configuring ephemeral
 
 **Customer impact:**
 - Reduced usable NVMe capacity compared to what is advertised for the VM size.
-- Inability to fully leverage high-performance local storage for workloads.
+- Inability to fully use high-performance local storage for workloads.
 - Potential confusion and inconvenience during upgrades or node replacement.
 
 **Recommendation:**
@@ -309,7 +307,7 @@ The following steps introduce generic benchmarking with fio and local NVMe volum
         ' | column -t -s,)
     ```
 
-4. Run fio on the VM with single NVMe disk (e.g standard_l8s_v3) and the VM with two NVMe disks (e.g Standard_L16s_v3). Evaluate the performance improvements from the NVMe volume striping cross multiple NVMe disks. See the following charts as examples:
+4. Run fio on the VM with single NVMe disk (for example, standard_l8s_v3) and the VM with two NVMe disks (for example, Standard_L16s_v3). Evaluate the performance improvements from the NVMe volume striping cross multiple NVMe disks. See the following charts as examples:
 
     ![IOPS benchmarking with and without striping](media/best-practices-storage-nvme/acstor-nvme-perf-iops.png)
 
