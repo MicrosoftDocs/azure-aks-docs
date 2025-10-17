@@ -42,7 +42,7 @@ In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigsci
 
 ## Deploy your model inferencing workload using the KAITO workspace template
 
-1. Navigate to the `kaito` directory and copy the [sample deployment YAML](https://github.com/kaito-project/kaito/tree/main/examples/custom-model-integration/custom-model-deployment.yaml. Replace the default values in the following fields with your model's requirements:
+1. Navigate to the `kaito` directory and copy the [sample deployment YAML](https://github.com/kaito-project/kaito/tree/main/examples/custom-model-integration/custom-model-deployment.yaml) manifest. Replace the default values in the following fields with your model's requirements:
 
    - `instanceType`: The minimum VM size for this inference service deployment is `Standard_NC24ads_A100_v4`. For larger model sizes you can choose a VM in the [`Standard_NCads_A100_v4`](/azure/virtual-machines/sizes/gpu-accelerated/nca100v4-series) family with higher memory capacity.
    - `MODEL_ID`: Replace with your model's specific HuggingFace identifier, which can be found after `https://huggingface.co/` in the model card URL.
@@ -106,9 +106,9 @@ In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigsci
                 - "--trust_remote_code"
                 - "--allow_remote_files"
                 - "--pretrained_model_name_or_path"
-                - "<MODEL_ID>"  # Replace <MODEL_ID> with the specific HuggingFace model identifier
+                - "bloom-1b7"
                 - "--torch_dtype"
-                - "float16"  # Set to "float16" for compatibility with V100 GPUs; use "bfloat16" for A100, H100 or newer GPUs
+                - "bfloat16"
               # env:
               #   HF_TOKEN is required only for private or gated Hugging Face models
               #   Uncomment and configure this block if needed
