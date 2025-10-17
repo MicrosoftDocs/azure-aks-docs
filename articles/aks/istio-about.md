@@ -53,13 +53,7 @@ Istio-based service mesh add-on for AKS has the following limitations:
 * The add-on doesn't yet support multi-cluster deployments.
 * The add-on doesn't yet support Windows Server containers. Windows Server containers aren't yet supported in open source Istio right now. Issue tracking this feature ask can be found [here][istio-oss-windows-issue].
 * Customization of mesh through the following custom resources is currently blocked - `ProxyConfig, WorkloadEntry, WorkloadGroup, IstioOperator, WasmPlugin`. 
-* The add-on allows the use of the following `EnvoyFilter` filter types, with other filter types blocked:
-    * Lua (`type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua`).
-    * Compressor (`type.googleapis.com/envoy.extensions.filters.http.compressor.v3.Compressor`)
-    * Local rate limit (`type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit`)
-    
-    > [!NOTE]
-    > While these `EnvoyFilter`s are allowed, any issue arising from them (for example from the Lua script or from the compression library) are outside the support scope of the Istio add-on. See the [support policy document][istio-support-policy] for more information about the support categories for Istio add-on features and configuration options.
+* While the add-on allows the use of `EnvoyFilter`'s, issues arising from them (for example from the Lua script or from the compression library) are outside the support scope of the Istio add-on. See the [support policy document][istio-support-policy] for more information about the support categories for Istio add-on features and configuration options.
 * Gateway API for Istio ingress gateway or managing mesh traffic (GAMMA) is currently not yet supported with Istio add-on. However, Gateway API for Istio ingress traffic management is currently under active development for the add-on. While the add-on supports [annotation and `externalTrafficPolicy` customization for the Istio ingress gateways][istio-ingress-customization], port or protocol configuration is currently not supported.
 * The add-on supports customization of a subset of the fields in [MeshConfig][upstream-istio-meshconfig]. Other customizations may be allowed but unsupported or disallowed entirely, as detailed [here][istio-meshconfig-allowlist].
 
