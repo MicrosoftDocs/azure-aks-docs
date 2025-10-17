@@ -124,70 +124,90 @@ If your cluster is limited by product tier or regional capacity, upgrades might 
 
 ### Scenario 2: Node drain failures and PDBs
 
-Upgrades require draining nodes (evicting pods). Drains can fail if:
+Upgrades require draining nodes (evicting pods). Drains can fail when pods are slow to terminate or strict [Pod Disruption Budgets (PDBs)](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/) block pod evictions.
 
-* Pods are slow to terminate (long shutdown hooks or persistent connections).
-* Strict [PDBs](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/) block pod evictions.
-
-Example error message:
-
+Example error:
 ```output
 Code: UpgradeFailed
-Message: Drain node ... failed when evicting pod ... failed with Too Many Requests error. This error is often caused by a restrictive PDB policy. See https://aka.ms/aks/debugdrainfailures. Original error: Cannot evict pod as it would violate the pod's disruption budget. PDB debug info: ... blocked by pdb ... with 0 unready pods.
+Message: Drain node ... failed when evicting pod ... Cannot evict pod as it would violate the pod's disruption budget.
+```
+#### Option 1: Force upgrade (bypass PDB)
+> [!WARNING]
+> Force upgrade bypasses Pod Disruption Budget (PDB) constraints and may cause service disruption by draining all pods simultaneously. Before using this option, first try to fix PDB misconfigurations (review the PDB minAvailable/maxUnavailable settings, ensure adequate pod replicas, verify PDBs aren't blocking all evictions).
+
+Use force upgrade only when PDBs prevent critical upgrades and cannot be resolved. This will override PDB protections and potentially cause complete service unavailability during the upgrade.
+
+**Requirements:** Azure CLI 2.79.0+ or AKS API version 2025-09-01+
+
+```azurecli-interactive
+az aks upgrade \
+  --name $CLUSTER_NAME \
+  --resource-group $RESOURCE_GROUP_NAME \
+  --kubernetes-version $KUBERNETES_VERSION \
+  --enable-force-upgrade \
+  --upgrade-override-until 2023-10-01T13:00:00Z
 ```
 
-#### Recommendations to prevent or resolve
-
-* Set `maxUnavailable` in PDBs to allow at least one pod to be evicted.
-* Increase pod replicas so that the disruption budget can tolerate evictions.
-* Use `undrainableNodeBehavior` to allow upgrades to proceed even if some nodes can't be drained:
-  * **Schedule (default):** Delete node and surge replacement to reduce capacity.
-  * **Cordon (recommended):** Node is cordoned and labeled as `kubernetes.azure.com/upgrade-status=Quarantined`.
-    * Example command:
-
-        ```azurecli-interactive
-        az aks nodepool update \
-          --resource-group <resource-group-name> \
-          --cluster-name <cluster-name> \
-          --name <node-pool-name> \
-          --undrainable-node-behavior Cordon
-        ```
-
-        The following example output shows the undrainable node behavior updated:
-
-        ```output  
-        "upgradeSettings": {
-        "drainTimeoutInMinutes": null,
-        "maxSurge": "1",
-        "nodeSoakDurationInMinutes": null,
-        "undrainableNodeBehavior": "Cordon"
-        }
-        ```
-
-#### Max Blocked Nodes Allowed (preview)
-
-The Max Blocked Nodes Allowed (preview) feature lets you specify how many nodes that fail to drain (blocked nodes) are tolerated during upgrades or similar operations. This feature works only if the undrainable node behavior property is set. Otherwise, the command returns an error.
-
 > [!NOTE]
-> If you don't explicitly set Max Blocked Nodes Allowed, it defaults to the value of [max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade). If max surge isn't set, the default is typically 10%, so Max Blocked Nodes Allowed also defaults to 10%.
+> - The `upgrade-override-until` parameter defines when validation bypass ends (must be a future date/time)
+> - If not specified, the window defaults to 3 days from current time
+> - The 'Z' indicates UTC/GMT time zone
 
-##### Prerequisites
+> [!WARNING]
+> When force upgrade is enabled, it takes precedence over all other drain configurations. The undrainable node behavior settings (Option 2) will not be applied when force upgrade is active.
 
-- The Azure CLI `aks-preview` extension version 18.0.0b9 or later is required to use this feature.
+#### Option 2: Handle undrainable nodes (honor PDB)
 
-  Example command:
+Use this conservative approach to honor PDBs while preventing upgrade failures.
+
+**Configure undrainable node behavior:**
+
+```azurecli-interactive
+az aks nodepool update \
+  --resource-group <resource-group-name> \
+  --cluster-name <cluster-name> \
+  --name <node-pool-name> \
+  --undrainable-node-behavior Cordon \
+  --max-blocked-nodes 2 \
+  --drain-timeout 30
+```
+
+**Behavior options:**
+- **Schedule (default):** Deletes blocked node and surges replacement
+- **Cordon (recommended):** Cordons node and labels it as `kubernetes.azure.com/upgrade-status=Quarantined`
+
+**Max blocked nodes (preview):**
+- Specifies how many nodes that fail to drain are tolerated
+- Requires `undrainable-node-behavior` to be set
+- Defaults to `maxSurge` value (typically 10%) if not specified
+
+##### Prerequisites for max blocked nodes
+
+- The Azure CLI `aks-preview` extension version 18.0.0b9 or later is required to use the max blocked nodes feature.
 
   ```azurecli-interactive
-  az aks nodepool update \
-    --cluster-name jizenMC1 \
-    --name nodepool1 \
-    --resource-group jizenTestMaxBlockedNodesRG \
-    --max-surge 1 \
-    --undrainable-node-behavior Cordon \
-    --max-blocked-nodes 2 \
-    --drain-timeout 5
+  # Install or update the aks-preview extension
+  az extension add --name aks-preview
+  az extension update --name aks-preview
   ```
 
+##### Example configuration with max blocked nodes
+
+```azurecli-interactive
+az aks nodepool update \
+  --cluster-name jizenMC1 \
+  --name nodepool1 \
+  --resource-group jizenTestMaxBlockedNodesRG \
+  --max-surge 1 \
+  --undrainable-node-behavior Cordon \
+  --max-blocked-nodes 2 \
+  --drain-timeout 5
+```
+
+#### Recommendations to prevent drain failures
+
+* Set `maxUnavailable` in PDBs to allow at least one pod eviction
+* Increase pod replicas to meet disruption budget requirements
 * Extend drain timeout if workloads need more time. (The default is *30 minutes*.)
 * Test PDBs in staging, monitor upgrade events, and use blue-green deployments for critical workloads. For more information, see [Blue-green deployment of AKS clusters](/azure/architecture/guide/aks/blue-green-deployment-for-aks).
 
