@@ -17,7 +17,7 @@ In this article, you create the infrastructure resources needed to run Apache Ai
 ## Prerequisites
 
 * If you haven't already, review the [Overview for deploying an Apache Airflow cluster on Azure Kubernetes Service (AKS)](./airflow-overview.md).
-* An Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* An Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * Azure CLI version 2.61.0. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 * Helm version 3 or later. To install, see [Installing Helm](https://helm.sh/docs/intro/install/).
 * `kubectl`, which is installed in Azure Cloud Shell by default.
@@ -220,12 +220,12 @@ In this section, we download the Apache Airflow images from Docker Hub and uploa
 * Import the Airflow images from Docker Hub and upload them to your container registry using the [`az acr import`](/cli/azure/acr#az-acr-import) command.
 
     ```azurecli-interactive
-    az acr import --name $MY_ACR_REGISTRY --source docker.io/apache/airflow:airflow-pgbouncer-2024.01.19-1.21.0 --image airflow:airflow-pgbouncer-2024.01.19-1.21.0
-    az acr import --name $MY_ACR_REGISTRY --source docker.io/apache/airflow:airflow-pgbouncer-exporter-2024.06.18-0.17.0 --image airflow:airflow-pgbouncer-exporter-2024.06.18-0.17.0
-    az acr import --name $MY_ACR_REGISTRY --source docker.io/bitnami/postgresql:16.1.0-debian-11-r15 --image postgresql:16.1.0-debian-11-r15
-    az acr import --name $MY_ACR_REGISTRY --source quay.io/prometheus/statsd-exporter:v0.26.1 --image statsd-exporter:v0.26.1 
-    az acr import --name $MY_ACR_REGISTRY --source docker.io/apache/airflow:2.9.3 --image airflow:2.9.3 
-    az acr import --name $MY_ACR_REGISTRY --source registry.k8s.io/git-sync/git-sync:v4.1.0 --image git-sync:v4.1.0
+    az acr import --name $MY_ACR_REGISTRY --source docker.io/apache/airflow:airflow-pgbouncer-2025.03.05-1.23.1 --image airflow:airflow-pgbouncer-2025.03.05-1.23.1
+    az acr import --name $MY_ACR_REGISTRY --source docker.io/apache/airflow:airflow-pgbouncer-exporter-2025.03.05-0.18.0 --image airflow:airflow-pgbouncer-exporter-2025.03.05-0.18.0
+    az acr import --name $MY_ACR_REGISTRY --source docker.io/bitnamilegacy/postgresql:16.1.0-debian-11-r15 --image postgresql:16.1.0-debian-11-r15
+    az acr import --name $MY_ACR_REGISTRY --source quay.io/prometheus/statsd-exporter:v0.28.0 --image statsd-exporter:v0.28.0 
+    az acr import --name $MY_ACR_REGISTRY --source docker.io/apache/airflow:3.0.2 --image airflow:3.0.2 
+    az acr import --name $MY_ACR_REGISTRY --source registry.k8s.io/git-sync/git-sync:v4.3.0 --image git-sync:v4.3.0
     ```
 
 ## Next step

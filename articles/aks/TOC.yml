@@ -146,7 +146,7 @@
                   href: istio-about.md
                 - name: Getting started
                   href: istio-deploy-addon.md
-                - name: Native sidecar mode (Preview)
+                - name: Native sidecar mode
                   href: istio-native-sidecar.md
                 - name: Mesh configuration
                   href: istio-meshconfig.md
@@ -166,6 +166,8 @@
                       href: istio-deploy-ingress.md
                     - name: Secure ingress gateways
                       href: istio-secure-gateway.md
+                    - name: Ingress with Kubernetes Gateway API
+                      href: istio-gateway-api.md
                 - name: Egress
                   items:
                     - name: Deploy egress gateways (preview)
@@ -246,6 +248,8 @@
           href: generation-2-vm.md
         - name: Add an Azure Spot node pool
           href: spot-node-pool.md
+        - name: Add a node pool with a unique subnet
+          href: node-pool-unique-subnet.md
         - name: Node pool snapshot
           href: node-pool-snapshot.md
         - name: Add a Virtual Machines node pool
@@ -280,6 +284,8 @@
           href: windows-faq.yml
         - name: Connect remotely
           href: rdp.md
+        - name: Create Windows Server node pools with `containerd`
+          href: windows-containerd.md
         - name: Use HostProcess containers
           href: use-windows-hpc.md
         - name: Use Windows Annual Channel for Containers
@@ -452,6 +458,8 @@
         items:
           - name: Overview
             href: concepts-network-ingress.md
+          - name: Ingress with the Kubernetes Gateway API
+            href: managed-gateway-api.md
           - name: Use application routing add-on
             items:
               - name: Application routing add-on overview
@@ -589,6 +597,18 @@
                     href: how-to-apply-l7-policies.md
       - name: Improve network fault tolerance using TCP keep-alive
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
+- name: Scheduling
+  items:
+      - name: Basic scheduler features
+        href: operator-best-practices-scheduler.md
+      - name: Advanced scheduler features
+        href: operator-best-practices-advanced-scheduler.md
+      - name: Kueue
+        items:
+          - name: Learn about Kueue for batch scheduling
+            href: kueue-overview.md
+          - name: Schedule and deploy batch jobs with Kueue
+            href: deploy-batch-jobs-with-kueue.md
 - name: Security
   items:
     - name: Security concepts
@@ -652,8 +672,16 @@
           href: deployment-safeguards.md
         - name: Create an OIDC Issuer for your cluster
           href: use-oidc-issuer.md
-        - name: Use KMS etcd encryption
-          href: use-kms-etcd-encryption.md
+        - name: KMS etcd encryption
+          items:
+            - name: Use KMS etcd encryption
+              href: use-kms-etcd-encryption.md
+            - name: Update key vault mode
+              href: update-kms-key-vault.md
+            - name: Migrate to KMS v2
+              href: use-kms-v2.md
+            - name: Observability for KMS etcd encryption
+              href: kms-observability.md
         - name: Secure container access to resources
           href: secure-container-access.md
     - name: Node security
@@ -724,10 +752,14 @@
           href: use-azure-ad-pod-identity.md
         - name: Pod Sandboxing
           href: use-pod-sandboxing.md
-        - name: Network policy best practices
-          href: network-policy-best-practices.md
-        - name: Secure pod traffic with network policies
-          href: use-network-policies.md
+        - name: Network policies
+          items:
+            - name: Secure pod traffic with network policies
+              href: use-network-policies.md
+            - name: Network policy best practices
+              href: network-policy-best-practices.md
+            - name: Use network policies in the Azure portal
+              href: use-network-policies-in-the-azure-portal.md
         - name: Pod security policies
           href: use-pod-security-policies.md
         - name: Pod Security Admission

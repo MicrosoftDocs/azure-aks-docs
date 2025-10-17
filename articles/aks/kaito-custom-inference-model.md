@@ -17,7 +17,7 @@ In this article, you learn how to onboard a sample HuggingFace model for inferen
 
 ## Prerequisites
 
-- An Azure account with an active subscription. If you don't have an account, you can [create one for free](https://azure.microsoft.com/free/).
+- An Azure account with an active subscription. If you don't have an account, you can [create one for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - An AKS cluster with the AI toolchain operator add-on enabled. For more information, see [Enable KAITO on an AKS cluster](./ai-toolchain-operator.md#enable-the-ai-toolchain-operator-add-on-on-an-aks-cluster).
 - This example deployment requires quota for the `Standard_NCads_A100_v4` virtual machine (VM) family in your Azure subscription. If you don't have quota for this VM family, please [request a quota increase](/azure/quotas/quickstart-increase-quota-portal).
 

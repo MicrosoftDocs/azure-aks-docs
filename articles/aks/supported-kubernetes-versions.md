@@ -74,7 +74,7 @@ Long-term support (LTS) needs to be enabled in order to get extended support. Yo
 | 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1st, 2025 | Nov 2026|
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Mar 2027|
 | 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Jun 2027|
-| 1.34 | Aug 2025 | Aug 2025 | Sep 2025 | Sep 2026 | Sep 2027 |
+| 1.34 | Aug 2025 | Oct 2025 | Nov 2025 | Nov 2026 | Nov 2027 |
 
 ### AKS Kubernetes release schedule Gantt chart
 

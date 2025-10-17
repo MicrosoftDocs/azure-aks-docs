@@ -23,7 +23,7 @@ The Istio add-on egress gateway also builds on top of and requires the [Static E
 - You can enable a maximum of `500` Istio add-on egress gateways per cluster. 
 - Istio add-on egress gateway names must be unique per namespace.
 - Istio add-on egress gateway names must be between `1-53` characters, must only consist of lowercase alphanumerical characters, '-' and '.,' and must start and end with an alphanumerical character. Names should also be a valid Domain Name System (DNS) name. The regex used for name validation is `^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$`.
-- Gateway API is currently not supported for the Istio add-on egress gateway.
+- Using the [Kubernetes Gateway API][istio-gateway-api] for egress traffic management with the Istio add-on is only supported for the [manual deployment model][istio-gateway-manual-deployment].
 - Because Static Egress Gateway is currently not supported on [Azure CNI Pod Subnet clusters][azure-cni-pod-subnet], the Istio add-on egress gateway isn't supported on Pod Subnet clusters either.
 
 ## Prerequisites
@@ -509,6 +509,7 @@ Once you disable the Istio egress gateway, you should be able to delete the `Sta
 
 ## Next steps
 
+* [Configure ingress for Istio service mesh add-on with the Kubernetes Gateway API][istio-gateway-api]
 * [Deploy external or internal ingresses for Istio service mesh add-on][istio-deploy-ingress]
 * [Configure egress gateway Horizontal Pod Autoscaler (HPA)][istio-scaling-guide]
 
@@ -528,3 +529,5 @@ Once you disable the Istio egress gateway, you should be able to delete the `Sta
 [istio-deploy-ingress]: istio-deploy-ingress.md
 [istio-deploy-addon]: istio-deploy-addon.md
 [istio-egress-tsg]:  /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-egress-gateway
+[istio-gateway-api]: istio-gateway-api.md
+[istio-gateway-manual-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#manual-deployment
