@@ -6,7 +6,7 @@ ms.topic: best-practice
 ms.subservice: aks-storage
 ms.date: 10/17/2025
 author: fhryo-msft
-ms.author: fhryo-msft
+ms.author: fryu
 
 # Customer intent: As a Kubernetes cluster operator, I want to implement best practices for ephemeral NVMe disks in AKS, so that I can achieve maximum application performance from high-performance ephemeral NVMe disks, for workloads requiring high throughput, high IOPS and low latency in processing intermidia files. For example, AI training/tuning/inference, PostgreSQL database, etc.
 ---
@@ -39,7 +39,7 @@ For databases such as PostgreSQL, especially in high-availability (HA) or read-i
 
 ### 2. AI Model Hosting and Inference (for example, KAITO)
 
-AI model serving platforms like [KAITO](https://kaito-project.github.io/kaito) benefit from NVMe disks for rapid model loading, artifact caching, and high-throughput inference. When models are stored as Open Container Initiative (OCI) artifacts and loaded on demand, local NVMe storage ensures minimal cold start times and efficient batch processing.
+AI model serving platforms like [KAITO](https://github.com/kaito-project/kaito) benefit from NVMe disks for rapid model loading, artifact caching, and high-throughput inference. When models are stored as Open Container Initiative (OCI) artifacts and loaded on demand, local NVMe storage ensures minimal cold start times and efficient batch processing.
 
 **Best practices:**
 - Use NVMe-backed volumes for model cache directories to accelerate model pulls and reduce inference latency.
@@ -71,7 +71,7 @@ HPC workloads, including genomics, financial modeling, and scientific simulation
 
 Ephemeral NVMe data disks are available on select Azure VM sizes that offer local, high-performance storage directly attached to the physical host. These disks are ideal for temporary data, such as caches, scratch files, or intermediate processing, and aren't persisted after a VM is deallocated or stopped. The number and capacity of NVMe disks vary by VM size and family.
 
-To determine which VM sizes support ephemeral NVMe data disks and their configurations, refer to the [Azure VM documentation](/azure/virtual-machines/sizes) and the [AKS supported VM sizes](https://learn.microsoft.com/azure/aks/quotas-skus-regions). Look for VM series such as [Lsv4](/azure/virtual-machines/sizes/storage-optimized/lsv4-series), and [Ddsv6](/azure/virtual-machines/sizes/general-purpose/ddsv6-series), which are designed for high-throughput, low-latency workloads.
+To determine which VM sizes support ephemeral NVMe data disks and their configurations, refer to the [Azure VM documentation](/azure/virtual-machines/sizes) and the [AKS supported VM sizes](/azure/aks/quotas-skus-regions). Look for VM series such as [Lsv4](/azure/virtual-machines/sizes/storage-optimized/lsv4-series), and [Ddsv6](/azure/virtual-machines/sizes/general-purpose/ddsv6-series), which are designed for high-throughput, low-latency workloads.
 
 The following table lists example VM sizes and their NVMe disk configurations:
 
@@ -185,7 +185,7 @@ There are several ways to use ephemeral NVMe data disks in your AKS workloads. T
 ### 3. Azure Container Storage (Recommended)
 
 - **How it works:**  
-    [Azure Container Storage](https://learn.microsoft.com/azure/container-storage/) is a Kubernetes-native storage solution that abstracts and manages local NVMe disks as persistent volumes, with advanced orchestration and data services.
+    [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) is a Kubernetes-native storage solution that abstracts and manages local NVMe disks as persistent volumes, with advanced orchestration and data services.
 - **Usage:**  
     Deploy Azure Container Storage in your AKS cluster and provision volumes using standard Kubernetes PVCs.
 - **Pros:**  
@@ -200,7 +200,7 @@ There are several ways to use ephemeral NVMe data disks in your AKS workloads. T
 **Recommendation:**  
 Azure Container Storage is the best option for Kubernetes workloads to orchestrate ephemeral NVMe data disks. It combines the raw performance of NVMe disks with Kubernetes-native management, security, and built-in integration with Azure’s monitoring features and Prometheus. This approach reduces operational complexity, improves reliability, and enables advanced scenarios (such as scaling and failover) that are difficult to achieve with `emptyDir` or `hostPath`.
 
-For more information, see [Azure Container Storage documentation](https://learn.microsoft.com/azure/container-storage/).
+For more information, see [Azure Container Storage documentation](/azure/storage/container-storage/container-storage-introduction).
 
 ## Ephemeral NVMe data disks with ephemeral OS disks
 
@@ -257,7 +257,7 @@ The following steps introduce generic benchmarking with fio and local NVMe volum
 
 1. Enable Azure Container Storage on your AKS cluster. See [Azure Container Storage Quickstart](/azure/storage/container-storage/container-storage-aks-quickstart)
 
-2. Deploy storage class, generic volume, fio pod with local NVMe volumes. See [Use local NVMe with Azure Container Storage](/storage/container-storage/use-container-storage-with-local-disk)
+2. Deploy storage class, generic volume, fio pod with local NVMe volumes. See [Use local NVMe with Azure Container Storage](/azure/storage/container-storage/use-container-storage-with-local-disk)
 
 3. Run the following fio command and modify as needed.
 
