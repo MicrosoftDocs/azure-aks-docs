@@ -309,6 +309,6 @@ The following steps introduce generic benchmarking with fio and local NVMe volum
 
 4. Run fio on the VM with single NVMe disk (for example, standard_l8s_v3) and the VM with two NVMe disks (for example, Standard_L16s_v3). Evaluate the performance improvements from the NVMe volume striping cross multiple NVMe disks. See the following charts as examples:
 
-    ![IOPS benchmarking with and without striping](media/best-practices-storage-nvme/acstor-nvme-perf-iops.png)
+    ![IOPS benchmarking with and without striping](media/best-practices-storage-nvme/acstor-nvme-performance-iops.png)
 
-    ![Throughput benchmarking with and without striping](media/best-practices-storage-nvme/acstor-nvme-perf-throughput.png)
+    ![Throughput benchmarking with and without striping](media/best-practices-storage-nvme/acstor-nvme-performance-throughput.png)
