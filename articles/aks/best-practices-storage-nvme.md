@@ -231,7 +231,7 @@ When you use VM sizes with a single local NVMe data disk and enable ephemeral OS
 **Current limitations:**
 - The ephemeral OS disk consumes a portion of one local NVMe drive, with the remainder left inaccessible.
 - There's no supported way to access or mount the unused NVMe space after node creation.
-- You cann't update or repartition the NVMe disk post-deployment.
+- You can't update or repartition the NVMe disk post-deployment.
 
 **Customer impact:**
 - Reduced usable NVMe capacity compared to what is advertised for the VM size.
