@@ -155,47 +155,56 @@ There are several ways to use ephemeral NVMe data disks in your AKS workloads. T
 
 ### 1. `emptyDir` Volumes
 
-- **How it works:**  
-    `emptyDir` is a Kubernetes volume type that uses the node's local storage. When backed by NVMe disks, `emptyDir` provides high throughput and low latency for temporary data.
-- **Usage:**  
-    Define an `emptyDir` volume in your Pod spec. By default, it uses the fastest available storage (NVMe if present).
-- **Pros:**  
-    - Simple to use and configure.
-    - No external dependencies.
-    - High performance when backed by NVMe.
-- **Cons:**  
-    - Data is lost if the Pod is rescheduled to another node.
-    - No data persistence or replication.
-    - Limited to single NVMe disk.
+**How it works:**  
+`emptyDir` is a Kubernetes volume type that uses the node's local storage. When backed by NVMe disks, `emptyDir` provides high throughput and low latency for temporary data.
+
+**Usage:**  
+Define an `emptyDir` volume in your Pod spec. By default, it uses the fastest available storage (NVMe if present).
+
+**Advantages:**  
+  - Simple to use and configure.
+  - No external dependencies.
+  - High performance when backed by NVMe.
+
+**Disadvantages:**  
+  - Data is lost if the Pod is rescheduled to another node.
+  - No data persistence or replication.
+  - Limited to single NVMe disk.
 
 ### 2. `hostPath` Volumes
 
-- **How it works:**  
-    `hostPath` mounts a specific directory or disk from the node’s filesystem into the Pod. You can target NVMe mount points directly.
-- **Usage:**  
-    Specify the NVMe disk path (for example, `/mnt` or `/mnt/nvme0n1`) in the Pod spec.
-- **Pros:**  
-    - Direct access to NVMe disk.
-    - Useful for advanced scenarios (for example, custom formatting, partitioning).
-- **Cons:**  
-    - Tightly coupled to node layout; not portable.
-    - Security risks if not properly restricted.
-    - Limited to single NVMe disk.
+**How it works:**  
+`hostPath` mounts a specific directory or disk from the node’s filesystem into the Pod. You can target NVMe mount points directly.
+
+**Usage:**  
+Specify the NVMe disk path (for example, `/mnt` or `/mnt/nvme0n1`) in the Pod spec.
+
+**Advantages:**
+  - Direct access to NVMe disk.
+  - Useful for advanced scenarios (for example, custom formatting, partitioning).
+
+**Disadvantages:**
+  - Tightly coupled to node layout; not portable.
+  - Security risks if not properly restricted.
+  - Limited to single NVMe disk.
 
 ### 3. Azure Container Storage (Recommended)
 
-- **How it works:**  
-    [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) is a Kubernetes-native storage solution that abstracts and manages local NVMe disks as persistent volumes, with advanced orchestration and data services.
-- **Usage:**  
-    Deploy Azure Container Storage in your AKS cluster and provision volumes using standard Kubernetes PVCs.
-- **Pros:**  
-    - Kubernetes-native experience with PersistentVolumeClaims.
-    - Automated discovery and management of NVMe disks for any VM sizes.
-    - Supports advanced features: dynamic provisioning, data security, and native integration with AKS.
-    - Improved reliability and operational simplicity.
-    - Enables high-performance workloads with default volume striping cross all available disks.
-- **Cons:**  
-    - Requires installation of Azure Container Storage.
+**How it works:**
+[Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) is a Kubernetes-native storage solution that abstracts and manages local NVMe disks as persistent volumes, with advanced orchestration and data services.
+
+**Usage:**
+Deploy Azure Container Storage in your AKS cluster and provision volumes using standard Kubernetes PVCs.
+
+**Advantages:**
+  - Kubernetes-native experience with PersistentVolumeClaims.
+  - Automated discovery and management of NVMe disks for any VM sizes.
+  - Supports advanced features: dynamic provisioning, data security, and native integration with AKS.
+  - Improved reliability and operational simplicity.
+  - Enables high-performance workloads with default volume striping cross all available disks.
+
+**Disadvantages:**
+  - Requires installation of Azure Container Storage.
 
 **Recommendation:**  
 Azure Container Storage is the best option for Kubernetes workloads to orchestrate ephemeral NVMe data disks. It combines the raw performance of NVMe disks with Kubernetes-native management, security, and built-in integration with Azure’s monitoring features and Prometheus. This approach reduces operational complexity, improves reliability, and enables advanced scenarios (such as scaling and failover) that are difficult to achieve with `emptyDir` or `hostPath`.
