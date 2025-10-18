@@ -244,7 +244,7 @@ When you use VM sizes with a single local NVMe data disk and enable ephemeral OS
 
 - Omit the OS disk size input when creating AKS nodes with ephemeral OS disks on NVMe-backed VMs. This prevents misconfiguration and aligns with product documentation, reducing the risk of inaccessible capacity and upgrade issues.
 
-> **Note:**  
+> [!Note]
 > These improvements are important for user experience and operational efficiency, especially as more VM SKUs with single NVMe disks become available. Follow the latest AKS documentation and monitor Azure updates for enhancements in ephemeral disk management.
 
 ## Measure workload performance with ephemeral NVMe data disks
