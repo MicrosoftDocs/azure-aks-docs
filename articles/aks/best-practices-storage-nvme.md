@@ -248,7 +248,10 @@ az aks nodepool add \
     --node-osdisk-type Ephemeral \
     --node-osdisk-size 60
 
-# Login to the node to check block devices. You can see 60 GiB only and allocated for OS.
+kubectl debug $nodeName \
+    --image=ubuntu \
+    --profile=sysadmin -it \
+    -- chroot /host /bin/bash
 
 lsblk -o NAME,FSTYPE,LABEL,MOUNTPOINT,SIZE,VENDOR,MODEL
 NAME         FSTYPE LABEL           MOUNTPOINT  SIZE VENDOR   MODEL
