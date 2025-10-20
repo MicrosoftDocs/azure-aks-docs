@@ -239,7 +239,14 @@ Use the following example to validate this behavior:
 ```bash
 # Create Standard_D2ads_v6 (Single 100-GiB NVMe disk) node pool using ephemeral OS disk with 60 GiB capacity
 
-az aks nodepool add --resource-group $resourceGroup --cluster-name $clusterName --name $nodePoolName --node-count 1 --node-vm-size Standard_D2ads_v6 --node-osdisk-type Ephemeral --node-osdisk-size 60
+az aks nodepool add \
+    --resource-group $resourceGroup \
+    --cluster-name $clusterName \
+    --name $nodePoolName \
+    --node-count 1 \
+    --node-vm-size Standard_D2ads_v6 \
+    --node-osdisk-type Ephemeral \
+    --node-osdisk-size 60
 
 # Login to the node to check block devices. You can see 60 GiB only and allocated for OS.
 
