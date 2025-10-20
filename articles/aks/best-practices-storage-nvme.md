@@ -248,7 +248,7 @@ az aks nodepool add \
     --node-osdisk-type Ephemeral \
     --node-osdisk-size 60
 
-kubectl debug $nodeName \
+kubectl debug "node/$nodeName" \
     --image=ubuntu \
     --profile=sysadmin -it \
     -- chroot /host /bin/bash
