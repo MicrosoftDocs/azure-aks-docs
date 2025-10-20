@@ -36,6 +36,8 @@
           href: concepts-preview-api-lifecycle.md
         - name: Kubernetes version support
           href: concepts-fleet-kubernetes-version-support.md
+        - name: Fleet and Arc integration
+          href: concepts-fleet-arc-integration.md
     - name: Multi-cluster Kubernetes and node images upgrades
       href: concepts-update-orchestration.md
     - name: Multi-cluster multi-tenancy with Managed Namespaces
