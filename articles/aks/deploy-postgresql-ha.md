@@ -297,7 +297,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources an
     ```
 
 > [!NOTE]
-> The sample manifest uses the `ghcr.io/cloudnative-pg/postgresql:18-system-trixie` image because it works with the in-core Barman Cloud integration shown later. When you're ready to switch to the Barman Cloud plugin, update `spec.imageName` to `ghcr.io/cloudnative-pg/postgresql:18-standard-trixie` and follow the [plugin configuration guidance](https://cloudnative-pg.io/documentation/current/backup_disaster_recovery/#barman-cloud-backup) before redeploying the cluster.
+> The sample manifest uses the `ghcr.io/cloudnative-pg/postgresql:18-system-trixie` image because it works with the in-core Barman Cloud integration shown later. When you're ready to switch to the Barman Cloud plugin, update `spec.imageName` to `ghcr.io/cloudnative-pg/postgresql:18-standard-trixie` and follow the [plugin configuration guidance](https://cloudnative-pg.io/plugin-barman-cloud/docs/intro/) before redeploying the cluster.
 
 > [!IMPORTANT]
 > The example `pg_hba` entry allows non-TLS access. If you keep this configuration, document the security implications for your team and prefer encrypted connections wherever possible.
