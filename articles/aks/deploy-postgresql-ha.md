@@ -44,7 +44,7 @@ kubectl create secret generic db-user-pass \
 
 ## Set environment variables for the PostgreSQL cluster
 
-* Deploy a ConfigMap to set environment variables for the PostgreSQL cluster using the following [`kubectl apply`][kubectl-apply] command:
+* Deploy a ConfigMap to configure the CNPG operator using the following [`kubectl apply`][kubectl-apply] command. These values replace the legacy `ENABLE_AZURE_PVC_UPDATES` toggle, which is no longer required, and help stagger upgrades and speed up replica reconnections. Before rolling this configuration into production, validate that any existing `DRAIN_TAINTS` settings you rely on remain compatible with your Azure environment.
 
     ```bash
     cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -f -
@@ -53,13 +53,13 @@ kubectl create secret generic db-user-pass \
     metadata:
         name: cnpg-controller-manager-config
     data:
-        ENABLE_AZURE_PVC_UPDATES: 'true'
+        CLUSTERS_ROLLOUT_DELAY: '120'
+        STANDBY_TCP_USER_TIMEOUT: '10'
     EOF
     ```
-
 ## Install the Prometheus PodMonitors
 
-Prometheus creates PodMonitors for the CNPG instances using a set of default recording rules stored on the CNPG GitHub samples repo. In a production environment, these rules would be modified as needed.
+Prometheus scrapes CNPG using the recording rules stored in the CNPG GitHub samples repo. Because the operator-managed PodMonitor is being deprecated, create and manage the PodMonitor resource yourself so you can tailor it to your monitoring stack.
 
 1. Add the Prometheus Community Helm repo using the [`helm repo add`][helm-repo-add] command.
 
@@ -77,6 +77,26 @@ Prometheus creates PodMonitors for the CNPG instances using a set of default rec
         prometheus-community \
         prometheus-community/kube-prometheus-stack \
         --kube-context=$AKS_PRIMARY_CLUSTER_NAME
+    ```
+
+3. Create a PodMonitor for the cluster. The CNPG team is deprecating the operator-managed PodMonitor, so you now manage it directly:
+
+    ```bash
+    cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE -f -
+    apiVersion: monitoring.coreos.com/v1
+    kind: PodMonitor
+    metadata:
+      name: $PG_PRIMARY_CLUSTER_NAME
+      namespace: ${PG_NAMESPACE}
+      labels:
+        cnpg.io/cluster: ${PG_PRIMARY_CLUSTER_NAME}
+    spec:
+      selector:
+        matchLabels:
+          cnpg.io/cluster: ${PG_PRIMARY_CLUSTER_NAME}
+      podMetricsEndpoints:
+        - port: metrics
+    EOF
     ```
 
 ## Create a federated credential
@@ -115,32 +135,39 @@ The following table outlines the key properties set in the YAML deployment manif
 
 | Property | Definition |
 | --------- | ------------ |
+| `imageName` | Points to the CloudNativePG operand container image. Use `ghcr.io/cloudnative-pg/postgresql:18-system-trixie` with the in-core backup integration shown in this guide, or switch to `18-standard-trixie` when you adopt the Barman Cloud plugin. |
 | `inheritedMetadata` | Specific to the CNPG operator. Metadata is inherited by all objects related to the cluster. |
-| `annotations: service.beta.kubernetes.io/azure-dns-label-name` | DNS label for use when exposing the read-write and read-only Postgres cluster endpoints. |
+| `annotations` | Includes the DNS label required when exposing the cluster endpoints and enables [`alpha.cnpg.io/failoverQuorum`](https://cloudnative-pg.io/documentation/current/failover/#failover-quorum-quorum-based-failover) for quorum-based failover. |
 | `labels: azure.workload.identity/use: "true"` | Indicates that AKS should inject workload identity dependencies into the pods hosting the PostgreSQL cluster instances. |
 | `topologySpreadConstraints` | Require different zones and different nodes with label `"workload=postgres"`. |
 | `resources` | Configures a Quality of Service (QoS) class of *Guaranteed*. In a production environment, these values are key for maximizing usage of the underlying node VM and vary based on the Azure VM SKU used. |
+| `probes` | Replaces the legacy `startDelay` configuration. Streaming startup and readiness probes help ensure replicas are healthy before serving traffic. |
+| `smartShutdownTimeout` | Allows long-running transactions to finish gracefully during updates instead of using aggressive stop delays. |
 | `bootstrap` | Specific to the CNPG operator. Initializes with an empty app database. |
-| `storage` / `walStorage` | Specific to the CNPG operator. Defines storage templates for the PersistentVolumeClaims (PVCs) for data and log storage. It's also possible to specify storage for tablespaces to shard out for increased IOPs. |
-| `replicationSlots` | Specific to the CNPG operator. Enables replication slots for high availability. |
-| `postgresql` | Specific to the CNPG operator. Maps settings for `postgresql.conf`, `pg_hba.conf`, and `pg_ident.conf config`. |
+| `storage` | Defines the PersistentVolume settings for the database. With Azure managed disks, the simplified syntax keeps data and WAL on the same 64 GiB volume, which offers better throughput tiers on managed disks. Adjust if you need separate WAL volumes. |
+| `postgresql.synchronous` | Replaces `minSyncReplicas`/`maxSyncReplicas` and lets you specify synchronous replication behaviour using the newer schema. |
+| `postgresql.parameters` | Specific to the CNPG operator. Maps settings for `postgresql.conf`, `pg_hba.conf`, and `pg_ident.conf`. The sample emphasizes observability and WAL retention defaults that suit the AKS workload identity scenario but should be tuned per workload. |
 | `serviceAccountTemplate` | Contains the template needed to generate the service accounts and maps the AKS federated identity credential to the UAMI to enable AKS workload identity authentication from the pods hosting the PostgreSQL instances to external Azure resources. |
 | `barmanObjectStore` | Specific to the CNPG operator. Configures the barman-cloud tool suite using AKS workload identity for authentication to the Azure Blob Storage object store. |
 
+To further isolate PostgreSQL workloads, you can add a taint (for example, `node-role.kubernetes.io/postgres=:NoSchedule`) to your data plane nodes and replace the sample `nodeSelector`/`tolerations` with the values recommended by CloudNativePG. If you take this approach, label the nodes accordingly and confirm the AKS autoscaler policies align with your topology.
+
 ### PostgreSQL performance parameters
 
-PostgreSQL performance heavily depends on your cluster's underlying resources. The following table provides some suggestions on how to calculate key parameters for high performance:
+PostgreSQL performance heavily depends on your cluster's underlying resources and workload. The following table provides baseline guidance for a three-node cluster running on Standard D4s v3 nodes (16 GiB memory). Treat these values as a starting point and adjust them once you understand your workload profile:
 
 | Property | Recommended value | Definition |
 | --------- | ------------ | -------------------- |
 | `wal_compression` | lz4 | Compresses full-page writes written in WAL file with specified method |
 | `max_wal_size` | 6GB | Sets the WAL size that triggers a checkpoint |
 | `checkpoint_timeout` | 15min | Sets the maximum time between automatic WAL checkpoints |
+| `checkpoint_completion_target` | 0.9 | Balances checkpoint work across the checkpoint window |
 | `checkpoint_flush_after` | 2MB | Number of pages after which previously performed writes are flushed to disk |
 | `wal_writer_flush_after` | 2MB | Amount of WAL written out by WAL writer that triggers a flush |
-| `min_wal_size` | 4GB | Sets the minimum size to shrink the WAL to |
-| `shared_buffers` | 25% of node memory | Sets the number of shared memory buffers used by the server |
-| `effective_cache_size` | 75% of node memory | Sets the planner's assumption about the total size of the data caches |
+| `min_wal_size` | 2GB | Sets the minimum size to shrink the WAL to |
+| `max_slot_wal_keep_size` | 10GB | Upper bound for WAL left to service replication slots |
+| `shared_buffers` | 4GB | Sets the number of shared memory buffers used by the server (25% of node memory in this example) |
+| `effective_cache_size` | 12GB | Sets the planner's assumption about the total size of the data caches |
 | `work_mem` | 1/256th of node memory | Sets the maximum memory to be used for query workspaces |
 | `maintenance_work_mem` | 6.25% of node memory | Sets the maximum memory to be used for maintenance operations |
 | `autovacuum_vacuum_cost_limit` | 2400 | Vacuum cost amount available before napping, for autovacuum |
@@ -154,13 +181,18 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
 
 1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
 
+   Streaming startup and readiness probes offer finer control over when instances admit traffic than the legacy `startDelay` setting. For background, review [CNPG recipe #19](https://www.gabrielebartolini.it/articles/2025/06/cnpg-recipe-19-finer-control-over-postgres-startup-with-probes/) and [CNPG recipe #20](https://www.gabrielebartolini.it/articles/2025/06/cnpg-recipe-20-finer-control-of-postgres-clusters-with-readiness-probes/) before tuning the `maximumLag` thresholds for your workload.
+
     ```bash
     cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
     apiVersion: postgresql.cnpg.io/v1
     kind: Cluster
     metadata:
       name: $PG_PRIMARY_CLUSTER_NAME
+      annotations:
+        alpha.cnpg.io/failoverQuorum: "true"
     spec:
+      imageName: ghcr.io/cloudnative-pg/postgresql:18-system-trixie
       inheritedMetadata:
         annotations:
           service.beta.kubernetes.io/azure-dns-label-name: $AKS_PRIMARY_CLUSTER_PG_DNSPREFIX
@@ -168,14 +200,20 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
           azure.workload.identity/use: "true"
 
       instances: 3
-      startDelay: 30
-      stopDelay: 30
-      minSyncReplicas: 1
-      maxSyncReplicas: 1
-      replicationSlots:
-        highAvailability:
-          enabled: true
-        updateInterval: 30
+      smartShutdownTimeout: 30
+
+      probes:
+        startup:
+          type: streaming
+          maximumLag: 32Mi
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 120
+        readiness:
+          type: streaming
+          maximumLag: 0
+          periodSeconds: 10
+          failureThreshold: 6
 
       topologySpreadConstraints:
       - maxSkew: 1
@@ -206,36 +244,22 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
           dataChecksums: true
 
       storage:
-        size: 32Gi
-        pvcTemplate:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 32Gi
-          storageClassName: $POSTGRES_STORAGE_CLASS
-
-      walStorage:
-        size: 32Gi
-        pvcTemplate:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 32Gi
-          storageClassName: $POSTGRES_STORAGE_CLASS
-
-      monitoring:
-        enablePodMonitor: true
+        storageClass: $POSTGRES_STORAGE_CLASS
+        size: 64Gi
 
       postgresql:
+        synchronous:
+          method: any
+          number: 1
         parameters:
           wal_compression: lz4
           max_wal_size: 6GB
+          max_slot_wal_keep_size: 10GB
           checkpoint_timeout: 15min
+          checkpoint_completion_target: '0.9'
           checkpoint_flush_after: 2MB
           wal_writer_flush_after: 2MB
-          min_wal_size: 4GB
+          min_wal_size: 2GB
           shared_buffers: 4GB
           effective_cache_size: 12GB
           work_mem: 62MB
@@ -244,6 +268,15 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
           random_page_cost: "1.1"
           effective_io_concurrency: "64"
           maintenance_io_concurrency: "64"
+          log_checkpoints: 'on'
+          log_lock_waits: 'on'
+          log_min_duration_statement: '1000'
+          log_statement: 'ddl'
+          log_temp_files: '1024'
+          log_autovacuum_min_duration: '1s'
+          pg_stat_statements.max: '10000'
+          pg_stat_statements.track: 'all'
+          hot_standby_feedback: 'on'
         pg_hba:
           - host all all all scram-sha-256
 
@@ -262,10 +295,18 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
         retentionPolicy: '7d'
     EOF
     ```
+
+> [!NOTE]
+> The sample manifest uses the `ghcr.io/cloudnative-pg/postgresql:18-system-trixie` image because it works with the in-core Barman Cloud integration shown later. When you're ready to switch to the Barman Cloud plugin, update `spec.imageName` to `ghcr.io/cloudnative-pg/postgresql:18-standard-trixie` and follow the [plugin configuration guidance](https://cloudnative-pg.io/documentation/current/backup_disaster_recovery/#barman-cloud-backup) before redeploying the cluster.
+
+> [!IMPORTANT]
+> The example `pg_hba` entry allows non-TLS access. If you keep this configuration, document the security implications for your team and prefer encrypted connections wherever possible.
   
 ### [Azure Container Storage (local NVMe)](#tab/acstor)
 
 1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
+
+   The same probe guidance applies when you deploy on Azure Container Storage. Tune the `maximumLag` settings with the help of [CNPG recipe #19](https://www.gabrielebartolini.it/articles/2025/06/cnpg-recipe-19-finer-control-over-postgres-startup-with-probes/) and [recipe #20](https://www.gabrielebartolini.it/articles/2025/06/cnpg-recipe-20-finer-control-of-postgres-clusters-with-readiness-probes/).
 
     ```bash
     cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
@@ -273,7 +314,10 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
     kind: Cluster
     metadata:
       name: $PG_PRIMARY_CLUSTER_NAME
+      annotations:
+        alpha.cnpg.io/failoverQuorum: "true"
     spec:
+      imageName: ghcr.io/cloudnative-pg/postgresql:18-system-trixie
       inheritedMetadata:
         annotations:
           service.beta.kubernetes.io/azure-dns-label-name: $AKS_PRIMARY_CLUSTER_PG_DNSPREFIX
@@ -282,14 +326,20 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
           azure.workload.identity/use: "true"
 
       instances: 3
-      startDelay: 30
-      stopDelay: 30
-      minSyncReplicas: 1
-      maxSyncReplicas: 1
-      replicationSlots:
-        highAvailability:
-          enabled: true
-        updateInterval: 30
+      smartShutdownTimeout: 30
+
+      probes:
+        startup:
+          type: streaming
+          maximumLag: 32Mi
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 120
+        readiness:
+          type: streaming
+          maximumLag: 0
+          periodSeconds: 10
+          failureThreshold: 6
 
       topologySpreadConstraints:
       - maxSkew: 1
@@ -329,17 +379,19 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
               storage: 32Gi
           storageClassName: $POSTGRES_STORAGE_CLASS
 
-      monitoring:
-        enablePodMonitor: true
-
       postgresql:
+        synchronous:
+          method: any
+          number: 1
         parameters:
           wal_compression: lz4
           max_wal_size: 6GB
+          max_slot_wal_keep_size: 10GB
           checkpoint_timeout: 15min
+          checkpoint_completion_target: '0.9'
           checkpoint_flush_after: 2MB
           wal_writer_flush_after: 2MB
-          min_wal_size: 4GB
+          min_wal_size: 2GB
           shared_buffers: 4GB
           effective_cache_size: 12GB
           work_mem: 62MB
@@ -348,6 +400,15 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
           random_page_cost: "1.1"
           effective_io_concurrency: "64"
           maintenance_io_concurrency: "64"
+          log_checkpoints: 'on'
+          log_lock_waits: 'on'
+          log_min_duration_statement: '1000'
+          log_statement: 'ddl'
+          log_temp_files: '1024'
+          log_autovacuum_min_duration: '1s'
+          pg_stat_statements.max: '10000'
+          pg_stat_statements.track: 'all'
+          hot_standby_feedback: 'on'
         pg_hba:
           - host all all all scram-sha-256
 
@@ -393,7 +454,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
 
 ## Validate the Prometheus PodMonitor is running
 
-The CNPG operator automatically creates a PodMonitor for the primary instance using the recording rules created during the [Prometheus Community installation](#install-the-prometheus-podmonitors).
+The manually created PodMonitor ties the kube-prometheus-stack scrape configuration to the CNPG pods you deployed earlier.
 
 1. Validate the PodMonitor is running using the [`kubectl get`][kubectl-get] command.
 
@@ -408,11 +469,18 @@ The CNPG operator automatically creates a PodMonitor for the primary instance us
     Example output
 
     ```output
-     kind: PodMonitor
-     metadata:
-      annotations:
-        cnpg.io/operatorVersion: 1.27.0
-    ...
+    kind: PodMonitor
+    metadata:
+      labels:
+        cnpg.io/cluster: pg-primary-cnpg-r8c7unrw
+      name: pg-primary-cnpg-r8c7unrw
+      namespace: cnpg-database
+    spec:
+      podMetricsEndpoints:
+      - port: metrics
+      selector:
+        matchLabels:
+          cnpg.io/cluster: pg-primary-cnpg-r8c7unrw
     ```
 
 If you're using Azure Monitor for Managed Prometheus, you need to add another pod monitor using the custom group name. Managed Prometheus doesn't pick up the custom resource definitions (CRDs) from the Prometheus community. Aside from the group name, the CRDs are the same. This allows pod monitors for Managed Prometheus to exist side-by-side those that use the community pod monitor. If you're not using Managed Prometheus, you can skip this. Create a new pod monitor:
@@ -491,6 +559,10 @@ Select the Save icon to save your dashboard.
 * Carol Smith | Senior Content Developer
 * Erin Schaffer | Content Developer 2
 * Adam Sharif | Customer Engineer 2
+
+## Acknowledgement
+
+This documentation was jointly developed with EnterpriseDB, the maintainers of the CloudNativePG operator.  
 
 <!-- LINKS -->
 

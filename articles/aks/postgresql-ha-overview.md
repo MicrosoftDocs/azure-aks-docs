@@ -16,6 +16,8 @@ In this guide, you deploy a highly available PostgreSQL cluster that spans multi
 
 This article walks through the prerequisites for setting up a PostgreSQL cluster on [Azure Kubernetes Service (AKS)][what-is-aks] and provides an overview of the full deployment process and architecture.
 
+CloudNativePG recently introduced new container image catalogs and updated operator defaults. The companion guides now default to the `18-system-trixie` operand image, refreshed streaming probes for safer startups and failovers, and controller settings that stagger rollouts. As you follow the scenario, watch for callouts that explain when to prefer the `18-standard-trixie` image with the Barman Cloud plugin, how to document non-TLS access, and how to plan for the future deprecation of in-core Barman Cloud support.
+
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
 ## Prerequisites
@@ -87,6 +89,10 @@ The type of storage you use can have large effects on PostgreSQL performance. La
 * Carol Smith | Senior Content Developer
 * Erin Schaffer | Content Developer 2
 * Adam Sharif | Customer Engineer 2
+
+## Acknowledgement
+
+This documentation was jointly developed with EnterpriseDB, the maintainers of the CloudNativePG operator.  
 
 <!-- LINKS -->
 [what-is-aks]: ./what-is-aks.md

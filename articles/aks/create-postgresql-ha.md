@@ -42,7 +42,6 @@ export PG_SYSTEM_NAMESPACE="cnpg-system"
 export PG_PRIMARY_CLUSTER_NAME="pg-primary-${LOCAL_NAME}-${SUFFIX}"
 export PG_PRIMARY_STORAGE_ACCOUNT_NAME="hacnpgpsa${SUFFIX}"
 export PG_STORAGE_BACKUP_CONTAINER_NAME="backups"
-export ENABLE_AZURE_PVC_UPDATES="true"
 export MY_PUBLIC_CLIENT_IP=$(dig +short myip.opendns.com @resolver3.opendns.com)
 ```
 
@@ -597,6 +596,10 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
 * Jenny Hayes | Senior Content Developer
 * Carol Smith | Senior Content Developer
 * Erin Schaffer | Content Developer 2
+
+## Acknowledgement
+
+This documentation was jointly developed with EnterpriseDB, the maintainers of the CloudNativePG operator.  
 
 <!-- LINKS -->
 [az-identity-create]: /cli/azure/identity#az-identity-create
