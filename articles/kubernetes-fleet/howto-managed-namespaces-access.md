@@ -6,7 +6,6 @@ ms.author: stumpaudra
 ms.topic: how-to
 ms.date: 09/22/2025
 ms.service: azure-kubernetes-fleet-manager
-zone_pivot_groups: azure-portal-azure-cli
 
 # Customer intent: "As an application developer or team lead, I want to find the namespaces I have access to and monitor their resource usage across all clusters so I can understand deployment status and determine if quota adjustments are needed."
 ---
@@ -61,7 +60,6 @@ zone_pivot_groups: azure-portal-azure-cli
   az account set --subscription ${SUBSCRIPTION_ID}
   ```
 
-:::zone target="docs" pivot="azure-cli"
 ## View the multi-cluster managed namespaces I have access to 
   ```azurecli-interactive
   az fleet namespace list  
@@ -79,11 +77,6 @@ zone_pivot_groups: azure-portal-azure-cli
     -o table 
   ```
 
-:::zone-end
-:::zone target="docs" pivot="azure-portal"
-## View the multi-cluster managed namespace I have access to 
-## View the member clusters that the managed namespace is placed on
-:::zone-end
 
 <!-- INTERNAL LINKS -->
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli

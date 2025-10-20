@@ -6,7 +6,6 @@ ms.author: stumpaudra
 ms.topic: how-to
 ms.date: 09/22/2025
 ms.service: azure-kubernetes-fleet-manager
-zone_pivot_groups: azure-portal-azure-cli
 
 # Customer intent: "As a platform admin, I want to define a namespace and deploy it across selected fleet clusters so I can delegate application teams access to resources on any cluster where the namespace exists."
 ---
@@ -69,8 +68,6 @@ This enables teams to work within their allocated resources across any member cl
   ```azurecli-interactive
   az account set --subscription ${SUBSCRIPTION_ID}
   ```
-
-:::zone target="docs" pivot="azure-cli"
 
 ## Creating a new multi-cluster managed namespace 
 
@@ -146,15 +143,6 @@ az fleet namespace delete \
     --fleet-name $FLEET \
     --name myManagedNamespace \
 ```
-:::zone-end
-
-:::zone target="docs" pivot="azure-portal"
-## Creating a new multi-cluster managed namespace 
-## Delegating access to a user
-## Manage member clusters the namespace is deployed to
-## Viewing the multi-cluster managed namespace
-## Deleting the multi-cluster managed namespace
-:::zone-end
 
 <!-- INTERNAL LINKS -->
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
