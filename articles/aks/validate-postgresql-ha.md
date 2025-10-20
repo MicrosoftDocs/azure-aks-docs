@@ -654,7 +654,7 @@ _Microsoft maintains this article. The following contributors originally wrote i
 
 ## Acknowledgement
 
-This documentation was jointly developed with EnterpriseDB, the maintainers of the CloudNativePG operator.  
+This documentation was jointly developed with EnterpriseDB, the maintainers of the CloudNativePG operator. We thank [Gabriele Bartolini](https://cloudnative-pg.io/authors/gbartolini/) for reviewing earlier drafts of this document and offering technical improvements.  
 
 <!-- LINKS -->
 
