@@ -12,6 +12,8 @@
       href: core-aks-concepts.md
     - name: Advanced AKS concepts
       href: advanced-aks-concepts.md
+    - name: Compare AKS Standard and AKS Automatic
+      href: intro-aks-automatic.md
     - name: Deploy a multi-container application to AKS
       items:
         - name: 1 - Prepare application for AKS
@@ -48,8 +50,6 @@
       href: concepts-preview-api-life-cycle.md
 - name: Set up clusters
   items:
-    - name: Compare AKS Standard and AKS Automatic
-      href: intro-aks-automatic.md
     - name: Create an AKS cluster
       items:
         - name: Create a Linux-based AKS cluster
