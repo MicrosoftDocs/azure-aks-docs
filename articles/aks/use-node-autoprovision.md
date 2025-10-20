@@ -15,6 +15,8 @@ zone_pivot_groups: arm-azure-cli
 
 This article explains how to enable or disable node auto-provisioning (NAP) in Azure Kubernetes Service (AKS) using the Azure CLI or Azure Resource Manager (ARM) templates.
 
+If you want to create a NAP-enabled AKS cluster with a custom virtual network (VNet) and subnets, see [Create a node auto-provisioning (NAP) cluster in a custom virtual network](./node-autoprovisioning-custom-vnet.md).
+
 ## Before you begin
 
 Before you begin, review the [Overview of node auto-provisioning (NAP) in AKS](./node-autoprovision.md) article, which details [how NAP works](./node-autoprovision.md#how-does-node-auto-provisioning-work), [prerequisites](./node-autoprovision.md#prerequisites) and [limitations](./node-autoprovision.md#limitations-and-unsupported-features).
@@ -231,4 +233,4 @@ For more information on node auto-provisioning in AKS, see the following article
 - [Configure networking for node auto-provisioning on AKS](./node-autoprovision-networking.md)
 - [Configure node pools for node auto-provisioning on AKS](./node-autoprovision-node-pools.md)
 - [Configure disruption policies for node auto-provisioning on AKS](./node-autoprovision-disruption.md)
-- [Upgrade node images for node auto-provisioning on AKS](./node-autoprovisioning-upgrade-image.md)
+- [Upgrade node images for node auto-provisioning on AKS](./node-autoprovision-upgrade-image.md)

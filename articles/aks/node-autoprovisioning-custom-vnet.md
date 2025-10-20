@@ -1,93 +1,119 @@
-## Node auto provisioning Metrics
-You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to see the logs and operations from [node auto provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview)
+---
+title: Create an Azure Kubernetes Service (AKS) cluster with node auto-provisioning (NAP) in a custom virtual network
+description: Learn how to create an AKS cluster with node auto-provisioning in a custom virtual network.
+ms.topic: how-to
+ms.custom: devx-track-azurecli
+ms.date: 06/13/2024
+ms.author: bsoghigian
+author: bsoghigian
+ms.service: azure-kubernetes-service
+# Customer intent: As a cluster operator or developer, I want to create an AKS cluster with node auto-provisioning enabled in a custom virtual network, so that I can manage my cluster's networking and security configurations while leveraging automatic node provisioning for optimal resource management.
+---
 
-## Monitoring selection events
+# Create a node auto-provisioning (NAP) cluster in a custom virtual network in Azure Kubernetes Service (AKS)
 
-Node auto provisioning produces cluster events that can be used to monitor deployment and scheduling decisions being made. You can view events through the Kubernetes events stream.
+This article shows you how to create a virtual network (VNet) and subnet, create a managed identity with permissions to access the VNet, and create an Azure Kubernetes Service (AKS) cluster in your custom VNet with node auto-provisioning (NAP) enabled.
 
-```
-kubectl get events -A --field-selector source=karpenter -w
-```
+## Before you begin
 
+Before you begin, review the following articles:
 
-## Custom Virtual Networks and node autoprovisioning
+- [Overview of node auto-provisioning (NAP) in AKS](./node-autoprovision.md) article, which details [how NAP works](./node-autoprovision.md#how-does-node-auto-provisioning-work), [prerequisites](./node-autoprovision.md#prerequisites) and [limitations](./node-autoprovision.md#limitations-and-unsupported-features).
+- [Overview of networking configurations for node auto-provisioning (NAP) in Azure Kubernetes Service (AKS)](./node-autoprovision-networking.md), which details X, Y, and Z.
 
-AKS allows you to add a cluster with node autoprovisioning enabled in a custom virtual network via the `--vnet-subnet-id` parameter. The following sections detail how to:
+## Create a virtual network and subnet
 
-- Create a virtual network
-- Create a managed identity with permissions over the virtual network  
-- Create a node autoprovisioning-enabled cluster in a custom virtual network 
+> [!IMPORTANT]
+> When using a custom VNet with NAP keep the following information in mind:
+>
+> - You must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same VNet. The minimum supported API server subnet size is _/28_.
+> - All traffic within the VNet is allowed by default. However, if you added network security group (NSG) rules to restrict traffic between different subnets, you need to ensure you configure the proper permissions. For more information, see the [Network security group documentation][network-security-group].
 
-### Create a virtual network
+1. Create a VNet using the [`az network vnet create`][az-network-vnet-create] command.
 
-Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create a cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
+    ```azurecli-interactive
+    az network vnet create \
+        --name $VNET_NAME \
+        --resource-group $RG_NAME \
+        --location $LOCATION \
+        --address-prefixes 172.19.0.0/16
+    ```
 
-When using a custom virtual network with node autoprovisioning, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
+1. Create a subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command and delegate it to `Microsoft.ContainerService/managedClusters`.
 
-```azurecli-interactive
-az network vnet create --name ${VNET_NAME} \
---resource-group ${RG_NAME} \
---location ${LOCATION} \
---address-prefixes 172.19.0.0/16
+    ```azurecli-interactive
+    az network vnet subnet create \
+        --resource-group $RG_NAME \
+        --vnet-name $VNET_NAME \
+        --name $SUBNET_NAME \
+        --delegations Microsoft.ContainerService/managedClusters \
+        --address-prefixes 172.19.0.0/28
+    ```
 
-az network vnet subnet create --resource-group ${RG_NAME} \
---vnet-name ${VNET_NAME} \
---name clusterSubnet \
---delegations Microsoft.ContainerService/managedClusters \
---address-prefixes 172.19.0.0/28
-```
+## Create a managed identity and give it permissions to access the VNet
 
-All traffic within the virtual network is allowed by default. But if you added Network Security Group (NSG) rules to restrict traffic between different subnets, see our [Network Security Group documentation][network-security-group] for the proper permissions.  
+1. Create a managed identity using the [`az identity create`][az-identity-create] command.
 
-### Create a managed identity and give it permissions on the virtual network
+    ```azurecli-interactive
+    az identity create \
+        --resource-group $RG_NAME \
+        --name $IDENTITY_NAME \
+        --location $LOCATION
+    ```
 
-Create a managed identity using the [`az identity create`][az-identity-create] command and retrieve the principal ID. Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
+1. Get the principal ID of the managed identity and set it to an environment variable using the [`az identity show`][az-identity-show] command.
 
-```azurecli-interactive
-az identity create --resource-group ${RG_NAME} \
---name ${IDENTITY_NAME} \
---location ${LOCATION}
-IDENTITY_PRINCIPAL_ID=$(az identity show --resource-group ${RG_NAME} --name ${IDENTITY_NAME} \
---query principalId -o tsv)
+    ```azurecli-interactive
+    IDENTITY_PRINCIPAL_ID=$(az identity show --resource-group $RG_NAME --name $IDENTITY_NAME --query principalId -o tsv)
+    ```
 
-az role assignment create --scope "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}" \
---role "Network Contributor" \
---assignee ${IDENTITY_PRINCIPAL_ID}
-```
+1. Assign the _Network Contributor_ role to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
 
-### Create an AKS cluster in a custom virtual network and with node autoprovisioning enabled
+    ```azurecli-interactive
+    az role assignment create \
+        --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME/providers/Microsoft.Network/virtualNetworks/$VNET_NAME" \
+        --role "Network Contributor" \
+        --assignee $IDENTITY_PRINCIPAL_ID
+    ```
 
-In the following command, an Azure Kubernetes Service (AKS) cluster is created as part of a custom virtual network using the [az aks create][az-aks-create] command. To create a customer virtual network
+## Create an AKS cluster with node auto-provisioning (NAP) in a custom VNet
 
-```azurecli-interactive
-        az aks create --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) \
-            --enable-managed-identity --generate-ssh-keys -o none --network-dataplane cilium --network-plugin azure --network-plugin-mode overlay \
-            --vnet-subnet-id "/subscriptions/$(AZURE_SUBSCRIPTION_ID)/resourceGroups/$(AZURE_RESOURCE_GROUP)/providers/Microsoft.Network/virtualNetworks/$(CUSTOM_VNET_NAME)/subnets/$(CUSTOM_SUBNET_NAME)" \
-            --node-provisioning-mode Auto
-```
+1. Create an AKS cluster with NAP enabled in your custom VNet using the [`az aks create`][az-aks-create] command. Make sure to set the `--node-provisioning-mode` flag to `Auto` to enable NAP.
 
-```azurecli-interactive
-az aks create --resource-group ${RG_NAME} \
---name ${CLUSTER_NAME} \
---location ${LOCATION} \
---vnet-subnet-id "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/clusterSubnet" \
---assign-identity "/subscriptions/${SUBSCRIPTION_ID}/resourcegroups/${RG_NAME}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/${IDENTITY_NAME}" \
---node-provisioning-mode Auto
-```
+    The following command also sets the `--network-plugin` to `azure`, `--network-plugin-mode` to `overlay`, and `--network-dataplane` to `cilium`. For more information on networking configurations supported with NAP, see [Configure networking for node auto-provisioning on AKS](./node-autoprovision-networking.md).
 
-After a few minutes, the command completes and returns JSON-formatted information about the cluster.
+    ```azurecli-interactive
+    az aks create \
+        --name $CLUSTER_NAME \
+        --resource-group $RG_NAME \
+        --location $LOCATION \
+        --assign-identity "/subscriptions/$SUBSCRIPTION_ID/resourcegroups/$RG_NAME/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$IDENTITY_NAME" \ 
+        --network-dataplane cilium \
+        --network-plugin azure \
+        --network-plugin-mode overlay \
+        --vnet-subnet-id "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME/providers/Microsoft.Network/virtualNetworks/$CUSTOM_VNET_NAME/subnets/$SUBNET_NAME" \
+        --node-provisioning-mode Auto
+    ```
 
-Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+    After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 
-```azurecli-interactive
-az aks get-credentials --resource-group ${RG_NAME} --name ${CLUSTER_NAME}
-```
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
-Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
+    ```azurecli-interactive
+    az aks get-credentials \
+        --resource-group $RG_NAME \
+        --name $CLUSTER_NAME
+    ```
 
-```bash
-kubectl get nodes
-```
+1. Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
+
+    ```bash
+    kubectl get nodes
+    ```
+
+## Next steps
+
+TBD.
 
 <!-- LINKS -->
 [az-network-vnet-create]: /cli/azure/network/vnet#az-network-vnet-create

@@ -1,46 +1,43 @@
 ---
-title: Node Autoprovisioning Node Pools Configuration
-description: Learn how to configure node pools for Azure Kubernetes Service (AKS) node autoprovisioning, including SKU selectors, limits, and weights.
+title: Configure Node Pools for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS)
+description: This article shows you how to configure node pools for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS), including SKU selectors, limits, and weights.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 07/25/2025
 ms.author: bsoghigian
 author: bsoghigian
+ms.service: azure-kubernetes-service
+# Customer intent: As a cluster operator or developer, I want to configure node pools for my AKS clusters using node auto-provisioning, so that I can optimize resource allocation and cost efficiency for my workloads.
 ---
 
-## Node pools
+# Configure node pools for node auto-provisioning (NAP) in Azure Kubernetes Service (AKS)
 
-For detailed node pool configuration including SKU selectors, limits, and weights, see [Node autoprovisioning node pools configuration](node-autoprovision-node-pools.md).
+This article explains how to configure node pools for node auto-provisioning (NAP) in Azure Kubernetes Service (AKS), including SKU selectors, resource limits, and priority weights. It also provides examples to help you get started.
 
-Node autoprovisioning uses VM SKU requirements to decide the best virtual machine for pending workloads. You can configure:
+## Overview of node pools in NAP
 
-- SKU families and specific instance types
-- Resource limits and priorities
-- Spot vs on-demand instances
-- Architecture and capabilities requirements
+NAP uses virtual machine (VM) SKU requirements to decide the best VMs for pending workloads. You can configure:
 
-# Node auto provisioning node pools configuration
+- SKU families and specific instance types.
+- Resource limits and priorities.
+- Spot or on-demand instances.
+- Architecture and capabilities requirements.
 
-This article explains how to configure node pools for Azure Kubernetes Service (AKS) node auto provisioning (NAP), including SKU selectors, resource limits, and priority weights.
+The `NodePool` resource sets constraints on the nodes that NAP creates and the pods that run on those nodes. When you first install NAP, it creates a [default `NodePool`](#review-default-node-pool-configuration). You can modify this node pool or create extra node pools to suit your workload requirements.
 
-## Node pool overview
+## Key behaviors of `NodePools` in NAP
 
-NodePools set constraints on the nodes that Node Auto Provisioning creates and the pods that run on those nodes. When you first install node autoprovisioning, a default NodePool is created. You can modify this NodePool or add more NodePools.
+When configuring `NodePools` for NAP, keep the following behaviors in mind:
 
-Key behaviors of NodePools:
-- Node auto provisioning requires at least one NodePool to function
-- Node auto provisioning evaluates each configured NodePool
-- Node auto provisioning skips NodePools with taints not tolerated by a pod
-- Node Auto Provisioning applies startup taints to provisioned nodes but doesn't require pod toleration
-- Node Auto Provisioning works best with mutually exclusive NodePools. When multiple NodePools match, the one with highest weight is used
+- NAP requires at least one `NodePool` to function.
+- NAP evaluates each configured `NodePool`.
+- NAP skips `NodePools` with taints not tolerated by a pod.
+- NAP applies startup taints to provisioned nodes but doesn't require pod toleration.
+- NAP works best with mutually exclusive `NodePools`. When multiple `NodePools` match, it uses the one with highest weight.
 
-Node autoprovisioning uses virtual machine (VM) Stock Keeping Unit (SKU) requirements to select the best virtual machine for pending workloads. Configure SKU families, VM types, spot or on-demand instances, architectures, and resource limits.
+## Review default node pool configuration
 
-## Default node pool configuration
-
-### Understand default NodePools
-
-AKS creates a default node pool configuration that you can customize:
+When you enable NAP on a new AKS cluster, it creates a default `NodePool` named `default` with the following configuration:
 
 ```yaml
 apiVersion: karpenter.sh/v1
@@ -79,21 +76,180 @@ spec:
         - D
 ```
 
-A `system-surge` node pool is also created to autoscale system pool nodes.
+It also creates a `system-surge` node pool to autoscale system pool nodes.
 
-### Control default NodePool creation
+## Control configuration of default node pool during cluster creation
 
-The `--node-provisioning-default-pools` flag controls the default Node Auto Provisioning NodePools that are created:
+When you [create a new AKS cluster enabled with NAP using the Azure CLI](./use-node-autoprovision.md#enable-nap-on-a-new-cluster), you can include the `--node-provisioning-default-pools` flag to control the configuration of the default NAP `NodePool`.
 
-- **`Auto`** (default): Creates two standard NodePools for immediate use
-- **`None`**: No default NodePools are created - you must define your own
+The `--node-provisioning-default-pools` flag controls the default NAP `NodePool` configuration and accepts the following values:
+
+- **`Auto`** (default): Creates two standard `NodePools` for immediate use.
+- **`None`**: Doesn't create any `NodePools`. You must define your own.
 
 > [!WARNING]
-> **Changing from Auto to None**: If you change this setting from `Auto` to `None` on an existing cluster, the default NodePools aren't deleted automatically. You must manually delete them if desired.
+> **Changing from `Auto` to `None`**: If you change the setting from `Auto` to `None` on an existing cluster, the default `NodePools` aren't deleted automatically. You must delete them manually if you no longer need them.
 
-## Comprehensive NodePool example
+## Node pool configuration options
 
-The following example demonstrates all available NodePool configuration options with detailed comments:
+The following sections outline various configuration options for `NodePools` in NAP, including [well-known labels and SKU selectors](#well-known-labels-and-sku-selectors), [node pool limits](#node-pool-limits), and [node pool weights](#node-pool-weights).
+
+### Well-known labels and SKU selectors
+
+Kubernetes defines [well-known labels](https://kubernetes.io/docs/reference/labels-annotations-taints/) that Azure implements. You can define these labels in the `spec.requirements` section of the `NodePool` API. NAP also supports Azure-specific labels for more advanced scheduling.
+
+| Selector | Description | Example |
+|--|--|--|
+| `karpenter.azure.com/sku-family` | VM SKU family | D, F, L, etc. |
+| `karpenter.azure.com/sku-name` | Explicit SKU name | Standard_A1_v2 |
+| `karpenter.azure.com/sku-version` | SKU version (without "v", can use 1) | 1, 2 |
+| `karpenter.sh/capacity-type` | VM allocation type (Spot / On Demand) | Spot or on-demand |
+| `karpenter.azure.com/sku-cpu` | Number of CPUs in VM | 16 |
+| `karpenter.azure.com/sku-memory` | Memory in VM in MiB | 131072 |
+| `karpenter.azure.com/sku-gpu-name` | GPU name | A100 |
+| `karpenter.azure.com/sku-gpu-manufacturer` | GPU manufacturer | nvidia |
+| `karpenter.azure.com/sku-gpu-count` | GPU count per VM | 2 |
+| `karpenter.azure.com/sku-networking-accelerated` | Whether the VM has accelerated networking | [true, false] |
+| `karpenter.azure.com/sku-storage-premium-capable` | Whether the VM supports Premium IO storage | [true, false] |
+| `karpenter.azure.com/sku-storage-ephemeralos-maxsize` | Size limit for the Ephemeral operating system (OS) disk in Gb | 92 |
+| `topology.kubernetes.io/zone` | Availability zone(s) | [uksouth-1,uksouth-2,uksouth-3] |
+| `kubernetes.io/os` | Operating system (Linux only during preview) | linux |
+| `kubernetes.io/arch` | CPU architecture (AMD64 or ARM64) | [amd64, arm64] |
+
+> [!NOTE]
+> Generally, instance types should be a list and not a single value. We recommend leaving these requirements undefined to maximize choices for efficiently placing pods. Most Azure VM sizes are supported with the exclusion of specialized sizes that don't support AKS.
+
+#### SKU family examples
+
+The `karpenter.azure.com/sku-family` selector allows you to target specific VM families.
+
+| Family | Description |
+|--------|-------------|
+| D-series | General-purpose VMs with balanced CPU-to-memory ratio |
+| F-series | Compute-optimized VMs with high CPU-to-memory ratio |
+| E-series | Memory-optimized VMs for memory-intensive applications |
+| L-series | Storage-optimized VMs with high disk throughput |
+| N-series | GPU-enabled VMs for compute-intensive workloads |
+
+Example configuration using SKU family:
+
+```yaml
+requirements:
+- key: karpenter.azure.com/sku-family
+  operator: In
+  values:
+  - D
+  - F
+```
+
+#### SKU name examples
+
+The `karpenter.azure.com/sku-name` selector allows you to specify the exact VM instance type.
+
+```yaml
+requirements:
+- key: karpenter.azure.com/sku-name
+  operator: In
+  values:
+  - Standard_D4s_v3
+  - Standard_F8s_v2
+```
+
+#### SKU version examples
+
+The `karpenter.azure.com/sku-version` selector targets specific generations of VM SKUs.
+
+```yaml
+requirements:
+- key: karpenter.azure.com/sku-version
+  operator: In
+  values:
+  - "3"  # v3 generation
+  - "5"  # v5 generation
+```
+
+#### Availability zone example
+
+The `topology.kubernetes.io/zone` selector allows you to specify the availability zones for your nodes.
+
+```yaml
+requirements:
+- key: topology.kubernetes.io/zone
+  operator: In
+  values:
+  - eastus-1
+  - eastus-2
+```
+
+> [!NOTE]
+> You can find available zones for your region using the `az account list-locations --output table` Azure CLI command.
+
+#### Architecture example
+
+The `kubernetes.io/arch` selector allows you to specify the CPU architecture for your nodes. NAP supports both `amd64` and `arm64` nodes.
+
+```yaml
+requirements:
+- key: kubernetes.io/arch
+  operator: In
+  values:
+  - amd64
+  - arm64
+```
+
+#### OS example
+
+The `kubernetes.io/os` selector allows you to specify the operating system for your nodes. Currently, NAP supports an OS type of `linux`.
+
+```yaml
+requirements:
+- key: kubernetes.io/os
+  operator: In
+  values:
+  - linux
+```
+
+#### Capacity type example
+
+The `karpenter.sh/capacity-type` selector allows you to specify whether to use spot or on-demand instances. NAP prioritizes spot instances if both are allowed.
+
+```yaml
+requirements:
+- key: karpenter.sh/capacity-type
+  operator: In
+  values:
+  - spot
+  - on-demand
+```
+
+### Node pool limits
+
+By default, NAP attempts to schedule your workloads within the Azure quota you have available. You can also specify the upper limit of resources that a node pool uses by specifying limits within the node pool spec. For example:
+
+```yaml
+spec:
+  # Resource limits constrain the total size of the cluster.
+  # Limits prevent Node Auto Provisioning from creating new instances once the limit is exceeded.
+  limits:
+    cpu: "1000"
+    memory: 1000Gi
+```
+
+### Node pool weights
+
+When you have multiple node pools defined, you can set a preference of where a workload should be scheduled by defining the relative weight in your node pool definitions. For example:
+
+```yaml
+spec:
+  # Priority given to the node pool when the scheduler considers which to select. 
+  # Higher weights indicate higher priority when comparing node pools.
+  # Specifying no weight is equivalent to specifying a weight of 0.
+  weight: 10
+```
+
+## Comprehensive example of all `NodePool` configuration options
+
+The following example demonstrates all available `NodePool` configuration options with detailed comments included for clarity:
 
 ```yaml
 apiVersion: karpenter.sh/v1
@@ -221,204 +377,10 @@ spec:
   weight: 10
 ```
 
-## Supported node provisioner requirements
-
-Kubernetes defines [Well-Known Labels](https://kubernetes.io/docs/reference/labels-annotations-taints/) that Azure implements. Define these labels in the "spec.requirements" section of the NodePool API.
-
-In addition to the well-known labels from Kubernetes, Node Auto Provisioning supports Azure-specific labels for more advanced scheduling.
-
-### SKU selectors with well-known labels
-
-| Selector | Description | Example |
-|--|--|--|
-| karpenter.azure.com/sku-family | VM SKU Family | D, F, L etc. |
-| karpenter.azure.com/sku-name | Explicit SKU name | Standard_A1_v2 |
-| karpenter.azure.com/sku-version | SKU version (without "v", can use 1) | 1 , 2 |
-| karpenter.sh/capacity-type | VM allocation type (Spot / On Demand) | spot or on-demand |
-| karpenter.azure.com/sku-cpu | Number of CPUs in VM | 16 |
-| karpenter.azure.com/sku-memory | Memory in VM in MiB | 131072 |
-| karpenter.azure.com/sku-gpu-name | GPU name | A100 |
-| karpenter.azure.com/sku-gpu-manufacturer | GPU manufacturer | nvidia |
-| karpenter.azure.com/sku-gpu-count | GPU count per VM | 2 |
-| karpenter.azure.com/sku-networking-accelerated | Whether the VM has accelerated networking | [true, false] |
-| karpenter.azure.com/sku-storage-premium-capable | Whether the VM supports Premium IO storage | [true, false] |
-| karpenter.azure.com/sku-storage-ephemeralos-maxsize | Size limit for the Ephemeral OS disk in Gb | 92 |
-| topology.kubernetes.io/zone | The Availability Zone(s) | [uksouth-1,uksouth-2,uksouth-3] |
-| kubernetes.io/os | Operating System (Linux only during preview) | linux |
-| kubernetes.io/arch | CPU architecture (AMD64 or ARM64) | [amd64, arm64] |
-
-### Well-known labels
-
-#### Instance types
-
-- **key**: `node.kubernetes.io/instance-type`
-- **key**: `karpenter.azure.com/sku-family`
-- **key**: `karpenter.azure.com/sku-name`
-- **key**: `karpenter.azure.com/sku-version`
-
-Generally, instance types should be a list and not a single value. Leaving these requirements undefined is recommended, as it maximizes choices for efficiently placing pods.
-
-Most Azure VM sizes are supported with the exclusion of specialized sizes that don't support AKS.
-
-##### SKU family examples
-The `karpenter.azure.com/sku-family` selector allows you to target specific VM families:
-- **D-series**: General-purpose VMs with balanced CPU-to-memory ratio
-- **F-series**: Compute-optimized VMs with high CPU-to-memory ratio
-- **E-series**: Memory-optimized VMs for memory-intensive applications
-- **L-series**: Storage-optimized VMs with high disk throughput
-- **N-series**: GPU-enabled VMs for compute-intensive workloads
-
-Example configuration:
-```yaml
-requirements:
-- key: karpenter.azure.com/sku-family
-  operator: In
-  values:
-  - D
-  - F
-```
-
-##### SKU name examples
-The `karpenter.azure.com/sku-name` selector allows you to specify the exact VM instance type:
-```yaml
-requirements:
-- key: karpenter.azure.com/sku-name
-  operator: In
-  values:
-  - Standard_D4s_v3
-  - Standard_F8s_v2
-```
-
-##### SKU version examples
-The `karpenter.azure.com/sku-version` selector targets specific generations:
-```yaml
-requirements:
-- key: karpenter.azure.com/sku-version
-  operator: In
-  values:
-  - "3"  # v3 generation
-  - "5"  # v5 generation
-```
-
-#### Availability zones
-
-- **key**: `topology.kubernetes.io/zone`
-- **value example**: `eastus-1`
-- **value list**: Use `az account list-locations --output table` to see available zones
-
-Node Auto Provisioning can be configured to create nodes in a particular zone. The Availability Zone `eastus-1` for your Azure subscription might not have the same physical location as `eastus-1` for another Azure subscription.
-
-#### Architecture
-
-- **key**: `kubernetes.io/arch`
-- **values**:
-  - `amd64`
-  - `arm64`
-
-Node Auto Provisioning supports both `amd64` and `arm64` nodes.
-
-#### Operating system
-
-- **key**: `kubernetes.io/os`
-- **values**:
-  - `linux`
-
-Node Auto Provisioning supports `linux` operating systems(Ubuntu + AzureLinux). Windows support is coming soon.
-
-#### Capacity type
-
-- **key**: `karpenter.sh/capacity-type`
-- **values**:
-  - `spot`
-  - `on-demand`
-
-Node Auto Provisioning prioritizes Spot offerings if the NodePool allows Spot and on-demand instances.
-
-## Node pool limits
-
-By default, node autoprovisioning attempts to schedule your workloads within the Azure quota you have available. You can also specify the upper limit of resources that is used by a node pool, specifying limits within the node pool spec.
-
-```yaml
-spec:
-  # Resource limits constrain the total size of the cluster.
-  # Limits prevent Node Auto Provisioning from creating new instances once the limit is exceeded.
-  limits:
-    cpu: "1000"
-    memory: 1000Gi
-```
-
-## Node pool weights
-
-When you have multiple node pools defined, it's possible to set a preference of where a workload should be scheduled. Define the relative weight on your Node pool definitions.
-
-```yaml
-spec:
-  # Priority given to the node pool when the scheduler considers which to select. 
-  # Higher weights indicate higher priority when comparing node pools.
-  # Specifying no weight is equivalent to specifying a weight of 0.
-  weight: 10
-```
-
-## Example node pool configurations
-
-### GPU-enabled node pool
-
-```yaml
-apiVersion: karpenter.sh/v1
-kind: NodePool
-metadata:
-  name: gpu-pool
-spec:
-  weight: 20
-  limits:
-    cpu: "500"
-    memory: 500Gi
-  template:
-    spec:
-      nodeClassRef:
-        name: default
-      requirements:
-      - key: karpenter.azure.com/sku-gpu-manufacturer
-        operator: In
-        values:
-        - nvidia
-      - key: karpenter.azure.com/sku-gpu-count
-        operator: Gt
-        values:
-        - "0"
-```
-
-### Spot instance node pool
-
-```yaml
-apiVersion: karpenter.sh/v1
-kind: NodePool
-metadata:
-  name: spot-pool
-spec:
-  weight: 5
-  template:
-    spec:
-      nodeClassRef:
-        name: default
-      requirements:
-      - key: karpenter.sh/capacity-type
-        operator: In
-        values:
-        - spot
-        - on-demand # Spot nodepools with on-demand configured will fallback to on-demand capacity
-      - key: karpenter.azure.com/sku-family
-        operator: In
-        values:
-        - D
-        - F
-```
-
-
-
 ## Next steps
+
+To learn more about using node auto-provisioning on AKS, see the following articles:
 
 - [Configure node disruption policies](node-autoprovision-disruption.md)
 - [Learn about networking configuration](node-autoprovision-networking.md)
 - [Configure AKSNodeClass settings](node-autoprovision-aksnodeclass.md)
-

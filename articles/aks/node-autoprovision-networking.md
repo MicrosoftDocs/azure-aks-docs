@@ -1,128 +1,48 @@
 ---
-title: Node Autoprovisioning Networking Configuration
-description: Learn about the networking configuration requirements and recommendations for Azure Kubernetes Service (AKS) node autoprovisioning.
-ms.topic: conceptual
+title: Understand Networking Configurations for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS)
+description: Learn about networking configuration requirements and recommendations for AKS clusters using node auto-provisioning (NAP), including supported configurations, subnet behavior, RBAC setup, and CIDR considerations.
+ms.topic: overview
 ms.custom: devx-track-azurecli
 ms.date: 06/13/2024
 ms.author: bsoghigian
 author: bsoghigian
+ms.service: azure-kubernetes-service
+# Customer intent: As a cluster operator or developer, I want to understand the networking configuration requirements and recommendations for AKS clusters using node auto-provisioning, so that I can ensure optimal performance, security, and scalability for my workloads.
 ---
 
-## Networking configuration
+# Overview of networking configurations for node auto-provisioning (NAP) in Azure Kubernetes Service (AKS)
 
-The following network configurations are recommended for clusters enabled with node autoprovisioning:
+This article provides an overview of networking configuration requirements and recommendations for Azure Kubernetes Service (AKS) clusters using node auto-provisioning (NAP). It covers supported configurations, default subnet behavior, role-based access control (RBAC) setup, and classless inter-domain routing (CIDR) considerations.
 
-- [Azure Container Network Interface (CNI) Overlay](concepts-network-azure-cni-overlay.md) with [Cilium](azure-cni-powered-by-cilium.md)
-- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
-- [Azure CNI](configure-azure-cni.md) with [Cilium](azure-cni-powered-by-cilium.md)
-- [Azure CNI](configure-azure-cni.md)
+## Supported networking configurations for NAP
 
-For detailed networking configuration requirements and recommendations, see [Node autoprovisioning networking configuration](node-autoprovision-networking.md).
-
-Key networking considerations:
-
-- Azure CNI Overlay with Cilium is recommended
-- Standard Load Balancer is required
-
-# Node autoprovisioning networking configuration
-
-This article covers the networking configuration requirements and recommendations for Azure Kubernetes Service (AKS) node autoprovisioning (NAP).
-
-## Supported networking configurations
-
-The following network configurations are recommended for clusters enabled with Node Autoprovisioning:
+NAP supports the following networking configurations:
 
 - [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
 - [Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
 - [Azure CNI](configure-azure-cni.md) with [Cilium](azure-cni-powered-by-cilium.md)
 - [Azure CNI](configure-azure-cni.md)
 
-## Recommended network policy engine
+We recommend using Azure CNI with [Cilium](azure-cni-powered-by-cilium.md). Cilium provides advanced networking capabilities and is optimized for performance with NAP.
 
-Our recommended network policy engine is [Cilium](azure-cni-powered-by-cilium.md). Cilium provides advanced networking capabilities and is optimized for performance with node autoprovisioning.
+### Unsupported networking configurations
 
-## Unsupported networking configurations
+NAP doesn't support the following networking configurations:
 
-The following networking configurations are currently *not* supported with node autoprovisioning:
+- Calico network policy
+- Dynamic IP allocation
+- Static allocation of classless inter-domain routing (CIDR) blocks
 
-- **Calico network policy** - Not supported with NAP
-- **Dynamic IP Allocation** - Not supported yet
-- **Static Allocation of Classless Inter-Domain Routing (CIDR) blocks** - Not supported yet
+## Default subnet behavior
 
-## Cluster setup with custom VNet and subnets
+The `vnetSubnetID` field in AKSNodeClass is optional. When not specified, Karpenter automatically uses the default subnet configured during Karpenter installation via the `--vnet-subnet-id` CLI parameter or `VNET_SUBNET_ID` environment variable.
 
-Karpenter supports custom networking configurations that allow you to specify different subnets for your nodes. This approach is useful when you need to place nodes in specific subnets for compliance, security, or network segmentation requirements.
-### Create VNet and subnets
+This default subnet is typically the same subnet specified during AKS cluster creation with the `--vnet-subnet-id` flag in the `az aks create` command. This fallback mechanism works as follows:
 
-First, create a VNet with two subnets for your AKS cluster:
+- **With vnetSubnetID specified**: Karpenter provisions nodes in the specified custom subnet
+- **Without vnetSubnetID specified**: Karpenter provisions nodes in the cluster's default subnet (from `--vnet-subnet-id`)
 
-```azurecli-interactive
-# Set variables
-RESOURCE_GROUP="my-aks-rg"
-LOCATION="eastus"
-VNET_NAME="my-aks-vnet"
-CLUSTER_SUBNET="cluster-subnet"
-CUSTOM_SUBNET="custom-subnet"
-CLUSTER_NAME="my-aks-cluster"
-
-# Create resource group
-az group create --name $RESOURCE_GROUP --location $LOCATION
-
-# Create VNet with address space
-az network vnet create \
-  --resource-group $RESOURCE_GROUP \
-  --name $VNET_NAME \
-  --address-prefixes 10.0.0.0/16
-
-# Create cluster subnet for main AKS nodes
-az network vnet subnet create \
-  --resource-group $RESOURCE_GROUP \
-  --vnet-name $VNET_NAME \
-  --name $CLUSTER_SUBNET \
-  --address-prefixes 10.0.1.0/24
-
-# Create custom subnet for Karpenter nodes
-az network vnet subnet create \
-  --resource-group $RESOURCE_GROUP \
-  --vnet-name $VNET_NAME \
-  --name $CUSTOM_SUBNET \
-  --address-prefixes 10.0.2.0/24
-```
-
-### Create AKS cluster with custom VNet
-
-Create the AKS cluster using the cluster subnet:
-
-```azurecli-interactive
-# Get subnet ID for cluster creation
-CLUSTER_SUBNET_ID=$(az network vnet subnet show \
-  --resource-group $RESOURCE_GROUP \
-  --vnet-name $VNET_NAME \
-  --name $CLUSTER_SUBNET \
-  --query id -o tsv)
-
-# Create AKS cluster with custom VNet and Karpenter enabled
-az aks create \
-  --resource-group $RESOURCE_GROUP \
-  --name $CLUSTER_NAME \
-  --node-count 1 \
-  --vnet-subnet-id $CLUSTER_SUBNET_ID \
-  --network-plugin azure \
-  --enable-managed-identity \
-  --node-provisioning-mode Auto \
-  --generate-ssh-keys
-```
-
-### Node auto provisioning installation
-
-Node auto provisioning is automatically enabled when using `--node-provisioning-mode Auto` during cluster creation.
-
-## Prerequisites
-
-- Azure CLI installed and authenticated
-- An AKS cluster with node auto provisioning installed (from previous steps)
-- Custom subnets in your VNet (from previous steps)
-- Appropriate Role-Based Access Control (RBAC) permissions for subnet access
+This approach allows you to have a mix of NodeClasses - some using custom subnets for specific workloads, and others using the cluster's default subnet configuration.
 
 ## VNet subnet configuration
 
@@ -136,17 +56,6 @@ metadata:
 spec:
   vnetSubnetID: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/my-aks-rg/providers/Microsoft.Network/virtualNetworks/my-aks-vnet/subnets/custom-subnet"
 ```
-
-### Default subnet behavior
-
-The `vnetSubnetID` field in AKSNodeClass is optional. When not specified, Karpenter automatically uses the default subnet configured during Karpenter installation via the `--vnet-subnet-id` CLI parameter or `VNET_SUBNET_ID` environment variable.
-
-This default subnet is typically the same subnet specified during AKS cluster creation with the `--vnet-subnet-id` flag in the `az aks create` command. This fallback mechanism works as follows:
-
-- **With vnetSubnetID specified**: Karpenter provisions nodes in the specified custom subnet
-- **Without vnetSubnetID specified**: Karpenter provisions nodes in the cluster's default subnet (from `--vnet-subnet-id`)
-
-This approach allows you to have a mix of NodeClasses - some using custom subnets for specific workloads, and others using the cluster's default subnet configuration.
 
 ## RBAC configuration
 

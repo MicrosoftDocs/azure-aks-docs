@@ -62,17 +62,19 @@ The following limitations and unsupported features apply to node auto-provisioni
 - You can't [stop a cluster](./start-stop-cluster.md) enabled with NAP.
 - [HTTP proxy](./http-proxy.md) isn't supported.
 - You can't change the [cluster egress outbound type](./egress-outboundtype.md) after you create a cluster enabled with NAP.
+- When creating a NAP cluster in a custom virtual network (VNet), you must use a [Standard Load Balancer](./load-balancer-standard.md). The [Basic Load Balancer](./load-balancer-basic.md) isn't supported.
 
 ## Get started with node auto-provisioning on AKS
 
 The following resources help you get started with node auto-provisioning on AKS:
 
-- [Enable or disable node auto-provisioning on an AKS cluster](./use-node-autoprovisioning.md)
+- [Enable or disable node auto-provisioning on an AKS cluster](./use-node-autoprovision.md)
+- [Create a node auto-provisioning (NAP) cluster in a custom virtual network](./node-autoprovisioning-custom-vnet.md)
 - [Use node auto-provisioning in a custom virtual network](./node-autoprovisioning-custom-vnet.md)
 - [Configure networking for node auto-provisioning on AKS](./node-autoprovision-networking.md)
 - [Configure node pools for node auto-provisioning on AKS](./node-autoprovision-node-pools.md)
 - [Configure disruption policies for node auto-provisioning on AKS](./node-autoprovision-disruption.md)
-- [Upgrade node images for node auto-provisioning on AKS](./node-autoprovisioning-upgrade-image.md)
+- [Upgrade node images for node auto-provisioning on AKS](./node-autoprovision-upgrade-image.md)
 
 <!-- LINKS -->
 [azure cli]: /cli/azure/get-started-with-azure-cli
