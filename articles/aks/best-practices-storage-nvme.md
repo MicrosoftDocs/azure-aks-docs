@@ -139,9 +139,12 @@ kubectl get nodes
 # Modify the node name from above list as needed
 nodeName="aks-myworkload-22647054-vmss000000"
 
-# Use your approach to login into the node. Use kubectl-exec alternatively (Reference: https://github.com/mohatb/kubectl-exec/blob/master/kubectl-exec)
+# Use your approach to login into the node.
 
-./kubectl-exec $nodeName
+kubectl debug "node/$nodeName" \
+    --image=ubuntu \
+    --profile=sysadmin -it \
+    -- chroot /host /bin/bash
 ```
 
 Once connected, use `lsblk` to list block devices and identify NVMe disks:
