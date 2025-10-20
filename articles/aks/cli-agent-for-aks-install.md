@@ -226,4 +226,4 @@ az aks-agent --status
 
 - For an overview of the CLI Agent for AKS, see [About the CLI Agent for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-overview.md).
 - To troubleshoot any issues with the CLI Agent for AKS, see [Troubleshoot the CLI Agent for AKS](./cli-agent-for-aks-troubleshoot.md).
-- [CLI Agent for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.md) answers common questions about the CLI Agent for AKS.
+- [CLI Agent for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml) answers common questions about the CLI Agent for AKS.

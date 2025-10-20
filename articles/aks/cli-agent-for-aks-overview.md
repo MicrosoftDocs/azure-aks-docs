@@ -62,4 +62,5 @@ Keep the following security considerations in mind when using the CLI Agent for 
 To start using the CLI Agent for AKS or to learn more, refer to the following resources:
 
 - [Install and use the CLI Agent for AKS](./cli-agent-for-aks-install.md)
-- [CLI Agent for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.md)
+- [CLI Agent for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml)
+- [Troubleshoot the CLI Agent for AKS](./cli-agent-for-aks-troubleshoot.md)
