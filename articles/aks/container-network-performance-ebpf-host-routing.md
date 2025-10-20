@@ -9,7 +9,7 @@ ms.topic: concept-article
 ms.date:  09/23/2025
 ---
 
-# Overview of eBPF Host Routing (Public Preview)
+# Overview of eBPF Host Routing (public preview)
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 

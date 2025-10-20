@@ -10,7 +10,7 @@ ms.date: 09/23/2025
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Enable eBPF Host Routing with Advanced Container Networking Services (Public Preview)
+# Enable eBPF Host Routing with Advanced Container Networking Services (public preview)
 
 > [!IMPORTANT]
 > eBPF Host Routing with Advanced Container Networking Services is currently in PREVIEW.  
