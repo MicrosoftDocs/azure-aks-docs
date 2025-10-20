@@ -100,10 +100,6 @@
           href: quickstart-resource-propagation.md
         - name: Understand the placement status
           href: howto-understand-placement.md
-        - name: Use managed namespaces for multi-tenancy across multiple clusters
-          href: howto-managed-namespaces.md
-        - name: View multi-cluster managed namespaces I have access to
-          href: howto-managed-namespaces-access.md
         - name: Intelligent multi-cluster resource placement using cluster properties
           href: intelligent-resource-placement.md
         - name: Use Automated Deployments to drive multi-cluster resource placement
@@ -116,6 +112,12 @@
           href: cluster-resource-override.md
         - name: Use overrides to customize namespace-scope resources
           href: resource-override.md  
+    - name: Multi-cluster multi-tenancy with Managed Namespaces
+      items:
+        - name: Define and deploy multi-cluster managed namespaces
+          href: howto-managed-namespaces.md
+        - name: View and access multi-cluster managed namespaces
+          href: howto-managed-namespaces-access.md
     - name: Load balance multi-cluster services
       items:
         - name: Use DNS-based load balancing across multiple clusters
