@@ -8,7 +8,7 @@ ms.date: 10/17/2025
 author: fhryo-msft
 ms.author: fryu
 
-# Customer intent: As a Kubernetes cluster operator, I want to implement best practices for ephemeral NVMe disks in AKS, so that I can achieve maximum application performance from high-performance ephemeral NVMe disks, for workloads requiring high throughput, high IOPS and low latency in processing intermidia files. For example, AI training/tuning/inference, PostgreSQL database, etc.
+# Customer intent: As a Kubernetes cluster operator, I want to implement best practices for ephemeral NVMe disks in AKS, so that I can achieve maximum application performance for workloads requiring high throughput, high IOPS, and low latency such as AI training/tuning/inference and high-performance databases.
 ---
 
 # Best practices for ephemeral NVMe data disks in Azure Kubernetes Service (AKS)
