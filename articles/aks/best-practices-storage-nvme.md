@@ -95,7 +95,7 @@ For AI workloads that require GPU acceleration, consider VM sizes in the NC, ND,
 
 Example GPU VM sizes with NVMe disks:
 
-| VM Size                  | GPU Type       | Number of NVMe Disks | Total NVMe Capacity (GB) |
+| VM Size                  | GPU Type       | Number of NVMe Disks | Total NVMe Capacity (GiB) |
 |--------------------------|----------------|----------------------|--------------------------|
 | Standard_NC48ads_A100_v4 | 2 x A100       | 2                    | 1,788                    |
 | Standard_NC96ads_A100_v4 | 4 x A100       | 4                    | 3,576                    |
