@@ -171,7 +171,6 @@ There are several ways to use ephemeral NVMe data disks in your AKS workloads. T
 
 You can deploy Azure Container Storage in your AKS cluster and provision volumes using standard Kubernetes PVCs.
 
-**Advantages:**
 
   - Kubernetes-native experience with PersistentVolumeClaims.
   - Automated discovery and management of NVMe disks for any VM sizes.
