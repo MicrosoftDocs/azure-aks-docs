@@ -44,7 +44,7 @@ For databases such as PostgreSQL, especially in high-availability (HA) or read-i
 - For HA scenarios, ensure that persistent data directories remain on durable storage, while using NVMe for non-persistent, high-churn data.
 - See [PostgreSQL HA on AKS](/azure/aks/postgresql-ha-overview) for architecture guidance.
 
-### 2. AI Model Hosting and Inference (for example, KAITO)
+### AI model hosting and inference (for example, KAITO)
 
 AI model serving platforms like [KAITO](https://github.com/kaito-project/kaito) benefit from NVMe disks for rapid model loading, artifact caching, and high-throughput inference. When models are stored as Open Container Initiative (OCI) artifacts and loaded on demand, local NVMe storage ensures minimal cold start times and efficient batch processing.
 
