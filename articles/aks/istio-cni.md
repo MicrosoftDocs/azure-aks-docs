@@ -29,9 +29,8 @@ Istio CNI addresses this security concern by moving the network configuration re
 
 When Istio CNI is enabled, application pods use a minimal `istio-validation` init container that drops all capabilities instead of the privileged `istio-init` container.
 
-## Prerequisites
+## Before you begin
 
-* You need an AKS cluster with the Istio-based service mesh add-on enabled. If you don't have this setup, see [Deploy Istio-based service mesh add-on for Azure Kubernetes Service][istio-deploy-addon].
 * Install the Azure CLI version 2.61.0 or later (TODO UPDATE THIS VERSION ONCE ITS SHIPPED). You can run `az --version` to verify the version. To install or upgrade, see [Install Azure CLI][azure-cli-install].
 * Install the `aks-preview` Azure CLI extension:
 
@@ -70,12 +69,7 @@ When Istio CNI is enabled, application pods use a minimal `istio-validation` ini
     }
     ```
 
-    When the feature shows as registered, refresh the registration of the `Microsoft.ContainerService` resource provider:
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
-
+* You need an AKS cluster with the Istio-based service mesh add-on enabled. If you don't have this setup, see [Deploy Istio-based service mesh add-on for Azure Kubernetes Service][istio-deploy-addon].
 * Ensure your Istio service mesh is using revision `asm-1-25` or later. You can check the current revision with:
 
     ```azurecli-interactive
@@ -111,13 +105,13 @@ kubectl get daemonset -n aks-istio-system
 You should see the Istio CNI DaemonSet running:
 
 ```output
-NAME                     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-TODO-istio-cni-node      3         3         3       3            3           <none>          2m
+NAME                                      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+azure-service-mesh-istio-cni-addon-node   3         3         3       3            3           kubernetes.io/os=linux   94s
 ```
 
-## Deploy and verify workload behavior
+## Deploy workloads and verify behavior
 
-To demonstrate the security improvement, deploy the bookinfo sample application and verify that workloads use the secure `istio-validation` init container instead of the privileged `istio-init` container.
+To verify the security improvement, you can deploy the bookinfo sample application and check that workloads use the secure `istio-validation` init container instead of the privileged `istio-init` container.
 
 ### Deploy sample application
 
@@ -148,12 +142,12 @@ kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.init
 Expected output should show `istio-validation` as the init container with dropped capabilities:
 
 ```output
-details-v1-xxxxxx        istio-validation    {"drop":["ALL"]}
-productpage-v1-xxxxxx    istio-validation    {"drop":["ALL"]}
-ratings-v1-xxxxxx        istio-validation    {"drop":["ALL"]}
-reviews-v1-xxxxxx        istio-validation    {"drop":["ALL"]}
-reviews-v2-xxxxxx        istio-validation    {"drop":["ALL"]}
-reviews-v3-xxxxxx        istio-validation    {"drop":["ALL"]}
+details-v1-799dc5d847-7x9gl     istio-validation        {"drop":["ALL"]}
+productpage-v1-99d6d698f-89gpj  istio-validation        {"drop":["ALL"]}
+ratings-v1-7545c4bb6c-m7t42     istio-validation        {"drop":["ALL"]}
+reviews-v1-8679d76d6c-jz4vg     istio-validation        {"drop":["ALL"]}
+reviews-v2-5b9c77895c-b2b7m     istio-validation        {"drop":["ALL"]}
+reviews-v3-5b57874f5f-kk9rt     istio-validation        {"drop":["ALL"]}
 ```
 
 You can also describe a specific pod to verify the security context:
@@ -192,39 +186,41 @@ After disabling Istio CNI:
 1. The CNI DaemonSet will be removed:
 
     ```bash
-    kubectl get daemonset -n aks-istio-system
+    kubectl get daemonset azure-service-mesh-istio-cni-addon-node -n aks-istio-system
     ```
 
     Expected output (no CNI DaemonSet):
 
     ```output
-    No resources found in aks-istio-system namespace.
+    Error from server (NotFound): daemonsets.apps "azure-service-mesh-istio-cni-addon-node" not found
     ```
 
-2. New workloads will use the traditional `istio-init` init container with network capabilities:
+1. New workloads will use the traditional `istio-init` init container with network capabilities. Restart all existing deployments to pick up the change:
 
     ```bash
-    # Restart deployments to pick up the change
     kubectl rollout restart deployment/details-v1
     kubectl rollout restart deployment/productpage-v1
     kubectl rollout restart deployment/ratings-v1
     kubectl rollout restart deployment/reviews-v1
     kubectl rollout restart deployment/reviews-v2
     kubectl rollout restart deployment/reviews-v3
+    ```
 
-    # Verify init container name and capabilities
+1. Verify init container name and capabilities:
+
+    ```bash
     kubectl get pods -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.initContainers[0].name}{"\t"}{.spec.initContainers[0].securityContext.capabilities}{"\n"}{end}'
     ```
 
     Expected output should show `istio-init` with network capabilities:
 
     ```output
-    details-v1-xxxxxx        istio-init    {"add":["NET_ADMIN","NET_RAW"]}
-    productpage-v1-xxxxxx    istio-init    {"add":["NET_ADMIN","NET_RAW"]}
-    ratings-v1-xxxxxx        istio-init    {"add":["NET_ADMIN","NET_RAW"]}
-    reviews-v1-xxxxxx        istio-init    {"add":["NET_ADMIN","NET_RAW"]}
-    reviews-v2-xxxxxx        istio-init    {"add":["NET_ADMIN","NET_RAW"]}
-    reviews-v3-xxxxxx        istio-init    {"add":["NET_ADMIN","NET_RAW"]}
+    details-v1-57bc58c559-722v8     istio-init        {"drop":["ALL"]}
+    productpage-v1-7bb64f657c-jw6gs istio-init        {"drop":["ALL"]}
+    ratings-v1-57d5594c75-4zd49     istio-init        {"drop":["ALL"]}
+    reviews-v1-7fd8f9cd59-mdcf9     istio-init        {"drop":["ALL"]}
+    reviews-v2-7b8bdc9cdf-k9qgb     istio-init        {"drop":["ALL"]}
+    reviews-v3-588854d9d7-s2f7j     istio-init        {"drop":["ALL"]}
     ```
 
 
