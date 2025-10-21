@@ -4,18 +4,16 @@ description: Install Managed Kubernetes Gateway API on Azure Kubernetes Service
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 author: nshankar
-ms.date: 08/25/2025
+ms.date: 10/21/2025
 ms.author: nshankar
 # Customer intent: "As a Kubernetes administrator, I want to install the Kubernetes Gateway API Custom Resource Definitions (CRDs) to create Kubernetes Gateway API resources on my cluster."
 ---
 
-# Install Managed Gateway API Custom Resource Definitions (CRDs) - Preview
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+# Install Managed Gateway API Custom Resource Definitions (CRDs)
 
 The [Kubernetes Gateway API][kubernetes-gateway-api] is a specification for traffic management on Kubernetes clusters. It was designed as a successor and enhancement of the [Ingress API][kubernetes-ingress-api], which lacked a unified and provider-agnostic approach for advanced traffic routing.
 
-The Managed Gateway API Installation for Azure Kubernetes Service (AKS) installs the Custom Resource Definitions (CRDs) for the Kubernetes Gateway API onto your cluster. With the Managed Gateway API installation, you can use Gateway API functionality in a fully supported mode on AKS. However, you must also use an AKS add-on or extension that implements the Gateway API, such as [the Istio add-on][istio-gateway-api].
+The Managed Gateway API Installation for Azure Kubernetes Service (AKS) installs the Custom Resource Definitions (CRDs) for the Kubernetes Gateway API. With the Managed Gateway API installation, you can use Gateway API functionality in a fully supported mode on AKS. However, you must also use an AKS add-on or extension that implements the Gateway API, such as [the Istio add-on][istio-gateway-api].
 
 ## Requirements and limitations
 
@@ -39,7 +37,23 @@ The following table outlines the supported Kubernetes versions for your AKS clus
 ### Install supported Gateway API implementation
 
 Ensure that you have at least one of the following implementations of the Gateway API installed on your cluster:
-- [Istio add-on][istio-deploy] minor revision `asm-1-26` or higher.
+- [Istio add-on][istio-deploy] minor revision `asm-1-26` or higher. 
+
+### Install the `aks-preview` Azure CLI extension
+
+Install the `aks-preview` extension if you're using Azure CLI. You must use `aks-preview` version `` or higher.
+
+1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+2. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
 
 ### Register the Managed Gateway API preview feature
 
@@ -51,38 +65,22 @@ az feature register --namespace "Microsoft.ContainerService" --name "ManagedGate
 
 ## Install the Managed Gateway API CRDs
 
-### Azure Resource Manager (ARM) Template
+Once you finish the prerequisite steps, you can run the `az aks create` command to install the Managed Gateway API CRDs on a newly created cluster:
 
-You can enable the Managed Gateway API CRDs on your cluster by deploying an [Azure Resource Manager (ARM) Template][azure-arm-template]. Add the following to an AR the Managed Cluster resource JSON under the `properties` spec, using the `2025-06-02-preview` API version or higher:
-
-```json
-"resources": [
-  {
-    "type": "Microsoft.ContainerService/managedClusters",
-    "apiVersion": "2025-06-02-preview",
-    "name": "[parameters('clusterName')]",
-    "location": "[parameters('location')]",
-    "properties": {
-      "ingressProfile": {
-        "gatewayAPI": {
-          "installation": "Standard"
-        }
-      }
-    }
-  }
-],
+```azurecli-interactive
+ az aks create -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-gateway-api
 ```
 
-Follow the instructions in the documentation to [deploy the template][azure-arm-template-deploy].
+To install the Managed Gateway API CRDs on an existing cluster, you can run:
 
-### Verify Installation 
+```azurecli-interactive
+ az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-gateway-api
+```
+
 You should now see the CRDs installed on your cluster:
 
 ```bash
-kubectl get crds | grep "gateway.networking.k8s.io"
-```
-
-```output
+$ kubectl get crds | grep "gateway.networking.k8s.io"
 gatewayclasses.gateway.networking.k8s.io                           2025-08-29T17:52:36Z
 gateways.gateway.networking.k8s.io                                 2025-08-29T17:52:36Z
 grpcroutes.gateway.networking.k8s.io                               2025-08-29T17:52:36Z
@@ -93,9 +91,7 @@ referencegrants.gateway.networking.k8s.io                          2025-08-29T17
 Verify that the CRDs have the expected annotations and that the bundle version matches the [expected Kubernetes version](#gateway-api-bundle-version-and-aks-kubernetes-version-mapping) for your cluster.
 
 ```bash
-kubectl get crd gateways.gateway.networking.k8s.io -ojsonpath={.metadata.annotations} | jq
-```
-```output
+$ kubectl get crd gateways.gateway.networking.k8s.io -ojsonpath={.metadata.annotations} | jq
 {
   "api-approved.kubernetes.io": "https://github.com/kubernetes-sigs/gateway-api/pull/3328",
   "app.kubernetes.io/managed-by": "aks",
@@ -107,26 +103,10 @@ kubectl get crd gateways.gateway.networking.k8s.io -ojsonpath={.metadata.annotat
 
 ## Uninstall the Managed Gateway API CRDs
 
-### ARM Template
+To uninstall the Managed Gateway API CRDs, you can run the following command:
 
-Deploy an [ARM template][azure-arm-template-deploy] with the following spec to disable the Managed Gateway API CRDs:
-
-```json
-"resources": [
-  {
-    "type": "Microsoft.ContainerService/managedClusters",
-    "apiVersion": "2025-06-02-preview",
-    "name": "[parameters('clusterName')]",
-    "location": "[parameters('location')]",
-    "properties": {
-      "ingressProfile": {
-        "gatewayAPI": {
-          "installation": "Disabled"
-        }
-      }
-    }
-  }
-],
+```azurecli-interactive
+ az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --disable-gateway-api
 ```
 
 ## Next Steps
@@ -137,8 +117,6 @@ Deploy an [ARM template][azure-arm-template-deploy] with the following spec to d
 [istio-about]: ./istio-about.md
 [istio-deploy]: ./istio-deploy-addon.md
 [istio-gateway-api]: ./istio-gateway-api.md
-[azure-arm-template]: ./learn/quick-kubernetes-deploy-rm-template.md
-[azure-arm-template-deploy]: ./learn/quick-kubernetes-deploy-rm-template.md#deploy-the-template
 
 [kubernetes-gateway-api]: https://gateway-api.sigs.k8s.io/
 [kubernetes-ingress-api]: https://kubernetes.io/docs/concepts/services-networking/ingress/

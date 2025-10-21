@@ -74,6 +74,9 @@ EOF
 ```
 
 > [!NOTE]
+> The example above creates an external ingress load balancer service that's accessible from outside the cluster. You can add [annotations][annotation-customizations] to create an internal load balancer and customize other load balancer settings.
+
+> [!NOTE]
 > If you are performing a [minor revision upgrade][istio-upgrade] and have two Istio add-on revisions installed on your cluster simultaneously, by default the control plane for the higher minor revision takes ownership of the `Gateways`. You can add the `istio.io/rev` label to the `Gateway` to control which control plane revision owns it. If you add the revision label, make sure that you update it accordingly to the appropriate control plane revision before rolling back or completing the upgrade operation.
 
 Verify that a `Deployment`, `Service`, `HorizontalPodAutoscaler`, and `PodDisruptionBudget` get created for `httpbin-gateway`:
@@ -134,6 +137,34 @@ You should see an `HTTP 200` response.
 The Istio add-on supports syncing secrets from Azure Key Vault (AKV) for securing Gateway API-based ingress traffic with [Transport Layer Security (TLS) termination][istio-tls-termination] or [Server Name Indication (SNI) passthrough][istio-sni-passthrough]. You can follow the [secure ingress gateway][istio-secure-gateways] document for syncing secrets from AKV onto your AKS cluster using the [AKV Secrets Store Container Storage Interface (CSI) Driver add-on][aks-csi-driver].
 
 ## Resource customizations
+
+### Annotation customizations
+
+You can add annotations under `spec.infrastructure.annotations` to [configure load balancer settings][azure-aks-load-balancer-annotations] for the `Gateway`. For instance, to create an internal load balancer attached to a specific subnet, you can create a `Gateway` with the following annotations:
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: httpbin-gateway
+spec:
+  gatewayClassName: istio
+  listeners:
+  - name: http
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: Same
+  infrastructure:
+    annotations: 
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+      service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "my-subnet"
+EOF
+```
+
+### ConfigMap customizations
 
 The Istio add-on also [supports customizations of the resources][istio-gateway-auto-deployment] generated for the `Gateways`, namely:
 
@@ -357,6 +388,8 @@ updated-per-gateway
 [istio-support-policy]: istio-support-policy.md#allowed-supported-and-blocked-customizations
 [istio-upgrade]: istio-upgrade.md
 [managed-gateway-addon]: managed-gateway-api.md
+[annotation customizations]: #annotation-customizations
+[azure-aks-load-balancer-annotations]: load-balancer-standard.md#customizations-via-kubernetes-annotations
 
 [istio-gateway-auto-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#automated-deployment
 [istio-gateway-manual-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#manual-deployment
