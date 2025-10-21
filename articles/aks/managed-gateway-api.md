@@ -80,7 +80,10 @@ To install the Managed Gateway API CRDs on an existing cluster, you can run:
 You should now see the CRDs installed on your cluster:
 
 ```bash
-$ kubectl get crds | grep "gateway.networking.k8s.io"
+kubectl get crds | grep "gateway.networking.k8s.io"
+```
+
+```output
 gatewayclasses.gateway.networking.k8s.io                           2025-08-29T17:52:36Z
 gateways.gateway.networking.k8s.io                                 2025-08-29T17:52:36Z
 grpcroutes.gateway.networking.k8s.io                               2025-08-29T17:52:36Z
@@ -91,7 +94,10 @@ referencegrants.gateway.networking.k8s.io                          2025-08-29T17
 Verify that the CRDs have the expected annotations and that the bundle version matches the [expected Kubernetes version](#gateway-api-bundle-version-and-aks-kubernetes-version-mapping) for your cluster.
 
 ```bash
-$ kubectl get crd gateways.gateway.networking.k8s.io -ojsonpath={.metadata.annotations} | jq
+kubectl get crd gateways.gateway.networking.k8s.io -ojsonpath={.metadata.annotations} | jq
+```
+
+```output
 {
   "api-approved.kubernetes.io": "https://github.com/kubernetes-sigs/gateway-api/pull/3328",
   "app.kubernetes.io/managed-by": "aks",
