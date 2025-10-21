@@ -169,7 +169,7 @@ There are several ways to use ephemeral NVMe data disks in your AKS workloads. T
 [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) is a Kubernetes-native storage solution that abstracts and manages local NVMe disks as persistent volumes, with advanced orchestration and data services.
 
 
-Deploy Azure Container Storage in your AKS cluster and provision volumes using standard Kubernetes PVCs.
+You can deploy Azure Container Storage in your AKS cluster and provision volumes using standard Kubernetes PVCs.
 
 **Advantages:**
 
