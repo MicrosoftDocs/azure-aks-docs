@@ -70,7 +70,7 @@ In-memory databases and caching solutions (for example, Redis, Memcached, RocksD
 - Use NVMe for write-heavy cache workloads where persistence isn't critical.
 - Monitor disk usage to avoid eviction or data loss due to node restarts.
 
-### 5. High-Performance Computing (HPC) and Simulation
+### High-performance computing (HPC) and simulation
 
 HPC workloads, including genomics, financial modeling, and scientific simulations, often require rapid access to large datasets and scratch space for intermediate results. NVMe disks provide the necessary bandwidth and low latency for these scenarios.
 
