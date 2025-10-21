@@ -39,7 +39,7 @@ Ephemeral NVMe data disks are ideal for workloads that demand high throughput, l
 
 For databases such as PostgreSQL, especially in high-availability (HA) or read-intensive deployments, local NVMe disks can dramatically improve transaction throughput and reduce query latency. When used for temporary tablespaces, write-ahead logs (WAL), or as a cache layer, NVMe disks help offload I/O from persistent storage, accelerating analytics and transactional workloads.
 
-**Best practices:**
+Best practices:
 - Use NVMe-backed volumes for PostgreSQL temp directories and WAL logs to maximize IOPS and minimize latency.
 - For HA scenarios, ensure that persistent data directories remain on durable storage, while using NVMe for non-persistent, high-churn data.
 - See [PostgreSQL HA on AKS](/azure/aks/postgresql-ha-overview) for architecture guidance.
