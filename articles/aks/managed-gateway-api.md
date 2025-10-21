@@ -9,7 +9,7 @@ ms.author: nshankar
 # Customer intent: "As a Kubernetes administrator, I want to install the Kubernetes Gateway API Custom Resource Definitions (CRDs) to create Kubernetes Gateway API resources on my cluster."
 ---
 
-# Install Managed Gateway API Custom Resource Definitions (CRDs)
+# Install Managed Gateway API Custom Resource Definitions (CRDs) - Preview
 
 The [Kubernetes Gateway API][kubernetes-gateway-api] is a specification for traffic management on Kubernetes clusters. It was designed as a successor and enhancement of the [Ingress API][kubernetes-ingress-api], which lacked a unified and provider-agnostic approach for advanced traffic routing.
 
@@ -41,7 +41,7 @@ Ensure that you have at least one of the following implementations of the Gatewa
 
 ### Install the `aks-preview` Azure CLI extension
 
-Install the `aks-preview` extension if you're using Azure CLI. You must use `aks-preview` version `` or higher.
+Install the `aks-preview` extension if you're using Azure CLI. You must use `aks-preview` version `19.0.0b4` or higher.
 
 1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
 
