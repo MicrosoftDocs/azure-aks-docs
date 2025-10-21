@@ -78,7 +78,7 @@ HPC workloads, including genomics, financial modeling, and scientific simulation
 
 Ephemeral NVMe data disks are available on select Azure VM sizes that offer local, high-performance storage directly attached to the physical host. These disks are ideal for temporary data, such as caches, scratch files, or intermediate processing, and aren't persisted after a VM is deallocated or stopped. The number and capacity of NVMe disks vary by VM size and family.
 
-To determine which VM sizes support ephemeral NVMe data disks and their configurations, refer to the [Azure VM documentation](/azure/virtual-machines/sizes) and the [AKS supported VM sizes](/azure/aks/quotas-skus-regions). Look for VM series such as [Lsv4](/azure/virtual-machines/sizes/storage-optimized/lsv4-series), and [Ddsv6](/azure/virtual-machines/sizes/general-purpose/ddsv6-series), which are designed for high-throughput, low-latency workloads.
+To determine which VM sizes support ephemeral NVMe data disks and their configurations, refer to the [Azure VM documentation](/azure/virtual-machines/sizes) and the [AKS supported VM sizes](/azure/aks/quotas-skus-regions). Look for VM series such as [Lsv4](/azure/virtual-machines/sizes/storage-optimized/lsv4-series) and [Ddsv6](/azure/virtual-machines/sizes/general-purpose/ddsv6-series), which are designed for high-throughput, low-latency workloads.
 
 The following table lists example VM sizes and their NVMe disk configurations:
 
