@@ -17,7 +17,7 @@ Ephemeral NVMe data disks provide high-performance, low-latency storage that's i
 
 Unlike remote disks that scale performance with VM size, Ephemeral NVMe disks deliver their full performance regardless of vCPU count because they're physically attached to the VM and bypass the remote disk controller entirely. Consider this stark contrast:
 
-- Ultra Disk: To get 400,000 IOPS, you need a 112-vCPU VM (for example, [Standard_E112ibds_v5](/azure/virtual-machines/ebdsv5-ebsv5-series#ebdsv5-series-nvme))
+- Ultra Disk: To get 400,000 IOPS, you need a 112-vCPU VM (for example, [Standard_E112ibds_v5](/azure/virtual-machines/ebdsv5-ebsv5-series#ebdsv5-series-nvme)).
 - Local NVMe: An 8-vCPU (for example, [Standard_L8s_v3](/azure/virtual-machines/sizes/storage-optimized/lsv3-series?tabs=sizestoragelocal#sizes-in-series)) VM delivers 400,000 IOPS out of the box
 
 That's 14x fewer vCPUs for the same IOPS performance, dramatically reducing your compute costs.
