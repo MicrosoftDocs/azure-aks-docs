@@ -103,7 +103,7 @@ Example GPU VM sizes with NVMe disks:
 | Standard_ND96isr_H200_v5 | 8 x H200       | 8                    | 28,610                   |
 
 > [!Note]
-> Actual NVMe disk capacity and number may vary by region and VM generation and not all GPU VM sizes include local NVMe storage. Always verify the latest VM specifications and NVMe disk availability in the Azure documentation, as configurations may change. 
+> Actual NVMe disk capacity and number might vary by region and VM generation. Not all GPU VM sizes include local NVMe storage. Always verify the latest VM specifications and NVMe disk availability in the Azure documentation, as configurations might change. 
 
 ## Validate ephemeral NVMe data disks configuration
 
