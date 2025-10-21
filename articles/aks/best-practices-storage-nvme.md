@@ -178,24 +178,19 @@ Azure Container Storage offers the following advantages:
   - Improved reliability and operational simplicity.
   - Enables high-performance workloads with default volume striping cross all available disks.
 
-**Disadvantages:**
 
-  - Requires installation of Azure Container Storage.
 
-**Recommendation:**  
 Azure Container Storage is the best option for Kubernetes workloads to orchestrate ephemeral NVMe data disks. It combines the raw performance of NVMe disks with Kubernetes-native management, security, and built-in integration with Azure’s monitoring features and Prometheus. This approach reduces operational complexity, improves reliability, and enables advanced scenarios (such as scaling and failover) that are difficult to achieve with `emptyDir` or `hostPath`.
 
 For more information, see [Azure Container Storage documentation](/azure/storage/container-storage/container-storage-introduction).
 
 ### `emptyDir` Volumes
 
-**How it works:**
 
 `emptyDir` is a Kubernetes volume type that uses the node's local storage. When backed by NVMe disks, `emptyDir` provides high throughput and low latency for temporary data.
 
-**Usage:**
 
-Define an `emptyDir` volume in your Pod spec. By default, it uses the fastest available storage (NVMe if present).
+To use this method, define an `emptyDir` volume in your Pod spec. By default, it uses the fastest available storage (NVMe if present).
 
 **Advantages:**  
   - Simple to use and configure.
@@ -209,13 +204,11 @@ Define an `emptyDir` volume in your Pod spec. By default, it uses the fastest av
 
 ### `hostPath` Volumes
 
-**How it works:**
 
 `hostPath` mounts a specific directory or disk from the node’s filesystem into the Pod. You can target NVMe mount points directly.
 
-**Usage:**
 
-Specify the NVMe disk path (for example, `/mnt` or `/mnt/nvme0n1`) in the Pod spec.
+To use this method, specify the NVMe disk path (for example, `/mnt` or `/mnt/nvme0n1`) in the Pod spec.
 
 **Advantages:**
 
@@ -230,14 +223,14 @@ Specify the NVMe disk path (for example, `/mnt` or `/mnt/nvme0n1`) in the Pod sp
 
 ## Ephemeral NVMe data disks with ephemeral OS disks
 
-When deploying AKS nodes with local NVMe data disks, such as the `Standard_D2ads_v6` VM size (single 100-GiB NVMe disk) with ephemeral OS disks setting opt-in, you may observe that the ephemeral OS disk (for example, 60 GiB) is provisioned from the NVMe capacity. However, the unused NVMe space (like the extra 40 GiB) isn’t available to use, and there’s no supported way to access or recover it after the node is created.
+When deploying AKS nodes with local NVMe data disks, such as the `Standard_D2ads_v6` VM size (single 100 GiB NVMe disk) with ephemeral OS disks setting opt-in, you might observe that the ephemeral OS disk (for example, 60 GiB) is provisioned from the NVMe capacity. However, the unused NVMe space (in this example, the extra 40 GiB) isn’t available to use, and there’s no supported way to access or recover it after the node is created.
 
 This behavior is by design, as the ephemeral OS disk requirements dictate how the NVMe device is partitioned at provisioning time. It can be confusing since you don’t get access to all of its storage, especially with many VM sizes that come with only one NVMe disk.
 
 Use the following example to validate this behavior:
 
 ```bash
-# Create Standard_D2ads_v6 (Single 100-GiB NVMe disk) node pool using ephemeral OS disk with 60 GiB capacity
+# Create Standard_D2ads_v6 (Single 100 GiB NVMe disk) node pool using ephemeral OS disk with 60 GiB capacity
 
 az aks nodepool add \
     --resource-group $resourceGroup \
@@ -293,7 +286,7 @@ The following steps introduce generic benchmarking with fio and local NVMe volum
 
 1. Enable Azure Container Storage on your AKS cluster. See [Azure Container Storage Quickstart](/azure/storage/container-storage/container-storage-aks-quickstart)
 
-2. Deploy storage class, generic volume, fio pod with local NVMe volumes. See [Use local NVMe with Azure Container Storage](/azure/storage/container-storage/use-container-storage-with-local-disk)
+2. Deploy storage class, generic volume, fio pod with local NVMe volumes. See [Use local NVMe with Azure Container Storage](/azure/storage/container-storage/use-container-storage-with-local-disk).
 
 3. Run the following fio command and modify as needed.
 
