@@ -53,7 +53,7 @@ Like Azure CNI Overlay, Kubenet assigns IP addresses to pods from an address spa
     - The same pod CIDR space can be used on multiple independent AKS clusters in the same VNet.
     - Pod CIDR space must not overlap with the cluster subnet range.
     - Pod CIDR space must not overlap with directly connected networks (like VNet peering, ExpressRoute, or VPN). If external traffic has source IPs in the podCIDR range, it needs translation to a nonoverlapping IP via SNAT to communicate with the cluster.
-    - Pod CIDR space can only be expanded.
+    - Pod CIDR space **can only be expanded**.
 - **Kubernetes service address range**: The size of the service address CIDR depends on the number of cluster services you plan to create. It must be smaller than `/12`. This range shouldn't overlap with the pod CIDR range, cluster subnet range, and IP range used in peered VNets and on-premises networks.
 - **Kubernetes DNS service IP address**: This IP address is within the Kubernetes service address range that's used by cluster service discovery. Don't use the first IP address in your address range, as this address is used for the `kubernetes.default.svc.cluster.local` address.
 
@@ -425,6 +425,7 @@ You can expand your Pod CIDR space on AKS Overlay clusters with Linux nodes only
 
  - Windows nodes and hybrid node scenarios aren't supported.
  - Only expansion is allowed. Shrinking or changing the Pod CIDR returns an error.
+ - Adding discontinuous Pod CIDR isn't supported. The new Pod CIDR must be a larger superset that completely contains the original range.
  - IPv6 Pod CIDR expansion isn't supported.
  - Changing multiple Pod CIDR blocks via `--pod-cidrs` isn't supported.
  - If an [Azure Availability Zone](./availability-zones.md) is down during the expansion operation, new nodes may appear as unready. These nodes are expected to reconcile once the Availability Zone is up.
