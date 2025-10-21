@@ -163,7 +163,7 @@ NVMe disks typically appear as `nvme*n1` and are configured with `Microsoft NVMe
 
 There are several ways to use ephemeral NVMe data disks in your AKS workloads. The most common approaches are:
 
-### Azure Container Storage (Recommended)
+### Azure Container Storage (recommended)
 
 **How it works:**
 
