@@ -1,5 +1,5 @@
 ---
-title: eBFP Host Routing with Advanced Container Networking Services (ACNS)
+title: eBPF Host Routing with Advanced Container Networking Services (ACNS)
 description: An overview of eBPF Host Routing on Advanced Container Networking Services with Azure Kubernetes Service (AKS).
 author: sf-msft
 ms.author: samfoo
