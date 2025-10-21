@@ -62,7 +62,7 @@ Workloads that process large volumes of intermediate data, such as [Spark](https
 - Configure shuffle and temp directories to use NVMe-backed storage.
 - Clean up temporary data promptly to maximize available space.
 
-### 4. Caching Layers and Key-Value Stores
+### Caching layers and key-value stores
 
 In-memory databases and caching solutions (for example, Redis, Memcached, RocksDB) can use NVMe disks as a fast persistence layer or for overflow storage, providing a balance between speed and durability.
 
