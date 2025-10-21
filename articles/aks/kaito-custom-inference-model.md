@@ -166,7 +166,7 @@ In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigsci
 
 If you no longer need these resources, you can delete them to avoid incurring extra Azure compute charges.
 
-1. Delete the KAITO inference workspace using the `kubectl delete workspace` command.
+Delete the KAITO inference workspace using the `kubectl delete workspace` command.
 
     ```bash
     kubectl delete workspace workspace-custom-llm
