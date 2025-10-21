@@ -35,7 +35,7 @@ This best practices article focuses on storage considerations for cluster operat
 
 Ephemeral NVMe data disks are ideal for workloads that demand high throughput, low latency, and fast access to temporary or intermediate data. The following scenarios highlight where local NVMe disks provide the most significant benefits:
 
-### 1. High-Performance Databases (for example, PostgreSQL)
+### High-performance databases (for example, PostgreSQL)
 
 For databases such as PostgreSQL, especially in high-availability (HA) or read-intensive deployments, local NVMe disks can dramatically improve transaction throughput and reduce query latency. When used for temporary tablespaces, write-ahead logs (WAL), or as a cache layer, NVMe disks help offload I/O from persistent storage, accelerating analytics and transactional workloads.
 
