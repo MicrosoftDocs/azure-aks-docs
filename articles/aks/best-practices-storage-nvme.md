@@ -1,7 +1,7 @@
 ---
 title: Best practices for ephemeral NVMe data disks
 titleSuffix: Azure Kubernetes Service
-description: Learn the cluster operator best practices for ephemeral NVMe data disks in Azure Kubernetes Service (AKS), across use cases, virtual machine (VM) sizes, manage volumes, working with ephemeral OS disks etc.
+description: Learn the cluster operator best practices for ephemeral NVMe data disks in Azure Kubernetes Service (AKS) for different use cases and virtual machine (VM) sizes. Learn how to manage volumes and work with ephemeral disks.
 ms.topic: best-practice
 ms.subservice: aks-storage
 ms.date: 10/17/2025
