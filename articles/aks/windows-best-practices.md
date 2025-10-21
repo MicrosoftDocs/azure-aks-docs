@@ -1,5 +1,5 @@
 ---
-title: Best practices for Windows containers on Azure Kubernetes Service (AKS)
+title: Best Practices for Windows Containers on Azure Kubernetes Service (AKS)
 description: Learn about best practices for running Windows containers in Azure Kubernetes Service (AKS).
 ms.service: azure-kubernetes-service
 ms.custom: linux-related-content
@@ -22,8 +22,8 @@ When you create a new AKS cluster, the Azure platform creates a Linux node pool 
 
 There are some cases where you should consider deploying a Linux node pool when planning to run Windows-based workloads on your AKS cluster, such as:
 
-* If you want to run Linux and Windows workloads, you can deploy a Linux node pool and a Windows node pool in the same cluster.
-* If you want to deploy infrastructure-related components based on Linux, such as NGINX, you need a Linux node pool alongside your Windows node pool. You can use control plane nodes for development and testing scenarios. For production workloads, we recommend that you deploy separate Linux node pools to ensure reliability and performance.
+- If you want to run Linux and Windows workloads, you can deploy a Linux node pool and a Windows node pool in the same cluster.
+- If you want to deploy infrastructure-related components based on Linux, such as NGINX, you need a Linux node pool alongside your Windows node pool. You can use control plane nodes for development and testing scenarios. For production workloads, we recommend that you deploy separate Linux node pools to ensure reliability and performance.
 
 ## Modernize existing applications with Windows on AKS
 
@@ -37,13 +37,13 @@ You might want to containerize existing applications and run them using Windows 
 
 AKS supports two options for the Windows Server operating system: Long Term Servicing Channel Releases (LTSC) and Windows Server Annual Channel for Containers.
 
-1. AKS supports Long Term Servicing Channel Releases (LTSC), including Windows Server 2022 and Windows Server 2019. This channel is released every three years and is supported for five years. Customers using Long Term Support (LTS) should use Windows Server 2022.
+1. AKS supports Long Term Servicing Channel Releases (LTSC), including Windows Server 2025 (preview), Windows Server 2022, and Windows Server 2019. This channel is released every three years and is supported for five years. Customers using Long Term Support (LTS) should use Windows Server 2022.
 
     AKS uses Windows Server 2019 and Windows Server 2022 as the host OS versions and only supports process isolation. AKS doesn't support container images built by other versions of Windows Server. For more information, see [Windows container version compatibility](/virtualization/windowscontainers/deploy-containers/version-compatibility). Windows Server 2022 is the default OS for Kubernetes version 1.25 and later.
 
     Windows Server 2022 will retire after Kubernetes version 1.34 reaches its end of support, and will not be supported in Kubernetes version 1.35 and above. Windows Server 2019 will retire after Kubernetes version 1.32 reaches end of support, and will not be supported in Kubernetes version 1.33 and above. For more information, see [AKS release notes][aks-release-notes]. To stay up to date on the latest Windows Server OS versions and learn more about our roadmap of what's planned for support on AKS, see our [AKS public roadmap](https://github.com/azure/aks/projects/1).
 
-2. AKS supports [Windows Server Annual Channel for Containers](https://techcommunity.microsoft.com/t5/windows-server-news-and-best/windows-server-annual-channel-for-containers/ba-p/3866248) (preview). This channel is released annually and is supported for 2 years. This channel is beneficial for customers requiring increased innovation cycles and portability. The portability functionality enables the Windows Server 2022-based container image OS to run on newer versions of Windows Server host OS, such as the new annual channel release.
+1. AKS supports [Windows Server Annual Channel for Containers](https://techcommunity.microsoft.com/t5/windows-server-news-and-best/windows-server-annual-channel-for-containers/ba-p/3866248) (preview). This channel is released annually and is supported for two years. This channel is beneficial for customers requiring increased innovation cycles and portability. The portability functionality enables the Windows Server 2022-based container image OS to run on newer versions of Windows Server host OS, such as the new annual channel release.
 
     Windows Annual Channel versions are based on the Kubernetes version of your node pool. To upgrade from one Annual Channel version to the next, [upgrade to a Kubernetes version](./upgrade-aks-cluster.md) that supports the next Annual Channel version. For more information, see [Windows Server Annual Channel for Containers on AKS][use-windows-annual].
 
@@ -54,13 +54,14 @@ AKS supports two options for the Windows Server operating system: Long Term Serv
 > Windows Exporter is installed on all Windows nodes in certain regions. To view regional rollout, see [AKS Github](https://github.com/Azure/AKS/issues/3465). With Managed Prometheus and Grafana, you can monitor default collectors included in Windows Exporter on AKS. For more information, see [default Prometheus metrics configured in Azure Monitor][default-prometheus].
 
 Windows Exporter allows customers to see their metrics through Managed Prometheus or Prometheus OSS deployments and enjoy enhanced observability around their node and pod performance, health, and resource usage. These metrics are also visible with Managed Grafana.
-- When enabling managed prometheus, add this required parameter for correct dashboard data presentation for windows: '--enable-windows-recording-rules'
-- Grafana includes dashboards for showing Windows resources, such as: 
-    - Kubernetes / Compute Resources / Cluster (Windows)
-    - Kubernetes / Compute Resources / Namespace (Windows)
-    - Kubernetes / Compute Resources / Pod (Windows)
-    - Kubernetes / USE Method / Cluster (Windows)
-    - Kubernetes / USE Method / Node (Windows)
+
+- When enabling managed prometheus, add this required parameter for correct dashboard data presentation for Windows: `--enable-windows-recording-rules`.
+- Grafana includes dashboards for showing Windows resources, such as:
+  - Kubernetes / Compute Resources / Cluster (Windows)
+  - Kubernetes / Compute Resources / Namespace (Windows)
+  - Kubernetes / Compute Resources / Pod (Windows)
+  - Kubernetes / USE Method / Cluster (Windows)
+  - Kubernetes / USE Method / Node (Windows)
 
 The default collectors included in Windows Exporter on AKS are: cpu, cpu_info, cs, container, logical_disk, memory, net, os, process, service, system, textfile. For more information on what metrics you can see using these collectors, please see [prometheus-community/windows_exporter](https://github.com/prometheus-community/windows_exporter#collectors).
 
@@ -110,13 +111,13 @@ You can stay up to date with the availability of new monthly releases using the 
 
 ### Windows node OS version upgrades
 
-Windows has a release cadence for new versions of the OS, including Windows Server 2019 and Windows Server 2022. When upgrading your Windows node OS version, ensure the Windows container image version matches the Windows container host version and the node pools have only one version of Windows Server.
+Windows has a release cadence for new versions of the OS, including Windows Server 2025 (preview), Windows Server 2022, and Windows Server 2019. When upgrading your Windows node OS version, ensure the Windows container image version matches the Windows container host version and the node pools have only one version of Windows Server.
 
 To upgrade the Windows node OS version, you need to complete the following steps:
 
 1. Create a new node pool with the new Windows Server version.
-2. Deploy your workloads with the new Windows container images to the new node pool.
-3. Decommission the old node pool.
+1. Deploy your workloads with the new Windows container images to the new node pool.
+1. Decommission the old node pool.
 
 For more information, see [Upgrade Windows Server workloads on AKS][upgrade-windows-workloads-aks].
 
@@ -129,9 +130,9 @@ For more information, see [Upgrade Windows Server workloads on AKS][upgrade-wind
 
 To learn more about Windows containers on AKS, see the following resources:
 
-* [Learn how to deploy, manage, and monitor Windows containers on AKS](/training/paths/deploy-manage-monitor-wincontainers-aks).
-* Open an issue or provide feedback in the [Windows containers GitHub repository](https://github.com/microsoft/Windows-Containers/issues).
-* Review the [third-party partner solutions for Windows on AKS][windows-on-aks-partner-solutions].
+- [Learn how to deploy, manage, and monitor Windows containers on AKS](/training/paths/deploy-manage-monitor-wincontainers-aks).
+- Open an issue or provide feedback in the [Windows containers GitHub repository](https://github.com/microsoft/Windows-Containers/issues).
+- Review the [third-party partner solutions for Windows on AKS][windows-on-aks-partner-solutions].
 
 <!-- LINKS - internal -->
 [azure-cni-overlay]: ./azure-cni-overlay.md

@@ -3,7 +3,7 @@ title: Node Images in Azure Kubernetes Service (AKS)
 description: Learn about the different node images available in Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 02/21/2025
+ms.date: 07/03/2025
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to understand the available node images in Azure Kubernetes Service, so that I can select the appropriate OS version and ensure my clusters remain supported and secure."
@@ -55,16 +55,16 @@ AKS sets a default operating system (OS) and node image during cluster and node 
 The following factors influence the default image AKS chooses for your node pool:
 
 - **OS SKU**: If `--os-sku` is specified, then your default OS changes. For example, if you specify Azure Linux as the OS SKU, then your node image is Azure Linux with containerd.
-- **Virtual machine (VM) size**: 
-    - [Confidential virtual machines (CVM)](./use-cvm.md)
-    - [AMR64 virtual machines](./create-node-pools.md)
+- **Virtual machine (VM) size**:
+  - [Confidential virtual machines (CVM)](./use-cvm.md)
+  - [AMR64 virtual machines](./create-node-pools.md)
 - **Hypervisor Generation**: Each VM size supports Generation 1, [Generation 2](./generation-2-vm.md), or both.
-    - If a Generation 2 is supported, AKS defaults to using the Generation 2 node image.
-    - If only Generation 1 is supported, AKS defaults to using the Generation 1 node image.
+  - If a Generation 2 is supported, AKS defaults to using the Generation 2 node image.
+  - If only Generation 1 is supported, AKS defaults to using the Generation 1 node image.
 - **Feature enablement**: There are some features embedded into the node image. If you choose to use any of these features, your default node image changes.
-    - [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md) changes the default node image for all Linux node pools.
-    - [Pod Sandboxing](./use-pod-sandboxing.md) changes the default node image for Azure Linux node pools.
-    - [Trusted Launch](./use-trusted-launch.md) changes the default node image for all Linux node pools.
+  - [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md) changes the default node image for all Linux node pools.
+  - [Pod Sandboxing](./use-pod-sandboxing.md) changes the default node image for Azure Linux node pools.
+  - [Trusted Launch](./use-trusted-launch.md) changes the default node image for all Linux node pools.
 
 > [!NOTE]
 > Certain features can't be combined in a single node pool. Follow links to the feature documentation to review the limitations.
@@ -106,19 +106,20 @@ The Windows Server node images are fully validated by AKS and supported by Micro
 
 | Node image | Use case | Limitations |
 |--|--|--|
-| **Windows Server with containerd and Gen 1** | This is the standard node image for Azure Linux node pools using a VM size that only supports Generation 1. | N/A |
-| **Windows Server with containerd and Gen 2** | This is the standard node image for Azure Linux node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, this node image is selected. | N/A |
+| **Windows Server with containerd and Gen 1** | This is the standard node image for Windows node pools using a VM size that supports Generation 1. If a VM size supports both Generation 1 and Generation 2, this node image is selected if using Windows Server 2019 or Windows Server 2022. | N/A |
+| **Windows Server with containerd and Gen 2** | This is the standard node image for Windows node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, this node image is selected if using Windows Server 2025. | N/A |
 
 ### Windows Server Annual Channel for Containers (preview) node images
 
 | Node image | Use case | Limitations |
 |--|--|--|
-| **Windows Server with containerd and Gen 1** | This is the standard node image for Azure Linux node pools using a VM size that only supports Generation 1. | N/A |
-| **Windows Server with containerd and Gen 2** | This is the standard node image for Azure Linux node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, this node image is selected. | N/A |
+| **Windows Server with containerd and Gen 1** | This is the standard node image for Windows node pools using a VM size that only supports Generation 1. If a VM size supports both Generation 1 and Generation 2, this node image is selected. | N/A |
+| **Windows Server with containerd and Gen 2** | This is the standard node image for Windows node pools using a VM size that supports Generation 2. | N/A |
 
 ## Next steps
 
 To learn more about node images, node pool upgrades, and node configurations on AKS, see the following resources:
+
 - To learn about nodes and node configurations, see [AKS core concepts][aks-core-concepts].
 - Configure [automatic node image upgrades](./auto-upgrade-node-os-image.md) and schedule them using [planned maintenance](./planned-maintenance.md).
 - Apply [custom node configurations][custom-node-configuration] to modify OS or kubelet settings.
