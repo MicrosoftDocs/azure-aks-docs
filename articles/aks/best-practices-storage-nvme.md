@@ -54,7 +54,7 @@ AI model serving platforms like [KAITO](https://github.com/kaito-project/kaito) 
 - Integrate with Kubernetes-native storage solutions (for example, Azure Container Storage) for automated management and monitoring.
 - See [KAITO model as OCI artifacts](https://kaito-project.github.io/kaito/docs/next/model-as-oci-artifacts) for architecture guidance.
 
-### 3. Data Analytics and ETL Pipelines
+### Data analytics and ETL pipelines
 
 Workloads that process large volumes of intermediate data, such as [Spark](https://spark.apache.org/), [Dask](https://www.dask.org/), or custom ETL jobs, can apply NVMe disks for shuffle storage, temporary files, and scratch space. This approach reduces bottlenecks during data transformation and aggregation.
 
