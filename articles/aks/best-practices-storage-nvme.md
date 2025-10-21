@@ -48,7 +48,7 @@ For databases such as PostgreSQL, especially in high-availability (HA) or read-i
 
 AI model serving platforms like [KAITO](https://github.com/kaito-project/kaito) benefit from NVMe disks for rapid model loading, artifact caching, and high-throughput inference. When models are stored as Open Container Initiative (OCI) artifacts and loaded on demand, local NVMe storage ensures minimal cold start times and efficient batch processing.
 
-**Best practices:**
+Best practices:
 - Use NVMe-backed volumes for model cache directories to accelerate model pulls and reduce inference latency.
 - For distributed inference, ensure each node has sufficient NVMe capacity to cache frequently used models.
 - Integrate with Kubernetes-native storage solutions (for example, Azure Container Storage) for automated management and monitoring.
@@ -58,7 +58,7 @@ AI model serving platforms like [KAITO](https://github.com/kaito-project/kaito) 
 
 Workloads that process large volumes of intermediate data, such as [Spark](https://spark.apache.org/), [Dask](https://www.dask.org/), or custom ETL jobs, can apply NVMe disks for shuffle storage, temporary files, and scratch space. This approach reduces bottlenecks during data transformation and aggregation.
 
-**Best practices:**
+Best practices:
 - Configure shuffle and temp directories to use NVMe-backed storage.
 - Clean up temporary data promptly to maximize available space.
 
@@ -66,7 +66,7 @@ Workloads that process large volumes of intermediate data, such as [Spark](https
 
 In-memory databases and caching solutions (for example, Redis, Memcached, RocksDB) can use NVMe disks as a fast persistence layer or for overflow storage, providing a balance between speed and durability.
 
-**Best practices:**
+Best practices:
 - Use NVMe for write-heavy cache workloads where persistence isn't critical.
 - Monitor disk usage to avoid eviction or data loss due to node restarts.
 
@@ -192,12 +192,12 @@ For more information, see [Azure Container Storage documentation](/azure/storage
 
 To use this method, define an `emptyDir` volume in your Pod spec. By default, it uses the fastest available storage (NVMe if present).
 
-**Advantages:**  
+#### Advantages
   - Simple to use and configure.
   - No external dependencies.
   - High performance when backed by NVMe.
 
-**Disadvantages:**  
+#### Disadvantages
   - Data is lost if the Pod is rescheduled to another node.
   - No data persistence or replication.
   - Limited to single NVMe disk.
@@ -210,12 +210,12 @@ To use this method, define an `emptyDir` volume in your Pod spec. By default, it
 
 To use this method, specify the NVMe disk path (for example, `/mnt` or `/mnt/nvme0n1`) in the Pod spec.
 
-**Advantages:**
+#### Advantages
 
   - Direct access to NVMe disk.
   - Useful for advanced scenarios (for example, custom formatting, partitioning).
 
-**Disadvantages:**
+#### Disadvantages
 
   - Tightly coupled to node layout; not portable.
   - Security risks if not properly restricted.
@@ -257,17 +257,17 @@ nvme0n1                                          60G          MSFT NVMe Accelera
 
 When you use VM sizes with a single local NVMe data disk and enable ephemeral OS disk, the OS consumes the entire NVMe disk, leaving no space available for Kubernetes workloads to provision persistent volumes. For VM sizes with two or more local NVMe data disks, one disk is used for the ephemeral OS, and the others can be used to provision persistent volumes for your workloads.
 
-**Current limitations:**
+### Current limitations
 - The ephemeral OS disk consumes a portion of one local NVMe drive, with the remainder left inaccessible.
 - There's no supported way to access or mount the unused NVMe space after node creation.
 - You can't update or repartition the NVMe disk post-deployment.
 
-**Customer impact:**
+### Customer impact
 - Reduced usable NVMe capacity compared to what is advertised for the VM size.
 - Inability to fully use high-performance local storage for workloads.
 - Potential confusion and inconvenience during upgrades or node replacement.
 
-**Recommendation:**
+### Recommendation
 
 - Decide the intended use of local NVMe disks, either for the OS disk or for Kubernetes workload storage—before provisioning AKS nodes. Ephemeral OS disk configuration is immutable after node creation, so planning ahead avoids the need to recreate nodes if requirements change.
 
@@ -338,6 +338,6 @@ The following steps introduce generic benchmarking with fio and local NVMe volum
 
 4. Run fio on the VM with single NVMe disk (for example, standard_l8s_v3) and the VM with two NVMe disks (for example, Standard_L16s_v3). Evaluate the performance improvements from the NVMe volume striping cross multiple NVMe disks. See the following charts as examples:
 
-    ![IOPS benchmarking with and without striping](media/best-practices-storage-nvme/acstor-nvme-performance-iops.png)
+    ![Comparison chart of IOPS benchmarking with and without striping.](media/best-practices-storage-nvme/azure-container-storage-nvme-performance-iops.png)
 
-    ![Throughput benchmarking with and without striping](media/best-practices-storage-nvme/acstor-nvme-performance-throughput.png)
+    ![Comparison chart of throughput benchmarking with and without striping.](media/best-practices-storage-nvme/azure-container-storage-nvme-performance-throughput.png)
