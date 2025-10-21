@@ -85,7 +85,7 @@ Recommendations can have one of the following attestation statuses:
 | 1.2.9 | Ensure that the admission control plugin EventRateLimit is set | Manual | L1 | Fail | Operational impact |
 | 1.2.10 | Ensure that the admission control plugin AlwaysAdmit isn't set | Automated | L1 | Pass | |
 | 1.2.11 | Ensure that the admission control plugin AlwaysPullImages is set | Manual | L1 | Fail | Operational impact |
-| 1.2.12 | Ensure that the admission control plugin ServiceAccount is set | Automated | L2 | Pass |  |  |
+| 1.2.12 | Ensure that the admission control plugin ServiceAccount is set | Automated | L2 | Pass |  |
 | 1.2.13 | Ensure that the admission control plugin NamespaceLifecycle is set | Automated | L2 | Pass | |
 | 1.2.14 | Ensure that the admission control plugin NodeRestriction is set | Automated | L2 | Pass | |
 | 1.2.15 | Ensure that the `--profiling` argument is set to false | Automated | L1 | Pass | |
