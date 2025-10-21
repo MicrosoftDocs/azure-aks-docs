@@ -13,7 +13,7 @@ ms.author: fryu
 
 # Best practices for ephemeral NVMe data disks in Azure Kubernetes Service (AKS)
 
-Ephemeral NVMe data disks provide high-performance, low-latency storage that's ideal for demanding workloads running on Azure Kubernetes Service (AKS). Many modern applications, such as AI/ML training, data analytics, and high-throughput databases, require fast temporary storage to process large volumes of intermediate data efficiently. By using ephemeral NVMe disks, you can significantly improve application responsiveness and throughput, while optimizing for cost and scalability in their AKS clusters.
+Ephemeral NVMe data disks provide high-performance, low-latency storage that's ideal for demanding workloads running on Azure Kubernetes Service (AKS). Many modern applications, such as AI/ML training, data analytics, and high-throughput databases, require fast temporary storage to process large volumes of intermediate data efficiently. By using ephemeral NVMe disks, you can significantly improve application responsiveness and throughput, while optimizing for cost and scalability in your AKS clusters.
 
 Unlike remote disks that scale performance with VM size, Ephemeral NVMe disks deliver their full performance regardless of vCPU count because they're physically attached to the VM and bypass the remote disk controller entirely. Consider this stark contrast:
 
