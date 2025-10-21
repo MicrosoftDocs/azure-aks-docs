@@ -874,7 +874,7 @@
                   href: /azure/storage/elastic-san/elastic-san-connect-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: Ephemeral Disk
             items:
-                - name: Best practices for Ephemeral NVMe data disks
+                - name: Best practices for ephemeral NVMe data disks
                   href: best-practices-storage-nvme.md
                 - name: Use Azure Container Storage with Ephemeral Disk
                   href: /azure/storage/container-storage/use-container-storage-with-local-disk?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
