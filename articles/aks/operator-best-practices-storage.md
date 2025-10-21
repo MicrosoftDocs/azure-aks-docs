@@ -113,7 +113,7 @@ Common scenarios that benefit from ephemeral NVMe data disks include:
 
 Because NVMe data is tied to the node instance, plan for pod disruption budgets and ensure your application can quickly rebuild from durable storage or replication. Data placed on these disks is lost whenever a node is deallocated, reimaged, or fails.
 
-For further recommendations on ephemeral NVMe data disks, see [Best practices for ephemeral NVMe data disks in Azure Kubernetes Service (AKS)][best-practices-nvme].To expose NVMe capacity to pods, use [Azure Container Storage][azure-container-storage], which will can orchestrate and create ephemeral **or** persistent volumes backed by local NVMe disks. For implementation guidance, see [Use Azure Container Storage with AKS][use-azure-container-storage].
+For further recommendations on ephemeral NVMe data disks, see [Best practices for ephemeral NVMe data disks in Azure Kubernetes Service (AKS)][best-practices-nvme]. To expose NVMe capacity to pods, use [Azure Container Storage][azure-container-storage], which will can orchestrate and create ephemeral **or** persistent volumes backed by local NVMe disks. For implementation guidance, see [Use Azure Container Storage with AKS][use-azure-container-storage].
 
 > [!IMPORTANT]
 > Use NVMe data disks only for workloads that can tolerate data loss and recover quickly. Keep business-critical data on durable storage such as Azure Disk or Azure Files.
