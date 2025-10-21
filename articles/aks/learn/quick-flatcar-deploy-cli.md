@@ -43,18 +43,18 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
     ```azurecli-interactive
     az extension add --name aks-preview
     ```
-1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Flatcar Container Linux requires a minimum of 18.0.0b5**.
+1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Flatcar Container Linux requires a minimum of 18.0.0b42**.
     ```azurecli-interactive
     az extension update --name aks-preview
     ```
-### Register `FlatcarPreview` feature flag
-1. Register the `FlatcarPreview` feature flag using the [`az feature register`][az-feature-register] command.
+### Register `AKSFlatcarPreview` feature flag
+1. Register the `AKSFlatcarPreview` feature flag using the [`az feature register`][az-feature-register] command.
     ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "FlatcarPreview"
+    az feature register --namespace "Microsoft.ContainerService" --name "AKSFlatcarPreview"
     ```
 1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
     ```azurecli-interactive
-    az feature show --namespace Microsoft.ContainerService --name FlatcarPreview
+    az feature show --namespace Microsoft.ContainerService --name AKSFlatcarPreview
     ```
 1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
     ```azurecli-interactive
@@ -125,6 +125,7 @@ Create an AKS cluster using the [az aks create][az-aks-create] command. The foll
 az aks create \
   --resource-group $MY_RESOURCE_GROUP_NAME \
   --name $MY_AKS_CLUSTER_NAME \
+  --ossku flatcar
   --node-count 1 \
   --generate-ssh-keys
 ```

@@ -22,7 +22,7 @@ Built with an immutable filesystem, Flatcar eliminates configuration drift and p
 
 To get started using the Flatcar Container Linux for AKS, see:
 
-* Creating a cluster with Flatcar Container Linux
+* [Deploy an Azure Kubernetes Service (AKS) cluster with Flatcar Container Linux for AKS (preview) using Azure CLI][flatcar-deploy-cli]
 * Add a node pool with Flatcar Container Linux to your existing cluster
 
 ## Limitations
@@ -92,6 +92,7 @@ To learn more about Flatcar Container Linux, see the [Flatcar documentation][fla
 [vm-support]: ./aks-virtual-machine-sizes.md
 [cvm]: ./use-cvm.md
 [pod-sandboxing]: ./use-pod-sandboxing.md
+[flatcar-deploy-cli]: ./learn/quick-flatcar-deploy-cli.md
 
 <!-- LINKS - External -->
 [flatcar-docs]: https://www.flatcar.org/
