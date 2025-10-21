@@ -36,6 +36,8 @@
           href: concepts-fleet-kubernetes-version-support.md
     - name: Multi-cluster Kubernetes and node images upgrades
       href: concepts-update-orchestration.md
+    - name: Multi-cluster multi-tenancy with Managed Namespaces
+      href: concepts-fleet-managed-namespace.md    
     - name: Multi-cluster workload management
       items:
         - name: Multi-cluster workload management overview
@@ -55,9 +57,7 @@
           - name: Taking over existing workloads
             href: concepts-placement-takeover.md
           - name: Detecting and managing workload drift
-            href: concepts-placement-drift.md
-          - name: Fleet managed namespaces
-            href: concepts-fleet-managed-namespace.md     
+            href: concepts-placement-drift.md 
     - name: Multi-cluster networking 
       items:
         - name: DNS-based load balancing across multiple clusters

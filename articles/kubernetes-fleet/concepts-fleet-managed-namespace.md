@@ -1,6 +1,6 @@
 ---
 title: "Use Fleet Manager Managed Namespaces to control user access and resource quotas across multiple clusters"
-description: This article provides a conceptual overview of multi-cluster managed namespaces (preview) using Azure Kubernetes Service (AKS) Fleet Manager.
+description: This article provides a conceptual overview of multi-cluster managed namespaces using Azure Kubernetes Fleet Manager.
 ms.date: 09/16/2025
 author: audrastump
 ms.author: stumpaudra
@@ -55,9 +55,6 @@ When a managed namespace is created, the adoption policy determines how existing
 
 During adoption a managed namespace may take over fields on a namespace on a member cluster, but it doesn't remove the resources from the namespace.
 
-> [!NOTE] 
-> Currently takeover behavior is limited to AKS cluster fleet members.
-
 ## Delete policy
 The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) controls how the Kubernetes namespace is handled when the managed namespace resource is deleted. There are two built-in options:
 
@@ -68,7 +65,7 @@ The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) control
 > A delete policy of **Delete** completely removes the Kubernetes namespace resource and the resources within it from the target member clusters, even if it existed prior to, and was adopted by the multi-cluster managed namespace.
 
 ## Multi-cluster managed namespace built-in roles
-Multi-cluster managed namespaces use the existing ARM Role Based Access Control (RBAC) [control plane roles](./concepts-rbac.md#control-plane) to manage and access managed namespaces. The existing [data plane RBAC roles](./concepts-rbac.md#data-plane) are applied to interact with the managed namespace created on the Fleet Manager hub cluster. 
+Multi-cluster managed namespaces use the existing Azure Role Based Access Control (RBAC) [control plane roles](./concepts-rbac.md#control-plane) to manage and access managed namespaces. The existing [data plane RBAC roles](./concepts-rbac.md#data-plane) are applied to interact with the managed namespace created on the Fleet Manager hub cluster. 
 
 To control access to a managed namespace on member clusters, managed namespaces use the following built-in roles, which can be applied at the namespace scope:
 
