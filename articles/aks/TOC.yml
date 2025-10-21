@@ -547,8 +547,14 @@
             href: dns-concepts.md
           - name: Use a static IP address and DNS label
             href: static-ip.md
-          - name: Customize CoreDNS
-            href: coredns-custom.md
+          - name: CoreDNS
+            items:
+              - name: Customize CoreDNS
+                href: coredns-custom.md
+              - name: Configure autoscaling for CoreDNS
+                href: coredns-autoscale.md
+              - name: Troubleshoot CoreDNS
+                href: coredns-troubleshoot.md
           - name: Configure LocalDNS
             href: localdns-custom.md
       - name: Load balancing
