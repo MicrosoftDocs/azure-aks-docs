@@ -61,8 +61,8 @@ This article shows you how to use Fleet Manager Managed Namespaces to define res
 
 - Create a new multi-cluster managed namespace using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command.
 
-> [!IMPORTANT]
-> An adoption policy and delete policy are required when creating a multi-cluster managed namespace.
+    > [!IMPORTANT]
+    > An adoption policy and delete policy are required when creating a multi-cluster managed namespace.
 
     ```azurecli-interactive
     az fleet namespace create \
