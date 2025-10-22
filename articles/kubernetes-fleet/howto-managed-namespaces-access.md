@@ -68,9 +68,11 @@ This article shows you how to view the managed namespaces you have access to and
         -o table 
     ```
 
-## View the member clusters the managed namespace is placed on
+:::image type="content" source="media/managed-namespaces/list-fleet-managed-namespaces.png" alt-text="Screenshot showing the output of listing fleet managed namespaces the user has access to." lightbox="media/managed-namespaces/list-fleet-managed-namespaces.png" :::
 
-- View the member clusters associated with the managed namespace using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
+## View the managed namespace
+
+- View the the managed namespace using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
 
     ```azurecli-interactive
     az fleet namespace show \ 
@@ -79,6 +81,8 @@ This article shows you how to view the managed namespaces you have access to and
         --name ${FLEET_NAMESPACE_NAME}$ \ 
         -o table 
     ```
+
+:::image type="content" source="media/managed-namespaces/show-managed-namespaces-per-fleet.png" alt-text="Screenshot showing the output of showing a fleet managed namespace." lightbox="media/managed-namespaces/show-managed-namespaces-per-fleet.png" :::
 
 ## Next steps
 

@@ -68,7 +68,7 @@ This article shows you how to use Fleet Manager Managed Namespaces to define res
     az fleet namespace create \
         --resource-group $GROUP \
         --fleet-name $FLEET \
-        --name myManagedNamespace \ 
+        --name my-managed-namespace \ 
         --annotations annotation1=value1 annotation2=value2 \
         --labels team=myTeam label2=value2 \
         --cpu-requests 1m \
@@ -88,7 +88,7 @@ You can now assign access to a user for the managed namespace across member clus
 - Create a role assignment using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. The following example assigns the _Azure Kubernetes Fleet Manager Member Cluster RBAC Writer_ role:
 
     ```azurecli-interactive
-    az role assignment create --role "Azure Kubernetes Fleet Manager Member Cluster RBAC Writer" --assignee <USER-ENTRA-ID> --scope $FLEET_ID/managedNamespaces/myManagedNamespace
+    az role assignment create --role "Azure Kubernetes Fleet Manager Member Cluster RBAC Writer" --assignee <USER-ENTRA-ID> --scope $FLEET_ID/managedNamespaces/my-managed-namespace
     ```
 
 ## Add member clusters to a managed namespace
@@ -109,7 +109,7 @@ You can control which member clusters to deploy the managed namespace to by spec
     az fleet namespace create \
         --resource-group $GROUP \
         --fleet-name $FLEET \
-        --name myManagedNamespace \
+        --name my-managed-namespace \
         --member-cluster-names clusterA clusterB clusterC
     ```
 
@@ -125,20 +125,22 @@ You can remove member clusters from a managed namespace by specifying the list o
     az fleet namespace create \
         --resource-group $GROUP \
         --fleet-name $FLEET \
-        --name myManagedNamespace \
+        --name my-managed-namespace \
         
 
 ## View the multi-cluster managed namespace
 
-- View the member clusters where the managed namespace is placed using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
+- View the managed namespace using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
 
     ```azurecli-interactive
     az fleet namespace show \
        --resource-group $GROUP \
        --fleet-name $FLEET \
-       --name myManagedNamespace \
+       --name my-managed-namespace \
        -o table
     ```
+
+:::image type="content" source="media/managed-namespaces/show-managed-namespaces-per-fleet.png" alt-text="Screenshot showing the output of showing a fleet managed namespace." lightbox="media/managed-namespaces/show-managed-namespaces-per-fleet.png" :::
 
 ## Delete a multi-cluster managed namespace
 
@@ -148,7 +150,7 @@ You can remove member clusters from a managed namespace by specifying the list o
     az fleet namespace delete \
         --resource-group $GROUP
         --fleet-name $FLEET \
-        --name myManagedNamespace \
+        --name my-managed-namespace \
     ```
 
 ## Next steps
