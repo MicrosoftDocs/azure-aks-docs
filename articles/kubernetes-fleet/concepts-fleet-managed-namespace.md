@@ -22,11 +22,13 @@ With multi-cluster managed namespaces on targeted member clusters, platform admi
 
 If the platform administrator specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object, with a [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type) placement policy, to propagate the namespace to the selected member clusters. 
 
-Administrators can also control two key behaviors: how conflicts are resolved when a managed namespace is placed on a member cluster that already has an unmanaged namespace with the same name, and whether Kubernetes resources are deleted upon managed namespace deletion.
+Administrators can also control two key behaviors: 
+1. Adoption Policy: How conflicts are resolved when a managed namespace is placed on a member cluster that already has an unmanaged namespace with the same name
+2. Delete Policy: Whether Kubernetes resources are deleted upon managed namespace deletion
 
 ## Resource quotas
 
-Platform administrators may use [resource quotas](../aks/concepts-managed-namespaces.md#resource-quotas) to cap CPU and memory consumption at the namespace layer.
+Platform administrators can use [resource quotas](../aks/concepts-managed-namespaces.md#resource-quotas) to cap CPU and memory consumption at the namespace layer.
 
 - **CPU requests and limits**: Set the minimum and maximum CPU resources that workloads in the namespace can request or consume.
 - **Memory requests and limits**: Set the minimum and maximum memory resources that workloads in the namespace can request or consume.
@@ -49,7 +51,7 @@ Network policies are applied to each cluster individually and don't control cros
 
 ## Labels and annotations
 
-Platform administrators may apply both Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) and annotations to the managed namespace. By default, each managed namespace has a built-in label indicating it's managed by ARM.
+Platform administrators can apply both Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) and annotations to the managed namespace. By default, each managed namespace has a built-in label indicating it's managed by ARM.
 
 ## Adoption Policy
 
@@ -88,5 +90,6 @@ For example, a developer in `team-A` which owns the `team-A` managed namespace w
 
 
 ## Next steps
+
 - Learn how to [create and use a multi-cluster managed namespace](./howto-managed-namespaces.md).
 - Learn how to [view managed namespaces you have access to](./howto-managed-namespaces-access.md).
