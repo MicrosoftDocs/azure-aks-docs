@@ -34,15 +34,11 @@ Use cases for eBPF Host Routing are performance-critical workloads such as high-
 
 **`iptables blocker`** - An init container that prevents any future installation of iptables rules in the host network namespace (such rules will be bypassed when eBPF host routing is enabled).
 
-**`iptables monitor`** - Checks whether any user-installed iptables rules are already present in the host network namespace. If yes, this init container prevents Cilium agent from starting until the rules are removed.
-
 **`IP Masquerade Agent`** - When eBPF Host Routing is active, Cilium takes over SNAT responsibilities using BPF-based masquerading thus making ip-masq-agent technically redundant. This agent remains running to maintain consistent behavior if eBPF Host Routing is later disabled; however, its iptables rules are ignored while eBPF Host Routing is active.
 
 ## Considerations
 
  - Enabling eBPF Host Routing causes iptables rules in the host network namespace to be bypassed. Hence, AKS attempts to detect and block enablement of eBPF Host Routing on clusters where iptables rules are in use in the host network namespace.
-
- - When user-installed iptables are present in the host network namespace while enabling eBPF Host Routing, `iptables monitor` prevents Ciliam agent from reaching `Ready` which causes Cilium operator to taint the node.
 
  - On clusters with eBPF host routing enabled, AKS blocks attempts to install iptables rules in the host network namespace. Trying to bypass this block may cause the cluster to be inoperational.
 
