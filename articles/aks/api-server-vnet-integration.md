@@ -1,8 +1,8 @@
 ---
 title: API Server VNet Integration in Azure Kubernetes Service (AKS)
 description: Learn how to create an Azure Kubernetes Service (AKS) cluster with API Server VNet Integration
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 05/19/2023
