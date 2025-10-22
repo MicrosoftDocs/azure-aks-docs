@@ -90,6 +90,8 @@
           items:
             - name: Use the Azure CLI
               href: learn/quick-flatcar-deploy-cli.md
+            - name: Use ARM template
+              href: learn/quick-flatcar-deploy-arm-template.md
         - name: Create a Windows-based AKS cluster
           items:
             - name: Use the Azure CLI

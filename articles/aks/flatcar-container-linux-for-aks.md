@@ -22,8 +22,10 @@ Built with an immutable filesystem, Flatcar eliminates configuration drift and p
 
 To get started using the Flatcar Container Linux for AKS, see:
 
-* [Deploy an Azure Kubernetes Service (AKS) cluster with Flatcar Container Linux for AKS (preview) using Azure CLI][flatcar-deploy-cli]
-* Add a node pool with Flatcar Container Linux to your existing cluster
+* Deploy an Azure Kubernetes Service (AKS) cluster with Flatcar Container Linux for AKS (preview) using [Azure CLI][flatcar-deploy-cli]
+* Deploy an Azure Kubernetes Service (AKS) cluster with Flatcar Container Linux for AKS (preview) using an [ARM template][flatcar-deploy-arm]
+* Create an AKS cluster with a single Flatcar Container Linux for AKS (preview) node pool using [Azure CLI or an ARM template][create-node-pools]
+* Add a Flatcar Container Linux for AKS (preview) node pool to an existing cluster using [Azure CLI or an ARM template][create-node-pools]
 
 ## Limitations
 
@@ -37,6 +39,7 @@ Flatcar Container Linux for AKS does not support the following configurations:
 * [Artifact Streaming][artifact-streaming] (preview) is not supported with Flatcar Container Linux
 * [Generation 1 VMs][vm-support] are not supported for Flatcar Container Linux. This means that you will not be able to use VM sizes that only support Generation 1.
 * [Pod Sandboxing (preview)][pod-sandboxing] is not supported for Flatcar Container Linux
+* [Node Autoprovisioning][NAP] is not supported for Flatcar Container Linux
 
 > [!NOTE]
 > If you have an existing cluster with any of the above features enabled, you may not be able to add a node pool using Flatcar Container Linux.
@@ -93,6 +96,9 @@ To learn more about Flatcar Container Linux, see the [Flatcar documentation][fla
 [cvm]: ./use-cvm.md
 [pod-sandboxing]: ./use-pod-sandboxing.md
 [flatcar-deploy-cli]: ./learn/quick-flatcar-deploy-cli.md
+[flatcar-deploy-arm]: ./learn/quick-flatcar-deploy-arm-template.md
+[create-node-pools]: ./create-node-pools.md
+[NAP]: ./node-autoprovision.md
 
 <!-- LINKS - External -->
 [flatcar-docs]: https://www.flatcar.org/

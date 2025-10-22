@@ -34,7 +34,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [az account set](/cli/azure/account#az-account-set) command. For more information, see [How to manage Azure subscriptions – Azure CLI](/cli/azure/manage-azure-subscriptions-azure-cli?tabs=bash#change-the-active-subscription).
 - Dependent upon your Azure subscription, you might need to request a vCPU quota increase. For more information, see [Increase VM-family vCPU quotas](/azure/quotas/per-vm-quota-requests).
 
-## Install `aks-preview` extension
+### Install `aks-preview` extension
 
 1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
 
@@ -43,20 +43,29 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
     ```azurecli-interactive
     az extension add --name aks-preview
     ```
+
 1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Flatcar Container Linux requires a minimum of 18.0.0b42**.
+
     ```azurecli-interactive
     az extension update --name aks-preview
     ```
+
 ### Register `AKSFlatcarPreview` feature flag
+
 1. Register the `AKSFlatcarPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
     ```azurecli-interactive
     az feature register --namespace "Microsoft.ContainerService" --name "AKSFlatcarPreview"
     ```
+
 1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
+
     ```azurecli-interactive
     az feature show --namespace Microsoft.ContainerService --name AKSFlatcarPreview
     ```
+
 1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
     ```azurecli-interactive
     az provider register --namespace Microsoft.ContainerService
     ```
