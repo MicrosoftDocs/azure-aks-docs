@@ -41,6 +41,7 @@ Node auto provisioning provisions, scales, and manages virtual machines (nodes) 
 ### Unsupported features
 
 - Windows node pools
+- [Flatcar Container Linux for AKS (preview) node pools][flatcar]
 - IPv6 clusters
 - [Service Principals](./kubernetes-service-principal.md)
    > [!NOTE]
@@ -557,6 +558,7 @@ Node auto provisioning can only be disabled when:
 [azure-reserved-instances]: https://azure.microsoft.com/pricing/reserved-vm-instances/
 [vm-overview]: /azure/virtual-machines/sizes/overview
 [network-security-group]: /azure/virtual-network/network-security-groups-overview
+[flatcar]: ./flatcar-container-linux-for-aks.md
 
 <!-- LINKS - external -->
 [aks-karpenter-provider]: https://github.com/Azure/karpenter-provider-azure
