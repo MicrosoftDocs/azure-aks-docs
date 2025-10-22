@@ -49,7 +49,7 @@ You can control access to the API server using Kubernetes role-based access cont
 AKS nodes are Azure virtual machines (VMs) that you manage and maintain.
 
 * Linux nodes run optimized versions of Ubuntu or Azure Linux.
-* Windows Server nodes run an optimized Windows Server 2022 release using the `containerd` container runtime.
+* Windows Server nodes run an optimized Windows Server release using the `containerd` container runtime.
 
 When an AKS cluster is created or scaled up, the nodes are automatically deployed with the latest OS security updates and configurations.
 
@@ -61,6 +61,18 @@ When an AKS cluster is created or scaled up, the nodes are automatically deploye
 For more information about the security upgrade process for Linux and Windows worker nodes, see [Security patching nodes][aks-vulnerability-management-nodes].
 
 AKS clusters running Azure Generation 2 VMs includes support for [Trusted Launch][trusted-launch], which protects against advanced and persistent attack techniques by combining technologies that can be independently enabled, like secure boot and virtualized version of trusted platform module (vTPM). Administrators can deploy AKS worker nodes with verified and signed bootloaders, OS kernels, and drivers to ensure integrity of the entire boot chain of the underlying VM.
+
+### Security optimized OS options
+
+AKS supports two K8s optimized Linux OS options with increased security, Azure Linux OS Guard (preview) and [Flatcar Container Linux for AKS (preview)][flatcar]. These OS options provide increase security as compared to other Linux OS options, such as:
+
+    - Both Azure Linux OS Guard and Flatcar Container Linux for AKS have an immutable operating system that cannot be modified at runtime. All OS binaries, libraries and static configuration are read-only, the bit-for-bit integrity is often cryptographically protected. These special purpose operating systems usually come without any kind of package management or other traditional means of altering the OS, shipping as self-contained images. User workloads run in isolated environments like containers, sandboxed from the OS.
+    - Both Azure Linux OS Guard and Flatcar Container Linux for AKS use SELinux for Mandatory Access Control.
+    - Azure Linux OS Guard enforces [FIPS][FIPS] and [Trusted Launch][trusted-launch] enablement, providing improved compliance and protection against advanced and persistent attacks by combining secure boot and virtualized version of trusted platform module (vTPM).
+
+When deciding between which K8s optimized OS options to use, AKS recommends the following:
+•	Use Azure Linux OS Guard (preview) if you’re looking for an enterprise-ready immutable OS, recommended by Microsoft.
+•	Use Flatcar Container Linux for AKS (preview) if you’re looking for a vendor neutral immutable OS with cross-cloud support.
 
 ### Node authorization
 

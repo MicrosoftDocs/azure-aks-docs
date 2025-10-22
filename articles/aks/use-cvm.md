@@ -59,6 +59,7 @@ This table includes the supported OS versions:
 |Linux|`Ubuntu2204`|Not Supported|AKS doesn't support CVM for Ubuntu 22.04.|
 |Linux|`Ubuntu2404`|Supported| CVM is supported on `Ubuntu2404` in K8s 1.32-1.38. |
 |Linux|`AzureLinux`| Supported on Azure Linux 3.0| Azure Linux 3 is default when enabling CVM for K8s version 1.28-1.36.|
+|Linux| `flatcar`| Not Supported| [Flatcar Container Linux for AKS][flatcar] does not support CVM. |
 |Windows|All Windows OS SKU| Not Supported|
 
 When using `Ubuntu` or `AzureLinux` as the `osSKU`, if the default OS version doesn't support CVM, AKS defaults to the most recent CVM-supported version of the OS. For example, Ubuntu 22.04 is default for Linux node pools. Since 22.04 doesn't currently support CVM, AKS defaults to Ubuntu 20.04 for Linux CVM-enabled node pools.
@@ -209,4 +210,5 @@ In this article, you learned how to add a node pool with CVM to an AKS cluster.
 [az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az_aks_nodepool_delete
 [resize-your-nodepool]: ./resize-node-pool.md
 [trusted-launch]: ./use-trusted-launch.md
+[flatcar]: ./flatcar-container-linux-for-aks.md
 

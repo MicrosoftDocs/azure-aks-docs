@@ -28,6 +28,10 @@ This article describes how to enable the Artifact Streaming feature on your AKS 
 > Artifact Streaming (preview) is a suggested alternative for customers previously using Teleport (preview).
 > [Teleport (preview)](https://github.com/Azure/acr/blob/main/docs/teleport/aks-getting-started.md) on AKS will be retired on 15 July 2025, please migrate to Artifact Streaming (preview) on AKS or update your node pools to set `--aks-custom-headers EnableACRTeleport=false`. Azure Container Registry has removed the Teleport API, meaning that any nodes with Teleport enabled will pull images from Azure Container Registry as any other AKS node without Teleport. After 15 July 2025, AKS node pools with Teleport (preview) enabled may experience breakage and node provisioning failures. For more information, see [aka.ms/aks/teleport-retirement](https://aka.ms/aks/teleport-retirement).
 
+## Limitations
+
+* Artifact Steaming is not supported for the following OS options: [Windows Server versions][windows-os] and [Flatcar Container Linux for AKS][flatcar]
+
 ## Prerequisites
 
 * You need an existing AKS cluster with ACR integration. If you don't have one, you can create one using [Authenticate with ACR from AKS][acr-auth-aks].
@@ -158,4 +162,5 @@ This article described how to enable Artifact Streaming on your AKS node pools t
 [az-acr-artifact-streaming-create]: /cli/azure/acr/artifact-streaming#az-acr-artifact-streaming-create
 [az-acr-manifest-list-referrers]: /cli/azure/acr/manifest#az-acr-manifest-list-referrers
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
-
+[windows-os]: ./windows-best-practices.md
+[flatcar]: ./flatcar-container-linux-for-aks.md
