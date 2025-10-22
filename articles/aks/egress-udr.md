@@ -4,8 +4,8 @@ description: Learn how to define a custom egress route with a routing table in A
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 05/10/2023
-ms.author: allensu
-author: asudbring
+ms.author: davidsmatlak
+author: davidsmatlak
 
 
 # Customer intent: As a cluster operator, I want to customize egress routes using user-defined routing tables in Azure Kubernetes Service, so that I can meet specific networking requirements without relying on default AKS configurations.
