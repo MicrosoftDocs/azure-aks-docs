@@ -15,12 +15,12 @@ ms.author: fryu
 
 Ephemeral NVMe data disks provide high-performance, low-latency storage that's ideal for demanding workloads running on Azure Kubernetes Service (AKS). Many modern applications, such as AI/ML training, data analytics, and high-throughput databases, require fast temporary storage to process large volumes of intermediate data efficiently. By using ephemeral NVMe disks, you can significantly improve application responsiveness and throughput, while optimizing for cost and scalability in your AKS clusters.
 
-Unlike remote disks that scale performance with VM size, Ephemeral NVMe disks deliver their full performance regardless of vCPU count because they're physically attached to the VM and bypass the remote disk controller entirely. Consider this stark contrast:
+In contrast to remote disks, whose performance scales with the size of the virtual machine (VM), Ephemeral NVMe disks maintain full performance regardless of vCPU count. This is because they are physically attached to the VM and operate without relying on a remote disk controller. The difference is notable:
 
-- Ultra Disk: To get 400,000 IOPS, you need a 112-vCPU VM (for example, [Standard_E112ibds_v5](/azure/virtual-machines/ebdsv5-ebsv5-series#ebdsv5-series-nvme)).
-- Local NVMe: An 8-vCPU (for example, [Standard_L8s_v3](/azure/virtual-machines/sizes/storage-optimized/lsv3-series?tabs=sizestoragelocal#sizes-in-series)) VM delivers 400,000 IOPS out of the box.
+- **Ultra Disk:** Achieving 400,000 IOPS requires a 112-vCPU VM (for example, [Standard_E112ibds_v5](/azure/virtual-machines/ebdsv5-ebsv5-series#ebdsv5-series-nvme)).
+- **Local NVMe:** An 8-vCPU VM (for example, [Standard_L8s_v3](/azure/virtual-machines/sizes/storage-optimized/lsv3-series?tabs=sizestoragelocal#sizes-in-series)) can deliver 400,000 IOPS.
 
-That's 14x fewer vCPUs for the same IOPS performance, dramatically reducing your compute costs.
+This results in approximately 14 times fewer vCPUs for equivalent IOPS performance, offering a substantial reduction in compute resource requirements.
 
 This best practices article focuses on storage considerations for cluster operators. In this article, you learn:
 
