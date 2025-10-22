@@ -2,8 +2,8 @@
 title: Configure Static Egress Gateway in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure Static Egress Gateway in Azure Kubernetes Service (AKS) to manage egress traffic from a constant IP address.
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 10/18/2024

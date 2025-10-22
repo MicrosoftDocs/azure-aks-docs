@@ -6,8 +6,8 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 09/25/2023
-ms.author: allensu
-author: asudbring
+ms.author: davidsmatlak
+author: davidsmatlak
 #Customer intent: As a cluster operator, I want to utilize a different kube-proxy configuration.
 # Customer intent: "As a cluster operator, I want to configure kube-proxy settings in my AKS environment so that I can optimize load balancing for my Kubernetes services."
 ---
