@@ -1,6 +1,6 @@
 ---
-title: Create AKS-managed GPU node pool(s) on Azure Kubernetes Service (AKS)
-description: Learn how to provision fully-managed GPU node(s) on your new or existing cluster on Azure Kubernetes Service (AKS).
+title: Create an AKS-managed GPU node pool on Azure Kubernetes Service (AKS)
+description: Learn how to provision a fully-managed GPU node pool on your new or existing cluster on Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
@@ -11,13 +11,13 @@ ms.author: sachidesai
 # Customer intent: As a cluster administrator or developer, I want to provision an Azure Kubernetes Service (AKS) cluster with GPU-enabled node pools, without deploying or managing the fundamental GPU software and observability components myself.
 ---
 
-# Create fully-managed GPU node(s) on Azure Kubernetes Service (AKS) (preview)
+# Create a fully-managed GPU node pool on Azure Kubernetes Service (AKS) (preview)
 
 Running GPU workloads in Azure Kubernetes Service (AKS) requires several software components to be installed and maintained: the GPU driver, the Kubernetes device plugin, and GPU metrics exporter for telemetry. These components are essential for enabling GPU scheduling, container-level GPU access, observability of resource usage and without them, AKS GPU node pools cannot function correctly. Previously, cluster operators had to either install these components manually or use open-source alternatives like the [NVIDIA GPU Operator](./nvidia-gpu-operator.md), which may introduce complexity and operational overhead.
 
-AKS now supports fully-managed GPU nodes (preview) and installs the NVIDIA GPU driver, device plugin, and [DCGM metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) by default. Enabling 1-step GPU node pool creation, this feature streamlines the operational experience for operators and empowers developers and ML engineers by making GPU resources available in AKS as simple as general purpose CPU nodes. Now, organizations can deploy GPU workloads faster, more reliably, and with less infrastructure burden.
+AKS now supports fully-managed GPU nodes (preview) and installs the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) by default. Enabling 1-step GPU node pool creation, this feature streamlines the operational experience for operators and empowers developers and ML engineers by making GPU resources available in AKS as simple as general purpose CPU nodes. Now, organizations can deploy GPU workloads faster, more reliably, and with less infrastructure burden.
 
-In this article, you learn how to provision and use AKS-managed GPU nodes in your cluster, including default installation of the NVIDIA GPU driver, device plugin, and DCGM metrics exporter.
+In this article, you learn how to provision an AKS-managed GPU nodes in your cluster, including default installation of the NVIDIA GPU driver, device plugin, and metrics exporter.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -30,7 +30,7 @@ In this article, you learn how to provision and use AKS-managed GPU nodes in you
 
 ## Limitations
 
-* This feature currently supports NVIDIA GPU-enabled VM sizes only.
+* This feature currently supports NVIDIA GPU-enabled virtual machine (VM) sizes only.
 * Updating a general purpose CPU-based node pool to add a GPU VM size is not supported on AKS.
 * Windows node pools are not yet supported with this feature.
 * Migrating your existing [multi-instance GPU](./gpu-multi-instance.md) node pools to use this feature is not yet supported.
@@ -122,8 +122,8 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
 
 ## Next steps
 
-* [Confirm that the GPUs are schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable) in your AKS-managed GPU node(s).
-* Deploy a [sample GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload) on your AKS-managed GPU-enabled node(s).
+* [Confirm that the GPUs are schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable) in your AKS-managed GPU node pool.
+* Deploy a [sample GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload) on your AKS-managed GPU-enabled nodes.
 * Monitor [GPU utilization and performance metrics](./monitor-gpu-metrics.md) from managed DCGM exporter on your GPU nodes.
 
 ## Related articles
