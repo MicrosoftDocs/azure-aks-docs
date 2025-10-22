@@ -17,7 +17,7 @@ This article provides an overview of the various Azure Kubernetes Fleet Manager 
 
 A Fleet Manager resource can be created with or without a hub cluster. A hub cluster is a managed Azure Kubernetes Service (AKS) cluster that acts as a hub to stage Kubernetes resources ready for placement. 
 
-Let's compare the scenarios enabled by the using a hub cluster.
+The following table outlines the supported capabilities of Fleet Manager with and without a hub cluster:
 
 | Capability | Fleet Manager without hub cluster | Fleet Manager with hub cluster |
 |----|----|----|
