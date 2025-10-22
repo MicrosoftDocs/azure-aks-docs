@@ -1,6 +1,6 @@
 ---
 title: Create an AKS-managed GPU node pool on Azure Kubernetes Service (AKS)
-description: Learn how to provision a fully-managed GPU node pool on your new or existing cluster on Azure Kubernetes Service (AKS).
+description: Learn how to provision a fully managed GPU node pool on your new or existing cluster on Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
@@ -11,11 +11,11 @@ ms.author: sachidesai
 # Customer intent: As a cluster administrator or developer, I want to provision an Azure Kubernetes Service (AKS) cluster with GPU-enabled node pools, without deploying or managing the fundamental GPU software and observability components myself.
 ---
 
-# Create a fully-managed GPU node pool on Azure Kubernetes Service (AKS) (preview)
+# Create a fully managed GPU node pool on Azure Kubernetes Service (AKS) (preview)
 
 Running GPU workloads in Azure Kubernetes Service (AKS) requires several software components to be installed and maintained: the GPU driver, the Kubernetes device plugin, and GPU metrics exporter for telemetry. These components are essential for enabling GPU scheduling, container-level GPU access, observability of resource usage and without them, AKS GPU node pools cannot function correctly. Previously, cluster operators had to either install these components manually or use open-source alternatives like the [NVIDIA GPU Operator](./nvidia-gpu-operator.md), which may introduce complexity and operational overhead.
 
-AKS now supports fully-managed GPU nodes (preview) and installs the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) by default. Enabling 1-step GPU node pool creation, this feature streamlines the operational experience for operators and empowers developers and ML engineers by making GPU resources available in AKS as simple as general purpose CPU nodes. Now, organizations can deploy GPU workloads faster, more reliably, and with less infrastructure burden.
+AKS now supports fully managed GPU nodes (preview) and installs the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) by default. Enabling 1-step GPU node pool creation, this feature streamlines the operational experience for operators and empowers developers and ML engineers by making GPU resources available in AKS as simple as general purpose CPU nodes. Now, organizations can deploy GPU workloads faster, more reliably, and with less infrastructure burden.
 
 In this article, you learn how to provision an AKS-managed GPU nodes in your cluster, including default installation of the NVIDIA GPU driver, device plugin, and metrics exporter.
 
@@ -24,9 +24,9 @@ In this article, you learn how to provision an AKS-managed GPU nodes in your clu
 ## Before you begin
 
 * This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-* You need the Azure CLI version 2.72.2 or later installed. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+* You need the Azure CLI version 2.72.2 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * This feature requires Kubernetes version 1.34 or later. To check your AKS cluster version, see [Check for available AKS cluster upgrades][aks-upgrade].
-* If you have the `aks-preview` Azure CLI extension installed, please update the version to [] or later.
+* If you have the `aks-preview` Azure CLI extension installed,  update the version to [] or later.
 
 ## Limitations
 
