@@ -24,7 +24,7 @@ This article shows you how to view the managed namespaces you have access to and
 
 - You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 - You need an existing multi-cluster managed namespace. If you don't have one, see [Create a multi-cluster managed namespace](./howto-managed-namespaces.md).
-- Read the [Overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md) to understand the concept of a managed namespace.
+- Read the [overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md) to understand the concept of a managed namespace.
 - You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install Azure CLI][az-aks-install-cli].
 - You need the `fleet` Azure CLI extension. You can install it and update to the latest version using the [`az extension add`](/cli/azure/extension#az-extension-add) and [`az extension update`](/cli/azure/extension#az-extension-update) commands.
 
@@ -70,9 +70,9 @@ This article shows you how to view the managed namespaces you have access to and
 
 :::image type="content" source="media/managed-namespaces/list-fleet-managed-namespaces.png" alt-text="Screenshot showing the output of listing fleet managed namespaces the user has access to." lightbox="media/managed-namespaces/list-fleet-managed-namespaces.png" :::
 
-## View the managed namespace
+## View a managed namespace
 
-- View the the managed namespace using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
+- View a specific managed namespace using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
 
     ```azurecli-interactive
     az fleet namespace show \ 
@@ -86,7 +86,7 @@ This article shows you how to view the managed namespaces you have access to and
 
 ## Next steps
 
-- Read the [Overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md) to understand the concept of a managed namespace.
+- Read the [overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md) to understand the concept of a managed namespace.
 - Learn how to [create and use a multi-cluster managed namespace](./howto-managed-namespaces.md).
 
 <!-- INTERNAL LINKS -->
