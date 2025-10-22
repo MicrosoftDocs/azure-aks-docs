@@ -111,6 +111,39 @@ NVIDIA DCGM Exporter collects and exports GPU metrics. It runs as a pod on your 
 
 ## Export GPU Prometheus metrics and configure the NVIDIA Grafana dashboard
 
+Once NVIDIA DCGM Exporter is successfully deployed to your GPU node pool, you need to export the default enabled GPU metrics to Azure Managed Prometheus by deploying a Kubernetes `PodMonitor` resource.
+
+1. Create a file named `pod-monitor.yaml` and add the following configuration to it:
+
+    ```yml
+    apiVersion: azmonitoring.coreos.com/v1
+    kind: PodMonitor
+    metadata:
+      name: nvidia-dcgm-exporter
+      labels:
+        app.kubernetes.io/name: nvidia-dcgm-exporter
+    spec:
+      selector:
+        matchLabels:
+          app.kubernetes.io/name: nvidia-dcgm-exporter
+      podMetricsEndpoints:
+      - port: metrics
+        interval: 30s
+      podTargetLabels:
+    ```
+
+2. Apply this PodMonitor configuration to your AKS cluster using the `kubectl apply` command **in the `kube-system` namespace**.
+
+    ```bash
+    kubectl apply -f pod-monitor.yaml -n kube-system
+    ```
+
+3. Verify the PodMonitor was successfully created using the `kubectl get podmonitor` command.
+
+    ```bash
+    kubectl get podmonitor -n kube-system
+    ```
+
 4. In the [Azure portal](https://portal.azure.com), navigate to the **Managed Prometheus** > **Prometheus explorer** section of your Azure Monitor workspace. Select the **Grid** tab and search for an example DCGM GPU metric in the **PromQL** box. For example `DCGM_FI_DEV_SM_CLOCK`:
 
     :::image type="content" source="./media/monitor-gpu-metrics/dcgm-azure-monitor.png" alt-text="Screenshot of the Metrics section of an Azure Monitor workspace in the Azure portal.":::
