@@ -85,10 +85,10 @@ This article shows you how to use Fleet Manager Managed Namespaces to define res
 
 You can now assign access to a user for the managed namespace across member clusters using one of the [built-in roles](./concepts-fleet-managed-namespace.md#multi-cluster-managed-namespace-built-in-roles).
 
-- Create a role assignment using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. The following example assigns the _Azure Kubernetes Fleet Manager Member Cluster RBAC Writer_ role:
+- Create a role assignment using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. The following example assigns the _Azure Kubernetes Fleet Manager RBAC Writer for Member Clusters_ role:
 
     ```azurecli-interactive
-    az role assignment create --role "Azure Kubernetes Fleet Manager Member Cluster RBAC Writer" --assignee <USER-ENTRA-ID> --scope $FLEET_ID/managedNamespaces/my-managed-namespace
+    az role assignment create --role "Azure Kubernetes Fleet Manager RBAC Writer for Member Clusters" --assignee <USER-ENTRA-ID> --scope $FLEET_ID/managedNamespaces/my-managed-namespace
     ```
 
 ## Add member clusters to a managed namespace
