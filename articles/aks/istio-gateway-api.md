@@ -292,7 +292,7 @@ data:
 > [!NOTE]
 > Only one ConfigMap per `GatewayClass` is allowed.
 
-Now, you should see the the `HPA` for `httpbin-gateway` that you created earlier get updated:
+Now, you should see the `HPA` for `httpbin-gateway` that you created earlier get updated:
 
 ```bash
 kubectl get hpa httpbin-gateway-istio
