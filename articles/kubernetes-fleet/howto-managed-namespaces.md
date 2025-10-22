@@ -98,7 +98,7 @@ You can control which member clusters to deploy the managed namespace to by spec
 > [!IMPORTANT]
 > Make sure the member clusters meet the following requirements:
 >
-> - Member clusters within a managed namespace must have a target Kubernetes version of at least 1.30.0.
+> - Member clusters within a managed namespace must have a target Kubernetes version of at least 1.30.0. Clusters below this version **will not** block end users from modifying the placed resources.
 > - The clusters you specify must be members of the fleet.
 
 - Specify the full list of member clusters you want to deploy the managed namespace to using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command with the `--member-cluster-names` parameter. The namespace will be propagated to all clusters in the list.
