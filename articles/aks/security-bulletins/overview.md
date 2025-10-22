@@ -1,7 +1,7 @@
 ---
 title: Security bulletins for Azure Kubernetes Service (AKS)
 description: This article provides security/vulnerability related updates and troubleshooting guides for Azure Kubernetes Services (AKS).
-ms.date: 03/27/2025
+ms.date: 10/23/2025
 author: bahe
 ms.author: bahe
 ms.topic: concept-article
@@ -376,12 +376,14 @@ For security bulletins from previous years, see:
 - Learn how to automatically upgrade node images with [Automatically upgrade node images][auto-upgrade-node-image].
 - Learn how to upgrade the Kubernetes version with [Upgrade an AKS cluster][upgrade-cluster].
 - Learn about upgrading best practices with [AKS patch and upgrade guidance][upgrade-operators-guide].
+- Learn how to to safely upgrade to a consistent node image across multiple clusters with [Azure Kubernetes Fleet Manager][fleet-auto-upgrade].
 
 
 <!-- LINKS - internal -->
 [node-image-upgrade]: ../node-image-upgrade.md
 [auto-upgrade-node-image]: ../auto-upgrade-node-image.md
 [upgrade-cluster]: ../upgrade-aks-cluster.md
+[fleet-auto-upgrade]: ../../kubernetes-fleet/concepts-update-orchestration.md
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
 
 <!-- LINKS - external -->
