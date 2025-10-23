@@ -257,11 +257,20 @@ The following table outlines the key differences and limitations of using Azure 
 
 ## Connect via Azure Cloud Shell
 
+Connecting to a private AKS cluster through Azure Cloud Shell requires completing the following steps:
+
+1. **Deploy required resources:** Cloud Shell must be deployed in a VNet that can reach your private cluster. This step provisions the necessary infrastructure. While Cloud Shell is a free service, using Cloud Shell in a VNet requires some resources that incur cost. For more information, see [Deploy Cloud Shell in a virtual network][cloud-shell-vnet-deploy].
+2. **Configure the connection:** After the resources are deployed, any user in the subscription that has appropriate permissions on the cluster can configure Cloud Shell to deploy in the VNet to allow a secure connection to the private cluster.
+
+The following sections describe how to complete each step.
+
 ### Deploy required resources
 
-While Cloud Shell is a free service, using Cloud Shell in a VNet requires some resources that incur cost. For more information, see [Deploy Cloud Shell in a virtual network][cloud-shell-vnet-deploy].
-
 To deploy and configure the required resources, you must have the **Owner** role assignment on the subscription. To view and assign roles, see [List Owners of a Subscription][list-owners-sub].
+
+You can deploy the required resources using the quickstart in the Azure portal, or by using the provided ARM template if you manage infrastructure as code or have organizational policies that require specific resource naming conventions.
+
+You can optionally leave the deployed resources in place for future connections or delete and recreate them as needed.
 
 #### [Azure portal (preview)](#tab/portal)
 
@@ -270,6 +279,7 @@ This option creates a separate VNet with the necessary resources for Cloud Shell
 1. In the [Azure portal](https://portal.azure.com), navigate to your private cluster resource.
 2. In the Overview page, select **Connect**.
 3. In the **Cloud Shell** tab, under **Prerequisites for private cluster connection**, select **Configure** to deploy the necessary resources.
+    - The deployment creates a new resource group named `RG-CloudShell-PrivateClusterConnection-{RANDOM_ID}`.
 4. Once the deployment has succeeded, under **Set cluster context**, select **Open Cloud Shell**.
 
 ![Azure Portal Cloud Shell Connect Button](media/access-private-cluster/azure-portal-cloud-shell-connect.png)
@@ -286,7 +296,9 @@ You can deploy Cloud Shell in the same VNet as your AKS private cluster with a d
 
 ### Configure connection
 
-Once the required resources are deployed, you can configure your Cloud Shell to deploy in the given VNet by following [Configure Cloud Shell to use a virtual network][cloud-shell-vnet-configure].
+Once the required resources are deployed, any user in the subscription can configure their Cloud Shell to deploy in the given VNet by following [Configure Cloud Shell to use a virtual network][cloud-shell-vnet-configure].
+
+Ensure the user has appropriate kubernetes-level access to successfully connect to the private cluster. See [Access and identity options for Azure Kubernetes Service][access-aks].
 
 ## Connect via Azure Bastion (preview)
 
@@ -519,3 +531,4 @@ For associated best practices, see [Best practices for network connectivity and 
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [azure-bastion]: /azure/bastion/bastion-connect-to-aks-private-cluster
 [list-owners-sub]: /azure/role-based-access-control/role-assignments-list-portal#list-owners-of-a-subscription
+[access-aks]: /articles/aks/concepts-identity.md
