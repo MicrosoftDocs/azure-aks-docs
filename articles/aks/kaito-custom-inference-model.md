@@ -168,9 +168,9 @@ If you no longer need these resources, you can delete them to avoid incurring ex
 
 Delete the KAITO inference workspace using the `kubectl delete workspace` command.
 
-    ```bash
-    kubectl delete workspace workspace-custom-llm
-    ```
+```bash
+kubectl delete workspace workspace-custom-llm
+```
 
 ## Next steps
 
