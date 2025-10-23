@@ -34,7 +34,7 @@ The workflow example is an ASP.NET Core project with:
 
 ## Prerequisites
 
-- An [Azure subscription](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) with Owner or Admin role.
+- An [Azure subscription](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) with Owner or Admin role.
 - The latest version of the [Azure CLI][install-cli]
 - Latest [Docker][docker]
 - Latest [Helm][helm]

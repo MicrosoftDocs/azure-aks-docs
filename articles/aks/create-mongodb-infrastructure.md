@@ -17,7 +17,7 @@ In this article, you create the required infrastructure resources to run a Mongo
 ## Prerequisites
 
 * Review of the [overview for deploying a MongoDB cluster on AKS](./mongodb-overview.md).
-* An Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* An Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * Azure CLI version 2.61.0. To install or upgrade, see [Install the Azure CLI](/cli/azure/install-azure-cli).
 * Helm version 3 or later. To install, see [Installing Helm](https://helm.sh/docs/intro/install/).
 * `kubectl`, which Azure Cloud Shell installs by default.

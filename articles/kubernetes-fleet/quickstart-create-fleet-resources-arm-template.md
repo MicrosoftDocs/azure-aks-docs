@@ -19,7 +19,7 @@ Get started with Azure Kubernetes Fleet Manager by using the ARM template to cre
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
 * Read the [conceptual overview of Fleet Manager](./concepts-fleet.md), which provides an explanation of fleets and member clusters referenced in this document.
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 * [Install or upgrade Azure CLI](/cli/azure/install-azure-cli) to version `2.71.0` or later.
     - Ensure **fleet** extension is updated to version `1.5.2` or higher.

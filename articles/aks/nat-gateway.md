@@ -5,13 +5,10 @@ ms.topic: how-to
 ms.date: 06/03/2024
 author: asudbring
 ms.author: allensu
-ms.custom: devx-track-azurecli, innovation-engine
+ms.custom: devx-track-azurecli
 ---
 
 # Create a managed or user-assigned NAT gateway for your Azure Kubernetes Service (AKS) cluster
-
-> [!div class="nextstepaction"]
-> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2333443)
 
 While you can route egress traffic through an Azure Load Balancer, there are limitations on the number of outbound flows of traffic you can have. Azure NAT Gateway allows up to 64,512 outbound UDP and TCP traffic flows per IP address with a maximum of 16 IP addresses.
 

@@ -306,7 +306,7 @@ sections:
       - question: |
           Can I use FIPS cryptographic libraries with deployments on AKS?
         answer: |
-          Nodes that are enabled with Federal Information Processing Standards (FIPS) are now supported on Linux-based node pools. For more information, see [Add a FIPS-enabled node pool](./create-node-pools.md#fips-enabled-node-pools).
+          Nodes that are enabled with Federal Information Processing Standards (FIPS) are now supported on Linux-based node pools. For more information, see [Add a FIPS-enabled node pool](./enable-fips-nodes.md).
           
       - question: |
           How are AKS add-ons updated?
