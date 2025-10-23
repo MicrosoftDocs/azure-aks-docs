@@ -1,4 +1,4 @@
-/---
+---
 title: Install the Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes
 description: Install and configure Dapr on your Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes clusters using the Dapr cluster extension.
 author: greenie-msft
