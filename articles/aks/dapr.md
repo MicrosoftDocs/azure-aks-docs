@@ -1,4 +1,4 @@
----
+/---
 title: Install the Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes
 description: Install and configure Dapr on your Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes clusters using the Dapr cluster extension.
 author: greenie-msft
@@ -85,7 +85,7 @@ If the provider shows as *NotRegistered*, register the provider using the [az pr
 az provider register --namespace Microsoft.KubernetesConfiguration
 ```
 
-### Register the `ExtenstionTypes` feature to your Azure subscription
+### Register the `ExtensionTypes` feature to your Azure subscription
 
 The `ExtensionTypes` feature needs to be registered to your Azure subscription. In the terminal, verify you're in the correct subscription:
 
@@ -93,7 +93,7 @@ The `ExtensionTypes` feature needs to be registered to your Azure subscription. 
 az account set --subscription <YOUR-AZURE-SUBSCRIPTION-ID>
 ```
 
-Register the `ExtenstionTypes` feature.
+Register the `ExtensionTypes` feature.
 
 ```azurecli
 az feature registration create --namespace Microsoft.KubernetesConfiguration --name ExtensionTypes
@@ -176,7 +176,7 @@ az k8s-extension extension-types list-versions-by-cluster --resource-group <myRe
 ```
 
 To view a list of the stable Dapr versions available _by location_:
-1. [Make sure you've registered the `ExtenstionTypes` feature to your Azure subscription.](./dapr.md#register-the-extenstiontypes-feature-to-your-azure-subscription)
+1. [Make sure you've registered the `ExtensionTypes` feature to your Azure subscription.](./dapr.md#register-the-extensiontypes-feature-to-your-azure-subscription)
 1. Run the following command.
 
 ```azurecli
@@ -227,7 +227,7 @@ If the provider shows as *NotRegistered*, register the provider using the [az pr
 az provider register --namespace Microsoft.KubernetesConfiguration
 ```
 
-### Register the `ExtenstionTypes` feature to your Azure subscription
+### Register the `ExtensionTypes` feature to your Azure subscription
 
 The `ExtensionTypes` feature needs to be registered to your Azure subscription. In the terminal, verify you're in the correct subscription:
 
