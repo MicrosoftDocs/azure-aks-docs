@@ -14,8 +14,7 @@ author: german1608
 
 This article shows you how to enable Istio CNI for the Istio-based service mesh add-on on Azure Kubernetes Service (AKS). Istio CNI improves security by eliminating the need for privileged network capabilities in application workloads within the service mesh.
 
-> [!IMPORTANT]
-> This feature is currently in preview. For more information about previews, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Overview
 
@@ -29,10 +28,13 @@ Istio CNI addresses this security concern by moving the network configuration re
 
 When Istio CNI is enabled, application pods use a minimal `istio-validation` init container that drops all capabilities instead of the privileged `istio-init` container.
 
+> [!NOTE]
+> Istio CNI is **not** a replacement for [Azure CNI](concepts-network-cni-overview.md) and will not interfere with your normal AKS networking. It is a separate plugin designed to handle Istio’s traffic redirection setup at the node level, improving security by removing the need for privileged init containers in application pods.
+
 ## Before you begin
 
-* Install the Azure CLI version 2.61.0 or later (TODO UPDATE THIS VERSION ONCE ITS SHIPPED). You can run `az --version` to verify the version. To install or upgrade, see [Install Azure CLI][azure-cli-install].
-* Install the `aks-preview` Azure CLI extension:
+* Install the Azure CLI version 2.77.0 or later. You can run `az --version` to verify the version. To install or upgrade, see [Install Azure CLI][azure-cli-install].
+* Install the `aks-preview` Azure CLI extension version 19.0.0b5 or later:
 
     ```azurecli-interactive
     az extension add --name aks-preview
@@ -226,7 +228,6 @@ After disabling Istio CNI:
 
 ## Next steps
 
-<!-- TODO: Add troubleshooting content -->
 
 * [Deploy external or internal ingresses for Istio service mesh add-on][istio-deploy-ingress]
 * [Configure Istio-based service mesh add-on for Azure Kubernetes Service][istio-meshconfig]
