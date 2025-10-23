@@ -6,7 +6,7 @@ ms.custom: devx-track-azurecli
 ms.service: azure-kubernetes-service
 ms.date: 08/21/2025
 ms.author: gerobayopaz
-author: gerobayopaz
+author: german1608
 # Customer intent: As a Kubernetes administrator, I want to enable Istio CNI for my Azure Kubernetes Service cluster with Istio service mesh add-on, so that I can improve security by removing privileged network capabilities from application workloads.
 ---
 
