@@ -58,7 +58,7 @@ The following factors influence the default image AKS chooses for your node pool
 - **Virtual machine (VM) size**: 
     - [Confidential virtual machines (CVM)](./use-cvm.md)
     - [AMR64 virtual machines](./create-node-pools.md)
-- **Hypervisor Generation**: Each VM size supports Generation 1, [Generation 2](./generation-2-vm.md), or both.
+- **Hypervisor Generation**: Each VM size supports Generation 1, [Generation 2](./generation-2-vms.md), or both.
     - If a Generation 2 is supported, AKS defaults to using the Generation 2 node image.
     - If only Generation 1 is supported, AKS defaults to using the Generation 1 node image.
 - **Feature enablement**: There are some features embedded into the node image. If you choose to use any of these features, your default node image changes.
