@@ -531,4 +531,4 @@ For associated best practices, see [Best practices for network connectivity and 
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [azure-bastion]: /azure/bastion/bastion-connect-to-aks-private-cluster
 [list-owners-sub]: /azure/role-based-access-control/role-assignments-list-portal#list-owners-of-a-subscription
-[access-aks]: /articles/aks/concepts-identity.md
+[access-aks]: concepts-identity.md
