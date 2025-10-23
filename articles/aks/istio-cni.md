@@ -98,6 +98,12 @@ az aks mesh enable-istio-cni --resource-group ${RESOURCE_GROUP} --name ${CLUSTER
 
 ## Verify Istio CNI is enabled
 
+Use `az aks get-credentials` to get the credentials for your AKS cluster:
+
+```azurecli-interactive
+az aks get-credentials --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
+```
+
 After enabling Istio CNI, verify the installation by checking that the CNI DaemonSet is running:
 
 ```bash
