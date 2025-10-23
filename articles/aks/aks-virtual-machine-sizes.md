@@ -54,8 +54,8 @@ AKS also supports the following VM types and features:
 There are three scenarios when creating a node pool with a supported VM size:
 
 - If the VM size supports only Gen 1, the default behavior for both Linux and Windows node pools is to use the Gen 1 node image.
-- If the VM size supports only Gen 2, the default behavior for both Linux and Windows node pools is to use the Gen 2 node image. Windows Server 2022 node pools require a custom header to use a VM size that only supports Gen 2. For more information, see [Create a Windows node pool with a Gen 2 VM](./generation-2-vm.md#create-a-node-pool-with-a-gen-2-vm).
-- If the VM size supports both Gen 1 and Gen 2, the default behavior for both Linux and Windows (in Windows Server 2025+) nodes pools is to use the Gen 2 node image. To use the Gen 2 node image for Windows Server 2022, see [Create a Windows node pool with a Gen 2 VM](./generation-2-vm.md#create-a-node-pool-with-a-gen-2-vm).
+- If the VM size supports only Gen 2, the default behavior for both Linux and Windows node pools is to use the Gen 2 node image. Windows Server 2022 node pools require a custom header to use a VM size that only supports Gen 2. For more information, see [Create a Windows node pool with a Gen 2 VM](./generation-2-vms.md#create-a-node-pool-with-a-gen-2-vm).
+- If the VM size supports both Gen 1 and Gen 2, the default behavior for both Linux and Windows (in Windows Server 2025+) nodes pools is to use the Gen 2 node image. To use the Gen 2 node image for Windows Server 2022, see [Create a Windows node pool with a Gen 2 VM](./generation-2-vms.md#create-a-node-pool-with-a-gen-2-vm).
 
 ## Check available VM sizes
 
@@ -112,7 +112,7 @@ Gen 2 VMs are generally Azure's newer offerings and have exclusive features over
 
 While we generally recommend running Gen 2 VMs, you should make sure that the generation you choose supports your requirements. To learn more about the differences between generations, and when one might make more sense than the other, see [Should I create a Gen 1 or 2 VM in Hyper-V?](/windows-server/virtualization/hyper-v/plan/should-i-create-a-generation-1-or-2-virtual-machine-in-hyper-v)
 
-To use Gen 2 VMs on AKS, see [Use generation 2 VMs on AKS](./generation-2-vm.md).
+To use Gen 2 VMs on AKS, see [Use generation 2 VMs on AKS](./generation-2-vms.md).
 
 ## Next steps
 
