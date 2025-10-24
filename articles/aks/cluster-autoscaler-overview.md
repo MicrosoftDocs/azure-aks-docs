@@ -31,6 +31,8 @@ It's a common practice to enable cluster autoscaler for nodes and either the Ver
 ## Best practices and considerations
 
 * When implementing **availability zones with the cluster autoscaler**, we recommend using a single node pool for each zone. You can set the `--balance-similar-node-groups` parameter to `True` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations. When this approach isn't implemented, scale down operations can disrupt the balance of nodes across zones.
+>[!NOTE]
+> The Cluster Autoscaler is not zone-aware, and zone allocation is handled by the underlying Virtual Machine Scale Sets. The above best practice becomes even more relevant when using zone-based  [pod topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) on a single multi-zonal node pool, as restrictive constraints may leave pods in a pending state.
 * For **clusters with more than 400 nodes**, we recommend using Azure CNI or Azure CNI Overlay.
 * To **effectively run workloads concurrently on both Spot and On-demand node pools**, consider using [*priority expanders*](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/expander/priority/readme.md). This approach allows you to scale out nodepools based on assigned priority. The following configuration illustrates this setup.
   ```yaml
@@ -97,6 +99,7 @@ View scaling failures and scale-up not triggered events via [CLI or Portal](./cl
 |--------------|--------------|
 | PersistentVolume node affinity conflicts, which can arise when using the cluster autoscaler with multiple availability zones or when a pod's or persistent volume's zone differs from the node's zone. | Use one node pool per availability zone and enabling `--balance-similar-node-groups`. You can also set the [`volumeBindingMode` field to `WaitForFirstConsumer`](./azure-disk-csi.md#create-a-custom-storage-class) in the pod specification to prevent the volume from being bound to a node until a pod using the volume is created. |
 | Taints and Tolerations/Node affinity conflicts | Assess the taints assigned to your nodes and review the tolerations defined in your pods. If necessary, make adjustments to the [taints and tolerations](./operator-best-practices-advanced-scheduler.md#provide-dedicated-nodes-using-taints-and-tolerations) to ensure that your pods can be efficiently scheduled on your nodes. |
+| [Restrictive Pod Topology Spread Constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) | Cluster Autoscaler runs scheduling simulations before initiating scale-up operations. If it determines that a pod cannot be scheduled on a new node due to restrictive topology spread constraints, it will not attempt to scale up. To mitigate this, consider relaxing the topology spread constraints | 
 
 ### Scale up operation failures
 
