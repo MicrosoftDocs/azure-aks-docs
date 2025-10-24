@@ -13,7 +13,7 @@ ms.author: schaffererin
 # Confidential Containers (preview) with Azure Kubernetes Service (AKS)
 
 > [!IMPORTANT]
-> The Confidential Containers preview is set to sunset in **March 2026**. Customers currently using Confidential Container node pools can continue using them as normal. After this date, customers with existing Confidential Container node pools should expect to see Confidential Container functionality degrade. No new nodes will be able to be spun up with the `KataCcIsolation` runtime. For customers that want an alterative to move off to:
+> The Confidential Containers preview is set to sunset in **March 2026**. After this date, customers with existing Confidential Container node pools should expect to see reduced functionality, and you won't be able to spin up any new nodes with the `KataCcIsolation` runtime. Customers currently using Confidential Container node pools can continue using them as normal. If you want to move off Confidential Containers, consider the following alternatives:
 >
 > - [Confidential VMs on AKS][use-confidential-vms]: Offers a similar hardware-based TEE that leverages AMD SEV-SNP security features, without the addition of per-VM isolation for workloads seen in Confidential Containers.
 > - [Application enclave support][intel-sgx-confidential-nodes]: Provides users with Intel SGX confidential computing VM nodes that support hardware-based, process-level container isolation through the Intel SGX trusted execution environment.
