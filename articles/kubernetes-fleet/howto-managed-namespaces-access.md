@@ -68,7 +68,13 @@ This article shows you how to view the managed namespaces you have access to and
         -o table 
     ```
 
-:::image type="content" source="media/managed-namespaces/list-fleet-managed-namespaces.png" alt-text="Screenshot showing the output of listing fleet managed namespaces the user has access to." lightbox="media/managed-namespaces/list-fleet-managed-namespaces.png" :::
+    Your output should resemble the following example output:
+    ```output
+    AdoptionPolicy  DeletePolicy   ETag                                    Location   Name                  ProvisioningState   ResourceGroup
+    --------------  ------------   -------------------------------------   --------   --------------------  -----------------   -------------
+    Always          Delete         "aaaaaaaa-0b0b-1c1c-2d2d-333333333333   westus2    my-managed-namespace  Succeeded           test-rg
+    ```
+
 
 ## View a managed namespace
 
@@ -82,7 +88,12 @@ This article shows you how to view the managed namespaces you have access to and
         -o table 
     ```
 
-:::image type="content" source="media/managed-namespaces/show-managed-namespaces-per-fleet.png" alt-text="Screenshot showing the output of showing a fleet managed namespace." lightbox="media/managed-namespaces/show-managed-namespaces-per-fleet.png" :::
+    Your output should resemble the following example output:
+    ```output
+    AdoptionPolicy  DeletePolicy   ETag                                    Location   Name                  ProvisioningState   ResourceGroup
+    --------------  ------------   -------------------------------------   --------   --------------------  -----------------   -------------
+    Always          Delete         "aaaaaaaa-0b0b-1c1c-2d2d-333333333333   westus2    my-managed-namespace  Succeeded           test-rg
+    ```
 
 ## Next steps
 

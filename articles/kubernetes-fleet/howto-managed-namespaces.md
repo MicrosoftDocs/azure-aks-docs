@@ -141,7 +141,12 @@ You can remove member clusters from a managed namespace by specifying the list o
        -o table
     ```
 
-:::image type="content" source="media/managed-namespaces/show-managed-namespaces-per-fleet.png" alt-text="Screenshot showing the output of showing a fleet managed namespace." lightbox="media/managed-namespaces/show-managed-namespaces-per-fleet.png" :::
+    Your output should resemble the following example output:
+    ```output
+    AdoptionPolicy  DeletePolicy   ETag                                    Location   Name                  ProvisioningState   ResourceGroup
+    --------------  ------------   -------------------------------------   --------   --------------------  -----------------   -------------
+    Always          Delete         "aaaaaaaa-0b0b-1c1c-2d2d-333333333333   westus2    my-managed-namespace  Succeeded           test-rg
+    ```
 
 ## Delete a multi-cluster managed namespace
 
