@@ -13,11 +13,14 @@ ms.author: schaffererin
 # Confidential Containers (preview) with Azure Kubernetes Service (AKS)
 
 > [!IMPORTANT]
-> The Confidential Containers preview is set to sunset in March 2026. Customers currently using Confidential Container node pools can continue using them as normal. After this date, customers with existing Confidential Container node pools should expect to see Confidential Container functionality degrade. No new nodes will be able to be spun up with the `KataCcIsolation` runtime. For customers that want an alterative to move off to:
+> The Confidential Containers preview is set to sunset in **March 2026**. Customers currently using Confidential Container node pools can continue using them as normal. After this date, customers with existing Confidential Container node pools should expect to see Confidential Container functionality degrade. No new nodes will be able to be spun up with the `KataCcIsolation` runtime. For customers that want an alterative to move off to:
 >
-> *[Confidential VMs on AKS][use-confidential-vms] offers a similar hardware based TEE that leverages AMD SEV-SNP security features, without the addition of per-VM isolation for workloads seen in Confidential Containers.
-> *[Application enclave support][intel-sgx-confidential-nodes] provides users with Intel SGX confidential computing VM nodes that support hardware based, process level container isolation through the Intel SGX trusted execution environment.
-> *[Confidential Containers on Azure Container Instances][aci-confidential-containers] allows for lift-and-shift deployments on containers backed by AMD SEV-SNP. Functionality includes performing full guest attestation, access toolings to generate policies, utilize sidecar containers for secure key releases. ACI nodes can be ran on AKS via [virtual nodes][aci-virtual-nodes].
+> - [Confidential VMs on AKS][use-confidential-vms]: Offers a similar hardware-based TEE that leverages AMD SEV-SNP security features, without the addition of per-VM isolation for workloads seen in Confidential Containers.
+> - [Application enclave support][intel-sgx-confidential-nodes]: Provides users with Intel SGX confidential computing VM nodes that support hardware-based, process-level container isolation through the Intel SGX trusted execution environment.
+> - [Confidential Containers on Azure Container Instances][aci-confidential-containers]: Allows for lift-and-shift deployments on containers backed by AMD SEV-SNP. Functionality includes performing full guest attestation, access to toolings to generate policies, and utilizing sidecar containers for secure key releases. ACI nodes can be run on AKS via [virtual nodes][aci-virtual-nodes].
+> - [Azure RedHat OpenShift Confidential Containers][aro-confidential-containers]: Offers a similar AMD SEV-SNP backed TEE and utilizes the Kata runtime for per-container level isolation.
+> - [Open source Confidential Containers][oss-cc]: Gives a similar AMD SEV-SNP backed TEE that comes with per-container isolation through Kata.
+>
 > If you have additional questions, please create a [support request](https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest) or post an issue in [AKS issues][aks-issues].
 
 Confidential Containers provide a set of features and capabilities to further secure your standard container workloads to achieve higher data security, data privacy and runtime code integrity goals. Azure Kubernetes Service (AKS) includes Confidential Containers (preview) on AKS.
@@ -88,6 +91,7 @@ With the local container filesystem backed by VM memory, writing to the containe
 <!-- EXTERNAL LINKS -->
 [kata-technical-documentation]: https://katacontainers.io/docs/
 [aks-issues]: https://github.com/Azure/AKS/issues
+[oss-cc]: https://github.com/confidential-containers
 
 <!-- INTERNAL LINKS -->
 [pod-sandboxing-overview]: use-pod-sandboxing.md
@@ -98,4 +102,5 @@ With the local container filesystem backed by VM memory, writing to the containe
 [intel-sgx-confidential-nodes]: /azure/confidential-computing/confidential-nodes-aks-overview
 [aci-confidential-containers]: /azure/confidential-computing/confidential-containers
 [aci-virtual-nodes]: /azure/container-instances/container-instances-virtual-nodes
+[aro-confidential-containers]: /azure/openshift/confidential-containers-overview
 
