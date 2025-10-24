@@ -30,7 +30,7 @@ This article describes how to enable the Artifact Streaming feature on your AKS 
 
 ## Limitations
 
-* Artifact Steaming is not supported for the following OS options: [Windows Server versions][windows-os] and [Flatcar Container Linux for AKS][flatcar]
+* Artifact Steaming is not supported for the following OS options: [Windows Server versions][windows-os],[Flatcar Container Linux for AKS][flatcar], and [Azure Linux with OS Guard for AKS][os-guard]
 
 ## Prerequisites
 
@@ -164,3 +164,4 @@ This article described how to enable Artifact Streaming on your AKS node pools t
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
 [windows-os]: ./windows-best-practices.md
 [flatcar]: ./flatcar-container-linux-for-aks.md
+[os-guard]: ./azure/azure-linux/intro-azure-linux-os-guard.md

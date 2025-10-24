@@ -326,3 +326,4 @@ In this article, you learned how to enable Trusted Launch. Learn more about [Tru
 [node-images]: ./node-images.md
 [quick-ARM-deploy]: /azure/aks/learn/quick-kubernetes-deploy-rm-template
 [flatcar]: ./flatcar-container-linux-for-aks.md
+[os-guard]: ./azure/azure-linux/intro-azure-linux-os-guard.md
