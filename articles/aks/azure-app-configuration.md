@@ -110,6 +110,9 @@ az deployment group create \
 
 ---
 
+> [!IMPORTANT]
+> The Azure App Configuration AKS extension is installed into the `azappconfig-system` namespace by default. If you have Azure Policy assignments that validate or mutate pod specifications (for example, the built-in policy "Kubernetes clusters should disable automounting API credentials" which enforces `automountServiceAccountToken: false`), exclude the `azappconfig-system` namespace from those policies by adding it to the policy's namespace exclusion list so the extension can function correctly. Not excluding it may cause the extension pods to fail validation or appear non-compliant.
+
 ### Configure automatic updates
 
 If you create Azure App Configuration extension without specifying a version, `--auto-upgrade-minor-version` *is automatically enabled*, configuring the Azure App Configuration extension to automatically update its minor version on new releases.
