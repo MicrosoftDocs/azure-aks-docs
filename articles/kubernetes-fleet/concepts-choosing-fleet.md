@@ -35,9 +35,6 @@ Without a hub cluster, Fleet Manager acts solely as a grouping entity in Azure R
 
 For more information, see [Create a Kubernetes Fleet resource without a hub cluster][create-fleet-without-hub].
 
-> [!NOTE]
-> If you intend on joining Arc-enabled Kubernetes clusters as members, you should [create a Fleet Manager **with hub cluster**](#fleet-manager-with-hub-cluster). Learn why by reading about Fleet Manager's supported **[member cluster types](./concepts-member-cluster-types.md)**.
-
 ## Fleet Manager with hub cluster
 
 A Fleet Manager with a hub cluster has an associated AKS-managed cluster, which hosts the open source [KubeFleet][fleet-github] solution for workload placement and the [fleet network manager][fleet-networking-github] for network management and load balancing.

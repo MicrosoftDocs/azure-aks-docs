@@ -40,7 +40,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure portal to cre
   * Microsoft.KubernetesConfiguration/extensions/write,
   * Microsoft.KubernetesConfiguration/extensions/delete,
 
-* Clusters you desire to join as members to Fleet must use supported versions of their respective platforms: see [AKS cluster version support policy](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy) and [Azure Arc-enabled Kubernetes validation](/azure/azure-arc/kubernetes/validation-program).
+* Clusters you wish to join as members to Fleet must use supported versions of their respective platforms: see [AKS cluster version support policy](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy) and [Azure Arc-enabled Kubernetes validation](/azure/azure-arc/kubernetes/validation-program).
 
 ## Create a Fleet Manager resource
 

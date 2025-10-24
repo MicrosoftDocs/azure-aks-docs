@@ -20,7 +20,6 @@ Azure Kubernetes Fleet Manager supports two types of member clusters:
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-beta.md)]
 
-
 The following table outlines which Azure Kubernetes Fleet Manager capabilities are supported for each member cluster type.
 
 | Capability | AKS cluster | Arc-enabled Kubernetes cluster |
@@ -28,8 +27,8 @@ The following table outlines which Azure Kubernetes Fleet Manager capabilities a
 | Kubernetes and node image updates |✅ GA | ❌ Unsupported|
 | Workload placement |✅ GA| ✅ Preview|
 | DNS load balancing | ✅ GA| ❌ Unsupported|
-| Managed Namespaces | ✅ Preview  | ❌ Unsupported  |
-
+| Managed Namespaces | ✅ Preview  | ✅ Preview  |
+| Managed Namespace RBAC | ✅ Preview  | ❌ Unsupported  |
 
 ## Arc-enabled Kubernetes Clusters important considerations
 

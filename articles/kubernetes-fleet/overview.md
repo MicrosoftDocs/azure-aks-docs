@@ -33,7 +33,7 @@ Fleet Manager supports the following scenarios:
 
 * Stage Kubernetes resources from Git repositories to Fleet Manager's hub cluster using [Automated Deployments](./concepts-automated-deployments.md) (preview).
 
-* Load balance incoming traffic across service endpoints on multiple **AKS** clusters using [DNS-based load balancing](./concepts-dns-load-balancing.md) (preview).
+* Load balance incoming traffic across service endpoints on multiple AKS clusters using [DNS-based load balancing](./concepts-dns-load-balancing.md) (preview).
 
 ## Next steps
 

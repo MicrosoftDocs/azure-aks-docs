@@ -22,32 +22,25 @@ If you are unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure
 
 ## What does the integration solve?
 
-The integration between Azure Kubernetes Fleet Manager and Azure Arc-enabled Kubernetes clusters extends centralized multi-cluster workload management beyond Azure-native AKS clusters, including many of the most popular Kubernetes distributions running anywhere:
+The integration between Azure Kubernetes Fleet Manager and Azure Arc-enabled Kubernetes clusters extends centralized multi-cluster resource management beyond Azure-native AKS clusters, including many of the most popular Kubernetes distributions running anywhere:
 
 - **Supported distributions**: AKS (Azure Kubernetes Service), K3s (Lightweight Kubernetes), OCP (Red Hat OpenShift), EKS (Amazon Elastic Kubernetes Service), GKE (Google Kubernetes Engine), and Rancher (RKE).
 
 ## Key benefits and capabilities
 
-Azure Kubernetes Fleet Manager integration with Arc-enabled Kubernetes clusters enables unified, intelligent, policy-driven multi-cluster workload management across hybrid and multi-cloud environments.
+Azure Kubernetes Fleet Manager integration with Arc-enabled Kubernetes clusters enables unified, intelligent, policy-driven multi-cluster resource management across hybrid and multi-cloud environments.
 
-### Intelligent, cross-environment workload placement
+### Centralized policy-driven fleet governance
 
-Place workloads optimally across AKS and any Arc-enabled Kubernetes cluster using rich cluster properties and labels:
+Azure Kubernetes Fleet Manager utilizes a hub-spoke architecture that creates a single control plane for the fleet. It allows fleet administrators to apply uniform cloud native policies on every member cluster, whether they reside in public clouds, private data centers, or edge locations. This greatly simplifies governance across large, geographically distributed fleets spanning hybrid and multi-cloud environments.
 
-- **Hybrid & multi-cloud policies**: Target clusters by location, environment (dev/test/prod), cost profile, hardware class, or custom labels.
-- **Edge-to-cloud optimization**: Balance latency-sensitive edge workloads with cloud-based scale-out services.
-- **Cost & efficiency**: Incorporate per-CPU / per-memory cost signals and current resource availability (CPU, memory, storage) to improve utilization.
-- **Geographic & compliance alignment**: Honor data residency, sovereignty, and regional placement requirements using location metadata.
-- **Custom dimensions**: Define and leverage organization-specific labels or attributes (for example, energy profile, security tier, GPU class) in placement rules.
+### Progressive Rollouts with Safeguards
 
-### Consistent resource propagation
+Azure Kubernetes Fleet Manager provides a cloud native progressive rollout plans sequence updates across the entire fleet with health verification at each step. The application owner can stop a rollout or rollback to any previous versions when they observe failures, limiting blast radius. This keeps multi-cluster application deployments reliable and predictable spanning edge, on-premises, and cloud environments.
 
-Distribute and update Kubernetes resources safely and predictably across your heterogeneous fleet:
+### Powerful Multi-Cluster Scheduling
 
-- **ClusterResourcePlacement**: Declaratively select destination clusters using selectors and placement policies.
-- **Envelope objects**: Propagate manifests without mutating or polluting the hub cluster state.
-- **Progressive rollouts**: Roll out changes in stages (for example, canary then broad) to reduce blast radius.
-
+Azure Kubernetes Fleet Manager scheduler evaluates member cluster properties, available capacity, and declarative placement policies to select optimal destinations for workloads. It supports cluster affinity and anti-affinity rules, topology spread constraints to distribute workloads across failure domains, and resource-based placement to ensure sufficient compute, memory, and storage. The scheduler continuously reconciles as fleet conditions change, automatically adapting to cluster additions, removals, or capacity shifts across edge, on-premises, and cloud environments. For more details on the various scheduling capabilities, please see the multi-cluster workload management section.
 
 ## Supported capabilities, prerequisites and considerations
 

@@ -157,8 +157,6 @@ Your output should look similar to the following example output:
 }
 ```
 
-
-
 ### [Fleet Manager with hub cluster](#tab/with-hub-cluster)
 
 If you want to use Fleet Manager for intelligent Kubernetes object placement and multi-cluster load balancing as well as Kubernetes and node image update orchestration, then you must create the Fleet Manager with the hub cluster enabled by specifying the `--enable-hub` parameter with the [`az fleet create`][az-fleet-create] command.
