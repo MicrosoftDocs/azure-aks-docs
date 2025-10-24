@@ -18,7 +18,7 @@ ms.author: schaffererin
 > *[Confidential VMs on AKS][use-confidential-vms] offers a similar hardware based TEE that leverages AMD SEV-SNP security features, without the addition of per-VM isolation for workloads seen in Confidential Containers.
 > *[Application enclave support][intel-sgx-confidential-nodes] provides users with Intel SGX confidential computing VM nodes that support hardware based, process level container isolation through the Intel SGX trusted execution environment.
 > *[Confidential Containers on Azure Container Instances][aci-confidential-containers] allows for lift-and-shift deployments on containers backed by AMD SEV-SNP. Functionality includes performing full guest attestation, access toolings to generate policies, utilize sidecar containers for secure key releases. ACI nodes can be ran on AKS via [virtual nodes][aci-virtual-nodes].
-> 
+> If you have additional questions, please create a [support request](https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest) or post an issue in [AKS issues][aks-issues].
 
 Confidential Containers provide a set of features and capabilities to further secure your standard container workloads to achieve higher data security, data privacy and runtime code integrity goals. Azure Kubernetes Service (AKS) includes Confidential Containers (preview) on AKS.
 
