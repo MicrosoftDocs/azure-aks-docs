@@ -73,21 +73,27 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Performance with eBPF Host Routing starting with Kubernetes version 1.33.
 
+> [!WARNING]
+> Only nodes with Ubuntu 24.04, or Azure Linux 3.0 are compatible. If using Ubuntu 24.04, refer to the [preview documentation](./upgrade-os-version.md#migrate-to-ubuntu-2404-preview) for enabling the feature flag.
 
 ```azurecli-interactive
 
 # Set environment variables for the AKS cluster name and resource group. Make sure to replace the placeholders with your own values.
 export CLUSTER_NAME="<aks-cluster-name>"
 export RESOURCE_GROUP="<resourcegroup-name>"
+export LOCATION="<location>"
  
 # Create an AKS cluster
 az aks create \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
-    --location eastus \
+    --location $LOCATION \
     --network-plugin azure \
     --network-plugin-mode overlay \
     --network-dataplane cilium \
+    --kubernetes-version 1.33 \
+    // Use either AzureLinux or Ubuntu2404
+    --os-sku AzureLinux \
     --enable-acns \
     --acns-datapath-acceleration-mode BpfVeth \
     --generate-ssh-keys
