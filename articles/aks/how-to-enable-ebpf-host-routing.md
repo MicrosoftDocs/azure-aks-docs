@@ -76,7 +76,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > [!WARNING]
 > Only nodes with Ubuntu 24.04, or Azure Linux 3.0 are compatible. If using Ubuntu 24.04, refer to the [preview documentation](./upgrade-os-version.md#migrate-to-ubuntu-2404-preview) for enabling the feature flag.
 
-Create an Azure resource group for the cluster using the [`az group create`](/cli/azure/feature#az_group_create) command.
+Create an Azure resource group for the cluster using the [`az group create`](/cli/azure/group#az-group-create) command.
 
 ```azurecli-interactive
 export LOCATION="<location>"
