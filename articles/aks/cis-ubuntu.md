@@ -393,5 +393,5 @@ For more information about AKS security, see the following articles:
 [linux-security-baseline]: /azure/governance/policy/samples/guest-configuration-baseline-linux
 [security-concepts-aks-apps-clusters]: concepts-security.md
 [chrony]: /azure/virtual-machines/linux/time-sync#chrony
-[azure-monitor-agent] /azure/azure-monitor/agents/azure-monitor-agent-troubleshoot-linux-vm-rsyslog
+[azure-monitor-agent]: /azure/azure-monitor/agents/azure-monitor-agent-troubleshoot-linux-vm-rsyslog
 [auto-upgrade-node]: auto-upgrade-node-os-image.md
