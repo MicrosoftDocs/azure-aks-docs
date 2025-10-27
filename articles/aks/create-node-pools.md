@@ -844,7 +844,7 @@ In this article, you learned how to create node pools in an AKS cluster using th
   - [Enabled Federal Information Processing Standards (FIPS) on an AKS node pool](./enable-fips-nodes.md)
   - [Add a node pool with a Confidential Virtual Machine (CVM) on an AKS cluster](./use-cvm.md)
   - [Create node pools with unique subnets in AKS](./node-pool-unique-subnet.md)
-  - [Add a generation 2 VM node pool to an AKS cluster](./aks-virtual-machine-sizes.md#create-a-node-pool-with-a-gen-2-vm)
+  - [Add a generation 2 VM node pool to an AKS cluster](./generation-2-vms.md)
   - [Add a node pool with Artifact Streaming to an AKS cluster](./artifact-streaming.md)
   - [Add Windows Server node pools with `containerd` to an AKS cluster](./windows-containerd.md)
 

@@ -154,6 +154,8 @@
                   href: istio-deploy-addon.md
                 - name: Native sidecar mode
                   href: istio-native-sidecar.md
+                - name: Istio CNI (Preview)
+                  href: istio-cni.md
                 - name: Mesh configuration
                   href: istio-meshconfig.md
                 - name: Upgrades
@@ -251,7 +253,7 @@
         - name: Reduce image pull time with Artifact Streaming on AKS
           href: artifact-streaming.md
         - name: Use generation 2 VMs
-          href: generation-2-vm.md
+          href: generation-2-vms.md
         - name: Add an Azure Spot node pool
           href: spot-node-pool.md
         - name: Add a node pool with a unique subnet
@@ -557,8 +559,14 @@
             href: dns-concepts.md
           - name: Use a static IP address and DNS label
             href: static-ip.md
-          - name: Customize CoreDNS
-            href: coredns-custom.md
+          - name: CoreDNS
+            items:
+              - name: Customize CoreDNS
+                href: coredns-custom.md
+              - name: Configure autoscaling for CoreDNS
+                href: coredns-autoscale.md
+              - name: Troubleshoot CoreDNS
+                href: coredns-troubleshoot.md
           - name: Configure LocalDNS
             href: localdns-custom.md
       - name: Load balancing

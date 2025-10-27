@@ -18,6 +18,8 @@ ms.custom:
 > [!IMPORTANT] 
 > On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on **Windows** nodes in AKS.
 > 
+> This change applies only to customers who have already onboarded to NPM. **Subscriptions that were not previously registered with this feature will no longer be able to onboard**. Existing onboarded customers can continue using NPM until the end-of-support date.
+>
 >  To ensure your setup continues to receive support, security updates, and deployment compatibility, please explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
 
 > [!IMPORTANT] 
@@ -138,6 +140,8 @@ az aks create \
 
 > [!IMPORTANT] 
 > On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on Windows nodes in AKS.
+>
+> This change applies only to customers who have already onboarded to NPM. **Subscriptions that were not previously registered with this feature will no longer be able to onboard.** Existing onboarded customers can continue using NPM until the end-of-support date.
 > 
 >  To ensure your setup continues to receive support, security updates, and deployment compatibility, please explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
 

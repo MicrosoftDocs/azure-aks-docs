@@ -3,8 +3,8 @@ title: Create a managed or user-assigned NAT gateway for your Azure Kubernetes S
 description: Learn how to create an AKS cluster with managed NAT integration and user-assigned NAT gateway.
 ms.topic: how-to
 ms.date: 06/03/2024
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.custom: devx-track-azurecli
 ---
 

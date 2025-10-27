@@ -352,7 +352,7 @@ The following sections describe how to turn on KMS for a private key vault on a 
 
 ### Rotate existing keys in a private key vault
 
-After you change the key ID (including changing either the key name or the key version), you can rotate the existing keys in the public key vault.
+After you change the key ID (including changing either the key name or the key version), you can rotate the existing keys in the private key vault.
 
 > [!WARNING]
 > Remember to update all secrets after key rotation. If you don't update all secrets, the secrets are inaccessible if the keys that were created earlier don't exist or no longer work.

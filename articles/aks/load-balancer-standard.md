@@ -6,8 +6,8 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 01/23/2024
-ms.author: allensu
-author: asudbring
+ms.author: davidsmatlak
+author: davidsmatlak
 
 # Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an Azure Load Balancer with a Standard SKU.
 

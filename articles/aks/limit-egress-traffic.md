@@ -4,9 +4,9 @@ description: Learn how to control egress traffic with Azure Firewall to set rest
 ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
-ms.author: allensu
+ms.author: davidsmatlak
 ms.date: 12/05/2023
-author: asudbring
+author: davidsmatlak
 
 # Customer intent: As a cluster operator, I want to restrict egress traffic for nodes to only access defined ports and addresses and improve cluster security.
 
