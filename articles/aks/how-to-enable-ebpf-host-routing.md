@@ -10,7 +10,7 @@ ms.date: 09/23/2025
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Enable eBPF Host Routing with Advanced Container Networking Services (public preview)
+# Enable eBPF Host Routing with Advanced Container Networking Services (Preview)
 
 > [!IMPORTANT]
 > eBPF Host Routing with Advanced Container Networking Services is currently in PREVIEW.  
@@ -76,12 +76,22 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > [!WARNING]
 > Only nodes with Ubuntu 24.04, or Azure Linux 3.0 are compatible. If using Ubuntu 24.04, refer to the [preview documentation](./upgrade-os-version.md#migrate-to-ubuntu-2404-preview) for enabling the feature flag.
 
-```azurecli-interactive
+Create an Azure resource group for the cluster using the [`az group create`](/cli/azure/group#az-group-create) command.
 
+```azurecli-interactive
+export LOCATION="<location>"
+
+az group create --location $LOCATION --name <resourcegroup-name>
+```
+
+Create a new AKS cluster with eBPF Host Routing enabled.
+
+```azurecli-interactive
 # Set environment variables for the AKS cluster name and resource group. Make sure to replace the placeholders with your own values.
 export CLUSTER_NAME="<aks-cluster-name>"
 export RESOURCE_GROUP="<resourcegroup-name>"
 export LOCATION="<location>"
+export OS_SKU="<os-sku>" # Use AzureLinux or Ubuntu2404
  
 # Create an AKS cluster
 az aks create \
@@ -92,8 +102,7 @@ az aks create \
     --network-plugin-mode overlay \
     --network-dataplane cilium \
     --kubernetes-version 1.33 \
-    // Use either AzureLinux or Ubuntu2404
-    --os-sku AzureLinux \
+    --os-sku $OS_SKU \
     --enable-acns \
     --acns-datapath-acceleration-mode BpfVeth \
     --generate-ssh-keys
