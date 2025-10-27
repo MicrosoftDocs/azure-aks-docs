@@ -1,5 +1,5 @@
 ---
-title: "Use Fleet Manager Managed Namespaces to Control User Access and Resource Quotas across Multiple Clusters"
+title: "Use Kubernetes Fleet Manager Managed Namespaces to Control User Access and Resource Quotas across Multiple Clusters"
 description: This article provides a conceptual overview of multi-cluster managed namespaces using Azure Kubernetes Fleet Manager.
 ms.date: 09/16/2025
 author: audrastump
@@ -23,8 +23,8 @@ With multi-cluster managed namespaces on targeted member clusters, platform admi
 If the platform administrator specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object, with a [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type) placement policy, to propagate the namespace to the selected member clusters. 
 
 Administrators can also control two key behaviors: 
-1. Adoption Policy: How conflicts are resolved when a managed namespace is placed on a member cluster that already has an unmanaged namespace with the same name
-2. Delete Policy: Whether Kubernetes resources are deleted upon managed namespace deletion
+* Adoption Policy: How conflicts are resolved when a managed namespace is placed on a member cluster that already has an unmanaged namespace with the same name
+* Delete Policy: Whether Kubernetes resources are deleted upon managed namespace deletion
 
 ## Resource quotas
 
@@ -53,7 +53,7 @@ Network policies are applied to each cluster individually and don't control cros
 
 Platform administrators can apply both Kubernetes [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) and annotations to the managed namespace. By default, each managed namespace has a built-in label indicating it's managed by ARM.
 
-## Adoption Policy
+## Adoption policy
 
 When a managed namespace is created, the adoption policy determines how existing unmanaged namespaces are handled if they already exist on the target cluster. Similar to a [single cluster namespace](../aks/concepts-managed-namespaces.md#adoption-policy), the following options are available:
 

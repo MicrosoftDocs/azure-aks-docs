@@ -1,5 +1,5 @@
 ---
-title: View a Multi-cluster Managed Namespace and its Associated Member Clusters
+title: View a Multi-cluster Managed Namespace and its Associated Member Clusters using a Kubernetes Fleet Manager
 description: Learn how to find managed namespaces you have access to, view their deployment locations, and monitor resource quota usage across multiple clusters.
 author: audrastump
 ms.author: stumpaudra

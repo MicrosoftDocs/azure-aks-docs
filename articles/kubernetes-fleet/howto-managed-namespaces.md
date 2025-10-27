@@ -1,5 +1,5 @@
 ---
-title: Use Fleet Manager Managed Namespaces for Multi-Tenancy across Multiple Clusters.
+title: Use Kubernetes Fleet Manager Managed Namespaces for Multi-Tenancy across Multiple Clusters
 description: Learn how to use multi-cluster managed namespaces to define resource quotas and network policies, and how to delegate user access for namespaces on multiple clusters.
 author: audrastump
 ms.author: stumpaudra
@@ -80,6 +80,9 @@ This article shows you how to use Fleet Manager Managed Namespaces to define res
             --delete-policy keep \
             --adoption-policy never
     ```
+
+> [!IMPORTANT]
+> When a multi-cluster managed namespace adopts a single cluster managed namespace or vice versa, it may lead to conflicting ownership. If you do so, use a delete policy of `keep` to avoid deleting Kubernetes resources that are still being actively managed by either Fleet or an AKS cluster.
 
 ## Delegate access to a user
 
