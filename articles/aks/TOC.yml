@@ -784,6 +784,12 @@
           href: developer-best-practices-pod-security.md
         - name: Resource management best practices
           href: developer-best-practices-resource-management.md
+        - name: Identity bindings
+          items:
+            - name: Identity bindings overview
+              href: identity-bindings-concepts.md
+            - name: Set up identity bindings
+              href: identity-bindings-how-to.md
         - name: Secrets Store CSI Driver
           items:
             - name: Configure TLS for NGINX Ingress controller
