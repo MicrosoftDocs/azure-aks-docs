@@ -100,12 +100,15 @@ To use the default Ubuntu operating system (OS) SKU, you create the node pool wi
     kubectl get pods -n default
     ```
 
-    Your output should look similar to the following:
+    Your output should include the following pods:
 
     ```output
     NAME                         READY   STATUS    RESTARTS   AGE
+    ...
+    ...
     nvidia-device-plugin-0001    1/1     Running   0          2m
     nvidia-dcgm-exporter-0001    1/1     Running   0          2m
+    ...
     ```
 
 ### [Azure Linux node pool](#tab/add-azure-linux-gpu-node-pool)
