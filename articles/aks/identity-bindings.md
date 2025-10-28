@@ -90,7 +90,7 @@ Example output (other fields omitted):
 
 AKS automatically creates a federated identity credential (FIC) named `aks-identity-binding` under the managed identity. This credential is managed by AKS—don't modify or delete it while identity bindings are in use.
 
-:::image type="content" source="media/identity-bindings/identity-bindings-fic.png" lightbox="media/identity-bindings/identity-bindings-fic.png" alt-text="Screenshot showing the federated identity credential created by identity bindings in the Azure portal." :::
+:::image type="content" source="media/identity-bindings/identity-bindings-federated-identity-credentials.png" lightbox="media/identity-bindings/identity-bindings-federated-identity-credentials.png" alt-text="Screenshot showing the federated identity credential created by identity bindings in the Azure portal." :::
 
 > [!NOTE]
 > The FIC created for identity bindings is shared across all identity bindings referencing the same UAMI.
