@@ -343,7 +343,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 6.1.3.4 | Ensure rsyslog log file creation mode is configured | Pass || 
 | 6.1.3.5 | Ensure rsyslog logging is configured | Pass || 
 | 6.1.3.6 | Ensure rsyslog is configured to send logs to a remote log host |Not applicable| [Azure Monitor Agent for Linux is configured][azure-monitor-agent] |
-| 6.1.3.7 | Ensure rsyslog is not configured to receive logs from a remote client | Pass || 
+| 6.1.3.7 | Ensure rsyslog isn't configured to receive logs from a remote client | Pass || 
 | 6.1.3.8 | Ensure logrotate is configured | Pass || 
 | 6.1.4 | **Configure Logfiles** |||
 | 6.1.4.1 | Ensure access to all logfiles has been configured | Pass || 
