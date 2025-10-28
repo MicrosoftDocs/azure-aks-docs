@@ -14,7 +14,7 @@ ms.author: allyford
 > [!IMPORTANT]
 > This article applies only to the Ubuntu 24.04 image used by AKS. The recommendation statuses and guidance reflect the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][cis-benchmark-ubuntu] and a point-in-time Ubuntu 24.04 image (released Sept 18, 2025). They might not apply to other Ubuntu releases (for example Ubuntu 22.04). Verify the OS version and benchmark version before applying guidance.
 
-This article covers the security OS configuration applied to Ubuntu image used by AKS. As a secure service, AKS complies with SOC, ISO, PCI DSS, and HIPAA standards. For more information about the AKS security, see [Security concepts for clusters in Azure Kubernetes Service (AKS)][security-concepts-aks]. To learn more about the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
+This article covers the security OS configuration applied to Ubuntu image used by AKS. As a secure service, AKS complies with SOC, ISO, PCI DSS, and HIPAA standards. For more information about the AKS security, see [Security concepts for clusters in Azure Kubernetes Service (AKS)][security-concepts-aks-apps-clusters]. To learn more about the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
 
 ## Recommendations
 
