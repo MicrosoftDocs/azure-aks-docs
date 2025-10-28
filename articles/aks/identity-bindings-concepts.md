@@ -71,7 +71,7 @@ Previously, workload identity required egress to `login.microsoftonline.com` so 
 Proceed to [Set up identity bindings][identity-bindings-how-to] for a step-by-step guide.
 
 <!-- INTERNAL LINKS -->
-[identity-bindings-how-to]: identity-bindings-how-to.md
+[identity-bindings-how-to]: identity-bindings.md
 [workload-identity-overview]: workload-identity-overview.md
 
 <!-- EXTERNAL LINKS -->

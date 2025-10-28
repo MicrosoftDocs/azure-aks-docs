@@ -329,7 +329,7 @@ The following table summarizes our migration or deployment recommendations for w
 [deploy-configure-workload-identity-cluster]: workload-identity-deploy-cluster.md
 [general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
 [identity-bindings-concepts]: identity-bindings-concepts.md
-[identity-bindings-how-to]: identity-bindings-how-to.md
+[identity-bindings-how-to]: identity-bindings.md
 [install-azure-cli]: /cli/azure/install-azure-cli
 [microsoft-authentication-library]: /azure/active-directory/develop/msal-overview
 [openid-connect-overview]: /azure/active-directory/develop/v2-protocols-oidc

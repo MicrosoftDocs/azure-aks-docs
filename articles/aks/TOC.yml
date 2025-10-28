@@ -789,7 +789,7 @@
             - name: Identity bindings overview
               href: identity-bindings-concepts.md
             - name: Set up identity bindings
-              href: identity-bindings-how-to.md
+              href: identity-bindings.md
         - name: Secrets Store CSI Driver
           items:
             - name: Configure TLS for NGINX Ingress controller
