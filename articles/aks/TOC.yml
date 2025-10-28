@@ -940,7 +940,7 @@
       items:
         - name: Use NVIDIA GPUs
           href: use-nvidia-gpu.md
-        - name: AKS-managed GPU nodes (preview)
+        - name: Use managed GPU nodes
           href: aks-managed-gpu-nodes.md
         - name: Use Windows GPUs
           href: use-windows-gpu.md
