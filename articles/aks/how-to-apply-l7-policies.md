@@ -11,7 +11,7 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 # Customer intent: As a Kubernetes administrator, I want to configure Layer 7 policies using Advanced Container Networking Services for my AKS cluster, so that I can enhance security and traffic management for my containerized applications.
 ---
 
-# Set up Layer 7(L7) policies with Advanced Container Networking Services (Preview)
+# Set up Layer 7(L7) policies with Advanced Container Networking Services
 
 This article demonstrates how to set up L7 policies with Advanced Container Networking Services in AKS clusters. Continue only after you have reviewed the limitations and considerations listed on the [Layer 7 Policy Overview](./container-network-security-l7-policy-concepts.md) page.
 
@@ -21,35 +21,6 @@ This article demonstrates how to set up L7 policies with Advanced Container Netw
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
  The minimum version of Azure CLI required for the steps in this article is 2.71.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-
-
-### Install the `aks-preview` Azure CLI extension
-
-Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
-
- The minimum version of the aks-preview Azure CLI extension is `14.0.0b6`
-
-```azurecli-interactive
-# Install the aks-preview extension
-az extension add --name aks-preview
-# Update the extension to make sure you have the latest version installed
-az extension update --name aks-preview
-```
-
-### Register the `AdvancedNetworkingL7PolicyPreview` feature flag
-
-Register the `AdvancedNetworkingL7PolicyPreview` feature flag using the [`az feature register`](/cli/azure/feature#az_feature_register) command.
-
-```azurecli-interactive 
-az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingL7PolicyPreview"
-```
-Verify successful registration using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for the registration to complete.
-
-```azurecli-interactive
-az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingL7PolicyPreview"
-```
-
-Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
 
 ### Enable Advanced Container Networking Services
 

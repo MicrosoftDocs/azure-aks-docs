@@ -10,7 +10,7 @@ ms.date:  03/14/2024
 # Customer intent: As a Kubernetes administrator, I want to implement Layer 7 policies in my cluster, so that I can enhance application security and traffic management by controlling communication at a granular level based on application-specific attributes.
 ---
 
-# Overview of Layer 7 (L7) policy (Preview) 
+# Overview of Layer 7 (L7) policy
 
 Network policies are essential for securing Kubernetes clusters by defining and controlling pod communication. They mitigate unauthorized access and potential security breaches by regulating traffic flow. Advanced Container Networking Services strengthens security with [FQDN-based network policies](./container-network-security-fqdn-filtering-concepts.md). Expanding on this foundation, Advanced Container Networking Services now provides L7 policy support, enabling detailed inspection and management of application-level traffic. This advancement enhances both the security and efficiency of network communications within AKS clusters. The offering includes comprehensive support for widely adopted protocols, including HTTP, gRPC, and Kafka.
 
