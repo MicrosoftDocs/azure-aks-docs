@@ -1,5 +1,5 @@
 ---
-title: Create an Azure Kubernetes Service (AKS) cluster with node auto-provisioning (NAP) in a custom virtual network
+title: Create an Azure Kubernetes Service (AKS) Cluster with Node Auto-Provisioning (NAP) in a Custom Virtual Network
 description: Learn how to create an AKS cluster with node auto-provisioning in a custom virtual network.
 ms.topic: how-to
 ms.custom: devx-track-azurecli

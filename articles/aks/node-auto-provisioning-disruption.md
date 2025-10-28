@@ -1,19 +1,7 @@
-
-## Node auto provisioning Metrics
-You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to see the logs and operations from [node auto provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview)
-
-## Monitoring selection events
-
-Node auto provisioning produces cluster events that can be used to monitor deployment and scheduling decisions being made. You can view events through the Kubernetes events stream.
-
-```
-kubectl get events -A --field-selector source=karpenter -w
-```
-
 ---
 title: Configure Disruption Policies for Node Auto-Provisioning (NAP) Nodes in Azure Kubernetes Service (AKS)
 description: Learn how to configure node disruption policies for node auto-provisioning (NAP) nodes in Azure Kubernetes Service (AKS) to optimize resource utilization.
-ms.topic: how-to
+ms.topic: overview
 ms.custom: devx-track-azurecli
 ms.date: 07/25/2025
 ms.author: bsoghigian
@@ -26,95 +14,35 @@ ms.service: azure-kubernetes-service
 
 This article explains how to configure node disruption policies for Azure Kubernetes Service (AKS) node auto-provisioning (NAP) nodes and details how disruption works to optimize resource utilization and cost efficiency.
 
-### Disruption Controls
+NAP optimizes your cluster by:
 
-Node Disruption, including Consolidation or Drift, can be controlled using different methods.
+- Removing or replacing underutilized nodes.
+- Consolidating workloads to reduce costs.
+- Respecting disruption budgets and maintenance windows.
+- Providing manual control when needed.
 
-### Consolidation
-When workloads on your nodes scale down, node autoprovisioning uses disruption rules. These rules decide when and how to remove nodes and reschedule workloads for better efficiency. Node auto provisioning primarily uses *consolidation* to delete or replace nodes for optimal pod placement. The state-based consideration uses `ConsolidationPolicy` such as `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
+## Before you begin
 
-You can remove a node manually using `kubectl delete node`, but node autoprovisioning can also control when it should optimize your nodes based on your specifications.
+- Read the [Overview of node auto-provisioning (NAP) in AKS](./node-auto-provisioning.md) article, which details [how NAP works](./node-auto-provisioning.md#how-does-node-auto-provisioning-work).
+- Read the [Overview of networking configurations for node auto-provisioning (NAP) in Azure Kubernetes Service (AKS)](./node-auto-provisioning-networking.md).
 
-```yaml
-  disruption:
-    # Describes which types of Nodes node autoprovisioning should consider for consolidation
-    consolidationPolicy: WhenEmptyorUnderutilized
-    # 'WhenEmptyorUnderutilized', node autoprovisioning will consider all nodes for consolidation and attempt to remove or replace Nodes when it discovers that the Node is empty or underutilized and could be changed to reduce cost
+## How does node disruption work for NAP nodes?
 
-    #  `WhenEmpty`, node autoprovisioning will only consider nodes for consolidation that contain no workload pods
-    
-    # The amount of time node autoprovisioning should wait after discovering a consolidation decision
-    # This value can currently only be set when the consolidationPolicy is 'WhenEmpty'
-    # You can choose to disable consolidation entirely by setting the string value 'Never'
-    consolidateAfter: 30s
-```
+Karpenter sets a Kubernetes [finalizer](https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers/) on each node and node claim it provisions. The finalizer blocks the deletion of the node object, while the Termination Controller taints and drains the node before removing the underlying node claim.
 
-### Disruption Controls
+When the workloads on your nodes scale down, NAP uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads for efficiency.
 
-Node autoprovisioning optimizes your cluster by:
+## Node disruption methods
 
-- Removing or replacing underutilized nodes
-- Consolidating workloads to reduce costs
-- Respecting disruption budgets and maintenance windows
-- Providing manual control when needed
+NAP automatically discovers nodes eligible for disruption and spins up replacements when needed. You can trigger disruption through automated methods like _Expiration_, _Consolidation_, and _Drift_, manual methods, or external systems.
 
-For detailed information about node disruption policies, upgrade mechanisms through drift, consolidation, and disruption budgets, see [Node autoprovisioning disruption policies](node-autoprovision-disruption.md).
+## Expiration
 
-# Node auto provisioning disruption policies
+Expiration allows you to set a maximum age for your NAP nodes. Nodes are marked as expired and disrupted after reaching the age you specify for the node pool's `spec.disruption.expireAfter` value.
 
-This article explains how to configure node disruption policies for Azure Kubernetes Service (AKS) node auto provisioning (NAP) to optimize resource utilization and cost efficiency.
+### Example expiration configuration
 
-## Example disruption configuration
-
-Here's a typical disruption configuration for a NodePool that balances cost optimization with stability:
-
-```yaml
-apiVersion: karpenter.sh/v1
-kind: NodePool
-metadata:
-  name: default
-spec:
-  disruption:
-    # Consolidate underutilized nodes to optimize costs
-    consolidationPolicy: WhenEmptyOrUnderutilized
-    
-    # Wait 30 seconds before consolidating
-    consolidateAfter: 30s
-    
-    # Replace nodes every 7 days to get fresh instances
-    expireAfter: 168h
-    
-    # Rate limit disruptions
-    budgets:
-    - nodes: "10%"        # Allow 10% of nodes to be disrupted at once
-    - nodes: "0"          # Block all disruptions during business hours
-      schedule: "0 9 * * 1-5"
-      duration: 8h
-```
-
-## Node disruption overview
-
-When the workloads on your nodes scale down, node auto provisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. Node auto provisioning primarily uses *consolidation* to delete or replace nodes for optimal pod placement.
-
-Node autoprovisioning can automatically control when it should optimize your nodes based on your specifications, or you can manually remove nodes using `kubectl delete node`.
-
-## Control flow
-
-Karpenter sets a Kubernetes [finalizer](https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers/) on each node and node claim it provisions. The finalizer blocks deletion of the node object while the Termination Controller taints and drains the node, before removing the underlying NodeClaim.
-
-### Disruption methods
-
-NAP automatically discovers nodes eligible for disruption and spins up replacements when needed. Disruption can be triggered through:
-
-- **Automated methods**: Expiration, Drift, and Consolidation
-- **Manual methods**: Node deletion via kubectl
-- **External systems**: Delete requests to the node object
-
-## Automated disruption methods
-
-### Expiration
-
-Nodes are marked as expired and disrupted after reaching the age specified in the NodePool's `spec.disruption.expireAfter` value.
+The following example shows how to set the expiration time for NAP nodes to 24 hours:
 
 ```yaml
 spec:
@@ -122,136 +50,63 @@ spec:
     expireAfter: 24h  # Expire nodes after 24 hours
 ```
 
-### Consolidation
+## Consolidation
 
-NAP works to actively reduce cluster cost by identifying when:
-- Nodes can be removed because they're empty
-- Nodes can be removed as their workloads run on other nodes
-- Nodes can be replaced with lower priced variants
+NAP works to actively reduce cluster cost by identifying when nodes can be removed because they're empty or underutilized, or when nodes can be replaced with lower priced variants. This process is called _Consolidation_. NAP primarily uses Consolidation to delete or replace nodes for optimal pod placement.
 
-Consolidation has three mechanisms performed in order:
-1. **Empty Node Consolidation** - Delete entirely empty nodes in parallel
-2. **Multi Node Consolidation** - Delete multiple nodes, possibly launching a single replacement
-3. **Single Node Consolidation** - Delete any single node, possibly launching a replacement
+NAP performs the following types of consolidation in order to optimize resource utilization:
 
-### Drift
+- **Empty node consolidation**: Deletes any empty nodes in parallel.
+- **Multi-node consolidation**: Deletes multiple nodes, possibly launching a single replacement.
+- **Single-node consolidation**: Deletes any single node, possibly launching a replacement.
 
-Drift handles changes to the NodePool/AKSNodeClass. For Drift, values in the NodePool/AKSNodeClass are reflected in the NodeClaimTemplateSpec/AKSNodeClassSpec in the same way that they're set. A NodeClaim is detected as drifted if the values in its owning NodePool/AKSNodeClass don't match the values in the NodeClaim. Similar to the upstream `deployment.spec.template` relationship to pods, Karpenter annotates the owning NodePool and AKSNodeClass with a hash of the NodeClaimTemplateSpec to check for drift. Some special cases are discovered either from Karpenter or through the CloudProvider interface, triggered by NodeClaim/Instance/NodePool/AKSNodeClass changes.
+You can trigger consolidation through the `spec.disruption.consolidationPolicy` field in the node pool specification using the `WhenEmpty`, or `WhenEmptyOrUnderUtilized` settings. You can also set the `consolidateAfter` field, which is a time-based condition that determines how long NAP waits after discovering a consolidation opportunity before disrupting the node.
 
-#### Special cases on drift
+### Example consolidation configuration
 
-In special cases, drift can correspond to multiple values and must be handled differently. Drift on resolved fields can create cases where drift occurs without changes to Custom Resource Definitions (CRDs), or where CRD changes don't result in drift. For example, if a NodeClaim has `node.kubernetes.io/instance-type: Standard_D2s_v3`, and requirements change from `node.kubernetes.io/instance-type In [Standard_D2s_v3]` to `node.kubernetes.io/instance-type In [Standard_D2s_v3, Standard_D4s_v3]`, the NodeClaim isn't drifted because its value is still compatible with the new requirements. Conversely, if a NodeClaim is using a NodeClaim imageFamily, but the `spec.imageFamily` field is changed, Karpenter detects the NodeClaim as drifted and rotates the node to meet that specification
-
-##### NodePool
-| Fields         |
-|----------------|
-| spec.template.spec.requirements   |
-
-##### AKSNodeClass
-
-Some example cases:
-
-| Fields                        |
-|-------------------------------|
-| spec.vnetSubnetID             |
-| spec.imageFamily              |
-
-###### VNet subnet ID drift
-
->[!Important] 
->The `spec.vnetSubnetID` field can trigger drift detection, but modifying this field from one valid subnet to another valid subnet is **NOT a supported operation**. This field is mutable solely to provide an escape hatch for correcting invalid or malformed subnet identifiers during initial configuration.
-
-Unlike traditional AKS NodePools created through ARM templates, Karpenter applies custom resource definitions (CRDs) that provision nodes instantly without the extended validation that ARM provides. **Customers are responsible for understanding their cluster's Classless Inter-Domain Routing (CIDR) ranges and ensuring no conflicts occur when configuring `vnetSubnetID`.**
-
-**Validation Differences**: 
-- **ARM Template NodePools**: Include comprehensive Classless Inter-Domain Routing (CIDR) conflict detection and network validation
-- **Karpenter CRDs**: Apply changes instantly without automatic validation - requires customer due diligence
-
-**Customer Responsibility**: Before modifying `vnetSubnetID`, verify:
-- Custom subnets don't conflict with cluster Pod CIDR, Service CIDR, or Docker Bridge CIDR
-- Sufficient IP address capacity for scaling requirements  
-- Proper network connectivity and routing configuration
-
-**Supported Use Case**: Fixing invalid subnet identifiers (IDs) only
-- Correcting malformed subnet references that prevent node provisioning
-- Updating subnet identifiers that point to nonexistent or inaccessible subnets
-
-**Unsupported Use Case**: Subnet migration between valid subnets
-- Moving nodes between subnets for network reorganization
-- Changing subnet configurations for capacity or performance reasons
-
-**Support Policy**: Microsoft doesn't provide support for issues arising from subnet to subnet migrations via `vnetSubnetID` modifications.
-
-#### Behavioral fields
-
-Behavioral Fields are treated as over-arching settings on the NodePool to dictate how Karpenter behaves. These fields don't correspond to settings on the NodeClaim or instance. Users set these fields to control Karpenter's Provisioning and disruption logic. Since these fields don't map to a desired state of NodeClaims, __behavioral fields are not considered for Drift__.
-
-##### NodePool
-
-| Fields              |
-|---------------------|
-| spec.weight         |
-| spec.limits         |
-| spec.disruption.*   |
-
-Read the [Drift Design](https://github.com/aws/karpenter-core/blob/main/designs/drift.md) for more.
-
-
-Karpenter adds the `Drifted` status condition on NodeClaims if the NodeClaim is drifted from its owning NodePool. Karpenter also removes the `Drifted` status condition if either:
-- The `Drift` feature gate isn't enabled but the NodeClaim is drifted, Karpenter removes the status condition.
-- The NodeClaim isn't drifted, but has the status condition, Karpenter removes it.
-
-## Disruption configuration
-
-Configure disruption through the NodePool's `spec.disruption` section:
+The following example shows how to configure NAP to consolidate nodes when they're empty, and to wait 30 seconds after discovering a consolidation opportunity before disrupting the node:
 
 ```yaml
-spec:
   disruption:
-    # Consolidation policy
-    consolidationPolicy: WhenEmptyOrUnderutilized | WhenEmpty
+    # Describes which types of nodes NAP should consider for consolidation
+    # `WhenEmptyOrUnderUtilized`: NAP considers all nodes for consolidation and attempts to remove or replace nodes when it discovers that the node is empty or underutilized and could be changed to reduce cost
+    # `WhenEmpty`: NAP only considers nodes for consolidation that don't contain any workload pods
     
-    # Time to wait after discovering consolidation opportunity
-    consolidateAfter: 30s
-    
-    # Node expiration time
-    expireAfter: Never
-    
-    # Disruption budgets for rate limiting
-    budgets:
-    - nodes: "20%"
-    - nodes: "5"
-      schedule: "@daily"
-      duration: 10m
-```
-
-## Consolidation policies
-
-### WhenEmptyOrUnderutilized
-
-NAP considers all nodes for consolidation and attempts to remove or replace nodes when they're underutilized or empty
-
-```yaml
-spec:
-  disruption:
-    consolidationPolicy: WhenEmptyOrUnderutilized
-    expireAfter: Never
-```
-
-### WhenEmpty
-
-NAP only considers nodes for consolidation that contain no workload pods:
-
-```yaml
-spec:
-  disruption:
     consolidationPolicy: WhenEmpty
+
+    # The amount of time NAP should wait after discovering a consolidation decision
+    # Currently, you can only set this value when the consolidation policy is `WhenEmpty`
+    # You can choose to disable consolidation entirely by setting the string value `Never`
     consolidateAfter: 30s
 ```
+
+## Drift
+
+Drift handles changes to the `NodePool`/`AKSNodeClass` resources. Values in the `NodeClaimTemplateSpec`/`AKSNodeClassSpec` are reflected in the same way that they're set. A `NodeClaim` is detected as _drifted_ if the values in the associated `NodePool`/`AKSNodeClass` don't match the values in the `NodeClaim`. Similar to the upstream `deployment.spec.template` relationship to pods, Karpenter annotates the associated `NodePool`/`AKSNodeClass` with a hash of the `NodeClaimTemplateSpec` to check for drift. Karpenter removes the `Drifted` status condition in the following scenarios:
+
+- The `Drift` feature gate isn't enabled but the `NodeClaim` is drifted.
+- The `NodeClaim` isn't drifted, but has the status condition.
+
+Karpenter or the cloud provider interface might discover [special cases](#special-cases-on-drift) triggered by `NodeClaim`/`Instance`/`NodePool`/`AKSNodeClass` changes.
+
+### Special cases on drift
+
+In special cases, drift can correspond to multiple values and must be handled differently. Drift on resolved fields can create cases where drift occurs without changes to Custom Resource Definitions (CRDs), or where CRD changes don't result in drift.
+
+For example, if a `NodeClaim` has `node.kubernetes.io/instance-type: Standard_D2s_v3`, and requirements change from `node.kubernetes.io/instance-type In [Standard_D2s_v3]` to `node.kubernetes.io/instance-type In [Standard_D2s_v3, Standard_D4s_v3]`, the `NodeClaim` isn't drifted because its value is still compatible with the new requirements. Conversely, if a `NodeClaim` uses a `NodeClaim` `imageFamily`, but the `spec.imageFamily` field changes, Karpenter detects the `NodeClaim` as _drifted_ and rotates the node to meet that specification.
+
+> [!IMPORTANT]
+> Karpenter monitors subnet configuration changes and detects drift when the `vnetSubnetID` in an `AKSNodeClass` is modified. Understanding this behavior is critical when managing custom networking configurations. For more information, see [Subnet drift behavior](./node-auto-provisioning-networking.md#subnet-drift-behavior).
+
+For more information, see [Drift Design](https://github.com/aws/karpenter-core/blob/main/designs/drift.md).
 
 ## Termination grace period
-Configure how long Karpenter waits for pods to terminate gracefully.
-This setting takes precedence over a pod's terminationGracePeriodSeconds and bypasses PodDisruptionBudgets and the karpenter.sh/do-not-disrupt annotation
+
+You can set a termination grace period for NAP nodes using the `spec.template.spec.terminationGracePeriod` field in the node pool specification. This setting allows you to configure how long Karpenter waits for pods to terminate gracefully. This setting takes precedence over a pod's `terminationGracePeriodSeconds` and bypasses `PodDisruptionBudgets` and the `karpenter.sh/do-not-disrupt` annotation.
+
+### Example termination grace period configuration
+
+The following example shows how to set a termination grace period of 30 seconds for NAP nodes:
 
 ```yaml
 apiVersion: karpenter.sh/v1
@@ -266,19 +121,63 @@ spec:
 
 ## Disruption budgets
 
-You can rate limit Karpenter's disruption through the NodePool's `spec.disruption.budgets`. If undefined, Karpenter defaults to one budget with `nodes: 10%`. Budgets consider nodes that are being deleted for any reason. They only block Karpenter from voluntary disruptions through expiration, drift, emptiness, and consolidation.
+You can rate limit Karpenter's disruption by modifying the `spec.disruption.budgets` field in the node pool specification. If you leave this setting undefined, Karpenter defaults to one budget with `nodes: 10%`. Budgets consider nodes that are being deleted for any reason, and they only block Karpenter from voluntary disruptions through expiration, drift, emptiness, and consolidation.
 
-### Node budgets
+When calculating if a budget blocks nodes from disruption, Karpenter counts the total nodes owned by a node pool and then subtracts nodes that are being deleted and nodes that are `NotReady`. If the budget is configured with a percentage value, such as `20%`, Karpenter calculates the number of allowed disruptions as `allowed_disruptions = roundup(total * percentage) - total_deleting - total_notready`. For multiple budgets in a node pool, Karpenter takes the minimum (most restrictive) value of each of the budgets.
 
-When calculating if a budget blocks nodes from disruption, Karpenter counts the total nodes owned by a NodePool. It then subtracts nodes that are being deleted and nodes that are NotReady.
+### Schedule and duration fields
 
-If the budget is configured with a percentage value, such as `20%`, Karpenter calculates the number of allowed disruptions as `allowed_disruptions = roundup(total * percentage) - total_deleting - total_notready`.
+When using budgets, you can optionally set the `schedule` and `duration` fields to create time-based budgets. These fields allow you to define maintenance windows or specific timeframes when disruption limits are stricter.
 
-For multiple budgets in a NodePool, Karpenter takes the minimum value (most restrictive) of each of the budgets.
+- **Schedule** uses cron job syntax with special macros like `@yearly`, `@monthly`, `@weekly`, `@daily`, `@hourly`.
+- **Duration** allows compound durations like `10h5m`, `30m`, or `160h`. Duration and Schedule must be defined together.
 
-### Budget examples
+#### Schedule and duration examples
 
-The following NodePool with three budgets defines these requirements:
+##### Maintenance window budget
+
+Prevent disruptions during business hours:
+
+```yaml
+budgets:
+- nodes: "0"
+  schedule: "0 9 * * 1-5"  # 9 AM Monday-Friday
+  duration: 8h             # For 8 hours
+```
+
+##### Weekend-only disruptions
+
+Only allow disruptions on weekends:
+
+```yaml
+budgets:
+- nodes: "50%"
+  schedule: "0 0 * * 6"    # Saturday midnight
+  duration: 48h            # All weekend
+- nodes: "0"               # Block all other times
+```
+
+##### Gradual rollout budget
+
+Allow increasing disruption rates:
+
+```yaml
+budgets:
+- nodes: "1"
+  schedule: "0 2 * * *"    # 2 AM daily
+  duration: 2h
+- nodes: "3"
+  schedule: "0 4 * * *"    # 4 AM daily
+  duration: 4h
+```
+
+### Budget configuration examples
+
+The following `NodePool` specification has three budgets configured:
+
+- The first budget allows 20% of nodes owned by the node pool to be disrupted at once.
+- The second budget acts as a ceiling, only allowing five disruptions when there are more than 25 nodes.
+- The last budget blocks disruptions during the first 10 minutes of each day.
 
 ```yaml
 apiVersion: karpenter.sh/v1
@@ -293,63 +192,17 @@ spec:
     - nodes: "20%"      # Allow 20% of nodes to be disrupted
     - nodes: "5"        # Cap at maximum 5 nodes
     - nodes: "0"        # Block all disruptions during maintenance window
-      schedule: "@daily"
-      duration: 10m
-```
-
-- The first budget allows 20% of nodes owned by that NodePool to be disrupted
-- The second budget acts as a ceiling, only allowing five disruptions when there are more than 25 nodes
-- The last budget blocks disruptions during the first 10 minutes of each day
-
-### Schedule and duration
-
-**Schedule** uses cron job syntax with special macros like `@yearly`, `@monthly`, `@weekly`, `@daily`, `@hourly`.
-**Duration** allows compound durations like `10h5m`, `30m`, or `160h`. Duration and Schedule must be defined together.
-
-### Budget configuration examples
-
-#### Maintenance window budget
-
-Prevent disruptions during business hours:
-
-```yaml
-budgets:
-- nodes: "0"
-  schedule: "0 9 * * 1-5"  # 9 AM Monday-Friday
-  duration: 8h             # For 8 hours
-```
-
-#### Weekend-only disruptions
-
-Only allow disruptions on weekends:
-
-```yaml
-budgets:
-- nodes: "50%"
-  schedule: "0 0 * * 6"    # Saturday midnight
-  duration: 48h            # All weekend
-- nodes: "0"               # Block all other times
-```
-
-#### Gradual rollout budget
-
-Allow increasing disruption rates:
-
-```yaml
-budgets:
-- nodes: "1"
-  schedule: "0 2 * * *"    # 2 AM daily
-  duration: 2h
-- nodes: "3"
-  schedule: "0 4 * * *"    # 4 AM daily
-  duration: 4h
+      schedule: "@daily" # Scheduled daily
+      duration: 10m # Duration of 10 minutes
 ```
 
 ## Manual node disruption
 
-### Node deletion
+You can manually disrupt NAP nodes using `kubectl` or by deleting `NodePool` resources.
 
-You can manually remove nodes using kubectl:
+### Remove nodes with kubectl
+
+You can manually remove nodes using the `kubectl delete node` command. You can delete specific nodes, all NAP-managed nodes, or nodes from a specific node pool by using labels, for example:
 
 ```bash
 # Delete a specific node
@@ -362,13 +215,15 @@ kubectl delete nodes -l karpenter.sh/nodepool
 kubectl delete nodes -l karpenter.sh/nodepool=$NODEPOOL_NAME
 ```
 
-### NodePool deletion
+### Delete `NodePool` resources
 
-The NodePool owns NodeClaims through an owner reference. NAP gracefully terminates nodes through cascading deletion when the owning NodePool is deleted.
+The `NodePool` owns `NodeClaims` through an owner reference. NAP gracefully terminates nodes through cascading deletion when you delete the associated `NodePool`.
 
-## Disruption controls
+## Control disruption using annotations
 
-### Pod-level controls
+You can block or disable disruption for specific pods, nodes, or entire node pools using annotations.
+
+### Pod controls
 
 Block NAP from disrupting certain pods by setting the `karpenter.sh/do-not-disrupt: "true"` annotation:
 
@@ -382,12 +237,9 @@ spec:
         karpenter.sh/do-not-disrupt: "true"
 ```
 
-This annotation prevents voluntary disruption for:
-- Consolidation
-- Drift
-- Expiration
+This annotation prevents voluntary disruption for Expiration, Consolidation, and Drift. However, it doesn't prevent disruption from external systems or manual disruption through `kubectl` or `NodePool` deletion.
 
-### Node-level controls
+### Node controls
 
 Block NAP from disrupting specific nodes:
 
@@ -399,9 +251,9 @@ metadata:
     karpenter.sh/do-not-disrupt: "true"
 ```
 
-### NodePool-level controls
+### Node pool controls
 
-Disable disruption for all nodes in a NodePool:
+Disable disruption for all nodes in a `NodePool`:
 
 ```yaml
 apiVersion: karpenter.sh/v1
@@ -417,7 +269,8 @@ spec:
 
 ## Next steps
 
-- [Configure node pools](node-autoprovision-node-pools.md)
-- [Learn about networking configuration](node-autoprovision-networking.md)
-- [Learn about Pod Disruption Budgets](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/)
+For more information on node auto-provisioning in AKS, see the following articles:
 
+- [Configure networking for node auto-provisioning on AKS](./node-auto-provisioning-networking.md)
+- [Configure node pools for node auto-provisioning on AKS](./node-auto-provisioning-node-pools.md)
+- [Create a node auto-provisioning cluster in a custom virtual network in AKS](./node-auto-provisioning-custom-vnet.md)

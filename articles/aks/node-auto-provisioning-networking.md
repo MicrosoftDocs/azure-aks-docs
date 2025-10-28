@@ -43,7 +43,7 @@ This approach allows you to have a mix of node classes, with some using custom s
 
 Karpenter monitors subnet configuration changes and detects drift when the `vnetSubnetID` in an `AKSNodeClass` is modified. Understanding this behavior is critical when managing custom networking configurations.
 
-**Modifying `vnetSubnetID` from one valid subnet to another valid subnet isn't a supported operation**. If you change the `vnetSubnetID` to point to a different valid subnet, Karpenter detects this as subnet drift and prevents node provisioning until the issue is resolved by reverting the `vnetSubnetID` to the original subnet. This behavior ensures that nodes are only provisioned in the intended subnets, maintaining network integrity and security. You can only modify the `vnetSubnetID` in the following scenarios:
+**Modifying `vnetSubnetID` from one valid subnet to another valid subnet isn't a supported operation**. If you change the `vnetSubnetID` to point to a different valid subnet, Karpenter detects this as subnet drift and prevents node provisioning until the issue is resolved by reverting the `vnetSubnetID` to the original subnet. This behavior ensures that nodes are only provisioned in the intended subnets, maintaining network integrity and security. However, there are exceptions to this rule. You can only modify the `vnetSubnetID` in the following scenarios:
 
 - Correcting a malformed subnet ID that prevents node provisioning.
 - Fixing an invalid subnet reference that causes configuration errors.
@@ -221,6 +221,8 @@ The following outlines what is and isn't supported when using BYO CNI with Karpe
 - **Not supported**: CNI-specific networking issues, configuration problems, or troubleshooting when using third-party CNI plugins.
 
 ## Next steps
+
+For more information on node auto-provisioning in AKS, see the following articles:
 
 - [Use node auto-provisioning in a custom virtual network](./node-auto-provisioning-custom-vnet.md)
 - [Configure node pools for node auto-provisioning on AKS](./node-auto-provisioning-node-pools.md)

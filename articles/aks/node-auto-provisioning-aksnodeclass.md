@@ -1,11 +1,13 @@
 ---
-title: Node Autoprovisioning AKSNodeClass Configuration
-description: Learn how to configure Azure-specific settings for Azure Kubernetes Service (AKS) node autoprovisioning using AKSNodeClass.
+title: Configure AKSNodeClass for node auto-provisioning in Azure Kubernetes Service (AKS)
+description: Learn how to configure Azure-specific settings for Azure Kubernetes Service (AKS) node auto-provisioning using AKSNodeClass.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 07/25/2025
 ms.author: bsoghigian
 author: bsoghigian
+ms.service: azure-kubernetes-service
+# Customer intent: As a cluster operator or developer, I want to configure Azure-specific settings for AKS node auto-provisioning using AKSNodeClass resources, so that I can optimize node provisioning for my workloads while leveraging Azure's capabilities.
 ---
 
 # Node autoprovisioning AKSNodeClass configuration

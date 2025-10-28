@@ -257,10 +257,10 @@ kind: NodePool
 metadata:
   name: default
 spec:
-  # Template section that describes how to template out NodeClaim resources that Karpenter will provision
-  # Karpenter will consider this template to be the minimum requirements needed to provision a Node using this NodePool
-  # It will overlay this NodePool with Pods that need to schedule to further constrain the NodeClaims
-  # Karpenter will provision to launch new Nodes for the cluster
+  # Template section that describes how to template out NodeClaim resources that Karpenter provisions
+  # Karpenter considers this template to be the minimum requirements needed to provision a Node using this NodePool
+  # It overlays this NodePool with Pods that need to schedule to further constrain the NodeClaims
+  # Karpenter provisions to launch new Nodes for the cluster
   template:
     metadata:
       # Labels are arbitrary key-values that are applied to all nodes
@@ -379,8 +379,8 @@ spec:
 
 ## Next steps
 
-To learn more about using node auto-provisioning on AKS, see the following articles:
+For more information on node auto-provisioning in AKS, see the following articles:
 
-- [Configure node disruption policies](node-autoprovision-disruption.md)
-- [Learn about networking configuration](node-autoprovision-networking.md)
-- [Configure AKSNodeClass settings](node-autoprovision-aksnodeclass.md)
+- [Configure networking for node auto-provisioning on AKS](./node-auto-provisioning-networking.md)
+- [Configure disruption policies for node auto-provisioning on AKS](./node-auto-provisioning-disruption.md)
+- [Create a node auto-provisioning cluster in a custom virtual network in AKS](./node-auto-provisioning-custom-vnet.md)

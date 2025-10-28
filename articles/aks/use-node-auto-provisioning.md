@@ -25,6 +25,9 @@ Before you begin, review the [Overview of node auto-provisioning (NAP) in AKS](.
 
 The following sections explain how to enable NAP on a new or existing AKS cluster:
 
+> [!NOTE]
+> You can enable [control plane metrics](./monitor-control-plane-metrics.md) to see the logs and operations from [node auto-provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview).
+
 ### Enable NAP on a new cluster
 
 :::zone pivot="azure-cli"
