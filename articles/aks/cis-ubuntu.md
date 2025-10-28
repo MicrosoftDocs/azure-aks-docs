@@ -14,7 +14,7 @@ ms.author: allyford
 > [!IMPORTANT]
 > This article applies only to the Ubuntu 24.04 image used by AKS. The recommendation statuses and guidance reflect the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][cis-benchmark-ubuntu] and a point-in-time Ubuntu 24.04 image (released Sept 18, 2025). They might not apply to other Ubuntu releases (for example Ubuntu 22.04). Verify the OS version and benchmark version before applying guidance.
 
-This article covers the security OS configuration applied to Ubuntu image used by AKS. As a secure service, AKS complies with SOC, ISO, PCI DSS, and HIPAA standards. For more information about the AKS security, see [Security concepts for clusters in Azure Kubernetes Service (AKS)][security-concepts-aks]. To learn more about the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
+This article covers the security OS configuration applied to Ubuntu image used by AKS. As a secure service, AKS complies with SOC, ISO, PCI DSS, and HIPAA standards. For more information about the AKS security, see [Security concepts for clusters in Azure Kubernetes Service (AKS)][security-concepts-aks-apps-clusters]. To learn more about the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
 
 ## Recommendations
 
@@ -67,7 +67,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1.1.1.10 | Ensure unused filesystems kernel modules aren't available | Manual || 
 | 1.1.2 | **Configure Filesystem Partitions** ||| 
 | 1.1.2.1 | **Configure /tmp** |||
-| 1.1.2.1.1 | Ensure /tmp is a separate partition | Fail |Operational impact| 
+| 1.1.2.1.1 | Ensure /tmp is a separate partition | Fail |Operational impact: Making /tmp a separate partition would require turning it into a tmpfs (in-memory filesystem) which would consume the same memory available for pods. | 
 | 1.1.2.1.2 | Ensure nodev option set on /tmp partition | Pass || 
 | 1.1.2.1.3 | Ensure nosuid option set on /tmp partition | Pass || 
 | 1.1.2.1.4 | Ensure noexec option set on /tmp partition | Pass || 
@@ -104,7 +104,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1.3.1| **Configure AppArmor** |||
 | 1.3.1.1 | Ensure AppArmor is installed | Pass || 
 | 1.3.1.2 | Ensure AppArmor is enabled in the bootloader configuration | Pass || 
-| 1.3.1.3 | Ensure all AppArmor Profiles are in enforce or complain mode | Fail | Operational impact | 
+| 1.3.1.3 | Ensure all AppArmor Profiles are in enforce or complain mode | Fail | Operational impact: May block legitimate workloads and addons. | 
 | 1.4 | **Configure Bootloader** ||| 
 | 1.4.1 | Ensure bootloader password is set | Pass || 
 | 1.4.2 | Ensure access to bootloader config is configured | Pass || 
@@ -342,8 +342,8 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 6.1.3.3 | Ensure journald is configured to send logs to rsyslog | Pass || 
 | 6.1.3.4 | Ensure rsyslog log file creation mode is configured | Pass || 
 | 6.1.3.5 | Ensure rsyslog logging is configured | Pass || 
-| 6.1.3.6 | Ensure rsyslog is configured to send logs to a remote log host |Not applicable| AKS manages log upload itself.| 
-| 6.1.3.7 | Ensure rsyslog isn't configured to receive logs from a remote client | Pass || 
+| 6.1.3.6 | Ensure rsyslog is configured to send logs to a remote log host |Not applicable| [Azure Monitor Agent for Linux is configured][azure-monitor-agent] |
+| 6.1.3.7 | Ensure rsyslog is not configured to receive logs from a remote client | Pass || 
 | 6.1.3.8 | Ensure logrotate is configured | Pass || 
 | 6.1.4 | **Configure Logfiles** |||
 | 6.1.4.1 | Ensure access to all logfiles has been configured | Pass || 
@@ -393,4 +393,5 @@ For more information about AKS security, see the following articles:
 [linux-security-baseline]: /azure/governance/policy/samples/guest-configuration-baseline-linux
 [security-concepts-aks-apps-clusters]: concepts-security.md
 [chrony]: /azure/virtual-machines/linux/time-sync#chrony
+[azure-monitor-agent]: /azure/azure-monitor/agents/azure-monitor-agent-troubleshoot-linux-vm-rsyslog
 [auto-upgrade-node]: auto-upgrade-node-os-image.md
