@@ -41,7 +41,7 @@ AKS clusters are deployed on host virtual machines, which run an operating syste
 As a part of the security-optimized operating system:
 
 * AKS provides a security-optimized host OS by default, but no option to select an alternate operating system.
-* The security-optimized host OS is built and maintained specifically for AKS and is **not** supported outside of the AKS platform.
+* The security-optimized host OS is built and maintained specifically for AKS and **isn't** supported outside of the AKS platform.
 * Some unnecessary kernel module drivers have been disabled in the OS to reduce the attack surface area.
 
 > [!NOTE]
@@ -58,13 +58,13 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1 | **Initial Setup** ||| 
 | 1.1 | **Filesystem** ||| 
 | 1.1.1 | **Configure Filesystem Kernel Modules** ||| 
-| 1.1.1.1 | Ensure cramfs kernel module is not available | Pass || 
-| 1.1.1.2 | Ensure freevxfs kernel module is not available | Pass || 
-| 1.1.1.3 | Ensure hfs kernel module is not available | Pass || 
-| 1.1.1.4 | Ensure hfsplus kernel module is not available | Pass || 
-| 1.1.1.5 | Ensure jffs2 kernel module is not available | Pass || 
-| 1.1.1.9 | Ensure usb-storage kernel module is not available | Pass || 
-| 1.1.1.10 | Ensure unused filesystems kernel modules are not available | Manual || 
+| 1.1.1.1 | Ensure cramfs kernel module isn't available | Pass || 
+| 1.1.1.2 | Ensure freevxfs kernel module isn't available | Pass || 
+| 1.1.1.3 | Ensure hfs kernel module isn't available | Pass || 
+| 1.1.1.4 | Ensure hfsplus kernel module isn't available | Pass || 
+| 1.1.1.5 | Ensure jffs2 kernel module isn't available | Pass ||
+| 1.1.1.9 | Ensure usb-storage kernel module isn't available | Pass || 
+| 1.1.1.10 | Ensure unused filesystems kernel modules aren't available | Manual || 
 | 1.1.2 | **Configure Filesystem Partitions** ||| 
 | 1.1.2.1 | **Configure /tmp** |||
 | 1.1.2.1.1 | Ensure /tmp is a separate partition | Fail |Operational impact| 
@@ -112,8 +112,8 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1.5.1 | Ensure address space layout randomization is enabled | Pass || 
 | 1.5.2 | Ensure ptrace_scope is restricted | Pass || 
 | 1.5.3 | Ensure core dumps are restricted | Pass || 
-| 1.5.4 | Ensure prelink is not installed | Pass || 
-| 1.5.5 | Ensure Automatic Error Reporting is not enabled | Pass || 
+| 1.5.4 | Ensure prelink isn't installed | Pass || 
+| 1.5.5 | Ensure Automatic Error Reporting isn't enabled | Pass || 
 | 1.6 | **Configure Command Line Warning Banners** ||| 
 | 1.6.1 | Ensure message of the day is configured properly | Pass || 
 | 1.6.2 | Ensure local login warning banner is configured properly | Pass || 
@@ -125,42 +125,42 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1.7.2 | Ensure GDM login banner is configured | Pass || 
 | 1.7.3 | Ensure GDM disable-user-list option is enabled | Pass || 
 | 1.7.4 | Ensure GDM screen locks when the user is idle | Pass || 
-| 1.7.5 | Ensure GDM screen locks cannot be overridden | Pass || 
+| 1.7.5 | Ensure GDM screen locks can't be overridden | Pass || 
 | 1.7.6 | Ensure GDM automatic mounting of removable media is disabled | Pass || 
-| 1.7.7 | Ensure GDM disabling automatic mounting of removable media is not overridden | Pass || 
+| 1.7.7 | Ensure GDM disabling automatic mounting of removable media isn't overridden | Pass || 
 | 1.7.8 | Ensure GDM autorun-never is enabled | Pass || 
-| 1.7.9 | Ensure GDM autorun-never is not overridden | Pass || 
-| 1.7.10 | Ensure XDMCP is not enabled | Pass || 
+| 1.7.9 | Ensure GDM autorun-never isn't overridden | Pass || 
+| 1.7.10 | Ensure XDMCP isn't enabled | Pass || 
 | 2 | **Services** ||| 
 | 2.1 | **Configure Server Services** ||| 
-| 2.1.1 | Ensure autofs services are not in use | Pass || 
-| 2.1.2 | Ensure avahi daemon services are not in use | Pass || 
-| 2.1.3 | Ensure dhcp server services are not in use | Pass || 
-| 2.1.4 | Ensure dns server services are not in use | Pass || 
-| 2.1.5 | Ensure dnsmasq services are not in use | Pass || 
-| 2.1.6 | Ensure ftp server services are not in use | Pass || 
-| 2.1.7 | Ensure ldap server services are not in use | Pass || 
-| 2.1.8 | Ensure message access server services are not in use | Pass || 
-| 2.1.9 | Ensure network file system services are not in use | Pass || 
-| 2.1.10 | Ensure nis server services are not in use | Pass || 
-| 2.1.11 | Ensure print server services are not in use | Pass || 
-| 2.1.12 | Ensure rpcbind services are not in use | Fail |Operational impact: rpcbind is a required dependency of NFS, used by the Azure CSI driver.| 
-| 2.1.13 | Ensure rsync services are not in use | Pass || 
-| 2.1.14 | Ensure samba file server services are not in use | Pass || 
-| 2.1.15 | Ensure snmp services are not in use | Pass || 
-| 2.1.16 | Ensure tftp server services are not in use | Pass || 
-| 2.1.17 | Ensure web proxy server services are not in use | Pass || 
-| 2.1.18 | Ensure web server services are not in use | Pass || 
-| 2.1.19 | Ensure xinetd services are not in use | Pass || 
-| 2.1.21 | Ensure mail transfer agent is configured for local-only mode | Pass || 
+| 2.1.1 | Ensure autofs services aren't in use | Pass || 
+| 2.1.2 | Ensure avahi daemon services aren't in use | Pass || 
+| 2.1.3 | Ensure dhcp server services aren't in use | Pass || 
+| 2.1.4 | Ensure dns server services aren't in use | Pass || 
+| 2.1.5 | Ensure dnsmasq services aren't in use | Pass || 
+| 2.1.6 | Ensure ftp server services aren't in use | Pass || 
+| 2.1.7 | Ensure ldap server services aren't in use | Pass || 
+| 2.1.8 | Ensure message access server services aren't in use | Pass || 
+| 2.1.9 | Ensure network file system services aren't in use | Pass || 
+| 2.1.10 | Ensure nis server services aren't in use | Pass || 
+| 2.1.11 | Ensure print server services aren't in use | Pass || 
+| 2.1.12 | Ensure rpcbind services aren't in use | Fail |Operational impact: rpcbind is a required dependency of NFS, used by the Azure CSI driver.| 
+| 2.1.13 | Ensure rsync services aren't in use | Pass || 
+| 2.1.14 | Ensure samba file server services aren't in use | Pass || 
+| 2.1.15 | Ensure snmp services aren't in use | Pass || 
+| 2.1.16 | Ensure tftp server services aren't in use | Pass || 
+| 2.1.17 | Ensure web proxy server services aren't in use | Pass || 
+| 2.1.18 | Ensure web server services aren't in use | Pass || 
+| 2.1.19 | Ensure xinetd services aren't in use | Pass || 
+| 2.1.21 | Ensure mail transfer agent is configured for local-only mode | Pass ||
 | 2.1.22 | Ensure only approved services are listening on a network interface | Pass || 
 | 2.2 | **Configure Client Services** ||| 
-| 2.2.1 | Ensure NIS Client is not installed | Pass || 
-| 2.2.2 | Ensure rsh client is not installed | Pass || 
-| 2.2.3 | Ensure talk client is not installed | Pass || 
-| 2.2.4 | Ensure telnet client is not installed | Pass || 
-| 2.2.5 | Ensure ldap client is not installed | Pass || 
-| 2.2.6 | Ensure ftp client is not installed | Pass || 
+| 2.2.1 | Ensure NIS Client isn't installed | Pass || 
+| 2.2.2 | Ensure rsh client isn't installed | Pass || 
+| 2.2.3 | Ensure talk client isn't installed | Pass || 
+| 2.2.4 | Ensure telnet client isn't installed | Pass || 
+| 2.2.5 | Ensure ldap client isn't installed | Pass || 
+| 2.2.6 | Ensure ftp client isn't installed | Pass || 
 | 2.3 | **Configure Time Synchronization** ||| 
 | 2.3.1 | **Ensure time synchronization is in use** |||
 | 2.3.1.1 | Ensure a single time synchronization daemon is in use | Pass || 
@@ -187,25 +187,25 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 3.1| **Configure Network Devices** |||
 | 3.1.1 | Ensure IPv6 status is identified | Pass|| 
 | 3.1.2 | Ensure wireless interfaces are disabled | Pass || 
-| 3.1.3 | Ensure bluetooth services are not in use | Pass || 
+| 3.1.3 | Ensure bluetooth services aren't in use | Pass || 
 |3.3| **Configure Network Kernel Parameters** |||
 | 3.3.1 | Ensure ip forwarding is disabled | Fail | Operational impact: this is required for container networking to function.| 
 | 3.3.2 | Ensure packet redirect sending is disabled | Pass || 
 | 3.3.3 | Ensure bogus icmp responses are ignored | Pass || 
 | 3.3.4 | Ensure broadcast icmp requests are ignored | Pass || 
-| 3.3.5 | Ensure icmp redirects are not accepted | Pass || 
-| 3.3.6 | Ensure secure icmp redirects are not accepted | Pass || 
+| 3.3.5 | Ensure icmp redirects aren't accepted | Pass || 
+| 3.3.6 | Ensure secure icmp redirects aren't accepted | Pass || 
 | 3.3.7 | Ensure reverse path filtering is enabled | Pass || 
-| 3.3.8 | Ensure source routed packets are not accepted | Pass || 
+| 3.3.8 | Ensure source routed packets aren't accepted | Pass || 
 | 3.3.9 | Ensure suspicious packets are logged | Pass || 
 | 3.3.10 | Ensure tcp syn cookies is enabled | Pass || 
-| 3.3.11 | Ensure ipv6 router advertisements are not accepted | Pass || 
+| 3.3.11 | Ensure ipv6 router advertisements aren't accepted | Pass || 
 | 4 | **Host Based Firewall** ||| 
 | 4.1| **Configure a single firewall utility** |||
 | 4.1.1 | Ensure a single firewall configuration utility is in use |Covered elsewhere|| 
 | 4.2| **Configure UncomplicatedFirewall** |||
 | 4.2.1 | Ensure ufw is installed | Covered elsewhere || 
-| 4.2.2 | Ensure iptables-persistent is not installed with ufw | Covered elsewhere|| 
+| 4.2.2 | Ensure iptables-persistent isn't installed with ufw | Covered elsewhere|| 
 | 4.2.3 | Ensure ufw service is enabled | Covered elsewhere|| 
 | 4.2.4 | Ensure ufw loopback traffic is configured | Covered elsewhere || 
 | 4.2.5 | Ensure ufw outbound connections are configured | Covered elsewhere || 
@@ -225,8 +225,8 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 4.4| **Configure iptables** |||
 | 4.4.1 | **Configure iptables software** |||
 | 4.4.1.1 | Ensure iptables packages are installed | Covered elsewhere || 
-| 4.4.1.2 | Ensure nftables is not in use with iptables | Covered elsewhere|| 
-| 4.4.1.3 | Ensure ufw is not in use with iptables | Covered elsewhere|| 
+| 4.4.1.2 | Ensure nftables isn't in use with iptables | Covered elsewhere|| 
+| 4.4.1.3 | Ensure ufw isn't in use with iptables | Covered elsewhere|| 
 | 4.4.2| **Configure IPV4 iptables** |||
 | 4.4.2.1 | Ensure iptables default deny firewall policy | Covered elsewhere || 
 | 4.4.2.2 | Ensure iptables loopback traffic is configured | Covered elsewhere || 
@@ -263,7 +263,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 5.2.1 | Ensure sudo is installed | Pass || 
 | 5.2.2 | Ensure sudo commands use pty | Pass || 
 | 5.2.3 | Ensure sudo log file exists | Pass || 
-| 5.2.5 | Ensure re-authentication for privilege escalation is not disabled globally | Pass || 
+| 5.2.5 | Ensure re-authentication for privilege escalation isn't disabled globally | Pass || 
 | 5.2.6 | Ensure sudo authentication timeout is configured correctly | Pass || 
 | 5.2.7 | Ensure access to the su command is restricted | Pass || 
 | 5.3| **Pluggable Authentication Modules** |||
@@ -295,8 +295,8 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 5.3.3.3.2 | Ensure password history is enforced for the root user | Pass || 
 | 5.3.3.3.3 | Ensure pam_pwhistory includes use_authtok | Pass || 
 | 5.3.3.4 | **Configure pam_unix module** |||
-| 5.3.3.4.1 | Ensure pam_unix does not include nullok | Pass || 
-| 5.3.3.4.2 | Ensure pam_unix does not include remember | Pass || 
+| 5.3.3.4.1 | Ensure pam_unix doesn't include nullok | Pass || 
+| 5.3.3.4.2 | Ensure pam_unix doesn't include remember | Pass || 
 | 5.3.3.4.3 | Ensure pam_unix includes a strong password hashing algorithm | Pass || 
 | 5.3.3.4.4 | Ensure pam_unix includes use_authtok | Pass || 
 | 5.4 | **User Accounts and Environment** |||
@@ -314,10 +314,10 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 5.4.2.4 | Ensure root account access is controlled | Pass || 
 | 5.4.2.5 | Ensure root path integrity | Pass || 
 | 5.4.2.6 | Ensure root user umask is configured | Pass || 
-| 5.4.2.7 | Ensure system accounts do not have a valid login shell | Pass || 
+| 5.4.2.7 | Ensure system accounts don't have a valid login shell | Pass || 
 | 5.4.2.8 | Ensure accounts without a valid login shell are locked | Pass || 
 | 5.4.3 | **Configure user default environment** |||
-| 5.4.3.1 | Ensure nologin is not listed in /etc/shells | Pass ||
+| 5.4.3.1 | Ensure nologin isn't listed in /etc/shells | Pass ||
 | 5.4.3.2 | Ensure default user shell timeout is configured | Pass || 
 | 5.4.3.3 | Ensure default user umask is configured | Pass || 
 | 6 | **Logging and Auditing** ||| 
@@ -332,7 +332,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 6.1.2.1.1 | Ensure systemd-journal-remote is installed | Pass || 
 | 6.1.2.1.2 | Ensure systemd-journal-upload authentication is configured | Not applicable| AKS doesn't use log uploading and relies on rsyslog.| 
 | 6.1.2.1.3 | Ensure systemd-journal-upload is enabled and active | Pass || 
-| 6.1.2.1.4 | Ensure systemd-journal-remote service is not in use | Pass || 
+| 6.1.2.1.4 | Ensure systemd-journal-remote service isn't in use | Pass || 
 | 6.1.2.2 | Ensure journald ForwardToSyslog is disabled | Pass || 
 | 6.1.2.3 | Ensure journald Compress is configured | Pass || 
 | 6.1.2.4 | Ensure journald Storage is configured | Pass || 
@@ -343,7 +343,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 6.1.3.4 | Ensure rsyslog log file creation mode is configured | Pass || 
 | 6.1.3.5 | Ensure rsyslog logging is configured | Pass || 
 | 6.1.3.6 | Ensure rsyslog is configured to send logs to a remote log host |Not applicable| AKS manages log upload itself.| 
-| 6.1.3.7 | Ensure rsyslog is not configured to receive logs from a remote client | Pass || 
+| 6.1.3.7 | Ensure rsyslog isn't configured to receive logs from a remote client | Pass || 
 | 6.1.3.8 | Ensure logrotate is configured | Pass || 
 | 6.1.4 | **Configure Logfiles** |||
 | 6.1.4.1 | Ensure access to all logfiles has been configured | Pass || 
@@ -367,7 +367,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 7.1.13 | Ensure SUID and SGID files are reviewed | Manual || 
 | 7.2 | **Local User and Group Settings** |||
 | 7.2.1 | Ensure accounts in /etc/passwd use shadowed passwords | Pass || 
-| 7.2.2 | Ensure /etc/shadow password fields are not empty | Pass || 
+| 7.2.2 | Ensure /etc/shadow password fields aren't empty | Pass || 
 | 7.2.3 | Ensure all groups in /etc/passwd exist in /etc/group | Pass || 
 | 7.2.4 | Ensure shadow group is empty | Pass || 
 | 7.2.5 | Ensure no duplicate UIDs exist | Pass || 
