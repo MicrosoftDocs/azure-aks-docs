@@ -1,5 +1,5 @@
 ---
-title: How Azure Kubernetes ServiAKS cordons Node 1 to pAKS repeats thAfter all permanent nodes are upgraded, the surge node is drained and deleSince Node 1 remains quarantined, the surge node becomes the permanent replacement running v1.31.
+title: How Azure Kubernetes Service cluster upgrades work
 description: Learn the step-by-step process of how AKS performs rolling upgrades to minimize disruption to your running workloads.
 ms.topic: conceptual
 ms.subservice: aks-upgrade
