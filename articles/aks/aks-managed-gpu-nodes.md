@@ -13,14 +13,11 @@ ms.service: azure-kubernetes-service
 
 # Create a fully managed GPU node pool on Azure Kubernetes Service (AKS) (preview)
 
-Running GPU workloads in Azure Kubernetes Service (AKS) requires several software components to be installed and maintained: the GPU driver, the Kubernetes device plugin, and GPU metrics exporter for telemetry. These components are essential for GPU scheduling, enabling container-level GPU access, and observability of resource usage. Without them, AKS GPU node pools cannot function correctly. Previously, cluster operators had to either install these components manually or use open-source alternatives like the [NVIDIA GPU Operator](./nvidia-gpu-operator.md), which may introduce complexity and operational overhead.
+Running GPU workloads in Azure Kubernetes Service (AKS) requires several software components to be installed and maintained: the GPU driver, the Kubernetes device plugin, and GPU metrics exporter for telemetry. These components are essential for GPU scheduling, enabling container-level GPU access, and observability of resource usage. Without them, AKS GPU node pools cannot function correctly. Previously, cluster operators had to either install these components manually or use open-source alternatives like the [NVIDIA GPU Operator](./nvidia-gpu-operator.md), which may introduce complexity in node lifecycle management.
 
-
-AKS supports fully managed GPU nodes (preview) and installs the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) by default. Enabling 1-step GPU node pool creation, this feature streamlines the operational experience for operators and empowers developers and ML engineers by making GPU resources available in AKS as simple as general purpose CPU nodes. Now, organizations can deploy GPU workloads faster, more reliably, and with less infrastructure burden.
-
+AKS supports fully managed GPU nodes (preview) and installs the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) by default. This feature enables 1-step GPU node pool creation and allows GPU resources to be provisioned in AKS using a similar workflow as general-purpose nodes, enabling faster, more reliable deployment of GPU workloads with reduced operational overhead.
 
 In this article, you'll learn how to provision a AKS-managed GPU nodes in your cluster, including default installation of the NVIDIA GPU driver, device plugin, and metrics exporter.
-
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -29,17 +26,16 @@ In this article, you'll learn how to provision a AKS-managed GPU nodes in your c
 - This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 - You need the Azure CLI version 2.72.2 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - This feature requires Kubernetes version 1.34 or later. To check your AKS cluster version, see [Check for available AKS cluster upgrades][aks-upgrade].
-- You need to [install the `aks-preview` extension](#install-the-aks-preview-extension).
+- You need to [install and upgrade to latest version of the `aks-preview` extension](#install-the-aks-preview-extension).
 - You need to [register the `ManagedGPUExperiencePreview` feature flag in your subscription](#register-the-managedgpuexperiencepreview-feature-flag-in-your-subscription).
 
 ## Limitations
 
-- This feature currently supports NVIDIA GPU-enabled virtual machine (VM) sizes only.
-- Updating a general-purpose CPU-based node pool to add a GPU VM size isn't supported on AKS.
-- Windows node pools aren't supported with this feature.
+- This feature currently supports [NVIDIA GPU-enabled virtual machine (VM) sizes](https://learn.microsoft.com/azure/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist#gpu-accelerated) only.
+- Updating a general-purpose node pool to add a GPU VM size isn't supported on AKS.
+- Windows node pools are not supported with this feature, because GPU metrics are not supported. When creating Windows GPU node pools, AKS automatically installs and manages the drivers and Directx device plugin. See [AKS Windows GPU documentation](./use-windows-gpu.md) for more information.
 - Migrating your existing [multi-instance GPU](./gpu-multi-instance.md) node pools to use this feature isn't supported.
 - In-place upgrades to use this feature on existing GPU-enabled nodes isn't supported.
-
 
 > [!NOTE]
 > GPU-enabled VMs contain specialized hardware subject to higher pricing and region availability. For more information, see the [pricing][azure-pricing] tool and [region availability][azure-availability].
@@ -58,11 +54,9 @@ In this article, you'll learn how to provision a AKS-managed GPU nodes in your c
     az extension update --name aks-preview
     ```
 
-
 ### Register the `ManagedGPUExperiencePreview` feature flag in your subscription
 
 - Register the `ManagedGPUExperiencePreview` feature flag in your subscription using the [`az feature register`][az-feature-register] command.
-
 
     ```azurecli-interactive
     az feature register --namespace Microsoft.ContainerService --name ManagedGPUExperiencePreview
@@ -76,16 +70,15 @@ In this article, you'll learn how to provision a AKS-managed GPU nodes in your c
     az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
     ```
 
-
 ## Create an AKS-managed GPU node pool (preview)
+
+You can add a fully managed GPU node pool (preview) to an existing AKS cluster by specifying OS SKU and `--enable-managed-gpu-experience`. When you do this, AKS will install the GPU driver, GPU device plugin, and metrics exporter automatically.
 
 ### [Ubuntu Linux node pool (default SKU)](#tab/add-ubuntu-gpu-node-pool)
 
-To use the default operating system (OS) SKU, you create the node pool without specifying an OS SKU. The node pool is configured for the default operating system based on the Kubernetes version of the cluster.
-
+To use the default Ubuntu operating system (OS) SKU, you create the node pool without specifying an OS SKU. The node pool is configured for the default operating system based on the Kubernetes version of the cluster.
 
 1. Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--enable-managed-gpu-experience` flag.
-
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -101,13 +94,25 @@ To use the default operating system (OS) SKU, you create the node pool without s
         --enable-managed-gpu-experience
     ```
 
+1. Confirm that the NVIDIA GPU software components are installed and running:
+
+    ```bash
+    kubectl get pods -n default
+    ```
+
+    Your output should look similar to the following:
+
+    ```output
+    NAME                         READY   STATUS    RESTARTS   AGE
+    nvidia-device-plugin-0001    1/1     Running   0          2m
+    nvidia-dcgm-exporter-0001    1/1     Running   0          2m
+    ```
+
 ### [Azure Linux node pool](#tab/add-azure-linux-gpu-node-pool)
 
 To use Azure Linux, you specify the operating system (OS) SKU by setting `os-sku` to `AzureLinux` during node pool creation. The `os-type` is set to `Linux` by default.
 
-
 1. Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--os-sku` flag set to `AzureLinux` and the `--enable-managed-gpu-experience` flag.
-
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -124,10 +129,25 @@ To use Azure Linux, you specify the operating system (OS) SKU by setting `os-sku
         --enable-managed-gpu-experience
     ```
 
+1. Confirm that the NVIDIA GPU software components are installed and running:
+
+    ```bash
+    kubectl get pods -n default
+    ```
+
+    Your output should look similar to the following:
+
+    ```output
+    NAME                         READY   STATUS    RESTARTS   AGE
+    nvidia-device-plugin-0001    1/1     Running   0          2m
+    nvidia-dcgm-exporter-0001    1/1     Running   0          2m
+    ```
+
+---
+
 ## Migrate existing GPU workloads to an AKS-managed GPU node pool
 
-In-place upgrades from a standard NVIDIA GPU node pool to an AKS-managed NVIDIA GPU node pool (preview) isn't supported. We recommend spinning down your GPU workloads, removing your existing GPU node pool, and redeploying them to a new GPU-enabled node pool with this feature enabled.
-
+In-place upgrades from a standard NVIDIA GPU node pool to a fully managed NVIDIA GPU node pool (preview) on your AKS cluster isn't supported. We recommend cordoning and draining your existing GPU nodes, then redeploying your workloads to a new GPU-enabled node pool with this feature enabled. See [Resize node pools on AKS](./resize-node-pool.md) to learn more.
 
 ## Bring your own (BYO) GPU driver
 
@@ -135,7 +155,6 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
 
 ## Next steps
 
-- [Confirm that the GPUs are schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable) in your AKS-managed GPU node pool.
 - Deploy a [sample GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload) on your AKS-managed GPU-enabled nodes.
 - Monitor [GPU utilization and performance metrics](./monitor-gpu-metrics.md) from managed DCGM exporter on your GPU nodes.
 
@@ -144,7 +163,6 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
 - Learn about [GPU health monitoring](./gpu-health-monitoring.md) with Node Problem Detector (NPD) on AKS.
 - [Autoscale your GPU workloads](./autoscale-gpu-workloads-with-keda.md) with DCGM metrics and Kubernetes Event-Driven Autoscaling (KEDA).
 - Run [distributed inference on multiple AKS GPU nodes](https://blog.aks.azure.com/2025/07/08/kaito-inference-with-acstor).
-
 
 <!-- LINKS - external -->
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
