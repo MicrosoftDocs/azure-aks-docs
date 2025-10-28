@@ -383,8 +383,7 @@ statefulset.apps/busybox-azuredisk created
 To validate the content of the volume, run the following command:
 
 ```bash
-kubectl exec -it busybox-azuredisk-0 -- cat c:\\mnt\\azuredisk\\data.txt # on Linux/MacOS Bash
-kubectl exec -it busybox-azuredisk-0 -- cat c:\mnt\azuredisk\data.txt # on Windows Powershell/CMD
+ kubectl exec -it statefulset-azuredisk-win-0 -- powershell -c "type c:/mnt/azuredisk/data.txt"
 ```
 
 The output of the command resembles the following example:

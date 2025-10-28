@@ -425,6 +425,7 @@ To learn how to utilize AKS with your own Container Network Interface (CNI) plug
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
+[az-group-create]: /cli/azure/group#az-group-create
 [aks-egress]: limit-egress-traffic.md
 [aks-network-policies]: use-network-policies.md
 [nsg]: /azure/virtual-network/network-security-groups-overview
