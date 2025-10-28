@@ -125,6 +125,8 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
 > - There are no existing NAP-managed nodes. You can use the `kubectl get nodes -l karpenter.sh/nodepool` command to check for existing NAP-managed nodes.
 > - All existing `karpenter.sh/NodePools` have their `spec.limits.cpu` field set to `0`. This action prevents new nodes from being created, but doesn't disrupt currently running nodes.
 
+:::zone pivot="azure-cli"
+
 1. Set the `spec.limits.cpu` field to `0` for every existing `karpenter.sh/NodePool`. For example:
 
     ```yaml
@@ -162,9 +164,6 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
 
 1. Scale up existing fixed-size `ManagedCluster AgentPools`, or create new fixed-size `AgentPools`, to take the load from the node NAP-managed nodes. As these nodes are added to the cluster, the node NAP-managed nodes are drained, and work is migrated to the fixed-scale nodes.
 1. Delete all NAP-managed nodes using the `kubectl get nodes -l karpenter.sh/nodepool` command. If NAP-managed nodes still exist, the cluster likely lacks fixed-scale capacity. In this case, you should add more nodes so the remaining workloads can be migrated.
-
-:::zone pivot="azure-cli"
-
 1. Update the NAP mode to `Manual` using the [`az aks update`](/cli/azure/aks#az-aks-update) Azure CLI command with the `--node-provisioning-mode` flag set to `Manual`.
 
     ```azurecli-interactive
@@ -178,6 +177,43 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
 
 :::zone pivot="arm"
 
+1. Set the `spec.limits.cpu` field to `0` for every existing `karpenter.sh/NodePool`. For example:
+
+    ```yaml
+    apiVersion: karpenter.sh/v1
+    kind: NodePool
+    metadata:
+      name: default
+    spec:
+      limits:
+        cpu: 0
+    ```
+
+    > [!IMPORTANT]
+    > If you don't want to ensure that every pod previously running on a NAP node is safely migrated to a non-NAP node before disabling NAP, you can skip steps 2 and 3 and instead use the `kubectl delete node` command for each NAP-managed node. However, **we don't recommend skipping these steps**, as it might leave some pods pending and doesn't honor Pod Disruption Budgets (PDBs).
+    >
+    > When using the `kubectl delete node` command, be careful to only delete NAP-managed nodes. You can identify NAP-managed nodes using the `kubectl get nodes -l karpenter.sh/nodepool` command.
+
+1. Add the `karpenter.azure.com/disable:NoSchedule` taint to every `karpenter.sh/NodePool`. For example:
+
+   ```yaml
+   apiVersion: karpenter.sh/v1
+   kind: NodePool
+   metadata:
+     name: default
+   spec:
+     template:
+       spec:
+         ...
+         taints:
+           - key: karpenter.azure.com/disable,
+             effect: NoSchedule
+   ```
+
+   This action starts the process of migrating the workloads on the NAP-managed nodes to non-NAP nodes, honoring PDBs and disruption limits. Pods migrate to non-NAP nodes if they can fit. If there isn't enough fixed-size capacity, some node NAP-managed nodes remain.
+
+1. Scale up existing fixed-size `ManagedCluster AgentPools`, or create new fixed-size `AgentPools`, to take the load from the node NAP-managed nodes. As these nodes are added to the cluster, the node NAP-managed nodes are drained, and work is migrated to the fixed-scale nodes.
+1. Delete all NAP-managed nodes using the `kubectl get nodes -l karpenter.sh/nodepool` command. If NAP-managed nodes still exist, the cluster likely lacks fixed-scale capacity. In this case, you should add more nodes so the remaining workloads can be migrated.
 1. Update the `properties.nodeProvisioningProfile.mode` field to `Manual` in your ARM template and redeploy it.
 
     ```JSON
