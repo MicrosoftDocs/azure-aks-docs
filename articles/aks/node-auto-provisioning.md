@@ -68,13 +68,12 @@ The following limitations and unsupported features apply to node auto-provisioni
 
 The following resources help you get started with node auto-provisioning on AKS:
 
-- [Enable or disable node auto-provisioning on an AKS cluster](./use-node-autoprovision.md)
-- [Create a node auto-provisioning (NAP) cluster in a custom virtual network](./node-autoprovisioning-custom-vnet.md)
-- [Use node auto-provisioning in a custom virtual network](./node-autoprovisioning-custom-vnet.md)
-- [Configure networking for node auto-provisioning on AKS](./node-autoprovision-networking.md)
-- [Configure node pools for node auto-provisioning on AKS](./node-autoprovision-node-pools.md)
-- [Configure disruption policies for node auto-provisioning on AKS](./node-autoprovision-disruption.md)
-- [Upgrade node images for node auto-provisioning on AKS](./node-autoprovision-upgrade-image.md)
+- [Enable or disable node auto-provisioning on an AKS cluster](./use-node-auto-provisioning.md)
+- [Use node auto-provisioning in a custom virtual network](./node-auto-provisioning-custom-vnet.md)
+- [Configure networking for node auto-provisioning on AKS](./node-auto-provisioning-networking.md)
+- [Configure node pools for node auto-provisioning on AKS](./node-auto-provisioning-node-pools.md)
+- [Configure disruption policies for node auto-provisioning on AKS](./node-auto-provisioning-disruption.md)
+- [Upgrade node images for node auto-provisioning on AKS](./node-auto-provisioning-upgrade-image.md)
 
 <!-- LINKS -->
 [azure cli]: /cli/azure/get-started-with-azure-cli

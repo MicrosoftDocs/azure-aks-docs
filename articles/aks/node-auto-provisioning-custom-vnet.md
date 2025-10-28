@@ -14,12 +14,17 @@ ms.service: azure-kubernetes-service
 
 This article shows you how to create a virtual network (VNet) and subnet, create a managed identity with permissions to access the VNet, and create an Azure Kubernetes Service (AKS) cluster in your custom VNet with node auto-provisioning (NAP) enabled.
 
-## Before you begin
+## Prerequisites
 
-Before you begin, review the following articles:
+- An Azure subscription. If you don't have one, you can create a [free account](https://azure.microsoft.com/free).
+- Azure CLI version `2.76.0` or later. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][azure cli].
+- Read the [Overview of node auto-provisioning (NAP) in AKS](./node-auto-provisioning.md) article, which details [how NAP works](./node-auto-provisioning.md#how-does-node-auto-provisioning-work).
+- Read the [Overview of networking configurations for node auto-provisioning (NAP) in Azure Kubernetes Service (AKS)](./node-auto-provisioning-networking.md).
 
-- [Overview of node auto-provisioning (NAP) in AKS](./node-autoprovision.md) article, which details [how NAP works](./node-autoprovision.md#how-does-node-auto-provisioning-work), [prerequisites](./node-autoprovision.md#prerequisites) and [limitations](./node-autoprovision.md#limitations-and-unsupported-features).
-- [Overview of networking configurations for node auto-provisioning (NAP) in Azure Kubernetes Service (AKS)](./node-autoprovision-networking.md), which details X, Y, and Z.
+## Limitations
+
+- When creating a NAP cluster in a custom virtual network (VNet), you must use a [Standard Load Balancer](./load-balancer-standard.md). The [Basic Load Balancer](./load-balancer-basic.md) isn't supported.
+- To review other limitations and unsupported features for NAP, see the [Overview of node auto-provisioning (NAP) in AKS](./node-auto-provisioning.md#limitations-and-unsupported-features) article.
 
 ## Create a virtual network and subnet
 
@@ -87,7 +92,7 @@ Before you begin, review the following articles:
         --name $CLUSTER_NAME \
         --resource-group $RG_NAME \
         --location $LOCATION \
-        --assign-identity "/subscriptions/$SUBSCRIPTION_ID/resourcegroups/$RG_NAME/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$IDENTITY_NAME" \ 
+        --assign-identity "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$IDENTITY_NAME" \
         --network-dataplane cilium \
         --network-plugin azure \
         --network-plugin-mode overlay \
@@ -113,7 +118,11 @@ Before you begin, review the following articles:
 
 ## Next steps
 
-TBD.
+For more information on node auto-provisioning in AKS, see the following articles:
+
+- [Configure networking for node auto-provisioning on AKS](./node-auto-provisioning-networking.md)
+- [Configure node pools for node auto-provisioning on AKS](./node-auto-provisioning-node-pools.md)
+- [Configure disruption policies for node auto-provisioning on AKS](./node-auto-provisioning-disruption.md)
 
 <!-- LINKS -->
 [az-network-vnet-create]: /cli/azure/network/vnet#az-network-vnet-create
@@ -124,3 +133,4 @@ TBD.
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [network-security-group]: /azure/virtual-network/network-security-groups-overview
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
+[azure cli]: /cli/azure/get-started-with-azure-cli

@@ -15,11 +15,11 @@ zone_pivot_groups: arm-azure-cli
 
 This article explains how to enable or disable node auto-provisioning (NAP) in Azure Kubernetes Service (AKS) using the Azure CLI or Azure Resource Manager (ARM) templates.
 
-If you want to create a NAP-enabled AKS cluster with a custom virtual network (VNet) and subnets, see [Create a node auto-provisioning (NAP) cluster in a custom virtual network](./node-autoprovisioning-custom-vnet.md).
+If you want to create a NAP-enabled AKS cluster with a custom virtual network (VNet) and subnets, see [Create a node auto-provisioning (NAP) cluster in a custom virtual network](./node-auto-provisioning-custom-vnet.md).
 
 ## Before you begin
 
-Before you begin, review the [Overview of node auto-provisioning (NAP) in AKS](./node-autoprovision.md) article, which details [how NAP works](./node-autoprovision.md#how-does-node-auto-provisioning-work), [prerequisites](./node-autoprovision.md#prerequisites) and [limitations](./node-autoprovision.md#limitations-and-unsupported-features).
+Before you begin, review the [Overview of node auto-provisioning (NAP) in AKS](./node-auto-provisioning.md) article, which details [how NAP works](./node-auto-provisioning.md#how-does-node-auto-provisioning-work), [prerequisites](./node-auto-provisioning.md#prerequisites) and [limitations](./node-auto-provisioning.md#limitations-and-unsupported-features).
 
 ## Enable node auto-provisioning (NAP) on an AKS cluster
 
@@ -229,8 +229,8 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
 
 For more information on node auto-provisioning in AKS, see the following articles:
 
-- [Use node auto-provisioning in a custom virtual network](./node-autoprovisioning-custom-vnet.md)
-- [Configure networking for node auto-provisioning on AKS](./node-autoprovision-networking.md)
-- [Configure node pools for node auto-provisioning on AKS](./node-autoprovision-node-pools.md)
-- [Configure disruption policies for node auto-provisioning on AKS](./node-autoprovision-disruption.md)
-- [Upgrade node images for node auto-provisioning on AKS](./node-autoprovision-upgrade-image.md)
+- [Use node auto-provisioning in a custom virtual network](./node-auto-provisioning-custom-vnet.md)
+- [Configure networking for node auto-provisioning on AKS](./node-auto-provisioning-networking.md)
+- [Configure node pools for node auto-provisioning on AKS](./node-auto-provisioning-node-pools.md)
+- [Configure disruption policies for node auto-provisioning on AKS](./node-auto-provisioning-disruption.md)
+- [Upgrade node images for node auto-provisioning on AKS](./node-auto-provisioning-upgrade-image.md)

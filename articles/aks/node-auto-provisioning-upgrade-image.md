@@ -132,7 +132,7 @@ For more information on configuring Karpenter Node Disruption Budgets and Pod Di
 
 For more information on node auto-provisioning in AKS, see the following articles:
 
-- [Use node auto-provisioning in a custom virtual network](./node-autoprovisioning-custom-vnet.md)
-- [Configure networking for node auto-provisioning on AKS](./node-autoprovision-networking.md)
-- [Configure node pools for node auto-provisioning on AKS](./node-autoprovision-node-pools.md)
-- [Configure disruption policies for node auto-provisioning on AKS](./node-autoprovision-disruption.md)
+- [Use node auto-provisioning in a custom virtual network](./node-auto-provisioning-custom-vnet.md)
+- [Configure networking for node auto-provisioning on AKS](./node-auto-provisioning-networking.md)
+- [Configure node pools for node auto-provisioning on AKS](./node-auto-provisioning-node-pools.md)
+- [Configure disruption policies for node auto-provisioning on AKS](./node-auto-provisioning-disruption.md)
