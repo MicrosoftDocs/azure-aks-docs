@@ -4,8 +4,8 @@ description: Learn how to configure node disruption policies for node auto-provi
 ms.topic: overview
 ms.custom: devx-track-azurecli
 ms.date: 07/25/2025
-ms.author: bsoghigian
-author: bsoghigian
+ms.author: schaffererin
+author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: As a cluster operator or developer, I want to understand and configure disruption policies for my AKS clusters using node auto-provisioning, so that I can effectively manage and maintain the health and security of my cluster nodes.
 ---

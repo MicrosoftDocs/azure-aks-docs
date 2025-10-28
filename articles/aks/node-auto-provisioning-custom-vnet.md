@@ -4,8 +4,8 @@ description: Learn how to create an AKS cluster with node auto-provisioning in a
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 06/13/2024
-ms.author: bsoghigian
-author: bsoghigian
+ms.author: schaffererin
+author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: As a cluster operator or developer, I want to create an AKS cluster with node auto-provisioning enabled in a custom virtual network, so that I can manage my cluster's networking and security configurations while leveraging automatic node provisioning for optimal resource management.
 ---
@@ -23,7 +23,7 @@ This article shows you how to create a virtual network (VNet) and subnet, create
 
 ## Limitations
 
-- When creating a NAP cluster in a custom virtual network (VNet), you must use a [Standard Load Balancer](./load-balancer-standard.md). The [Basic Load Balancer](./load-balancer-basic.md) isn't supported.
+- When creating a NAP cluster in a custom virtual network (VNet), you must use a [Standard Load Balancer](./load-balancer-standard.md). The Basic Load Balancer isn't supported.
 - To review other limitations and unsupported features for NAP, see the [Overview of node auto-provisioning (NAP) in AKS](./node-auto-provisioning.md#limitations-and-unsupported-features) article.
 
 ## Create a virtual network and subnet

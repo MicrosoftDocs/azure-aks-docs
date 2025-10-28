@@ -4,8 +4,8 @@ description: This article shows you how to configure node pools for Node Auto-Pr
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 07/25/2025
-ms.author: bsoghigian
-author: bsoghigian
+ms.author: schaffererin
+author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: As a cluster operator or developer, I want to configure node pools for my AKS clusters using node auto-provisioning, so that I can optimize resource allocation and cost efficiency for my workloads.
 ---
@@ -80,7 +80,7 @@ It also creates a `system-surge` node pool to autoscale system pool nodes.
 
 ## Control configuration of default node pool during cluster creation
 
-When you [create a new AKS cluster enabled with NAP using the Azure CLI](./use-node-autoprovision.md#enable-nap-on-a-new-cluster), you can include the `--node-provisioning-default-pools` flag to control the configuration of the default NAP `NodePool`.
+When you [create a new AKS cluster enabled with NAP using the Azure CLI](./use-node-auto-provisioning.md#enable-nap-on-a-new-cluster), you can include the `--node-provisioning-default-pools` flag to control the configuration of the default NAP `NodePool`.
 
 The `--node-provisioning-default-pools` flag controls the default NAP `NodePool` configuration and accepts the following values:
 

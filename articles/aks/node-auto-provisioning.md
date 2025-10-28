@@ -62,7 +62,7 @@ The following limitations and unsupported features apply to node auto-provisioni
 - You can't [stop a cluster](./start-stop-cluster.md) enabled with NAP.
 - [HTTP proxy](./http-proxy.md) isn't supported.
 - You can't change the [cluster egress outbound type](./egress-outboundtype.md) after you create a cluster enabled with NAP.
-- When creating a NAP cluster in a custom virtual network (VNet), you must use a [Standard Load Balancer](./load-balancer-standard.md). The [Basic Load Balancer](./load-balancer-basic.md) isn't supported.
+- When creating a NAP cluster in a custom virtual network (VNet), you must use a [Standard Load Balancer](./load-balancer-standard.md). The Basic Load Balancer isn't supported.
 
 ## Get started with node auto-provisioning on AKS
 

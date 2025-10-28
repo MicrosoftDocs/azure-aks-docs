@@ -4,8 +4,8 @@ description: Learn about networking configuration requirements and recommendatio
 ms.topic: overview
 ms.custom: devx-track-azurecli
 ms.date: 06/13/2024
-ms.author: bsoghigian
-author: bsoghigian
+ms.author: schaffererin
+author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: As a cluster operator or developer, I want to understand the networking configuration requirements and recommendations for AKS clusters using node auto-provisioning, so that I can ensure optimal performance, security, and scalability for my workloads.
 ---
@@ -85,7 +85,7 @@ Be aware of the following common CIDR conflict scenarios when using custom subne
 
 When using custom subnet configurations with NAP, you need to ensure that Karpenter has the necessary permissions to read subnet information and join nodes to the specified subnets. This requires setting up appropriate RBAC permissions for the cluster's managed identity.
 
-There are two main approaches to setting up these permissions: [Assign broad virtual network (VNet) permissions](#assign-broad-virtual-network-vnet-permissions) or [Assign scoped subnet permissions](#assign-scoped-subnet-permissions).
+There are two main approaches to setting up these permissions: **Assign broad virtual network (VNet) permissions** or **Assign scoped subnet permissions**.
 
 ### [Assign broad virtual network (VNet) permissions](#tab/assign-broad-vnet-permissions)
 
