@@ -13,11 +13,11 @@ ms.service: azure-kubernetes-service
 
 # Create a fully managed GPU node pool on Azure Kubernetes Service (AKS) (preview)
 
-Running GPU workloads in Azure Kubernetes Service (AKS) requires several software components to be installed and maintained: the GPU driver, the Kubernetes device plugin, and GPU metrics exporter for telemetry. These components are essential for GPU scheduling, enabling container-level GPU access, and observability of resource usage. Without them, AKS GPU node pools cannot function correctly. Previously, cluster operators had to either install these components manually or use open-source alternatives like the [NVIDIA GPU Operator](./nvidia-gpu-operator.md), which may introduce complexity in node lifecycle management.
+When you run GPU workloads in Azure Kubernetes Service (AKS), you need to install and maintain several software components, including the GPU driver, Kubernetes device plugin, and GPU metrics exporter for telemetry. These components are essential for enabling GPU scheduling, container-level GPU access, observability of resource usage, and proper functioning of AKS GPU-enabled nodes. Previously, cluster operators had to either install these components manually or use open-source alternatives like the [NVIDIA GPU Operator](./nvidia-gpu-operator.md), which can introduce complexity and operational overhead.
 
-AKS supports fully managed GPU nodes (preview) and installs the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) by default. This feature enables 1-step GPU node pool creation and allows GPU resources to be provisioned in AKS using a similar workflow as general-purpose nodes, enabling faster, more reliable deployment of GPU workloads with reduced operational overhead.
+AKS now supports fully managed GPU nodes (preview) and installs the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) by default. This feature enables one-step GPU node pool creation and makes the availability of GPU resources in AKS as simple as general purpose CPU nodes.
 
-In this article, you'll learn how to provision a AKS-managed GPU nodes in your cluster, including default installation of the NVIDIA GPU driver, device plugin, and metrics exporter.
+In this article, you learn how to provision a fully managed GPU node pool (preview) in your AKS cluster, including default installation of the NVIDIA GPU driver, device plugin, and metrics exporter.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -26,12 +26,12 @@ In this article, you'll learn how to provision a AKS-managed GPU nodes in your c
 - This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 - You need the Azure CLI version 2.72.2 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - This feature requires Kubernetes version 1.34 or later. To check your AKS cluster version, see [Check for available AKS cluster upgrades][aks-upgrade].
-- You need to [install and upgrade to latest version of the `aks-preview` extension](#install-the-aks-preview-extension).
+- You need to [install and upgrade to latest version of the `aks-preview` extension](#install-the-aks-preview-cli-extension).
 - You need to [register the `ManagedGPUExperiencePreview` feature flag in your subscription](#register-the-managedgpuexperiencepreview-feature-flag-in-your-subscription).
 
 ## Limitations
 
-- This feature currently supports [NVIDIA GPU-enabled virtual machine (VM) sizes](https://learn.microsoft.com/azure/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist#gpu-accelerated) only.
+- This feature currently supports [NVIDIA GPU-enabled virtual machine (VM) sizes](/azure/virtual-machines/sizes-gpu) only.
 - Updating a general-purpose node pool to add a GPU VM size isn't supported on AKS.
 - Windows node pools are not supported with this feature, because GPU metrics are not supported. When creating Windows GPU node pools, AKS automatically installs and manages the drivers and Directx device plugin. See [AKS Windows GPU documentation](./use-windows-gpu.md) for more information.
 - Migrating your existing [multi-instance GPU](./gpu-multi-instance.md) node pools to use this feature isn't supported.
