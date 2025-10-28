@@ -24,7 +24,7 @@ If you are unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure
 
 The integration between Azure Kubernetes Fleet Manager and Azure Arc-enabled Kubernetes clusters extends centralized multi-cluster resource management beyond Azure-native AKS clusters, including many of the most popular Kubernetes distributions running anywhere:
 
-- **Supported distributions**: AKS (Azure Kubernetes Service), K3s (Lightweight Kubernetes), OCP (Red Hat OpenShift), EKS (Amazon Elastic Kubernetes Service), GKE (Google Kubernetes Engine), and Rancher (RKE).
+- **Supported distributions**: EKS (Amazon Elastic Kubernetes Service), GKE (Google Kubernetes Engine), K3s (Lightweight Kubernetes), OCP (Red Hat OpenShift), and Rancher (RKE).
 
 ## Key benefits and capabilities
 
