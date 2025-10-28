@@ -12,7 +12,7 @@ ms.author: allyford
 
 # Use Flatcar Container Linux for Azure Kubernetes Service (AKS) (preview)
 
-Flatcar Container Linux for AKS is a Cloud Native Compute Foundation (CNCF) project that provides security, reliability, and cross-cloud capabilities. Flatcar Container Linux is available as an OS option on AKS in preview. You can deploy Flatcar Container Linux node pools in a new AKS cluster or add Flatcar Container Linux node pools to your existing clusters. To learn more about Flatcar Container Linux, see [Flatcar documentation][flatcar-docs].
+Flatcar Container Linux for AKS is a Cloud Native Compute Foundation (CNCF) project that provides security, reliability, and cross-cloud capabilities. Flatcar Container Linux is available in preview as an OS option on AKS. You can deploy Flatcar Container Linux node pools in a new AKS cluster or add Flatcar Container Linux node pools to your existing clusters. To learn more about Flatcar Container Linux, see [Flatcar documentation][flatcar-docs].
 
 ## Why use Flatcar Container Linux for AKS
 
