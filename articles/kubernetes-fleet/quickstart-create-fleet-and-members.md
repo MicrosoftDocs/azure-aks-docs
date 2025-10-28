@@ -116,9 +116,6 @@ You can create a Fleet Manager at any time, selecting to later add [supported Ku
 
 If you want to use Fleet Manager only for Kubernetes or node image update orchestration, you can create a Fleet resource without the hub cluster using the [`az fleet create`][az-fleet-create] command.
 
-> [!NOTE]
-> If you intend on joining Arc-enabled Kubernetes clusters as members, you should [create a Fleet Manager **with hub cluster**](#fleet-manager-with-hub-cluster). Learn why by reading about Fleet Manager's supported **[member cluster types](./concepts-member-cluster-types.md)**.
-
 ```azurecli-interactive
 az fleet create \
     --resource-group ${GROUP} \

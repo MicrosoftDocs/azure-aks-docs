@@ -57,10 +57,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure portal to cre
       * **Region**: Select the region where you want to create the Fleet resource.
       * **Hub cluster mode**: Leave the default selection of **With hub cluster** if you want to use Fleet Manager for Kubernetes object propagation and multi-cluster load balancing along with update orchestration. Select **Without hub cluster** if you want to use Fleet Manager only for update orchestration.
 
-> [!NOTE]
-> If you intend on joining Arc-enabled Kubernetes clusters as members, you should select **with hub cluster**. Learn why by reading about Fleet Manager's supported **[member cluster types](./concepts-member-cluster-types.md)**.
-
-    :::image type="content" source="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png" alt-text="Screenshot of the Create Fleet resource basics tab in the Azure portal." lightbox="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png":::
+        :::image type="content" source="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png" alt-text="Screenshot of the Create Fleet resource basics tab in the Azure portal." lightbox="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png":::
 
 5. Select **Next: Member clusters**.
 6. On the **Member clusters** tab, select **Add** to add an existing cluster as a member cluster to the Fleet Manager. You can add multiple member clusters to the Fleet Manager.
