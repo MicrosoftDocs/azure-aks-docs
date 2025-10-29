@@ -302,6 +302,8 @@
       items:
         - name: Use Azure Linux for AKS
           href: use-azure-linux.md
+        - name: Use Azure Linux with OS Guard for AKS
+          href: use-azure-linux-os-guard.md
         - name: Azure Linux AKS partner solutions
           href: azure-linux-aks-partner-solutions.md
 - name: Manage and optimize clusters
