@@ -62,6 +62,11 @@ To learn more, see the [FQDN-based filtering overview](./container-network-secur
 
 Gain granular control over application-level traffic. Implement policies based on protocols like HTTP, gRPC and kafka, securing your applications with deep visibility and fine-grained access control. To learn more, see the [Layer 7 policy overview](./container-network-security-l7-policy-concepts.md) documentation.
 
+### WireGuard Encryption (preview)
+
+Secure your workload traffic with WireGuard. It ensures all communication between Cilium-managed endpoints across different nodes within your AKS cluster is encrypted and protected by default, without added complexity. To learn more, see the [WireGuard encryption Overview](./container-network-security-wireguard-encryption-concepts.md) documentation. 
+
+
 ## Container Network Performance
 
 Configuration profile utilizing Cilium with eBPF features to optimize throughput, reduce latency, and minimize CPU overhead for containerized workloads in AKS clusters.
