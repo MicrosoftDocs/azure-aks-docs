@@ -37,7 +37,7 @@ Learn more about the [key features of Azure Linux with OS Guard][os-guard-doc].
 
 ## Regional availability
 
-Azure Linux with OS Guard is available for use in the same regions as AKS.
+Azure Linux with OS Guard is available for use in the same [regions](/quotas-skus-regions) as AKS.
 
 ## Get started with Azure Linux with OS Guard on AKS
 
