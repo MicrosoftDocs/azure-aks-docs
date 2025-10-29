@@ -70,9 +70,10 @@ AKS supports two K8s optimized Linux OS options with increased security, [Azure 
     - Both Azure Linux OS Guard and Flatcar Container Linux for AKS use SELinux for Mandatory Access Control.
     - Azure Linux OS Guard enforces [FIPS][FIPS] and [Trusted Launch][trusted-launch] enablement, providing improved compliance and protection against advanced and persistent attacks by combining secure boot and virtualized version of trusted platform module (vTPM).
 
-When deciding between which K8s optimized OS options to use, AKS recommends the following:
-•	Use Azure Linux OS Guard (preview) if you’re looking for an enterprise-ready immutable OS, recommended by Microsoft.
-•	Use Flatcar Container Linux for AKS (preview) if you’re looking for a vendor neutral immutable OS with cross-cloud support.
+When deciding between which Kubernetes-optimized OS options to use, AKS recommends the following:
+
+- Use Azure Linux OS Guard (preview) if you’re looking for an enterprise-ready immutable OS.
+- Use Flatcar Container Linux for AKS (preview) if you’re looking for a vendor neutral immutable OS with cross-cloud support.
 
 ### Node authorization
 

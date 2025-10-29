@@ -37,7 +37,7 @@ Azure CLI version 2.32.0 or later installed and configured. To find the version,
   * Container images on the FIPS nodes aren't assessed for FIPS compliance.
   * Mounting of a CIFS share fails because FIPS disables some authentication modules. To work around this issue, see [Errors when mounting a file share on a FIPS-enabled node pool][errors-mount-file-share-fips].
   * FIPS-enabled node pools with [Arm64 VMs](./use-arm64-vms.md) are only supported with Azure Linux 3.0+.
-  * FIPS is not supported with [Flatcar Container Linux for AKS (preview)][flatcar]
+  * FIPS isn't supported with [Flatcar Container Linux for AKS (preview)][flatcar].
 
 > [!IMPORTANT]
 > The FIPS-enabled Linux image is a different image than the default Linux image used for Linux-based node pools.

@@ -27,7 +27,8 @@ The NVIDIA GPU Operator automates the management and deployment of all NVIDIA so
 
 ## Limitations
 
-* NVIDIA GPU Operator is not supported for the following OS options: Windows Server versions, [Flatcar Container Linux for AKS (preview)][flatcar], and [Azure Linux with OS Guard for AKS (preview)][os-guard]
+* NVIDIA GPU Operator is not supported for the following OS options: Windows Server versions, [Flatcar Container Linux for AKS (preview)][flatcar], and [Azure Linux with OS Guard for AKS (preview)][os-guard].
+
 
 ## Get the credentials for your cluster
 

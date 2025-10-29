@@ -44,8 +44,8 @@ Each [node image][node-images] corresponds to an OS version, which you can speci
 | Linux | Ubuntu2204 | This OS SKU is supported in Kubernetes version 1.25 to 1.36. | Ubuntu 22.04 is currently default when using `--os-sku Ubuntu`. We recommend this OS SKU if you need to roll back to Ubuntu 22.04 after testing Ubuntu 24.04. |
 | Linux | AzureLinux | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Azure Linux 2.0 is default for Kubernetes version 1.27 to 1.31. Azure Linux 3.0 is default for Kubernetes version 1.32+. When the `AzureLinuxV3Preview` feature flag is enabled on AKS 1.31, `--os-sku AzureLinux` defaults to 3.0. |
 | Linux | AzureLinux3 | This OS SKU is supported in Kubernetes 1.28 to 1.36. | We recommend this OS SKU if you want to test out the new OS version without upgrading your Kubernetes version. You can also use this OS SKU to migrate from Azure Linux 2.0 to Azure Linux 3.0. |
-| Linux | AzureLinuxOSGuard | This OS SKU is supported in Kubernetes versions 1.32 and above. | Azure Linux with OS Guard versions are upgraded through node image upgrades. For more information, see [Azure Linux with OS Guard for AKS][os-guard] |
-| Linux | Flatcar | This OS SKU is supported in all Kubernetes versions. | Flatcar versions are upgraded through node image upgrades. For more information, see [Flatcar Container Linux for AKS][flatcar] |
+| Linux | AzureLinuxOSGuard | This OS SKU is supported in Kubernetes versions 1.32 and above. | Azure Linux with OS Guard versions are upgraded through node image upgrades. For more information, see [Azure Linux with OS Guard for AKS][os-guard]. |
+| Linux | Flatcar | This OS SKU is supported in all Kubernetes versions. | Flatcar versions are upgraded through node image upgrades. For more information, see [Flatcar Container Linux for AKS][flatcar]. |
 | Windows | Windows2019 | 1.14 to 1.32 | Default for Windows OS Type in Kubernetes version 1.14 to 1.24. |
 | Windows | Windows2022 | 1.23 to 1.34 | Default for Windows OS Type in Kubernetes version 1.25 to 1.34. |
 

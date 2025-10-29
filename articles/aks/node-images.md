@@ -58,9 +58,9 @@ The following factors influence the default image AKS chooses for your node pool
 - **Virtual machine (VM) size**: 
     - [Confidential virtual machines (CVM)](./use-cvm.md)
     - [AMR64 virtual machines](./create-node-pools.md)
-- **Hypervisor Generation**: Each VM size supports Generation 1, [Generation 2](./generation-2-vm.md), or both.
+- **Hypervisor generation**: Each VM size supports Generation 1, [Generation 2](./generation-2-vm.md), or both.
     - If Generation 2 is supported, AKS defaults to using the Generation 2 node image in all OS versions except for Windows Server 2019 and Windows Server 2022.
-    - If only Generation 1 is supported, AKS defaults to using the Generation 1 node image. Generation 1 is not supported for Azure Linux OS Guard (preview) or Flatcar Container Linux for AKS (preview).
+    - If only Generation 1 is supported, AKS defaults to using the Generation 1 node image. Generation 1 isn't supported for Azure Linux OS Guard (preview) or Flatcar Container Linux for AKS (preview).
 - **Feature enablement**: There are some features embedded into the node image. If you choose to use any of these features, your default node image changes.
     - [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md) changes the default node image for all Linux node pools.
     - [Pod Sandboxing](./use-pod-sandboxing.md) changes the default node image for Azure Linux node pools.
@@ -99,14 +99,15 @@ The Azure Linux node images are fully validated by AKS and built from source, us
 | **Azure Linux with containerd and Pod Sandboxing** | This is a variant of the default node image for customers that enable [Pod Sandboxing](./use-pod-sandboxing.md). These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or Trusted Launch. |
 ### Azure Linux with OS Guard for AKS (preview) node images
 
-The Azure Linux with OS Guard for AKS node images are fully validated by AKS and built from source, using a native AKS image. Versioning for Azure Linux with OS Guard node images will follow AKS's date-based format (e.g., 202509.23.0). This will be visible in the release notes and by using `az aks nodepool list` to view the `nodeImageVersion`. For more information, see [Azure Linux with OS Guard for AKS][os-guard].
+The Azure Linux with OS Guard for AKS node images are fully validated by AKS and built from source, using a native AKS image. Versioning for Azure Linux with OS Guard node images follow the AKS date-based format (for example: 202509.23.0). You can check the node images in the release notes and by running the [`az aks nodepool list`](/cli/azure/aks/nodepool#az-aks-nodepool-list) command to view the `nodeImageVersion`. For more information, see [Azure Linux with OS Guard for AKS][os-guard].
 
 | Node image | Use case | Limitations |
 |--|--|--|
 | **Azure Linux with OS Guard with containerd, Gen 2, FIPS, and Trusted Launch** | This is the standard node image for Azure Linux with OS Guard for AKS node pools using a VM size. If you use a VM size that supports Gen 1 only, you won't be able to use Azure Linux with OS Guard.| N/A |
+
 ### Flatcar Container Linux for AKS (preview) node images
 
-The Flatcar Container Linux for AKS node images are fully validated by AKS and supported by Microsoft and the Flatcar community. Versioning for Flatcar Container Linux node images will follow AKS's date-based format (e.g., 202506.13.0). This will be visible in the release notes and by using `az aks nodepool list` to view the `nodeImageVersion`. The Flatcar version number (e.g., Flatcar 4344.0.0) will be visible in the release notes and by using `kubectl get nodes` command. For more information, see [Flatcar Container Linux for AKS][flatcar].
+The Flatcar Container Linux for AKS node images are fully validated by AKS and supported by Microsoft and the Flatcar community. Versioning for Flatcar Container Linux node images follow the AKS date-based format (for example: 202506.13.0). You can check the node images in the release notes and by using the [`az aks nodepool list`](/cli/azure/aks/nodepool#az-aks-nodepool-list) command to view the `nodeImageVersion`. You can check the Flatcar version number (for example: Flatcar 4344.0.0) in the release notes and by running the `kubectl get nodes` command. For more information, see [Flatcar Container Linux for AKS][flatcar].
 
 | Node image | Use case | Limitations |
 |--|--|--|

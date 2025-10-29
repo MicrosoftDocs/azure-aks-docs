@@ -1,12 +1,11 @@
 ---
-
-title: Use Flatcar Container Linux for Azure Kubernetes Service (AKS) (preview)
-description: Learn how to use Flatcar Container Linux for Azure Kubernetes Service (AKS)
-ms.topic: how-to
+title: Flatcar Container Linux for Azure Kubernetes Service (AKS) (preview) overview
+description: Learn about Flatcar Container Linux for Azure Kubernetes Service (AKS), including limitations, migration information, and resources to get started.
+ms.topic: overview
 ms.date: 10/16/2025
 author: allyford
 ms.author: allyford
-
+ms.service: azure-kubernetes-service
 # Customer intent: "As a cloud developer, I want to deploy and manage AKS clusters built using Flatcar Container Linux, so that I can ensure reliable and efficient container workloads with reduced maintenance and enhanced security across multiple cloud providers."
 ---
 
@@ -14,45 +13,48 @@ ms.author: allyford
 
 Flatcar Container Linux for AKS is a Cloud Native Compute Foundation (CNCF) project that provides security, reliability, and cross-cloud capabilities. Flatcar Container Linux is available in preview as an OS option on AKS. You can deploy Flatcar Container Linux node pools in a new AKS cluster or add Flatcar Container Linux node pools to your existing clusters. To learn more about Flatcar Container Linux, see [Flatcar documentation][flatcar-docs].
 
-## Why use Flatcar Container Linux for AKS
+## Flatcar Container Linux for AKS benefits
 
-Built with an immutable filesystem, Flatcar eliminates configuration drift and prevents unauthorized changes, ensuring robust protection for your workloads across multiple cloud platforms. Designed for versatility, Flatcar enables cross-cloud deployment, empowering businesses to scale effortlessly and securely.
-
-## How to use Flatcar Container Linux for AKS
-
-To get started using the Flatcar Container Linux for AKS, see:
-
-* Deploy an Azure Kubernetes Service (AKS) cluster with Flatcar Container Linux for AKS (preview) using [Azure CLI][flatcar-deploy-cli]
-* Deploy an Azure Kubernetes Service (AKS) cluster with Flatcar Container Linux for AKS (preview) using an [ARM template][flatcar-deploy-arm]
-* Create an AKS cluster with a single Flatcar Container Linux for AKS (preview) node pool using [Azure CLI or an ARM template][create-node-pools]
-* Add a Flatcar Container Linux for AKS (preview) node pool to an existing cluster using [Azure CLI or an ARM template][create-node-pools]
+Flatcar is built with an immutable filesystem, and it eliminates configuration drift and prevents unauthorized changes, ensuring robust protection for your workloads across multiple cloud platforms. Designed for versatility, Flatcar enables cross-cloud deployment, empowering businesses to scale effortlessly and securely.
 
 ## Limitations
 
-Flatcar Container Linux for AKS does not support the following configurations:
+Flatcar Container Linux for AKS has the following limitations:
 
-* [FIPS][fips] is not supported with Flatcar Container Linux
-* [Trusted Launch][trusted-launch] is not supported with Flatcar Container Linux
-* [Confidential VM sizes][cvm] are not supported using Flatcar Container Linux
-* [Node OS Upgrade Channel][automatic-upgrade-node], `SecurityPatch` is not supported with Flatcar Container Linux
-* During preview, AKS will not support in-place updates with Flatcar Container Linux
-* [Artifact Streaming][artifact-streaming] (preview) is not supported with Flatcar Container Linux
-* [Generation 1 VMs][vm-support] are not supported for Flatcar Container Linux. This means that you will not be able to use VM sizes that only support Generation 1.
-* [Pod Sandboxing (preview)][pod-sandboxing] is not supported for Flatcar Container Linux
-* [Node Autoprovisioning][NAP] is not supported for Flatcar Container Linux
+- [FIPS][fips] isn't supported with Flatcar Container Linux.
+- [Trusted Launch][trusted-launch] isn't supported with Flatcar Container Linux.
+- [Confidential VM sizes][cvm] aren't supported with Flatcar Container Linux.
+- The `SecurityPatch` [node OS upgrade channel][automatic-upgrade-node] isn't supported with Flatcar Container Linux.
+- During preview, AKS doesn't support in-place updates with Flatcar Container Linux.
+- [Artifact Streaming][artifact-streaming] (preview) isn't supported with Flatcar Container Linux.
+- [Generation 1 VMs][vm-support] aren't supported with Flatcar Container Linux, which means can't use VM sizes that only support Generation 1.
+- [Pod Sandboxing (preview)][pod-sandboxing] isn't supported with Flatcar Container Linux.
+- [Node auto-provisioning][NAP] isn't supported with Flatcar Container Linux.
 
 > [!NOTE]
-> If you have an existing cluster with any of the above features enabled, you may not be able to add a node pool using Flatcar Container Linux.
+> If you have an existing cluster with any of the above features enabled, you might not be able to add a node pool using Flatcar Container Linux.
 
-## OS Migrations and upgrades
+## Get started with Flatcar Container Linux for AKS
 
-AKS does not support in-place migrations from existing Linux clusters or node pools to Flatcar Container Linux clusters or node pools. To migrate existing workloads to Flatcar Container Linux for AKS, you'll need to re-create your node pools using `--ossku flatcar`.
+To get started using the Flatcar Container Linux for AKS, see the following resources:
 
-Flatcar Container Linux for AKS will release weekly AKS node images. Versioning will follow AKS's date-based format (e.g., 202506.13.0). This will be visible in the release notes and by using `az aks nodepool list` to view the `nodeImageVersion`.
+- Deploy an Azure Kubernetes Service (AKS) cluster with Flatcar Container Linux for AKS (preview) using [Azure CLI][flatcar-deploy-cli]
+- Deploy an Azure Kubernetes Service (AKS) cluster with Flatcar Container Linux for AKS (preview) using an [ARM template][flatcar-deploy-arm]
+- Create an AKS cluster with a single Flatcar Container Linux for AKS (preview) node pool using [Azure CLI or an ARM template][create-node-pools]
+- Add a Flatcar Container Linux for AKS (preview) node pool to an existing cluster using [Azure CLI or an ARM template][create-node-pools]
+
+
+## OS migrations and upgrades with Flatcar Container Linux
+
+AKS doesn't support in-place migrations from existing Linux clusters or node pools to Flatcar Container Linux clusters or node pools. To migrate existing workloads to Flatcar Container Linux for AKS, you need to recreate your node pools using `--ossku flatcar`.
+
+Flatcar Container Linux for AKS releases weekly AKS node images. Versioning follows the AKS date-based format (for example: 202506.13.0). You can check the node images in the release notes and by using the [`az aks nodepool list`](/cli/azure/aks/nodepool#az-aks-nodepool-list) command to view the `nodeImageVersion`. For example:
 
     ```azurecli-interactive
     az aks nodepool list --resource-group <resource-group-name> --cluster-name <aks-cluster-name> --query '[].{name: name, nodeImageVersion: nodeImageVersion}'
     ```
+
+Example output:
 
     ```output
     [
@@ -63,11 +65,13 @@ Flatcar Container Linux for AKS will release weekly AKS node images. Versioning 
     ]
     ```
 
-The Flatcar version number (e.g., Flatcar 4344.0.0) will be visible in the release notes and by using `kubectl get nodes` command.
+You can check the Flatcar version number (for example: Flatcar 4344.0.0) in the release notes and by using `kubectl get nodes` command. For example:
 
     ```bash
     kubectl get nodes -o wide
     ```
+
+Example output:
 
     ```output
     NAME                            STATUS   ROLES    AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                             KERNEL-VERSION    CONTAINER-RUNTIME

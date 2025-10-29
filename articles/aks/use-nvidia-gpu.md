@@ -38,8 +38,8 @@ For AKS node pools, we recommend a minimum size of *Standard_NC6s_v3*. The NVv4 
 ## Limitations
 
 * If you're using an Azure Linux GPU-enabled node pool, automatic security patches aren't applied. Refer to your current AKS API version for the default behavior of node OS upgrade channel.
-* [Flatcar Container Linux for AKS][flatcar] is not yet supported with NVIDIA GPU on AKS.
-* [Azure Linux with OS Guard for AKS][os-guard] is not yet supported with NVIDIA GPU on AKS.
+* [Flatcar Container Linux for AKS][flatcar] isn't supported with NVIDIA GPU on AKS.
+* [Azure Linux with OS Guard for AKS][os-guard] isn't supported with NVIDIA GPU on AKS.
 
 > [!NOTE]
 > For AKS API version 2023-06-01 or later, the default channel for node OS upgrade is *NodeImage*. For previous versions, the default channel is *None*. To learn more, see [auto-upgrade](./auto-upgrade-node-image.md).

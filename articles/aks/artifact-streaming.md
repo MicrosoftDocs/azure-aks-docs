@@ -32,7 +32,7 @@ This article describes how to enable the Artifact Streaming feature on your AKS 
 
 ## Limitations
 
-* Artifact Steaming is not supported for the following OS options: [Windows Server versions][windows-os],[Flatcar Container Linux for AKS][flatcar], and [Azure Linux with OS Guard for AKS][os-guard]
+* Artifact Steaming isn't supported for the following OS options: [Windows Server versions][windows-os], [Flatcar Container Linux for AKS][flatcar], and [Azure Linux with OS Guard for AKS][os-guard].
 
 ## Prerequisites
 
