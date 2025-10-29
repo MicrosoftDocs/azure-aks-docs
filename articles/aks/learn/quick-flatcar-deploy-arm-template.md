@@ -5,6 +5,7 @@ ms.topic: quickstart
 ms.date: 10/22/2025
 author: allyford
 ms.author: allyford
+ms.service: azure-kubernetes-service
 
 # Customer intent: As a developer or cluster operator, I want to deploy an AKS cluster and deploy an application built using Flatcar Container Linux, so that I can ensure reliable and efficient container workloads with reduced maintenance and enhanced security across multiple cloud providers."
 
