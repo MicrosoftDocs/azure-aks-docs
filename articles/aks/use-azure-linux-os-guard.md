@@ -35,19 +35,20 @@ Azure Linux with OS Guard on AKS builds on the benefits of [Azure Linux][azureli
 
 Learn more about the [key features of Azure Linux with OS Guard][os-guard-doc].
 
-## How to use Azure Linux with OS Guard on AKS
-
-To get started using the Azure Linux container host for AKS, see:
-
-* [Creating a cluster with Azure Linux with OS Guard][os-guard-quickstart]
-* [How to upgrade Azure Linux with OS Guard clusters][os-guard-upgrade]
-* [Add an Azure Linux with OS Guard node pool to your existing cluster][os-guard-add-node-pool]
-* [Migrate to Azure Linux with OS Guard][os-guard-migrate]
-* [Enable Telemetry and Monitoring on an Azure Linux with OS Guard cluster][os-guard-monitoring]
-
 ## Regional availability
 
 Azure Linux with OS Guard is available for use in the same regions as AKS.
+
+## Get started with Azure Linux with OS Guard on AKS
+
+Get started with Azure Linux with OS Guard on AKS using the following resources:
+
+- [Creating a cluster with Azure Linux with OS Guard][os-guard-quickstart]
+- [How to upgrade Azure Linux with OS Guard clusters][os-guard-upgrade]
+- [Add an Azure Linux with OS Guard node pool to your existing cluster][os-guard-add-node-pool]
+- [Migrate to Azure Linux with OS Guard][os-guard-migrate]
+- [Enable telemetry and monitoring on an Azure Linux with OS Guard cluster][os-guard-monitoring]
+
 
 ## Next steps
 
