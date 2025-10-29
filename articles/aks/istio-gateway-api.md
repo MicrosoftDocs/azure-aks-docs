@@ -390,7 +390,7 @@ updated-per-gateway
 [istio-support-policy]: istio-support-policy.md#allowed-supported-and-blocked-customizations
 [istio-upgrade]: istio-upgrade.md
 [managed-gateway-addon]: managed-gateway-api.md
-[annotation customizations]: #annotation-customizations
+[annotation-customizations]: #annotation-customizations
 [azure-aks-load-balancer-annotations]: load-balancer-standard.md#customizations-via-kubernetes-annotations
 
 [istio-gateway-auto-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#automated-deployment
