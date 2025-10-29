@@ -60,7 +60,7 @@ If you only want to use Fleet Manager for update orchestration, you can create a
 ### [Fleet Manager resource with hub cluster](#tab/with-hub-cluster)
 If you want to use Fleet Manager for Kubernetes object propagation in addition to update orchestration, then you need to create the Fleet Manager resource with the hub cluster.
 
-Fleet Manager clusters with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
+Fleet Manager clusters with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
 
 #### Public hub cluster
 To create a public Fleet Manager resource with a hub cluster, use the following ARM template
