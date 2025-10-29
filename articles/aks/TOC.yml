@@ -320,6 +320,8 @@
           href: upgrade.md
         - name: Upgrade options and recommendations
           href: upgrade-cluster.md
+        - name: How AKS cluster upgrades work
+          href: how-does-upgrade-happen.md
         - name: AKS component versioning
           href: aks-component-versioning.md
         - name: Upgrade scenarios hub
@@ -1000,8 +1002,10 @@
       href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: GPUs
       items:
-        - name: Use Linux GPUs
+        - name: Use NVIDIA GPUs
           href: use-nvidia-gpu.md
+        - name: Use managed GPU nodes
+          href: aks-managed-gpu-nodes.md
         - name: Use Windows GPUs
           href: use-windows-gpu.md
         - name: Use AMD GPUs
