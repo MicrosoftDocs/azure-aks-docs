@@ -5,7 +5,7 @@ ms.topic: quickstart
 ms.date: 10/19/2025
 author: allyford
 ms.author: allyford
-
+ms.service: azure-kubernetes-service
 # Customer intent: As a developer or cluster operator, I want to deploy an AKS cluster and deploy an application built using Flatcar Container Linux, so that I can ensure reliable and efficient container workloads with reduced maintenance and enhanced security across multiple cloud providers."
 ---
 
@@ -15,7 +15,7 @@ ms.author: allyford
 
 Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you quickly deploy and manage clusters. In this quickstart, you learn how to:
 
-- Create an AKS cluster using Flatcar Container Linux for AKS (preview)
+- Create an AKS cluster using Flatcar Container Linux for AKS (preview).
 - Deploy an AKS cluster using the Azure CLI.
 - Run a sample multi-container application with a group of microservices and web front ends that simulate a retail scenario.
 
@@ -31,10 +31,10 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 - Make sure that the identity you're using to create your cluster has the appropriate minimum permissions. For more information on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
-- If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [az account set](/cli/azure/account#az-account-set) command. For more information, see [How to manage Azure subscriptions – Azure CLI](/cli/azure/manage-azure-subscriptions-azure-cli?tabs=bash#change-the-active-subscription).
+- If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [`az account set`](/cli/azure/account#az-account-set) command. For more information, see [How to manage Azure subscriptions – Azure CLI](/cli/azure/manage-azure-subscriptions-azure-cli?tabs=bash#change-the-active-subscription).
 - Dependent upon your Azure subscription, you might need to request a vCPU quota increase. For more information, see [Increase VM-family vCPU quotas](/azure/quotas/per-vm-quota-requests).
 
-### Install `aks-preview` extension
+### Install the `aks-preview` extension
 
 1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
 
@@ -50,7 +50,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
     az extension update --name aks-preview
     ```
 
-### Register `AKSFlatcarPreview` feature flag
+### Register the `AKSFlatcarPreview` feature flag
 
 1. Register the `AKSFlatcarPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
@@ -74,87 +74,87 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
 You might need to register resource providers in your Azure subscription. For example, `Microsoft.ContainerService` is required. 
 
-Run the following command to check the registration status. 
+1. Check the registration status using the [`az provider show`](/cli/azure/provider#az-provider-show) command.
 
-```azurecli-interactive
-az provider show --namespace Microsoft.ContainerService --query registrationState
-```
+    ```azurecli-interactive
+    az provider show --namespace Microsoft.ContainerService --query registrationState
+    ```
 
-If necessary, register the resource provider.
+1. If necessary, register the resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
 
-```azurecli-interactive
-az provider register --namespace Microsoft.ContainerService
-```
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
 
 ## Define environment variables
 
-Define the following environment variables for use throughout this quickstart.
+- Define the following environment variables for use throughout this quickstart:
 
-```azurecli-interactive
-export RANDOM_ID="$(openssl rand -hex 3)"
-export MY_RESOURCE_GROUP_NAME="myAKSResourceGroup$RANDOM_ID"
-export REGION="westus"
-export MY_AKS_CLUSTER_NAME="myAKSCluster$RANDOM_ID"
-export MY_DNS_LABEL="mydnslabel$RANDOM_ID"
-```
+    ```bash
+    export RANDOM_ID="$(openssl rand -hex 3)"
+    export MY_RESOURCE_GROUP_NAME="myAKSResourceGroup$RANDOM_ID"
+    export REGION="westus"
+    export MY_AKS_CLUSTER_NAME="myAKSCluster$RANDOM_ID"
+    export MY_DNS_LABEL="mydnslabel$RANDOM_ID"
+    ```
 
-The `RANDOM_ID` variable's value is a six character alphanumeric value appended to the resource group and cluster name so that the names are unique. Use the `echo` command to view variable values like `echo $RANDOM_ID`.
+    The `RANDOM_ID` variable's value is a six-character alphanumeric value appended to the resource group and cluster name so that the names are unique. Use the `echo` command to view variable values like `echo $RANDOM_ID`.
 
 ## Create a resource group
 
 An [Azure resource group][azure-resource-group] is a logical group in which Azure resources are deployed and managed. When you create a resource group, you're prompted to specify a location. This location is the storage location of your resource group metadata and where your resources run in Azure if you don't specify another region during resource creation.
 
-Create a resource group using the [az group create][az-group-create] command.
+- Create a resource group using the [`az group create`][az-group-create] command.
 
-```azurecli-interactive
-az group create --name $MY_RESOURCE_GROUP_NAME --location $REGION
-```
+    ```azurecli-interactive
+    az group create --name $MY_RESOURCE_GROUP_NAME --location $REGION
+    ```
 
-The result looks like the following example.
-<!-- expected_similarity=0.3 -->
-```output
-{
-  "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myAKSResourceGroup<randomIDValue>",
-  "location": "westus",
-  "managedBy": null,
-  "name": "myAKSResourceGroup<randomIDValue>",
-  "properties": {
-    "provisioningState": "Succeeded"
-  },
-  "tags": null,
-  "type": "Microsoft.Resources/resourceGroups"
-}
-```
+    Example output:
+    <!-- expected_similarity=0.3 -->
+    ```output
+    {
+      "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myAKSResourceGroup<randomIDValue>",
+      "location": "westus",
+      "managedBy": null,
+      "name": "myAKSResourceGroup<randomIDValue>",
+      "properties": {
+        "provisioningState": "Succeeded"
+      },
+      "tags": null,
+      "type": "Microsoft.Resources/resourceGroups"
+    }
+    ```
 
 ## Create an AKS cluster
 
-Create an AKS cluster using the [az aks create][az-aks-create] command. The following example creates a cluster with one node and enables a system-assigned managed identity.
+- Create an AKS cluster using the [`az aks create`][az-aks-create] command. The following example creates a cluster with one node and enables a system-assigned managed identity:
 
-```azurecli-interactive
-az aks create \
-  --resource-group $MY_RESOURCE_GROUP_NAME \
-  --name $MY_AKS_CLUSTER_NAME \
-  --ossku flatcar
-  --node-count 1 \
-  --generate-ssh-keys
-```
+    ```azurecli-interactive
+    az aks create \
+      --resource-group $MY_RESOURCE_GROUP_NAME \
+      --name $MY_AKS_CLUSTER_NAME \
+      --ossku flatcar
+      --node-count 1 \
+      --generate-ssh-keys
+    ```
 
-> [!NOTE]
-> When you create a new cluster, AKS automatically creates a second resource group to store the AKS resources. For more information, see [Why are two resource groups created with AKS?](../faq.yml)
+    > [!NOTE]
+    > When you create a new cluster, AKS automatically creates a second resource group to store the AKS resources. For more information, see [Why are two resource groups created with AKS?](../faq.yml)
 
 ## Connect to the cluster
 
-To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [az aks install-cli][az-aks-install-cli] command.
+To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [`az aks install-cli`][az-aks-install-cli] command.
 
-1. Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
     ```azurecli-interactive
     az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_AKS_CLUSTER_NAME
     ```
 
-1. Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
+1. Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
 
-    ```azurecli-interactive
+    ```bash
     kubectl get nodes
     ```
 
@@ -467,9 +467,9 @@ To deploy the application, you use a manifest file to create all the objects req
 
     If you create and save the YAML file locally, then you can upload the manifest file to your default directory in Cloud Shell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
-2. Deploy the application using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest.
+1. Deploy the application using the [`kubectl apply`][kubectl-apply] command and specify the name of your YAML manifest.
 
-    ```azurecli-interactive
+    ```bash
     kubectl apply -f aks-store-quickstart.yaml
     ```
 
@@ -477,68 +477,70 @@ To deploy the application, you use a manifest file to create all the objects req
 
 You can validate that the application is running by visiting the public IP address or the application URL.
 
-Get the application URL using the following commands:
+1. Get the application URL using the following commands:
 
-```azurecli-interactive
-runtime="5 minutes"
-endtime=$(date -ud "$runtime" +%s)
-while [[ $(date -u +%s) -le $endtime ]]
-do
-   STATUS=$(kubectl get pods -l app=store-front -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}')
-   echo $STATUS
-   if [ "$STATUS" == 'True' ]
-   then
-      export IP_ADDRESS=$(kubectl get service store-front --output 'jsonpath={..status.loadBalancer.ingress[0].ip}')
-      echo "Service IP Address: $IP_ADDRESS"
-      break
-   else
-      sleep 10
-   fi
-done
-```
+    ```bash
+    runtime="5 minutes"
+    endtime=$(date -ud "$runtime" +%s)
+    while [[ $(date -u +%s) -le $endtime ]]
+    do
+       STATUS=$(kubectl get pods -l app=store-front -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}')
+       echo $STATUS
+       if [ "$STATUS" == 'True' ]
+       then
+          export IP_ADDRESS=$(kubectl get service store-front --output 'jsonpath={..status.loadBalancer.ingress[0].ip}')
+          echo "Service IP Address: $IP_ADDRESS"
+          break
+       else
+          sleep 10
+       fi
+    done
+    ```
 
-```azurecli-interactive
-curl $IP_ADDRESS
-```
+    ```bash
+    curl $IP_ADDRESS
+    ```
 
-Results:
-<!-- expected_similarity=0.3 -->
-```HTML
-<!doctype html>
-<html lang="">
-   <head>
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      <link rel="icon" href="/favicon.ico">
-      <title>store-front</title>
-      <script defer="defer" src="/js/chunk-vendors.df69ae47.js"></script>
-      <script defer="defer" src="/js/app.7e8cfbb2.js"></script>
-      <link href="/css/app.a5dc49f6.css" rel="stylesheet">
-   </head>
-   <body>
-      <div id="app"></div>
-   </body>
-</html>
-```
+    Example output:
+    <!-- expected_similarity=0.3 -->
+    ```HTML
+    <!doctype html>
+    <html lang="">
+       <head>
+          <meta charset="utf-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width,initial-scale=1">
+          <link rel="icon" href="/favicon.ico">
+          <title>store-front</title>
+          <script defer="defer" src="/js/chunk-vendors.df69ae47.js"></script>
+          <script defer="defer" src="/js/app.7e8cfbb2.js"></script>
+          <link href="/css/app.a5dc49f6.css" rel="stylesheet">
+       </head>
+       <body>
+          <div id="app"></div>
+       </body>
+    </html>
+    ```
 
-```output
-echo "You can now visit your web server at $IP_ADDRESS"
-```
+    ```output
+    echo "You can now visit your web server at $IP_ADDRESS"
+    ```
 
-To view the application website, open a browser and enter the IP address. The page looks like the following example.
+1. View the application website, open a browser and enter the IP address. The page looks like the following example.
 
-:::image type="content" source="media/quick-kubernetes-deploy-cli/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="media/quick-kubernetes-deploy-cli/aks-store-application.png":::
+    :::image type="content" source="media/quick-kubernetes-deploy-cli/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="media/quick-kubernetes-deploy-cli/aks-store-application.png":::
 
 ## Delete the cluster
 
-If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up unnecessary resources to avoid Azure billing charges. You can remove the resource group, container service, and all related resources using the [az group delete][az-group-delete] command.
+If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up unnecessary resources to avoid Azure billing charges.
 
-```azurecli-interactive
-az group delete --name $MY_RESOURCE_GROUP_NAME
-```
+- Remove the resource group, container service, and all related resources using the [`az group delete`][az-group-delete] command.
 
-The AKS cluster was created with a system-assigned managed identity, which is the default identity option used in this quickstart. The platform manages this identity so you don't need to manually remove it.
+    ```azurecli-interactive
+    az group delete --name $MY_RESOURCE_GROUP_NAME
+    ```
+
+    The AKS cluster was created with a system-assigned managed identity, which is the default identity option used in this quickstart. The platform manages this identity so you don't need to manually remove it.
 
 ## Next steps
 

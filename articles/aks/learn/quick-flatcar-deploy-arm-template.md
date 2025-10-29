@@ -14,7 +14,7 @@ ms.author: allyford
 
 Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you quickly deploy and manage clusters. In this quickstart, you:
 
-- Create an AKS cluster using Flatcar Container Linux for AKS (preview)
+- Create an AKS cluster using Flatcar Container Linux for AKS (preview).
 - Deploy an AKS cluster using an Azure Resource Manager template.
 - Run a sample multi-container application with a group of microservices and web front ends simulating a retail scenario.
 
@@ -35,7 +35,7 @@ This article assumes a basic understanding of Kubernetes concepts. For more info
 
 After you deploy the cluster from the template, you can use either Azure CLI or Azure PowerShell to connect to the cluster and deploy the sample application.
 
-### Install `aks-preview` extension
+### Install the `aks-preview` extension
 
 1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
 
@@ -51,7 +51,7 @@ After you deploy the cluster from the template, you can use either Azure CLI or 
     az extension update --name aks-preview
     ```
 
-### Register `AKSFlatcarPreview` feature flag
+### Register the `AKSFlatcarPreview` feature flag
 
 1. Register the `AKSFlatcarPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
@@ -80,9 +80,9 @@ To create an AKS cluster using an ARM template, you provide an SSH public key. I
 To access AKS nodes, you connect using an SSH key pair (public and private). To create an SSH key pair:
 
 1. Go to [https://shell.azure.com](https://shell.azure.com) to open Cloud Shell in your browser.
-1. Create an SSH key pair using the [az sshkey create](/cli/azure/sshkey#az-sshkey-create) command or the `ssh-keygen` command.
+1. Create an SSH key pair using the [`az sshkey create`](/cli/azure/sshkey#az-sshkey-create) command or the `ssh-keygen` command.
 
-    ```azurecli
+    ```azurecli-interactive
     # Create an SSH key pair using Azure CLI
     az sshkey create --name "mySSHKey" --resource-group "myResourceGroup"
 
@@ -92,15 +92,15 @@ To access AKS nodes, you connect using an SSH key pair (public and private). To 
     ssh-keygen -t rsa -b 4096
     ```
 
-1. To deploy the template, you must provide the public key from the SSH pair. To retrieve the public key, call [az sshkey show](/cli/azure/sshkey#az-sshkey-show):
+1. To deploy the template, you must provide the public key from the SSH pair. Retrieve the public key using the [`az sshkey show`](/cli/azure/sshkey#az-sshkey-show) command.
 
-    ```azurecli
+    ```azurecli-interactive
     az sshkey show --name "mySSHKey" --resource-group "myResourceGroup" --query "publicKey"
     ```
 
-By default, the SSH key files are created in the *~/.ssh* directory. Running the `az sshkey create` or `ssh-keygen` command will overwrite any existing SSH key pair with the same name.
+    By default, the SSH key files are created in the _~/.ssh_ directory. Running the `az sshkey create` or `ssh-keygen` command overwrites any existing SSH key pair with the same name.
 
-For more information about creating SSH keys, see [Create and manage SSH keys for authentication in Azure][ssh-keys].
+    For more information about creating SSH keys, see [Create and manage SSH keys for authentication in Azure][ssh-keys].
 
 ## Review the template
 
@@ -140,21 +140,21 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
 
 ### [Azure CLI](#tab/azure-cli)
 
-If you use Azure Cloud Shell, `kubectl` is already installed. To install and run `kubectl` locally, call the [az aks install-cli][az-aks-install-cli] command.
+If you use Azure Cloud Shell, `kubectl` is already installed. To install and run `kubectl` locally, use the [`az aks install-cli`][az-aks-install-cli] command.
 
-1. Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
-    ```azurecli
+    ```azurecli-interactive
     az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
     ```
 
-1. Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
+1. Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
 
-    ```azurecli
+    ```bash
     kubectl get nodes
     ```
 
-    The following example output shows the three nodes created in the previous steps. Make sure the node status is *Ready*.
+    The following example output shows the three nodes created in the previous steps. Make sure the node status is _Ready_:
 
     ```output
     NAME                                STATUS   ROLES   AGE   VERSION
@@ -165,21 +165,21 @@ If you use Azure Cloud Shell, `kubectl` is already installed. To install and run
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-If you use Azure Cloud Shell, `kubectl` is already installed. To install `kubectl` locally, call the [Install-AzAksCliTool][install-azakskubectl] cmdlet.
+If you use Azure Cloud Shell, `kubectl` is already installed. To install `kubectl` locally, use the [`Install-AzAksCliTool`][install-azakskubectl] cmdlet.
 
-1. Configure `kubectl` to connect to your Kubernetes cluster using the [Import-AzAksCredential][import-azakscredential] cmdlet. This command downloads credentials and configures the Kubernetes CLI to use them.
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`Import-AzAksCredential`][import-azakscredential] cmdlet. This command downloads credentials and configures the Kubernetes CLI to use them.
 
-    ```azurepowershell
+    ```azurepowershell-interactive
     Import-AzAksCredential -ResourceGroupName myResourceGroup -Name myAKSCluster
     ```
 
-1. Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
+1. Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
 
-    ```azurepowershell
+    ```bash
     kubectl get nodes
     ```
 
-    The following example output shows the three nodes created in the previous steps. Make sure the node status is *Ready*.
+    The following example output shows the three nodes created in the previous steps. Make sure the node status is _Ready_:
 
     ```output
     NAME                                STATUS   ROLES   AGE   VERSION
@@ -439,9 +439,9 @@ To deploy the application, you use a manifest file to create all the objects req
 
     If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
-2. Deploy the application using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest.
+1. Deploy the application using the [`kubectl apply`][kubectl-apply] command and specify the name of your YAML manifest.
 
-    ```console
+    ```bash
     kubectl apply -f aks-store-quickstart.yaml
     ```
 
@@ -460,15 +460,15 @@ To deploy the application, you use a manifest file to create all the objects req
 
 ## Test the application
 
-1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command. Make all pods are `Running` before proceeding.
+1. Check the status of the deployed pods using the [`kubectl get pods`][kubectl-get] command. Make all pods are `Running` before proceeding.
 
-    ```console
+    ```bash
     kubectl get pods
     ```
 
-1. Check for a public IP address for the store-front application. Monitor progress using the [kubectl get service][kubectl-get] command with the `--watch` argument.
+1. Check for a public IP address for the store-front application. Monitor progress using the [`kubectl get service`][kubectl-get] command with the `--watch` argument.
 
-    ```console
+    ```bash
     kubectl get service store-front --watch
     ```
 
@@ -488,7 +488,7 @@ To deploy the application, you use a manifest file to create all the objects req
     store-front   LoadBalancer   10.0.100.10   20.62.159.19   80:30025/TCP   4h5m
     ```
 
-1. Open a web browser to the external IP address of your service to see the Azure Store app in action.
+1. Open a web browser to the external IP address of your service to see the Azure Store app in action:
 
     :::image type="content" source="media/quick-kubernetes-deploy-rm-template/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="media/quick-kubernetes-deploy-rm-template/aks-store-application.png":::
 
@@ -498,24 +498,24 @@ If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up un
 
 ### [Azure CLI](#tab/azure-cli)
 
-Remove the resource group, container service, and all related resources by calling the [az group delete][az-group-delete] command.
+- Remove the resource group, container service, and all related resources using the [`az group delete`][az-group-delete] command.
 
-```azurecli
-az group delete --name myResourceGroup --yes --no-wait
-```
+    ```azurecli-interactive
+    az group delete --name myResourceGroup --yes --no-wait
+    ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-Remove the resource group, container service, and all related resources by calling the [Remove-AzResourceGroup][remove-azresourcegroup] cmdlet
+- Remove the resource group, container service, and all related resources using the [`Remove-AzResourceGroup`][remove-azresourcegroup] cmdlet.
 
-```azurepowershell
-Remove-AzResourceGroup -Name myResourceGroup
-```
+    ```azurepowershell-interactive
+    Remove-AzResourceGroup -Name myResourceGroup
+    ```
 
 ---
 
 > [!NOTE]
-> The AKS cluster was created with a system-assigned managed identity, which is the default identity option used in this quickstart. The platform manages this identity so you don't need to manually remove it.
+> The AKS cluster was created with a system-assigned managed identity, which is the default identity option used in this quickstart. The platform manages this identity, so you don't need to manually remove it.
 
 ## Next steps
 
