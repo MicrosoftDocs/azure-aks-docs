@@ -50,33 +50,33 @@ AKS doesn't support in-place migrations from existing Linux clusters or node poo
 
 Flatcar Container Linux for AKS releases weekly AKS node images. Versioning follows the AKS date-based format (for example: 202506.13.0). You can check the node images in the release notes and by using the [`az aks nodepool list`](/cli/azure/aks/nodepool#az-aks-nodepool-list) command to view the `nodeImageVersion`. For example:
 
-    ```azurecli-interactive
-    az aks nodepool list --resource-group <resource-group-name> --cluster-name <aks-cluster-name> --query '[].{name: name, nodeImageVersion: nodeImageVersion}'
-    ```
+```azurecli-interactive
+az aks nodepool list --resource-group <resource-group-name> --cluster-name <aks-cluster-name> --query '[].{name: name, nodeImageVersion: nodeImageVersion}'
+```
 
 Example output:
 
-    ```output
-    [
-    {
-        "name": "nodes",
-        "nodeImageVersion": "AKSFlatcar-flatcargen2-202508.06.0"
-    }
-    ]
-    ```
+```output
+[
+{
+    "name": "nodes",
+    "nodeImageVersion": "AKSFlatcar-flatcargen2-202508.06.0"
+}
+]
+```
 
 You can check the Flatcar version number (for example: Flatcar 4344.0.0) in the release notes and by using `kubectl get nodes` command. For example:
 
-    ```bash
-    kubectl get nodes -o wide
-    ```
+```bash
+kubectl get nodes -o wide
+```
 
 Example output:
 
-    ```output
-    NAME                            STATUS   ROLES    AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                             KERNEL-VERSION    CONTAINER-RUNTIME
-    aks-nodes-16363508-vmss000000   Ready    <none>   2m33s   v1.32.6   10.224.0.4    <none>        Flatcar Container Linux by Kinvolk 4372.0.1 (Oklo)   6.12.35-flatcar   containerd://2.0.4
-    ```
+```output
+NAME                            STATUS   ROLES    AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                             KERNEL-VERSION    CONTAINER-RUNTIME
+aks-nodes-16363508-vmss000000   Ready    <none>   2m33s   v1.32.6   10.224.0.4    <none>        Flatcar Container Linux by Kinvolk 4372.0.1 (Oklo)   6.12.35-flatcar   containerd://2.0.4
+```
 
 ## Next steps
 
