@@ -1,6 +1,6 @@
 ---
 title: Configure Scheduler Profiles on Azure Kubernetes Service (AKS) (preview)
-description: Learn how to set scheduler profiles to achieve advanced scheduling behaviors on Azure Kubernetes Service (AKS)
+description: Learn how to set scheduler profiles to achieve advanced scheduling behaviors on Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.date: 09/30/2025
 ms.author: sachidesai
