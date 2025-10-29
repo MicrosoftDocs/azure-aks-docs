@@ -145,7 +145,8 @@ To learn more about these plugins and configuration options, see the [Kubernetes
     - `Node`: Information about the node on which preemption is considered.
 
 - `ImageLocality`: Helps the scheduler decide whether to schedule a pod onto a node based on the presence of a required container image. It tries to schedule pods on nodes where the required image is already present, reducing the time needed to pull the image.
-- `InterPodAffinity`: Takes into account _affinity_ rules specified by the user that influence scheduling based on the proximity of other pods. If a pod has affinity rules, it tries to schedule the pod on the same node or in the same topology as other pods that it has an affinity for (for example: for performance reasons or tight coupling). This plugin can receive the following arguments:
+- `InterPodAffinity`: Takes into account _affinity_ rules specified by the user that influences scheduling based on the proximity of other pods. If a pod has affinity rules, it tries to schedule the pod on the same node or in the same topology as other pods that it has an affinity for (for example: for performance reasons or tight coupling). This plugin can receive the following arguments:
+
 
      - `Affinity`: Defines required or preferred affinity rules for the pod, which specifies other pods that the pod should or shouldn't be scheduled nearby.
      - `TopologyKey`: The key representing the failure domain to which the affinity rule applies (for example: `"kubernetes.io/hostname"` for node-level affinity or `"topology.kubernetes.io/zone"` for zone-level).
