@@ -45,7 +45,7 @@ Trusted Launch is composed of several, coordinated infrastructure technologies t
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
 - To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see [Skip GPU driver installation][skip-gpu-driver-install].
 - Ephemeral OS disks can be created with trusted Launch and all regions are supported. However, not all virtual machines sizes are supported. For more information, see [Trusted Launch ephemeral OS sizes][tusted-launch-ephemeral-os-sizes].
-- [Flatcar Container Linux for AKS][flatcar] does not support Trusted Launch on AKS.
+- [Flatcar Container Linux for AKS][flatcar] doesn't support Trusted Launch on AKS.
 
 ## Create an AKS cluster with Trusted Launch enabled
 
