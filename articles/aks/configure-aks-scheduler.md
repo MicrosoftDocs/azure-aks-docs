@@ -367,6 +367,9 @@ The scheduling profile, **scheduler-one** prioritizes placing pods across zones 
     kubectl delete schedulerconfiguration upstream || true
     ```
 
+    > [!NOTE]
+    > Ensure that the previous step is complete and confirm that the `schedulerconfiguration` resource was deleted before proceeding to disable this feature.
+
 1. Disable the feature using the [`az aks update`](/cli/azure/aks#az_aks_update) command with the `--disable-upstream-kubescheduler-user-configuration` flag.
 
     ```azurecli-interactive
