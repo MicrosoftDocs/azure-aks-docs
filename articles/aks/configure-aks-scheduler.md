@@ -33,13 +33,15 @@ In this article, you learn how to deploy example scheduler profiles in Azure Kub
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-- Install the `aks-preview` extension using the [`az extension add`](/cli/azure/extension#az_extension_add) command.
+1. Install the `aks-preview` extension using the [`az extension add`](/cli/azure/extension#az_extension_add) command.
+
 
     ```azurecli-interactive
     az extension add --name aks-preview
     ```
 
-- Update to the latest version of the `aks-preview` extension using the [`az extension update`](/cli/azure/extension#az_extension_update) command.
+1. Update to the latest version of the `aks-preview` extension using the [`az extension update`](/cli/azure/extension#az_extension_update) command.
+
 
     ```azurecli-interactive
     az extension update --name aks-preview
