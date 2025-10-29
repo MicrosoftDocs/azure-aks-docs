@@ -25,7 +25,6 @@ In this article, you learn how to provision a fully managed GPU node pool (previ
 
 - This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 - You need the Azure CLI version 2.72.2 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-- This feature requires Kubernetes version 1.34 or later. To check your AKS cluster version, see [Check for available AKS cluster upgrades][aks-upgrade].
 - You need to [install and upgrade to latest version of the `aks-preview` extension](#install-the-aks-preview-cli-extension).
 - You need to [register the `ManagedGPUExperiencePreview` feature flag in your subscription](#register-the-managedgpuexperiencepreview-feature-flag-in-your-subscription).
 
