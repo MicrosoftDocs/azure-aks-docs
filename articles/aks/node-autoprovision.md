@@ -3,7 +3,7 @@ title: Node auto provisioning
 description: Learn about Azure Kubernetes Service (AKS) node autoprovisioning.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 07/23/2025
+ms.date: 09/29/2025
 ms.author: wilsondarko
 author: wdarko1
 
@@ -45,11 +45,14 @@ Node auto provisioning provisions, scales, and manages virtual machines (nodes) 
 - [Service Principals](./kubernetes-service-principal.md)
    > [!NOTE]
    > You can use either a system-assigned or user-assigned managed identity.
-- Disk encryption sets
+- Disk Encryption Sets
 - CustomCATrustCertificates
 - Clusters with node autoprovisioning can't be [stopped](./start-stop-cluster.md)
 - [HTTP proxy](./http-proxy.md)
 - All cluster egress [outbound types](./egress-outboundtype.md) are supported, however the type can't be changed after the cluster is created
+
+> [!NOTE] 
+> Private Clusters are now supported with NAP-enabled clusters, which were previously listed as unsupported. See the [2025-09-21 AKS Release Notes](https://github.com/Azure/AKS/releases/tag/2025-09-21) for more information.
 
 ## Networking configuration
 
@@ -66,7 +69,6 @@ Key networking considerations:
 
 - Azure CNI Overlay with Cilium is recommended
 - Standard Load Balancer is required
-- Private clusters aren't currently supported
 
 ## Enable node autoprovisioning
 
@@ -334,9 +336,84 @@ AKS recommends coupling node autoprovisioning with a Kubernetes [Auto Upgrade][a
 
 ### Node image updates
 
-By default node autoprovisioning node pool virtual machines are automatically updated when a new image is available. There are multiple methods to regulate when your node image updates take place, including Karpenter or Node Disruption Budgets, and Pod Disruption Budgets.
+By default, node autoprovisioning node pool virtual machines are automatically updated when a new image version is available.
 
->[!NOTE]
+There are multiple methods to regulate when upgrades occur:
+- Configure an `aksManagedNodeOSUpgradeSchedule` maintenance window for the cluster to control when new images are picked up.
+- Use Karpenter Node Disruption Budgets and Pod Disruption Budgets to control how and when disruption occurs during upgrades.
+
+
+#### Node OS maintenance windows (support for NAP)
+
+Node autoprovisioning (NAP) honors Node OS maintenance windows configured via the AKS Planned Maintenance feature. Configure the `aksManagedNodeOSUpgradeSchedule` maintenance configuration to control when NAP picks up new images for NAP‑provisioned nodes.
+
+Key points:
+
+- The `aksManagedNodeOSUpgradeSchedule` maintenance configuration determines the window during which node autoprovisioning picks up a new image; it does not necessarily determine when existing nodes are disrupted.
+- The upgrade mechanism and decision criteria are specific to NAP/Karpenter and are evaluated by NAP's drift logic; NAP respects Karpenter Node Disruption Budgets, and Pod Disruption Budgets.
+- These NAP upgrade decisions are separate from the cluster `NodeImage` and `SecurityPatch` channels. However, the `aksManagedNodeOSUpgradeSchedule` maintenance configuration will apply them as well.
+- Use a maintenance window of four hours or more for reliable operation.
+- If no maintenance configuration exists, AKS may use a fallback schedule to pick up new images, which can cause images to be picked up at unexpected times. Define an explicit `aksManagedNodeOSUpgradeSchedule` to avoid unexpected timing of new images, and upgrades.
+
+> [!NOTE] 
+> NAP will force the latest image version to be picked up, if the existing node image version is ever older than 90 days. This will bypass any existing maintenance window.
+
+Recommended schedule patterns for NAP-managed nodes:
+
+- Weekly cadence: recommended for routine node image rollouts (for example, "Every week on Sunday").
+
+**Create a Node OS maintenance schedule example (JSON + Azure CLI)**
+
+1. Create a JSON file named `nodeosMaintenance.json` with a weekly maintenance window (Sunday at 01:00 UTC for 4 hours):
+
+```json
+{
+  "properties": {
+    "maintenanceWindow": {
+      "durationHours": 4,
+      "schedule": {
+        "weekly": {
+          "intervalWeeks": 1,
+          "dayOfWeek": "Sunday"
+        }
+      },
+      "startDate": "2025-01-01",
+      "startTime": "01:00",
+      "utcOffset": "+00:00"
+    }
+  }
+}
+```
+
+2. Add the maintenance configuration to your cluster:
+
+```azurecli-interactive
+az aks maintenanceconfiguration add --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME} --name aksManagedNodeOSUpgradeSchedule --config-file ./nodeosMaintenance.json
+```
+
+Update, view, list, and delete:
+
+```azurecli-interactive
+az aks maintenanceconfiguration update --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME} --name aksManagedNodeOSUpgradeSchedule --config-file ./nodeosMaintenance.json
+```
+
+```azurecli-interactive
+az aks maintenanceconfiguration show --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME} --name aksManagedNodeOSUpgradeSchedule
+```
+
+```azurecli-interactive
+az aks maintenanceconfiguration list --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME}
+```
+
+```azurecli-interactive
+az aks maintenanceconfiguration delete --resource-group ${RG_NAME} --cluster-name ${CLUSTER_NAME} --name aksManagedNodeOSUpgradeSchedule
+```
+
+**Operational considerations**
+
+- Allow at least 30 minutes between creating or updating a maintenance configuration and the scheduled start time to ensure AKS has time to reconcile the new configuration.
+
+For complete details, examples, and advanced scenarios, see Use Planned Maintenance to schedule maintenance windows for your AKS cluster: [planned-maintenance][planned-maintenance].
 
 ## Node auto provisioning Metrics
 You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to see the logs and operations from [node auto provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview)
@@ -461,6 +538,7 @@ Node auto provisioning can only be disabled when:
 [azure cli]: /cli/azure/get-started-with-azure-cli
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
+[planned-maintenance]: /azure/aks/planned-maintenance
 [planned-maintenance#schedule-configuration-types-for-planned-maintenance]: /azure/aks/planned-maintenance#schedule-configuration-types-for-planned-maintenance
 [Azure-Policy-RBAC-permissions]: /azure/governance/policy/overview#azure-rbac-permissions-in-azure-policy
 [aks-entra-rbac]: /azure/aks/manage-azure-rbac

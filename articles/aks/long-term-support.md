@@ -119,7 +119,6 @@ The following table provides a list of add-ons and features that aren't supporte
 
 |  Add-on / Feature | Reason it's unsupported |
 |---|---|
-| Istio |  The Istio support cycle is short (six months), and there are no maintenance releases for supported LTS versions. |
 | Calico  |  Requires Calico Enterprise agreement past community support. |
 | Key Management Service (KMS) | KMSv2 replaces KMS during this LTS cycle. |
 | Dapr | AKS extensions aren't supported. |

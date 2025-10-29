@@ -17,6 +17,9 @@ As a secure service, Azure Kubernetes Service (AKS) complies with SOC, ISO, PCI 
 
 The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.11.1][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.29.x through AKS 1.32.x. For support timelines, see [supported Kubernetes versions][supported-kubernetes-versions].
 
+> [!NOTE]
+> In addition to the Kubernetes CIS benchmark, there's an [AKS CIS benchmark][cis-benchmark-aks] available as well.
+
 ### Security levels
 
 CIS benchmarks provide two levels of security settings:
@@ -82,7 +85,7 @@ Recommendations can have one of the following attestation statuses:
 | 1.2.9 | Ensure that the admission control plugin EventRateLimit is set | Manual | L1 | Fail | Operational impact |
 | 1.2.10 | Ensure that the admission control plugin AlwaysAdmit isn't set | Automated | L1 | Pass | |
 | 1.2.11 | Ensure that the admission control plugin AlwaysPullImages is set | Manual | L1 | Fail | Operational impact |
-| 1.2.12 | Ensure that the admission control plugin ServiceAccount is set | Automated | L2 | Pass |  |  |
+| 1.2.12 | Ensure that the admission control plugin ServiceAccount is set | Automated | L2 | Pass |  |
 | 1.2.13 | Ensure that the admission control plugin NamespaceLifecycle is set | Automated | L2 | Pass | |
 | 1.2.14 | Ensure that the admission control plugin NodeRestriction is set | Automated | L2 | Pass | |
 | 1.2.15 | Ensure that the `--profiling` argument is set to false | Automated | L1 | Pass | |
@@ -199,9 +202,6 @@ Recommendations can have one of the following attestation statuses:
 | 5.6.2 | Ensure that the seccomp profile is set to docker/default in your pod definitions | Manual | L2 | Depends on Environment | |
 | 5.6.3 | Apply Security Context to Your Pods and Containers | Manual | L2 | Depends on Environment | |
 | 5.6.4 | The default namespace shouldn't be used | Manual | L2 | Depends on Environment | |
-
-> [!NOTE]
-> In addition to the Kubernetes CIS benchmark, there's an [AKS CIS benchmark][cis-benchmark-aks] available as well.
 
 ## Other notes
 

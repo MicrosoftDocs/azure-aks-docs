@@ -12,6 +12,8 @@
       href: core-aks-concepts.md
     - name: Advanced AKS concepts
       href: advanced-aks-concepts.md
+    - name: Compare AKS Standard and AKS Automatic
+      href: intro-aks-automatic.md
     - name: Deploy a multi-container application to AKS
       items:
         - name: 1 - Prepare application for AKS
@@ -48,8 +50,6 @@
       href: concepts-preview-api-life-cycle.md
 - name: Set up clusters
   items:
-    - name: Compare AKS Standard and AKS Automatic
-      href: intro-aks-automatic.md
     - name: Create an AKS cluster
       items:
         - name: Create a Linux-based AKS cluster
@@ -146,8 +146,10 @@
                   href: istio-about.md
                 - name: Getting started
                   href: istio-deploy-addon.md
-                - name: Native sidecar mode (Preview)
+                - name: Native sidecar mode
                   href: istio-native-sidecar.md
+                - name: Istio CNI (Preview)
+                  href: istio-cni.md
                 - name: Mesh configuration
                   href: istio-meshconfig.md
                 - name: Upgrades
@@ -166,6 +168,8 @@
                       href: istio-deploy-ingress.md
                     - name: Secure ingress gateways
                       href: istio-secure-gateway.md
+                    - name: Ingress with Kubernetes Gateway API
+                      href: istio-gateway-api.md
                 - name: Egress
                   items:
                     - name: Deploy egress gateways (preview)
@@ -243,9 +247,11 @@
         - name: Reduce image pull time with Artifact Streaming on AKS
           href: artifact-streaming.md
         - name: Use generation 2 VMs
-          href: generation-2-vm.md
+          href: generation-2-vms.md
         - name: Add an Azure Spot node pool
           href: spot-node-pool.md
+        - name: Add a node pool with a unique subnet
+          href: node-pool-unique-subnet.md
         - name: Node pool snapshot
           href: node-pool-snapshot.md
         - name: Add a Virtual Machines node pool
@@ -280,6 +286,8 @@
           href: windows-faq.yml
         - name: Connect remotely
           href: rdp.md
+        - name: Create Windows Server node pools with `containerd`
+          href: windows-containerd.md
         - name: Use HostProcess containers
           href: use-windows-hpc.md
         - name: Use Windows Annual Channel for Containers
@@ -312,6 +320,8 @@
           href: upgrade.md
         - name: Upgrade options and recommendations
           href: upgrade-cluster.md
+        - name: How AKS cluster upgrades work
+          href: how-does-upgrade-happen.md
         - name: AKS component versioning
           href: aks-component-versioning.md
         - name: Upgrade scenarios hub
@@ -452,6 +462,8 @@
         items:
           - name: Overview
             href: concepts-network-ingress.md
+          - name: Ingress with the Kubernetes Gateway API
+            href: managed-gateway-api.md
           - name: Use application routing add-on
             items:
               - name: Application routing add-on overview
@@ -539,8 +551,14 @@
             href: dns-concepts.md
           - name: Use a static IP address and DNS label
             href: static-ip.md
-          - name: Customize CoreDNS
-            href: coredns-custom.md
+          - name: CoreDNS
+            items:
+              - name: Customize CoreDNS
+                href: coredns-custom.md
+              - name: Configure autoscaling for CoreDNS
+                href: coredns-autoscale.md
+              - name: Troubleshoot CoreDNS
+                href: coredns-troubleshoot.md
           - name: Configure LocalDNS
             href: localdns-custom.md
       - name: Load balancing
@@ -569,6 +587,12 @@
             items:
               - name: Overview
                 href: container-network-security-concepts.md
+              - name: WireGuard encryption
+                items:
+                  - name: Overview
+                    href: container-network-security-wireguard-encryption-concepts.md
+                  - name: Set up WireGuard encryption
+                    href: how-to-apply-wireguard.md
               - name: FQDN-based filtering
                 items:
                   - name: Overview
@@ -581,8 +605,28 @@
                     href: container-network-security-l7-policy-concepts.md
                   - name: Set up Layer 7 policies
                     href: how-to-apply-l7-policies.md
+      - name: Performance
+        items:
+          - name: Container Network Performance
+            items:
+              - name: Overview
+                href: container-network-performance-ebpf-host-routing.md
+              - name: Set up eBPF Host routing
+                href: how-to-enable-ebpf-host-routing.md
       - name: Improve network fault tolerance using TCP keep-alive
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
+- name: Scheduling
+  items:
+      - name: Basic scheduler features
+        href: operator-best-practices-scheduler.md
+      - name: Advanced scheduler features
+        href: operator-best-practices-advanced-scheduler.md
+      - name: Kueue
+        items:
+          - name: Learn about Kueue for batch scheduling
+            href: kueue-overview.md
+          - name: Schedule and deploy batch jobs with Kueue
+            href: deploy-batch-jobs-with-kueue.md
 - name: Security
   items:
     - name: Security concepts
@@ -646,8 +690,16 @@
           href: deployment-safeguards.md
         - name: Create an OIDC Issuer for your cluster
           href: use-oidc-issuer.md
-        - name: Use KMS etcd encryption
-          href: use-kms-etcd-encryption.md
+        - name: KMS etcd encryption
+          items:
+            - name: Use KMS etcd encryption
+              href: use-kms-etcd-encryption.md
+            - name: Update key vault mode
+              href: update-kms-key-vault.md
+            - name: Migrate to KMS v2
+              href: use-kms-v2.md
+            - name: Observability for KMS etcd encryption
+              href: kms-observability.md
         - name: Secure container access to resources
           href: secure-container-access.md
     - name: Node security
@@ -718,10 +770,14 @@
           href: use-azure-ad-pod-identity.md
         - name: Pod Sandboxing
           href: use-pod-sandboxing.md
-        - name: Network policy best practices
-          href: network-policy-best-practices.md
-        - name: Secure pod traffic with network policies
-          href: use-network-policies.md
+        - name: Network policies
+          items:
+            - name: Secure pod traffic with network policies
+              href: use-network-policies.md
+            - name: Network policy best practices
+              href: network-policy-best-practices.md
+            - name: Use network policies in the Azure portal
+              href: use-network-policies-in-the-azure-portal.md
         - name: Pod security policies
           href: use-pod-security-policies.md
         - name: Pod Security Admission
@@ -756,6 +812,8 @@
             href: cis-azure-linux.md
           - name: CIS Azure Linux 3.0 benchmark
             href: cis-azure-linux-v3.md
+          - name: CIS Ubuntu benchmark
+            href: cis-ubuntu.md
           - name: CIS Windows Server benchmark
             href: cis-windows.md
         - name: Payment Card Industry Data Security Standard (PCI DSS)
@@ -836,6 +894,8 @@
                   href: /azure/storage/elastic-san/elastic-san-connect-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: Ephemeral Disk
             items:
+                - name: Best practices for ephemeral NVMe data disks
+                  href: best-practices-storage-nvme.md
                 - name: Use Azure Container Storage with Ephemeral Disk
                   href: /azure/storage/container-storage/use-container-storage-with-local-disk?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Shared file storage
@@ -932,6 +992,10 @@
               href: ai-toolchain-operator-monitoring.md
             - name: Onboard custom models for inference
               href: kaito-custom-inference-model.md
+            - name: Configure tool calling with LLM inference
+              href: ai-toolchain-operator-tool-calling.md
+            - name: Integrate an MCP server
+              href: ai-toolchain-operator-mcp.md
         - name: Deploy data and ML pipelines with Flyte
           href: use-flyte.md
     - name: Work with clusters using Copilot
@@ -956,6 +1020,8 @@
           href: autoscale-gpu-workloads-with-keda.md
         - name: Set up NVIDIA GPU Operator
           href: nvidia-gpu-operator.md
+        - name: GPU health checking with NPD
+          href: gpu-health-monitoring.md
 - name: Manage and optimize costs
   items:
     - name: Cost optimization best practices
@@ -1016,8 +1082,20 @@
               href: keda-integrations.md
             - name: Troubleshoot Kubernetes Event-driven Autoscaler (KEDA)
               href: /troubleshoot/azure/azure-kubernetes/troubleshoot-kubernetes-event-driven-autoscaling-add-on?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Node autoprovisioning
-          href: node-autoprovision.md
+        - name: Node auto provisioning
+          items:
+            - name: About node auto provisioning (NAP)
+              href: node-autoprovision.md
+            - name: Node auto provisioning configuration
+              items:
+                - name: Configure networking with node auto provisioning
+                  href: node-autoprovision-networking.md
+                - name: Configure disruption policies with node auto provisioning
+                  href: node-autoprovision-disruption.md
+                - name: Configure NodePool custom resource
+                  href: node-autoprovision-node-pools.md
+                - name: Configure AKSNodeClass custom resource
+                  href: node-autoprovision-aksnodeclass.md
 - name: Monitoring
   items:
     - name: Monitoring concepts and resources
@@ -1094,7 +1172,7 @@
               href: create-valkey-infrastructure.md
             - name: Configure and deploy a Valkey cluster
               href: deploy-valkey-cluster.md
-            - name: Test Valkey with Locust
+            - name: Load test Valkey with Locust
               href: validate-valkey-cluster.md
             - name: Test resiliency during an AKS node pool upgrade
               href: upgrade-valkey-aks-nodepool.md

@@ -1,5 +1,5 @@
 ---
-title: "Supported Kubernetes versions inAzure Kubernetes Fleet Manager"
+title: "Supported Kubernetes versions in Azure Kubernetes Fleet Manager"
 description: Learn the Kubernetes version support policy and lifecycle of clusters in Azure Kubernetes Fleet Manager.
 ms.date: 09/02/2025
 author: sjwaight

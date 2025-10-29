@@ -24,6 +24,8 @@ Advanced Container Networking Services offers two key features:
 
 - **Container Network Security:** For clusters that use Azure CNI Powered by Cilium, network policies include Fully Qualified Domain Name (FQDN) filtering for tackling the complexities of maintaining configuration.
 
+- **Container Network Performance:** For clusters that use Azure CNI Powered by Cilium, a suite of networking performance features such as eBPF Host Routing can be enabled to reduce latency and increase throughput.
+
 ## Container Network Observability
 
 Container Network Observability in AKS is a comprehensive feature set within Advanced Container Networking Services, designed to provide deep insights into network traffic and performance across containerized environments. It works seamlessly across both Cilium and non-Cilium data planes, offering flexibility for diverse networking needs. The feature uses eBPF to enhance scalability and performance by identifying potential bottlenecks and network congestion before applications are affected.
@@ -60,6 +62,19 @@ To learn more, see the [FQDN-based filtering overview](./container-network-secur
 
 Gain granular control over application-level traffic. Implement policies based on protocols like HTTP, gRPC and kafka, securing your applications with deep visibility and fine-grained access control. To learn more, see the [Layer 7 policy overview](./container-network-security-l7-policy-concepts.md) documentation.
 
+### WireGuard Encryption (preview)
+
+Secure your workload traffic with WireGuard. It ensures all communication between Cilium-managed endpoints across different nodes within your AKS cluster is encrypted and protected by default, without added complexity. To learn more, see the [WireGuard encryption Overview](./container-network-security-wireguard-encryption-concepts.md) documentation. 
+
+
+## Container Network Performance
+
+Configuration profile utilizing Cilium with eBPF features to optimize throughput, reduce latency, and minimize CPU overhead for containerized workloads in AKS clusters.
+
+### eBPF Host Routing
+
+To learn more, see the [eBPF Host Routing overview](./container-network-performance-ebpf-host-routing.md)
+
 ## Pricing
 
 > [!IMPORTANT]
@@ -71,7 +86,7 @@ For information about pricing, see [Advanced Container Networking Services - Pri
 
 ### Prerequisites
 
-- An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
+- An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 

@@ -29,7 +29,7 @@ You can use Trusted Access to give explicit consent to your system-assigned mana
 
 ## Prerequisites
 
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * Resource types that support [system-assigned managed identity](/azure/active-directory/managed-identities-azure-resources/overview).
 * Azure CLI version 2.53.0 or later. Run `az --version` to find your version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 * To learn what roles to use in different scenarios, see these articles:

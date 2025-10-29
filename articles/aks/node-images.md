@@ -25,6 +25,9 @@ This article describes the node images available for Azure Kubernetes Service (A
 > [!IMPORTANT]
 > Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
+> [!IMPORTANT]
+> Older node images can contain unpatched security vulnerabilities and might not work properly with recently released features. Using older images might lead to issues with scaling, node readiness, and security. Depending on the age of the image version, it could also place the cluster outside of the support scope until you perform a node image upgrade. **We recommend that you keep node images [current](https://releases.aks.azure.com/) and enable automatic upgrades**.
+
 ## Node image releases
 
 Azure Kubernetes Service (AKS) regularly provides new node images, so it's beneficial to upgrade your node images frequently to access the latest AKS features, component updates, and security fixes. You can find detailed summaries of each node image version in the [AKS VHD notes](https://github.com/Azure/AKS/tree/master/vhd-notes). 
@@ -58,7 +61,7 @@ The following factors influence the default image AKS chooses for your node pool
 - **Virtual machine (VM) size**: 
     - [Confidential virtual machines (CVM)](./use-cvm.md)
     - [AMR64 virtual machines](./create-node-pools.md)
-- **Hypervisor Generation**: Each VM size supports Generation 1, [Generation 2](./generation-2-vm.md), or both.
+- **Hypervisor Generation**: Each VM size supports Generation 1, [Generation 2](./generation-2-vms.md), or both.
     - If a Generation 2 is supported, AKS defaults to using the Generation 2 node image.
     - If only Generation 1 is supported, AKS defaults to using the Generation 1 node image.
 - **Feature enablement**: There are some features embedded into the node image. If you choose to use any of these features, your default node image changes.

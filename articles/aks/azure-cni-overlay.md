@@ -1,8 +1,8 @@
 ---
 title: Configure Azure CNI Overlay networking in Azure Kubernetes Service (AKS)
 description: Learn how to configure Azure CNI Overlay networking in Azure Kubernetes Service (AKS), including deploying an AKS cluster into an existing virtual network and subnets.
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli
@@ -425,6 +425,7 @@ To learn how to utilize AKS with your own Container Network Interface (CNI) plug
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
+[az-group-create]: /cli/azure/group#az-group-create
 [aks-egress]: limit-egress-traffic.md
 [aks-network-policies]: use-network-policies.md
 [nsg]: /azure/virtual-network/network-security-groups-overview

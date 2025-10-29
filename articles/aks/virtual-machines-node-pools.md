@@ -3,7 +3,7 @@ title: Use Virtual Machines node pools in Azure Kubernetes Services (AKS)
 description: Learn how to add multiple Virtual Machine types of a similar family to a node pool in an AKS cluster.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 06/26/2025
+ms.date: 08/26/2025
 ms.author: wilsondarko
 author: wdarko1
 # Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types. I want to minimize capacity constraints by having greater flexibility in VM size selection.
@@ -50,7 +50,6 @@ The following table highlights how Virtual Machines node pools compare with stan
 
 - [Cluster autoscaler][cluster autoscaler] is currently not supported.
 - [InifiniBand][InifiniBand] isn't available.
-- This feature isn't available in Azure portal. [Azure CLI][azure cli] or REST APIs must be used to perform CRUD operations or manage the pool.
 - [Node pool snapshot][node pool snapshot] isn't supported.
 - All VM sizes selected in a node pool need to be from a similar virtual machine family. For example, you can't mix an N-Series virtual machine type with a D-Series virtual machine type in the same node pool.
 - Virtual Machines node pools allow up to five different virtual machine sizes per node pool.
@@ -68,7 +67,7 @@ The following table highlights how Virtual Machines node pools compare with stan
 
 - Create an AKS cluster with Virtual Machines node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
 
-    The following example creates a cluster named *myAKSCluster* with a Virtual Machines node pool containing two nodes, generates SSH keys, sets the load balancer SKU to *standard*, and sets the Kubernetes version to *1.28.5*:
+    The following example creates a cluster named *myAKSCluster* with a Virtual Machines node pool containing two nodes, generates SSH keys, sets the load balancer SKU to *standard*, and sets the Kubernetes version to *1.31.0*:
 
     ```azurecli-interactive
     az aks create \
@@ -77,7 +76,7 @@ The following table highlights how Virtual Machines node pools compare with stan
         --vm-set-type "VirtualMachines" \
         --vm-sizes "Standard_D4s_v3" 
         --node-count 2 \
-        --kubernetes-version 1.28.5
+        --kubernetes-version 1.31.0
     ```
 
 ## Create a cluster with Windows enabled and a Windows Virtual Machine node pool

@@ -4,8 +4,8 @@ description: Learn how to snapshot AKS cluster node pools and create clusters an
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 01/29/2024
-ms.author: allensu
-author: asudbring
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.subservice: aks-nodes
 # Customer intent: As a Kubernetes administrator, I want to create and manage snapshots of AKS node pools, so that I can maintain consistent configurations and quickly deploy new clusters or node pools based on those snapshots.
 ---

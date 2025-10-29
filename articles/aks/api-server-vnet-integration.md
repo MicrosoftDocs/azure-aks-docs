@@ -1,8 +1,8 @@
 ---
 title: API Server VNet Integration in Azure Kubernetes Service (AKS)
 description: Learn how to create an Azure Kubernetes Service (AKS) cluster with API Server VNet Integration
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 05/19/2023
@@ -23,6 +23,9 @@ API Server VNet Integration is supported for public or private clusters. You can
 ## Prerequisites
 
 - You must have Azure CLI version 2.73.0 or later installed. You can check your version using the `az --version` command.
+
+## Limitations
+* API Server VNet Integration does not support encrypted virtual networks.
 
 ## Limited availability
 

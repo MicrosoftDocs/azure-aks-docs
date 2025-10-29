@@ -1,14 +1,14 @@
 ### YamlMime:Landing
 title: Azure Kubernetes Fleet Manager
-summary: Learn how to address multi-cluster and at-scale scenarios for Azure Kubernetes Service (AKS) clusters
+summary: Azure Kubernetes Fleet Manager enables at-scale management of multiple Azure Kubernetes Service (AKS) clusters. Fleet Manager provides platform administrators with access to automated safe multi-cluster updates, intelligent Kubernetes resource placement, and a centralized location to access monitoring data for their clusters
 
 metadata:
   title: Azure Kubernetes Fleet Manager
-  description: Learn how to address multi-cluster and at-scale scenarios for Azure Kubernetes Service (AKS) clusters
+  description: Azure Kubernetes Fleet Manager enables at-scale management of multiple Azure Kubernetes Service (AKS) clusters. Fleet Manager provides platform administrators with access to automated safe multi-cluster updates, intelligent Kubernetes resource placement, and a centralized location to access monitoring data for their clusters.
   ms.service: azure-kubernetes-fleet-manager
   ms.author: simonwaight
   ms.topic: landing-page
-  ms.date: 05/09/2025
+  ms.date: 09/15/2025
 landingContent:
   - title: About Azure Kubernetes Fleet Manager
     linkLists:
@@ -31,6 +31,44 @@ landingContent:
           - text: Frequently asked questions
             url: faq.md
 
+  - title: Safe multi-cluster updates
+    linkLists:
+      - linkListType: tutorial
+        links:
+          - text: Use update runs to update Kubernetes and node images across multiple clusters
+            url: concepts-update-orchestration.md
+      - linkListType: tutorial
+        links:
+          - text: Define reusable update strategies
+            url: update-create-update-strategy.md
+      - linkListType: tutorial
+        links:
+          - text: Automate upgrades of Kubernetes and node images across multiple clusters
+            url: update-automation.md
+      - linkListType: tutorial
+        links:
+          - text: Monitoring and alerting for multi-cluster updates
+            url: howto-monitor-update-runs.md
+
+  - title: Multi-cluster resource placement
+    linkLists:
+      - linkListType: tutorial
+        links:
+          - text: Deploy applications across multiple clusters with resource placement
+            url: quickstart-resource-propagation.md
+      - linkListType: tutorial
+        links:
+          - text: Use cluster properties, resources utilization, and cost with resource placement
+            url: intelligent-resource-placement.md
+      - linkListType: tutorial
+        links:
+          - text: Use Automated Deployments to drive multi-cluster resource placement
+            url: howto-automated-deployments.md
+      - linkListType: tutorial
+        links:
+          - text: Understanding multi-cluster resource placement status
+            url: howto-understand-placement.md        
+
   - title: Get started
     linkLists:
       - linkListType: quickstart
@@ -39,12 +77,17 @@ landingContent:
             url: quickstart-create-fleet-and-members.md
       - linkListType: quickstart
         links:
-          - text: Use Fleet Manager to deploy workloads across multiple clusters
-            url: quickstart-resource-propagation.md
-      - linkListType: tutorial
+          - text: Update orchestration across multiple member clusters
+            url: update-orchestration.md
+      - linkListType: quickstart
         links:
-          - text: Use Automated Deployments to drive multi-cluster resource placement
-            url: howto-automated-deployments.md
+          - text: Deploy resources across multiple clusters
+            url: quickstart-resource-propagation.md
+      - linkListType: quickstart
+        links:
+          - text: Set up DNS load balancing across Fleet Manager member clusters
+            url: howto-dns-load-balancing.md
+
 
   - title: API reference
     linkLists:

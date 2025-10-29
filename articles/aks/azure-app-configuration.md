@@ -17,7 +17,7 @@ ms.custom: devx-track-azurecli, references_regions
 
 ## Prerequisites 
 
-- An Azure subscription. [Create a free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- An Azure subscription. [Create a free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - The latest version of the [Azure CLI](/cli/azure/install-azure-cli).
 - An Azure Kubernetes Service (AKS) cluster. [Create an AKS cluster](/azure/aks/tutorial-kubernetes-deploy-cluster#create-a-kubernetes-cluster).
 - Permission with the [Azure Kubernetes Service RBAC Admin](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin) role.
@@ -109,6 +109,9 @@ az deployment group create \
 ```
 
 ---
+
+> [!IMPORTANT]
+> The Azure App Configuration AKS extension is installed into the `azappconfig-system` namespace by default. If you have Azure Policy assignments that validate or mutate pod specifications (for example, the built-in policy "Kubernetes clusters should disable automounting API credentials" which enforces `automountServiceAccountToken: false`), exclude the `azappconfig-system` namespace from those policies by adding it to the policy's namespace exclusion list so the extension can function correctly. Not excluding it may cause the extension pods to fail validation or appear non-compliant.
 
 ### Configure automatic updates
 

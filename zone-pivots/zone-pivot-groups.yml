@@ -38,6 +38,15 @@ groups:
     title: Azure CLI
   - id: bicep
     title: Bicep
+# Owner: simonwaight
+- id: azure-portal-azure-cli
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-portal
+    title: Azure portal
+  - id: azure-cli
+    title: Azure CLI
 - id: azure-cli-or-terraform
   title: Interaction type
   prompt: Select how you want to interact with Azure
@@ -46,6 +55,14 @@ groups:
     title: Azure CLI
   - id: terraform
     title: Terraform
+- id: public-hub-private-hub
+  title: Hub cluster type
+  prompt: Select your hub cluster configuration
+  pivots:
+  - id: public-hub
+    title: Public hub cluster
+  - id: private-hub
+    title: Private hub cluster
 # Owner: allyford
 - id: arm-azure-cli
   title: Interaction type
@@ -85,3 +102,20 @@ groups:
     title: AKS-managed Azure Container Registry
   - id: byo-acr
     title: Bring your own (BYO) Azure Container Registry
+# Owner: schaffererin
+- id: azure-cli-or-arm
+  title: Choose a deployment method
+  prompt: Choose a deployment method
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: arm
+    title: ARM template
+- id: public-or-private-kv
+  title: Choose a key vault type
+  prompt: Choose a key vault type
+  pivots:
+  - id: public-kv
+    title: Public key vault
+  - id: private-kv
+    title: Private key vault

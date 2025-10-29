@@ -7,13 +7,10 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: As a cluster operator, I want to resize my cluster so I can scale my workloads based on demand.
-ms.custom: innovation-engine, devx-track-azurecli, aks, scaling, cluster-management
+ms.custom: devx-track-azurecli, aks, scaling, cluster-management
 ---
 
 # Resize Azure Kubernetes Service (AKS) clusters
-
-> [!div class="nextstepaction"]
-> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2333259)
 
 In this article, you learn how to resize an Azure Kubernetes Service (AKS) cluster. It's important to right-size your clusters to optimize costs and performance. You can manually resize a cluster by adding or removing the nodes to meet the needs of your applications. You can also autoscale your cluster to automatically adjust the number of nodes in response to changing demands.
 

@@ -3,9 +3,9 @@ title: 'Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster'
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic.
 ms.topic: quickstart
 ms.custom: build-2024, devx-track-azurecli, devx-track-bicep, ignite-2024
-ms.date: 08/28/2025
-author: sabbour
-ms.author: asabbour
+ms.date: 10/10/2025
+author: wangyira
+ms.author: wangamanda
 zone_pivot_groups: bicep-azure-cli-portal
 # Customer intent: As a DevOps engineer, I want to create and manage an Azure Kubernetes Service (AKS) Automatic cluster, so that I can efficiently deploy and operate containerized applications with best practice configurations automatically.
 ---
@@ -23,7 +23,8 @@ In this quickstart, you learn to:
 
 ## Before you begin
 
-This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
+- This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
+- AKS Automatic will [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should pre-register the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. See [Azure resource providers and types][az-provider-register] for more information.
 
 :::zone target="docs" pivot="azure-cli"
 
@@ -38,15 +39,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - To deploy a Bicep file, you need to write access on the resources you create and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to create a virtual machine, you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](/azure/role-based-access-control/built-in-roles).
 :::zone-end
 
-## Limitations
-
-- AKS Automatic clusters require deployment in Azure regions that support at least three [availability zones](/azure/reliability/regions-list).
-- You can only create AKS Automatic clusters in regions where [API Server VNet Integration](../api-server-vnet-integration.md#limited-availability) is generally available (GA).
-- You can't add non-[node auto provisioning node pools](../node-autoprovision.md) to AKS Automatic clusters. There's no effect on existing Automatic clusters that have non-node auto provisioning pools.
-- AKS Automatic only supports the [Azure Linux OS](/azure/azure-linux/intro-azure-linux).
-
-> [!IMPORTANT]
-> AKS Automatic tries to dynamically select a virtual machine size for the `system` node pool based on the capacity available in the subscription. Make sure your subscription has quota for 16 vCPUs of any of the following sizes in the region you're deploying the cluster to: [Standard_D4lds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series), [Standard_D4ads_v5](/azure/virtual-machines/sizes/general-purpose/dadsv5-series), [Standard_D4ds_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v4](/azure/virtual-machines/sizes/general-purpose/dv4-series), [Standard_DS3_v2](/azure/virtual-machines/sizes/general-purpose/dsv3-series), [Standard_DS12_v2](/azure/virtual-machines/sizes/memory-optimized/dv2-dsv2-series-memory), [Standard_D4alds_v6](/azure/virtual-machines/sizes/general-purpose/daldsv6-series), [Standard_D4lds_v6](/azure/virtual-machines/sizes/general-purpose/dldsv6-series), or [Standard_D4alds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series). You can [view quotas for specific VM-families and submit quota increase requests](/azure/quotas/per-vm-quota-requests) through the Azure portal.
+[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
 :::zone target="docs" pivot="azure-cli"
 
@@ -138,9 +131,13 @@ aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
 
     :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/create-basics-automatic.png" alt-text="The screenshot of the Create - Basics Tab for an AKS Automatic cluster in the Azure portal.":::
 
-1. On the **Monitoring** tab, choose your monitoring configurations from Azure Monitor, Managed Prometheus, Grafana Dashboards, and/or configure alerts. Enable Managed Grafana (optional), add tags (optional), and proceed to create the cluster.
+1. On the **Monitoring** tab, choose your monitoring configurations from Azure Monitor, Managed Prometheus, Grafana Dashboards, Container Network Observability (ACNS) and/or configure alerts. Enable Managed Grafana (optional), add tags (optional), and proceed to create the cluster.
 
     :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/configure-monitoring-automatic.png" alt-text="The screenshot of the Monitoring Tab while creating an AKS Automatic cluster in the Azure portal.":::
+
+1. On the **Advanced** tab, update your networking (optional), managed identity (optional), security and managed namespaces (optional) settings and proceed to create the cluster.
+
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/configure-advanced-automatic.png" alt-text="The screenshot of the Advanced Tab while creating an AKS Automatic cluster in the Azure portal.":::
 
 1. Get started with configuring your first application from GitHub and set up an automated deployment pipeline. 
 
@@ -417,3 +414,5 @@ To learn more about AKS Automatic, continue to the introduction.
 [aks-entra-rbac]: /azure/aks/manage-azure-rbac
 [aks-entra-rbac-builtin-roles]: /azure/aks/manage-azure-rbac#create-role-assignments-for-users-to-access-the-cluster
 [availability-zones]: /azure/reliability/availability-zones-region-support
+[policy-for-kubernetes]: /azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks
+[az-provider-register]: /azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider

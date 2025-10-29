@@ -21,7 +21,7 @@ For more information, see [Choosing an Azure Kubernetes Fleet Manager option][co
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 - [Install or upgrade Azure CLI](/cli/azure/install-azure-cli) to the latest version.
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - You must have an existing Kubernetes Fleet resource without a hub cluster. The steps in this article show you how to create a Kubernetes Fleet resource without a hub cluster. If you already have one, you can skip the initial setup and begin at [Upgrade hub cluster type for the Kubernetes Fleet resource](#upgrade-hub-cluster-type-for-the-kubernetes-fleet-resource).
 - This article also includes steps on joining member clusters. If you plan to follow along, you need at least one AKS cluster.
 
@@ -92,14 +92,14 @@ After running the `az fleet create` command to upgrade the fleet resource, verif
 
 ## Rejoin member clusters
 
-To rejoin member clusters to the newly upgrade fleet resource, use the `az fleet member reconcile` command for each individual member cluster. 
+To rejoin member clusters to the newly upgrade fleet resource, use the `az fleet member reconcile` command for each individual member cluster.
 
 ```azurecli-interactive
 az fleet member reconcile -g $RG -f $FLEET -n $FLEET_MEMBER
 ```
 
 > [!NOTE]
-> Any AKS clusters that you're joining to the fleet resource for the first time after the upgrade has already taken place don't need to be reconciled using `az fleet member reconcile`.
+> Clusters being joined to the fleet for the first time after an upgrade don't require reconciliation.
 
 ## Verify member clusters joined successfully
 
@@ -124,13 +124,13 @@ If successful, your output should look similar to the following example output:
 ```bash
 NAME           JOINED   AGE
 aks-member-1   True     2m
-aks-member-2   True     2m
+arc-member-2   True     2m
 aks-member-3   True     2m
 ```
 
 ## Clean up resources
 
-Once you're finished, you can remove the fleet resource and related resources by deleting the resource group. Keep in mind that this operation won't remove your AKS clusters if they reside in a different resource group.
+Once you're finished, you can remove the fleet resource and related resources by deleting the resource group. This operation won't delete your clusters if they are in a different resource group.
 
 ```azurecli-interactive
 az group delete -n $RG

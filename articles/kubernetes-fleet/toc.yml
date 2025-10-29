@@ -1,9 +1,7 @@
 - name: Azure Kubernetes Fleet Manager
   href: index.yml
-- name: Overview
-  items:
-  - name: About Azure Kubernetes Fleet Manager
-    href: overview.md
+- name: What is Azure Kubernetes Fleet Manager?
+  href: overview.md
 - name: Quickstarts
   items:
   - name: Create a fleet and join member clusters
@@ -28,6 +26,8 @@
           href: concepts-choosing-fleet.md
         - name: Fleet hub cluster overview
           href: concepts-lifecycle.md
+        - name: Member cluster types
+          href: concepts-member-cluster-types.md
         - name: Use Azure RBAC to control resource access
           href: concepts-rbac.md
         - name: Scheduler and scheduling framework
@@ -36,8 +36,12 @@
           href: concepts-preview-api-lifecycle.md
         - name: Kubernetes version support
           href: concepts-fleet-kubernetes-version-support.md
+        - name: Fleet and Arc integration
+          href: concepts-fleet-arc-integration.md
     - name: Multi-cluster Kubernetes and node images upgrades
       href: concepts-update-orchestration.md
+    - name: Multi-cluster multi-tenancy with Managed Namespaces
+      href: concepts-fleet-managed-namespace.md    
     - name: Multi-cluster workload management
       items:
         - name: Multi-cluster workload management overview
@@ -57,7 +61,7 @@
           - name: Taking over existing workloads
             href: concepts-placement-takeover.md
           - name: Detecting and managing workload drift
-            href: concepts-placement-drift.md        
+            href: concepts-placement-drift.md 
     - name: Multi-cluster networking 
       items:
         - name: DNS-based load balancing across multiple clusters
@@ -80,12 +84,16 @@
       href: howto-use-policy-to-add-clusters-to-fleet.md
     - name: Progressively upgrade Kubernetes and node images
       items:
-        - name: Define reusable update strategies
-          href: update-create-update-strategy.md
         - name: Update Kubernetes and node images
           href: update-orchestration.md
         - name: Automate updates of Kubernetes and node images
           href: update-automation.md
+        - name: Define reusable update strategies
+          href: update-create-update-strategy.md
+        - name: Add approvals to update groups and stages
+          href: update-strategies-gates-approvals.md
+        - name: Automate approvals using events
+          href: howto-configure-events-for-gates.md
         - name: Configure monitoring and alerting of update runs
           href: howto-monitor-update-runs.md       
     - name: Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform
@@ -109,7 +117,13 @@
         - name: Use overrides to customize cluster-scoped resources
           href: cluster-resource-override.md
         - name: Use overrides to customize namespace-scope resources
-          href: resource-override.md
+          href: resource-override.md  
+    - name: Multi-cluster multi-tenancy with Managed Namespaces
+      items:
+        - name: Define and deploy multi-cluster managed namespaces
+          href: howto-managed-namespaces.md
+        - name: View and access multi-cluster managed namespaces
+          href: howto-managed-namespaces-access.md
     - name: Load balance multi-cluster services
       items:
         - name: Use DNS-based load balancing across multiple clusters

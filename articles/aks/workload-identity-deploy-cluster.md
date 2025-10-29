@@ -65,7 +65,7 @@ Results:
 
 ## Create an AKS cluster
 
-Create an AKS cluster using the [az aks create][az-aks-create] command with the `--enable-oidc-issuer` parameter to enable the OIDC issuer. The following example creates a cluster with a single node:
+Create an AKS cluster using the [az aks create][az-aks-create] command with the `--enable-oidc-issuer` parameter to enable the OpenID Connect (OIDC) issuer. The following example creates a cluster with a single node:
 
 ```azurecli-interactive
 export CLUSTER_NAME="myAKSCluster$RANDOM_ID"
@@ -84,7 +84,7 @@ After a few minutes, the command completes and returns JSON-formatted informatio
 
 ## Update an existing AKS cluster
 
-You can update an AKS cluster to use the OIDC issuer and enable workload identity by calling the [az aks update][az aks update] command with the `--enable-oidc-issuer` and the `--enable-workload-identity` parameters. 
+You can update an AKS cluster to use the OIDC issuer and enable workload identity by calling the [az aks update][az aks update] command with the `--enable-oidc-issuer` and the `--enable-workload-identity` parameters.
 
 ## Retrieve the OIDC issuer URL
 
@@ -103,7 +103,7 @@ The environment variable should contain the issuer URL, similar to the following
 https://eastus.oic.prod-aks.azure.com/00000000-0000-0000-0000-000000000000/11111111-1111-1111-1111-111111111111/
 ```
 
-By default, the issuer is set to use the base URL `https://{region}.oic.prod-aks.azure.com/{tenant_id}/{uuid}`, where the value for `{region}` matches the location to which the AKS cluster is deployed. The value `{uuid}` represents the OIDC key, which is a randomly generated guid for each cluster that is immutable.
+By default, the issuer is set to use the base URL `https://{region}.oic.prod-aks.azure.com/{tenant_id}/{uuid}`, where the value for `{region}` matches the location to which the AKS cluster is deployed. The value `{uuid}` represents the OIDC key, which is a randomly generated guid for each cluster that's immutable.
 
 ## Create a managed identity
 
@@ -194,11 +194,11 @@ az identity federated-credential create \
 ```
 
 > [!NOTE]
-> It takes a few seconds for the federated identity credential to propagate after it is added. If a token request is made immediately after adding the federated identity credential, the request might fail until the cache is refreshed. To avoid this issue, you can add a slight delay after adding the federated identity credential.
+> It takes a few seconds for the federated identity credential to propagate after it's added. If a token request is made immediately after adding the federated identity credential, the request might fail until the cache is refreshed. To avoid this issue, you can add a slight delay after adding the federated identity credential.
 
 ## Deploy your application
 
-When you deploy your application pods, the manifest should reference the service account created in the **Create Kubernetes service account** step. The following manifest shows how to reference the account, specifically the _metadata\namespace_ and _spec\serviceAccountName_ properties. Make sure to specify an image for `<image>` and a container name for `<containerName>`:
+When you deploy your application pods, the manifest should reference the service account created in the **Create Kubernetes service account** step. The following manifest shows how to reference the account, specifically the `metadata\namespace` and `spec\serviceAccountName` properties. Make sure to specify an image for `<image>` and a container name for `<containerName>`:
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -235,7 +235,7 @@ EOF
 ```
 
 > [!IMPORTANT]
-> Ensure that the application pods using workload identity include the label `azure.workload.identity/use: "true"` in the pod spec. Otherwise the pods will fail after they are restarted.
+> Ensure that the application pods using workload identity include the label `azure.workload.identity/use: "true"` in the pod spec. Otherwise the pods will fail after they're restarted.
 
 ## Grant permissions to access Azure Key Vault
 
@@ -243,7 +243,7 @@ The instructions in this step show how to access secrets, keys, or certificates 
 
 The following example shows how to use the Azure role-based access control (Azure RBAC) permission model to grant the pod access to the key vault. For more information about the Azure RBAC permission model for Azure Key Vault, see [Grant permission to applications to access an Azure key vault using Azure RBAC](/azure/key-vault/general/rbac-guide).
 
-1. Create a key vault with purge protection and RBAC authorization enabled. You can also use an existing key vault if it is configured for both purge protection and RBAC authorization:
+1. Create a key vault with purge protection and Azure RBAC authorization enabled. You can also use an existing key vault if it's configured for both purge protection and Azure RBAC authorization:
 
     ```azurecli-interactive
     export KEYVAULT_NAME="keyvault-workload-id$RANDOM_ID"
@@ -256,10 +256,10 @@ The following example shows how to use the Azure role-based access control (Azur
         --resource-group "${RESOURCE_GROUP}" \
         --location "${LOCATION}" \
         --enable-purge-protection \
-        --enable-rbac-authorization 
+        --enable-rbac-authorization
     ```
 
-1. Assign yourself the RBAC [Key Vault Secrets Officer](/azure/role-based-access-control/built-in-roles/security#key-vault-secrets-officer) role so that you can create a secret in the new key vault:
+1. Assign yourself the Azure RBAC [Key Vault Secrets Officer](/azure/role-based-access-control/built-in-roles/security#key-vault-secrets-officer) role so that you can create a secret in the new key vault:
 
     ```azurecli-interactive
     export KEYVAULT_RESOURCE_ID=$(az keyvault show --resource-group "${RESOURCE_GROUP}" \
@@ -292,7 +292,7 @@ The following example shows how to use the Azure role-based access control (Azur
         --resource-group "${RESOURCE_GROUP}" \
         --query principalId \
         --output tsv)
-    
+
     az role assignment create \
         --assignee-object-id "${IDENTITY_PRINCIPAL_ID}" \
         --role "Key Vault Secrets User" \
@@ -346,10 +346,10 @@ kubectl wait --namespace ${SERVICE_ACCOUNT_NAMESPACE} --for=condition=Ready pod/
 kubectl describe pod sample-workload-identity-key-vault | grep "SECRET_NAME:"
 ```
 
-If successful, the output should be similar to the following:
+If successful, the output should be similar to the following example:
 
 ```output
-      SECRET_NAME:                 ${KEYVAULT_SECRET_NAME}
+SECRET_NAME: ${KEYVAULT_SECRET_NAME}
 ```
 
 To verify that pod is able to get a token and access the resource, use the kubectl logs command:
@@ -358,14 +358,14 @@ To verify that pod is able to get a token and access the resource, use the kubec
 kubectl logs sample-workload-identity-key-vault
 ```
 
-If successful, the output should be similar to the following:
+If successful, the output should be similar to the following example:
 
 ```output
 I0114 10:35:09.795900       1 main.go:63] "successfully got secret" secret="Hello\\!"
 ```
 
 > [!IMPORTANT]
-> Azure RBAC role assignments can take up to ten minutes to propagate. If the pod is unable to access the secret, you may need to wait for the role assignment to propagate. For more information, see [Troubleshoot Azure RBAC](/azure/role-based-access-control/troubleshooting#).
+> Azure RBAC role assignments can take up to 10 minutes to propagate. If the pod is unable to access the secret, you might need to wait for the role assignment to propagate. For more information, see [Troubleshoot Azure RBAC](/azure/role-based-access-control/troubleshooting#).
 
 ## Disable workload identity
 
@@ -375,7 +375,7 @@ To disable the Microsoft Entra Workload ID on the AKS cluster where it's been en
 
 In this article, you deployed a Kubernetes cluster and configured it to use a workload identity in preparation for application workloads to authenticate with that credential. Now you're ready to deploy your application and configure it to use the workload identity with the latest version of the [Azure Identity][azure-identity-libraries] client library. If you can't rewrite your application to use the latest client library version, you can [set up your application pod][workload-identity-migration] to authenticate using managed identity with workload identity as a short-term migration solution.
 
-The [Service Connector](/azure/service-connector/overview) integration helps simplify the connection configuration for AKS workloads and Azure backing services. It securely handles authentication and network configurations and follows best practices for connecting to Azure services. For more information, see [Connect to Azure OpenAI in Foundry Models in AKS using Workload Identity](/azure/service-connector/tutorial-python-aks-openai-workload-identity) and the [Service Connector introduction](https://azure.github.io/AKS/2024/05/23/service-connector-intro).
+The [Service Connector](/azure/service-connector/overview) integration helps simplify the connection configuration for AKS workloads and Azure backing services. It securely handles authentication and network configurations and follows best practices for connecting to Azure services. For more information, see [Connect to Azure OpenAI in Foundry Models in AKS using Workload Identity](/azure/service-connector/tutorial-python-aks-openai-workload-identity) and the [Service Connector introduction](https://blog.aks.azure.com/2024/05/23/service-connector-intro).
 
 <!-- EXTERNAL LINKS -->
 [kubectl-describe]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe

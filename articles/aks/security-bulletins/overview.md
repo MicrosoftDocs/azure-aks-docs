@@ -1,7 +1,7 @@
 ---
 title: Security bulletins for Azure Kubernetes Service (AKS)
 description: This article provides security/vulnerability related updates and troubleshooting guides for Azure Kubernetes Services (AKS).
-ms.date: 03/27/2025
+ms.date: 10/23/2025
 author: bahe
 ms.author: bahe
 ms.topic: concept-article
@@ -22,6 +22,33 @@ These updates cover security information related to the following AKS components
 - Azure Kubernetes Service (AKS)
 - Azure Kubernetes Service Node Image (AKS Node Image)
 - Azure Kubernetes Service Addons (AKS add-ons)
+
+---
+
+## AKS-2025-0011  Malicious NPM Packages used in Supply Chain Attacks
+
+**Published Date**: October 1, 2025
+
+### Description
+This bulletin provides an update on Node Package Manager (NPM) packages being compromised. There has been a series of recent NPM supply chain attacks resulting in packages being used to perform malicious activity such as delivering malware or stealing credentials.
+The vulnerability **does not** impact Azure Kubernetes Service (AKS), as Node.js is **not used** in any AKS core or managed components.
+
+### References
+
+- [NPM Security Advisories](https://github.com/advisories?query=npm)
+- [Ongoing Supply Chain Attack Targets CrowdStrike NPM Packages](https://socket.dev/blog/ongoing-supply-chain-attack-targets-crowdstrike-npm-packages#Compromised-Packages-and-Versions)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- None
+
+**Resolutions**
+
+- AKS does not use Node.js in any core or managed components and is not affected by these attacks. **No customer action is required.** 
 
 ---
 
@@ -47,7 +74,7 @@ This issue arises because node users are authorized to perform create and patch 
 
 **Resolutions**
 
-- A security patch is currently being rolled out in 20250720 and 20250808 release and is expected to be applied across all regions within the next 4–5 days. You can check the release status from [AKS release tracker][aks-release-tracker].
+- A security patch has been rolled out in 20250720 and 20250808 release. You can check the release status from [AKS release tracker][aks-release-tracker].
 - **No action is required**. The patch will be automatically applied to your cluster during your configured or default [maintenance window](../planned-maintenance.md).
 
 ---
@@ -349,12 +376,14 @@ For security bulletins from previous years, see:
 - Learn how to automatically upgrade node images with [Automatically upgrade node images][auto-upgrade-node-image].
 - Learn how to upgrade the Kubernetes version with [Upgrade an AKS cluster][upgrade-cluster].
 - Learn about upgrading best practices with [AKS patch and upgrade guidance][upgrade-operators-guide].
+- Learn how to to safely upgrade to a consistent node image across multiple clusters with [Azure Kubernetes Fleet Manager][fleet-auto-upgrade].
 
 
 <!-- LINKS - internal -->
 [node-image-upgrade]: ../node-image-upgrade.md
 [auto-upgrade-node-image]: ../auto-upgrade-node-image.md
 [upgrade-cluster]: ../upgrade-aks-cluster.md
+[fleet-auto-upgrade]: ../../kubernetes-fleet/concepts-update-orchestration.md
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
 
 <!-- LINKS - external -->

@@ -60,11 +60,12 @@ Upgrade an existing Kubenet cluster to use Azure CNI Overlay using the [`az aks 
 az aks update \
   --name $CLUSTER_NAME \
   --resource-group $RESOURCE_GROUP \
+# --pod-cidr 192.168.0.0/16 \
   --network-plugin azure \
   --network-plugin-mode overlay
 ```
 
-Since the cluster is already using a private CIDR for pods which doesn't overlap with the VNet IP space, you don't need to specify the `--pod-cidr` parameter and the Pod CIDR remains the same if the parameter isn't used.
+If you do want to expand the Pod CIDR to accomodate a larger cluster during the upgrade, specify the new range with `--pod-cidr`. The Pod CIDR remains the same if the parameter isn't used.
 
 > [!NOTE]
 > When upgrading from Kubenet to CNI Overlay, the route table is no longer required for pod routing. If the cluster is using a customer provided route table, the routes which were being used to direct pod traffic to the correct node are automatically deleted during the migration operation. If the cluster is using a managed route table (AKS creates the route table which lives in the node resource group), then that route table is deleted as part of the migration.

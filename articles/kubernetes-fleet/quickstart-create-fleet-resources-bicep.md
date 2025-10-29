@@ -19,7 +19,7 @@ Get started with Azure Kubernetes Fleet Manager by using Bicep to create a Fleet
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
 * Read the [conceptual overview of Fleet Manager](./concepts-fleet.md), which provides an explanation of fleets and member clusters referenced in this document.
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 * [Install or upgrade Azure CLI](/cli/azure/install-azure-cli) to version `2.71.0` or later.
     - Ensure **fleet** extension is updated to version `1.5.2` or higher.
@@ -66,7 +66,7 @@ If you only want to use Fleet Manager for update orchestration, you can create a
 ### [Fleet Manager resource with hub cluster](#tab/with-hub-cluster)
 If you want to use Fleet Manager for Kubernetes object propagation in addition to update orchestration, then you need to create the Fleet Manager resource with the hub cluster.
 
-Fleet Manager clusters with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
+Fleet Manager clusters with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
 
 #### Public hub cluster
 To create a public Fleet Manager resource with a hub cluster, use the following Bicep
