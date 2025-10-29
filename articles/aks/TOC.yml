@@ -12,6 +12,8 @@
       href: core-aks-concepts.md
     - name: Advanced AKS concepts
       href: advanced-aks-concepts.md
+    - name: Compare AKS Standard and AKS Automatic
+      href: intro-aks-automatic.md
     - name: Deploy a multi-container application to AKS
       items:
         - name: 1 - Prepare application for AKS
@@ -48,8 +50,6 @@
       href: concepts-preview-api-life-cycle.md
 - name: Set up clusters
   items:
-    - name: Compare AKS Standard and AKS Automatic
-      href: intro-aks-automatic.md
     - name: Create an AKS cluster
       items:
         - name: Create a Linux-based AKS cluster
@@ -148,6 +148,8 @@
                   href: istio-deploy-addon.md
                 - name: Native sidecar mode
                   href: istio-native-sidecar.md
+                - name: Istio CNI (Preview)
+                  href: istio-cni.md
                 - name: Mesh configuration
                   href: istio-meshconfig.md
                 - name: Upgrades
@@ -245,7 +247,7 @@
         - name: Reduce image pull time with Artifact Streaming on AKS
           href: artifact-streaming.md
         - name: Use generation 2 VMs
-          href: generation-2-vm.md
+          href: generation-2-vms.md
         - name: Add an Azure Spot node pool
           href: spot-node-pool.md
         - name: Add a node pool with a unique subnet
@@ -318,6 +320,8 @@
           href: upgrade.md
         - name: Upgrade options and recommendations
           href: upgrade-cluster.md
+        - name: How AKS cluster upgrades work
+          href: how-does-upgrade-happen.md
         - name: AKS component versioning
           href: aks-component-versioning.md
         - name: Upgrade scenarios hub
@@ -547,8 +551,14 @@
             href: dns-concepts.md
           - name: Use a static IP address and DNS label
             href: static-ip.md
-          - name: Customize CoreDNS
-            href: coredns-custom.md
+          - name: CoreDNS
+            items:
+              - name: Customize CoreDNS
+                href: coredns-custom.md
+              - name: Configure autoscaling for CoreDNS
+                href: coredns-autoscale.md
+              - name: Troubleshoot CoreDNS
+                href: coredns-troubleshoot.md
           - name: Configure LocalDNS
             href: localdns-custom.md
       - name: Load balancing
@@ -595,6 +605,14 @@
                     href: container-network-security-l7-policy-concepts.md
                   - name: Set up Layer 7 policies
                     href: how-to-apply-l7-policies.md
+      - name: Performance
+        items:
+          - name: Container Network Performance
+            items:
+              - name: Overview
+                href: container-network-performance-ebpf-host-routing.md
+              - name: Set up eBPF Host routing
+                href: how-to-enable-ebpf-host-routing.md
       - name: Improve network fault tolerance using TCP keep-alive
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
 - name: Scheduling
@@ -794,6 +812,8 @@
             href: cis-azure-linux.md
           - name: CIS Azure Linux 3.0 benchmark
             href: cis-azure-linux-v3.md
+          - name: CIS Ubuntu benchmark
+            href: cis-ubuntu.md
           - name: CIS Windows Server benchmark
             href: cis-windows.md
         - name: Payment Card Industry Data Security Standard (PCI DSS)
@@ -874,6 +894,8 @@
                   href: /azure/storage/elastic-san/elastic-san-connect-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: Ephemeral Disk
             items:
+                - name: Best practices for ephemeral NVMe data disks
+                  href: best-practices-storage-nvme.md
                 - name: Use Azure Container Storage with Ephemeral Disk
                   href: /azure/storage/container-storage/use-container-storage-with-local-disk?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Shared file storage
@@ -980,8 +1002,10 @@
       href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: GPUs
       items:
-        - name: Use Linux GPUs
+        - name: Use NVIDIA GPUs
           href: use-nvidia-gpu.md
+        - name: Use managed GPU nodes
+          href: aks-managed-gpu-nodes.md
         - name: Use Windows GPUs
           href: use-windows-gpu.md
         - name: Use AMD GPUs

@@ -4,8 +4,8 @@ description: Learn how to access clusters using Conditional Access when integrat
 ms.topic: concept-article
 ms.subservice: aks-integration
 ms.date: 06/25/2024
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.custom: devx-track-azurecli
 # Customer intent: "As a cloud security administrator, I want to configure Conditional Access for my AKS clusters, so that I can manage access securely and ensure compliance for users accessing the clusters."
 ---
