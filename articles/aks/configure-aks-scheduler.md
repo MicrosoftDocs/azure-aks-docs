@@ -24,16 +24,12 @@ The following examples demonstrate how targeted scheduling mechanisms can be con
 - AKS doesn't support in-tree scheduling plugins targeting the `aks-system` scheduler. This restriction is in place to help prevent unexpected changes to AKS add-ons enabled on your cluster.
 
 ## Prerequisites
-* The Azure CLI version `2.76.0` or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* The `aks-preview` Azure CLI extension version `18.0.0b27` or later.
-* Kubernetes version `1.33` or later running on your AKS cluster.
-* Understanding of [supported advanced scheduling concepts](./concepts-scheduler-configuration.md) and in-tree scheduling plugins on AKS.
-* Register the `UserDefinedSchedulerConfigurationPreview` feature flag in your Azure subscription.
 
 - The Azure CLI version `2.76.0` or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - Kubernetes version `1.33` or later running on your AKS cluster.
 - The [`aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) version `18.0.0b27` or later.
 - [Register the `UserDefinedSchedulerConfigurationPreview` feature flag](#register-the-user-defined-scheduler-configuration-preview-feature-flag) in your Azure subscription.
+- Understanding of [supported advanced scheduling concepts](./concepts-scheduler-configuration.md) and in-tree scheduling plugins on AKS.
 
 ### Install the `aks-preview` Azure CLI extension
 
