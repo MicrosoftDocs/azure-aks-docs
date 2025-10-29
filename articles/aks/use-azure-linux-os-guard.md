@@ -1,13 +1,12 @@
 ---
-
 title: Use Azure Linux with OS Guard (preview) for Azure Kubernetes Service (AKS)
-description: Learn how to use Azure Linux with OS Guard (preview) on Azure Kubernetes Service (AKS)
-ms.topic: how-to
+description: Learn about Azure Linux with OS Guard (preview) on Azure Kubernetes Service (AKS), including key features, region availability, and resources to get started.
+ms.topic: overview
 ms.custom: linux-related-content
-ms.date:10/29/2025
+ms.date: 10/29/2025
 author: florataagen
 ms.author: florataagen
-
+ms.service: azure-kubernetes-service
 # Customer intent: "As a cloud developer, I want to deploy and manage Azure Linux container with OS Guard on AKS, so that I can ensure reliable and efficient container workloads with reduced maintenance and enhanced security."
 ---
 
