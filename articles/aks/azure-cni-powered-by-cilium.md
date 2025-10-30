@@ -43,10 +43,8 @@ If you aren't sure which option to select, read ["Choosing a network model to us
 
 | Kubernetes Version | Minimum Cilium Version |
 |--------------------|----------------|
-| 1.27 (LTS)         | 1.13.18        |
-| 1.28 (End of Life) | 1.13.18        |
-| 1.29               | 1.14.19        |
-| 1.30 (LTS)         | 1.14.19        |
+| 1.29 (LTS)         | 1.14.19        |
+| 1.30               | 1.14.19        |
 | 1.31               | 1.16.6         |
 | 1.32               | 1.17.0         |
 | 1.33               | 1.17.0         |
