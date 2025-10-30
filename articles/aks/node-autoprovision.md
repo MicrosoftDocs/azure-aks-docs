@@ -45,13 +45,14 @@ Node auto provisioning provisions, scales, and manages virtual machines (nodes) 
 - [Service Principals](./kubernetes-service-principal.md)
    > [!NOTE]
    > You can use either a system-assigned or user-assigned managed identity.
+- Disk Encryption Sets
 - CustomCATrustCertificates
 - Clusters with node autoprovisioning can't be [stopped](./start-stop-cluster.md)
 - [HTTP proxy](./http-proxy.md)
 - All cluster egress [outbound types](./egress-outboundtype.md) are supported, however the type can't be changed after the cluster is created
 
 > [!NOTE] 
-> Private Clusters and Disk Encryption Sets are now supported with NAP-enabled clusters, which were previously listed as unsupported. See the [2025-09-21 AKS Release Notes](https://github.com/Azure/AKS/releases/tag/2025-09-21) for more information.
+> Private Clusters are now supported with NAP-enabled clusters, which were previously listed as unsupported. See the [2025-09-21 AKS Release Notes](https://github.com/Azure/AKS/releases/tag/2025-09-21) for more information.
 
 ## Networking configuration
 

@@ -2,8 +2,8 @@
 title: Create an internal load balancer
 titleSuffix: Azure Kubernetes Service
 description: Learn how to create and use an internal load balancer to expose your services with Azure Kubernetes Service (AKS).
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 03/25/2025
@@ -313,7 +313,7 @@ To learn more about Kubernetes services, see the [Kubernetes services documentat
 [aks-sp]: kubernetes-service-principal.md#delegate-access-to-other-azure-resources
 [different-subnet]: #specify-a-different-subnet
 [aks-vnet-subnet]: configure-kubenet.md#create-a-virtual-network-and-subnet
-[unique-subnet]: create-node-pools.md#add-a-node-pool-with-a-unique-subnet
+[unique-subnet]: node-pool-unique-subnet.md
 [az-network-vnet-subnet-list]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-list
 [get-azvirtualnetworksubnetconfig]: /powershell/module/az.network/get-azvirtualnetworksubnetconfig
 [az-network-private-link-service-list]: /cli/azure/network/private-link-service#az_network_private_link_service_list

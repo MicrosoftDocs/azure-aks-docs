@@ -41,31 +41,22 @@ When you use planned maintenance, the following considerations apply:
 
 Three schedule configuration types are available for planned maintenance:
 
-* `default` is a basic configuration for controlling AKS releases. The releases can take up to two weeks to roll out to all regions from the initial time of shipping, because of Azure safe deployment practices.
+* `default` is a basic configuration for controlling AKS releases, which covers control plane components and system add-ons upgrade. The releases can take up to two weeks to roll out to all regions from the initial time of shipping, because of Azure safe deployment practices.
 
   Choose `default` to schedule these updates in a manner that's least disruptive for you. You can monitor the status of an ongoing AKS release by region with the [weekly release tracker][release-tracker].  
 * `aksManagedAutoUpgradeSchedule` controls when to perform cluster upgrades scheduled by your designated auto-upgrade channel. You can configure more finely controlled cadence and recurrence settings with this configuration compared to the `default` configuration. For more information on cluster auto-upgrade, see [Automatically upgrade an Azure Kubernetes Service cluster][aks-upgrade].
 * `aksManagedNodeOSUpgradeSchedule` controls when to perform the node OS security patching scheduled by your node OS auto-upgrade channel. You can configure more finely controlled cadence and recurrence settings with this configuration compared to the `default` configuration. For more information on node OS auto-upgrade channels, see [Automatically patch and update AKS cluster node images][node-image-auto-upgrade].
 
-We recommend using `aksManagedAutoUpgradeSchedule` for all cluster upgrade scenarios and `aksManagedNodeOSUpgradeSchedule` for all node OS security patching scenarios.
+We recommend using `aksManagedAutoUpgradeSchedule` for all cluster k8s version upgrade scenarios and `aksManagedNodeOSUpgradeSchedule` for all node OS security patching scenarios.
 
-The `default` option is meant exclusively for AKS weekly releases. You can switch the `default` configuration to the `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` configuration by using the `az aks maintenanceconfiguration update` command.
+The `default` option is meant exclusively for AKS weekly releases. Use `default` if you want to control the upgrade schedule for AKS control plane components (such as API Server, ETCD, etc) and add-ons (such as CoreDNS, Metrics Server, etc).
+
+All 3 types of configurations: `default`, `aksManagedAutoUpgradeSchedule`, `aksManagedNodeOSUpgradeSchedule` can co-exist.
 
 ## Create a maintenance window
 
 > [!NOTE]
 > When you're using auto-upgrade, to ensure proper functionality, use a maintenance window with a duration of four hours or more.
-
-Planned maintenance windows are specified in Coordinated Universal Time (UTC).
-
-A `default` maintenance window has the following legacy properties (no longer recommended):
-
-|Name|Description|Default value|
-|--|--|--|
-|`timeInWeek`|In a `default` configuration, this property contains the `day` and `hourSlots` values that define a maintenance window.|Not applicable|
-|`timeInWeek.day`|The day of the week to perform maintenance in a `default` configuration.|Not applicable|
-|`timeInWeek.hourSlots`|A list of hour-long time slots to perform maintenance on a particular day in a `default` configuration.|Not applicable|
-|`notAllowedTime`|A range of dates that maintenance can't run, determined by `start` and `end` child properties. This property is applicable only when you're creating the maintenance window by using a configuration file.|Not applicable|
 
 > [!NOTE] 
 > From the 2023-05-01 API version onwards, please use the below properties for `default` configuration.
@@ -85,6 +76,19 @@ An `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintena
 |`durationHours`|The duration of the window for maintenance to run.|Not applicable|
 |`notAllowedDates`|A range of dates that maintenance can't run, determined by `start` and `end` child properties. It's applicable only when you're creating the maintenance window by using a configuration file.|Not applicable|
 
+> [!NOTE] 
+> Creating a `default` configuration with the below deprecated properties will be automatically migrated to the new properties shown above.
+
+**[Deprecated]** A `default` maintenance window has the following legacy properties:
+
+|Name|Description|Default value|
+|--|--|--|
+|`timeInWeek`|In a `default` configuration, this property contains the `day` and `hourSlots` values that define a maintenance window.|Not applicable|
+|`timeInWeek.day`|The day of the week to perform maintenance in a `default` configuration.|Not applicable|
+|`timeInWeek.hourSlots`|A list of hour-long time slots to perform maintenance on a particular day in a `default` configuration.|Not applicable|
+|`notAllowedTime`|A range of dates that maintenance can't run, determined by `start` and `end` child properties. This property is applicable only when you're creating the maintenance window by using a configuration file.|Not applicable|
+
+
 ### Schedule types
 Four schedule types are supported—`Daily`, `Weekly`, `AbsoluteMonthly`, and `RelativeMonthly`.  
 The table below shows which types are available for each maintenance-configuration option.
@@ -96,8 +100,8 @@ The table below shows which types are available for each maintenance-configurati
 |-----------------|:---------:|:--------------------------------------:|:---------------------------------:|
 | Daily           | ❌        | ✅ (after Jun 2025)                    | ✅                                 |
 | Weekly          | ✅        | ✅                                     | ✅                                 |
-| AbsoluteMonthly | ✅        | ✅                                     | ✅                                 |
-| RelativeMonthly | ✅        | ✅                                     | ✅                                 |
+| AbsoluteMonthly | ❌        | ✅                                     | ✅                                 |
+| RelativeMonthly | ❌        | ✅                                     | ✅                                 |
 
 All of the fields shown for each schedule type are required.
 
@@ -153,18 +157,15 @@ Valid values for `weekIndex` include `First`, `Second`, `Third`, `Fourth`, and `
 
 Add a maintenance window configuration to an AKS cluster by using the [`az aks maintenanceconfiguration add`][az-aks-maintenanceconfiguration-add] command.
 
-The first example adds a new `default` configuration that schedules maintenance to run from 1:00 AM to 2:00 AM every Monday. The second example adds a new `aksManagedAutoUpgradeSchedule` configuration that schedules maintenance to run every third Friday between 12:00 AM and 8:00 AM in the `UTC+5:30` time zone.
+The first example adds a new `default` configuration that schedules maintenance to run from 1:00 AM to 5:00 AM every Monday in the `UTC` time zone. The second example adds a new `aksManagedAutoUpgradeSchedule` configuration that schedules maintenance to run every third Friday between 12:00 AM and 8:00 AM in the `UTC+5:30` time zone.
 
 ```azurecli-interactive
 # Add a new default configuration
-az aks maintenanceconfiguration add --resource-group myResourceGroup --cluster-name myAKSCluster --name default --weekday Monday --start-hour 1
+az aks maintenanceconfiguration add --resource-group myResourceGroup --cluster-name myAKSCluster --name default --schedule-type Weekly --day-of-week Monday --interval-weeks 1 --duration 4 --utc-offset +00:00 --start-time 01:00
 
 # Add a new aksManagedAutoUpgradeSchedule configuration
 az aks maintenanceconfiguration add --resource-group myResourceGroup --cluster-name myAKSCluster --name aksManagedAutoUpgradeSchedule --schedule-type Weekly --day-of-week Friday --interval-weeks 3 --duration 8 --utc-offset +05:30 --start-time 00:00
 ```
-
-> [!NOTE]
-> When you're using a `default` configuration type, you can omit the `--start-time` parameter to allow maintenance anytime during a day.
 
 ### [Azure portal](#tab/azure-portal)
 
@@ -188,36 +189,33 @@ az aks maintenanceconfiguration add --resource-group myResourceGroup --cluster-n
 
 ### [JSON file](#tab/json-file)
 
-You can use a JSON file to create a maintenance configuration instead of using parameters. When you use this method, you can prevent maintenance during a range of dates by specifying `notAllowedTimes` for `default` configurations and `notAllowedDates` for `aksManagedAutoUpgradeSchedule` configurations.
+You can use a JSON file to create a maintenance configuration instead of using parameters. When you use this method, you can prevent maintenance during a range of dates by specifying `notAllowedDates` for `default`, `aksManagedAutoUpgradeSchedule` and `aksManagedNodeOSUpgradeSchedule` configurations.
 
 1. Create a JSON file with the maintenance window settings.
 
-    The following example creates a `default.json` file that schedules maintenance to run from 1:00 AM to 3:00 AM every Tuesday and Wednesday in the `UTC` time zone. There's also an exception from `2021-05-26T03:00:00Z` to `2021-05-30T12:00:00Z` where maintenance isn't allowed, even if it overlaps with a maintenance window.
+    The following example creates a `default.json` file that schedules maintenance to run from 1:00 AM to 5:00 AM every Tuesday in the `UTC` time zone. There's also an exception from `2021-05-26` to `2021-05-30` where maintenance isn't allowed, even if it overlaps with a maintenance window.
 
     ```json
     {
-      "timeInWeek": [
-        {
-          "day": "Tuesday",
-          "hour_slots": [
-            1,
-            2
-          ]
-        },
-        {
-          "day": "Wednesday",
-          "hour_slots": [
-            1,
-            6
-          ]
+      "properties": {
+        "maintenanceWindow": {
+            "schedule": {
+                "weekly": {
+                    "intervalWeeks": 1,
+                    "dayOfWeek": "Tuesday"
+                }
+            },
+            "durationHours": 4,
+            "utcOffset": "+00:00",
+            "startTime": "01:00",
+            "notAllowedDates": [
+                {
+                    "start": "2021-05-26",
+                    "end": "2021-05-30"
+                }
+            ]
         }
-      ],
-      "notAllowedTime": [
-        {
-          "start": "2021-05-26T03:00:00Z",
-          "end": "2021-05-30T12:00:00Z"
-        }
-      ]
+      }
     }
     ```
 
@@ -267,10 +265,11 @@ You can use a JSON file to create a maintenance configuration instead of using p
 
 Update an existing maintenance configuration by using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command.
 
-The following example updates the `default` configuration to schedule maintenance to run from 2:00 AM to 3:00 AM every Monday:
+The following example updates the `default` configuration to schedule maintenance to run from 2:00 AM to 6:00 AM every Friday:
 
 ```azurecli-interactive
-az aks maintenanceconfiguration update --resource-group myResourceGroup --cluster-name myAKSCluster --name default --weekday Monday --start-hour 2
+az aks maintenanceconfiguration update --resource-group myResourceGroup --cluster-name myAKSCluster --name default --schedule-type Weekly --day-of-week Friday --interval-weeks 1 --duration 4 --utc-offset +00:00 --start-time 02:00
+
 ```
 
 ### [Azure portal](#tab/azure-portal)
@@ -288,25 +287,29 @@ az aks maintenanceconfiguration update --resource-group myResourceGroup --cluste
 
 1. Update the configuration JSON file with the new maintenance window settings.
 
-    The following example updates the `default.json` file from the [previous section](#add-a-maintenance-window-configuration) to schedule maintenance to run from 2:00 AM to 3:00 AM every Monday:
+    The following example updates the `default.json` file from the [previous section](#add-a-maintenance-window-configuration) to schedule maintenance to run from 2:00 AM to 6:00 AM every Monday:
 
     ```json
     {
-      "timeInWeek": [
-        {
-          "day": "Monday",
-          "hour_slots": [
-            2,
-            3
-          ]
+      "properties": {
+        "maintenanceWindow": {
+            "schedule": {
+                "weekly": {
+                    "intervalWeeks": 1,
+                    "dayOfWeek": "Monday"
+                }
+            },
+            "durationHours": 4,
+            "utcOffset": "+00:00",
+            "startTime": "02:00",
+            "notAllowedDates": [
+                {
+                    "start": "2021-05-26",
+                    "end": "2021-05-30"
+                }
+            ]
         }
-      ],
-      "notAllowedTime": [
-        {
-          "start": "2021-05-26T03:00:00Z",
-          "end": "2021-05-30T12:00:00Z"
-        }
-      ]
+      }
     }
     ```
 
@@ -411,7 +414,7 @@ az aks maintenanceconfiguration delete --resource-group myResourceGroup --cluste
 
   Use the `az aks maintenanceconfiguration show` command.
   
-* Can reactive, unplanned maintenance happen during the `notAllowedTime` or `notAllowedDates` periods too?
+* Can reactive, unplanned maintenance happen during the `notAllowedDates` periods too?
 
   Yes. AKS reserves the right to break these windows for unplanned, reactive maintenance operations that are urgent or critical.
 

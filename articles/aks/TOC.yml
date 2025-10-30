@@ -12,6 +12,8 @@
       href: core-aks-concepts.md
     - name: Advanced AKS concepts
       href: advanced-aks-concepts.md
+    - name: Compare AKS Standard and AKS Automatic
+      href: intro-aks-automatic.md
     - name: Deploy a multi-container application to AKS
       items:
         - name: 1 - Prepare application for AKS
@@ -48,8 +50,6 @@
       href: concepts-preview-api-life-cycle.md
 - name: Set up clusters
   items:
-    - name: Compare AKS Standard and AKS Automatic
-      href: intro-aks-automatic.md
     - name: Create an AKS cluster
       items:
         - name: Create a Linux-based AKS cluster
@@ -148,6 +148,8 @@
                   href: istio-deploy-addon.md
                 - name: Native sidecar mode
                   href: istio-native-sidecar.md
+                - name: Istio CNI (Preview)
+                  href: istio-cni.md
                 - name: Mesh configuration
                   href: istio-meshconfig.md
                 - name: Upgrades
@@ -245,9 +247,11 @@
         - name: Reduce image pull time with Artifact Streaming on AKS
           href: artifact-streaming.md
         - name: Use generation 2 VMs
-          href: generation-2-vm.md
+          href: generation-2-vms.md
         - name: Add an Azure Spot node pool
           href: spot-node-pool.md
+        - name: Add a node pool with a unique subnet
+          href: node-pool-unique-subnet.md
         - name: Node pool snapshot
           href: node-pool-snapshot.md
         - name: Add a Virtual Machines node pool
@@ -282,6 +286,8 @@
           href: windows-faq.yml
         - name: Connect remotely
           href: rdp.md
+        - name: Create Windows Server node pools with `containerd`
+          href: windows-containerd.md
         - name: Use HostProcess containers
           href: use-windows-hpc.md
         - name: Use Windows Annual Channel for Containers
@@ -314,6 +320,8 @@
           href: upgrade.md
         - name: Upgrade options and recommendations
           href: upgrade-cluster.md
+        - name: How AKS cluster upgrades work
+          href: how-does-upgrade-happen.md
         - name: AKS component versioning
           href: aks-component-versioning.md
         - name: Upgrade scenarios hub
@@ -414,14 +422,10 @@
               href: best-practices-performance-scale.md
             - name: For large workloads
               href: best-practices-performance-scale-large.md
-    - name: Multi-tenancy, isolation, and scheduling best practices
+    - name: Multi-tenancy and isolation
       items:
         - name: Multi-tenancy and cluster isolation
           href: operator-best-practices-cluster-isolation.md
-        - name: Basic scheduler features
-          href: operator-best-practices-scheduler.md
-        - name: Advanced scheduler features
-          href: operator-best-practices-advanced-scheduler.md
         - name: Managed namespaces
           items:
             - name: Overview
@@ -543,8 +547,14 @@
             href: dns-concepts.md
           - name: Use a static IP address and DNS label
             href: static-ip.md
-          - name: Customize CoreDNS
-            href: coredns-custom.md
+          - name: CoreDNS
+            items:
+              - name: Customize CoreDNS
+                href: coredns-custom.md
+              - name: Configure autoscaling for CoreDNS
+                href: coredns-autoscale.md
+              - name: Troubleshoot CoreDNS
+                href: coredns-troubleshoot.md
           - name: Configure LocalDNS
             href: localdns-custom.md
       - name: Load balancing
@@ -591,6 +601,14 @@
                     href: container-network-security-l7-policy-concepts.md
                   - name: Set up Layer 7 policies
                     href: how-to-apply-l7-policies.md
+      - name: Performance
+        items:
+          - name: Container Network Performance
+            items:
+              - name: Overview
+                href: container-network-performance-ebpf-host-routing.md
+              - name: Set up eBPF Host routing
+                href: how-to-enable-ebpf-host-routing.md
       - name: Improve network fault tolerance using TCP keep-alive
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
 - name: Scheduling
@@ -599,6 +617,12 @@
         href: operator-best-practices-scheduler.md
       - name: Advanced scheduler features
         href: operator-best-practices-advanced-scheduler.md
+      - name: Scheduler profile configuration
+        items:
+          - name: Overview
+            href: concepts-scheduler-configuration.md
+          - name: Configure a scheduler profile
+            href: configure-aks-scheduler.md
       - name: Kueue
         items:
           - name: Learn about Kueue for batch scheduling
@@ -668,8 +692,16 @@
           href: deployment-safeguards.md
         - name: Create an OIDC Issuer for your cluster
           href: use-oidc-issuer.md
-        - name: Use KMS etcd encryption
-          href: use-kms-etcd-encryption.md
+        - name: KMS etcd encryption
+          items:
+            - name: Use KMS etcd encryption
+              href: use-kms-etcd-encryption.md
+            - name: Update key vault mode
+              href: update-kms-key-vault.md
+            - name: Migrate to KMS v2
+              href: use-kms-v2.md
+            - name: Observability for KMS etcd encryption
+              href: kms-observability.md
         - name: Secure container access to resources
           href: secure-container-access.md
     - name: Node security
@@ -782,6 +814,8 @@
             href: cis-azure-linux.md
           - name: CIS Azure Linux 3.0 benchmark
             href: cis-azure-linux-v3.md
+          - name: CIS Ubuntu benchmark
+            href: cis-ubuntu.md
           - name: CIS Windows Server benchmark
             href: cis-windows.md
         - name: Payment Card Industry Data Security Standard (PCI DSS)
@@ -862,6 +896,8 @@
                   href: /azure/storage/elastic-san/elastic-san-connect-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: Ephemeral Disk
             items:
+                - name: Best practices for ephemeral NVMe data disks
+                  href: best-practices-storage-nvme.md
                 - name: Use Azure Container Storage with Ephemeral Disk
                   href: /azure/storage/container-storage/use-container-storage-with-local-disk?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Shared file storage

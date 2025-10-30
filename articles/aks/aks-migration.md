@@ -5,16 +5,13 @@ ms.topic: concept-article
 ms.date: 06/12/2024
 author: schaffererin
 ms.author: schaffererin
-ms.custom: mvc, devx-track-azurecli, innovation-engine
+ms.custom: mvc, devx-track-azurecli
 ms.collection: 
  - migration
 # Customer intent: As a DevOps engineer, I want to migrate my applications to Azure Kubernetes Service (AKS) so that I can leverage managed services for improved scalability and reduced management overhead while ensuring high availability and business continuity during the transition.
 ---
 
 # Migrate to Azure Kubernetes Service (AKS)
-
-> [!div class="nextstepaction"]
-> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2333349)
 
 To help you plan and execute a successful migration to Azure Kubernetes Service (AKS), this guide provides details for the current recommended AKS configuration. While this article doesn't cover every scenario, it contains links to more detailed information for planning a successful migration.
 

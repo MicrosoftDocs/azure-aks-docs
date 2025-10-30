@@ -4,9 +4,9 @@ description: Learn what ports and addresses are required to control egress traff
 ms.subservice: aks-networking
 ms.custom: build-2024, quarterly
 ms.topic: how-to
-ms.author: allensu
+ms.author: davidsmatlak
 ms.date: 06/10/2025
-author: asudbring
+author: davidsmatlak
 
 # Customer intent: "As a Kubernetes cluster operator, I want to understand the outbound network and FQDN rules necessary to control egress traffic, so that I can enhance security and ensure proper functionality within my Azure Kubernetes Service deployment."
 ---
