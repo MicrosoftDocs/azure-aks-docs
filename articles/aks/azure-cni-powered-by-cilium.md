@@ -168,6 +168,10 @@ az aks create \
 
     Yes, `ClusterwideCiliumNetworkPolicy` is supported.
 
+- **Can I use `CiliumLocalRedirectPolicy`?**
+
+    Yes, `CiliumLocalRedirectPolicy` is supported.
+
 - **Which Cilium features are supported in Azure managed CNI? Which of those require Advanced Container Networking Services?**
 
     | Supported Feature | w/o ACNS | w/ ACNS |
@@ -179,6 +183,7 @@ az aks create \
     | L7 Network Policies (HTTP/gRPC/Kafka) | ❌ | ✔️ |
     | Container Network Observability (Metrics and Flow logs ) | ❌ | ✔️ |
     | Clusterwide Cilium Network Policy | ✔️ | ✔️ |
+    | Cilium Local Redirect Policy | ✔️ | ✔️ |
 
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
 
