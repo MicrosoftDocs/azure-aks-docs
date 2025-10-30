@@ -1082,20 +1082,26 @@
               href: keda-integrations.md
             - name: Troubleshoot Kubernetes Event-driven Autoscaler (KEDA)
               href: /troubleshoot/azure/azure-kubernetes/troubleshoot-kubernetes-event-driven-autoscaling-add-on?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Node auto provisioning
+        - name: Node auto-provisioning (NAP)
           items:
-            - name: About node auto provisioning (NAP)
-              href: node-autoprovision.md
-            - name: Node auto provisioning configuration
+            - name: Overview
+              href: node-auto-provisioning.md
+            - name: Enable or disable NAP
+              href: use-node-auto-provisioning.md
+            - name: Use NAP in a custom VNet
+              href: node-auto-provisioning-custom-vnet.md
+            - name: Update NAP node images
+              href: node-auto-provisioning-upgrade-image.md
+            - name: NAP configuration options
               items:
-                - name: Configure networking with node auto provisioning
-                  href: node-autoprovision-networking.md
-                - name: Configure disruption policies with node auto provisioning
-                  href: node-autoprovision-disruption.md
-                - name: Configure NodePool custom resource
-                  href: node-autoprovision-node-pools.md
-                - name: Configure AKSNodeClass custom resource
-                  href: node-autoprovision-aksnodeclass.md
+                - name: Configure networking
+                  href: node-auto-provisioning-networking.md
+                - name: Configure disruption policies
+                  href: node-auto-provisioning-disruption.md
+                - name: Configure NodePool custom resources
+                  href: node-auto-provisioning-node-pools.md
+                - name: Configure AKSNodeClass custom resources
+                  href: node-auto-provisioning-aksnodeclass.md
 - name: Monitoring
   items:
     - name: Monitoring concepts and resources
