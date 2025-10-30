@@ -1008,10 +1008,8 @@
       href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: GPUs
       items:
-        - name: Use NVIDIA GPUs
+        - name: Use Linux GPUs
           href: use-nvidia-gpu.md
-        - name: Use managed GPU nodes
-          href: aks-managed-gpu-nodes.md
         - name: Use Windows GPUs
           href: use-windows-gpu.md
         - name: Use AMD GPUs
