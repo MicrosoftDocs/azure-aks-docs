@@ -134,7 +134,7 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
     az aks create \
       --resource-group $MY_RESOURCE_GROUP_NAME \
       --name $MY_AKS_CLUSTER_NAME \
-      --os-sku flatcar
+      --os-sku flatcar \
       --node-count 1 \
       --generate-ssh-keys
     ```
