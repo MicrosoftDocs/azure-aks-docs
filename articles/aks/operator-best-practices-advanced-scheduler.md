@@ -25,7 +25,9 @@ This best practices article focuses on advanced Kubernetes scheduling features f
 > * Split apart or group together pods with inter-pod affinity or anti-affinity.
 > * Restrict scheduling of workloads that require GPUs only on nodes with schedulable GPUs.
 
-If you need additional capabilities to schedule batch workloads, you can learn to [install and configure Kueue on AKS][kueue-on-aks]
+If additional capabilities or ML frameworks are needed to schedule and queue batch workloads, you can [install and configure Kueue on AKS][kueue-on-aks] to ensure efficient, policy-driven scheduling in AKS clusters.
+
+If fine-grained scheduler configuration is needed to optimize how pods and jobs prioritize specific nodes, storage resources, topology, and more, you can [configure a scheduler on AKS][config-scheduler-aks].
 
 ## Provide dedicated nodes using taints and tolerations
 
