@@ -422,26 +422,16 @@
               href: best-practices-performance-scale.md
             - name: For large workloads
               href: best-practices-performance-scale-large.md
-    - name: Multi-tenancy, isolation, and scheduling best practices
+    - name: Multi-tenancy and isolation
       items:
         - name: Multi-tenancy and cluster isolation
           href: operator-best-practices-cluster-isolation.md
-        - name: Basic scheduler features
-          href: operator-best-practices-scheduler.md
-        - name: Advanced scheduler features
-          href: operator-best-practices-advanced-scheduler.md
         - name: Managed namespaces
           items:
             - name: Overview
               href: concepts-managed-namespaces.md
             - name: Use managed namespaces
               href: managed-namespaces.md  
-        - name: Scheduler profile configuration
-          items:
-            - name: Overview
-              href: concepts-scheduler-configuration.md
-            - name: Configure a scheduler profile
-              href: configure-aks-scheduler.md
     - name: Configure backup
       items:
         - name: Prerequisites
@@ -627,6 +617,12 @@
         href: operator-best-practices-scheduler.md
       - name: Advanced scheduler features
         href: operator-best-practices-advanced-scheduler.md
+      - name: Scheduler profile configuration
+        items:
+          - name: Overview
+            href: concepts-scheduler-configuration.md
+          - name: Configure a scheduler profile
+            href: configure-aks-scheduler.md
       - name: Kueue
         items:
           - name: Learn about Kueue for batch scheduling
