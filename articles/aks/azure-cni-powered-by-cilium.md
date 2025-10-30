@@ -166,7 +166,7 @@ az aks create \
 
 - **Can I use `ClusterwideCiliumNetworkPolicy`?**
 
-    `ClusterwideCiliumNetworkPolicy` is not supported.
+    Yes, `ClusterwideCiliumNetworkPolicy` is supported.
 
 - **Which Cilium features are supported in Azure managed CNI? Which of those require Advanced Container Networking Services?**
 
@@ -178,6 +178,7 @@ az aks create \
     | FQDN Filtering | ❌ | ✔️ |
     | L7 Network Policies (HTTP/gRPC/Kafka) | ❌ | ✔️ |
     | Container Network Observability (Metrics and Flow logs ) | ❌ | ✔️ |
+    | Clusterwide Cilium Network Policy | ✔️ | ✔️ |
 
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
 
