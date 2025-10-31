@@ -15,7 +15,7 @@ This article provides an overview of Flatcar Container Linux for AKS, a Cloud Na
 
 ## Flatcar Container Linux for AKS benefits
 
-Flatcar is built with an immutable filesystem, and it eliminates configuration drift and prevents unauthorized changes, ensuring robust protection for your workloads across multiple cloud platforms. Designed for versatility, Flatcar enables cross-cloud deployment, empowering businesses to scale effortlessly and securely.
+Flatcar uses an immutable OS filesystem, and it eliminates configuration drift and prevents unauthorized changes, ensuring robust protection for your workloads across multiple cloud platforms. Designed for versatility, Flatcar enables cross-cloud deployment, empowering businesses to scale effortlessly and securely.
 
 ## Limitations
 
@@ -27,7 +27,7 @@ Flatcar Container Linux for AKS has the following limitations:
 - The `SecurityPatch` [node OS upgrade channel][automatic-upgrade-node] isn't supported with Flatcar Container Linux.
 - During preview, AKS doesn't support in-place updates with Flatcar Container Linux.
 - [Artifact Streaming][artifact-streaming] (preview) isn't supported with Flatcar Container Linux.
-- [Generation 1 VMs][vm-support] aren't supported with Flatcar Container Linux, which means can't use VM sizes that only support Generation 1.
+- [Generation 1 VMs][vm-support] aren't supported with Flatcar Container Linux, which means you can't use VM sizes that only support Generation 1.
 - [Pod Sandboxing (preview)][pod-sandboxing] isn't supported with Flatcar Container Linux.
 - [Node auto-provisioning][NAP] isn't supported with Flatcar Container Linux.
 
@@ -65,7 +65,7 @@ Example output:
 ]
 ```
 
-You can check the Flatcar version number (for example: Flatcar 4344.0.0) in the release notes and by using `kubectl get nodes` command. For example:
+You can check the Flatcar version number (for example: Flatcar 4372.0.1) in the release notes and by using `kubectl get nodes` command. For example:
 
 ```bash
 kubectl get nodes -o wide
@@ -78,6 +78,7 @@ NAME                            STATUS   ROLES    AGE     VERSION   INTERNAL-IP 
 aks-nodes-16363508-vmss000000   Ready    <none>   2m33s   v1.32.6   10.224.0.4    <none>        Flatcar Container Linux by Kinvolk 4372.0.1 (Oklo)   6.12.35-flatcar   containerd://2.0.4
 ```
 
+Flatcar's inbuilt automatic A/B update for the OS partition is disabled and only full node image updates are supported.
 ## Next steps
 
 To learn more about Flatcar Container Linux, see the [Flatcar documentation][flatcar-docs].
