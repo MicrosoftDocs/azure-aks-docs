@@ -110,7 +110,7 @@ az aks create \
 
 ### Enable eBPF Host Routing with Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az-aks-update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features that includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability), [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security), and [Container Network Performance](./advanced-container-networking-services-overview.md#container-network-performance).
+The [`az aks update`](/cli/azure/aks#az-aks-update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with `--acns-datapath-acceleration-mode BpfVeth` to enable Advanced Container Networking Services features that includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability), [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security), and [Container Network Performance](./advanced-container-networking-services-overview.md#container-network-performance).
 
 > [!NOTE]
 > Enabling eBPF Host Routing on an existing cluster may disrupt existing connections.
