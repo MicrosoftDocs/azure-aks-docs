@@ -1,11 +1,12 @@
 ---
 title: Use a Microsoft Entra Workload ID on AKS
 description: Learn about Microsoft Entra Workload ID for Azure Kubernetes Service (AKS) and how to migrate your application to authenticate using this identity.  
-author: shashankbarsin
-ms.author: shasb
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
-ms.date: 10/27/2025
+ms.custom: build-2023
+ms.date: 05/28/2024
 # Customer intent: As a cloud developer, I want to implement Microsoft Entra Workload ID with Azure Kubernetes Service, so that my applications can authenticate securely and access Azure resources effectively without relying on managed identities.
 ---
 
@@ -39,12 +40,12 @@ The following table provides the **minimum** package version required for each l
 
 | Ecosystem | Library | Minimum version |
 |--|--|--|
-| .NET | [Azure.Identity][azure-identity-dotnet] | 1.9.0 |
-| C++ | [azure-identity-cpp][azure-identity-cpp] | 1.6.0 |
-| Go | [azidentity][azure-identity-go] | 1.3.0 |
-| Java | [azure-identity][azure-identity-java] | 1.9.0 |
-| Node.js | [@azure/identity][azure-identity-javascript] | 3.2.0 |
-| Python | [azure-identity][azure-identity-python] | 1.13.0 |
+| .NET | [Azure.Identity](/dotnet/api/overview/azure/identity-readme) | 1.9.0 |
+| C++ | [azure-identity-cpp](https://github.com/Azure/azure-sdk-for-cpp/blob/main/sdk/identity/azure-identity/README.md) | 1.6.0 |
+| Go | [azidentity](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity) | 1.3.0 |
+| Java | [azure-identity](/java/api/overview/azure/identity-readme) | 1.9.0 |
+| Node.js | [@azure/identity](/javascript/api/overview/azure/identity-readme) | 3.2.0 |
+| Python | [azure-identity](/python/api/overview/azure/identity-readme) | 1.13.0 |
 
 In the following code samples, `DefaultAzureCredential` is used. This credential type uses the environment variables injected by the Azure Workload Identity mutating webhook to authenticate with Azure Key Vault. To see samples using one of the other approaches, refer to the Ecosystem-specific client library links above.
 
@@ -198,15 +199,15 @@ The following client libraries are the **minimum** version required.
 
 | Ecosystem | Library | Image | Example | Has Windows |
 |--|--|--|--|--|
-| .NET | [Microsoft Authentication Library-for-dotnet][msal-dotnet] | `ghcr.io/azure/azure-workload-identity/msal-net:latest` | [Link][msal-dotnet-example] | Yes |
-| Go | [Microsoft Authentication Library-for-go][msal-go] | `ghcr.io/azure/azure-workload-identity/msal-go:latest` | [Link][msal-go-example] | Yes |
-| Java | [Microsoft Authentication Library-for-java][msal-java] | `ghcr.io/azure/azure-workload-identity/msal-java:latest` | [Link][msal-java-example] | No |
-| JavaScript | [Microsoft Authentication Library-for-js][msal-javascript] | `ghcr.io/azure/azure-workload-identity/msal-node:latest` | [Link][msal-javascript-example] | No |
-| Python | [Microsoft Authentication Library-for-python][msal-python] | `ghcr.io/azure/azure-workload-identity/msal-python:latest` | [Link][msal-python-example] | No |
+| .NET | [Microsoft Authentication Library-for-dotnet](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) | `ghcr.io/azure/azure-workload-identity/msal-net:latest` | [Link](https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-net/akvdotnet) | Yes |
+| Go | [Microsoft Authentication Library-for-go](https://github.com/AzureAD/microsoft-authentication-library-for-go) | `ghcr.io/azure/azure-workload-identity/msal-go:latest` | [Link](https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-go) | Yes |
+| Java | [Microsoft Authentication Library-for-java](https://github.com/AzureAD/microsoft-authentication-library-for-java) | `ghcr.io/azure/azure-workload-identity/msal-java:latest` | [Link](https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-java) | No |
+| JavaScript | [Microsoft Authentication Library-for-js](https://github.com/AzureAD/microsoft-authentication-library-for-js) | `ghcr.io/azure/azure-workload-identity/msal-node:latest` | [Link](https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-node) | No |
+| Python | [Microsoft Authentication Library-for-python](https://github.com/AzureAD/microsoft-authentication-library-for-python) | `ghcr.io/azure/azure-workload-identity/msal-python:latest` | [Link](https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-python) | No |
 
 ## Limitations
 
-- You can have a maximum of [20 federated identity credentials][general-federated-identity-credential-considerations] per managed identity. <br/>If you need to reuse the same user-assigned managed identity across many clusters or numerous `<namespace, service-account>` combinations and would exceed this limit, see [Identity bindings (Preview)][identity-bindings-concepts] for a scalable approach that maintains a single federated identity credential.
+- You can have a maximum of [20 federated identity credentials][general-federated-identity-credential-considerations] per managed identity.
 - It takes a few seconds for the federated identity credential to be propagated after being initially added.
 - The [virtual nodes][aks-virtual-nodes] add on, based on the open source project [Virtual Kubelet][virtual-kubelet], isn't supported.
 - Creation of federated identity credentials is not supported on user-assigned managed identities in these [regions.][unsupported-regions-user-assigned-managed-identities]
@@ -298,43 +299,25 @@ The following table summarizes our migration or deployment recommendations for w
 * See [Deploy and configure an AKS cluster with workload identity][deploy-configure-workload-identity-cluster], which helps you deploy an Azure Kubernetes Service cluster and configure a sample application to use a workload identity.
 
 <!-- EXTERNAL LINKS -->
-[azure-identity-cpp]: https://github.com/Azure/azure-sdk-for-cpp/blob/main/sdk/identity/azure-identity/README.md
-[azure-identity-dotnet]: /dotnet/api/overview/azure/identity-readme
-[azure-identity-go]: https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity
-[azure-identity-java]: /java/api/overview/azure/identity-readme
-[azure-identity-javascript]: /javascript/api/overview/azure/identity-readme
-[azure-identity-python]: /python/api/overview/azure/identity-readme
 [custom-resource-definition]: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
-[msal-dotnet]: https://github.com/AzureAD/microsoft-authentication-library-for-dotnet
-[msal-dotnet-example]: https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-net/akvdotnet
-[msal-go]: https://github.com/AzureAD/microsoft-authentication-library-for-go
-[msal-go-example]: https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-go
-[msal-java]: https://github.com/AzureAD/microsoft-authentication-library-for-java
-[msal-java-example]: https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-java
-[msal-javascript]: https://github.com/AzureAD/microsoft-authentication-library-for-js
-[msal-javascript-example]: https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-node
-[msal-python]: https://github.com/AzureAD/microsoft-authentication-library-for-python
-[msal-python-example]: https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-python
-[multiple-identities]: https://azure.github.io/azure-workload-identity/docs/faq.html#how-to-federate-multiple-identities-with-a-kubernetes-service-account
-[oidc-federation]: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens
 [service-account-token-volume-projection]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#serviceaccount-token-volume-projection
+[oidc-federation]: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens
+[multiple-identities]: https://azure.github.io/azure-workload-identity/docs/faq.html#how-to-federate-multiple-identities-with-a-kubernetes-service-account
 [virtual-kubelet]: https://virtual-kubelet.io/docs/
 
 <!-- INTERNAL LINKS -->
-[aks-virtual-nodes]: virtual-nodes.md
-[auto-rotation]: certificate-rotation.md#certificate-auto-rotation
-[azure-ad-application-registration]: /azure/active-directory/develop/application-model#register-an-application
-[azure-ad-workload-identity]: /azure/active-directory/develop/workload-identities-overview
-[azure-identity-libraries]: /azure/active-directory/develop/reference-v2-libraries
-[deploy-configure-workload-identity-cluster]: workload-identity-deploy-cluster.md
-[general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
-[identity-bindings-concepts]: identity-bindings-concepts.md
-[identity-bindings-how-to]: identity-bindings.md
-[install-azure-cli]: /cli/azure/install-azure-cli
-[microsoft-authentication-library]: /azure/active-directory/develop/msal-overview
-[openid-connect-overview]: /azure/active-directory/develop/v2-protocols-oidc
 [service-connector-overview]: /azure/service-connector/overview
-[unsupported-regions-user-assigned-managed-identities]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#unsupported-regions-user-assigned-managed-identities
 [use-azure-ad-pod-identity]: use-azure-ad-pod-identity.md
+[azure-ad-workload-identity]: /azure/active-directory/develop/workload-identities-overview
+[microsoft-authentication-library]: /azure/active-directory/develop/msal-overview
+[azure-ad-application-registration]: /azure/active-directory/develop/application-model#register-an-application
+[install-azure-cli]: /cli/azure/install-azure-cli
+[azure-identity-libraries]: /azure/active-directory/develop/reference-v2-libraries
+[openid-connect-overview]: /azure/active-directory/develop/v2-protocols-oidc
+[deploy-configure-workload-identity-cluster]: workload-identity-deploy-cluster.md
 [workload-identity-migration-sidecar]: workload-identity-migrate-from-pod-identity.md
+[auto-rotation]: certificate-rotation.md#certificate-auto-rotation
+[aks-virtual-nodes]: virtual-nodes.md
+[unsupported-regions-user-assigned-managed-identities]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#unsupported-regions-user-assigned-managed-identities
+[general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
 
