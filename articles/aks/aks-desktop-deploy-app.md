@@ -40,9 +40,7 @@ This article guides you through deploying an application using AKS desktop, enab
 
 ### Open AKS desktop
 
-The first time you open up AKS desktop, you need to sign into your Azure account. To sign in, select the **Azure Account** tab bar button on the left hand side of the application.
-
-Once logged in, you have the ability to add clusters that you have access to into AKS desktop.
+The first time you open up AKS desktop, you need to sign into your Azure account. To sign in, select the **Azure Account** tab bar button on the left hand side of the application. Once logged in, you have the ability to add clusters that you have access to into AKS desktop.
 
 After merging the cluster you want to deploy your app to, open the **Projects** tab. You can choose an existing project or create a new one for your deployment.
 
@@ -78,7 +76,7 @@ When you create a project on a cluster, it's visible to all other users who have
    > [!NOTE]
    > Images can't use the "latest" tag as this results in best practice violation on AKS Automatic.
 
-Select your app properties. This table provides the following configuration options:
+You can then select your app properties. This table provides the following configuration options:
 
 | Option | Description |
 |--|--|
@@ -99,9 +97,9 @@ These are **default** settings needed to deploy to AKS Automatic. AKS Automatic 
 
 1. Select **Deploy to AKS**. The app should deploy.
 
-1. On the next screen. select **Close**
+1. On the next screen, select **Close**.
 
-## Manage the app
+## View tile details
 
 The key benefit to AKS desktop is to see your application resources, health status, and resource quota in one screen. The tabs on the screen provide more detail of each individual tile:
 
