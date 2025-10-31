@@ -13,6 +13,9 @@ ms.author: qpetraroia
 
 This article guides you through deploying an application using AKS desktop, enabling you to manage your containerized workloads with an intuitive, application-centric interface.
 
+> [!NOTE]
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop may undergo design changes, add/delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at [aka.ms/aks/aks-desktop](https://aka.ms/aks/aks-desktop).
+
 ## Prerequisites
 
 - An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
