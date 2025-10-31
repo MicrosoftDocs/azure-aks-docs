@@ -1,8 +1,7 @@
 ---
 title: Deploy an application via AKS desktop
 description: Learn how to deploy and manage applications on Azure Kubernetes Service (AKS) using the AKS desktop guided deployment wizard.
-ms.subservice: aks-devx
-ms.custom: devx
+ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: how-to
 ms.date: 10/31/2025
@@ -49,13 +48,19 @@ After merging the cluster you want to deploy your app to, open the **Projects** 
 > [!NOTE]
 > We recommend that you always create a new project when deploying a new application.
 
-If you wish to deploy your app into a new project, select **Create project** and then **New project**. Fill out the project name, the cluster, and the namespace that you wish to assign the project to. When you create a project on a cluster, it's visible to all other users who have access to the namespace. This is because the project is based on a namespace, and that namespace has a specific label.
+If you wish to deploy your app into a new project, select **Create project** and then **New project**. Fill out the following information you wish to assign the project to:
+
+- **Project name**
+
+- **Cluster**
+
+- **Namespace**
+
+When you create a project on a cluster, it's visible to all other users who have access to the namespace. This is because the project is based on a namespace, and that namespace has a specific label.
 
 ### Deploy an application into the project
 
 1. Select the project you created and then select **Deploy Application** in the top right corner.
-
-### Deploy app: Source
 
 1. There are two sources you can select from:
 
@@ -65,16 +70,12 @@ If you wish to deploy your app into a new project, select **Create project** and
 
    Select **Container Image**, scroll down, and then select **Next**.
 
-### Deploy app: Configure container image
-
 1. Paste in your container image into the **Container Image** textbox. It must be in the format `<YOUR ACR>.azurecr.io/<YOUR IMAGE NAME>:<YOUR IMAGE TAG>`.
 
-> [!NOTE]
-> Images can't use the "latest" tag as this results in best practice violation on AKS Automatic.
+   > [!NOTE]
+   > Images can't use the "latest" tag as this results in best practice violation on AKS Automatic.
 
-### Deploy app: Configure your app
-
-Here you can select your app properties. This page has the following configuration options:
+Select your app properties. This table provides the following configuration options:
 
 | Option | Description |
 |--|--|
@@ -87,41 +88,28 @@ Here you can select your app properties. This page has the following configurati
 
 ### Deploy app: Health checks and advanced configuration
 
-These are default settings needed to deploy to AKS Automatic. AKS Automatic deployment safeguards might block your deployment if you change these settings.
+These are **default** settings needed to deploy to AKS Automatic. AKS Automatic deployment safeguards might block your deployment if you change these settings.
 
 ### Deploy app: Preview and deploy
 
 1. You can check the YAML and also select **Deploy**. This performs the `kubectl apply` action to the cluster directly.
+
 1. Select **Deploy to AKS**. The app should deploy.
+
 1. On the next screen. select **Close**
 
 ## Manage the app
 
-The key benefit to AKS desktop is to see your application resources, health status, and resource quota in one screen. The tabs on the screen provide more detail of each individual tile.
+The key benefit to AKS desktop is to see your application resources, health status, and resource quota in one screen. The tabs on the screen provide more detail of each individual tile:
 
-### Manage the app: Resources
-
-View all associated application workload resources. In this section, you'll also see other resources such as Network, Configuration, and Discovery. These are added in by the Namespace and the AKS desktop generated Kubernetes YAML template.
-
-### Manage the app: Map
-
-The map screen shows the resource dependencies, useful for quick understanding and troubleshooting.
-
-### Manage the app: Info
-
-View and update the project networking policies and compute quota.
-
-### Manage the app: Logs
-
-View live application logs for workload deployments.
-
-### Manage the app: Metrics
-
-View live metrics per workload deployment.
-
-### Manage the app: Scaling
-
-View scaling and CPU metrics for your application. This can be configured to switch between manual scaling and Horizontal Pod Autoscaler (HPA).
+| Tile | Description |
+|--|--|
+| **Resources** | View all associated application workload resources, including **Network**, **Configuration**, and **Discovery** added by Namespace and YAML. |
+| **Map** | Visualize resource dependencies for quick understanding and troubleshooting. |
+| **Info** | View and update project networking policies and compute quota. |
+| **Logs** | View live application logs for workload deployments. |
+| **Metrics** | View live metrics per workload deployment. |
+| **Scaling** | View scaling and CPU metrics. Configure manual scaling or Horizontal Pod Autoscaler (HPA). |
 
 ## Next steps
 
