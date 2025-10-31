@@ -366,6 +366,12 @@
           href: cluster-container-registry-integration.md
         - name: Use cluster extensions
           items:
+        - name: AKS desktop
+          items:
+            - name: AKS desktop overview
+              href: aks-desktop.md
+            - name: Deploy an application via AKS desktop
+              href: aks-desktop-deploy-app.md
             - name: About cluster extensions
               href: cluster-extensions.md
             - name: Use the Azure CLI
