@@ -76,9 +76,8 @@ Once you deploy an application to a project through AKS desktop, you will be gre
 * **Kubernetes resources**: All the Kubernetes resources deployed into your project. These are the workloads, the network configuration, etc.
 * **Access**: Grant and remove access to your project.
 * **Map**: A map of your Kubernetes resources in your project, showing how data flows between deployments, services, etc.
-* **Logs**: See streaming logs of your application.
-* **Monitoring**: ___________
-* **Metrics**: ____________
+* **Logs**: View streaming logs of your application.
+* **Metrics**: View live metrics per workload deployment.
 * **Scaling**: Set your application to scale via HPA or manually.
 * **Environment variables**: Add environment variables to your application.
 
