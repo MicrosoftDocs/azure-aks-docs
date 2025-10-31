@@ -1,5 +1,5 @@
 ---
-title: eBFP Host Routing with Advanced Container Networking Services (ACNS)
+title: eBPF Host Routing with Advanced Container Networking Services (ACNS)
 description: An overview of eBPF Host Routing on Advanced Container Networking Services with Azure Kubernetes Service (AKS).
 author: sf-msft
 ms.author: samfoo
@@ -9,14 +9,14 @@ ms.topic: concept-article
 ms.date:  09/23/2025
 ---
 
-# Overview of eBPF Host Routing (public preview)
+# Overview of eBPF Host Routing (Preview)
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 As containerized workloads scale across distributed environments, the need for high-performance, low-latency networking becomes critical. eBPF Host Routing is a performance-focused feature within [Advanced Container Networking Services (ACNS)](advanced-container-networking-services-overview.md) that uses extended Berkeley Packet Filter (eBPF) technology to optimize traffic flow in Kubernetes clusters. Legacy routing on Kubernetes hosts introduces overhead in the form of iptables and netfilter rule processing in the host network namespace. eBPF Host Routing has benefits over legacy host routing by:
 
  - Implementing the routing logic in eBPF programs.
- - Allowing Cilium to make routing decisions without invoking iptables or the host stack.
+ - Allowing Cilium eBPF to bypass iptables in the host namespace.
 
 This direct path reduces the number of hops and processing layers, resulting in faster packet delivery.
 
@@ -34,21 +34,17 @@ Use cases for eBPF Host Routing are performance-critical workloads such as high-
 
 **`iptables blocker`** - An init container that prevents any future installation of iptables rules in the host network namespace (such rules will be bypassed when eBPF host routing is enabled).
 
-**`iptables monitor`** - Checks whether any user-installed iptables rules are already present in the host network namespace. If yes, this init container prevents Cilium agent from starting until the rules are removed.
-
-**`IP Masquerade Agent`** - When eBPF Host Routing is active, Cilium takes over SNAT responsibilities using BPF-based masquerading thus making ip-masq-agent technically redundant. This agent remains running to maintain consistent behavior if eBPF Host Routing is later disabled; however, its iptables rules are ignored while eBPF Host Routing is active.
+**`IP Masquerade Agent`** - When eBPF Host Routing is active, Cilium takes over SNAT responsibilities using BPF-based masquerading. `ip-masq-agent` remains running to maintain consistent behavior if eBPF Host Routing is later disabled; however, its iptables rules are ignored while eBPF Host Routing is active.
 
 ## Considerations
 
  - Enabling eBPF Host Routing causes iptables rules in the host network namespace to be bypassed. Hence, AKS attempts to detect and block enablement of eBPF Host Routing on clusters where iptables rules are in use in the host network namespace.
 
- - When user-installed iptables are present in the host network namespace while enabling eBPF Host Routing, `iptables monitor` prevents Ciliam agent from reaching `Ready` which causes Cilium operator to taint the node.
-
  - On clusters with eBPF host routing enabled, AKS blocks attempts to install iptables rules in the host network namespace. Trying to bypass this block may cause the cluster to be inoperational.
 
 ## Limitations
 
- - eBPF host routing is currently incompatible with nodes running OSes other than Ubuntu 24.04, or Azure Linux 3.0. eBPF host routing is currently also not supported with Confidential VMs and Pod Sandboxing
+ - eBPF host routing is currently incompatible with nodes running OSes other than Ubuntu 24.04, or Azure Linux 3.0. eBPF host routing is currently also not supported with Confidential VMs and Pod Sandboxing.
 
  - eBPF Host Routing can only be enabled for all nodes in a cluster. Hybrid node scenarios aren't supported.
 

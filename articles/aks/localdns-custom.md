@@ -244,9 +244,9 @@ Check the output. If localDNS is working correctly, you should see a response wi
 
 ## Monitor LocalDNS
 
-LocalDNS exposes Prometheus metrics, which you can use for monitoring and alerting. These [metrics](https://learn.microsoft.com/azure/azure-monitor/containers/prometheus-metrics-scrape-default#coredns) are exposed on port `9253` of the Node IP and can be scraped from there.
+LocalDNS exposes Prometheus metrics, which you can use for monitoring and alerting. These [metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default#coredns) are exposed on port `9253` of the Node IP and can be scraped from there.
 
-The following example YAML shows a scrape configuration you can use with the [Azure Managed Prometheus add on as a DaemonSet](https://learn.microsoft.com/azure/azure-monitor/essentials/prometheus-metrics-scrape-configuration#advanced-setup-configure-custom-prometheus-scrape-jobs-for-the-daemonset):
+The following example YAML shows a scrape configuration you can use with the [Azure Managed Prometheus add on as a DaemonSet](/azure/azure-monitor/essentials/prometheus-metrics-scrape-configuration):
 
 ```yaml
 kind: ConfigMap

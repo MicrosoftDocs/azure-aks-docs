@@ -131,9 +131,13 @@ aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
 
     :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/create-basics-automatic.png" alt-text="The screenshot of the Create - Basics Tab for an AKS Automatic cluster in the Azure portal.":::
 
-1. On the **Monitoring** tab, choose your monitoring configurations from Azure Monitor, Managed Prometheus, Grafana Dashboards, and/or configure alerts. Enable Managed Grafana (optional), add tags (optional), and proceed to create the cluster.
+1. On the **Monitoring** tab, choose your monitoring configurations from Azure Monitor, Managed Prometheus, Grafana Dashboards, Container Network Observability (ACNS) and/or configure alerts. Enable Managed Grafana (optional), add tags (optional), and proceed to create the cluster.
 
     :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/configure-monitoring-automatic.png" alt-text="The screenshot of the Monitoring Tab while creating an AKS Automatic cluster in the Azure portal.":::
+
+1. On the **Advanced** tab, update your networking (optional), managed identity (optional), security and managed namespaces (optional) settings and proceed to create the cluster.
+
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/configure-advanced-automatic.png" alt-text="The screenshot of the Advanced Tab while creating an AKS Automatic cluster in the Azure portal.":::
 
 1. Get started with configuring your first application from GitHub and set up an automated deployment pipeline. 
 

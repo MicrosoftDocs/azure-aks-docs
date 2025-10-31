@@ -68,6 +68,6 @@ For more information on Windows containers, see the [Windows Server containers F
 [open-service-mesh]: open-service-mesh-about.md
 [gpu]: use-windows-gpu.md
 [multi-instance-gpu]: gpu-multi-instance.md
-[gen-2-vms]: generation-2-vm.md
+[gen-2-vms]: generation-2-vms.md
 [custom-node-config]: custom-node-configuration.md
 [custom-kubelet-parameters]: custom-node-configuration.md#kubelet-custom-configuration

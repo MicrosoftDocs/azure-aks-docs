@@ -1,8 +1,8 @@
 ---
 title: API Server VNet Integration in Azure Kubernetes Service (AKS)
 description: Learn how to create an Azure Kubernetes Service (AKS) cluster with API Server VNet Integration
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 05/19/2023
@@ -24,23 +24,11 @@ API Server VNet Integration is supported for public or private clusters. You can
 
 - You must have Azure CLI version 2.73.0 or later installed. You can check your version using the `az --version` command.
 
-## Limited availability
+## Limitations
+* API Server VNet Integration does not support encrypted virtual networks.
 
-> [!IMPORTANT]
-> **API Server VNet Integration has limited availability and capacity in certain regions.**  
-> When creating or updating a cluster with API Server VNet Integration enabled, you may receive the following error:
->
-> **`API Server VNet Integration is currently unavailable in region (_region_) due to high demand and limited capacity. AKS is actively expanding support for this feature. Check for other available regions at aka.ms/AksVnetIntegration.`**
->
-> This message indicates that the selected region has temporarily reached capacity for API Server VNet Integration.
->
-> **To proceed**, you can:
-> - Retry your request at a later time, as capacity may become available.
-> - Select an alternate region where this feature is currently supported.
-
-API Server VNet Integration is available in the following regions: 
-
-australiacentral, australiacentral2, australiaeast, australiasoutheast, austriaeast, brazilsouth, brazilsoutheast, canadacentral, canadaeast, centralindia, centralus, centraluseuap, chilecentral, eastasia, eastus, eastus2euap, francecentral, francesouth, germanynorth, germanywestcentral, indonesiacentral, israelcentral, israelnorthwest, italynorth, japaneast, japanwest, jioindiacentral, jioindiawest, koreacentral, koreasouth, malaysiawest, mexicocentral, newzealandnorth, northcentralus, northeurope, norwayeast, norwaywest, polandcentral, southafricanorth, southafricawest, southcentralus, southcentralus2, southeastasia, southeastus, southeastus3, southeastus5, southindia, southwestus, spaincentral, swedencentral, swedensouth, switzerlandnorth, switzerlandwest, taiwannorth, taiwannorthwest, uaecentral, uaenorth, uksouth, ukwest, usgovtexas, westcentralus, westeurope, westus, westus2, westus3
+## Availability
+- API Server VNet Integration is available in all GA public cloud regions except eastus2 and qatarcentral. We are continually working on enabling this feature in these regions and will update this page when these regions become available.
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 

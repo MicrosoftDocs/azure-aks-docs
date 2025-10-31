@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 09/16/2025
+ms.date: 10/23/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -120,6 +120,24 @@ For more information, see the documentation for [AKS cluster maintenance windows
 Node consistency is only guaranteed for all clusters contained in a single [update run][update-run] where the `consistent image` option is chosen.
 
 There's no consistency guarantee for node image versions across separate update runs.
+
+### How can I find out which node images were used in an update run?
+
+Update run has a list of the selected node images used for a run. This information is available even if the update run hasn't started.
+
+There can be more than a single node image selected based on the different node pools operating across all clusters selected for update.
+
+You can find the images selected by using this Azure CLI command:
+
+```azurecli
+az fleet updaterun show \
+    --resource-group ${GROUP} \
+    --fleet-name ${FLEET} \
+    --name ${UPDATE_RUN_NAME} \
+    --query "status.nodeImageSelection.selectedNodeImageVersions"
+```
+
+You can also use the `View JSON` option in the Update Run Overview page in the Azure Portal to view the raw data for an update run.
 
 ### My update run is in a pending state for quite some time. What should I do?
 
