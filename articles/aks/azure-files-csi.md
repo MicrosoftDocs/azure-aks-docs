@@ -300,14 +300,14 @@ kubectl apply -f private-pvc.yaml
 
 ## Use Microsoft Entra Managed Identity to access Azure Files storage  (Preview)
 
-Azure Files now supports [Microsoft Entra Managed Identity](https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview#what-are-managed-identities) based authentication for SMB access. This enables your applicatioins to securely access Azure Files without storing or managing credentials.
+Azure Files now supports [Microsoft Entra Managed Identity](/entra/identity/managed-identities-azure-resources/overview) based authentication for SMB access. This enables your applicatioins to securely access Azure Files without storing or managing credentials.
 
 > [!NOTE]
 > Managed identity support for Azure Files in AKS is available in preview starting with AKS version 1.34 on Linux nodes.
 
 ### Prerequisites
 
-- Ensure the [user-assigned Kubelet identity](https://learn.microsoft.com/azure/aks/use-managed-identity#use-a-pre-created-kubelet-managed-identity) has the `Storage File Data SMB MI Admin` role on the storage account. 
+- Ensure the [user-assigned Kubelet identity](/use-managed-identity#use-a-pre-created-kubelet-managed-identity) has the `Storage File Data SMB MI Admin` role on the storage account. 
   > If you use your own storage account, you need to assign `Storage File Data SMB MI Admin` role to the user-assigned Kubelet identity on that storage account.
 
   > If the storage account is created by the CSI driver, grant `Storage File Data SMB MI Admin` role to the resource group where the storage account resides.
