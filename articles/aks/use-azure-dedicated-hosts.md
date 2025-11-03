@@ -160,7 +160,7 @@ In this article, you learned how to create an AKS cluster with a Dedicated host,
 [aks-faq]: faq.md
 [azure-cli-install]: /cli/azure/install-azure-cli
 [dedicated-hosts]: /azure/virtual-machines/dedicated-hosts
-[az-vm-host-group-create]: /cli/azure/vm/host/group#az_vm_host_group_create
+[az-vm-host-group-create]: /cli/azure/vm/host/group#az-vm-host-group-create
 [determine-host-based-on-vm-utilization]: /azure/virtual-machines/dedicated-host-general-purpose-skus
 [host-utilization-evaluate]: /azure/virtual-machines/dedicated-hosts-how-to#check-the-status-of-the-host
 

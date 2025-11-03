@@ -170,4 +170,4 @@ You can remove member clusters from a managed namespace by specifying the list o
 <!-- INTERNAL LINKS -->
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[az-account-set]: /cli/azure/account#az_account_set
+[az-account-set]: /cli/azure/account#az-account-set

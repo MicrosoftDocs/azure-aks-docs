@@ -280,4 +280,4 @@ After deploying your AKS cluster in an Azure Extended Zone, learn about [AKS clu
 [configure-cluster]: ./cluster-configuration.md
 [arm-template-deploy]: /azure/azure-resource-manager/templates/deployment-tutorial-local-template
 [concepts-cluster]: /azure/aks/core-aks-concepts
-[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-aks-create]: /cli/azure/aks#az-aks-create

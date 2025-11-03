@@ -279,16 +279,16 @@ This article showed you how to deploy your AKS cluster into your existing virtua
 
 <!-- LINKS - Internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
-[az-identity-create]: /cli/azure/identity#az_identity_create
+[az-identity-create]: /cli/azure/identity#az-identity-create
 [aks-network-concepts]: concepts-network.md
 [aks-network-nsg]: concepts-network.md#network-security-groups
-[az-group-create]: /cli/azure/group#az_group_create
-[az-network-vnet-create]: /cli/azure/network/vnet#az_network_vnet_create
-[az-network-vnet-show]: /cli/azure/network/vnet#az_network_vnet_show
-[az-network-vnet-subnet-show]: /cli/azure/network/vnet/subnet#az_network_vnet_subnet_show
-[az-network-vnet-subnet-list]: /cli/azure/network/vnet/subnet#az_network_vnet_subnet_list
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-group-create]: /cli/azure/group#az-group-create
+[az-network-vnet-create]: /cli/azure/network/vnet#az-network-vnet-create
+[az-network-vnet-show]: /cli/azure/network/vnet#az-network-vnet-show
+[az-network-vnet-subnet-show]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-show
+[az-network-vnet-subnet-list]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-list
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
 [byo-subnet-route-table]: #bring-your-own-subnet-and-route-table-with-kubenet
 [develop-helm]: quickstart-helm.md
 [use-helm]: kubernetes-helm.md

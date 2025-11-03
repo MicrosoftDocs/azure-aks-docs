@@ -34,7 +34,7 @@ By capturing container network logs, you can effectively track network traffic, 
 
 ### Install the aks-preview Azure CLI extension
 
-Install or update the Azure CLI preview extension by using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
+Install or update the Azure CLI preview extension by using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command.
 
 ```azurecli
 # Install the aks-preview extension
@@ -47,19 +47,19 @@ az extension update --name aks-preview
 
 ### Register the AdvancedNetworkingFlowLogsPreview feature flag
 
-First, register the AdvancedNetworkingFlowLogsPreview feature flag by using the  [`az feature register`](/cli/azure/feature#az_feature_register) command:
+First, register the AdvancedNetworkingFlowLogsPreview feature flag by using the  [`az feature register`](/cli/azure/feature#az-feature-register) command:
 
 ```azurecli
 az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingFlowLogsPreview"
 ```
 
-Verify successful registration by using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for registration to complete.
+Verify successful registration by using the [`az feature show`](/cli/azure/feature#az-feature-show) command. It takes a few minutes for registration to complete.
 
 ```azurecli
 az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingFlowLogsPreview"
 ```
 
-When the feature shows **Registered**, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
+When the feature shows **Registered**, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
 
 ## Limitations
 
@@ -248,7 +248,7 @@ To enable container network logs on an existing cluster:
 
 ### Get cluster credentials
 
-Get your cluster credentials by using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command:
+Get your cluster credentials by using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command:
 
 ```azurecli
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
@@ -448,7 +448,7 @@ az aks create \
 
 ### Enable Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the  `--enable-acns` flag updates an existing AKS cluster with all Advanced Container Networking Services features. The features include [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
+The [`az aks update`](/cli/azure/aks#az-aks-update) command with the  `--enable-acns` flag updates an existing AKS cluster with all Advanced Container Networking Services features. The features include [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
 > [!NOTE]
 > Only clusters that have the Cilium data plane support the Container Network Security features of Advanced Container Networking Services.
@@ -460,7 +460,7 @@ az aks update \
     --enable-acns
 ```
 
-Next, get your cluster credentials by using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command:
+Next, get your cluster credentials by using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command:
 
 ```azurecli
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
@@ -854,7 +854,7 @@ To disable retina flow log collection by the Azure Monitor Agent, run:
 
 ## Clean up resources
 
-If you don't plan to use this example application, delete the resources you created in this article by using the [`az group delete`](/cli/azure/#az_group_delete) command.
+If you don't plan to use this example application, delete the resources you created in this article by using the [`az group delete`](/cli/azure/#az-group-delete) command.
 
 ```azurecli
   az group delete --name $RESOURCE_GROUP
