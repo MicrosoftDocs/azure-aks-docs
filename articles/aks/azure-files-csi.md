@@ -307,7 +307,7 @@ Azure Files now supports [Microsoft Entra Managed Identity](/entra/identity/mana
 
 ### Prerequisites
 
-- Ensure the [user-assigned Kubelet identity](/use-managed-identity#use-a-pre-created-kubelet-managed-identity) has the `Storage File Data SMB MI Admin` role on the storage account. 
+- Ensure the [user-assigned Kubelet identity](use-managed-identity#use-a-pre-created-kubelet-managed-identity) has the `Storage File Data SMB MI Admin` role on the storage account. 
   > If you use your own storage account, you need to assign `Storage File Data SMB MI Admin` role to the user-assigned Kubelet identity on that storage account.
 
   > If the storage account is created by the CSI driver, grant `Storage File Data SMB MI Admin` role to the resource group where the storage account resides.
