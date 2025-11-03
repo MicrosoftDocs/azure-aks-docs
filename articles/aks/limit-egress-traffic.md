@@ -445,6 +445,6 @@ In this article, you learned how to secure your outbound traffic using Azure Fir
 [az-network-firewall-nat-rule-create]: /cli/azure/network/firewall/nat-rule#az-network-firewall-nat-rule-create
 [az-group-delete]: /cli/azure/group#az_group_delete
 [add role to identity]: use-managed-identity.md#add-a-role-assignment-for-a-system-assigned-managed-identity
-[Use a pre-created kubelet managed identity]: use-managed-identity.md#use-a-pre-created-kubelet-managed-identity
+[Use a pre-created kubelet managed identity]: use-managed-identity.md#create-a-kubelet-managed-identity
 [az-identity-create]: /cli/azure/identity#az_identity_create
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials

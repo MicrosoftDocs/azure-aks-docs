@@ -79,8 +79,8 @@ AKS uses several managed identities for built-in services and add-ons. The follo
 
 | Identity | Name | Use case | Default permissions | Bring your own identity |
 |----------|------|----------|---------------------|-------------------------|
-| Control plane | <aks-cluster-name> | Used by AKS control plane components to manage cluster resources including ingress load balancers and AKS-managed public IPs, Cluster Autoscaler, Azure Disk, File, Blob CSI drivers | Contributor role for Node resource group | Supported |
-| Kubelet | <aks-cluster-name>-agentpool | Authentication with Azure Container Registry (ACR) | N/A for Kubernetes version 1.15 and later | Supported |
+| Control plane | AKS cluster name | Used by AKS control plane components to manage cluster resources including ingress load balancers and AKS-managed public IPs, Cluster Autoscaler, Azure Disk, File, Blob CSI drivers | Contributor role for Node resource group | Supported |
+| Kubelet | AKS cluster name-agentpool | Authentication with Azure Container Registry (ACR) | N/A for Kubernetes version 1.15 and later | Supported |
 | Add-on | AzureNPM | No identity required | N/A | Unsupported |
 | Add-on | AzureCNI network monitoring | No identity required | N/A | Unsupported |
 | Add-on | azure-policy (gatekeeper) | No identity required | N/A | Unsupported |
@@ -100,4 +100,4 @@ To learn how to enable managed identities on a new or existing AKS cluster, see 
 <!-- LINKS -->
 [workload-identity-overview]: workload-identity-overview.md
 [managed-identity-operator]: /azure/role-based-access-control/built-in-roles#managed-identity-operator
-[bring-your-own-control-plane-managed-identity]: use-managed-identity.md#enable-a-user-assigned-managed-identity
+[bring-your-own-control-plane-managed-identity]: use-managed-identity.md#create-a-user-assigned-managed-identity

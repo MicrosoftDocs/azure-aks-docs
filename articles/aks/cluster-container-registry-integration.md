@@ -316,9 +316,9 @@ ACR has two endpoints:
 * Learn more about [ACR health](/azure/container-registry/container-registry-check-health).
 
 <!-- LINKS - external -->
-[byo-kubelet-identity]: use-managed-identity.md#use-a-pre-created-kubelet-managed-identity
+[byo-kubelet-identity]: use-managed-identity.md#create-a-kubelet-managed-identity
 [image-pull-secret]: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-[summary-msi]: use-managed-identity.md#summary-of-managed-identities-used-by-aks
+[summary-msi]: managed-identity-overview.md#summary-of-managed-identities-used-by-aks
 [acr-pull]: /azure/role-based-access-control/built-in-roles#acrpull
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps

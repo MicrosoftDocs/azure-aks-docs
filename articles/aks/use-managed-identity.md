@@ -455,7 +455,7 @@ To update an existing cluster to use the kubelet managed identity, first get the
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-identity-create]: /cli/azure/identity#az_identity_create
 [az-identity-show]: /cli/azure/identity#az_identity_show
-[use-a-pre-created-kubelet-managed-identity]: use-managed-identity.md#use-a-pre-created-kubelet-managed-identity
+[use-a-pre-created-kubelet-managed-identity]: use-managed-identity.md#create-a-kubelet-managed-identity
 [update-system-assigned-managed-identity-on-an-existing-cluster]: use-managed-identity.md#update-an-existing-aks-cluster-to-use-a-system-assigned-managed-identity
 [update-user-assigned-managed-identity-on-an-existing-cluster]: use-managed-identity.md#update-an-existing-cluster-to-use-a-user-assigned-managed-identity
 [az-account-set]: /cli/azure/account#az-account-set

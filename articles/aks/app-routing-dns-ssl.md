@@ -234,7 +234,7 @@ Learn about monitoring the Ingress-nginx controller metrics included with the ap
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 
 <!-- LINKS - internal -->
-[summary-msi]: use-managed-identity.md#summary-of-managed-identities-used-by-aks
+[summary-msi]: managed-identity-overview.md#summary-of-managed-identities-used-by-aks
 [rbac-owner]: /azure/role-based-access-control/built-in-roles#owner
 [rbac-classic]: /azure/role-based-access-control/rbac-and-directory-admin-roles#classic-subscription-administrator-roles
 [app-routing-add-on-basic-configuration]: app-routing.md
