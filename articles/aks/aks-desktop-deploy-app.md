@@ -1,5 +1,5 @@
 ---
-title: Deploy an application via AKS desktop
+title: Deploy an application via AKS desktop (Preview)
 description: Learn how to deploy and manage applications on Azure Kubernetes Service (AKS) using the AKS desktop guided deployment wizard.
 ms.subservice: aks-developer
 author: qpetraroia
@@ -9,7 +9,7 @@ ms.author: qpetraroia
 # Customer intent: As a developer, I want to deploy an application to Azure Kubernetes Service using AKS desktop, so that I can quickly deploy and manage my containerized applications without writing detailed Kubernetes manifests.
 ---
 
-# Deploy an application to AKS desktop
+# Deploy an application to AKS desktop (Preview)
 
 This article guides you through deploying an application using AKS desktop, enabling you to manage your containerized workloads with an intuitive, application-centric interface.
 

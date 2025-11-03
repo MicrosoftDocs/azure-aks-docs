@@ -1,5 +1,5 @@
 ---
-title: AKS desktop overview
+title: AKS desktop (Preview) overview
 description: Learn how to use AKS desktop to deploy and manage workloads on Azure Kubernetes Service (AKS) with a guided, self-service experience.
 ms.subservice: aks-developer
 author: qpetraroia
@@ -9,7 +9,7 @@ ms.author: qpetraroia
 # Customer intent: As a developer, I want to use AKS desktop to deploy and manage applications on Azure Kubernetes Service without needing deep Kubernetes expertise, so that I can accelerate time to business value.
 ---
 
-# AKS desktop overview
+# AKS desktop (Preview) overview
 
 AKS desktop delivers an application-focused experience for deploying and managing workloads on Azure Kubernetes Service (AKS). It accelerates time to business value by providing a guided, self-service user experience (UX) built on supported AKS features, best practices, and open-source Headlamp. Designed to work within your existing environment and tools, it enables team collaboration through role-based access control (RBAC) while abstracting complexity without removing control.
 
@@ -65,7 +65,6 @@ Once you deploy an application to a project through AKS desktop, you're greeted 
 * **Access**: Grant and remove access to your project.
 * **Map**: A map of your Kubernetes resources in your project, showing how data flows between deployments, services, etc.
 * **Logs**: See streaming logs of your application.
-* **Monitoring**: ___________
 * **Metrics**: ____________
 * **Scaling**: Set your application to scale via HPA or manually.
 * **Environment variables**: Add environment variables to your application.
