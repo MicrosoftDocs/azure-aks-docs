@@ -127,3 +127,14 @@ groups:
     title: Public key vault
   - id: private-kv
     title: Private key vault
+# Owner: schaffererin
+- id: use-managed-identity
+  title: Choose a managed identity type
+  prompt: Choose a managed identity type
+  pivots:
+  - id: system-assigned
+    title: System-assigned managed identity
+  - id: user-assigned
+    title: User-assigned managed identity
+  - id: pre-created-kubelet
+    title: Pre-created kubelet managed identity

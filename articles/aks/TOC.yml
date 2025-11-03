@@ -670,8 +670,12 @@
           href: operator-best-practices-cluster-security.md
         - name: Azure kubelogin
           href: kubelogin-authentication.md
-        - name: Use managed identities
-          href: use-managed-identity.md
+        - name: Managed identities
+          items:
+            - name: Overview
+              href: managed-identity-overview.md
+            - name: Enable a managed identity on your cluster
+              href: use-managed-identity.md
         - name: Create a service principal
           href: kubernetes-service-principal.md
         - name: Enable access to AKS clusters using Trusted Access
