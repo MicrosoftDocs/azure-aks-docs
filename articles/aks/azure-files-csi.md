@@ -298,9 +298,9 @@ Create the PVC by using the [kubectl apply][kubectl-apply] command:
 kubectl apply -f private-pvc.yaml
 ```
 
-## Use Microsoft Entra Managed Identity to access Azure Files storage  (Preview)
+## Use Managed Identity to access Azure Files storage  (Preview)
 
-Azure Files now supports [Microsoft Entra Managed Identity](/entra/identity/managed-identities-azure-resources/overview) based authentication for SMB access. This enables your applicatioins to securely access Azure Files without storing or managing credentials.
+Azure Files now supports managed identity based authentication for SMB access. This enables your applicatioins to securely access Azure Files without storing or managing credentials.
 
 > [!NOTE]
 > Managed identity support for Azure Files in AKS is available in preview starting with AKS version 1.34 on Linux nodes.
