@@ -149,7 +149,7 @@ az eventgrid system-topic event-subscription create \
   --system-topic-name stpc-aks-resource-notifications \
   --included-event-types Microsoft.ResourceNotifications.AKSResources.FleetGateCreated \
   --advanced-filter data.resourceInfo.properties.target.id StringContains "fleets/flt-mgr-approvals-01" \
-  --advanced-filterdata.resourceInfo.properties.gateType StringIn Approval \
+  --advanced-filter data.resourceInfo.properties.gateType StringIn Approval \
   --advanced-filter data.resourceInfo.properties.state StringIn Pending \
   --advanced-filter data.resourceInfo.properties.displayName StringContains "Check with sales teams" \
   --advanced-filter data.resourceInfo.properties.target.updateRunProperties.timing StringIn Before \

@@ -109,7 +109,7 @@ az aks create \
 To configure Azure CNI networking with dynamic IP allocation and enhanced subnet support, see [Configure Azure CNI networking for dynamic allocation of IPs and enhanced subnet support in AKS](configure-azure-cni-dynamic-ip-allocation.md).
 
 <!-- LINKS - Internal -->
-[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-aks-create]: /cli/azure/aks#az-aks-create
 [macOSUpgrade]: /powershell/azure/install-azps-macos#update-the-azure-powershell-module
 [windowsUpgrade]: /powershell/azure/install-azps-windows#update-the-az-powershell-module
 [linuxUpgrade]: /powershell/azure/install-azps-linux#update-the-az-powershell-module
