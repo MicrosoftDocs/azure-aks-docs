@@ -358,7 +358,7 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
 In this article, you learned how to create node pools in an AKS cluster using the Azure CLI.
 
-To learn about how to manage multiple node pools, see [Manage multiple node pools for AKS clusters](./manage-node-pools.md).
+To learn how to manage multiple node pools, see [Manage multiple node pools for AKS clusters](./manage-node-pools.md).
 
 <!-- LINKS -->
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
