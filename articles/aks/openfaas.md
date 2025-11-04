@@ -237,6 +237,6 @@ Continue to learn with the [OpenFaaS workshop][openfaas-workshop], which include
 [open-faas]: https://www.openfaas.com/
 [open-faas-cli]: https://github.com/openfaas/faas-cli
 [openfaas-workshop]: https://github.com/openfaas/workshop
-[az-group-create]: /cli/azure/group#az_group_create
-[az-cosmosdb-create]: /cli/azure/cosmosdb#az_cosmosdb_create
-[az-cosmosdb-keys-list]: /cli/azure/cosmosdb/keys#az_cosmosdb_keys_list
+[az-group-create]: /cli/azure/group#az-group-create
+[az-cosmosdb-create]: /cli/azure/cosmosdb#az-cosmosdb-create
+[az-cosmosdb-keys-list]: /cli/azure/cosmosdb/keys#az-cosmosdb-keys-list

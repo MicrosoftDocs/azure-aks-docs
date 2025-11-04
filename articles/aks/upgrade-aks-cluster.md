@@ -353,18 +353,18 @@ For a detailed discussion of upgrade best practices and other considerations, se
 <!-- LINKS - internal -->
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps
-[az-aks-get-upgrades]: /cli/azure/aks#az_aks_get_upgrades
-[az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
+[az-aks-get-upgrades]: /cli/azure/aks#az-aks-get-upgrades
+[az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
 [set-azakscluster]: /powershell/module/az.aks/set-azakscluster
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [get-azakscluster]: /powershell/module/az.aks/get-azakscluster
 [aks-auto-upgrade]: auto-upgrade-cluster.md
 [k8s-deprecation]: https://kubernetes.io/blog/2022/11/18/upcoming-changes-in-kubernetes-1-26/#:~:text=A%20deprecated%20API%20is%20one%20that%20has%20been,point%20you%20must%20migrate%20to%20using%20the%20replacement
 [azure-rp-operations]: /azure/role-based-access-control/built-in-roles#containers
 [get-azaksversion]: /powershell/module/az.aks/get-azaksversion
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az_aks_nodepool_update
-[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az_aks_nodepool_upgrade
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
 [configure-automatic-aks-upgrades]: ./upgrade-cluster.md#configure-automatic-upgrades
 [release-tracker]: release-tracker.md
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices

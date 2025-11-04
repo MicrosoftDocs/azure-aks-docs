@@ -463,8 +463,8 @@ For more information regarding the network requirements of AKS clusters, see [Co
 
 <!-- LINKS - internal -->
 [aks-egress]: ./limit-egress-traffic.md
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [install-azure-cli]: /cli/azure/install-azure-cli
 [istio-add-on-docs]: ./istio-about.md
 [operator-best-practices-scheduler]: ./operator-best-practices-scheduler.md

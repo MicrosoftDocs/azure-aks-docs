@@ -289,11 +289,11 @@ To help troubleshoot any issues with SSH connectivity to your clusters nodes, yo
 <!-- LINKS - external -->
 
 <!-- LINKS - internal -->
-[az-feature-register]: /cli/azure/feature#az_feature_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
-[az-extension-add]: /cli/azure/extension#az_extension_add
-[az-extension-update]: /cli/azure/extension#az_extension_update
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update

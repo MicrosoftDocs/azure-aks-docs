@@ -162,8 +162,8 @@ For a detailed discussion of upgrade best practices and other considerations, se
 [planned-maintenance]: ./planned-maintenance.md
 [operator-best-practices-scheduler]: operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets
 [node-image-auto-upgrade]: auto-upgrade-node-image.md
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [aks-troubleshoot-docs]: /support/azure/azure-kubernetes/welcome-azure-kubernetes
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
 
