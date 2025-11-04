@@ -302,8 +302,8 @@ To learn more about Kubernetes services, see the [Kubernetes services documentat
 
 <!-- LINKS - Internal -->
 [advanced-networking]: configure-azure-cni.md
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [azure-lb-comparison]: /azure/load-balancer/skus
 [use-kubenet]: configure-kubenet.md
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
@@ -316,5 +316,5 @@ To learn more about Kubernetes services, see the [Kubernetes services documentat
 [unique-subnet]: node-pool-unique-subnet.md
 [az-network-vnet-subnet-list]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-list
 [get-azvirtualnetworksubnetconfig]: /powershell/module/az.network/get-azvirtualnetworksubnetconfig
-[az-network-private-link-service-list]: /cli/azure/network/private-link-service#az_network_private_link_service_list
-[az-network-private-endpoint-create]: /cli/azure/network/private-endpoint#az_network_private_endpoint_create
+[az-network-private-link-service-list]: /cli/azure/network/private-link-service#az-network-private-link-service-list
+[az-network-private-endpoint-create]: /cli/azure/network/private-endpoint#az-network-private-endpoint-create

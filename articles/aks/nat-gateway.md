@@ -424,8 +424,8 @@ For more information on Azure NAT Gateway, see [Azure NAT Gateway][nat-docs].
 [aks-upgrade]: /cli/azure/aks#az-aks-update
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
-[az-group-create]: /cli/azure/group#az_group_create
-[az-network-public-ip-create]: /cli/azure/network/public-ip#az_network_public_ip_create
-[az-network-nat-gateway-create]: /cli/azure/network/nat/gateway#az_network_nat_gateway_create
-[az-network-vnet-create]: /cli/azure/network/vnet#az_network_vnet_create
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
+[az-group-create]: /cli/azure/group#az-group-create
+[az-network-public-ip-create]: /cli/azure/network/public-ip#az-network-public-ip-create
+[az-network-nat-gateway-create]: /cli/azure/network/nat/gateway#az-network-nat-gateway-create
+[az-network-vnet-create]: /cli/azure/network/vnet#az-network-vnet-create
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add

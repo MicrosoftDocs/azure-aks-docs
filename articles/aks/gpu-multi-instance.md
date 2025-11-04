@@ -270,12 +270,12 @@ To learn more about GPUs on Azure Kubernetes Service, see:
 * [Learn about use cases for GPU workloads on AKS](/azure/architecture/reference-architectures/containers/aks-gpu/gpu-aks)
 
 <!-- LINKS - internal -->
-[az-group-create]: /cli/azure/group#az_group_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
+[az-group-create]: /cli/azure/group#az-group-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [install-azure-cli]: /cli/azure/install-azure-cli
-[az-aks-install-cli]: /cli/azure/aks#az_aks_install_cli
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 
 <!-- LINKS - external-->
 [NVIDIA MIG]:https://www.nvidia.com/en-us/technologies/multi-instance-gpu/

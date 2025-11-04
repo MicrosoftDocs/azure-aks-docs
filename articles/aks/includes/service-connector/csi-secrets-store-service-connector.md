@@ -188,11 +188,11 @@ You can create a service connection to Azure Key Vault using the Azure portal or
    ```
 
 <!-- LINKS -->
-[az-group-create]: /cli/azure/group#az_group_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-keyvault-create]: /cli/azure/keyvault#az_keyvault_create
-[az-keyvault-secret-set]: /cli/azure/keyvault/secret#az_keyvault_secret_set
-[az-aks-connection-create-keyvault]: /cli/azure/aks/connection/create#az_aks_connection_create_keyvault
-[az-login]: /cli/azure/reference-index#az_login
-[az-aks-install-cli]: /cli/azure/aks#az_aks_install_cli
+[az-group-create]: /cli/azure/group#az-group-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create
+[az-keyvault-secret-set]: /cli/azure/keyvault/secret#az-keyvault-secret-set
+[az-aks-connection-create-keyvault]: /cli/azure/aks/connection/create#az-aks-connection-create-keyvault
+[az-login]: /cli/azure/reference-index#az-login
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli

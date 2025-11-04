@@ -263,14 +263,14 @@ In this article, you learned how to secure access to Azure OpenAI from Azure Kub
 For more information on Microsoft Entra Workload ID, see [Microsoft Entra Workload ID](./workload-identity-overview.md).
 
 <!-- Links internal -->
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-identity-create]: /cli/azure/identity#az_identity_create
-[az-identity-show]: /cli/azure/identity#az_identity_show
-[az-resource-list]: /cli/azure/resource#az_resource_list
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az_identity_federated_credential_create
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-identity-create]: /cli/azure/identity#az-identity-create
+[az-identity-show]: /cli/azure/identity#az-identity-show
+[az-resource-list]: /cli/azure/resource#az-resource-list
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 
 <!-- Links external -->
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply

@@ -203,10 +203,10 @@ In this article, you learned how to add a node pool with CVM to an AKS cluster.
 [cvm-announce]: https://techcommunity.microsoft.com/t5/azure-confidential-computing/azure-confidential-vms-using-sev-snp-dcasv5-ecasv5-are-now/ba-p/3573747
 [cvm-subs-dc]: /azure/virtual-machines/dcasv5-dcadsv5-series
 [cvm-subs-ec]: /azure/virtual-machines/ecasv5-ecadsv5-series
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-nodepool-list]: /cli/azure/aks/nodepool#az_aks_nodepool_list
-[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az_aks_nodepool_show
-[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az_aks_nodepool_delete
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-list]: /cli/azure/aks/nodepool#az-aks-nodepool-list
+[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
+[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
 [resize-your-nodepool]: ./resize-node-pool.md
 [trusted-launch]: ./use-trusted-launch.md
 

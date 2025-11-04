@@ -63,7 +63,7 @@ Using AMD GPUs involves the installation of various AMD GPU software components 
     --name AKSInfinibandSupport
     ```
 
-1. Create an AMD GPU-enabled node pool using the [`az aks nodepool add`](/cli/azure/aks#az_aks_nodepool_add) command and skip default driver installation by setting the API field `--gpu-driver` to the value `none`:
+1. Create an AMD GPU-enabled node pool using the [`az aks nodepool add`](/cli/azure/aks#az-aks-nodepool-add) command and skip default driver installation by setting the API field `--gpu-driver` to the value `none`:
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -210,7 +210,7 @@ kubectl delete jobs samples-tf-mnist-demo
 
 
 <!-- LINKS -->
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
