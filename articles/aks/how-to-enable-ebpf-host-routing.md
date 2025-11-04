@@ -33,7 +33,7 @@ This article shows you how to enable eBPF Host Routing with Advanced Container N
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
+Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command.
 
  The minimum version of the aks-preview Azure CLI extension is `14.0.0b6`
 
@@ -46,18 +46,18 @@ az extension update --name aks-preview
 
 ### Register the `AdvancedNetworkingPerformancePreview` feature flag
 
-Register the `AdvancedNetworkingPerformancePreview` feature flag using the  [`az feature register`](/cli/azure/feature#az_feature_register) command.
+Register the `AdvancedNetworkingPerformancePreview` feature flag using the  [`az feature register`](/cli/azure/feature#az-feature-register) command.
 
 ```azurecli-interactive 
 az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPerformancePreview"
 ```
-Verify successful registration using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for the registration to complete.
+Verify successful registration using the [`az feature show`](/cli/azure/feature#az-feature-show) command. It takes a few minutes for the registration to complete.
 
 ```azurecli-interactive
 az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPerformancePreview"
 ```
 
-Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
+Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
 
 ### Enable Advanced Container Networking Services and eBPF Host Routing
 

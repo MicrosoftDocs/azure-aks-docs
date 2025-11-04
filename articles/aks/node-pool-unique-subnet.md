@@ -32,7 +32,7 @@ In this article, you learn how to create node pools with unique subnets in Azure
 
 ## Add a node pool with a unique subnet
 
-- Add a node pool with a unique subnet into your existing AKS cluster using the [`az aks nodepool add`](/cli/azure/aks#az_aks_nodepool_add) command and the `--vnet-subnet-id` parameter specified.
+- Add a node pool with a unique subnet into your existing AKS cluster using the [`az aks nodepool add`](/cli/azure/aks#az-aks-nodepool-add) command and the `--vnet-subnet-id` parameter specified.
 
     ```azurecli-interactive
     az aks nodepool add \

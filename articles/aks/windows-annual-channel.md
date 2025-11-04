@@ -170,9 +170,9 @@ To learn more about Windows Containers on AKS, see the following resources:
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-extension-add]: /cli/azure/azure-cli-extensions-overview#add-extensions
 [az-extension-update]: /cli/azure/azure-cli-extensions-overview#update-extensions
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [new-azaksnodepool]: /powershell/module/az.aks/new-azaksnodepool
 [release-notes]: https://github.com/Azure/AKS/releases

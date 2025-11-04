@@ -229,7 +229,7 @@ In this article, you learned how to add a Spot node pool to an AKS cluster. For 
 <!-- LINKS - Internal -->
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
-[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az_aks_nodepool_show
+[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
 [cluster-autoscaler]: cluster-autoscaler.md
 [eviction-policy]: /azure/virtual-machine-scale-sets/use-spot#eviction-policy
 [kubernetes-concepts]: concepts-clusters-workloads.md

@@ -300,7 +300,7 @@ Learn more about [Azure Dedicated hosts][azure-dedicated-hosts] for nodes with y
 
 <!-- INTERNAL LINKS -->
 [install-azure-cli]: /cli/azure
-[az-feature-register]: /cli/azure/feature#az_feature_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
