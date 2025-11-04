@@ -282,7 +282,7 @@ This option creates a separate VNet with the necessary resources for Cloud Shell
     - The deployment creates a new resource group named `RG-CloudShell-PrivateClusterConnection-{RANDOM_ID}`.
 4. Once the deployment has succeeded, under **Set cluster context**, select **Open Cloud Shell**.
 
-![Azure Portal Cloud Shell Connect Button](media/access-private-cluster/azure-portal-cloud-shell-connect.png)
+[ ![Screenshot of the Azure Portal at a private cluster's resource page showing the Cloud Shell configuration button.](media/access-private-cluster/azure-portal-cloud-shell-connect.png) ](media/access-private-cluster/azure-portal-cloud-shell-connect.png#lightbox)
 
 If Cloud Shell has already been configured in a VNet for a particular cluster, repeating these steps ensures your Cloud Shell user settings are correctly aligned with that VNet.
 
@@ -388,7 +388,8 @@ When deploying an AKS cluster into such a networking environment, there are some
 
   * **Public DNS only** – Disable private‑zone creation by setting `privateDNSZone` to `none` **and** leave `publicDNS` at its default value (`true`).
 
-  > Setting `privateDNSZone: none` **and** `publicDNS: false` at the same time is **not supported**;
+> [!NOTE]
+> Setting `privateDNSZone: none` **and** `publicDNS: false` at the same time is **not supported**.
 
 > [!NOTE]
 > Conditional forwarding doesn't support subdomains.
