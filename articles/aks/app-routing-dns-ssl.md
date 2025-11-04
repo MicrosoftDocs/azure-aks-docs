@@ -1,5 +1,5 @@
 ---
-title: Set up a custom domain name and SSL certificate with the application routing add-on for Azure Kubernetes Service (AKS)
+title: Set up a Custom Domain Name and SSL Certificate with the Application Routing Add-on for Azure Kubernetes Service (AKS)
 description: Understand the advanced configuration options that are supported with the application routing add-on for Azure Kubernetes Service (AKS). 
 ms.subservice: aks-networking
 ms.author: davidsmatlak
@@ -87,7 +87,7 @@ az keyvault certificate import --vault-name <KeyVaultName> --name <KeyVaultCerti
 ```
 
 > [!IMPORTANT]
-> To enable the add-on to reload certificates from Azure Key Vault when they change, you should to enable the [secret autorotation feature][csi-secrets-store-autorotation] of the Secret Store CSI driver with the `--enable-secret-rotation` argument. When autorotation is enabled, the driver updates the pod mount and the Kubernetes secret by polling for changes periodically, based on the rotation poll interval you define. The default rotation poll interval is two minutes.
+> To enable the add-on to reload certificates from Azure Key Vault when they change, you should enable the [secret autorotation feature][csi-secrets-store-autorotation] of the Secret Store CSI driver with the `--enable-secret-rotation` argument. When autorotation is enabled, the driver updates the pod mount and the Kubernetes secret by polling for changes periodically, based on the rotation poll interval you define. The default rotation poll interval is two minutes.
 
 ### Enable Azure Key Vault integration
 
@@ -234,7 +234,7 @@ Learn about monitoring the Ingress-nginx controller metrics included with the ap
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 
 <!-- LINKS - internal -->
-[summary-msi]: use-managed-identity.md#summary-of-managed-identities-used-by-aks
+[summary-msi]: managed-identity-overview.md#summary-of-managed-identities-used-by-aks
 [rbac-owner]: /azure/role-based-access-control/built-in-roles#owner
 [rbac-classic]: /azure/role-based-access-control/rbac-and-directory-admin-roles#classic-subscription-administrator-roles
 [app-routing-add-on-basic-configuration]: app-routing.md

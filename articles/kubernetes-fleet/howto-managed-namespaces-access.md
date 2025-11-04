@@ -103,4 +103,4 @@ This article shows you how to view the managed namespaces you have access to and
 <!-- INTERNAL LINKS -->
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[az-account-set]: /cli/azure/account#az_account_set
+[az-account-set]: /cli/azure/account#az-account-set

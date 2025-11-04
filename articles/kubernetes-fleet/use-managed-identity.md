@@ -447,13 +447,13 @@ The response is either **SystemAssigned** or **UserAssigned**.
 
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
-[az-identity-create]: /cli/azure/identity#az_identity_create
-[az-identity-show]: /cli/azure/identity#az_identity_show
+[az-identity-create]: /cli/azure/identity#az-identity-create
+[az-identity-show]: /cli/azure/identity#az-identity-show
 [fleet-auto-upgrade]: ./update-automation.md
 [az-account-set]: /cli/azure/account#az-account-set
-[az-group-create]: /cli/azure/group#az_group_create
-[az-fleet-create]: /cli/azure/fleet#az_fleet_create
-[az-fleet-show]: /cli/azure/fleet#az_fleet_show
-[az-fleet-update]: /cli/azure/fleet#az_fleet_update
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
+[az-group-create]: /cli/azure/group#az-group-create
+[az-fleet-create]: /cli/azure/fleet#az-fleet-create
+[az-fleet-show]: /cli/azure/fleet#az-fleet-show
+[az-fleet-update]: /cli/azure/fleet#az-fleet-update
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [user-assigned-docs]: /entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities?pivots=identity-mi-methods-azp#create-a-user-assigned-managed-identity
