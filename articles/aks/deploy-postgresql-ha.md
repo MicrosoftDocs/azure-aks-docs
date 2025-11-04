@@ -277,6 +277,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources an
           pg_stat_statements.max: '10000'
           pg_stat_statements.track: 'all'
           hot_standby_feedback: 'on'
+          io_method: 'io_uring'
         pg_hba:
           - host all all all scram-sha-256
 
@@ -321,7 +322,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources an
       inheritedMetadata:
         annotations:
           service.beta.kubernetes.io/azure-dns-label-name: $AKS_PRIMARY_CLUSTER_PG_DNSPREFIX
-          acstor.azure.com/accept-ephemeral-storage: "true"
+          localdisk.csi.acstor.io/accept-ephemeral-storage: "true"
         labels:
           azure.workload.identity/use: "true"
 
