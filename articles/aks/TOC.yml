@@ -561,10 +561,18 @@
         items:
           - name: Create an internal load balancer
             href: internal-lb.md
-          - name: Use a Standard Load Balancer
-            href: load-balancer-standard.md
-          - name: Use multiple Standard Load Balancers
-            href: use-multiple-standard-load-balancer.md
+          - name: Standard Load Balancer
+            items:
+              - name: Create a Load Balancer Service
+                href: load-balancer-standard.md
+              - name: Configure a Standard Load Balancer
+                href: configure-load-balancer-standard.md
+              - name: Use multiple Standard Load Balancers
+                href: use-multiple-standard-load-balancer.md
+              - name: Use shared health probes
+                href: shared-health-probes.md
+              - name: Troubleshoot SNAT issues
+                href: troubleshoot-snat.md
           - name: Upgrade Basic Load Balancer
             href: upgrade-basic-load-balancer-on-aks.md
           - name: Use kube-proxy configuration (IPVS)
