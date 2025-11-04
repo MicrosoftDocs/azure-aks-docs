@@ -4,7 +4,7 @@ description: Learn how to install, configure, and use the CLI Agent for AKS to t
 ms.topic: how-to
 ms.date: 10/20/2025
 author: aritragho
-ms.author: aritragho
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 # Customer intent: As a cluster administrator or SRE, I want to install and configure the Agentic CLI for AKS so I can start troubleshooting my clusters using natural language queries.

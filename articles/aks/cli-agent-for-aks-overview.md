@@ -4,7 +4,7 @@ description: Learn about the CLI Agent for Azure Kubernetes Service (AKS) and it
 ms.topic: overview
 ms.date: 10/20/2025
 author: aritragho
-ms.author: aritragho
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 # Customer intent: As a cluster administrator or SRE, I want to use the AI-powered CLI Agent for AKS to efficiently troubleshoot my AKS clusters and get intelligent cluster insights, so that I can quickly diagnose and resolve issues.
