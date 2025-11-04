@@ -479,7 +479,7 @@ To learn more about using internal load balancer for inbound traffic, see the [A
 [azure-lb-outbound-connections]: /azure/load-balancer/load-balancer-outbound-connections
 [azure-lb-outbound-preallocatedports]: /azure/load-balancer/load-balancer-outbound-connections#preallocatedports
 [azure-lb-outbound-rules-overview]: /azure/load-balancer/load-balancer-outbound-connections#outboundrules
-[troubleshoot-snat]: snat-troubleshoot.md
+[troubleshoot-snat]: troubleshoot-source-network-address-translation.md
 [service-tags]: /azure/virtual-network/network-security-groups-overview#service-tags
 [maxcount]: ./cluster-autoscaler.md#enable-the-cluster-autoscaler-on-an-existing-cluster
 [maxsurge]: ./upgrade-aks-cluster.md#customize-node-surge-upgrade
