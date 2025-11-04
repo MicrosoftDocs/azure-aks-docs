@@ -1,5 +1,5 @@
 ---
-title: Use a managed identity in Azure Kubernetes Service (AKS)
+title: Use a Managed Identity in Azure Kubernetes Service (AKS)
 description: Learn how to use a system-assigned, user-assigned, or pre-created kubelet managed identity in Azure Kubernetes Service (AKS).
 author: davidsmatlak
 ms.author: davidsmatlak
@@ -68,7 +68,7 @@ This article provides step-by-step instructions on how to enable and use a syste
 >
 > - The Azure CLI ensures your addon's permission is correctly set after migrating. If you're not using the Azure CLI to perform the migrating operation, you need to handle the addon identity's permission by yourself. For an example using an Azure Resource Manager (ARM) template, see [Assign Azure roles using ARM templates](/azure/role-based-access-control/role-assignments-template).
 >
-> - If your cluster was using `--attach-acr` to pull from images from Azure Container Registry (ACR), you need to run the `az aks update --resource-group <resource-group-name> --name <aks-cluster-name> --attach-acr <acr-resource-id>` command after updating your cluster to let the newly-created kubelet used for managed identity get the permission to pull from ACR. Otherwise, you won't be able to pull from ACR after the update.
+> - If your cluster was using `--attach-acr` to pull from images from Azure Container Registry (ACR), you need to run the `az aks update --resource-group <resource-group-name> --name <aks-cluster-name> --attach-acr <acr-resource-id>` command after updating your cluster to let the newly created kubelet used for managed identity get the permission to pull from ACR. Otherwise, you won't be able to pull from ACR after the update.
 
 :::zone pivot="system-assigned"
 

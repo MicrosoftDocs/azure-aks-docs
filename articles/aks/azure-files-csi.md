@@ -1,5 +1,5 @@
 ---
-title: Use Container Storage Interface (CSI) driver for Azure Files on Azure Kubernetes Service (AKS)
+title: Use Container Storage Interface (CSI) Driver for Azure Files on Azure Kubernetes Service (AKS)
 description: Learn how to use the Container Storage Interface (CSI) driver for Azure Files in an Azure Kubernetes Service (AKS) cluster.
 ms.topic: concept-article
 ms.custom:
@@ -46,7 +46,7 @@ A storage class is used to define how an Azure file share is created. A storage 
 * **Premium_ZRS**: Premium zone-redundant storage
 
 > [!NOTE]
-> Azure Files supports Azure Premium file shares. The minimum file share capacity is 100 GiB. We recommend using Azure Premium file shares instead of Standard file shares because Premium file shares offers higher performance, low-latency disk support for I/O-intensive workloads.
+> Azure Files supports Azure Premium file shares. The minimum file share capacity is 100 GiB. We recommend using Azure Premium file shares instead of Standard file shares because Premium file shares offer higher performance, low-latency disk support for I/O-intensive workloads.
 
 When you use storage CSI drivers on AKS, there are two more built-in `StorageClasses` that uses the Azure Files CSI storage drivers. The other CSI storage classes are created with the cluster alongside the in-tree default storage classes.
 
@@ -300,7 +300,7 @@ kubectl apply -f private-pvc.yaml
 
 ## Use Managed Identity to access Azure Files storage  (Preview)
 
-Azure Files now supports managed identity based authentication for SMB access. This enables your applicatioins to securely access Azure Files without storing or managing credentials.
+Azure Files now supports managed identity based authentication for SMB access. This enables your applications to securely access Azure Files without storing or managing credentials.
 
 > [!NOTE]
 > Managed identity support for Azure Files in AKS is available in preview starting with AKS version 1.34 on Linux nodes.
@@ -351,7 +351,7 @@ To enable managed identity for dynamically provisioned volumes:
 
 For static volumes:
   - Create a PV with `mountWithManagedIdentity`: `"true"`.
-  - Mount the PV to you application pod.
+  - Mount the PV to your application pod.
 #### Sample PV YAML  
  ```yml
     apiVersion: v1
@@ -408,7 +408,7 @@ This section provides information about how to approach performance tuning NFS w
 
 Optimal performance is based on efficient client-server communication. Increasing or decreasing the **mount** read and write option size values can improve NFS performance. The default size of the read/write packets transferred between client and server are 8 KB for NFS version 2, and 32 KB for NFS version 3 and 4. These defaults may be too large or too small. Reducing the rsize and wsize might improve NFS performance in a congested network by sending smaller packets for each NFS-read reply and write request. However, this can increase the number of packets needed to send data across the network, increasing total network traffic and CPU utilization on the client and server.
 
-It's important that you perform testing to find an rsize and wsize that sustains efficent packet transfer, where it doesn't decrease throughput and increase latency.
+It's important that you perform testing to find an rsize and wsize that sustains efficient packet transfer, where it doesn't decrease throughput and increase latency.
 
 For example, to configure a maximum *rsize* and *wsize* of 256-KiB, configure the `mountOptions` in the storage class as follows:
 
