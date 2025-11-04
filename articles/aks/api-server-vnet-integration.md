@@ -28,7 +28,7 @@ API Server VNet Integration is supported for public or private clusters. You can
 * API Server VNet Integration does not support encrypted virtual networks.
 
 ## Availability
-- API Server VNet Integration is available in all GA public cloud regions except eastus2 and qatarcentral. We are continually working on enabling this feature in these regions and will update this page when these regions become available.
+- API Server VNet Integration is available in all GA public cloud regions except eastus2 (ETA February 2026) and qatarcentral. We are continually working on enabling this feature in these regions and will update this page when these regions become available.
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 
