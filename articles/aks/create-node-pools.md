@@ -60,6 +60,20 @@ The following limitations apply when you create AKS clusters that support multip
 - All node pools must reside in the same virtual network.
 - When you create multiple node pools at cluster creation time, the Kubernetes versions for the node pools must match the version set for the control plane.
 
+## Create specialized node pools
+
+To learn how to create specialized node pools, see the following articles:
+
+- [Add an Azure Spot node pool to an AKS cluster](./spot-node-pool.md)
+- [Add a Virtual Machines node pool to an AKS cluster](./virtual-machines-node-pools.md)
+- [Add a dedicated system node pool to an AKS cluster](./use-system-pools.md#add-a-dedicated-system-node-pool-to-an-existing-aks-cluster)
+- [Enabled Federal Information Processing Standards (FIPS) on an AKS node pool](./enable-fips-nodes.md)
+- [Add a node pool with a Confidential Virtual Machine (CVM) on an AKS cluster](./use-cvm.md)
+- [Create node pools with unique subnets in AKS](./node-pool-unique-subnet.md)
+- [Add a generation 2 VM node pool to an AKS cluster](./generation-2-vms.md)
+- [Add a node pool with Artifact Streaming to an AKS cluster](./artifact-streaming.md)
+- [Add Windows Server node pools with `containerd` to an AKS cluster](./windows-containerd.md)
+
 :::zone pivot="azure-cli"
 
 ## Set environment variables
@@ -344,17 +358,7 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
 In this article, you learned how to create node pools in an AKS cluster using the Azure CLI.
 
-- To learn about how to manage multiple node pools, see [Manage multiple node pools for AKS clusters](./manage-node-pools.md).
-- To learn how to create different types of node pools, see the following articles:
-  - [Add an Azure Spot node pool to an AKS cluster](./spot-node-pool.md)
-  - [Add a Virtual Machines node pool to an AKS cluster](./virtual-machines-node-pools.md)
-  - [Add a dedicated system node pool to an AKS cluster](./use-system-pools.md#add-a-dedicated-system-node-pool-to-an-existing-aks-cluster)
-  - [Enabled Federal Information Processing Standards (FIPS) on an AKS node pool](./enable-fips-nodes.md)
-  - [Add a node pool with a Confidential Virtual Machine (CVM) on an AKS cluster](./use-cvm.md)
-  - [Create node pools with unique subnets in AKS](./node-pool-unique-subnet.md)
-  - [Add a generation 2 VM node pool to an AKS cluster](./generation-2-vms.md)
-  - [Add a node pool with Artifact Streaming to an AKS cluster](./artifact-streaming.md)
-  - [Add Windows Server node pools with `containerd` to an AKS cluster](./windows-containerd.md)
+To learn about how to manage multiple node pools, see [Manage multiple node pools for AKS clusters](./manage-node-pools.md).
 
 <!-- LINKS -->
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
