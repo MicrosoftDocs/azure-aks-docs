@@ -151,7 +151,7 @@ Azure automatically routes traffic between Azure subnets, virtual networks, and 
 
 > [!IMPORTANT]
 > Outbound type of UDR (`userDefinedRouting`) requires a route for 0.0.0.0/0 and a next hop destination of NVA in the route table.
-> The route table already has a default 0.0.0.0/0 to the Internet. Without a public IP address for Azure to use for Source Network Address Translation (SNAT), simply adding this route won't provide you outbound Internet connectivity. AKS validates that you don't create a 0.0.0.0/0 route pointing to the Internet but instead to a gateway, NVA, etc.
+> The route table already has a default 0.0.0.0/0 to the Internet. Without a public IP address for Azure to use for Source Network Address Translation (SNAT), simply adding this route won't provide you with outbound Internet connectivity. AKS validates that you don't create a 0.0.0.0/0 route pointing to the Internet but instead to a gateway, NVA, etc.
 > When using an outbound type of UDR, a load balancer public IP address for **inbound requests** isn't created unless you configure a service of type *loadbalancer*. AKS never creates a public IP address for **outbound requests** if you set an outbound type of UDR.
 > For more information, see [Outbound rules for Azure Load Balancer](/azure/load-balancer/outbound-rules#scenario6out).
 
@@ -445,6 +445,6 @@ In this article, you learned how to secure your outbound traffic using Azure Fir
 [az-network-firewall-nat-rule-create]: /cli/azure/network/firewall/nat-rule#az-network-firewall-nat-rule-create
 [az-group-delete]: /cli/azure/group#az-group-delete
 [add role to identity]: use-managed-identity.md#add-a-role-assignment-for-a-system-assigned-managed-identity
-[Use a pre-created kubelet managed identity]: use-managed-identity.md#use-a-pre-created-kubelet-managed-identity
-[az-identity-create]: /cli/azure/identity#az-identity-create
-[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[Use a pre-created kubelet managed identity]: use-managed-identity.md#create-a-kubelet-managed-identity
+[az-identity-create]: /cli/azure/identity#az_identity_create
+[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
