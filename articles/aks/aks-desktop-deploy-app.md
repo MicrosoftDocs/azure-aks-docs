@@ -1,40 +1,36 @@
 ---
-title: Deploy an application via AKS desktop
+title: Deploy an application via AKS desktop (Preview)
 description: Learn how to deploy and manage applications on Azure Kubernetes Service (AKS) using the AKS desktop guided deployment wizard.
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: how-to
-ms.date: 10/31/2025
+ms.date: 11/04/2025
 ms.author: qpetraroia
 # Customer intent: As a developer, I want to deploy an application to Azure Kubernetes Service using AKS desktop, so that I can quickly deploy and manage my containerized applications without writing detailed Kubernetes manifests.
 ---
 
-# Deploy an application to AKS desktop
+# Deploy an application to AKS desktop (Preview)
 
 This article guides you through deploying an application using AKS desktop, enabling you to manage your containerized workloads with an intuitive, application-centric interface.
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop may undergo design changes, add/delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at [aka.ms/aks/aks-desktop](https://aka.ms/aks/aks-desktop).
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop may undergo design changes, add/delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at [aka.ms/aks/aks-desktop][aka.ms/aks/aks-desktop].
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- You'll need an Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account](https://azure.microsoft.com/free).
 
-- AKS desktop downloaded. You can download AKS desktop via:
+- An Azure Container Registry with your application image that you want to deploy.
 
-  - Brew _________
+- Download and install AKS desktop for your specific operating system (OS):
 
-  - AKS desktop GitHub
+  - Windows
 
-    - Windows
+  - Linux
 
-    - Linux
+  - Mac
 
-    - Mac
-
-- An Azure Container Registry with your application image that you want to deploy
-
-- [AKS Automatic clusters][AKS Automatic clusters]
+- Brew _________
 
 ## Deploy and manage an application
 
@@ -44,24 +40,39 @@ The first time you open up AKS desktop, you need to sign into your Azure account
 
 After merging the cluster you want to deploy your app to, open the **Projects** tab. You can choose an existing project or create a new one for your deployment.
 
-### Create a new project
+### Create a new Project
 
 > [!NOTE]
-> We recommend that you always create a new project when deploying a new application.
+> We recommend that you always create a new Project when deploying a new application.
 
-If you wish to deploy your app into a new project, select **Create project** and then **New project**. Fill out the following information you wish to assign the project to:
+If you wish to deploy your app into a new Project, select **Create Project** and then **AKS managed Project**. Fill out the following information you wish to assign the project to:
 
 - **Project name**
 
-- **Cluster**
+- **Subscription**
 
-- **Namespace**
+- **Cluster**
 
 When you create a project on a cluster, it's visible to all other users who have access to the namespace. This is because the project is based on a namespace, and that namespace has a specific label.
 
-### Deploy an application into the project
+> [!NOTE]
+> When creating a new **AKS managed Project**, you'll only be allowed to deploy to AKS Automatic cluster or clusters that are Microsoft Entra Authenticated.
 
-1. Select the project you created and then select **Deploy Application** in the top right corner.
+#### New Project: Networking Policies
+
+In the **Networking Policies** tab you can set the networking communications for the managed namespace. If you wish for traffic to flow out of the namespace, set **Ingress**  to **Allow All Traffic**, you can also change this setting later.
+
+#### New Project: Compute Quota
+
+The **Compute Quota** tab allows you to set Quota for the managed namespace. Anytime an application is deployed within the namespace, it isn't able to exceed the limits. You can also change this setting later once the application is deployed.
+
+#### New Project: Access
+
+The **Access** tab allows you to add other developers, operators, and eta to the Project, either as a reader or a contributor.
+
+### Deploy an application into the Project
+
+1. Select the Project you created and then select **Deploy Application** in the top right corner.
 
 1. There are two sources you can select from:
 
@@ -114,5 +125,5 @@ The key benefit to AKS desktop is to see your application resources, health stat
 
 ## Next steps
 
-- Learn more about [AKS desktop overview](aks-desktop.md)
+- Learn more about [AKS desktop overview](aks-desktop-overview.md)
 - Explore [AKS Automatic clusters](auto-upgrade-cluster.md)
