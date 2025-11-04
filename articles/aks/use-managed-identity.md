@@ -527,8 +527,8 @@ AKS uses several managed identities for built-in services and add-ons.
 
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
-[az-identity-create]: /cli/azure/identity#az_identity_create
-[az-identity-show]: /cli/azure/identity#az_identity_show
+[az-identity-create]: /cli/azure/identity#az-identity-create
+[az-identity-show]: /cli/azure/identity#az-identity-show
 [managed-identity-resources-overview]: /azure/active-directory/managed-identities-azure-resources/overview#managed-identity-types
 [bring-your-own-control-plane-managed-identity]: use-managed-identity.md#enable-a-user-assigned-managed-identity
 [use-a-pre-created-kubelet-managed-identity]: use-managed-identity.md#use-a-pre-created-kubelet-managed-identity
@@ -536,10 +536,10 @@ AKS uses several managed identities for built-in services and add-ons.
 [update-user-assigned-managed-identity-on-an-existing-cluster]: use-managed-identity.md#update-an-existing-cluster-to-use-a-user-assigned-managed-identity
 [workload-identity-overview]: workload-identity-overview.md
 [az-account-set]: /cli/azure/account#az-account-set
-[az-group-create]: /cli/azure/group#az_group_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
+[az-group-create]: /cli/azure/group#az-group-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [managed-identity-operator]: /azure/role-based-access-control/built-in-roles#managed-identity-operator
 [kubelogin-authentication]: kubelogin-authentication.md

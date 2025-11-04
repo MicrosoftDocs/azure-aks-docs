@@ -183,10 +183,10 @@ Learn more about networking in AKS in the following articles:
 <!-- LINKS - External -->
 [kubernetes-cni]: https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/
 <!-- LINKS - Internal -->
-[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-aks-create]: /cli/azure/aks#az-aks-create
 [aks-network-concepts]: concepts-network.md
 [aks-network-nsg]: concepts-network.md#network-security-groups
 [deploy-bicep-template]: /azure/azure-resource-manager/bicep/deploy-cli
-[az-group-create]: /cli/azure/group#az_group_create
+[az-group-create]: /cli/azure/group#az-group-create
 [deploy-arm-template]: /azure/azure-resource-manager/templates/deploy-cli
 

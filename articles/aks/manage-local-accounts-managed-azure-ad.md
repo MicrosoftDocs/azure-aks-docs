@@ -130,8 +130,8 @@ You can disable local accounts using the parameter `disable-local-accounts`. The
 * Learn about [Azure RBAC integration for Kubernetes Authorization][azure-rbac-integration].
 
 <!-- LINKS - Internal -->
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [azure-rbac-integration]: manage-azure-rbac.md
 

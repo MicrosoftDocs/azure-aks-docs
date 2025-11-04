@@ -97,7 +97,7 @@ az aks create \
 
 ### Enable Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features that includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
+The [`az aks update`](/cli/azure/aks#az-aks-update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features that includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
 
 
 > [!NOTE]
@@ -114,7 +114,7 @@ az aks update \
 
 ## Get cluster credentials 
 
-Once you have Get your cluster credentials using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command.
+Once you have Get your cluster credentials using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.
 
 ```azurecli-interactive
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
@@ -280,7 +280,7 @@ Skip this step if using Azure managed Grafana
 
 ## Clean up resources
 
-If you don't plan on using this application, delete the other resources you created in this article using the [`az group delete`](/cli/azure/#az_group_delete) command.
+If you don't plan on using this application, delete the other resources you created in this article using the [`az group delete`](/cli/azure/#az-group-delete) command.
 
 ```azurecli-interactive
   az group delete --name $RESOURCE_GROUP
