@@ -425,14 +425,14 @@ For more information, see [Windows containers considerations with Azure Kubernet
 <!-- LINKS - internal -->
 [aks-cni]: configure-azure-cni.md
 [aks-managed-id]: use-managed-identity.md
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [gmsa-getting-started]: /windows-server/security/group-managed-service-accounts/getting-started-with-group-managed-service-accounts
 [gmsa-overview]: /windows-server/security/group-managed-service-accounts/group-managed-service-accounts-overview
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-identity-create]: /cli/azure/identity#az_identity_create
-[az-identity-list]: /cli/azure/identity#az_identity_list
-[az-keyvault-create]: /cli/azure/keyvault#az_keyvault_create
-[az-keyvault-secret-set]: /cli/azure/keyvault/secret#az_keyvault_secret_set
-[az-keyvault-set-policy]: /cli/azure/keyvault#az_keyvault_set_policy
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-identity-create]: /cli/azure/identity#az-identity-create
+[az-identity-list]: /cli/azure/identity#az-identity-list
+[az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create
+[az-keyvault-secret-set]: /cli/azure/keyvault/secret#az-keyvault-secret-set
+[az-keyvault-set-policy]: /cli/azure/keyvault#az-keyvault-set-policy

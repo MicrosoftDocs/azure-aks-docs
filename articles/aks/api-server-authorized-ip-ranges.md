@@ -318,9 +318,9 @@ In this article, you enabled API server authorized IP ranges. This approach is o
 
 <!-- LINKS - internal -->
 [api-server-vnet-integration]: api-server-vnet-integration.md
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [concepts-security]: concepts-security.md
 [egress-outboundtype]: egress-outboundtype.md
 [install-azure-cli]: /cli/azure/install-azure-cli

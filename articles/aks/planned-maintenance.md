@@ -465,8 +465,8 @@ az aks maintenanceconfiguration delete --resource-group myResourceGroup --cluste
 [aks-eventgrid]:quickstart-event-grid.md
 [aks-support-policy]:support-policies.md
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
-[az-aks-maintenanceconfiguration-add]: /cli/azure/aks/maintenanceconfiguration#az_aks_maintenanceconfiguration_add
-[az-aks-maintenanceconfiguration-update]: /cli/azure/aks/maintenanceconfiguration#az_aks_maintenanceconfiguration_update
-[az-aks-maintenanceconfiguration-list]: /cli/azure/aks/maintenanceconfiguration#az_aks_maintenanceconfiguration_list
-[az-aks-maintenanceconfiguration-show]: /cli/azure/aks/maintenanceconfiguration#az_aks_maintenanceconfiguration_show
-[az-aks-maintenanceconfiguration-delete]: /cli/azure/aks/maintenanceconfiguration#az_aks_maintenanceconfiguration_delete
+[az-aks-maintenanceconfiguration-add]: /cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-add
+[az-aks-maintenanceconfiguration-update]: /cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-update
+[az-aks-maintenanceconfiguration-list]: /cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-list
+[az-aks-maintenanceconfiguration-show]: /cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-show
+[az-aks-maintenanceconfiguration-delete]: /cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-delete

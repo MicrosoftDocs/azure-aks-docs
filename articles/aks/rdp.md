@@ -405,11 +405,11 @@ If you need more troubleshooting data, you can [view the Kubernetes primary node
 <!-- INTERNAL LINKS -->
 [aks-quickstart-windows-cli]: ./learn/quick-windows-container-deploy-cli.md
 [aks-quickstart-windows-powershell]: ./learn/quick-windows-container-deploy-powershell.md
-[az-aks-install-cli]: /cli/azure/aks#az_aks_install_cli
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [install-azakskubectl]: /powershell/module/az.aks/install-azaksclitool
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [import-azakscredential]: /powershell/module/az.aks/import-azakscredential
-[az-vm-delete]: /cli/azure/vm#az_vm_delete
+[az-vm-delete]: /cli/azure/vm#az-vm-delete
 [remove-azvm]: /powershell/module/az.compute/remove-azvm
 [azure-monitor-containers]: /azure/azure-monitor/containers/container-insights-overview
 [install-azure-cli]: /cli/azure/install-azure-cli

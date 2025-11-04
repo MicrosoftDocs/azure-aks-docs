@@ -180,9 +180,9 @@ For Windows Server nodes, regularly perform a node image upgrade operation to sa
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 
 <!-- INTERNAL LINKS -->
-[az-aks-get-upgrades]: /cli/azure/aks#az_aks_get_upgrades
+[az-aks-get-upgrades]: /cli/azure/aks#az-aks-get-upgrades
 [get-azaksupgradeprofile]: /powershell/module/az.aks/get-azaksupgradeprofile
-[az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
+[az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
 [set-azakscluster]: /powershell/module/az.aks/set-azakscluster
 [aks-supported-versions]: supported-kubernetes-versions.md
 [aks-upgrade]: upgrade-cluster.md

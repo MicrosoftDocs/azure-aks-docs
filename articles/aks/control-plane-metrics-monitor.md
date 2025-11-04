@@ -45,7 +45,7 @@ To see the full list of supported control plane platform metrics, see the [AKS m
 
 ### Register the AzureMonitorMetricsControlPlanePreview feature flag
 
-1. Register the `AzureMonitorMetricsControlPlanePreview` feature flag by using the [`az feature register`](/cli/azure/feature#az_feature_register) command:
+1. Register the `AzureMonitorMetricsControlPlanePreview` feature flag by using the [`az feature register`](/cli/azure/feature#az-feature-register) command:
 
     ```azurecli
     az feature register --namespace "Microsoft.ContainerService" --name "AzureMonitorMetricsControlPlanePreview"

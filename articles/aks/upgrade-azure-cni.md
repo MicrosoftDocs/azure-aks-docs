@@ -110,4 +110,4 @@ az aks update \
 ```
 
 <!-- LINKS - Internal -->
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-update]: /cli/azure/aks#az-aks-update

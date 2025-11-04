@@ -173,12 +173,12 @@ In this article, you manually scaled an AKS cluster to increase or decrease the 
 [kubernetes-drain]: https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/
 
 <!-- LINKS - internal -->
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [get-azakscluster]: /powershell/module/az.aks/get-azakscluster
-[az-aks-scale]: /cli/azure/aks#az_aks_scale
+[az-aks-scale]: /cli/azure/aks#az-aks-scale
 [set-azakscluster]: /powershell/module/az.aks/set-azakscluster
 [cluster-autoscaler]: cluster-autoscaler.md
-[az-aks-nodepool-scale]: /cli/azure/aks/nodepool#az_aks_nodepool_scale
+[az-aks-nodepool-scale]: /cli/azure/aks/nodepool#az-aks-nodepool-scale
 [update-azaksnodepool]: /powershell/module/az.aks/update-azaksnodepool
 [service-quotas]: ./quotas-skus-regions.md#service-quotas-and-limits
 

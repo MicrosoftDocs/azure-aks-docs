@@ -183,5 +183,5 @@ az aks update --resource-group <resourceGroup> --name <clusterName> --outbound-t
 
 <!-- LINKS - internal -->
 [api-server-vnet-integration]: api-server-vnet-integration.md
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [private-cluster]: private-clusters.md

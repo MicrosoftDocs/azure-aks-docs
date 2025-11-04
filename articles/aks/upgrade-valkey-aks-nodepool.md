@@ -16,20 +16,20 @@ Using the same Valkey cluster on Azure Kubernetes Service (AKS) that you deploye
 
 ## Upgrade the AKS cluster
 
-1. List [the available versions for the AKS cluster][check-for-available-aks-cluster-upgrades] and identify the target version you're upgrading to using the [`az aks get-upgrades`](/cli/azure/aks#az_aks_get_upgrades) command.
+1. List [the available versions for the AKS cluster][check-for-available-aks-cluster-upgrades] and identify the target version you're upgrading to using the [`az aks get-upgrades`](/cli/azure/aks#az-aks-get-upgrades) command.
 
     ```azurecli-interactive
     az aks get-upgrades --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --output table
     ```
 
-1. Upgrade the AKS control plane using the [`az aks upgrade`](/cli/azure/aks#az_aks_upgrade) command. In this example, the target version is 1.33.0.
+1. Upgrade the AKS control plane using the [`az aks upgrade`](/cli/azure/aks#az-aks-upgrade) command. In this example, the target version is 1.33.0.
 
     ```azurecli-interactive
     az aks upgrade --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --control-plane-only --kubernetes-version 1.33.0
     ```
 
 1. Verify the [Locust client started in the previous article][validate-valkey-cluster] is still running. The Locust dashboard will show the impact of the AKS node pool upgrade on the Valkey cluster.
-1. Upgrade the Valkey node pool using the [`az aks nodepool upgrade`](/cli/azure/aks/nodepool#az_aks_nodepool_upgrade) command.
+1. Upgrade the Valkey node pool using the [`az aks nodepool upgrade`](/cli/azure/aks/nodepool#az-aks-nodepool-upgrade) command.
 
     ```azurecli-interactive
     az aks nodepool upgrade \

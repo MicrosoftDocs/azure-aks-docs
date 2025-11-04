@@ -239,9 +239,9 @@ By default, your cluster has AKS-managed pod disruption budgets (such as `coredn
 After resizing a node pool by cordoning and draining, learn more about [using multiple node pools][use-multiple-node-pools].
 
 <!-- LINKS -->
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [new-azaksnodepool]: /powershell/module/az.aks/new-azaksnodepool
-[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az_aks_nodepool_delete
+[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
 [remove-azaksnodepool]: /powershell/module/az.aks/remove-azaksnodepool
 [vmss-docs]: /azure/virtual-machine-scale-sets/overview
 [vm-node-pools]: ./virtual-machines-node-pools.md

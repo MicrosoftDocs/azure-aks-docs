@@ -17,12 +17,12 @@ sections:
       - question:  |
           Why can't I create new Windows Server 2019 node pools?
         answer:  |
-          Windows Server 2019 isn't supported in Kubernetes version 1.33 and above. Use a supported Windows Server version such as Windows Server 2022.
+          Windows Server 2019 isn't supported in Kubernetes version 1.33 and above. Use a supported Windows Server version such as Windows Server 2025 (preview) or Windows Server 2022.
 
       - question:  |
           Why can't I upgrade my Windows Server 2019 node pools to Kubernetes version 1.33?
         answer:  |
-          Windows Server 2019 isn't supported in Kubernetes version 1.33 and above. Use a supported Windows Server version such as Windows Server 2022.
+          Windows Server 2019 isn't supported in Kubernetes version 1.33 and above. Use a supported Windows Server version such as Windows Server 2025 (preview) or Windows Server 2022.
 
       - question: |
           What kind of disks are supported for Windows?
@@ -32,7 +32,7 @@ sections:
       - question: |
           Does Windows support generation 2 virtual machines (VMs)?
         answer: |
-          Generation 2 VMs are supported on Windows starting with Windows Server 2022.
+          Generation 2 VMs are supported on Windows starting with Windows Server 2022. Generation 2 VMs are default in Windows Server 2025.
           
           For more information, see [Support for generation 2 VMs on Azure](/azure/virtual-machines/generation-2).
           

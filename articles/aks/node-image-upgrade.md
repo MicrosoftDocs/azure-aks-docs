@@ -168,10 +168,10 @@ To speed up the node image upgrade process, you can upgrade your node images usi
 [use-multiple-node-pools]: create-node-pools.md
 [max-surge]: upgrade-aks-cluster.md#customize-node-surge-upgrade
 [auto-upgrade-node-image]: auto-upgrade-node-image.md
-[az-aks-nodepool-get-upgrades]: /cli/azure/aks/nodepool#az_aks_nodepool_get_upgrades
-[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az_aks_nodepool_show
-[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az_aks_nodepool_upgrade
-[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az_aks_nodepool_update
-[az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-nodepool-get-upgrades]: /cli/azure/aks/nodepool#az-aks-nodepool-get-upgrades
+[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
+[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices

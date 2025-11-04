@@ -269,5 +269,5 @@ This article showed you how to install the OSM add-on on an AKS cluster and veri
 [osm-uninstall]: open-service-mesh-uninstall-add-on.md
 [osm-deploy-sample-app]: https://release-v1-0.docs.openservicemesh.io/docs/getting_started/install_apps/
 [osm-onboard-app]: https://release-v1-0.docs.openservicemesh.io/docs/guides/app_onboarding/
-[az-deployment-group-create]: /cli/azure/deployment/group#az_deployment_group_create
-[az-group-delete]: /cli/azure/group#az_group_delete
+[az-deployment-group-create]: /cli/azure/deployment/group#az-deployment-group-create
+[az-group-delete]: /cli/azure/group#az-group-delete

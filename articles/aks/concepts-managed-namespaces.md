@@ -95,6 +95,9 @@ Managed namespaces uses the following built-in roles for the data plane.
 | [Azure Kubernetes Service RBAC Writer][aks-rbac-writer] | Allows read/write access to most objects in a namespace. This role doesn't allow viewing or modifying roles or role bindings. However, this role allows accessing Secrets and running Pods as any ServiceAccount in the namespace, so it can be used to gain the API access levels of any ServiceAccount in the namespace. |
 [Azure Kubernetes Service RBAC Admin][aks-rbac-admin] |  Allows read/write access to most resources in a namespace, including the ability to create roles and role bindings within the namespace. This role doesn't allow write access to resource quota or to the namespace itself. |
 
+> [!IMPORTANT]
+> When you assign these RBAC roles at a managed namespace scope, access is granted to any unmanaged Kubernetes namespaces on member clusters with the same name, regardless of whether they were placed by the managed namespace.
+
 ## Next steps
 
 Learn how to [create and use managed namespaces on Azure Kubernetes Service (AKS)][managed-namespaces].
@@ -115,9 +118,9 @@ Learn how to [create and use managed namespaces on Azure Kubernetes Service (AKS
 [azure-rbac-k8s]: manage-azure-rbac.md
 [install-azure-cli]: /cli/azure/install-azure-cli
 [azure-cli-extensions]: /cli/azure/azure-cli-extensions-overview
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [aks-namespace-contributor]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-namespace-contributor
 [aks-namespace-user]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-namespace-user
 [aks-rbac-reader]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-reader

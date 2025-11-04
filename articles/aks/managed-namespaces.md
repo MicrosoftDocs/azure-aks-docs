@@ -374,9 +374,9 @@ This article focused on using the managed namespaces feature to logically isolat
 [install-azure-cli]: /cli/azure/install-azure-cli
 [azure-cli-extensions]: /cli/azure/azure-cli-extensions-overview
 [aks-preview-api-lifecycle]: /azure/aks/concepts-preview-api-life-cycle
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [aks-managed-namespace-rbac-reader]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-namespace-rbac-reader
 [aks-managed-namespace-rbac-writer]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-namespace-rbac-writer
 [aks-managed-namespace-rbac-admin]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-namespace-rbac-admin

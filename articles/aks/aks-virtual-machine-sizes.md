@@ -120,4 +120,4 @@ To use Gen 2 VMs on AKS, see [Use generation 2 VMs on AKS](./generation-2-vms.md
 - To learn more about supported Gen 2 node images, see [Node images](./node-images.md)
 
 <!-- LINKS -->
-[az-vm-list-skus]: /cli/azure/vm#az_vm_list_skus
+[az-vm-list-skus]: /cli/azure/vm#az-vm-list-skus

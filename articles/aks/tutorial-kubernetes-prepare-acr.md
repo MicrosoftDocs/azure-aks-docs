@@ -146,9 +146,9 @@ In the next tutorial, you learn how to deploy a Kubernetes cluster in Azure.
 > [Deploy Kubernetes cluster][aks-tutorial-deploy-cluster]
 
 <!-- LINKS - internal -->
-[az-acr-create]: /cli/azure/acr#az_acr_create
-[az-acr-repository-list]: /cli/azure/acr/repository#az_acr_repository_list
-[az-group-create]: /cli/azure/group#az_group_create
+[az-acr-create]: /cli/azure/acr#az-acr-create
+[az-acr-repository-list]: /cli/azure/acr/repository#az-acr-repository-list
+[az-group-create]: /cli/azure/group#az-group-create
 [azure-cli-install]: /cli/azure/install-azure-cli
 [aks-tutorial-deploy-cluster]: ./tutorial-kubernetes-deploy-cluster.md
 [aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md

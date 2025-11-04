@@ -127,9 +127,9 @@ In this article, you learned how to add a node pool with an Arm64 VM to an AKS c
 [arm-sku-vm1]: /azure/virtual-machines/dpsv5-dpdsv5-series
 [arm-sku-vm2]: /azure/virtual-machines/dplsv5-dpldsv5-series
 [arm-sku-vm3]: /azure/virtual-machines/epsv5-epdsv5-series
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az_aks_nodepool_show
-[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az_aks_nodepool_delete
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
+[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
 [az-aks-nodepool-update]: /cli/azure/aks#az-aks-update
 [azure-linux-3.0]: /azure/azure-linux/how-to-enable-azure-linux-3
 [cobalt-arm64-vm]: /azure/virtual-machines/sizes/cobalt-overview

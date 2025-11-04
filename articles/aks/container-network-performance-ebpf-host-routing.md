@@ -16,7 +16,7 @@ ms.date:  09/23/2025
 As containerized workloads scale across distributed environments, the need for high-performance, low-latency networking becomes critical. eBPF Host Routing is a performance-focused feature within [Advanced Container Networking Services (ACNS)](advanced-container-networking-services-overview.md) that uses extended Berkeley Packet Filter (eBPF) technology to optimize traffic flow in Kubernetes clusters. Legacy routing on Kubernetes hosts introduces overhead in the form of iptables and netfilter rule processing in the host network namespace. eBPF Host Routing has benefits over legacy host routing by:
 
  - Implementing the routing logic in eBPF programs.
- - Allowing Cilium to make routing decisions without invoking iptables or the host stack.
+ - Allowing Cilium eBPF to bypass iptables in the host namespace.
 
 This direct path reduces the number of hops and processing layers, resulting in faster packet delivery.
 
@@ -34,7 +34,7 @@ Use cases for eBPF Host Routing are performance-critical workloads such as high-
 
 **`iptables blocker`** - An init container that prevents any future installation of iptables rules in the host network namespace (such rules will be bypassed when eBPF host routing is enabled).
 
-**`IP Masquerade Agent`** - When eBPF Host Routing is active, Cilium takes over SNAT responsibilities using BPF-based masquerading thus making ip-masq-agent technically redundant. This agent remains running to maintain consistent behavior if eBPF Host Routing is later disabled; however, its iptables rules are ignored while eBPF Host Routing is active.
+**`IP Masquerade Agent`** - When eBPF Host Routing is active, Cilium takes over SNAT responsibilities using BPF-based masquerading. `ip-masq-agent` remains running to maintain consistent behavior if eBPF Host Routing is later disabled; however, its iptables rules are ignored while eBPF Host Routing is active.
 
 ## Considerations
 
@@ -44,7 +44,7 @@ Use cases for eBPF Host Routing are performance-critical workloads such as high-
 
 ## Limitations
 
- - eBPF host routing is currently incompatible with nodes running OSes other than Ubuntu 24.04, or Azure Linux 3.0. eBPF host routing is currently also not supported with Confidential VMs and Pod Sandboxing
+ - eBPF host routing is currently incompatible with nodes running OSes other than Ubuntu 24.04, or Azure Linux 3.0. eBPF host routing is currently also not supported with Confidential VMs and Pod Sandboxing.
 
  - eBPF Host Routing can only be enabled for all nodes in a cluster. Hybrid node scenarios aren't supported.
 

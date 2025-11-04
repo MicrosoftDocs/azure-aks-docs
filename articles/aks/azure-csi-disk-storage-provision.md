@@ -408,7 +408,7 @@ kubectl delete -f azure-pvc.yaml
 <!-- LINKS - internal -->
 [azure-storage-account]: ../storage/common/storage-introduction.md
 [azure-disks-storage-csi]: azure-disk-csi.md
-[az-disk-create]: /cli/azure/disk#az_disk_create
+[az-disk-create]: /cli/azure/disk#az-disk-create
 [az-aks-show]: /cli/azure/aks#az-aks-show
 [install-azure-cli]: /cli/azure/install-azure-cli
 [operator-best-practices-storage]: operator-best-practices-storage.md

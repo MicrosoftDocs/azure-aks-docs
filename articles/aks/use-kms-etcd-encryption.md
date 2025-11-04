@@ -412,7 +412,7 @@ For more information on using KMS with AKS, see the following articles:
 <!-- LINKS -->
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-aks-create]: /cli/azure/aks#az-aks-create
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [api-server-vnet-integration]: api-server-vnet-integration.md
 [kms-v2-support]: ./use-kms-v2.md
 [update-a-key-vault-mode]: ./update-kms-key-vault.md

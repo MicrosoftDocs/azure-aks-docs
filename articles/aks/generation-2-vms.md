@@ -113,7 +113,7 @@ az aks nodepool show --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NA
 - To learn more about supported Gen 2 node images, see [Node images](./node-images.md)
 
 <!-- LINKS -->
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az_aks_nodepool_show
-[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az_aks_nodepool_update
-[az-vm-list-skus]: /cli/azure/vm#az_vm_list_skus
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[az-vm-list-skus]: /cli/azure/vm#az-vm-list-skus

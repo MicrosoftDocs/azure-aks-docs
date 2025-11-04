@@ -106,8 +106,8 @@ Use the following command to get each IP address for the Resource ID:
 <!-- LINKS - internal -->
 
 [turn-off-kms]: /azure/aks/use-kms-etcd-encryption#turn-off-kms
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update

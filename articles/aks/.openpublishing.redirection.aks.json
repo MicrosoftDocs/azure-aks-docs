@@ -137,7 +137,7 @@
         },
         {
             "source_path_from_root": "/articles/aks/create-cluster.md",
-            "redirect_url": "/cli/azure/aks#az_aks_create",
+            "redirect_url": "/cli/azure/aks#az-aks-create",
             "redirect_document_id": false
         },
         {
@@ -608,7 +608,32 @@
         {
             "source_path_from_root": "/articles/aks/container-network-security-concepts.md",
             "redirect_url": "/azure/aks/advanced-container-networking-services-overview?tabs=cilium#container-network-security",
-            "redirect_document_id": false 
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/node-autoprovision.md",
+            "redirect_url": "/azure/aks/node-auto-provisioning",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/node-autoprovision-networking.md",
+            "redirect_url": "/azure/aks/node-auto-provisioning-networking",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/node-autoprovision-disruption.md",
+            "redirect_url": "/azure/aks/node-auto-provisioning-disruption",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/node-autoprovision-node-pools.md",
+            "redirect_url": "/azure/aks/node-auto-provisioning-node-pools",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/node-autoprovision-aksnodeclass.md",
+            "redirect_url": "/azure/aks/node-auto-provisioning-aksnodeclass",
+            "redirect_document_id": false
         },
         {
             "source_path_from_root": "/articles/aks/use-pod-security-policies.md",

@@ -298,6 +298,96 @@ Create the PVC by using the [kubectl apply][kubectl-apply] command:
 kubectl apply -f private-pvc.yaml
 ```
 
+## Use Managed Identity to access Azure Files storage  (Preview)
+
+Azure Files now supports managed identity based authentication for SMB access. This enables your applicatioins to securely access Azure Files without storing or managing credentials.
+
+> [!NOTE]
+> Managed identity support for Azure Files in AKS is available in preview starting with AKS version 1.34 on Linux nodes.
+
+### Prerequisites
+
+- Ensure the [user-assigned Kubelet identity](use-managed-identity.md#use-a-pre-created-kubelet-managed-identity) has the `Storage File Data SMB MI Admin` role on the storage account. 
+  > If you use your own storage account, you need to assign `Storage File Data SMB MI Admin` role to the user-assigned Kubelet identity on that storage account.
+
+  > If the storage account is created by the CSI driver, grant `Storage File Data SMB MI Admin` role to the resource group where the storage account resides.
+
+  > If you just leverage the default built-in user-assigned Kubelet identity, it already has the required  `Storage File Data SMB MI Admin` role on the managed node resource group.
+
+### Dynamic Provisioning
+
+To enable managed identity for dynamically provisioned volumes:
+  - Create a new storage class with `mountWithManagedIdentity`: `"true"`.
+  - Deploy your StatefulSet using this storage class.
+#### Sample Storage Class YAML   
+ ```yml
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: azurefile-csi
+    provisioner: file.csi.azure.com
+    parameters:
+      resourceGroup: EXISTING_RESOURCE_GROUP_NAME   # optional, node resource group by default if it's not provided
+      storageAccount: EXISTING_STORAGE_ACCOUNT_NAME # optional, a new account will be created if it's not provided
+      mountWithManagedIdentity: "true"
+      # optional, clientID of the managed identity, kubelet identity would be used by default if it's not provided
+      clientID: "xxxxx-xxxx-xxx-xxx-xxxxxxx"
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    allowVolumeExpansion: true
+    mountOptions:
+      - dir_mode=0777  # modify this permission if you want to enhance the security
+      - file_mode=0777
+      - uid=0
+      - gid=0
+      - mfsymlinks
+      - cache=strict  # https://linux.die.net/man/8/mount.cifs
+      - nosharesock  # reduce probability of reconnect race
+      - actimeo=30  # reduce latency for metadata-heavy workload
+      - nobrl  # disable sending byte range lock requests to the server
+ ```
+
+### Static Provisioning
+
+For static volumes:
+  - Create a PV with `mountWithManagedIdentity`: `"true"`.
+  - Mount the PV to you application pod.
+#### Sample PV YAML  
+ ```yml
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: pv-azurefile
+    spec:
+      capacity:
+        storage: 100Gi
+      accessModes:
+        - ReadWriteMany
+      persistentVolumeReclaimPolicy: Retain
+      storageClassName: azurefile-csi
+      mountOptions:
+        - dir_mode=0777  # modify this permission if you want to enhance the security
+        - file_mode=0777
+        - uid=0
+        - gid=0
+        - mfsymlinks
+        - cache=strict  # https://linux.die.net/man/8/mount.cifs
+        - nosharesock  # reduce probability of reconnect race
+        - actimeo=30  # reduce latency for metadata-heavy workload
+        - nobrl  # disable sending byte range lock requests to the server
+      csi:
+        driver: file.csi.azure.com
+        # make sure volumeHandle is unique for every identical share in the cluster
+        volumeHandle: "{resource-group-name}#{account-name}#{file-share-name}"
+        volumeAttributes:
+          resourceGroup: EXISTING_RESOURCE_GROUP_NAME   # optional, node resource group by default if it's not provided
+          storageAccount: EXISTING_STORAGE_ACCOUNT_NAME # optional, a new account will be created if it's not provided
+          shareName: EXISTING_FILE_SHARE_NAME
+          mountWithManagedIdentity: "true"
+          # optional, clientID of the managed identity, kubelet identity would be used by default if it's empty
+          clientID: "xxxxx-xxxx-xxx-xxx-xxxxxxx"
+ ```
+
 ## NFS file shares
 
 [Azure Files supports the NFS v4.1 protocol](/azure/storage/files/storage-files-how-to-create-nfs-shares). NFS version 4.1 support for Azure Files provides you with a fully managed NFS file system as a service built on a highly available and highly durable distributed resilient storage platform.

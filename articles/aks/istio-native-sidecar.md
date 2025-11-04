@@ -116,9 +116,9 @@ If native sidecar is not enabled, it is likely one of the version prerequisites 
 [istio-default-native-sidecar]: https://istio.io/latest/news/releases/1.27.x/announcing-1.27/change-notes/#installation
 
 <!--- Internal Links --->
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-provider-register]: /cli/azure/provider#az-provider-register

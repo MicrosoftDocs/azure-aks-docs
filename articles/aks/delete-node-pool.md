@@ -121,10 +121,10 @@ If your cluster has PodDisruptionBudgets that are preventing the deletion of the
 For more information about adjusting node pool sizes in AKS, see [Resize node pools][resize-node-pool].
 
 <!-- LINKS -->
-[az-aks-delete-nodepool]: /cli/azure/aks#az_aks_nodepool_delete
+[az-aks-delete-nodepool]: /cli/azure/aks#az-aks-nodepool-delete
 [remove-azaksnodepool]: /powershell/module/az.aks/remove-azaksnodepool
 [resize-node-pool]: ./resize-node-pool.md
 [pod-disruption-budget]: operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets
 [specify-disruption-budget]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 [disruptions]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
-[az-aks-nodepool-delete-machines]: /cli/azure/aks/nodepool#az_aks_nodepool_delete_machines
+[az-aks-nodepool-delete-machines]: /cli/azure/aks/nodepool#az-aks-nodepool-delete-machines

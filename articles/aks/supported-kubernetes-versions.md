@@ -377,11 +377,11 @@ For information on how to upgrade your cluster, see:
 
 <!-- LINKS - Internal -->
 [aks-upgrade]: upgrade-cluster.md
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-extension-add]: /cli/azure/extension#az_extension_add
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[az-aks-get-versions]: /cli/azure/aks#az_aks_get_versions
+[az-aks-get-versions]: /cli/azure/aks#az-aks-get-versions
 [preview-terms]: https://azure.microsoft.com/support/legal/preview-supplemental-terms/
 [get-azaksversion]: /powershell/module/az.aks/get-azaksversion
 [aks-tracker]: release-tracker.md

@@ -237,7 +237,7 @@ In the next tutorial, you learn how to upgrade Kubernetes in your AKS cluster.
 
 <!-- LINKS - internal -->
 [aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md
-[az-aks-scale]: /cli/azure/aks#az_aks_scale
+[az-aks-scale]: /cli/azure/aks#az-aks-scale
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps
 [get-azakscluster]: /powershell/module/az.aks/get-azakscluster

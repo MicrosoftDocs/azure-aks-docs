@@ -28,7 +28,7 @@ In this article, you learn how to onboard a sample HuggingFace model for inferen
 
 In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigscience/bloom-1b7) small language model. Alternatively, you can choose from thousands of text-generation models supported on [HuggingFace](https://huggingface.co/models?pipeline_tag=text-generation).
 
-1. Connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command.
+1. Connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.
 
     ```azurecli-interactive
     az aks get-credentials --resource-group <resource-group-name> --name <aks-cluster-name>

@@ -357,14 +357,14 @@ In this article, you learned how to create node pools in an AKS cluster using th
   - [Add Windows Server node pools with `containerd` to an AKS cluster](./windows-containerd.md)
 
 <!-- LINKS -->
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-nodepool]: /cli/azure/aks/nodepool
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-nodepool-list]: /cli/azure/aks/nodepool#az_aks_nodepool_list
-[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az_aks_nodepool_delete
-[az-group-create]: /cli/azure/group#az_group_create
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-list]: /cli/azure/aks/nodepool#az-aks-nodepool-list
+[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
+[az-group-create]: /cli/azure/group#az-group-create
 [install-azure-cli]: /cli/azure/install-azure-cli
 [azure-linux]: ./use-azure-linux.md
 [windows]: ./windows-best-practices.md

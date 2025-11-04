@@ -33,14 +33,14 @@ In this article, you learn how to deploy example scheduler profiles in Azure Kub
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-1. Install the `aks-preview` extension using the [`az extension add`](/cli/azure/extension#az_extension_add) command.
+1. Install the `aks-preview` extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
 
 
     ```azurecli-interactive
     az extension add --name aks-preview
     ```
 
-1. Update to the latest version of the `aks-preview` extension using the [`az extension update`](/cli/azure/extension#az_extension_update) command.
+1. Update to the latest version of the `aks-preview` extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
 
 
     ```azurecli-interactive
@@ -386,7 +386,7 @@ You can customize the upstream scheduler with multiple profiles and customize ea
     > [!NOTE]
     > Ensure that the previous step is complete and confirm that the `schedulerconfiguration` resource was deleted before proceeding to disable this feature.
 
-1. Disable the feature using the [`az aks update`](/cli/azure/aks#az_aks_update) command with the `--disable-upstream-kubescheduler-user-configuration` flag.
+1. Disable the feature using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--disable-upstream-kubescheduler-user-configuration` flag.
 
     ```azurecli-interactive
     az aks update --subscription="${SUBSCRIPTION_ID}" \
@@ -395,7 +395,7 @@ You can customize the upstream scheduler with multiple profiles and customize ea
     --disable-upstream-kubescheduler-user-configuration
     ```
 
-1. Verify the feature is disabled using the [`az aks show`](/cli/azure/aks#az_aks_show) command.
+1. Verify the feature is disabled using the [`az aks show`](/cli/azure/aks#az-aks-show) command.
 
     ```azurecli-interactive
     az aks show --resource-group="${RESOURCE_GROUP}" \
@@ -430,10 +430,10 @@ To learn more about the AKS scheduler and best practices, see the following reso
 - [Monitor your AKS resource metrics and logs](./monitor-aks.md)
 
 <!-- LINKS - internal -->
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az_aks_nodepool_update
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [aks-quickstart-cli]: ./learn/quick-windows-container-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-windows-container-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-windows-container-deploy-powershell.md

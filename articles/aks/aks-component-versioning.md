@@ -160,8 +160,8 @@ Each component entry includes:
 [version-support-policy]: supported-kubernetes-versions.md
 [stop-cluster-upgrade-api-breaking-changes]: stop-cluster-upgrade-api-breaking-changes.md
 [istio-upgrade]: istio-upgrade.md
-[az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
-[az-aks-get-upgrades]: /cli/azure/aks#az_aks_get-upgrades
-[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az_aks_nodepool_upgrade
+[az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
+[az-aks-get-upgrades]: /cli/azure/aks#az-aks-get-upgrades
+[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
 [aks-quickstart-cli]: learn/quick-kubernetes-deploy-cli.md
 [aks-upgrade-profile-api]: /rest/api/aks/managed-clusters/get-upgrade-profile

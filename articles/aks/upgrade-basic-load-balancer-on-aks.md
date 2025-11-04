@@ -38,7 +38,7 @@ Your cluster must meet the following prerequisites before you can perform the mi
 
 ## Upgrade Basic Load Balancer to Standard Load Balancer
 
-1. Upgrade your Basic Load Balancer to Standard Load Balancer using the [`az aks update`](/cli/azure/aks#az_aks_create) command with the `--load-balancer-sku` flag set to `Standard`.
+1. Upgrade your Basic Load Balancer to Standard Load Balancer using the [`az aks update`](/cli/azure/aks#az-aks-create) command with the `--load-balancer-sku` flag set to `Standard`.
 
     ```azurecli-interactive
     az aks update \
@@ -47,7 +47,7 @@ Your cluster must meet the following prerequisites before you can perform the mi
       --load-balancer-sku=Standard
     ```
 
-1. Verify the migration was successful using the [`az aks show`](/cli/azure/aks#az_aks_show) command.
+1. Verify the migration was successful using the [`az aks show`](/cli/azure/aks#az-aks-show) command.
 
     ```azurecli-interactive
     az aks show \
@@ -68,13 +68,13 @@ Your cluster must meet the following prerequisites before you can perform the mi
 
 You can confirm the new IP addresses associated with outbound rules by confirming the resource IDs for the IP addresses and then listing the IP addresses.
 
-1. Get the resource ID for the outbound IP addresses using the [`az aks show`](/cli/azure/aks#az_aks_show) command.
+1. Get the resource ID for the outbound IP addresses using the [`az aks show`](/cli/azure/aks#az-aks-show) command.
 
     ```azurecli-interactive
     az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query networkProfile.loadBalancerProfile.effectiveOutboundIPs[].id
     ```
 
-1. Get the new IP address for each resource ID using the [`az network public-ip show`](/cli/azure/network/public-ip#az_network_public_ip_show) command.
+1. Get the new IP address for each resource ID using the [`az network public-ip show`](/cli/azure/network/public-ip#az-network-public-ip-show) command.
 
     ```azurecli-interactive
     az network public-ip show --ids $IP_RESOURCE_ID --query ipAddress -o tsv
@@ -165,7 +165,7 @@ To run the migration commands, you need:
 
 ### How can I see if Key Management Service (KMS) encryption is disabled?
 
-You can check whether KMS encryption is enabled on your AKS cluster using the [`az aks list`](/cli/azure/aks#az_aks_list) command.
+You can check whether KMS encryption is enabled on your AKS cluster using the [`az aks list`](/cli/azure/aks#az-aks-list) command.
 
 ```azurecli-interactive
 az aks list --query "[].{Name:name, KmsEnabled:securityProfile.azureKeyVaultKms.enabled, KeyId:securityProfile.azureKeyVaultKms.keyId}"

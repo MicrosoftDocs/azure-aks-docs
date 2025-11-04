@@ -471,7 +471,7 @@ Trident supports many features with Azure NetApp Files. For more information, se
 [importing-trident-volumes]: https://docs.netapp.com/us-en/trident/trident-use/vol-import.html
 
 <!-- INTERNAL LINKS -->
-[az-netappfiles-volume-show]: /cli/azure/netappfiles/volume#az_netappfiles_volume_show
+[az-netappfiles-volume-show]: /cli/azure/netappfiles/volume#az-netappfiles-volume-show
 [azure-netapp-nfs]: azure-netapp-files-nfs.md
 [azure-netapp-smb]: azure-netapp-files-smb.md
 [azure-netapp-files]: azure-netapp-files.md

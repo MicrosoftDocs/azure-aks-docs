@@ -59,7 +59,7 @@ Install the `aks-preview` extension if you're using Azure CLI. You must use `aks
 
 ### Register the Managed Gateway API preview feature
 
-Register the `ManagedGatewayAPIPreview` feature flag by using the [`az feature register`](/cli/azure/feature#az_feature_register) command:
+Register the `ManagedGatewayAPIPreview` feature flag by using the [`az feature register`](/cli/azure/feature#az-feature-register) command:
 
 ```azurecli-interactive
 az feature register --namespace "Microsoft.ContainerService" --name "ManagedGatewayAPIPreview"

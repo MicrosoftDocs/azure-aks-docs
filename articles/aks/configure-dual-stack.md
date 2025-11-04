@@ -537,7 +537,7 @@ Once the cluster has been created, you can deploy your workloads. This article w
 [aks-out-of-tree]: ./out-of-tree.md
 [nat-gateway]: /azure/virtual-network/nat-gateway/nat-overview
 [aks-network-concepts]: concepts-network.md
-[az-group-create]: /cli/azure/group#az_group_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-group-create]: /cli/azure/group#az-group-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 

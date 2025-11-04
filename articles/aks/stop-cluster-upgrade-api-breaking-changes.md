@@ -73,6 +73,6 @@ This article showed you how to stop AKS cluster upgrades automatically on API br
 [k8s-api]: https://kubernetes.io/docs/reference/using-api/api-concepts/
 
 <!-- LINKS - internal -->
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
 [container-insights]:/azure/azure-monitor/containers/container-insights-log-query#resource-logs

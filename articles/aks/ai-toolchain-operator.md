@@ -181,17 +181,17 @@ Learn more about KAITO model deployment options below:
 
 <!-- LINKS -->
 
-[az-group-create]: /cli/azure/group#az_group_create
-[az-group-delete]: /cli/azure/group#az_group_delete
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-account-set]: /cli/azure/account#az_account_set
-[az-extension-add]: /cli/azure/extension#az_extension_add
-[az-extension-update]: /cli/azure/extension#az_extension_update
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-group-create]: /cli/azure/group#az-group-create
+[az-group-delete]: /cli/azure/group#az-group-delete
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-account-set]: /cli/azure/account#az-account-set
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [mlops-concepts]: ../aks/concepts-machine-learning-ops.md
 [mlops-best-practices]: ../aks/best-practices-ml-ops.md
 [delete-node-pool]: ../aks/delete-node-pool.md

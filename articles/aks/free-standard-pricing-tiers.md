@@ -177,7 +177,7 @@ Once the deployment completes, it returns JSON-formatted information about your 
 
 ## Update the tier of an existing AKS cluster
 
-The following example uses the [`az aks update`](/cli/azure/aks#az_aks_update) command to update the existing cluster.
+The following example uses the [`az aks update`](/cli/azure/aks#az-aks-update) command to update the existing cluster.
 
 ### Update an existing cluster from the Standard tier to the Free tier
 
@@ -337,7 +337,7 @@ Results:
 
 [manage-resource-group-cli]: /azure/azure-resource-manager/management/manage-resource-groups-cli
 [availability-zones]: ./availability-zones.md
-[az-aks-create]: /cli/azure/aks?#az_aks_create
+[az-aks-create]: /cli/azure/aks?#az-aks-create
 [private-clusters]: private-clusters.md
 [long-term-support]: long-term-support.md
 [long-term-support-update]: long-term-support.md#enable-lts-on-an-existing-cluster

@@ -153,7 +153,7 @@ This article described how to enable Artifact Streaming on your AKS node pools t
 [aks-image-management]: ./operator-best-practices-container-image-management.md
 [az-group-create]: /cli/azure/group#az-group-create
 [az-acr-create]: /cli/azure/acr#az-acr-create
-[az-configure]: /cli/azure#az_configure
+[az-configure]: /cli/azure#az-configure
 [az-acr-import]: /cli/azure/acr#az-acr-import
 [az-acr-artifact-streaming-create]: /cli/azure/acr/artifact-streaming#az-acr-artifact-streaming-create
 [az-acr-manifest-list-referrers]: /cli/azure/acr/manifest#az-acr-manifest-list-referrers

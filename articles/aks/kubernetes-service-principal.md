@@ -290,13 +290,13 @@ For information on how to update the credentials, see [Update or rotate the cred
 
 <!-- LINKS - internal -->
 [aad-service-principal]: /entra/identity-platform/app-objects-and-service-principals
-[az-ad-sp-create]: /cli/azure/ad/sp#az_ad_sp_create_for_rbac
-[az-ad-sp-delete]: /cli/azure/ad/sp#az_ad_sp_delete
-[az-ad-app-credential-list]: /cli/azure/ad/app/credential#az_ad_app_credential_list
+[az-ad-sp-create]: /cli/azure/ad/sp#az-ad-sp-create-for-rbac
+[az-ad-sp-delete]: /cli/azure/ad/sp#az-ad-sp-delete
+[az-ad-app-credential-list]: /cli/azure/ad/app/credential#az-ad-app-credential-list
 [install-azure-cli]: /cli/azure/install-azure-cli
 [service-principal]: /entra/identity-platform/app-objects-and-service-principals
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [rbac-network-contributor]: /azure/role-based-access-control/built-in-roles#network-contributor
 [rbac-custom-role]: /azure/role-based-access-control/custom-roles
 [rbac-disk-contributor]: /azure/role-based-access-control/built-in-roles#virtual-machine-contributor
