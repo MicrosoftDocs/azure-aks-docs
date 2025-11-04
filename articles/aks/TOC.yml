@@ -364,14 +364,14 @@
           href: integrations.md
         - name: Integrate ACR with an AKS cluster
           href: cluster-container-registry-integration.md
+        - name: AKS desktop (Preview)
+          items:
+            - name: AKS desktop (Preview) overview
+              href: aks-desktop.md
+            - name: Deploy an application via AKS desktop (Preview)
+              href: aks-desktop-deploy-app.md
         - name: Use cluster extensions
           items:
-        - name: AKS desktop
-          items:
-            - name: AKS desktop overview
-              href: aks-desktop.md
-            - name: Deploy an application via AKS desktop
-              href: aks-desktop-deploy-app.md
             - name: About cluster extensions
               href: cluster-extensions.md
             - name: Use the Azure CLI

@@ -14,11 +14,11 @@ ms.author: qpetraroia
 This article guides you through deploying an application using AKS desktop, enabling you to manage your containerized workloads with an intuitive, application-centric interface.
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop may undergo design changes, add/delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at [aka.ms/aks/aks-desktop](https://aka.ms/aks/aks-desktop).
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop may undergo design changes, add/delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at [aka.ms/aks/aks-desktop][aka.ms/aks/aks-desktop].
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have an Azure subscription, you can create a [free account][free azure account].
 
 - AKS desktop downloaded. You can download AKS desktop via:
 
@@ -36,7 +36,7 @@ This article guides you through deploying an application using AKS desktop, enab
 
 - [AKS Automatic clusters][AKS Automatic clusters]
 
-## Deploy and manage an application
+# Deploy and manage an application
 
 ### Open AKS desktop
 
@@ -44,24 +44,39 @@ The first time you open up AKS desktop, you need to sign into your Azure account
 
 After merging the cluster you want to deploy your app to, open the **Projects** tab. You can choose an existing project or create a new one for your deployment.
 
-### Create a new project
+### Create a new Project
 
 > [!NOTE]
-> We recommend that you always create a new project when deploying a new application.
+> We recommend that you always create a new Project when deploying a new application.
 
-If you wish to deploy your app into a new project, select **Create project** and then **New project**. Fill out the following information you wish to assign the project to:
+If you wish to deploy your app into a new Project, select **Create Project** and then **AKS managed Project**. Fill out the following information you wish to assign the project to:
 
 - **Project name**
 
-- **Cluster**
+- **Subscription**
 
-- **Namespace**
+- **Cluster**
 
 When you create a project on a cluster, it's visible to all other users who have access to the namespace. This is because the project is based on a namespace, and that namespace has a specific label.
 
-### Deploy an application into the project
+> [!NOTE]
+> When creating a new **AKS managed Project** you will only be allowed to deploy to AKS Automatic cluster or clusters that are Entra Authenticated.
 
-1. Select the project you created and then select **Deploy Application** in the top right corner.
+#### New Project: Networking Policies
+
+In the Networking Policies tab you can set the networking communications for the managed namespace. If you wish for traffic to flow out of the namespace, set **Ingress**  to 'Allow All Traffic', you can also change this setting later.
+
+#### New Project: Compute Quota
+
+The Compute Quota tab allows you to set Qutoa for the managed namespace. Anytime an application is deployed within the namespace, it will not be able to exceed the limits. You can also change this setting later once the appy is deployed.
+
+#### New Project: Access
+
+The Access tab allows you to add other developers, operators, etc to the Project, either as a reader or a contributor.
+
+### Deploy an application into the Project
+
+1. Select the Project you created and then select **Deploy Application** in the top right corner.
 
 1. There are two sources you can select from:
 
@@ -113,6 +128,18 @@ The key benefit to AKS desktop is to see your application resources, health stat
 | **Scaling** | View scaling and CPU metrics. Configure manual scaling or Horizontal Pod Autoscaler (HPA). |
 
 ## Next steps
+
+- Learn more about [AKS desktop overview](aks-desktop.md)
+- Explore [AKS Automatic clusters](auto-upgrade-cluster.md)
+
+
+<!--- External Links --->
+[aka.ms/aks/aks-desktop]: https://aka.ms/aks/aks-desktop
+[free azure account]: https://azure.microsoft.com/free
+
+<!--- Internal Links --->
+[AKS Managed Namespace]: concepts-managed-namespaces.md
+[Deploy an application via AKS desktop]: aks-desktop-deploy-app.md
 
 - Learn more about [AKS desktop overview](aks-desktop.md)
 - Explore [AKS Automatic clusters](auto-upgrade-cluster.md)
