@@ -50,7 +50,7 @@ sections:
           
           For programmatic evaluations, we measured standard responsible AI metrics such as Groundedness, UPIA and XPIA Jailbreak, Harmful Content, and Conversation Quality (coherence, fluency, etc.). We conduct internal bug bashes and red-teams to rigorously test the agent’s behavior across a variety of cases including but not limited to: node health degradation, DNS failures, upgrade disruptions, and pod scheduling problems. These tests help us identify gaps in reasoning, tooling integration, and prompt execution. A core metric for success is the accuracy of the agent’s diagnosis and the relevance of its recommendations, including whether it correctly identifies the root cause and suggests actionable, context-aware mitigations.
           
-          We realize the dynamic nature of agentic-AI interactions, and we welcome your feedback as part of the preview. You can share feedback directly with us at _aksagentcli@service.microsoft.com_ or [open a Github issue](ADD-LINK).
+          We realize the dynamic nature of agentic-AI interactions, and we welcome your feedback as part of the preview. You can share feedback directly with us at _aksagentcli@service.microsoft.com_ or [open a Github issue](https://github.com/Azure/agentic-cli-for-aks/issues).
       
       - question: |
           What are the limitations of the CLI Agent for AKS? How can I minimize the impact of these limitations when using the system?
@@ -65,7 +65,7 @@ sections:
           To minimize the impact of these limitations, you can take several proactive steps:
           
           - Ensure that required diagnostic tools, such as Azure Monitor, are properly configured to help the agent access richer telemetry and perform more comprehensive diagnostics.
-          - Extend the capabilities of the CLI Agent by using it with Azure MCP or AKS MCP servers. For more information, see [ADD LINK](ADD-LINK).
+          - Extend the capabilities of the CLI Agent by using it with Azure MCP or AKS MCP servers. For more information, see [Integrate the AKS MCP server with the CLI Agent for AKS](./cli-agent-for-aks-install.md#aks-mcp-server-integration).
           - Since the CLI Agent for AKS doesn't come with AI models included, you should use the latest generation reasoning or general-purpose models such as GPT4o and GPTo3 to ensure the best possible outcomes.
 
       - question: |
