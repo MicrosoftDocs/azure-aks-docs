@@ -366,8 +366,8 @@
           href: cluster-container-registry-integration.md
         - name: AKS desktop (Preview)
           items:
-            - name: AKS desktop (Preview) overview
-              href: aks-desktop.md
+            - name: AKS desktop overview (Preview)
+              href: aks-desktop-overview.md
             - name: Deploy an application via AKS desktop (Preview)
               href: aks-desktop-deploy-app.md
         - name: Use cluster extensions
@@ -437,7 +437,7 @@
             - name: Overview
               href: concepts-managed-namespaces.md
             - name: Use managed namespaces
-              href: managed-namespaces.md  
+              href: managed-namespaces.md
     - name: Configure backup
       items:
         - name: Prerequisites
