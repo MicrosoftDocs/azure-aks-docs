@@ -572,7 +572,7 @@
               - name: Use shared health probes
                 href: shared-health-probes.md
               - name: Troubleshoot SNAT issues
-                href: troubleshoot-snat.md
+                href: troubleshoot-source-network-address-translation.md
           - name: Upgrade Basic Load Balancer
             href: upgrade-basic-load-balancer-on-aks.md
           - name: Use kube-proxy configuration (IPVS)
