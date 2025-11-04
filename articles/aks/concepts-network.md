@@ -83,6 +83,20 @@ You can also use network policies to automatically apply traffic filter rules to
 
 For more information, see [How network security groups filter network traffic][nsg-traffic].
 
+### Custom virtual network requirements
+
+When using a custom virtual network with AKS clusters, if you have added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
+
+| Destination | Source | Protocol | Port | Use |
+|--- |--- |--- |--- |--- |
+| APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
+| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communication between the Azure Load Balancer and the API Server Subnet CIDR. |
+| Node CIDR | Node CIDR | All Protocols | All Ports | Required to enable communication between Nodes. |
+| Node CIDR | Pod CIDR | All Protocols | All Ports | Required for Service traffic routing. |
+| Pod CIDR | Pod CIDR | All Protocols | All Ports | Required for Pod to Pod and Pod to Service traffic, including DNS. |
+
+These requirements apply to both AKS Standard and AKS Automatic clusters when using custom virtual networks.
+
 ## Network policies
 
 By default, all pods in an AKS cluster can send and receive traffic without limitations. For improved security, define rules that control the flow of traffic, like:
