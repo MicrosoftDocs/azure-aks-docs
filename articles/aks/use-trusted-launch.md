@@ -302,7 +302,7 @@ In this article, you learned how to enable Trusted Launch. Learn more about [Tru
 
 <!-- INTERNAL LINKS -->
 [install-azure-cli]: /cli/azure/install-azure-cli
-[az-feature-register]: /cli/azure/feature#az_feature_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [trusted-launch-overview]: /azure/virtual-machines/trusted-launch

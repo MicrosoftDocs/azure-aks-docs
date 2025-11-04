@@ -214,10 +214,10 @@ This article showed you how to manually and automatically rotate your cluster ce
 <!-- LINKS - internal -->
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-aks-nodepool-update]: /cli/azure/aks#az-aks-update
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [aks-best-practices-security-upgrades]: operator-best-practices-cluster-security.md
 [aks-node-access]: ./node-access.md
-[az-aks-rotate-certs]: /cli/azure/aks#az_aks_rotate_certs
+[az-aks-rotate-certs]: /cli/azure/aks#az-aks-rotate-certs
 [node-image-upgrade]: node-image-upgrade.md
 
 <!-- LINKS - external -->

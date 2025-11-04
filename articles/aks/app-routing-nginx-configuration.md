@@ -640,7 +640,7 @@ Learn about monitoring the ingress-nginx controller metrics included with the ap
 [kubectl-delete]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete
 
 <!-- LINKS - internal -->
-[az-network-public-ip-create]: /cli/azure/network/public-ip#az_network_public_ip_create
+[az-network-public-ip-create]: /cli/azure/network/public-ip#az-network-public-ip-create
 [az-group-create]: /cli/azure/group#az-group-create
 [app-routing-add-on-basic-configuration]: app-routing.md
 [az-aks-approuting-update]: /cli/azure/aks/approuting#az-aks-approuting-update

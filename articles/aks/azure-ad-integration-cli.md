@@ -316,28 +316,28 @@ For best practices on identity and resource control, see [Best practices for aut
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 
 <!-- LINKS - internal -->
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-aks-install-cli]: /cli/azure/aks#az_aks_install_cli
-[az-group-create]: /cli/azure/group#az_group_create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[az-group-create]: /cli/azure/group#az-group-create
 [open-id-connect]: /azure/active-directory/develop/v2-protocols-oidc
-[az-ad-user-show]: /cli/azure/ad/user#az_ad_user_show
-[az-ad-app-create]: /cli/azure/ad/app#az_ad_app_create
-[az-ad-app-update]: /cli/azure/ad/app#az_ad_app_update
-[az-ad-sp-create]: /cli/azure/ad/sp#az_ad_sp_create
-[az-ad-app-permission-add]: /cli/azure/ad/app/permission#az_ad_app_permission_add
-[az-ad-app-permission-grant]: /cli/azure/ad/app/permission#az_ad_app_permission_grant
-[az-ad-app-permission-admin-consent]: /cli/azure/ad/app/permission#az_ad_app_permission_admin_consent
-[az-ad-app-show]: /cli/azure/ad/app#az_ad_app_show
-[az-group-create]: /cli/azure/group#az_group_create
-[az-account-show]: /cli/azure/account#az_account_show
-[az-ad-signed-in-user-show]: /cli/azure/ad/signed-in-user#az_ad_signed_in_user_show
+[az-ad-user-show]: /cli/azure/ad/user#az-ad-user-show
+[az-ad-app-create]: /cli/azure/ad/app#az-ad-app-create
+[az-ad-app-update]: /cli/azure/ad/app#az-ad-app-update
+[az-ad-sp-create]: /cli/azure/ad/sp#az-ad-sp-create
+[az-ad-app-permission-add]: /cli/azure/ad/app/permission#az-ad-app-permission-add
+[az-ad-app-permission-grant]: /cli/azure/ad/app/permission#az-ad-app-permission-grant
+[az-ad-app-permission-admin-consent]: /cli/azure/ad/app/permission#az-ad-app-permission-admin-consent
+[az-ad-app-show]: /cli/azure/ad/app#az-ad-app-show
+[az-group-create]: /cli/azure/group#az-group-create
+[az-account-show]: /cli/azure/account#az-account-show
+[az-ad-signed-in-user-show]: /cli/azure/ad/signed-in-user#az-ad-signed-in-user-show
 [install-azure-cli]: /cli/azure/install-azure-cli
-[az-ad-sp-credential-reset]: /cli/azure/ad/sp/credential#az_ad_sp_credential_reset
+[az-ad-sp-credential-reset]: /cli/azure/ad/sp/credential#az-ad-sp-credential-reset
 [rbac-authorization]: concepts-identity.md#kubernetes-rbac
 [operator-best-practices-identity]: operator-best-practices-identity.md
 [azure-ad-rbac]: azure-ad-rbac.md
 [managed-aad]: managed-azure-ad.md
 [managed-aad-migrate]: managed-azure-ad.md#migrate-a-legacy-azure-ad-cluster-to-integration
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-show]: /cli/azure/aks#az-aks-show
 

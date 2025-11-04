@@ -231,15 +231,15 @@ If you want to use your own images, see the [guidance for image signing](/azure/
 In this article, you learned how to use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters. If you want to learn how to sign your own containers, see [Build, sign, and verify container images using Notary and Azure Key Vault (Preview)](/azure/container-registry/container-registry-tutorial-sign-build-push).
 
 <!--- Internal links ---->
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
-[az-policy-assignment-create]: /cli/azure/policy/assignment#az_policy_assignment_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
+[az-policy-assignment-create]: /cli/azure/policy/assignment#az-policy-assignment-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps
-[az-policy-assignment-delete]: /cli/azure/policy/assignment#az_policy_assignment_delete
-[az-policy-remediation-create]: /cli/azure/policy/remediation#az_policy_remediation_create
+[az-policy-assignment-delete]: /cli/azure/policy/assignment#az-policy-assignment-delete
+[az-policy-remediation-create]: /cli/azure/policy/remediation#az-policy-remediation-create
 
 <!--- External links ---->
 [ratify]: https://github.com/deislabs/ratify

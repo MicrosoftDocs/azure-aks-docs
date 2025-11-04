@@ -217,4 +217,4 @@ After the persistent volume claim is created and the disk successfully provision
 [ultra-disk-limitations]: /azure/virtual-machines/disks-types#ultra-disk-limitations
 [azure-disk-volume]: azure-disk-csi.md
 [operator-best-practices-storage]: operator-best-practices-storage.md
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add

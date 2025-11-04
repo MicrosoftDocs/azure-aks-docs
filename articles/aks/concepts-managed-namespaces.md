@@ -118,9 +118,9 @@ Learn how to [create and use managed namespaces on Azure Kubernetes Service (AKS
 [azure-rbac-k8s]: manage-azure-rbac.md
 [install-azure-cli]: /cli/azure/install-azure-cli
 [azure-cli-extensions]: /cli/azure/azure-cli-extensions-overview
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [aks-namespace-contributor]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-namespace-contributor
 [aks-namespace-user]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-namespace-user
 [aks-rbac-reader]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-reader
