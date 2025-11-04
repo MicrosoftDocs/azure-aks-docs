@@ -165,7 +165,6 @@ You can remove member clusters from a managed namespace by specifying the list o
 > [!IMPORTANT]
 > RBAC roles placed on the managed namespace will be deleted when the managed namespace is deleted, regardless of the delete policy configuration
 
-
 ## Next steps
 
 - Read the [Overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md) to understand the concept of a managed namespace.
