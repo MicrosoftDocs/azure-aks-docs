@@ -86,5 +86,5 @@ For more information, see the following articles:
 <!-- LINKS - Internal -->
 [aad-conditional-access]: /azure/active-directory/conditional-access/overview
 [licensing-fundamentals]: /entra/id-governance/licensing-fundamentals
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [pim-aks]: ./privileged-identity-management.md

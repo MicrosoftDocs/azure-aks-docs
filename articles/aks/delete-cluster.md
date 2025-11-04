@@ -70,6 +70,6 @@ For more information about AKS, see [Core Kubernetes concepts for AKS][core-conc
 [node-resource-group]: ./concepts-clusters-workloads.md#node-resource-group
 [stop-cluster]: ./start-stop-cluster.md
 [upgrade-cluster]: ./upgrade-cluster.md
-[az-aks-delete]: /cli/azure/aks#az_aks_delete
+[az-aks-delete]: /cli/azure/aks#az-aks-delete
 [remove-azaks]: /powershell/module/az.aks/remove-azakscluster
 [core-concepts]: ./concepts-clusters-workloads.md

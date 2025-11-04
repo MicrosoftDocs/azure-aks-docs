@@ -411,9 +411,9 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [azuremonitoring]: /azure/azure-monitor/logs/private-link-configure#connect-to-a-private-endpoint
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [azure-acr-rbac-contributor]: /azure/container-registry/container-registry-roles
 [container-registry-private-link]: /azure/container-registry/container-registry-private-link
 [az-aks-create]: /cli/azure/aks#az-aks-create

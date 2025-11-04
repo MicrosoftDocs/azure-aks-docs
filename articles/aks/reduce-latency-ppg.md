@@ -119,8 +119,8 @@ Learn more about [proximity placement groups][proximity-placement-groups].
 <!-- LINKS - Internal -->
 [azure-cli-install]: /cli/azure/install-azure-cli
 [proximity-placement-groups]: /azure/virtual-machines/co-location#proximity-placement-groups
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-group-create]: /cli/azure/group#az_group_create
-[az-group-delete]: /cli/azure/group#az_group_delete
-[az-ppg-create]: /cli/azure/ppg#az_ppg_create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-group-create]: /cli/azure/group#az-group-create
+[az-group-delete]: /cli/azure/group#az-group-delete
+[az-ppg-create]: /cli/azure/ppg#az-ppg-create

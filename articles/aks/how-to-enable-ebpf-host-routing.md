@@ -16,7 +16,7 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 > eBPF Host Routing with Advanced Container Networking Services is currently in PREVIEW.  
 > See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
 
-This article shows you how to enable eBPF Host Routing with Advanced Container Networking Services on Azure Kubernetes Service (AKS) clusters.
+This article shows you how to enable eBPF Host Routing with Advanced Container Networking Services (ACNS) on Azure Kubernetes Service (AKS) clusters.
 
 ## Prerequisites
 
@@ -33,7 +33,7 @@ This article shows you how to enable eBPF Host Routing with Advanced Container N
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
+Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command.
 
  The minimum version of the aks-preview Azure CLI extension is `14.0.0b6`
 
@@ -46,18 +46,18 @@ az extension update --name aks-preview
 
 ### Register the `AdvancedNetworkingPerformancePreview` feature flag
 
-Register the `AdvancedNetworkingPerformancePreview` feature flag using the  [`az feature register`](/cli/azure/feature#az_feature_register) command.
+Register the `AdvancedNetworkingPerformancePreview` feature flag using the  [`az feature register`](/cli/azure/feature#az-feature-register) command.
 
 ```azurecli-interactive 
 az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPerformancePreview"
 ```
-Verify successful registration using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for the registration to complete.
+Verify successful registration using the [`az feature show`](/cli/azure/feature#az-feature-show) command. It takes a few minutes for the registration to complete.
 
 ```azurecli-interactive
 az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPerformancePreview"
 ```
 
-Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
+Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
 
 ### Enable Advanced Container Networking Services and eBPF Host Routing
 
@@ -68,7 +68,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 
 * **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
-* **Container Network Performance:** Improves latency and throughput for pod to pod traffic. To learn more visit [Container Network Performance](./advanced-container-networking-services-overview.md#container-network-performance)
+* **Container Network Performance:** Improves latency and throughput for pod network traffic. To learn more visit [Container Network Performance](./advanced-container-networking-services-overview.md#container-network-performance)
 
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Performance with eBPF Host Routing starting with Kubernetes version 1.33.
@@ -84,7 +84,7 @@ export LOCATION="<location>"
 az group create --location $LOCATION --name <resourcegroup-name>
 ```
 
-Create a new AKS cluster with eBPF Host Routing enabled.
+Create a new AKS cluster with eBPF Host Routing by enabling ACNS through `--enable-acns` and setting the acceleration mode with `--acns-datapath-acceleration-mode BpfVeth`.
 
 ```azurecli-interactive
 # Set environment variables for the AKS cluster name and resource group. Make sure to replace the placeholders with your own values.
@@ -108,9 +108,9 @@ az aks create \
     --generate-ssh-keys
 ```
 
-### Enable Advanced Container Networking Services on an existing cluster
+### Enable eBPF Host Routing with Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features that includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability), [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security), and [Container Network Performance](./advanced-container-networking-services-overview.md#container-network-performance).
+The [`az aks update`](/cli/azure/aks#az-aks-update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with `--acns-datapath-acceleration-mode BpfVeth` to enable Advanced Container Networking Services features that includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability), [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security), and [Container Network Performance](./advanced-container-networking-services-overview.md#container-network-performance).
 
 > [!NOTE]
 > Enabling eBPF Host Routing on an existing cluster may disrupt existing connections.

@@ -1,5 +1,5 @@
 ---
-title: Use Container Storage Interface (CSI) driver for Azure Files on Azure Kubernetes Service (AKS)
+title: Use Container Storage Interface (CSI) Driver for Azure Files on Azure Kubernetes Service (AKS)
 description: Learn how to use the Container Storage Interface (CSI) driver for Azure Files in an Azure Kubernetes Service (AKS) cluster.
 ms.topic: concept-article
 ms.custom:
@@ -46,7 +46,7 @@ A storage class is used to define how an Azure file share is created. A storage 
 * **Premium_ZRS**: Premium zone-redundant storage
 
 > [!NOTE]
-> Azure Files supports Azure Premium file shares. The minimum file share capacity is 100 GiB. We recommend using Azure Premium file shares instead of Standard file shares because Premium file shares offers higher performance, low-latency disk support for I/O-intensive workloads.
+> Azure Files supports Azure Premium file shares. The minimum file share capacity is 100 GiB. We recommend using Azure Premium file shares instead of Standard file shares because Premium file shares offer higher performance, low-latency disk support for I/O-intensive workloads.
 
 When you use storage CSI drivers on AKS, there are two more built-in `StorageClasses` that uses the Azure Files CSI storage drivers. The other CSI storage classes are created with the cluster alongside the in-tree default storage classes.
 
@@ -298,6 +298,96 @@ Create the PVC by using the [kubectl apply][kubectl-apply] command:
 kubectl apply -f private-pvc.yaml
 ```
 
+## Use Managed Identity to access Azure Files storage  (Preview)
+
+Azure Files now supports managed identity based authentication for SMB access. This enables your applications to securely access Azure Files without storing or managing credentials.
+
+> [!NOTE]
+> Managed identity support for Azure Files in AKS is available in preview starting with AKS version 1.34 on Linux nodes.
+
+### Prerequisites
+
+- Ensure the [user-assigned Kubelet identity](use-managed-identity.md#create-a-kubelet-managed-identity) has the `Storage File Data SMB MI Admin` role on the storage account. 
+  > If you use your own storage account, you need to assign `Storage File Data SMB MI Admin` role to the user-assigned Kubelet identity on that storage account.
+
+  > If the storage account is created by the CSI driver, grant `Storage File Data SMB MI Admin` role to the resource group where the storage account resides.
+
+  > If you just leverage the default built-in user-assigned Kubelet identity, it already has the required  `Storage File Data SMB MI Admin` role on the managed node resource group.
+
+### Dynamic Provisioning
+
+To enable managed identity for dynamically provisioned volumes:
+  - Create a new storage class with `mountWithManagedIdentity`: `"true"`.
+  - Deploy your StatefulSet using this storage class.
+#### Sample Storage Class YAML   
+ ```yml
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: azurefile-csi
+    provisioner: file.csi.azure.com
+    parameters:
+      resourceGroup: EXISTING_RESOURCE_GROUP_NAME   # optional, node resource group by default if it's not provided
+      storageAccount: EXISTING_STORAGE_ACCOUNT_NAME # optional, a new account will be created if it's not provided
+      mountWithManagedIdentity: "true"
+      # optional, clientID of the managed identity, kubelet identity would be used by default if it's not provided
+      clientID: "xxxxx-xxxx-xxx-xxx-xxxxxxx"
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    allowVolumeExpansion: true
+    mountOptions:
+      - dir_mode=0777  # modify this permission if you want to enhance the security
+      - file_mode=0777
+      - uid=0
+      - gid=0
+      - mfsymlinks
+      - cache=strict  # https://linux.die.net/man/8/mount.cifs
+      - nosharesock  # reduce probability of reconnect race
+      - actimeo=30  # reduce latency for metadata-heavy workload
+      - nobrl  # disable sending byte range lock requests to the server
+ ```
+
+### Static Provisioning
+
+For static volumes:
+  - Create a PV with `mountWithManagedIdentity`: `"true"`.
+  - Mount the PV to your application pod.
+#### Sample PV YAML  
+ ```yml
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: pv-azurefile
+    spec:
+      capacity:
+        storage: 100Gi
+      accessModes:
+        - ReadWriteMany
+      persistentVolumeReclaimPolicy: Retain
+      storageClassName: azurefile-csi
+      mountOptions:
+        - dir_mode=0777  # modify this permission if you want to enhance the security
+        - file_mode=0777
+        - uid=0
+        - gid=0
+        - mfsymlinks
+        - cache=strict  # https://linux.die.net/man/8/mount.cifs
+        - nosharesock  # reduce probability of reconnect race
+        - actimeo=30  # reduce latency for metadata-heavy workload
+        - nobrl  # disable sending byte range lock requests to the server
+      csi:
+        driver: file.csi.azure.com
+        # make sure volumeHandle is unique for every identical share in the cluster
+        volumeHandle: "{resource-group-name}#{account-name}#{file-share-name}"
+        volumeAttributes:
+          resourceGroup: EXISTING_RESOURCE_GROUP_NAME   # optional, node resource group by default if it's not provided
+          storageAccount: EXISTING_STORAGE_ACCOUNT_NAME # optional, a new account will be created if it's not provided
+          shareName: EXISTING_FILE_SHARE_NAME
+          mountWithManagedIdentity: "true"
+          # optional, clientID of the managed identity, kubelet identity would be used by default if it's empty
+          clientID: "xxxxx-xxxx-xxx-xxx-xxxxxxx"
+ ```
+
 ## NFS file shares
 
 [Azure Files supports the NFS v4.1 protocol](/azure/storage/files/storage-files-how-to-create-nfs-shares). NFS version 4.1 support for Azure Files provides you with a fully managed NFS file system as a service built on a highly available and highly durable distributed resilient storage platform.
@@ -318,7 +408,7 @@ This section provides information about how to approach performance tuning NFS w
 
 Optimal performance is based on efficient client-server communication. Increasing or decreasing the **mount** read and write option size values can improve NFS performance. The default size of the read/write packets transferred between client and server are 8 KB for NFS version 2, and 32 KB for NFS version 3 and 4. These defaults may be too large or too small. Reducing the rsize and wsize might improve NFS performance in a congested network by sending smaller packets for each NFS-read reply and write request. However, this can increase the number of packets needed to send data across the network, increasing total network traffic and CPU utilization on the client and server.
 
-It's important that you perform testing to find an rsize and wsize that sustains efficent packet transfer, where it doesn't decrease throughput and increase latency.
+It's important that you perform testing to find an rsize and wsize that sustains efficient packet transfer, where it doesn't decrease throughput and increase latency.
 
 For example, to configure a maximum *rsize* and *wsize* of 256-KiB, configure the `mountOptions` in the storage class as follows:
 
