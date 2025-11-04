@@ -1,8 +1,8 @@
 ---
 title: Configure container network metrics filtering for Azure Kubernetes Service (AKS)
 description: Learn how to configure container network metrics filtering to optimize data collection and reduce storage costs in Azure Kubernetes Service (AKS) with Cilium.
-author: shaifaligargmsft
-ms.author: shaifaligarg
+author: Khushbu-Parekh
+ms.author: kparekh
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
@@ -85,6 +85,7 @@ az aks create \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
     --location $LOCATION \
+    --network-plugin azure \
     --network-dataplane cilium \
     --enable-acns \
     --enable-managed-identity \
@@ -100,44 +101,86 @@ Get your cluster credentials by using the [`az aks get-credentials`](/cli/azure/
 az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrite-existing
 ```
 
-### Verify the setup
-
-Verify that the dynamic metrics configuration is properly set up:
-
-1. **Check the Cilium ConfigMap contains dynamic metrics configuration**:
-
-   ```azurecli
-   kubectl get configmap cilium-config -n kube-system -o yaml | grep -A 10 "dynamic-metrics-config"
-   ```
-
-2. **Verify the dynamic metrics ConfigMap is created with base metrics**:
-
-   ```azurecli
-   kubectl get configmap cilium-dynamic-metrics-config -n kube-system -o yaml
-   ```
-
-3. **Check that Cilium agents have started in dynamic metrics mode**:
-
-   ```azurecli
-   # Get a Cilium pod name
-   CILIUM_POD=$(kubectl get pods -n kube-system -l k8s-app=cilium -o jsonpath='{.items[0].metadata.name}')
-   
-   # Check the logs for dynamic metrics configuration
-   kubectl logs -n kube-system $CILIUM_POD | grep "Starting Hubble server with dynamically configurable metrics"
-   ```
-
-   You should see output similar to:
-   ```
-   level=info msg="Starting Hubble server with dynamically configurable metrics" address=":9965" metricConfig=/dynamic-metrics-config/dynamic-metrics.yaml subsys=hubble tls=false
-   ```
-
-## Configure filtering rules
+### Configure custom resources for metrics filtering 
 
 Container network metrics filtering uses the `ContainerNetworkMetric` Custom Resource Definition (CRD) to define filtering rules. Only one CRD can exist per cluster, and changes take about 30 seconds to reconcile.
 
-### Basic filtering configuration
 
-Create a basic filtering configuration that focuses on DNS metrics:
+```azurecli
+apiVersion: acn.azure.com/v1alpha1
+kind: ContainerNetworkMetric
+metadata:
+  name: sample-containeretworkmetric # Cluster scoped
+spec:
+  includefilters: # List of filters
+    - name: sample-filter # Filter name
+      from:
+        namespacedPod: # List of source namespace/pods. Prepend namespace with /
+          - sample-namespace/sample-pod
+        labelSelector: # Standard k8s label selector
+          matchLabels:
+            app: frontend
+            k8s.io/namespace: sample-namespace
+          matchExpressions:
+            - key: environment
+              operator: In
+              values:
+                - production
+                - staging
+        ip: # List of source IPs; can be CIDR
+          - "192.168.1.10"
+          - "10.0.0.1"
+      to:
+        namespacedPod:
+          - sample-namespace2/sample-pod2
+        labelSelector:
+          matchLabels:
+            app: backend
+            k8s.io/namespace: sample-namespace2
+          matchExpressions:
+            - key: tier
+              operator: NotIn
+              values:
+                - dev
+        ip:
+          - "192.168.1.20"
+          - "10.0.1.1"
+      protocol: # List of protocols; can be tcp, udp, dns
+        - tcp
+        - udp
+        - dns
+      verdict: # List of verdicts; can be forwarded, dropped
+        - forwarded
+        - dropped
+```
+
+The following table describes the fields in the custom resource definition:
+
+| Field                        | Type         | Description                                                                                                                         | Required |
+|----------------------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| `includefilters`                 | []filter | A list of filters that define network flows to include. Each filter specifies the source, destination, protocol, and other matching criteria. Include filters can't be empty and must have at least one filter. | Mandatory    |
+| `filters.name`            | String           | The name of the filter.                                                                                                                | Optional    |
+| `filters.protocol`        | []string | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`. Because it's an optional parameter, if it isn't specified, logs with all protocols are included.                                                      | Optional     |
+| `filters.verdict`         | []string | The verdict of the flow to match. Valid values are `forwarded` and `dropped`. Because it's an optional parameter, if it isn't specified, logs with all verdicts are included.                                                        | Optional     |
+| `filters.from`            | Endpoint          | Specifies the source of the network flow. Can include IP addresses, label selectors, and namespace/pod pairs.                           | Optional    |
+| `Endpoint.ip`         | []string | It can be a single IP or a CIDR.                                                                                                         | Optional     |
+| `Endpoint.labelSelector` | Object           | A label selector is a mechanism to filter and query resources based on labels, so you can identify specific subsets of resources. A label selector can include two components: `matchLabels` and `matchExpressions`. Use `matchLabels` for straightforward matching by specifying a key/value pair (for example, `{"app": "frontend"}`). For more advanced criteria, use `matchExpressions`, where you define a label key, an operator (such as `In`, `NotIn`, `Exists`, or `DoesNotExist`), and an optional list of values. Ensure that the conditions in both `matchLabels` and `matchExpressions` are met, because they're logically combined by `AND`. If no conditions are specified, the selector matches all resources. To match none, leave the selector null. Carefully define your label selector to target the correct set of resources.  | Optional     |
+| `Endpoint.namespacedPod` | []string | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the source. `name` should match the RegEx pattern `^.+$`.                                              | Optional     |
+| `filters.to`              | Endpoint           | Specifies the destination of the network flow. Can include IP addresses, label selectors, or namespace/pod pairs.                      | Optional    |
+| `Endpoint.ip`           | []string | It can be a single IP or a CIDR.         | Optional     |
+| `Endpoint.labelSelector` | Object           | A label selector to match resources based on their labels.                                                                             | Optional     |
+| `Endpoint.namespacedPod` | []string | A list of namespace and pod pairs (formatted as `namespace/pod`) to match the destination.                                         | Optional     |
+
+
+Apply the `ContainerNetworkMetric` custom resource to enable log collection at the cluster:
+
+  ```azurecli
+  kubectl apply -f <crd.yaml>
+  ```
+
+### Example filtering configuration
+
+1. Create a basic filtering configuration that focuses on DNS metrics:
 
 ```yaml
 # basic-dns-filter.yaml
@@ -155,15 +198,8 @@ spec:
             namespacedPod: ["kube-system/coredns-*"]
 ```
 
-Apply the configuration:
 
-```azurecli
-kubectl apply -f basic-dns-filter.yaml
-```
-
-### TCP metrics filtering
-
-Configure filtering for TCP metrics with include and exclude filters:
+2. Configure filtering for TCP metrics with include and exclude filters:
 
 ```yaml
 # tcp-metrics-filter.yaml
@@ -184,16 +220,7 @@ spec:
         - to:
             namespacedPod: ["kube-system/metrics-server-*"]
 ```
-
-Apply the configuration:
-
-```azurecli
-kubectl apply -f tcp-metrics-filter.yaml
-```
-
-### Flow metrics filtering
-
-Configure filtering for network flow metrics:
+3. Configure filtering for network flow metrics:
 
 ```yaml
 # flow-metrics-filter.yaml
@@ -218,13 +245,7 @@ spec:
             namespacedPod: ["default/test-*"]
 ```
 
-Apply the configuration:
-
-```azurecli
-kubectl apply -f flow-metrics-filter.yaml
-```
-
-### Drop metrics filtering
+4. Drop metrics filtering
 
 Configure filtering for dropped packet metrics (requires network policies):
 
@@ -244,15 +265,7 @@ spec:
             namespacedPod: ["kube-system/*"]
 ```
 
-Apply the configuration:
-
-```azurecli
-kubectl apply -f drop-metrics-filter.yaml
-```
-
-### Multi-metric filtering
-
-Configure filtering for multiple metric types in a single CRD:
+5. Configure filtering for multiple metric types in a single CRD:
 
 ```yaml
 # multi-metrics-filter.yaml
@@ -284,133 +297,17 @@ spec:
         - reason: ["Policy denied", "Invalid"]
 ```
 
-Apply the configuration:
-
-```azurecli
-kubectl apply -f multi-metrics-filter.yaml
-```
-
-## Validate the configuration
-
-### Check filtering status
-
-Verify that the filtering configuration is applied correctly:
-
-```azurecli
-# Check the ContainerNetworkMetric CRD
-kubectl get ContainerNetworkMetric
-
-# Get detailed information about the CRD
-kubectl describe ContainerNetworkMetric container-network-metric
-```
-
-### Verify ConfigMap updates
-
-Check that the dynamic metrics ConfigMap includes your filtering rules (takes about 30 seconds to reconcile):
-
-```azurecli
-kubectl get configmap cilium-dynamic-metrics-config -n kube-system -o yaml
-```
-
-### Check Cilium and Retina operator logs
-
-Monitor for any errors during configuration:
-
-```azurecli
-# Check Cilium agent logs
-CILIUM_POD=$(kubectl get pods -n kube-system -l k8s-app=cilium -o jsonpath='{.items[0].metadata.name}')
-kubectl logs -n kube-system $CILIUM_POD | tail -20
-
-# Check Retina operator logs
-kubectl logs -n kube-system -l app=retina-operator
-```
-
-### Test ConfigMap resilience
-
-Test that the configuration is resilient to changes:
-
-1. **Edit the dynamic metrics ConfigMap** (it should reconcile back to default):
-
-   ```azurecli
-   kubectl edit configmap cilium-dynamic-metrics-config -n kube-system
-   # Make any change and save - it should be reverted
-   ```
-
-2. **Delete the ConfigMap** (it should be recreated):
-
-   ```azurecli
-   kubectl delete configmap cilium-dynamic-metrics-config -n kube-system
-   # Wait a few seconds and check if it's recreated
-   kubectl get configmap cilium-dynamic-metrics-config -n kube-system
-   ```
-
 ## Best practices
 
-### Start with broad inclusion, then exclude
+- Begin by including all necessary metrics, then progressively exclude specific ones.
 
-Begin by including all necessary metrics, then progressively exclude specific ones:
+- Leverage Kubernetes label selectors for flexible filtering.
 
-```yaml
-spec:
-  filters:
-    - metric: flow
-      excludeFilters:
-        - from:
-            namespacedPod: ["kube-system/*"]
-        - to:
-            namespacedPod: ["default/debug-*"]
-```
+- Always validate filtering configurations in development or staging
 
-### Use label selectors for flexibility
+- Regularly review filtered metrics to ensure important data isn't lost.
 
-Leverage Kubernetes label selectors for flexible filtering:
-
-```yaml
-spec:
-  filters:
-    - metric: tcp
-      includeFilters:
-        - from:
-            labelSelector:
-              matchLabels:
-                app: "frontend"
-                environment: "production"
-```
-
-### Test in development environments
-
-Always validate filtering configurations in development or staging:
-
-```yaml
-# Development environment - minimal metrics
-spec:
-  filters:
-    - metric: dns
-      includeFilters:
-        - protocol: ["dns"]
-    - metric: drop
-      includeFilters:
-        - reason: ["Policy denied"]
-```
-
-### Monitor filtering effectiveness
-
-Regularly review filtered metrics to ensure important data isn't lost:
-
-```azurecli
-# Check that critical metrics are still available
-kubectl port-forward -n kube-system svc/hubble-relay 4245:443 &
-hubble observe --protocol dns --last 100
-```
-
-### Use single CRD per cluster
-
-Remember that only one `ContainerNetworkMetric` CRD can exist per cluster:
-
-```azurecli
-# Check existing CRDs before creating new ones
-kubectl get ContainerNetworkMetric
-```
+- Remember that only one CRD can exist per cluster. Check existing CRDs before creating new ones.
 
 ## Troubleshooting
 
@@ -443,18 +340,6 @@ kubectl get configmap cilium-dynamic-metrics-config -n kube-system -o yaml
 kubectl logs -n kube-system -l app=retina-operator
 ```
 
-**Issue**: Cilium agents not in dynamic metrics mode
-
-**Solution**: Verify Cilium configuration and restart if necessary:
-
-```azurecli
-# Check Cilium ConfigMap
-kubectl get configmap cilium-config -n kube-system -o yaml | grep -A 10 "dynamic-metrics-config"
-
-# Restart Cilium agents if needed
-kubectl rollout restart daemonset/cilium -n kube-system
-```
-
 **Issue**: Metrics still showing after applying excludeFilters
 
 **Solution**: Remember that pre-existing metrics persist in Prometheus. You may need to wait for new metrics to be generated to see the filtering effects.
@@ -464,17 +349,7 @@ kubectl rollout restart daemonset/cilium -n kube-system
 To clean up filtering configuration:
 
 ```azurecli
-# Delete the CRD (ConfigMap should reconcile to default)
-kubectl delete ContainerNetworkMetric container-network-metric
-
-# Verify ConfigMap reset to default
-kubectl get configmap cilium-dynamic-metrics-config -n kube-system -o yaml
-```
-
-To completely reset the cluster:
-
-```azurecli
-# Delete the filtering CRD
+# Delete the CRD
 kubectl delete ContainerNetworkMetric container-network-metric
 ```
 

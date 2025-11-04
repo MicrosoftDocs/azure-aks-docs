@@ -116,7 +116,7 @@ Container network metrics filtering is particularly valuable in large-scale prod
 
 The filtering capability supports multiple dimensions including namespace-based filtering to focus on specific applications, pod and label-based filtering for targeted monitoring, and metric-specific filtering to collect only the types of metrics that are essential for your use case. This flexibility allows you to strike the right balance between comprehensive observability and cost-effective operations.
 
-To learn more on how to enable container network metrics filtering, see [PLACEHOLDER_LINK].
+To learn more on how to enable container network metrics filtering, see [How to Configure Container Network Metrics Filtering ](./how-to-configure-container-network-metrics-filtering.md).
 
 ### Limitations
 
@@ -127,8 +127,6 @@ To learn more on how to enable container network metrics filtering, see [PLACEHO
 * Flow logs are not currently available in the air gapped cloud.
 * Hubble relay may crash if one of the Hubble node agents goes down and may cause interruptions to Hubble CLI.
 * When using Advanced Container Networking Services (ACNS) on non-Cilium data planes, FIPS support isn't available on Ubuntu 20.04 nodes due to kernel restrictions. To enable FIPS in this scenario, you must use an Azure Linux node pool. This limitation is expected to be resolved with the release of Ubuntu 22 FIPS. For updates, see the [AKS issue tracker](https://github.com/Azure/AKS/issues/4857).
-* Container network metrics filtering rules are applied at the collection source and cannot be easily reversed without reconfiguration.
-* Over-aggressive filtering may result in loss of important diagnostic information.
 
 Refer to the FIPS support matrix below:
 
