@@ -29,7 +29,7 @@ Azure Linux with OS Guard on AKS builds on the benefits of [Azure Linux][azureli
 - **Immutability**: The `/usr` directory is mounted as a read-only volume protected by dm-verity, preventing execution of tampered or untrusted code.
 - **Code integrity**: OS Guard integrates the [Integrity Policy Enforcement (IPE) Linux Security Module](https://docs.kernel.org/next/admin-guide/LSM/ipe.html) to ensure that only binaries from trusted, signed volumes are allowed to execute. (**IPE is running in audit mode during Public Preview**.)
 - **Mandatory access controls**: OS Guard integrates SELinux to limit which processes can access sensitive resources in the system. (**SELinux is operating in permissive mode during Public Preview**.)
-- **Integration with Azure security features**: Native support for [Trusted Launch](/aks/use-trusted-launch) and Secure Boot provides measured boot protections and attestation.
+- **Integration with Azure security features**: Native support for [Trusted Launch](/azure/aks/use-trusted-launch) and Secure Boot provides measured boot protections and attestation.
 - **Verified container layers**: Container images and layers are validated using signed dm-verity hashes. This ensures that only verified layers are used at runtime, reducing the risk of container escape or tampering.
 - **Sovereign Supply Chain Security**: OS Guard inherits Azure Linux’s secure build pipelines, signed Unified Kernel Images (UKIs) and Software Bill of Materials (SBOMs).
 
@@ -37,7 +37,7 @@ Learn more about the [key features of Azure Linux with OS Guard][os-guard-doc].
 
 ## Regional availability
 
-Azure Linux with OS Guard is available for use in the same [regions](/aks/quotas-skus-regions) as AKS.
+Azure Linux with OS Guard is available for use in the same [regions](/azure/aks/quotas-skus-regions) as AKS.
 
 ## Get started with Azure Linux with OS Guard on AKS
 
