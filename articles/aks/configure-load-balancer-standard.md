@@ -107,7 +107,7 @@ When using a _Standard_ SKU load balancer with managed outbound public IPs (whic
         --generate-ssh-keys
     ```
 
-### [Update an existing cluster to scale the number of managed outbound public IPs](#tab/update-cluster-managed-outbound-ips)
+#### [Update an existing cluster to scale the number of managed outbound public IPs](#tab/update-cluster-managed-outbound-ips)
 
 - Update an existing AKS cluster to scale the number of managed outbound public IPs using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--load-balancer-managed-outbound-ip-count` parameter. The following example sets the number of managed outbound public IPs to _two_.
 
@@ -192,7 +192,7 @@ Make sure you meet the following requirements before providing your own outbound
 
 > [!IMPORTANT]
 >
-> If you have applications on your cluster that can establish a large number of connections to small set of destinations on public IP addresses, like many instances of a frontend application connecting to a database, you might have a scenario susceptible to encounter SNAT port exhaustion. SNAT port exhaustion happens when an application runs out of outbound ports to use to establish a connection to another application or host. If you have a scenario susceptible to encounter SNAT port exhaustion, we highly recommended you increase the allocated outbound ports and outbound frontend IPs on the load balancer.
+> If you have applications on your cluster that can establish a large number of connections to small set of destinations on public IP addresses, like many instances of a frontend application connecting to a database, you might have a scenario susceptible to encounter SNAT port exhaustion. SNAT port exhaustion happens when an application runs out of outbound ports to use to establish a connection to another application or host. If you have a scenario susceptible to encounter SNAT port exhaustion, we highly recommend you increase the allocated outbound ports and outbound frontend IPs on the load balancer.
 >
 > For more information on SNAT, see [Use SNAT for outbound connections](/azure/load-balancer/load-balancer-outbound-connections).
 
@@ -240,7 +240,7 @@ The following examples show how the values you set affect the number of outbound
 - If the number of outbound ports is set to 4,000 and the outbound IP count is set to 7, then the cluster can support a maximum of 112 nodes: `64,000 ports per IP / 4,000 ports per node * 7 IPs = 112 nodes`.
 
 > [!IMPORTANT]
-> After calculating the number outbound ports and IPs, verify you have extra outbound port capacity to handle node surge during upgrades. It's critical to allocate sufficient excess ports for extra nodes needed for upgrade and other operations. AKS defaults to _one_ buffer node for upgrade operations. If you're using [`maxSurge` values][maxsurge], multiply the outbound ports per node by your `maxSurge` value to determine the number of ports required. For example, if you calculate that you need 4000 ports per node with 7 IP address on a cluster with a maximum of 100 nodes and a max surge of 2:
+> After calculating the number of outbound ports and IPs, verify you have extra outbound port capacity to handle node surge during upgrades. It's critical to allocate sufficient excess ports for extra nodes needed for upgrade and other operations. AKS defaults to _one_ buffer node for upgrade operations. If you're using [`maxSurge` values][maxsurge], multiply the outbound ports per node by your `maxSurge` value to determine the number of ports required. For example, if you calculate that you need 4000 ports per node with 7 IP addresses on a cluster with a maximum of 100 nodes and a max surge of 2:
 >
 > - 2 surge nodes * 4000 ports per node = 8000 ports needed for node surge during upgrades.
 > - 100 nodes * 4000 ports per node = 400,000 ports required for your cluster.
