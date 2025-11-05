@@ -13,7 +13,7 @@ zone_pivot_groups: external-idp-authn-type
 
 # Configure external identity providers with AKS structured authentication (preview)
 
-This article shows you how to configure external identity providers for Azure Kubernetes Service (AKS) control plane authentication using structured authentication. You'll learn how to create JWT authenticators, configure claim validation and mapping, and test the authentication flow.
+This article shows you how to configure external identity providers for Azure Kubernetes Service (AKS) control plane authentication using structured authentication. You'll learn how to create JSON Web Token (JWT) authenticators, configure claim validation and mapping, and test the authentication flow.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -65,7 +65,7 @@ az provider register --namespace Microsoft.ContainerService
 
 ## Step 1: Set up your identity provider
 
-Configure your external identity provider to support OIDC authentication. Select your identity provider below for specific setup instructions:
+Configure your external identity provider to support OIDC authentication. Select your identity provider for specific setup instructions:
 
 ::: zone pivot="google-identity"
 
@@ -94,7 +94,7 @@ Configure your external identity provider to support OIDC authentication. Select
 
 ## Step 2: Create JWT authenticator configuration
 
-Create a JSON configuration file that defines how to validate and process tokens from your identity provider. Select your identity provider below for specific configuration examples:
+Create a JSON configuration file that defines how to validate and process tokens from your identity provider. Select your identity provider for specific configuration examples:
 
 ::: zone pivot="google-identity"
 
@@ -193,11 +193,21 @@ For GitHub Actions OIDC, create a file named `jwt-config.json` with the followin
 
 ### Configuration elements
 
-- **issuer.url**: Your identity provider's OIDC issuer URL
-- **issuer.audiences**: Array of expected audience values (typically your client ID)
-- **claimValidationRules**: CEL expressions to validate token claims
-- **claimMappings**: How to map claims to Kubernetes user attributes
-- **userValidationRules**: Additional validation after claim mapping
+- **issuer**: The OIDC issuer configuration
+    - **url**: The OIDC issuer URL that must match the `iss` claim in JWTs
+    - **audiences**: List of audiences that JWTs must be issued for (checked against `aud` claim)
+    - **certificateAuthority**: Optional base64-encoded root certificate bundle for TLS verification
+- **claimValidationRules**: Array of validation rules using CEL expressions to validate JWT claims
+    - **expression**: CEL expression that must evaluate to true
+    - **message**: Error message displayed when validation fails
+- **claimMappings**: Defines how JWT claims map to Kubernetes user information
+    - **username**: CEL expression defining how to construct the username from claims
+    - **groups**: CEL expression defining how to construct group memberships from claims  
+    - **uid**: Optional CEL expression for user identifier
+    - **extra**: Optional map of additional user attributes
+- **userValidationRules**: Array of validation rules applied to the final user information
+    - **expression**: CEL expression that must evaluate to true for the mapped user
+    - **message**: Error message displayed when user validation fails
 
 > [!IMPORTANT]
 > All username and group mappings must include the `aks:jwt:` prefix to prevent conflicts with other authentication methods.
@@ -279,7 +289,7 @@ az aks jwtauthenticator show \
 
 ## Step 4: Set up client for authentication
 
-Configure your client to authenticate with your external identity provider. Select your identity provider below for specific configuration:
+Configure your client to authenticate with your external identity provider. Select your identity provider for specific configuration:
 
 ::: zone pivot="google-identity"
 
@@ -435,9 +445,9 @@ Error from server (Forbidden): nodes is forbidden: User "aks:jwt:github:your-act
 
 This error indicates successful authentication but lack of authorization.
 
-## Step 5: Configure Kubernetes RBAC
+## Step 5: Configure Kubernetes Role-Based Access Control (RBAC)
 
-Create appropriate RBAC bindings for your external users. Use the cluster admin credentials to apply these configurations. Select your identity provider below for provider-specific examples:
+Create appropriate RBAC bindings for your external users. Use the cluster admin credentials to apply these configurations. Select your identity provider for provider-specific examples:
 
 ### Create a sample role and binding
 
@@ -537,7 +547,7 @@ kubectl get pods --user external-user
 3. **Network connectivity issues**
    - Verify cluster nodes can reach your identity provider
    - Check firewall rules and network security groups
-   - Ensure DNS resolution works for the issuer URL
+   - Ensure Domain Name System (DNS) resolution works for the issuer URL
 
 ### Debug authentication
 
