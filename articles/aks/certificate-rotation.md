@@ -1,13 +1,14 @@
 ---
 title: Certificate Rotation in Azure Kubernetes Service (AKS)
 description: Learn about certificate rotation in an Azure Kubernetes Service (AKS) cluster.
-author: nickomang
+author: davidsmatlak
 
-ms.author: nickoman
+ms.author: davidsmatlak
 ms.topic: concept-article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 08/29/2024
+# Customer intent: "As a Kubernetes administrator, I want to implement certificate rotation in my AKS cluster, so that I can ensure the security and compliance of my cluster by managing certificate expirations and maintaining secure communication between components."
 ---
 
 # Certificate rotation in Azure Kubernetes Service (AKS)
@@ -157,7 +158,7 @@ Kubelet serving certificate rotation allows AKS to utilize kubelet server TLS bo
 ### Limitations
 
 - Supported on Kubernetes version 1.27 and above.
-- Not supported when the node pool is provisioned based on a snapshot.
+- Not supported when the node pool is using a node pool snapshot based on any node image older than `202501.12.0`.
 - This feature can't be manually enabled. Existing node pools will have kubelet serving certificate rotation enabled by default when they perform their first upgrade to any kubernetes version 1.27 or greater. New node pools on kubernetes version 1.27 or greater will have kubelet serving certificate rotation enabled by default. To see if kubelet serving certificate rotation has been enabled in your region, see [AKS Releases](https://github.com/Azure/AKS/releases).
 
 ### Verify kubelet serving certificate rotation has been enabled 
@@ -213,10 +214,10 @@ This article showed you how to manually and automatically rotate your cluster ce
 <!-- LINKS - internal -->
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-aks-nodepool-update]: /cli/azure/aks#az-aks-update
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [aks-best-practices-security-upgrades]: operator-best-practices-cluster-security.md
 [aks-node-access]: ./node-access.md
-[az-aks-rotate-certs]: /cli/azure/aks#az_aks_rotate_certs
+[az-aks-rotate-certs]: /cli/azure/aks#az-aks-rotate-certs
 [node-image-upgrade]: node-image-upgrade.md
 
 <!-- LINKS - external -->

@@ -7,7 +7,8 @@ author: schaffererin
 ms.author: schaffererin
 ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell
 
-#Customer intent: As a developer, I want to learn how to create and use a container registry so that I can deploy my own applications to Azure Kubernetes Service.
+# Customer intent: As a developer, I want to learn how to create and use a container registry so that I can deploy my own applications to Azure Kubernetes Service.
+
 ---
 
 # Tutorial - Create an Azure Container Registry (ACR) and build images
@@ -83,10 +84,10 @@ Before creating an ACR instance, you need a resource group. An Azure resource gr
     > [!NOTE]
     > For this step, there isn't an equivalent Azure PowerShell cmdlet that performs this task.
     >
-    > In the following example, we don't build the `rabbitmq` image. This image is available from the Docker Hub public repository and doesn't need to be built or pushed to your ACR instance.
+    > In the following example, we don't build the `product-service` image. This image can take a long time to build, and there's a container image already available in the GitHub Container Registry (GHCR). You can use the [`az acr import`][az-acr-import] command to import the image from the GHCR to your ACR instance. We also don't build the `rabbitmq` image. This image is available from the Docker Hub public repository and doesn't need to be built or pushed to your ACR instance.
 
     ```azurecli-interactive
-    az acr build --registry $ACRNAME --image aks-store-demo/product-service:latest ./src/product-service/
+    az acr import --name $ACRNAME --source ghcr.io/azure-samples/aks-store-demo/product-service:latest --image aks-store-demo/product-service:latest
     az acr build --registry $ACRNAME --image aks-store-demo/order-service:latest ./src/order-service/
     az acr build --registry $ACRNAME --image aks-store-demo/store-front:latest ./src/store-front/
     ```
@@ -145,9 +146,9 @@ In the next tutorial, you learn how to deploy a Kubernetes cluster in Azure.
 > [Deploy Kubernetes cluster][aks-tutorial-deploy-cluster]
 
 <!-- LINKS - internal -->
-[az-acr-create]: /cli/azure/acr#az_acr_create
-[az-acr-repository-list]: /cli/azure/acr/repository#az_acr_repository_list
-[az-group-create]: /cli/azure/group#az_group_create
+[az-acr-create]: /cli/azure/acr#az-acr-create
+[az-acr-repository-list]: /cli/azure/acr/repository#az-acr-repository-list
+[az-group-create]: /cli/azure/group#az-group-create
 [azure-cli-install]: /cli/azure/install-azure-cli
 [aks-tutorial-deploy-cluster]: ./tutorial-kubernetes-deploy-cluster.md
 [aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md
@@ -156,4 +157,5 @@ In the next tutorial, you learn how to deploy a Kubernetes cluster in Azure.
 [new-azcontainerregistry]: /powershell/module/az.containerregistry/new-azcontainerregistry
 [get-azcontainerregistryrepository]: /powershell/module/az.containerregistry/get-azcontainerregistryrepository
 [acr-tasks]: /azure/container-registry/container-registry-tasks-overview
-[az-acr-build]: /cli/azure/acr#az_acr_build
+[az-acr-build]: /cli/azure/acr#az-acr-build
+[az-acr-import]: /cli/azure/acr#az-acr-import

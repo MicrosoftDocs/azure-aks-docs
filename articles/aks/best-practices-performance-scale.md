@@ -7,6 +7,7 @@ ms.date: 11/03/2023
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a Kubernetes administrator, I want to implement best practices for performance and scaling of small to medium workloads, so that I can optimize resource utilization and ensure high availability for my applications in Azure Kubernetes Service."
 ---
 
 # Best practices for performance and scaling for small to medium workloads in Azure Kubernetes Service (AKS)
@@ -26,6 +27,9 @@ In this article, you learn about:
 > * Monitoring and troubleshooting control plane and node performance.
 > * Capacity planning, surge scenarios, and cluster upgrades.
 > * Storage and networking considerations for data plane performance.
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Application autoscaling vs. infrastructure autoscaling
 

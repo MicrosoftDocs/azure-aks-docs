@@ -6,6 +6,7 @@ ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.date: 03/18/2025
+# Customer intent: "As a cloud operations manager, I want to implement cost-optimized Kubernetes management practices, so that I can efficiently operate multiple AKS clusters at scale while minimizing operational costs."
 ---
 
 # Operate cost-optimized Azure Kubernetes Service (AKS) at scale
@@ -38,7 +39,7 @@ For more information, see [Intelligent cross-cluster Kubernetes resource placeme
 
 ## AKS Automatic
 
-[AKS Automatic (preview)](./intro-aks-automatic.md) offers an experience that makes the most common tasks on Kubernetes fast and frictionless, while preserving the flexibility, extensibility, and consistency of Kubernetes. Azure takes care of cluster setup, including node management, scaling, and security, and preconfigures settings that follow AKS well-architected recommendations.
+[AKS Automatic](./intro-aks-automatic.md) offers an experience that makes the most common tasks on Kubernetes fast and frictionless, while preserving the flexibility, extensibility, and consistency of Kubernetes. Azure takes care of cluster setup, including node management, scaling, and security, and preconfigures settings that follow AKS well-architected recommendations.
 
 AKS Automatic clusters are designed to help reduce management overhead costs of creating cluster templates, managing the cluster lifecycle, guardrails, and updates. Scaling is seamless and dynamic. Nodes are created based on workload requests using [node autoprovisioning (NAP)](./node-autoprovision.md) and workloads are automatically scaled with features like Horizontal Pod Autoscaler (HPA), [Kubernetes Event Driven Autoscaling (KEDA)](./keda-about.md), and [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md).
 

@@ -3,14 +3,15 @@ title: Create a network isolated AKS cluster
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure an Azure Kubernetes Service (AKS) cluster with outbound and inbound network restrictions.
 ms.subservice: aks-networking
-author: shashankbarsin
-ms.author: shasb
+author: charleswool
+ms.author: yuewu2
 ms.topic: how-to
-ms.date: 04/24/2025
+ms.date: 06/20/2025
 zone_pivot_groups: network-isolated-acr-type
+# Customer intent: As a cluster operator, I want to create a network isolated Kubernetes cluster, so that I can ensure compliance with strict security requirements by eliminating outbound dependencies during bootstrapping and reducing the risk of data exfiltration.
 ---
 
-# Create a network isolated Azure Kubernetes Service (AKS) cluster 
+# Create a network isolated Azure Kubernetes Service (AKS) cluster
 
 Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, standard SKU Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. The conceptual document on [outbound network and FQDN rules for AKS clusters][outbound-rules] provides a list of required endpoints for the AKS cluster and its optional add-ons and features.
 
@@ -84,18 +85,42 @@ az aks create --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --kubernetes
 
 If you'd rather enable network isolation on an existing AKS cluster instead of creating a new cluster, use the [az aks update][az-aks-update] command.
 
-```azurecli-interactive
-az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --outbound-type none
-```
+To enable the network isolated feature on an existing AKS cluster, first run the following command to update `bootstrap-artifact-source`:
 
-After the feature is enabled, any newly added node can bootstrap successfully without egress. When you enable network isolation on an existing cluster, keep in mind that you need to manually reimage all existing node pools.
+```azurecli-interactive
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache
+```
+Then you need to manually reimage all the exisiting nodepools:
 
 ```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
+> [!NOTE]
+> You need to ensure the outbound exists until the first reimage completes. To check if the reimage completes, run:
+>```azurecli-interactive
+>NODEPOOLS=$(az aks nodepool list \
+>--resource-group "${RESOURCE_GROUP}" \
+>--cluster-name "${AKS_NAME}" \
+>--query "[].name" -o tsv)
+>for NODEPOOL in $NODEPOOLS; do
+>echo "Waiting for node pool $NODEPOOL to finish upgrading..."
+>az aks nodepool wait \
+>--resource-group "${RESOURCE_GROUP}" \
+>--cluster-name "${AKS_NAME}" \
+>--name "$NODEPOOL" \
+>--updated
+>echo "Node pool $NODEPOOL upgrade succeeded."
+>done
+>```
+
+Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
+
+```azurecli-interactive
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-type none
+```
 
 >[!IMPORTANT]
-> Remember to reimage the cluster's node pools after you enable the network isolation mode for an existing cluster. Otherwise, the feature won't take effect for the cluster.
+> Remember to reimage the cluster's node pools instantly after you update the artifact source to Cache. Otherwise, the feature won't take effect for the cluster.
 
 ::: zone-end
 
@@ -119,7 +144,7 @@ az group create --name ${RESOURCE_GROUP} --location ${LOCATION}
 
 az network vnet create  --resource-group ${RESOURCE_GROUP} --name ${VNET_NAME} --address-prefixes 192.168.0.0/16
 
-az network vnet subnet create --name ${AKS_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --address-prefixes 192.168.1.0/24 
+az network vnet subnet create --name ${AKS_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --address-prefixes 192.168.1.0/24
 
 SUBNET_ID=$(az network vnet subnet show --name ${AKS_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --query 'id' --output tsv)
 
@@ -147,7 +172,7 @@ There are multiple ways to [disable the virtual network outbound connectivity][v
     ```
 > [!NOTE]
 > With BYO ACR, it is your responsibility to ensure the ACR cache rule is created and maintained correctly as above. This step is critical to cluster creation, functioning and upgrading. This cache rule should NOT be modified.
-    
+
 
 ### Step 4: Create a private endpoint for the ACR
 
@@ -253,20 +278,44 @@ If you'd rather enable network isolation on an existing AKS cluster instead of c
 
 When creating the private endpoint and private DNS zone for the BYO ACR, use the existing virtual network and subnets of the existing AKS cluster. When you assign the **AcrPull** permission to the kubelet identity, use the existing kubelet identity of the existing AKS cluster.
 
-To enable the network isolated feature on an existing AKS cluster, use the following command:
+To enable the network isolated feature on an existing AKS cluster, first run the following command to update `bootstrap-artifact-source`:
 
 ```azurecli-interactive
-az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --bootstrap-container-registry-resource-id ${REGISTRY_ID} --outbound-type none
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --bootstrap-container-registry-resource-id ${REGISTRY_ID}
 ```
-
-After the network isolated cluster feature is enabled, nodes in the newly added node pool can bootstrap successfully without egress. You must reimage existing node pools so that newly scaled node can bootstrap successfully. When you enable the feature on an existing cluster, you need to manually reimage all existing node pools.
+Then you need to manually reimage all the exisiting nodepools:
 
 ```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
 
+> [!NOTE]
+> You need to ensure the outbound exists until the first reimage completes.
+> To check if the reimage completes, run:
+>```azurecli-interactive
+>NODEPOOLS=$(az aks nodepool list \
+>--resource-group "${RESOURCE_GROUP}" \
+>--cluster-name "${AKS_NAME}" \
+>--query "[].name" -o tsv)
+>for NODEPOOL in $NODEPOOLS; do
+>echo "Waiting for node pool $NODEPOOL to finish upgrading..."
+>az aks nodepool wait \
+>--resource-group "${RESOURCE_GROUP}" \
+>--cluster-name "${AKS_NAME}" \
+>--name "$NODEPOOL" \
+>--updated
+>echo "Node pool $NODEPOOL upgrade succeeded."
+>done
+>```
+
+Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
+
+```azurecli-interactive
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-type none
+```
+
 >[!IMPORTANT]
-> Remember to reimage the cluster's node pools after you enable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
+> Remember to reimage the cluster's node pools instantly after you update the artifact source to Cache. Otherwise, the feature won't take effect for the cluster.
 
 
 ### Update your ACR ID
@@ -362,9 +411,9 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [azuremonitoring]: /azure/azure-monitor/logs/private-link-configure#connect-to-a-private-endpoint
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [azure-acr-rbac-contributor]: /azure/container-registry/container-registry-roles
 [container-registry-private-link]: /azure/container-registry/container-registry-private-link
 [az-aks-create]: /cli/azure/aks#az-aks-create

@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: fasttrack-edit
+# Customer intent: "As a Kubernetes administrator, I want to implement Azure CNI Overlay networking in my AKS cluster, so that I can efficiently manage IP addresses while scaling to a larger number of pods and maintain optimal intra-cluster communication performance."
 ---
 
 # Azure Container Networking Interface (CNI) Overlay networking
@@ -50,7 +51,7 @@ A `/24` subnet can fit up to 251 nodes since the first three IP addresses are re
 
 ### Pods
 
-The Overlay solution assigns a `/24` address space for pods on every node from the private CIDR that you specify during cluster creation. The `/24` size is fixed and can't be increased or decreased. You can run up to 250 pods on a node. 
+The Overlay solution assigns a `/24` address space for pods on every node from the private CIDR that you specify during cluster creation. The `/24` size is fixed and can't be increased or decreased. You can run up to 250 pods on a node.
 
 When planning IP address space for pods, consider the following factors:
 
@@ -106,7 +107,7 @@ Azure CNI Overlay has the following limitations:
 
 - Virtual Machine Availability Sets (VMAS) aren't supported.
 - You can't use [DCsv2-series](/azure/virtual-machines/dcv2-series) virtual machines in node pools. To meet Confidential Computing requirements, consider using [DCasv5 or DCadsv5-series confidential VMs](/azure/virtual-machines/dcasv5-dcadsv5-series) instead.
-- If you're using your own subnet to deploy the cluster, the names of the subnet, VNet, and resource group containing the VNet, must be 63 characters or less. These names will be used as labels in AKS worker nodes and are subject to [Kubernetes label syntax rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).  
+- If you're using your own subnet to deploy the cluster, the names of the subnet, VNet, and resource group containing the VNet, must be 63 characters or less. These names will be used as labels in AKS worker nodes and are subject to [Kubernetes label syntax rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).
 
 <!-- LINKS - Internal -->
 [aks-egress]: limit-egress-traffic.md

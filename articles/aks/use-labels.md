@@ -3,12 +3,16 @@ title: Use labels in an Azure Kubernetes Service (AKS) cluster
 description: Learn how to use labels in an Azure Kubernetes Service (AKS) cluster.
 author: rayoef
 ms.author: rayoflores
-ms.topic: how-to 
-ms.date: 05/09/2023
-#Customer intent: As a cluster operator, I want to learn how to use labels in an AKS cluster so that I can set scheduling rules for nodes.
+ms.topic: how-to
+ms.date: 06/10/2024
+ms.custom: innovation-engine, devx-track-azurecli, linux-related-content, kubernetes, aks
+# Customer intent: As an AKS cluster operator, I want to understand how to use labels for node pools so that I can effectively manage scheduling and resource allocation within my Kubernetes environment.
 ---
 
 # Use labels in an Azure Kubernetes Service (AKS) cluster
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2330038)
 
 If you have multiple node pools, you may want to add a label during node pool creation. [Kubernetes labels][kubernetes-labels] handle the scheduling rules for nodes. You can add labels to a node pool anytime and apply them to all nodes in the node pool.
 
@@ -20,86 +24,149 @@ You need the Azure CLI version 2.2.0 or later installed and configured. Run `az 
 
 ## Create an AKS cluster with a label
 
-1. Create an AKS cluster with a label using the [`az aks create`][az-aks-create] command and specify the `--node-labels` parameter to set your labels. Labels must be a key/value pair and have a [valid syntax][kubernetes-label-syntax].
+You can create an AKS cluster with node labels to set key/value metadata for workload scheduling.
 
-    ```azurecli-interactive
-    az aks create \
-        --resource-group myResourceGroup \
-        --name myAKSCluster \
-        --node-count 2 \
-        --nodepool-labels dept=IT costcenter=9000 \
-        --generate-ssh-keys
-    ```
+```bash
+export RANDOM_SUFFIX=$(openssl rand -hex 3)
+export RESOURCE_GROUP="myResourceGroup$RANDOM_SUFFIX"
+export AKS_CLUSTER_NAME="myAKSCluster$RANDOM_SUFFIX"
+az group create --name $RESOURCE_GROUP --location $REGION
+```
 
-2. Verify the labels were set using the `kubectl get nodes --show-labels` command.
+Results:
 
-    ```bash
-    kubectl get nodes --show-labels | grep -e "costcenter=9000" -e "dept=IT"
-    ```
+<!-- expected_similarity=0.3 -->
+
+```output
+{
+  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroupxxx",
+  "location": "eastus2",
+  "managedBy": null,
+  "name": "myResourceGroupxxx",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+```
+
+Create the AKS cluster specifying node labels (e.g., dept=IT, costcenter=9000):
+
+```azurecli-interactive
+az aks create \
+    --resource-group $RESOURCE_GROUP \
+    --name $AKS_CLUSTER_NAME \
+    --node-count 2 \
+    --nodepool-labels dept=IT costcenter=9000 \
+    --generate-ssh-keys --location $REGION
+```
+
+Results:
+
+<!-- expected_similarity=0.3 -->
+
+```output
+{
+  "aadProfile": null,
+  "addonProfiles": {},
+  "agentPoolProfiles": [
+    {
+      "count": 2,
+      "enableAutoScaling": null,
+      "mode": "System",
+      "name": "nodepool1",
+      "nodeLabels": {
+        "costcenter": "9000",
+        "dept": "IT"
+      }
+    }
+  ],
+  "dnsPrefix": "myaksclusterxxx-dns",
+  "fqdn": "myaksclusterxxx-xxxxxxxx.hcp.eastus2.azmk8s.io",
+  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroupxxx/providers/Microsoft.ContainerService/managedClusters/myAKSClusterxxx",
+  "location": "eastus2",
+  "name": "myAKSClusterxxx",
+  "resourceGroup": "myResourceGroupxxx"
+}
+```
+
+Verify the labels were set:
+
+```bash
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME --overwrite-existing
+kubectl get nodes --show-labels | grep -e "costcenter=9000" -e "dept=IT"
+```
 
 ## Create a node pool with a label
 
-1. Create a node pool with a label using the [`az aks nodepool add`][az-aks-nodepool-add] command and specify a name for the `--name` parameters and labels for the `--labels` parameter. Labels must be a key/value pair and have a [valid syntax][kubernetes-label-syntax]
+You can create an additional node pool with labels for specific scheduling needs.
 
-    The following example command creates a node pool named *labelnp* with the labels *dept=HR* and *costcenter=5000*.
+```bash
+export NODEPOOL_NAME="labelnp"
+az aks nodepool add \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $AKS_CLUSTER_NAME \
+    --name $NODEPOOL_NAME \
+    --node-count 1 \
+    --labels dept=HR costcenter=5000 \
+```
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name labelnp \
-        --node-count 1 \
-        --labels dept=HR costcenter=5000 \
-        --no-wait
-    ```
+The following is example output from the [`az aks nodepool list`][az-aks-nodepool-list] command showing the *labelnp* node pool is *Creating* nodes with the specified *nodeLabels*:
 
-    The following example output from the [`az aks nodepool list`][az-aks-nodepool-list] command shows the *labelnp* node pool is *Creating* nodes with the specified *nodeLabels*:
+```bash
+az aks nodepool list --resource-group $RESOURCE_GROUP --cluster-name $AKS_CLUSTER_NAME
+```
 
-    ```output
-    [
-      {
-        ...
-        "count": 1,
-        ...
-        "name": "labelnp",
-        "orchestratorVersion": "1.15.7",
-        ...
-        "provisioningState": "Creating",
-        ...
-        "nodeLabels":  {
-          "costcenter": "5000",
-          "dept": "HR"
-        },
-        ...
-      },
-     ...
-    ]
-    ```
+Results:
 
-2. Verify the labels were set using the `kubectl get nodes --show-labels` command.
+<!-- expected_similarity=0.3 -->
 
-    ```bash
-    kubectl get nodes --show-labels | grep -e "costcenter=5000" -e "dept=HR"
-    ```
+```output
+[
+  {
+    "count": 2,
+    "name": "nodepool1",
+    "nodeLabels": {
+      "costcenter": "9000",
+      "dept": "IT"
+    }
+  },
+  {
+    "count": 1,
+    "name": "labelnp",
+    "nodeLabels": {
+      "costcenter": "5000",
+      "dept": "HR"
+    },
+    "provisioningState": "Creating"
+  }
+]
+```
+
+Verify the labels were set:
+
+```bash
+kubectl get nodes --show-labels | grep -e "costcenter=5000" -e "dept=HR"
+```
 
 ## Updating labels on existing node pools
 
-1. Update a label on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command. Updating labels on existing node pools overwrites the old labels with the new labels. Labels must be a key/value pair and have a [valid syntax][kubernetes-label-syntax].
+You can update the labels on an existing node pool. Note that updating labels will overwrite the old labels.
 
-    ```azurecli-interactive
-    az aks nodepool update \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name labelnp \
-        --labels dept=ACCT costcenter=6000 \
-        --no-wait
-    ```
+```bash
+az aks nodepool update \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $AKS_CLUSTER_NAME \
+    --name $NODEPOOL_NAME \
+    --labels dept=ACCT costcenter=6000 \
+```
 
-2. Verify the labels were set using the `kubectl get nodes --show-labels` command.
+Verify the new labels are set:
 
-    ```bash
-    kubectl get nodes --show-labels | grep -e "costcenter=6000" -e "dept=ACCT"
-    ```
+```bash
+kubectl get nodes --show-labels | grep -e "costcenter=6000" -e "dept=ACCT"
+```
 
 ## Unavailable labels
 
@@ -189,4 +256,3 @@ Learn more about Kubernetes labels in the [Kubernetes labels documentation][kube
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [create-or-update-os-sku]: /rest/api/aks/agent-pools/create-or-update#ossku
 [install-azure-cli]: /cli/azure/install-azure-cli
-

@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 03/01/2023
+# Customer intent: As a Kubernetes administrator, I want to update or rotate the service principal and Microsoft Entra application credentials for my AKS cluster, so that I can ensure ongoing security and adherence to my organization's credential management policies.
 ---
 
 # Update or rotate the credentials for an Azure Kubernetes Service (AKS) cluster
@@ -129,14 +130,14 @@ In this article, you learned how to update or rotate service principal and Micro
 
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-aks-update-credentials]: /cli/azure/aks#az_aks_update_credentials
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-aks-update-credentials]: /cli/azure/aks#az-aks-update-credentials
 [best-practices-identity]: operator-best-practices-identity.md
 [aad-integration]: ./azure-ad-integration-cli.md
 [create-aad-app]: ./azure-ad-integration-cli.md#create-azure-ad-server-component
-[az-ad-sp-create]: /cli/azure/ad/sp#az_ad_sp_create_for_rbac
-[az-ad-app-credential-list]: /cli/azure/ad/app/credential#az_ad_app_credential_list
-[az-ad-app-credential-reset]: /cli/azure/ad/app/credential#az_ad_app_credential_reset
+[az-ad-sp-create]: /cli/azure/ad/sp#az-ad-sp-create-for-rbac
+[az-ad-app-credential-list]: /cli/azure/ad/app/credential#az-ad-app-credential-list
+[az-ad-app-credential-reset]: /cli/azure/ad/app/credential#az-ad-app-credential-reset
 [node-image-upgrade]: ./node-image-upgrade.md
 [node-surge-upgrade]: upgrade-aks-cluster.md#customize-node-surge-upgrade
 [update-cluster-service-principal-credentials]: #update-aks-cluster-with-service-principal-credentials

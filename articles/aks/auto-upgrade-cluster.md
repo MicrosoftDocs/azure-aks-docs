@@ -2,14 +2,18 @@
 title: Automatically upgrade an Azure Kubernetes Service (AKS) cluster
 description: Learn how to automatically upgrade an Azure Kubernetes Service (AKS) cluster to get the latest features and security updates.
 ms.topic: how-to
-ms.author: nickoman
-author: nickomang
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.subservice: aks-upgrade
 ms.date: 04/06/2025
 ms.custom: aks-upgrade, automation, innovation-engine
+# Customer intent: "As a DevOps engineer, I want to enable automatic upgrades for my Kubernetes clusters, so that I can ensure my environment remains secure and up to date without manual intervention."
 ---
 
 # Automatically upgrade an Azure Kubernetes Service (AKS) cluster
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321740)
 
 Part of the AKS cluster lifecycle involves performing periodic upgrades to the latest Kubernetes version. It’s important you apply the latest security releases or upgrade to get the latest features. Before learning about auto-upgrade, make sure you understand the [AKS cluster upgrade fundamentals][upgrade-aks-cluster].
 
@@ -158,8 +162,8 @@ For a detailed discussion of upgrade best practices and other considerations, se
 [planned-maintenance]: ./planned-maintenance.md
 [operator-best-practices-scheduler]: operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets
 [node-image-auto-upgrade]: auto-upgrade-node-image.md
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [aks-troubleshoot-docs]: /support/azure/azure-kubernetes/welcome-azure-kubernetes
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
 

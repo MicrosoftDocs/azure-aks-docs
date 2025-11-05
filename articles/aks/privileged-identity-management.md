@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 08/26/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a cloud administrator, I want to configure Privileged Identity Management for my AKS clusters, so that I can manage access control effectively with just-in-time permissions and ensure security compliance for different user roles.
 ---
 
 # Use Privileged Identity Management (PIM) to control access to your Azure Kubernetes Service (AKS) clusters
@@ -146,15 +147,16 @@ You *can* use just the **default** and **admin** groups instead of creating a se
 
 In this section, we create two users in Microsoft Entra ID: a **normal** user with only the default role, and a **privileged** user who can approve or deny just-in-time requests from the *normal* user.
 
-1. Create the **normal** user using the [`az ad user create`][az-ad-user-create] command.
+1. Create the **normal** user using the [`az ad user create`][az-ad-user-create] command. For the password variable commands, the values are hidden so they aren't displayed on your console.
 
     ```azurecli-interactive
     DOMAIN=contoso.com
-    PASSWORD=Password1
+    read -sp 'Enter password for NUSER_ID: ' NUSERPASSWORD
+    read -sp 'Enter password for PUSER_ID: ' PUSERPASSWORD
 
     NUSER_ID=$(az ad user create \
         --display-name n01 \
-        --password ${PASSWORD} \
+        --password ${NUSERPASSWORD} \
         --user-principal-name n01@${DOMAIN} \
         --query id \
         --output tsv)
@@ -173,7 +175,7 @@ In this section, we create two users in Microsoft Entra ID: a **normal** user wi
     ```azurecli-interactive
     PUSER_ID=$(az ad user create \
         --display-name p01 \
-        --password ${PASSWORD} \
+        --password ${PUSERPASSWORD} \
         --user-principal-name p01@${DOMAIN} \
         --query id \
         --output tsv)
@@ -217,8 +219,14 @@ Now, we can try to access the AKS cluster using the **normal** user, who is a me
 1. Log in to the Azure portal as the **normal** user using the [`az login`][az-login] command.
 
     ```azurecli-interactive
-    az login --username n01@$DOMAIN --password ${PASSWORD}
+    az login --username n01@$DOMAIN --password ${NUSERPASSWORD}
     ```
+
+    Micorsoft recommends you use the most secure method available to sign in to Azure. For more information, see the following articles:
+
+    - [Sign in with credentials on the command line](/cli/azure/authenticate-azure-cli-interactively#sign-in-with-credentials-on-the-command-line)
+    - [Sign into Azure interactively using the Azure CLI](/cli/azure/authenticate-azure-cli-interactively)
+    - [Authenticate to Azure using Azure CLI](/cli/azure/authenticate-azure-cli)
 
 1. Get the user credentials to access the cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
@@ -313,14 +321,14 @@ For more information, see the following articles:
 [licensing-fundamentals]: /entra/id-governance/licensing-fundamentals
 [aad-pricing]: https://azure.microsoft.com/pricing/details/active-directory/
 [create-aks-managed-cluster]: ./enable-authentication-microsoft-entra-id.md
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-group-show]: /cli/azure/group#az_group_show
-[az-ad-group-create]: /cli/azure/ad/group#az_ad_group_create
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[az-ad-user-create]: /cli/azure/ad/user#az_ad_user_create
-[az-ad-group-member-add]: /cli/azure/ad/group/member#az_ad_group_member_add
-[az-login]: /cli/azure/reference-index#az_login
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-group-show]: /cli/azure/group#az-group-show
+[az-ad-group-create]: /cli/azure/ad/group#az-ad-group-create
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[az-ad-user-create]: /cli/azure/ad/user#az-ad-user-create
+[az-ad-group-member-add]: /cli/azure/ad/group/member#az-ad-group-member-add
+[az-login]: /cli/azure/reference-index#az-login
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [configure-pim-for-groups]: /entra/id-governance/privileged-identity-management/groups-assign-member-owner
 [activate-ownership-pim]: /entra/id-governance/privileged-identity-management/groups-activate-roles
 [approve-requests]: /entra/id-governance/privileged-identity-management/groups-approval-workflow

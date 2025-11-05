@@ -2,14 +2,18 @@
 title: Configure Istio-based service mesh add-on for Azure Kubernetes Service
 description: Configure Istio-based service mesh add-on for Azure Kubernetes Service
 ms.topic: how-to
-ms.custom:
+ms.custom: innovation-engine
 ms.service: azure-kubernetes-service
-ms.date: 02/14/2024
+ms.date: 06/13/2024
 ms.author: shasb
 author: shashankbarsin
+# Customer intent: As a Kubernetes administrator, I want to configure the Istio service mesh add-on for my AKS cluster, so that I can manage service communication and enhance observability in my applications.
 ---
 
 # Configure Istio-based service mesh add-on for Azure Kubernetes Service
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2331829)
 
 Open-source Istio uses [MeshConfig][istio-meshconfig] to define mesh-wide settings for the Istio service mesh. Istio-based service mesh add-on for AKS builds on top of MeshConfig and classifies different properties as supported, allowed, and blocked.
 
@@ -24,32 +28,40 @@ This guide assumes you followed the [documentation][istio-deploy-add-on] to enab
 1. Find out which revision of Istio is deployed on the cluster:
 
     ```bash
-    az aks show --name $CLUSTER --resource-group $RESOURCE_GROUP --query 'serviceMeshProfile'
+    export RANDOM_SUFFIX=$(head -c 3 /dev/urandom | xxd -p)
+    export CLUSTER="my-aks-cluster"
+    export RESOURCE_GROUP="my-aks-rg$RANDOM_SUFFIX"
+    az aks show --name $CLUSTER --resource-group $RESOURCE_GROUP --query 'serviceMeshProfile' --output json
     ```
 
-    Output:
+    Results:
 
-    ```
+    <!-- expected_similarity=0.3 --> 
+
+    ```output
     {
       "istio": {
-          "certificateAuthority": null,
-          "components": {
+        "certificateAuthority": null,
+        "components": {
           "egressGateways": null,
           "ingressGateways": null
-          },
-          "revisions": [
+        },
+        "revisions": [
           "asm-1-24"
-          ]
+        ]
       },
       "mode": "Istio"
     }
     ```
 
+    This command shows the Istio service mesh profile, including the revision(s) currently deployed on your AKS cluster.
+
 2. Create a ConfigMap with the name `istio-shared-configmap-<asm-revision>` in the `aks-istio-system` namespace. For example, if your cluster is running asm-1-24 revision of mesh, then the ConfigMap needs to be named as `istio-shared-configmap-asm-1-24`. Mesh configuration has to be provided within the data section under mesh.
 
     Example:
 
-    ```yaml
+    ```bash
+    cat <<EOF > istio-shared-configmap-asm-1-24.yaml
     apiVersion: v1
     kind: ConfigMap
     metadata:
@@ -60,7 +72,18 @@ This guide assumes you followed the [documentation][istio-deploy-add-on] to enab
         accessLogFile: /dev/stdout
         defaultConfig:
           holdApplicationUntilProxyStarts: true
+    EOF
+    kubectl apply -f istio-shared-configmap-asm-1-24.yaml
     ```
+
+    Results:
+
+    <!-- expected_similarity=0.3 --> 
+
+    ```output
+    configmap/istio-shared-configmap-asm-1-24 created
+    ```
+
     The values under `defaultConfig` are mesh-wide settings applied for Envoy sidecar proxy.
 
 > [!CAUTION]
@@ -142,6 +165,7 @@ Fields present in [open source MeshConfig reference documentation](https://istio
 | holdApplicationUntilProxyStarts | Supported | - |
 | caCertificatesPem | Allowed | - |
 | privateKeyProvider | Allowed | - |
+| proxyHeaders | Allowed | - |
 
 > [!CAUTION]
 > **Support scope of configurations:** Mesh configuration allows for extension providers such as self-managed instances of Zipkin or Apache Skywalking to be configured with the Istio add-on. However, these extension providers are outside the support scope of the Istio add-on. Any issues associated with extension tools are outside the support boundary of the Istio add-on.
@@ -156,7 +180,6 @@ Fields present in [open source MeshConfig reference documentation](https://istio
 - Certain `MeshConfig` options such as accessLogging may increase Envoy's resource consumption, and disabling some of these settings may mitigate Istio data plane resource utilization. It's also advisable to use the `discoverySelectors` field in the MeshConfig to help alleviate memory consumption for Istiod and Envoy.
 - If the `concurrency` field in the MeshConfig is misconfigured and set to zero, it causes Envoy to use up all CPU cores. Instead if this field is unset, number of worker threads to run is automatically determined based on CPU requests/limits.
 - [Pod and sidecar race conditions][istio-sidecar-race-condition] in which the application starts before Envoy can be mitigated using the `holdApplicationUntilProxyStarts` field in the MeshConfig.
-
 
 [istio-meshconfig]: https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/
 [istio-sidecar-race-condition]: https://istio.io/latest/docs/ops/common-problems/injection/#pod-or-containers-start-with-network-issues-if-istio-proxy-is-not-ready

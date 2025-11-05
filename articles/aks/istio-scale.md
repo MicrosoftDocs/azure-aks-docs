@@ -5,7 +5,9 @@ ms.topic: concept-article
 ms.custom:
 ms.service: azure-kubernetes-service
 ms.date: 03/19/2024
+author: schaffererin
 ms.author: shalierxia
+# Customer intent: "As a Kubernetes administrator, I want to evaluate the performance and scaling capabilities of the Istio service mesh add-on, so that I can optimize resource usage and ensure efficient management of sidecar proxies in my Azure Kubernetes Service environments."
 ---
 
 # Istio service mesh add-on performance and scaling
@@ -103,7 +105,7 @@ A comparison of data plane latency performance across Istio add-on and AKS versi
 
 ### Horizontal pod autoscaling customization
 
-[Horizontal pod autoscaling (HPA)][hpa] is enabled for the `istiod` and ingress gateway pods. The default configurations for `istiod` and the gateways are:
+[Horizontal pod autoscaling (HPA)][hpa] is enabled for the `istiod` and ingress/egress gateway deployments. The default configurations for `istiod` and the gateways are:
 - Min Replicas: 2
 - Max Replicas: 5
 - CPU Utilization: 80%
@@ -133,7 +135,7 @@ kubectl patch hpa aks-istio-ingressgateway-external-asm-1-19 -n aks-istio-ingres
 ## Service entry
 Istio's ServiceEntry custom resource definition enables adding other services into the Istio’s internal service registry. A [ServiceEntry][serviceentry] allows services already in the mesh to route or access the services specified. However, the configuration of multiple ServiceEntries with the `resolution` field set to DNS can cause a [heavy load on Domain Name System (DNS) servers][understanding-dns]. The following suggestions can help reduce the load:
 
-- Switch to `resolution: NONE` to avoid proxy DNS lookups entirely. Suitable for most use cases.
+- Switch to `resolution: NONE` to avoid proxy DNS lookups entirely. Suitable for most use cases. However, when using an [Istio add-on egress gateway][istio-egress-gateway], the ServiceEntry resolution must be set to `DNS`. 
 - Increase TTL (Time To Live) if you control the domains being resolved.
 - Limit the ServiceEntry scope with `exportTo`.
 
@@ -146,3 +148,4 @@ Istio's ServiceEntry custom resource definition enables adding other services in
 [understanding-dns]: https://preliminary.istio.io/latest/docs/ops/configuration/traffic-management/dns/#proxy-dns-resolution
 [hpa]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 [istio-upgrade-hpa]: ./istio-upgrade.md#minor-revision-upgrades-with-horizontal-pod-autoscaling-customizations
+[istio-egress-gateway]: ./istio-deploy-egress.md

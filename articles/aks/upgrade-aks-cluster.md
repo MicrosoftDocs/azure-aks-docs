@@ -8,6 +8,7 @@ ms.date: 01/26/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a cloud administrator, I want to upgrade my Kubernetes clusters, so that I can ensure they have the latest features and security updates to maintain optimal performance and compliance."
 ---
 
 # Upgrade an Azure Kubernetes Service (AKS) cluster
@@ -99,6 +100,11 @@ The Azure portal highlights all the deprecated APIs between your current version
 :::image type="content" source="./media/upgrade-cluster/azure-portal-upgrade.png" alt-text="The screenshot of the upgrade blade for an AKS cluster in the Azure portal. The automatic upgrade field shows 'patch' selected, and several APIs deprecated between the selected Kubernetes version and the cluster's current version are described.":::
 
 ---
+
+## FAQ
+### I upgraded only the control plane. Why were my nodes upgraded too?
+AKS may trigger a rolling node (agent pool) upgrade alongside or after a control plane upgrade to keep the cluster compliant and healthy. This occurs when:
+typically when a previous node upgrade failed or left nodes on mixed versions.
 
 ## Troubleshoot AKS cluster upgrade error messages
 
@@ -237,7 +243,7 @@ AKS accepts both integer values and a percentage value for max surge. For exampl
     az aks nodepool update --name mynodepool --resource-group MyResourceGroup --cluster-name MyManagedCluster --max-surge 5
     ```
 
-### Customize unavailable nodes during upgrade (Preview)
+### Customize unavailable nodes during upgrade
 
 > [!IMPORTANT]
 >
@@ -324,6 +330,20 @@ A common pattern in this situation is to carry out a blue / green deployment of 
     ...
     ```
 
+## Client-Server version compatibility for kubectl
+
+Ensure your `kubectl` client is within ±1 minor version of the AKS control plane (API server) to maintain compatibility. Exceeding this supported version skew can lead to command failures or unexpected behavior. The following command displays both the Client Version and Server Version and warns if they're out of sync:
+
+```shell
+kubectl version
+```
+
+If there's a version mismatch:
+
+- Update or downgrade your kubectl to align with the server's version.
+- Alternatively, if you're restricted from changing your local kubectl, consider using the [`az aks command invoke` command](/cli/azure/aks/command) in Azure CLI to run your kubectl commands remotely on your cluster.
+
+
 ## Next steps
 
 To learn how to configure automatic upgrades, see [Configure automatic upgrades for an AKS cluster][configure-automatic-aks-upgrades]. 
@@ -333,18 +353,18 @@ For a detailed discussion of upgrade best practices and other considerations, se
 <!-- LINKS - internal -->
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps
-[az-aks-get-upgrades]: /cli/azure/aks#az_aks_get_upgrades
-[az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
+[az-aks-get-upgrades]: /cli/azure/aks#az-aks-get-upgrades
+[az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
 [set-azakscluster]: /powershell/module/az.aks/set-azakscluster
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [get-azakscluster]: /powershell/module/az.aks/get-azakscluster
 [aks-auto-upgrade]: auto-upgrade-cluster.md
 [k8s-deprecation]: https://kubernetes.io/blog/2022/11/18/upcoming-changes-in-kubernetes-1-26/#:~:text=A%20deprecated%20API%20is%20one%20that%20has%20been,point%20you%20must%20migrate%20to%20using%20the%20replacement
 [azure-rp-operations]: /azure/role-based-access-control/built-in-roles#containers
 [get-azaksversion]: /powershell/module/az.aks/get-azaksversion
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az_aks_nodepool_update
-[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az_aks_nodepool_upgrade
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
 [configure-automatic-aks-upgrades]: ./upgrade-cluster.md#configure-automatic-upgrades
 [release-tracker]: release-tracker.md
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices

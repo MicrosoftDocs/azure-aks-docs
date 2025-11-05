@@ -1,11 +1,12 @@
 ---
 title: Use Image Cleaner on Azure Kubernetes Service (AKS)
 description: Learn how to use Image Cleaner to clean up vulnerable stale images on Azure Kubernetes Service (AKS)
-ms.author: nickoman
-author: nickomang
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 01/22/2024
+# Customer intent: "As a DevOps engineer managing an AKS cluster, I want to configure Image Cleaner to automatically remove vulnerable stale images, so that I can enhance the security and efficiency of my image management process."
 ---
 
 # Use Image Cleaner to clean up vulnerable stale images on your Azure Kubernetes Service (AKS) cluster
@@ -305,6 +306,6 @@ The `eraser-aks-xxxxx` pod deletes within 10 minutes after work completion. You 
 <!-- LINKS -->
 
 [azure-cli-install]: /cli/azure/install-azure-cli
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-show]: /cli/azure/aks#az-aks-show

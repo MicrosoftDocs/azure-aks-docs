@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 08/14/2024
 ms.author: nshankar
 author: niranjanshankar
+# Customer intent: "As a cloud engineer using Istio on Azure Kubernetes Service, I want to configure telemetry for the service mesh so that I can customize metrics and logging for workloads, ensuring effective monitoring and observability of my applications."
 ---
 
 # Telemetry API for Istio-based service mesh add-on for Azure Kubernetes Service

@@ -7,6 +7,7 @@ ms.date: 09/25/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a Kubernetes administrator, I want to uninstall the Open Service Mesh add-on from my AKS cluster, so that I can clean up unused resources and prepare for migrating to a compatible service mesh solution.
 ---
 
 # Uninstall the Open Service Mesh (OSM) add-on from your Azure Kubernetes Service (AKS) cluster
@@ -46,6 +47,6 @@ This article shows you how to uninstall the OMS add-on and related resources fro
 Learn more about [Open Service Mesh][osm].
 
 <!-- LINKS - Internal -->
-[az-aks-disable-addon]: /cli/azure/aks#az_aks_disable_addons
+[az-aks-disable-addon]: /cli/azure/aks#az-aks-disable-addons
 [osm]: ./open-service-mesh-about.md
 

@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: As a Kubernetes administrator, I want to manage and view snapshots of cluster resource placements, so that I can maintain an efficient scheduling history and implement rollback mechanisms during updates.
 ---
 
 # Understanding snapshots for Azure Kubernetes Fleet Manager cluster resource placement

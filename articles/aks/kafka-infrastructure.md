@@ -1,12 +1,14 @@
 ---
-title: Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)  
+title: Prepare the Infrastructure for Deploying Kafka on Azure Kubernetes Service (AKS)  
 description: In this article, you prepare the infrastructure for deploying a Kafka cluster on Azure Kubernetes Service (AKS) using the Strimzi Operator.  
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
-ms.date: 03/31/2025
+ms.service: azure-kubernetes-service
+ms.date: 09/15/2025
 author: senavar
 ms.author: senavar
 zone_pivot_groups: azure-cli-or-terraform
+ms.custom: 'stateful-workloads'
+# Customer intent: As a cloud architect, I want to prepare the infrastructure for deploying a Kafka cluster on Azure Kubernetes Service, so that I can ensure high availability and efficient resource management for my data workloads.
 ---
 
 # Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)  
@@ -15,34 +17,33 @@ In this article, you prepare the infrastructure for deploying a Kafka cluster on
 
 ## Architecture overview
 
-The target AKS architecture for Kafka deployment prioritizes high availability through a comprehensive zone-redundant design. The design requires three node pools—one per availability zone—to maintain workload distribution and storage alignment. This zonal configuration is critical because persistent volumes in this architecture have zonal affinity. Any new nodes that are provisioned with cluster autoscaler must be created in the appropriate zone. Without this zonal specificity, pods with zone-bound persistent volumes would remain in a pending state. Multiple replicas of the Strimzi Cluster Operator and Kafka broker instances are defined and distributed across zones, providing resilience against both node and entire zone failures within the target region. To prevent resource contention and ensure predictable performance, dedicated node pools for Kafka workloads are strongly recommended. 
+The target AKS architecture for Kafka deployment prioritizes high availability through a comprehensive zone-redundant design. The design requires three node pools—one per availability zone—to maintain workload distribution and storage alignment. This zonal configuration is critical because persistent volumes in this architecture have zonal affinity. Any new nodes that are provisioned with cluster autoscaler must be created in the appropriate zone. Without this zonal specificity, pods with zone-bound persistent volumes would remain in a pending state. Multiple replicas of the Strimzi Cluster Operator and Kafka broker instances are defined and distributed across zones, providing resilience against both node and entire zone failures within the target region. To prevent resource contention and ensure predictable performance, dedicated node pools for Kafka workloads are strongly recommended.
 
 ## Prerequisites  
 
-* If you haven't already, review the [Overview for deploying Kafka on Azure Kubernetes Service (AKS) using Strimzi](./kafka-overview.md).  
-* Terraform v1.3.0 or later installed.  
-* Azure CLI installed and authenticated.  
-* Sufficient permissions to create infrastructure resources and assign RBAC to managed identities: Network Contributor, Azure Kubernetes Service Contributor, and Role Based Access Control Administrator.  
+- If you haven't already, review the [Overview for deploying Kafka on Azure Kubernetes Service (AKS) using Strimzi](./kafka-overview.md).  
+- Terraform v1.3.0 or later installed.  
+- Azure CLI installed and authenticated.  
+- Sufficient permissions to create infrastructure resources and assign RBAC to managed identities: Network Contributor, Azure Kubernetes Service Contributor, and Role Based Access Control Administrator.  
 
 ## Deploy infrastructure  
 
 The following steps guide you through deploying the AKS cluster and supporting infrastructure needed for your Kafka deployment.
 
-
 > [!TIP]  
 > **If you have an existing AKS cluster or existing supporting infrastructure**: You can skip the full deployment steps or make code adjustments, but ensure your infrastructure and AKS cluster meets the following requirements:  
->  
-> * Virtual network with subnet for nodes
-> * [Azure Container Storage installed](/azure/storage/container-storage/container-storage-aks-quickstart#install-azure-container-storage-and-create-a-storage-pool) on the AKS cluster.  
-> * Node pool per availability zone (1, 2, and 3).  
-> * Dedicated node pools for Kafka with [appropriate VM sizes](./kafka-overview.md#node-pools) based on your workload's requirements.  
-> * Azure Managed Prometheus and Azure Managed Grafana configured.
+>
+> - Virtual network with subnet for nodes.
+> - Azure Disk CSI driver enabled on the AKS cluster (enabled by default).
+> - Node pool per availability zone (1, 2, and 3).  
+> - Dedicated node pools for Kafka with [appropriate VM sizes](./kafka-overview.md#node-pools) based on your workload's requirements.  
+> - Azure Managed Prometheus and Azure Managed Grafana configured.
 
 ::: zone pivot="azure-cli"  
 
 ### Set environment variables
 
-* Before running any CLI commands, set the following environment variables to use throughout this guide with values that meet your requirements:  
+- Before running any CLI commands, set the following environment variables to use throughout this guide with values that meet your requirements:  
 
     ```azurecli-interactive
     export RESOURCE_GROUP_NAME="rg-kafka"  
@@ -75,15 +76,15 @@ The following steps guide you through deploying the AKS cluster and supporting i
 
 ### Pre-cluster network deployments
 
-Before deploying the AKS cluster for Kafka, deploy the prerequisite network resources that support the AKS cluster deployment:  
+Before deploying the AKS cluster for Kafka, deploy the prerequisite network resources that support the AKS cluster deployment.
 
 1. Create a resource group using the [`az group create`](/cli/azure/group#az-group-create) command.  
 
-    ```azurecli-interactive    
+    ```azurecli-interactive
     az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
     ```  
 
-2. Create a virtual network using the [`az network vnet create`](/cli/azure/network/vnet#az-network-vnet-create) command. 
+1. Create a virtual network using the [`az network vnet create`](/cli/azure/network/vnet#az-network-vnet-create) command.
 
     ```azurecli-interactive
     az network vnet create \
@@ -93,8 +94,8 @@ Before deploying the AKS cluster for Kafka, deploy the prerequisite network reso
     --location $LOCATION
     ```  
 
-3. Create a subnet using the [`az network vnet subnet create`](/cli/azure/network/vnet/subnet#az-network-vnet-subnet-create) command.  
-    
+1. Create a subnet using the [`az network vnet subnet create`](/cli/azure/network/vnet/subnet#az-network-vnet-subnet-create) command.  
+
     ```azurecli-interactive
     az network vnet subnet create \
     --resource-group $RESOURCE_GROUP_NAME \
@@ -103,7 +104,7 @@ Before deploying the AKS cluster for Kafka, deploy the prerequisite network reso
     --address-prefix $SUBNET_PREFIX
     ```  
 
-4. Create a public IP for the NAT Gateway using the [`az network public-ip create`](/cli/azure/network/public-ip#az-network-public-ip-create) command. 
+1. Create a public IP for the NAT Gateway using the [`az network public-ip create`](/cli/azure/network/public-ip#az-network-public-ip-create) command. 
 
     ```azurecli-interactive  
     az network public-ip create \
@@ -113,7 +114,7 @@ Before deploying the AKS cluster for Kafka, deploy the prerequisite network reso
     --location $LOCATION
     ```  
 
-5. Create a NAT Gateway using the [`az network nat gateway create`](/cli/azure/network/nat/gateway#az-network-nat-gateway-create) command. 
+1. Create a NAT Gateway using the [`az network nat gateway create`](/cli/azure/network/nat/gateway#az-network-nat-gateway-create) command. 
 
     ```azurecli-interactive
     az network nat gateway create \
@@ -123,7 +124,7 @@ Before deploying the AKS cluster for Kafka, deploy the prerequisite network reso
     --location $LOCATION
     ```  
 
-6. Associate the NAT Gateway to the node subnet using [`az network vnet subnet update`](/cli/azure/network/vnet/subnet#az-network-vnet-subnet-update) command.  
+1. Associate the NAT Gateway to the node subnet using [`az network vnet subnet update`](/cli/azure/network/vnet/subnet#az-network-vnet-subnet-update) command.  
 
     ```azurecli-interactive
     az network vnet subnet update \
@@ -133,9 +134,9 @@ Before deploying the AKS cluster for Kafka, deploy the prerequisite network reso
     --nat-gateway $NAT_GATEWAY_NAME
     ```  
 
-### Pre-cluster monitoring and governance deployments 
+### Pre-cluster monitoring and governance deployments
 
-Before deploying the AKS cluster for Kafka, deploy the prerequisite monitoring and governance resources that support the AKS cluster deployment:  
+Before deploying the AKS cluster for Kafka, deploy the prerequisite monitoring and governance resources that support the AKS cluster deployment.
 
 1. Create a log analytics workspace using the [`az monitor log-analytics workspace create`](/cli/azure/monitor/log-analytics/workspace#az-monitor-log-analytics-workspace-create) command.  
 
@@ -146,7 +147,7 @@ Before deploying the AKS cluster for Kafka, deploy the prerequisite monitoring a
     --location $LOCATION
     ```  
 
-2. Create an Azure monitor workspace for Prometheus using the [`az monitor account create`](/cli/azure/monitor/account#az-monitor-account-create) command.  
+1. Create an Azure monitor workspace for Prometheus using the [`az monitor account create`](/cli/azure/monitor/account#az-monitor-account-create) command.  
 
     ```azurecli-interactive
     az monitor account create \
@@ -155,7 +156,7 @@ Before deploying the AKS cluster for Kafka, deploy the prerequisite monitoring a
     --location $LOCATION
     ```  
 
-3. Create an Azure managed Grafana instance using the [`az grafana create`](/cli/azure/grafana#az-grafana-create) command. 
+1. Create an Azure managed Grafana instance using the [`az grafana create`](/cli/azure/grafana#az-grafana-create) command. 
 
     ```azurecli-interactive
     az grafana create \
@@ -171,7 +172,7 @@ Before deploying the AKS cluster for Kafka, deploy the prerequisite monitoring a
     > [!NOTE]
     > Azure Managed Grafana has zone redundancy available in [select regions](/azure/managed-grafana/high-availability#supported-regions). If your target region has zone redundancy, use the `--zone-redundancy Enabled` argument.
 
-4. Create an Azure container registry using the [`az acr create`](/cli/azure/acr#az-acr-create) command.  
+1. Create an Azure container registry using the [`az acr create`](/cli/azure/acr#az-acr-create) command.  
 
     ```azurecli-interactive
     az acr create \
@@ -183,7 +184,7 @@ Before deploying the AKS cluster for Kafka, deploy the prerequisite monitoring a
     --zone-redundancy Enabled
     ```  
 
-5. Create a user-assigned managed identity using the [`az identity create`](/cli/azure/identity#az-identity-create) command. 
+1. Create a user-assigned managed identity using the [`az identity create`](/cli/azure/identity#az-identity-create) command.
 
     ```azurecli-interactive
     az identity create \
@@ -192,8 +193,8 @@ Before deploying the AKS cluster for Kafka, deploy the prerequisite monitoring a
     --location $LOCATION
     ```  
 
-6. Assign RBAC permissions to the managed identity of the Grafana instance using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
-    
+1. Assign RBAC permissions to the managed identity of the Grafana instance using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
+
     ```azurecli-interactive
     az role assignment create \
     --assignee $(az grafana show --resource-group $RESOURCE_GROUP_NAME --name $GRAFANA_NAME --query identity.principalId -o tsv) \
@@ -202,9 +203,9 @@ Before deploying the AKS cluster for Kafka, deploy the prerequisite monitoring a
 
 ### AKS cluster deployment
 
-Deploy the AKS cluster with dedicated node pools for Kafka per availability zone and Azure Container Storage enabled using Azure CLI:  
+Deploy the AKS cluster with dedicated node pools for Kafka per availability zone using Azure CLI.
 
-1. First, assign the network contributor role to the user-assigned managed identity for AKS using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
+1. Assign the network contributor role to the user-assigned managed identity for AKS using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
 
     ```azurecli-interactive
     az role assignment create \
@@ -213,7 +214,7 @@ Deploy the AKS cluster with dedicated node pools for Kafka per availability zone
     --scope $(az group show --name $RESOURCE_GROUP_NAME --query id -o tsv)
     ```  
 
-2. Create an AKS cluster using the [`az aks create`](/cli/azure/aks#az-aks-create) command.
+1. Create an AKS cluster using the [`az aks create`](/cli/azure/aks#az-aks-create) command.
 
     ```azurecli-interactive
     az aks create \
@@ -257,14 +258,14 @@ Deploy the AKS cluster with dedicated node pools for Kafka per availability zone
     --zones 1 2 3
     ```  
 
-3. Create an additional node pool per availability zone using a for loop and the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command. 
+1. Create an additional node pool per availability zone using a for loop and the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command.
 
     ```azurecli-interactive
     for zone in 1 2 3; do
       az aks nodepool add \
       --cluster-name $AKS_CLUSTER_NAME \
       --enable-cluster-autoscaler \
-      --labels app=kafka acstor.azure.com/io-engine=acstor \
+      --labels app=kafka \
       --max-count $KAFKA_NODE_COUNT_MAX \
       --max-surge 10% \
       --min-count $KAFKA_NODE_COUNT_MIN \
@@ -278,18 +279,9 @@ Deploy the AKS cluster with dedicated node pools for Kafka per availability zone
       --vnet-subnet-id $(az network vnet subnet show --resource-group $RESOURCE_GROUP_NAME --vnet-name $VNET_NAME --name $SUBNET_NAME --query id -o tsv) \
       --zones $zone
     done
-    ```  
+    ```
 
-4. Enable [Azure Container Storage](/azure/storage/container-storage/container-storage-aks-quickstart) with azureDisk on the AKS cluster using the [`az aks update`](/cli/azure/aks#az-aks-update) command.  
-  
-    ```azurecli-interactive  
-    az aks update \
-    --name $AKS_CLUSTER_NAME \
-    --resource-group $RESOURCE_GROUP_NAME \
-    --enable-azure-container-storage azureDisk
-    ```  
-
-5. Enable Azure Managed Prometheus and Grafana integration using the [`az aks update`](/cli/azure/aks#az-aks-update) command.  
+1. Enable Azure Managed Prometheus and Grafana integration using the [`az aks update`](/cli/azure/aks#az-aks-update) command.  
 
     ```azurecli-interactive  
     az aks update \
@@ -300,8 +292,8 @@ Deploy the AKS cluster with dedicated node pools for Kafka per availability zone
     --grafana-resource-id $(az grafana show --resource-group $RESOURCE_GROUP_NAME --name $GRAFANA_NAME --query id -o tsv)
     ```  
 
-6. **Optional**: Configure diagnostic setting for the AKS cluster using the [`az monitor diagnostic-settings create`](/cli/azure/monitor/diagnostic-settings#az-monitor-diagnostic-settings-create) command.  
-    
+1. **Optional**: Configure diagnostic setting for the AKS cluster using the [`az monitor diagnostic-settings create`](/cli/azure/monitor/diagnostic-settings#az-monitor-diagnostic-settings-create) command.  
+
     ```azurecli-interactive  
     az monitor diagnostic-settings create \
     --resource $(az aks show --resource-group $RESOURCE_GROUP_NAME --name $AKS_CLUSTER_NAME --query id -o tsv) \
@@ -317,15 +309,15 @@ Deploy the AKS cluster with dedicated node pools for Kafka per availability zone
 
 In this section, you deploy an AKS cluster and supporting infrastructure resources using Terraform:  
 
-* A private AKS cluster with a node pool per availability zone using the Azure Verified Module (AVM).  
-* Virtual network and subnet configurations.  
-* NAT gateway for outbound connectivity.  
-* Azure Container Registry with private endpoint.  
-* User-assigned managed identity for AKS.  
-* Azure Monitor workspace for Prometheus metrics.  
-* Azure Managed Grafana dashboard with Prometheus integration.  
-* Dedicated node pools for Kafka workloads with appropriate labels.  
-* Azure Container Storage extension for persistent volumes. 
+- A private AKS cluster with a node pool per availability zone using the Azure Verified Module (AVM).  
+- Virtual network and subnet configurations.  
+- NAT gateway for outbound connectivity.  
+- Azure Container Registry with private endpoint.  
+- User-assigned managed identity for AKS.  
+- Azure Monitor workspace for Prometheus metrics.  
+- Azure Managed Grafana dashboard with Prometheus integration.  
+- Dedicated node pools for Kafka workloads with appropriate labels.  
+- Azure Disk CSI driver for persistent volumes (enabled by default).
 
 > [!NOTE]  
 > This Terraform deployment uses the [Azure Verified Module](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production) for a production AKS cluster. As a result, the cluster is deployed as a private cluster and with opinionated configurations. Appropriate connectivity must be in place to run the subsequent kubectl commands.  
@@ -374,7 +366,7 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
     }
     ```
 
-2. Review the variables and create a `kafka.tfvars` as needed. Update with values that meet your requirements:  
+1. Review the variables and create a `kafka.tfvars` as needed. Update with values that meet your requirements:  
 
     ```tf  
     # Replace placeholder values with your actual configuration
@@ -391,9 +383,9 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
     ]
     ```  
 
-3. Copy the `main.tf` to your Terraform directory.
-    
-    ```tf 
+1. Copy the `main.tf` to your Terraform directory.
+
+    ```tf
     terraform {
       required_version = ">= 1.3.0"
       required_providers {
@@ -604,28 +596,29 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
     }
     ```
 
-4. Initialize Terraform using the `terraform init` command.  
+1. Initialize Terraform using the `terraform init` command.  
 
     ```bash  
     terraform init  
     ```  
 
-5. Create a deployment plan using the `terraform plan` command.  
+1. Create a deployment plan using the `terraform plan` command.  
 
     ```bash  
     terraform plan -var-file="kafka.tfvars"
     ```  
 
-6. Apply the configuration using the `terraform apply` command.  
+1. Apply the configuration using the `terraform apply` command.  
 
     ```bash  
     terraform apply -var-file="kafka.tfvars" 
-    ```  
+    ```
+
 ::: zone-end
 
 ## Validate deployment and connect to cluster  
 
-After deploying your AKS cluster, use the following steps to validate the deployment and gain access to the AKS API Server:  
+After deploying your AKS cluster, use the following steps to validate the deployment and connect to the AKS API server.
 
 1. Verify the deployment of the AKS cluster using the [`az aks show`](/cli/azure/aks#az-aks-show) command.  
 
@@ -633,54 +626,42 @@ After deploying your AKS cluster, use the following steps to validate the deploy
     az aks show --resource-group $RESOURCE_GROUP_NAME --name $AKS_CLUSTER_NAME --output table  
     ```  
 
-2. After verifying the deployment, connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.  
+1. After verifying the deployment, connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.  
 
     ```azurecli-interactive  
     az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $AKS_CLUSTER_NAME  
     ```  
-        
-3. Verify connectivity by listing nodes using the `kubectl get` command.  
+
+1. Verify connectivity by listing nodes using the `kubectl get` command.  
 
     ```bash  
     kubectl get nodes  
     ```  
 
-## Create Azure Container Storage storage pool
+## Create storage class for Kafka
 
-1. Verify that Azure Container Storage is running on your AKS cluster using the `kubectl get` command.  
+- Create a storage class for Premium SSD v2 disks using the `kubectl apply` command.
 
-    ```bash  
-    kubectl get deploy,ds -n acstor
-    ```  
-
-    Currently, you can't configure Azure Container Storage with a toleration to handle nodes with taints. Adding taints to nodes will block the deployment of Azure Container Storage.
-
-
-2. After deploying the cluster and validating that Azure Container Storage is running, apply the multi-zone `StoragePool` configuration using the `kubectl apply` command.  
-
-    ```bash  
+    ```bash
     kubectl apply -f - <<EOF  
     ---  
-    apiVersion: containerstorage.azure.com/v1  
-    kind: StoragePool  
-    metadata:  
-      name: azuredisk-zr  
-      namespace: acstor  
-    spec:  
-      zones: ["1","2","3"]  
-      poolType:  
-        azureDisk:  
-          skuName: PremiumV2_LRS  
-          iopsReadWrite: 5000  
-          mbpsReadWrite: 200  
-      resources:  
-        requests:  
-          storage: 1Ti    
-    EOF  
-    ```  
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: kafka-premium-ssd-v2
+    provisioner: disk.csi.azure.com
+    parameters:
+      skuName: PremiumV2_LRS
+      diskIOPSReadWrite: "5000"
+      diskMBpsReadWrite: "200"
+    reclaimPolicy: Delete
+    volumeBindingMode: WaitForFirstConsumer
+    allowVolumeExpansion: true
+    EOF
+    ```
 
-> [!IMPORTANT]  
-> The storage configuration above represents a starting point. For production deployments, adjust the `iopsReadWrite`, `mbpsReadWrite`, and `storage` values based on your expected Kafka cluster size and workload as discussed in the [Azure Container Storage section](./kafka-overview.md#azure-container-storage).  
+    > [!IMPORTANT]
+    > The storage configuration above represents a starting point. For production deployments, adjust the `diskIOPSReadWrite` and `diskMBpsReadWrite` values based on your expected Kafka cluster size and workload requirements.
 
 ## Next step  
 
@@ -689,7 +670,7 @@ After deploying your AKS cluster, use the following steps to validate the deploy
 
 ## Contributors  
 
-*Microsoft maintains this article. The following contributors originally wrote it:*  
+_Microsoft maintains this article. The following contributors originally wrote it:_
 
-* Sergio Navar | Senior Customer Engineer  
-* Erin Schaffer | Content Developer 2  
+- Sergio Navar | Senior Customer Engineer
+- Erin Schaffer | Content Developer 2

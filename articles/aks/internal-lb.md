@@ -2,14 +2,15 @@
 title: Create an internal load balancer
 titleSuffix: Azure Kubernetes Service
 description: Learn how to create and use an internal load balancer to expose your services with Azure Kubernetes Service (AKS).
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 03/25/2025
 
 
-#Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an internal Azure load balancer for enhanced security and without an external endpoint.
+# Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an internal Azure load balancer for enhanced security and without an external endpoint.
+
 ---
 
 # Use an internal load balancer with Azure Kubernetes Service (AKS)
@@ -80,7 +81,7 @@ If you want to use a specific IP address with the load balancer, you have two op
 ### [Set service annotations](#tab/set-service-annotations)
 
 1. Set service annotations using `service.beta.kubernetes.io/azure-load-balancer-ipv4` for an IPv4 address and `service.beta.kubernetes.io/azure-load-balancer-ipv6` for an IPv6 address.
-  
+
     ```yaml
     apiVersion: v1
     kind: Service
@@ -184,11 +185,11 @@ For more information on configuring your load balancer in a different subnet, se
 
     ```azurecli-interactive
     # Create a variable for the node resource group
-    
+
     AKS_MC_RG=$(az aks show -g myResourceGroup --name myAKSCluster --query nodeResourceGroup -o tsv)
-    
+
     # View the details of the Private Link Service object
-    
+
     az network private-link-service list -g $AKS_MC_RG --query "[].{Name:name,Alias:alias}" -o table
     ```
 
@@ -208,11 +209,11 @@ A Private Endpoint allows you to privately connect to your Kubernetes service ob
 
     ```azurecli-interactive
     # Create a variable for the private link service
-    
+
     AKS_PLS_ID=$(az network private-link-service list -g $AKS_MC_RG --query "[].id" -o tsv)
-    
+
     # Create the private endpoint
-    
+
     $ az network private-endpoint create \
         -g myOtherResourceGroup \
         --name myAKSServicePE \
@@ -301,8 +302,8 @@ To learn more about Kubernetes services, see the [Kubernetes services documentat
 
 <!-- LINKS - Internal -->
 [advanced-networking]: configure-azure-cni.md
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [azure-lb-comparison]: /azure/load-balancer/skus
 [use-kubenet]: configure-kubenet.md
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
@@ -312,9 +313,8 @@ To learn more about Kubernetes services, see the [Kubernetes services documentat
 [aks-sp]: kubernetes-service-principal.md#delegate-access-to-other-azure-resources
 [different-subnet]: #specify-a-different-subnet
 [aks-vnet-subnet]: configure-kubenet.md#create-a-virtual-network-and-subnet
-[unique-subnet]: create-node-pools.md#add-a-node-pool-with-a-unique-subnet
+[unique-subnet]: node-pool-unique-subnet.md
 [az-network-vnet-subnet-list]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-list
 [get-azvirtualnetworksubnetconfig]: /powershell/module/az.network/get-azvirtualnetworksubnetconfig
-[az-network-private-link-service-list]: /cli/azure/network/private-link-service#az_network_private_link_service_list
-[az-network-private-endpoint-create]: /cli/azure/network/private-endpoint#az_network_private_endpoint_create
-
+[az-network-private-link-service-list]: /cli/azure/network/private-link-service#az-network-private-link-service-list
+[az-network-private-endpoint-create]: /cli/azure/network/private-endpoint#az-network-private-endpoint-create

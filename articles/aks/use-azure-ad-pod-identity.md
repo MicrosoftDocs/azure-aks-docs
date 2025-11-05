@@ -8,6 +8,7 @@ ms.date: 08/29/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a cloud administrator, I want to implement Microsoft Entra pod-managed identities in my Azure Kubernetes Service cluster, so that I can securely manage identities and access to Azure resources for my applications."
 ---
 
 # Use Microsoft Entra pod-managed identities in Azure Kubernetes Service (Preview)
@@ -359,12 +360,12 @@ For more information on managed identities, see [Managed identities for Azure re
 
 <!-- LINKS - internal -->
 [workload-identity-overview]: workload-identity-overview.md
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-extension-add]: /cli/azure/extension#az_extension_add
-[az-extension-update]: /cli/azure/extension#az_extension_update
-[az-group-create]: /cli/azure/group#az_group_create
-[az-identity-create]: /cli/azure/identity#az_identity_create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-group-create]: /cli/azure/group#az-group-create
+[az-identity-create]: /cli/azure/identity#az-identity-create
 [az-managed-identities]: /azure/active-directory/managed-identities-azure-resources/overview
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-register]: /cli/azure/feature#az-feature-register

@@ -7,6 +7,7 @@ ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 02/13/2024
 #Customer intent: As a cluster operator or developer, I want to learn how to integrate HPC Cache with AKS
+# Customer intent: As a cluster operator or developer, I want to integrate Azure HPC Cache with Azure Kubernetes Service, so that I can enhance data access and improve the performance of high-performance computing tasks.
 ---
 
 # Integrate Azure HPC Cache with Azure Kubernetes Service (AKS)
@@ -362,19 +363,19 @@ az feature show --namespace "Microsoft.StorageCache"
 [hpc-cache-access-policies]: /azure/hpc-cache/access-policies
 [hpc-cache-cli-prerequisites]: /azure/hpc-cache/az-cli-prerequisites
 [hpc-cache-prereqs]: /azure/hpc-cache/hpc-cache-prerequisites
-[az-hpc-cache-create]: /cli/azure/hpc-cache#az_hpc_cache_create
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-hpc-cache-create]: /cli/azure/hpc-cache#az-hpc-cache-create
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [install-azure-cli]: /cli/azure/install-azure-cli
 [persistent-volume]: concepts-storage.md#persistent-volumes
 [persistent-volume-claim]: concepts-storage.md#persistent-volume-claims
-[az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az_network_vnet_subnet_create
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-provider-register]: /cli/azure/provider#az_provider_register
-[az-storage-account-create]: /cli/azure/storage/account#az_storage_account_create
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[az-storage-container-create]: /cli/azure/storage/container#az_storage_container_create
-[az-hpc-cache-blob-storage-target-add]: /cli/azure/hpc-cache/blob-storage-target#az_hpc_cache_blob_storage_target_add
-[az-network-private-dns-zone-create]: /cli/azure/network/private-dns/zone#az_network_private_dns_zone_create
-[az-network-private-dns-link-vnet-create]: /cli/azure/network/private-dns/link/vnet#az_network_private_dns_link_vnet_create
-[az-network-private-dns-record-set-a-create]: /cli/azure/network/private-dns/record-set/a#az_network_private_dns_record_set_a_create
+[az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-provider-register]: /cli/azure/provider#az-provider-register
+[az-storage-account-create]: /cli/azure/storage/account#az-storage-account-create
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[az-storage-container-create]: /cli/azure/storage/container#az-storage-container-create
+[az-hpc-cache-blob-storage-target-add]: /cli/azure/hpc-cache/blob-storage-target#az-hpc-cache-blob-storage-target-add
+[az-network-private-dns-zone-create]: /cli/azure/network/private-dns/zone#az-network-private-dns-zone-create
+[az-network-private-dns-link-vnet-create]: /cli/azure/network/private-dns/link/vnet#az-network-private-dns-link-vnet-create
+[az-network-private-dns-record-set-a-create]: /cli/azure/network/private-dns/record-set/a#az-network-private-dns-record-set-a-create

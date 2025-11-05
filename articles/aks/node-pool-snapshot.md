@@ -4,9 +4,10 @@ description: Learn how to snapshot AKS cluster node pools and create clusters an
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 01/29/2024
-ms.author: allensu
-author: asudbring
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.subservice: aks-nodes
+# Customer intent: As a Kubernetes administrator, I want to create and manage snapshots of AKS node pools, so that I can maintain consistent configurations and quickly deploy new clusters or node pools based on those snapshots.
 ---
 
 # Azure Kubernetes Service (AKS) node pool snapshot
@@ -115,11 +116,11 @@ az aks create \
 [github-schedule]: node-upgrade-github-actions.md
 [use-multiple-node-pools]: create-node-pools.md
 [max-surge]: upgrade-cluster.md#customize-node-surge-upgrade
-[az-extension-add]: /cli/azure/extension#az_extension_add
+[az-extension-add]: /cli/azure/extension#az-extension-add
 [az-aks-nodepool-snapshot]:/cli/azure/aks/nodepool#az-aks-nodepool-add
-[az-extension-update]: /cli/azure/extension#az_extension_update
-[az-feature-list]: /cli/azure/feature#az_feature_list
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-aks-install-cli]: /cli/azure/aks#az_aks_install_cli
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-feature-list]: /cli/azure/feature#az-feature-list
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[az-provider-register]: /cli/azure/provider#az-provider-register
 

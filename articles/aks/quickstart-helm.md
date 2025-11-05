@@ -4,9 +4,10 @@ description: Use Helm with AKS and Azure Container Registry to package and run a
 ms.topic: concept-article
 ms.custom: devx-track-azurecli, devx-track-azurepowershell
 ms.date: 01/25/2024
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
+# Customer intent: As a developer, I want to use Helm to package and deploy applications on Azure Kubernetes Service, so that I can efficiently manage the lifecycle of my containerized applications in the cloud.
 ---
 
 # Quickstart: Develop on Azure Kubernetes Service (AKS) with Helm
@@ -311,16 +312,16 @@ For more information about using Helm, see the [Helm documentation][helm-documen
 
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps
-[az-acr-create]: /cli/azure/acr#az_acr_create
+[az-acr-create]: /cli/azure/acr#az-acr-create
 [new-azcontainerregistry]: /powershell/module/az.containerregistry/new-azcontainerregistry
 [new-azakscluster]: /powershell/module/az.aks/new-azakscluster
-[az-acr-build]: /cli/azure/acr#az_acr_build
-[az-group-delete]: /cli/azure/group#az_group_delete
+[az-acr-build]: /cli/azure/acr#az-acr-build
+[az-group-delete]: /cli/azure/group#az-group-delete
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-create]: /cli/azure/aks#az-aks-create
 [import-azakscredential]: /powershell/module/az.aks/import-azakscredential
-[az-aks-install-cli]: /cli/azure/aks#az_aks_install_cli
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [install-azakskubectl]: /powershell/module/az.aks/install-azaksclitool
 [azure-vote-app]: https://github.com/Azure-Samples/azure-voting-app-redis.git
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/

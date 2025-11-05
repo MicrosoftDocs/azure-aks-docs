@@ -7,6 +7,7 @@ ms.author: allyford
 author: schaffererin
 ms.topic: how-to
 ms.date: 07/01/2024
+# Customer intent: As a cloud engineer, I want to deploy Windows Server Annual Channel containers in Azure Kubernetes Service, so that I can leverage annual updates and improved portability for my containerized applications.
 ---
 
 # Use Windows Server Annual Channel for Containers on Azure Kubernetes Service (AKS) (Preview)
@@ -25,7 +26,6 @@ AKS releases support for new releases of Windows Server Annual Channel for Conta
 |--------------|-------------------|-------------------|-------------------|
 | 1.28 | 23H2 (preview only) | Windows Server 2022 | End of 1.33 support |
 | 1.34 | 24H2 | Windows Server 2022 & Windows Server 2025 | End of 1.35 support |
-| 1.36 | 25H2 | Windows Server 2025 | End of 1.38 support |
 
 ## Windows Server Annual Channel vs. Long Term Servicing Channel Releases (LTSC)
 
@@ -170,9 +170,9 @@ To learn more about Windows Containers on AKS, see the following resources:
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-extension-add]: /cli/azure/azure-cli-extensions-overview#add-extensions
 [az-extension-update]: /cli/azure/azure-cli-extensions-overview#update-extensions
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [new-azaksnodepool]: /powershell/module/az.aks/new-azaksnodepool
 [release-notes]: https://github.com/Azure/AKS/releases

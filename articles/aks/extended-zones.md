@@ -6,6 +6,7 @@ ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.date: 03/20/2025
+# Customer intent: As a cloud architect, I want to deploy an Azure Kubernetes Service cluster in an Extended Zone, so that I can achieve low latency and maintain data residency for my applications.
 ---
 
 # Azure Kubernetes Service (AKS) for Extended Zones (preview)
@@ -279,4 +280,4 @@ After deploying your AKS cluster in an Azure Extended Zone, learn about [AKS clu
 [configure-cluster]: ./cluster-configuration.md
 [arm-template-deploy]: /azure/azure-resource-manager/templates/deployment-tutorial-local-template
 [concepts-cluster]: /azure/aks/core-aks-concepts
-[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-aks-create]: /cli/azure/aks#az-aks-create

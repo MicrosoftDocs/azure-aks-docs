@@ -5,10 +5,11 @@ description: Learn how to configure SSH and manage SSH keys on Azure Kubernetes 
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 08/29/2024
-author: nickomang
-ms.author: nickoman
+ms.date: 09/23/2025
+author: charleswool
+ms.author: yuewu2
 
+# Customer intent: As a Kubernetes administrator, I want to manage SSH keys and access for AKS cluster nodes, so that I can enhance security and control access to the nodes effectively.
 ---
 
 # Manage SSH for secure access to Azure Kubernetes Service (AKS) nodes
@@ -23,12 +24,14 @@ AKS supports the following configuration options to manage SSH keys on cluster n
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+
 ## Before you begin
 
 * You need `aks-preview` version 0.5.116 or later to use **Update**.
 * You need `aks-preview` version 1.0.0b6 or later to use **Disable**.
 * The **Create** and **Update** SSH feature supports Linux, Windows, and Azure Linux node pools on existing clusters.
-* The **Disable** SSH feature isn't supported in this preview release on node pools running the Windows Server operating system.
 
 ### Install the `aks-preview` Azure CLI extension
 
@@ -117,7 +120,7 @@ The following are examples of this command:
     ```
 
 > [!IMPORTANT]
-> After you update the SSH key, AKS doesn't automatically update your node pool. At any time, you can choose to perform a [nodepool update operation][node-image-upgrade]. The update SSH keys operation takes effect after a node image update is complete.
+> After you update the SSH key, AKS doesn't automatically update your node pool. At any time, you can choose to perform a [nodepool update operation][node-image-upgrade]. The update SSH keys operation takes effect after a node image update is complete. For clusters with [Node Auto-provisioning][node auto-provisioning] enabled, a node image update can be performed by applying a new label to the Kubernetes NodePool custom resource.
 
 ## Disable SSH overview
 
@@ -199,25 +202,6 @@ az aks nodepool upgrade --cluster-name myManagedCluster --name mynodepool --reso
 
 > [!IMPORTANT]
 > To disable SSH on an existing cluster, you need to disable SSH for each node pool on this cluster. 
-
-### Re-enable SSH on an existing cluster
-
-Use the [`az aks update`][az-aks-update] command to update an existing cluster, and include the `--ssh-access localuser` argument to re-enable SSH (preview) on all the node pools in the cluster.
-
-```azurecli-interactive
-az aks update --resource-group myResourceGroup --name myManagedCluster --ssh-access localuser
-```
-
-The following message is returned while the process is performed:
-
-```output
-Only after all the nodes are reimaged, does the disable/enable SSH Access operation take effect."
-```
-
-After re-enabling SSH, the nodes won't be reimaged automatically. At any time, you can choose to perform a [reimage operation][node-image-upgrade].
-
->[!IMPORTANT]
->During this operation, all Virtual Machine Scale Set instances are upgraded and reimaged to use the new SSH public key.
 
 ### Re-enable SSH for a specific node pool
 
@@ -305,11 +289,11 @@ To help troubleshoot any issues with SSH connectivity to your clusters nodes, yo
 <!-- LINKS - external -->
 
 <!-- LINKS - internal -->
-[az-feature-register]: /cli/azure/feature#az_feature_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
-[az-extension-add]: /cli/azure/extension#az_extension_add
-[az-extension-update]: /cli/azure/extension#az_extension_update
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
@@ -317,6 +301,7 @@ To help troubleshoot any issues with SSH connectivity to your clusters nodes, yo
 [view-kubelet-logs]: kubelet-logs.md
 [view-master-logs]: monitor-aks-reference.md#resource-logs
 [node-image-upgrade]: node-image-upgrade.md
+[node auto-provisioning]: node-autoprovision.md
 [az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
 [network-security-group-rules-overview]: concepts-security.md#azure-network-security-groups
 [kubelet-debug-node-access]: node-access.md

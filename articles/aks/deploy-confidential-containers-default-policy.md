@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: devx-track-azurecli, ignite-fall-2023, mode-api
+# Customer intent: As a cloud architect, I want to deploy an Azure Kubernetes Service (AKS) cluster with Confidential Containers, so that I can ensure secure application environments for sensitive workloads using confidential computing.
 ---
 
 # Deploy an AKS cluster with Confidential Containers and an automatically generated policy
@@ -19,6 +20,9 @@ In general, getting started with AKS Confidential Containers involves the follow
 * Add an annotation to your pod YAML manifest to mark the pod as using confidential containers
 * Add a security policy to your pod YAML manifest
 * Deploy your application in confidential computing
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Prerequisites
 
@@ -432,14 +436,14 @@ kubectl delete pod pod-name
 [aks-workload-identity-overview]: workload-identity-overview.md
 [cluster-access-and-identity-options]: concepts-identity.md
 [DC8as-series]: /azure/virtual-machines/dcasccv5-dcadsccv5-series
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-feature-register]: /cli/azure/feature#az_feature_register
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-feature-register]: /cli/azure/feature#az-feature-register
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-delete]: /cli/azure/aks#az_aks_delete
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-delete]: /cli/azure/aks#az-aks-delete
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-install-cmd]: /cli/azure/aks#az-aks-install-cli
 [overview-confidential-containers]: confidential-containers-overview.md
 [azure-key-vault-managed-hardware-security-module]: /azure/key-vault/managed-hsm/overview

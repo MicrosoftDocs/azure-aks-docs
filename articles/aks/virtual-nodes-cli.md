@@ -5,11 +5,12 @@ description: Learn how to use Azure CLI to create an Azure Kubernetes Services (
 ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.date: 08/28/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ms.custom: references_regions, devx-track-azurecli
 ms.subservice: aks-nodes
+# Customer intent: "As a cloud engineer, I want to configure an Azure Kubernetes Service cluster with virtual nodes using Azure CLI, so that I can enable seamless communication between active pods in Azure Container Instances and AKS for improved resource scaling and efficient workload management."
 ---
 
 # Create and configure an Azure Kubernetes Services (AKS) cluster to use virtual nodes using Azure CLI
@@ -174,7 +175,7 @@ For more information on managed identities, see [Use managed identities](use-man
             - containerPort: 80
           nodeSelector:
             kubernetes.io/role: agent
-            beta.kubernetes.io/os: linux
+            kubernetes.io/os: linux
             type: virtual-kubelet
           tolerations:
           - key: virtual-kubelet.io/provider
@@ -303,19 +304,19 @@ Virtual nodes are often one component of a scaling solution in AKS. For more inf
 [acr-aks-secrets]: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 
 <!-- LINKS - internal -->
-[az-group-create]: /cli/azure/group#az_group_create
-[az-network-vnet-create]: /cli/azure/network/vnet#az_network_vnet_create
-[az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az_network_vnet_subnet_create
-[az-network-vnet-subnet-show]: /cli/azure/network/vnet/subnet#az_network_vnet_subnet_show
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-enable-addons]: /cli/azure/aks#az_aks_enable_addons
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az aks disable-addons]: /cli/azure/aks#az_aks_disable_addons
+[az-group-create]: /cli/azure/group#az-group-create
+[az-network-vnet-create]: /cli/azure/network/vnet#az-network-vnet-create
+[az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-create
+[az-network-vnet-subnet-show]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-show
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az aks disable-addons]: /cli/azure/aks#az-aks-disable-addons
 [aks-hpa]: tutorial-kubernetes-scale.md
 [aks-cluster-autoscaler]: ./cluster-autoscaler.md
 [aks-basic-ingress]: ingress-basic.md
-[az-provider-list]: /cli/azure/provider#az_provider_list
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-provider-list]: /cli/azure/provider#az-provider-list
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [virtual-nodes-aks]: virtual-nodes.md
 [virtual-nodes-networking-aci]: /azure/container-instances/container-instances-virtual-network-concepts
 

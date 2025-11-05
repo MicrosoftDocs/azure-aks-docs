@@ -6,6 +6,7 @@ ms.date: 06/20/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: "As a cloud engineer, I want to deploy an AWS event-driven workflow to Azure Kubernetes Service so that I can leverage the reliability and scalability of Azure for managing my event-driven applications."
 ---
 
 # Deploy an AWS event-driven workflow (EDW) workload to Azure
@@ -311,12 +312,12 @@ For more information on developing and running applications in AKS, see the foll
 <!-- LINKS -->
 [eks-edw-overview]: ./eks-edw-overview.md
 [az-login]: /cli/azure/authenticate-azure-cli-interactively#interactive-login
-[az-account-list]: /cli/azure/account#az_account_list
-[az-account-set]: /cli/azure/account#az_account_set
+[az-account-list]: /cli/azure/account#az-account-list
+[az-account-set]: /cli/azure/account#az-account-set
 [github-repo]: https://github.com/Azure-Samples/aks-event-driven-replicate-from-aws
 [prerequisites]: ./eks-edw-overview.md#prerequisites
 [azure-resource-group]: /azure/azure-resource-manager/management/overview
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [kubectl-get]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/
 [k9s]: https://k9scli.io/
 [k9s-install]: https://k9scli.io/topics/install/

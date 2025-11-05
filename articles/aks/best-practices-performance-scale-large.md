@@ -7,6 +7,7 @@ ms.date: 01/18/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a cloud architect, I want to implement performance and scaling best practices for large workloads in Kubernetes, so that I can ensure optimal resource utilization and reliability of the applications deployed in Azure Kubernetes Service.
 ---
 
 # Best practices for performance and scaling for large workloads in Azure Kubernetes Service (AKS)
@@ -112,7 +113,7 @@ As you scale your AKS clusters to larger scale points, keep the following featur
 * [Azure Network Policy Manager (Azure npm)][azure-npm] only supports up to 250 nodes.
 * Some AKS node metrics, including node disk usage, node CPU/memory usage, and network in/out, won't be accessible in [azure monitor platform metrics](/azure/azure-monitor/reference/supported-metrics/microsoft-containerservice-managedclusters-metrics) after the control plane is scaled up. To confirm if your control plane has been scaled up, look for the configmap 'control-plane-scaling-status'
 ```
-kubectl describe configmap control-plane-scaling-status -n kube-system
+kubectl describe configmap large-cluster-control-plane-scaling-status -n kube-system
 ```
 * You can't use the Stop and Start feature with clusters that have more than 100 nodes. For more information, see [Stop and start an AKS cluster](./start-stop-cluster.md).
 

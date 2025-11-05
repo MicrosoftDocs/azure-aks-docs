@@ -1,16 +1,17 @@
 ---
 title: "Azure Kubernetes Fleet Manager scheduler and scheduling framework"
 description: This article provides a conceptual overview of the Azure Kubernetes Fleet Manager scheduler and scheduling framework.
-ms.date: 04/01/2024
+ms.date: 05/23/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: As a cloud administrator, I want to understand the scheduling framework in Azure Kubernetes Fleet Manager so that I can optimize resource allocation across multiple clusters.
 ---
 
 # Azure Kubernetes Fleet Manager scheduler and scheduling framework
 
-This article provides a conceptual overview of the scheduler and scheduling framework in Azure Kubernetes Fleet Manager (Fleet).
+This article provides a conceptual overview of the scheduler and scheduling framework in Azure Kubernetes Fleet Manager.
 
 ## What is the scheduler?
 
@@ -25,7 +26,7 @@ Scheduling resources within a `ClusterResourcePlacement` involves more dependenc
 * In a `ClusterResourcePlacement`, multiple replicas of resources can't be scheduled on the same cluster.
 * The `ClusterResourcePlacement` supports different placement types within a single object.
 
-For more information, see [the open-source Fleet Scheduler documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/Scheduler/README.md).
+For more information, see the open-source [KubeFleet Scheduler documentation](https://kubefleet.dev/docs/concepts/scheduler/).
 
 ## What is the scheduling framework?
 
@@ -43,7 +44,7 @@ The fleet scheduler integrates the following fundamental built-in plugins:
 * **Cluster eligibility plugin**: Enables cluster selection based on specific status criteria.
 * **Taint & toleration plugin**: Enables cluster selection based on [taints on the cluster](./concepts-fleet.md#taints) and [tolerations on the `ClusterResourcePlacement`](./concepts-resource-propagation.md#using-tolerations).
 
-For more information, see the [open-source Fleet Scheduling Framework documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/Scheduling-Framework/README.md).
+For more information, see the open-source [KubeFleet Scheduling Framework documentation](https://kubefleet.dev/docs/concepts/scheduling-framework/).
 
 ## Next steps
 

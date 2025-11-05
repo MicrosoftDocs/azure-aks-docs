@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.author: alvinli
 author: alvinli
 ms.date: 05/09/2024
+# Customer intent: "As a cloud administrator managing an Azure Kubernetes Service cluster, I want to delete a node pool, so that I can optimize resource allocation and manage costs effectively."
 ---
 
 # Delete an Azure Kubernetes Service (AKS) node pool
@@ -71,7 +72,7 @@ If your cluster has PodDisruptionBudgets that are preventing the deletion of the
     az aks nodepool delete \
         --resource-group myResourceGroup \
         --cluster-name myAKSCluster \
-        --name nodepool1
+        --name nodepool1 \
         --ignore-pod-disruption-budget true
     ```
 
@@ -103,7 +104,7 @@ If your cluster has PodDisruptionBudgets that are preventing the deletion of the
     az aks nodepool delete-machines \
         --resource-group <resource-group-name> \
         --cluster-name <cluster-name> \
-        --name <node-pool-name>
+        --name <node-pool-name> \
         --machine-names <vm-name-1> <vm-name-2>
     ```
 
@@ -120,10 +121,10 @@ If your cluster has PodDisruptionBudgets that are preventing the deletion of the
 For more information about adjusting node pool sizes in AKS, see [Resize node pools][resize-node-pool].
 
 <!-- LINKS -->
-[az-aks-delete-nodepool]: /cli/azure/aks#az_aks_nodepool_delete
+[az-aks-delete-nodepool]: /cli/azure/aks#az-aks-nodepool-delete
 [remove-azaksnodepool]: /powershell/module/az.aks/remove-azaksnodepool
 [resize-node-pool]: ./resize-node-pool.md
 [pod-disruption-budget]: operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets
 [specify-disruption-budget]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 [disruptions]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
-[az-aks-nodepool-delete-machines]: /cli/azure/aks/nodepool#az_aks_nodepool_delete_machines
+[az-aks-nodepool-delete-machines]: /cli/azure/aks/nodepool#az-aks-nodepool-delete-machines

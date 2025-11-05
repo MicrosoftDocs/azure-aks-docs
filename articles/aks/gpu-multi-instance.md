@@ -4,7 +4,9 @@ description: Learn how to create a multi-instance GPU node pool in Azure Kuberne
 ms.topic: how-to
 ms.date: 08/30/2023
 ms.author: sachidesai
+author: schaffererin
 ms.subservice: aks-nodes
+# Customer intent: "As a cloud engineer, I want to create a multi-instance GPU node pool in Azure Kubernetes Service, so that I can efficiently utilize GPU resources for parallel processing in my applications."
 ---
 
 # Create a multi-instance GPU node pool in Azure Kubernetes Service (AKS)
@@ -15,7 +17,7 @@ This article walks you through how to create a multi-instance GPU node pool usin
 
 ## Prerequisites and limitations
 
-* An Azure account with an active subscription. If you don't have one, you can [create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* An Azure account with an active subscription. If you don't have one, you can [create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * Azure CLI version 2.2.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * The Kubernetes command-line client, [kubectl](https://kubernetes.io/docs/reference/kubectl/), installed and configured. If you use Azure Cloud Shell, `kubectl` is already installed. If you want to install it locally, you can use the [`az aks install-cli`][az-aks-install-cli] command.
 * Helm v3 installed and configured. For more information, see [Installing Helm](https://helm.sh/docs/intro/install/).
@@ -268,12 +270,12 @@ To learn more about GPUs on Azure Kubernetes Service, see:
 * [Learn about use cases for GPU workloads on AKS](/azure/architecture/reference-architectures/containers/aks-gpu/gpu-aks)
 
 <!-- LINKS - internal -->
-[az-group-create]: /cli/azure/group#az_group_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
+[az-group-create]: /cli/azure/group#az-group-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [install-azure-cli]: /cli/azure/install-azure-cli
-[az-aks-install-cli]: /cli/azure/aks#az_aks_install_cli
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 
 <!-- LINKS - external-->
 [NVIDIA MIG]:https://www.nvidia.com/en-us/technologies/multi-instance-gpu/

@@ -4,6 +4,9 @@ titleSuffix: Windows Server Container Partner Solutions
 description: Find partner-tested solutions that enable you to build, test, deploy, manage, and monitor your Windows-based apps on Windows containers on AKS.
 ms.topic: concept-article
 ms.date: 09/26/2023
+ms.author: schaffererin
+author: schaffererin
+# Customer intent: "As a cloud developer, I want to integrate partner solutions for Windows containers on AKS, so that I can optimize application deployment, enhance security, and improve observability across my Windows-based applications."
 ---
 
 # Windows AKS partner solutions

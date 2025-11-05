@@ -8,7 +8,8 @@ ms.author: schaffererin
 
 ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell, devx-track-extended-azdevcli
 
-#Customer intent: As a developer or IT pro, I want to learn how to create an Azure Kubernetes Service (AKS) cluster so that I can deploy and run my own applications.
+# Customer intent: As a developer or IT pro, I want to learn how to create an Azure Kubernetes Service (AKS) cluster so that I can deploy and run my own applications.
+
 ---
 
 # Tutorial - Create an Azure Kubernetes Service (AKS) cluster
@@ -238,9 +239,9 @@ In the next tutorial, you learn how to deploy Azure Container Storage on your cl
 [aks-tutorial-prepare-acr]: ./tutorial-kubernetes-prepare-acr.md
 [aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md
 [aks-tutorial-acstor]: ./tutorial-kubernetes-deploy-azure-container-storage.md
-[az aks create]: /cli/azure/aks#az_aks_create
-[az aks install-cli]: /cli/azure/aks#az_aks_install_cli
-[az aks get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az aks create]: /cli/azure/aks#az-aks-create
+[az aks install-cli]: /cli/azure/aks#az-aks-install-cli
+[az aks get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [azure-azd-install]: /azure/developer/azure-developer-cli/install-azd
 [azure-cli-install]: /cli/azure/install-azure-cli
 [container-registry-integration]: ./cluster-container-registry-integration.md

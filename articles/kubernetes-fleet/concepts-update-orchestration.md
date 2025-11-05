@@ -1,16 +1,19 @@
 ---
 title: "Update Kubernetes and node images across multiple member clusters"
 description: This article describes the concept of update orchestration across multiple clusters.
-ms.date: 04/09/2025
+ms.date: 09/10/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: "As a platform administrator managing multiple Kubernetes clusters, I want to orchestrate safe and predictable updates across member clusters, so that I can maintain and upgrade the clusters without manual intervention and minimize downtime."
 ---
 
 # Update Kubernetes and node images across multiple member clusters
 
-Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager (Fleet) allows you to orchestrate updates across multiple clusters using update runs. 
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
+
+Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager allows you to orchestrate updates across multiple clusters using update runs. 
 
 Update runs consist of stages, groups, and strategies and can be applied either manually, for one-time updates, or automatically, for ongoing regular updates using auto-upgrade profiles. All update runs (manual or automated) honor member cluster [maintenance windows][aks-maintenance-windows].
 
@@ -23,7 +26,11 @@ The following image visualizes an upgrade run containing two update stages, each
 * **Update run**: An update run represents an update being applied to a collection of AKS clusters, consisting of the update goal and sequence. The update goal describes the desired updates (for example, upgrading to Kubernetes version 1.28.3). The update sequence describes the exact order to apply the update to multiple member clusters, expressed using stages and groups. If unspecified, all the member clusters are updated one by one sequentially. An update run can be stopped and started.
 * **Update stage**: Update runs are divided into stages, which are applied sequentially. For example, a first update stage might update test environment member clusters, and a second update stage would then later update production environment member clusters. A wait time can be specified to delay between the application of subsequent update stages.
 * **Update group**: Each update stage contains one or more update groups, which are used to select the member clusters to be updated. Update groups are also used to order the application of updates to member clusters. Within an update stage, updates are applied to all the different update groups in parallel; within an update group, member clusters update sequentially. Each member cluster of the fleet can only be a part of one update group.
+* **Approval gates (preview)**: Can be configured before or after each stage or group. Approvals pause the update run, allowing either you or automations that you've set up to check that it's OK to proceed. After you or your automation grants approval, the update run will continue.
 * **Update strategy**: An update strategy describes the update sequence with stages and groups and allows you to reuse an update run configuration instead of defining the sequence repeatedly in each run. An update strategy doesn't include desired Kubernetes or node image versions.
+
+> [!NOTE]
+> The maximum number of Update Groups in each Update Stage is **50**.
 
 Currently, the supported update operations on member cluster are upgrades. There are three types of upgrades you can choose from:
 
@@ -44,15 +51,15 @@ You should choose `Latest` to use fresher image versions and minimize security r
 
 Update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the Azure Kubernetes Service (AKS) cluster level.
 
-AKS clusters support two distinct maintenance windows - one for Kubernetes (control plane) upgrades and one for node image upgrades.
+AKS clusters support two distinct maintenance windows - one for Kubernetes (control plane) upgrades and one for node image upgrades. Maintenance windows define periods when updates can be applied to a cluster, but aren't an update trigger.
 
-Fleet Manager update runs will honor AKS maintenance windows as follows:
+Fleet Manager update runs honors AKS maintenance windows as follows:
 
 | Fleet Manager update channel | AKS upgrade option | AKS maintenance window setting       |
 |------------------------------|--------------------| -------------------------------------|
 | Kubernetes Control Plane     | Kubernetes Version | AKSManagedAutoUpgradeSchedule        |
 | Kubernetes + Node Image      | Kubernetes Version | AKSManagedAutoUpgradeSchedule        |
-| Node Image Only              | Node Image         |  AKSManagedNodeOSAutoUpgradeSchedule | 
+| Node Image Only              | Node Image         | AKSManagedNodeOSAutoUpgradeSchedule  | 
 
 Update run prioritizes upgrading clusters based on planned maintenance in the following order: 
   1. Member with an open ongoing maintenance window.
@@ -67,12 +74,12 @@ An update run can be in one of the following states:
 - **Not Started**: Update run hasn't started.
 - **Running**: Update run is in progress for at least one member cluster.
 - **Pending**: 
-  - **Member cluster**: A member cluster can be in the `Pending` state for any of the following reasons which can be viewed in the message field.
+  - **Member cluster**: A member cluster can be in the `Pending` state for any of the following reasons, which can be viewed in the message field.
     - Maintenance window isn't open. Message indicates next opening time.
     - Target Kubernetes version isn't yet available in the member's Azure region. Message links to the AKS release tracker so you can check status of the release across regions.
     - Target node image version isn't yet available in the member's Azure region. Message links to the AKS release tracker.
-  - **Update group**: A group is `Pending` if all members in the group are `Pending` or not started. When a member moves to `Pending`, the update run will attempt to upgrade the next member in the group. If all members are `Pending`, the group moves to `Pending` state. If a group is `Pending`, the update run waits for the group to complete before moving on to the next update stage.
-  - **Update stage**: A stage is `Pending` if all update groups in the stage are `Pending` or not started.
+  - **Update group**: A group is `Pending` if all members in the group are `Pending` or not started, or if it has a `Pending` gate. When a member moves to `Pending`, the update run will attempt to upgrade the next member in the group. If all members are `Pending`, the group moves to `Pending` state. If a group is `Pending`, the update run waits for the group to complete before moving on to the next update stage.
+  - **Update stage**: A stage is `Pending` if all update groups in the stage are `Pending` or not started, or if it has a `Pending` gate.
   - **Run**: A run is in `Pending` state if the current stage is in `Pending` state.
 - **Skipped**: All levels of an update run can be skipped. Skipping can be system or user-initiated.
   - **Member cluster**:
@@ -90,7 +97,7 @@ An update run can be in one of the following states:
     - All stages were detected as `Skipped` by the system.
 - **Stopped**: All levels of an update run can be stopped. There are two possibilities for entering a stopped state:
   - User stopped the update run, at which point update run stopped tracking all operations. If an operation was already initiated by update run (for example, a cluster upgrade is in progress), then that operation isn't aborted for that individual cluster.
-  - If a failure is encountered during the update run (for example upgrades failed on one of the clusters), the entire update run enters into a stopped state. Operations are not attempted for any subsequent cluster in the update run.
+  - If a failure is encountered during the update run (for example upgrades failed on one of the clusters), the entire update run enters into a stopped state. Operations aren't attempted for any subsequent cluster in the update run.
 - **Failed**: A failure to upgrade a cluster results in the following actions:
   - Marks the `MemberUpdateStatus` as `Failed` on the member cluster.
   - Marks all parents (group -> stage -> run) as `Failed` with a summary error message.
@@ -106,7 +113,7 @@ Auto-upgrade profiles are used to automatically trigger update runs when new Kub
 
 In an auto-upgrade profile you can configure:
 
-- a `Channel` (Stable, Rapid, NodeImage) which determines the type of auto-upgrade that is applied to the clusters.
+- a `Channel` (Stable, Rapid, NodeImage, TargetKubernetesVersion (preview)) which determines the type of auto-upgrade that is applied to the clusters.
 - an `UpdateStrategy` which configures the sequence in which the clusters are upgraded. If a strategy isn't supplied, clusters are updated one by one sequentially.
 - the `NodeImageSelectionType` (Latest, Consistent) to specify how the node image is selected when upgrading the Kubernetes version.
 
@@ -140,9 +147,19 @@ Example:
 
 * A cluster has nodes with a NodeImage of *AKSWindows-2022-containerd* of version *20348.2582.240716*. A new NodeImage version *20348.2582.240916* is released and the cluster nodes are automatically upgraded to version *20348.2582.240916*.
 
+### TargetKubernetesVersion channel (preview)
+
+The TargetKubernetesVersion channel allows you to control when to move your fleet to the next Kubernetes minor version by specifying it in the auto-upgrade profile. The target Kubernetes version must be specified in the format "{major}.{minor}" (for example, "1.33"). Fleet auto-upgrade automatically upgrades member clusters to the latest patch release of the specified target Kubernetes version when the patch is available. Fleet won't upgrade to the next minor version until you update the auto-upgrade profile's target Kubernetes version.
+
+Examples:
+* You create an auto upgrade profile with TargetKubernetesVersion channel and specify a target Kubernetes version of "1.30". A new patch version 1.30.5 is published. Update run is automatically created with the target of 1.30.5.
+* You create an auto-upgrade profile with TargetKubernetesVersion channel, specify a target Kubernetes version of "1.29" and enable LongTermSupport (LTS) in the auto-upgrade profile. The latest community supported minor version is "1.33". A new patch version 1.29.5 is published. Update run is automatically created with the target of 1.29.5. **Note**: if the generated update run includes clusters without LTS enabled, it will fail.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
 ### Minor version skipping behavior
 
-Auto-upgrade does not move clusters between minor Kubernetes versions when there's more than one minor Kubernetes version difference (for example: 1.28 to 1.30). Where administrators have a diverse set of Kubernetes versions it's recommended to first use one or more [update run](#understanding-update-runs) to bring member clusters into a set of consistently versioned releases so that configured `Stable` or `Rapid` channel updates ensure consistency is maintained in future.
+Auto-upgrade doesn't move clusters between minor Kubernetes versions when there's more than one minor Kubernetes version difference (for example: 1.28 to 1.30). Where administrators have a diverse set of Kubernetes versions it's recommended to first use one or more [update run](#understanding-update-runs) to bring member clusters into a set of consistently versioned releases so that configured `Stable` or `Rapid` channel updates ensure consistency is maintained in future.
 
 > [!NOTE]
 >
@@ -156,9 +173,11 @@ Auto-upgrade does not move clusters between minor Kubernetes versions when there
 >
 > * If a cluster has no defined planned maintenance window it will be upgraded immediately when the update run reaches the cluster.
 >
-> * If you want to have your Kubernetes version upgraded, you need to create an `autoupgradeprofile` with `Rapid` or `Stable` channels.
+> * If you want to have your Kubernetes version upgraded, you need to create an `autoupgradeprofile` with `Rapid`, `Stable`, or `TargetKubernetesVersion (preview)` channels.
 >
 > * If you want to have your NodeImage version upgraded, you need to create an `autoupgradeprofile` with `NodeImage` channel.
+>
+> * When using the `TargetKubernetesVersion (preview)` channel, you must specify the target Kubernetes version using the `--target-kubernetes-version` parameter.
 >
 > * You can create multiple auto-upgrade profiles for the same Fleet.
 
@@ -167,6 +186,7 @@ Auto-upgrade does not move clusters between minor Kubernetes versions when there
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
 * [How-to: Monitor update runs for Azure Kubernetes Fleet Manager](./howto-monitor-update-runs.md).
+* [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).
 
 <!-- INTERNAL LINKS -->
 [supported-kubernetes-versions]: /azure/aks/supported-kubernetes-versions

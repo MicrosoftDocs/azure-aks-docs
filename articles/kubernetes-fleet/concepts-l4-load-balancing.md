@@ -6,6 +6,7 @@ author: shashankbarsin
 ms.author: shasb
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: "As a cloud architect, I want to implement multi-cluster layer-4 load balancing, so that I can manage traffic across deployed workloads in Azure Kubernetes clusters."
 ---
 
 # Multi-cluster layer-4 load balancing (preview)
@@ -20,7 +21,7 @@ For multi-cluster load balancing, Fleet requires target clusters to be using [Az
 
 The `ServiceExport` itself can be propagated from the fleet cluster to a member cluster using the Kubernetes resource propagation feature, or it can be created directly on the member cluster. Once this `ServiceExport` resource is created, it results in a `ServiceImport` being created on the fleet cluster, and all other member clusters to build the awareness of the service.
 
-The user can then create a `MultiClusterService` custom resource to indicate that they want to set up Layer 4 multi-cluster load balancing. This `MultiClusterService` results in the member cluster mapped Azure Load Balancer being configured to load balance incoming traffic across endpoints of this service on multiple member clusters.
+The user can then create a `MultiClusterService` custom resource to indicate that they want to set up Layer 4 multi-cluster load balancing. This MultiClusterService configures the Azure Load Balancer in each member cluster to distribute incoming Layer 4 traffic across the service’s endpoints in multiple member clusters.
 
 ## Next steps
 

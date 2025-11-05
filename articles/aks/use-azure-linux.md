@@ -8,11 +8,15 @@ ms.date: 02/27/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a cloud developer, I want to deploy and manage Azure Linux container hosts on AKS, so that I can ensure reliable and efficient container workloads with reduced maintenance and enhanced security."
 ---
 
 # Use the Azure Linux container host for Azure Kubernetes Service (AKS)
 
 The Azure Linux container host for AKS is an open-source Linux distribution created by Microsoft, and it’s generally available as a container host on Azure Kubernetes Service (AKS). The Azure Linux container host provides reliability and consistency from cloud to edge across the AKS, AKS-HCI, and Arc products. You can deploy Azure Linux node pools in a new cluster, add Azure Linux node pools to your existing Ubuntu clusters, or migrate your Ubuntu nodes to Azure Linux nodes. To learn more about Azure Linux, see the [Azure Linux documentation][azurelinux-doc].
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Why use Azure Linux
 
@@ -40,8 +44,8 @@ To learn more about Azure Linux, see the [Azure Linux documentation][azurelinuxd
 [azurelinux-doc]: /azure/azure-linux/intro-azure-linux
 [azurelinux-capabilities]: /azure/azure-linux/intro-azure-linux#azure-linux-container-host-key-benefits
 [azurelinux-cluster-config]: /azure/azure-linux/quickstart-azure-cli
-[azurelinux-node-pool]: create-node-pools.md#add-an-azure-linux-node-pool
-[ubuntu-to-azurelinux]: create-node-pools.md#migrate-ubuntu-nodes-to-azure-linux-nodes
+[azurelinux-node-pool]: ./create-node-pools.md#create-an-aks-cluster-with-a-single-node-pool-using-the-azure-cli
+[ubuntu-to-azurelinux]: /azure/azure-linux/tutorial-azure-linux-migration
 [auto-upgrade-aks]: auto-upgrade-cluster.md
 [kured]: node-updates-kured.md
 [azurelinuxdocumentation]: /azure/azure-linux/intro-azure-linux

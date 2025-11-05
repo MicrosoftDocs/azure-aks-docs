@@ -2,13 +2,13 @@
 title: Enhancing Concurrency Control with Entity Tags (eTags) in Azure Kubernetes Service
 description: Learn how to use eTags (Entity Tags) to enable concurrency control and avoid racing conditions or overwriting scenarios. 
 ms.topic: how-to
-ms.date: 02/28/2025
-ms.author: reginalin
-author: reginalin
+ms.date: 06/10/2024
+author: schaffererin
+ms.author: schaffererin
+ms.custom: aks, etag, concurrency-control
 ms.subservice: aks-nodes
+# Customer intent: As a cloud engineer, I want to implement eTags for entity-level concurrency control in Azure Kubernetes Service, so that I can prevent conflicting requests and ensure data integrity during resource updates.
 ---
-
-
 
 # Enhance concurrency control with entity tags (eTags) in Azure Kubernetes Service 
 
@@ -32,21 +32,65 @@ You can do either a `LIST` or a `GET` call to your cluster or node pool to see t
 ```
 
 ### What would modify existing ETags
-ETags can exist at both the cluster and agent pool levels. Depending on the scope of the operations you are performing, you can pass in the corresponding eTag. When you perform a cluster-level operation, both the cluster-level eTag and agent pool eTag are updated. When you perform an agent pool operation, only the agent pool eTag is updated.
 
+ETags can exist at both the cluster and agent pool levels. Depending on the scope of the operations you are performing, you can pass in the corresponding eTag. When you perform a cluster-level operation, both the cluster-level eTag and agent pool eTag are updated. When you perform an agent pool operation, only the agent pool eTag is updated.
 
 ### Include ETags in operation headers
 
 Headers are optional to use. The following examples show how to use `–-if-match` and `-–if-none-match` headers. 
 
-**Example 1**: The CLI command below s an existing cluster `MyManagedCluster` if the eTag matches with `yvjvt`
-```azurecli
-az aks delete -g MyResourceGroup -n MyManagedCluster --if-match "yvjvt"
+**Example 1**: The CLI command below deletes an existing cluster `MyManagedCluster` if the eTag matches with `yvjvt`
+
+Suppose you want to delete an AKS cluster using its eTag. (For illustration, replace `"yvjvt"` with the actual eTag value you retrieved from the resource.)
+
+```shell
+az aks delete -g $RG_NAME -n $CLUSTER_NAME --if-match "yvjvt"
 ```
 
-**Example 2**: The CLI command below creates a new cluster called `MyManagedCluster`. If `*` is provided in the `–if-none-match` header, that means to validate the resource does not exist.
+**Example 2**: The CLI command below creates a new cluster. If `*` is provided in the `–if-none-match` header, that means to validate the resource does not exist.
+
+First, create a resource group:
+
 ```azurecli
-az aks create -g MyResourceGroup -n MyManagedCluster --if-none-match "*"
+export RANDOM_SUFFIX=$(head -c 3 /dev/urandom | xxd -p)
+export RG_NAME="my-resource-group$RANDOM_SUFFIX"
+export REGION="eastus2"
+
+az group create --name $RG_NAME --location $REGION 
+```
+
+Then, create a new AKS cluster with a random suffix to ensure uniqueness:
+
+```azurecli
+export CLUSTER_NAME="my-managed-cluster$RANDOM_SUFFIX"
+
+az aks create -g $RG_NAME -n $CLUSTER_NAME --location $REGION --if-none-match "*"
+```
+
+Results: 
+
+<!-- expected_similarity=0.3 --> 
+
+```output
+{
+  "aadProfile": null,
+  "addonProfiles": null,
+  "agentPoolProfiles": [
+    {
+      "eTag": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      ...
+    }
+  ],
+  "apiServerAccessProfile": null,
+  "autoScalerProfile": null,
+  ...
+  "name": "my-managed-clusterxxx",
+  ...
+  "provisioningState": "Succeeded",
+  ...
+  "resourceGroup": "my-resource-groupxxx",
+  ...
+}
 ```
 
 ### Configurations and Expected Behavior

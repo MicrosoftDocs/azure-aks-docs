@@ -8,6 +8,7 @@ ms.topic: how-to
 ms.date: 01/16/2025
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
+# Customer intent: As a developer, I want to install the Dapr extension on my Azure Kubernetes Service (AKS) cluster, so that I can efficiently build and manage resilient microservices using Dapr's capabilities for communication and state management.
 ---
 
 # Install the Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes
@@ -38,7 +39,7 @@ Once Dapr is installed on your cluster, you can begin to develop using the Dapr 
 
 ## Prerequisites 
 
-- An Azure subscription. [Don't have one? Create a free account.](https://azure.microsoft.com/free/?WT.mc_id=A261C142F)
+- An Azure subscription. [Don't have one? Create a free account.](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn)
 - The latest version of the [Azure CLI][install-cli].
 - An existing [AKS cluster][deploy-cluster] or connected [Arc-enabled Kubernetes cluster][arc-k8s-cluster].
 - [An Azure Kubernetes Service Role-Based Access Control Admin role](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin) 
@@ -84,7 +85,7 @@ If the provider shows as *NotRegistered*, register the provider using the [az pr
 az provider register --namespace Microsoft.KubernetesConfiguration
 ```
 
-### Register the `ExtenstionTypes` feature to your Azure subscription
+### Register the `ExtensionTypes` feature to your Azure subscription
 
 The `ExtensionTypes` feature needs to be registered to your Azure subscription. In the terminal, verify you're in the correct subscription:
 
@@ -92,7 +93,7 @@ The `ExtensionTypes` feature needs to be registered to your Azure subscription. 
 az account set --subscription <YOUR-AZURE-SUBSCRIPTION-ID>
 ```
 
-Register the `ExtenstionTypes` feature.
+Register the `ExtensionTypes` feature.
 
 ```azurecli
 az feature registration create --namespace Microsoft.KubernetesConfiguration --name ExtensionTypes
@@ -175,7 +176,7 @@ az k8s-extension extension-types list-versions-by-cluster --resource-group <myRe
 ```
 
 To view a list of the stable Dapr versions available _by location_:
-1. [Make sure you've registered the `ExtenstionTypes` feature to your Azure subscription.](./dapr.md#register-the-extenstiontypes-feature-to-your-azure-subscription)
+1. [Make sure you've registered the `ExtensionTypes` feature to your Azure subscription.](./dapr.md#register-the-extensiontypes-feature-to-your-azure-subscription)
 1. Run the following command.
 
 ```azurecli
@@ -226,7 +227,7 @@ If the provider shows as *NotRegistered*, register the provider using the [az pr
 az provider register --namespace Microsoft.KubernetesConfiguration
 ```
 
-### Register the `ExtenstionTypes` feature to your Azure subscription
+### Register the `ExtensionTypes` feature to your Azure subscription
 
 The `ExtensionTypes` feature needs to be registered to your Azure subscription. In the terminal, verify you're in the correct subscription:
 

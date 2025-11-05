@@ -3,8 +3,11 @@ title: Limit access to kubeconfig in Azure Kubernetes Service (AKS)
 description: Learn how to control access to the Kubernetes configuration file (kubeconfig) for cluster administrators and cluster users
 ms.topic: how-to
 ms.subservice: aks-security
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.custom: devx-track-azurecli
 ms.date: 03/28/2023
+# Customer intent: "As a cluster administrator, I want to manage access to the kubeconfig file using role-based access control, so that I can ensure that only authorized users have the necessary permissions to interact with our Azure Kubernetes Service clusters."
 ---
 
 # Use Azure role-based access control to define access to the Kubernetes configuration file in Azure Kubernetes Service (AKS)
@@ -151,13 +154,13 @@ For enhanced security on access to AKS clusters, [integrate Microsoft Entra auth
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
 [azure-cli-install]: /cli/azure/install-azure-cli
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [api-cluster-admin]: /rest/api/aks/managedclusters/listclusteradmincredentials
 [api-cluster-user]: /rest/api/aks/managedclusters/listclusterusercredentials
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-account-show]: /cli/azure/account#az_account_show
-[az-ad-user-show]: /cli/azure/ad/user#az_ad_user_show
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[az-role-assignment-delete]: /cli/azure/role/assignment#az_role_assignment_delete
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-account-show]: /cli/azure/account#az-account-show
+[az-ad-user-show]: /cli/azure/ad/user#az-ad-user-show
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[az-role-assignment-delete]: /cli/azure/role/assignment#az-role-assignment-delete
 [aad-integration]: ./azure-ad-integration-cli.md
-[az-ad-group-show]: /cli/azure/ad/group#az_ad_group_show
+[az-ad-group-show]: /cli/azure/ad/group#az-ad-group-show

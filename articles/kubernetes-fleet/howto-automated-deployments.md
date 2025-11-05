@@ -5,8 +5,9 @@ author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
 ms.custom: build-2025
-ms.date: 04/22/2025
+ms.date: 06/16/2025
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: As a DevOps engineer, I want to configure automated deployments using a multi-cluster strategy, so that I can build and deploy applications across multiple Kubernetes clusters while maintaining security and resource optimization.
 ---
 
 # Use Azure Kubernetes Fleet Manager Automated Deployments to drive multi-cluster resource placement (Preview)
@@ -25,6 +26,7 @@ Automated Deployments build on [draft.sh](https://draft.sh). When you create a n
 * A Kubernetes Fleet Manager with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 * The user completing the configuration has permissions to the Fleet Manager hub cluster Kubernetes API. For more information, see [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
 * A Kubernetes namespace already deployed on the Fleet Manager hub cluster.
+* An Azure Container Registry (ACR) with [AcrPull rights granted to member AKS clusters][acr-create].
 
 ## Bring your application source code
 
@@ -274,6 +276,7 @@ During preview, to configure placement of your staged workload on to member clus
 
  * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
  * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
+ * [Automated Deployments FAQs](./faq.md#automated-deployments-faqs).
 
 [azure-portal]: https://portal.azure.com
 [portal-fleets]: https://portal.azure.com/#browse/Microsoft.ContainerService%2Ffleets
@@ -284,3 +287,4 @@ During preview, to configure placement of your staged workload on to member clus
 [kubernetes-pod-security-standards]: https://kubernetes.io/docs/concepts/security/pod-security-standards/
 [pod-anti-affinity]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
 [topology-spread-constraints]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+[acr-create]: /azure/aks/cluster-container-registry-integration

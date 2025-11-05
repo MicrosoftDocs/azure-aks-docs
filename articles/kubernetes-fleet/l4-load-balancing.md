@@ -8,6 +8,7 @@ ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - devx-track-azurecli
+# Customer intent: "As a Kubernetes administrator, I want to set up multi-cluster Layer 4 load balancing across multiple member clusters, so that I can route incoming traffic to applications deployed on these clusters."
 ---
 
 # Set up multi-cluster layer 4 load balancing across Azure Kubernetes Fleet Manager member clusters (preview)
@@ -180,7 +181,7 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
     >   name: kuard
     >   namespace: kuard-demo
     >   annotations:
-    >      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    >      networking.fleet.azure.com/azure-load-balancer-internal: "true"
     >   ...
     > ```
 

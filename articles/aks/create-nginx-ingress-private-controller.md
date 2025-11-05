@@ -5,8 +5,9 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 10/08/2024
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
+# Customer intent: "As a DevOps engineer, I want to configure an NGINX ingress controller with an Azure private DNS zone, so that I can ensure secure and efficient DNS resolution for internal applications running on my Kubernetes cluster."
 ---
 
 # Configure NGINX ingress controller to support Azure private DNS zone with application routing add-on
@@ -102,7 +103,7 @@ The Azure DNS private zone auto registration feature manages DNS records for vir
 
 The application routing add-on uses a Kubernetes [custom resource definition (CRD)][k8s-crds] called [`NginxIngressController`][app-routing-crds] to configure NGINX ingress controllers. You can create more ingress controllers or modify an existing configuration.
 
-`NginxIngressController` CRD has a `loadBalancerAnnotations` field to control the behavior of the NGINX ingress controller's service by setting load balancer annotations. For more information about load balancer annotations, see [Customizations via Kubernetes annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations).
+`NginxIngressController` CRD has a `loadBalancerAnnotations` field to control the behavior of the NGINX ingress controller's service by setting load balancer annotations. For more information about load balancer annotations, see [Customizations via Kubernetes annotations](configure-load-balancer-standard.md#customizations-via-kubernetes-annotations).
 
 Perform the following steps to create an NGINX ingress controller with an internal facing Azure Load Balancer with a private IP address.
 
@@ -265,7 +266,7 @@ For other configuration information related to SSL encryption other advanced NGI
 [app-routing-crds]: https://aka.ms/aks/approuting/nginxingresscontrollercrd
 
 <!-- LINKS - internal -->
-[summary-msi]: use-managed-identity.md#summary-of-managed-identities-used-by-aks
+[summary-msi]: managed-identity-overview.md#summary-of-managed-identities-used-by-aks
 [rbac-owner]: /azure/role-based-access-control/built-in-roles#owner
 [rbac-classic]: /azure/role-based-access-control/rbac-and-directory-admin-roles#classic-subscription-administrator-roles
 [app-routing-add-on-basic-configuration]: app-routing.md

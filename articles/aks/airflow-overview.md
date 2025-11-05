@@ -1,16 +1,18 @@
 ---
-title: Solution overview for deploying Apache Airflow on Azure Kubernetes Service (AKS)
-description: In this article, we provide an overview of deploying Apache Airflow on Azure Kubernetes Service (AKS) using Helm.
+title: Deploy Apache Airflow on AKS with Helm
+description: Learn the high-level architecture of deploying production-ready Apache Airflow on Azure Kubernetes Service (AKS) and the available Airflow executors.
 ms.topic: overview
-ms.custom: azure-kubernetes-service
-ms.date: 12/19/2024
+ms.service: azure-kubernetes-service
+ms.date: 07/14/2025
 author: schaffererin
 ms.author: schaffererin
+ms.custom: 'stateful-workloads'
+# Customer intent: As a data engineer, I want to deploy Apache Airflow on Azure Kubernetes Service using Helm, so that I can effectively manage and scale complex data workflows in a production environment.
 ---
 
-# Deploy Apache Airflow on Azure Kubernetes Service (AKS) overview
+# Overview of deploying Apache Airflow on Azure Kubernetes Service (AKS)
 
-In this guide, you deploy Apache Airflow on Azure Kubernetes Service (AKS) using Helm. You learn how to set up an AKS cluster, install Helm, deploy Airflow using the Helm chart, and explore the Airflow UI.
+In this guide, you deploy Apache Airflow on Azure Kubernetes Service (AKS) using Helm. You learn how to set up an AKS cluster, install Helm, deploy Airflow using the Helm chart, and explore the Airflow UI. This article provides a high-level overview of the architecture and components involved in deploying production-ready Airflow on AKS.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
@@ -29,7 +31,7 @@ At a high level, Airflow includes:
 * Workers that perform the tasks.
 * Other components like the Command Line Interface (CLI).
 
-:::image type="content" source="./media/airflow-overview/airflow-architecture.png" alt-text="Screenshot of the Apache Airflow architecture on AKS.":::
+:::image type="content" source="./media/airflow-overview/airflow-architecture.png" alt-text="Architecture diagram of Apache Airflow on AKS.":::
 
 ## Airflow distributed architecture for production
 

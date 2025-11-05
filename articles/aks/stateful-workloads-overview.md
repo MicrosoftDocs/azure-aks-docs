@@ -3,11 +3,13 @@ title: Stateful workloads in Azure Kubernetes Service (AKS)
 description: Learn about running stateful workloads in Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 04/04/2025
+ms.date: 06/13/2025
 author: schaffererin
 ms.author: schaffererin
 ms.collection: 
  - migration
+ms.custom: 'stateful-workloads'
+# Customer intent: As a cloud architect, I want to understand how to deploy stateful workloads on Azure Kubernetes Service, so that I can ensure data persistence and reliability for critical applications in a scalable environment.
 ---
 
 # Stateful workloads in Azure Kubernetes Service (AKS)
@@ -85,6 +87,12 @@ The following sections provide links to design and deployment information for st
 * [Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)](kafka-infrastructure.md)
 * [Configure and deploy Strimzi and Kafka components on Azure Kubernetes Service (AKS)](kafka-deploy.md)
 * [Configure monitoring and networking for a Kafka cluster on Azure Kubernetes Service (AKS)](kafka-configure.md)
+
+## GitHub Actions with Azure Files
+
+* [Solution overview for deploying highly available GitHub Actions on Azure Kubernetes Service (AKS)](./github-actions-azure-files-overview.md)
+* [Create the infrastructure for deploying highly available GitHub Actions on Azure Kubernetes Service (AKS)](./github-actions-azure-files-create-infrastructure.md)
+* [Deploy and test GitHub Actions on Azure Kubernetes Service (AKS)](./github-actions-azure-files-deploy-test.md)
 
 ## Contributors
 

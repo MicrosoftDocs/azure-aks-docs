@@ -7,6 +7,7 @@ ms.topic: concept-article
 ms.date: 06/22/2023
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, build-spring-2022
+# Customer intent: "As a developer using Azure Kubernetes Service, I want to automate the creation of Dockerfiles and deployment workflows with Draft, so that I can streamline my application development and deployment processes."
 ---
 
 # Draft for Azure Kubernetes Service (AKS) (preview)
@@ -24,7 +25,7 @@ Draft has the following commands to help ease your development on Kubernetes:
 
 ## Prerequisites
 
-- If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
+- If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 - Install the latest version of the [Azure CLI](/cli/azure/install-azure-cli-windows) and the *aks-preview* extension.
 - If you don't have one already, you need to create an [AKS cluster][deploy-cluster] and an Azure Container Registry instance.
 

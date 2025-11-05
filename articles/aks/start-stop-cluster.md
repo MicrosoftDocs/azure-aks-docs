@@ -4,6 +4,8 @@ description: Learn how to stop and start an Azure Kubernetes Service (AKS) clust
 ms.topic: how-to
 ms.date: 07/01/2024
 author: palma21
+ms.author: schaffererin
+# Customer intent: As a cloud administrator, I want to stop and start my Kubernetes clusters, so that I can optimize costs during idle periods without losing my configuration.
 ---
 
 # Stop and start an Azure Kubernetes Service (AKS) cluster
@@ -177,9 +179,9 @@ When using the cluster stop/start feature, the following conditions apply:
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [stop-azakscluster]: /powershell/module/az.aks/stop-azakscluster
 [get-azakscluster]: /powershell/module/az.aks/get-azakscluster
 [start-azakscluster]: /powershell/module/az.aks/start-azakscluster
-[az-aks-stop]: /cli/azure/aks#az_aks_stop
-[az-aks-start]: /cli/azure/aks#az_aks_start
+[az-aks-stop]: /cli/azure/aks#az-aks-stop
+[az-aks-start]: /cli/azure/aks#az-aks-start

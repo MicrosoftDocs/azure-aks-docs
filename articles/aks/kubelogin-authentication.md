@@ -1,13 +1,14 @@
 ---
 title: Use kubelogin to authenticate in Azure Kubernetes Service
 description: Learn how to use the kubelogin plugin for all Microsoft Entra authentication methods in Azure Kubernetes Service (AKS).
-author: nickomang
+author: davidsmatlak
 
-ms.author: nickoman
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom:
 ms.date: 11/28/2023
+# Customer intent: "As a Kubernetes administrator, I want to configure the kubelogin plugin for Microsoft Entra authentication in AKS, so that I can streamline user access and improve security for cluster management."
 ---
 
 # Use kubelogin to authenticate users in Azure Kubernetes Service

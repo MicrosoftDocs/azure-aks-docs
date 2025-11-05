@@ -6,6 +6,7 @@ ms.topic: concept-article
 ms.subservice: aks-security
 ms.date: 04/03/2025
 ms.author: shasb
+# Customer intent: "As a cloud security engineer, I want to implement comprehensive security practices for Azure Kubernetes Service, so that I can safeguard applications and clusters against vulnerabilities and unauthorized access throughout the development and deployment pipeline."
 ---
 
 # Security concepts for applications and clusters in Azure Kubernetes Service (AKS)
@@ -23,6 +24,9 @@ Kubernetes includes security components, such as *pod security standards* and *S
 * Provide secure pod traffic and access to sensitive credentials.
 
 This article introduces the core concepts that secure your applications in AKS.
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Build Security
 

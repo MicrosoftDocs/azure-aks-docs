@@ -1,18 +1,25 @@
 ---
 title: "Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI"
 description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI.
-ms.date: 04/28/2025
 author: sjwaight
 ms.author: simonwaight
+ms.date: 05/13/2025
 ms.service: azure-kubernetes-fleet-manager
-ms.custom: template-quickstart, mode-other, devx-track-azurecli, ignite-2023, build-2024
-ms.devlang: azurecli
 ms.topic: quickstart
+ms.custom:
+  - template-quickstart
+  - mode-other
+  - devx-track-azurecli
+  - ignite-2023
+  - build-2024
+  - build-2025
+ms.devlang: azurecli
+# Customer intent: "As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using the Azure CLI, so that I can manage and orchestrate multiple Kubernetes clusters from a centralized resource."
 ---
 
 # Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Azure CLI
 
-Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create a Fleet Manager and join Azure Kubernetes Service (AKS) clusters as member clusters.
+Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create a Fleet Manager and join [supported Kubernetes clusters](./concepts-member-cluster-types.md) as members.
 
 ## Prerequisites
 
@@ -20,21 +27,29 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create
 
 * Read the [conceptual overview of Fleet Manager](./concepts-fleet.md), which provides an explanation of fleets and member clusters referenced in this document.
 * Read the [conceptual overview of fleet types](./concepts-choosing-fleet.md), which provides a comparison of different fleet configuration options.
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
-* An identity (user or service principal) which can be used to [log in to Azure CLI](/cli/azure/authenticate-azure-cli). This identity needs to have the following permissions on the Fleet and AKS resource types for completing the steps listed in this quickstart:
+* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
+* An identity (user or service principal) which can be used to [log in to Azure CLI](/cli/azure/authenticate-azure-cli). This identity needs the following permissions for Fleet resources, and if applicable, member cluster resources:
 
+* **Fleet permissions:**
   * Microsoft.ContainerService/fleets/read
   * Microsoft.ContainerService/fleets/write
   * Microsoft.ContainerService/fleets/members/read
   * Microsoft.ContainerService/fleets/members/write
   * Microsoft.ContainerService/fleetMemberships/read
   * Microsoft.ContainerService/fleetMemberships/write
+* **If joining AKS member clusters:**
   * Microsoft.ContainerService/managedClusters/read
   * Microsoft.ContainerService/managedClusters/write
+  * Microsoft.ContainerService/managedClusters/listClusterUserCredential/action
+* **If joining Arc-enabled Kubernetes member clusters:**
+  * Microsoft.Kubernetes/connectedClusters/read,
+  * Microsoft.KubernetesConfiguration/extensions/read,
+  * Microsoft.KubernetesConfiguration/extensions/write,
+  * Microsoft.KubernetesConfiguration/extensions/delete,
 
 * Have the Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.6.2 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
@@ -61,7 +76,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create
   az aks install-cli
   ```
 
-* The AKS clusters you want to join as member clusters need to be running Kubernetes versions supported by AKS. Learn more about AKS version support policy [here](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy).
+* Kubernetes clusters to join as Fleet Manager member clusters must use supported versions of their respective platforms: see [AKS cluster version support policy](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy) and [Azure Arc-enabled Kubernetes validation](/azure//azure-arc/kubernetes/validation-program).
 
 ## Create a resource group
 
@@ -92,7 +107,7 @@ The following output example resembles successful creation of the resource group
 
 ## Create a Fleet Manager resource
 
-You can create a Fleet Manager at any time, selecting to later add your AKS clusters as member clusters. When created via the Azure CLI, by default, Fleet Manager enables member cluster grouping and update orchestration. If the Fleet Manager is created with a hub cluster, intelligent Kubernetes object placement and load balancing across multiple member clusters is possible. For more information, see the [conceptual overview of fleet types](./concepts-choosing-fleet.md), which provides a comparison of different fleet configurations.
+You can create a Fleet Manager at any time, selecting to later add [supported Kubernetes clusters](./concepts-member-cluster-types.md) as members. When created via the Azure CLI, by default, Fleet Manager enables member cluster grouping and update orchestration. If the Fleet Manager is created with a hub cluster, intelligent Kubernetes object placement and load balancing across multiple member clusters is possible. For more information, see the [conceptual overview of fleet types](./concepts-choosing-fleet.md), which provides a comparison of different fleet configurations.
 
 > [!IMPORTANT]
 > You can change from a Fleet Manager without a hub cluster to one with a hub cluster, but not the reverse. For Fleet Managers with a hub cluster, once private or public access is selected it can't be changed.
@@ -166,7 +181,17 @@ Your output should look similar to the following example output:
 ```output
 {
   "etag": "...",
-  "hubProfile": null,
+  "hubProfile": {
+    "agentProfile": {
+      "subnetId": null,
+      "vmSize": null
+    },
+    "apiServerAccessProfile": {
+      "enablePrivateCluster": false,
+      "enableVnetIntegration": false,
+      "subnetId": null
+    }
+  },
   "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/fleet-demo/providers/Microsoft.ContainerService/fleets/fleet-demo",
   "identity": {
     "principalId": <system-identity-id>,
@@ -225,16 +250,21 @@ az fleet create \
 
 ## Join member clusters
 
-Fleet currently supports joining existing AKS clusters as member clusters.
+Fleet currently supports joining existing AKS clusters or Arc-enabled Kubernetes clusters (Preview) as member clusters.
 
 1. Set the following environment variables for member clusters:
 
     ```azurecli-interactive
-    export MEMBER_NAME_1=aks-member-1
+    export MEMBER_NAME_1=flt-member-cluster-1
+
+   # For an AKS cluster
     export MEMBER_CLUSTER_ID_1=/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${GROUP}/providers/Microsoft.ContainerService/managedClusters/${MEMBER_NAME_1}
+
+    # For an Arc-enabled cluster
+    export MEMBER_CLUSTER_ID_1=/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${GROUP}/providers/Microsoft.Kubernetes/connectedClusters/${MEMBER_NAME_1}
     ```
 
-2. Join your existing AKS clusters to the Fleet resource using the [`az fleet member create`][az-fleet-member-create] command.
+2. Join the existing clusters to the Fleet Manager using the [`az fleet member create`][az-fleet-member-create] command.
 
     ```azurecli-interactive
     az fleet member create \
@@ -266,7 +296,7 @@ Fleet currently supports joining existing AKS clusters as member clusters.
     }
     ```
 
-3. Verify that the member clusters successfully joined the Fleet resource using the [`az fleet member list`][az-fleet-member-list] command.
+3. Verify that the member clusters successfully joined the Fleet Manager using the [`az fleet member list`][az-fleet-member-list] command.
 
     ```azurecli-interactive
     az fleet member list \

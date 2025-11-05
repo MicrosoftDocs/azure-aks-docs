@@ -2,11 +2,13 @@
 title: API server authorized IP ranges in Azure Kubernetes Service (AKS)
 description: Learn how to secure your cluster using an IP address range for access to the API server in Azure Kubernetes Service (AKS)
 ms.topic: concept-article
-ms.custom: devx-track-azurecli, devx-track-azurepowershell
+ms.custom: devx-track-azurecli, devx-track-azurepowershell, copilot-scenario-highlight
 ms.date: 05/19/2024
 ms.author: schaffererin
 author: schaffererin
-#Customer intent: As a cluster operator, I want to increase the security of my cluster by limiting access to the API server to only the IP addresses that I specify.
+
+# Customer intent: As a cluster operator, I want to increase the security of my cluster by limiting access to the API server to only the IP addresses that I specify.
+
 ---
 
 # Secure access to the API server using authorized IP address ranges in Azure Kubernetes Service (AKS)
@@ -18,7 +20,10 @@ The Kubernetes API server is the core of the Kubernetes control plane and is the
 ## Before you begin
 
 - You need the Azure CLI version 2.0.76 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-- To learn what IP addresses to include when integrating your AKS cluster with Azure DevOps, see the Azure DevOps [Allowed IP addresses and domain URLs][azure-devops-allowed-network-cfg] article.  
+- To learn what IP addresses to include when integrating your AKS cluster with Azure DevOps, see the Azure DevOps [Allowed IP addresses and domain URLs][azure-devops-allowed-network-cfg] article.
+
+> [!TIP]
+> From the Azure portal, you can use Microsoft Copilot in Azure to make changes to the IP addresses that can access your cluster. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#enable-ip-address-authorization).
 
 ### Limitations
 
@@ -73,7 +78,7 @@ When creating a cluster with API server authorized IP ranges enabled, you use th
 
 When creating a cluster with API server authorized IP ranges enabled, you specify a list of authorized public IP address ranges. When you specify a CIDR range, start with the first IP address in the range. For example, *137.117.106.90/29* is a valid range, but make sure you specify the first IP address in the range, such as *137.117.106.88/29*.
 
-1. From the [Azure portal home page](https://ms.portal.azure.com/#home), select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
+1. From the [Azure portal home page](https://portal.azure.com/#home), select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
 2. Configure the cluster settings as needed.
 3. In the **Networking** section under **Public access**, select **Set authorized IP ranges**.
 4. For **Specify IP ranges**, enter the IP address ranges you want to authorize to access the API server.
@@ -118,7 +123,7 @@ When you enable API server authorized IP ranges during cluster creation, the out
 
 When you enable API server authorized IP ranges during cluster creation, the outbound public IP for the Standard SKU load balancer for your cluster is also allowed by default in addition to the ranges you specify. To allow only the outbound public IP of the Standard SKU load balancer, you use *0.0.0.0/32* when specifying the IP ranges.
 
-1. From the [Azure portal home page](https://ms.portal.azure.com/#home), select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
+1. From the [Azure portal home page](https://portal.azure.com/#home), select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
 2. Configure the cluster settings as needed.
 3. In the **Networking** section under **Public access**, select **Set authorized IP ranges**.
 4. For **Specify IP ranges**, enter *0.0.0.0/32*. This allows only the outbound public IP of the Standard SKU load balancer.
@@ -313,9 +318,9 @@ In this article, you enabled API server authorized IP ranges. This approach is o
 
 <!-- LINKS - internal -->
 [api-server-vnet-integration]: api-server-vnet-integration.md
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [concepts-security]: concepts-security.md
 [egress-outboundtype]: egress-outboundtype.md
 [install-azure-cli]: /cli/azure/install-azure-cli

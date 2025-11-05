@@ -3,10 +3,11 @@ title: Control cluster access using Conditional Access with AKS-managed Microsof
 description: Learn how to access clusters using Conditional Access when integrating Microsoft Entra ID in your Azure Kubernetes Service (AKS) clusters.
 ms.topic: concept-article
 ms.subservice: aks-integration
-ms.date: 04/20/2023
-author: nickomang
-ms.author: nickoman
+ms.date: 06/25/2024
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.custom: devx-track-azurecli
+# Customer intent: "As a cloud security administrator, I want to configure Conditional Access for my AKS clusters, so that I can manage access securely and ensure compliance for users accessing the clusters."
 ---
 
 # Control cluster access using Conditional Access with AKS-managed Microsoft Entra integration
@@ -32,10 +33,22 @@ When you integrate Microsoft Entra ID with your AKS cluster, you can use [Condit
 
 ## Verify your Conditional Access policy has been successfully listed
 
+After implementing your Conditional Access policy, verify that it works as expected by accessing the AKS cluster and checking the sign-in activity.
+
 1. Get the user credentials to access the cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
+    Assign values to the required environment variables. The AKS cluster and resource group must exist.
+
     ```azurecli-interactive
-     az aks get-credentials --resource-group myResourceGroup --name myManagedCluster
+    export RANDOM_SUFFIX=$(head -c 3 /dev/urandom | xxd -p)
+    export RESOURCE_GROUP="myResourceGroup$RANDOM_SUFFIX"
+    export AKS_CLUSTER="myManagedCluster$RANDOM_SUFFIX"
+    ```
+
+    Download credentials required to access your AKS cluster.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER --overwrite-existing
     ```
 
 1. Follow the instructions to sign in.
@@ -44,6 +57,16 @@ When you integrate Microsoft Entra ID with your AKS cluster, you can use [Condit
 
     ```azurecli-interactive
     kubectl get nodes
+    ```
+
+    Results:
+
+    <!-- expected_similarity=0.3 -->
+
+    ```output
+    NAME                                         STATUS   ROLES   AGE     VERSION
+    aks-nodepool1-xxxxx-vmss000000               Ready    agent   3d2h    v1.xx.x
+    aks-nodepool1-xxxxx-vmss000001               Ready    agent   3d2h    v1.xx.x
     ```
 
 1. In the Azure portal, navigate to **Microsoft Entra ID** and select **Enterprise applications** > **Activity** > **Sign-ins**.
@@ -63,5 +86,5 @@ For more information, see the following articles:
 <!-- LINKS - Internal -->
 [aad-conditional-access]: /azure/active-directory/conditional-access/overview
 [licensing-fundamentals]: /entra/id-governance/licensing-fundamentals
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [pim-aks]: ./privileged-identity-management.md

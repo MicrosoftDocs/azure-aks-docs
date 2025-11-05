@@ -1,12 +1,13 @@
 ---
 title: Use OpenFaaS on Azure Kubernetes Service (AKS)
 description: Learn how to deploy and use OpenFaaS on an Azure Kubernetes Service (AKS) cluster to build serverless functions with containers.
-author: justindavies
+author: schaffererin
 ms.topic: concept-article
 ms.date: 08/29/2023
 ms.subservice: aks-developer
-ms.author: juda
+ms.author: schaffererin
 ms.custom: mvc, devx-track-azurecli
+# Customer intent: As a developer using Azure Kubernetes Service, I want to deploy and manage OpenFaaS to build and run serverless functions with containers, so that I can efficiently develop and scale my applications.
 ---
 
 # Use OpenFaaS on Azure Kubernetes Service (AKS)
@@ -16,7 +17,7 @@ ms.custom: mvc, devx-track-azurecli
 ## Before you begin
 
 * This article assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)](./concepts-clusters-workloads.md).
-* You need an active Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/) before you begin.
+* You need an active Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 * You need an AKS cluster. If you don't have an existing cluster, you can create one using the [Azure CLI](./learn/quick-kubernetes-deploy-cli.md), [Azure PowerShell](./learn/quick-kubernetes-deploy-powershell.md), or [Azure portal](./learn/quick-kubernetes-deploy-portal.md).
 * You need to install the OpenFaaS CLI. For installation options, see the [OpenFaaS CLI documentation][open-faas-cli].
 
@@ -236,6 +237,6 @@ Continue to learn with the [OpenFaaS workshop][openfaas-workshop], which include
 [open-faas]: https://www.openfaas.com/
 [open-faas-cli]: https://github.com/openfaas/faas-cli
 [openfaas-workshop]: https://github.com/openfaas/workshop
-[az-group-create]: /cli/azure/group#az_group_create
-[az-cosmosdb-create]: /cli/azure/cosmosdb#az_cosmosdb_create
-[az-cosmosdb-keys-list]: /cli/azure/cosmosdb/keys#az_cosmosdb_keys_list
+[az-group-create]: /cli/azure/group#az-group-create
+[az-cosmosdb-create]: /cli/azure/cosmosdb#az-cosmosdb-create
+[az-cosmosdb-keys-list]: /cli/azure/cosmosdb/keys#az-cosmosdb-keys-list

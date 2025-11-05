@@ -6,11 +6,12 @@ ms.topic: how-to
 ms.custom: build-2023, linux-related-content
 ms.reviewer: mattmcinnes
 ms.date: 04/19/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ms.subservice: aks-upgrade
-#Customer intent: As a cluster administrator, I want to know how to automatically apply Linux updates and reboot nodes in AKS for security and/or compliance
+
+# Customer intent: As a cluster administrator, I want to automate the reboot process for Linux nodes in Azure Kubernetes Service, so that I can ensure timely application of security updates and maintain cluster compliance without manual intervention.
 ---
 
 # Apply security and kernel updates to Linux nodes in Azure Kubernetes Service (AKS)
@@ -25,6 +26,9 @@ This article shows you how to use the open-source [kured (KUbernetes REboot Daem
 > `Kured` is an open-source project in the Cloud Native Computing Foundation. Please direct issues to the [kured GitHub][kured]. Additional support can be found in the #kured channel on [CNCF Slack](https://slack.cncf.io).
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Before you begin
 

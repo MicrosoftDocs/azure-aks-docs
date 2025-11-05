@@ -5,6 +5,8 @@ services: container-service
 ms.topic: how-to
 ms.date: 09/25/2024
 ms.author: pgibson
+author: schaffererin
+# Customer intent: "As a cloud engineer migrating microservices from Open Service Mesh to Istio, I want detailed guidance on translating OSM configurations to Istio equivalents, so that I can ensure a seamless transition and effective management of my workloads within the Istio service mesh."
 ---
 
 # Migration guidance for Open Service Mesh (OSM) configurations to Istio

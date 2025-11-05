@@ -7,7 +7,9 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: mvc, devx-track-azurepowershell
-#Customer intent: As a developer or IT pro, I want to learn how to upgrade an Azure Kubernetes Service (AKS) cluster so that I can use the latest version of Kubernetes and features.
+
+# Customer intent: As a developer or IT pro, I want to learn how to upgrade an Azure Kubernetes Service (AKS) cluster so that I can use the latest version of Kubernetes and features.
+
 ---
 
 # Tutorial - Upgrade an Azure Kubernetes Service (AKS) cluster
@@ -387,11 +389,11 @@ For more information on AKS, see the [AKS overview][aks-intro]. For guidance on 
 <!-- LINKS - internal -->
 [aks-intro]: ./intro-kubernetes.md
 [aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-aks-get-upgrades]: /cli/azure/aks#az_aks_get_upgrades
-[az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-aks-get-upgrades]: /cli/azure/aks#az-aks-get-upgrades
+[az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
 [azure-cli-install]: /cli/azure/install-azure-cli
-[az-group-delete]: /cli/azure/group#az_group_delete
+[az-group-delete]: /cli/azure/group#az-group-delete
 [sp-delete]: kubernetes-service-principal.md#other-considerations
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?WT.mc_id=AKSDOCSPAGE
 [azure-powershell-install]: /powershell/azure/install-az-ps
@@ -402,5 +404,5 @@ For more information on AKS, see the [AKS overview][aks-intro]. For guidance on 
 [aks-auto-upgrade]: ./auto-upgrade-cluster.md
 [auto-upgrade-node-image]: ./auto-upgrade-node-image.md
 [node-image-upgrade]: ./node-image-upgrade.md
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-aks-update]: /cli/azure/aks#az-aks-update
 

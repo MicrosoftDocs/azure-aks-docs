@@ -6,6 +6,7 @@ ms.author: schaffererin
 ms.topic: how-to
 ms.date: 09/19/2024
 ms.service: azure-kubernetes-service
+# Customer intent: As an Azure Kubernetes Service user, I want to enable the Kubernetes Event-driven Autoscaling (KEDA) add-on on my existing cluster, so that I can efficiently scale my applications based on demand and optimize resource management.
 ---
 
 # Enable the Kubernetes Event-driven Autoscaling (KEDA) add-on on an existing AKS cluster using the Azure portal

@@ -3,9 +3,10 @@ title:  Node Problem Detector (NPD) in Azure Kubernetes Service (AKS) nodes
 description: Learn about how AKS uses Node Problem Detector to expose issues with the node.
 ms.topic: concept-article
 ms.date: 05/31/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
+# Customer intent: As a Kubernetes administrator, I want to utilize Node Problem Detector to monitor node health and detect issues, so that I can maintain cluster stability and promptly address any underlying problems affecting performance.
 ---
 
 # Node Problem Detector (NPD) in Azure Kubernetes Service (AKS) nodes
@@ -19,25 +20,32 @@ ms.author: nickoman
 
 Node conditions indicate a permanent problem that makes the node unavailable. AKS uses the following node conditions from NPD to expose permanent problems on the node. NPD also emits corresponding Kubernetes events.
 
-|Problem Daemon type| NodeCondition | Reason |  
-|---|---|---|
-|CustomPluginMonitor| FilesystemCorruptionProblem | FilesystemCorruptionDetected |
-|CustomPluginMonitor| KubeletProblem | KubeletIsDown |
-|CustomPluginMonitor| ContainerRuntimeProblem | ContainerRuntimeIsDown |
-|CustomPluginMonitor| VMEventScheduled | VMEventScheduled |
-|CustomPluginMonitor| FrequentUnregisterNetDevice | UnregisterNetDevice|
-|CustomPluginMonitor|FrequentKubeletRestart|FrequentKubeletRestart|
-|CustomPluginMonitor|FrequentContainerdRestart|FrequentContainerdRestart|
-|CustomPluginMonitor|FrequentDockerRestart|FrequentDockerRestart|
-|SystemLogMonitor|KernelDeadlock|DockerHung|
-|SystemLogMonitor|ReadonlyFilesystem |FilesystemIsReadOnly|
+|Problem Daemon type|NodeCondition| Reason|Compute type| 
+|---|---|---|---|
+|CustomPluginMonitor| FilesystemCorruptionProblem | FilesystemCorruptionDetected | General purpose |
+|CustomPluginMonitor| KubeletProblem | KubeletIsDown |  General purpose |
+|CustomPluginMonitor| ContainerRuntimeProblem | ContainerRuntimeIsDown |  General purpose |
+|CustomPluginMonitor| VMEventScheduled | VMEventScheduled |  General purpose |
+|CustomPluginMonitor| FrequentUnregisterNetDevice | UnregisterNetDevice|  General purpose |
+|CustomPluginMonitor|FrequentKubeletRestart|FrequentKubeletRestart|  General purpose |
+|CustomPluginMonitor|FrequentContainerdRestart|FrequentContainerdRestart|  General purpose |
+|CustomPluginMonitor|FrequentDockerRestart|FrequentDockerRestart| General purpose |
+|CustomPluginMonitor|GPUMissing|Observed GPU count does not match expected GPU count| GPU only |
+|CustomPluginMonitor|NVLinkStatusInactive|NVLinkStatusInactive| GPU only |
+|CustomPluginMonitor|XIDErrors|XID errors present in kernel log| GPU only |
+|CustomPluginMonitor|IBLinkFlapping|Intermittent InfiniBand device connectivity| GPU only |
+|SystemLogMonitor|KernelDeadlock|DockerHung| General purpose |
+|SystemLogMonitor|ReadonlyFilesystem |FilesystemIsReadOnly| General purpose |
+
+> [!NOTE]
+> The `GPU only` node conditions currently apply to AKS node pools with `Standard_ND96asr_v4` or `Standard_ND96isr_H100_v5` VM size, and are supported on standard GPU and [MIG-enabled GPU node pools](./gpu-multi-instance.md).
 
 ## Events
 
 NPD emits events with relevant information to help you diagnose underlying issues.
 
 |Problem Daemon type| Reason  |  Frequency  |  Description | Action |
-|---|---| ---| --| --|
+|---|---|---|---|---|
 |CustomPluginMonitor|EgressBlocked|30 min| This event checks for connectivity to external [endpoints](#egressblocked) | Check if a firewall or NSG blocking the connectivity to the endpoint getting flagged|
 |CustomPluginMonitor|FilesystemCorruptionDetected|5min| This checks for filesystem corruption surfaced by docker | |
 |CustomPluginMonitor|KubeletIsDown|30s| This checks if kubelet service is running and healthy | |
@@ -164,4 +172,3 @@ problem_gauge{reason="VMEventScheduled",type="VMEventScheduled"} 0
 ## Next steps
 
 For more information on NPD, see [kubernetes/node-problem-detector](https://github.com/kubernetes/node-problem-detector).
-

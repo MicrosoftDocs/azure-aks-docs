@@ -2,12 +2,13 @@
 title: Configure dual-stack networking in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure dual-stack networking in Azure Kubernetes Service (AKS).
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 12/07/2023
 ms.custom: devx-track-azurecli, build-2023
+# Customer intent: As a cloud architect, I want to configure dual-stack networking in Azure Kubernetes Service so that I can enable both IPv4 and IPv6 support for my applications to ensure compatibility and improved network management.
 ---
 
 # Use dual-stack networking in Azure Kubernetes Service (AKS)
@@ -16,11 +17,15 @@ You can deploy your AKS clusters in a dual-stack mode when using a dual-stack Az
 
 This article shows you how to use dual-stack networking with an AKS cluster. For more information on network options and considerations, see [Network concepts for Kubernetes and AKS][aks-network-concepts].
 
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+
 ## Limitations
 
 * In Azure Linux node pools, service objects are only supported with `externalTrafficPolicy: Local`.
 * Dual-stack networking is required for the Azure virtual network and the pod CIDR.
   * Single stack IPv6-only isn't supported for node or pod IP addresses. Services can be provisioned on IPv4 or IPv6.
+* [Azure CNI Overlay](/azure/aks/azure-cni-overlay?tabs=kubectl#dual-stack-networking) is required  
 
 ## Prerequisites
 
@@ -532,7 +537,7 @@ Once the cluster has been created, you can deploy your workloads. This article w
 [aks-out-of-tree]: ./out-of-tree.md
 [nat-gateway]: /azure/virtual-network/nat-gateway/nat-overview
 [aks-network-concepts]: concepts-network.md
-[az-group-create]: /cli/azure/group#az_group_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-group-create]: /cli/azure/group#az-group-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 
