@@ -25,20 +25,20 @@ Structured authentication extends AKS beyond traditional Microsoft Entra ID inte
 - Implement custom claim validation and user mapping rules
 - Support multiple identity providers simultaneously on a single cluster
 
-The feature is based on the [Kubernetes structured authentication configuration][k8s-structured-auth], which moved to beta in Kubernetes 1.30. AKS implements this functionality through JWT authenticators that validate tokens from external identity providers according to your configuration.
+The feature is based on the [Kubernetes structured authentication configuration][k8s-structured-auth], which moved to beta in Kubernetes 1.30. AKS implements this functionality through JSON Web Token (JWT) authenticators that validate tokens from external identity providers according to your configuration.
 
 ## How it works
 
 
 :::image type="content" source="media/external-identity-provider-authentication/conceptual-diagram.png" alt-text="Conceptual diagram showing how external identity provider based authentication works with AKS clusters" lightbox="media/external-identity-provider-authentication/conceptual-diagram.png":::
-
 When a user attempts to access the Kubernetes API server:
 
-1. **Token presentation**: The user presents a JWT token from their configured identity provider
-2. **Token validation**: The API server validates the token's signature, issuer, audience, and expiration
-3. **Claim processing**: Custom claim validation rules are applied to ensure the token meets your requirements
-4. **User mapping**: Claims are mapped to Kubernetes user identity (username, groups, and extra attributes)
-5. **Authorization**: Standard Kubernetes RBAC determines what actions the authenticated user can perform
+- **Authentication**: The following steps validate the user's identity:
+    - **Token presentation**: The user presents a JWT token from their configured identity provider
+    - **Token validation**: The API server validates the token's signature, issuer, audience, and expiration
+    - **Claim processing**: Custom claim validation rules are applied to ensure the token meets your requirements
+    - **User mapping**: Claims are mapped to Kubernetes user identity (username, groups, and extra attributes)
+- **Authorization**: Standard Kubernetes Role-Based Access Control (RBAC) determines what actions the authenticated user can perform
 
 ## Key concepts
 
@@ -49,7 +49,7 @@ A JWT authenticator is a configuration object that defines how to validate and p
 - **Issuer configuration**: The identity provider's OIDC issuer URL and expected audiences
 - **Claim validation rules**: Custom validation logic using CEL (Common Expression Language) expressions
 - **Claim mappings**: How to map token claims to Kubernetes user attributes
-- **User validation rules**: Additional validation logic applied after claim mapping
+- **User validation rules**: More validation logic applied after claim mapping
 
 ### CEL expressions
 
@@ -88,7 +88,7 @@ While AKS structured authentication supports any OIDC-compliant identity provide
 - **Custom identity solutions**: Organization-specific OIDC implementations
 
 > [!NOTE]
-> Microsoft Entra ID is not supported as an external identity provider through structured authentication. Use the existing [AKS-managed Microsoft Entra integration][aks-managed-entra-id] for Microsoft Entra ID authentication.
+> Microsoft Entra ID isn't supported as an external identity provider through structured authentication. Use the existing [AKS-managed Microsoft Entra integration][aks-managed-entra-id] for Microsoft Entra ID authentication.
 
 ## Security considerations
 
