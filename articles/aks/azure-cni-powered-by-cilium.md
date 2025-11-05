@@ -162,9 +162,27 @@ az aks create \
 
     Customers may use FQDN filtering and Layer 7 Policies as part of the [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) feature bundle.
 
-- **Can I use `ClusterwideCiliumNetworkPolicy`?**
+- **Can I use `CiliumClusterwideNetworkPolicy`?**
 
-    Yes, `ClusterwideCiliumNetworkPolicy` is supported.
+    Yes, `CiliumClusterwideNetworkPolicy` is supported. The following is a sample CCNP policy YAML.
+    ```
+    apiVersion: "cilium.io/v2"
+    kind: CiliumClusterwideNetworkPolicy
+    metadata:
+      name: "l4-rule-ingress-backend-frontend"
+    spec:
+      endpointSelector:
+        matchLabels:
+          role: backend
+      ingress:
+        - fromEndpoints:
+            - matchLabels:
+                role: frontend
+          toPorts:
+            - ports:
+                - port: "80"
+                  protocol: TCP
+    ```
 
 - **Which Cilium features are supported in Azure managed CNI? Which of those require Advanced Container Networking Services?**
 
@@ -173,10 +191,11 @@ az aks create \
     | Cilium Endpoint Slices | ✔️ | ✔️ |
     | K8s Network Policies | ✔️ | ✔️ |
     | Cilium L3/L4 Network Policies | ✔️ | ✔️ |
+    | Cilium Clusterwide Network Policy | ✔️ | ✔️ |
     | FQDN Filtering | ❌ | ✔️ |
     | L7 Network Policies (HTTP/gRPC/Kafka) | ❌ | ✔️ |
     | Container Network Observability (Metrics and Flow logs ) | ❌ | ✔️ |
-    | Clusterwide Cilium Network Policy | ✔️ | ✔️ |
+   
 
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
 
