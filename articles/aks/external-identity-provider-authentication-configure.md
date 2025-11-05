@@ -614,7 +614,6 @@ az aks jwtauthenticator delete \
     --cluster-name $CLUSTER_NAME \
     --name external-auth
 ```
-```
 
 ## Best practices
 
