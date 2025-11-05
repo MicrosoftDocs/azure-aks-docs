@@ -92,19 +92,19 @@ To use the default Ubuntu operating system (OS) SKU, you create the node pool wi
         --tags EnableManagedGPUExperience=true
     ```
 
-1. Confirm that the NVIDIA GPU software components are installed and running:
+1. Confirm that the NVIDIA GPU software components are installed and running. [SSH into one of the GPU nodes](./node-access.md) and run the following command:
 
     ```bash
-    kubectl get pods -n default
+    systemctl list-units | grep -i nvidia
     ```
-    Your output should include the following pods:
+    
+    Your output should include the following services:
+
     ```output
-    NAME                         READY   STATUS    RESTARTS   AGE
-    ...
-    ...
-    nvidia-device-plugin-0001    1/1     Running   0          2m
-    nvidia-dcgm-exporter-0001    1/1     Running   0          2m
-    ...
+    nvidia-device-plugin-service            loaded active running       NVIDIA Device Plugin for Kubernetes
+    nvidia-dcgm-exporter-service            loaded active running       NVIDIA DCGM-exporter service
+    nvidia-dcgm-service                     loaded active running       NVIDIA DCGM service
+    nvidia-modprobe.service                 loaded active exited        Installs and loads Nvidia GPU kernel module     
     ```
 
 ### [Azure Linux node pool](#tab/add-azure-linux-gpu-node-pool)
@@ -127,16 +127,19 @@ To use Azure Linux, you specify the operating system (OS) SKU by setting `os-sku
         --tags EnableManagedGPUExperience=true
     ```
 
-1. Confirm that the NVIDIA GPU software components are installed and running:
+1. Confirm that the NVIDIA GPU software components are installed and running. [SSH into one of the GPU nodes](./node-access.md) and run the following command:
 
     ```bash
-    kubectl get pods -n default
+    systemctl list-units | grep -i nvidia
     ```
-    Your output should look similar to the following:
+    
+    Your output should include the following services:
+
     ```output
-    NAME                         READY   STATUS    RESTARTS   AGE
-    nvidia-device-plugin-0001    1/1     Running   0          2m
-    nvidia-dcgm-exporter-0001    1/1     Running   0          2m
+    nvidia-device-plugin-service            loaded active running       NVIDIA Device Plugin for Kubernetes
+    nvidia-dcgm-exporter-service            loaded active running       NVIDIA DCGM-exporter service
+    nvidia-dcgm-service                     loaded active running       NVIDIA DCGM service
+    nvidia-modprobe.service                 loaded active exited        Installs and loads Nvidia GPU kernel module     
     ```
 
 ---
