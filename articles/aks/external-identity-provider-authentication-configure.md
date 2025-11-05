@@ -13,7 +13,7 @@ zone_pivot_groups: external-idp-authn-type
 
 # Configure external identity providers with AKS structured authentication (preview)
 
-This article shows you how to configure external identity providers for Azure Kubernetes Service (AKS) control plane authentication using structured authentication. You'll learn how to create JSON Web Token (JWT) authenticators, configure claim validation and mapping, and test the authentication flow.
+This article shows you how to configure external identity providers for Azure Kubernetes Service (AKS) control plane authentication using structured authentication. You learn how to create JSON Web Token (JWT) authenticators, configure claim validation and mapping, and test the authentication flow.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -196,7 +196,7 @@ For GitHub Actions OIDC, create a file named `jwt-config.json` with the followin
 - **issuer**: The OIDC issuer configuration
     - **url**: The OIDC issuer URL that must match the `iss` claim in JWTs
     - **audiences**: List of audiences that JWTs must be issued for (checked against `aud` claim)
-    - **certificateAuthority**: Optional base64-encoded root certificate bundle for TLS verification
+    - **certificateAuthority**: Optional base64-encoded root certificate bundle for Transport Layer Security (TLS) verification
 - **claimValidationRules**: Array of validation rules using CEL expressions to validate JWT claims
     - **expression**: CEL expression that must evaluate to true
     - **message**: Error message displayed when validation fails
@@ -204,7 +204,7 @@ For GitHub Actions OIDC, create a file named `jwt-config.json` with the followin
     - **username**: CEL expression defining how to construct the username from claims
     - **groups**: CEL expression defining how to construct group memberships from claims  
     - **uid**: Optional CEL expression for user identifier
-    - **extra**: Optional map of additional user attributes
+    - **extra**: Optional map of more user attributes
 - **userValidationRules**: Array of validation rules applied to the final user information
     - **expression**: CEL expression that must evaluate to true for the mapped user
     - **message**: Error message displayed when user validation fails
@@ -382,7 +382,7 @@ jobs:
 
 #### Required repository secrets and variables
 
-Set up the following in your GitHub repository:
+Set up these secrets in your GitHub repository:
 
 **Secrets:**
 - `AKS_CA_DATA`: Base64-encoded certificate authority data for your AKS cluster
@@ -427,7 +427,7 @@ kubectl get nodes --user external-user
 
 ::: zone pivot="google-identity"
 
-Expected output for first-time setup (before RBAC configuration):
+Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
 ```
 Error from server (Forbidden): nodes is forbidden: User "aks:jwt:google:your-subject" cannot list resource "nodes" in API group "" at the cluster scope
 ```
@@ -436,7 +436,7 @@ Error from server (Forbidden): nodes is forbidden: User "aks:jwt:google:your-sub
 
 ::: zone pivot="github"
 
-Expected output for first-time setup (before RBAC configuration):
+Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
 ```
 Error from server (Forbidden): nodes is forbidden: User "aks:jwt:github:your-actor" cannot list resource "nodes" in API group "" at the cluster scope
 ```
@@ -575,7 +575,7 @@ kubectl get pods --user external-user
 
 ::: zone-end
 
-2. Decode the token to verify claims at [jwt.ms][jwt-ms]
+2. Decode the token and verify claims at [jwt.ms][jwt-ms]
 
 3. Check AKS API server logs for authentication errors
 
