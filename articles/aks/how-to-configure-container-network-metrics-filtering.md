@@ -30,8 +30,6 @@ Container network metrics filtering enables dynamic management of Hubble metrics
 
 * Container network metrics filtering works specifically with Cilium data planes.
 
-* Access to a canary region (eastus2euap) for preview features.
-
 * The minimum version of the `aks-preview` Azure CLI extension to complete the steps in this article is `18.0.0b2`.
 
 ### Install the aks-preview Azure CLI extension
@@ -110,55 +108,68 @@ Container network metrics filtering uses the `ContainerNetworkMetric` Custom Res
 apiVersion: acn.azure.com/v1alpha1
 kind: ContainerNetworkMetric
 metadata:
-  name: sample-containeretworkmetric # Cluster scoped
+  name: : container-network-metric # Cluster scoped
 spec:
-  includefilters: # List of filters
-    - name: sample-filter # Filter name
-      from:
-        namespacedPod: # List of source namespace/pods. Prepend namespace with /
-          - sample-namespace/sample-pod
-        labelSelector: # Standard k8s label selector
-          matchLabels:
-            app: frontend
-            k8s.io/namespace: sample-namespace
-          matchExpressions:
-            - key: environment
-              operator: In
-              values:
-                - production
-                - staging
-        ip: # List of source IPs; can be CIDR
-          - "192.168.1.10"
-          - "10.0.0.1"
-      to:
-        namespacedPod:
-          - sample-namespace2/sample-pod2
-        labelSelector:
-          matchLabels:
-            app: backend
-            k8s.io/namespace: sample-namespace2
-          matchExpressions:
-            - key: tier
-              operator: NotIn
-              values:
-                - dev
-        ip:
-          - "192.168.1.20"
-          - "10.0.1.1"
-      protocol: # List of protocols; can be tcp, udp, dns
-        - tcp
-        - udp
-        - dns
-      verdict: # List of verdicts; can be forwarded, dropped
-        - forwarded
-        - dropped
-```
+  filters:
+  - metric: flow
+    includeFilters: # List of include filters
+      - name: sample-filter # Filter name
+        from:
+          namespacedPod: # List of source namespace/pods. Prepend namespace with /
+            - sample-namespace/sample-pod
+          labelSelector: # Standard k8s label selector
+            matchLabels:
+              app: frontend
+              k8s.io/namespace: sample-namespace
+            matchExpressions:
+              - key: environment
+                operator: In
+                values:
+                  - production
+                  - staging
+          ip: # List of source IPs; can be CIDR
+            - "192.168.1.10"
+            - "10.0.0.1"
+        to:
+          namespacedPod:
+            - sample-namespace2/sample-pod2
+          labelSelector:
+            matchLabels:
+              app: backend
+              k8s.io/namespace: sample-namespace2
+            matchExpressions:
+              - key: tier
+                operator: NotIn
+                values:
+                  - dev
+          ip:
+            - "192.168.1.20"
+            - "10.0.1.1"
+        protocol: # List of protocols; can be tcp, udp, dns
+          - tcp
+          - udp
+          - dns
+        verdict: # List of verdicts; can be forwarded, dropped
+          - forwarded
+          - dropped
+    metric: dns
+    excludeFilters: # List of exclude filters
+      - name: sample-filter # Filter name
+        from:
+          namespacedPod: # List of source namespace/pods. Prepend namespace with /
+            - sample-namespace/sample-pod
+          labelSelector: # Standard k8s label selector
+            matchLabels:
+              app: frontend
+              k8s.io/namespace: sample-namespace
+  ```
 
 The following table describes the fields in the custom resource definition:
 
 | Field                        | Type         | Description                                                                                                                         | Required |
 |----------------------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------|--------------|
-| `includefilters`                 | []filter | A list of filters that define network flows to include. Each filter specifies the source, destination, protocol, and other matching criteria. Include filters can't be empty and must have at least one filter. | Mandatory    |
+|  `filters.metric`             | String | Name of the metric you would like to apply the filter on. This is mandatory. The supported values are `dns`, `flow`, `tcp`, `drop`  | Mandatory    |
+| `includeFilters` or `excludeFilters`               | []filter | A list of filters that define network flows to include. Each filter specifies the source, destination, protocol, and other matching criteria.You must have at least one incude or exclude filter. | Mandatory    |
 | `filters.name`            | String           | The name of the filter.                                                                                                                | Optional    |
 | `filters.protocol`        | []string | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`. Because it's an optional parameter, if it isn't specified, logs with all protocols are included.                                                      | Optional     |
 | `filters.verdict`         | []string | The verdict of the flow to match. Valid values are `forwarded` and `dropped`. Because it's an optional parameter, if it isn't specified, logs with all verdicts are included.                                                        | Optional     |
@@ -177,6 +188,15 @@ Apply the `ContainerNetworkMetric` custom resource to enable log collection at t
   ```azurecli
   kubectl apply -f <crd.yaml>
   ```
+
+### Cleanup and reset
+
+To clean up filtering configuration:
+
+```azurecli
+# Delete the CRD
+kubectl delete ContainerNetworkMetric container-network-metric
+```
 
 ### Example filtering configuration
 
@@ -299,7 +319,7 @@ spec:
 
 ## Best practices
 
-- Begin by including all necessary metrics, then progressively exclude specific ones.
+- Ensure you do not have confliting include and exclude filter on the CRD.
 
 - Leverage Kubernetes label selectors for flexible filtering.
 
@@ -307,7 +327,8 @@ spec:
 
 - Regularly review filtered metrics to ensure important data isn't lost.
 
-- Remember that only one CRD can exist per cluster. Check existing CRDs before creating new ones.
+- Remember that only one CRD can exist per cluster.
+
 
 ## Troubleshooting
 
@@ -325,44 +346,17 @@ az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetwork
 kubectl get ContainerNetworkMetric
 ```
 
-**Issue**: ConfigMap not updating after CRD changes
-
-**Solution**: Wait 30 seconds for reconciliation and check logs:
-
-```azurecli
-# Wait for reconciliation (takes about 30 seconds)
-sleep 30
-
-# Check ConfigMap
-kubectl get configmap cilium-dynamic-metrics-config -n kube-system -o yaml
-
-# Check operator logs
-kubectl logs -n kube-system -l app=retina-operator
-```
-
 **Issue**: Metrics still showing after applying excludeFilters
 
 **Solution**: Remember that pre-existing metrics persist in Prometheus. You may need to wait for new metrics to be generated to see the filtering effects.
 
-### Cleanup and reset
-
-To clean up filtering configuration:
-
-```azurecli
-# Delete the CRD
-kubectl delete ContainerNetworkMetric container-network-metric
-```
 
 ## Limitations
 
 * This feature is specifically designed for Cilium data planes only
 * Only one `ContainerNetworkMetric` CRD can exist per cluster
-* Changes to filtering configuration take approximately 30 seconds to reconcile
 * Pre-existing metrics persist in Prometheus; new filtering rules apply to newly generated metrics
 * Requires Kubernetes version 1.32 or later
-* Available only in canary regions during preview
-* Supported metric types are limited to: dns, flow, tcp, drop
-* Dynamic metrics ConfigMap should not be manually edited as changes will be reverted
 
 ## Related content
 
