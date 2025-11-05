@@ -63,7 +63,7 @@ When the status shows `Registered`, refresh the resource provider registration:
 az provider register --namespace Microsoft.ContainerService
 ```
 
-## Step 1: Set up your identity provider
+## Set up your identity provider
 
 Configure your external identity provider to support OIDC authentication. Select your identity provider for specific setup instructions:
 
@@ -92,7 +92,7 @@ Configure your external identity provider to support OIDC authentication. Select
 
 ::: zone-end
 
-## Step 2: Create JWT authenticator configuration
+## Create JWT authenticator configuration
 
 Create a JSON configuration file that defines how to validate and process tokens from your identity provider. Select your identity provider for specific configuration examples:
 
@@ -256,7 +256,7 @@ For more complex scenarios with multiple groups and conditional logic:
 }
 ```
 
-## Step 3: Create the JWT authenticator
+## Create the JWT authenticator
 
 Add the JWT authenticator to your AKS cluster:
 
@@ -287,7 +287,7 @@ az aks jwtauthenticator show \
     --name external-auth
 ```
 
-## Step 4: Set up client for authentication
+## Set up client for authentication
 
 Configure your client to authenticate with your external identity provider. Select your identity provider for specific configuration:
 
@@ -445,7 +445,7 @@ Error from server (Forbidden): nodes is forbidden: User "aks:jwt:github:your-act
 
 This error indicates successful authentication but lack of authorization.
 
-## Step 5: Configure Kubernetes Role-Based Access Control (RBAC)
+## Configure Kubernetes Role-Based Access Control (RBAC)
 
 Create appropriate RBAC bindings for your external users. Use the cluster admin credentials to apply these configurations. Select your identity provider for provider-specific examples:
 
