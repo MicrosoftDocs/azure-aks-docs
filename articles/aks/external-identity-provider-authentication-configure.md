@@ -34,14 +34,26 @@ This article shows you how to configure external identity providers for Azure Ku
     ```azurecli-interactive
     az extension show --name aks-preview --query version
     ```
-- An AKS cluster running Kubernetes version 1.30 or later.
+- An AKS cluster running Kubernetes version 1.30 or later. To create an AKS cluster, see [Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Azure CLI][aks-quickstart-cli].
 - `kubectl` command-line tool to interact with your Kubernetes cluster. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [az aks install-cli][az-aks-install-cli] command.
+    ```azurecli-interactive
+    az aks install-cli
+    ```
 - An external identity provider that supports OpenID Connect (OIDC).
 - Network connectivity from cluster nodes to your identity provider.
 - If you plan to use the `kubelogin` plugin, install it using kubectl krew:
   ```bash
   kubectl krew install oidc-login
   ```
+
+### Set environment variables
+
+Set the following environment variables for your resource group and cluster name:
+
+```bash
+export RESOURCE_GROUP="<your-resource-group-name>"
+export CLUSTER_NAME="<your-cluster-name>"
+```
 
 ### Register the preview feature
 
@@ -71,10 +83,10 @@ Configure your external identity provider to support OIDC authentication. Select
 
 ### Google OAuth 2.0 Setup
 
-1. Go to the [Google Cloud Console][google-cloud-console]
-2. Create or select a project
-3. Create OAuth 2.0 credentials
-4. Note your client ID and client secret for later use
+1. Go to the [Google Cloud Console][google-cloud-console].
+2. [Create or select a project][google-workspace-create-project].
+3. [Create OAuth 2.0 credentials][google-oauth2-protocol].
+4. Note your client ID and client secret for later use.
 
 ::: zone-end
 
@@ -82,12 +94,13 @@ Configure your external identity provider to support OIDC authentication. Select
 
 ### GitHub Actions OIDC Setup
 
-1. Ensure your GitHub Actions workflows have the necessary permissions
+1. Ensure your GitHub Actions workflows have the necessary permissions.
 2. Configure the `id-token: write` permission in your workflow files:
    ```yaml
    permissions:
      id-token: write
      contents: read
+   ```
 3. Set up appropriate repository and organization settings for OIDC token access. Configure [repository OIDC settings](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure) and [organization security policies](https://docs.github.com/en/organizations/managing-organization-settings/restricting-access-to-machine-identities) for token usage.
 
 ::: zone-end
@@ -193,21 +206,21 @@ For GitHub Actions OIDC, create a file named `jwt-config.json` with the followin
 
 ### Configuration elements
 
-- **issuer**: The OIDC issuer configuration
-    - **url**: The OIDC issuer URL that must match the `iss` claim in JWTs
-    - **audiences**: List of audiences that JWTs must be issued for (checked against `aud` claim)
-    - **certificateAuthority**: Optional base64-encoded root certificate bundle for Transport Layer Security (TLS) verification
-- **claimValidationRules**: Array of validation rules using CEL expressions to validate JWT claims
-    - **expression**: CEL expression that must evaluate to true
-    - **message**: Error message displayed when validation fails
-- **claimMappings**: Defines how JWT claims map to Kubernetes user information
-    - **username**: CEL expression defining how to construct the username from claims
-    - **groups**: CEL expression defining how to construct group memberships from claims  
-    - **uid**: Optional CEL expression for user identifier
-    - **extra**: Optional map of more user attributes
-- **userValidationRules**: Array of validation rules applied to the final user information
-    - **expression**: CEL expression that must evaluate to true for the mapped user
-    - **message**: Error message displayed when user validation fails
+- **issuer**: The OIDC issuer configuration.
+    - **url**: The OIDC issuer URL that must match the `iss` claim in JWTs.
+    - **audiences**: List of audiences that JWTs must be issued for (checked against `aud` claim).
+    - **certificateAuthority**: Optional base64-encoded root certificate bundle for Transport Layer Security (TLS) verification.
+- **claimValidationRules**: Array of validation rules using CEL expressions to validate JWT claims.
+    - **expression**: CEL expression that must evaluate to true.
+    - **message**: Error message displayed when validation fails.
+- **claimMappings**: Defines how JWT claims map to Kubernetes user information.
+    - **username**: CEL expression defining how to construct the username from claims.
+    - **groups**: CEL expression defining how to construct group memberships from claims.
+    - **uid**: Optional CEL expression for user identifier.
+    - **extra**: Optional map of more user attributes.
+- **userValidationRules**: Array of validation rules applied to the final user information.
+    - **expression**: CEL expression that must evaluate to true for the mapped user.
+    - **message**: Error message displayed when user validation fails.
 
 > [!IMPORTANT]
 > All username and group mappings must include the `aks:jwt:` prefix to prevent conflicts with other authentication methods.
@@ -262,8 +275,8 @@ Add the JWT authenticator to your AKS cluster:
 
 ```azurecli-interactive
 az aks jwtauthenticator add \
-    --resource-group myResourceGroup \
-    --cluster-name myAKSCluster \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $CLUSTER_NAME \
     --name external-auth \
     --config-file jwt-config.json
 ```
@@ -274,16 +287,16 @@ List all JWT authenticators on your cluster:
 
 ```azurecli-interactive
 az aks jwtauthenticator list \
-    --resource-group myResourceGroup \
-    --cluster-name myAKSCluster
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $CLUSTER_NAME
 ```
 
 Get details of a specific authenticator:
 
 ```azurecli-interactive
 az aks jwtauthenticator show \
-    --resource-group myResourceGroup \
-    --cluster-name myAKSCluster \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $CLUSTER_NAME \
     --name external-auth
 ```
 
@@ -385,8 +398,8 @@ jobs:
 Set up these secrets in your GitHub repository:
 
 **Secrets:**
-- `AKS_CA_DATA`: Base64-encoded certificate authority data for your AKS cluster
-- `AKS_SERVER_URL`: Your AKS cluster's API server URL
+- `AKS_CA_DATA`: Base64-encoded certificate authority data for your AKS cluster.
+- `AKS_SERVER_URL`: Your AKS cluster's API server URL.
 
 > [!NOTE]
 > The audience value `my-api` should match the audience configured in your JWT authenticator configuration.
@@ -397,10 +410,10 @@ To get the required cluster information, run:
 
 ```bash
 # Get cluster info
-az aks show --resource-group myResourceGroup --name myAKSCluster --query "fqdn" -o tsv
+az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query "fqdn" -o tsv
 
 # Get CA data (base64 encoded)
-az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --file - --format exec | \
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --file - --format exec | \
   grep certificate-authority-data | awk '{print $2}'
 ```
 
@@ -535,19 +548,19 @@ kubectl get pods --user external-user
 ### Common issues
 
 1. **401 Unauthorized errors**
-   - Verify your identity provider configuration
-   - Check that the token audience matches your authenticator configuration
-   - Ensure the issuer URL is correct and accessible
+   - Verify your identity provider configuration.
+   - Check that the token audience matches your authenticator configuration.
+   - Ensure the issuer URL is correct and accessible.
 
 2. **Token validation failures**
-   - Verify CEL expressions in your configuration
-   - Check that claim mappings return the expected data types
-   - Ensure all usernames/groups have the `aks:jwt:` prefix
+   - Verify CEL expressions in your configuration.
+   - Check that claim mappings return the expected data types.
+   - Ensure all usernames/groups have the `aks:jwt:` prefix.
 
 3. **Network connectivity issues**
-   - Verify cluster nodes can reach your identity provider
-   - Check firewall rules and network security groups
-   - Ensure Domain Name System (DNS) resolution works for the issuer URL
+   - Verify cluster nodes can reach your identity provider.
+   - Check firewall rules and network security groups.
+   - Ensure Domain Name System (DNS) resolution works for the issuer URL.
 
 ### Debug authentication
 
@@ -575,9 +588,9 @@ kubectl get pods --user external-user
 
 ::: zone-end
 
-2. Decode the token and verify claims at [jwt.ms][jwt-ms]
+2. Decode the token and verify claims at [jwt.ms][jwt-ms].
 
-3. Check AKS API server logs for authentication errors
+3. Check AKS API server logs for authentication errors.
 
 ### Update JWT authenticator
 
@@ -585,8 +598,8 @@ Modify your configuration and update the authenticator:
 
 ```azurecli-interactive
 az aks jwtauthenticator update \
-    --resource-group myResourceGroup \
-    --cluster-name myAKSCluster \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $CLUSTER_NAME \
     --name external-auth \
     --config-file updated-jwt-config.json
 ```
@@ -597,20 +610,21 @@ Delete an authenticator when no longer needed:
 
 ```azurecli-interactive
 az aks jwtauthenticator delete \
-    --resource-group myResourceGroup \
-    --cluster-name myAKSCluster \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $CLUSTER_NAME \
     --name external-auth
+```
 ```
 
 ## Best practices
 
 ### Security recommendations
 
-1. **Use strong claim validation**: Implement comprehensive validation rules to ensure only authorized tokens are accepted
-2. **Limit token scope**: Configure your identity provider to issue tokens with minimal necessary claims
-3. **Regular rotation**: Rotate client secrets and certificates regularly
-4. **Monitor access**: Enable audit logging to track authentication events
-5. **Test configurations**: Validate your JWT authenticator configuration in a non-production environment first
+1. **Use strong claim validation**: Implement comprehensive validation rules to ensure only authorized tokens are accepted.
+2. **Limit token scope**: Configure your identity provider to issue tokens with minimal necessary claims.
+3. **Regular rotation**: Rotate client secrets and certificates regularly.
+4. **Monitor access**: Enable audit logging to track authentication events.
+5. **Test configurations**: Validate your JWT authenticator configuration in a non-production environment first.
 
 ## Next steps
 
@@ -621,9 +635,12 @@ az aks jwtauthenticator delete \
 
 <!-- LINKS - external -->
 [google-cloud-console]: https://console.cloud.google.com/
+[google-workspace-create-project]: https://developers.google.com/workspace/guides/create-project
+[google-oauth2-protocol]: https://developers.google.com/identity/protocols/oauth2/
 [jwt-ms]: https://jwt.ms
 
 <!-- LINKS - internal -->
+[aks-quickstart-cli]: quick-kubernetes-deploy-cli.md
 [structured-auth-overview]: external-identity-provider-authentication-overview.md
 [workload-identity-cross-tenant]: workload-identity-cross-tenant.md
 [manage-azure-rbac]: manage-azure-rbac.md
