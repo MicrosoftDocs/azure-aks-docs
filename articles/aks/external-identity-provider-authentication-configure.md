@@ -614,7 +614,7 @@ az aks jwtauthenticator delete \
 [jwt-ms]: https://jwt.ms
 
 <!-- LINKS - internal -->
-[structured-auth-overview]: structured-authentication-overview.md
+[structured-auth-overview]: external-identity-provider-authentication-overview.md
 [workload-identity-cross-tenant]: workload-identity-cross-tenant.md
 [manage-azure-rbac]: manage-azure-rbac.md
 [monitor-aks]: monitor-aks.md

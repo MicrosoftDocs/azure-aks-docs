@@ -130,4 +130,4 @@ Identity provider endpoints must be accessible from:
 
 <!-- LINKS - internal -->
 [aks-managed-entra-id]: enable-authentication-microsoft-entra-id.md
-[configure-structured-auth]: structured-authentication-configure.md
+[configure-structured-auth]: external-identity-provider-authentication-configure.md

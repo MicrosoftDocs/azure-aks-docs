@@ -750,10 +750,10 @@
           href: control-kubeconfig-access.md
         - name: External identity providers (preview)
           items:
-            - name: Structured authentication overview
-              href: structured-authentication-overview.md
+            - name: External identity provider authentication overview
+              href: external-identity-provider-authentication-overview.md
             - name: Configure external identity providers
-              href: structured-authentication-configure.md
+              href: external-identity-provider-configure.md
         - name: Control deployments with Azure Policy
           href: /azure/governance/policy/concepts/policy-for-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Application security
