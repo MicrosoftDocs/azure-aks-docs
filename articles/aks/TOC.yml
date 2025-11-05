@@ -32,6 +32,8 @@
           href: tutorial-kubernetes-scale.md
         - name: 8 - Upgrade cluster
           href: tutorial-kubernetes-upgrade-cluster.md
+    - name: Create and manage AKS resources in the Azure portal with Kubernetes center
+      href: kubernetes-center-azure-portal.md
 - name: Pricing, quotas, and version support
   items:
     - name: Pricing tiers for AKS

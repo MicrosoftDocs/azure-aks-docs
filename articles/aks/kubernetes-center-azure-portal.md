@@ -1,6 +1,6 @@
 ---
-title: Manage Azure Kubernetes Service (AKS) resources in the Azure portal with Kubernetes Center (preview)
-description: Learn how to manage your AKS resources directly in the Azure portal using Kubernetes Center (preview), which centralizes creation, management, and monitoring of your Kubernetes clusters.
+title: Create and Manage Azure Kubernetes Service (AKS) resources in the Azure portal with Kubernetes Center (preview)
+description: Learn how to create and manage your AKS resources directly in the Azure portal using Kubernetes Center (preview), which centralizes creation, management, and monitoring of your Kubernetes clusters.
 author: schaffererin
 ms.author: schaffererin
 ms.topic: how-to
@@ -9,7 +9,7 @@ ms.date: 11/04/2025
 # Customer intent: "As a DevOps engineer, I want to manage my Kubernetes resources more efficiently in the Azure portal, so that I can streamline my workflows and improve productivity."
 ---
 
-# Manage Azure Kubernetes Service (AKS) resources in the Azure portal with Kubernetes Center (preview)
+# Create and manage Azure Kubernetes Service (AKS) resources in the Azure portal with Kubernetes Center (preview)
 
 Kubernetes Center (preview) in the Azure portal centralizes and simplifies AKS resource creation and management. This feature provides a unified experience across all your AKS resources and delivers intelligent insights and streamlined workflows, allowing platform teams to maintain control while enabling developers to move quickly and confidently.
 
@@ -30,26 +30,43 @@ Kubernetes Center (preview) offers several key benefits, including:
 To use Kubernetes Center (preview), ensure you have the following prerequisites:
 
 - An active Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free/).
-- 2
-- 3
 
 ## Access quickstarts and documentation
 
-1. From the [Azure portal](https://portal.azure.com/) home page, search for and select **Kubernetes Center (preview)**.
-1. Select **Browse quickstarts** to access a curated list of quickstarts that help you get started with AKS, AKS Automatic, Azure Kubernetes Fleet Manager, and managed namespaces.
+1. From the [Azure portal](https://portal.azure.com/) home page, search for and select **Kubernetes center**.
+1. On the **Overview** page, select **Browse quickstarts**.
+
+    :::image type="content" source="./media/kubernetes-center-azure-portal/kubernetes-center-browse-quickstarts.png" alt-text="Screenshot showing the Browse quickstarts option on the Overview page of the Kubernetes center in the Azure portal.":::
+
+1. On the **Kubernetes center | Quickstarts** page, browse the available quickstarts and select one to view detailed instructions and documentation.
+
+    :::image type="content" source="./media/kubernetes-center-azure-portal/kubernetes-center-quickstarts-page.png" alt-text="Screenshot showing the Quickstarts page in the Kubernetes center of the Azure portal.":::
 
 ## Create resources
 
-1. From the [Azure portal](https://portal.azure.com/) home page, search for and select **Kubernetes Center (preview)**.
-1. On the **Overview** page, select **Create resource**.
-1. Select the type of resource you want to create.
+1. From the [Azure portal](https://portal.azure.com/) home page, search for and select **Kubernetes center**.
+1. On the **Overview** page, select **Create**.
+
+    :::image type="content" source="./media/kubernetes-center-azure-portal/kubernetes-center-create.png" alt-text="Screenshot showing the Create option on the Overview page of the Kubernetes center in the Azure portal.":::
+
+1. Select the type of resource you want to create from the available options:
+
+    - AKS Cluster
+    - AKS Automatic Cluster
+    - Managed Kubernetes Namespace
+    - Kubernetes Fleet Manager
+    - Deploy your application
+
+    :::image type="content" source="./media/kubernetes-center-azure-portal/kubernetes-center-resources.png" alt-text="Screenshot showing the available resource options in the Kubernetes center of the Azure portal.":::
+
 1. Follow the prompts to configure your resource.
 1. Select **Review + create** to proceed with the creation.
 
 ## Manage clusters and workloads
 
-With Kubernetes Center (preview), you can manage your clusters and workloads more efficiently:
+With Kubernetes Center (preview), you can manage your clusters and workloads more efficiently. The **Overview** page provides cluster health and workload performance details, along with security alerts and upgrade recommendations.
 
-- Monitor cluster health and workload performance from the **Overview dashboard**.
-- View and address security alerts or upgrade recommendations.
-- Use **Azure Kubernetes Fleet Manager** for multi-cluster operations, such as version upgrades or policy coordination.
+:::image type="content" source="./media/kubernetes-center-azure-portal/kubernetes-center-overview-page.png" alt-text="Screenshot showing the Overview page of the Kubernetes center in the Azure portal.":::
+
+## Next steps
+
