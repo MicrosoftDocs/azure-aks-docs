@@ -2,7 +2,7 @@
 title: Use Azure Linux with OS Guard (preview) for Azure Kubernetes Service (AKS)
 description: Learn about Azure Linux with OS Guard (preview) on Azure Kubernetes Service (AKS), including key features, region availability, and resources to get started.
 ms.topic: overview
-ms.custom: linux-related-content
+ms.custom: linux-related-content, references_regions
 ms.date: 10/29/2025
 author: florataagen
 ms.author: florataagen
@@ -16,13 +16,13 @@ This article provides an overview of Azure Linux with OS Guard (preview) on Azur
 
 ## What is Azure Linux with OS Guard?
 
-Azure Linux with OS Guard, is a hardened, immutable variant of Azure Linux. It provides strong runtime integrity, tamper resistance, and enterprise-grade security for container hosts on AKS. OS Guard is built on Azure Linux and adds kernel and runtime features that enforce code integrity, protect the root file system from unauthorized changes, and apply mandatory access controls.
+Azure Linux with OS Guard is a hardened, immutable variant of Azure Linux. It provides strong runtime integrity, tamper resistance, and enterprise-grade security for container hosts on AKS. OS Guard is built on Azure Linux and adds kernel and runtime features that enforce code integrity, protect the root file system from unauthorized changes, and apply mandatory access controls.
 
 You can deploy Azure Linux with OS Guard node pools in a new cluster, add Azure Linux with OS Guard node pools to your existing Azure Linux or Ubuntu clusters, or migrate your Azure Linux or Ubuntu nodes to Azure Linux with OS Guard nodes.
 
-To learn more about Azure Linux with OS Guard, see the [Azure Linux with OS Guard documentation][os-guard-doc]
+To learn more about Azure Linux with OS Guard, see the [Azure Linux with OS Guard documentation][os-guard-doc].
 
-## Why use Azure Linux with OS Guard on AKS
+## Why use Azure Linux with OS Guard on AKS?
 
 Azure Linux with OS Guard on AKS builds on the benefits of [Azure Linux][azurelinux-capabilities] by adding enhanced security features that help protect your container workloads from advanced threats. OS Guard provides:
 
@@ -62,5 +62,5 @@ To learn more about Azure Linux with OS Guard, see the [Azure Linux with OS Guar
 [os-guard-upgrade]: /azure/azure-linux/tutorial-azure-linux-os-guard-upgrade
 [os-guard-add-node-pool]: /azure/azure-linux/tutorial-azure-linux-os-guard-add-node-pool
 [os-guard-migrate]: /azure/azure-linux/tutorial-azure-linux-os-guard-migration
-[os-guard-monitoring]: /azure/azure-linux/tutorial-azure-linux-os-guard-telemetry-monitoring
+[os-guard-monitoring]: /azure/azure-linux/tutorial-azure-linux-os-guard-telemetry-monitor
 
