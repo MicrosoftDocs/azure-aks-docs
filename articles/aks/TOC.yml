@@ -264,7 +264,7 @@
           href: reduce-latency-ppg.md
     - name: Virtual nodes
       items:
-        - name: Use virtual nodes
+        - name: Use virtual nodes 
           href: virtual-nodes.md
         - name: Use the Azure CLI
           href: virtual-nodes-cli.md
