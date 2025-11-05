@@ -748,6 +748,12 @@
           href: update-credentials.md
         - name: Limit access to cluster configuration file
           href: control-kubeconfig-access.md
+        - name: External identity providers (preview)
+          items:
+            - name: Structured authentication overview
+              href: structured-authentication-overview.md
+            - name: Configure external identity providers
+              href: structured-authentication-configure.md
         - name: Control deployments with Azure Policy
           href: /azure/governance/policy/concepts/policy-for-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Application security
