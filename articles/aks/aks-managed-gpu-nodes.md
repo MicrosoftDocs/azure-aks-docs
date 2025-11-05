@@ -70,7 +70,7 @@ In this article, you learn how to provision a fully managed GPU node pool (previ
 
 ## Create an AKS-managed GPU node pool (preview)
 
-You can add a fully managed GPU node pool (preview) to an existing AKS cluster by specifying OS SKU and flag `--tags EnableManagedGPUExperience=true`. When you do this, AKS will install the GPU driver, GPU device plugin, and metrics exporter automatically.
+You can add a fully managed GPU node pool (preview) to an existing AKS cluster by specifying OS SKU and `--tags EnableManagedGPUExperience=true` command. When you do this, AKS will install the GPU driver, GPU device plugin, and metrics exporter automatically.
 
 ### [Ubuntu Linux node pool (default SKU)](#tab/add-ubuntu-gpu-node-pool)
 
@@ -111,7 +111,7 @@ To use the default Ubuntu operating system (OS) SKU, you create the node pool wi
 
 To use Azure Linux, you specify the operating system (OS) SKU by setting `os-sku` to `AzureLinux` during node pool creation. The `os-type` is set to `Linux` by default.
 
-1. Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--os-sku` flag set to `AzureLinux` and the `--tags EnableManagedGPUExperience=true`.
+1. Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--os-sku` flag set to `AzureLinux` and `--tags EnableManagedGPUExperience=true`.
     ```azurecli-interactive
     az aks nodepool add \
         --resource-group myResourceGroup \
