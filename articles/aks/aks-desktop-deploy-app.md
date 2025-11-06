@@ -14,7 +14,7 @@ ms.author: alalve
 This article guides you through deploying an application using AKS desktop, enabling you to manage your containerized workloads with an intuitive, application-centric interface.
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop may undergo design changes, add/delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at [aka.ms/aks/aks-desktop](aka.ms/aks/aks-desktop).
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add/delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team.
 
 ## Prerequisites
 
@@ -38,7 +38,7 @@ This article guides you through deploying an application using AKS desktop, enab
 The first time you open AKS desktop, you need to sign into your Azure account. To sign in, follow these steps:
 
 1. In the left pane, select **Home**, then select **Sign in with Azure**.
-1. Select the account which you want to use.
+1. Select the account that you want to use.
 
 Once signed in, you have the ability to add clusters that you have access to into AKS desktop.
 
@@ -49,7 +49,7 @@ When you add a cluster, you're given two options to add a cluster to AKS desktop
 - From your Azure subscription
 - Uploading a Kubeconfig file
 
-If you have a single Azure subscription, AKS desktop will auto populate your subscription once you sign in.
+If you have a single Azure subscription, AKS desktop auto populates your subscription once you sign in.
 
 # [Azure](#tab/azure)
 
@@ -112,7 +112,7 @@ There are three methods you can choose from to deploy your application using AKS
 # [New project](#tab/new-project)
 
 1. Provide a project name.
-1. Select a cluster to add to your project. You can add more once a clusters is selected.
+1. Select a cluster to add to your project. You can add more once a cluster is selected.
 1. Use an existing namespace or type a new namespace to use.
 1. Select **Create**.
 
@@ -123,10 +123,10 @@ There are three methods you can choose from to deploy your application using AKS
 1. Under **Load resources**, you can choose the following:
 
    1. Select a `.yaml` or `.yml` file to load. You can also drag and drop your file into AKS desktop. Then select **Create**.
-   
+
    1. Select **Load from URL**, paste your YAML URL, select **Load**, then select **Create**.
 
-# [AKS managed project](#tab/new-project)
+# [AKS managed project](#tab/aks-managed-project)
 
 To manage your project using this method, the **aks-preview** extension must be installed by running the following command:
 
