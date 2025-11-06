@@ -178,7 +178,7 @@ To connect to another node in the cluster, use the `kubectl debug` command. For 
 
 ## Use Host Process Container to access Windows node
 
-1. Create `hostprocess.yaml` with the following content and replacing `AKSWINDOWSNODENAME` with the AKS Windows node name.
+1. Create `hostprocess.yaml` with the following content and replacing `AKSWINDOWSNODENAME` with the AKS Windows node name. Note that this specification uses the nanoserver base image - which doesn't have powershell. But because it's running as a host process container, powershell is available from the underlying VM.
 
     ```yaml
     apiVersion: v1
@@ -195,7 +195,7 @@ To connect to another node in the cluster, use the `kubectl debug` command. For 
       hostNetwork: true
       containers:
         - name: hpc
-          image: mcr.microsoft.com/windows/servercore:ltsc2022 # Use servercore:1809 for WS2019
+          image: mcr.microsoft.com/windows/nanoserver:ltsc2022 # Use nanoserver:1809 for WS2019
           command:
             - powershell.exe
             - -Command
