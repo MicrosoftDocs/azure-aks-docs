@@ -4,8 +4,8 @@ description: Learn how to use AKS desktop to deploy and manage workloads on Azur
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: overview
-ms.date: 11/04/2025
-ms.author: qpetraroia
+ms.date: 11/06/2025
+ms.author: alalve
 # Customer intent: As a developer, I want to use AKS desktop to deploy and manage applications on Azure Kubernetes Service without needing deep Kubernetes expertise, so that I can accelerate time to business value.
 ---
 
@@ -14,7 +14,7 @@ ms.author: qpetraroia
 AKS desktop delivers an application-focused experience for deploying and managing workloads on Azure Kubernetes Service (AKS). It accelerates time to business value by providing a guided, self-service user experience (UX) built on supported AKS features, best practices, and open-source Headlamp. Designed to work within your existing environment and tools, it enables team collaboration through role-based access control (RBAC) while abstracting complexity without removing control.
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add, or delete additional features. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at [aka.ms/aks/aks-desktop][aka.ms/aks/aks-desktop].
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add, or delete additional features. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at [aka.ms/aks/aks-desktop](aka.ms/aks/aks-desktop).
 
 ## Why AKS desktop?
 
@@ -29,20 +29,25 @@ AKS desktop provides the following benefits:
 - **Deploy applications without needing to focus on writing detailed Kubernetes manifests**:
 
   - Guided deployment wizard
+
   - Automatically generated Kubernetes manifests aligned to AKS best practices compatible with AKS Automatic
 
 - **View and manage applications from an app centric UI** - Easy to understand UI allowing you to focus directly on your applications, with an emphasis on:
 
   - General application health
+
   - Detailed metrics and logs for monitoring
+
   - Viewing and editing application scaling properties
+
   - Kubernetes resource troubleshooting
 
 - **Multi-cloud capabilities** - View and access Kubernetes clusters across any cloud.
 
-- **Collaboration: User and resource management**:
+- **User and resource management collaboration**:
 
   - Teams can view the same project
+
   - UI that honors RBAC roles enabling persona scoped experiences
 
 ### AKS desktop limitations
@@ -51,13 +56,13 @@ AKS desktop is optimized for AKS Automatic clusters. While standard SKU clusters
 
 ## What are Projects?
 
-In AKS desktop, a Project is linked directly by default to an [AKS Managed Namespace][AKS Managed Namespace], which is a way to logically isolate workloads and teams within a cluster. This feature enables administrators to enforce resource quotas, apply network policies, and manage access control at the namespace level. In AKS desktop, Projects are meant to simplify the idea around Kubernetes namespaces and Kubernetes concepts. A project can be made up of one or more applications. For this preview, we recommend you have one application per Project.
+In AKS desktop, a Project is linked directly by default to an AKS managed namespace, which is a way to logically isolate workloads and teams within a cluster. This feature enables administrators to enforce resource quotas, apply network policies, and manage access control at the namespace level. In AKS desktop, Projects are meant to simplify the idea around Kubernetes namespaces and Kubernetes concepts. A project can be made up of one or more applications. For this preview, we recommend you have one application per Project.
 
 In upcoming releases, AKS desktop plans to add enhancements that allow for Projects to expand to include additional Azure resources, such as Azure Container Registry, enabling you to view all resources related to your application within a unified interface.
 
 When you deploy an app into a project through AKS desktop, you're greeted with the Project overview screen that includes all the tools you need for day 2 operations.
 
-## What is the project overview screen?
+## What is the Project Overview screen?
 
 Once you deploy an application to a project through AKS desktop, you're greeted with the Project Overview screen. The Project Overview screen is an overview of your application highlighting the most important parts that matter to application developers. With these tools at your disposal, the Project Overview screen is your centralized control hub, giving you visibility, insights, and direct actions to manage, monitor, and optimize your application. These features are:
 
