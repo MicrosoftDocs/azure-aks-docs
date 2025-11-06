@@ -2,7 +2,7 @@
 title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster with Flatcar Container Linux for AKS (preview) using Azure CLI'
 description: Learn how to deploy an Azure Kubernetes Service cluster (AKS) with Flatcar Container Linux for AKS (preview) and deploy an application using Azure CLI.
 ms.topic: quickstart
-ms.date: 10/19/2025
+ms.date: 11/10/2025
 author: allyford
 ms.author: allyford
 ms.service: azure-kubernetes-service
@@ -34,11 +34,27 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [`az account set`](/cli/azure/account#az-account-set) command. For more information, see [How to manage Azure subscriptions – Azure CLI](/cli/azure/manage-azure-subscriptions-azure-cli?tabs=bash#change-the-active-subscription).
 - Dependent upon your Azure subscription, you might need to request a vCPU quota increase. For more information, see [Increase VM-family vCPU quotas](/azure/quotas/per-vm-quota-requests).
 
-### Install the `aks-preview` extension
+## Register resource providers
+
+You might need to register resource providers in your Azure subscription. For example, `Microsoft.ContainerService` is required. 
+
+Check the registration status using the [`az provider show`](/cli/azure/provider#az-provider-show) command.
+
+```azurecli-interactive
+az provider show --namespace Microsoft.ContainerService --query registrationState
+```
+
+If necessary, register the resource provider using the [az provider register](/cli/azure/provider#az-provider-register) command.
+
+```azurecli-interactive
+az provider register --namespace Microsoft.ContainerService
+```
+
+## Install `aks-preview` extension
+
+ [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
-
-    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
     ```azurecli-interactive
     az extension add --name aks-preview
@@ -50,7 +66,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
     az extension update --name aks-preview
     ```
 
-### Register the `AKSFlatcarPreview` feature flag
+## Register `AKSFlatcarPreview` feature flag
 
 1. Register the `AKSFlatcarPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
@@ -70,33 +86,17 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
     az provider register --namespace Microsoft.ContainerService
     ```
 
-## Register resource providers
-
-You might need to register resource providers in your Azure subscription. For example, `Microsoft.ContainerService` is required. 
-
-1. Check the registration status using the [`az provider show`](/cli/azure/provider#az-provider-show) command.
-
-    ```azurecli-interactive
-    az provider show --namespace Microsoft.ContainerService --query registrationState
-    ```
-
-1. If necessary, register the resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Define environment variables
 
 - Define the following environment variables for use throughout this quickstart:
 
-    ```bash
-    export RANDOM_ID="$(openssl rand -hex 3)"
-    export MY_RESOURCE_GROUP_NAME="myAKSResourceGroup$RANDOM_ID"
-    export REGION="westus"
-    export MY_AKS_CLUSTER_NAME="myAKSCluster$RANDOM_ID"
-    export MY_DNS_LABEL="mydnslabel$RANDOM_ID"
-    ```
+```azurecli-interactive
+export RANDOM_ID="$(openssl rand -hex 3)"
+export MY_RESOURCE_GROUP_NAME="myAKSResourceGroup$RANDOM_ID"
+export REGION="westus"
+export MY_AKS_CLUSTER_NAME="myAKSCluster$RANDOM_ID"
+```
 
     The `RANDOM_ID` variable's value is a six-character alphanumeric value appended to the resource group and cluster name so that the names are unique. Use the `echo` command to view variable values like `echo $RANDOM_ID`.
 
@@ -106,38 +106,41 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
 
 - Create a resource group using the [`az group create`][az-group-create] command.
 
-    ```azurecli-interactive
-    az group create --name $MY_RESOURCE_GROUP_NAME --location $REGION
-    ```
+```azurecli-interactive
+az group create \
+  --name $MY_RESOURCE_GROUP_NAME \
+  --location $REGION
+```
 
-    Example output:
-    <!-- expected_similarity=0.3 -->
-    ```output
-    {
-      "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myAKSResourceGroup<randomIDValue>",
-      "location": "westus",
-      "managedBy": null,
-      "name": "myAKSResourceGroup<randomIDValue>",
-      "properties": {
-        "provisioningState": "Succeeded"
-      },
-      "tags": null,
-      "type": "Microsoft.Resources/resourceGroups"
-    }
-    ```
+Example output:
+
+<!-- expected_similarity=0.3 -->
+```output
+{
+  "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myAKSResourceGroup<randomIDValue>",
+  "location": "westus",
+  "managedBy": null,
+  "name": "myAKSResourceGroup<randomIDValue>",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+```
 
 ## Create an AKS cluster
 
 - Create an AKS cluster using the [`az aks create`][az-aks-create] command. The following example creates a cluster with one node and enables a system-assigned managed identity:
 
-    ```azurecli-interactive
-    az aks create \
-      --resource-group $MY_RESOURCE_GROUP_NAME \
-      --name $MY_AKS_CLUSTER_NAME \
-      --os-sku flatcar \
-      --node-count 1 \
-      --generate-ssh-keys
-    ```
+```azurecli-interactive
+az aks create \
+  --resource-group $MY_RESOURCE_GROUP_NAME \
+  --name $MY_AKS_CLUSTER_NAME \
+  --os-sku flatcar \
+  --node-count 1 \
+  --generate-ssh-keys
+```
 
     > [!NOTE]
     > When you create a new cluster, AKS automatically creates a second resource group to store the AKS resources. For more information, see [Why are two resource groups created with AKS?](../faq.yml)
@@ -149,7 +152,9 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
 1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
     ```azurecli-interactive
-    az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_AKS_CLUSTER_NAME
+    az aks get-credentials \
+      --resource-group $MY_RESOURCE_GROUP_NAME \
+      --name $MY_AKS_CLUSTER_NAME
     ```
 
 1. Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
@@ -473,62 +478,54 @@ To deploy the application, you use a manifest file to create all the objects req
     kubectl apply -f aks-store-quickstart.yaml
     ```
 
-## Test the application
-
-You can validate that the application is running by visiting the public IP address or the application URL.
-
-1. Get the application URL using the following commands:
-
-    ```bash
-    runtime="5 minutes"
-    endtime=$(date -ud "$runtime" +%s)
-    while [[ $(date -u +%s) -le $endtime ]]
-    do
-       STATUS=$(kubectl get pods -l app=store-front -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}')
-       echo $STATUS
-       if [ "$STATUS" == 'True' ]
-       then
-          export IP_ADDRESS=$(kubectl get service store-front --output 'jsonpath={..status.loadBalancer.ingress[0].ip}')
-          echo "Service IP Address: $IP_ADDRESS"
-          break
-       else
-          sleep 10
-       fi
-    done
-    ```
-
-    ```bash
-    curl $IP_ADDRESS
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.3 -->
-    ```HTML
-    <!doctype html>
-    <html lang="">
-       <head>
-          <meta charset="utf-8">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge">
-          <meta name="viewport" content="width=device-width,initial-scale=1">
-          <link rel="icon" href="/favicon.ico">
-          <title>store-front</title>
-          <script defer="defer" src="/js/chunk-vendors.df69ae47.js"></script>
-          <script defer="defer" src="/js/app.7e8cfbb2.js"></script>
-          <link href="/css/app.a5dc49f6.css" rel="stylesheet">
-       </head>
-       <body>
-          <div id="app"></div>
-       </body>
-    </html>
-    ```
+    The following example output shows the deployments and services:
 
     ```output
-    echo "You can now visit your web server at $IP_ADDRESS"
+    deployment.apps/rabbitmq created
+    service/rabbitmq created
+    deployment.apps/order-service created
+    service/order-service created
+    deployment.apps/product-service created
+    service/product-service created
+    deployment.apps/store-front created
+    service/store-front created
     ```
 
-1. View the application website, open a browser and enter the IP address. The page looks like the following example.
+## Test the application
 
-    :::image type="content" source="media/quick-kubernetes-deploy-cli/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="media/quick-kubernetes-deploy-cli/aks-store-application.png":::
+When the application runs, a Kubernetes service exposes the application front end to the internet. This process can take a few minutes to complete.
+
+1. Check the status of the deployed pods using the [`kubectl get pods`][kubectl-get] command. Make sure all pods are `Running` before proceeding.
+
+    ```bash
+    kubectl get pods
+    ```
+
+1. Check for a public IP address for the `store-front` application. Monitor progress using the [`kubectl get service`][kubectl-get] command with the `--watch` argument.
+
+    ```azurecli-interactive
+    kubectl get service store-front --watch
+    ```
+
+    The **EXTERNAL-IP** output for the `store-front` service initially shows as *pending*:
+
+    ```output
+    NAME          TYPE           CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE
+    store-front   LoadBalancer   10.0.100.10   <pending>     80:30025/TCP   4h4m
+    ```
+
+    Once the **EXTERNAL-IP** address changes from *pending* to an actual public IP address, use `CTRL-C` to stop the `kubectl` watch process.
+
+    The following example output shows a valid public IP address assigned to the service:
+
+    ```output
+    NAME          TYPE           CLUSTER-IP    EXTERNAL-IP    PORT(S)        AGE
+    store-front   LoadBalancer   10.0.100.10   20.62.159.19   80:30025/TCP   4h5m
+    ```
+
+1. Open a web browser to the external IP address of your service to see the Azure Store app in action.
+
+    :::image type="content" source="media/quick-kubernetes-deploy-portal/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="media/quick-kubernetes-deploy-portal/aks-store-application.png":::
 
 ## Delete the cluster
 
@@ -565,5 +562,8 @@ To learn more about AKS and do a complete code-to-deployment example, continue t
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-group-create]: /cli/azure/group#az-group-create
 [az-group-delete]: /cli/azure/group#az-group-delete
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json

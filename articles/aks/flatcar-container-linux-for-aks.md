@@ -2,7 +2,7 @@
 title: Flatcar Container Linux for Azure Kubernetes Service (AKS) (preview) Overview
 description: Learn about Flatcar Container Linux for Azure Kubernetes Service (AKS), including limitations, migration information, and resources to get started.
 ms.topic: overview
-ms.date: 10/16/2025
+ms.date: 11/10/2025
 author: allyford
 ms.author: allyford
 ms.service: azure-kubernetes-service
@@ -30,6 +30,7 @@ Flatcar Container Linux for AKS has the following limitations:
 - [Generation 1 VMs][vm-support] aren't supported with Flatcar Container Linux, which means you can't use VM sizes that only support Generation 1.
 - [Pod Sandboxing (preview)][pod-sandboxing] isn't supported with Flatcar Container Linux.
 - [Node auto-provisioning][NAP] isn't supported with Flatcar Container Linux.
+- [Azure Monitor VM(SS) extension][azure-monitor-extension] isn't supported.
 
 > [!NOTE]
 > If you have an existing cluster with any of the above features enabled, you might not be able to add a node pool using Flatcar Container Linux.
@@ -104,6 +105,7 @@ To learn more about Flatcar Container Linux, see the [Flatcar documentation][fla
 [flatcar-deploy-arm]: ./learn/quick-flatcar-deploy-arm-template.md
 [create-node-pools]: ./create-node-pools.md
 [NAP]: ./node-autoprovision.md
+[azure-monitor-extension]: ./azure/azure-monitor/agents/azure-monitor-agent-manage?tabs=azure-portal#:~:text=Virtual%20machine%20(VM)%20extension
 
 <!-- LINKS - External -->
 [flatcar-docs]: https://www.flatcar.org/

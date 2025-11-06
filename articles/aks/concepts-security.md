@@ -4,7 +4,7 @@ description: Learn about security in Azure Kubernetes Service (AKS), including m
 author: shashankbarsin
 ms.topic: concept-article
 ms.subservice: aks-security
-ms.date: 04/03/2025
+ms.date: 11/10/2025
 ms.author: shasb
 # Customer intent: "As a cloud security engineer, I want to implement comprehensive security practices for Azure Kubernetes Service, so that I can safeguard applications and clusters against vulnerabilities and unauthorized access throughout the development and deployment pipeline."
 ---
@@ -70,10 +70,14 @@ AKS supports two Kubernetes optimized Linux OS options with increased security, 
     - Both Azure Linux OS Guard and Flatcar Container Linux for AKS use SELinux for Mandatory Access Control.
     - Azure Linux OS Guard enforces [FIPS][FIPS] and [Trusted Launch][trusted-launch] enablement, providing improved compliance and protection against advanced and persistent attacks by combining secure boot and virtualized version of trusted platform module (vTPM).
 
-When deciding between which Kubernetes-optimized OS options to use, AKS recommends the following:
+When deciding between which container-optimized OS options to use, AKS recommends the following:
 
-- Use Azure Linux OS Guard (preview) if you’re looking for an enterprise-ready immutable OS.
-- Use Flatcar Container Linux for AKS (preview) if you’re looking for a vendor neutral immutable OS with cross-cloud support.
+- Use [**Flatcar Container Linux for AKS (preview)**](https://aka.ms/aks/flatcar) if you're looking for a vendor neutral immutable OS with cross-cloud support.
+- Use [**Azure Linux OS Guard (preview)**](https://aka.ms/aks/azure-linux-os-guard) if you're looking for an enterprise-ready immutable OS, recommended by Microsoft.
+- Use [Ubuntu](https://aka.ms/aks/supported-ubuntu-versions) if you're looking for a vendor neutral, general purpose OS with cross-cloud support.
+- Use [Azure Linux](https://aka.ms/aks/use-azure-linux) if you're looking for an enterprise-ready, general purpose OS, recommended by Microsoft.
+
+![OS Comparison](media/concepts-security/os-comparison.png)
 
 ### Node authorization
 

@@ -2,7 +2,7 @@
 title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster with Flatcar Container Linux for AKS (preview) using an ARM template'
 description: Learn how to quickly deploy a Kubernetes cluster with Flatcar Container Linux for AKS (preview) using an Azure Resource Manager template and deploy an application in Azure Kubernetes Service (AKS).
 ms.topic: quickstart
-ms.date: 10/22/2025
+ms.date: 11/10/2025
 author: allyford
 ms.author: allyford
 ms.service: azure-kubernetes-service
@@ -36,11 +36,27 @@ This article assumes a basic understanding of Kubernetes concepts. For more info
 
 After you deploy the cluster from the template, you can use either Azure CLI or Azure PowerShell to connect to the cluster and deploy the sample application.
 
-### Install the `aks-preview` extension
+## Register resource providers
+
+You might need to register resource providers in your Azure subscription. For example, `Microsoft.ContainerService` is required. 
+
+Check the registration status using the [`az provider show`](/cli/azure/provider#az-provider-show) command.
+
+```azurecli-interactive
+az provider show --namespace Microsoft.ContainerService --query registrationState
+```
+
+If necessary, register the resource provider using the [az provider register](/cli/azure/provider#az-provider-register) command.
+
+```azurecli-interactive
+az provider register --namespace Microsoft.ContainerService
+```
+
+## Install `aks-preview` extension
+
+ [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
-
-    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
     ```azurecli-interactive
     az extension add --name aks-preview
@@ -52,7 +68,7 @@ After you deploy the cluster from the template, you can use either Azure CLI or 
     az extension update --name aks-preview
     ```
 
-### Register the `AKSFlatcarPreview` feature flag
+## Register `AKSFlatcarPreview` feature flag
 
 1. Register the `AKSFlatcarPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
@@ -81,22 +97,31 @@ To create an AKS cluster using an ARM template, you provide an SSH public key. I
 To access AKS nodes, you connect using an SSH key pair (public and private). To create an SSH key pair:
 
 1. Go to [https://shell.azure.com](https://shell.azure.com) to open Cloud Shell in your browser.
-1. Create an SSH key pair using the [`az sshkey create`](/cli/azure/sshkey#az-sshkey-create) command or the `ssh-keygen` command.
+
+1. Create a resource group using the [az group create][az-group-create] command.
 
     ```azurecli-interactive
-    # Create an SSH key pair using Azure CLI
-    az sshkey create --name "mySSHKey" --resource-group "myResourceGroup"
+    az group create \
+      --name myResourceGroup \
+      --location eastus
+    ```
 
-    # or
+1. Create an SSH key pair using the [az sshkey create](/cli/azure/sshkey#az-sshkey-create) command or the `ssh-keygen` command.
 
-    # Create an SSH key pair using ssh-keygen
+    ```azurecli-interactive
+    az sshkey create --name mySSHKey --resource-group myResourceGroup
+    ```
+
+    Or create an SSH key pair using ssh-keygen
+
+    ```bash
     ssh-keygen -t rsa -b 4096
     ```
 
 1. To deploy the template, you must provide the public key from the SSH pair. Retrieve the public key using the [`az sshkey show`](/cli/azure/sshkey#az-sshkey-show) command.
 
-    ```azurecli-interactive
-    az sshkey show --name "mySSHKey" --resource-group "myResourceGroup" --query "publicKey"
+    ```azurecli
+    az sshkey show --name mySSHKey --resource-group myResourceGroup --query publicKey
     ```
 
     By default, the SSH key files are created in the _~/.ssh_ directory. Running the `az sshkey create` or `ssh-keygen` command overwrites any existing SSH key pair with the same name.
@@ -145,8 +170,10 @@ If you use Azure Cloud Shell, `kubectl` is already installed. To install and run
 
 1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
-    ```azurecli-interactive
-    az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+    ```azurecli
+    az aks get-credentials \
+      --resource-group myResourceGroup \
+      --name myAKSCluster
     ```
 
 1. Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
@@ -159,9 +186,9 @@ If you use Azure Cloud Shell, `kubectl` is already installed. To install and run
 
     ```output
     NAME                                STATUS   ROLES   AGE   VERSION
-    aks-agentpool-27442051-vmss000000   Ready    agent   10m   v1.27.7
-    aks-agentpool-27442051-vmss000001   Ready    agent   10m   v1.27.7
-    aks-agentpool-27442051-vmss000002   Ready    agent   11m   v1.27.7
+    aks-agentpool-38955149-vmss000000   Ready    <none>   5m53s   v1.32.7
+    aks-agentpool-38955149-vmss000001   Ready    <none>   6m31s   v1.32.7
+    aks-agentpool-238955149-vmss000002   Ready    <none>   6m35s   v1.32.7
     ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
@@ -184,9 +211,9 @@ If you use Azure Cloud Shell, `kubectl` is already installed. To install `kubect
 
     ```output
     NAME                                STATUS   ROLES   AGE   VERSION
-    aks-agentpool-27442051-vmss000000   Ready    agent   10m   v1.27.7
-    aks-agentpool-27442051-vmss000001   Ready    agent   10m   v1.27.7
-    aks-agentpool-27442051-vmss000002   Ready    agent   11m   v1.27.7
+    aks-agentpool-38955149-vmss000000   Ready    <none>   5m53s   v1.32.7
+    aks-agentpool-38955149-vmss000001   Ready    <none>   6m31s   v1.32.7
+    aks-agentpool-238955149-vmss000002   Ready    <none>   6m35s   v1.32.7
     ```
 
 ---
@@ -501,9 +528,9 @@ If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up un
 
 - Remove the resource group, container service, and all related resources using the [`az group delete`][az-group-delete] command.
 
-    ```azurecli-interactive
-    az group delete --name myResourceGroup --yes --no-wait
-    ```
+```azurecli
+az group delete --name myResourceGroup
+```
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
@@ -535,6 +562,7 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 
 <!-- LINKS - internal -->
 [aks-tutorial]: ../tutorial-kubernetes-prepare-app.md
+[az-group-create]: /cli/azure/group#az-group-create
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
 [import-azakscredential]: /powershell/module/az.aks/import-azakscredential
 [az-aks-install-cli]: /cli/azure/aks#az_aks_install_cli
