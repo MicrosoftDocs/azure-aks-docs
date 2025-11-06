@@ -108,9 +108,9 @@ All metrics include labels:
 
 ---
 
-## Container network metrics filtering (Preview)
+## Container Network Metrics Filtering (Preview)
 
-Now that you have the ability to collect comprehensive metrics at both node and pod levels, you might find yourself dealing with a significant volume of data. To help reduce noise and optimize storage costs, Container Network Observability introduces **container network metrics filtering**. This feature enables you to filter metrics at the source before they are collected and stored, giving you control over which metrics are most relevant to your specific monitoring and troubleshooting needs.
+Now that you have the ability to collect comprehensive metrics at both node and pod levels, you might find yourself dealing with a significant volume of data. To help reduce noise and optimize storage costs, Container Network Observability introduces **container network metrics filtering**. This feature enables you to filter metrics at the source before they are collected and stored, giving you control over which metrics are most relevant to your specific monitoring and troubleshooting needs. This feature is only available for Cilium clusters.
 
 Container network metrics filtering is particularly valuable in large-scale production environments where the sheer volume of metrics can impact storage costs and query performance. By filtering out unnecessary metrics early in the collection process, you can focus on the data that matters most to your operations while maintaining the visibility you need for effective network monitoring.
 
@@ -127,6 +127,7 @@ To learn more on how to enable container network metrics filtering, see [How to 
 * Flow logs are not currently available in the air gapped cloud.
 * Hubble relay may crash if one of the Hubble node agents goes down and may cause interruptions to Hubble CLI.
 * When using Advanced Container Networking Services (ACNS) on non-Cilium data planes, FIPS support isn't available on Ubuntu 20.04 nodes due to kernel restrictions. To enable FIPS in this scenario, you must use an Azure Linux node pool. This limitation is expected to be resolved with the release of Ubuntu 22 FIPS. For updates, see the [AKS issue tracker](https://github.com/Azure/AKS/issues/4857).
+* Container Network Metrics Filtering is only available for Cilium Clusters. 
 
 Refer to the FIPS support matrix below:
 

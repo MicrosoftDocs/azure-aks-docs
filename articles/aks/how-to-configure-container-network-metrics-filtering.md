@@ -1,5 +1,5 @@
 ---
-title: Configure container network metrics filtering for Azure Kubernetes Service (AKS)
+title: Configure Configure Container Network Metrics Filtering for Azure Kubernetes Service (AKS)
 description: Learn how to configure container network metrics filtering to optimize data collection and reduce storage costs in Azure Kubernetes Service (AKS) with Cilium.
 author: Khushbu-Parekh
 ms.author: kparekh
@@ -10,11 +10,11 @@ ms.date: 10/30/2025
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Configure container network metrics filtering for Azure Kubernetes Service (AKS) (Preview)
+# Configure Container Network Metrics Filtering for Azure Kubernetes Service (AKS) (Preview)
 
-This article shows you how to configure container network metrics filtering for Azure Kubernetes Service (AKS) with Cilium to optimize data collection, reduce storage costs, and focus on the metrics most relevant to your monitoring needs.
+This article shows you how to configure Configure Container Network Metrics Filtering  for Azure Kubernetes Service (AKS) with Cilium to optimize data collection, reduce storage costs, and focus on the metrics most relevant to your monitoring needs.
 
-Container network metrics filtering enables dynamic management of Hubble metrics cardinality through Kubernetes Custom Resource Definitions (CRDs). This feature allows you to dynamically control the cardinality, dimensions, and targets of Hubble metrics without restarting Cilium agents or Prometheus servers.
+Configure Container Network Metrics Filtering enables dynamic management of Hubble metrics cardinality through Kubernetes Custom Resource Definitions (CRDs). This feature allows you to dynamically control the cardinality, dimensions, and targets of Hubble metrics without restarting Cilium agents or Prometheus servers.
 
 ## Prerequisites
 
@@ -32,6 +32,8 @@ Container network metrics filtering enables dynamic management of Hubble metrics
 
 * The minimum version of the `aks-preview` Azure CLI extension to complete the steps in this article is `18.0.0b2`.
 
+
+
 ### Install the aks-preview Azure CLI extension
 
 Install or update the Azure CLI preview extension by using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
@@ -43,23 +45,22 @@ az extension add --name aks-preview
 az extension update --name aks-preview
 ```
 
-## Configure container network metrics filtering
 
 ### Register the AdvancedNetworkingDynamicMetricsPreview feature flag
 
-First, register the AdvancedNetworkingDynamicMetricsPreview feature flag by using the [`az feature register`](/cli/azure/feature#az_feature_register) command:
+1. First, register the AdvancedNetworkingDynamicMetricsPreview feature flag by using the [`az feature register`](/cli/azure/feature#az_feature_register) command:
 
 ```azurecli
 az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingDynamicMetricsPreview"
 ```
 
-Verify successful registration by using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for registration to complete.
+2. Verify successful registration by using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for registration to complete.
 
 ```azurecli
 az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingDynamicMetricsPreview"
 ```
 
-When the feature shows **Registered**, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
+3. When the feature shows **Registered**, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
 
 ```azurecli
 az provider register --namespace Microsoft.ContainerService
@@ -67,7 +68,13 @@ az provider register --namespace Microsoft.ContainerService
 
 ### Create a new AKS cluster with Cilium
 
-Create a new AKS cluster with Cilium data plane and Advanced Container Networking Services enabled:
+If you already have an existing cluster, you can skip this step.
+
+Use the `az aks create` command with the `--enable-acns` flag to create a new AKS cluster that has all Advanced Container Networking Services features. These features include:
+
+* **Container Network Observability:**  Provides insight into your network traffic. To learn more, see [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability).
+
+* **Container Network Security:** Offers security features like FQDN filtering. To learn more, see [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
 ```azurecli
 # Set environment variables
@@ -99,9 +106,9 @@ Get your cluster credentials by using the [`az aks get-credentials`](/cli/azure/
 az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrite-existing
 ```
 
-### Configure custom resources for metrics filtering 
+## Configure custom resources for metrics filtering 
 
-Container network metrics filtering uses the `ContainerNetworkMetric` Custom Resource Definition (CRD) to define filtering rules. Only one CRD can exist per cluster, and changes take about 30 seconds to reconcile.
+Container network metrics filtering uses the `ContainerNetworkMetric` Custom Resource Definition (CRD) to define filtering rules. Only one CRD can exist per cluster, and changes take approximately 30 seconds to reconcile. If the CRD is not applied, all metrics will be collected.
 
 
 ```azurecli
@@ -169,7 +176,7 @@ The following table describes the fields in the custom resource definition:
 | Field                        | Type         | Description                                                                                                                         | Required |
 |----------------------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------|--------------|
 |  `filters.metric`             | String | Name of the metric you would like to apply the filter on. This is mandatory. The supported values are `dns`, `flow`, `tcp`, `drop`  | Mandatory    |
-| `includeFilters` or `excludeFilters`               | []filter | A list of filters that define network flows to include. Each filter specifies the source, destination, protocol, and other matching criteria.You must have at least one incude or exclude filter. | Mandatory    |
+| `includeFilters` or `excludeFilters`               | []filter | A list of filters that define network flows to include. Each filter specifies the source, destination, protocol, and other matching criteria. You must have at least one include or exclude filter. | Mandatory    |
 | `filters.name`            | String           | The name of the filter.                                                                                                                | Optional    |
 | `filters.protocol`        | []string | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`. Because it's an optional parameter, if it isn't specified, logs with all protocols are included.                                                      | Optional     |
 | `filters.verdict`         | []string | The verdict of the flow to match. Valid values are `forwarded` and `dropped`. Because it's an optional parameter, if it isn't specified, logs with all verdicts are included.                                                        | Optional     |
@@ -189,7 +196,7 @@ Apply the `ContainerNetworkMetric` custom resource to enable log collection at t
   kubectl apply -f <crd.yaml>
   ```
 
-### Cleanup and reset
+## Clean up and reset
 
 To clean up filtering configuration:
 
@@ -198,7 +205,7 @@ To clean up filtering configuration:
 kubectl delete ContainerNetworkMetric container-network-metric
 ```
 
-### Example filtering configuration
+## Example filtering configuration
 
 1. Create a basic filtering configuration that focuses on DNS metrics:
 
@@ -211,11 +218,9 @@ metadata:
 spec:
   filters:
     - metric: dns  # Supported: dns, flow, tcp, drop
-      includeFilters:
-        - protocol: ["dns"]
       excludeFilters:
         - from:
-            namespacedPod: ["kube-system/coredns-*"]
+            namespacedPod: ["kube-system/coredns"]
 ```
 
 
@@ -231,15 +236,15 @@ spec:
   filters:
     - metric: tcp
       includeFilters:
-        - protocol: ["tcp"]
-        - from:
+          - from:
             labelSelector:
               matchLabels:
-                app: "frontend"
+                tier: "frontend"
       excludeFilters:
         - to:
-            namespacedPod: ["kube-system/metrics-server-*"]
+            namespacedPod: ["kube-system/metrics-server"]
 ```
+
 3. Configure filtering for network flow metrics:
 
 ```yaml
@@ -262,12 +267,10 @@ spec:
                 tier: "backend"
       excludeFilters:
         - from:
-            namespacedPod: ["default/test-*"]
+            namespacedPod: ["default/test"]
 ```
 
-4. Drop metrics filtering
-
-Configure filtering for dropped packet metrics (requires network policies):
+4. Configure filtering for dropped packet metrics:
 
 ```yaml
 # drop-metrics-filter.yaml
@@ -278,11 +281,9 @@ metadata:
 spec:
   filters:
     - metric: drop
-      includeFilters:
-        - reason: ["Policy denied"]
       excludeFilters:
         - from:
-            namespacedPod: ["kube-system/*"]
+            namespacedPod: ["kube-system/"]
 ```
 
 5. Configure filtering for multiple metric types in a single CRD:
@@ -319,7 +320,7 @@ spec:
 
 ## Best practices
 
-- Ensure you do not have confliting include and exclude filter on the CRD.
+- Ensure you do not have conflicting include and exclude filter on the CRD.
 
 - Leverage Kubernetes label selectors for flexible filtering.
 
@@ -348,14 +349,14 @@ kubectl get ContainerNetworkMetric
 
 **Issue**: Metrics still showing after applying excludeFilters
 
-**Solution**: Remember that pre-existing metrics persist in Prometheus. You may need to wait for new metrics to be generated to see the filtering effects.
+**Solution**: Remember that preexisting metrics persist in Prometheus. You may need to wait for new metrics to be generated to see the filtering effects.
 
 
 ## Limitations
 
 * This feature is specifically designed for Cilium data planes only
 * Only one `ContainerNetworkMetric` CRD can exist per cluster
-* Pre-existing metrics persist in Prometheus; new filtering rules apply to newly generated metrics
+* Preexisting metrics persist in Prometheus; new filtering rules apply to newly generated metrics
 * Requires Kubernetes version 1.32 or later
 
 ## Related content
