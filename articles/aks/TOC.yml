@@ -422,14 +422,10 @@
               href: best-practices-performance-scale.md
             - name: For large workloads
               href: best-practices-performance-scale-large.md
-    - name: Multi-tenancy, isolation, and scheduling best practices
+    - name: Multi-tenancy and isolation
       items:
         - name: Multi-tenancy and cluster isolation
           href: operator-best-practices-cluster-isolation.md
-        - name: Basic scheduler features
-          href: operator-best-practices-scheduler.md
-        - name: Advanced scheduler features
-          href: operator-best-practices-advanced-scheduler.md
         - name: Managed namespaces
           items:
             - name: Overview
@@ -565,10 +561,18 @@
         items:
           - name: Create an internal load balancer
             href: internal-lb.md
-          - name: Use a Standard Load Balancer
-            href: load-balancer-standard.md
-          - name: Use multiple Standard Load Balancers
-            href: use-multiple-standard-load-balancer.md
+          - name: Standard Load Balancer
+            items:
+              - name: Create a Load Balancer Service
+                href: load-balancer-standard.md
+              - name: Configure a Standard Load Balancer
+                href: configure-load-balancer-standard.md
+              - name: Use multiple Standard Load Balancers
+                href: use-multiple-standard-load-balancer.md
+              - name: Use shared health probes
+                href: shared-health-probes.md
+              - name: Troubleshoot SNAT issues
+                href: troubleshoot-source-network-address-translation.md
           - name: Upgrade Basic Load Balancer
             href: upgrade-basic-load-balancer-on-aks.md
           - name: Use kube-proxy configuration (IPVS)
@@ -621,6 +625,12 @@
         href: operator-best-practices-scheduler.md
       - name: Advanced scheduler features
         href: operator-best-practices-advanced-scheduler.md
+      - name: Scheduler profile configuration
+        items:
+          - name: Overview
+            href: concepts-scheduler-configuration.md
+          - name: Configure a scheduler profile
+            href: configure-aks-scheduler.md
       - name: Kueue
         items:
           - name: Learn about Kueue for batch scheduling
@@ -668,8 +678,12 @@
           href: operator-best-practices-cluster-security.md
         - name: Azure kubelogin
           href: kubelogin-authentication.md
-        - name: Use managed identities
-          href: use-managed-identity.md
+        - name: Managed identities
+          items:
+            - name: Overview
+              href: managed-identity-overview.md
+            - name: Enable a managed identity on your cluster
+              href: use-managed-identity.md
         - name: Create a service principal
           href: kubernetes-service-principal.md
         - name: Enable access to AKS clusters using Trusted Access
@@ -1002,10 +1016,8 @@
       href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: GPUs
       items:
-        - name: Use NVIDIA GPUs
+        - name: Use Linux GPUs
           href: use-nvidia-gpu.md
-        - name: Use managed GPU nodes
-          href: aks-managed-gpu-nodes.md
         - name: Use Windows GPUs
           href: use-windows-gpu.md
         - name: Use AMD GPUs
@@ -1082,20 +1094,26 @@
               href: keda-integrations.md
             - name: Troubleshoot Kubernetes Event-driven Autoscaler (KEDA)
               href: /troubleshoot/azure/azure-kubernetes/troubleshoot-kubernetes-event-driven-autoscaling-add-on?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Node auto provisioning
+        - name: Node auto-provisioning (NAP)
           items:
-            - name: About node auto provisioning (NAP)
-              href: node-autoprovision.md
-            - name: Node auto provisioning configuration
+            - name: Overview
+              href: node-auto-provisioning.md
+            - name: Enable or disable NAP
+              href: use-node-auto-provisioning.md
+            - name: Use NAP in a custom VNet
+              href: node-auto-provisioning-custom-vnet.md
+            - name: Update NAP node images
+              href: node-auto-provisioning-upgrade-image.md
+            - name: NAP configuration options
               items:
-                - name: Configure networking with node auto provisioning
-                  href: node-autoprovision-networking.md
-                - name: Configure disruption policies with node auto provisioning
-                  href: node-autoprovision-disruption.md
-                - name: Configure NodePool custom resource
-                  href: node-autoprovision-node-pools.md
-                - name: Configure AKSNodeClass custom resource
-                  href: node-autoprovision-aksnodeclass.md
+                - name: Configure networking
+                  href: node-auto-provisioning-networking.md
+                - name: Configure disruption policies
+                  href: node-auto-provisioning-disruption.md
+                - name: Configure NodePool custom resources
+                  href: node-auto-provisioning-node-pools.md
+                - name: Configure AKSNodeClass custom resources
+                  href: node-auto-provisioning-aksnodeclass.md
 - name: Monitoring
   items:
     - name: Monitoring concepts and resources

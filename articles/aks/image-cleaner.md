@@ -306,6 +306,6 @@ The `eraser-aks-xxxxx` pod deletes within 10 minutes after work completion. You 
 <!-- LINKS -->
 
 [azure-cli-install]: /cli/azure/install-azure-cli
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-show]: /cli/azure/aks#az-aks-show

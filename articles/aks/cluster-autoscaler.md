@@ -297,7 +297,7 @@ To further help improve cluster resource utilization and free up CPU and memory 
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-scale]: /cli/azure/aks#az-aks-scale
 [vertical-pod-autoscaler]: vertical-pod-autoscaler.md
-[az-group-create]: /cli/azure/group#az_group_create
+[az-group-create]: /cli/azure/group#az-group-create
 
 <!-- LINKS - external -->
 [az-aks-update-preview]: https://github.com/Azure/azure-cli-extensions/tree/master/src/aks-preview

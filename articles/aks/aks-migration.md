@@ -305,5 +305,5 @@ In this article, we summarized migration details for:
 
 <!-- LINKS - internal -->
 [region-availability]: https://azure.microsoft.com/global-infrastructure/services/?products=kubernetes-service
-[az-group-create]: /cli/azure/group#az_group_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-group-create]: /cli/azure/group#az-group-create
+[az-aks-create]: /cli/azure/aks#az-aks-create

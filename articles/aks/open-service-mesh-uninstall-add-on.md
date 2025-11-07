@@ -47,6 +47,6 @@ This article shows you how to uninstall the OMS add-on and related resources fro
 Learn more about [Open Service Mesh][osm].
 
 <!-- LINKS - Internal -->
-[az-aks-disable-addon]: /cli/azure/aks#az_aks_disable_addons
+[az-aks-disable-addon]: /cli/azure/aks#az-aks-disable-addons
 [osm]: ./open-service-mesh-about.md
 

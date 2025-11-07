@@ -508,11 +508,11 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 
 <!-- LINKS - internal -->
 [aks-tutorial]: ../tutorial-kubernetes-prepare-app.md
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [import-azakscredential]: /powershell/module/az.aks/import-azakscredential
-[az-aks-install-cli]: /cli/azure/aks#az_aks_install_cli
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [install-azakskubectl]: /powershell/module/az.aks/install-azaksclitool
-[az-group-delete]: /cli/azure/group#az_group_delete
+[az-group-delete]: /cli/azure/group#az-group-delete
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
 [kubernetes-deployment]: ../concepts-clusters-workloads.md#deployments-and-yaml-manifests
 [ssh-keys]: /azure/virtual-machines/linux/create-ssh-keys-detailed

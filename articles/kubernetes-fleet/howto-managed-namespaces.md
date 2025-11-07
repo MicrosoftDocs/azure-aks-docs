@@ -162,6 +162,9 @@ You can remove member clusters from a managed namespace by specifying the list o
         --name my-managed-namespace \
     ```
 
+> [!IMPORTANT]
+> RBAC roles placed on the managed namespace will be deleted when the managed namespace is deleted, regardless of the delete policy configuration
+
 ## Next steps
 
 - Read the [Overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md) to understand the concept of a managed namespace.
@@ -170,4 +173,4 @@ You can remove member clusters from a managed namespace by specifying the list o
 <!-- INTERNAL LINKS -->
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[az-account-set]: /cli/azure/account#az_account_set
+[az-account-set]: /cli/azure/account#az-account-set
