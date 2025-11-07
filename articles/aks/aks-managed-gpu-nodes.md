@@ -4,7 +4,7 @@ description: Learn how to provision a fully managed GPU node pool on your new or
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
-ms.date: 10/30/2025
+ms.date: 11/7/2025
 author: sachidesai
 ms.author: sachidesai
 ms.service: azure-kubernetes-service
@@ -70,13 +70,13 @@ In this article, you learn how to provision a fully managed GPU node pool (previ
 
 ## Create an AKS-managed GPU node pool (preview)
 
-You can add a fully managed GPU node pool (preview) to an existing AKS cluster by specifying OS SKU and `--enable-managed-gpu-experience`. When you do this, AKS will install the GPU driver, GPU device plugin, and metrics exporter automatically.
+You can add a fully managed GPU node pool (preview) to an existing AKS cluster by specifying OS SKU and `--tags EnableManagedGPUExperience=true` command. When you do this, AKS will install the GPU driver, GPU device plugin, and metrics exporter automatically.
 
 ### [Ubuntu Linux node pool (default SKU)](#tab/add-ubuntu-gpu-node-pool)
 
 To use the default Ubuntu operating system (OS) SKU, you create the node pool without specifying an OS SKU. The node pool is configured for the default operating system based on the Kubernetes version of the cluster.
 
-1. Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--enable-managed-gpu-experience` flag.
+1. Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--tags EnableManagedGPUExperience=true` command.
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -89,21 +89,28 @@ To use the default Ubuntu operating system (OS) SKU, you create the node pool wi
         --enable‐cluster‐autoscaler \
         --min‐count 1 \
         --max‐count 3 \
-        --enable-managed-gpu-experience
+        --tags EnableManagedGPUExperience=true
     ```
 
-1. Confirm that the NVIDIA GPU software components are installed and running:
-
-    ```bash
-    kubectl get pods -n default
+1. Confirm that the managed NVIDIA GPU software components are installed successfully:
+    
+    ```azurecli-interactive
+    az aks nodepool show \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name gpunp \
     ```
-    Your output should include the following pods:
+
+    Your output should include the following values:
+
     ```output
-    NAME                         READY   STATUS    RESTARTS   AGE
     ...
     ...
-    nvidia-device-plugin-0001    1/1     Running   0          2m
-    nvidia-dcgm-exporter-0001    1/1     Running   0          2m
+    "gpuInstanceProfile": …
+        "gpuProfile": {
+            "driver": "Install"
+        },
+    ...
     ...
     ```
 
@@ -111,7 +118,7 @@ To use the default Ubuntu operating system (OS) SKU, you create the node pool wi
 
 To use Azure Linux, you specify the operating system (OS) SKU by setting `os-sku` to `AzureLinux` during node pool creation. The `os-type` is set to `Linux` by default.
 
-1. Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--os-sku` flag set to `AzureLinux` and the `--enable-managed-gpu-experience` flag.
+1. Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--os-sku` flag set to `AzureLinux` and `--tags EnableManagedGPUExperience=true`.
     ```azurecli-interactive
     az aks nodepool add \
         --resource-group myResourceGroup \
@@ -124,19 +131,29 @@ To use Azure Linux, you specify the operating system (OS) SKU by setting `os-sku
         --enable-cluster-autoscaler \
         --min-count 1 \
         --max-count 3
-        --enable-managed-gpu-experience
+        --tags EnableManagedGPUExperience=true
     ```
 
-1. Confirm that the NVIDIA GPU software components are installed and running:
-
-    ```bash
-    kubectl get pods -n default
+1. Confirm that the managed NVIDIA GPU software components are installed successfully:
+    
+    ```azurecli-interactive
+    az aks nodepool show \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name gpunp \
     ```
-    Your output should look similar to the following:
+
+    Your output should include the following values:
+
     ```output
-    NAME                         READY   STATUS    RESTARTS   AGE
-    nvidia-device-plugin-0001    1/1     Running   0          2m
-    nvidia-dcgm-exporter-0001    1/1     Running   0          2m
+    ...
+    ...
+    "gpuInstanceProfile": …
+        "gpuProfile": {
+            "driver": "Install"
+        },
+    ...
+    ...
     ```
 
 ---
@@ -152,12 +169,11 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
 ## Next steps
 
 - Deploy a [sample GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload) on your AKS-managed GPU-enabled nodes.
-- Monitor [GPU utilization and performance metrics](./monitor-gpu-metrics.md) from managed DCGM exporter on your GPU nodes.
+- Learn about [GPU utilization and performance metrics](./monitor-gpu-metrics.md) from managed NVIDIA DCGM exporter on your GPU node pool.
 
 ## Related articles
 
 - Learn about [GPU health monitoring](./gpu-health-monitoring.md) with Node Problem Detector (NPD) on AKS.
-- [Autoscale your GPU workloads](./autoscale-gpu-workloads-with-keda.md) with DCGM metrics and Kubernetes Event-Driven Autoscaling (KEDA).
 - Run [distributed inference on multiple AKS GPU nodes](https://blog.aks.azure.com/2025/07/08/kaito-inference-with-acstor).
 
 <!-- LINKS - external -->

@@ -43,10 +43,8 @@ If you aren't sure which option to select, read ["Choosing a network model to us
 
 | Kubernetes Version | Minimum Cilium Version |
 |--------------------|----------------|
-| 1.27 (LTS)         | 1.13.18        |
-| 1.28 (End of Life) | 1.13.18        |
-| 1.29               | 1.14.19        |
-| 1.30 (LTS)         | 1.14.19        |
+| 1.29 (LTS)         | 1.14.19        |
+| 1.30               | 1.14.19        |
 | 1.31               | 1.16.6         |
 | 1.32               | 1.17.0         |
 | 1.33               | 1.17.0         |
@@ -164,9 +162,27 @@ az aks create \
 
     Customers may use FQDN filtering and Layer 7 Policies as part of the [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) feature bundle.
 
-- **Can I use `ClusterwideCiliumNetworkPolicy`?**
+- **Can I use `CiliumClusterwideNetworkPolicy`?**
 
-    `ClusterwideCiliumNetworkPolicy` is not supported.
+    Yes, `CiliumClusterwideNetworkPolicy` is supported. The following is a sample CCNP policy YAML.
+    ```
+    apiVersion: "cilium.io/v2"
+    kind: CiliumClusterwideNetworkPolicy
+    metadata:
+      name: "l4-rule-ingress-backend-frontend"
+    spec:
+      endpointSelector:
+        matchLabels:
+          role: backend
+      ingress:
+        - fromEndpoints:
+            - matchLabels:
+                role: frontend
+          toPorts:
+            - ports:
+                - port: "80"
+                  protocol: TCP
+    ```
 
 - **Which Cilium features are supported in Azure managed CNI? Which of those require Advanced Container Networking Services?**
 
@@ -175,9 +191,11 @@ az aks create \
     | Cilium Endpoint Slices | ✔️ | ✔️ |
     | K8s Network Policies | ✔️ | ✔️ |
     | Cilium L3/L4 Network Policies | ✔️ | ✔️ |
+    | Cilium Clusterwide Network Policy | ✔️ | ✔️ |
     | FQDN Filtering | ❌ | ✔️ |
     | L7 Network Policies (HTTP/gRPC/Kafka) | ❌ | ✔️ |
     | Container Network Observability (Metrics and Flow logs ) | ❌ | ✔️ |
+   
 
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
 
