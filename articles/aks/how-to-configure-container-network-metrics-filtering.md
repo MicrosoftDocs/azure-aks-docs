@@ -1,5 +1,5 @@
 ---
-title: Configure Configure Container Network Metrics Filtering for Azure Kubernetes Service (AKS)
+title: Configure Container network metrics filtering for Azure Kubernetes Service (AKS)
 description: Learn how to configure container network metrics filtering to optimize data collection and reduce storage costs in Azure Kubernetes Service (AKS) with Cilium.
 author: Khushbu-Parekh
 ms.author: kparekh
@@ -10,11 +10,11 @@ ms.date: 10/30/2025
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Configure Container Network Metrics Filtering for Azure Kubernetes Service (AKS) (Preview)
+# Configure container network metrics filtering for Azure Kubernetes Service (AKS) (Preview)
 
-This article shows you how to configure Configure Container Network Metrics Filtering  for Azure Kubernetes Service (AKS) with Cilium to optimize data collection, reduce storage costs, and focus on the metrics most relevant to your monitoring needs.
+This article shows you how to configure container network metrics filtering  for Azure Kubernetes Service (AKS) with Cilium to optimize data collection, reduce storage costs, and focus on the metrics most relevant to your monitoring needs.
 
-Configure Container Network Metrics Filtering enables dynamic management of Hubble metrics cardinality through Kubernetes Custom Resource Definitions (CRDs). This feature allows you to dynamically control the cardinality, dimensions, and targets of Hubble metrics without restarting Cilium agents or Prometheus servers.
+Configure container network metrics filtering enables dynamic management of Hubble metrics cardinality through Kubernetes Custom Resource Definitions (CRDs). This feature allows you to dynamically control the cardinality, dimensions, and targets of Hubble metrics without restarting Cilium agents or Prometheus servers.
 
 ## Prerequisites
 
