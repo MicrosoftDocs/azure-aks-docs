@@ -181,6 +181,8 @@ Once you create your first project, AKS desktop places you directly into the new
 
 1. Review the resources to deploy, select **Deploy**, then select **Close**.
 
+---
+
 ## View cluster data and metrics
 
 AKS desktop provides a unified view of your application resources, health status, resource quotas, workloads, and configuration settings all in a single dashboard. Use the tabs to explore detailed information and manage each aspect of your deployment efficiently.
