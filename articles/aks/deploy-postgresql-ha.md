@@ -181,8 +181,6 @@ PostgreSQL performance heavily depends on your cluster's underlying resources an
 
 1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
 
-   Streaming startup and readiness probes offer finer control over when instances admit traffic than the legacy `startDelay` setting. For background, review [CNPG recipe #19](https://www.gabrielebartolini.it/articles/2025/06/cnpg-recipe-19-finer-control-over-postgres-startup-with-probes/) and [CNPG recipe #20](https://www.gabrielebartolini.it/articles/2025/06/cnpg-recipe-20-finer-control-of-postgres-clusters-with-readiness-probes/) before tuning the `maximumLag` thresholds for your workload.
-
     ```bash
     cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
     apiVersion: postgresql.cnpg.io/v1
@@ -306,8 +304,6 @@ PostgreSQL performance heavily depends on your cluster's underlying resources an
 ### [Azure Container Storage (local NVMe)](#tab/acstor)
 
 1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
-
-   The same probe guidance applies when you deploy on Azure Container Storage. Tune the `maximumLag` settings with the help of [CNPG recipe #19](https://www.gabrielebartolini.it/articles/2025/06/cnpg-recipe-19-finer-control-over-postgres-startup-with-probes/) and [recipe #20](https://www.gabrielebartolini.it/articles/2025/06/cnpg-recipe-20-finer-control-of-postgres-clusters-with-readiness-probes/).
 
     ```bash
     cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
