@@ -1,6 +1,6 @@
 ---
 title: Deploy an AI Model on Azure Kubernetes Service (AKS) with the AI Toolchain Operator in the Azure Portal (Preview)
-description: Learn how to deploy an AI model on Azure Kubernetes Service (AKS) using the AI Toolchain Operator in the Azure Portal (Preview).
+description: Learn how to deploy an AI model on Azure Kubernetes Service (AKS) using the AI Toolchain Operator in the Azure portal (Preview).
 ms.topic: how-to
 ms.date: 11/04/2025
 author: schaffererin
@@ -49,7 +49,7 @@ Built on top of the open-source KAITO project, the AI toolchain operator managed
 1. In the [Azure portal](https://portal.azure.com/), navigate to your **AKS cluster resource**.
 1. From the service menu, select **Settings** > **AI/ML (preview)** > **Enable**.
 
-    :::image type="content" source="./media/ai-toolchain-operator-azure-portal/enable-add-on-azure-portal.png" alt-text="Screenshot that shows the AI/ML (preview) page and the option to enable KAITO in the Azure portal.":::
+    :::image type="content" source="./media/ai-toolchain-operator-azure-portal/enable-add-on-azure-portal.png" alt-text="Screenshot that shows the AI/ML (preview) page and the option to enable KAITO in the Azure portal." lightbox="./media/ai-toolchain-operator-azure-portal/enable-add-on-azure-portal.png":::
 
 ## Connect to your AKS cluster using Azure Cloud Shell
 
@@ -105,22 +105,22 @@ If you're using Cloud Shell, open it with the `>_` button on the top of the Azur
 
 1. Navigate through the supported model registry in the **Models** tab and select **Deploy** for your chosen model.
 
-    :::image type="content" source="./media/ai-toolchain-operator-azure-portal/add-on-azure-portal-model.png" alt-text="Screenshot that shows the supported model registry in the AI/ML (preview) blade of the AKS cluster resource in the Azure portal.":::
+    :::image type="content" source="./media/ai-toolchain-operator-azure-portal/add-on-azure-portal-model.png" alt-text="Screenshot that shows the supported model registry in the AI/ML (preview) blade of the AKS cluster resource in the Azure portal." lightbox="./media/ai-toolchain-operator-azure-portal/add-on-azure-portal-model.png":::
 
 1. On the **1. Model** page, select a **Model family**, **Model**, and **Instance type**, and enter a **Workspace name**.
 
-    :::image type="content" source="./media/ai-toolchain-operator-azure-portal/add-on-azure-portal-model-details.png" alt-text="Screenshot that shows the inference configuration and compute resource details for the selected model in the Azure portal.":::
+    :::image type="content" source="./media/ai-toolchain-operator-azure-portal/add-on-azure-portal-model-details.png" alt-text="Screenshot that shows the inference configuration and compute resource details for the selected model in the Azure portal." lightbox="./media/ai-toolchain-operator-azure-portal/add-on-azure-portal-model-details.png":::
 
 1. Deploy the model.
 1. Track the resource readiness and progress of the inference service deployment in the **AI Deployments** tab.
 
-    :::image type="content" source="./media/ai-toolchain-operator-azure-portal/add-on-azure-portal-deployment-progress.png" alt-text="Screenshot that shows the AI Deployments tab in the Azure portal.":::
+    :::image type="content" source="./media/ai-toolchain-operator-azure-portal/add-on-azure-portal-deployment-progress.png" alt-text="Screenshot that shows the AI Deployments tab in the Azure portal." lightbox="./media/ai-toolchain-operator-azure-portal/add-on-azure-portal-deployment-progress.png":::
 
 ## Test the model inference service
 
 - Test different inputs on your model inference service and adjust the configurable parameters to evaluate model performance.
 
-    :::image type="content" source="media/ai-toolchain-operator-azure-portal/add-on-azure-portal-model-testing.png" alt-text="Screenshot that shows the KAITO inference test page with sliders to configure LLM parameters in the Azure portal.":::
+    :::image type="content" source="./media/ai-toolchain-operator-azure-portal/add-on-azure-portal-model-testing.png" alt-text="Screenshot that shows the KAITO inference test page with sliders to configure LLM parameters in the Azure portal." lightbox="./media/ai-toolchain-operator-azure-portal/add-on-azure-portal-model-testing.png":::
 
 ## Next steps
 
