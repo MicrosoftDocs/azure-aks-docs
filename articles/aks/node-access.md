@@ -176,9 +176,11 @@ To connect to another node in the cluster, use the `kubectl debug` command. For 
     >  ssh -o 'ProxyCommand ssh -p 2022 -W %h:%p azureuser@127.0.0.1' -o PreferredAuthentications=password azureuser@10.224.0.62
     > ```
 
-## Use Host Process Container to access Windows node
+## Use a host process container to access Windows node
 
-1. Create `hostprocess.yaml` with the following content and replacing `AKSWINDOWSNODENAME` with the AKS Windows node name. Note that this specification uses the nanoserver base image - which doesn't have powershell. But because it's running as a host process container, powershell is available from the underlying VM.
+1. Run the following script to create `hostprocess.yaml`. In the script, replace `AKSWINDOWSNODENAME` with the AKS Windows node name.
+
+   This specification uses the nanoserver base image. The base image doesn't have PowerShell, but because it runs as a host process container (HPC), PowerShell is available in the underlying VM.
 
     ```yaml
     apiVersion: v1
@@ -216,7 +218,7 @@ To connect to another node in the cluster, use the `kubectl debug` command. For 
           operator: Exists
     ```
 
-2. Run `kubectl apply -f hostprocess.yaml` to deploy the Windows host process container (HPC) in the specified Windows node.
+2. Run `kubectl apply -f hostprocess.yaml` to deploy the Windows HPC in the specified Windows node.
 
 3. Use `kubectl exec -it [HPC-POD-NAME] -- powershell`.
 
