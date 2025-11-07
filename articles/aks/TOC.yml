@@ -1,8 +1,8 @@
 - name: Azure Kubernetes Service (AKS)
   href: ./index.yml
 - name: What is AKS?
-  href: what-is-aks.md
-- name: Get started with AKS
+  href: what-is-aks.md 
+- name: Get started with AKS 
   items:
     - name: Kubernetes basics
       href: get-started-kubernetes.md
@@ -270,7 +270,7 @@
           href: reduce-latency-ppg.md
     - name: Virtual nodes
       items:
-        - name: Use virtual nodes
+        - name: Use virtual nodes 
           href: virtual-nodes.md
         - name: Use the Azure CLI
           href: virtual-nodes-cli.md
@@ -310,6 +310,8 @@
       items:
         - name: Use Azure Linux for AKS
           href: use-azure-linux.md
+        - name: Use Azure Linux with OS Guard for AKS
+          href: use-azure-linux-os-guard.md
         - name: Azure Linux AKS partner solutions
           href: azure-linux-aks-partner-solutions.md
 - name: Manage and optimize clusters
@@ -1016,8 +1018,10 @@
       href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: GPUs
       items:
-        - name: Use Linux GPUs
+        - name: Use NVIDIA GPUs
           href: use-nvidia-gpu.md
+        - name: Use managed GPU nodes
+          href: aks-managed-gpu-nodes.md
         - name: Use Windows GPUs
           href: use-windows-gpu.md
         - name: Use AMD GPUs

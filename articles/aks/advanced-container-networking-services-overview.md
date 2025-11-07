@@ -58,7 +58,7 @@ Enhance egress control with Azure CNI Powered by Cilium DNS-based policies. Simp
 
 To learn more, see the [FQDN-based filtering overview](./container-network-security-fqdn-filtering-concepts.md).
 
-### Layer 7 policy (preview)
+### Layer 7 policy
 
 Gain granular control over application-level traffic. Implement policies based on protocols like HTTP, gRPC and kafka, securing your applications with deep visibility and fine-grained access control. To learn more, see the [Layer 7 policy overview](./container-network-security-l7-policy-concepts.md) documentation.
 
