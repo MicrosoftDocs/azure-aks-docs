@@ -71,18 +71,18 @@ An [AWS Application Load Balancer (ALB)][aws-alb] is a component of Elastic Load
 | **Feature** | **Azure Application Gateway for Containers** | **AWS Application Load Balancer** |
 |--------|------------------------------|-----------------------------------|
 | Secure Sockets Layer (SSL/TLS) Termination | [Supported](/azure/application-gateway/features#secure-sockets-layer-ssltls-termination) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html#listeners-ssl) |
-| Autoscaling | [Supported](/azure/application-gateway/features#autoscaling)  | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancer-target-group.html) |
-| Zone redundancy | [Supported](/azure/application-gateway/features#zone-redundancy) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-components.html#zone-configuration) |
-| Web Application Firewall | [Supported](/azure/application-gateway/features#web-application-firewall) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html#load-balancer-waf) |
-| Ingress controller | [Supported](/azure/application-gateway/features#ingress-controller-for-aks) | [Supported](https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html) |
-| URL-based routing | [Supported](/azure/application-gateway/features#url-based-routing) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html#url-based-routing) |
-| Multiple-site hosting | [Supported](/azure/application-gateway/features#multiple-site-hosting) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-target-group.html) |
-| Redirection | [Supported](/azure/application-gateway/features#redirection) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html#add-https-listener) |
-| Session affinity | [Supported](/azure/application-gateway/features#session-affinity) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-group.html#sticky-sessions) |
-| WebSocket and HTTP/2 traffic | [Supported](/azure/application-gateway/features#websocket-and-http2-traffic) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html#websocket-protocol) |
-| Mutual TLS authentication | [Supported](/azure/application-gateway/mutual-authentication-overview) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/mutual-authentication.html) |
-| Connection draining | [Supported](/azure/application-gateway/features#connection-draining) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-group.html#connection-draining) |
-| Rewrite HTTP headers and URL | [Supported](/azure/application-gateway/features?branch=main#rewrite-http-headers-and-url) | [Supported with AWS WAF](https://docs.aws.amazon.com/waf/latest/developerguide/customizing-the-incoming-request.html) |
+| Autoscaling | [Supported](/azure/application-gateway/for-containers/scaling-zone-resiliency)  | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancer-target-group.html) |
+| Zone redundancy | [Supported]/azure/application-gateway/for-containers/scaling-zone-resiliency) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-components.html#zone-configuration) |
+| Web Application Firewall | [Supported](/azure/application-gateway/for-containers/web-application-firewall) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html#load-balancer-waf) |
+| Ingress controller | [Supported](/azure/application-gateway/for-containers/application-gateway-for-containers-components) | [Supported](https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html) |
+| URL-based routing | [Supported](/azure/application-gateway/for-containers/how-to-path-header-query-string-routing-gateway-api) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html#url-based-routing) |
+| Multiple-site hosting | [Supported](/azure/application-gateway/for-containers/how-to-multiple-site-hosting-gateway-api) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-target-group.html) |
+| Redirection | [Supported](/azure/application-gateway/for-containers/how-to-url-redirect-gateway-api) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html#add-https-listener) |
+| Session affinity | [Supported](/azure/application-gateway/for-containers/session-affinity) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-group.html#sticky-sessions) |
+| WebSocket and HTTP/2 traffic | [Supported]/azure/application-gateway/for-containers/websockets) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html#websocket-protocol) |
+| Mutual TLS authentication | [Supported](/azure/application-gateway/for-containers/how-to-frontend-mtls-gateway-api) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/mutual-authentication.html) |
+| Connection draining | [Supported](/azure/application-gateway/for-containers/migrate-from-agic-to-agc#connection-draining) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-group.html#connection-draining) |
+| Rewrite HTTP headers and URL | [Supported](/azure/application-gateway/for-containers/how-to-header-rewrite-gateway-api) | [Supported with AWS WAF](https://docs.aws.amazon.com/waf/latest/developerguide/customizing-the-incoming-request.html) |
 
 ## Web Application Firewall
 
@@ -143,8 +143,8 @@ Other contributors:
 [aws-grafana]: https://aws.amazon.com/grafana/
 [aks]: ./what-is-aks.md
 [eks-web-rearchitect]: ./eks-web-rearchitect.md
-[azure-ag]: /application-gateway/for-containers/overview
-[azure-ag-waf]: /application-gateway/for-containers/web-application-firewall
+[azure-ag]: /azure/application-gateway/for-containers/overview
+[azure-ag-waf]: /azure/application-gateway/for-containers/web-application-firewall
 [azure-waf]: /azure/web-application-firewall/overview
 [azure-metrics-explorer]: /azure/azure-monitor/essentials/metrics-explorer
 [azure-prometheus]: /azure/azure-monitor/essentials/prometheus-metrics-overview
