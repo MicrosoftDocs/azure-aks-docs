@@ -88,7 +88,7 @@ All nodes are now running Kubernetes version 1.31 with pods scheduled across the
 
 ## Upgrade behavior with restrictive Pod Disruption Budget
 
-When a restrictive PDB blocks node draining, AKS can use the `Cordon` undrainable node behavior to continue the upgrade process. This example shows upgrading a two-node cluster from Kubernetes 1.30 to 1.31 with `maxSurge` set to 1 and a PDB blocking the first node's drain operation.
+When a restrictive PDB blocks node draining, AKS can use the `Cordon` undrainable node behavior to continue the upgrade process. This example shows upgrading a two-node cluster from Kubernetes 1.30 to 1.31 with `maxSurge` set to 2 and a PDB blocking the first node's drain operation.
 
 ### Step 1: Initial setup with restrictive PDB
 
@@ -148,7 +148,7 @@ Since Node 1 remains quarantined, the surge node 1 becomes the permanent replace
 
 The upgrade completes with one quarantined node requiring manual intervention.
 
-- **Node 1**: Quarantined (v1.30) with Pod A - **Customer must manually resolve** (see [customize unavailable nodes during upgrade](./upgrade-aks-cluster.md#customize-unavailable-nodes-during-upgrade))
+- **Node 1**: Quarantined (v1.30) with Pod A - **Customer must manually resolve** (see [Resolve undrainable nodes](./upgrade-cluster.md#resolve-undrainable-nodes))
 - **Node 2 (v1.31)**: Running normally
 - **Former Surge Node (v1.31)**: Now permanent replacement
 
