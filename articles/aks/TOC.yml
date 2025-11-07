@@ -1000,8 +1000,10 @@
               href: deploy-ray-tuning.md
         - name: AI toolchain operator (KAITO)
           items:
-            - name: Deploy an AI model
+            - name: Deploy an AI model using the Azure CLI
               href: ai-toolchain-operator.md
+            - name: Deploy an AI model using the Azure portal
+              href: ai-toolchain-operator-azure-portal.md
             - name: Fine-tune an AI model for inferencing
               href: ai-toolchain-operator-fine-tune.md
             - name: Monitor your inference service with the AI toolchain operator
