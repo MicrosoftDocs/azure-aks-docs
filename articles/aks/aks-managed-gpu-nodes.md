@@ -4,7 +4,7 @@ description: Learn how to provision a fully managed GPU node pool on your new or
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
-ms.date: 10/30/2025
+ms.date: 11/7/2025
 author: sachidesai
 ms.author: sachidesai
 ms.service: azure-kubernetes-service
@@ -92,19 +92,26 @@ To use the default Ubuntu operating system (OS) SKU, you create the node pool wi
         --tags EnableManagedGPUExperience=true
     ```
 
-1. Confirm that the NVIDIA GPU software components are installed and running. [SSH into one of the GPU nodes](./node-access.md) and run the following command:
-
-    ```bash
-    systemctl list-units | grep -i nvidia
-    ```
+1. Confirm that the managed NVIDIA GPU software components are installed successfully:
     
-    Your output should include the following services:
+    ```azurecli-interactive
+    az aks nodepool show \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name gpunp \
+    ```
+
+    Your output should include the following values:
 
     ```output
-    nvidia-device-plugin-service            loaded active running       NVIDIA Device Plugin for Kubernetes
-    nvidia-dcgm-exporter-service            loaded active running       NVIDIA DCGM-exporter service
-    nvidia-dcgm-service                     loaded active running       NVIDIA DCGM service
-    nvidia-modprobe.service                 loaded active exited        Installs and loads Nvidia GPU kernel module     
+    ...
+    ...
+    "gpuInstanceProfile": …
+        "gpuProfile": {
+            "driver": "Install"
+        },
+    ...
+    ...
     ```
 
 ### [Azure Linux node pool](#tab/add-azure-linux-gpu-node-pool)
@@ -127,19 +134,26 @@ To use Azure Linux, you specify the operating system (OS) SKU by setting `os-sku
         --tags EnableManagedGPUExperience=true
     ```
 
-1. Confirm that the NVIDIA GPU software components are installed and running. [SSH into one of the GPU nodes](./node-access.md) and run the following command:
-
-    ```bash
-    systemctl list-units | grep -i nvidia
-    ```
+1. Confirm that the managed NVIDIA GPU software components are installed successfully:
     
-    Your output should include the following services:
+    ```azurecli-interactive
+    az aks nodepool show \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name gpunp \
+    ```
+
+    Your output should include the following values:
 
     ```output
-    nvidia-device-plugin-service            loaded active running       NVIDIA Device Plugin for Kubernetes
-    nvidia-dcgm-exporter-service            loaded active running       NVIDIA DCGM-exporter service
-    nvidia-dcgm-service                     loaded active running       NVIDIA DCGM service
-    nvidia-modprobe.service                 loaded active exited        Installs and loads Nvidia GPU kernel module     
+    ...
+    ...
+    "gpuInstanceProfile": …
+        "gpuProfile": {
+            "driver": "Install"
+        },
+    ...
+    ...
     ```
 
 ---
@@ -155,12 +169,11 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
 ## Next steps
 
 - Deploy a [sample GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload) on your AKS-managed GPU-enabled nodes.
-- Monitor [GPU utilization and performance metrics](./monitor-gpu-metrics.md) from managed DCGM exporter on your GPU nodes.
+- Learn about [GPU utilization and performance metrics](./monitor-gpu-metrics.md) from managed NVIDIA DCGM exporter on your GPU node pool.
 
 ## Related articles
 
 - Learn about [GPU health monitoring](./gpu-health-monitoring.md) with Node Problem Detector (NPD) on AKS.
-- [Autoscale your GPU workloads](./autoscale-gpu-workloads-with-keda.md) with DCGM metrics and Kubernetes Event-Driven Autoscaling (KEDA).
 - Run [distributed inference on multiple AKS GPU nodes](https://blog.aks.azure.com/2025/07/08/kaito-inference-with-acstor).
 
 <!-- LINKS - external -->
