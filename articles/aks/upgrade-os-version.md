@@ -69,7 +69,6 @@ Update the `os-sku` on an existing node pool using the [`az aks nodepool update`
 az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
-    --os-type Linux \
     --os-sku Ubuntu \
     --name $NODE_POOL_NAME \
     --node-count 1
@@ -133,7 +132,6 @@ Update to `--os-sku Ubuntu2404` on an existing node pool using the [`az aks node
 az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
-    --os-type Linux \
     --os-sku Ubuntu2404 \
     --kubernetes-version 1.32.0 \
     --name $NODE_POOL_NAME \
@@ -159,7 +157,6 @@ Update to `--os-sku AzureLinux3` on an existing node pool using the [`az aks nod
 az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
-    --os-type Linux \
     --os-sku AzureLinux3 \
     --kubernetes-version 1.30.0 \
     --name $NODE_POOL_NAME \
@@ -200,7 +197,6 @@ Update to `--os-sku Ubuntu`on an existing node pool using the [`az aks nodepool 
 az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
-    --os-type Linux \
     --os-sku Ubuntu \
     --name $NODE_POOL_NAME \
     --node-count 1
@@ -218,7 +214,6 @@ Update to `--os-sku AzureLinux` on an existing node pool using the [`az aks node
 az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
-    --os-type Linux \
     --os-sku AzureLinux \
     --name $NODE_POOL_NAME \
     --node-count 1
@@ -239,7 +234,6 @@ Roll back to `--os-sku Ubuntu2204` on an existing node pool using the [`az aks n
 az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
-    --os-type Linux \
     --os-sku Ubuntu2204 \
     --kubernetes-version 1.32.0 \
     --name $NODE_POOL_NAME \

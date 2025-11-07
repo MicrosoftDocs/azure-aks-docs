@@ -58,7 +58,7 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 - Learn more about [Ray clusters on AKS](ray-overview.md).
 
 <!-- LINKS -->
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md

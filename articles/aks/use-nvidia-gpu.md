@@ -177,7 +177,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
           # See https://kubernetes.io/docs/tasks/administer-cluster/guaranteed-scheduling-critical-addon-pods/
           priorityClassName: "system-node-critical"
           containers:
-          - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.2
+          - image: nvcr.io/nvidia/k8s-device-plugin:v0.18.0
             name: nvidia-device-plugin-ctr
             env:
               - name: FAIL_ON_INIT_ERROR
@@ -421,10 +421,10 @@ kubectl delete jobs samples-tf-mnist-demo
 [nvidia-github]: https://github.com/NVIDIA/k8s-device-plugin/blob/4b3d6b0a6613a3672f71ea4719fd8633eaafb4f3/deployments/static/nvidia-device-plugin.yml
 
 <!-- LINKS - internal -->
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az_aks_nodepool_update
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md

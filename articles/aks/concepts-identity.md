@@ -283,7 +283,7 @@ For more information on core Kubernetes and AKS concepts, see the following arti
 
 <!-- LINKS - Internal -->
 [openid-connect]: /azure/active-directory/develop/v2-protocols-oidc
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [azure-rbac]: /azure/role-based-access-control/overview
 [aks-aad]: managed-azure-ad.md
 [aks-concepts-clusters-workloads]: concepts-clusters-workloads.md

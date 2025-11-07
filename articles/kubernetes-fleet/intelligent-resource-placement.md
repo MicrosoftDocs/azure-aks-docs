@@ -13,7 +13,7 @@ ms.custom:
 
 # Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager
 
-Application developers often need to deploy Kubernetes resources into multiple clusters. Fleet operators often need to pick the best clusters for workloads based on heuristics (such as cost of compute) or available resources (such as memory and CPU). It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how you can address these scenarios by using the intelligent Kubernetes resource placement capability in Azure Kubernetes Fleet Manager.
+Application developers often need to deploy Kubernetes resources into multiple clusters located in cloud and on-premises environments. Fleet operators often need to pick the best clusters for workloads based on heuristics (such as cost of compute) or available resources (such as memory and CPU). It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how you can address these scenarios by using the intelligent Kubernetes resource placement capability in Azure Kubernetes Fleet Manager.
 
 The resource placement capability of Fleet Manager can make scheduling decisions based on the following cluster properties:
 
@@ -27,10 +27,10 @@ For more information about the concepts in this article, see [Kubernetes resourc
 
 * You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
-* You must have a Fleet Manager with a hub cluster and one or more member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
+* You must have a Fleet Manager with a hub cluster and one or more member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join your [supported Kubernetes clusters](./concepts-member-cluster-types.md) as members.
 
   > [!TIP]
-  > Ensure that your AKS member clusters are configured so that you can test placement by using the cluster properties that interest you (location, node count, resources, or cost).
+  > Ensure that your Kubernetes clusters are configured so that you can test placement by using the cluster properties that interest you (location, node count, resources, or cost).
 
 * Set the following environment variables:
 

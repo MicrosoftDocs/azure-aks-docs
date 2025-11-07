@@ -10,7 +10,7 @@ ms.date:  03/14/2024
 # Customer intent: As a Kubernetes administrator, I want to implement Layer 7 policies in my cluster, so that I can enhance application security and traffic management by controlling communication at a granular level based on application-specific attributes.
 ---
 
-# Overview of Layer 7 (L7) policy (Preview) 
+# Overview of Layer 7 (L7) policy
 
 Network policies are essential for securing Kubernetes clusters by defining and controlling pod communication. They mitigate unauthorized access and potential security breaches by regulating traffic flow. Advanced Container Networking Services strengthens security with [FQDN-based network policies](./container-network-security-fqdn-filtering-concepts.md). Expanding on this foundation, Advanced Container Networking Services now provides L7 policy support, enabling detailed inspection and management of application-level traffic. This advancement enhances both the security and efficiency of network communications within AKS clusters. The offering includes comprehensive support for widely adopted protocols, including HTTP, gRPC, and Kafka.
 
@@ -51,8 +51,8 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 ## Limitations and considerations
 
 *	Current feature support relies on Cilium's Layer 7 policy enforcement based on HTTP, HTTPS, gRPC, and Kafka.
-*	In preview, the maximum supported cluster size is up to 1,000 nodes or 40,000 pods, whichever is greater.
-*    Traffic traversing Envoy proxies do come with latency. Users may experience noticeable latency degradation beyond 3,000 requests per second.
+*	The maximum supported cluster size is up to 1,000 nodes or 40,000 pods, whichever is greater.
+*   Traffic traversing Envoy proxies do come with latency. Users may experience noticeable latency degradation beyond 3,000 requests per second.
 *    As part of our observability solution, we provide envoy_http_rq_total metrics. These metrics give the total request count, which could be used to derive requests per seconds (rps).
 *    During a Cilium upgrade or rollout, existing sessions can be gracefully closed. Applications are expected to handle these interruptions gracefully—typically by implementing retry mechanisms at the connection or request level. New connections initiated during the rollout aren't impacted.
 *	L7 policy through Advanced Container Networking Services (ACNS)  isn't  compatible with L7 policies implemented via alternate methods such as Istio. The following table summarizes the supported scenarios.
