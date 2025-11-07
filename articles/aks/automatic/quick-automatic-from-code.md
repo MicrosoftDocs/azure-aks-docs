@@ -200,7 +200,7 @@ To learn more about AKS Automatic, continue to the introduction.
 [automated-deployments]: ../automated-deployments.md
 [azure-portal]: https://portal.azure.com
 [portal-kubernetes-services]: https://portal.azure.com/#browse/Microsoft.ContainerService%2FmanagedClusters
-[aks-identities]: ../use-managed-identity.md#summary-of-managed-identities-used-by-aks
+[aks-identities]: ../managed-identity-overview.md#summary-of-managed-identities-used-by-aks
 [kubernetes-documentation]: https://kubernetes.io/docs/concepts/workloads/
 [deployment-safeguards]: ../deployment-safeguards.md
 [seccomp-profile]: ../secure-container-access.md#secure-computing-seccomp

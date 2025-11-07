@@ -381,7 +381,7 @@ To learn more about Kueue, visit the following resources:
 * [Kueue developer tools](https://kueue.sigs.k8s.io/docs/tasks/dev/) official documentation.
 
 <!-- LINKS -->
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md

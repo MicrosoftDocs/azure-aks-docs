@@ -58,9 +58,14 @@ Enhance egress control with Azure CNI Powered by Cilium DNS-based policies. Simp
 
 To learn more, see the [FQDN-based filtering overview](./container-network-security-fqdn-filtering-concepts.md).
 
-### Layer 7 policy (preview)
+### Layer 7 policy
 
 Gain granular control over application-level traffic. Implement policies based on protocols like HTTP, gRPC and kafka, securing your applications with deep visibility and fine-grained access control. To learn more, see the [Layer 7 policy overview](./container-network-security-l7-policy-concepts.md) documentation.
+
+### WireGuard Encryption (preview)
+
+Secure your workload traffic with WireGuard. It ensures all communication between Cilium-managed endpoints across different nodes within your AKS cluster is encrypted and protected by default, without added complexity. To learn more, see the [WireGuard encryption Overview](./container-network-security-wireguard-encryption-concepts.md) documentation. 
+
 
 ## Container Network Performance
 
@@ -89,7 +94,7 @@ For information about pricing, see [Advanced Container Networking Services - Pri
 
 ### Install the aks-preview Azure CLI extension
 
-Install or update the Azure CLI preview extension by using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
+Install or update the Azure CLI preview extension by using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command.
 
 The minimum version of the `aks-preview` Azure CLI extension is `14.0.0b6`.
 
@@ -106,13 +111,13 @@ az extension update --name aks-preview
 > Container Network Security features only supported on Azure CNI powered by Cilium-based clusters.
 >
 
-Register the `AdvancedNetworkingL7PolicyPreview` feature flag by using the [`az feature register`](/cli/azure/feature#az_feature_register) command:
+Register the `AdvancedNetworkingL7PolicyPreview` feature flag by using the [`az feature register`](/cli/azure/feature#az-feature-register) command:
 
 ```azurecli
 az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingL7PolicyPreview"
 ```
 
-Verify successful registration by using the [`az feature show`](/cli/azure/feature#az_feature_show) command. Registration takes a few minutes to complete.
+Verify successful registration by using the [`az feature show`](/cli/azure/feature#az-feature-show) command. Registration takes a few minutes to complete.
 
 ```azurecli
 az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingL7PolicyPreview"
@@ -120,7 +125,7 @@ az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetwork
 
 ### Create a resource group
 
-A resource group is a logical container in which Azure resources are deployed and managed. Create a resource group by using the [`az group create`](/cli/azure/group#az_group_create) command:
+A resource group is a logical container in which Azure resources are deployed and managed. Create a resource group by using the [`az group create`](/cli/azure/group#az-group-create) command:
 
 ```azurecli
 # Set environment variables for the resource group name and location. Make sure to replace the placeholders with your own values.
@@ -183,7 +188,7 @@ az aks create \
 
 ### Enable Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the `--enable-acns` flag updates an existing AKS cluster with all Advanced Container Networking Services features, including [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
+The [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--enable-acns` flag updates an existing AKS cluster with all Advanced Container Networking Services features, including [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
 ##### [Cilium](#tab/cilium)
 

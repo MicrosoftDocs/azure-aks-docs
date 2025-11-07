@@ -99,4 +99,4 @@ IP address planning for Kubernetes services remains unchanged.
 <!-- LINKS - Internal -->
 [azure-cni-prereq]: ./configure-azure-cni.md#prerequisites
 [azure-cni-deployment-parameters]: ./azure-cni-overview.md#deployment-parameters
-[az-aks-enable-addons]: /cli/azure/aks#az_aks_enable_addons
+[az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons

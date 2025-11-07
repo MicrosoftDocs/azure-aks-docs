@@ -389,9 +389,9 @@ In this article, you learned how to deploy SpinKube to Azure Kubernetes Service 
 
 <!-- INTERNAL LINKS -->
 [install-azure-cli]: /cli/azure/install-azure-cli
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-acr-create]: /cli/azure/acr#az_acr_create
-[az-acr-show]: /cli/azure/acr#az_acr_show
-[az-acr-credential-show]: /cli/azure/acr#az_acr_credential_show
-[az-acr-delete]: /cli/azure/acr#az_acr_delete
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-acr-create]: /cli/azure/acr#az-acr-create
+[az-acr-show]: /cli/azure/acr#az-acr-show
+[az-acr-credential-show]: /cli/azure/acr#az-acr-credential-show
+[az-acr-delete]: /cli/azure/acr#az-acr-delete
 

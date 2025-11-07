@@ -18,6 +18,8 @@ ms.custom:
 > [!IMPORTANT] 
 > On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on **Windows** nodes in AKS.
 > 
+> This change applies only to customers who have already onboarded to NPM. **Subscriptions that were not previously registered with this feature will no longer be able to onboard**. Existing onboarded customers can continue using NPM until the end-of-support date.
+>
 >  To ensure your setup continues to receive support, security updates, and deployment compatibility, please explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
 
 > [!IMPORTANT] 
@@ -138,6 +140,8 @@ az aks create \
 
 > [!IMPORTANT] 
 > On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on Windows nodes in AKS.
+>
+> This change applies only to customers who have already onboarded to NPM. **Subscriptions that were not previously registered with this feature will no longer be able to onboard.** Existing onboarded customers can continue using NPM until the end-of-support date.
 > 
 >  To ensure your setup continues to receive support, security updates, and deployment compatibility, please explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
 
@@ -454,13 +458,13 @@ To learn more about policies, see [Kubernetes network policies][kubernetes-netwo
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
 [use-advanced-networking]: configure-azure-cni.md
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [concepts-network]: concepts-network.md
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [windows-server-password]: /windows/security/threat-protection/security-policy-settings/password-must-meet-complexity-requirements#reference
-[az-extension-add]: /cli/azure/extension#az_extension_add
-[az-extension-update]: /cli/azure/extension#az_extension_update
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
 [dsr]: ../load-balancer/load-balancer-multivip-overview.md#rule-type-2-backend-port-reuse-by-using-floating-ip
 

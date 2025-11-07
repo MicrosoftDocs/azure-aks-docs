@@ -36,7 +36,7 @@ If you don't have an Azure account, create a [free account](https://azure.micros
 - Cluster identity with a `Network Contributor` built-in role assignment on the virtual network to support [Node Autoprovisioning](../node-autoprovision.md).
 - User identity accessing the cluster with [`Azure Kubernetes Service Cluster User Role`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-cluster-user-role) and [`Azure Kubernetes Service RBAC Writer`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-writer).
 - A virtual network with a dedicated API server subnet of at least `*/28` size that is delegated to `Microsoft.ContainerService/managedClusters`.
-  - If there's a Network Security Group (NSG) attached to subnets, ensure that the [rules permit the following traffic](#network-security-group-rules) between the nodes and the API server, the Azure Load Balancer and the API server, and pod to pod communication.
+  - If there's a Network Security Group (NSG) attached to subnets, ensure that the NSG security rules permit the required types of communication between cluster components. For detailed requirements, see [Custom virtual network requirements][concepts-network-custom-vnet].
   - If there's an Azure Firewall or other outbound restriction method or appliance, ensure the [required outbound network rules and FQDNs][outbound-rules-control-egress] are allowed.
 - AKS Automatic will [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should pre-register the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. See [Azure resource providers and types][az-provider-register] for more information.
 
@@ -84,17 +84,11 @@ When using a custom virtual network with AKS Automatic, you must create and dele
 
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/public/sh/create-vnet.sh" interactive="cloudshell-bash":::
 
-### Network security group rules
+### Network security group requirements
 
-All traffic within the virtual network is allowed by default. But if you  added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
+If you have added Network Security Group (NSG) rules to restrict traffic between different subnets in your custom virtual network, ensure that the NSG security rules permit the required types of communication between cluster components. 
 
-| Destination | Source | Protocol | Port | Use |
-|--- |--- |--- |--- |--- |
-| APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
-| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communication between the Azure Load Balancer and the API Server Subnet CIDR. |
-| Node CIDR | Node CIDR | All Protocols | All Ports | Required to enable communication between Nodes. |
-| Node CIDR | Pod CIDR | All Protocols | All Ports | Required for Service traffic routing. |
-| Pod CIDR | Pod CIDR | All Protocols | All Ports | Required for Pod to Pod and Pod to Service traffic, including DNS. |
+For detailed NSG requirements when using custom virtual networks with AKS clusters, see [Custom virtual network requirements][concepts-network-custom-vnet].
 
 ## Create a managed identity and give it permissions on the virtual network
 
@@ -164,12 +158,9 @@ Deploy the Bicep file using the Azure CLI.
 az deployment group create --resource-group <resource-group> --template-file virtualNetwork.bicep
 ```
 
-All traffic within the virtual network is allowed by default. But if you added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
+All traffic within the virtual network is allowed by default. If you have added Network Security Group (NSG) rules to restrict traffic between different subnets in your custom virtual network, ensure that the NSG security rules permit the required types of communication between cluster components.
 
-| Destination | Source | Protocol | Port | Use |
-|--- |--- |--- |--- |--- |
-| APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
-| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communication between the Azure Load Balancer and the API Server Subnet CIDR. |
+For detailed NSG requirements when using custom virtual networks with AKS clusters, see [Custom virtual network requirements][concepts-network-custom-vnet].
 
 ## Create a managed identity
 
@@ -380,9 +371,9 @@ To learn more about AKS Automatic, continue to the introduction.
 [node-auto-provisioning]: ../node-autoprovision.md
 [kubernetes-deployment]: ../concepts-clusters-workloads.md#deployments-and-yaml-manifests
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [what-is-aks-automatic]: ../intro-aks-automatic.md
 [Azure-Policy-RBAC-permissions]: /azure/governance/policy/overview#azure-rbac-permissions-in-azure-policy
 [aks-entra-rbac]: /azure/aks/manage-azure-rbac
@@ -393,4 +384,5 @@ To learn more about AKS Automatic, continue to the introduction.
 [az-identity-create]: /cli/azure/identity#az-identity-create
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [policy-for-kubernetes]: /azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks
+[concepts-network-custom-vnet]: ../concepts-network.md#custom-virtual-network-requirements
 [az-provider-register]: /azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider

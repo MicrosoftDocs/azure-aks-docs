@@ -179,9 +179,9 @@ When using the cluster stop/start feature, the following conditions apply:
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [stop-azakscluster]: /powershell/module/az.aks/stop-azakscluster
 [get-azakscluster]: /powershell/module/az.aks/get-azakscluster
 [start-azakscluster]: /powershell/module/az.aks/start-azakscluster
-[az-aks-stop]: /cli/azure/aks#az_aks_stop
-[az-aks-start]: /cli/azure/aks#az_aks_start
+[az-aks-stop]: /cli/azure/aks#az-aks-stop
+[az-aks-start]: /cli/azure/aks#az-aks-start

@@ -20,7 +20,7 @@ Several Azure Networking services, such as Azure Load Balancer (ALB), enable you
 
 The idle timeout feature in an ALB is designed to optimize resource utilization for both client and server applications. This timeout applies to both ingress and egress traffic managed by the ALB. When the timeout occurs, the client and server applications can stop processing the request and release resources associated with the connection. These resources can then be reused for other requests, improving the overall performance of the applications.
 
-In AKS, the TCP Reset on idle is enabled on the Load Balancer by default with an idle timeout period of 30 minutes. You can adjust this timeout period with the [`az aks update`](/cli/azure/aks#az_aks_update) command. The following example sets the timeout period to 45 minutes.
+In AKS, the TCP Reset on idle is enabled on the Load Balancer by default with an idle timeout period of 30 minutes. You can adjust this timeout period with the [`az aks update`](/cli/azure/aks#az-aks-update) command. The following example sets the timeout period to 45 minutes.
 
 ```azurecli-interactive
 az aks update \
