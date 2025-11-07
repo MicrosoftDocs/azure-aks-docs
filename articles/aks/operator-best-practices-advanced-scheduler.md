@@ -9,7 +9,7 @@ author: schaffererin
 # Customer intent: "As a Kubernetes cluster operator, I want to implement advanced scheduling strategies using taints, tolerations, and node affinity, so that I can effectively manage workload distribution and resource allocation across my AKS clusters."
 ---
 
-# Best practices for advanced scheduler features in Azure Kubernetes Service (AKS)
+# Best practices for advanced scheduler features in Azure Kubernetes Service (AKS) using the kube-scheduler
 
 As you manage clusters in Azure Kubernetes Service (AKS), you often need to isolate teams and workloads. Advanced features provided by the Kubernetes scheduler let you control:
 
@@ -24,6 +24,10 @@ This best practices article focuses on advanced Kubernetes scheduling features f
 > * Give preference to pods to run on certain nodes with node selectors or node affinity.
 > * Split apart or group together pods with inter-pod affinity or anti-affinity.
 > * Restrict scheduling of workloads that require GPUs only on nodes with schedulable GPUs.
+
+If additional capabilities or ML frameworks are needed to schedule and queue batch workloads, you can [install and configure Kueue on AKS][kueue-on-aks] to ensure efficient, policy-driven scheduling in AKS clusters.
+
+If fine-grained scheduler configuration is needed to optimize how pods and jobs prioritize specific nodes, storage resources, topology, and more, you can [configure a scheduler on AKS][config-scheduler-aks].
 
 ## Provide dedicated nodes using taints and tolerations
 
@@ -249,3 +253,5 @@ This article focused on advanced Kubernetes scheduler features. For more informa
 [use-multiple-node-pools]: create-node-pools.md
 [taint-node-pool]: manage-node-pools.md#specify-a-taint-label-or-tag-for-a-node-pool
 [use-gpus-aks]: gpu-cluster.md
+[kueue-on-aks]: kueue-overview.md
+[config-scheduler-aks]: concepts-scheduler-configuration.md
