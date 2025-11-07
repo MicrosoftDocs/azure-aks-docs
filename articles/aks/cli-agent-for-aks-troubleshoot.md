@@ -1,6 +1,6 @@
 ---
-title: Troubleshoot the CLI Agent for Azure Kubernetes Service (AKS)
-description: Learn how to troubleshoot the CLI Agent for Azure Kubernetes Service (AKS) to resolve common issues and improve performance.
+title: Troubleshoot the Agentic CLI for Azure Kubernetes Service (AKS)
+description: Learn how to troubleshoot the agentic CLI for Azure Kubernetes Service (AKS) to resolve common issues and improve performance.
 ms.topic: troubleshooting-general
 ms.date: 10/20/2025
 author: aritragho
@@ -10,20 +10,19 @@ ms.subservice: aks-monitoring
 # Customer intent: As a cluster administrator or SRE, I want to troubleshoot issues with the AI-powered CLI Agent for AKS to ensure it functions correctly and provides accurate insights.
 ---
 
-# Troubleshoot the CLI Agent for Azure Kubernetes Service (AKS)
+# Troubleshoot the agentic CLI for Azure Kubernetes Service (AKS)
 
-This article provides guidance on troubleshooting common issues with the CLI Agent for Azure Kubernetes Service (AKS).
+This article provides guidance on troubleshooting common issues with the agentic CLI for Azure Kubernetes Service (AKS).
 
 ## Common troubleshooting steps
 
-If you run into any issues using the CLI Agent for AKS, try the following troubleshooting steps:
+If you run into any issues using the agentic CLI for AKS, try the following troubleshooting steps:
 
-- Make sure your API keys and environment variables are set correctly.
+- Check that your LLM provider is configured correctly. If you used `az aks agent-init` to set your LLM parameters, check your config file at `path/to/aksAgent.yaml`. If you're using a custom config file, ensure that your parameters are set correctly.
 - Check if you're using the right model using the `--model` parameter (if needed for Azure OpenAI).
 - Confirm cluster connectivity using the `kubectl cluster-info` command.
 - If you see requests retrying to `/chat/completions` in the responses, you're throttled by the token per minute (TPM) limits from the LLM. Increase the TPM limit or [apply for more quota](/azure/ai-foundry/openai/how-to/quota).
 - If outputs vary, it might be due to LLM response variability or intermittent MCP server connections.
-- You can't pass the Azure-specific variables as parameters to the command. They explicitly need to be set as environment variables (`AZURE_API_BASE`, `AZURE_API_VERSION`, `AZURE_API_KEY`). You can use the model as a parameter.
 - Ensure that the deployment name is the same as the model name in the Azure OpenAI deployments.
 - If the `aks-agent` installation is failing, try to uninstall and reinstall the latest Azure CLI.
 
@@ -65,5 +64,5 @@ You can also reach out directly to [aksagentcli@service.microsoft.com](mailto:ak
 
 ## Related content
 
-- For an overview of the CLI Agent for AKS, see [About the CLI Agent for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-overview.md).
-- [CLI Agent for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml) answers common questions about the CLI Agent for AKS.
+- For an overview of the agentic CLI for AKS, see [About the agentic CLI for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-overview.md).
+- [agentic CLI for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml) answers common questions about the agentic CLI for AKS.

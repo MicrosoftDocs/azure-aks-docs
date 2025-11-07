@@ -1,6 +1,6 @@
 ---
-title: Install and Use the CLI Agent for Azure Kubernetes Service (AKS) (preview)
-description: Learn how to install, configure, and use the CLI Agent for AKS to troubleshoot clusters and get intelligent insights using natural language.
+title: Install and Use the Agentic CLI for Azure Kubernetes Service (AKS) (preview)
+description: Learn how to install, configure, and use the agentic CLI for AKS to troubleshoot clusters and get intelligent insights using natural language.
 ms.topic: how-to
 ms.date: 10/20/2025
 author: aritragho
@@ -10,11 +10,11 @@ ms.subservice: aks-monitoring
 # Customer intent: As a cluster administrator or SRE, I want to install and configure the Agentic CLI for AKS so I can start troubleshooting my clusters using natural language queries.
 ---
 
-# Install and use the CLI Agent for Azure Kubernetes Service (AKS) (preview)
+# Install and use the agentic CLI for Azure Kubernetes Service (AKS) (preview)
 
-This article shows you how to install, configure, and use the CLI Agent for AKS to get AI-powered troubleshooting and insights for your Azure Kubernetes Service (AKS) clusters.
+This article shows you how to install, configure, and use the agentic CLI for AKS to get AI-powered troubleshooting and insights for your Azure Kubernetes Service (AKS) clusters.
 
-For more information, see [CLI Agent for Azure Kubernetes Service (AKS) overview](./cli-agent-for-aks-overview.md).
+For more information, see [agentic CLI for Azure Kubernetes Service (AKS) overview](./cli-agent-for-aks-overview.md).
 
 ## Prerequisites
 
@@ -29,13 +29,13 @@ For more information, see [CLI Agent for Azure Kubernetes Service (AKS) overview
     az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrite-existing
     ```
 
-- [Install the CLI Agent for AKS extension](#install-the-cli-agent-for-aks-extension).
+- [Install the agentic CLI for AKS extension](#install-the-agentic-cli-for-aks-extension).
 
-### Install the CLI Agent for AKS extension
+### Install the agentic CLI for AKS extension
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-1. Add the CLI Agent for AKS extension to your Azure CLI installation using the [`az extension add`](/cli/azure/extension#az-extension-add) command, or update to the latest version if you already have it installed using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
+1. Add the agentic CLI for AKS extension to your Azure CLI installation using the [`az extension add`](/cli/azure/extension#az-extension-add) command, or update to the latest version if you already have it installed using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
 
     ```azurecli-interactive
     # Install the extension
@@ -104,9 +104,9 @@ For more information, see [CLI Agent for Azure Kubernetes Service (AKS) overview
 
 We also support any OpenAI compatible model. For other LLM providers, contact [Microsoft support](https://support.microsoft.com) for assistance.
 
-## Initialize the CLI Agent for AKS
+## Initialize the agentic CLI for AKS
 
-1. Initialize the CLI Agent for AKS using the [`az aks agent-init`](/cli/azure/aks#az-aks-agent-init) command. This command sets up the necessary configurations and toolsets for the agent.
+1. Initialize the agentic CLI for AKS using the [`az aks agent-init`](/cli/azure/aks#az-aks-agent-init) command. This command sets up the necessary configurations and toolsets for the agent.
 
     ```azurecli-interactive
     az aks agent-init
@@ -133,11 +133,11 @@ We also support any OpenAI compatible model. For other LLM providers, contact [M
     > [!NOTE]
     > The API key will appear as empty as you type, so make sure to use the right API key. You can also skip the `init` experience by providing the values in the config file. The Azure API Base refers to the Azure Open AI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Azure AI Foundry. If the LLM configuration fails, please double check your API key and/or the `AZURE_API_BASE`.
 
-## Use the CLI Agent for AKS
+## Use the agentic CLI for AKS
 
-You can now start using the CLI Agent for AKS to troubleshoot your clusters and get intelligent insights using natural language queries. The following sections outline key parameters and example queries to get you started.
+You can now start using the agentic CLI for AKS to troubleshoot your clusters and get intelligent insights using natural language queries. The following sections outline key parameters and example queries to get you started.
 
-### CLI Agent for AKS parameters
+### Agentic CLI for AKS parameters
 
 | Parameter | Description |
 |-----------|-------------|
@@ -179,13 +179,16 @@ az aks agent "Check kubernetes pod resource usage" --config-file exampleconfig.y
 
 ### Basic queries
 
-You can use the following example queries to get started with the CLI Agent for AKS:
+You can use the following example queries to get started with the agentic CLI for AKS:
+
+> [!NOTE]
+> If you have multiple models set up, you can specify the model to use for each query using the `--model` parameter. For example, `--model=azure/gpt-4o`.
 
 ```azurecli-interactive
-az aks agent "How many nodes are in my cluster?" --model=azure/gpt-4o
-az aks agent "What is the Kubernetes version on the cluster?" --model=azure/gpt-4o
-az aks agent "Why is coredns not working on my cluster?" --model=azure/gpt-4o
-az aks agent "Why is my cluster in a failed state?" --model=azure/gpt-4o
+az aks agent "How many nodes are in my cluster?"
+az aks agent "What is the Kubernetes version on the cluster?"
+az aks agent "Why is coredns not working on my cluster?"
+az aks agent "Why is my cluster in a failed state?"
 ```
 
 By default, the experience uses interactive mode where you can continue asking questions with retained context until you want to exit. To quit the experience, type `/exit`.
@@ -206,6 +209,7 @@ The `az aks agent` has a set of subcommands that aid the troubleshooting experie
 | `/shell` | Drop into interactive shell, then optionally share session with LLM. |
 | `/context` | Show conversation context size and token count. |
 | `/show` | Show specific tool output in scrollable view. |
+| `/feedback` | Provide feedback on the agent's response. |
 
 ### Disable interactive mode
 
@@ -218,7 +222,7 @@ az aks agent "Why are the pods in Crashloopbackoff in the kube-system namespace"
 
 ### Toolsets
 
-The CLI Agent for AKS includes pre-built integrations for popular monitoring and observability tools through toolsets. Some integrations work automatically with Kubernetes, while others require API keys or configuration.
+The agentic CLI for AKS includes pre-built integrations for popular monitoring and observability tools through toolsets. Some integrations work automatically with Kubernetes, while others require API keys or configuration.
 
 For AKS, there are specific toolsets that help with the troubleshooting experience. These toolsets appear in the output at the start of the experience:
 
@@ -238,12 +242,12 @@ Using 37 datasources (toolsets). To refresh: use flag `--refresh-toolsets`
 
 ## AKS MCP server integration
 
-As an alternative to the default toolsets, you can enable the [AKS MCP server](https://github.com/Azure/aks-mcp) with the Agentic CLI for AKS. This experience spins up the AKS MCP server locally and uses it as the source for telemetry.
+As an alternative to the default toolsets, you can enable the [AKS MCP server](https://github.com/Azure/aks-mcp) with the agentic CLI for AKS. This experience spins up the AKS MCP server locally and uses it as the source for telemetry.
 
-The following example shows how to start the MCP server and use it with the CLI Agent for AKS:
+The following example shows how to start the MCP server and use it with the agentic CLI for AKS:
 
 ```azurecli-interactive
-az aks agent "why is my node unhealthy" --model=azure/gpt-4o --aks-mcp --name $MCP_SERVER_CLUSTER_NAME --resource-group $MCP_SERVER_RESOURCE_GROUP
+az aks agent "why is my node unhealthy" --model=azure/gpt-4o --aks-mcp --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 Loaded models: ['azure/gpt-4o']                                                                                           
 Refreshing available datasources (toolsets)                                                                               
 ❌ Toolset slab: Environment variable SLAB_API_KEY was not set                                                            
@@ -311,9 +315,9 @@ To check the status of the MCP server, you can use the `--status` flag:
 az aks-agent --status
 ```
 
-## Remove the CLI Agent for AKS extension
+## Remove the agentic CLI for AKS extension
 
-- Remove the CLI Agent for AKS extension using the [`az extension remove`](/cli/azure/extension#az-extension-remove) command.
+- Remove the agentic CLI for AKS extension using the [`az extension remove`](/cli/azure/extension#az-extension-remove) command.
 
     ```azurecli-interactive
     az extension remove --name aks-agent --debug
@@ -321,6 +325,6 @@ az aks-agent --status
 
 ## Next steps
 
-- For an overview of the CLI Agent for AKS, see [About the CLI Agent for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-overview.md).
-- To troubleshoot any issues with the CLI Agent for AKS, see [Troubleshoot the CLI Agent for AKS](./cli-agent-for-aks-troubleshoot.md).
-- [CLI Agent for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml) answers common questions about the CLI Agent for AKS.
+- For an overview of the agentic CLI for AKS, see [About the agentic CLI for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-overview.md).
+- To troubleshoot any issues with the agentic CLI for AKS, see [Troubleshoot the agentic CLI for AKS](./cli-agent-for-aks-troubleshoot.md).
+- [agentic CLI for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml) answers common questions about the agentic CLI for AKS.
