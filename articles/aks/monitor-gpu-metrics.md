@@ -1,7 +1,7 @@
 ---
 title: GPU observability in Azure Kubernetes Service (AKS)
 description: This article provides a conceptual overview of key utilization and performance NVIDIA DCGM GPU metrics on Azure Kubernetes Service (AKS).
-ms.topic: concepts
+ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.date: 11/7/2025
 author: sachidesai
