@@ -3,7 +3,7 @@ title: Understand platform differences for the web application workload
 description: Learn about the key differences between the AWS and Azure platforms related to the web application hosting.
 author: schaffererin
 ms.author: schaffererin
-ms.date: 10/31/2024
+ms.date: 11/10/2025
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 # Customer intent: "As a cloud architect, I want to understand the operational differences between AWS and Azure for hosting web applications, so that I can make informed decisions when migrating workloads to the appropriate cloud platform."
@@ -53,27 +53,26 @@ Both AKS and EKS provide support for open-source projects, enabling you to utili
 
 ## Load balancing
 
-[Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] are two popular layer 7 load balancing solutions offered by Microsoft Azure and Amazon Web Services, respectively. These services play a crucial role in distributing incoming network traffic across multiple servers to ensure high availability and improved performance for applications.
+[Azure Application Gateway For Containers][azure-ag] and [AWS Application Load Balancer][aws-alb] are two popular layer 7 load balancing solutions offered by Microsoft Azure and Amazon Web Services, respectively. These services play a crucial role in distributing incoming network traffic across multiple servers to ensure high availability and improved performance for applications.
 
 ### AWS Application Load balancer
 
 An [AWS Application Load Balancer (ALB)][aws-alb] is a component of Elastic Load Balancing in Amazon Web Services (AWS). ALB ensures traffic is routed only to healthy targets and scales with incoming traffic. It supports various load balancers, including Application, Network, Gateway, and Classic Load Balancers.
 
 
-### Azure Application Gateway 
+### Azure Application Gateway for Containers
 
-[Azure Application Gateway][azure-ag] is a layer 7 web traffic regional load balancer that enables customers to manage the inbound traffic to multiple downstream web applications and REST APIs. Azure Application Gateway is designed to optimize the delivery of web applications and provide enhanced security through features like [Azure Web Application Firewall][azure-waf] and [Application Gateway Ingress Controller][agic] for [Azure Kubernetes Service (AKS)][aks]. It distributes incoming application traffic across multiple backend pools, which include public and private [Azure Load Balancers](/azure/load-balancer/load-balancer-overview), [Azure virtual machines (VMs)](/azure/virtual-machines/overview), [Azure Virtual Machine Scale Sets (VMSSs)](/azure/virtual-machine-scale-sets/overview), hostnames, [Azure App Service](/azure/app-service/overview), and on-premises/external servers. 
+[Azure Application Gateway for Containers][azure-ag] is a layer 7 web traffic regional load balancer that enables customers to manage the inbound traffic to multiple downstream web applications and REST APIs. Azure Application Gateway for Containers is designed to optimize the delivery of web applications and provide enhanced security through features like [Azure Web Application Firewall][azure-waf] for [Azure Kubernetes Service (AKS)][aks]. It distributes incoming application traffic across multiple backend pools, which include public and private [Azure Load Balancers](/azure/load-balancer/load-balancer-overview), [Azure virtual machines (VMs)](/azure/virtual-machines/overview), [Azure Virtual Machine Scale Sets (VMSSs)](/azure/virtual-machine-scale-sets/overview), hostnames, [Azure App Service](/azure/app-service/overview), and on-premises/external servers. 
 
-### Compare Azure Application Gateway and AWS ALB
+### Compare Azure Application Gateway for Containers and AWS ALB
 
 [Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] provide a comparable feature set.  The following table provides a comparison of the solutions:
 
-| **Feature** | **Azure Application Gateway** | **AWS Application Load Balancer** |
+| **Feature** | **Azure Application Gateway for Containers** | **AWS Application Load Balancer** |
 |--------|------------------------------|-----------------------------------|
 | Secure Sockets Layer (SSL/TLS) Termination | [Supported](/azure/application-gateway/features#secure-sockets-layer-ssltls-termination) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html#listeners-ssl) |
 | Autoscaling | [Supported](/azure/application-gateway/features#autoscaling)  | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancer-target-group.html) |
 | Zone redundancy | [Supported](/azure/application-gateway/features#zone-redundancy) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-components.html#zone-configuration) |
-| Static VIP | [Supported](/azure/application-gateway/features#static-vip) | Supported with [AWS Global Accelerator](https://aws.amazon.com/global-accelerator/) |
 | Web Application Firewall | [Supported](/azure/application-gateway/features#web-application-firewall) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html#load-balancer-waf) |
 | Ingress controller | [Supported](/azure/application-gateway/features#ingress-controller-for-aks) | [Supported](https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html) |
 | URL-based routing | [Supported](/azure/application-gateway/features#url-based-routing) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html#url-based-routing) |
@@ -83,9 +82,7 @@ An [AWS Application Load Balancer (ALB)][aws-alb] is a component of Elastic Load
 | WebSocket and HTTP/2 traffic | [Supported](/azure/application-gateway/features#websocket-and-http2-traffic) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html#websocket-protocol) |
 | Mutual TLS authentication | [Supported](/azure/application-gateway/mutual-authentication-overview) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/mutual-authentication.html) |
 | Connection draining | [Supported](/azure/application-gateway/features#connection-draining) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-group.html#connection-draining) |
-| Custom error pages | [Supported](/azure/application-gateway/features#custom-error-pages) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-update.html#change-default-reqs) |
 | Rewrite HTTP headers and URL | [Supported](/azure/application-gateway/features?branch=main#rewrite-http-headers-and-url) | [Supported with AWS WAF](https://docs.aws.amazon.com/waf/latest/developerguide/customizing-the-incoming-request.html) |
-| Sizing | [Multiple sizes available](/azure/application-gateway/features#sizing) | [Multiple sizes available](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancer-limits.html) |
 
 ## Web Application Firewall
 
@@ -97,14 +94,14 @@ Ensuring web application security is crucial to protect against evolving cyber t
 
 ### Azure Web Application Firewall (WAF)
 
-[Azure Web Application Firewall (WAF)][azure-waf] that provides centralized protection of web applications from common exploits and vulnerabilities. WAF can be deployed with [Azure Application Gateway](/azure/web-application-firewall/ag/ag-overview), [Azure Front Door](/azure/web-application-firewall/afds/afds-overview), and [Azure Content Delivery Network (CDN)](/azure/web-application-firewall/cdn/cdn-overview) service from Microsoft. 
+[Azure Web Application Firewall (WAF)][azure-waf] that provides centralized protection of web applications from common exploits and vulnerabilities. WAF can be deployed with [Azure Application Gateway for Containers][azure-ag], [Azure Front Door](/azure/web-application-firewall/afds/afds-overview), and [Azure Content Delivery Network (CDN)](/azure/web-application-firewall/cdn/cdn-overview) service from Microsoft. 
 
 The Azure WAF comes with a preconfigured, platform-managed [OWASP (Open Web Application Security Project) ruleset](https://owasp.org/www-project-modsecurity-core-rule-set/) that provides protection against various types of attacks, including cross-site scripting and SQL injection. As a WAF administrator, you have the option to write your own [custom rules](/azure/web-application-firewall/ag/custom-waf-rules-overview) to enhance the core rule set (CRS) rules. Azure WAF also supports a [Bot Protection ruleset](/azure/web-application-firewall/ag/bot-protection-overview) that you can use to prevent bad bots from scraping, scanning, and looking for vulnerabilities in your web application. The Azure WAF can be configured to run in the following two modes:
 
-- Detection mode: Monitors and logs all threat alerts. You turn on logging diagnostics for Application Gateway in the Diagnostics section. You must also make sure that the WAF log is selected and turned on. Web application firewall doesn't block incoming requests when it's operating in Detection mode.
+- Detection mode: Monitors and logs all threat alerts. You turn on logging diagnostics for Application Gateway for Containers in the Diagnostics section. You must also make sure that the WAF log is selected and turned on. Web application firewall doesn't block incoming requests when it's operating in Detection mode.
 - Prevention mode: Blocks intrusions and attacks that the rules detect. The attacker receives a "403 unauthorized access" exception, and the connection is closed. Prevention mode records such attacks in the WAF logs.
 
-Azure Web Application Firewall (WAF) monitoring and logging are provided through logging and integration with Azure Monitor and Azure Monitor logs. You can configure your [Azure Application Gateway](/azure/web-application-firewall/ag/ag-overview), [Azure Front Door](/azure/web-application-firewall/afds/afds-overview), and [Azure Content Delivery Network (CDN)](/azure/web-application-firewall/cdn/cdn-overview) to use [Azure Web Application Firewall (WAF)][azure-waf] and store diagnostic logs and metrics to a [Log Analytics workspace](/azure/azure-monitor/logs/log-analytics-overview). You can use the [Azure Monitor Metrics Explorer][azure-metrics-explorer]  to analyze the Azure WAF metrics and the [Kusto Query Language](/kusto/query) to create and run queries against the diagnostics logs collected in the Log Analytics workspace.
+Azure Web Application Firewall (WAF) monitoring and logging are provided through logging and integration with Azure Monitor and Azure Monitor logs. You can configure your [Azure Application Gateway for Containers][azure-ag-waf], [Azure Front Door](/azure/web-application-firewall/afds/afds-overview), and [Azure Content Delivery Network (CDN)](/azure/web-application-firewall/cdn/cdn-overview) to use [Azure Web Application Firewall (WAF)][azure-waf] and store diagnostic logs and metrics to a [Log Analytics workspace](/azure/azure-monitor/logs/log-analytics-overview). You can use the [Azure Monitor Metrics Explorer][azure-metrics-explorer]  to analyze the Azure WAF metrics and the [Kusto Query Language](/kusto/query) to create and run queries against the diagnostics logs collected in the Log Analytics workspace.
 
 ## Next steps
 
@@ -146,7 +143,8 @@ Other contributors:
 [aws-grafana]: https://aws.amazon.com/grafana/
 [aks]: ./what-is-aks.md
 [eks-web-rearchitect]: ./eks-web-rearchitect.md
-[azure-ag]: /azure/application-gateway/overview
+[azure-ag]: /application-gateway/for-containers/overview
+[azure-ag-waf]: /application-gateway/for-containers/web-application-firewall
 [azure-waf]: /azure/web-application-firewall/overview
 [azure-metrics-explorer]: /azure/azure-monitor/essentials/metrics-explorer
 [azure-prometheus]: /azure/azure-monitor/essentials/prometheus-metrics-overview
