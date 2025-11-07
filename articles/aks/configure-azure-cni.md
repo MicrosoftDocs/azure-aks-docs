@@ -2,13 +2,14 @@
 title: Configure Azure CNI networking in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure Azure CNI (advanced) networking in Azure Kubernetes Service (AKS).
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 12/11/2024
 ms.custom: references_regions, devx-track-azurecli
+# Customer intent: As a Kubernetes administrator, I want to configure Azure CNI networking for my AKS cluster, so that I can effectively manage virtual network subnets and optimize IP address allocation.
 ---
 
 # Configure Azure CNI networking in Azure Kubernetes Service (AKS)
@@ -19,11 +20,11 @@ This article shows you how to use Azure CNI networking to create and use a virtu
 
 ### [Azure portal](#tab/configure-networking-portal)
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 ### [Azure PowerShell](#tab/configure-networking-powershell)
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 - Azure Cloud Shell or Azure PowerShell.
 
@@ -35,7 +36,7 @@ This article shows you how to use Azure CNI networking to create and use a virtu
 
 ### [Azure CLI](#tab/configure-networking-cli)
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
@@ -108,7 +109,7 @@ az aks create \
 To configure Azure CNI networking with dynamic IP allocation and enhanced subnet support, see [Configure Azure CNI networking for dynamic allocation of IPs and enhanced subnet support in AKS](configure-azure-cni-dynamic-ip-allocation.md).
 
 <!-- LINKS - Internal -->
-[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-aks-create]: /cli/azure/aks#az-aks-create
 [macOSUpgrade]: /powershell/azure/install-azps-macos#update-the-azure-powershell-module
 [windowsUpgrade]: /powershell/azure/install-azps-windows#update-the-az-powershell-module
 [linuxUpgrade]: /powershell/azure/install-azps-linux#update-the-az-powershell-module

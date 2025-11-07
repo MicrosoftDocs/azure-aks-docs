@@ -2,11 +2,13 @@
 title: Deploy a client application (Mongo Express) to connect to a MongoDB cluster on Azure Kubernetes Service (AKS)
 description: In this article, you learn how to connect to a MongoDB cluster on Azure Kubernetes Service (AKS) using sample client app.
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
-ms.date: 01/07/2025
+ms.service: azure-kubernetes-service
+ms.date: 09/15/2025
 author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-cli-or-terraform
+ms.custom: 'stateful-workloads'
+# Customer intent: "As a cloud engineer, I want to deploy a MongoDB client application on Azure Kubernetes Service, so that I can easily manage and interact with my MongoDB cluster for effective data handling and application development."
 ---
 
 # Deploy a client application to connect to a MongoDB cluster on Azure Kubernetes Service (AKS)
@@ -17,7 +19,7 @@ After deploying the MongoDB cluster on AKS, you can deploy a sample client appli
 
 In this section, you connect to the MongoDB shell. Once you're connected, you create a database and collection, insert data, and run queries.
 
-1. Create a pod named `percona-client` in the `${AKS_MONGODB_NAMESPACE}` namespace in your cluster using the `kubectl run` command. Make sure you are passing correct `$connectionString` environment variable exported from the step 3 of the [previous tutorial][deploy-mongodb-cluster].
+1. Create a pod named `percona-client` in the `${AKS_MONGODB_NAMESPACE}` namespace in your cluster using the `kubectl run` command. Make sure you're passing correct `$connectionString` environment variable exported from the step 3 of the [previous tutorial][deploy-mongodb-cluster].
 
     ```bash
     kubectl -n "${AKS_MONGODB_NAMESPACE}" run -i --rm --tty percona-client --image=${MY_ACR_REGISTRY}.azurecr.io/percona-server-mongodb:7.0.8-5 --restart=Never -- env CONN_STR=$connectionString 
@@ -70,7 +72,7 @@ In this section, you connect to the MongoDB shell. Once you're connected, you cr
 
 To deploy the `mongo-express` client app, you first need to create secrets specific to `mongo-express` in Azure Key Vault and update your secret store you created in the [previous tutorial][create-secret].
 
-1. Generate a random password using the below function:
+1. Generate a random password using the function:
 
     ```bash
     #This function generates secrets of 32 characters using only alphanumeric characters   

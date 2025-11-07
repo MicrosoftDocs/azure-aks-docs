@@ -6,6 +6,7 @@ ms.date: 06/03/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: fasttrack-edit
+# Customer intent: As a cloud developer, I want to understand networking concepts in Azure Kubernetes Service (AKS) so that I can effectively manage application connectivity, security, and load balancing within my microservices architecture.
 ---
 
 # Networking concepts for applications in Azure Kubernetes Service (AKS)
@@ -55,13 +56,22 @@ For more information on networking models in AKS, see [CNI Networking in AKS][ne
 
 ## Control outbound (egress) traffic
 
-AKS clusters are deployed on a virtual network and have outbound dependencies on services outside of that virtual network, which are almost entirely defined with fully qualified domain names (FQDNs). AKS provides several outbound configuration options which allow you to customize the way in which these external resources are accessed. 
+AKS clusters are deployed on a virtual network and have outbound dependencies on services outside of that virtual network, which are almost entirely defined with fully qualified domain names (FQDNs). AKS provides several outbound configuration options which allow you to customize the way in which these external resources are accessed.
+
+> [!NOTE]
+> After [31 March 2026](https://azure.microsoft.com/updates?id=default-outbound-access-for-vms-in-azure-will-be-retired-transition-to-a-new-method-of-internet-access), new AKS clusters that use the **AKS-managed virtual network** option will place cluster subnets into [private subnets](/azure/virtual-network/ip-services/default-outbound-access#why-is-disabling-default-outbound-access-recommended) by default (`defaultOutboundAccess = false`).
+>
+> This setting **does not impact AKS-managed cluster traffic**, which uses explicitly configured outbound paths. It may affect **unsupported scenarios**, such as deploying other resources (e.g., VMs) into the same subnet.
+>
+> **Clusters using BYO VNets are unaffected** by this change. In supported configurations, no action is required.
+
+### Outbound configuration options
 
 For more information on the supported AKS cluster outbound configuration types, see [Customize cluster egress with outbound types in Azure Kubernetes Service (AKS)](./egress-outboundtype.md).
 
 By default, AKS clusters have unrestricted outbound (egress) Internet access, which allows the nodes and services you run to access external resources as needed. If desired, you can restrict outbound traffic.
 
-For more information on how to restrict outbound traffic from you cluster see [Control egress traffic for cluster nodes in AKS][limit-egress].
+For more information on how to restrict outbound traffic from your cluster see [Control egress traffic for cluster nodes in AKS][limit-egress].
 
 ## Network security groups
 
@@ -72,6 +82,20 @@ You don't need to manually configure network security group rules to filter traf
 You can also use network policies to automatically apply traffic filter rules to pods.
 
 For more information, see [How network security groups filter network traffic][nsg-traffic].
+
+### Custom virtual network requirements
+
+When using a custom virtual network with AKS clusters, if you have added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
+
+| Destination | Source | Protocol | Port | Use |
+|--- |--- |--- |--- |--- |
+| APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
+| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communication between the Azure Load Balancer and the API Server Subnet CIDR. |
+| Node CIDR | Node CIDR | All Protocols | All Ports | Required to enable communication between Nodes. |
+| Node CIDR | Pod CIDR | All Protocols | All Ports | Required for Service traffic routing. |
+| Pod CIDR | Pod CIDR | All Protocols | All Ports | Required for Pod to Pod and Pod to Service traffic, including DNS. |
+
+These requirements apply to both AKS Standard and AKS Automatic clusters when using custom virtual networks.
 
 ## Network policies
 

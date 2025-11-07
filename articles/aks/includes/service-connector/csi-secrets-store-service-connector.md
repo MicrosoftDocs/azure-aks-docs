@@ -5,6 +5,7 @@ ms.reviewer: schaffererin
 ms.service: service-connector
 ms.topic: include
 ms.date: 09/01/2024
+# Customer intent: "As a DevOps engineer, I want to connect an AKS cluster to Azure Key Vault using the Secrets Store CSI Driver, so that I can securely manage and access secrets from the key vault in my containerized applications."
 ---
 
 Learn how to connect to Azure Key Vault with the Secrets Store CSI Driver in an Azure Kubernetes Service (AKS) cluster using Service Connector. In this article, you complete the following tasks:
@@ -18,7 +19,7 @@ Learn how to connect to Azure Key Vault with the Secrets Store CSI Driver in an 
 
 ## Prerequisites
 
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/).
+* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * The [Azure CLI](/cli/azure/install-azure-cli). Sign in using the [`az login`][az-login] command.
 * [Docker](https://docs.docker.com/get-docker/) and [kubectl](https://kubernetes.io/docs/tasks/tools/). To install kubectl locally, use the [`az aks install-cli`][az-aks-install-cli] command.
 * A basic understanding of containers and AKS. Get started by [preparing an application for AKS](/azure/aks/tutorial-kubernetes-prepare-app).
@@ -187,11 +188,11 @@ You can create a service connection to Azure Key Vault using the Azure portal or
    ```
 
 <!-- LINKS -->
-[az-group-create]: /cli/azure/group#az_group_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-keyvault-create]: /cli/azure/keyvault#az_keyvault_create
-[az-keyvault-secret-set]: /cli/azure/keyvault/secret#az_keyvault_secret_set
-[az-aks-connection-create-keyvault]: /cli/azure/aks/connection/create#az_aks_connection_create_keyvault
-[az-login]: /cli/azure/reference-index#az_login
-[az-aks-install-cli]: /cli/azure/aks#az_aks_install_cli
+[az-group-create]: /cli/azure/group#az-group-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create
+[az-keyvault-secret-set]: /cli/azure/keyvault/secret#az-keyvault-secret-set
+[az-aks-connection-create-keyvault]: /cli/azure/aks/connection/create#az-aks-connection-create-keyvault
+[az-login]: /cli/azure/reference-index#az-login
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli

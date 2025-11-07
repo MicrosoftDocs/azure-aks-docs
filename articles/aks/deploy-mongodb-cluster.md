@@ -1,12 +1,13 @@
 ---
 title: 'Configure and deploy a MongoDB cluster on Azure Kubernetes Service (AKS)'
-description: In this article, you configure and deploy a MongoDB cluster on AKS.
+description: In this article, you learn how to configure and deploy a MongoDB cluster on AKS.
 ms.topic: how-to
-ms.date: 01/07/2025
+ms.date: 09/15/2025
 author: fossygirl
 ms.author: carols
-ms.custom: aks-related-content
+ms.custom: 'aks-related-content, stateful-workloads'
 zone_pivot_groups: azure-cli-or-terraform
+# Customer intent: As a cloud engineer, I want to configure and deploy a MongoDB cluster on Azure Kubernetes Service, so that I can ensure high availability and manage data efficiently in a cloud-native environment.
 ---
 
 # Configure and deploy a MongoDB cluster on Azure Kubernetes Service (AKS)
@@ -101,7 +102,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
     More information on the different types of SecretStores and how to configure them
     can be found in our Github: https://github.com/external-secrets/external-secrets
     ```
-3. Generate a random password using the below function:
+3. Generate a random password using the function:
 
     ```bash
     #MongoDB connection strings can contain special characters in the password, which need to be URL encoded. 
@@ -678,12 +679,17 @@ To connect to Percona Server for MongoDB, you need to construct the MongoDB conn
 
 3. Decode the Base64-encoded login name and password and export the connection string to the environment variable using the following commands:
 
-    ```bash
-    export databaseAdmin=$(kubectl get secret ${AKS_MONGODB_SECRETS_NAME} -n ${AKS_MONGODB_NAMESPACE} -o jsonpath="{.data.MONGODB_DATABASE_ADMIN_USER}" | base64 --decode)
-    export databaseAdminPassword=$(kubectl get secret ${AKS_MONGODB_SECRETS_NAME} -n ${AKS_MONGODB_NAMESPACE} -o jsonpath="{.data.MONGODB_DATABASE_ADMIN_PASSWORD}" | base64 --decode)
-    export connectionString="mongodb://${databaseAdmin}:${databaseAdminPassword}@${AKS_MONGODB_CLUSTER_NAME}-mongos.mongodb.svc.cluster.local/admin?replicaSet=rs0&ssl=false&directConnection=true"
+> [!IMPORTANT]
+>
+> Microsoft recommends that you use the most secure authentication flow available. The authentication flow described in this procedure requires a very high degree of trust in the application, and carries risks that are not present in other flows. You should only use this flow when other more secure flows, such as managed identities, aren't viable. 
+>
 
-    ```
+
+```bash
+export databaseAdmin=$(kubectl get secret ${AKS_MONGODB_SECRETS_NAME} -n ${AKS_MONGODB_NAMESPACE} -o jsonpath="{.data.MONGODB_DATABASE_ADMIN_USER}" | base64 --decode)
+export databaseAdminPassword=$(kubectl get secret ${AKS_MONGODB_SECRETS_NAME} -n ${AKS_MONGODB_NAMESPACE} -o jsonpath="{.data.MONGODB_DATABASE_ADMIN_PASSWORD}" | base64 --decode)
+export connectionString="mongodb://${databaseAdmin}:${databaseAdminPassword}@${AKS_MONGODB_CLUSTER_NAME}-mongos.mongodb.svc.cluster.local/admin?replicaSet=rs0&ssl=false&directConnection=true"
+```
 
 ## Verify the MongoDB cluster
 

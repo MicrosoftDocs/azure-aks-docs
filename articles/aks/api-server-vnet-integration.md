@@ -1,15 +1,16 @@
 ---
 title: API Server VNet Integration in Azure Kubernetes Service (AKS)
 description: Learn how to create an Azure Kubernetes Service (AKS) cluster with API Server VNet Integration
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 05/19/2023
 ms.custom: references_regions, devx-track-azurecli
+# Customer intent: As a cloud architect, I want to configure an Azure Kubernetes Service cluster with API Server VNet Integration, so that I can ensure secure, private communication between the API server and cluster nodes without requiring external links or tunnels.
 ---
 
-# Create an Azure Kubernetes Service cluster with API Server VNet Integration (Preview)
+# Create an Azure Kubernetes Service cluster with API Server VNet Integration 
 
 An Azure Kubernetes Service (AKS) cluster configured with API Server VNet Integration projects the API server endpoint directly into a delegated subnet in the VNet where AKS is deployed. API Server VNet Integration enables network communication between the API server and the cluster nodes without requiring a private link or tunnel. The API server is available behind an internal load balancer VIP in the delegated subnet, which the nodes are configured to utilize. By using API Server VNet Integration, you can ensure network traffic between your API server and your node pools remains on the private network only.
 
@@ -19,52 +20,15 @@ The control plane or API server is in an AKS-managed Azure subscription. Your cl
 
 API Server VNet Integration is supported for public or private clusters. You can add or remove public access after cluster provisioning. Unlike non-VNet integrated clusters, the agent nodes always communicate directly with the private IP address of the API server internal load balancer (ILB) IP without using DNS. All node to API server traffic is kept on private networking, and no tunnel is required for API server to node connectivity. Out-of-cluster clients needing to communicate with the API server can do so normally if public network access is enabled. If public network access is disabled, you should follow the same private DNS setup methodology as standard [private clusters](private-clusters.md).
 
-## Region availability
-
-API Server VNet Integration is available in all global Azure regions.
-
 ## Prerequisites
 
-* Azure CLI with aks-preview extension 0.5.97 or later.
-* If using ARM or the REST API, the AKS API version must be 2022-04-02-preview or later.
+- You must have Azure CLI version 2.73.0 or later installed. You can check your version using the `az --version` command.
 
-## Install the aks-preview Azure CLI extension
+## Limitations
+* API Server VNet Integration does not support encrypted virtual networks.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-* Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli
-    az extension add --name aks-preview
-    ```
-
-* Update to the latest version of the extension released using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli
-    az extension update --name aks-preview
-    ```
-
-## Register the 'EnableAPIServerVnetIntegrationPreview' feature flag
-
-1. Register the `EnableAPIServerVnetIntegrationPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "EnableAPIServerVnetIntegrationPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command:
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "EnableAPIServerVnetIntegrationPreview"
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
+## Availability
+- API Server VNet Integration is available in all GA public cloud regions except eastus2 and qatarcentral. We are continually working on enabling this feature in these regions and will update this page when these regions become available.
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 
@@ -211,7 +175,17 @@ az group create --location <location> --name <resource-group>
 
 ## Convert an existing AKS cluster to API Server VNet Integration
 
-You can convert existing public/private AKS clusters to API Server VNet Integration clusters by supplying an API server subnet that meets the requirements listed earlier. These requirements include: in the same VNet as the cluster nodes, permissions granted for the AKS cluster identity, not used by other resources like private endpoint, and size of at least */28*. Converting your cluster is a one-way migration. Clusters can't have API Server VNet Integration disabled after it's been enabled.
+> [!WARNING]
+> **API Server VNet Integration is a one-way, capacity-sensitive feature.**
+>
+> - **Manual restart required.**  
+>   After enabling API Server VNet Integration using `az aks update --enable-apiserver-vnet-integration`, you must immediately restart the cluster for the change to take effect. This restart is not automated. Delaying the restart increases the risk of capacity becoming unavailable, which can prevent the API server from starting.
+>
+> - **Capacity is validated, but not reserved.**  
+>   AKS validates regional capacity when you enable the feature on an existing cluster, but this validation does not reserve capacity. If the restart is delayed and capacity becomes unavailable in the meantime, the cluster may fail to start after a stop or restart. Clusters that enabled this feature before general availability (GA), or that have not yet restarted since enablement, will not undergo capacity validation.
+>
+> - **Feature cannot be disabled.**  
+>   Once enabled, the feature is permanent. You cannot disable API Server VNet Integration.
 
 This upgrade performs a node-image version upgrade on all node pools and restarts all workloads while they undergo a rolling image upgrade.
 
@@ -262,28 +236,40 @@ AKS clusters configured with API Server VNet Integration can have public network
     az aks get-credentials --resource-group <resource-group> --name <cluster-name>
     ```
 
+## Expose the API server through Private Link
+
+You can expose the API server endpoint of a private cluster with API Server VNet Integration using Azure Private Link. The following steps show how to create a Private Link Service (PLS) in the cluster VNet and connect to it from another VNet or subscription using a Private Endpoint.
+
+### Create an API Server VNet Integration Private cluster
+
+* Create a private AKS cluster with API Server VNet Integration using the [`az aks create`][az-aks-create] command with the `--enable-api-server-vnet-integration` and `--enable-private-cluster` flags.
+
+    ```azurecli-interactive
+    az aks create --name <cluster-name> \
+        --resource-group <resource-group> \
+        --location <location> \
+        --enable-private-cluster \
+        --enable-apiserver-vnet-integration
+    ```
+
+For more guidance on how to set up Private Link with API Server VNet Integration, see [Private Link with API Server VNet Integration][private-apiserver].
+
 ## NSG security rules
 
 All traffic within the VNet is allowed by default. But if you have added NSG rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
 
-| Destination | Source | Protocol | Port | Use |
-|--- |--- |--- |--- |--- |
-| APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
-| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communicatios between the Azure Load Balancer and the API Server Subnet CIDR. |
+| Destination           | Source              | Protocol | Port         | Use                                                                                                                                                                                     |
+|-----------------------|---------------------|----------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| APIServer Subnet CIDR | Cluster Subnet      | TCP      | 443 and 4443 | Required to enable communication between Nodes and the API server.                                                                                                                      |
+| APIServer Subnet CIDR | Azure Load Balancer | TCP      | 9988         | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communications between the Azure Load Balancer and the API Server Subnet CIDR. |
 
 ## Next steps
 
-For associated best practices, see [Best practices for network connectivity and security in AKS][operator-best-practices-network].
+- For associated best practices, see [Best practices for network connectivity and security in AKS][operator-best-practices-network].
+- For guidance on how to set up private link with API Server VNet Integration, see [Private Link with API Server VNet Integration][private-apiserver].
+
 
 <!-- LINKS - internal -->
-[az-provider-register]: /cli/azure/provider#az-provider-register
-[az-feature-register]: /cli/azure/feature#az-feature-register
-[az-feature-show]: /cli/azure/feature#az-feature-show
-[az-extension-add]: /cli/azure/extension#az-extension-add
-[az-extension-update]: /cli/azure/extension#az-extension-update
-[private-link-service]: ../private-link/private-link-service-overview.md#limitations
-[virtual-network-peering]: ../virtual-network/virtual-network-peering-overview.md
-[command-invoke]: command-invoke.md
 [operator-best-practices-network]: operator-best-practices-network.md
 [az-group-create]: /cli/azure/group#az-group-create
 [az-aks-create]: /cli/azure/aks#az-aks-create
@@ -294,4 +280,5 @@ For associated best practices, see [Best practices for network connectivity and 
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [ref-support-levels]: /cli/azure/reference-types-and-status
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[private-apiserver]: private-apiserver-vnet-integration-cluster.md
 

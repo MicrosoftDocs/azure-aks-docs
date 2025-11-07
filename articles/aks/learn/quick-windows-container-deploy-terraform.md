@@ -7,10 +7,12 @@ ms.topic: quickstart
 ms.date: 07/15/2024
 ms.custom: devx-track-terraform
 ms.service: azure-kubernetes-service
-content_well_notification: 
+content_well_notification:
   - AI-contribution
 ai-usage: ai-assisted
-#customer intent: As a Terraform user, I want to see how to create an Azure Kubernetes cluster with a Windows node pool.
+
+# Customer intent: As a Terraform user, I want to see how to create an Azure Kubernetes cluster with a Windows node pool.
+
 ---
 
 # Quickstart: Create a Windows-based Azure Kubernetes Service (AKS) cluster using Terraform
@@ -28,7 +30,7 @@ In this quickstart, you create an Azure Kubernetes cluster with a Windows node p
 
 ## Prerequisites
 
-- Create an Azure account with an active subscription. You can [create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- Create an Azure account with an active subscription. You can [create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 - [Install and configure Terraform](/azure/developer/terraform/quickstart-configure)
 
@@ -36,7 +38,7 @@ In this quickstart, you create an Azure Kubernetes cluster with a Windows node p
 
 > [!NOTE]
 > The sample code for this article is located in the [Azure Terraform GitHub repo](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-cluster-windows). You can view the log file containing the [test results from current and previous versions of Terraform](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-cluster-windows/TestRecord.md).
-> 
+>
 > See more [articles and sample code showing how to use Terraform to manage Azure resources](/azure/terraform)
 
 1. Create a directory in which to test and run the sample Terraform code and make it the current directory.

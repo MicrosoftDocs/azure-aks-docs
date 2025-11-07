@@ -5,6 +5,9 @@ ms.topic: tutorial
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 01/16/2025
+author: davidsmatlak
+ms.author: davidsmatlak
+# Customer intent: As a developer, I want to use Telepresence to debug and test microservices locally while connected to a remote Kubernetes cluster, so that I can make real-time updates and see changes without needing to redeploy the entire application.
 ---
 
 # Tutorial: Use Telepresence to develop and test microservices locally
@@ -29,7 +32,7 @@ Telepresence injects Traffic Agents into the workload pod as a sidecar. The Traf
 ## Prerequisites
 
 - An AKS cluster. If you don't have a cluster you can use for this tutorial, create one using [Tutorial - Create an Azure Kubernetes Service (AKS) cluster](./tutorial-kubernetes-deploy-cluster.md).
-- [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) is installed and on the path in command-line environment you use for development. This tutorial uses `kubectl` to manage the Kubernetes cluster. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [`az aks install-cli`](/cli/azure/aks#az_aks_install_cli) command. 
+- [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) is installed and on the path in command-line environment you use for development. This tutorial uses `kubectl` to manage the Kubernetes cluster. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [`az aks install-cli`](/cli/azure/aks#az-aks-install-cli) command. 
 - Install [Node.js LTS](https://nodejs.org). Run the command `node --version` to verify that Node.js is installed.
 
 ## Connect to cluster using kubectl
@@ -39,7 +42,7 @@ Telepresence injects Traffic Agents into the workload pod as a sidecar. The Traf
 
 Before you can install Telepresence and interact with your AKS cluster, make sure you're connected to your cluster. If you didn't install `kubectl` in the _Prerequisites_ section, do that before continuing.
 
-1. Configure `kubectl` to connect to your AKS cluster using the [az aks get-credentials](/cli/azure/aks#az_aks_get_credentials) command. This command downloads credentials and configures the Kubernetes CLI to use them.
+1. Configure `kubectl` to connect to your AKS cluster using the [az aks get-credentials](/cli/azure/aks#az-aks-get-credentials) command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
     ```azurecli-interactive
     az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_AKS_CLUSTER_NAME
@@ -185,16 +188,18 @@ With Telepresence configured, you can seamlessly modify your local code and see 
     <template>
       <nav>
         <div class="logo">
-          <a href="/">
-            <img src="/contoso-pet-store-logo.png" alt="Contoso Pet Store Logo">
-          </a>
+          <router-link to="/">
+            <img src="/contoso-pet-store-logo.png" alt="Contoso Pet Store Logo" />
+          </router-link>
         </div>
         <button class="hamburger" @click="toggleNav">
-      <span class="hamburger-icon"></span>
+          <span class="hamburger-icon"></span>
         </button>
         <ul class="nav-links" :class="{ 'nav-links--open': isNavOpen }">
-          <li><router-link to="/" @click="closeNav">New Products</router-link></li>
-          <li><router-link to="/cart" @click="closeNav">Cart ({{ cartItemCount }})</router-link></li>
+          <li><router-link to="/" @click="closeNav">Products</router-link></li>
+          <li>
+            <router-link to="/cart" @click="closeNav">Cart ({{ cartItemCount }})</router-link>
+          </li>
         </ul>
       </nav>
     </template>

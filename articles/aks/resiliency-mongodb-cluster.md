@@ -2,10 +2,12 @@
 title: Load test MongoDB cluster on Azure Kubernetes Service (AKS)
 description: In this article, you learn how to test resiliency of MongoDB cluster on Azure Kubernetes Service (AKS) using sample client app.
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 01/07/2025
 author: schaffererin
 ms.author: schaffererin
+ms.custom: 'stateful-workloads'
+# Customer intent: "As a database administrator, I want to load test a MongoDB cluster on Azure Kubernetes Service, so that I can validate its resiliency and performance under simulated workload conditions."
 ---
 
 # Load Test MongoDB cluster on Azure Kubernetes Service (AKS)

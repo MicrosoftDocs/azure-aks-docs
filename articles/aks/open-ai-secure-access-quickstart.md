@@ -8,6 +8,7 @@ ms.date: 09/18/2023
 ms.author: schaffererin
 author: schaffererin
 ms.subservice: aks-developer
+# Customer intent: As a cloud developer, I want to secure access to Azure OpenAI from my AKS deployment using workload identities, so that I can implement a passwordless authentication mechanism for Azure resources and enhance the security of my applications.
 ---
 
 # Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
@@ -24,7 +25,7 @@ In this article, you learn how to secure access to Azure OpenAI from Azure Kuber
 
 ## Before you begin
 
-* You need an Azure account with an active subscription. If you don't have one, [create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* You need an Azure account with an active subscription. If you don't have one, [create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * This article builds on [Deploy an application that uses OpenAI on AKS](./open-ai-quickstart.md). You should complete that article before you begin this one.
 * You need a custom domain name enabled on your Azure OpenAI account to use for Microsoft Entra authorization. For more information, see [Custom subdomain names for Azure AI services](/azure/ai-services/cognitive-services-custom-subdomains).
 
@@ -42,7 +43,7 @@ The Microsoft Entra Workload ID and OIDC Issuer Endpoint features aren't enabled
     # Set the resource group variable
     RG_NAME=myResourceGroup
 
-    # Set the AKS cluster resource group variable
+    # Set the AKS cluster name based on the resource group variable
     AKS_NAME=$(az resource list --resource-group $RG_NAME --resource-type Microsoft.ContainerService/managedClusters --query "[0].name" -o tsv)
     ```
 
@@ -237,39 +238,23 @@ To use Microsoft Entra Workload ID on AKS, you need to make a few changes to the
 1. Verify the new pod is running using the [`kubectl get pods`][kubectl-get-pods] command.
 
     ```azurecli-interactive
-    kubectl get pods --selector app=ai-service -w
+    kubectl get pods --selector app=ai-service
     ```
 
-2. Get the pod logs using the [`kubectl logs`][kubectl-logs] command. It may take a few minutes for the pod to initialize.
-
-    ```azurecli-interactive
-    kubectl logs --selector app=ai-service -f
-    ```
-
-    The following example output shows the app has initialized and is ready to accept requests. The first line suggests the code is missing configuration variables. However, the Azure Identity SDK handles this process and sets the `AZURE_CLIENT_ID` and `AZURE_TENANT_ID` variables.
-
-    ```output
-    Incomplete environment configuration. These variables are set: AZURE_CLIENT_ID, AZURE_TENANT_ID
-    INFO:     Started server process [1]
-    INFO:     Waiting for application startup.
-    INFO:     Application startup complete.
-    INFO:     Uvicorn running on http://0.0.0.0:5001 (Press CTRL+C to quit)
-    ```
-
-3. Get the pod environment variables using the [`kubectl describe pod`][kubectl-describe-pod] command. The output demonstrates that the Azure OpenAI API key no longer exists in the Pod's environment variables.
+2. Get the pod environment variables using the [`kubectl describe pod`][kubectl-describe-pod] command. The output demonstrates that the Azure OpenAI API key no longer exists in the Pod's environment variables.
 
     ```azurecli-interactive
     kubectl describe pod --selector app=ai-service
     ```
 
-4. Open a new terminal and get the IP of the store admin service using the following `echo` command.
+3. Open a new terminal and get the IP of the store admin service using the following `echo` command.
 
     ```azurecli-interactive
     echo "http://$(kubectl get svc/store-admin -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
     ```
 
-5. Open a web browser and navigate to the IP address from the previous step.
-6. Select **Products**. You should be able to add a new product and get a description for it using Azure OpenAI.
+4. Open a web browser and navigate to the IP address from the previous step.
+5. Select **Products**. You should be able to add a new product and get a description for it using Azure OpenAI.
 
 ## Next steps
 
@@ -278,14 +263,14 @@ In this article, you learned how to secure access to Azure OpenAI from Azure Kub
 For more information on Microsoft Entra Workload ID, see [Microsoft Entra Workload ID](./workload-identity-overview.md).
 
 <!-- Links internal -->
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-identity-create]: /cli/azure/identity#az_identity_create
-[az-identity-show]: /cli/azure/identity#az_identity_show
-[az-resource-list]: /cli/azure/resource#az_resource_list
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az_identity_federated_credential_create
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-identity-create]: /cli/azure/identity#az-identity-create
+[az-identity-show]: /cli/azure/identity#az-identity-show
+[az-resource-list]: /cli/azure/resource#az-resource-list
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 
 <!-- Links external -->
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply

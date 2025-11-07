@@ -2,11 +2,12 @@
 title: Bring your own Container Network Interface (CNI) plugin with Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to bring your own Container Network Interface (CNI) plugin with Azure Kubernetes Service (AKS).
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 06/20/2023
+# Customer intent: As an advanced Kubernetes user, I want to deploy an AKS cluster with no preinstalled CNI plugin, so that I can use a custom CNI solution that aligns with my on-premises environment.
 ---
 
 # Bring your own Container Network Interface (CNI) plugin with Azure Kubernetes Service (AKS)
@@ -34,6 +35,7 @@ Support is still provided for non-CNI-related issues.
   * `Microsoft.Network/virtualNetworks/subnets/read`
 * The subnet assigned to the AKS node pool can't be a [delegated subnet](/azure/virtual-network/subnet-delegation-overview).
 * AKS doesn't apply Network Security Groups (NSGs) to its subnet or modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure the security rules in the NSGs allow traffic within the node CIDR range. For more information, see [Network security groups][aks-network-nsg].
+* No route table is created by AKS in the managed virtual network.
 
 ## Create an AKS cluster with no CNI plugin preinstalled
 
@@ -181,10 +183,10 @@ Learn more about networking in AKS in the following articles:
 <!-- LINKS - External -->
 [kubernetes-cni]: https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/
 <!-- LINKS - Internal -->
-[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-aks-create]: /cli/azure/aks#az-aks-create
 [aks-network-concepts]: concepts-network.md
 [aks-network-nsg]: concepts-network.md#network-security-groups
 [deploy-bicep-template]: /azure/azure-resource-manager/bicep/deploy-cli
-[az-group-create]: /cli/azure/group#az_group_create
+[az-group-create]: /cli/azure/group#az-group-create
 [deploy-arm-template]: /azure/azure-resource-manager/templates/deploy-cli
 

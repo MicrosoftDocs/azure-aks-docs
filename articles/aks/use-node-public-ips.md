@@ -6,6 +6,7 @@ ms.custom: devx-track-azurecli
 ms.date: 10/14/2024
 ms.author: pahealy
 author: phealy
+# Customer intent: As a DevOps engineer, I want to configure instance-level public IPs for nodes in Azure Kubernetes Service, so that I can ensure direct connectivity for workloads, such as gaming applications, to minimize latency and optimize performance.
 ---
 
 # Use instance-level public IPs in Azure Kubernetes Service (AKS)
@@ -283,26 +284,26 @@ Containers:
 [arm-sku-vm2]: ../virtual-machines/dplsv5-dpldsv5-series.md
 [arm-sku-vm3]: ../virtual-machines/epsv5-epdsv5-series.md
 [aks-quickstart-windows-cli]: ./learn/quick-windows-container-deploy-cli.md
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-get-upgrades]: /cli/azure/aks#az_aks_get_upgrades
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-nodepool-list]: /cli/azure/aks/nodepool#az_aks_nodepool_list
-[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az_aks_nodepool_update
-[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az_aks_nodepool_upgrade
-[az-aks-nodepool-scale]: /cli/azure/aks/nodepool#az_aks_nodepool_scale
-[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az_aks_nodepool_delete
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-extension-add]: /cli/azure/extension#az_extension_add
-[az-extension-update]: /cli/azure/extension#az_extension_update
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-get-upgrades]: /cli/azure/aks#az-aks-get-upgrades
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-list]: /cli/azure/aks/nodepool#az-aks-nodepool-list
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
+[az-aks-nodepool-scale]: /cli/azure/aks/nodepool#az-aks-nodepool-scale
+[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-list]: /cli/azure/feature#az-feature-list
 [az-feature-show]: /cli/azure/feature#az-feature-show
-[az-provider-register]: /cli/azure/provider#az_provider_register
-[az-group-create]: /cli/azure/group#az_group_create
-[az-group-delete]: /cli/azure/group#az_group_delete
-[az-deployment-group-create]: /cli/azure/deployment/group#az_deployment_group_create
-[az-aks-nodepool-add]: /cli/azure/aks#az_aks_nodepool_add
+[az-provider-register]: /cli/azure/provider#az-provider-register
+[az-group-create]: /cli/azure/group#az-group-create
+[az-group-delete]: /cli/azure/group#az-group-delete
+[az-deployment-group-create]: /cli/azure/deployment/group#az-deployment-group-create
+[az-aks-nodepool-add]: /cli/azure/aks#az-aks-nodepool-add
 [enable-fips-nodes]: enable-fips-nodes.md
 [gpu-cluster]: gpu-cluster.md
 [install-azure-cli]: /cli/azure/install-azure-cli
@@ -315,10 +316,10 @@ Containers:
 [use-system-pool]: use-system-pools.md
 [node-resource-group]: faq.yml
 [vmss-commands]: /azure/virtual-machine-scale-sets/virtual-machine-scale-sets-networking#public-ipv4-per-virtual-machine
-[az-list-ips]: /cli/azure/vmss#az_vmss_list_instance_public_ips
+[az-list-ips]: /cli/azure/vmss#az-vmss-list-instance-public-ips
 [reduce-latency-ppg]: reduce-latency-ppg.md
 [public-ip-prefix-benefits]: /azure/virtual-network/ip-services/public-ip-address-prefix
-[az-public-ip-prefix-create]: /cli/azure/network/public-ip/prefix#az_network_public_ip_prefix_create
+[az-public-ip-prefix-create]: /cli/azure/network/public-ip/prefix#az-network-public-ip-prefix-create
 [node-image-upgrade]: node-image-upgrade.md
 [use-tags]: use-tags.md
 [use-labels]: use-labels.md

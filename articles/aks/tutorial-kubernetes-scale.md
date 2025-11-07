@@ -7,7 +7,9 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: mvc
-#Customer intent: As a developer or IT pro, I want to learn how to scale my applications in an Azure Kubernetes Service (AKS) cluster so I can provide high availability or respond to customer demand and application load.
+
+# Customer intent: As a developer or IT pro, I want to learn how to scale my applications in an Azure Kubernetes Service (AKS) cluster so I can provide high availability or respond to customer demand and application load.
+
 ---
 
 # Tutorial - Scale applications in Azure Kubernetes Service (AKS)
@@ -62,14 +64,13 @@ This tutorial requires Azure PowerShell version 5.9.0 or later. Run `Get-Install
 3. Verify the additional pods were created using the [`kubectl get pods`][kubectl-get] command.
 
     ```console
-    kubectl get pods
+    kubectl get pods --selector app=store-front
     ```
 
     The following example output shows the additional pods running the Azure Store Front app:
 
     ```output
-                                      READY     STATUS    RESTARTS   AGE
-    store-front-2606967446-2q2qzc     1/1       Running   0          15m
+    NAME                              READY     STATUS    RESTARTS   AGE
     store-front-3309479140-2hfh0      1/1       Running   0          3m
     store-front-3309479140-bzt05      1/1       Running   0          3m
     store-front-3309479140-fvcvm      1/1       Running   0          3m
@@ -138,7 +139,7 @@ These resource requests and limits are defined for each container, as shown in t
     kubectl get hpa
     ```
 
-    After a few minutes, with minimal load on the Azure Store Front app, the number of pod replicas decreases to three. You can use `kubectl get pods` again to see the unneeded pods being removed.
+    After a few minutes, with minimal load on the Azure Store Front app, the number of pod replicas decreases to three. You can use `kubectl get pods` command again to see the unneeded pods being removed.
 
 > [!NOTE]
 > You can enable the Kubernetes-based Event-Driven Autoscaler (KEDA) AKS add-on to your cluster to drive scaling based on the number of events needing to be processed. For more information, see [Enable simplified application autoscaling with the Kubernetes Event-Driven Autoscaling (KEDA) add-on (Preview)][keda-addon].
@@ -236,7 +237,7 @@ In the next tutorial, you learn how to upgrade Kubernetes in your AKS cluster.
 
 <!-- LINKS - internal -->
 [aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md
-[az-aks-scale]: /cli/azure/aks#az_aks_scale
+[az-aks-scale]: /cli/azure/aks#az-aks-scale
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps
 [get-azakscluster]: /powershell/module/az.aks/get-azakscluster

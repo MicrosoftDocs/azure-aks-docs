@@ -8,6 +8,7 @@ ms.date: 11/15/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a cloud engineer, I want to provision dual-protocol volumes for Azure Kubernetes Service using Azure NetApp Files, so that I can efficiently manage both NFS and SMB workloads in my Kubernetes environment.
 ---
 
 # Provision Azure NetApp Files dual-protocol volumes for Azure Kubernetes Service
@@ -470,7 +471,7 @@ Trident supports many features with Azure NetApp Files. For more information, se
 [importing-trident-volumes]: https://docs.netapp.com/us-en/trident/trident-use/vol-import.html
 
 <!-- INTERNAL LINKS -->
-[az-netappfiles-volume-show]: /cli/azure/netappfiles/volume#az_netappfiles_volume_show
+[az-netappfiles-volume-show]: /cli/azure/netappfiles/volume#az-netappfiles-volume-show
 [azure-netapp-nfs]: azure-netapp-files-nfs.md
 [azure-netapp-smb]: azure-netapp-files-smb.md
 [azure-netapp-files]: azure-netapp-files.md

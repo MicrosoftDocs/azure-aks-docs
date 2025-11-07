@@ -9,6 +9,7 @@ ms.date: 4/25/2025
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a Kubernetes administrator, I want to create and manage persistent volumes using Azure Files, so that I can enable concurrent access for multiple pods within an Azure Kubernetes Service cluster.
 ---
 
 # Create and use a volume with Azure Files in Azure Kubernetes Service (AKS)
@@ -55,7 +56,7 @@ The following table includes parameters you can use to define a custom storage c
 |shareAccessTier | [Access tier for file share][storage-tiers] | General purpose v2 account can choose between `TransactionOptimized` (default), `Hot`, and `Cool`. Premium storage account type for file shares only. | No | Empty. Use default setting for different storage account types.|
 |shareName | Specify Azure file share name. | Existing or new Azure file share name. | No | If empty, driver generates an Azure file share name. |
 |shareNamePrefix | Specify Azure file share name prefix created by driver. | Share name can only contain lowercase letters, numbers, hyphens, and length should be fewer than 21 characters. | No |
-|skuName | Azure Files storage account type (alias: `storageAccountType`)| `Standard_LRS`, `Standard_ZRS`, `Standard_GRS`, `Standard_RAGRS`, `Standard_RAGZRS`,`Premium_LRS`, `Premium_ZRS` | No | `Standard_LRS`<br> Minimum file share size for Premium account type is 100 GB.<br> ZRS account type is supported in limited regions.<br> NFS file share only supports Premium account type.|
+|skuName | Azure Files storage account type (alias: `storageAccountType`)| `Standard_LRS`, `Standard_ZRS`, `Standard_GRS`, `Standard_RAGRS`, `Standard_RAGZRS`,`Premium_LRS`, `Premium_ZRS`, `StandardV2_LRS`, `StandardV2_ZRS`, `StandardV2_GRS`, `StandardV2_GZRS`, `PremiumV2_LRS`, `PremiumV2_ZRS` | No | `Standard_LRS`<br> Minimum file share size for Premium account type is 100 GB.<br> ZRS account type is supported in limited regions.<br> NFS file share only supports Premium account type. <br> Standard V2 SKU names are for [Azure Files provisioned v2 model](/azure/storage/files/understanding-billing#provisioned-v2-model). |
 |storageAccount | Specify an Azure storage account name.| storageAccountName | - No | When a specific storage account name is not provided, the driver will look for a suitable storage account that matches the account settings within the same resource group. If it fails to find a matching storage account, it will create a new one. However, if a storage account name is specified, the storage account must already exist. |
 |storageEndpointSuffix | Specify Azure storage endpoint suffix. | `core.windows.net`, `core.chinacloudapi.cn`, etc. | No | If empty, driver uses default storage endpoint suffix according to cloud environment. For example, `core.windows.net`. |
 |tags | [Tags][tag-resources] are created in new storage account. | Tag format: 'foo=aaa,bar=bbb' | No | "" |
@@ -270,7 +271,7 @@ parameters:
 ```
 
 > [!NOTE]
-> The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
+> The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you're [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you're [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
 
 ### Using Azure tags
 
@@ -332,6 +333,10 @@ Before you can use an Azure Files file share as a Kubernetes volume, you must cr
     ```azurecli-interactive
     export AZURE_STORAGE_CONNECTION_STRING=$(az storage account show-connection-string -n storageAccountName -g resourceGroupName -o tsv)
     ```
+
+    Connection strings must be protected using key rotation or storage in an Azure Key Vault. For more information about connection strings, see [Configure Azure Storage connection strings](/azure/storage/common/storage-configure-connection-string) and [Manage storage account access keys](/azure/storage/common/storage-account-keys-manage). 
+
+    For production environments, Microsoft recommends using Microsoft Entra ID authentication. For more information, see [Authorize access to data in Azure Storage](/azure/storage/blobs/authorize-access-azure-active-directory).
 
 4. Create the file share using the [`az storage share create`][az-storage-share-create] command. Make sure to replace `shareName` with your share name.
 
@@ -516,7 +521,7 @@ To mount the Azure Files file share into your pod, you configure the volume in t
 
 To have the best experience with Azure Files, please follow these best practices:
 
-* The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
+* The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you're [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you're [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
 * We recommend FIO when running benchmarking tests. For more information, see [benchmarking tools and tests](/azure/storage/files/nfs-performance#benchmarking-tools-and-tests).
 
 ### SMB shares

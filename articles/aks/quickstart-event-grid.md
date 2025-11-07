@@ -4,9 +4,10 @@ description: Use Azure Event Grid to subscribe to Azure Kubernetes Service event
 ms.topic: how-to
 ms.custom: devx-track-azurepowershell, devx-track-azurecli
 ms.date: 06/22/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
+# Customer intent: "As a cloud developer, I want to subscribe to Azure Kubernetes Service events using Event Grid, so that I can monitor and react to important changes in my containerized applications seamlessly."
 ---
 
 # Quickstart: Subscribe to Azure Kubernetes Service (AKS) events with Azure Event Grid
@@ -210,7 +211,7 @@ To learn more about AKS, and walk through a complete code to deployment example,
 [azure-powershell-install]: /powershell/azure/install-az-ps
 [aks-events]: /azure/event-grid/event-schema-aks
 [aks-tutorial]: ./tutorial-kubernetes-prepare-app.md
-[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-aks-create]: /cli/azure/aks#az-aks-create
 [new-azakscluster]: /powershell/module/az.aks/new-azakscluster
 [az-eventhubs-namespace-create]: /cli/azure/eventhubs/namespace#az-eventhubs-namespace-create
 [new-azeventhubnamespace]: /powershell/module/az.eventhub/new-azeventhubnamespace
@@ -218,7 +219,7 @@ To learn more about AKS, and walk through a complete code to deployment example,
 [new-azeventhub]: /powershell/module/az.eventhub/new-azeventhub
 [az-eventgrid-event-subscription-create]: /cli/azure/eventgrid/event-subscription#az-eventgrid-event-subscription-create
 [new-azeventgridsubscription]: /powershell/module/az.eventgrid/new-azeventgridsubscription
-[az-group-delete]: /cli/azure/group#az_group_delete
+[az-group-delete]: /cli/azure/group#az-group-delete
 [sp-delete]: kubernetes-service-principal.md#other-considerations
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
 

@@ -5,11 +5,15 @@ ms.topic: concept-article
 ms.date: 07/10/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a cloud architect, I want to understand the core concepts of managed Kubernetes services so that I can effectively deploy and manage containerized applications at scale in a cloud environment.
 ---
 
 # Core concepts for Azure Kubernetes Service (AKS)
 
 This article describes core concepts of Azure Kubernetes Service (AKS), a managed Kubernetes service that you can use to deploy and operate containerized applications at scale on Azure.
+
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## What is Kubernetes?
 
@@ -77,7 +81,7 @@ AKS uses node resources to help the nodes function as part of the cluster. This 
 
 ### OS
 
-AKS supports Ubuntu 22.04 and Azure Linux 2.0 as the node OS for Linux node pools. For Windows node pools, AKS supports Windows Server 2022 as the default OS. Windows Server 2019 is being retired after Kubernetes version 1.32 reaches end of life and isn't supported in future releases. If you need to upgrade your Windows OS version, see [Upgrade from Windows Server 2019 to Windows Server 2022][upgrade-2019-2022]. For more information on using Windows Server on AKS, see [Windows container considerations in Azure Kubernetes Service (AKS)][windows-considerations].
+AKS supports two linux distros: Ubuntu and Azure Linux. Ubuntu is the default Linux distro on AKS. Windows node pools are also supported on AKS with the [Long Term Servicing Channel (LTSC)][servicing-channels-comparison] as the default channel on AKS. For more information on default OS versions, see documentation on [node images][node-images].
 
 ### Container runtime
 
@@ -118,13 +122,13 @@ The following namespaces are created by default in an AKS cluster:
 | `default` | The [default][kubernetes-namespaces] namespace allows you to start using cluster resources without creating a new namespace. |
 | `kube-node-lease` | The [kube-node-lease][kubernetes-namespaces] namespace enables nodes to communicate their availability to the control plane. |
 | `kube-public` | The [kube-public][kubernetes-namespaces] namespace isn't typically used, but you can use it so that resources are visible across the whole cluster by any user. |
-| `kube-system` | The [kube-system][kubernetes-namespaces] namespace is used by Kubernetes to manage cluster resources, such as `coredns`, `konnectivity-agent`, and `metrics-server`. |
+| `kube-system` | The [kube-system][kubernetes-namespaces] namespace is used by Kubernetes to manage cluster resources, such as `coredns`, `konnectivity-agent`, and `metrics-server`. It is not recommended to deploy your own applications to this namespace. For rare cases where deploying your own applications to this namespace is necessary, see the [FAQ](faq.yml#can-admission-controller-webhooks-affect-kube-system-and-internal-aks-namespaces-) to learn how. |
 
 ![Screenshot that shows Kubernetes namespaces to logically divide resources and applications.](media/concepts-clusters-workloads/namespaces.png)
 
 ## Cluster modes
 
-In AKS, you can create a cluster with the Automatic (preview) or Standard mode. AKS Automatic provides a more fully managed experience. You can manage cluster configuration, including nodes, scaling, security, and other preconfigured settings. AKS Standard provides more control over the cluster configuration, including the ability to manage node pools, scaling, and other settings.
+In AKS, you can create a cluster with the Automatic or Standard mode. AKS Automatic provides a more fully managed experience. You can manage cluster configuration, including nodes, scaling, security, and other preconfigured settings. AKS Standard provides more control over the cluster configuration, including the ability to manage node pools, scaling, and other settings.
 
 For more information, see [AKS Automatic and Standard feature comparison][automatic-standard].
 
@@ -186,3 +190,5 @@ For information on more core concepts for AKS, see the following resources:
 [aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes
 [windows-considerations]: ./windows-vs-linux-containers.md
 [upgrade-2019-2022]: ./upgrade-windows-os.md
+[node-images]: ./node-images.md
+[servicing-channels-comparison]: /windows-server/get-started/servicing-channels-comparison

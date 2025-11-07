@@ -9,6 +9,7 @@ ms.topic: how-to
 ms.date: 08/02/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli
+# Customer intent: As a developer, I want to deploy and run Dapr Workflows on Azure Kubernetes Service, so that I can efficiently orchestrate microservices and handle state management in my applications.
 ---
 
 # Deploy and run workflows with the Dapr extension for Azure Kubernetes Service (AKS)
@@ -33,7 +34,7 @@ The workflow example is an ASP.NET Core project with:
 
 ## Prerequisites
 
-- An [Azure subscription](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) with Owner or Admin role.
+- An [Azure subscription](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) with Owner or Admin role.
 - The latest version of the [Azure CLI][install-cli]
 - Latest [Docker][docker]
 - Latest [Helm][helm]
@@ -199,10 +200,6 @@ Notice that the workflow status is marked as completed.
 [kubectl]: ./tutorial-kubernetes-deploy-cluster.md#connect-to-cluster-using-kubectl
 
 <!-- Links External -->
-[dapr-workflow-sample]: https://github.com/Azure/dapr-workflows-aks-sample
-[dapr-program]: https://github.com/Azure/dapr-workflows-aks-sample/blob/main/Program.cs
-[dapr-workflow-dir]: https://github.com/Azure/dapr-workflows-aks-sample/tree/main/Workflows
-[dapr-activities-dir]: https://github.com/Azure/dapr-workflows-aks-sample/tree/main/Activities
 [dapr-workflow-preview]: https://docs.dapr.io/operations/support/support-preview-features/#current-preview-features
 [deployment-yaml]: https://github.com/Azure/dapr-workflows-aks-sample/blob/main/Deploy/deployment.yaml
 [docker]: https://docs.docker.com/get-docker/

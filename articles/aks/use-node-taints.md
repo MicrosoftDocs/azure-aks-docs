@@ -30,7 +30,7 @@ Taints are key-value pairs with an [effect](https://kubernetes.io/docs/concepts/
 There are two types of node taints that can be applied to your AKS nodes: **node taints** and **node initialization taints**.
 
 * **Node taints** are meant to remain permanently on the node for scheduling pods with node affinity. Node taints can only be added, updated, or removed completely using the AKS API.
-* **Node initialization taints** are placed on the node at boot time and are meant to be used temporarily, such as in scenarios where you might need extra time to set up your nodes. You can remove node initialization taint using the Kubernetes API and aren't guaranteed during the node lifecycle. They appear only after a node is scaled up or upgraded/reimaged. New nodes still have the node initialization taint after scaling. Node initialization taints appear on all nodes after upgrading. If you want to remove the initialization taints completely, you can remove them using the AKS API after untainting the nodes using the Kubernetes API. Once you remove the initialization taints from the cluster spec using the AKS API, newly created nodes don't come up with those initialization taints. If the initialization taint is still present on existing nodes, you can permanently remove it by performing a node image upgrade operation.
+* **Node initialization taints** are placed on the node at boot time and are meant to be used temporarily, such as in scenarios where you might need extra time to set up your nodes. You can remove node initialization taint using the Kubernetes API and they aren't guaranteed during the node lifecycle. They will appear on new replicas of the node when it is scaled up or on all replicas when a node is upgraded. If you want to remove the initialization taints completely, you can remove them using the AKS API after untainting the nodes using the Kubernetes API. Once you remove the initialization taints from the cluster spec using the AKS API, newly created nodes don't come up with those initialization taints. If the initialization taint is still present on existing nodes, you can permanently remove it by performing a node image upgrade operation.
 
 > [!NOTE]
 >
@@ -84,7 +84,7 @@ This article assumes you have an existing AKS cluster. If you need an AKS cluste
 ### Prerequisites and limitations
 
 * You need the Azure CLI version `3.0.0b3` or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* You can only apply initialization taints via cluster create or upgrade when using the AKS API. If using ARM templates, you can specify node initialization taints during node pool creation and update.
+* You can only apply initialization taints via cluster create or upgrade when using the AKS API. If using ARM template that will result in a Managed Cluster level operation, you can specify node initialization taints during node pool creation and update. Agentpool level operations are blocked when `NodeInitializationTaints` are present in the request body.
 * You can't apply initialization taints to Windows node pools using the Azure CLI.
 
 ### Get the credentials for your cluster
@@ -153,7 +153,7 @@ This article assumes you have an existing AKS cluster. If you need an AKS cluste
 1. Update a cluster to add a node initialization taint using the [`az aks update`][az-aks-update] command and the `--node-initialization-taints` parameter to specify `sku=gpu:NoSchedule` for the taint.
 
     > [!IMPORTANT]
-    > When updating a cluster with a node initialization taint, the taints apply to all node pools in the cluster. You can view updates to node initialization taints on the node after a reimage operation.
+     > When updating a cluster with a node initialization taint, the taints apply to all node pools in the cluster. If your nodes are using VMSS, you can view updates to node initialization taints on the node after the node's VMSS model is updated (for example, after a node image version upgrade operation). Initialization taints will not appear on your nodes until an operation that triggers a VMSS model update occurs.
 
     ```azurecli-interactive
     az aks update \
@@ -239,6 +239,10 @@ This article assumes you have an existing AKS cluster. If you need an AKS cluste
      ...
     ]
     ```
+
+> [!IMPORTANT]
+>
+> If your nodes are using VMSS, node initialization taints will not be visible on actual nodes in your cluster until an operation that triggers VMSS model update occurs (for example, Kubernetes version upgrade or node image version upgrade).
 
 ## Remove node taints
 

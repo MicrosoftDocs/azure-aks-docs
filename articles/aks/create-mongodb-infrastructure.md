@@ -1,12 +1,13 @@
 ---
 title: 'Create the infrastructure for running a MongoDB cluster on Azure Kubernetes Service (AKS)'
-description: Create the infrastructure needed to run a MongoDB cluster on AKS.
+description: In this article, you learn how to create the infrastructure needed to run a MongoDB cluster on AKS.
 ms.topic: how-to
-ms.date: 01/07/2025
+ms.date: 09/15/2025
 author: fossygirl
 ms.author: carols
-ms.custom: aks-related-content
+ms.custom: 'aks-related-content, stateful-workloads'
 zone_pivot_groups: azure-cli-or-terraform
+# Customer intent: As a cloud architect, I want to establish the infrastructure needed to run a MongoDB cluster on Azure Kubernetes Service (AKS) so that I can ensure scalable, reliable data management in containerized applications.
 ---
 
 # Create the infrastructure for running a MongoDB cluster on Azure Kubernetes Service (AKS)
@@ -16,7 +17,7 @@ In this article, you create the required infrastructure resources to run a Mongo
 ## Prerequisites
 
 * Review of the [overview for deploying a MongoDB cluster on AKS](./mongodb-overview.md).
-* An Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* An Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * Azure CLI version 2.61.0. To install or upgrade, see [Install the Azure CLI](/cli/azure/install-azure-cli).
 * Helm version 3 or later. To install, see [Installing Helm](https://helm.sh/docs/intro/install/).
 * `kubectl`, which Azure Cloud Shell installs by default.
@@ -240,7 +241,7 @@ In this section, you download the Percona images from Docker Hub and upload them
 
 ## Deploy the infrastructure with Terraform
 
-To deploy the infrastructure using Terraform, we're going to use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/) for AKS. The repository [terraform-azurerm-avm-res-containerservice-managedcluster](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git) containes a full example with the infrastructure required to run a MongoDB cluster on Azure Kubernetes Service (AKS).
+To deploy the infrastructure using Terraform, we're going to use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/) for AKS. The repository [terraform-azurerm-avm-res-containerservice-managedcluster](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git) contains a full example with the infrastructure required to run a MongoDB cluster on Azure Kubernetes Service (AKS).
 
 > [!NOTE]
 > If you're planning to run this in production, we recommend looking at [AKS production pattern module for Azure Verified Modules](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production). This comes coupled with best practice recommendations.
@@ -316,6 +317,9 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
     ```
 :::zone-end
 
+> [!NOTE]
+> In AKS, the keepalive time (the duration of inactivity after which the first keepalive probe is sent) default duration is [7,200 seconds or 2 hours](/azure/aks/improve-network-fault-tolerance-in-aks-using-tcp-keepalive#configuring-tcp-keepalive-on-aks). For MongoDB, you'll generally experience better results with a shorter keepalive value, on the order of [120 seconds or 2 minutes](https://www.mongodb.com/docs/manual/faq/diagnostics/#does-tcp-keepalive-time-affect-mongodb-deployments-).
+
 ## Connect to the AKS cluster
 
 * Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.
@@ -323,7 +327,6 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
     ```azurecli-interactive
     az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
     ```
-
 
 
 ## Next step

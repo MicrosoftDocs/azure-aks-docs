@@ -1,16 +1,17 @@
 ---
-title: "Test and validate a highly available PostgreSQL database on AKS with Azure CLI"
-description: Inspect your newly created PostgreSQL database on AKS and learn how to conduct various day-2 operations
+title: 'Validate and test a PostgreSQL database deployment on AKS'
+description: Validate the deployment of a PostgreSQL database on AKS and learn how to conduct various day-2 operations
 ms.topic: how-to
-ms.date: 06/07/2024
+ms.date: 06/18/2025
 author: kenkilty
 ms.author: kkilty
-ms.custom: innovation-engine, aks-related-content
+ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
+# Customer intent: "As a database administrator, I want to test and validate a highly available PostgreSQL database on AKS, so that I can ensure its reliability and performance in a production environment."
 ---
 
-# Test and validate PostgreSQL database on AKS
+# Validate and test a PostgreSQL database deployment on Azure Kubernetes Service (AKS)
 
-In this article, you will perform various testing and validation steps on your newly deployed PostgreSQL database.
+In this article, you perform various testing and validation steps on a PostgreSQL database deployed on AKS. This includes verifying the deployment, connecting to the database, and testing failover scenarios.
 
 * If you haven't already deployed PostgreSQL, follow the steps in [Deploy a highly available PostgreSQL database on AKS with Azure CLI][deploy-postgresql-ha] to get set up, and then you can return to this article.
 
@@ -56,24 +57,22 @@ Your output should resemble the following example output with the availability z
 
 In this section, you create a table and insert some data into the app database that was created in the CNPG Cluster CRD you deployed earlier. You use this data to validate the backup and restore operations for the PostgreSQL cluster.
 
--   Create a table and insert data into the app database using the following commands:
+* Create a table and insert data into the app database using the following commands:
 
     ```bash
     kubectl cnpg psql $PG_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE
     ```
 
-    ```sql
-    # Run the following PSQL commands to create a small dataset
-    # postgres=#
+  ```sql
+  -- Create a small dataset
+  CREATE TABLE datasample (id INTEGER, name VARCHAR(255));
+  INSERT INTO datasample (id, name) VALUES (1, 'John');
+  INSERT INTO datasample (id, name) VALUES (2, 'Jane');
+  INSERT INTO datasample (id, name) VALUES (3, 'Alice');
+  SELECT COUNT(*) FROM datasample;
+  ```
 
-    CREATE TABLE datasample (id INTEGER,name VARCHAR(255));
-    INSERT INTO datasample (id, name) VALUES (1, 'John');
-    INSERT INTO datasample (id, name) VALUES (2, 'Jane');
-    INSERT INTO datasample (id, name) VALUES (3, 'Alice');
-    SELECT COUNT(*) FROM datasample;
-
-    # Type \q to exit psql
-    ```
+  Type `\q` to exit psql when finished.
 
     Your output should resemble the following example output:
 
@@ -90,41 +89,37 @@ In this section, you create a table and insert some data into the app database t
 
 ## Connect to PostgreSQL read-only replicas
 
--   Connect to the PostgreSQL read-only replicas and validate the sample dataset using the following commands:
+* Connect to the PostgreSQL read-only replicas and validate the sample dataset using the following commands:
 
     ```bash
     kubectl cnpg psql --replica $PG_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE
     ```
 
-    ```sql
-    #postgres=#
-    SELECT pg_is_in_recovery();
-    ```
+  ```sql
+  SELECT pg_is_in_recovery();
+  ```
 
     Example output
 
-    ```output
-    # pg_is_in_recovery
-    #-------------------
-    # t
-    #(1 row)
-    ```
+  ```output
+  pg_is_in_recovery
+  -------------------
+  t
+  (1 row)
+  ```
 
-    ```sql
-    #postgres=#
-    SELECT COUNT(*) FROM datasample;
-    ```
+  ```sql
+  SELECT COUNT(*) FROM datasample;
+  ```
 
     Example output
 
-    ```output
-    # count
-    #-------
-    #     3
-    #(1 row)
-
-    # Type \q to exit psql
-    ```
+  ```output
+  count
+  -------
+    3
+  (1 row)
+  ```
 
 ## Set up on-demand and scheduled PostgreSQL backups using Barman
 
@@ -350,18 +345,18 @@ You also create a second federated credential to map the new recovery cluster se
     ```
 
     ```sql
-    postgres=# SELECT COUNT(*) FROM datasample;
+    SELECT COUNT(*) FROM datasample;
     ```
 
     Example output
 
     ```output
-    # count
-    #-------
-    #     3
-    #(1 row)
+     count
+    -------
+         3
+    (1 row)
 
-    # Type \q to exit psql
+    Type \q to exit psql
     ```
 
 1. Delete the recovered cluster using the following command:
@@ -388,9 +383,9 @@ In this section, you configure the necessary infrastructure to publicly expose t
 
 You also retrieve the following endpoints from the Cluster IP service:
 
--   _One_ primary read-write endpoint that ends with `*-rw`.
--   _Zero to N_ (depending on the number of replicas) read-only endpoints that end with `*-ro`.
--   _One_ replication endpoint that ends with `*-r`.
+* *One* primary read-write endpoint that ends with `*-rw`.
+* *Zero to N* (depending on the number of replicas) read-only endpoints that end with `*-ro`.
+* *One* replication endpoint that ends with `*-r`.
 
 1. Get the Cluster IP service details using the [`kubectl get`][kubectl-get] command.
 
@@ -511,7 +506,7 @@ Remember that the primary read-write endpoint maps to TCP port 5432 and the read
 > [!NOTE]
 > You need the value of the app user password for PostgreSQL basic auth that was generated earlier and stored in the `$PG_DATABASE_APPUSER_SECRET` environment variable.
 
--   Validate the public PostgreSQL endpoints using the following `psql` commands:
+- Validate the public PostgreSQL endpoints using the following `psql` commands:
 
     ```bash
     echo "Public endpoint for PostgreSQL cluster: $AKS_PRIMARY_CLUSTER_ALB_DNSNAME"
@@ -640,7 +635,7 @@ In this how-to guide, you learned how to:
 * Simulate a cluster interruption and PostgreSQL replica failover.
 * Perform a backup and restore of the PostgreSQL database.
 
-To learn more about how you can leverage AKS for your workloads, see [What is Azure Kubernetes Service (AKS)?][what-is-aks] To learn more about Azure Database for PostgreSQL, see [What is Azure Database for PostgreSQL?](/azure/postgresql/flexible-server/overview)
+To learn more about how you can use AKS for your workloads, see [What is Azure Kubernetes Service (AKS)?][what-is-aks] To learn more about Azure Database for PostgreSQL, see [What is Azure Database for PostgreSQL?](/azure/postgresql/flexible-server/overview)
 
 ## Contributors
 
@@ -658,11 +653,11 @@ _Microsoft maintains this article. The following contributors originally wrote i
 
 [kubectl-get]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/
 [kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/
-[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az_identity_federated_credential_create
+[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [kubectl-describe]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_describe/
-[az-storage-blob-list]: /cli/azure/storage/blob/#az_storage_blob_list
-[az-identity-federated-credential-delete]: /cli/azure/identity/federated-credential#az_identity_federated_credential_delete
+[az-storage-blob-list]: /cli/azure/storage/blob/#az-storage-blob-list
+[az-identity-federated-credential-delete]: /cli/azure/identity/federated-credential#az-identity-federated-credential-delete
 [kubectl-delete]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_delete/
-[az-group-delete]: /cli/azure/group#az_group_delete
+[az-group-delete]: /cli/azure/group#az-group-delete
 [what-is-aks]: ./what-is-aks.md
 [deploy-postgresql-ha]: ./deploy-postgresql-ha.md

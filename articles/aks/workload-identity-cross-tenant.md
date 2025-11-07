@@ -6,6 +6,7 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 07/03/2024
 ms.author: schaffererin
+# Customer intent: As a cloud administrator, I want to configure cross-tenant workload identity on my Kubernetes cluster, so that I can securely access resources across multiple Azure tenants and enhance application integration.
 ---
 
 # Configure cross-tenant workload identity on Azure Kubernetes Service (AKS)
@@ -392,18 +393,18 @@ In this article, you learned how to configure cross-tenant workload identity on 
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-login-interactively]: /cli/azure/authenticate-azure-cli-interactively
 [az-logout]: /cli/azure/authenticate-azure-cli-interactively#logout
-[az-account-set]: /cli/azure/account#az_account_set
-[az-group-create]: /cli/azure/group#az_group_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-identity-create]: /cli/azure/identity#az_identity_create
-[az-identity-show]: /cli/azure/identity#az_identity_show
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
+[az-account-set]: /cli/azure/account#az-account-set
+[az-group-create]: /cli/azure/group#az-group-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-identity-create]: /cli/azure/identity#az-identity-create
+[az-identity-show]: /cli/azure/identity#az-identity-show
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-servicebus-namespace-create]: /cli/azure/servicebus/namespace#az-servicebus-namespace-create
 [az-servicebus-namespace-show]: /cli/azure/servicebus/namespace#az-servicebus-namespace-show
 [az-servicebus-queue-create]: /cli/azure/servicebus/queue#az-servicebus-queue-create
-[az-group-delete]: /cli/azure/group#az_group_delete
+[az-group-delete]: /cli/azure/group#az-group-delete
 [azure-portal]: https://portal.azure.com
 

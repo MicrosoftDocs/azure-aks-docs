@@ -2,12 +2,13 @@
 title: Configure kubenet networking in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure kubenet (basic) network in Azure Kubernetes Service (AKS) to deploy an AKS cluster into an existing virtual network and subnet.
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 05/22/2024
+# Customer intent: As a cloud architect, I want to configure kubenet networking for my AKS cluster within an existing virtual network, so that I can optimize IP address management and support my application demands efficiently.
 ---
 
 # Use kubenet networking with your own IP address ranges in Azure Kubernetes Service (AKS)
@@ -145,7 +146,7 @@ For more information to help you decide which network model to use, see [Compare
         --dns-service-ip 10.0.0.10 \
         --pod-cidr 10.244.0.0/16 \
         --vnet-subnet-id $SUBNET_ID \
-        --generate-ssh-keys 
+        --generate-ssh-keys
     ```
 
   Deployment parameters:
@@ -170,14 +171,14 @@ For more information to help you decide which network model to use, see [Compare
     Your output should resemble the following example output:
 
     ```output
-    {                                  
+    {
       "clientId": "<client-id>",
       "clientSecretUrl": "<clientSecretUrl>",
-      "id": "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity", 
+      "id": "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity",
       "location": "westus2",
       "name": "myIdentity",
       "principalId": "<principal-id>",
-      "resourceGroup": "myResourceGroup",                       
+      "resourceGroup": "myResourceGroup",
       "tags": {},
       "tenantId": "<tenant-id>",
       "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
@@ -278,16 +279,16 @@ This article showed you how to deploy your AKS cluster into your existing virtua
 
 <!-- LINKS - Internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
-[az-identity-create]: /cli/azure/identity#az_identity_create
+[az-identity-create]: /cli/azure/identity#az-identity-create
 [aks-network-concepts]: concepts-network.md
 [aks-network-nsg]: concepts-network.md#network-security-groups
-[az-group-create]: /cli/azure/group#az_group_create
-[az-network-vnet-create]: /cli/azure/network/vnet#az_network_vnet_create
-[az-network-vnet-show]: /cli/azure/network/vnet#az_network_vnet_show
-[az-network-vnet-subnet-show]: /cli/azure/network/vnet/subnet#az_network_vnet_subnet_show
-[az-network-vnet-subnet-list]: /cli/azure/network/vnet/subnet#az_network_vnet_subnet_list
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-group-create]: /cli/azure/group#az-group-create
+[az-network-vnet-create]: /cli/azure/network/vnet#az-network-vnet-create
+[az-network-vnet-show]: /cli/azure/network/vnet#az-network-vnet-show
+[az-network-vnet-subnet-show]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-show
+[az-network-vnet-subnet-list]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-list
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
 [byo-subnet-route-table]: #bring-your-own-subnet-and-route-table-with-kubenet
 [develop-helm]: quickstart-helm.md
 [use-helm]: kubernetes-helm.md
@@ -297,4 +298,4 @@ This article showed you how to deploy your AKS cluster into your existing virtua
 [custom-route-table]: /azure/virtual-network/manage-route-table
 [network-comparisons]: concepts-network-cni-overview.md
 [Create an AKS cluster with user-assigned managed identity]: configure-kubenet.md#create-an-aks-cluster-with-user-assigned-managed-identity
-[bring-your-own-control-plane-managed-identity]: ../aks/use-managed-identity.md#enable-a-user-assigned-managed-identity
+[bring-your-own-control-plane-managed-identity]: ../aks/use-managed-identity.md#create-a-user-assigned-managed-identity

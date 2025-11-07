@@ -4,9 +4,10 @@ description: Learn about vertical pod autoscaling in Azure Kubernetes Service (A
 ms.topic: overview
 ms.custom: devx-track-azurecli
 ms.date: 09/28/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
+# Customer intent: "As an AKS administrator, I want to implement Vertical Pod Autoscaler so that I can optimize resource allocation for my containers based on usage patterns, enhancing overall cluster efficiency and performance."
 ---
 
 # Vertical pod autoscaling in Azure Kubernetes Service (AKS)

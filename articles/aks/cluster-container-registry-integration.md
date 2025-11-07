@@ -3,9 +3,12 @@ title: Integrate Azure Container Registry with Azure Kubernetes Service (AKS)
 description: Learn how to integrate Azure Kubernetes Service (AKS) with Azure Container Registry (ACR).
 ms.topic: concept-article
 ms.date: 11/08/2024
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.tool: azure-cli, azure-powershell
 ms.devlang: azurecli
 ms.custom: devx-track-azurepowershell, devx-track-azurecli
+# Customer intent: As a cloud administrator, I want to integrate Azure Container Registry with Azure Kubernetes Service, so that I can streamline the deployment of container images and manage access permissions efficiently.
 ---
 
 # Authenticate with Azure Container Registry (ACR) from Azure Kubernetes Service (AKS)
@@ -19,6 +22,9 @@ The AKS to ACR integration assigns the [**AcrPull** role][acr-pull] to the [Micr
 
 > [!NOTE]
 > This article covers automatic authentication between AKS and ACR. If you need to pull an image from a private external registry, use an [image pull secret][image-pull-secret].
+
+> [!CAUTION]
+> The AKS-ACR integration through `az aks --attach-acr` is not supported for ABAC-enabled ACR registries where the role assignment permissions mode is set to "RBAC Registry + ABAC Repository Permissions." ABAC-enabled ACR registries require the [`Container Registry Repository Reader` role](/azure/role-based-access-control/built-in-roles#container-registry-repository-reader) instead of the `AcrPull` role for granting image pull permissions. For ABAC-enabled ACR registries, you should not use `az aks --attach-acr` but instead manually assign the `Container Registry Repository Reader` role assignment using either the Azure Portal, `az role assignment` CLI, or Azure Resource Manager. Please visit https://aka.ms/acr/auth/abac for more information on ABAC-enabled ACR registries.
 
 ## Before you begin
 
@@ -279,7 +285,7 @@ The AKS to ACR integration assigns the [**AcrPull** role][acr-pull] to the [Micr
 
 ACR has two endpoints:
 
- - REST endpoint: `{REGISTRY_NAME}.azurecr.io`
+- REST endpoint: `{REGISTRY_NAME}.azurecr.io`
  - Data endpoint: `{REGISTRY_NAME}.{REGISTRY_LOCATION}.data.azurecr.io`
 
 1. Ensure the rest and data endpoints are added to `noProxy` under the HTTP Proxy config.
@@ -310,9 +316,9 @@ ACR has two endpoints:
 * Learn more about [ACR health](/azure/container-registry/container-registry-check-health).
 
 <!-- LINKS - external -->
-[byo-kubelet-identity]: use-managed-identity.md#use-a-pre-created-kubelet-managed-identity
+[byo-kubelet-identity]: use-managed-identity.md#create-a-kubelet-managed-identity
 [image-pull-secret]: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-[summary-msi]: use-managed-identity.md#summary-of-managed-identities-used-by-aks
+[summary-msi]: managed-identity-overview.md#summary-of-managed-identities-used-by-aks
 [acr-pull]: /azure/role-based-access-control/built-in-roles#acrpull
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps

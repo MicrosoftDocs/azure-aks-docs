@@ -2,8 +2,9 @@
 ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 07/22/2024
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
+# Customer intent: "As a cloud architect, I want to understand the support and maintenance implications of using open-source software on Azure Kubernetes Service, so that I can make informed decisions about deployment and establish a sound support strategy."
 ---
 
 > [!IMPORTANT]

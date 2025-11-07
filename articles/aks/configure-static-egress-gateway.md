@@ -1,12 +1,13 @@
 ---
-title: Configure Static Egress Gateway in Azure Kubernetes Service (AKS) - Preview
+title: Configure Static Egress Gateway in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure Static Egress Gateway in Azure Kubernetes Service (AKS) to manage egress traffic from a constant IP address.
-author: asudbring
-ms.author: allensu
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 10/18/2024
+# Customer intent: As a Kubernetes administrator, I want to configure a Static Egress Gateway in my AKS cluster, so that I can manage egress traffic with fixed source IP addresses for secure and consistent communication with external systems.
 ---
 
 # Configure Static Egress Gateway in Azure Kubernetes Service (AKS)
@@ -15,11 +16,11 @@ Static Egress Gateway in AKS provides a streamlined solution for configuring fix
 
 This article provides step-by-step instructions to set up a Static Egress Gateway node pool in your AKS cluster, enabling you to configure fixed source IP addresses for outbound traffic from your Kubernetes workloads.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Limitations and considerations
 
 - Static Egress Gateway isn't supported in clusters with [Azure CNI Pod Subnet][azure-cni-pod-subnet].
+- Static Egress Gateway does not support Private IP's assigned to the gateway node pool. The gateway node pool must have a public IP prefix assigned to it.
 - Kubernetes network policies won't apply to traffic leaving the cluster through the gateway node pool.
   - This shouldn't affect cluster traffic control as **only** egress traffic from annotated pods **routed to the gateway node pool** are affected.  
 
@@ -27,46 +28,6 @@ This article provides step-by-step instructions to set up a Static Egress Gatewa
 - Windows node pools can't be used as gateway node pools.
 - hostNetwork pods **cannot** be annotated to use the gateway node pool.
 - Pods can only use a gateway node pool if they are in the same namespace as the `StaticGatewayConfiguration` resource.
-
-## Before you begin
-
-- If using the Azure CLI, you need the `aks-preview` extension. See [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension).
-
-### Install the `aks-preview` Azure CLI extension
-
-1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `StaticEgressGatewayPreview` feature flag
-
-1. Register the `StaticEgressGatewayPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "StaticEgressGatewayPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "StaticEgressGatewayPreview"
-    ```
-
-3. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Create or update an AKS cluster with Static Egress Gateway
 
@@ -165,6 +126,10 @@ az aks update -n <cluster-name> -g <resource-group> --disable-static-egress-gate
 
 By following these steps, you can effectively set up and manage Static Egress Gateway configurations in your AKS cluster, enabling controlled and consistent egress traffic from your workloads.
 
+## Next steps
+
+* [Deploy egress gateways for the Istio service mesh add-on][istio-egress-gateway]
+
 <!-- LINKS - Internal -->
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-register]: /cli/azure/feature#az-feature-register
@@ -172,3 +137,4 @@ By following these steps, you can effectively set up and manage Static Egress Ga
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [azure-cni-pod-subnet]: concepts-network-azure-cni-pod-subnet.md
+[istio-egress-gateway]: istio-deploy-egress.md

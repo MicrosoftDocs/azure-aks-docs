@@ -8,6 +8,7 @@ ms.date: 05/08/2023
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a Kubernetes administrator, I want to provision Azure NetApp Files NFS volumes for my applications, so that I can efficiently manage storage for containerized workloads in Azure Kubernetes Service."
 ---
 
 # Provision Azure NetApp Files NFS volumes for Azure Kubernetes Service
@@ -578,13 +579,13 @@ Trident supports many features with Azure NetApp Files. For more information, se
 [anf]: ../azure-netapp-files/azure-netapp-files-introduction.md
 [anf-delegate-subnet]: ../azure-netapp-files/azure-netapp-files-delegate-subnet.md
 [anf-regions]: https://azure.microsoft.com/global-infrastructure/services/?products=netapp&regions=all
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-netappfiles-account-create]: /cli/azure/netappfiles/account#az_netappfiles_account_create
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-netappfiles-account-create]: /cli/azure/netappfiles/account#az-netappfiles-account-create
 [az-netapp-files-dynamic]: azure-netapp-files-dynamic.md
-[az-netappfiles-pool-create]: /cli/azure/netappfiles/pool#az_netappfiles_pool_create
-[az-netappfiles-volume-create]: /cli/azure/netappfiles/volume#az_netappfiles_volume_create
-[az-netappfiles-volume-show]: /cli/azure/netappfiles/volume#az_netappfiles_volume_show
-[az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az_network_vnet_subnet_create
+[az-netappfiles-pool-create]: /cli/azure/netappfiles/pool#az-netappfiles-pool-create
+[az-netappfiles-volume-create]: /cli/azure/netappfiles/volume#az-netappfiles-volume-create
+[az-netappfiles-volume-show]: /cli/azure/netappfiles/volume#az-netappfiles-volume-show
+[az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-create
 [install-azure-cli]: /cli/azure/install-azure-cli
 [use-tags]: use-tags.md
 [azure-ad-app-registration]: /azure/active-directory/develop/howto-create-service-principal-portal

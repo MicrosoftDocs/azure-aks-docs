@@ -4,7 +4,11 @@ description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to u
 ms.topic: tutorial
 ms.date: 06/10/2024
 ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell
-#Customer intent: As a developer, I want to learn how to use PaaS services with an Azure Kubernetes Service (AKS) cluster so that I can deploy and manage my applications.
+ms.author: schaffererin
+author: schaffererin
+
+# Customer intent: As a developer, I want to learn how to use PaaS services with an Azure Kubernetes Service (AKS) cluster so that I can deploy and manage my applications.
+
 ---
 
 # Tutorial - Use PaaS services with an Azure Kubernetes Service (AKS) cluster
@@ -189,6 +193,27 @@ In previous tutorials, you used a RabbitMQ container to store orders submitted b
               limits:
                 cpu: 75m
                 memory: 128Mi
+            startupProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 5
+              initialDelaySeconds: 20
+              periodSeconds: 10
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 3
+              initialDelaySeconds: 3
+              periodSeconds: 5
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 5
+              initialDelaySeconds: 3
+              periodSeconds: 3
     ```
 
     > [!NOTE]
@@ -323,15 +348,15 @@ In the next tutorial, you learn how to scale an application in AKS.
 [azure-powershell-install]: /powershell/azure/install-az-ps
 [aks-tutorial-scale]: ./tutorial-kubernetes-scale.md
 [azure-service-bus]: /azure/service-bus-messaging/service-bus-messaging-overview
-[az-servicebus-namespace-create]: /cli/azure/servicebus/namespace#az_servicebus_namespace_create
-[az-servicebus-queue-create]: /cli/azure/servicebus/queue#az_servicebus_queue_create
-[az-servicebus-queue-authorization-rule-create]: /cli/azure/servicebus/queue/authorization-rule#az_servicebus_queue_authorization_rule_create
-[az-servicebus-namespace-show]: /cli/azure/servicebus/namespace#az_servicebus_namespace_show
-[az-servicebus-queue-authorization-rule-keys-list]: /cli/azure/servicebus/queue/authorization-rule/keys#az_servicebus_queue_authorization_rule_keys_list
+[az-servicebus-namespace-create]: /cli/azure/servicebus/namespace#az-servicebus-namespace-create
+[az-servicebus-queue-create]: /cli/azure/servicebus/queue#az-servicebus-queue-create
+[az-servicebus-queue-authorization-rule-create]: /cli/azure/servicebus/queue/authorization-rule#az-servicebus-queue-authorization-rule-create
+[az-servicebus-namespace-show]: /cli/azure/servicebus/namespace#az-servicebus-namespace-show
+[az-servicebus-queue-authorization-rule-keys-list]: /cli/azure/servicebus/queue/authorization-rule/keys#az-servicebus-queue-authorization-rule-keys-list
 [new-az-service-bus-namespace]: /powershell/module/az.servicebus/new-azservicebusnamespace
 [new-az-service-bus-queue]: /powershell/module/az.servicebus/new-azservicebusqueue
 [new-az-service-bus-authorization-rule]: /powershell/module/az.servicebus/new-azservicebusauthorizationrule
 [get-az-service-bus-namespace]: /powershell/module/az.servicebus/get-azservicebusnamespace
 [get-az-service-bus-key]: /powershell/module/az.servicebus/get-azservicebuskey
 [import-azakscredential]: /powershell/module/az.aks/import-azakscredential
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials

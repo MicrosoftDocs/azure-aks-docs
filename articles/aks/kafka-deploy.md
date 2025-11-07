@@ -1,27 +1,29 @@
 ---
-title: Deploy Strimzi and Kafka components on Azure Kubernetes Service (AKS)
+title: Deploy Kafka with Strimzi on Azure Kubernetes Service (AKS)
 description: In this article, we provide guidance for deploying the Strimzi Operator and a Kafka cluster on Azure Kubernetes Service (AKS). 
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
-ms.date: 03/31/2025
+ms.service: azure-kubernetes-service
+ms.date: 09/15/2025
 author: senavar
 ms.author: senavar
+ms.custom: 'stateful-workloads'
+# Customer intent: As a cloud engineer, I want to deploy the Strimzi Operator and a Kafka cluster on Azure Kubernetes Service, so that I can manage scalable and highly available Kafka messaging systems effectively.
 ---
 
 # Configure and deploy Strimzi and Kafka components on Azure Kubernetes Service (AKS)  
 
-In this article, you deploy the Strimzi Cluster Operator and a highly available Kafka cluster on AKS.
+In this article, you deploy the Strimzi Cluster Operator and a highly available Kafka cluster on Azure Kubernetes Service (AKS).
 
 > [!NOTE]
 > If you haven't created the required infrastructure for this deployment, follow the steps in [Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)](./kafka-infrastructure.md) to get set up, and then you can return to this article.
 
 ## Strimzi deployment  
 
-The Strimzi Cluster Operator is deployed in its own namespace, `strimzi-operator`, and is configured to watch the `kafka` namespace where Kafka cluster components are deployed. For high availability, the operator uses:
+The Strimzi Cluster Operator is deployed in its own namespace, `strimzi-operator`, and is configured to watch the `kafka` namespace where the Kafka cluster components are deployed. For high availability, the operator uses:
 
-* **Multiple replicas with leader election**: One replica serves as the active leader managing deployed resources, while others remain on standby. If the leader fails, a standby replica takes over.  
-* **Zonal distribution**: Three replicas (one per availability zone) provide resilience against zonal outages. Pod anti-affinity rules prevent multiple replicas from being scheduled in the same zone.  
-* **Pod Disruption Budget**: Created automatically by the Operator deployment to ensure at least one replica remains available during voluntary disruptions.  
+- **Multiple replicas with leader election**: One replica serves as the active leader managing deployed resources, while others remain on standby. If the leader fails, a standby replica takes over.  
+- **Zonal distribution**: Three replicas (one per availability zone) provide resilience against zonal outages. Pod anti-affinity rules prevent multiple replicas from being scheduled in the same zone.  
+- **Pod Disruption Budget**: Created automatically by the operator deployment to ensure at least one replica remains available during voluntary disruptions.
 
 This architecture ensures the Strimzi Cluster Operator remains highly available even during infrastructure maintenance or partial outages.
 
@@ -34,7 +36,7 @@ This architecture ensures the Strimzi Cluster Operator remains highly available 
     kubectl create namespace kafka  
     ```  
 
-1. Using the following script, create a `values.yaml` file to provide specific configurations for the Helm chart: 
+1. Using the following script, create a `values.yaml` file to provide specific configurations for the Helm chart:
 
     ```bash  
     cat <<EOF > values.yaml  
@@ -57,7 +59,7 @@ This architecture ensures the Strimzi Cluster Operator remains highly available 
             topologyKey: topology.kubernetes.io/zone  
     EOF  
     ```  
- 
+
 1. Install the Strimzi Cluster Operator using the `helm install` command.  
 
     ```bash  
@@ -66,7 +68,7 @@ This architecture ensures the Strimzi Cluster Operator remains highly available 
     --values values.yaml
     ```  
 
-1. Verify that the Strimzi Cluster Operator successfully deployed and that all pods are a running state using the `kubectl get` command.  
+1. Verify the Strimzi Cluster Operator successfully deployed and all pods are a running state using the `kubectl get` command.  
 
     ```bash  
     kubectl get pods -n strimzi-operator  
@@ -83,9 +85,9 @@ This architecture ensures the Strimzi Cluster Operator remains highly available 
 
 ### Install Strimzi Drain Cleaner using Helm
 
-Strimzi Drain Cleaner ensures smooth Kubernetes node draining by intercepting drain requests for broker pods. This prevents Kafka partition replicas from becoming under-replicated, maintaining Kafka cluster health and reliability.  
+Strimzi Drain Cleaner ensures smooth Kubernetes node draining by intercepting drain requests for broker pods, which prevents Kafka partition replicas from becoming under-replicated and maintains cluster health and reliability.
 
-For high availability, you should deploy Drain Cleaner with multiple replicas across availability zones and configure it with pod disruption budgets, ensuring it remains functional during zonal outages or cluster upgrades.
+For high availability, deploy Drain Cleaner with multiple replicas across availability zones and configure it with pod disruption budgets to ensure it remains functional during zonal outages or cluster upgrades.
 
 A Helm chart is available for the installation of Strimzi Drain Cleaner:
 
@@ -95,7 +97,7 @@ A Helm chart is available for the installation of Strimzi Drain Cleaner:
     kubectl create namespace strimzi-drain-cleaner  
     ```  
 
-2. Create a `values.yaml` file to override specific configurations for the Helm chart using the following script:  
+1. Create a `values.yaml` file to override specific configurations for the Helm chart using the following script:  
 
     ```bash  
     cat <<EOF > values.yaml  
@@ -117,7 +119,7 @@ A Helm chart is available for the installation of Strimzi Drain Cleaner:
     EOF  
     ```  
 
-3. Install the Strimzi Drain Cleaner using the `helm install` command.  
+1. Install the Strimzi Drain Cleaner using the `helm install` command.  
 
     ```bash  
     helm install strimzi-drain-cleaner oci://quay.io/strimzi-helm/strimzi-drain-cleaner \
@@ -125,7 +127,7 @@ A Helm chart is available for the installation of Strimzi Drain Cleaner:
     --values values.yaml
     ```  
 
-4. Verify the Strimzi Drain Cleaner successfully deployed and that all pods are a running state using the `kubectl get` command.  
+1. Verify the Strimzi Drain Cleaner successfully deployed and that all pods are a running state using the `kubectl get` command.  
 
     ```bash  
     kubectl get pods -n strimzi-drain-cleaner  
@@ -140,22 +142,21 @@ A Helm chart is available for the installation of Strimzi Drain Cleaner:
     strimzi-drain-cleaner-6d694bd55b-wj6xx   1/1     Running   0          1d22h  
     ```  
 
-
 ## Kafka cluster architecture and considerations  
 
-The Strimzi Cluster Operator enables declarative Kafka deployment on AKS using custom resource definitions. Beginning with Strimzi 0.46, Kafka clusters use [KRaft](https://strimzi.io/blog/2024/03/21/kraft-migration/) directly within Kafka instead of ZooKeeper. 
+The Strimzi Cluster Operator enables declarative Kafka deployment on AKS using custom resource definitions. Beginning with Strimzi 0.46, Kafka clusters use [KRaft](https://strimzi.io/blog/2024/03/21/kraft-migration/) within Kafka instead of ZooKeeper.
 
-Strimzi uses the KafkaNodePool custom resource, where each pool is assigned a specific role (broker, controller, or both):
+Strimzi uses the `KafkaNodePool` custom resource, where each pool is assigned a specific role (broker, controller, or both):
 
-* **Kafka brokers** handle processing and storage of messages.  
-* **Kafka controllers** manage Kafka metadata using the Raft consensus protocol.  
+- **Kafka brokers** handle processing and storage of messages.  
+- **Kafka controllers** manage Kafka metadata using the Raft consensus protocol.  
 
-For high availability, our target architecture is defined by:
+For high availability, the target architecture is defined by:
 
-* Separate KafkaNodePools for brokers and controllers, each with three replicas.  
-* Topology Spread Constraints that distribute pods across availability zones and nodes.  
-* Node affinity rules that optimize resource utilization with specific node pools.  
-* Persistent volumes from Azure Container Storage with separate volumes for broker messages and metadata.  
+- Separate `KafkaNodePools` for brokers and controllers, each with three replicas.  
+- Topology Spread Constraints that distribute pods across availability zones and nodes.  
+- Node affinity rules that optimize resource utilization with specific node pools.  
+- Persistent volumes from Azure Disk CSI driver with separate volumes for broker messages and metadata.
 
 This architecture improves scalability and fault tolerance while allowing brokers and controllers to be independently scaled to meet workload requirements.
 
@@ -163,7 +164,7 @@ This architecture improves scalability and fault tolerance while allowing broker
 
 Tuning the Java Virtual Machine (JVM) is critical for optimal Kafka broker and controller performance, especially in production environments. Properly configured JVM settings help maximize throughput, minimize latency, and ensure stability under heavy load for each broker.
 
-LinkedIn, the creators of Kafka, shared the typical arguments for running Kafka on Java for one of LinkedIn's busiest clusters: [Apache Kafka Java Configuration](https://kafka.apache.org/documentation/#java). We will use this configuration as a baseline for the configuration of the Kafka brokers. Changes can be made to meet your specific workloads requirements.
+LinkedIn, the creators of Kafka, shared their recommended arguments for running Kafka on Java for one of their busiest clusters: [Apache Kafka Java Configuration](https://kafka.apache.org/documentation/#java). This guide uses this configuration as a baseline for the Kafka brokers. You can make changes to meet your specific workload requirements.
 
 ```yaml
 jvmOptions:
@@ -199,9 +200,9 @@ jvmOptions:
 
 ## Deploy Kafka node pools  
 
-In this section, we create two Kafka node pools: one for brokers and one for controllers.  
+In this section, you create two Kafka node pools: one for brokers and one for controllers.
 
-* Apply the YAML manifest to create the two Kafka node pools using the `kubectl apply` command.  
+- Apply the YAML manifest to create the two Kafka node pools using the `kubectl apply` command.  
 
     ```bash
     kubectl apply -n kafka -f - <<EOF
@@ -264,7 +265,7 @@ In this section, we create two Kafka node pools: one for brokers and one for con
             size: 25Gi
             kraftMetadata: shared
             deleteClaim: false
-            class: acstor-azuredisk-zr
+            class: kafka-premium-ssd-v2
       jvmOptions:
         "-Xms": "3g"
         "-Xmx": "3g"
@@ -335,13 +336,13 @@ In this section, we create two Kafka node pools: one for brokers and one for con
             type: persistent-claim
             size: 50Gi
             deleteClaim: false
-            class: acstor-azuredisk-zr
+            class: kafka-premium-ssd-v2
           - id: 1
             type: persistent-claim
             size: 25Gi
             kraftMetadata: shared
             deleteClaim: false
-            class: acstor-azuredisk-zr
+            class: kafka-premium-ssd-v2
       jvmOptions:
         "-Xms": "6g"
         "-Xmx": "6g"
@@ -357,7 +358,7 @@ In this section, we create two Kafka node pools: one for brokers and one for con
     EOF
     ```
 
-After creating the Kafka node pools, the next step is to define a Kafka cluster custom resource that binds these pools into a functioning Kafka ecosystem. This architecture follows a separation of concerns pattern, where Kafka node pools manage the infrastructure aspects while the Kafka cluster resource handles application-level configurations. 
+After creating the Kafka node pools, the next step is to define a Kafka cluster custom resource that binds these pools into a functioning Kafka ecosystem. This architecture follows a separation of concerns pattern, where Kafka node pools manage the infrastructure aspects while the Kafka cluster resource handles application-level configurations.
 
 ## Deploy the Kafka cluster  
 
@@ -553,12 +554,12 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
     EOF
     ```
 
-2. Deploy the Kafka cluster resource, which connects the previously created node pools into a complete Kafka ecosystem, using the `kubectl apply` command. This custom resource configures several critical components:  
+1. Deploy the Kafka cluster resource, which connects the previously created node pools into a complete Kafka ecosystem, using the `kubectl apply` command. This custom resource configures the following critical components:
 
-    * **Kafka core configuration**: Defines replication factors, listener settings, and other Kafka-specific parameters.  
-    * **Cruise Control**: Provides automated cluster balancing and monitoring capabilities.  
-    * **Entity Operator**: Deploys the Topic and User Operators that manage Kafka topics and users declaratively through Kubernetes resources.  
-    * **JMX metrics**: Configures metrics exposure using the previously defined ConfigMaps.  
+    - **Kafka core configuration**: Defines replication factors, listener settings, and other Kafka-specific parameters.  
+    - **Cruise Control**: Provides automated cluster balancing and monitoring capabilities.  
+    - **Entity Operator**: Deploys the Topic and User Operators that manage Kafka topics and users declaratively through Kubernetes resources.  
+    - **JMX metrics**: Configures metrics exposure using the previously defined ConfigMaps.  
 
     ```bash
     kubectl apply -n kafka -f - <<EOF
@@ -612,7 +613,7 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
     EOF
     ```
 
-3. Once deployed, verify your Kafka deployment by checking that all KafkaNodePools, Kafka cluster resources, and their corresponding pods are created and in a running state using the `kubectl get` command.  
+1. Once deployed, verify your Kafka deployment by checking that all KafkaNodePools, Kafka cluster resources, and their corresponding pods are created and in a running state using the `kubectl get` command.  
 
     ```bash
     kubectl get pods,kafkanodepool,kafka -n kafka
@@ -641,9 +642,9 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
 
 ## Create a Kafka User and Topic
 
-The Strimzi Entity Operator, deployed with the Kafka cluster custom resource, translates Kubernetes custom resources (`KafkaTopic` and `KafkaUser`) into actual Kafka resources, enabling GitOps workflows and consistent configuration management.  
+The Strimzi Entity Operator, deployed with the Kafka cluster custom resource, translates Kubernetes custom resources (`KafkaTopic` and `KafkaUser`) into actual Kafka resources. This enables GitOps workflows and consistent configuration management.
 
-> [!NOTE] 
+> [!NOTE]
 > Creating Kafka Topics and Users declaratively using the Entity Operator is optional. You can also create them using traditional Kafka CLI tools or APIs. However, the declarative approach offers benefits such as version control, audit trails, and consistent management across environments.  
 
 1. Create a Kafka Topic with the Topic Operator using the `kubectl apply` command.  
@@ -665,7 +666,7 @@ The Strimzi Entity Operator, deployed with the Kafka cluster custom resource, tr
     EOF  
     ```  
 
-2. Verify the Kafka Topic was successfully created using the `kubectl get` command.  
+1. Verify the Kafka Topic was successfully created using the `kubectl get` command.  
 
     ```bash  
     kubectl get kafkatopic -n kafka  
@@ -678,9 +679,9 @@ The Strimzi Entity Operator, deployed with the Kafka cluster custom resource, tr
     test-topic   kafka-aks-cluster   4            3                    True  
     ```  
 
-For more information, see [using the Topic Operator to manage Kafka topics](https://strimzi.io/docs/operators/latest/deploying#using-the-topic-operator-str).  
+    For more information, see [using the Topic Operator to manage Kafka topics](https://strimzi.io/docs/operators/latest/deploying#using-the-topic-operator-str).  
 
-3. Create a Kafka User with the User Operator using the `kubectl apply` command.  
+1. Create a Kafka User with the User Operator using the `kubectl apply` command.  
 
     ```bash  
     kubectl apply -f - <<EOF  
@@ -722,7 +723,8 @@ For more information, see [using the Topic Operator to manage Kafka topics](http
             host: "*"  
     EOF  
     ```
-For more information, see [using the User Operator to manage Kafka users](https://strimzi.io/docs/operators/latest/deploying#assembly-using-the-user-operator-str).
+
+    For more information, see [using the User Operator to manage Kafka users](https://strimzi.io/docs/operators/latest/deploying#assembly-using-the-user-operator-str).
 
 ## Next step  
 
@@ -731,7 +733,7 @@ For more information, see [using the User Operator to manage Kafka users](https:
 
 ## Contributors  
 
-*Microsoft maintains this article. The following contributors originally wrote it:*  
+_Microsoft maintains this article. The following contributors originally wrote it:_
 
-* Sergio Navar | Senior Customer Engineer  
-* Erin Schaffer | Content Developer 2  
+- Sergio Navar | Senior Customer Engineer
+- Erin Schaffer | Content Developer 2

@@ -5,8 +5,9 @@ author: charleswool
 
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 10/23/2024
+ms.date: 05/30/2025
 ms.author: yuewu2
+# Customer intent: As a Kubernetes administrator, I want to restrict pod access to the Azure Instance Metadata Service (IMDS) endpoint, so that I can enhance the security of my AKS cluster and prevent sensitive information leaks.
 ---
 
 # Block pod access to the Azure Instance Metadata Service (IMDS) endpoint (preview)
@@ -46,7 +47,7 @@ Host network pods have `hostNetwork` set to **true** in their specs. Host networ
         az extension update --name aks-preview
         ```
 
-1. Register the `IMDSRestrictionPreview` feature flag using the [az feature register][az-feature-register] command.
+2. Register the `IMDSRestrictionPreview` feature flag using the [az feature register][az-feature-register] command.
 
     ```azurecli-interactive
     az feature register --namespace Microsoft.ContainerService --name IMDSRestrictionPreview
@@ -63,6 +64,7 @@ Host network pods have `hostNetwork` set to **true** in their specs. Host networ
     ```azurecli-interactive
     az provider register --namespace Microsoft.ContainerService
     ```
+3. Enable OIDC Issuer on your AKS cluster. To create a new cluster or update an existing cluster, see [Configure an AKS cluster with OIDC Issuer](./use-oidc-issuer.md).
 
 ## Limitations
 
@@ -78,11 +80,11 @@ Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS
 - HTTP application routing
 - Web application routing
 - Azure cost analysis
-- Azure Key Vault provider for Secrets Store CSI Driver
-
-Additionally, Windows node pools aren't currently supported with IDMS restriction.
 
 The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI) driver now supports workload identity authentication mode and therefore can work with IMDS restriction enabled.
+
+Additionally, Windows node pools aren't currently supported with IMDS restriction.
+
 
 > [!CAUTION]
 > Enabling IMDS restrictions for a cluster that uses unsupported add-ons results in an error.
@@ -91,7 +93,7 @@ The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI)
 
 When IMDS restriction is enabled, AKS manages the iptables rules on the node. Keep in mind the following points to prevent the iptables rules from being accidentally removed or tampered with:
 
-- iptables rules can be modified with SSH or node-shell, so we recommend using [Disable SSH][disable-ssh] or using a policy to disable privileged pods.
+- The iptables rules can be modified with SSH or node-shell, so we recommend using [Disable SSH][disable-ssh] or using a policy to disable privileged pods.
 - The iptables rules that restrict access to IMDS are restored when the node is [reimaged][node-image-upgrade] or restarted.
 
 ## Enable IMDS restriction on a new cluster
@@ -213,9 +215,9 @@ After you update the cluster, you must [reimage][node-image-upgrade] the nodes i
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [node-image-upgrade]: node-image-upgrade.md
 [workload-identity-overview]: workload-identity-overview.md
 [disable-ssh]: manage-ssh-node-access.md

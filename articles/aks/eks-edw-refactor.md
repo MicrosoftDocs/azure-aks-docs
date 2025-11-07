@@ -6,6 +6,7 @@ ms.date: 06/20/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: As a developer migrating an event-driven workflow from AWS to Azure, I want to update the application code and implement Azure SDKs for data access and authentication, so that I can successfully replicate the workload and utilize Azure services effectively.
 ---
 
 # Update application code for the event-driven workflow (EDW) workload
@@ -240,8 +241,8 @@ To build the container images and push them to ACR, make sure the environment va
 [map-aws-to-azure]: ./eks-edw-rearchitect.md#map-aws-services-to-azure-services
 [storage-queue-data-contributor]: /azure/role-based-access-control/built-in-roles#storage
 [storage-table-data-contributor]: /azure/role-based-access-control/built-in-roles#storage
-[az-identity-create]: /cli/azure/identity#az_identity_create
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
+[az-identity-create]: /cli/azure/identity#az-identity-create
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [github-repo]: https://github.com/Azure-Samples/aks-event-driven-replicate-from-aws
 [azure-sdk-python]: https://github.com/Azure/azure-sdk-for-python
 [default-azure-credential]: /azure/storage/queues/storage-quickstart-queues-python#authorize-access-and-create-a-client-object

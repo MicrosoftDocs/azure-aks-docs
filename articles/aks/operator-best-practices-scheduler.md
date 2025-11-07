@@ -3,7 +3,9 @@ title: Operator best practices - Basic scheduler features in Azure Kubernetes Se
 description: Learn the cluster operator best practices for using basic scheduler features such as resource quotas and pod disruption budgets in Azure Kubernetes Service (AKS)
 ms.topic: best-practice
 ms.date: 03/09/2021
-
+ms.author: schaffererin
+author: schaffererin
+# Customer intent: As a cluster operator, I want to implement resource quotas and pod disruption budgets in my Kubernetes environment, so that I can effectively manage resources and maintain application availability during maintenance events.
 ---
 
 # Best practices for basic scheduler features in Azure Kubernetes Service (AKS)
@@ -18,8 +20,8 @@ This best practices article focuses on basic Kubernetes scheduling features for 
 
 ## Enforce resource quotas
 
-> **Best practice guidance** 
-> 
+> **Best practice guidance**
+>
 > Plan and apply resource quotas at the namespace level. If pods don't define resource requests and limits, reject the deployment. Monitor resource usage and adjust quotas as needed.
 
 Resource requests and limits are placed in the pod specification. Requests are used by the Kubernetes scheduler at deployment time to find an available node in the cluster. Limits and requests work at the individual pod level. For more information about how to define these values, see [Define pod resource requests and limits][resource-limits].
@@ -60,7 +62,7 @@ For more information about available resource objects, scopes, and priorities, s
 
 ## Plan for availability using pod disruption budgets
 
-> **Best practice guidance** 
+> **Best practice guidance**
 >
 > To maintain the availability of applications, define Pod Disruption Budgets (PDBs) to make sure that a minimum number of pods are available in the cluster.
 
@@ -74,8 +76,8 @@ There are two disruptive events that cause pods to be removed:
 * Deletion of a node VM
 
 Involuntary disruptions can be mitigated by:
-* Using multiple replicas of your pods in a deployment. 
-* Running multiple nodes in the AKS cluster. 
+* Using multiple replicas of your pods in a deployment.
+* Running multiple nodes in the AKS cluster.
 
 ### Voluntary disruptions
 
@@ -84,7 +86,7 @@ Involuntary disruptions can be mitigated by:
 * Updated deployment template
 * Accidentally deleting a pod
 
-Kubernetes provides *pod disruption budgets* for voluntary disruptions, letting you plan for how deployments or replica sets respond when a voluntary disruption event occurs. Using pod disruption budgets, cluster operators can define a minimum available or maximum unavailable resource count. 
+Kubernetes provides *pod disruption budgets* for voluntary disruptions, letting you plan for how deployments or replica sets respond when a voluntary disruption event occurs. Using pod disruption budgets, cluster operators can define a minimum available or maximum unavailable resource count.
 
 If you upgrade a cluster or update a deployment template, the Kubernetes scheduler will schedule extra pods on other nodes before allowing voluntary disruption events to continue. The scheduler waits to reboot a node until the defined number of pods are successfully scheduled on other nodes in the cluster.
 

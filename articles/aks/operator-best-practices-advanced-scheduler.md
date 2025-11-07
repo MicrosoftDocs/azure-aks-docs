@@ -4,10 +4,12 @@ titleSuffix: Azure Kubernetes Service
 description: Learn the cluster operator best practices for using advanced scheduler features such as taints and tolerations, node selectors and affinity, or inter-pod affinity and anti-affinity in Azure Kubernetes Service (AKS)
 ms.topic: best-practice
 ms.date: 11/11/2022
- 
+ms.author: schaffererin
+author: schaffererin
+# Customer intent: "As a Kubernetes cluster operator, I want to implement advanced scheduling strategies using taints, tolerations, and node affinity, so that I can effectively manage workload distribution and resource allocation across my AKS clusters."
 ---
 
-# Best practices for advanced scheduler features in Azure Kubernetes Service (AKS)
+# Best practices for advanced scheduler features in Azure Kubernetes Service (AKS) using the kube-scheduler
 
 As you manage clusters in Azure Kubernetes Service (AKS), you often need to isolate teams and workloads. Advanced features provided by the Kubernetes scheduler let you control:
 
@@ -22,6 +24,10 @@ This best practices article focuses on advanced Kubernetes scheduling features f
 > * Give preference to pods to run on certain nodes with node selectors or node affinity.
 > * Split apart or group together pods with inter-pod affinity or anti-affinity.
 > * Restrict scheduling of workloads that require GPUs only on nodes with schedulable GPUs.
+
+If additional capabilities or ML frameworks are needed to schedule and queue batch workloads, you can [install and configure Kueue on AKS][kueue-on-aks] to ensure efficient, policy-driven scheduling in AKS clusters.
+
+If fine-grained scheduler configuration is needed to optimize how pods and jobs prioritize specific nodes, storage resources, topology, and more, you can [configure a scheduler on AKS][config-scheduler-aks].
 
 ## Provide dedicated nodes using taints and tolerations
 
@@ -94,9 +100,9 @@ You can [taint a node pool][taint-node-pool] from the AKS API to have newly scal
 
 Let's assume:
 
-1. You begin with a two-node cluster: *node1* and *node2*. 
+1. You begin with a two-node cluster: *node1* and *node2*.
 1. You upgrade the node pool.
-1. Two other nodes are created: *node3* and *node4*. 
+1. Two other nodes are created: *node3* and *node4*.
 1. The taints are passed on respectively.
 1. The original *node1* and *node2* are deleted.
 
@@ -104,13 +110,13 @@ Let's assume:
 
 Again, let's assume:
 
-1. You have a two-node cluster: *node1* and *node2*. 
+1. You have a two-node cluster: *node1* and *node2*.
 1. You upgrade the node pool.
 1. An extra node is created: *node3*.
 1. The taints from *node1* are applied to *node3*.
 1. *node1* is deleted.
 1. A new *node1* is created to replace to original *node1*.
-1. The *node2* taints are applied to the new *node1*. 
+1. The *node2* taints are applied to the new *node1*.
 1. *node2* is deleted.
 
 In essence, *node1* becomes *node3*, and *node2* becomes the new *node1*.
@@ -247,3 +253,5 @@ This article focused on advanced Kubernetes scheduler features. For more informa
 [use-multiple-node-pools]: create-node-pools.md
 [taint-node-pool]: manage-node-pools.md#specify-a-taint-label-or-tag-for-a-node-pool
 [use-gpus-aks]: gpu-cluster.md
+[kueue-on-aks]: kueue-overview.md
+[config-scheduler-aks]: concepts-scheduler-configuration.md

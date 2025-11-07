@@ -2,12 +2,13 @@
 title: Use Container Storage Interface (CSI) driver for Azure Disk on Azure Kubernetes Service (AKS)
 description: Learn how to use the Container Storage Interface (CSI) driver for Azure Disk in an Azure Kubernetes Service (AKS) cluster.
 ms.topic: concept-article
-ms.custom:
+ms.custom: biannual
 ms.subservice: aks-storage
-ms.date: 03/03/2025
+ms.date: 06/10/2025
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a Kubernetes administrator, I want to implement the Azure Disk CSI driver in my AKS cluster so that I can efficiently manage storage provisioning and enhance performance for my containerized applications."
 ---
 
 # Use the Azure Disk Container Storage Interface (CSI) driver in Azure Kubernetes Service (AKS)
@@ -382,8 +383,7 @@ statefulset.apps/busybox-azuredisk created
 To validate the content of the volume, run the following command:
 
 ```bash
-kubectl exec -it busybox-azuredisk-0 -- cat c:\\mnt\\azuredisk\\data.txt # on Linux/MacOS Bash
-kubectl exec -it busybox-azuredisk-0 -- cat c:\mnt\azuredisk\data.txt # on Windows Powershell/CMD
+ kubectl exec -it statefulset-azuredisk-win-0 -- powershell -c "type c:/mnt/azuredisk/data.txt"
 ```
 
 The output of the command resembles the following example:
@@ -420,21 +420,21 @@ The output of the command resembles the following example:
 [azure-blob-csi]: azure-blob-csi.md
 [premium-storage]: /azure/virtual-machines/disks-types
 [expand-an-azure-managed-disk]: ../virtual-machines/linux/expand-disks.md#expand-an-azure-managed-disk
-[az-disk-list]: /cli/azure/disk#az_disk_list
-[az-snapshot-create]: /cli/azure/snapshot#az_snapshot_create
-[az-disk-create]: /cli/azure/disk#az_disk_create
-[az-disk-show]: /cli/azure/disk#az_disk_show
+[az-disk-list]: /cli/azure/disk#az-disk-list
+[az-snapshot-create]: /cli/azure/snapshot#az-snapshot-create
+[az-disk-create]: /cli/azure/disk#az-disk-create
+[az-disk-show]: /cli/azure/disk#az-disk-show
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [install-azure-cli]: /cli/azure/install-azure-cli
 [operator-best-practices-storage]: operator-best-practices-storage.md
 [concepts-storage]: concepts-storage.md
 [storage-class-concepts]: concepts-storage.md#storage-classes
-[az-extension-add]: /cli/azure/extension#az_extension_add
-[az-extension-update]: /cli/azure/extension#az_extension_update
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-list]: /cli/azure/feature#az_feature_list
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-list]: /cli/azure/feature#az-feature-list
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [az-on-demand-bursting]: /azure/virtual-machines/disk-bursting#on-demand-bursting
 [enable-on-demand-bursting]: ../virtual-machines/disks-enable-bursting.md?tabs=azure-cli
 [az-premium-ssd]: /azure/virtual-machines/disks-types#premium-ssds

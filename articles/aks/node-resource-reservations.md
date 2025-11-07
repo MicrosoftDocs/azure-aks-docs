@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 04/16/2024
 ms.author: schaffererin
 author: schaffererin
+# Customer intent: As a Kubernetes administrator, I want to understand node resource reservations in Azure Kubernetes Service, so that I can effectively manage resource allocation and optimize the performance of my clusters.
 ---
 
 # Node resource reservations in Azure Kubernetes Service (AKS)

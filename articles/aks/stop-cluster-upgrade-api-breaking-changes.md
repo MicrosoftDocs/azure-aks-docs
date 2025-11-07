@@ -7,6 +7,7 @@ ms.subservice: aks-upgrade
 ms.date: 07/05/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a Kubernetes administrator, I want to configure my AKS cluster to automatically halt upgrades during API breaking changes, so that I can prevent disruptions and manage deprecated APIs effectively before upgrading.
 ---
 
 # Stop Azure Kubernetes Service (AKS) cluster upgrades automatically on API breaking changes
@@ -72,6 +73,6 @@ This article showed you how to stop AKS cluster upgrades automatically on API br
 [k8s-api]: https://kubernetes.io/docs/reference/using-api/api-concepts/
 
 <!-- LINKS - internal -->
-[az-aks-update]: /cli/azure/aks#az_aks_update
-[az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
+[az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
 [container-insights]:/azure/azure-monitor/containers/container-insights-log-query#resource-logs

@@ -7,6 +7,7 @@ ms.date: 07/19/2023
 author: schaffererin
 ms.author: schaffererin
 ms.subservice: aks-nodes
+# Customer intent: "As a Kubernetes administrator, I want to manage node pools in my AKS cluster, so that I can scale, upgrade, and configure resources to meet changing application demands effectively."
 ---
 
 # Manage node pools for a cluster in Azure Kubernetes Service (AKS)
@@ -533,17 +534,17 @@ When you use an Azure Resource Manager template to create and manage resources, 
 [capacity-reservation-groups]:/azure/virtual-machines/capacity-reservation-associate-virtual-machine-scale-set
 
 <!-- INTERNAL LINKS -->
-[az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
+[az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
 [aks-storage-concepts]: concepts-storage.md
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-get-upgrades]: /cli/azure/aks#az_aks_get_upgrades
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-aks-nodepool-list]: /cli/azure/aks/nodepool#az_aks_nodepool_list
-[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az_aks_nodepool_upgrade
-[az-aks-nodepool-scale]: /cli/azure/aks/nodepool#az_aks_nodepool_scale
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-provider-register]: /cli/azure/provider#az_provider_register
-[az-deployment-group-create]: /cli/azure/deployment/group#az_deployment_group_create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-get-upgrades]: /cli/azure/aks#az-aks-get-upgrades
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-list]: /cli/azure/aks/nodepool#az-aks-nodepool-list
+[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
+[az-aks-nodepool-scale]: /cli/azure/aks/nodepool#az-aks-nodepool-scale
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-provider-register]: /cli/azure/provider#az-provider-register
+[az-deployment-group-create]: /cli/azure/deployment/group#az-deployment-group-create
 [install-azure-cli]: /cli/azure/install-azure-cli
 [operator-best-practices-advanced-scheduler]: operator-best-practices-advanced-scheduler.md
 [quotas-skus-regions]: quotas-skus-regions.md
@@ -559,6 +560,6 @@ When you use an Azure Resource Manager template to create and manage resources, 
 [create-node-pools]: create-node-pools.md
 [use-labels]: use-labels.md
 [use-tags]: use-tags.md
-[az-extension-add]: /cli/azure/extension#az_extension_add
-[az-extension-update]: /cli/azure/extension#az_extension_update
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
 [use-node-taints]: ./use-node-taints.md

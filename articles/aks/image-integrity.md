@@ -1,12 +1,15 @@
 ---
 title: Use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters (Preview)
 description: Learn how to use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters.
-author: schaffererin
-ms.author: schaffererin
+author: charleswool
+ms.author: yuewu2
+ms.date: 09/01/2025
 ms.service: azure-kubernetes-service
-ms.custom: devx-track-azurecli
 ms.topic: how-to
-ms.date: 09/26/2023
+ms.custom:
+  - devx-track-azurecli
+  - build-2025
+# Customer intent: "As a Kubernetes administrator, I want to validate signed images before deploying them to AKS clusters, so that I can ensure only trusted and unaltered images are used in my cloud-native applications."
 ---
 
 # Use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters (Preview)
@@ -27,17 +30,13 @@ In these application environments, using signed container images helps verify th
 * `aks-preview` CLI extension version 0.5.96 or later.
 * Ensure that the Azure Policy add-on for AKS is enabled on your cluster. If you don't have this add-on installed, see [Install Azure Policy add-on for AKS](/azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks).
 * An AKS cluster enabled with OIDC Issuer. To create a new cluster or update an existing cluster, see [Configure an AKS cluster with OIDC Issuer](./use-oidc-issuer.md).
-* The `EnableImageIntegrityPreview` and `AKS-AzurePolicyExternalData` feature flags registered on your Azure subscription. Register the feature flags using the following commands:
+* The `EnableImageIntegrityPreview` feature flags registered on your Azure subscription. Register the feature flags using the following commands:
   
-    1. Register the `EnableImageIntegrityPreview` and `AKS-AzurePolicyExternalData` feature flags using the [`az feature register`][az-feature-register] command.
+    1. Register the `EnableImageIntegrityPreview` feature flags using the [`az feature register`][az-feature-register] command.
 
         ```azurecli-interactive
         # Register the EnableImageIntegrityPreview feature flag
         az feature register --namespace "Microsoft.ContainerService" --name "EnableImageIntegrityPreview"
-
-        # Register the AKS-AzurePolicyExternalData feature flag
-        az feature register --namespace "Microsoft.ContainerService" --name "AKS-AzurePolicyExternalData"
-        ```
 
         It may take a few minutes for the status to show as *Registered*.
 
@@ -46,10 +45,6 @@ In these application environments, using signed container images helps verify th
         ```azurecli-interactive
         # Verify the EnableImageIntegrityPreview feature flag registration status
         az feature show --namespace "Microsoft.ContainerService" --name "EnableImageIntegrityPreview"
-
-        # Verify the AKS-AzurePolicyExternalData feature flag registration status
-        az feature show --namespace "Microsoft.ContainerService" --name "AKS-AzurePolicyExternalData"
-        ```
 
     3. Once the status shows *Registered*, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`][az-provider-register] command.
 
@@ -123,7 +118,7 @@ In this article, we use a self-signed CA cert from the official Ratify documenta
 
     ```YAML
     apiVersion: config.ratify.deislabs.io/v1beta1
-    kind: CertificateStore
+    kind: KeyManagementProvider
     metadata:
       name: certstore-inline
     spec:
@@ -215,18 +210,20 @@ If you want to use your own images, see the [guidance for image signing](/azure/
 
 ## Disable Image Integrity
 
-* Disable Image Integrity on your cluster using the [`az aks update`][az-aks-update] command with the `--disable-image-integrity` flag.
-
-    ```azurecli-interactive
-    az aks update --resource-group myResourceGroup --name MyManagedCluster --disable-image-integrity
-    ```
-
 ### Remove policy initiative
 
-* Remove the policy initiative using the [`az policy assignment delete`][az-policy-assignment-delete] command.
+* First you should remove the policy initiative using the [`az policy assignment delete`][az-policy-assignment-delete] command.
 
     ```azurecli-interactive
     az policy assignment delete --name 'deploy-trustedimages'
+    ```
+
+### Diable add-on
+
+* Then disable Image Integrity add-on on your cluster using the [`az aks update`][az-aks-update] command with the `--disable-image-integrity` flag.
+
+    ```azurecli-interactive
+    az aks update --resource-group myResourceGroup --name MyManagedCluster --disable-image-integrity
     ```
 
 ## Next steps
@@ -234,15 +231,15 @@ If you want to use your own images, see the [guidance for image signing](/azure/
 In this article, you learned how to use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters. If you want to learn how to sign your own containers, see [Build, sign, and verify container images using Notary and Azure Key Vault (Preview)](/azure/container-registry/container-registry-tutorial-sign-build-push).
 
 <!--- Internal links ---->
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-feature-show]: /cli/azure/feature#az_feature_show
-[az-provider-register]: /cli/azure/provider#az_provider_register
-[az-policy-assignment-create]: /cli/azure/policy/assignment#az_policy_assignment_create
-[az-aks-update]: /cli/azure/aks#az_aks_update
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
+[az-policy-assignment-create]: /cli/azure/policy/assignment#az-policy-assignment-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps
-[az-policy-assignment-delete]: /cli/azure/policy/assignment#az_policy_assignment_delete
-[az-policy-remediation-create]: /cli/azure/policy/remediation#az_policy_remediation_create
+[az-policy-assignment-delete]: /cli/azure/policy/assignment#az-policy-assignment-delete
+[az-policy-remediation-create]: /cli/azure/policy/remediation#az-policy-remediation-create
 
 <!--- External links ---->
 [ratify]: https://github.com/deislabs/ratify

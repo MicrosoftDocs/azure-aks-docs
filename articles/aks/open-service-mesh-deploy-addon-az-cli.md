@@ -5,6 +5,8 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 09/25/2024
 ms.author: pgibson
+author: schaffererin
+# Customer intent: As a Kubernetes administrator, I want to install the Open Service Mesh add-on using Azure CLI, so that I can manage traffic, enforce policies, and collect telemetry for my applications running on an Azure Kubernetes Service cluster.
 ---
 
 # Install the Open Service Mesh (OSM) add-on using Azure CLI
@@ -45,7 +47,7 @@ This article shows you how to install the Open Service Mesh (OSM) add-on on an A
         --resource-group myResourceGroup \
         --name myAKSCluster \
         --enable-addons open-service-mesh \
-        --generate-ssh-keys        
+        --generate-ssh-keys
     ```
 
 > [!IMPORTANT]
@@ -179,9 +181,9 @@ This article showed you how to install the OSM add-on on an AKS cluster and veri
 [smi]: https://smi-spec.io/
 [osm-deploy-sample-app]: https://release-v1-0.docs.openservicemesh.io/docs/getting_started/install_apps/
 [osm-onboard-app]: https://release-v1-0.docs.openservicemesh.io/docs/guides/app_onboarding/
-[az-group-create]: /cli/azure/group#az_group_create
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-aks-show]: /cli/azure/aks#az_aks_show
-[az-group-delete]: /cli/azure/group#az_group_delete
-[az-aks-enable-addons]: /cli/azure/aks#az_aks_enable_addons
+[az-group-create]: /cli/azure/group#az-group-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-group-delete]: /cli/azure/group#az-group-delete
+[az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons

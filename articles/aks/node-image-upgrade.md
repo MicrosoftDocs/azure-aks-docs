@@ -8,9 +8,13 @@ ms.service: azure-kubernetes-service
 ms.date: 04/06/2025
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a Kubernetes administrator, I want to upgrade node images in my AKS cluster so that I can leverage the latest features and ensure optimal performance and security for my containerized applications.
 ---
 
 # Upgrade Azure Kubernetes Service (AKS) node images
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321849)
 
 Azure Kubernetes Service (AKS) regularly provides new node images, so it's beneficial to upgrade your node images frequently to use the latest AKS features. Linux node images are updated weekly, and Windows node images are updated monthly. Image upgrade announcements are included in the [AKS release notes](https://github.com/Azure/AKS/releases), and it can take up to a week for these updates to be rolled out across all regions. You can also perform node image upgrades automatically and schedule them using planned maintenance. For more information, see [Automatically upgrade node images][auto-upgrade-node-image].
 
@@ -164,10 +168,10 @@ To speed up the node image upgrade process, you can upgrade your node images usi
 [use-multiple-node-pools]: create-node-pools.md
 [max-surge]: upgrade-aks-cluster.md#customize-node-surge-upgrade
 [auto-upgrade-node-image]: auto-upgrade-node-image.md
-[az-aks-nodepool-get-upgrades]: /cli/azure/aks/nodepool#az_aks_nodepool_get_upgrades
-[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az_aks_nodepool_show
-[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az_aks_nodepool_upgrade
-[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az_aks_nodepool_update
-[az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
-[az-aks-show]: /cli/azure/aks#az_aks_show
+[az-aks-nodepool-get-upgrades]: /cli/azure/aks/nodepool#az-aks-nodepool-get-upgrades
+[az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
+[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices

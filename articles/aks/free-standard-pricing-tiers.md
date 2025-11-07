@@ -10,6 +10,7 @@ ms.custom: references_regions, devx-track-azurecli
 
 # Free, Standard, and Premium pricing tiers for Azure Kubernetes Service (AKS) cluster management
 
+
 Azure Kubernetes Service (AKS) offers three pricing tiers for cluster management: the **Free tier**, the **Standard tier**, and the **Premium tier**. All tiers are in the **Base** SKU.
 
 |                  |Free tier|Standard tier|Premium tier|
@@ -40,6 +41,34 @@ Use the Azure CLI to create a new cluster on an AKS pricing tier. You can create
 
 Use the [`az aks create`][az-aks-create] command to create an AKS cluster. The following commands show you how to create a new cluster in the Free, Standard, and Premium tiers.
 
+Below, we set up the required environment variables for the resource group, cluster name, and region. We generate a unique suffix for the resource names to avoid conflicts if run multiple times.
+
+```azurecli-interactive
+export RANDOM_SUFFIX=$(openssl rand -hex 3)
+export REGION="eastus2"
+export RESOURCE_GROUP="aks-rg-$RANDOM_SUFFIX"
+export CLUSTER_NAME="aks-cluster-$RANDOM_SUFFIX"
+az group create --name $RESOURCE_GROUP --location $REGION
+```
+
+Results: 
+
+```output
+{
+  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/aks-rg-xxx",
+  "location": "eastus2",
+  "managedBy": null,
+  "name": "aks-rg-xxx",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+```
+
+### Create a new AKS cluster in the Free tier
+
 ```azurecli-interactive
 # Create a new AKS cluster in the Free tier
 
@@ -48,7 +77,24 @@ az aks create \
     --name $CLUSTER_NAME \
     --tier free \
     --generate-ssh-keys
+```
 
+Results:
+
+```output
+{
+  ...
+  "sku": {
+    "name": "Base",
+    "tier": "Free"
+  },
+  ...
+}
+```
+
+### Create a new AKS cluster in the Standard tier
+
+```azurecli-interactive
 # Create a new AKS cluster in the Standard tier
 
 az aks create \
@@ -56,7 +102,26 @@ az aks create \
     --name $CLUSTER_NAME \
     --tier standard \
     --generate-ssh-keys
+```
 
+Results:
+
+```output
+{
+  ...
+  "sku": {
+    "name": "Base",
+    "tier": "Standard"
+  },
+  ...
+}
+```
+
+### Create a new AKS cluster in the Premium tier
+
+LongTermSupport and Premium tier should be enabled/disabled together.
+
+```azurecli-interactive
 # Create a new AKS cluster in the Premium tier
 # LongTermSupport and Premium tier should be enabled/disabled together
 
@@ -66,6 +131,20 @@ az aks create \
     --tier premium \
     --k8s-support-plan AKSLongTermSupport \
     --generate-ssh-keys
+```
+
+Results:
+
+```output
+{
+  ...
+  "sku": {
+    "name": "Base",
+    "tier": "Premium"
+  },
+  "supportPlan": "AKSLongTermSupport",
+  ...
+}
 ```
 
 Once the deployment completes, it returns JSON-formatted information about your cluster:
@@ -98,26 +177,100 @@ Once the deployment completes, it returns JSON-formatted information about your 
 
 ## Update the tier of an existing AKS cluster
 
-The following example uses the [`az aks update`](/cli/azure/aks#az_aks_update) command to update the existing cluster.
+The following example uses the [`az aks update`](/cli/azure/aks#az-aks-update) command to update the existing cluster.
+
+### Update an existing cluster from the Standard tier to the Free tier
 
 ```azurecli-interactive
 # Update an existing cluster from the Standard tier to the Free tier
 
 az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --tier free
+```
 
+<!-- expected_similarity=0.3 -->
+
+Results:
+
+```output
+{
+  ...
+  "sku": {
+    "name": "Base",
+    "tier": "Free"
+  },
+  ...
+}
+```
+
+### Update an existing cluster from the Free tier to the Standard tier
+
+```azurecli-interactive
 # Update an existing cluster from the Free tier to the Standard tier
 
 az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --tier standard
 ```
 
+<!-- expected_similarity=0.3 -->
+
+Results:
+
+```output
+{
+  ...
+  "sku": {
+    "name": "Base",
+    "tier": "Standard"
+  },
+  ...
+}
+```
+
 [Updating existing clusters from and to the Premium tier][long-term-support-update] requires changing the support plan.
+
+### Update an existing cluster to the Premium tier
 
 ```azurecli-interactive
 # Update an existing cluster to the Premium tier
 az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --tier premium --k8s-support-plan AKSLongTermSupport
+```
 
+<!-- expected_similarity=0.3 -->
+
+Results:
+
+```output
+{
+  ...
+  "sku": {
+    "name": "Base",
+    "tier": "Premium"
+  },
+  "supportPlan": "AKSLongTermSupport",
+  ...
+}
+```
+
+### Update an existing cluster to from Premium tier to Free or Standard tier
+
+```azurecli-interactive
 # Update an existing cluster to from Premium tier to Free or Standard tier
-az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --tier [free|standard] --k8s-support-plan KubernetesOfficial
+az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --tier free --k8s-support-plan KubernetesOfficial
+# or
+az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --tier standard --k8s-support-plan KubernetesOfficial
+```
+
+Results:
+
+```output
+{
+  ...
+  "sku": {
+    "name": "Base",
+    "tier": "Free"  # or "Standard"
+  },
+  "supportPlan": "KubernetesOfficial",
+  ...
+}
 ```
 
 This process takes several minutes to complete. You shouldn't experience any downtime while your cluster tier is being updated. When finished, the following example JSON snippet shows updating the existing cluster to the Standard tier in the Base SKU.
@@ -130,16 +283,62 @@ This process takes several minutes to complete. You shouldn't experience any dow
   },
 ```
 
+## Update the SKU of an existing cluster
+
+### Update an existing cluster from the Base SKU to the Automatic SKU
+
+> [!IMPORTANT]
+> Make sure all the [AKS Automatic features](./intro-aks-automatic.md) are enabled on your cluster before updating.
+
+```azurecli-interactive
+# Update an existing cluster from the Base SKU to the Automatic SKU
+az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --sku Automatic
+```
+
+Results:
+
+```output
+{
+  ...
+  "sku": {
+    "name": "Automatic",
+    "tier": "Standard"
+  },
+  ...
+}
+```
+
+### Update an existing cluster from the Automatic SKU to the Base SKU
+
+```azurecli-interactive
+# Update an existing cluster from the Automatic SKU to the Base SKU
+az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --sku Base
+```
+
+Results:
+
+```output
+{
+  ...
+  "sku": {
+    "name": "Base",
+    "tier": "Standard"
+  },
+  ...
+}
+```
+
 ## Next steps
 
 * Use [Availability Zones][availability-zones] to increase high availability with your AKS cluster workloads.
 * Configure your cluster to [limit egress traffic](limit-egress-traffic.md).
 
+<!---LINKS--->
+
 [manage-resource-group-cli]: /azure/azure-resource-manager/management/manage-resource-groups-cli
 [availability-zones]: ./availability-zones.md
-[az-aks-create]: /cli/azure/aks?#az_aks_create
+[az-aks-create]: /cli/azure/aks?#az-aks-create
 [private-clusters]: private-clusters.md
 [long-term-support]: long-term-support.md
 [long-term-support-update]: long-term-support.md#enable-lts-on-an-existing-cluster
 [install-azure-cli]: /cli/azure/install-azure-cli
-

@@ -6,6 +6,7 @@ ms.topic: how-to
 ms.date: 10/28/2024
 ms.author: qpetraroia
 ms.service: azure-kubernetes-service
+# Customer intent: As a developer using GitHub Copilot, I want to leverage AKS plugins to create clusters and deploy manifests, so that I can streamline my workflow and efficiently manage Azure Kubernetes Service without memorizing complex commands.
 ---
 
 # Use AKS plugins in GitHub Copilot for Azure to enhance your day-to-day experience in Azure Kubernetes Service

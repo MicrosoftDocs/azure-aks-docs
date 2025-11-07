@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
 ms.date: 07/30/2024
+# Customer intent: As a security administrator managing a Kubernetes cluster, I want to implement FQDN filtering for network policies, so that I can enhance security by simplifying policy management and maintaining compliance without frequent updates due to changing IP addresses.
 ---
 
 # Overview of FQDN filtering
@@ -91,4 +92,4 @@ rules:
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
 
-* Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](container-network-observability-concepts.md).
+* Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](./advanced-container-networking-services-overview.md#container-network-observability).

@@ -3,11 +3,12 @@ title: Create virtual nodes in Azure Kubernetes Service (AKS) using the Azure po
 description: Learn how to use the Azure portal to create an Azure Kubernetes Services (AKS) cluster that uses virtual nodes to run pods.
 ms.topic: concept-article
 ms.date: 05/09/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ms.custom: references_regions
 ms.subservice: aks-nodes
+# Customer intent: As a cloud engineer, I want to create an Azure Kubernetes Service cluster with virtual nodes, so that I can enable seamless communication between pods in Azure Container Instances and my AKS cluster.
 ---
 
 # Create and configure an Azure Kubernetes Services (AKS) cluster to use virtual nodes in the Azure portal
@@ -201,10 +202,10 @@ Virtual nodes are one component of a scaling solution in AKS. For more informati
 [acr-aks-secrets]: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 
 <!-- LINKS - internal -->
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [aks-hpa]: tutorial-kubernetes-scale.md
 [aks-cluster-autoscaler]: cluster-autoscaler.md
 [aks-basic-ingress]: ingress-basic.md
-[az-provider-list]: /cli/azure/provider#az_provider_list
-[az-provider-register]: /cli/azure/provider#az_provider_register
+[az-provider-list]: /cli/azure/provider#az-provider-list
+[az-provider-register]: /cli/azure/provider#az-provider-register
 
