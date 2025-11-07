@@ -85,7 +85,7 @@ Other contributors:
 
 [eks-aws-waf]: https://aws.amazon.com/it/blogs/containers/protecting-your-amazon-eks-web-apps-with-aws-waf/
 [azure-ag]: /azure/application-gateway/for-containers/overview
-[azure-waf]: /web-application-firewall/overview
+[azure-waf]: /azure/web-application-firewall/overview
 [aks]: ./what-is-aks.md
 [azure-free]: https://azure.microsoft.com/free/
 [azure-built-in-roles]: /azure/role-based-access-control/built-in-roles
