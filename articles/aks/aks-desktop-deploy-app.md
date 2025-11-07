@@ -4,7 +4,7 @@ description: Learn how to deploy and manage applications on Azure Kubernetes Ser
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: how-to
-ms.date: 11/06/2025
+ms.date: 11/07/2025
 ms.author: alalve
 # Customer intent: As a developer, I want to deploy an application to Azure Kubernetes Service using AKS desktop, so that I can quickly deploy and manage my containerized applications without writing detailed Kubernetes manifests.
 ---
@@ -24,10 +24,12 @@ This article guides you through deploying an application using AKS desktop, enab
 - Install AKS desktop for your specific operating system (OS):
 
   - Windows
+
   - Linux
+
   - Mac
 
-- If you decide to create an AKS managed Project, your cluster must be Microsoft Entra ID authenticated. You can run the following command on an existing cluster to perform this action. You can also add multiple admin groups by adding `ObjectID_1,ObjectID_2,...`:
+- If you decide to create an AKS managed project, your cluster must be Microsoft Entra ID authenticated. You can run the following command on an existing cluster to perform this action. You can also add multiple admin groups by adding `ObjectID_1,ObjectID_2,...`:
 
   ```azurecli
   az aks update --resource-group YourResourceGroupName --name YourManagedClusterName --enable-aad --aad-admin-group-object-ids <ObjectID_1> --aad-tenant-id <TenantID>
@@ -104,9 +106,6 @@ To delete a cluster from AKS desktop, follow these steps:
 
 When you create a project on a cluster, it's visible to all other users who have access to the namespace. This is because the project is based on a namespace, and that namespace has a specific label.
 
-> [!NOTE]
-> We recommend that you always create a new Project when deploying a new application.
-
 There are three methods you can choose from to deploy your application using AKS desktop:
 
 # [New project](#tab/new-project)
@@ -153,56 +152,44 @@ Once these prerequisites are complete, perform the following steps:
 
 ## Deploy an application into a Project
 
-1. Select the Project you created and then select **Deploy Application** in the top right corner.
+We recommend that you always create a new project when deploying a new application.
 
-1. There are two sources you can select from:
+Once you create your first project, AKS desktop places you directly into the newly created project. Within your project, select **Deploy Application** from the top right corner. There are two sources you can choose from to deploy your app. Choose one of the two, then select **Next**:
 
-   - **Container Image**
+# [Container Image](#tab/container-image)
 
-   - **K8s YAML**
-
-   Select **Container Image**, scroll down, and then select **Next**.
-
-1. Paste in your container image into the **Container Image** textbox. It must be in the format `<YOUR ACR>.azurecr.io/<YOUR IMAGE NAME>:<YOUR IMAGE TAG>`.
+1. Provide a name for your app.
+1. Under **Container image**, paste the path to your container image. It must be in the format `<YourACR>.azurecr.io/<YourImageName>:<YourImageTag>`.
 
    > [!NOTE]
-   > Images can't use the "latest" tag as this results in best practice violation on AKS Automatic.
+   > The **latest** tag can't be used for your container images as this results in best practice violation on AKS Automatic.
 
-You can later select your app properties. This table provides the following configuration options:
+1. Select your replica amount.
+1. Under **Networking**, input your network port. Choose whether your app is meant for internal only or for public access, then select **Continue**.
+1. Under **Health checks**, choose which checks you want to perform, then select **Continue**.
+1. Under **Resource Limits**, configure this per your app requirements, then select **Continue**.
+1. Under **Environment Variables**, add your `key:value` pair variable for your app, then select **Continue**.
+1. Under **HPA**, select whether to enable Horizontal Pod Autoscaler (HPA) for your app. HPA automatically adjusts the number of pods in response to resource usage, helping maintain optimal performance and resource efficiency. Configure this per your needs, then select **Continue**.
+1. Under **Advanced**, choose which settings you'd like to apply to your app, then select **Next**.
+1. Review your app deployment configuration. Select **Deploy**, then select **Close**.
 
-| Option | Description |
-|--|--|
-| **Deployment Name** | The name of your deployment. |
-| **Resource Limits** | The resource or request limits of your application. |
-| **Service Type** | Choose between: <br><br><li> Cluster IP <li> Load balancer <li> Node port </li> |
-| **Target Port** | The port your application listens on. |
-| **Environment Variables** | Add environment variables to your deployment. |
-| **Horizontal Pod Autoscaler** | Enable Horizontal Pod Autoscaler (HPA) on your application. |
+# [Kubernetes YAML](#tab/kubernetes-yaml)
 
-### Deploy app: Health checks and advanced configuration
+1. Select **Upload files** to upload one or more `.yaml` or `.yml` files. Then select **Next**.
 
-These are **default** settings needed to deploy to AKS Automatic. AKS Automatic deployment safeguards might block your deployment if you change these settings.
+   *Alternatively*, you can paste the contents within your YAML files into the text editor, then select **Next**.
 
-### Deploy app: Preview and deploy
+1. Review the resources to deploy, select **Deploy**, then select **Close**.
 
-1. You can check the YAML and also select **Deploy**. This performs the `kubectl apply` action to the cluster directly.
+## View cluster data and metrics
 
-1. Select **Deploy to AKS**. The app should deploy.
+AKS desktop provides a unified view of your application resources, health status, resource quotas, workloads, and configuration settings all in a single dashboard. Use the tabs to explore detailed information and manage each aspect of your deployment efficiently.
 
-1. On the next screen, select **Close**.
+To access this information for your specific cluster, follow these steps:
 
-## View tile details
-
-The key benefit to AKS desktop is to see your application resources, health status, and resource quota in one screen. The tabs on the screen provide more detail of each individual tile:
-
-| Tile | Description |
-|--|--|
-| **Resources** | View all associated application workload resources, including **Network**, **Configuration**, and **Discovery** added by Namespace and YAML. |
-| **Map** | Visualize resource dependencies for quick understanding and troubleshooting. |
-| **Info** | View and update project networking policies and compute quota. |
-| **Logs** | View live application logs for workload deployments. |
-| **Metrics** | View live metrics per workload deployment. |
-| **Scaling** | View scaling and CPU metrics. Configure manual scaling or Horizontal Pod Autoscaler (HPA). |
+1. A cluster must be added into AKS desktop to view this information.
+1. Select **Home**, under the **Name** tab, select the cluster you wish to view.
+1. In the left pane, choose the specific setting to view detailed cluster data and metrics.
 
 ## Next steps
 
