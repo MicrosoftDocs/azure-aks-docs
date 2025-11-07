@@ -214,8 +214,8 @@ This article focused on network connectivity and security. For more information 
 
 <!-- LINKS - External -->
 [cni-networking]: https://github.com/Azure/azure-container-networking/blob/master/docs/cni.md
-[app-gateway-for-containers]: /application-gateway/for-containers/overview
-[app-gateway-for-containers-deploy]: /application-gateway/for-containers/quickstart-deploy-application-gateway-for-containers-alb-controller
+[app-gateway-for-containers]: /azure/application-gateway/for-containers/overview
+[app-gateway-for-containers-deploy]: /azure/application-gateway/for-containers/quickstart-deploy-application-gateway-for-containers-alb-controller
 [nginx]: https://www.nginx.com/products/nginx/kubernetes-ingress-controller
 [contour]: https://github.com/heptio/contour
 [haproxy]: https://www.haproxy.org
@@ -227,7 +227,6 @@ This article focused on network connectivity and security. For more information 
 [sp-delegation]: kubernetes-service-principal.md#delegate-access-to-other-azure-resources
 [expressroute]: /azure/expressroute/expressroute-introduction
 [vpn-gateway]: /azure/vpn-gateway/vpn-gateway-about-vpngateways
-[app-gateway]: /azure/application-gateway/overview
 [use-network-policies]: use-network-policies.md
 [advanced-networking]: configure-azure-cni.md
 [concepts-node-selectors]: concepts-clusters-workloads.md#node-selectors
