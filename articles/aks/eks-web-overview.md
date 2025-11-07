@@ -4,7 +4,7 @@ description: Learn how to replicate an AWS web application protected by AWS WAF 
 author: DixitArora-MSFT
 ms.author: dixitaro
 ms.topic: how-to
-ms.date: 10/31/2024
+ms.date: 11/10/2025
 ms.service: azure-kubernetes-service
 ms.collection: 
  - migration
@@ -14,7 +14,7 @@ ms.collection:
 
 # Replicate an Amazon Web Services (AWS) web application with AWS WAF in Azure Kubernetes Service (AKS)
 
-In this article, you learn how to replicate an Amazon Elastic Kubernetes Service (EKS) web application with AWS Web Application Firewall (WAF) using [Azure Web Application Firewall (WAF)][azure-waf] and [Azure Application Gateway][azure-ag] in [Azure Kubernetes Service (AKS)][aks]. 
+In this article, you learn how to replicate an Amazon Elastic Kubernetes Service (EKS) web application with AWS Web Application Firewall (WAF) using [Azure Web Application Firewall (WAF)][azure-waf] and [Azure Application Gateway for Containers][azure-ag] in [Azure Kubernetes Service (AKS)][aks]. 
 
 This workload implements a WAF to protect a [Yelb][yelb] web-based application running in a Kubernetes cluster. Applications rely on WAFs to block unwanted traffic and protect apps from common vulnerabilities. A centralized web application firewall helps simplify security management and helps ensure better protection against threats or intrusions.
 
@@ -84,8 +84,8 @@ Other contributors:
 [yelb]: https://github.com/mreferre/yelb/
 
 [eks-aws-waf]: https://aws.amazon.com/it/blogs/containers/protecting-your-amazon-eks-web-apps-with-aws-waf/
-[azure-ag]: /azure/application-gateway/overview
-[azure-waf]: /azure/web-application-firewall/overview
+[azure-ag]: /azure/application-gateway/for-containers/overview
+[azure-waf]: /web-application-firewall/overview
 [aks]: ./what-is-aks.md
 [azure-free]: https://azure.microsoft.com/free/
 [azure-built-in-roles]: /azure/role-based-access-control/built-in-roles
