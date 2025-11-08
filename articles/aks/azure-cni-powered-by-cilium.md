@@ -69,6 +69,8 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 * Cilium Endpoint Slices are supported in Kubernetes version 1.32 and above. Cilium Endpoint Slices do not support configuration of how Cilium Endpoints are grouped. Priority namespaces through `cilium.io/ces-namespace` is not supported.
 
+* L7 policy is not supported by CiliumClusterwideNetworkPolicy(CCNP).
+
 ## Considerations
 
 To gain capabilities such as observability into your network traffic and security features like Fully Qualified Domain Name (FQDN) based filtering and Layer 7-based network policies on your cluster, consider enabling [Advanced Container Networking services](./advanced-container-networking-services-overview.md) on your clusters.
