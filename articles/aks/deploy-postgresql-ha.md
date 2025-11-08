@@ -455,30 +455,30 @@ The manually created PodMonitor ties the kube-prometheus-stack scrape configurat
 
 Validate the PodMonitor is running using the [`kubectl get`][kubectl-get] command.
 
-    ```bash
-    kubectl --namespace $PG_NAMESPACE \
-        --context $AKS_PRIMARY_CLUSTER_NAME \
-        get podmonitors.monitoring.coreos.com \
-        $PG_PRIMARY_CLUSTER_NAME \
-        --output yaml
-    ```
+```bash
+kubectl --namespace $PG_NAMESPACE \
+    --context $AKS_PRIMARY_CLUSTER_NAME \
+    get podmonitors.monitoring.coreos.com \
+    $PG_PRIMARY_CLUSTER_NAME \
+    --output yaml
+```
 
-    Example output
+Example output
 
-    ```output
-    kind: PodMonitor
-    metadata:
-      labels:
-        cnpg.io/cluster: pg-primary-cnpg-r8c7unrw
-      name: pg-primary-cnpg-r8c7unrw
-      namespace: cnpg-database
-    spec:
-      podMetricsEndpoints:
-      - port: metrics
-      selector:
-        matchLabels:
-          cnpg.io/cluster: pg-primary-cnpg-r8c7unrw
-    ```
+```output
+kind: PodMonitor
+metadata:
+  labels:
+    cnpg.io/cluster: pg-primary-cnpg-r8c7unrw
+  name: pg-primary-cnpg-r8c7unrw
+  namespace: cnpg-database
+spec:
+  podMetricsEndpoints:
+  - port: metrics
+  selector:
+    matchLabels:
+      cnpg.io/cluster: pg-primary-cnpg-r8c7unrw
+```
 
 If you're using Azure Monitor for Managed Prometheus, you need to add another pod monitor using the custom group name. Managed Prometheus doesn't pick up the custom resource definitions (CRDs) from the Prometheus community. Aside from the group name, the CRDs are the same. That design lets pod monitors for Managed Prometheus run alongside pod monitors that use the community CRD. If you're not using Managed Prometheus, you can skip this section. Create a new pod monitor:
 

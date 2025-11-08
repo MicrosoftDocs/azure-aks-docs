@@ -361,25 +361,25 @@ To use Premium SSD v2, you can create a custom storage class.
 
 Define a new CSI driver storage class:
 
-    ```bash
-    cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
-    apiVersion: storage.k8s.io/v1
-    kind: StorageClass
-    metadata:
-      name: premium2-disk-sc
-    parameters:
-      cachingMode: None
-      skuName: PremiumV2_LRS
-      DiskIOPSReadWrite: "3500"
-      DiskMBpsReadWrite: "125"
-    provisioner: disk.csi.azure.com
-    reclaimPolicy: Delete
-    volumeBindingMode: WaitForFirstConsumer
-    allowVolumeExpansion: true
-    EOF
+```bash
+cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: premium2-disk-sc
+parameters:
+  cachingMode: None
+  skuName: PremiumV2_LRS
+  DiskIOPSReadWrite: "3500"
+  DiskMBpsReadWrite: "125"
+provisioner: disk.csi.azure.com
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+EOF
 
-    export POSTGRES_STORAGE_CLASS="premium2-disk-sc"
-    ```
+export POSTGRES_STORAGE_CLASS="premium2-disk-sc"
+```
 
 ### [Local NVMe](#tab/acstor)
 
