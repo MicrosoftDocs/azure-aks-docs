@@ -1130,6 +1130,8 @@
           href: container-network-observability-metrics.md
         - name: Configure Container Network Metrics
           href: container-network-observability-how-to.md
+        - name: Configure container network metrics filtering
+          href: how-to-configure-container-network-metrics-filtering.md
     - name: Container Network Logs
       items:
         - name: Overview
