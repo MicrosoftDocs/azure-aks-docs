@@ -88,7 +88,7 @@ The type of storage you use can have large effects on PostgreSQL performance. La
 * Erin Schaffer | Content Developer 2
 * Adam Sharif | Customer Engineer 2
 
-## Acknowledgement
+## Acknowledgment
 
 This documentation was jointly developed with EnterpriseDB, the maintainers of the CloudNativePG operator. We thank [Gabriele Bartolini](https://cloudnative-pg.io/authors/gbartolini/) for reviewing earlier drafts of this document and offering technical improvements.  
 

@@ -13,7 +13,7 @@ ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
 
 In this article, you deploy a highly available PostgreSQL database on AKS.
 
-* If you haven't already created the required infrastructure for this deployment, follow the steps in [Create infrastructure for deploying a highly available PostgreSQL database on AKS][create-infrastructure] to get set up, and then you can return to this article.
+* If you still need to create the required infrastructure for this deployment, follow the steps in [Create infrastructure for deploying a highly available PostgreSQL database on AKS][create-infrastructure] to get set up, and then return to this article.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
@@ -23,7 +23,7 @@ In this article, you deploy a highly available PostgreSQL database on AKS.
 
 > [!IMPORTANT]
 >
-> Microsoft recommends that you use the most secure authentication flow available. The authentication flow described in this procedure requires a very high degree of trust in the application, and carries risks that are not present in other flows. You should only use this flow when other more secure flows, such as managed identities, aren't viable. 
+> Microsoft recommends that you use the most secure authentication flow available. The authentication flow described in this procedure requires a high degree of trust in the application and carries risks that are not present in other flows. You should only use this flow when other more secure flows, such as managed identities, aren't viable. 
 >
 
 ```bash
@@ -136,7 +136,7 @@ The following table outlines the key properties set in the YAML deployment manif
 | Property | Definition |
 | --------- | ------------ |
 | `imageName` | Points to the CloudNativePG operand container image. Use `ghcr.io/cloudnative-pg/postgresql:18-system-trixie` with the in-core backup integration shown in this guide, or switch to `18-standard-trixie` when you adopt the Barman Cloud plugin. |
-| `inheritedMetadata` | Specific to the CNPG operator. Metadata is inherited by all objects related to the cluster. |
+| `inheritedMetadata` | Specific to the CNPG operator. The CNPG operator applies the metadata to every object related to the cluster. |
 | `annotations` | Includes the DNS label required when exposing the cluster endpoints and enables [`alpha.cnpg.io/failoverQuorum`](https://cloudnative-pg.io/documentation/current/failover/#failover-quorum-quorum-based-failover) for quorum-based failover. |
 | `labels: azure.workload.identity/use: "true"` | Indicates that AKS should inject workload identity dependencies into the pods hosting the PostgreSQL cluster instances. |
 | `topologySpreadConstraints` | Require different zones and different nodes with label `"workload=postgres"`. |
@@ -144,8 +144,8 @@ The following table outlines the key properties set in the YAML deployment manif
 | `probes` | Replaces the legacy `startDelay` configuration. Streaming startup and readiness probes help ensure replicas are healthy before serving traffic. |
 | `smartShutdownTimeout` | Allows long-running transactions to finish gracefully during updates instead of using aggressive stop delays. |
 | `bootstrap` | Specific to the CNPG operator. Initializes with an empty app database. |
-| `storage` | Defines the PersistentVolume settings for the database. With Azure managed disks, the simplified syntax keeps data and WAL on the same 64 GiB volume, which offers better throughput tiers on managed disks. Adjust if you need separate WAL volumes. |
-| `postgresql.synchronous` | Replaces `minSyncReplicas`/`maxSyncReplicas` and lets you specify synchronous replication behaviour using the newer schema. |
+| `storage` | Defines the PersistentVolume settings for the database. With Azure managed disks, the simplified syntax keeps data and WAL on the same 64-GiB volume, which offers better throughput tiers on managed disks. Adjust if you need separate WAL volumes. |
+| `postgresql.synchronous` | Replaces `minSyncReplicas`/`maxSyncReplicas` and lets you specify synchronous replication behavior using the newer schema. |
 | `postgresql.parameters` | Specific to the CNPG operator. Maps settings for `postgresql.conf`, `pg_hba.conf`, and `pg_ident.conf`. The sample emphasizes observability and WAL retention defaults that suit the AKS workload identity scenario but should be tuned per workload. |
 | `serviceAccountTemplate` | Contains the template needed to generate the service accounts and maps the AKS federated identity credential to the UAMI to enable AKS workload identity authentication from the pods hosting the PostgreSQL instances to external Azure resources. |
 | `barmanObjectStore` | Specific to the CNPG operator. Configures the barman-cloud tool suite using AKS workload identity for authentication to the Azure Blob Storage object store. |
@@ -154,25 +154,25 @@ To further isolate PostgreSQL workloads, you can add a taint (for example, `node
 
 ### PostgreSQL performance parameters
 
-PostgreSQL performance heavily depends on your cluster's underlying resources and workload. The following table provides baseline guidance for a three-node cluster running on Standard D4s v3 nodes (16 GiB memory). Treat these values as a starting point and adjust them once you understand your workload profile:
+PostgreSQL performance heavily depends on your cluster's underlying resources and workload. The following table provides baseline guidance for a three-node cluster running on Standard D4s v3 nodes (16-GiB memory). Treat these values as a starting point and adjust them once you understand your workload profile:
 
 | Property | Recommended value | Definition |
 | --------- | ------------ | -------------------- |
 | `wal_compression` | lz4 | Compresses full-page writes written in WAL file with specified method |
-| `max_wal_size` | 6GB | Sets the WAL size that triggers a checkpoint |
-| `checkpoint_timeout` | 15min | Sets the maximum time between automatic WAL checkpoints |
+| `max_wal_size` | 6 GB | Sets the WAL size that triggers a checkpoint |
+| `checkpoint_timeout` | 15 min | Sets the maximum time between automatic WAL checkpoints |
 | `checkpoint_completion_target` | 0.9 | Balances checkpoint work across the checkpoint window |
-| `checkpoint_flush_after` | 2MB | Number of pages after which previously performed writes are flushed to disk |
-| `wal_writer_flush_after` | 2MB | Amount of WAL written out by WAL writer that triggers a flush |
-| `min_wal_size` | 2GB | Sets the minimum size to shrink the WAL to |
-| `max_slot_wal_keep_size` | 10GB | Upper bound for WAL left to service replication slots |
-| `shared_buffers` | 4GB | Sets the number of shared memory buffers used by the server (25% of node memory in this example) |
-| `effective_cache_size` | 12GB | Sets the planner's assumption about the total size of the data caches |
+| `checkpoint_flush_after` | 2 MB | Number of pages after which previously performed writes are flushed to disk |
+| `wal_writer_flush_after` | 2 MB | Amount of WAL written out by WAL writer that triggers a flush |
+| `min_wal_size` | 2 GB | Sets the minimum size to shrink the WAL to |
+| `max_slot_wal_keep_size` | 10 GB | Upper bound for WAL left to service replication slots |
+| `shared_buffers` | 4 GB | Sets the number of shared memory buffers used by the server (25% of node memory in this example) |
+| `effective_cache_size` | 12 GB | Sets the planner's assumption about the total size of the data caches |
 | `work_mem` | 1/256th of node memory | Sets the maximum memory to be used for query workspaces |
 | `maintenance_work_mem` | 6.25% of node memory | Sets the maximum memory to be used for maintenance operations |
 | `autovacuum_vacuum_cost_limit` | 2400 | Vacuum cost amount available before napping, for autovacuum |
 | `random_page_cost` | 1.1 | Sets the planner's estimate of the cost of a nonsequentially fetched disk page |
-| `effective_io_concurrency` | 64 | Number of simultaneous requests that can be handled efficiently by the disk subsystem |
+| `effective_io_concurrency` | 64 | Sets how many simultaneous requests the disk subsystem can handle efficiently |
 | `maintenance_io_concurrency` | 64 | A variant of "effective_io_concurrency" that is used for maintenance work |
 
 ### Deploying PostgreSQL
@@ -443,7 +443,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources an
     ```
 
 > [!IMPORTANT]  
-> If you're using local NVMe with Azure Container Storage and your pod is stuck in the init state with a multi-attach error, it's likely still searching for the volume on a lost node. Once the pod starts running, it enters a `CrashLoopBackOff` state because a new replica has been created on the new node without any data and CNPG can't find the pgdata directory. To resolve this, you need to destroy the affected instance and bring up a new one. Run the following command:  
+> If you use local NVMe with Azure Container Storage and a pod remains in the init state with a multi-attach error, the pod is still searching for the volume on a lost node. After the pod starts running, it enters a `CrashLoopBackOff` state because CNPG creates a new replica on a new node without data and can't find the `pgdata` directory. To resolve this issue, destroy the affected instance and bring up a new one. Run the following command:  
 >  
 > ```bash  
 > kubectl cnpg destroy [cnpg-cluster-name] [instance-number]  
@@ -453,7 +453,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources an
 
 The manually created PodMonitor ties the kube-prometheus-stack scrape configuration to the CNPG pods you deployed earlier.
 
-1. Validate the PodMonitor is running using the [`kubectl get`][kubectl-get] command.
+Validate the PodMonitor is running using the [`kubectl get`][kubectl-get] command.
 
     ```bash
     kubectl --namespace $PG_NAMESPACE \
@@ -480,7 +480,7 @@ The manually created PodMonitor ties the kube-prometheus-stack scrape configurat
           cnpg.io/cluster: pg-primary-cnpg-r8c7unrw
     ```
 
-If you're using Azure Monitor for Managed Prometheus, you need to add another pod monitor using the custom group name. Managed Prometheus doesn't pick up the custom resource definitions (CRDs) from the Prometheus community. Aside from the group name, the CRDs are the same. This allows pod monitors for Managed Prometheus to exist side-by-side those that use the community pod monitor. If you're not using Managed Prometheus, you can skip this. Create a new pod monitor:
+If you're using Azure Monitor for Managed Prometheus, you need to add another pod monitor using the custom group name. Managed Prometheus doesn't pick up the custom resource definitions (CRDs) from the Prometheus community. Aside from the group name, the CRDs are the same. That design lets pod monitors for Managed Prometheus run alongside pod monitors that use the community CRD. If you're not using Managed Prometheus, you can skip this section. Create a new pod monitor:
 
 ```bash
 cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE -f -
@@ -514,13 +514,13 @@ kubectl --namespace $PG_NAMESPACE \
 
 ### Option A - Azure Monitor workspace
 
-Once you have deployed the Postgres cluster and the pod monitor, you can view the metrics using the Azure portal in an Azure Monitor workspace.
+After you deploy the Postgres cluster and the pod monitor, you can view the metrics using the Azure portal in an Azure Monitor workspace.
 
 :::image source="./media/deploy-postgresql-ha/prometheus-metrics.png" alt-text="Screenshot showing Postgres cluster metrics in an Azure Monitor workspace in the Azure portal." lightbox="./media/deploy-postgresql-ha/prometheus-metrics.png":::
 
 ### Option B - Managed Grafana
 
-Alternatively, Once you have deployed the Postgres cluster and pod monitors, you can create a metrics dashboard on the Managed Grafana instance created by the deployment script to visualize the metrics exported to the Azure Monitor workspace. You can access the Managed Grafana via the Azure portal. Navigate to the Managed Grafana instance created by the deployment script and select the Endpoint link as shown here:
+Alternatively, after you deploy the Postgres cluster and pod monitors, you can create a metrics dashboard on the Managed Grafana instance created by the deployment script to visualize the metrics exported to the Azure Monitor workspace. You can access the Managed Grafana via the Azure portal. Navigate to the Managed Grafana instance created by the deployment script and select the Endpoint link as shown here:
 
 :::image source="./media/deploy-postgresql-ha/grafana-metrics-1.png" alt-text="Screenshot Postgres cluster metrics in an Azure Managed Grafana instance in the Azure portal." lightbox="./media/deploy-postgresql-ha/grafana-metrics-1.png":::
 
@@ -528,7 +528,7 @@ Selecting the Endpoint link opens a new browser window where you can create dash
 
 :::image source="./media/deploy-postgresql-ha/grafana-metrics-2.png" alt-text="Screenshot showing Azure Monitor data source options in the Azure portal." lightbox="./media/deploy-postgresql-ha/grafana-metrics-2.png":::
 
-On the Managed Prometheus option, select the option to build a dashboard to open the dashboard editor. Once the editor window opens, select the Add visualization option then select the Managed Prometheus option to browse the metrics from the Postgres cluster. Once you have selected the metric you want to visualize, select the Run queries button to fetch the data for the visualization as shown here:
+On the Managed Prometheus option, select the option to build a dashboard to open the dashboard editor. After the editor window opens, select the Add visualization option then select the Managed Prometheus option to browse the metrics from the Postgres cluster. After you select the metric you want to visualize, select the Run queries button to fetch the data for the visualization as shown here:
 
 :::image source="./media/deploy-postgresql-ha/grafana-metrics-3.png" alt-text="Screenshot showing a Managed Prometheus dashboard with Postgres cluster metrics." lightbox="./media/deploy-postgresql-ha/grafana-metrics-3.png":::
 
@@ -557,7 +557,7 @@ Select the Save icon to save your dashboard.
 * Erin Schaffer | Content Developer 2
 * Adam Sharif | Customer Engineer 2
 
-## Acknowledgement
+## Acknowledgment
 
 This documentation was jointly developed with EnterpriseDB, the maintainers of the CloudNativePG operator. We thank [Gabriele Bartolini](https://cloudnative-pg.io/authors/gbartolini/) for reviewing earlier drafts of this document and offering technical improvements.  
 

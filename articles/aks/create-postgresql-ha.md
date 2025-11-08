@@ -359,7 +359,7 @@ export POSTGRES_STORAGE_CLASS="managed-csi-premium"
 
 To use Premium SSD v2, you can create a custom storage class.
 
-1. Define a new CSI driver storage class:
+Define a new CSI driver storage class:
 
     ```bash
     cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
@@ -384,7 +384,7 @@ To use Premium SSD v2, you can create a custom storage class.
 ### [Local NVMe](#tab/acstor)
 
 > [!IMPORTANT]  
-> Ensure that your cluster is using VM SKUs that support local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms]. The below instructions requires Azure Container Storage v2.0.0 or later.
+> Ensure that your cluster is using VM SKUs that support local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms]. The below instructions require Azure Container Storage v2.0.0 or later.
 
 1. Update AKS cluster to install Azure Container Storage on user node pool.
 
@@ -597,7 +597,7 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
 * Carol Smith | Senior Content Developer
 * Erin Schaffer | Content Developer 2
 
-## Acknowledgement
+## Acknowledgment
 
 This documentation was jointly developed with EnterpriseDB, the maintainers of the CloudNativePG operator. We thank [Gabriele Bartolini](https://cloudnative-pg.io/authors/gbartolini/) for reviewing earlier drafts of this document and offering technical improvements.  
 

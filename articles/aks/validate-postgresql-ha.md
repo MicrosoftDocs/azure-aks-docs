@@ -124,7 +124,7 @@ In this section, you create a table and insert some data into the app database t
 ## Set up on-demand and scheduled PostgreSQL backups using Barman
 
 > [!NOTE]
-> CloudNativePG is expected to deprecate native Barman Cloud support in favour of the [Barman Cloud plugin](https://cloudnative-pg.io/plugin-barman-cloud/docs/intro/) in an upcoming 1.29 release. The steps in this guide continue to work today, but plan to migrate to the plugin once it stabilises.
+> CloudNativePG is expected to deprecate native Barman Cloud support in favor of the [Barman Cloud plugin](https://cloudnative-pg.io/plugin-barman-cloud/docs/intro/) in an upcoming 1.29 release. The steps in this guide continue to work today, but plan to migrate to the plugin once it stabilizes.
 
 1. Validate that the PostgreSQL cluster can access the Azure storage account specified in the CNPG Cluster CRD and that `Working WAL archiving` reports as `OK` using the following command:
 
@@ -652,7 +652,7 @@ _Microsoft maintains this article. The following contributors originally wrote i
 * Erin Schaffer | Content Developer 2
 * Adam Sharif | Customer Engineer 2
 
-## Acknowledgement
+## Acknowledgment
 
 This documentation was jointly developed with EnterpriseDB, the maintainers of the CloudNativePG operator. We thank [Gabriele Bartolini](https://cloudnative-pg.io/authors/gbartolini/) for reviewing earlier drafts of this document and offering technical improvements.  
 
