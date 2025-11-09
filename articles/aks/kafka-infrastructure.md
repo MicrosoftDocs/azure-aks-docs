@@ -456,7 +456,6 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
           os_disk_size_gb      = 128
           labels = {
             "app" = "kafka"
-            "acstor.azure.com/io-engine" = "acstor"
           }
         }
       }
