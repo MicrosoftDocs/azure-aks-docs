@@ -275,7 +275,6 @@ PostgreSQL performance heavily depends on your cluster's underlying resources an
           pg_stat_statements.max: '10000'
           pg_stat_statements.track: 'all'
           hot_standby_feedback: 'on'
-          io_method: 'io_uring'
         pg_hba:
           - host all all all scram-sha-256
 
