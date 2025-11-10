@@ -77,7 +77,7 @@ When deciding between which container-optimized OS options to use, AKS recommend
 - Use [Ubuntu](https://aka.ms/aks/supported-ubuntu-versions) if you're looking for a vendor neutral, general purpose OS with cross-cloud support.
 - Use [Azure Linux](https://aka.ms/aks/use-azure-linux) if you're looking for an enterprise-ready, general purpose OS, recommended by Microsoft.
 
-![OS Comparison](media/concepts-security/os-comparison.png)
+![OS Comparison](media/concepts-security/os-comparison.png) Screenshot of a table that compares optimized OS options like Flatcar Container Linux for AKS and Azure Linux OS Guard to general purpose OS options like Ubuntu and Azure Linux.
 
 ### Node authorization
 
