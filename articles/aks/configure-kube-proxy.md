@@ -18,7 +18,7 @@ author: asudbring
 
 - **iptables** is the default backend utilized in the majority of Kubernetes clusters. It's simple and well-supported, but not as efficient or intelligent as IPVS.
 - **IPVS** uses the Linux Virtual Server, a layer 3/4 load balancer built into the Linux kernel. IPVS provides a number of advantages over the default iptables configuration, including state awareness, connection tracking, and more intelligent load balancing. IPVS *doesn't support Azure Network Policy*.
-- **nftables** is the successor to the iptables API and is designed to provide better performance and scalability than iptables. The nftables proxy mode is essentially a replacement for both the iptables and ipvs modes, with better performance than either of them, and is recommended as a replacement for ipvs.
+- **nftables** is the successor to the iptables API and is designed to provide better performance and scalability than iptables. The nftables proxy mode is essentially a replacement for both the iptables and IPVS modes, with better performance than either of them, and is recommended as a replacement for IPVS.
 
 For more information, see the [Kubernetes documentation on kube-proxy](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/).
 
