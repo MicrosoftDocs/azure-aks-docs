@@ -975,3 +975,4 @@ To learn how to manage multiple node pools, see [Manage multiple node pools for 
 [quick-arm]: ./learn/quick-kubernetes-deploy-rm-template.md
 [flatcar]: ./flatcar-container-linux-for-aks.md
 [os-guard]: ./use-azure-linux-os-guard.md
+[az-feature-register]: /cli/azure/feature#az-feature-register

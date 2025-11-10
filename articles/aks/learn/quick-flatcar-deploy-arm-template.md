@@ -88,8 +88,6 @@ az provider register --namespace Microsoft.ContainerService
     az provider register --namespace Microsoft.ContainerService
     ```
 
----
-
 ### Create an SSH key pair
 
 To create an AKS cluster using an ARM template, you provide an SSH public key. If you need this resource, follow the steps in this section. Otherwise, skip to the [Review the template](#review-the-template) section.
@@ -230,7 +228,7 @@ To deploy the application, you use a manifest file to create all the objects req
 - **Rabbit MQ**: Message queue for an order queue.
 
 > [!NOTE]
-> We don't recommend running stateful containers, such as Rabbit MQ, without persistent storage for production. These are used here for simplicity, but we recommend using managed services, such as Azure CosmosDB or Azure Service Bus.
+> We don't recommend running stateful containers, such as Rabbit MQ, without persistent storage for production. These are used here for simplicity, but we recommend using managed services, such as Azure Cosmos DB or Azure Service Bus.
 
 1. Create a file named `aks-store-quickstart.yaml` and copy in the following manifest:
 
@@ -573,3 +571,6 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [ssh-keys]: /azure/virtual-machines/linux/create-ssh-keys-detailed
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
