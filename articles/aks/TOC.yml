@@ -368,8 +368,8 @@
           items:
             - name: AKS desktop overview (Preview)
               href: aks-desktop-overview.md
-            - name: Deploy an application via AKS desktop (Preview)
-              href: aks-desktop-deploy-app.md
+            - name: Deploy an application using AKS desktop (Preview)
+              href: aks-desktop-app.md
         - name: Use cluster extensions
           items:
             - name: About cluster extensions
