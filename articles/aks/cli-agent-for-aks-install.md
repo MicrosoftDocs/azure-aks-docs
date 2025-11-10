@@ -131,7 +131,9 @@ We also support any OpenAI compatible model. For other LLM providers, contact [M
     ```
 
     > [!NOTE]
-    > The API key will appear as empty as you type, so make sure to use the right API key. You can also skip the `init` experience by providing the values in the config file. The Azure API Base refers to the Azure Open AI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Azure AI Foundry. If the LLM configuration fails, please double check your API key and/or the `AZURE_API_BASE`.
+    > The API key will appear as empty as you type, so make sure to use the right API key. You can also skip the `init` experience by providing the values in the config file. The Azure API Base refers to the Azure OpenAI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Azure AI Foundry. If the LLM configuration fails, please double check your API key and/or the `AZURE_API_BASE`.
+
+---
 
 ## Use the agentic CLI for AKS
 
@@ -307,7 +309,7 @@ User: why is my node unhealthy
 ```
 
 > [!NOTE]
-> In the MCP server integration, please provide the name of the cluster and the resource group at the start of the agent experience. Unlike the regular mode where the cluster context is picked up automatically, the MCP server integration currently doesn't support it. This limitation will be fixed in the future.
+> In the MCP server integration, please provide the name of the cluster and the resource group at the start of the agent experience. Unlike the regular mode where the cluster context is picked up automatically, the MCP server integration currently doesn't support it.
 
 To check the status of the MCP server, you can use the `--status` flag:
 
@@ -327,4 +329,4 @@ az aks-agent --status
 
 - For an overview of the agentic CLI for AKS, see [About the agentic CLI for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-overview.md).
 - To troubleshoot any issues with the agentic CLI for AKS, see [Troubleshoot the agentic CLI for AKS](./cli-agent-for-aks-troubleshoot.md).
-- [agentic CLI for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml) answers common questions about the agentic CLI for AKS.
+- [Agentic CLI for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml) answers common questions about the agentic CLI for AKS.

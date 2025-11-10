@@ -60,9 +60,7 @@ This error is likely due to an issue with the variables setup for the Azure Open
 
 For questions or issues, document the commands and outputs and open an issue directly on the [GitHub repository](https://github.com/Azure/cli-agent-for-aks/issues).
 
-You can also reach out directly to [aksagentcli@service.microsoft.com](mailto:aksagentcli@service.microsoft.com) with any feedback or questions.
-
 ## Related content
 
 - For an overview of the agentic CLI for AKS, see [About the agentic CLI for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-overview.md).
-- [agentic CLI for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml) answers common questions about the agentic CLI for AKS.
+- [Agentic CLI for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml) answers common questions about the agentic CLI for AKS.
