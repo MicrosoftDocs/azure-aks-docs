@@ -46,7 +46,7 @@ CVMs offer the following security enhancements as compared to other virtual mach
 
 ## How does it work?
 
-If you're running a workload that requires enhanced confidentiality and integrity, you can benefit from memory encryption and enhanced security without code changes in your application. All pods on your CVM node are part of the same trust boundary. The nodes in a node pool created with CVM use a customized [node image][./node-images] specially configured for CVM. 
+If you're running a workload that requires enhanced confidentiality and integrity, you can benefit from memory encryption and enhanced security without code changes in your application. All pods on your CVM node are part of the same trust boundary. The nodes in a node pool created with CVM use a customized [node image][node-images] specially configured for CVM. 
 
 ### Supported OS Versions
 You can create CVM node pools on Linux OS types (Ubuntu and Azure Linux). However, not all OS versions support CVM node pools.
@@ -213,4 +213,5 @@ In this article, you learned how to add a node pool with CVM to an AKS cluster.
 [trusted-launch]: ./use-trusted-launch.md
 [flatcar]: ./flatcar-container-linux-for-aks.md
 [os-guard]: ./use-azure-linux-os-guard.md
+[node-images]: ./node-images.md
 

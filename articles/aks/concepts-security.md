@@ -191,5 +191,5 @@ For more information on core Kubernetes and AKS concepts, see:
 [FIPS]: ./enable-fips-nodes.md
 [custom-node-configuration]: /azure/aks/custom-node-configuration
 [security-best-practices]: /azure/aks/operator-best-practices-cluster-security
-[security-container-access]: secure-container-access.md
+[security-container-access]: ./secure-container-access.md
 [etcd-encryption-cmk]: use-kms-etcd-encryption.md

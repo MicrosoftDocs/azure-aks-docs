@@ -215,3 +215,8 @@ kubectl delete jobs samples-tf-mnist-demo
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
+[flatcar]: ./flatcar-container-linux-for-aks.md
+[os-guard]: ./use-azure-linux-os-guard.md
+[azure-pricing]: ./free-standard-pricing-tiers.md
+[azure-availability]: ./quotas-skus-regions.md
+[install-azure-cli]: /cli/azure/install-azure-cli
