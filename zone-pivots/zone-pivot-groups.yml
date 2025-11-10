@@ -106,10 +106,10 @@ groups:
   title: Choose an external identity provider authentication type
   prompt: Choose an authentication type
   pivots:
-  - id: google-identity
-    title: Google Identity
   - id: github
     title: GitHub
+  - id: google-identity
+    title: Google Identity
 # Owner: schaffererin
 - id: azure-cli-or-arm
   title: Choose a deployment method
