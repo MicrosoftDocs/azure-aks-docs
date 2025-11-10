@@ -30,6 +30,8 @@ Kubernetes Center (preview) offers several key benefits, including:
 To use Kubernetes Center (preview), ensure you have the following prerequisites:
 
 - An active Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free/).
+- [Azure Monitor enabled for your AKS clusters](/azure/azure-monitor/containers/kubernetes-monitoring-enable).
+- [Microsoft Defender for Containers enabled for your AKS clusters](/azure/defender-for-cloud/defender-for-containers-enable?pivots=defender-for-container-aks).
 
 ## Access quickstarts and documentation
 
@@ -70,3 +72,8 @@ With Kubernetes Center (preview), you can manage your clusters and workloads mor
 
 ## Next steps
 
+For more information about monitoring and managing your AKS clusters, see the following articles:
+
+- [Monitor Azure Kubernetes Service (AKS)](./monitor-aks.md)
+- [Monitor Azure Kubernetes Service (AKS) control plane metrics](./control-plane-metrics-monitor.md)
+- [Add-ons, extensions, and other integrations with Azure Kubernetes Service (AKS)](./integrations.md)
