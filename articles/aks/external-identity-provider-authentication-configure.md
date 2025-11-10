@@ -317,8 +317,9 @@ jobs:
 Set up these secrets in your GitHub repository:
 
 **Secrets:**
-- `AKS_CA_DATA`: Base64-encoded certificate authority data for your AKS cluster.
 - `AKS_SERVER_URL`: Your AKS cluster's API server URL.
+- `AKS_CA_DATA`: Base64-encoded certificate authority data for your AKS cluster.
+
 
 > [!NOTE]
 > The audience value `my-api` should match the audience configured in your JWT authenticator configuration.
@@ -329,7 +330,8 @@ To get the required cluster information, run:
 
 ```bash
 # Get cluster info
-az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query "fqdn" -o tsv
+az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query "fqdn" -o tsv | \
+  awk '{print "https://" $0 ":443"}'
 
 # Get CA data (base64 encoded)
 az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --file - --format exec | \
@@ -374,11 +376,25 @@ users:
 
 ### Test authentication
 
+::: zone pivot="github"
+
+You can trigger the workflow by:
+- Pushing to the main branch
+- Manually triggering it from the Actions tab in your repository
+
+Monitor the workflow execution in the Actions tab to verify authentication is working.
+
+::: zone-end
+
+::: zone pivot="google-identity"
+
 Test the authentication by running a kubectl command:
 
 ```bash
 kubectl get nodes --user external-user
 ```
+
+::: zone-end
 
 ::: zone pivot="github"
 
@@ -427,7 +443,7 @@ metadata:
   name: external-user-binding
 subjects:
 - kind: User
-  # This matches the username expression in claim mappings for GitHub
+  # This matches the username expression in claim mappings for GitHub; example of GitHub subject is "repo:<organization-name>/<repository-name>:ref:refs/heads/main"
   name: aks:jwt:github:your-github-sub
   apiGroup: rbac.authorization.k8s.io
 roleRef:
