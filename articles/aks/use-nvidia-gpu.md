@@ -425,7 +425,7 @@ kubectl delete jobs samples-tf-mnist-demo
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
-[az-vm-list-skus]: /cli/azure/vm/az-vm-list-skus
+[az-vm-list-skus]: /cli/azure/vm
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
