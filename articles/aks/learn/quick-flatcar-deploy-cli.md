@@ -98,7 +98,7 @@ export REGION="westus"
 export MY_AKS_CLUSTER_NAME="myAKSCluster$RANDOM_ID"
 ```
 
-    The `RANDOM_ID` variable's value is a six-character alphanumeric value appended to the resource group and cluster name so that the names are unique. Use the `echo` command to view variable values like `echo $RANDOM_ID`.
+The `RANDOM_ID` variable's value is a six-character alphanumeric value appended to the resource group and cluster name so that the names are unique. Use the `echo` command to view variable values like `echo $RANDOM_ID`.
 
 ## Create a resource group
 
@@ -142,8 +142,8 @@ az aks create \
   --generate-ssh-keys
 ```
 
-    > [!NOTE]
-    > When you create a new cluster, AKS automatically creates a second resource group to store the AKS resources. For more information, see [Why are two resource groups created with AKS?](../faq.yml)
+> [!NOTE]
+> When you create a new cluster, AKS automatically creates a second resource group to store the AKS resources. For more information, see [Why are two resource groups created with AKS?](../faq.yml)
 
 ## Connect to the cluster
 

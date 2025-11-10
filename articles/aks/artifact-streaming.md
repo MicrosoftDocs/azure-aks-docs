@@ -166,4 +166,4 @@ This article described how to enable Artifact Streaming on your AKS node pools t
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
 [windows-os]: ./windows-best-practices.md
 [flatcar]: ./flatcar-container-linux-for-aks.md
-[os-guard]: ./azure/azure-linux/intro-azure-linux-os-guard.md
+[os-guard]: ./use-azure-linux-os-guard.md

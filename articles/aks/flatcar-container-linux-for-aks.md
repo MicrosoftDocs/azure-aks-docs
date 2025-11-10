@@ -105,7 +105,7 @@ To learn more about Flatcar Container Linux, see the [Flatcar documentation][fla
 [flatcar-deploy-arm]: ./learn/quick-flatcar-deploy-arm-template.md
 [create-node-pools]: ./create-node-pools.md
 [NAP]: ./node-autoprovision.md
-[azure-monitor-extension]: ./azure/azure-monitor/agents/azure-monitor-agent-manage?tabs=azure-portal#:~:text=Virtual%20machine%20(VM)%20extension
+[azure-monitor-extension]: /azure/azure-monitor/agents/azure-monitor-agent-manage?tabs=azure-portal#:~:text=Virtual%20machine%20(VM)%20extension
 
 <!-- LINKS - External -->
 [flatcar-docs]: https://www.flatcar.org/

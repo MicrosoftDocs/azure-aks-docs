@@ -249,7 +249,7 @@ For a detailed discussion of upgrade best practices and other considerations, se
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [flatcar]: ./flatcar-container-linux-for-aks.md
-[os-guard]: ./azure/azure-linux/intro-azure-linux-os-guard.md
+[os-guard]: ./use-azure-linux-os-guard.md
 
 <!-- LINKS - external -->
 [Blog]: https://techcommunity.microsoft.com/t5/linux-and-open-source-blog/increased-security-and-resiliency-of-canonical-workloads-on/ba-p/3970623

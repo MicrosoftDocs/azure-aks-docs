@@ -63,4 +63,4 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
 [flatcar]: ./flatcar-container-linux-for-aks.md
-[os-guard]: ./azure/azure-linux/intro-azure-linux-os-guard.md
+[os-guard]: ./use-azure-linux-os-guard.md

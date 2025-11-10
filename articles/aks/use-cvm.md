@@ -212,5 +212,5 @@ In this article, you learned how to add a node pool with CVM to an AKS cluster.
 [resize-your-nodepool]: ./resize-node-pool.md
 [trusted-launch]: ./use-trusted-launch.md
 [flatcar]: ./flatcar-container-linux-for-aks.md
-[os-guard]: ./azure/azure-linux/intro-azure-linux-os-guard.md
+[os-guard]: ./use-azure-linux-os-guard.md
 

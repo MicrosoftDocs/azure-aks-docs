@@ -444,4 +444,4 @@ kubectl delete jobs samples-tf-mnist-demo
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [NVadsA10]: /azure/virtual-machines/nva10v5-series
 [flatcar]: ./flatcar-container-linux-for-aks.md
-[os-guard]: ./azure/azure-linux/intro-azure-linux-os-guard.md
+[os-guard]: ./use-azure-linux-os-guard.md

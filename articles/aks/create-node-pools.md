@@ -974,4 +974,4 @@ To learn how to manage multiple node pools, see [Manage multiple node pools for 
 [managedclusters]: /azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-arm-template
 [quick-arm]: ./learn/quick-kubernetes-deploy-rm-template.md
 [flatcar]: ./flatcar-container-linux-for-aks.md
-[os-guard]:./azure/azure-linux/intro-azure-linux-os-guard.md
+[os-guard]: ./use-azure-linux-os-guard.md
