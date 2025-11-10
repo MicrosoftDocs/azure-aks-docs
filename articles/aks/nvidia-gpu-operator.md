@@ -25,6 +25,12 @@ The NVIDIA GPU Operator automates the management and deployment of all NVIDIA so
 > [!NOTE]
 > GPU-enabled VMs contain specialized hardware subject to higher pricing and region availability. For more information, see the [pricing][azure-pricing] tool and [region availability][azure-availability].
 
+## Limitations
+
+- NVIDIA GPU Operator isn't supported for the following OS options: Windows Server versions, [Flatcar Container Linux for AKS (preview)][flatcar], and [Azure Linux with OS Guard for AKS (preview)][os-guard].
+
+
+
 ## Get the credentials for your cluster
 
 Get the credentials for your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. The following example command gets the credentials for the cluster `myAKSCluster` in the `myResourceGroup` resource group:
@@ -56,3 +62,8 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
+[flatcar]: ./flatcar-container-linux-for-aks.md
+[os-guard]: ./use-azure-linux-os-guard.md
+[azure-pricing]: ./free-standard-pricing-tiers.md
+[azure-availability]: ./quotas-skus-regions.md
+[install-azure-cli]: /cli/azure/install-azure-cli

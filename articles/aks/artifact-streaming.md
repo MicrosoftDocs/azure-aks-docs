@@ -26,7 +26,13 @@ This article describes how to enable the Artifact Streaming feature on your AKS 
 
 > [!IMPORTANT]
 > Artifact Streaming (preview) is a suggested alternative for customers previously using Teleport (preview).
-> [Teleport (preview)](https://github.com/Azure/acr/blob/main/docs/teleport/aks-getting-started.md) on AKS will be retired on 15 July 2025, please migrate to Artifact Streaming (preview) on AKS or update your node pools to set `--aks-custom-headers EnableACRTeleport=false`. Azure Container Registry has removed the Teleport API, meaning that any nodes with Teleport enabled will pull images from Azure Container Registry as any other AKS node without Teleport. After 15 July 2025, AKS node pools with Teleport (preview) enabled may experience breakage and node provisioning failures. For more information, see [aka.ms/aks/teleport-retirement](https://aka.ms/aks/teleport-retirement).
+> [Teleport (preview)](https://github.com/Azure/acr/blob/main/docs/teleport/aks-getting-started.md) on AKS will be retired on 15 July 2025. Please migrate to Artifact Streaming (preview) on AKS or update your node pools to set `--aks-custom-headers EnableACRTeleport=false`. 
+> Azure Container Registry removed the Teleport API, meaning that any nodes with Teleport enabled will pull images from Azure Container Registry like any other AKS node without Teleport. 
+> After 15 July 2025, AKS node pools with Teleport enabled might experience breakage and node provisioning failures. For more information, see [aka.ms/aks/teleport-retirement](https://aka.ms/aks/teleport-retirement).
+
+## Limitations
+
+* Artifact Steaming isn't supported for the following OS options: [Windows Server versions][windows-os], [Flatcar Container Linux for AKS][flatcar], and [Azure Linux with OS Guard for AKS][os-guard].
 
 ## Prerequisites
 
@@ -158,4 +164,6 @@ This article described how to enable Artifact Streaming on your AKS node pools t
 [az-acr-artifact-streaming-create]: /cli/azure/acr/artifact-streaming#az-acr-artifact-streaming-create
 [az-acr-manifest-list-referrers]: /cli/azure/acr/manifest#az-acr-manifest-list-referrers
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
-
+[windows-os]: ./windows-best-practices.md
+[flatcar]: ./flatcar-container-linux-for-aks.md
+[os-guard]: ./use-azure-linux-os-guard.md

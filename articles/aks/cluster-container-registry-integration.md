@@ -23,8 +23,8 @@ The AKS to ACR integration assigns the [**AcrPull** role][acr-pull] to the [Micr
 > [!NOTE]
 > This article covers automatic authentication between AKS and ACR. If you need to pull an image from a private external registry, use an [image pull secret][image-pull-secret].
 
-> [!NOTE]
-> The AKS-ACR integration through `az aks --attach-acr` is not supported for registries where the role assignment permissions mode is set to "RBAC Registry + ABAC Repository Permissions". This limitation will be addressed in the future. Please visit https://aka.ms/acr/auth/abac for more information on ABAC-enabled ACR registries.
+> [!CAUTION]
+> The AKS-ACR integration through `az aks --attach-acr` is not supported for ABAC-enabled ACR registries where the role assignment permissions mode is set to "RBAC Registry + ABAC Repository Permissions." ABAC-enabled ACR registries require the [`Container Registry Repository Reader` role](/azure/role-based-access-control/built-in-roles#container-registry-repository-reader) instead of the `AcrPull` role for granting image pull permissions. For ABAC-enabled ACR registries, you should not use `az aks --attach-acr` but instead manually assign the `Container Registry Repository Reader` role assignment using either the Azure Portal, `az role assignment` CLI, or Azure Resource Manager. Please visit https://aka.ms/acr/auth/abac for more information on ABAC-enabled ACR registries.
 
 ## Before you begin
 
@@ -285,7 +285,7 @@ The AKS to ACR integration assigns the [**AcrPull** role][acr-pull] to the [Micr
 
 ACR has two endpoints:
 
- - REST endpoint: `{REGISTRY_NAME}.azurecr.io`
+- REST endpoint: `{REGISTRY_NAME}.azurecr.io`
  - Data endpoint: `{REGISTRY_NAME}.{REGISTRY_LOCATION}.data.azurecr.io`
 
 1. Ensure the rest and data endpoints are added to `noProxy` under the HTTP Proxy config.

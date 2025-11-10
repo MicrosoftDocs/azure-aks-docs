@@ -149,6 +149,134 @@ If you want only one node pool in your AKS cluster, you can schedule application
     az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME
     ```
 
+### [Create an AKS cluster with a single Azure Linux with OS Guard for AKS (preview) node pool](#tab/os-guard)
+
+#### Install the `aks-preview` extension
+
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
+
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+#### Register the `AzureLinuxOSGuardPreview` feature flag
+
+1. Register the `AzureLinuxOSGuardPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AzureLinuxOSGuardPreview"
+    ```
+
+1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name AzureLinuxOSGuardPreview
+    ```
+
+1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+#### Create the Azure Linux with OS Guard for AKS cluster
+
+1. Create a cluster with a single Azure Linux with OS Guard for AKS (preview) node pool using the [`az aks create`][az-aks-create] command. This step specifies two nodes in the single node pool.
+
+    ```azurecli-interactive
+    az aks create \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --name $CLUSTER_NAME \
+        --vm-set-type VirtualMachineScaleSets \
+        --node-count 2 \
+        --os-sku AzureLinuxOSGuard \
+        --node-osdisk-type Managed \
+        --enable-fips-image \
+        --enable-secure-boot \
+        --enable-vtpm
+        --location $LOCATION \
+        --load-balancer-sku standard \
+        --generate-ssh-keys
+    ```
+
+    It takes a few minutes to create the cluster.
+
+1. When the cluster is ready, get the cluster credentials using the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME
+    ```
+
+### [Create an AKS cluster with a single Flatcar Container Linux for AKS (preview) node pool](#tab/flatcar)
+
+#### Install the `aks-preview` extension
+
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
+
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Flatcar Container Linux requires a minimum of 18.0.0b42**.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+#### Register the `AKSFlatcarPreview` feature flag
+
+1. Register the `AKSFlatcarPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AKSFlatcarPreview"
+    ```
+
+1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name AKSFlatcarPreview
+    ```
+
+1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+#### Create the Flatcar Container Linux for AKS cluster
+
+1. Create a cluster with a single Flatcar Container Linux for AKS (preview) node pool using the [`az aks create`][az-aks-create] command. This step specifies two nodes in the single node pool.
+
+    ```azurecli-interactive
+    az aks create \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --name $CLUSTER_NAME \
+        --vm-set-type VirtualMachineScaleSets \
+        --node-count 2 \
+        --os-sku flatcar \
+        --location $LOCATION \
+        --load-balancer-sku standard \
+        --generate-ssh-keys
+    ```
+
+    It takes a few minutes to create the cluster.
+
+1. When the cluster is ready, get the cluster credentials using the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME
+    ```
+
 ---
 
 ## Add a second node pool using the Azure CLI
@@ -200,9 +328,184 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
     It takes a few minutes to create the node pool.
 
+#### [Add an Azure Linux with OS Guard for AKS (preview) node pool](#tab/os-guard)
+
+##### Install the `aks-preview` extension
+
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
+
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+##### Register the `AzureLinuxOSGuardPreview` feature flag
+
+1. Register the `AzureLinuxOSGuardPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AzureLinuxOSGuardPreview"
+    ```
+
+1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name AzureLinuxOSGuardPreview
+    ```
+
+1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+##### Create the Azure Linux with OS Guard for AKS node pool
+
+- Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Linux` node pool with the `Azure Linux with OS Guard` OS SKU that runs _three_ nodes. If you don't specify an OS SKU, AKS defaults to `Ubuntu`.
+
+    ```azurecli-interactive
+    az aks nodepool add \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --cluster-name $CLUSTER_NAME \
+        --name $NODE_POOL_NAME \
+        --node-vm-size Standard_DS2_v2 \
+        --os-type Linux \
+       --os-sku AzureLinuxOSGuard \
+       --node-osdisk-type Managed \
+       --enable-fips-image \
+       --enable-secure-boot \
+       --enable-vtpm \
+       --node-count 3
+    ```
+
+    It takes a few minutes to create the node pool.
+
+    For more information, see [Azure Linux with OS Guard for AKS][os-guard].
+
+#### [Add a Flatcar Container Linux for AKS (preview) node pool](#tab/flatcar)
+
+##### Install the `aks-preview` extension
+
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
+
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Flatcar Container Linux requires a minimum of 18.0.0b42**.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+##### Register the `AKSFlatcarPreview` feature flag
+
+1. Register the `AKSFlatcarPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AKSFlatcarPreview"
+    ```
+
+1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name AKSFlatcarPreview
+    ```
+
+1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+##### Create the Flatcar Container Linux for AKS node pool
+
+- Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Linux` node pool with the `flatcar` OS SKU that runs _three_ nodes. If you don't specify an OS SKU, AKS defaults to `Ubuntu`.
+
+    ```azurecli-interactive
+    az aks nodepool add \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --cluster-name $CLUSTER_NAME \
+        --name $NODE_POOL_NAME \
+        --node-vm-size Standard_DS2_v2 \
+        --os-type Linux \
+        --os-sku flatcar \
+        --node-count 3
+    ```
+
+    It takes a few minutes to create the node pool.
+
+    For more information, see [Flatcar Container Linux for AKS][flatcar].
+
 ---
 
 ### Add a Windows Server node pool
+
+#### [Add a Windows Server 2025 (preview) node pool](#tab/ws2025)
+
+##### Install the `aks-preview` extension
+
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
+
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Windows Server 2025 requires a minimum of 18.0.0b5**.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+##### Register the `AksWindows2025Preview` feature flag
+
+1. Register the `AksWindows2025Preview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AksWindows2025Preview"
+    ```
+
+1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name AksWindows2025Preview
+    ```
+
+1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+##### Create the Windows Server 2025 node pool
+
+- Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Windows` node pool with the `Windows2025` OS SKU that runs _three_ nodes.
+
+    For more information about Windows OS, see [Windows best practices][windows].
+
+    ```azurecli-interactive
+    az aks nodepool add \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --cluster-name $CLUSTER_NAME \
+        --name $NODE_POOL_NAME \
+        --node-vm-size Standard_DS2_v2 \
+        --os-type Windows \
+        --os-sku Windows2025 \
+        --node-count 3
+    ```
+
+#### [Add a Windows Server 2022 node pool](#tab/ws2022)
 
 - Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Windows` node pool with the `Windows2022` OS SKU that runs _three_ nodes.
 
@@ -218,6 +521,8 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
         --os-sku Windows2022 \
         --node-count 3
     ```
+
+---
 
 ### Check the status of your node pools
 
@@ -288,6 +593,124 @@ If you want only one node pool in your AKS cluster, you can schedule application
 
     For more information about Azure Linux, see [Azure Linux on AKS][azure-linux].
 
+### [Modify JSON to create a single Azure Linux with OS Guard for AKS (preview) node pool](#tab/os-guard-arm)
+
+#### Install the `aks-preview` extension
+
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
+
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+#### Register the `AzureLinuxOSGuardPreview` feature flag
+
+1. Register the `AzureLinuxOSGuardPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AzureLinuxOSGuardPreview"
+    ```
+
+1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name AzureLinuxOSGuardPreview
+    ```
+
+1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+#### Create the Azure Linux with OS Guard for AKS node pool
+
+- Create a single Azure Linux with OS Guard for AKS node pool in your AKS cluster by making the following modifications to your ARM template:
+
+    ```json
+      "properties": {
+        "agentPoolProfiles": [
+        {
+            "count": "1",
+            "osSKU": "AzureLinuxOSGuard",
+            "osType": "linux",
+            "osDiskType": "Managed",
+                        "enableFIPS": true,
+                        "securityProfile": {
+                            "enableSecureBoot": true,
+                            "enableVTPM": true
+                        },
+         } 
+         ],
+    }
+    ```
+
+    For more information, see [Azure Linux with OS Guard for AKS][os-guard].
+
+### [Modify JSON to create a single Flatcar Container Linux for AKS (preview) node pool](#tab/flatcar-arm)
+
+#### Install the `aks-preview` extension
+
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
+
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Flatcar Container Linux requires a minimum of 18.0.0b42**.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+#### Register the `AKSFlatcarPreview` feature flag
+
+1. Register the `AKSFlatcarPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AKSFlatcarPreview"
+    ```
+
+1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name AKSFlatcarPreview
+    ```
+
+1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+#### Create the Flatcar Container Linux for AKS node pool
+
+- Create a single Flatcar Container Linux for AKS node pool in your AKS cluster by making the following modifications to your ARM template:
+
+    ```json
+      "properties": {
+        "agentPoolProfiles": [
+        {
+            "count": "1",
+            "osSKU": "flatcar",
+            "osType": "linux"
+         } 
+         ],
+    }
+    ```
+
+    For more information, see [Flatcar Container Linux for AKS][flatcar].
+
 ---
 
 ## Add a second node pool using an ARM template
@@ -330,9 +753,183 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
     For more information about Azure Linux, see [Azure Linux on AKS][azure-linux].
 
+#### [Modify JSON to create multiple Azure Linux with OS Guard for AKS (preview) node pools](#tab/os-guard-arm)
+
+##### Install the `aks-preview` extension
+
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
+
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+##### Register the `AzureLinuxOSGuardPreview` feature flag
+
+1. Register the `AzureLinuxOSGuardPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AzureLinuxOSGuardPreview"
+    ```
+
+1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name AzureLinuxOSGuardPreview
+    ```
+
+1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+##### Create the Azure Linux with OS Guard for AKS node pools
+
+- Create multiple Azure Linux with OS Guard for AKS (preview) node pools in your AKS cluster by making the following modifications to your ARM template:
+
+    ```json
+      "properties": {
+        "agentPoolProfiles": [
+        {
+            "count": "3",
+            "osSKU": "AzureLinuxOSGuard",
+            "osType": "linux",
+            "osDiskType": "Managed",
+            "enableFIPS": true,
+            "securityProfile": {
+                   "enableSecureBoot": true,
+                   "enableVTPM": true
+             },
+         } 
+         ],
+    }
+    ```
+
+For more information, see Azure Linux with OS Guard for AKS][os-guard].
+
+#### [Modify JSON to create multiple Flatcar Container Linux for AKS (preview) node pools](#tab/flatcar-arm)
+
+##### Install the `aks-preview` extension
+
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
+
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Flatcar Container Linux requires a minimum of 18.0.0b42**.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+##### Register the `AKSFlatcarPreview` feature flag
+
+1. Register the `AKSFlatcarPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AKSFlatcarPreview"
+    ```
+
+1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name AKSFlatcarPreview
+    ```
+
+1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+##### Create the Flatcar Container Linux for AKS node pools
+
+- Create multiple Flatcar Container Linux for AKS (preview) node pools in your AKS cluster by making the following modifications to your ARM template:
+
+    ```json
+      "properties": {
+        "agentPoolProfiles": [
+        {
+            "count": "3",
+            "osSKU": "flatcar",
+            "osType": "linux"
+         } 
+         ],
+    }
+    ```
+
+For more information, see [Flatcar Container Linux for AKS][flatcar].
+
 ---
 
 ### Add Windows Server node pools
+
+#### [Modify JSON to create multiple Windows Server 2025 (preview) node pools](#tab/ws2025-arm)
+
+##### Install the `aks-preview` extension
+
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
+
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Windows Server 2025 requires a minimum of 18.0.0b5**.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+##### Register the `AksWindows2025Preview` feature flag
+
+1. Register the `AksWindows2025Preview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AksWindows2025Preview"
+    ```
+
+1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name AksWindows2025Preview
+    ```
+
+1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+##### Create the Windows Server 2025 node pools
+
+- Create multiple Windows node pools in your AKS cluster by making the following modifications to your ARM template:
+
+    ```json
+      "properties": {
+        "agentPoolProfiles": [
+        {
+            "count": "3",
+            "osSKU": "windows2025",
+            "osType": "windows"
+         } 
+         ],
+    }
+    ```
+
+#### [Modify JSON to create multiple Windows Server 2022 node pools](#tab/ws2022-arm)
 
 - Create multiple Windows node pools in your AKS cluster by making the following modifications to your ARM template:
 
@@ -347,6 +944,8 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
          ],
     }
     ```
+
+---
 
 ## Deploy your ARM template
 
@@ -374,3 +973,8 @@ To learn how to manage multiple node pools, see [Manage multiple node pools for 
 [windows]: ./windows-best-practices.md
 [managedclusters]: /azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-arm-template
 [quick-arm]: ./learn/quick-kubernetes-deploy-rm-template.md
+[flatcar]: ./flatcar-container-linux-for-aks.md
+[os-guard]: ./use-azure-linux-os-guard.md
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
