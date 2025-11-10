@@ -4,7 +4,7 @@ description: Learn about security in Azure Kubernetes Service (AKS), including m
 author: shashankbarsin
 ms.topic: concept-article
 ms.subservice: aks-security
-ms.date: 04/03/2025
+ms.date: 11/10/2025
 ms.author: shasb
 # Customer intent: "As a cloud security engineer, I want to implement comprehensive security practices for Azure Kubernetes Service, so that I can safeguard applications and clusters against vulnerabilities and unauthorized access throughout the development and deployment pipeline."
 ---
@@ -30,7 +30,7 @@ This article introduces the core concepts that secure your applications in AKS.
 
 ## Build Security
 
-As the entry point for the Supply Chain, it's important to conduct static analysis of image builds before they are promoted down the pipeline. This includes vulnerability and compliance assessment. It's not about failing a build because it has a vulnerability, as that breaks development. It's about looking at the **Vendor Status** to segment based on vulnerabilities that are actionable by the development teams. Also use **Grace Periods** to allow developers time to remediate identified issues.
+As the entry point for the Supply Chain, it's important to conduct static analysis of image builds before they're promoted down the pipeline. This includes vulnerability and compliance assessment. It's not about failing a build because it has a vulnerability, as that breaks development. It's about looking at the **Vendor Status** to segment based on vulnerabilities that are actionable by the development teams. Also use **Grace Periods** to allow developers time to remediate identified issues.
 
 ## Registry Security
 
@@ -49,7 +49,7 @@ You can control access to the API server using Kubernetes role-based access cont
 AKS nodes are Azure virtual machines (VMs) that you manage and maintain.
 
 * Linux nodes run optimized versions of Ubuntu or Azure Linux.
-* Windows Server nodes run an optimized Windows Server 2022 release using the `containerd` container runtime.
+* Windows Server nodes run an optimized Windows Server release using the `containerd` container runtime.
 
 When an AKS cluster is created or scaled up, the nodes are automatically deployed with the latest OS security updates and configurations.
 
@@ -60,7 +60,24 @@ When an AKS cluster is created or scaled up, the nodes are automatically deploye
 
 For more information about the security upgrade process for Linux and Windows worker nodes, see [Security patching nodes][aks-vulnerability-management-nodes].
 
-AKS clusters running Azure Generation 2 VMs includes support for [Trusted Launch][trusted-launch], which protects against advanced and persistent attack techniques by combining technologies that can be independently enabled, like secure boot and virtualized version of trusted platform module (vTPM). Administrators can deploy AKS worker nodes with verified and signed bootloaders, OS kernels, and drivers to ensure integrity of the entire boot chain of the underlying VM.
+AKS clusters running Azure Generation 2 VMs include support for [Trusted Launch][trusted-launch]. This feature protects against advanced and persistent attack techniques by combining technologies that you can enable independently, like secure boot and a virtualized version of the trusted platform module (vTPM). Administrators can deploy AKS worker nodes with verified and signed bootloaders, OS kernels, and drivers to ensure integrity of the entire boot chain of the underlying VM.
+
+### Container and security optimized OS options
+
+AKS released support for two new optimized Linux OS options. [Azure Linux OS Guard (preview)](https://aka.ms/aks/azure-linux-os-guard) is Microsoft-created and optimized for Azure. OS Guard is built on top of Azure Linux with specialized configuration to support containerized workloads with security optimizations. [Flatcar Container Linux for AKS (preview)](https://aka.ms/aks/flatcar) is a CNCF-based vendor-neutral container-optimized immutable OS, best suited for running on multicloud and on-premises environments. These OS options provide increased security when compared to other Linux OS options, such as:
+
+- Both Azure Linux OS Guard and Flatcar Container Linux for AKS have an immutable operating system that you can't modify at runtime. All OS binaries, libraries and static configuration are read-only, and the bit-for-bit integrity is often cryptographically protected. These special purpose operating systems ship as self-contained images and come without any kind of package management or other traditional means of altering the OS. User workloads run in isolated environments like containers, sandboxed from the OS.
+- Both Azure Linux OS Guard and Flatcar Container Linux for AKS use SELinux for Mandatory Access Control.
+ - Azure Linux OS Guard enforces [FIPS][FIPS] and [Trusted Launch][trusted-launch] enablement, providing improved compliance and protection against advanced and persistent attacks by combining secure boot and virtualized version of trusted platform module (vTPM).
+
+When deciding between which container-optimized OS options to use, AKS recommends the following:
+
+- Use [**Flatcar Container Linux for AKS (preview)**](https://aka.ms/aks/flatcar) if you're looking for a vendor neutral immutable OS with cross-cloud support.
+- Use [**Azure Linux OS Guard (preview)**](https://aka.ms/aks/azure-linux-os-guard) if you're looking for an enterprise-ready immutable OS, recommended by Microsoft.
+- Use [Ubuntu](https://aka.ms/aks/supported-ubuntu-versions) if you're looking for a vendor neutral, general purpose OS with cross-cloud support.
+- Use [Azure Linux](https://aka.ms/aks/use-azure-linux) if you're looking for an enterprise-ready, general purpose OS, recommended by Microsoft.
+
+:::image type="content" source="./media/concepts-security/os-comparison.png" alt-text="Screenshot of a table that compares optimized OS options like Flatcar Container Linux for AKS and Azure Linux OS Guard to general purpose OS options like Ubuntu and Azure Linux.":::
 
 ### Node authorization
 
@@ -84,8 +101,8 @@ For these types of hostile multitenant workloads, you should use physically isol
 
 Because of compliance or regulatory requirements, certain workloads may require a high degree of isolation from other customer workloads. For these workloads, Azure provides:
 
-* [Kernel isolated containers][azure-confidential-containers] to use as the agent nodes in an AKS cluster. These containers are completely isolated to a specific hardware type and isolated from the Azure Host fabric, the host operating system, and the hypervisor. They are dedicated to a single customer. Select [one of the isolated VMs sizes][isolated-vm-size] as the **node size** when creating an AKS cluster or adding a node pool.
-* [Confidential Containers][confidential-containers] (preview), also based on Kata Confidential Containers, encrypts container memory and prevents data in memory during computation from being in clear text, readable format, and tampering. It helps isolate your containers from other container groups/pods, as well as VM node OS kernel. Confidential Containers (preview) uses hardware based memory encryption (SEV-SNP).
+* [Kernel isolated containers][azure-confidential-containers] to use as the agent nodes in an AKS cluster. These containers are completely isolated to a specific hardware type and isolated from the Azure Host fabric, the host operating system, and the hypervisor. They're dedicated to a single customer. Select [one of the isolated VMs sizes][isolated-vm-size] as the **node size** when creating an AKS cluster or adding a node pool.
+* [Confidential Containers][confidential-containers] (preview), also based on Kata Confidential Containers, encrypts container memory and prevents data in memory during computation from being in clear text, readable format, and tampering. It helps isolate your containers from other container groups/pods, and VM node OS kernel. Confidential Containers (preview) uses hardware based memory encryption (SEV-SNP).
 * [Pod Sandboxing][pod-sandboxing] (preview) provides an isolation boundary between the container application and the shared kernel and compute resources (CPU, memory, and network) of the container host.
 
 ## Network security
@@ -171,7 +188,8 @@ For more information on core Kubernetes and AKS concepts, see:
 [aks-vulnerability-management-nodes]: concepts-vulnerability-management.md#worker-nodes
 [manage-ssh-access]: manage-ssh-node-access.md
 [trusted-launch]: use-trusted-launch.md
+[FIPS]: ./enable-fips-nodes.md
 [custom-node-configuration]: /azure/aks/custom-node-configuration
 [security-best-practices]: /azure/aks/operator-best-practices-cluster-security
-[security-container-access]: secure-container-access.md
+[security-container-access]: ./secure-container-access.md
 [etcd-encryption-cmk]: use-kms-etcd-encryption.md

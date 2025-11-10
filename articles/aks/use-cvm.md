@@ -46,7 +46,7 @@ CVMs offer the following security enhancements as compared to other virtual mach
 
 ## How does it work?
 
-If you're running a workload that requires enhanced confidentiality and integrity, you can benefit from memory encryption and enhanced security without code changes in your application. All pods on your CVM node are part of the same trust boundary. The nodes in a node pool created with CVM use a customized [node image][./node-images] specially configured for CVM. 
+If you're running a workload that requires enhanced confidentiality and integrity, you can benefit from memory encryption and enhanced security without code changes in your application. All pods on your CVM node are part of the same trust boundary. The nodes in a node pool created with CVM use a customized [node image][node-images] specially configured for CVM. 
 
 ### Supported OS Versions
 You can create CVM node pools on Linux OS types (Ubuntu and Azure Linux). However, not all OS versions support CVM node pools.
@@ -59,6 +59,8 @@ This table includes the supported OS versions:
 |Linux|`Ubuntu2204`|Not Supported|AKS doesn't support CVM for Ubuntu 22.04.|
 |Linux|`Ubuntu2404`|Supported| CVM is supported on `Ubuntu2404` in K8s 1.32-1.38. |
 |Linux|`AzureLinux`| Supported on Azure Linux 3.0| Azure Linux 3 is default when enabling CVM for K8s version 1.28-1.36.|
+|Linux| `flatcar`| Not supported| [Flatcar Container Linux for AKS][flatcar] doesn't support CVM. |
+|Linux| `AzureLinuxOSGuard`| Not supported| [Azure Linux with OS Guard for AKS][os-guard] doesn't support CVM. |
 |Windows|All Windows OS SKU| Not Supported|
 
 When using `Ubuntu` or `AzureLinux` as the `osSKU`, if the default OS version doesn't support CVM, AKS defaults to the most recent CVM-supported version of the OS. For example, Ubuntu 22.04 is default for Linux node pools. Since 22.04 doesn't currently support CVM, AKS defaults to Ubuntu 20.04 for Linux CVM-enabled node pools.
@@ -209,4 +211,7 @@ In this article, you learned how to add a node pool with CVM to an AKS cluster.
 [az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
 [resize-your-nodepool]: ./resize-node-pool.md
 [trusted-launch]: ./use-trusted-launch.md
+[flatcar]: ./flatcar-container-linux-for-aks.md
+[os-guard]: ./use-azure-linux-os-guard.md
+[node-images]: ./node-images.md
 

@@ -234,6 +234,36 @@ Cilium Agent blocked the request with the output:
 xx drop (Policy denied) flow 0xfddd76f6 to endpoint 0, ifindex 29, file bpf_lxc.c:1274, , identity 48447->world: 192.168.0.149:45830 -> 93.184.215.14:80 tcp SYN
 ```
 
+### Supported by CiliumClusterwideNetworkPolicy(CCNP)
+
+`CiliumClusterwideNetworkPolicy` supports FQDN filtering.
+
+> [!NOTE]
+> [Namespace specific information](https://docs.cilium.io/en/latest/security/policy/kubernetes/#namespace-specific-information) such as `io.kubernetes.pod.namespace` is only supported in cluster-wide policies.
+
+```
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-bing-fqdn
+spec:
+  endpointSelector: {} # Applies to all pods in the cluster
+  egress:
+    - toEndpoints:
+      - matchLabels:
+          "k8s:io.kubernetes.pod.namespace": kube-system
+          "k8s:k8s-app": kube-dns
+      toPorts:
+        - ports:
+           - port: "53"
+             protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*.bing.com"
+    - toFQDNs:
+      - matchPattern: "*.bing.com"
+```
+
 ---
 
 ## Clean up resources
