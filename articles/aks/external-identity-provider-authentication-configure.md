@@ -77,17 +77,6 @@ az provider register --namespace Microsoft.ContainerService
 
 Configure your external identity provider to support OIDC authentication. Select your identity provider for specific setup instructions:
 
-::: zone pivot="google-identity"
-
-### Google OAuth 2.0 Setup
-
-1. Go to the [Google Cloud Console][google-cloud-console].
-2. [Create or select a project][google-workspace-create-project].
-3. [Create OAuth 2.0 credentials][google-oauth2-protocol].
-4. Note your client ID and client secret for later use.
-
-::: zone-end
-
 ::: zone pivot="github"
 
 ### GitHub Actions OIDC Setup
@@ -103,9 +92,60 @@ Configure your external identity provider to support OIDC authentication. Select
 
 ::: zone-end
 
+::: zone pivot="google-identity"
+
+### Google OAuth 2.0 Setup
+
+1. Go to the [Google Cloud Console][google-cloud-console].
+2. [Create or select a project][google-workspace-create-project].
+3. [Create OAuth 2.0 credentials][google-oauth2-protocol].
+4. Note your client ID and client secret for later use.
+
+::: zone-end
+
 ## Create JWT authenticator configuration
 
 Create a JSON configuration file that defines how to validate and process tokens from your identity provider. Select your identity provider for specific configuration examples:
+
+::: zone pivot="github"
+
+### GitHub Configuration
+
+For GitHub Actions OIDC, create a file named `jwt-config.json` with the following configuration:
+
+```json
+{
+  "issuer": {
+      "url": "https://token.actions.githubusercontent.com",
+      "audiences": [
+          "my-api"
+      ]
+  },
+  "claimValidationRules": [
+      {
+          "expression": "has(claims.sub)",
+          "message": "must have sub claim"
+      }
+  ],
+  "claimMappings": {
+      "username": {
+          "expression": "'aks:jwt:github:' + claims.sub"
+      }
+  },
+  "userValidationRules": [
+      {
+          "expression": "has(user.username)",
+          "message": "must have username"
+      },
+      {
+          "expression": "!user.username.startsWith('aks:jwt:github:system')",
+          "message": "username must not start with 'aks:jwt:github:system'"
+      }
+  ]
+}
+```
+
+::: zone-end
 
 ::: zone pivot="google-identity"
 
@@ -145,46 +185,6 @@ Create a file named `jwt-config.json` with the following configuration:
             "message": "username must not start with 'aks:jwt:google:system'"
         }
     ]
-}
-```
-
-::: zone-end
-
-::: zone pivot="github"
-
-### GitHub Configuration
-
-For GitHub Actions OIDC, create a file named `jwt-config.json` with the following configuration:
-
-```json
-{
-  "issuer": {
-      "url": "https://token.actions.githubusercontent.com",
-      "audiences": [
-          "my-api"
-      ]
-  },
-  "claimValidationRules": [
-      {
-          "expression": "has(claims.sub)",
-          "message": "must have sub claim"
-      }
-  ],
-  "claimMappings": {
-      "username": {
-          "expression": "'aks:jwt:github:' + claims.sub"
-      }
-  },
-  "userValidationRules": [
-      {
-          "expression": "has(user.username)",
-          "message": "must have username"
-      },
-      {
-          "expression": "!user.username.startsWith('aks:jwt:github:system')",
-          "message": "username must not start with 'aks:jwt:github:system'"
-      }
-  ]
 }
 ```
 
@@ -245,29 +245,6 @@ az aks jwtauthenticator show \
 ## Set up client for authentication
 
 Configure your client to authenticate with your external identity provider. Select your identity provider for specific configuration:
-
-::: zone pivot="google-identity"
-
-### Method 1: Using kubelogin plugin (Google)
-
-Add a new user context to your kubeconfig file:
-
-```yaml
-users:
-- name: external-user
-  user:
-    exec:
-      apiVersion: client.authentication.k8s.io/v1beta1
-      command: kubectl
-      args:
-      - oidc-login
-      - get-token
-      - --oidc-issuer-url=https://accounts.google.com
-      - --oidc-client-id=your-client-id.apps.googleusercontent.com
-      - --oidc-client-secret=your-client-secret
-```
-
-::: zone-end
 
 ::: zone pivot="github"
 
@@ -361,6 +338,29 @@ az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --f
 
 ::: zone-end
 
+::: zone pivot="google-identity"
+
+### Method 1: Using kubelogin plugin (Google)
+
+Add a new user context to your kubeconfig file:
+
+```yaml
+users:
+- name: external-user
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      command: kubectl
+      args:
+      - oidc-login
+      - get-token
+      - --oidc-issuer-url=https://accounts.google.com
+      - --oidc-client-id=your-client-id.apps.googleusercontent.com
+      - --oidc-client-secret=your-client-secret
+```
+
+::: zone-end
+
 ### Method 2: Using static token
 
 If you have a JWT token, you can use it directly:
@@ -380,20 +380,20 @@ Test the authentication by running a kubectl command:
 kubectl get nodes --user external-user
 ```
 
-::: zone pivot="google-identity"
-
-Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
-```
-Error from server (Forbidden): nodes is forbidden: User "aks:jwt:google:your-subject" cannot list resource "nodes" in API group "" at the cluster scope
-```
-
-::: zone-end
-
 ::: zone pivot="github"
 
 Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
 ```
 Error from server (Forbidden): nodes is forbidden: User "aks:jwt:github:your-sub" cannot list resource "nodes" in API group "" at the cluster scope
+```
+
+::: zone-end
+
+::: zone pivot="google-identity"
+
+Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
+```
+Error from server (Forbidden): nodes is forbidden: User "aks:jwt:google:your-subject" cannot list resource "nodes" in API group "" at the cluster scope
 ```
 
 ::: zone-end
@@ -405,38 +405,6 @@ This error indicates successful authentication but lack of authorization.
 Create appropriate RBAC bindings for your external users. Use the cluster admin credentials to apply these configurations. Select your identity provider for provider-specific examples:
 
 ### Create a sample role and binding
-
-::: zone pivot="google-identity"
-
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: external-user-role
-rules:
-- apiGroups: [""]
-  resources: ["pods", "services", "nodes"]
-  verbs: ["get", "list"]
-- apiGroups: ["apps"]
-  resources: ["deployments", "replicasets"]
-  verbs: ["get", "list"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: external-user-binding
-subjects:
-- kind: User
-  # This matches the username expression in claim mappings for Google
-  name: aks:jwt:google:your-subject-claim
-  apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: ClusterRole
-  name: external-user-role
-  apiGroup: rbac.authorization.k8s.io
-```
-
-::: zone-end
 
 ::: zone pivot="github"
 
@@ -461,6 +429,38 @@ subjects:
 - kind: User
   # This matches the username expression in claim mappings for GitHub
   name: aks:jwt:github:your-github-sub
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: external-user-role
+  apiGroup: rbac.authorization.k8s.io
+```
+
+::: zone-end
+
+::: zone pivot="google-identity"
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: external-user-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "nodes"]
+  verbs: ["get", "list"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: external-user-binding
+subjects:
+- kind: User
+  # This matches the username expression in claim mappings for Google
+  name: aks:jwt:google:your-subject-claim
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
