@@ -30,7 +30,7 @@ The feature is based on the [Kubernetes structured authentication configuration]
 ## How it works
 
 
-:::image type="content" source="media/external-identity-provider-authentication/conceptual-diagram.png" alt-text="Conceptual diagram showing how external identity provider based authentication works with AKS clusters" lightbox="media/external-identity-provider-authentication/conceptual-diagram.png":::
+:::image type="content" source="media/external-identity-provider-authentication/conceptual-diagram.png" alt-text="Conceptual diagram showing how external identity provider-based authentication works with AKS clusters." lightbox="media/external-identity-provider-authentication/conceptual-diagram.png":::
 When a user attempts to access the Kubernetes API server:
 
 - **Authentication**: The following steps validate the user's identity:
@@ -116,11 +116,11 @@ Structured authentication provides multiple validation layers:
 
 ### Security recommendations
 
-1. **Use strong claim validation**: Implement comprehensive validation rules to ensure only authorized tokens are accepted.
-2. **Limit token scope**: Configure your identity provider to issue tokens with minimal necessary claims.
-3. **Regular rotation**: Rotate client secrets and certificates regularly.
-4. **Monitor access**: Enable [resource logs][monitor-resource-logs] and turn on `kube-apiserver` logs to inspect any potential issues with the configured JWT authenticators and track authentication events.
-5. **Test configurations**: Validate your JWT authenticator configuration in a non-production environment first.
+- **Use strong claim validation**: Implement comprehensive validation rules to ensure only authorized tokens are accepted.
+- **Limit token scope**: Configure your identity provider to issue tokens with minimal necessary claims.
+- **Regular rotation**: Rotate client secrets and certificates regularly.
+- **Monitor access**: Enable [resource logs][monitor-resource-logs] and turn on `kube-apiserver` logs to inspect any potential issues with the configured JWT authenticators and track authentication events.
+- **Test configurations**: Validate your JWT authenticator configuration in a non-production environment first.
 
 
 ## Next steps
