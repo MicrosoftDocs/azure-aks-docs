@@ -13,7 +13,14 @@ ms.author: shasb
 
 # Set up identity bindings on Azure Kubernetes Service (AKS) (Preview)
 
+
+The existing [workload identity feature for AKS][workload-identity-overview] has scale limitations because a single user-assigned managed identity (UAMI) can't have more than **20 federated identity credentials (FICs)**. Large Kubernetes platform deployments might span more than 20 clusters (each cluster has a unique issuer) or have many `<namespace, service-account>` combinations that require mapping to the same UAMI, exhausting the FIC quota.
+
+This article shows you how to configure identity bindings to overcome these workload identity scale limitations.
+
 ## Prerequisites
+
+1. Read the [conceptual doc for identity bindings][identity-bindings-concepts] to understand how identity binding works.
 
 1. Install or update the Azure CLI `aks-preview` extension version `18.0.0b26` or later.
 
@@ -158,7 +165,7 @@ The following example shows how to use the Azure role-based access control (Azur
 1. Create a key vault with purge protection and Azure RBAC authorization enabled. You can also use an existing key vault if it's configured for both purge protection and Azure RBAC authorization:
 
     ```azurecli-interactive
-    export KEYVAULT_NAME="keyvault-workload-id"
+    export KEYVAULT_NAME="ib-test"
     # Ensure the key vault name is between 3-24 characters
     if [ ${#KEYVAULT_NAME} -gt 24 ]; then
         KEYVAULT_NAME="${KEYVAULT_NAME:0:24}"
@@ -275,15 +282,6 @@ I1107 20:03:42.865180       1 main.go:77] "successfully got secret" secret="Hell
 ## Scale out usage across clusters
 
 Identity bindings allow mapping multiple AKS clusters to the same UAMI while still using a single FIC. Repeat the steps from "Create an identity binding" through "Acquire a Microsoft Entra access token" for additional clusters (creating a new identity binding per cluster) to validate scaled usage patterns.
-
-## Troubleshooting
-
-| Symptom | Possible cause | Resolution |
-|---------|----------------|-----------|
-| Identity binding creation fails | Missing FIC create permissions | Assign role with `federatedIdentityCredentials/write` on the UAMI scope. |
-| Pod missing workload identity env vars | Missing label `azure.workload.identity/use: true` | Add the label and restart the pod. |
-| Token request times out | Egress/network interception issues | Verify cluster can reach identity binding proxy endpoint and no network policies block traffic. |
-| Access token missing expected claims | Incorrect service account annotations | Reapply correct `tenant-id` and `client-id` annotations and restart pod. |
 
 ## Clean up (optional)
 
