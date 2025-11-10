@@ -13,8 +13,7 @@ ms.author: shasb
 
 # Identity bindings for Azure Kubernetes Service (AKS) (Preview)
 
-> [!IMPORTANT]
-> Identity bindings is a private preview capability. Functionality and API surface may change. Access requires enabling the feature flag `Microsoft.ContainerService/IdentityBinding` for your subscription(s) using the private preview enrollment form. Do not use in production environments.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Context
 
