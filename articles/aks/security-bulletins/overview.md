@@ -25,7 +25,7 @@ These updates cover security information related to the following AKS components
 
 ---
 
-## AKS-2025-0012  Runc CVEs - CVE-2025-31133, CVE-2025-52565, CVE-2025-52881
+## AKS-2025-0012 Runc CVEs - CVE-2025-31133, CVE-2025-52565, CVE-2025-52881
 
 **Published Date**: November 7, 2025
 
@@ -45,14 +45,13 @@ The bulletin provides an update regarding the recent vulnerabilities (CVE-2025-3
 
 **Affected Versions**
 
-- <TODO: insert the version>
+- Linux node image versions prior to 202511.07.0
 
 **Resolutions**
 
 - Newer node image versions have been rolled out. Upgrade Linux node image version to
-  * <TODO: insert the version>
-  * or later
-- A security patch has been rolled out in 20251107 release. You can check the release status from [AKS release tracker][aks-release-tracker].
+  - 202511.07.0
+  - or later. You can check the latest node image versions from [AKS release notes][aks-release-notes].
 
 ---
 
