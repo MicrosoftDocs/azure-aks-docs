@@ -78,9 +78,9 @@ External identity providers must:
 - Issue JWT tokens with appropriate claims
 - Be accessible from AKS cluster nodes for token validation
 
-## Supported identity providers
+## Identity providers
 
-While AKS structured authentication supports any OIDC-compliant identity provider, common examples include:
+While AKS structured authentication allows any OIDC-compliant identity provider, common examples include:
 
 - **GitHub**: Authenticate using GitHub identities or GitHub Actions
 - **Google OAuth 2.0**: Use Google accounts for authentication
