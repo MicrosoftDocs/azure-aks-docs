@@ -38,6 +38,8 @@ For AKS node pools, we recommend a minimum size of *Standard_NC6s_v3*. The NVv4 
 ## Limitations
 
 * If you're using an Azure Linux GPU-enabled node pool, automatic security patches aren't applied. Refer to your current AKS API version for the default behavior of node OS upgrade channel.
+* [Flatcar Container Linux for AKS][flatcar] isn't supported with NVIDIA GPU on AKS.
+* [Azure Linux with OS Guard for AKS][os-guard] isn't supported with NVIDIA GPU on AKS.
 
 > [!NOTE]
 > For AKS API version 2023-06-01 or later, the default channel for node OS upgrade is *NodeImage*. For previous versions, the default channel is *None*. To learn more, see [auto-upgrade](./auto-upgrade-node-image.md).
@@ -423,6 +425,7 @@ kubectl delete jobs samples-tf-mnist-demo
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-vm-list-skus]: /cli/azure/vm
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
@@ -441,3 +444,5 @@ kubectl delete jobs samples-tf-mnist-demo
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [NVadsA10]: /azure/virtual-machines/nva10v5-series
+[flatcar]: ./flatcar-container-linux-for-aks.md
+[os-guard]: ./use-azure-linux-os-guard.md
