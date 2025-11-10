@@ -92,13 +92,16 @@ While AKS structured authentication supports any OIDC-compliant identity provide
 
 ## Security considerations
 
+### Network access
+
+Identity provider endpoints must be accessible from:
+- AKS cluster nodes for token validation
+- Client systems for token acquisition
+- Any network paths involved in the authentication flow
+
 ### Prefix requirements
 
-All usernames and groups mapped through structured authentication must be prefixed with `aks:jwt:` to prevent conflicts with other authentication methods and system accounts. This prefix:
-
-- Ensures clear separation between authentication sources
-- Prevents privilege escalation attacks
-- Maintains compatibility with existing RBAC configurations
+All usernames and groups mapped through structured authentication must be prefixed with `aks:jwt:` to prevent conflicts with other authentication methods and system accounts.
 
 ### Validation layers
 
@@ -109,12 +112,16 @@ Structured authentication provides multiple validation layers:
 3. **Custom claim validation**: Applies your organization's specific requirements
 4. **User validation**: Final checks after claim mapping
 
-### Network access
+## Best practices
 
-Identity provider endpoints must be accessible from:
-- AKS cluster nodes for token validation
-- Client systems for token acquisition
-- Any network paths involved in the authentication flow
+### Security recommendations
+
+1. **Use strong claim validation**: Implement comprehensive validation rules to ensure only authorized tokens are accepted.
+2. **Limit token scope**: Configure your identity provider to issue tokens with minimal necessary claims.
+3. **Regular rotation**: Rotate client secrets and certificates regularly.
+4. **Monitor access**: Enable [resource logs][monitor-resource-logs] and turn on `kube-apiserver` logs to inspect any potential issues with the configured JWT authenticators and track authentication events.
+5. **Test configurations**: Validate your JWT authenticator configuration in a non-production environment first.
+
 
 ## Next steps
 
@@ -131,3 +138,4 @@ Identity provider endpoints must be accessible from:
 <!-- LINKS - internal -->
 [aks-managed-entra-id]: enable-authentication-microsoft-entra-id.md
 [configure-structured-auth]: external-identity-provider-authentication-configure.md
+[monitor-resource-logs]: monitor-aks-reference.md#resource-logs

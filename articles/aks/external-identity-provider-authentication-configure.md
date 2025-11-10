@@ -19,6 +19,7 @@ This article shows you how to configure external identity providers for Azure Ku
 
 ## Prerequisites
 
+- Read [conceptual overview][structured-auth-overview] for authentication to AKS using external identity provider.
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 - This article requires version 2.77.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
 - You need to install the `aks-preview` Azure CLI extension version 18.0.0b41 or later to use structured authentication features.
@@ -41,10 +42,7 @@ This article shows you how to configure external identity providers for Azure Ku
     ```
 - An external identity provider that supports OpenID Connect (OIDC).
 - Network connectivity from cluster nodes to your identity provider.
-- If you plan to use the `kubelogin` plugin, install it using kubectl krew:
-  ```bash
-  kubectl krew install oidc-login
-  ```
+- If you plan to use the `kubelogin` plugin, install it using these [setup instructions][kubelogin-oidc]
 
 ### Set environment variables
 
@@ -127,10 +125,6 @@ Create a file named `jwt-config.json` with the following configuration:
         {
             "expression": "has(claims.sub)",
             "message": "must have sub claim"
-        },
-        {
-            "expression": "has(claims.email)",
-            "message": "must have email claim"
         }
     ],
     "claimMappings": {
@@ -164,41 +158,33 @@ For GitHub Actions OIDC, create a file named `jwt-config.json` with the followin
 
 ```json
 {
-    "issuer": {
-        "url": "https://token.actions.githubusercontent.com",
-        "audiences": [
-            "my-api"
-        ]
-    },
-    "claimValidationRules": [
-        {
-            "expression": "has(claims.sub)",
-            "message": "must have sub claim"
-        },
-        {
-            "expression": "claims.repository_owner == 'your-org'",
-            "message": "must be from authorized organization"
-        }
-    ],
-    "claimMappings": {
-        "username": {
-            "expression": "'aks:jwt:github:' + claims.actor"
-        },
-        "groups": {
-            "expression": "['aks:jwt:github:' + claims.repository_owner]"
-        },
-        "extra": {
-            "repository": {
-                "expression": "claims.repository"
-            }
-        }
-    },
-    "userValidationRules": [
-        {
-            "expression": "user.groups.all(g, g.startsWith('aks:jwt:github:'))",
-            "message": "all groups must be properly prefixed"
-        }
-    ]
+  "issuer": {
+      "url": "https://token.actions.githubusercontent.com",
+      "audiences": [
+          "my-api"
+      ]
+  },
+  "claimValidationRules": [
+      {
+          "expression": "has(claims.sub)",
+          "message": "must have sub claim"
+      }
+  ],
+  "claimMappings": {
+      "username": {
+          "expression": "'aks:jwt:github:' + claims.sub"
+      }
+  },
+  "userValidationRules": [
+      {
+          "expression": "has(user.username)",
+          "message": "must have username"
+      },
+      {
+          "expression": "!user.username.startsWith('aks:jwt:github:system')",
+          "message": "username must not start with 'aks:jwt:github:system'"
+      }
+  ]
 }
 ```
 
@@ -224,50 +210,6 @@ For GitHub Actions OIDC, create a file named `jwt-config.json` with the followin
 
 > [!IMPORTANT]
 > All username and group mappings must include the `aks:jwt:` prefix to prevent conflicts with other authentication methods.
-
-### Advanced configuration example
-
-For more complex scenarios with multiple groups and conditional logic:
-
-```json
-{
-    "issuer": {
-        "url": "https://token.actions.githubusercontent.com",
-        "audiences": [
-            "my-api"
-        ]
-    },
-    "claimValidationRules": [
-        {
-            "expression": "has(claims.sub)",
-            "message": "must have sub claim"
-        },
-        {
-            "expression": "claims.repository_owner == 'your-org'",
-            "message": "must be from authorized organization"
-        }
-    ],
-    "claimMappings": {
-        "username": {
-            "expression": "'aks:jwt:github:' + claims.actor"
-        },
-        "groups": {
-            "expression": "['aks:jwt:github:' + claims.repository_owner]"
-        },
-        "extra": {
-            "repository": {
-                "expression": "claims.repository"
-            }
-        }
-    },
-    "userValidationRules": [
-        {
-            "expression": "user.groups.all(g, g.startsWith('aks:jwt:github:'))",
-            "message": "all groups must be properly prefixed"
-        }
-    ]
-}
-```
 
 ## Create the JWT authenticator
 
@@ -451,7 +393,7 @@ Error from server (Forbidden): nodes is forbidden: User "aks:jwt:google:your-sub
 
 Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
 ```
-Error from server (Forbidden): nodes is forbidden: User "aks:jwt:github:your-actor" cannot list resource "nodes" in API group "" at the cluster scope
+Error from server (Forbidden): nodes is forbidden: User "aks:jwt:github:your-sub" cannot list resource "nodes" in API group "" at the cluster scope
 ```
 
 ::: zone-end
@@ -518,7 +460,7 @@ metadata:
 subjects:
 - kind: User
   # This matches the username expression in claim mappings for GitHub
-  name: aks:jwt:github:your-github-actor
+  name: aks:jwt:github:your-github-sub
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
@@ -543,67 +485,6 @@ kubectl get nodes --user external-user
 kubectl get pods --user external-user
 ```
 
-## Troubleshooting
-
-### Common issues
-
-1. **401 Unauthorized errors**
-   - Verify your identity provider configuration.
-   - Check that the token audience matches your authenticator configuration.
-   - Ensure the issuer URL is correct and accessible.
-
-2. **Token validation failures**
-   - Verify CEL expressions in your configuration.
-   - Check that claim mappings return the expected data types.
-   - Ensure all usernames/groups have the `aks:jwt:` prefix.
-
-3. **Network connectivity issues**
-   - Verify cluster nodes can reach your identity provider.
-   - Check firewall rules and network security groups.
-   - Ensure Domain Name System (DNS) resolution works for the issuer URL.
-
-### Debug authentication
-
-::: zone pivot="google-identity"
-
-1. Get a token from your Google identity provider:
-   ```bash
-   kubectl oidc-login get-token \
-     --oidc-issuer-url=https://accounts.google.com \
-     --oidc-client-id=your-client-id \
-     --oidc-client-secret=your-client-secret
-   ```
-
-::: zone-end
-
-::: zone pivot="github"
-
-1. For GitHub Actions OIDC, tokens are typically obtained within the workflow context using the GitHub Actions OIDC provider. You can obtain a token for testing using:
-   ```bash
-   # This would typically be done within a GitHub Actions workflow
-   # where ACTIONS_ID_TOKEN_REQUEST_TOKEN and ACTIONS_ID_TOKEN_REQUEST_URL are available
-   curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-     "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=my-api"
-   ```
-
-::: zone-end
-
-2. Decode the token and verify claims at [jwt.ms][jwt-ms].
-
-3. Check AKS API server logs for authentication errors.
-
-### Update JWT authenticator
-
-Modify your configuration and update the authenticator:
-
-```azurecli-interactive
-az aks jwtauthenticator update \
-    --resource-group $RESOURCE_GROUP \
-    --cluster-name $CLUSTER_NAME \
-    --name external-auth \
-    --config-file updated-jwt-config.json
-```
-
 ### Remove JWT authenticator
 
 Delete an authenticator when no longer needed:
@@ -615,35 +496,23 @@ az aks jwtauthenticator delete \
     --name external-auth
 ```
 
-## Best practices
-
-### Security recommendations
-
-1. **Use strong claim validation**: Implement comprehensive validation rules to ensure only authorized tokens are accepted.
-2. **Limit token scope**: Configure your identity provider to issue tokens with minimal necessary claims.
-3. **Regular rotation**: Rotate client secrets and certificates regularly.
-4. **Monitor access**: Enable audit logging to track authentication events.
-5. **Test configurations**: Validate your JWT authenticator configuration in a non-production environment first.
-
 ## Next steps
 
-- [Learn about structured authentication concepts][structured-auth-overview]
-- [Configure cross-tenant workload identity][workload-identity-cross-tenant]
-- [Set up Azure RBAC for Kubernetes authorization][manage-azure-rbac]
-- [Monitor and audit AKS cluster access][monitor-aks]
+- [Set up resource logs to monitor AKS API server logs][monitor-resource-logs]
 
 <!-- LINKS - external -->
 [google-cloud-console]: https://console.cloud.google.com/
 [google-workspace-create-project]: https://developers.google.com/workspace/guides/create-project
 [google-oauth2-protocol]: https://developers.google.com/identity/protocols/oauth2/
 [jwt-ms]: https://jwt.ms
+[kubelogin-oidc]: https://github.com/int128/kubelogin?tab=readme-ov-file#setup
 
 <!-- LINKS - internal -->
 [aks-quickstart-cli]: learn/quick-kubernetes-deploy-cli.md
 [structured-auth-overview]: external-identity-provider-authentication-overview.md
 [workload-identity-cross-tenant]: workload-identity-cross-tenant.md
 [manage-azure-rbac]: manage-azure-rbac.md
-[monitor-aks]: monitor-aks.md
+[monitor-resource-logs]: monitor-aks-reference.md#resource-logs
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
