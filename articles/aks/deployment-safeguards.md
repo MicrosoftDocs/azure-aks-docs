@@ -51,6 +51,25 @@ The following table lists the policies that become active and the Kubernetes res
 
 If you want to submit an idea or request for Deployment Safeguards, open an issue in the [AKS GitHub repository][aks-gh-repo] and add `[Deployment Safeguards request]` to the beginning of the title.
 
+## Pod Security Standards in Deployment Safeguards (AKS Automatic)
+> [!NOTE]
+> Baseline Pod Security Standards are now turned on by default in AKS Automatic. Currently Pod Security Standards in Deployment Safeguards are not available in Standard SKU.
+
+In AKS Automatic, [Baseline Pod Security Standards][pod-security-standards] are now enabled by default. To ensure your workloads deploy successfully, make sure each manifest complies with the Baseline Pod Security requirements.
+
+Policy|Error Message|Fix
+-|-|-
+AppArmor|`AppArmor annotation values must be undefined/nil, runtime/default, or localhost/*` or `AppArmor profile type must be one of: undefined/nil, RuntimeDefault, or Localhost`|Remove any specification of AppArmor. Kubernetes by default applies apparmor settings. "On supported hosts, the RuntimeDefault AppArmor profile is applied by default".
+Host Namespaces|`Host network namespaces are disallowed: spec.hostNetwork is set to true'` or `'Host PID namespaces are disallowed: spec.hostPID is set to true'` or `'Host IPC namespaces are disallowed: spec.hostIPC is set to true'`|Set those values to false, or remove specifying the fields.
+Privileged Containers|`'Privileged [ephemeral\|init\|N/A] containers are disallowed: spec.containers[*].securityContext.privileged is set to true'`|Set the appropriate securityContext.privileged field to false, or remove the field.
+Capabiilities|Message will start with `'Disallowed capabilities detected`| Remove the capability shown from the container's manifest.
+HostPath volumes|`HostPath volumes are forbidden under restricted security policy unless containers mounting them are from allowed images`|Remove the HostPath volume and volume mount
+Host Ports|HostPorts are forbidden under baseline security policy| Remove the host port specification from the offending container.
+SELinux|`SELinux type must be one of: undefined/empty, container_t, container_init_t, container_kvm_t, or container_engine_t`|Set the container's securityContext.seLinuxOptions.type field to one of the allowed values
+/proc Mount Type|ProcMount must be undefined/nil or 'Default' in spec.containers[*].securityContext.procMount|set "*   `spec.containers[*].securityContext.procMount`" to 'Default' or have it be undefined.
+Seccomp|`Seccomp profile must not be explicitly set to Unconfined. Allowed values are: undefined/nil, RuntimeDefault, or Localhost`| Set `securityContext.seccompProfile.type` on the pod or containers to one of the allowed values.
+Sysctls|`Disallowed sysctl detected. Only baseline Kubernetes pod security standard sysctls are permitted`|Remove the disallowed systctls( see the [oss spec](https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline) for specific list).
+
 ## Enable Deployment Safeguards
 
 >[!NOTE]
@@ -157,6 +176,9 @@ To learn more, see [workload validation in Gatekeeper](https://open-policy-agent
 ## Next steps
 
 * Learn more about [best practices][best-practices] for operating an AKS cluster.
+
+<!-- EXTERNAL LINKS -->
+[pod-security-standards]: https://kubernetes.io/docs/concepts/security/pod-security-standards/
 
 <!-- LINKS -->
 [az-extension-add]: /cli/azure/extension#az-extension-add

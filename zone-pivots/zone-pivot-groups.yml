@@ -102,6 +102,14 @@ groups:
     title: AKS-managed Azure Container Registry
   - id: byo-acr
     title: Bring your own (BYO) Azure Container Registry
+- id: external-idp-authn-type
+  title: Choose an external identity provider authentication type
+  prompt: Choose an authentication type
+  pivots:
+  - id: github
+    title: GitHub
+  - id: google-identity
+    title: Google Identity
 # Owner: schaffererin
 - id: app-routing-nginx-configuration
   title: Choose a configuration option
