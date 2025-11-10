@@ -301,7 +301,7 @@ jobs:
       - name: Get GitHub OIDC token
         id: get_token
         run: |
-          TOKEN=$(curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          TOKEN=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=my-api" | \
             jq -r '.value')
           echo "::add-mask::$TOKEN"
