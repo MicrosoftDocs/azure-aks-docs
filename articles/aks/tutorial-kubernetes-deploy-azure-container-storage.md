@@ -16,7 +16,7 @@ ms.custom: mvc, devx-track-azurecli
 This tutorial introduces Azure Container Storage and demonstrates how to deploy and manage container-native storage for applications running on Azure Kubernetes Service (AKS). If you don't want to deploy Azure Container Storage now, you can skip this tutorial and proceed directly to [Deploy an application in AKS][aks-tutorial-deploy-app]. You won't need Azure Container Storage for the basic storefront application in this tutorial series.
 
 > [!IMPORTANT]
-> This article explains how to install Azure Container Storage (version 1.x.x), which now explicitly requires a version pinning parameter `--container-storage-version 1` for installation. [Azure Container Storage (version 2.x.x)](/azure/storage/container-storage/container-storage-introduction.md) is now available.
+> This article explains how to install Azure Container Storage (version 1.x.x), which now explicitly requires a version pinning parameter `--container-storage-version 1` for installation. [Azure Container Storage (version 2.x.x)](/azure/storage/container-storage/container-storage-introduction) is now available.
 
 Azure Container Storage simplifies the management of stateful applications in Kubernetes by offering container-native storage tailored to a variety of workloads, including databases, analytics platforms, and high-performance applications.
 
