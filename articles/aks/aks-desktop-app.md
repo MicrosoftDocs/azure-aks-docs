@@ -4,7 +4,7 @@ description: Learn how to deploy and manage applications on Azure Kubernetes Ser
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: how-to
-ms.date: 11/07/2025
+ms.date: 11/10/2025
 ms.author: alalve
 # Customer intent: As a developer, I want to deploy an application to Azure Kubernetes Service using AKS desktop, so that I can quickly deploy and manage my containerized applications without writing detailed Kubernetes manifests.
 ---
@@ -44,7 +44,7 @@ The first time you open AKS desktop, you need to sign into your Azure account. T
 
 Once signed in, you have the ability to add clusters that you have access to into AKS desktop.
 
-## Add a cluster to AKS desktop
+## Add a cluster to AKS desktop (Preview)
 
 When you add a cluster, you're given two options to add a cluster to AKS desktop. The available options are:
 
@@ -84,7 +84,7 @@ If you followed the Azure portal method first, follow these steps:
 
 ---
 
-## Add additional clusters to AKS desktop
+## Add additional clusters to AKS desktop (Preview)
 
 1. In the left pane, select **Add Cluster**.
 1. Under **Providers**, select **Add**.
@@ -94,7 +94,7 @@ If you followed the Azure portal method first, follow these steps:
 
 1. Choose your cluster, then select **Register Cluster**.
 
-## Remove a cluster from AKS desktop
+## Remove a cluster from AKS desktop (Preview)
 
 To delete a cluster from AKS desktop, follow these steps:
 
@@ -183,6 +183,17 @@ Once you create your first project, AKS desktop places you directly into the new
 
 ---
 
+## Remove a project
+
+To delete a project from AKS desktop, follow these steps:
+
+1. In the left pane, select the **Home** button.
+1. Under **Projects**, select your project under the **Name** column.
+1. Within your project, to the far right, select the trash can button.
+1. Under the **Delete Project** window, select the **Delete Project** button to remove your project from the given namespace.
+
+   If you also want to the delete the namespace along with your project (this also removes associated resources), tick the box **Also delete the namespaces**. Then select **Delete Project**.
+
 ## View cluster data and metrics
 
 AKS desktop provides a unified view of your application resources, health status, resource quotas, workloads, and configuration settings all in a single dashboard. Use the tabs to explore detailed information and manage each aspect of your deployment efficiently.
@@ -192,6 +203,14 @@ To access this information for your specific cluster, follow these steps:
 1. A cluster must be added into AKS desktop to view this information.
 1. Select **Home**, under the **Name** tab, select the cluster you wish to view.
 1. In the left pane, choose the specific setting to view detailed cluster data and metrics.
+
+## Provide feedback for AKS desktop (Preview)
+
+You can provide feedback by visiting the [AKS Community](https://feedback.azure.com/d365community/forum/aabe212a-f724-ec11-b6e6-000d3a4f0da0) forum. To provide your feedback, follow these steps:
+
+1. To the far right, select the **Post a new idea** button.
+1. Under **Title**, type **AKS desktop (Preview)**.
+1. Place your feedback in the **Description** box. Then select the **Post** button to submit your information.
 
 ## Next steps
 
