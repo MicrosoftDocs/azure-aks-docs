@@ -801,7 +801,13 @@
         - name: Microsoft Entra pod identity
           href: use-azure-ad-pod-identity.md
         - name: Pod Sandboxing
-          href: use-pod-sandboxing.md
+          items:
+            - name: Pod Sandboxing overview
+              href: concepts-pod-sandboxing.md
+            - name: Pod Sandboxing considerations
+              href: considerations-pod-sandboxing.md
+            - name: Deploy Pod Sandboxing
+              href: use-pod-sandboxing.md
         - name: Network policies
           items:
             - name: Secure pod traffic with network policies
