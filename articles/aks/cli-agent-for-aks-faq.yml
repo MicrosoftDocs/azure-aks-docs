@@ -82,7 +82,7 @@ sections:
         answer: |
           You can provide feedback or get help with the agentic CLI for AKS through several channels:
 
-          - GitHub issues and PRs on the HolmesGPT repository.
+          - GitHub issues and PRs on the [Agentic CLI repository](https://github.com/Azure/agentic-cli-for-aks).
           - Internal channels during the private preview phase.
           - Azure support tickets or direct engagement with the AKS product team.
 
