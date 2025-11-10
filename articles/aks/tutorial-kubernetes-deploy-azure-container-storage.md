@@ -1,19 +1,22 @@
 ---
 title: Kubernetes on Azure tutorial - Use Azure Container Storage
-description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to deploy Azure Container Storage on an AKS cluster and create volumes.
+description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to deploy Azure Container Storage (version 1.x.x) on an AKS cluster and create volumes.
 ms.topic: tutorial
-ms.date: 03/05/2025
+ms.date: 11/10/2025
 author: khdownie
 ms.author: kendownie
 ms.custom: mvc, devx-track-azurecli
 
-# Customer intent: As a developer or IT pro, I want to learn how to use Azure Container Storage with Azure Kubernetes Service (AKS) so that I can deploy container-native storage for stateful applications.
+# Customer intent: As a developer or IT pro, I want to learn how to use Azure Container Storage (version 1.x.x) with Azure Kubernetes Service (AKS) so that I can deploy container-native storage for stateful applications.
 
 ---
 
-# Tutorial - Deploy Azure Container Storage on an AKS cluster
+# Tutorial - Deploy Azure Container Storage (version 1.x.x) on an AKS cluster
 
 This tutorial introduces Azure Container Storage and demonstrates how to deploy and manage container-native storage for applications running on Azure Kubernetes Service (AKS). If you don't want to deploy Azure Container Storage now, you can skip this tutorial and proceed directly to [Deploy an application in AKS][aks-tutorial-deploy-app]. You won't need Azure Container Storage for the basic storefront application in this tutorial series.
+
+> [!IMPORTANT]
+> This article explains how to install Azure Container Storage (version 1.x.x), which now explicitly requires a version pinning parameter `--container-storage-version 1` for installation. [Azure Container Storage (version 2.x.x)](container-storage-introduction.md) is now available.
 
 Azure Container Storage simplifies the management of stateful applications in Kubernetes by offering container-native storage tailored to a variety of workloads, including databases, analytics platforms, and high-performance applications.
 
@@ -23,7 +26,7 @@ By the end of this tutorial, you will:
 >
 > * Understand how Azure Container Storage supports diverse workloads in Kubernetes.
 > * Explore multiple storage backend options to tailor storage to your application's needs.
-> * Deploy Azure Container Storage on your AKS cluster and create a generic ephemeral volume.
+> * Deploy Azure Container Storage (version 1.x.x) on your AKS cluster and create a generic ephemeral volume.
 
 ## Before you begin
 
@@ -68,7 +71,7 @@ If you're not already connected to your cluster from the previous tutorial, run 
 
 ## Choose a backing storage option
 
-Azure Container Storage uses storage pools to provision and manage persistent and generic volumes. It offers a variety of back-end storage options for your storage pools, each suited for specific workloads. Selecting the right storage type is critical for optimizing workload performance, durability, and cost efficiency. For this tutorial, we'll use Ephemeral Disk with local NVMe as backing storage to create a generic ephemeral volume. However, we'll also explore the other backing storage options that allow you to create persistent volumes.
+Azure Container Storage (version 1.x.x) uses storage pools to provision and manage persistent and generic volumes. It offers a variety of back-end storage options for your storage pools, each suited for specific workloads. Selecting the right storage type is critical for optimizing workload performance, durability, and cost efficiency. For this tutorial, we'll use Ephemeral Disk with local NVMe as backing storage to create a generic ephemeral volume. However, we'll also explore the other backing storage options that allow you to create persistent volumes.
 
 ### Ephemeral Disk
 
@@ -86,12 +89,12 @@ Azure Disks allow for automatic provisioning of storage volumes and include buil
 
 Designed for shared storage needs and general-purpose databases requiring scalability and high availability, Azure Elastic SAN is a good fit for workloads such as CI/CD pipelines or large-scale data processing.
 
-## Enable Azure Container Storage and create a storage pool
+## Enable Azure Container Storage (version 1.x.x) and create a storage pool
 
 Run the following command to install Azure Container Storage on the cluster and create a Local NVMe storage pool.
 
 ```azurecli-interactive
-az aks update -n myAKSCluster -g myResourceGroup --enable-azure-container-storage ephemeralDisk --storage-pool-option NVMe
+az aks update -n myAKSCluster -g myResourceGroup --enable-azure-container-storage ephemeralDisk --container-storage-version 1 --storage-pool-option NVMe
 ```
 
 The deployment should take less than 15 minutes.
@@ -189,7 +192,7 @@ Verify the available capacity of ephemeral disks before provisioning additional 
 kubectl describe node <node-name>
 ```
 
-To learn more about Azure Container Storage, including how to create persistent volumes, see [What is Azure Container Storage?][azure-container-storage]
+To learn more about Azure Container Storage (version 1.x.x), including how to create persistent volumes, see [What is Azure Container Storage?][azure-container-storage]
 
 ## Clean up resources
 
@@ -215,11 +218,11 @@ You won't need Azure Container Storage for the rest of this tutorial series, so 
 
 ## Next step
 
-In this tutorial, you deployed Azure Container Storage on your AKS cluster. You learned how to:
+In this tutorial, you deployed Azure Container Storage (version 1.x.x) on your AKS cluster. You learned how to:
 
 > [!div class="checklist"]
 >
-> * Enable Azure Container Storage on your AKS cluster.
+> * Enable Azure Container Storage (version 1.x.x) on your AKS cluster.
 > * Choose a backing storage type and create a storage pool.
 > * Deploy a pod with a generic ephemeral volume.
 
@@ -233,4 +236,4 @@ In the next tutorial, you learn how to deploy an application to your cluster.
 [aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md
 [aks-tutorial-deploy-cluster]: ./tutorial-kubernetes-deploy-cluster.md
 [azure-cli-install]: /cli/azure/install-azure-cli
-[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction-version-1
