@@ -67,7 +67,9 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 * Network policies aren't applied to pods using host networking (`spec.hostNetwork: true`) because these pods use the host identity instead of having individual identities.
 
-* Cilium Endpoint Slices are supported in Kubernetes version 1.32 and above. Cilium Endpoint Slices do not support configuration of how Cilium Endpoints are grouped. Priority namespaces through `cilium.io/ces-namespace` is not supported.
+* Cilium Endpoint Slices are supported in Kubernetes version 1.32 and above. Cilium Endpoint Slices don't support configuration of how Cilium Endpoints are grouped. Priority namespace through `cilium.io/ces-namespace` isn't supported.
+
+* L7 policy isn't supported by CiliumClusterwideNetworkPolicy (CCNP).
 
 ## Considerations
 
@@ -138,7 +140,7 @@ az aks create \
 > [!NOTE]
 > Azure CLI version 2.69.0 or later is required. Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-Create a cluster using [node subnet](concepts-network-legacy-cni.md#azure-cni-node-subnet) with a Cilium dataplane:
+Create a cluster using [node subnet](concepts-network-legacy-cni.md#azure-cni-node-subnet) with a Cilium data plane:
 
 ```azurecli-interactive
 az aks create \
@@ -164,7 +166,8 @@ az aks create \
 
 - **Can I use `CiliumClusterwideNetworkPolicy`?**
 
-    Yes, `CiliumClusterwideNetworkPolicy` is supported. The following is a sample CCNP policy YAML.
+    Yes, `CiliumClusterwideNetworkPolicy` is supported. The following sample policy YAML shows configuring an L4 rule:
+
     ```
     apiVersion: "cilium.io/v2"
     kind: CiliumClusterwideNetworkPolicy
@@ -190,11 +193,13 @@ az aks create \
     | ----------------- | -------- | ------- |
     | Cilium Endpoint Slices | ✔️ | ✔️ |
     | K8s Network Policies | ✔️ | ✔️ |
+    | Local Redirect Policy | ✔️ | ✔️ |
     | Cilium L3/L4 Network Policies | ✔️ | ✔️ |
     | Cilium Clusterwide Network Policy | ✔️ | ✔️ |
     | FQDN Filtering | ❌ | ✔️ |
     | L7 Network Policies (HTTP/gRPC/Kafka) | ❌ | ✔️ |
-    | Container Network Observability (Metrics and Flow logs ) | ❌ | ✔️ |
+    | Container Network Observability (Metrics and Flow logs) | ❌ | ✔️ |
+    | eBPF Host Routing | ❌ | ✔️ |
    
 
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
@@ -239,13 +244,18 @@ az aks create \
 
     > [!NOTE]
     > It isn't currently possible to specify a `NetworkPolicy` with an `ipBlock` to allow traffic to node IPs.
+
+- **Does Azure CNI powered by Cilium support Local Redirect Policy?**
+
+    Local Redirect Policy is supported. Local Redirect Policy on Azure CNI powered by Cilium enables pods to route traffic directly to local endpoints on the same node, reducing cross-node hops and improving latency for services like DNS and health probes.
+
 - **Does AKS configure CPU or memory limits on the Cilium `daemonset`?**
 
     No, AKS doesn't configure CPU or memory limits on the Cilium `daemonset` because Cilium is a critical system component for pod networking and network policy enforcement.
 
 - **Does Azure CNI powered by Cilium use Kube-Proxy?**
 
-    No, AKS clusters created with network dataplane as Cilium don't use Kube-Proxy.
+    No, AKS clusters created with network data plane as Cilium don't use Kube-Proxy.
     If the AKS clusters are on [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md) and are upgraded to AKS clusters running Azure CNI powered by Cilium, new nodes workloads are created without kube-proxy. Older workloads are also migrated to run without kube-proxy as a part of this upgrade process.
 
 ## Next steps
