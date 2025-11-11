@@ -156,6 +156,10 @@ subjects:
 EOF
 ```
 
+> [!NOTE]
+> The example above explicitly refers to the `demo` service account in the `demo` namespace. While explicitly referring to a specific service account is one option, it's also possible to refer to a collection of service accounts under `subjects`. For more information, see [Referring to subjects][k8s-rbac-subjects] in the Kubernetes documentation.
+
+
 ## Deploy sample application
 
 The instructions in this step show how to access secrets, keys, or certificates in an Azure key vault from the pod. The examples in this section configure access to secrets in the key vault for the workload identity, but you can perform similar steps to configure access to keys or certificates.
@@ -312,5 +316,6 @@ az group delete --name $RESOURCE_GROUP --yes --no-wait
 
 <!-- EXTERNAL LINKS -->
 [general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
+[k8s-rbac-subjects]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-subjects
 [managed-identities-overview]: /azure/active-directory/managed-identities-azure-resources/overview
 [jwt-ms]: https://jwt.ms/
