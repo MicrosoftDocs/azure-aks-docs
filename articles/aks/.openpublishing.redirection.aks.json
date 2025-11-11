@@ -631,6 +631,12 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/manage-node-pools.md",
+            "redirect_url": "/azure/aks/create-node-pools",
+            "redirect_document_id": false
+
+        },
+        {
             "source_path_from_root": "/articles/aks/node-autoprovision-aksnodeclass.md",
             "redirect_url": "/azure/aks/node-auto-provisioning-aksnodeclass",
             "redirect_document_id": false
