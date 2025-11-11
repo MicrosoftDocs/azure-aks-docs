@@ -269,7 +269,7 @@ EOF
 
 1. Describe the pod and confirm environment variables and projected token volume mounts are present:
 
-        ```bash
+    ```bash
     kubectl describe pod demo -n demo
     ```
 
