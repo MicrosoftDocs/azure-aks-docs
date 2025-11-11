@@ -12,6 +12,20 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 
 # Set up container network logs with Advanced Container Networking Services (preview)
 
+> [!IMPORTANT]
+> **Component Renaming (Starting November 11, 2025)**  
+> We are renaming components in the Container Network Logs feature to improve clarity and consistency:
+>
+> **What's Changing**
+> - **CRD**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
+> - **CLI flag**: `--enable-retinanetworkflowlog` → `--enable-container-network-logs`
+> - **Log Analytics table**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
+> - **Grafana dashboards**: Need to be imported again.
+>
+> **Notes**
+> - Previously collected data stays in your workspace
+> - After re-enabling, allow a short delay before new data appears
+
 In this article, you complete the steps to configure and use the container network logs feature in Advanced Container Networking Services for Azure Kubernetes Service (AKS). These logs offer persistent network flow monitoring tailored to enhance visibility in containerized environments.
 
 By capturing container network logs, you can effectively track network traffic, detect anomalies, optimize performance, and ensure compliance with established policies. Follow the detailed instructions provided to set up and integrate container network logs for your system. For more information about the container network logs feature, see [Overview of container network logs](container-network-observability-logs.md).
@@ -22,7 +36,7 @@ By capturing container network logs, you can effectively track network traffic, 
 
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-* The minimum version of the Azure CLI required to complete the steps in this article is **2.73.0**. To find your version, run `az --version`  in the Azure CLI. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+* The minimum version of the Azure CLI required to complete the steps in this article is **2.75.0**. To find your version, run `az --version`  in the Azure CLI. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 * Container network logs in stored logs mode works only for Cilium data planes.
 
@@ -30,7 +44,7 @@ By capturing container network logs, you can effectively track network traffic, 
 
 * If your existing cluster is <= **1.32**, upgrade the cluster to the latest available Kubernetes version.
 
-* The minimum version of the `aks-preview` Azure CLI extension to complete the steps in this article is `18.0.0b2`.
+* The minimum version of the `aks-preview` Azure CLI extension to complete the steps in this article is `19.0.07`.
 
 ### Install the aks-preview Azure CLI extension
 
@@ -44,6 +58,11 @@ az extension update --name aks-preview
 ```
 
 ## Configure stored logs mode for container network logs
+
+This section provides two paths for setting up container network logs based on your current situation:
+
+- **[New clusters](#new-clusters)**: Complete setup for new AKS clusters 
+- **[Existing clusters](#existing-clusters)**: Enable container network logs on existing AKS clusters
 
 ### Register the AdvancedNetworkingFlowLogsPreview feature flag
 
@@ -61,16 +80,48 @@ az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetwork
 
 When the feature shows **Registered**, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
 
+### Deployment methods
+
+You can onboard to container network logs using different deployment methods:
+
+# [Azure CLI](#tab/cli)
+
+The Azure CLI method is described in the sections below for both [new clusters](#new-clusters) and [existing clusters](#existing-clusters).
+
+# [ARM Template](#tab/arm)
+
+For Infrastructure as Code (IaC) deployments using Azure Resource Manager templates, follow the detailed steps in the [Azure Monitor documentation for ARM template deployment](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-network-monitoring?tabs=arm#onboarding-to-container-network-logs).
+
+The ARM template deployment includes:
+- Template and parameter file downloads
+- Configuration of required parameters including `enableContainerNetworkLogs`
+- Deployment commands for existing clusters
+
+# [Bicep](#tab/bicep)
+
+For Infrastructure as Code (IaC) deployments using Bicep templates, follow the detailed steps in the [Azure Monitor documentation for Bicep deployment](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-network-monitoring?tabs=bicep#onboarding-to-container-network-logs).
+
+The Bicep deployment includes:
+- Template and parameter file downloads  
+- Configuration of required parameters including `enableContainerNetworkLogs`
+- Deployment commands for existing clusters
+
+---
+
 ## Limitations
 
 * Layer 7 flow data is captured only when Layer 7 policy support is enabled. For more information, see [Configure a Layer 7 policy](./how-to-apply-l7-policies.md).
 * Domain Name System (DNS) flows and related metrics are captured only when a Cilium Fully Qualified Domain (FQDN) network policy is applied. For more information, see [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
-* During preview, you can configure this feature only via the Azure CLI and Azure Resource Manager templates (ARM templates). Onboarding by using Terraform isn't supported at this time.
+* Onboarding by using Terraform isn't supported at this time.
 * When Log Analytics isn't configured for log storage, container network logs are limited to a maximum of 50 MB of storage. When this limit is reached, new entries overwrite older logs.
 * If the log table plan is set to Basic logs, the prebuilt Grafana dashboards don't function as expected.
 * The Auxiliary logs table plan isn't supported.
 
-### Enable Advanced Container Networking Services on a new cluster
+## New clusters
+
+This section guides you through setting up container network logs on a new AKS cluster from start to finish.
+
+### Create a new AKS cluster with Advanced Container Networking Services
 
 Use the `az aks create` command with the `--enable-acns` flag to create a new AKS cluster that has all Advanced Container Networking Services features. These features include:
 
@@ -83,12 +134,15 @@ Use the `az aks create` command with the `--enable-acns` flag to create a new AK
 export CLUSTER_NAME="<aks-cluster-name>"
 export RESOURCE_GROUP="<aks-resource-group>"
 
+# Create the resource group if it doesn't already exist
+az group create --name $RESOURCE_GROUP --location <location>
+
 # Create an AKS cluster
 az aks create \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
     --generate-ssh-keys \
-    --location uksouth \
+    --location <location> \
     --max-pods 250 \
     --network-plugin azure \
     --network-plugin-mode overlay \
@@ -99,21 +153,21 @@ az aks create \
     --enable-acns
 ```
 
-#### Configure custom resources for log filtering  
+### Configure custom resources for log filtering  
 
 To configure container network logs in stored logs mode, you must define specific custom resources to set filters for logs collection. When at least one custom resource is defined, logs are collected and stored on the host node at `/var/log/acns/hubble/events.log`.
 
-To configure logging, you must define and apply the `RetinaNetworkFlowLog` type of custom resource. You set filters like namespace, pod, service, port, protocol, and verdict. Multiple custom resources can exist in a cluster simultaneously. If no custom resource is defined with nonempty filters, no logs are saved in the designated location.
+To configure logging, you must define and apply the `ContainerNetworkLog` type of custom resource. You set filters like namespace, pod, service, port, protocol, and verdict. Multiple custom resources can exist in a cluster simultaneously. If no custom resource is defined with nonempty filters, no logs are saved in the designated location.
 
-The following sample definition demonstrates how to configure the `RetinaNetworkFlowLog` type of custom resource.
+The following sample definition demonstrates how to configure the `ContainerNetworkLog` type of custom resource.
 
-#### RetinaNetworkFlowLog template
+### ContainerNetworkLog CRD template
 
 ```azurecli
 apiVersion: acn.azure.com/v1alpha1
-kind: RetinaNetworkFlowLog
+kind: ContainerNetworkLog
 metadata:
-  name: sample-retinanetworkflowlog # Cluster scoped
+  name: sample-containernetworklog # Cluster scoped
 spec:
   includefilters: # List of filters
     - name: sample-filter # Filter name
@@ -174,17 +228,22 @@ The following table describes the fields in the custom resource definition:
 | `Endpoint.labelSelector` | Object           | A label selector to match resources based on their labels.                                                                             | Optional     |
 | `Endpoint.namespacedPod` | []string | A list of namespace and pod pairs (formatted as `namespace/pod`) to match the destination.                                         | Optional     |
 
-* Apply the `RetinaNetworkFlowLog` custom resource to enable log collection at the cluster:
+* Apply the `ContainerNetworkLog` custom resource to enable log collection at the cluster:
 
   ```azurecli
   kubectl apply -f <crd.yaml>
   ```
 
+  > [!TIP]
+  > For a practical example of a ContainerNetworkLog custom resource configuration, see the [sample CRD in the AKS Labs documentation](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#enable-flow-logs-for-the-pets-namespace).
+
 Logs stored locally on host nodes are temporary because the host or node itself isn't a persistent storage solution. Also, logs on host nodes are rotated when their size reaches 50 MB. For longer-term storage and analysis, we recommend that you configure the Azure Monitor Agent on the cluster to collect and retain logs in the Log Analytics workspace.
 
 Alternatively, you can integrate a partner logging service like an OpenTelemetry collector for more log management options.
 
-#### Configure the Azure Monitor Agent to scrape logs in the Log Analytics workspace for a new cluster (in managed storage)
+### Configure Azure Monitor for managed storage (recommended)
+
+For persistent storage and advanced analytics, configure the Azure Monitor Agent to collect and store logs in a Log Analytics workspace:
 
 ```azurecli
 # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
@@ -198,17 +257,37 @@ Alternatively, you can integrate a partner logging service like an OpenTelemetry
     ### To use an existing Log Analytics workspace
     az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME --workspace-resource-id <workspace-resource-id>
 
-# Update the AKS cluster with the enable-retina-flow-logs flag
+# Update the AKS cluster with the enable-container-network-logs flag
   az aks update --enable-acns \
-    --enable-retina-flow-logs \
+    --enable-container-network-logs \
     -g $RESOURCE_GROUP \
     -n $CLUSTER_NAME
 ```
 
 > [!NOTE]
-> When enabled, container network flow logs are written to `/var/log/acns/hubble/events.log` when the `RetinaNetworkFlowLog` custom resource is applied. If Log Analytics integration is enabled later, the Azure Monitor Agent begins collecting logs at that point. Logs older than two minutes aren't ingested. Only new entries that are appended after monitoring begins are collected in a Log Analytics workspace.
+> When enabled, container network flow logs are written to `/var/log/acns/hubble/events.log` when the `ContainerNetworkLog` custom resource is applied. If Log Analytics integration is enabled later, the Azure Monitor Agent begins collecting logs at that point. Logs older than two minutes aren't ingested. Only new entries that are appended after monitoring begins are collected in a Log Analytics workspace.
 
-#### Configure an existing cluster to store logs in a Log Analytics workspace
+## Existing clusters
+
+This section guides you through enabling container network logs on an existing AKS cluster.
+
+### Enable Advanced Container Networking Services on an existing cluster with no prior ACNS setup
+
+If your existing cluster doesn't have Advanced Container Networking Services enabled, first enable it using the [`az aks update`](/cli/azure/aks#az-aks-update) command:
+
+```azurecli
+# Set environment variables for your existing cluster
+export CLUSTER_NAME="<aks-cluster-name>"
+export RESOURCE_GROUP="<aks-resource-group>"
+
+# Enable Advanced Container Networking Services
+az aks update \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --enable-acns
+```
+
+### Configure integration with log analytics on existing cluster
 
 To enable container network logs on an existing cluster:
 
@@ -218,7 +297,7 @@ To enable container network logs on an existing cluster:
      az aks addon list -g $RESOURCE_GROUP -n $CLUSTER_NAME
     ```
 
-1. If monitoring addons is enabled, disable monitoring addons:
+2. If monitoring addons is enabled, disable monitoring addons:
 
     ```azurecli
      az aks disable-addons -a monitoring -g $RESOURCE_GROUP -n $CLUSTER_NAME
@@ -226,7 +305,7 @@ To enable container network logs on an existing cluster:
 
    You complete this step because monitoring addons might already be enabled, but not for high scale. For more information, see [High-scale mode](/azure/azure-monitor/containers/container-insights-high-scale).
 
-1. Set Azure Monitor to `enable-high-log-scale-mode`:
+3. Set Azure Monitor to `enable-high-log-scale-mode`:
 
     ```azurecli
      ### Use default Log Analytics workspace
@@ -235,16 +314,24 @@ To enable container network logs on an existing cluster:
      az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME --workspace-resource-id <workspace-resource-id>
     ```
 
-1. Update the AKS cluster with the `enable-retina-flow-logs` flag:
+4. Update the AKS cluster with the `enable-container-network-logs` flag:
 
     ```azurecli
      az aks update --enable-acns \
-         --enable-retina-flow-logs \
+         --enable-container-network-logs \
          -g $RESOURCE_GROUP \
          -n $CLUSTER_NAME
     ```
 
----
+5. Apply the same [ContainerNetworkLog custom resource](#containernetworklog-template) as described in the new cluster section to start collecting logs.
+
+   > [!TIP]
+   > For a practical example of a ContainerNetworkLog custom resource configuration, see the [sample CRD in the AKS Labs documentation](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#enable-flow-logs-for-the-pets-namespace).
+
+
+## Common post-setup steps
+
+The following steps apply to both new and existing cluster setups.
 
 ### Get cluster credentials
 
@@ -276,15 +363,21 @@ Expected output:
 ----------------------------
 "osmagent":{
  "config":{
-  "enableRetinaNetworkFlags": "True"
+  "enableContainerNetworkLogs": "True"
  }
 }
 ```
-
-Validate that the `RetinaNetworkFlowLog` custom resource is applied:
+Check which custom resource definitions are installed for flow logs:
 
 ```azurecli
-   kubectl describe retinanetworkflowlogs <cr-name>
+   k get containernetworklog
+```
+it will list all the `ContainerNetworkLog` custom resources created in the cluster.
+
+Validate that the `ContainerNetworkLog` custom resource is applied:
+
+```azurecli
+   kubectl describe containernetworklogs <cr-name>
 ```
 
 Expect to see a `Spec` node that contains `Include filters` and a `Status` node. The value for `Status` > `State` should be `CONFIGURED` (not `FAILED`).
@@ -307,6 +400,18 @@ Status:
   State:      CONFIGURED
   Timestamp:  2025-05-01T11:24:48Z
 ```
+
+### Querying Container Network Flow Logs in Log Analytics dashboard
+
+Since Container Network Flow Logs are enabled with Log Analytics workspace, we have access to historical logs that allow us to analyze network traffic patterns over time. We can query these logs using the `RetinaNetworkFlowLogs` table to perform detailed forensic analysis and troubleshooting.
+
+Customers can use Kusto Query Language (KQL) for analyzing network data in Log Analytics. This historical data is invaluable for understanding network behavior patterns, identifying security incidents, troubleshooting connectivity issues, and performing root cause analysis over extended periods. The ability to correlate network events across time helps in detecting intermittent issues and understanding traffic flows that may not be apparent in real-time monitoring.
+
+To see sample queries that can be applied for troubleshooting connectivity issues, refer to the [progressive diagnosis using flow logs](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#progressive-diagnosis-using-flow-logs) in the AKS Labs documentation.
+
+> [!IMPORTANT]
+> **Table Name Update**  
+> The table name will soon change from `RetinaNetworkFlowLogs` to `ContainerNetworkLog` to maintain consistency with other ACNS features. Customers will be notified via email. Update your queries accordingly when the change is implemented.
 
 ### Azure Managed Grafana
 
@@ -819,25 +924,25 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
    Trying to enable the container network flow logs capability on a cluster without enabling Advanced Container Networking Services, for example:
 
-    `az aks update -g test-rg -n test-cluster --enable-retina-flow-logs`
+    `az aks update -g test-rg -n test-cluster --enable-container-network-logs`
 
    Results in an error message:
 
     `Flow logs requires '--enable-acns', advanced networking to be enabled, and the monitoring addon to be enabled.`
 
-* If the cluster Kubernetes version is earlier than version 1.32.0, trying to run `--enable-retina-flow-logs` results in an error  message:
+* If the cluster Kubernetes version is earlier than version 1.32.0, trying to run `--enable-container-network-logs` results in an error  message:
 
     `The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.32.0 or later.`
 
     where `%s` is your Kubernetes version.
 
-* If you try to run `--enable-retina-flow-logs` on a subscription where the Azure Feature Exposure Control (AFEC) flag isn't enabled, an error message appears:
+* If you try to run `--enable-container-network-logs` on a subscription where the Azure Feature Exposure Control (AFEC) flag isn't enabled, an error message appears:
 
     `Feature Microsoft.ContainerService/AdvancedNetworkingFlowLogsPreview is not enabled. Please see https://aka.ms/aks/previews for how to enable features.`
 
-* If you try to apply a `RetinaNetworkFlowLog` custom resource on a cluster where Advanced Container Networking Services isn't enabled, an error message appears:
+* If you try to apply a `ContainerNetworkLog` custom resource on a cluster where Advanced Container Networking Services isn't enabled, an error message appears:
 
-   `error: resource mapping not found for <....>": no matches for kind "RetinaNetworkFlowLog" in version "acn.azure.com/v1alpha1"`
+   `error: resource mapping not found for <....>": no matches for kind "ContainerNetworkLog" in version "acn.azure.com/v1alpha1"`
   
   Ensure that you install custom resources first.
 
@@ -845,10 +950,10 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
 If all custom resources are deleted, flow log collection stops because no filters are defined for collection.
 
-To disable retina flow log collection by the Azure Monitor Agent, run:
+To disable container network log collection by the Azure Monitor Agent, run:
 
   ```azurecli
-   az aks update -n $CLUSTER_NAME -g $RESOURCE_GROUP --disable-retina-flow-logs
+   az aks update -n $CLUSTER_NAME -g $RESOURCE_GROUP --disable-container-network-logs
 
 ```
 

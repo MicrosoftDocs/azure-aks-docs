@@ -6,10 +6,24 @@ ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: overview
-ms.date:  05/16/2025
+ms.date:  11/11/2025
 ---
 
 # What is container network logs (preview)?
+
+> [!IMPORTANT]
+> **Component Renaming (Starting November 11, 2025)**  
+> We are renaming components in the Container Network Logs feature to improve clarity and consistency:
+>
+> **What's Changing**
+> - **CRD**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
+> - **CLI flag**: `--enable-retinanetworkflowlog` → `--enable-container-network-logs`
+> - **Log Analytics table**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
+> - **Grafana dashboards**: Need to be imported again.
+>
+> **Notes**
+> - Previously collected data stays in your workspace
+> - After re-enabling, allow a short delay before new data appears
 
 Container network logs in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) for Azure Kubernetes Service (AKS) give you deep visibility into network traffic in your AKS clusters.
 
@@ -44,7 +58,7 @@ To read more about throttling and Container insights, see the [Container insight
 
 ### Key capabilities of stored logs mode
 
-* *Customizable filters.* You can configure logging by defining custom resources of the  [RetinaNetworkFlowLog](./how-to-configure-container-network-logs.md#retinanetworkflowlog-template) type. Use custom resources to apply granular filters by namespace, pod, service, port, protocol, verdict, or traffic direction (ingress or egress). The flexibility ensures precise data collection tailored to specific use cases. Only relevant traffic is logged, and storage is optimized for improved performance, compliance, and troubleshooting.
+* *Customizable filters.* You can configure logging by defining custom resources of the [ContainerNetworkLog](./how-to-configure-container-network-logs.md#containernetworklog-template) type. Use custom resources to apply granular filters by namespace, pod, service, port, protocol, verdict, or traffic direction (ingress or egress). The flexibility ensures precise data collection tailored to specific use cases. Only relevant traffic is logged, and storage is optimized for improved performance, compliance, and troubleshooting.
 
 * *Log storage options.* The container network logs feature has two primary storage options: unmanaged storage and managed storage.
 
@@ -114,7 +128,7 @@ Advanced Container Networking Services offers on-demand capture of network flow 
 
 The Hubble command-line interface (CLI) provides a flexible and interactive way to query, filter, and analyze flow logs directly in the terminal. You can execute real-time commands to inspect traffic flows, view packet metadata, and troubleshoot network issues without leaving your operational environment.
 
-:::image type="content" source="./media/advanced-container-networking-services/hubble-cli-snapshot.png" alt-text="Screenshot of the Hubble CLI." lightbox="./media/advanced-container-networking-services/hubble-cli-snapshot.png":::
+:::image type="content" source="./media/advanced-container-networking-services/hubble-CLI-snapshot.png" alt-text="Screenshot of the Hubble CLI." lightbox="./media/advanced-container-networking-services/hubble-CLI-snapshot.png":::
 
 ### Hubble UI
 
@@ -122,7 +136,7 @@ The Hubble web-based interface offers an intuitive and visual platform for monit
 
 The tools in the Hubble UI provide real-time visibility and actionable insights for faster troubleshooting and improved network management.
 
-:::image type="content" source="./media/advanced-container-networking-services/hubble-ui-snapshot.png" alt-text="Screenshot of the Hubble UI." lightbox="./media/advanced-container-networking-services/hubble-ui-snapshot.png":::
+:::image type="content" source="./media/advanced-container-networking-services/hubble-UI-snapshot.png" alt-text="Screenshot of the Hubble UI." lightbox="./media/advanced-container-networking-services/hubble-UI-snapshot.png":::
 
 ## Key benefits of on-demand logs
 
