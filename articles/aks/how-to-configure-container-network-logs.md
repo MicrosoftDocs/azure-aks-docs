@@ -90,21 +90,12 @@ The Azure CLI method is described in the sections below for both [new clusters](
 
 # [ARM Template](#tab/arm)
 
-For Infrastructure as Code (IaC) deployments using Azure Resource Manager templates, follow the detailed steps in the [Azure Monitor documentation for ARM template deployment](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-network-monitoring?tabs=arm#onboarding-to-container-network-logs).
+For Infrastructure as Code (IaC) deployments using ARM templates, follow the detailed steps in the [Azure Monitor documentation for ARM template deployment](https://learn.microsoft.com/azure/azure-monitor/containers/container-insights-network-monitoring?tabs=arm#onboarding-to-container-network-logs).
 
-The ARM template deployment includes:
-- Template and parameter file downloads
-- Configuration of required parameters including `enableContainerNetworkLogs`
-- Deployment commands for existing clusters
-
+The ARM deployment includes template and parameter file downloads, configuration of `enableContainerNetworkLogs`, and deployment commands for existing clusters.
 # [Bicep](#tab/bicep)
 
-For Infrastructure as Code (IaC) deployments using Bicep templates, follow the detailed steps in the [Azure Monitor documentation for Bicep deployment](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-network-monitoring?tabs=bicep#onboarding-to-container-network-logs).
-
-The Bicep deployment includes:
-- Template and parameter file downloads  
-- Configuration of required parameters including `enableContainerNetworkLogs`
-- Deployment commands for existing clusters
+For Bicep deployments, see the [Azure Monitor Bicep deployment guide](https://learn.microsoft.com/azure/azure-monitor/containers/container-insights-network-monitoring?tabs=bicep#onboarding-to-container-network-logs) for template configuration and deployment steps.
 
 ---
 
@@ -323,7 +314,7 @@ To enable container network logs on an existing cluster:
          -n $CLUSTER_NAME
     ```
 
-5. Apply the same [ContainerNetworkLog custom resource](#containernetworklog-template) as described in the new cluster section to start collecting logs.
+5. Apply the same [ContainerNetworkLog custom resource](#containernetworklog-crd-template) as described in the new cluster section to start collecting logs.
 
    > [!TIP]
    > For a practical example of a ContainerNetworkLog custom resource configuration, see the [sample CRD in the AKS Labs documentation](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#enable-flow-logs-for-the-pets-namespace).
