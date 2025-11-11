@@ -40,7 +40,7 @@
           href: concepts-fleet-arc-integration.md
     - name: Multi-cluster Kubernetes and node images upgrades
       href: concepts-update-orchestration.md
-    - name: Multi-cluster multi-tenancy with Managed Namespaces
+    - name: Multi-cluster multi-tenancy with Managed Fleet Namespaces
       href: concepts-fleet-managed-namespace.md    
     - name: Multi-cluster workload management
       items:
@@ -118,11 +118,11 @@
           href: cluster-resource-override.md
         - name: Use overrides to customize namespace-scope resources
           href: resource-override.md  
-    - name: Multi-cluster multi-tenancy with Managed Namespaces
+    - name: Use Managed Fleet Namespaces for multi-cluster multi-tenancy
       items:
-        - name: Define and deploy multi-cluster managed namespaces
+        - name: Define and deploy Managed Fleet Namespaces
           href: howto-managed-namespaces.md
-        - name: View and access multi-cluster managed namespaces
+        - name: View and access Managed Fleet Namespaces
           href: howto-managed-namespaces-access.md
     - name: Load balance multi-cluster services
       items:

@@ -85,7 +85,7 @@ Managed namespaces uses the following built-in roles for the control plane.
 | Role | Description |
 | ---- | ------------|
 | [Azure Kubernetes Service Namespace Contributor][aks-namespace-contributor] | Allows access to create, update, and delete managed namespaces on a cluster. |
-[Azure Kubernetes Service Namespace User][aks-namespace-user] | Allows read-only access to a managed namespace on a cluster. Allows access to list credentials on the namespace.  |
+| [Azure Kubernetes Service Namespace User][aks-namespace-user] | Allows read-only access to a managed namespace on a cluster. Allows access to list credentials on the namespace.  |
 
 Managed namespaces uses the following built-in roles for the data plane.
 
@@ -93,18 +93,17 @@ Managed namespaces uses the following built-in roles for the data plane.
 | ---- | ------------|
 | [Azure Kubernetes Service RBAC Reader][aks-rbac-reader] | Allows read-only access to see most objects in a namespace. It doesn't allow viewing roles or role bindings. This role doesn't allow viewing Secrets, since reading the contents of Secrets enables access to ServiceAccount credentials in the namespace, which would allow API access as any ServiceAccount in the namespace (a form of privilege escalation).|
 | [Azure Kubernetes Service RBAC Writer][aks-rbac-writer] | Allows read/write access to most objects in a namespace. This role doesn't allow viewing or modifying roles or role bindings. However, this role allows accessing Secrets and running Pods as any ServiceAccount in the namespace, so it can be used to gain the API access levels of any ServiceAccount in the namespace. |
-[Azure Kubernetes Service RBAC Admin][aks-rbac-admin] |  Allows read/write access to most resources in a namespace, including the ability to create roles and role bindings within the namespace. This role doesn't allow write access to resource quota or to the namespace itself. |
+| [Azure Kubernetes Service RBAC Admin][aks-rbac-admin] |  Allows read/write access to most resources in a namespace, including the ability to create roles and role bindings within the namespace. This role doesn't allow write access to resource quota or to the namespace itself. |
 
 > [!IMPORTANT]
 > When you assign these RBAC roles at a managed namespace scope, access is granted to any unmanaged Kubernetes namespaces on member clusters with the same name, regardless of whether they were placed by the managed namespace.
 
 ## Next steps
 
-Learn how to [create and use managed namespaces on Azure Kubernetes Service (AKS)][managed-namespaces].
+* Learn how to [create and use managed namespaces on Azure Kubernetes Service (AKS)][managed-namespaces].
+* Learn about [multi-cluster managed namespaces][fleet-managed-namespace] with Azure Kubernetes Fleet Manager.
 
 <!--- External Links --->
-[create-azure-subscription]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F
-[azure-portal]: https://portal.azure.com
 [meaning-of-cpu]: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-cpu
 [meaning-of-memory]: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
 [labels]: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -113,20 +112,12 @@ Learn how to [create and use managed namespaces on Azure Kubernetes Service (AKS
 <!--- Internal Links --->
 [cluster-autoscaler]: cluster-autoscaler.md
 [node-auto-provisioning]: node-autoprovision.md
-[quick-automatic-managed-network]: automatic/quick-automatic-managed-network.md
-[deployment-safeguards]: deployment-safeguards.md
-[azure-rbac-k8s]: manage-azure-rbac.md
-[install-azure-cli]: /cli/azure/install-azure-cli
-[azure-cli-extensions]: /cli/azure/azure-cli-extensions-overview
-[az-feature-register]: /cli/azure/feature#az-feature-register
-[az-feature-show]: /cli/azure/feature#az-feature-show
-[az-provider-register]: /cli/azure/provider#az-provider-register
 [aks-namespace-contributor]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-namespace-contributor
 [aks-namespace-user]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-namespace-user
 [aks-rbac-reader]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-reader
 [aks-rbac-writer]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-writer
 [aks-rbac-admin]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-admin
 [aks-network-policies]: use-network-policies.md
-[aks-network-policy-options]: use-network-policies.md#network-policy-options-in-aks
 [aks-resource-quotas]: operator-best-practices-scheduler.md#enforce-resource-quotas
 [managed-namespaces]: managed-namespaces.md
+[fleet-managed-namespace]: ../kubernetes-fleet/concepts-fleet-managed-namespace.md
