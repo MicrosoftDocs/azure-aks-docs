@@ -189,7 +189,6 @@ You can use your config file by specifying the `--config-file` parameter with th
 ```azurecli-interactive
 az aks agent "Check kubernetes pod resource usage" --config-file exampleconfig.yaml
 ```
-ß
 
 ### Interactive commands
 
