@@ -242,29 +242,29 @@ The following example shows how to use the Azure role-based access control (Azur
 1. Deploy the sample pod that uses identity binding to obtain an access token for the managed identity to access Azure Key Vault:
 
     ```bash
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: demo
-  namespace: demo
-  labels:
-    azure.workload.identity/use: "true"
-  annotations:
-    azure.workload.identity/use-identity-binding: "true"
-spec:
-  serviceAccount: demo
-  containers:
-    - name: azure-sdk
-      # source code: https://github.com/Azure/azure-workload-identity/blob/feature/custom-token-endpoint/examples/identitybinding-msal-go/main.go
-      image: ghcr.io/bahe-msft/azure-workload-identity/identitybinding-msal-go:latest-linux-amd64
-      env:
-        - name: KEYVAULT_URL
-          value: ${KEYVAULT_URL}
-        - name: SECRET_NAME
-          value: ${KEYVAULT_SECRET_NAME}
-  restartPolicy: Never
-EOF
+    kubectl apply -f - <<EOF
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: demo
+      namespace: demo
+      labels:
+        azure.workload.identity/use: "true"
+      annotations:
+        azure.workload.identity/use-identity-binding: "true"
+    spec:
+      serviceAccount: demo
+      containers:
+        - name: azure-sdk
+          # source code: https://github.com/Azure/azure-workload-identity/blob/feature/custom-token-endpoint/examples/identitybinding-msal-go/main.go
+          image: ghcr.io/bahe-msft/azure-workload-identity/identitybinding-msal-go:latest-linux-amd64
+          env:
+            - name: KEYVAULT_URL
+              value: ${KEYVAULT_URL}
+            - name: SECRET_NAME
+              value: ${KEYVAULT_SECRET_NAME}
+      restartPolicy: Never
+    EOF
     ```
 
 1. Describe the pod and confirm environment variables and projected token volume mounts are present:
