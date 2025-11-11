@@ -32,14 +32,14 @@ This article shows you how to configure identity bindings to overcome these work
     az extension update --name aks-preview
     ```
 
-1. Register the `IdentityBinding` feature flag:
+1. Register the `IdentityBindingPreview` feature flag:
 
     ```bash
     # Register the feature flag
-    az feature register --namespace Microsoft.ContainerService --name IdentityBinding
+    az feature register --namespace Microsoft.ContainerService --name IdentityBindingPreview
 
     # Wait for registration to complete (this may take several minutes)
-    az feature show --namespace Microsoft.ContainerService --name IdentityBinding
+    az feature show --namespace Microsoft.ContainerService --name IdentityBindingPreview
 
     # Refresh the provider registration
     az provider register --namespace Microsoft.ContainerService
@@ -69,7 +69,7 @@ az aks create -g $RESOURCE_GROUP -n $CLUSTER -l $LOCATION --no-ssh-key --enable-
 az identity create -g $RESOURCE_GROUP -n $MI_NAME
 ```
 
- Identity Binding requires preview version of AKS workload identity webhook. Please confirm the following output from the command:
+Identity Binding requires the preview version of AKS workload identity webhook. Confirm the following output from the command:
 
 ```bash
 kubectl -n kube-system get pods -l azure-workload-identity.io/system=true -o yaml | grep v1.6.0
@@ -158,7 +158,7 @@ EOF
 
 ## Deploy sample application
 
-The instructions in this step show how to access secrets, keys, or certificates in an Azure key vault from the pod. The examples in this section  configure access to secrets in the key vault for the workload identity, but you can perform similar steps to configure access to keys or certificates.
+The instructions in this step show how to access secrets, keys, or certificates in an Azure key vault from the pod. The examples in this section configure access to secrets in the key vault for the workload identity, but you can perform similar steps to configure access to keys or certificates.
 
 The following example shows how to use the Azure role-based access control (Azure RBAC) permission model to grant the pod access to the key vault. For more information about the Azure RBAC permission model for Azure Key Vault, see [Grant permission to applications to access an Azure key vault using Azure RBAC](/azure/key-vault/general/rbac-guide).
 
@@ -196,7 +196,7 @@ The following example shows how to use the Azure role-based access control (Azur
 1. Create a secret in the key vault:
 
     ```azurecli-interactive
-    export KEYVAULT_SECRET_NAME="my-secret$RANDOM_ID"
+    export KEYVAULT_SECRET_NAME="my-secret"
     az keyvault secret set \
         --vault-name "${KEYVAULT_NAME}" \
         --name "${KEYVAULT_SECRET_NAME}" \
@@ -207,7 +207,7 @@ The following example shows how to use the Azure role-based access control (Azur
 
     ```azurecli-interactive
     export IDENTITY_PRINCIPAL_ID=$(az identity show \
-        --name "${USER_ASSIGNED_IDENTITY_NAME}" \
+        --name "${MI_NAME}" \
         --resource-group "${RESOURCE_GROUP}" \
         --query principalId \
         --output tsv)
@@ -229,9 +229,19 @@ The following example shows how to use the Azure role-based access control (Azur
         --output tsv)"
     ```
 
-1. Deploy the sample pod that uses identity binding to obtain access token for the managed identity to access Azure Key Vault:
+1. Annotate the service account with the managed identity information:
 
-```bash
+    ```bash
+    export MI_TENANT_ID=$(az identity show -g $RESOURCE_GROUP -n $MI_NAME --query tenantId -o tsv)
+    export MI_CLIENT_ID=$(az identity show -g $RESOURCE_GROUP -n $MI_NAME --query clientId -o tsv)
+    
+    kubectl annotate sa demo -n demo azure.workload.identity/tenant-id=$MI_TENANT_ID
+    kubectl annotate sa demo -n demo azure.workload.identity/client-id=$MI_CLIENT_ID
+    ```
+
+1. Deploy the sample pod that uses identity binding to obtain an access token for the managed identity to access Azure Key Vault:
+
+    ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Pod
@@ -247,41 +257,39 @@ spec:
   containers:
     - name: azure-sdk
       # source code: https://github.com/Azure/azure-workload-identity/blob/feature/custom-token-endpoint/examples/identitybinding-msal-go/main.go
-      image: ghcr.io/bahe-msft/azure-workload-identity/identitybinding-msal-go@sha256:d8a262e2aed015790335650f1d1221cbf9270ee209993337e4c6055b39dd00ae
+      image: ghcr.io/bahe-msft/azure-workload-identity/identitybinding-msal-go:latest-linux-amd64
       env:
         - name: KEYVAULT_URL
-          value: https://<your-keyvault-name>.vault.azure.net/
+          value: ${KEYVAULT_URL}
         - name: SECRET_NAME
-          value: <secret-name>
+          value: ${KEYVAULT_SECRET_NAME}
   restartPolicy: Never
 EOF
-```
+    ```
 
 1. Describe the pod and confirm environment variables and projected token volume mounts are present:
 
-```bash
-kubectl describe pod demo -n demo
-```
+        ```bash
+    kubectl describe pod demo -n demo
+    ```
 
-:::image type="content" source="media/identity-bindings/identity-bindings-demo-pod-describe.png" lightbox="media/identity-bindings/identity-bindings-demo-pod-describe.png" alt-text="Screenshot showing the results of describing the demo pod with identity binding environment variables and volume mounts." :::
+    :::image type="content" source="media/identity-bindings/identity-bindings-demo-pod-describe.png" lightbox="media/identity-bindings/identity-bindings-demo-pod-describe.png" alt-text="Screenshot showing the results of describing the demo pod with identity binding environment variables and volume mounts." :::
 
+1. To verify that the pod is able to get a token and access the resource, use the `kubectl logs` command:
 
-1. To verify that pod is able to get a token and access the resource, use the kubectl logs command:
+    ```bash
+    kubectl logs demo -n demo
+    ```
 
-Verify the sample application pod
-```bash
-kubectl logs demo -n demo
-```
+    If successful, the output should be similar to the following example:
 
-If successful, the output should be similar to the following example:
-
-```output
-I1107 20:03:42.865180       1 main.go:77] "successfully got secret" secret="Hello!"
-```
+    ```output
+    I1107 20:03:42.865180       1 main.go:77] "successfully got secret" secret="Hello!"
+    ```
 
 ## Scale out usage across clusters
 
-Identity bindings allow mapping multiple AKS clusters to the same UAMI while still using a single FIC. Repeat the steps from "Create an identity binding" through "Acquire a Microsoft Entra access token" for additional clusters (creating a new identity binding per cluster) to validate scaled usage patterns.
+Identity bindings allow mapping multiple AKS clusters to the same UAMI while still using a single FIC. Repeat the steps from "Create an identity binding" through "Deploy sample application" for additional clusters (creating a new identity binding per cluster) to validate scaled usage patterns.
 
 ## Clean up (optional)
 

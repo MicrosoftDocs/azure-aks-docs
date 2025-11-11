@@ -35,6 +35,16 @@ Even if the same UAMI is needed across multiple clusters, only **one** federated
 
 After the binding is created and the UAMI is authorized for the cluster, the cluster operator must define `ClusterRole` and `ClusterRoleBinding` objects that specify the namespaces and service accounts (granularly or collectively) permitted to use that managed identity for Microsoft Entra token acquisition.
 
+## Azure Identity client libraries
+
+To use identity bindings with your application workloads, ensure you're using a supported version of the Azure Identity client library for your programming language. The following minimum versions are required for identity binding support:
+
+| Language | Package | Minimum Version | Notes |
+|----------|---------|-----------------|-------|
+| Go | [azidentity](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity) | **v1.14.0-beta.2** or later | `WorkloadIdentityCredential` identity binding mode is disabled by default. To enable it, set `WorkloadIdentityCredentialOptions.EnableAzureTokenProxy` to `true`. |
+| JavaScript | [@azure/identity](https://www.npmjs.com/package/@azure/identity) | **4.14.0-beta.1** or later | When `enableAzureKubernetesTokenProxy ` option is enabled, the credential redirects token requests to an AKS-provided proxy to work around Entra ID's limit on federated identity credentials per managed identity. This feature is opt-in and only available when using `WorkloadIdentityCredential` directly (not supported by `DefaultAzureCredential` or `ManagedIdentityCredential`) |
+| Python | [azure-identity](/python/api/overview/azure/identity-readme) | **1.26.0b1** or later | Set use_token_proxy=True in WorkloadIdentityCredential. This argument is not honored through DefaultAzureCredential |
+
 ## FAQ
 
 ### Is identity sameness (namespace and service account sameness) required across clusters when the same UAMI is used?
