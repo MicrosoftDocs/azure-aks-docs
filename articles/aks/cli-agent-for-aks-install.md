@@ -73,36 +73,29 @@ For more information, see [agentic CLI for Azure Kubernetes Service (AKS) overvi
 > [!NOTE]
 > We recommend using newer models such as GPT-4o, GPT-4o-mini, or Claude Sonnet 4.0 for better performance. Choose a model with a high context size of at least 128,000 tokens or higher.
 
-### [Azure OpenAI (recommended)](#tab/azure-openai)
+### [Azure OpenAI (recommended)]
 
-1. Set up an Azure OpenAI resource by following the steps in [Create an Azure OpenAI in Azure AI Foundry Models resource](/azure/ai-foundry/openai/how-to/create-resource#create-a-resource).
+### Azure OpenAI (Recommended)
 
-   > [!IMPORTANT]
-   > For the deployment name, use the same name as the model's name (such as `gpt-4o` or `gpt-4o-mini`) depending on access. You can use any region where you have access and quota for the model. In the deployment, select the highest possible token limit per minute (TPM). We recommend upwards of 1M TPM for good performance. If you need to increase your quota, see [Manage Azure OpenAI in Azure AI Foundry Models quota](/azure/ai-foundry/openai/how-to/quota).
+1. Set up an Azure Open AI resource by following the [Microsoft documentation](https://learn.microsoft.com/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
 
-1. Deploy the model by following the steps in [Deploy an Azure OpenAI in Azure AI Foundry Models resource](/azure/ai-foundry/openai/how-to/create-resource#deploy-a-model).
-1. Set environment variables with your API base URL and API key, as shown in the following examples:
+> [!NOTE]
+> For the deployment name, please use the same name as the model name such as gpt-4o, gpt-4o-mini depending on the access. You can use any region where you have access and quota for the model
+> In the deployment, please select as high token limit per minute (TPM) as possible. We recommend upwards of 1M TPM for good performance
+2. [Deploy the model](https://learn.microsoft.com/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) you plan to use in the Azure AI Foundry Portal.
+3. Once deployed, note your API base URL and API key, 
+<img width="1713" height="817" alt="image" src="https://github.com/user-attachments/assets/400021fd-5604-4cd2-9faf-407145c52669" />
 
-    ```bash
-    # Linux/Mac
-    export AZURE_API_BASE="https://<your-endpoint>.openai.azure.com/"
-    export AZURE_API_VERSION="2025-04-01-preview"
-    export AZURE_API_KEY="<your-api-key>"
 
-    # Windows
-    $env:AZURE_API_VERSION="2025-04-01-preview"
-    $env:AZURE_API_BASE="https://<your-endpoint>.openai.azure.com"
-    $env:AZURE_API_KEY="<your-api-key>"
-    ```
+> [!NOTE] 
+> The API version is not the model version, you can use any API version that is available and supported [here]([url](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/api-version-lifecycle?))
+>  The Azure API Base refers to the Azure Open AI end point (which usually ends in openai.azure.com/), not the target URI of the deployment in Azure AI Foundry.
 
-    > [!NOTE]
-    > - The API version isn't the model version. You can use any available and supported API version.
-    > - The Azure API Base refers to the Azure OpenAI endpoint, not the target URI of the deployment in Azure AI Foundry.
-    > - You must specify the model when using Azure OpenAI using the [`az aks agent`](/cli/azure/aks#az-aks-agent) command with the `--model` parameter.
 
-### [Other supported providers](#tab/other-providers)
 
-We also support any OpenAI compatible model. For other LLM providers, contact [Microsoft support](https://support.microsoft.com) for assistance.
+### Other LLM providers
+We also support any OpenAI compatible model, please check the documentation of the LLM provider for instructions on how to create an account and retrieve the API key
+
 
 ## Initialize the agentic CLI for AKS
 
@@ -116,7 +109,7 @@ We also support any OpenAI compatible model. For other LLM providers, contact [M
 
     ```output
     Welcome to AKS Agent LLM configuration setup. Type '/exit' to exit.
-     1. azure
+     1. Azure Open AI
      2. openai
      3. anthropic
      4. gemini
@@ -138,6 +131,24 @@ We also support any OpenAI compatible model. For other LLM providers, contact [M
 ## Use the agentic CLI for AKS
 
 You can now start using the agentic CLI for AKS to troubleshoot your clusters and get intelligent insights using natural language queries. The following sections outline key parameters and example queries to get you started.
+
+### Basic queries
+
+You can use the following example queries to get started with the agentic CLI for AKS:
+
+> [!NOTE]
+> If you have multiple models set up, you can specify the model to use for each query using the `--model` parameter. For example, `--model=azure/gpt-4o`.
+
+```azurecli-interactive
+az aks agent "How many nodes are in my cluster?"
+az aks agent "What is the Kubernetes version on the cluster?"
+az aks agent "Why is coredns not working on my cluster?"
+az aks agent "Why is my cluster in a failed state?"
+```
+
+By default, the experience uses interactive mode where you can continue asking questions with retained context until you want to exit. To quit the experience, type `/exit`.
+
+
 
 ### Agentic CLI for AKS parameters
 
@@ -178,22 +189,7 @@ You can use your config file by specifying the `--config-file` parameter with th
 ```azurecli-interactive
 az aks agent "Check kubernetes pod resource usage" --config-file exampleconfig.yaml
 ```
-
-### Basic queries
-
-You can use the following example queries to get started with the agentic CLI for AKS:
-
-> [!NOTE]
-> If you have multiple models set up, you can specify the model to use for each query using the `--model` parameter. For example, `--model=azure/gpt-4o`.
-
-```azurecli-interactive
-az aks agent "How many nodes are in my cluster?"
-az aks agent "What is the Kubernetes version on the cluster?"
-az aks agent "Why is coredns not working on my cluster?"
-az aks agent "Why is my cluster in a failed state?"
-```
-
-By default, the experience uses interactive mode where you can continue asking questions with retained context until you want to exit. To quit the experience, type `/exit`.
+ß
 
 ### Interactive commands
 
