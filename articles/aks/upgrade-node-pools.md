@@ -86,9 +86,9 @@ An AKS cluster has two cluster resource objects with Kubernetes versions associa
 
 The control plane maps to one or many node pools. The behavior of an upgrade operation depends on which Azure CLI command you use and the flags you specify:
 
-- [`az aks upgrade`][az-aks-upgrade] upgrades the control plane and all node pools in the cluster to the same Kubernetes version.
-- [`az aks upgrade`][az-aks-upgrade] with the `--control-plane-only` flag upgrades only the cluster control plane and leaves all node pools unchanged.
-- [`az aks nodepool upgrade`][az-aks-nodepool-upgrade] upgrades only the target node pool with the specified Kubernetes version.
+- [`az aks upgrade`](/cli/azure/aks#az-aks-upgrade) upgrades the control plane and all node pools in the cluster to the same Kubernetes version.
+- [`az aks upgrade`](/cli/azure/aks#az-aks-upgrade) with the `--control-plane-only` flag upgrades only the cluster control plane and leaves all node pools unchanged.
+- [`az aks nodepool upgrade`](/cli/azure/aks/nodepool#az-aks-nodepool-upgrade) upgrades only the target node pool with the specified Kubernetes version.
 
 ### Validation rules for upgrades
 
