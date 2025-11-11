@@ -36,6 +36,7 @@ For more information, see [agentic CLI for Azure Kubernetes Service (AKS) overvi
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 1. Add the agentic CLI for AKS extension to your Azure CLI installation using the [`az extension add`](/cli/azure/extension#az-extension-add) command, or update to the latest version if you already have it installed using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
+This might take 5-10 minutes to complete.
 
     ```azurecli-interactive
     # Install the extension
@@ -175,7 +176,7 @@ The `--model` parameter determines which LLM and provider analyzes your cluster.
 
 ### Configuration file
 
-You can specify some of the common parameters in a config file instead of the `init` experience. See the [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml) for an example configuration file.
+The LLM configuration is stored in a config file through  the the `az aks agent-init` experience. If the init command doesnt work, you can still use the config file by adding the variables manually.  Please see  [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml) for an example config file. The default configuration file path can be found through the `az aks agent --help` command.
 
 The config file currently supports the following parameters:
 
@@ -184,7 +185,7 @@ The config file currently supports the following parameters:
 - Custom toolsets
 - Azure environment variables
 
-You can use your config file by specifying the `--config-file` parameter with the path to your config file when using the [`az aks agent`](/cli/azure/aks#az-aks-agent) command.
+You can also use your config file by specifying the `--config-file` parameter with the path to your config file when using the [`az aks agent`](/cli/azure/aks#az-aks-agent) command.
 
 ```azurecli-interactive
 az aks agent "Check kubernetes pod resource usage" --config-file exampleconfig.yaml
@@ -247,54 +248,9 @@ The following example shows how to start the MCP server and use it with the agen
 az aks agent "why is my node unhealthy" --model=azure/gpt-4o --aks-mcp --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 Loaded models: ['azure/gpt-4o']                                                                                           
 Refreshing available datasources (toolsets)                                                                               
-❌ Toolset slab: Environment variable SLAB_API_KEY was not set                                                            
-✅ Toolset kubernetes/kube-prometheus-stack                                                                               
-❌ Toolset argocd/core: Environment variable ARGOCD_AUTH_TOKEN was not set                                                
-❌ Toolset confluence: Environment variable CONFLUENCE_BASE_URL was not set                                               
-✅ Toolset core_investigation                                                                                             
-❌ Toolset robusta: Integration with Robusta cloud is disabled                                                            
-✅ Toolset internet                                                                                                       
-❌ Toolset opensearch/status: The toolset is missing its configuration                                                    
-❌ Toolset grafana/tempo: The toolset is missing its configuration                                                        
-❌ Toolset grafana/loki: Missing Loki configuration. Check your config.                                                   
-❌ Toolset newrelic: No configuration provided                                                                            
-❌ Toolset grafana/grafana: The toolset is missing its configuration                                                      
-❌ Toolset notion: Notion toolset is misconfigured. Authorization header is required.                                     
-❌ Toolset kafka/admin: The toolset is missing its configuration                                                          
-❌ Toolset datadog/logs: Missing config for dd_api_key, dd_app_key, or site_api_url. For details:                         
-https://holmesgpt.dev/data-sources/builtin-toolsets/datadog/                                                              
-❌ Toolset datadog/general: Missing config for dd_api_key, dd_app_key, or site_api_url. For details:                      
-https://holmesgpt.dev/data-sources/builtin-toolsets/datadog/                                                              
-❌ Toolset datadog/metrics: Missing config for dd_api_key, dd_app_key, or site_api_url. For details:                      
-https://holmesgpt.dev/data-sources/builtin-toolsets/datadog/                                                              
-❌ Toolset datadog/traces: No configuration provided for Datadog Traces toolset                                           
-✅ Toolset datadog/rds                                                                                                    
-❌ Toolset opensearch/logs: Missing OpenSearch configuration. Check your config.                                          
-❌ Toolset opensearch/traces: Missing opensearch traces URL. Check your config                                            
-❌ Toolset opensearch/query_assist: Environment variable OPENSEARCH_URL was not set                                       
-❌ Toolset coralogix/logs: The toolset is missing its configuration                                                       
-❌ Toolset rabbitmq/core: RabbitMQ toolset is misconfigured. 'management_url' is required.                                
-❌ Toolset git: Missing one or more required Git configuration values.                                                    
-❌ Toolset MongoDBAtlas: Missing config credentials.                                                                      
-✅ Toolset runbook                                                                                                        
-❌ Toolset azure/sql: The toolset is missing its configuration                                                            
-❌ Toolset ServiceNow: Missing config credentials.                                                                        
-❌ Toolset aws/security: `aws sts get-caller-identity` returned 127                                                       
-❌ Toolset aws/rds: `aws sts get-caller-identity` returned 127                                                            
-❌ Toolset docker/core: `docker version` returned 127                                                                     
-❌ Toolset cilium/core: `cilium status` returned 127                                                                      
-❌ Toolset hubble/observability: `hubble version` returned 127                                                            
+..                                                                                                                       
 **✅ Toolset aks-mcp  **                                                                                                      
-❌ Toolset kubernetes/krew-extras: `kubectl version --client && kubectl lineage --version` returned 1                     
-✅ Toolset helm/core                                                                                                      
-Toolset statuses are cached to /Users/aritraghosh/.azure/toolsets_status.json                                             
-✅ Toolset kubernetes/kube-prometheus-stack                                                                               
-✅ Toolset internet                                                                                                       
-✅ Toolset core_investigation                                                                                             
-✅ Toolset datadog/rds                                                                                                    
-✅ Toolset runbook                                                                                                        
-✅ Toolset aks-mcp                                                                                                        
-✅ Toolset helm/core                                                                                                      
+..                                                                                                   
 NO ENABLED LOGGING TOOLSET                                                                                                
 Using model: azure/gpt-4o (128,000 total tokens, 16,384 output tokens)                                                    
 This tool uses AI to generate responses and may not always be accurate.
