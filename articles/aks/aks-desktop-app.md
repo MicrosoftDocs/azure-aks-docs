@@ -4,7 +4,7 @@ description: Learn how to deploy and manage applications on Azure Kubernetes Ser
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: how-to
-ms.date: 11/10/2025
+ms.date: 11/12/2025
 ms.author: alalve
 # Customer intent: As a developer, I want to deploy an application to Azure Kubernetes Service using AKS desktop, so that I can quickly deploy and manage my containerized applications without writing detailed Kubernetes manifests.
 ---
@@ -14,11 +14,11 @@ ms.author: alalve
 This article guides you through deploying an application using AKS desktop, enabling you to manage your containerized workloads with an intuitive, application-centric interface.
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add/delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team.
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team.
 
 ## Prerequisites
 
-- You'll need an Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account](https://azure.microsoft.com/free).
+- You need an Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account](https://azure.microsoft.com/free).
 - You must have an AKS cluster available through the Azure portal or an Azure Container Registry with your application image that you want to deploy.
 - Your AKS cluster must have a namespace for use.
 - [Install AKS desktop](https://github.com/Azure/aks-desktop/releases). AKS desktop supports the following operating systems:
@@ -49,7 +49,7 @@ Once signed in, you have the ability to add clusters that you have access to int
 When you add a cluster, you're given two options to add a cluster to AKS desktop. The available options are:
 
 - From your Azure subscription
-- Uploading a Kubeconfig file
+- Uploading a KubeConfig file
 
 If you have a single Azure subscription, AKS desktop auto populates your subscription once you sign in.
 
@@ -64,7 +64,7 @@ If you have a single Azure subscription, AKS desktop auto populates your subscri
 
 # [KubeConfig](#tab/kubeconfig)
 
-If this is your first method of choice, follow these steps:
+If KubeConfig is your first method of choice, follow these steps:
 
 1. Select **Home**, then select **Add Other Clusters**.
 1. Select **Load from KubeConfig**, from here, pick one of two options:
@@ -73,7 +73,7 @@ If this is your first method of choice, follow these steps:
 
    1. Drag and drop your Kubeconfig file into AKS desktop. Then select **Next**.
 
-If you followed the Azure portal method first, follow these steps:
+If you followed the Azure method first, follow these steps:
 
 1. In the left pane, select **Add Cluster**, then select **Load from KubeConfig**.
 1. From here, pick one of two options:
@@ -104,7 +104,7 @@ To delete a cluster from AKS desktop, follow these steps:
 
 ## Create a new Project
 
-When you create a project on a cluster, it's visible to all other users who have access to the namespace. This is because the project is based on a namespace, and that namespace has a specific label.
+When you create a project on a cluster, any user with access to the associated namespace can view the project. Namespace access and labeling determine which users can see each project, since projects are tied to namespaces.
 
 There are three methods you can choose from to deploy your application using AKS desktop:
 
@@ -162,14 +162,14 @@ Once you create your first project, AKS desktop places you directly into the new
 1. Under **Container image**, paste the path to your container image. It must be in the format `<YourACR>.azurecr.io/<YourImageName>:<YourImageTag>`.
 
    > [!NOTE]
-   > The **latest** tag can't be used for your container images as this results in best practice violation on AKS Automatic.
+   > The **latest** tag can't be used for your container images as it results in best practice violation on AKS Automatic.
 
 1. Select your replica amount.
 1. Under **Networking**, input your network port. Choose whether your app is meant for internal only or for public access, then select **Continue**.
 1. Under **Health checks**, choose which checks you want to perform, then select **Continue**.
-1. Under **Resource Limits**, configure this per your app requirements, then select **Continue**.
+1. Under **Resource Limits**, configure per your app requirements, then select **Continue**.
 1. Under **Environment Variables**, add your `key:value` pair variable for your app, then select **Continue**.
-1. Under **HPA**, select whether to enable Horizontal Pod Autoscaler (HPA) for your app. HPA automatically adjusts the number of pods in response to resource usage, helping maintain optimal performance and resource efficiency. Configure this per your needs, then select **Continue**.
+1. Under **HPA**, select whether to enable Horizontal Pod Autoscaler (HPA) for your app. HPA automatically adjusts the number of pods in response to resource usage, helping maintain optimal performance and resource efficiency. Configure per your needs, then select **Continue**.
 1. Under **Advanced**, choose which settings you'd like to apply to your app, then select **Next**.
 1. Review your app deployment configuration. Select **Deploy**, then select **Close**.
 
@@ -192,7 +192,7 @@ To delete a project from AKS desktop, follow these steps:
 1. Within your project, to the far right, select the trash can button.
 1. Under the **Delete Project** window, select the **Delete Project** button to remove your project from the given namespace.
 
-   If you also want to the delete the namespace along with your project (this also removes associated resources), tick the box **Also delete the namespaces**. Then select **Delete Project**.
+   If you also want to the delete the namespace along with your project (which also removes associated resources), tick the box **Also delete the namespaces**. Then select **Delete Project**.
 
 ## View cluster data and metrics
 
@@ -209,8 +209,8 @@ To access this information for your specific cluster, follow these steps:
 You can provide feedback by visiting the [official AKS desktop GitHub repository](https://github.com/Azure/aks-desktop). To provide your feedback, follow these steps:
 
 1. Select the **Issue** button.
-1. Click **New Issue**, and select the appropriate issue.
-1. Fill out the appropriate fields in the issue. Then select the **Create** button to submit your information.
+1. Select **New Issue**, and select the appropriate issue.
+1. Fill out the appropriate fields for the issue. Then select the **Create** button to submit your information.
 
 ## Next steps
 
