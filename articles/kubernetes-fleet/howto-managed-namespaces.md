@@ -13,9 +13,9 @@ ms.service: azure-kubernetes-fleet-manager
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-This article shows you how use Fleet Manager to create and configure a Managed Fleet Namespace that defines resource quotas, network policies, and delegated user access for the namespaces on multiple clusters.
+This article shows you how to use Fleet Manager to create and configure a Managed Fleet Namespace that defines resource quotas, network policies, and delegated user access for the namespaces on multiple clusters.
 
-If you're looking to view or access existing Managed Fleet Namespaces you have been granted access to, see [view and access Managed Fleet Namespaces](./howto-managed-namespaces-access.md).
+If you're looking to view or access existing Managed Fleet Namespaces you have access to, see [view and access Managed Fleet Namespaces](./howto-managed-namespaces-access.md).
 
 [!INCLUDE [preview_features_note](./includes/preview/preview-callout.md)]
 
@@ -23,13 +23,13 @@ If you're looking to view or access existing Managed Fleet Namespaces you have b
 
 * When a Managed Fleet Namespace adopts a single cluster [Managed Kubernetes Namespace](../aks/concepts-managed-namespaces.md) or vice versa, it may lead to conflicting ownership. To avoid, use a delete policy of `keep` for both the Managed Fleet and Kubernetes Namespaces.
 * Clusters must have a Kubernetes version of at least 1.30.0. Clusters below this version **will not** block users on the cluster from modifying the placed Kubernetes resources.
-* Clusters you specify must be members of the fleet managed by the same Fleet Manager under which the Managed Fleet Namespace will exist.
+* Clusters you specify must be members of the fleet managed by the same Fleet Manager which controls the Managed Fleet Namespace.
 
 ## Before you begin
 
 - You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 - You need a Fleet Manager with a hub cluster. If you don't have one, see [create and join at least one Azure Kubernetes Service (AKS) cluster to the fleet](./quickstart-create-fleet-and-members.md).
-- Read the [Overview of Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md) to understand the concept.
+- Understand the Managed Fleet Namespace concept by [reading the overview](./concepts-fleet-managed-namespace.md).
 - You need Azure CLI version 2.78.0 or later installed to complete this article. To install or upgrade, see [Install Azure CLI][az-aks-install-cli].
 - You need the `fleet` Azure CLI extension version 1.8.0 or later. You can install it and update to the latest version using the [`az extension add`][az-extension-add] and [`az extension update`][az-extension-update] commands.
 	
@@ -102,9 +102,9 @@ az role assignment create \
 
 You can control which member clusters to deploy the managed namespace to by specifying the desired list of member cluster names. Any unmanaged namespaces with the same name on member clusters not in the specified list remain untouched.
 
-Specify the full list of member clusters you want to deploy the managed namespace to using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command with the `--member-cluster-names` parameter. The managed namespace will be propagated to all clusters in the list.
+Specify the full list of member clusters you want to deploy the managed namespace to using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command with the `--member-cluster-names` parameter. The managed namespace is propagated to all clusters in the list.
 
-In this example, the managed namespace will be deployed to `clusterA`, `clusterB`, and `clusterC`.
+In this example, the managed namespace is deployed to `clusterA`, `clusterB`, and `clusterC`.
 
 ```azurecli-interactive
 az fleet namespace create \
@@ -116,11 +116,11 @@ az fleet namespace create \
 
 ## Remove member clusters from a Managed Fleet Namespace
 
-You can remove member clusters from a managed namespace by specifying the list of member clusters you want the namespace to remain on, excluding any clusters you want to remove. This action removes the namespace from the clusters not included in the list.
+You can remove member clusters from a Managed Fleet Namespace by excluding them from the list of member clusters you want the namespace on.
 
-Specify the list of member clusters you want the managed namespace to remain on using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command with the `--member-cluster-names` parameter. The managed namespace will be removed from any clusters excluded from the list.
+Specify the list of member clusters you want the managed namespace to remain on using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command with the `--member-cluster-names` parameter. The managed namespace is removed from any clusters excluded from the list.
 
-In this example, the managed namespace will be removed from `clusterC`.
+In this example, the managed namespace is removed from `clusterC`.
 
 ```azurecli-interactive
 az fleet namespace create \
@@ -162,11 +162,11 @@ az fleet namespace delete \
 ```
 
 > [!IMPORTANT]
-> RBAC roles placed on the managed namespace will be deleted when the managed namespace is deleted, regardless of the delete policy configuration.
+> RBAC roles placed on the managed namespace are deleted when the managed namespace is deleted, regardless of the delete policy configuration.
 
 ## Next steps
 
-- Read the [overview of Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md) to understand the concept of a managed namespace.
+- Understand the concept of Managed Fleet Namespaces by [reading the overview](./concepts-fleet-managed-namespace.md).
 - Learn how to [view and access Managed Fleet namespaces you have access to](./howto-managed-namespaces-access.md).
 
 <!-- INTERNAL LINKS -->

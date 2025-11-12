@@ -13,7 +13,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-This article is intended for users of a managed namespace who need to discover and access those namespaces. If you're looking to create and configure managed namespaces, see [use multi-cluster managed namespaces for multi-tenancy](./howto-managed-namespaces.md).
+This article is intended for users of a managed namespace who need to discover and access those namespaces. If you're looking to create and configure managed namespaces, see [create and configure Managed Fleet Namespaces](./howto-managed-namespaces.md).
 
 [!INCLUDE [preview_features_note](./includes/preview/preview-callout.md)]
 
@@ -21,7 +21,7 @@ This article is intended for users of a managed namespace who need to discover a
 
 - You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 - You need an existing Managed Fleet Namespace. If you don't have one, see [create a multi-cluster Managed Fleet Namespace](./howto-managed-namespaces.md).
-- Read the [overview of multi-cluster Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md) to understand the concept of a managed namespace.
+- Understand the Managed Fleet Namespace concept by [reading the overview](./concepts-fleet-managed-namespace.md).
 - You need Azure CLI version 2.78.0 or later installed to complete this article. To install or upgrade, see [Install Azure CLI][az-aks-install-cli].
 - You need the `fleet` Azure CLI extension version 1.8.0 or later. You can install it and update to the latest version using the [`az extension add`][az-extension-add] and [`az extension update`][az-extension-update] commands.
 
@@ -54,9 +54,9 @@ This article is intended for users of a managed namespace who need to discover a
     az account set --subscription ${SUBSCRIPTION_ID}
     ```
 
-## View the Managed Fleet Namespaces you have access to
+## View the Managed Fleet Namespaces you can access
 
-View the multi-cluster managed namespaces you have access to using the [`az fleet namespace list`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
+View the multi-cluster managed namespaces you can access using the [`az fleet namespace list`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
 
 ```azurecli-interactive
 az fleet namespace list  
@@ -93,7 +93,7 @@ AdoptionPolicy  DeletePolicy   ETag                                    Location 
 Always          Delete         "aaaaaaaa-0b0b-1c1c-2d2d-333333333333   westus2    my-managed-namespace  Succeeded           test-rg
 ```
 
-## Retrive the kubeconfig for a Managed Fleet Namespace
+## Retrieve the kubeconfig for a Managed Fleet Namespace
 
 You can retrieve either the kubeconfig to access the multi-cluster managed namespace on the Fleet Manager hub cluster, or on a specific member cluster. If you access the hub cluster, you can utilize Fleet Manager's [intelligent resource placement](intelligent-resource-placement.md) to replicate your resources to member clusters.
 
@@ -118,7 +118,7 @@ az fleet namespace get-credentials \
 
 ## Next steps
 
-- Read the [overview of multi-cluster managed namespaces](./concepts-fleet-managed-namespace.md) to understand the concept of a managed namespace.
+- Understand the concept of Managed Fleet Namespaces by [reading the overview](./concepts-fleet-managed-namespace.md).
 - Learn how to [create and use a multi-cluster managed namespace](./howto-managed-namespaces.md).
 
 <!-- INTERNAL LINKS -->

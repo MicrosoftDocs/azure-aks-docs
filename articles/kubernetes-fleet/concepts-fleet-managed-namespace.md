@@ -12,7 +12,7 @@ ms.topic: concept-article
 
 **Applies to** :heavy_check_mark: Fleet Manager with hub cluster
 
-This article provides a conceptual overview of Azure Kubernetes Fleet Manager's Managed Fleet Namespaces which provide a centrally managed multi-cluster muti-tenancy solution.
+This article provides a conceptual overview of Azure Kubernetes Fleet Manager's Managed Fleet Namespaces that provide a centrally managed multi-cluster muti-tenancy solution.
  
 [!INCLUDE [preview_features_note](./includes/preview/preview-callout.md)]
 
@@ -22,10 +22,10 @@ When deployed on target member clusters, Managed Fleet Namespaces allow platform
 
 Managed Fleet Namespaces use a generated, read-only, Fleet Manager [Cluster Resource Placement](concepts-resource-propagation.md) (CRP) to propagate the centrally defined namespace to selected member clusters. 
 
-When creating a Fleet Managed Namespace you can also control: 
+When creating a Fleet Managed Namespace, you can also control: 
 
-* Adoption Policy: How conflicts are resolved when a Managed Fleet Namespace is placed on a member cluster that already has an unmanaged namespace or Managed Kuberentes Namespace with the same name.
-* Delete Policy: Whether Kubernetes resources are deleted upon Managed Fleet Namespace deletion.
+* Adoption Policy: Defines how conflicts are resolved when a Managed Fleet Namespace is placed on a member cluster where an unmanaged namespace or Managed Kubernetes Namespace exists with the same name.
+* Delete Policy: Defines whether Kubernetes resources are deleted upon Managed Fleet Namespace Azure resource deletion.
 
 ## Setting resource quotas
 
@@ -48,7 +48,7 @@ Network policies are applied to each cluster individually and don't control cros
 - **Deny all**: Deny all network traffic, including traffic between pods and external endpoints.
 
 > [!NOTE]
-> Managed Fleet Namespaces set default network policies, but namespace users with sufficient permissions can add extra policies that relax the overall network policy for the namespace. This matches the standard additive behavior of Kubernetes network policies.
+> Managed Fleet Namespaces set default network policies, but namespace users with sufficient permissions can add extra policies that relax the overall network policy for the namespace. This behavior matches the standard additive behavior of Kubernetes network policies.
 
 ## Labels and annotations
 
@@ -62,7 +62,7 @@ When a Managed Fleet Namespace is created, the adoption policy determines how ex
 - **IfIdentical**: Managed namespace creation fails if a namespace with the same name already exists in the cluster, unless the namespaces are identical. If the namespaces are identical, Fleet Manager takes over the existing namespace to be managed.
 - **Always**: The managed namespace always takes over the existing namespace, even if some resources in the namespace are overwritten.
 
-During adoption a Managed Fleet Namespace may take over fields on a existing namespace on a member cluster, but it doesn't remove resources from the namespace.
+During adoption a Managed Fleet Namespace can take over fields on an existing namespace on a member cluster, but it doesn't remove resources from the namespace.
 
 ## Delete policy
 
@@ -87,7 +87,7 @@ To control access to a Managed Fleet Namespace on member clusters, use the follo
 | Azure Kubernetes Fleet Manager RBAC Admin for Member Clusters | • Read and write access to Kubernetes resources in the namespace on the member cluster. |
 | Azure Kubernetes Fleet Manager RBAC Cluster Admin for Member Clusters | • Full read/write access to all Kubernetes resources on the member cluster. |
 
-For example, a developer in `team-A` which uses the `team-A` Managed Fleet Namespace would need to read and write Kubernetes resources in the namespace on the Fleet Manager hub cluster. The developer would also need to read Kubernetes objects in the `team-A` namespace on the member clusters on which it exists. Consequently, the namespace administrator would assign them **Azure Kubernetes Fleet Manager RBAC Writer** at the fleet scope and **Azure Kubernetes Fleet Manager RBAC Reader for Member Clusters** at the Managed Fleet Namespace scope for these respective requirements.
+For example, a developer in `team-A` which uses the `team-A` Managed Fleet Namespace would need to read and write Kubernetes resources in the namespace on the Fleet Manager hub cluster. The developer would also need to read Kubernetes objects in the `team-A` namespace on the member clusters on which it exists. So, the platform administrator would assign them **Azure Kubernetes Fleet Manager RBAC Writer** at the fleet scope and **Azure Kubernetes Fleet Manager RBAC Reader for Member Clusters** at the Managed Fleet Namespace scope for these respective requirements.
 
 ## Next steps
 
