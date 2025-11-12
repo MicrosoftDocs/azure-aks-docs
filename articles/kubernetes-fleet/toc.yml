@@ -120,7 +120,7 @@
           href: resource-override.md  
     - name: Use Managed Fleet Namespaces for multi-cluster multi-tenancy
       items:
-        - name: Define and deploy Managed Fleet Namespaces
+        - name: Create Managed Fleet Namespaces
           href: howto-managed-namespaces.md
         - name: View and access Managed Fleet Namespaces
           href: howto-managed-namespaces-access.md
