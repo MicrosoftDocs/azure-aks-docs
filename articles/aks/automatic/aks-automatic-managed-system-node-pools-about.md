@@ -1,13 +1,13 @@
 ---
 title: Overview of AKS Automatic Clusters with Managed System Node Pools (Preview)
-description: 
+description: Learn about the managed system node pools (preview) feature for Azure Kubernetes Service (AKS) Automatic clusters, including its key features, benefits, and restrictions.
 author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: ignite-2025
 ms.topic: overview
 ms.date: 11/12/2025
 ms.author: schaffererin
-# Customer intent: 
+# Customer intent: As a cluster developer, I want to understand the managed system node pools feature for AKS Automatic clusters so that I can evaluate its benefits and limitations for my use case.
 ---
 
 # Managed system node pools (preview) on Azure Kubernetes Service (AKS) Automatic clusters
