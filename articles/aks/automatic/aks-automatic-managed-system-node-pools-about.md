@@ -14,6 +14,8 @@ ms.author: schaffererin
 
 In this article, you learn about the managed system node pools (preview) feature for [Azure Kubernetes Service (AKS) Automatic clusters](../intro-aks-automatic.md). With this feature, AKS automatically manages system node pools in your cluster, including configuration, scaling, and maintenance.
 
+To create an AKS Automatic cluster with managed system node pools, see the [Create an Azure Kubernetes Service (AKS) Automatic cluster with managed system node pools (preview)](./aks-automatic-managed-system-node-pools.md) quickstart.
+
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Key features and benefits
@@ -53,14 +55,14 @@ The following operations are denied for objects and pods running on the managed 
 - All create, update, and delete operations.
 - All pod `exec` and `attach` operations.
 
-## Restrictions that prevent running workloads on the managed system node pool
+### Restrictions that prevent running workloads on the managed system node pool
 
 The following workload specifications are denied when scheduled on a managed system node pool:
 
 - Workloads tolerating `CriticalAddonsOnly` and other forms of wildcard tolerations.
 - Workloads that specify custom schedulers.
 
-## Unsupported AKS API operations
+### Unsupported AKS API operations
 
 The following AKS API operations are **unsupported**:
 

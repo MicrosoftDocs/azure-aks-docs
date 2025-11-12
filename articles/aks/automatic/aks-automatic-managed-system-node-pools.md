@@ -18,7 +18,7 @@ In this quickstart, you learn how to create an Azure Kubernetes Service (AKS) Au
 
 ## Prerequisites
 
-- Before you begin, read the [Overview of AKS Automatic clusters with managed system node pools](./aks-automatic-managed-system-node-pools-about.md) to learn about the feature and its restrictions.
+- Before you begin, read the [Overview of AKS Automatic clusters with managed system node pools (preview)](./aks-automatic-managed-system-node-pools-about.md) to learn about the components that run in the managed system node pools and the restrictions that apply to them.
 - The Azure CLI version 2.77.0 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/get-started-with-azure-cli).
 - [Install the `aks-preview` Azure CLI extension](#install-or-update-the-aks-preview-extension). The minimum required version is **19.0.0b15**.
 - [Register the `AKS-AutomaticHostedSystemProfilePreview` feature flag in your Azure subscription](#register-the-aks-automatichostedsystemprofilepreview-feature-flag).
@@ -55,39 +55,8 @@ In this quickstart, you learn how to create an Azure Kubernetes Service (AKS) Au
 - Migrations between AKS Automatic clusters and AKS Automatic clusters with managed system node pools aren't supported.
 - AKS Automatic clusters in a custom virtual network (VNet) with managed system node pools aren't supported.
 
-## Region availability
-
-AKS Automatic clusters with managed system node pools are currently available in the following regions:
-
-| Geography | Available regions |
-|-----------|-------------------|
-| Africa | South Africa North <br> South Africa West |
-| Asia Pacific | Asia East <br> Asia Southeast |
-| Australia | Australia Central <br> Australia East <br> Australia Central 2 <br> Australia Southeast |
-| Brazil | Brazil South <br> Brazil Southeast |
-| Canada | Canada Central <br> Canada East |
-| Chile | Chile Central |
-| Europe | Europe North <br> Europe West |
-| France | France Central <br> France South |
-| Germany | Germany North <br> Germany West Central |
-| India | India Central <br> India South <br> India West <br> Jio India Central <br> Jio India West |
-| Israel | Israel Central |
-| Italy | Italy North |
-| Japan | Japan East <br> Japan West |
-| Korea | Korea Central <br> Korea South |
-| Malaysia | Malaysia South |
-| Mexico | Mexico Central |
-| New Zealand | New Zealand North |
-| Norway | Norway East <br> Norway West |
-| Poland | Poland Central |
-| Qatar | Qatar Central |
-| Spain | Spain Central |
-| Sweden | Sweden Central <br> Sweden South |
-| Switzerland | Switzerland North <br> Switzerland West |
-| Taiwan | Taiwan North <br> Taiwan Northwest |
-| UAE | UAE North <br> UAE Central |
-| UK | UK South <br> UK South 2 <br> UK West |
-| US | East US <br> East US 2 <br> Central US <br> North Central US <br> South Central US <br> West Central US <br> West US <br> West US 2 <br> West US 3 <br> US East 2 EUAP <br> US Central EUAP |
+> [!NOTE]
+> Migrations between AKS Automatic clusters and AKS Standard clusters are supported. For more information, see [Update the SKU of an existing AKS cluster](../free-standard-pricing-tiers.md#update-the-sku-of-an-existing-cluster).
 
 ## Create an AKS Automatic cluster with managed system node pools
 
@@ -111,3 +80,10 @@ AKS Automatic clusters with managed system node pools are currently available in
       },
     ...
     ```
+
+## Next steps
+
+For more information about AKS Automatic, see the following article:
+
+> [!div class="nextstepaction"]
+> [Introduction to Azure Kubernetes Service (AKS) Automatic](../intro-aks-automatic.md)
