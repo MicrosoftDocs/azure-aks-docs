@@ -29,7 +29,7 @@ Fleet Manager supports the following scenarios:
 
 * Automatically trigger version upgrades when new Kubernetes or node image versions are published by defining one or more [auto-upgrade profile](./concepts-update-orchestration.md#understanding-auto-upgrade-profiles).
 
-* Deploy a hub cluster to enable intelligent placing of Kubernetes resources across member clusters based on cluster labels and properties using Fleet Manager [cluster resource placement](./concepts-resource-propagation.md).
+* Deploy a hub cluster to enable intelligent placing of Kubernetes resources across member clusters based on cluster labels and properties using Fleet Manager [cluster resource placement](./concepts-resource-propagation.md) and [namespace-scoped resource placement](./concepts-namespaced-resource-propagation.md).
 
 * Stage Kubernetes resources from Git repositories to Fleet Manager's hub cluster using [Automated Deployments](./concepts-automated-deployments.md) (preview).
 
@@ -39,6 +39,7 @@ Fleet Manager supports the following scenarios:
 
 * [Conceptual overview of Fleets and member clusters](./concepts-fleet.md).
 * [Conceptual overview of Update orchestration across multiple member clusters](./concepts-update-orchestration.md).
-* [Conceptual overview of Kubernetes resource placement from hub cluster to member clusters](./concepts-resource-propagation.md).
+* [Conceptual overview of cluster-scoped Kubernetes resource placement from hub cluster to member clusters](./concepts-resource-propagation.md).
+* [Conceptual overview of namespace-scoped Kubernetes resource placement from hub cluster to member clusters](./concepts-namespaced-resource-propagation.md).
 * [Conceptual overview of DNS load balancing (preview)](./concepts-l4-load-balancing.md).
 * [Create a fleet and join member clusters](./quickstart-create-fleet-and-members.md).

@@ -33,6 +33,9 @@ Fleet Manager supports these custom resources based on the [CNCF project KubeFle
 
 A `ClusterResourcePlacement` object is used to tell the fleet scheduler how to place a given set of cluster-scoped objects from the fleet hub cluster onto member clusters. Namespace-scoped objects like Deployments, StatefulSets, DaemonSets, ConfigMaps, Secrets, and PersistentVolumeClaims are included when their containing namespace is selected.
 
+> [!NOTE]
+> For fine-grained control over individual namespace-scoped resources within a namespace, use the [`ResourcePlacement` API](./concepts-namespaced-resource-propagation.md) instead. `ClusterResourcePlacement` is best suited for propagating entire namespaces and cluster-scoped resources.
+
 With `ClusterResourcePlacement`, you can:
 
 * Select which resources to propagate. These can be cluster-scoped Kubernetes resources defined using [Kubernetes Group Version Kind (GVK)](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#api-groups) references, or a namespace, which propagates the namespace and all its resources.
@@ -520,6 +523,7 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 ## Next steps
 
 * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
+* [Namespace-scoped resource placement using ResourcePlacement API](./concepts-namespaced-resource-propagation.md).
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
