@@ -131,6 +131,7 @@ spec:
       kind: Namespace
       name: my-app
       version: v1
+      selectionScope: NamespaceOnly # only namespace itself is placed, no resources within the namespace
   policy:
     placementType: PickAll
 ---
