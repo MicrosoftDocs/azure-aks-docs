@@ -185,9 +185,12 @@ Yes. You can edit the existing strategy to include approvals. However, existing 
 
 ### Can I select resources inside a namespace for propagation?
 
-Fleet Manager only currently supports propagating resources at the cluster and namespace level. You can't select individual resources inside a namespace for propagation.
+Yes. Fleet Manager supports both cluster-scoped and namespace-scoped resource placement:
 
-Provide [feedback](https://github.com/Azure/AKS/issues/5067) if support for intra-namespace resource placement is important for you.
+* **ClusterResourcePlacement**: Propagates cluster-scoped resources and entire namespaces (including all their contents) to member clusters.
+* **ResourcePlacement**: Provides fine-grained control to select and propagate specific namespace-scoped resources (such as ConfigMaps, Secrets, Deployments) within a namespace.
+
+For more information, see the documentation on [namespace-scoped resource placement using ResourcePlacement API](./concepts-namespaced-resource-propagation.md).
 
 ## Automated Deployments FAQs
 

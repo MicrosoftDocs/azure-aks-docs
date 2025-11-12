@@ -50,6 +50,8 @@
           items:
           - name: Introduction to cluster resource placement API
             href: concepts-resource-propagation.md
+          - name: Introduction to resource placement API
+            href: concepts-namespaced-resource-propagation.md
           - name: Defining a placement rollout strategy
             href: concepts-rollout-strategy.md
           - name: Automated deployments overview
