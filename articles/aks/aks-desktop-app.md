@@ -206,11 +206,11 @@ To access this information for your specific cluster, follow these steps:
 
 ## Provide feedback for AKS desktop (Preview)
 
-You can provide feedback by visiting the [AKS Community](https://feedback.azure.com/d365community/forum/aabe212a-f724-ec11-b6e6-000d3a4f0da0) forum. To provide your feedback, follow these steps:
+You can provide feedback by visiting the [official AKS desktop GitHub repository](https://github.com/Azure/aks-desktop). To provide your feedback, follow these steps:
 
-1. To the far right, select the **Post a new idea** button.
-1. Under **Title**, type **AKS desktop (Preview)**.
-1. Place your feedback in the **Description** box. Then select the **Post** button to submit your information.
+1. Select the **Issue** button.
+1. Click **New Issue**, and select the appropriate issue.
+1. Fill out the appropriate fields in the issue. Then select the **Create** button to submit your information.
 
 ## Next steps
 
