@@ -13,6 +13,14 @@ ms.author: alalve
 
 AKS desktop delivers an application-focused experience for deploying and managing workloads on Azure Kubernetes Service (AKS). It accelerates time to business value by providing a guided, self-service user experience (UX) built on supported AKS features, best practices, and open-source Headlamp. Designed to work within your existing environment and tools, it enables team collaboration through role-based access control (RBAC) while abstracting complexity without removing control.
 
+Visit the official AKS desktop repository to [install AKS desktop](https://github.com/Azure/aks-desktop/releases). AKS desktop supports the following operating systems:
+
+  - Windows
+
+  - Linux
+
+  - Mac
+
 > [!NOTE]
 > AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add, or delete additional features. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at the offical [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop).
 
