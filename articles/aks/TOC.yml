@@ -368,6 +368,8 @@
           items:
             - name: AKS desktop overview (Preview)
               href: aks-desktop-overview.md
+            - name: Understand permissions in AKS desktop (Preview)
+              href: aks-desktop-permissions.md
             - name: Deploy an application using AKS desktop (Preview)
               href: aks-desktop-app.md
         - name: Use cluster extensions

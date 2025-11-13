@@ -215,4 +215,5 @@ You can provide feedback by visiting the [official AKS desktop GitHub repository
 ## Next steps
 
 - Learn more about [AKS desktop overview](aks-desktop-overview.md)
+- Learn how to [Get started with AKS desktop (Preview)](aks-desktop-permissions.md)
 - Explore [AKS Automatic clusters](auto-upgrade-cluster.md)
