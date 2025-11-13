@@ -84,6 +84,14 @@ Once you deploy an application to a project through AKS desktop, you're greeted 
 | **Scaling** | Configure application scaling using Horizontal Pod Autoscaler (HPA) or manual settings. |
 | **Environment variables** | Manage environment variables for your application. |
 
+## Join the community and provide feedback for AKS desktop (Preview)
+
+You can provide feedback by visiting the [official AKS desktop GitHub repository](https://github.com/Azure/aks-desktop). To provide your feedback, follow these steps:
+
+1. Select the **Issue** button.
+1. Select **New Issue**, and select the appropriate issue.
+1. Fill out the appropriate fields for the issue. Then select the **Create** button to submit your information.
+
 ## Next steps
 
 - Learn how to [Deploy an application via AKS desktop (Preview)](aks-desktop-app.md)

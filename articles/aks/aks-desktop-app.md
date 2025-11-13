@@ -204,7 +204,7 @@ To access this information for your specific cluster, follow these steps:
 1. Select **Home**, under the **Name** tab, select the cluster you wish to view.
 1. In the left pane, choose the specific setting to view detailed cluster data and metrics.
 
-## Provide feedback for AKS desktop (Preview)
+## Join the community and provide feedback for AKS desktop (Preview)
 
 You can provide feedback by visiting the [official AKS desktop GitHub repository](https://github.com/Azure/aks-desktop). To provide your feedback, follow these steps:
 
