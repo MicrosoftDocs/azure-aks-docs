@@ -110,7 +110,7 @@ Both `ResourcePlacement` and `ClusterResourcePlacement` share the same core capa
 The following examples show how to coordinate CRP and RP:
 
 > [!NOTE]
-> The following examples use the `placement.kubernetes-fleet.io/v1beta1` API version. The `selectionScope: NamespaceOnly` field is a preview feature available in v1beta1 and is not available in the stable v1 API.
+> The following examples use the `placement.kubernetes-fleet.io/v1beta1` API version. The `selectionScope: NamespaceOnly` field is a preview feature available in v1beta1 and is not available in the v1 API.
 
 **Platform Admin**: First, create the namespace using `ClusterResourcePlacement`:
 
