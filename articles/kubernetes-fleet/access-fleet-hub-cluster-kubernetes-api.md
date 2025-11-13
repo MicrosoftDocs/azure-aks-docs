@@ -161,7 +161,8 @@ Using Azure Bastion protects your private hub cluster from exposing endpoints to
 
 ## Related content
 
-* [Propagate resources from an Azure Kubernetes Fleet Manager hub cluster to member clusters](./quickstart-resource-propagation.md)
+* [Propagate cluster-scoped resources from an Azure Kubernetes Fleet Manager hub cluster to member clusters](./quickstart-resource-propagation.md)
+* [Propagate namespace-scoped resources across multiple clusters](./quickstart-namespace-scoped-resource-propagation.md)
 
 <!-- LINKS --->
 [az-fleet-get-credentials]: /cli/azure/fleet#az-fleet-get-credentials

@@ -178,6 +178,7 @@ For complete details on these capabilities, refer to the [ClusterResourcePlaceme
 
 ## Next steps
 
+- [Use ResourcePlacement to deploy namespace-scoped resources across multiple clusters](./quickstart-namespace-scoped-resource-propagation.md)
 - [Using ClusterResourcePlacement to deploy cluster-scoped resources](./concepts-resource-propagation.md)
 - [Multi-cluster resource placement using cluster resource placement](./quickstart-resource-propagation.md)
 - [Use overrides to customize namespace-scoped resources](./resource-override.md)
