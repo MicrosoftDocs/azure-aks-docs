@@ -4,7 +4,7 @@ description: Learn how to use AKS desktop to deploy and manage workloads on Azur
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: overview
-ms.date: 11/12/2025
+ms.date: 11/13/2025
 ms.author: alalve
 # Customer intent: As a developer, I want to use AKS desktop to deploy and manage applications on Azure Kubernetes Service without needing deep Kubernetes expertise, so that I can accelerate time to business value.
 ---
@@ -22,7 +22,7 @@ You can install [AKS desktop](https://github.com/Azure/aks-desktop/releases) by 
   - Mac
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team.
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop).
 
 ## Why AKS desktop?
 
