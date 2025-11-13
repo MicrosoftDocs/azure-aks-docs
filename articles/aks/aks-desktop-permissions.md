@@ -78,6 +78,9 @@ To create the infrastructure resources, you need permissions to create resources
 
 ## Step 2: Create the AKS cluster with ACR integration
 
+> [!NOTE]
+> It is reccomended that you use an AKS Automatic cluster when using AKS desktop. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. This is because AKS Automatic comes bundled with metrics, observability and other tools that allow AKS desktop to expose key insights.
+
 You must ensure the cluster is authorized to connect to the ACR. Choose one of the following options:
 
 ### Option 1: Attach ACR during cluster creation

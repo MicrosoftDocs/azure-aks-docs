@@ -60,7 +60,7 @@ AKS desktop provides the following benefits:
 
 ## AKS desktop limitations
 
-AKS desktop is optimized for AKS Automatic clusters. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. This is because AKS Automatic comes bundled with metrics, observability and other tools that allow AKS desktop to expose these key insights.
+**AKS desktop is optimized for AKS Automatic clusters**. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. This is because AKS Automatic comes bundled with metrics, observability and other tools that allow AKS desktop to expose key insights.
 
 ## What are Projects?
 

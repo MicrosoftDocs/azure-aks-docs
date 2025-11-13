@@ -46,6 +46,9 @@ Once signed in, you have the ability to add clusters that you have access to int
 
 ## Add a cluster to AKS desktop (Preview)
 
+> [!NOTE]
+> It is reccomended that you use an AKS Automatic cluster when using AKS desktop. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. This is because AKS Automatic comes bundled with metrics, observability and other tools that allow AKS desktop to expose key insights.
+
 When you add a cluster, you're given two options to add a cluster to AKS desktop. The available options are:
 
 - From your Azure subscription
