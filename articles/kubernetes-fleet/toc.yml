@@ -48,22 +48,22 @@
           href: concepts-multi-cluster-workload-management.md
         - name: Managing workloads using cluster resource placement
           items:
-            - name: Introduction to ClusterResourcePlacement
-              href: concepts-resource-propagation.md
-            - name: Introduction to ResourcePlacement
-              href: concepts-namespace-scoped-resource-propagation.md
-            - name: Defining a placement rollout strategy
-              href: concepts-rollout-strategy.md
-            - name: Automated deployments overview
-              href: concepts-automated-deployments.md        
-            - name: Controlling eviction and disruption
-              href: concepts-eviction-disruption.md
-            - name: Placement strategy and resource snapshots
-              href: concepts-placement-snapshots.md
-            - name: Taking over existing workloads
-              href: concepts-placement-takeover.md
-            - name: Detecting and managing workload drift
-              href: concepts-placement-drift.md 
+          - name: Introduction to ClusterResourcePlacement
+            href: concepts-resource-propagation.md
+          - name: Introduction to ResourcePlacement
+            href: concepts-namespace-scoped-resource-propagation.md
+          - name: Defining a placement rollout strategy
+            href: concepts-rollout-strategy.md
+          - name: Automated deployments overview
+            href: concepts-automated-deployments.md        
+          - name: Controlling eviction and disruption
+            href: concepts-eviction-disruption.md
+          - name: Placement strategy and resource snapshots
+            href: concepts-placement-snapshots.md
+          - name: Taking over existing workloads
+            href: concepts-placement-takeover.md
+          - name: Detecting and managing workload drift
+            href: concepts-placement-drift.md 
     - name: Multi-cluster networking 
       items:
         - name: DNS-based load balancing across multiple clusters
