@@ -91,20 +91,7 @@ The following table highlights the key differences between `ResourcePlacement` a
 | **Typical Use Cases** | AI/ML Jobs, individual workloads, specific ConfigMaps/Secrets that need independent placement decisions | Application bundles, entire namespaces, cluster-wide policies |
 | **Team Ownership** | Can be managed by namespace owners/developers | Typically managed by platform operators |
 
-## Similarities between ResourcePlacement and ClusterResourcePlacement
-
-Both RP and CRP share the same core concepts and capabilities:
-
-- **Placement Policies**: Same three placement types (`PickAll`, `PickFixed`, `PickN`) with identical scheduling logic.
-- **Resource Selection**: Both support selection by group/version/kind, name, and label selectors.
-- **Rollout Strategy**: Identical rolling update mechanisms for zero-downtime deployments.
-- **Scheduling Framework**: Use the same multi-cluster scheduler with filtering, scoring, and binding phases.
-- **Override Support**: Both integrate with `ClusterResourceOverride` and `ResourceOverride` for resource customization.
-- **Status Reporting**: Similar status structures and condition types for placement tracking.
-- **Tolerations**: Same taints and tolerations mechanism for cluster selection.
-- **Snapshot Architecture**: Both use immutable snapshots (`ResourceSnapshot` vs `ClusterResourceSnapshot`) for resource and policy tracking.
-
-This design allows teams familiar with one placement object to easily understand and use the other, while providing the appropriate level of control for different resource scopes.
+Both `ResourcePlacement` and `ClusterResourcePlacement` share the same core capabilities for all other aspects not listed in the differences table above.
 
 ## Working with ClusterResourcePlacement
 
@@ -175,105 +162,18 @@ When using `ResourcePlacement` with `ClusterResourcePlacement`, follow these bes
 
 This coordinated approach ensures that `ResourcePlacement` provides the flexibility teams need while maintaining the foundational infrastructure managed by platform operators.
 
-## Placement types
+## Resource selection, placement, and rollout
 
-`ResourcePlacement` supports the same placement types as `ClusterResourcePlacement`. For detailed information about each placement type, see the [ClusterResourcePlacement placement types documentation](./concepts-resource-propagation.md#placement-types).
+`ResourcePlacement` uses the same placement patterns as `ClusterResourcePlacement`:
 
-The following placement types are available:
+- **[Placement types](./concepts-resource-propagation.md#placement-types)**: `PickAll`, `PickFixed`, and `PickN` strategies work identically for both APIs.
+- **[Rollout strategy](./concepts-rollout-strategy.md)**: Control how updates propagate across clusters with the same rolling update mechanisms.
+- **[Status and observability](./howto-understand-placement.md)**: Monitor deployment progress using `kubectl describe resourceplacement <name> -n <namespace>`.
+- **[Advanced features](./concepts-resource-propagation.md)**: Leverage tolerations, resource overrides, topology spread constraints, and affinity rules.
 
-- **[PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type)**: Places resources onto a specific list of member clusters by name.
-- **[PickAll](./concepts-resource-propagation.md#pickall-placement-type)**: Places resources onto all member clusters, or all member clusters that meet criteria.
-- **[PickN](./concepts-resource-propagation.md#pickn-placement-type)**: Flexible placement option with selection based on affinity or topology spread constraints.
+The key difference is in **resource selection** scope. While `ClusterResourcePlacement` typically selects entire namespaces and their contents, `ResourcePlacement` provides fine-grained control over individual namespace-scoped resources.
 
-## Resource selection
-
-`ResourcePlacement` supports selecting namespace-scoped resources using the following criteria:
-
-- **Group, Version, Kind (GVK)**: Specify the exact type of Kubernetes resource.
-- **Name**: Target specific resources by name.
-- **Label selectors**: Select resources based on labels.
-
-The following example shows selecting ConfigMaps with specific labels:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ResourcePlacement
-metadata:
-  name: config-placement
-  namespace: my-app
-spec:
-  resourceSelectors:
-    - group: ""
-      kind: ConfigMap
-      version: v1
-      labelSelector:
-        matchLabels:
-          environment: production
-          component: frontend
-  policy:
-    placementType: PickAll
-```
-
-## Rollout strategy
-
-`ResourcePlacement` uses the same rolling update strategy as `ClusterResourcePlacement` to control how updates are rolled out across clusters. For detailed information, see the [rollout strategy documentation](./concepts-rollout-strategy.md).
-
-The following example shows a rolling update configuration:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ResourcePlacement
-metadata:
-  name: app-deployment-rp
-  namespace: my-app
-spec:
-  resourceSelectors:
-    - group: apps
-      kind: Deployment
-      version: v1
-      name: frontend
-  policy:
-    placementType: PickN
-    numberOfClusters: 3
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 25%
-      maxSurge: 25%
-      unavailablePeriodSeconds: 60
-```
-
-## Status and observability
-
-`ResourcePlacement` provides comprehensive status reporting to track deployment progress:
-
-- **Overall status**: High-level conditions indicating scheduling, rollout, and availability states.
-- **Per-cluster status**: Individual status for each target cluster showing detailed progress.
-- **Events**: Timeline of placement activities and any issues encountered.
-
-You can view the status using the `kubectl describe` command:
-
-```bash
-kubectl describe resourceplacement <name> -n <namespace>
-```
-
-The output includes:
-
-- Placement conditions (scheduled, synchronized, applied)
-- Per-cluster placement status
-- Selected resources
-- Events and state transitions
-
-For more information on understanding placement status, see the [placement status documentation](./howto-understand-placement.md).
-
-## Advanced features
-
-`ResourcePlacement` supports the same advanced features as `ClusterResourcePlacement`:
-
-- **[Tolerations](./use-taints-tolerations.md)**: Use tolerations to control which clusters can receive placements.
-- **[Resource overrides](./resource-override.md)**: Customize namespace-scoped resources per cluster.
-- **[Topology spread constraints](./concepts-resource-propagation.md#pickn-with-topology-spread-constraints)**: Distribute resources across topology boundaries.
-- **[Affinity and anti-affinity](./concepts-resource-propagation.md#pickn-with-affinities)**: Control resource placement based on cluster properties.
+For complete details on these capabilities, refer to the [ClusterResourcePlacement documentation](./concepts-resource-propagation.md#resource-selection).
 
 ## Next steps
 
