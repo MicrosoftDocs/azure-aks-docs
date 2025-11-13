@@ -20,7 +20,7 @@ This article describes the `ResourcePlacement` API, which enables fine-grained c
 `ResourcePlacement` is a namespace-scoped API that enables dynamic selection and multi-cluster propagation of namespace-scoped resources. It provides fine-grained control over how specific resources within a namespace are distributed across member clusters in a fleet.
 
 > [!IMPORTANT]
-> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview. Some features demonstrated in this article, such as `selectionScope` in `ClusterResourcePlacement`, are also part of the v1beta1 API and may not be available in the v1 API.
+> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview. Some features demonstrated in this article, such as `selectionScope` in `ClusterResourcePlacement`, are also part of the v1beta1 API and isn't available in the v1 API.
 
 **Key characteristics:**
 
@@ -44,7 +44,7 @@ A `ResourcePlacement` consists of three core components:
 - **Compliance and governance**: Apply different policies to different resource types within the same namespace.
 - **Progressive rollouts**: Safely deploy resource updates across clusters with zero-downtime strategies.
 
-In multi-cluster environments, workloads often consist of both cluster-scoped and namespace-scoped resources that need to be distributed across different clusters. While `ClusterResourcePlacement` (CRP) handles cluster-scoped resources effectively, particularly entire namespaces and their contents, there are scenarios where you need more granular control over namespace-scoped resources within existing namespaces.
+In multi-cluster environments, workloads often consist of both cluster-scoped and namespace-scoped resources that need to be distributed across different clusters. While `ClusterResourcePlacement` (CRP) handles cluster-scoped resources effectively, entire namespaces and their contents, there are scenarios where you need more granular control over namespace-scoped resources within existing namespaces.
 
 `ResourcePlacement` (RP) was designed to address this gap by providing:
 
@@ -59,9 +59,9 @@ In multi-cluster environments, workloads often consist of both cluster-scoped an
 
 While CRP assumes that namespaces represent application boundaries, real-world usage patterns are often more complex. Organizations frequently use namespaces as team boundaries rather than application boundaries, leading to several challenges that `ResourcePlacement` directly addresses:
 
-**Multi-application namespaces**: In many organizations, a single namespace contains multiple independent applications owned by the same team. These applications may have:
+**Multi-application namespaces**: In many organizations, a single namespace contains multiple independent applications owned by the same team. These applications might have:
 
-- Different lifecycle requirements (one application may need frequent updates while another remains stable).
+- Different lifecycle requirements (one application might need frequent updates while another remains stable).
 - Different cluster placement needs (development vs. production applications).
 - Independent scaling and resource requirements.
 - Separate compliance or governance requirements.
@@ -69,12 +69,12 @@ While CRP assumes that namespaces represent application boundaries, real-world u
 **Individual scheduling decisions**: Many workloads, particularly AI/ML jobs, require individual scheduling decisions:
 
 - **AI Jobs**: Machine learning workloads often consist of short-lived, resource-intensive jobs that need to be scheduled based on cluster resource availability, GPU availability, or data locality.
-- **Batch Workloads**: Different batch jobs within the same namespace may target different cluster types based on computational requirements.
+- **Batch Workloads**: Different batch jobs within the same namespace might target different cluster types based on computational requirements.
 
 **Complete application team control**: `ResourcePlacement` provides application teams with direct control over their resource placement without requiring platform team intervention:
 
 - **Self-service operations**: Teams can manage their own resource distribution strategies.
-- **Independent deployment cycles**: Different applications within a namespace can have completely independent rollout schedules.
+- **Independent deployment cycles**: Different applications within a namespace can have independent rollout schedules.
 - **Granular override capabilities**: Teams can customize resource configurations per cluster without affecting other applications in the namespace.
 
 This granular approach ensures that `ResourcePlacement` can adapt to diverse organizational structures and workload patterns while maintaining the simplicity and power of the Fleet scheduling framework.
@@ -91,7 +91,7 @@ The following table highlights the key differences between `ResourcePlacement` a
 | **Typical Use Cases** | AI/ML Jobs, individual workloads, specific ConfigMaps/Secrets that need independent placement decisions | Application bundles, entire namespaces, cluster-wide policies |
 | **Team Ownership** | Can be managed by namespace owners/developers | Typically managed by platform operators |
 
-Both `ResourcePlacement` and `ClusterResourcePlacement` share the same core capabilities for all other aspects not listed in the differences table above.
+Both `ResourcePlacement` and `ClusterResourcePlacement` share the same core capabilities for all other aspects not listed in the differences table.
 
 ## Working with ClusterResourcePlacement
 
@@ -100,7 +100,7 @@ Both `ResourcePlacement` and `ClusterResourcePlacement` share the same core capa
 ### Namespace prerequisites
 
 > [!IMPORTANT]
-> `ResourcePlacement` can only place namespace-scoped resources to clusters that already have the target namespace. This creates a fundamental dependency on `ClusterResourcePlacement` for namespace establishment.
+> `ResourcePlacement` can only place namespace-scoped resources to clusters that already have the target namespace. We recommend using `ClusterResourcePlacement` for namespace establishment.
 
 **Typical workflow**:
 
@@ -110,7 +110,7 @@ Both `ResourcePlacement` and `ClusterResourcePlacement` share the same core capa
 The following examples show how to coordinate CRP and RP:
 
 > [!NOTE]
-> The following examples use the `placement.kubernetes-fleet.io/v1beta1` API version. The `selectionScope: NamespaceOnly` field is a preview feature available in v1beta1 and is not available in the v1 API.
+> The following examples use the `placement.kubernetes-fleet.io/v1beta1` API version. The `selectionScope: NamespaceOnly` field is a preview feature available in v1beta1 and isn't available in the v1 API.
 
 **Platform Admin**: First, create the namespace using `ClusterResourcePlacement`:
 
@@ -169,7 +169,7 @@ This coordinated approach ensures that `ResourcePlacement` provides the flexibil
 - **[Placement types](./concepts-resource-propagation.md#placement-types)**: `PickAll`, `PickFixed`, and `PickN` strategies work identically for both APIs.
 - **[Rollout strategy](./concepts-rollout-strategy.md)**: Control how updates propagate across clusters with the same rolling update mechanisms.
 - **[Status and observability](./howto-understand-placement.md)**: Monitor deployment progress using `kubectl describe resourceplacement <name> -n <namespace>`.
-- **[Advanced features](./concepts-resource-propagation.md)**: Leverage tolerations, resource overrides, topology spread constraints, and affinity rules.
+- **[Advanced features](./concepts-resource-propagation.md)**: Use tolerations, resource overrides, topology spread constraints, and affinity rules.
 
 The key difference is in **resource selection** scope. While `ClusterResourcePlacement` typically selects entire namespaces and their contents, `ResourcePlacement` provides fine-grained control over individual namespace-scoped resources.
 
