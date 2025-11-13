@@ -32,8 +32,6 @@ To fix these problems, we created AKS desktop, an application centric UI experie
 
 AKS desktop provides the following benefits:
 
-- **Add existing clusters into AKS desktop** - Easily sing in or sign out of your Azure account and import existing AKS clusters into AKS desktop through a simple UI.
-
 - **Deploy applications without needing to focus on writing detailed Kubernetes manifests**:
 
   - Guided deployment wizard.
@@ -58,13 +56,19 @@ AKS desktop provides the following benefits:
 
   - UI that honors RBAC roles enabling persona scoped experiences.
 
-### AKS desktop limitations
+- **Add existing clusters into AKS desktop** - Easily sing in or sign out of your Azure account and import existing AKS clusters into AKS desktop through a simple UI.
 
-AKS desktop is optimized for AKS Automatic clusters. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view.
+## AKS desktop limitations
+
+AKS desktop is optimized for AKS Automatic clusters. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. This is because AKS Automatic comes bundled with metrics, observability and other tools that allow AKS desktop to expose these key insights.
 
 ## What are Projects?
 
-In AKS desktop, an AKS managed project is linked directly by default to an [AKS managed namespace](concepts-managed-namespaces.md), which is a way to logically isolate workloads and teams within a cluster. This feature enables administrators to enforce resource quotas, apply network policies, and manage access control at the namespace level. In AKS desktop, Projects are meant to simplify the idea around Kubernetes namespaces and Kubernetes concepts. A project can be made up of one or more applications. For this preview, we recommend you have one application per Project. If you wish to learn more about the Project concept, visit [Headlamp's open-source documentation](https://headlamp.dev/docs/latest/learn/projects).
+Per Headlamp's documentation - 
+  
+  "Projects make Kubernetes easier to manage by grouping related resources into a single, application-centric view that is designed with developers in mind. Instead of navigating cluster-wide lists or searching for labels, Projects let you organize workloads across one or more namespaces and even multiple clusters into a logical group. This approach gives developers clarity on their application as a whole, making collaboration, troubleshooting, and onboarding much simpler."
+
+In AKS desktop, an AKS managed project is linked directly by default to an [AKS managed namespace](concepts-managed-namespaces.md), which is a way to logically isolate workloads and teams within a cluster. This feature enables administrators to enforce resource quotas, apply network policies, and manage access control at the namespace level. A project can be made up of one or more applications. For this preview, we recommend you have one application per Project. If you wish to learn more about the Project concept, visit [Headlamp's open-source documentation](https://headlamp.dev/docs/latest/learn/projects).
 
 ## What is the Project Overview screen?
 
