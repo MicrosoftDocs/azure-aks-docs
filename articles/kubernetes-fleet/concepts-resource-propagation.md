@@ -34,7 +34,7 @@ Fleet Manager supports these custom resources based on the [CNCF project KubeFle
 A `ClusterResourcePlacement` object is used to tell the fleet scheduler how to place a given set of cluster-scoped objects from the fleet hub cluster onto member clusters. Namespace-scoped objects like Deployments, StatefulSets, DaemonSets, ConfigMaps, Secrets, and PersistentVolumeClaims are included when their containing namespace is selected.
 
 > [!NOTE]
-> For fine-grained control over individual namespace-scoped resources within a namespace, use the [`ResourcePlacement` API](./concepts-namespaced-resource-propagation.md) instead. `ClusterResourcePlacement` is best suited for propagating entire namespaces and cluster-scoped resources.
+> For fine-grained control over individual namespace-scoped resources within a namespace, use the [`ResourcePlacement` API](./concepts-namespace-scoped-resource-propagation.md) instead. `ClusterResourcePlacement` is best suited for propagating entire namespaces and cluster-scoped resources.
 
 With `ClusterResourcePlacement`, you can:
 
@@ -58,7 +58,7 @@ With `ClusterResourcePlacement`, you can:
 
 When selecting a namespace resource, you can use the `selectionScope` field to control whether to propagate only the namespace itself or the namespace and all its contents:
 
-* **`NamespaceOnly`**: Propagates only the namespace object itself, without any resources within the namespace. This is useful when you want to establish namespaces across clusters while managing individual resources separately using [`ResourcePlacement`](./concepts-namespaced-resource-propagation.md).
+* **`NamespaceOnly`**: Propagates only the namespace object itself, without any resources within the namespace. This is useful when you want to establish namespaces across clusters while managing individual resources separately using [`ResourcePlacement`](./concepts-namespace-scoped-resource-propagation.md).
 * **Default behavior** (when `selectionScope` is not specified): Propagates the namespace and all resources within it.
 
 The following example shows how to propagate only the namespace without its contents using the v1beta1 API:
@@ -79,7 +79,7 @@ spec:
     placementType: PickAll
 ```
 
-This approach enables a workflow where platform administrators use `ClusterResourcePlacement` to establish namespaces, while application teams use [`ResourcePlacement`](./concepts-namespaced-resource-propagation.md) for fine-grained control over specific resources within those namespaces.
+This approach enables a workflow where platform administrators use `ClusterResourcePlacement` to establish namespaces, while application teams use [`ResourcePlacement`](./concepts-namespace-scoped-resource-propagation.md) for fine-grained control over specific resources within those namespaces.
 
 ## Placement types
 
@@ -561,7 +561,7 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 ## Next steps
 
 * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
-* [Using ResourcePlacement to deploy namespace-scoped resources](./concepts-namespaced-resource-propagation.md).
+* [Using ResourcePlacement to deploy namespace-scoped resources](./concepts-namespace-scoped-resource-propagation.md).
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).

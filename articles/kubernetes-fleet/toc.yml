@@ -51,7 +51,7 @@
           - name: Introduction to ClusterResourcePlacement
             href: concepts-resource-propagation.md
           - name: Introduction to ResourcePlacement
-            href: concepts-namespaced-resource-propagation.md
+            href: concepts-namespace-scoped-resource-propagation.md
           - name: Defining a placement rollout strategy
             href: concepts-rollout-strategy.md
           - name: Automated deployments overview
