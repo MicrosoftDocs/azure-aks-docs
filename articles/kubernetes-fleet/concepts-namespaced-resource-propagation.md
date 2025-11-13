@@ -1,5 +1,5 @@
 ---
-title: "Namespace-scoped resource placement using ResourcePlacement API"
+title: "Using ResourcePlacement to deploy namespace-scoped resources (preview)"
 description: This article describes the ResourcePlacement API, which enables fine-grained control over namespace-scoped Kubernetes resources across member clusters.
 ms.date: 11/12/2025
 author: weiweng
@@ -9,13 +9,16 @@ ms.topic: concept-article
 # Customer intent: As an application developer, I want to propagate specific namespace-scoped resources from a hub cluster to selected member clusters, so that I can manage individual workloads and configurations independently within shared namespaces.
 ---
 
-# ResourcePlacement API for namespace-scoped resources
+# Using ResourcePlacement to deploy namespace-scoped resources (preview)
 
 This article describes the `ResourcePlacement` API, which enables fine-grained control over namespace-scoped Kubernetes resources across member clusters using Azure Kubernetes Fleet Manager.
 
 ## Overview
 
 `ResourcePlacement` is a namespace-scoped API that enables dynamic selection and multi-cluster propagation of namespace-scoped resources. It provides fine-grained control over how specific resources within a namespace are distributed across member clusters in a fleet.
+
+> [!IMPORTANT]
+> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview. Some features demonstrated in this article, such as `selectionScope` in `ClusterResourcePlacement`, are also part of the v1beta1 API and may not be available in the v1 API.
 
 **Key characteristics:**
 
@@ -118,6 +121,9 @@ This design allows teams familiar with one placement object to easily understand
 2. **Application Teams**: Use `ResourcePlacement` to manage specific resources within those established namespaces.
 
 The following examples show how to coordinate CRP and RP:
+
+> [!NOTE]
+> The following examples use the `placement.kubernetes-fleet.io/v1beta1` API version. The `selectionScope: NamespaceOnly` field is a preview feature available in v1beta1 and is not available in the stable v1 API.
 
 **Platform Admin**: First, create the namespace using `ClusterResourcePlacement`:
 
