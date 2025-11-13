@@ -114,13 +114,14 @@ This design allows teams familiar with one placement object to easily understand
 
 **Typical workflow**:
 
-1. **Fleet Admin**: Uses `ClusterResourcePlacement` to deploy namespaces across the fleet.
+1. **Platform Admin**: Uses `ClusterResourcePlacement` to deploy namespaces across the fleet.
 2. **Application Teams**: Use `ResourcePlacement` to manage specific resources within those established namespaces.
 
-The following example shows how to coordinate CRP and RP:
+The following examples show how to coordinate CRP and RP:
+
+**Platform Admin**: First, create the namespace using `ClusterResourcePlacement`:
 
 ```yaml
-# Fleet admin creates namespace using CRP
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacement
 metadata:
@@ -134,8 +135,11 @@ spec:
       selectionScope: NamespaceOnly # only namespace itself is placed, no resources within the namespace
   policy:
     placementType: PickAll
----
-# Application team manages resources using RP
+```
+
+**Application Team**: Then, manage specific resources within the namespace using `ResourcePlacement`:
+
+```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourcePlacement
 metadata:
