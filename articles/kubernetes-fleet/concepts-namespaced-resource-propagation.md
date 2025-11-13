@@ -13,6 +13,8 @@ ms.topic: concept-article
 
 This article describes the `ResourcePlacement` API, which enables fine-grained control over namespace-scoped Kubernetes resources across member clusters using Azure Kubernetes Fleet Manager.
 
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
 ## Overview
 
 `ResourcePlacement` is a namespace-scoped API that enables dynamic selection and multi-cluster propagation of namespace-scoped resources. It provides fine-grained control over how specific resources within a namespace are distributed across member clusters in a fleet.
