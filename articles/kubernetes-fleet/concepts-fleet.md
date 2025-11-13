@@ -43,7 +43,7 @@ You can join [supported Kubernetes clusters](./concepts-member-cluster-types.md)
 
 ### Labels
 
-Member clusters can have service-defined and user-defined labels associated with them, which can be used to select clusters for workload placement scheduling decisions. When you define a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#introduce-clusterresourceplacement-api), you can use label selectors to target specific member clusters based on their labels. This allows you to deploy workloads only to clusters that match certain criteria, such as region, environment, team, or other custom attributes.
+Member clusters can have service-defined and user-defined labels associated with them, which can be used to select clusters for workload placement scheduling decisions. When you define a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#using-clusterresourceplacement-to-deploy-cluster-scoped-resources), you can use label selectors to target specific member clusters based on their labels. This allows you to deploy workloads only to clusters that match certain criteria, such as region, environment, team, or other custom attributes.
 
 By default, Fleet populates these [service-defined labels](./concepts-resource-propagation.md#labels) on each member cluster.
 
@@ -57,7 +57,7 @@ Member clusters support the specification of taints, which apply to the `MemberC
 * `value`: The value of the taint.
 * `effect`: The effect of the taint, such as `NoSchedule`.
 
-Once a `MemberCluster` is tainted, it lets the [scheduler](./concepts-scheduler-scheduling-framework.md) know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#introduce-clusterresourceplacement-api) to the `MemberCluster`.
+Once a `MemberCluster` is tainted, it lets the [scheduler](./concepts-scheduler-scheduling-framework.md) know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#using-clusterresourceplacement-to-deploy-cluster-scoped-resources) to the `MemberCluster`.
 
 For more information, see the [KubeFleet components documentation](https://kubefleet.dev/docs/concepts/components/).
 

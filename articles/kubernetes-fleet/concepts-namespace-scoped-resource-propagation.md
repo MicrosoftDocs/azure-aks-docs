@@ -177,7 +177,7 @@ For complete details on these capabilities, refer to the [ClusterResourcePlaceme
 
 ## Next steps
 
-- [Introduction to ClusterResourcePlacement API](./concepts-resource-propagation.md)
+- [Using ClusterResourcePlacement to deploy cluster-scoped resources](./concepts-resource-propagation.md)
 - [Multi-cluster resource placement using cluster resource placement](./quickstart-resource-propagation.md)
 - [Use overrides to customize namespace-scoped resources](./resource-override.md)
 - [Defining a rollout strategy for resource placement](./concepts-rollout-strategy.md)
