@@ -34,7 +34,15 @@ A `ResourcePlacement` consists of three core components:
 - **Placement Policy**: Determine target clusters using `PickAll`, `PickFixed`, or `PickN` strategies.
 - **Rollout Strategy**: Control how changes propagate across selected clusters.
 
-## Motivation
+## When to use ResourcePlacement
+
+`ResourcePlacement` is ideal for scenarios requiring granular control over namespace-scoped resources:
+
+- **Selective resource distribution**: Deploy specific ConfigMaps, Secrets, or Services without affecting the entire namespace.
+- **Multi-tenant environments**: Allow different teams to manage their resources independently within shared namespaces.
+- **Configuration management**: Distribute environment-specific configurations across different cluster environments.
+- **Compliance and governance**: Apply different policies to different resource types within the same namespace.
+- **Progressive rollouts**: Safely deploy resource updates across clusters with zero-downtime strategies.
 
 In multi-cluster environments, workloads often consist of both cluster-scoped and namespace-scoped resources that need to be distributed across different clusters. While `ClusterResourcePlacement` (CRP) handles cluster-scoped resources effectively, particularly entire namespaces and their contents, there are scenarios where you need more granular control over namespace-scoped resources within existing namespaces.
 
@@ -47,7 +55,7 @@ In multi-cluster environments, workloads often consist of both cluster-scoped an
 > [!NOTE]
 > `ResourcePlacement` can be used together with `ClusterResourcePlacement` in namespace-only mode. For example, you can use CRP to deploy the namespace, while using RP for fine-grained management of specific resources like environment-specific ConfigMaps or Secrets within that namespace.
 
-### Addressing real-world namespace usage patterns
+### Real-world namespace usage patterns
 
 While CRP assumes that namespaces represent application boundaries, real-world usage patterns are often more complex. Organizations frequently use namespaces as team boundaries rather than application boundaries, leading to several challenges that `ResourcePlacement` directly addresses:
 
@@ -97,16 +105,6 @@ Both RP and CRP share the same core concepts and capabilities:
 - **Snapshot Architecture**: Both use immutable snapshots (`ResourceSnapshot` vs `ClusterResourceSnapshot`) for resource and policy tracking.
 
 This design allows teams familiar with one placement object to easily understand and use the other, while providing the appropriate level of control for different resource scopes.
-
-## When to use ResourcePlacement
-
-`ResourcePlacement` is ideal for scenarios requiring granular control over namespace-scoped resources:
-
-- **Selective resource distribution**: Deploy specific ConfigMaps, Secrets, or Services without affecting the entire namespace.
-- **Multi-tenant environments**: Allow different teams to manage their resources independently within shared namespaces.
-- **Configuration management**: Distribute environment-specific configurations across different cluster environments.
-- **Compliance and governance**: Apply different policies to different resource types within the same namespace.
-- **Progressive rollouts**: Safely deploy resource updates across clusters with zero-downtime strategies.
 
 ## Working with ClusterResourcePlacement
 
