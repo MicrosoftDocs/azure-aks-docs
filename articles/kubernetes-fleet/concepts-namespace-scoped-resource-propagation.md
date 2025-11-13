@@ -127,7 +127,7 @@ spec:
       version: v1
       selectionScope: NamespaceOnly # only namespace itself is placed, no resources within the namespace
   policy:
-    placementType: PickAll
+    placementType: PickAll # If placement type is not PickAll, the application teams needs to know what are the clusters they can place their applications.
 ```
 
 **Application Team**: Then, manage specific resources within the namespace using `ResourcePlacement`:
