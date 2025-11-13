@@ -31,10 +31,9 @@ Fleet Manager supports these custom resources based on the [CNCF project KubeFle
 
 ## ClusterResourcePlacement API overview
 
-A `ClusterResourcePlacement` object is used to tell the fleet scheduler how to place a given set of cluster-scoped objects from the fleet hub cluster onto member clusters. Namespace-scoped objects like Deployments, StatefulSets, DaemonSets, ConfigMaps, Secrets, and PersistentVolumeClaims are included when their containing namespace is selected.
+A `ClusterResourcePlacement` object is used to tell the fleet scheduler how to place a given set of cluster-scoped objects from the fleet hub cluster onto member clusters. When selecting a namespace, all namespace-scoped objects within it—like Deployments, StatefulSets, DaemonSets, ConfigMaps, Secrets, and PersistentVolumeClaims—are included and propagated together.
 
-> [!NOTE]
-> For fine-grained control over individual namespace-scoped resources within a namespace, use the [`ResourcePlacement` API](./concepts-namespace-scoped-resource-propagation.md) instead. `ClusterResourcePlacement` is best suited for propagating entire namespaces and cluster-scoped resources.
+For scenarios requiring fine-grained control over individual namespace-scoped resources within a namespace, see [`ResourcePlacement`](./concepts-namespace-scoped-resource-propagation.md), which enables selective propagation of specific resources rather than entire namespaces.
 
 With `ClusterResourcePlacement`, you can:
 
@@ -51,10 +50,12 @@ With `ClusterResourcePlacement`, you can:
 * **Name**: The name of a specific resource.
 * **Label selectors**: Labels to match multiple resources.
 
-### Namespace selection scope (v1beta1 preview)
+### Namespace selection scope (preview)
 
 > [!IMPORTANT]
 > The `selectionScope` field is available in the `placement.kubernetes-fleet.io/v1beta1` API version as a preview feature. It is not available in the `placement.kubernetes-fleet.io/v1` API.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 When selecting a namespace resource, you can use the `selectionScope` field to control whether to propagate only the namespace itself or the namespace and all its contents:
 
