@@ -181,4 +181,4 @@ For complete details on these capabilities, refer to the [ClusterResourcePlaceme
 - [Multi-cluster resource placement using cluster resource placement](./quickstart-resource-propagation.md)
 - [Use overrides to customize namespace-scoped resources](./resource-override.md)
 - [Defining a rollout strategy for resource placement](./concepts-rollout-strategy.md)
-- [Cluster esource placement FAQs](./faq.md#cluster-resource-placement-faqs)
+- [Cluster resource placement FAQs](./faq.md#cluster-resource-placement-faqs)
