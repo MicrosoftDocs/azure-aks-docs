@@ -1,5 +1,6 @@
 ---
 title: "Using ResourcePlacement to deploy namespace-scoped resources (preview)"
+titleSuffix: Azure Kubernetes Fleet Manager
 description: This article describes the ResourcePlacement API, which enables fine-grained control over namespace-scoped Kubernetes resources across member clusters.
 ms.date: 11/12/2025
 author: weiweng
