@@ -187,10 +187,8 @@ Yes. You can edit the existing strategy to include approvals. However, existing 
 
 Yes. Fleet Manager supports both cluster-scoped and namespace-scoped resource placement:
 
-* **ClusterResourcePlacement**: Propagates cluster-scoped resources and entire namespaces (including all their contents) to member clusters.
-* **ResourcePlacement**: Provides fine-grained control to select and propagate specific namespace-scoped resources (such as ConfigMaps, Secrets, Deployments) within a namespace.
-
-For more information, see the documentation on [namespace-scoped resource placement using ResourcePlacement API](./concepts-namespaced-resource-propagation.md).
+* **ClusterResourcePlacement**: Propagates cluster-scoped resources and entire namespaces (including all their contents) to member clusters. For more information, see [Using ClusterResourcePlacement to deploy cluster-scoped resources](./concepts-resource-propagation.md).
+* **ResourcePlacement**: Provides fine-grained control to select and propagate specific namespace-scoped resources (such as ConfigMaps, Secrets, Deployments) within a namespace. For more information, see [Using ResourcePlacement to deploy namespace-scoped resources](./concepts-namespaced-resource-propagation.md).
 
 ## Automated Deployments FAQs
 

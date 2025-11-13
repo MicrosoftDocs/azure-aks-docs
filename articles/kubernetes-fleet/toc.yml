@@ -48,9 +48,9 @@
           href: concepts-multi-cluster-workload-management.md
         - name: Managing workloads using cluster resource placement
           items:
-          - name: Introduction to cluster resource placement API
+          - name: Introduction to ClusterResourcePlacement
             href: concepts-resource-propagation.md
-          - name: Introduction to resource placement API
+          - name: Introduction to ResourcePlacement
             href: concepts-namespaced-resource-propagation.md
           - name: Defining a placement rollout strategy
             href: concepts-rollout-strategy.md
