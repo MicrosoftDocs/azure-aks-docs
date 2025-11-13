@@ -9,7 +9,7 @@ ms.author: alalve
 # Customer intent: As a cluster operator or developer, I want to understand the setup requirements and permissions for AKS desktop, so that I can configure my environment based on my role.
 ---
 
-# Get started with permission assignments in AKS desktop (Preview)
+# Get started with permissions for AKS desktop (Preview)
 
 AKS desktop builds on existing AKS and Azure features to provide an application-focused experience for deploying and managing workloads. This article helps you get started with AKS desktop by explaining the required infrastructure and permissions for two common scenarios:
 
@@ -148,13 +148,13 @@ When a project is created in AKS desktop, permissions are automatically assigned
 
   - **Azure Kubernetes Service Namespace User** role on the managed namespace
 
-  Including one of the following Kubernetes RBAC roles:
+    Including one of the following Kubernetes RBAC roles:
 
-  - **Azure Kubernetes Service RBAC Reader** - Read-only access to resources
+    - **Azure Kubernetes Service RBAC Reader** - Read-only access to resources
 
-  - **Azure Kubernetes Service RBAC Writer** - Read and write access to deploy apps
+    - **Azure Kubernetes Service RBAC Writer** - Read and write access to deploy apps
 
-  - **Azure Kubernetes Service RBAC Admin** - Full administrative access
+    - **Azure Kubernetes Service RBAC Admin** - Full administrative access
 
 To deploy applications, you need the **Writer** or **Admin** role. For more information, see [Managed namespaces built-in roles](concepts-managed-namespaces.md#managed-namespaces-built-in-roles).
 
@@ -190,33 +190,33 @@ Currently, AKS desktop doesn't provide a UI option to modify project permissions
 
 1. Granting access to the managed namespace resource by running the following command:
 
-```azurecli-interactive
-namespaceName=<namespace-or-project-name>
+   ```azurecli-interactive
+   namespaceName=<namespace-or-project-name>
 
-az role assignment create \
-    --role "Azure Kubernetes Service Namespace User" \
-    --assignee <user-id> \
-    --scope /subscriptions/<subscription-id>/resourceGroups/$myResourceGroup/providers/Microsoft.ContainerService/managedClusters/$myClusterName/namespaces/$namespaceName
-```
+   az role assignment create \
+       --role "Azure Kubernetes Service Namespace User" \
+       --assignee <user-id> \
+       --scope /subscriptions/<subscription-id>/resourceGroups/$myResourceGroup/providers/Microsoft.ContainerService/managedClusters/$myClusterName/namespaces/$namespaceName
+   ```
 
 1. Assigning one of the following Kubernetes RBAC roles based on the required access level. Modify `--role` with one of the following permissions:
 
-- **Azure Kubernetes Service RBAC Reader** - Read-only access
-- **Azure Kubernetes Service RBAC Writer** - Read and write access to deploy apps
-- **Azure Kubernetes Service RBAC Admin** - Full administrative access
+   - **Azure Kubernetes Service RBAC Reader** - Read-only access
+   - **Azure Kubernetes Service RBAC Writer** - Read and write access to deploy apps
+   - **Azure Kubernetes Service RBAC Admin** - Full administrative access
 
-```azurecli-interactive
-AKS_ID=$(az aks show \
-    --resource-group $myResourceGroup \
-    --name $myClusterName \
-    --query id \
-    --output tsv)
+   ```azurecli-interactive
+   AKS_ID=$(az aks show \
+       --resource-group $myResourceGroup \
+       --name $myClusterName \
+       --query id \
+       --output tsv)
 
-az role assignment create \
-    --role "Azure Kubernetes Service RBAC Writer" \
-    --assignee <user-id> \
-    --scope $AKS_ID/namespaces/$namespaceName
-```
+   az role assignment create \
+       --role "Azure Kubernetes Service RBAC Writer" \
+       --assignee <user-id> \
+       --scope $AKS_ID/namespaces/$namespaceName
+   ```
 
 1. To grant permissions to view metrics, follow the steps in the [View application metrics](#view-application-metrics) section to grant users access to view application metrics.
 
