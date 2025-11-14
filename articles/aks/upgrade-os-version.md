@@ -39,7 +39,7 @@ Each [node image][node-images] corresponds to an OS version, which you can speci
 |--|--|--|--|
 | Linux | Ubuntu | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes version 1.25 to 1.34. Ubuntu 24.04 is default for kubernetes version 1.35+. |
 | Linux | Ubuntu2404 | This OS SKU will only be supported in Kubernetes 1.32 to 1.38. | We recommend this versioned OS SKU if you want to migrate to the new OS version without upgrading your Kubernetes version. Ubuntu 24.04 is default when using `--os-sku Ubuntu` in kubernetes version 1.35+. |
-| Linux | Ubuntu2204 | This OS SKU is supported in Kubernetes version 1.25 to 1.36. | We recommend this versioned OS SKU if you need to roll back to Ubuntu 22.04.Ubuntu 22.04 is default when using `--os-sku Ubuntu` in kubernetes version 1.25 to 1.34. |
+| Linux | Ubuntu2204 | This OS SKU is supported in Kubernetes version 1.25 to 1.36. | We recommend this versioned OS SKU if you need to roll back to Ubuntu 22.04.Ubuntu 22.04 is default when using `--os-sku Ubuntu` in kubernetes version 1.25 to 1.35. |
 | Linux | AzureLinux | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Azure Linux 2.0 is default for Kubernetes version 1.27 to 1.31. Azure Linux 3.0 is default for Kubernetes version 1.32+. When the `AzureLinuxV3Preview` feature flag is enabled on AKS 1.31, `--os-sku AzureLinux` defaults to 3.0. |
 | Linux | AzureLinux3 | This OS SKU is supported in Kubernetes 1.28 to 1.36. | We recommend this OS SKU if you want to test out the new OS version without upgrading your Kubernetes version. You can also use this OS SKU to migrate from Azure Linux 2.0 to Azure Linux 3.0. |
 | Linux | AzureLinuxOSGuard | This OS SKU is supported in Kubernetes versions 1.32 and above. | Azure Linux with OS Guard versions are upgraded through node image upgrades. For more information, see [Azure Linux with OS Guard for AKS][os-guard]. |
@@ -49,11 +49,13 @@ Each [node image][node-images] corresponds to an OS version, which you can speci
 
 ## Migrate to a new OS version
 
-When a new OS version releases on AKS, it's supported in preview before it becomes generally available and default. We recommend testing your nonproduction workloads with the new OS version when it becomes available in preview. In order to access preview functions, make sure you have the preview extension installed. You can install the extension using the `az extension add --name aks-preview` command.
+When a new OS version releases on AKS, it's initially supported in preview. After testing in preview for a few months, AKS will make the new OS version generally available. Then, we will update the default OS SKU (`Ubuntu` or `AzureLinux`) to the latest GA OS version. This default update occurs with a new kubernetes version release.
+
+We recommend testing your nonproduction workloads with the new OS version when it becomes available in preview. In order to access preview functions, make sure you have the preview extension installed. You can install the extension using the `az extension add --name aks-preview` command.
 
 There are two ways to migrate to a new OS version:
 
-1. Default OS SKU: If you are using a default OS SKU such as `Ubuntu` or `AzureLinux`, you'll automatically get the latest GA version when you upgrade your kubernetes version. There is no manual changes required to migrate to a new OS version. 
+1. Default OS SKU: If you are using a default OS SKU such as `Ubuntu` or `AzureLinux`, you'll automatically get the latest GA version when you [upgrade your kubernetes version][manage-node-pools]. There is no manual changes required to migrate to a new OS version. 
 2. Versioned OS SKU: If you are using a versioned OS SKU such as `Ubuntu2404`, `AzureLinux3`, or `Windows2025`, you'll need to manually migrate to a new OS version to avoid blocked kubernetes upgrade. If you are using a Linux OS, you can update the OS SKU on an existing node pool to manually migrate.
 
 ### Update OS SKU on an existing node pool
@@ -90,7 +92,7 @@ Ubuntu 24.04 is the default for `--os-sku Ubuntu` in Kubernetes versions 1.35+. 
 > - [FIPS](./enable-fips-nodes.md) is not supported.
 > - Ubuntu 24.04 is supported in Kubernetes versions 1.32 to 1.38.
 > - You need to update your OS SKU to a supported OS option before upgrading your Kubernetes version to 1.39+. `--os-sku Ubuntu2404` is an option and is intended for testing the new OS Linux version without requiring you to upgrade your Kubernetes version.
-> - You need the preview Azure CLI version 18.0.0b5 or later installed and configured. To find your CLI version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+> - You need the preview Azure CLI version 18.0.0b5 or later for *preview* and version 2.81.0 for *GA* installed and configured. To find your CLI version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 Update to `--os-sku Ubuntu2404` on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command.
 
@@ -192,8 +194,8 @@ az aks nodepool update \
 > Keep the following information in mind when migrating to `--os-sku Ubuntu2204`:
 >
 > - [FIPS](./enable-fips-nodes.md) and [CVM](./use-cvm.md) aren't supported.
-> - Ubuntu 22.04 is supported in Kubernetes versions 1.25 to 1.36.
-> - `--os-sku Ubuntu2204` is intended for roll back to Ubuntu 22.04 on your current Kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your Kubernetes version to 1.34+.
+> - Ubuntu 22.04 is supported in Kubernetes versions 1.25 to 1.35.
+> - `--os-sku Ubuntu2204` is intended for roll back to Ubuntu 22.04 on your current Kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your Kubernetes version to 1.36 and above.
 
 Roll back to `--os-sku Ubuntu2204` on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command.
 
@@ -233,3 +235,4 @@ To learn more about node images, node pool upgrades, and node configurations on 
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [flatcar]: ./flatcar-container-linux-for-aks.md
 [os-guard]: ./use-azure-linux-os-guard.md
+[manage-node-pools]: ./manage-node-pools.md
