@@ -55,7 +55,7 @@ This table includes the supported OS versions:
 
 |OS Type|OS SKU|CVM support|CVM default|
 |--|--|--|--|
-|Linux|`Ubuntu`|Supported|Ubuntu 20.04 is default for K8s version 1.24-1.33. Ubuntu 24.04 is default for K8s version 1.35+.|
+|Linux|`Ubuntu`|Supported|Ubuntu 20.04 is default for K8s version 1.24-1.33. Ubuntu 24.04 is default for K8s version 1.34+.|
 |Linux|`Ubuntu2204`|Not Supported|AKS doesn't support CVM for Ubuntu 22.04.|
 |Linux|`Ubuntu2404`|Supported| CVM is supported on `Ubuntu2404` in K8s 1.32-1.38. |
 |Linux|`AzureLinux`| Supported on Azure Linux 3.0| Azure Linux 3 is default when enabling CVM for K8s version 1.28-1.36.|
