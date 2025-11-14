@@ -137,7 +137,7 @@ az fleet updaterun show \
     --query "status.nodeImageSelection.selectedNodeImageVersions"
 ```
 
-You can also use the `View JSON` option in the Update Run Overview page in the Azure Portal to view the raw data for an update run.
+You can also use the `View JSON` option in the Update Run Overview page in the Azure portal to view the raw data for an update run.
 
 ### My update run is in a pending state for quite some time. What should I do?
 
