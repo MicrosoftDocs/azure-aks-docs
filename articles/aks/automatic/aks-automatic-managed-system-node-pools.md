@@ -79,7 +79,7 @@ AKS Automatic clusters with managed system node pools are currently available in
 
 ## Create an AKS Automatic cluster with managed system node pools
 
-- Create an AKS Automatic cluster with managed system node pools using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--sku` parameter set to `automatic` and the `--enable-hosted-system` flag.
+Create an AKS Automatic cluster with managed system node pools using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--sku` parameter set to `automatic` and the `--enable-hosted-system` flag.
 
     ```azurecli-interactive
     az aks create \
