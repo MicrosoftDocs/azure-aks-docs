@@ -776,6 +776,12 @@
           href: update-credentials.md
         - name: Limit access to cluster configuration file
           href: control-kubeconfig-access.md
+        - name: External identity providers (preview)
+          items:
+            - name: External identity provider authentication overview
+              href: external-identity-provider-authentication-overview.md
+            - name: Configure external identity providers
+              href: external-identity-provider-authentication-configure.md
         - name: Control deployments with Azure Policy
           href: /azure/governance/policy/concepts/policy-for-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Application security
@@ -1156,6 +1162,16 @@
       href: aks-diagnostics.md
     - name: Enable monitoring for AKS clusters
       href: /azure/azure-monitor/containers/kubernetes-monitoring-enable?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: CLI Agent for AKS
+      items:
+        - name: Overview
+          href: cli-agent-for-aks-overview.md
+        - name: Install and use the CLI Agent for AKS
+          href: cli-agent-for-aks-install.md
+        - name: Troubleshoot CLI Agent for AKS issues
+          href: cli-agent-for-aks-troubleshoot.md
+        - name: CLI Agent for AKS FAQ
+          href: cli-agent-for-aks-faq.yml
     - name: Monitor Kubernetes object events
       href: events.md
     - name: Monitor kube-audit events
