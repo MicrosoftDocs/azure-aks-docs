@@ -14,6 +14,8 @@ ms.service: azure-kubernetes-service
 
 In this quickstart, you learn how to create an Azure Kubernetes Service (AKS) Automatic cluster with managed system node pools (preview) using the Azure CLI.
 
+With managed system node pools on AKS Automatic clusters, AKS manages the [system node pool](../use-system-pools.md) and its components for you. AKS automatically handles creating, upgrading, and scaling the system node pool, so you can focus on your application workloads.
+
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Prerequisites
@@ -57,6 +59,23 @@ In this quickstart, you learn how to create an Azure Kubernetes Service (AKS) Au
 
 > [!NOTE]
 > Migrations between AKS Automatic clusters and AKS Standard clusters are supported. For more information, see [Update the SKU of an existing AKS cluster](../free-standard-pricing-tiers.md#update-the-sku-of-an-existing-cluster).
+
+## Region availability
+
+AKS Automatic clusters with managed system node pools are currently available in the following regions:
+
+- `swedencentral`
+- `canadacentral`
+- `westcentralus`
+- `eastasia`
+- `uksouth`
+- `australiaeast`
+- `brazilsouth`
+- `centralindia`
+- `francecentral`
+- `germanywestcentral`
+- `northeurope`
+- `switzerlandnorth`
 
 ## Create an AKS Automatic cluster with managed system node pools
 
