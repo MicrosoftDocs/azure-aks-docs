@@ -149,7 +149,9 @@ spec:
           app: my-application
   policy:
     placementType: PickFixed
-    clusterNames: ["prod-cluster-1", "prod-cluster-2"]
+    clusterNames:
+    - cluster1
+    - cluster2
 ```
 
 ### Best practices

@@ -104,9 +104,9 @@
       items:
         - name: Access Fleet hub cluster API
           href: access-fleet-hub-cluster-kubernetes-api.md
-        - name: Multi-cluster resource placement using cluster resource placement
+        - name: Multi-cluster cluster-scoped resource placement
           href: quickstart-resource-propagation.md
-        - name: Multi-cluster namespace-scoped resource placement using resource placement
+        - name: Multi-cluster namespace-scoped resource placement
           href: quickstart-namespace-scoped-resource-propagation.md
         - name: Understand the placement status
           href: howto-understand-placement.md

@@ -55,12 +55,10 @@ With `ClusterResourcePlacement`, you can:
 > [!IMPORTANT]
 > The `selectionScope` field is available in the `placement.kubernetes-fleet.io/v1beta1` API version as a preview feature. It is not available in the `placement.kubernetes-fleet.io/v1` API.
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
-
 When selecting a namespace resource, you can use the `selectionScope` field to control whether to propagate only the namespace itself or the namespace and all its contents:
 
-* **`NamespaceOnly`**: Propagates only the namespace object itself, without any resources within the namespace. This is useful when you want to establish namespaces across clusters while managing individual resources separately using [`ResourcePlacement`](./concepts-namespace-scoped-resource-propagation.md).
 * **Default behavior** (when `selectionScope` is not specified): Propagates the namespace and all resources within it.
+* **`NamespaceOnly`**: Propagates only the namespace object itself, without any resources within the namespace. This is useful when you want to establish namespaces across clusters while managing individual resources separately using [`ResourcePlacement`](./concepts-namespace-scoped-resource-propagation.md).
 
 The following example shows how to propagate only the namespace without its contents using the v1beta1 API:
 
