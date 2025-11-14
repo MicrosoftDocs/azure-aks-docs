@@ -232,7 +232,7 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
 
 ### Retrieve Karpenter logs and status 
 
-You can retrieve logs and status updates from Karpenter to help diagnose and debug NAP-related events. AKS manages node auto-provisioning on your behalf and runs it in the managed control plane. You can enable control plane logs to see the logs and operations from node auto-provisioning.
+You can retrieve logs and status updates from Karpenter to help diagnose and debug NAP-related events. AKS manages node auto-provisioning on your behalf and runs it in the managed control plane. You can enable control plane logs to see the Karpenter logs and operations from node auto-provisioning. For more on control plane logs, see our [AKS control plane logs documentation][supported-resource-logs]
 
 1. Set up a rule for resource logs to push node auto-provisioning logs to Log Analytics using the [instructions here][aks-view-master-logs]. Make sure you check the box for `node-auto-provisioning` when selecting options for **Logs**.
 1. Select the **Log** section on your cluster.
@@ -240,13 +240,13 @@ You can retrieve logs and status updates from Karpenter to help diagnose and deb
 
     ```kusto
     AzureDiagnostics
-    | where Category == "node-auto-provisioning"
+    | where Category == "karpenter-events"
     ```
 
 1. View node auto-provisioning events on CLI.
 
     ```bash
-    kubectl get events --field-selector source=node-auto-provisioning
+    kubectl get events --field-selector source=karpenter-events
     ```
 
 ## node auto-provisioning Metrics
@@ -265,3 +265,4 @@ For more information on node auto-provisioning in AKS, see the following article
 
 <!-- LINKS - internal -->
 [aks-view-master-logs]: monitor-aks.md#aks-control-plane-resource-logs
+[supported-resource-logs]: monitor-aks-reference.md#supported-resource-logs-for-microsoftcontainerservicemanagedclusters
