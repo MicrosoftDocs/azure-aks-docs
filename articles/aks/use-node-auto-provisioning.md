@@ -228,6 +228,30 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
 
 :::zone-end
 
+## Monitoring Node auto provisioning
+
+### Retrieve Karpenter logs and status 
+
+You can retrieve logs and status updates from Karpenter to help diagnose and debug NAP-related events. AKS manages node auto-provisioning on your behalf and runs it in the managed control plane. You can enable control plane logs to see the logs and operations from node auto-provisioning.
+
+1. Set up a rule for resource logs to push node auto-provisioning logs to Log Analytics using the [instructions here][aks-view-master-logs]. Make sure you check the box for `node-auto-provisioning` when selecting options for **Logs**.
+1. Select the **Log** section on your cluster.
+1. Enter the following example query into Log Analytics:
+
+    ```kusto
+    AzureDiagnostics
+    | where Category == "node-auto-provisioning"
+    ```
+
+1. View node auto-provisioning events on CLI.
+
+    ```bash
+    kubectl get events --field-selector source=node-auto-provisioning
+    ```
+
+## node auto-provisioning Metrics
+You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to see specific Karpenter metrics and operations from [node auto-provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview)
+
 ## Next steps
 
 For more information on node auto-provisioning in AKS, see the following articles:
@@ -237,3 +261,7 @@ For more information on node auto-provisioning in AKS, see the following article
 - [Configure node pools for node auto-provisioning on AKS](./node-auto-provisioning-node-pools.md)
 - [Configure disruption policies for node auto-provisioning on AKS](./node-auto-provisioning-disruption.md)
 - [Upgrade node images for node auto-provisioning on AKS](./node-auto-provisioning-upgrade-image.md)
+
+
+<!-- LINKS - internal -->
+[aks-view-master-logs]: monitor-aks.md#aks-control-plane-resource-logs
