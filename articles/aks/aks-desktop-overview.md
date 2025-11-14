@@ -4,7 +4,7 @@ description: Learn how to use AKS desktop to deploy and manage workloads on Azur
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: overview
-ms.date: 11/13/2025
+ms.date: 11/14/2025
 ms.author: alalve
 # Customer intent: As a developer, I want to use AKS desktop to deploy and manage applications on Azure Kubernetes Service without needing deep Kubernetes expertise, so that I can accelerate time to business value.
 ---
@@ -60,13 +60,13 @@ AKS desktop provides the following benefits:
 
 ## AKS desktop limitations
 
-**AKS desktop is optimized for AKS Automatic clusters**. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. This is because AKS Automatic comes bundled with metrics, observability and other tools that allow AKS desktop to expose key insights.
+**AKS desktop is optimized for AKS Automatic clusters**. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
 
 ## What are Projects?
 
-Per Headlamp's documentation - 
-  
-  "Projects make Kubernetes easier to manage by grouping related resources into a single, application-centric view that is designed with developers in mind. Instead of navigating cluster-wide lists or searching for labels, Projects let you organize workloads across one or more namespaces and even multiple clusters into a logical group. This approach gives developers clarity on their application as a whole, making collaboration, troubleshooting, and onboarding much simpler."
+Per Headlamp's documentation:
+
+> "Projects make Kubernetes easier to manage by grouping related resources into a single, application-centric view that is designed with developers in mind. Instead of navigating cluster-wide lists or searching for labels, Projects let you organize workloads across one or more namespaces and even multiple clusters into a logical group. This approach gives developers clarity on their application as a whole, making collaboration, troubleshooting, and onboarding much simpler."
 
 In AKS desktop, an AKS managed project is linked directly by default to an [AKS managed namespace](concepts-managed-namespaces.md), which is a way to logically isolate workloads and teams within a cluster. This feature enables administrators to enforce resource quotas, apply network policies, and manage access control at the namespace level. A project can be made up of one or more applications. For this preview, we recommend you have one application per Project. If you wish to learn more about the Project concept, visit [Headlamp's open-source documentation](https://headlamp.dev/docs/latest/learn/projects).
 
