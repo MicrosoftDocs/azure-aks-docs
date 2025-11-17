@@ -11,7 +11,7 @@ ms.author: alalve
 
 # AKS desktop overview (Preview)
 
-AKS desktop delivers an application-focused experience for deploying and managing workloads on Azure Kubernetes Service (AKS). It accelerates time to business value by providing a guided, self-service user experience (UX) built on supported AKS features, best practices, and open-source Headlamp. Designed to work within your existing environment and tools, it enables team collaboration through role-based access control (RBAC) while abstracting complexity without removing control.
+AKS desktop delivers an application-focused experience for deploying and managing workloads on Azure Kubernetes Service (AKS). It accelerates time to business value by providing a guided, self-service user experience (UX) built on supported AKS features, best practices, and open-source [Headlamp](https://headlamp.dev/). Designed to work within your existing environment and tools, it enables team collaboration through role-based access control (RBAC) while abstracting complexity without removing control.
 
 You can install [AKS desktop](https://github.com/Azure/aks-desktop/releases) by visiting the official AKS desktop repository. AKS desktop supports the following operating systems:
 
@@ -49,6 +49,8 @@ AKS desktop provides the following benefits:
   - Kubernetes resource troubleshooting.
 
 - **Multi-cloud capabilities** - View and access Kubernetes clusters across any cloud.
+
+- **Kubeconfig management** - Easily sign into your Azure account and merge your cluster credentials.
 
 - **User and resource management collaboration**:
 
