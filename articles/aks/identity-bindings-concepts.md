@@ -42,14 +42,13 @@ To use identity bindings with your application workloads, do the following:
  1. Ensure you're using the minimum required Azure Identity package.
  1. Use `WorkloadIdentityCredential` and opt into the feature. This feature isn't supported in `ManagedIdentityCredential` or `DefaultAzureCredential`.
  
-
 | Language | Package | Minimum Version | How to enable |
 |----------|---------|-----------------|-------|
-| .NET | [Azure.Identity](/dotnet/api/overview/azure/identity-readme) | **v1.18.0-beta.2** or later | `WorkloadIdentityCredential` identity binding mode is disabled by default. Set `WorkloadIdentityCredentialOptions.IsAzureKubernetesTokenProxyEnabled` to `true`. |
-| Go | [azidentity](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity) | **v1.14.0-beta.2** or later | Set `WorkloadIdentityCredentialOptions.EnableAzureTokenProxy` to `true`. |
-| Java | [azure-identity](/java/api/overview/azure/identity-readme) | **v1.19.0-beta.1** or later | Call `enableAzureTokenProxy()` on `WorkloadIdentityCredentialBuilder`. |
-| JavaScript | [@azure/identity](https://www.npmjs.com/package/@azure/identity) | **4.14.0-beta.1** or later | Set `enableAzureKubernetesTokenProxy` to `true` in `WorkloadIdentityCredentialOptions`. |
-| Python | [azure-identity](/python/api/overview/azure/identity-readme) | **1.26.0b1** or later | Set `use_token_proxy=True` in `WorkloadIdentityCredential`. |
+| .NET | [Azure.Identity][dotnet-azure-identity] | **v1.18.0-beta.2** or later | `WorkloadIdentityCredential` identity binding mode is disabled by default. Set `WorkloadIdentityCredentialOptions.IsAzureKubernetesTokenProxyEnabled` to `true`. |
+| Go | [azidentity][go-azidentity] | **v1.14.0-beta.2** or later | Set `WorkloadIdentityCredentialOptions.EnableAzureTokenProxy` to `true`. |
+| Java | [azure-identity][java-azure-identity] | **v1.19.0-beta.1** or later | Call `enableAzureTokenProxy()` on `WorkloadIdentityCredentialBuilder`. |
+| JavaScript | [@azure/identity][javascript-azure-identity] | **4.14.0-beta.1** or later | Set `enableAzureKubernetesTokenProxy` to `true` in `WorkloadIdentityCredentialOptions`. |
+| Python | [azure-identity][python-azure-identity] | **1.26.0b1** or later | Set `use_token_proxy=True` in `WorkloadIdentityCredential`. |
 
 ## FAQ
 
@@ -88,7 +87,12 @@ Proceed to [Set up identity bindings][identity-bindings-how-to] for a step-by-st
 <!-- INTERNAL LINKS -->
 [identity-bindings-how-to]: identity-bindings.md
 [workload-identity-overview]: workload-identity-overview.md
-
-<!-- EXTERNAL LINKS -->
+[dotnet-azure-identity]: /dotnet/api/overview/azure/identity-readme
+[java-azure-identity]: /java/api/overview/azure/identity-readme
+[javascript-azure-identity]: /javascript/api/overview/azure/identity-readme
+[python-azure-identity]: /python/api/overview/azure/identity-readme
 [general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
 [managed-identities-overview]: /azure/active-directory/managed-identities-azure-resources/overview
+
+<!-- EXTERNAL LINKS -->
+[go-azidentity]: https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity
