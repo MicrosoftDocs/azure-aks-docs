@@ -77,6 +77,12 @@
               href: learn/quick-kubernetes-deploy-terraform.md
         - name: Create a Linux-based AKS Automatic cluster
           items:
+            - name: Use managed system node pools
+              items:
+                - name: Overview
+                  href: automatic/aks-automatic-managed-system-node-pools-about.md
+                - name: Create an AKS Automatic cluster with managed system node pools
+                  href: automatic/aks-automatic-managed-system-node-pools.md
             - name: From a code repository
               href: automatic/quick-automatic-from-code.md
             - name: Inside a managed virtual network
