@@ -19,11 +19,34 @@ ms.date:  11/11/2025
 > - **CRD**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
 > - **CLI flag**: `--enable-retinanetworkflowlog` → `--enable-container-network-logs`
 > - **Log Analytics table**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
-> - **Grafana dashboards**: Need to be imported again.
+> 
+> **Action Items for Existing Users to Enable New Naming**
+> 1. **Update Azure CLI** (MUST - First step!):
+>    ```bash
+>    az upgrade
+>    ```
+> 2. **Update Preview CLI Extension** (MUST):
+>    ```bash
+>    az extension update --name aks-preview
+>    ```
+> 3. **Disable Monitoring**:
+>    ```bash
+>    az aks disable-addons -a monitoring -n <cluster-name> -g <resource-group>
+>    ```
+> 4. **Re-enable Monitoring**:
+>    ```bash
+>    az aks enable-addons -a monitoring --enable-high-log-scale-mode -g <resource-group> -n <cluster-name>
+>    ```
+> 5. **Re-enable ACNS Container Network Logs**:
+>    ```bash
+>    az aks update --enable-acns --enable-container-network-logs -g <resource-group> -n <cluster-name>
+>    ```
+> 6. **Apply new ContainerNetworkLog CRD**: Apply your updated CRD configuration with the new naming.
+> 7. **Reimport Grafana Dashboards**: Import the updated dashboards to reflect the new table names.
 >
 > **Notes**
-> - Previously collected data stays in your workspace
-> - After re-enabling, allow a short delay before new data appears
+> - Previously collected data stays in your workspace in old table RetinaNetworkFlowLogs.
+> - After re-enabling, allow a short delay before new data appears in new table ContainerNetworkLog.
 
 Container network logs in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) for Azure Kubernetes Service (AKS) give you deep visibility into network traffic in your AKS clusters.
 
@@ -58,7 +81,7 @@ To read more about throttling and Container insights, see the [Container insight
 
 ### Key capabilities of stored logs mode
 
-* *Customizable filters.* You can configure logging by defining custom resources of the [ContainerNetworkLog](./how-to-configure-container-network-logs.md#containernetworklog-template) type. Use custom resources to apply granular filters by namespace, pod, service, port, protocol, verdict, or traffic direction (ingress or egress). The flexibility ensures precise data collection tailored to specific use cases. Only relevant traffic is logged, and storage is optimized for improved performance, compliance, and troubleshooting.
+* *Customizable filters.* You can configure logging by defining custom resources of the [ContainerNetworkLog](./how-to-configure-container-network-logs.md#containernetworklog-crd-template) type. Use custom resources to apply granular filters by namespace, pod, service, port, protocol, verdict, or traffic direction (ingress or egress). The flexibility ensures precise data collection tailored to specific use cases. Only relevant traffic is logged, and storage is optimized for improved performance, compliance, and troubleshooting.
 
 * *Log storage options.* The container network logs feature has two primary storage options: unmanaged storage and managed storage.
 

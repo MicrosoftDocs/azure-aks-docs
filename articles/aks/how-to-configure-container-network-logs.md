@@ -20,11 +20,34 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 > - **CRD**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
 > - **CLI flag**: `--enable-retinanetworkflowlog` → `--enable-container-network-logs`
 > - **Log Analytics table**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
-> - **Grafana dashboards**: Need to be imported again.
+> 
+> **Action Items for Existing Users to Enable New Naming**
+> 1. **Update Azure CLI** (MUST - First step!):
+>    ```bash
+>    az upgrade
+>    ```
+> 2. **Update Preview CLI Extension** (MUST):
+>    ```bash
+>    az extension update --name aks-preview
+>    ```
+> 3. **Disable Monitoring**:
+>    ```bash
+>    az aks disable-addons -a monitoring -n <cluster-name> -g <resource-group>
+>    ```
+> 4. **Re-enable Monitoring**:
+>    ```bash
+>    az aks enable-addons -a monitoring --enable-high-log-scale-mode -g <resource-group> -n <cluster-name>
+>    ```
+> 5. **Re-enable ACNS Container Network Logs**:
+>    ```bash
+>    az aks update --enable-acns --enable-container-network-logs -g <resource-group> -n <cluster-name>
+>    ```
+> 6. **Apply new ContainerNetworkLog CRD**: Apply your updated CRD configuration with the new naming.
+> 7. **Reimport Grafana Dashboards**: Import the updated dashboards to reflect the new table names.
 >
 > **Notes**
-> - Previously collected data stays in your workspace
-> - After re-enabling, allow a short delay before new data appears
+> - Previously collected data stays in your workspace in old table RetinaNetworkFlowLogs.
+> - After re-enabling, allow a short delay before new data appears in new table ContainerNetworkLog.
 
 In this article, you complete the steps to configure and use the container network logs feature in Advanced Container Networking Services for Azure Kubernetes Service (AKS). These logs offer persistent network flow monitoring tailored to enhance visibility in containerized environments.
 
@@ -80,6 +103,15 @@ az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetwork
 
 When the feature shows **Registered**, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
 
+## Limitations
+
+* Layer 7 flow data is captured only when Layer 7 policy support is enabled. For more information, see [Configure a Layer 7 policy](./how-to-apply-l7-policies.md).
+* Domain Name System (DNS) flows and related metrics are captured only when a Cilium Fully Qualified Domain (FQDN) network policy is applied. For more information, see [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
+* Onboarding by using Terraform isn't supported at this time.
+* When Log Analytics isn't configured for log storage, container network logs are limited to a maximum of 50 MB of storage. When this limit is reached, new entries overwrite older logs.
+* If the log table plan is set to Basic logs, the prebuilt Grafana dashboards don't function as expected.
+* The Auxiliary logs table plan isn't supported.
+
 ### Deployment methods
 
 You can onboard to container network logs using different deployment methods:
@@ -90,24 +122,14 @@ The Azure CLI method is described in the sections below for both [new clusters](
 
 # [ARM Template](#tab/arm)
 
-For Infrastructure as Code (IaC) deployments using ARM templates, follow the detailed steps in the [Azure Monitor documentation for ARM template deployment](https://learn.microsoft.com/azure/azure-monitor/containers/container-insights-network-monitoring?tabs=arm#onboarding-to-container-network-logs).
+For Infrastructure as Code (IaC) deployments using ARM templates, follow the detailed steps in the [Azure Monitor documentation for ARM template deployment](/azure/azure-monitor/containers/container-insights-network-monitoring?tabs=arm#onboarding-to-container-network-logs).
 
 The ARM deployment includes template and parameter file downloads, configuration of `enableContainerNetworkLogs`, and deployment commands for existing clusters.
 # [Bicep](#tab/bicep)
 
-For Bicep deployments, see the [Azure Monitor Bicep deployment guide](https://learn.microsoft.com/azure/azure-monitor/containers/container-insights-network-monitoring?tabs=bicep#onboarding-to-container-network-logs) for template configuration and deployment steps.
+For Bicep deployments, see the [Azure Monitor Bicep deployment guide](/azure/azure-monitor/containers/container-insights-network-monitoring?tabs=bicep#onboarding-to-container-network-logs) for template configuration and deployment steps.
 
 ---
-
-## Limitations
-
-* Layer 7 flow data is captured only when Layer 7 policy support is enabled. For more information, see [Configure a Layer 7 policy](./how-to-apply-l7-policies.md).
-* Domain Name System (DNS) flows and related metrics are captured only when a Cilium Fully Qualified Domain (FQDN) network policy is applied. For more information, see [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
-* Onboarding by using Terraform isn't supported at this time.
-* When Log Analytics isn't configured for log storage, container network logs are limited to a maximum of 50 MB of storage. When this limit is reached, new entries overwrite older logs.
-* If the log table plan is set to Basic logs, the prebuilt Grafana dashboards don't function as expected.
-* The Auxiliary logs table plan isn't supported.
-
 ## New clusters
 
 This section guides you through setting up container network logs on a new AKS cluster from start to finish.
@@ -124,9 +146,10 @@ Use the `az aks create` command with the `--enable-acns` flag to create a new AK
 # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
 export CLUSTER_NAME="<aks-cluster-name>"
 export RESOURCE_GROUP="<aks-resource-group>"
+export LOCATION="<location>"
 
 # Create the resource group if it doesn't already exist
-az group create --name $RESOURCE_GROUP --location <location>
+az group create --name $RESOURCE_GROUP --location $LOCATION
 
 # Create an AKS cluster
 az aks create \
@@ -258,26 +281,16 @@ For persistent storage and advanced analytics, configure the Azure Monitor Agent
 > [!NOTE]
 > When enabled, container network flow logs are written to `/var/log/acns/hubble/events.log` when the `ContainerNetworkLog` custom resource is applied. If Log Analytics integration is enabled later, the Azure Monitor Agent begins collecting logs at that point. Logs older than two minutes aren't ingested. Only new entries that are appended after monitoring begins are collected in a Log Analytics workspace.
 
-## Existing clusters
+## Existing clusters 
 
-This section guides you through enabling container network logs on an existing AKS cluster.
-
-### Enable Advanced Container Networking Services on an existing cluster with no prior ACNS setup
-
-If your existing cluster doesn't have Advanced Container Networking Services enabled, first enable it using the [`az aks update`](/cli/azure/aks#az-aks-update) command:
+> [!NOTE]
+> If your cluster already has Advanced Container Networking Services (ACNS) enabled, you can start collecting flow logs on the host node by simply applying a ContainerNetworkLog CRD. However, if you want to enable flow logs with Log Analytics workspace integration for persistent storage and advanced analytics, follow the steps in the [Configure integration with log analytics on existing cluster](#configure-integration-with-log-analytics-on-existing-cluster) section.
 
 ```azurecli
-# Set environment variables for your existing cluster
+# Set environment variables for your existing cluster. Make sure you replace the placeholders with your own values.
 export CLUSTER_NAME="<aks-cluster-name>"
 export RESOURCE_GROUP="<aks-resource-group>"
-
-# Enable Advanced Container Networking Services
-az aks update \
-    --resource-group $RESOURCE_GROUP \
-    --name $CLUSTER_NAME \
-    --enable-acns
 ```
-
 ### Configure integration with log analytics on existing cluster
 
 To enable container network logs on an existing cluster:
@@ -319,6 +332,52 @@ To enable container network logs on an existing cluster:
    > [!TIP]
    > For a practical example of a ContainerNetworkLog custom resource configuration, see the [sample CRD in the AKS Labs documentation](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#enable-flow-logs-for-the-pets-namespace).
 
+#### **Viewing L7 flows and DNS errors**
+To capture Layer 7 (L7) flow data and DNS errors/flows in your container network logs, you must apply Cilium network policies with FQDN filtering and L7 policy support enabled. Without these policies, L7 and DNS-related flow information won't be captured.
+
+  Example of a Cilium network policy with FQDN filtering and L7 support:
+
+  ```yaml
+  apiVersion: cilium.io/v2
+  kind: CiliumNetworkPolicy
+  metadata:
+    name: l7-dns-policy
+    namespace: default
+  spec:
+    endpointSelector:
+      matchLabels:
+        app: myapp
+    egress:
+      - toEndpoints:
+          - matchLabels:
+              "k8s:io.kubernetes.pod.namespace": kube-system
+              "k8s:k8s-app": kube-dns
+        toPorts:
+          - ports:
+              - port: "53"
+                protocol: UDP
+            rules:
+              dns:
+                - matchPattern: "*.example.com"
+      - toFQDNs:
+          - matchPattern: "*.example.com"
+        toPorts:
+          - ports:
+              - port: "443"
+                protocol: TCP
+            rules:
+              http:
+                - method: "GET"
+                  path: "/1"
+  ```
+
+  Apply the policy using:
+  
+  ```bash
+  kubectl apply -f l7-dns-policy.yaml
+  ```
+
+  For more information, see [Configure a Layer 7 policy](./how-to-apply-l7-policies.md) and [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md)
 
 ## Common post-setup steps
 
@@ -391,6 +450,7 @@ Status:
   State:      CONFIGURED
   Timestamp:  2025-05-01T11:24:48Z
 ```
+User can apply multiple `ContainerNetworkLog` custom resources in the cluster. Each custom resource will have its own status.
 
 ### Querying Container Network Flow Logs in Log Analytics dashboard
 
@@ -400,28 +460,21 @@ Customers can use Kusto Query Language (KQL) for analyzing network data in Log A
 
 To see sample queries that can be applied for troubleshooting connectivity issues, refer to the [progressive diagnosis using flow logs](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#progressive-diagnosis-using-flow-logs) in the AKS Labs documentation.
 
-> [!IMPORTANT]
-> **Table Name Update**  
-> The table name will soon change from `RetinaNetworkFlowLogs` to `ContainerNetworkLog` to maintain consistency with other ACNS features. Customers will be notified via email. Update your queries accordingly when the change is implemented.
-
 ### Azure Managed Grafana
+You can access Azure Monitor dashboards with Grafana through the Azure portal from Azure Monitor or Azure Kubernetes Services.
+1. Make sure that the Azure logs pods are running:
 
-If you don't have an existing Azure Managed Grafana instance, you must create one to visualize the network flow logs pre-built dashboard.
+    ```azurecli
+    kubectl get pods -o wide -n kube-system | grep ama-logs
+    ```
 
-#### Create an Azure Managed Grafana instance
+    Your output should look similar to the following example:
 
-Use [`az grafana create`](/cli/azure/grafana#az-grafana-create) to create a Managed Grafana instance. The name of the instance must be unique.
-
-```azurecli
-# Set an environment variable for the Managed Grafana name. Make sure that you replace the placeholder with your own value.
-export GRAFANA_NAME="<grafana-name>"
-
-# Create a Managed Grafana instance
-az grafana create \
-    --name $GRAFANA_NAME \
-    --resource-group $RESOURCE_GROUP 
-```
-
+    ```output
+    ama-logs-9bxc6                                   3/3     Running   1 (39m ago)   44m
+    ama-logs-fd568                                   3/3     Running   1 (40m ago)   44m
+    ama-logs-rs-65bdd98f75-hqnd2                     2/2     Running   1 (43m ago)   22h
+    
 Ensure that your Managed Grafana workspace can access and search all monitoring data in the relevant subscription. This step is required to access prebuilt dashboards for network flow logs.  
 
 **Use case 1**: If you're a subscription Owner or a User Access Administrator, when a Managed Grafana workspace is created, it comes with the Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources in the subscription. The new Managed Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources and view any logs stored in Log Analytics workspaces in the subscription.
@@ -444,44 +497,25 @@ Ensure that your Managed Grafana workspace can access and search all monitoring 
 
    :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking the data source in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
 
-### Visualization in Grafana dashboards
+#### Visualization in Grafana dashboards
 
-You can visualize container network flow logs for analysis by using two prebuilt Grafana dashboards. You can access the dashboards either through Azure Managed Grafana or in the Azure portal.
-
-#### Visualization by using Azure Managed Grafana
-
-1. Make sure that the Azure logs pods are running:
-
-    ```azurecli
-    kubectl get pods -o wide -n kube-system | grep ama-logs
-    ```
-
-    Your output should look similar to the following example:
-
-    ```output
-    ama-logs-9bxc6                                   3/3     Running   1 (39m ago)   44m
-    ama-logs-fd568                                   3/3     Running   1 (40m ago)   44m
-    ama-logs-rs-65bdd98f75-hqnd2                     2/2     Running   1 (43m ago)   22h
-    
-    ```
+Azure Monitor dashboards with Grafana enable you to use Grafana's query, transformation, and visualization capability on metrics and logs collected in Azure Monitor. you can use this option as an alternative to visualize container network flow logs.
+1.  Navigate to left pane of the kubernetes cluster in the Azure portal.
+1.  Select **Dashboards with Grafana (Preview)**.
+1.  Browse the list of available dashboards in the Azure Monitor or Azure Managed Prometheus listings.
+1.  Select a dashboard, for example **Azure | Insights | Containers | Networking | Flow Logs**.You can visualize container network flow logs for analysis by using two prebuilt Grafana dashboards. You can access the dashboards either through Azure Managed Grafana or in the Azure portal.
 
 1. To simplify log analysis, we provide preconfigured two Azure Managed Grafana dashboards:
 
     * Go to **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs**. This dashboard provides visualizations in which AKS workloads communicate with each other, including network requests, responses, drops, and errors. Currently, you must use [ID 23155](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//) to import these dashboards.
 
-      :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard.png" alt-text="Screenshot of a flow log Grafana dashboard in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard.png":::
+      :::image type="content" source="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png" alt-text="Screenshot of Grafana dashboards in Azure Monitor." lightbox="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png":::
 
     * Go to **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs (External Traffic)**. This dashboard provides visualizations in which AKS workloads send and receive communications from outside an AKS cluster, including network requests, responses, drops, and errors. Use [ID 23156](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic//).
 
      :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of a flow log (external) Grafana dashboard in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
 
 For more information about how to use this dashboard, see the [overview of container network logs](container-network-observability-logs.md).
-
-#### Visualization of container network logs in the Azure portal
-
-You can visualize, query, and analyze flow logs in the Azure portal. Go to the Log Analytics workspace of the cluster:
-
-:::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Screenshot of container network logs in Log Analytics." lightbox="./media/advanced-container-networking-services/azure-log-analytics.png":::
 
 ## Configure on-demand logs mode
 
@@ -539,8 +573,6 @@ az aks create \
     --pod-cidr 192.168.0.0/16 \
     --enable-acns
 ```
-
----
 
 ### Enable Advanced Container Networking Services on an existing cluster
 
@@ -936,6 +968,7 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
    `error: resource mapping not found for <....>": no matches for kind "ContainerNetworkLog" in version "acn.azure.com/v1alpha1"`
   
   Ensure that you install custom resources first.
+
 
 ### Disable container network logs: Stored logs mode on existing cluster
 
