@@ -239,7 +239,7 @@ You can retrieve logs and status updates from Karpenter to help diagnose and deb
 1. Enter the following example query into Log Analytics:
 
     ```kusto
-    AzureDiagnostics
+    AKSControlPlane
     | where Category == "karpenter-events"
     ```
 
