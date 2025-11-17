@@ -2,7 +2,7 @@
 title: Security bulletins for Azure Kubernetes Service (AKS)
 description: This article provides security/vulnerability related updates and troubleshooting guides for Azure Kubernetes Services (AKS).
 ms.date: 10/23/2025
-author: bahe
+author: bcho
 ms.author: bahe
 ms.topic: concept-article
 ms.subservice: aks-security
@@ -22,6 +22,36 @@ These updates cover security information related to the following AKS components
 - Azure Kubernetes Service (AKS)
 - Azure Kubernetes Service Node Image (AKS Node Image)
 - Azure Kubernetes Service Addons (AKS add-ons)
+
+---
+
+## AKS-2025-0012 Runc CVEs - CVE-2025-31133, CVE-2025-52565, CVE-2025-52881
+
+**Published Date**: November 7, 2025
+
+### Description
+
+The bulletin provides an update regarding the recent vulnerabilities (CVE-2025-31133, CVE-2025-52565, CVE-2025-52881) disclosed from runc.
+
+### References
+
+- [CVE-2025-31133](https://github.com/advisories/GHSA-9493-h29p-rfm2)
+- [CVE-2025-52565](https://github.com/advisories/GHSA-qw9x-cqr3-wc7r)
+- [CVE-2025-52881](https://github.com/advisories/GHSA-cgrx-mc8f-2prm)
+
+### Affected Components
+
+#### [**AKS Node Image**](#tab/aks-node-image)
+
+**Affected Versions**
+
+- Linux node image versions prior to 202511.07.0
+
+**Resolutions**
+
+- Newer node image versions have been rolled out. Upgrade Linux node image version to
+  - 202511.07.0
+  - or later. You can check the latest node image versions from [AKS release notes][aks-release-notes].
 
 ---
 
