@@ -4,7 +4,7 @@ description: Learn how to set up Azure Kubernetes Service (AKS) desktop with the
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: how-to
-ms.date: 11/14/2025
+ms.date: 11/17/2025
 ms.author: alalve
 # Customer intent: As a cluster operator or developer, I want to understand the setup requirements and permissions for AKS desktop, so that I can configure my environment based on my role.
 ---
@@ -63,18 +63,18 @@ To create the infrastructure resources, you need permissions to create resources
 
 1. Set environment variables for your resource group and cluster name by running the following command:
 
-    ```azurecli-interactive
-    myResourceGroup=<infra-resource-group>
-    myClusterName=<cluster-name>
-    ```
+   ```azurecli-interactive
+   myResourceGroup=<infra-resource-group>
+   myClusterName=<cluster-name>
+   ```
 
 1. Assign the necessary role to create resources in the resource group using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command:
 
-    ```azurecli-interactive
-    az role assignment create --role "Contributor" \
-        --assignee <user-id> \
-        --scope /subscriptions/<subscription-id>/resourceGroups/$myResourceGroup
-    ```
+   ```azurecli-interactive
+   az role assignment create --role "Contributor" \
+       --assignee <user-id> \
+       --scope /subscriptions/<subscription-id>/resourceGroups/$myResourceGroup
+   ```
 
 ## Step 2: Create the AKS cluster with ACR integration
 
@@ -85,7 +85,7 @@ You must ensure the cluster is authorized to connect to the ACR. Choose one of t
 
 ### Option 1: Attach ACR during cluster creation
 
-Create the cluster and attach the ACR using the [`az aks create`](/cli/azure/aks#az-aks-create) command.
+Create the cluster and attach the ACR using the [`az aks create`](/cli/azure/aks#az-aks-create) command:
 
 ```azurecli-interactive
 az aks create \
@@ -97,7 +97,7 @@ az aks create \
 
 ### Option 2: Attach ACR to an existing cluster
 
-Update an existing cluster to attach the ACR using the [`az aks update`](/cli/azure/aks#az-aks-update) command.
+Update an existing cluster to attach the ACR using the [`az aks update`](/cli/azure/aks#az-aks-update) command:
 
 ```azurecli-interactive
 az aks update \

@@ -4,7 +4,7 @@ description: Learn how to deploy and manage applications on Azure Kubernetes Ser
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: how-to
-ms.date: 11/14/2025
+ms.date: 11/17/2025
 ms.author: alalve
 # Customer intent: As a developer, I want to deploy an application to Azure Kubernetes Service using AKS desktop, so that I can quickly deploy and manage my containerized applications without writing detailed Kubernetes manifests.
 ---

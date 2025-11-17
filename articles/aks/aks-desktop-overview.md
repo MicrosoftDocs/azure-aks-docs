@@ -4,7 +4,7 @@ description: Learn how to use AKS desktop to deploy and manage workloads on Azur
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: overview
-ms.date: 11/14/2025
+ms.date: 11/17/2025
 ms.author: alalve
 # Customer intent: As a developer, I want to use AKS desktop to deploy and manage applications on Azure Kubernetes Service without needing deep Kubernetes expertise, so that I can accelerate time to business value.
 ---
@@ -91,7 +91,7 @@ Once you deploy an application to a project through AKS desktop, you're greeted 
 You can provide feedback by visiting the [official AKS desktop GitHub repository](https://github.com/Azure/aks-desktop). To provide your feedback, follow these steps:
 
 1. Select the **Issue** button.
-1. Select **New Issue**, and select the appropriate issue.
+1. Select **New Issue**, then select the appropriate issue.
 1. Fill out the appropriate fields for the issue. Then select the **Create** button to submit your information.
 
 ## Next steps
