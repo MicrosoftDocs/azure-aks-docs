@@ -65,6 +65,8 @@ If you have a single Azure subscription, AKS desktop auto populates your subscri
 
 1. Choose your cluster, then select **Register Cluster**.
 
+   ![A video demonstrating how to add a cluster to the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-add-additional-clusters.gif)
+
 # [KubeConfig](#tab/kubeconfig)
 
 If KubeConfig is your first method of choice, follow these steps:
@@ -89,13 +91,15 @@ If you followed the Azure method first, follow these steps:
 
 ## Add additional clusters to AKS desktop (Preview)
 
-1. In the left pane, select **Add Cluster**.
-1. Under **Providers**, select **Add**.
+1. In the bottom left pane, select **Add Cluster**. You can choose to load from your kubeconfig file or from Azure.
+1. Using the Azure method, under **Providers**, select **Add**.
 1. Type the name of your Azure subscription if you have more than one.
 
    *Alternatively*, select the arrow to open the drop-down list, then select your Azure subscription.
 
 1. Choose your cluster, then select **Register Cluster**.
+
+   ![A video demonstrating how to add additional clusters to the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-add-additional-clusters.gif)
 
 ## Remove a cluster from AKS desktop (Preview)
 
@@ -104,6 +108,8 @@ To delete a cluster from AKS desktop, follow these steps:
 1. Under the **Home** screen, tick the box next to the cluster you want to remove.
 1. To the far right under **Actions**, select the three dots, then select **Delete**.
 1. The **Delete Cluster** window appears asking if you want to remove the specified cluster. Select **Delete**.
+
+   ![A video demonstrating how to remove a cluster from the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-remove-cluster.gif)
 
 ## Create a new Project
 
@@ -117,6 +123,8 @@ There are three methods you can choose from to deploy your application using AKS
 1. Select a cluster to add to your project. You can add more once a cluster is selected.
 1. Use an existing namespace or type a new namespace to use.
 1. Select **Create**.
+
+   ![A video demonstrating how to create a new project in the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-create-new-project.gif)
 
 # [YAML project](#tab/yaml-project)
 
@@ -153,6 +161,17 @@ Once these prerequisites are complete, perform the following steps:
 
 ---
 
+## Remove a project
+
+To delete a project from AKS desktop, follow these steps:
+
+1. In the left pane, select the **Home** button.
+1. Under **Projects**, select your project under the **Name** column.
+1. Within your project, to the far right, select the trash can button.
+1. Under the **Delete Project** window, select the **Delete Project** button to remove your project from the given namespace.
+
+   If you also want to the delete the namespace along with your project (which also removes associated resources), tick the box **Also delete the namespaces**. Then select **Delete Project**.
+
 ## Deploy an application into a Project
 
 We recommend that you always create a new project when deploying a new application.
@@ -176,6 +195,8 @@ Once you create your first project, AKS desktop places you directly into the new
 1. Under **Advanced**, choose which settings you'd like to apply to your app, then select **Next**.
 1. Review your app deployment configuration. Select **Deploy**, then select **Close**.
 
+   ![A video demonstrating how to deploy a new application into the AKS desktop app project.](media/aks-desktop-app/aks-desktop-app-deploy-application.gif)
+
 # [Kubernetes YAML](#tab/kubernetes-yaml)
 
 1. Select **Upload files** to upload one or more `.yaml` or `.yml` files. Then select **Next**.
@@ -185,17 +206,6 @@ Once you create your first project, AKS desktop places you directly into the new
 1. Review the resources to deploy, select **Deploy**, then select **Close**.
 
 ---
-
-## Remove a project
-
-To delete a project from AKS desktop, follow these steps:
-
-1. In the left pane, select the **Home** button.
-1. Under **Projects**, select your project under the **Name** column.
-1. Within your project, to the far right, select the trash can button.
-1. Under the **Delete Project** window, select the **Delete Project** button to remove your project from the given namespace.
-
-   If you also want to the delete the namespace along with your project (which also removes associated resources), tick the box **Also delete the namespaces**. Then select **Delete Project**.
 
 ## View cluster data and metrics
 
