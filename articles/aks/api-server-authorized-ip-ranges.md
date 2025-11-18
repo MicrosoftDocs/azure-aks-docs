@@ -23,7 +23,7 @@ The Kubernetes API server is the core of the Kubernetes control plane and is the
 - To learn what IP addresses to include when integrating your AKS cluster with Azure DevOps, see the Azure DevOps [Allowed IP addresses and domain URLs][azure-devops-allowed-network-cfg] article.
 
 > [!TIP]
-> From the Azure portal, you can use Microsoft Copilot in Azure to make changes to the IP addresses that can access your cluster. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#enable-ip-address-authorization).
+> From the Azure portal, you can use Azure Copilot to make changes to the IP addresses that can access your cluster. For more information, see [Work with AKS clusters efficiently using Azure Copilot](/azure/copilot/work-aks-clusters#enable-ip-address-authorization).
 
 ### Limitations
 
