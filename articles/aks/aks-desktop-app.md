@@ -65,7 +65,7 @@ If you have a single Azure subscription, AKS desktop auto populates your subscri
 
 1. Choose your cluster, then select **Register Cluster**.
 
-   ![A video demonstrating how to add a cluster to the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-add-additional-clusters.gif)
+   ![A video demonstrating how to add a cluster to the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-add-cluster.gif)
 
 # [KubeConfig](#tab/kubeconfig)
 
