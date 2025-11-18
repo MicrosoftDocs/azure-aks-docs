@@ -62,11 +62,11 @@ ms.date:  11/11/2025
 > - Previously collected data stays in your workspace in old table RetinaNetworkFlowLogs.
 > - After re-enabling, allow a short delay before new data appears in new table ContainerNetworkLog.
 
-Container network logs in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) for Azure Kubernetes Service (AKS) provide deep visibility into network traffic in your AKS clusters.
+Container network logs in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) for Azure Kubernetes Service (AKS) provide comprehensive, context-rich visibility into every network flow within your cluster. While metrics tell you *what* is happening in your network (such as bandwidth usage or error rates), container network logs tell you *why* by capturing the complete story of each connection—including who initiated it, what protocols were used, and whether the traffic was allowed or blocked.
 
-The logs capture essential metadata, including source and destination IP addresses, pod and service names, ports, protocols, and traffic direction. This provides detailed insight into network behavior.
+These logs capture essential metadata for every network flow, including source and destination IP addresses, pod and service names, namespaces, ports, protocols, traffic direction, and policy verdicts. This deep contextual information enables you to correlate network behavior with specific workloads, troubleshoot connectivity issues, validate security policies, and perform forensic analysis.
 
-Container network logs capture Layer 3 (IP), Layer 4 (TCP/UDP), and Layer 7 (HTTP/gRPC/Kafka) traffic to help you effectively monitor connectivity, troubleshoot, visualize network topology, and enforce security policy.
+Container network logs capture Layer 3 (IP), Layer 4 (TCP/UDP), and Layer 7 (HTTP/gRPC/Kafka) traffic, providing the detailed insights you need to monitor connectivity, troubleshoot issues, visualize network topology, enforce security policies, and ensure compliance.
 
 Choose from two modes:
 
@@ -165,7 +165,7 @@ Advanced Container Networking Services offers on-demand capture of network flow 
 
 The Hubble command-line interface (CLI) provides a flexible and interactive way to query, filter, and analyze flow logs directly in the terminal. You can execute real-time commands to inspect traffic flows, view packet metadata, and troubleshoot network issues without leaving your operational environment.
 
-:::image type="content" source="./media/advanced-container-networking-services/hubble-CLI-snapshot.png" alt-text="Screenshot of the Hubble CLI." lightbox="./media/advanced-container-networking-services/hubble-CLI-snapshot.png":::
+:::image type="content" source="./media/advanced-container-networking-services/hubble-cli-snapshot.png" alt-text="Screenshot of the Hubble CLI." lightbox="./media/advanced-container-networking-services/hubble-cli-snapshot.png":::
 
 ### Hubble UI
 
@@ -173,7 +173,7 @@ The Hubble web-based interface offers an intuitive and visual platform for monit
 
 The Hubble UI tools provide real-time visibility and actionable insights for faster troubleshooting and improved network management.
 
-:::image type="content" source="./media/advanced-container-networking-services/hubble-UI-snapshot.png" alt-text="Screenshot of the Hubble UI." lightbox="./media/advanced-container-networking-services/hubble-UI-snapshot.png":::
+:::image type="content" source="./media/advanced-container-networking-services/hubble-ui-snapshot.png" alt-text="Screenshot of the Hubble UI." lightbox="./media/advanced-container-networking-services/hubble-ui-snapshot.png":::
 
 ### Key benefits of on-demand logs
 

@@ -473,7 +473,7 @@ Customers can use Kusto Query Language (KQL) to analyze network data in Log Anal
 To see sample queries that can be applied for troubleshooting connectivity issues, refer to the [progressive diagnosis using flow logs](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#progressive-diagnosis-using-flow-logs) in the AKS Labs documentation.
 
 ### Azure Managed Grafana
-You can access prebuilt Grafana dashboards through the Azure portal. Navigate to either the Azure Monitor resource or your Azure Kubernetes Service (AKS) cluster to view and interact with these dashboards. but before that: 
+You can access prebuilt Grafana dashboards through the Azure portal. Navigate to either the Azure Monitor resource or your Azure Kubernetes Service (AKS) cluster to view and interact with these dashboards. But before that: 
 1. Make sure that the Azure logs pods are running:
 
     ```azurecli
@@ -489,23 +489,23 @@ You can access prebuilt Grafana dashboards through the Azure portal. Navigate to
     
 2. Ensure that your Managed Grafana workspace can access and search all monitoring data in the relevant subscription. This step is required to access prebuilt dashboards for network flow logs.  
 
-**Use case 1**: If you're a subscription Owner or a User Access Administrator, when a Managed Grafana workspace is created, it comes with the Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources in the subscription. The new Managed Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources and view any logs stored in Log Analytics workspaces in the subscription.
+    **Use case 1**: If you're a subscription Owner or a User Access Administrator, when a Managed Grafana workspace is created, it comes with the Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources in the subscription. The new Managed Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources and view any logs stored in Log Analytics workspaces in the subscription.
 
-**Use case 2**: If you're not a subscription Owner or User Access Administrator, or if your Log Analytics and Managed Grafana workspaces are in different subscriptions, Grafana can't access Log Analytics and the subscription. The Grafana workspace must have the Monitoring Reader role in the relevant subscription to access prebuilt Grafana dashboards. In this scenario, complete these steps to provide access:
+    **Use case 2**: If you're not a subscription Owner or User Access Administrator, or if your Log Analytics and Managed Grafana workspaces are in different subscriptions, Grafana can't access Log Analytics and the subscription. The Grafana workspace must have the Monitoring Reader role in the relevant subscription to access prebuilt Grafana dashboards. In this scenario, complete these steps to provide access:
 
-   1. In your Managed Grafana workspace, go to **Settings** > **Identity**.
+       1. In your Managed Grafana workspace, go to **Settings** > **Identity**.
 
       :::image type="content" source="./media/advanced-container-networking-services/grafana-identity.png" alt-text="Screenshot of the identity option in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-identity.png":::
 
-   1. Select **Azure role assignments** > **Add role assignments**.
+       1. Select **Azure role assignments** > **Add role assignments**.
 
       :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in a Grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
 
-   1. For **Scope**, enter **Subscription**. Select your subscription. Set **Role** to **Monitoring Reader**, and then select **Save**.
+       1. For **Scope**, enter **Subscription**. Select your subscription. Set **Role** to **Monitoring Reader**, and then select **Save**.
   
       :::image type="content" source="./media/advanced-container-networking-services/grafana-subscription-selection.png" alt-text="Screenshot of entering subscription details in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-subscription-selection.png":::
 
-   1. Verify the data source for the Managed Grafana instance. To verify the subscription for the data source for the Grafana dashboards, check the **Data source** tab in the Managed Grafana instance:
+       1. Verify the data source for the Managed Grafana instance. To verify the subscription for the data source for the Grafana dashboards, check the **Data source** tab in the Managed Grafana instance:
 
       :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking the data source in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
 
