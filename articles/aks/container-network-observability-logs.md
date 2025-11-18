@@ -12,39 +12,53 @@ ms.date:  11/11/2025
 # What is container network logs (preview)?
 
 > [!IMPORTANT]
-> **Component Renaming (Starting November 11, 2025)**  
+> Component renaming (starting November 11, 2025)
+>
 > We are renaming components in the Container Network Logs feature to improve clarity and consistency:
 >
-> **What's Changing**
+> What's changing
+>
 > - **CRD**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
 > - **CLI flag**: `--enable-retinanetworkflowlog` → `--enable-container-network-logs`
 > - **Log Analytics table**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
 > 
-> **Action Items for Existing Users to Enable New Naming**
+> Action items for existing users to enable new naming
+>
 > 1. **Update Azure CLI** (MUST - First step!):
+>
 >    ```bash
 >    az upgrade
 >    ```
+>
 > 2. **Update Preview CLI Extension** (MUST):
+>
 >    ```bash
 >    az extension update --name aks-preview
 >    ```
+>
 > 3. **Disable Monitoring**:
+>
 >    ```bash
 >    az aks disable-addons -a monitoring -n <cluster-name> -g <resource-group>
 >    ```
+>
 > 4. **Re-enable Monitoring**:
+>
 >    ```bash
 >    az aks enable-addons -a monitoring --enable-high-log-scale-mode -g <resource-group> -n <cluster-name>
 >    ```
+>
 > 5. **Re-enable ACNS Container Network Logs**:
+>
 >    ```bash
 >    az aks update --enable-acns --enable-container-network-logs -g <resource-group> -n <cluster-name>
 >    ```
+>
 > 6. **Apply new ContainerNetworkLog CRD**: Apply your updated CRD configuration with the new naming.
+>
 > 7. **Reimport Grafana Dashboards**: Import the updated dashboards to reflect the new table names.
 >
-> **Notes**
+> [!NOTE]
 > - Previously collected data stays in your workspace in old table RetinaNetworkFlowLogs.
 > - After re-enabling, allow a short delay before new data appears in new table ContainerNetworkLog.
 

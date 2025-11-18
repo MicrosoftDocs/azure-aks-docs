@@ -13,39 +13,53 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 # Set up container network logs with Advanced Container Networking Services (preview)
 
 > [!IMPORTANT]
-> **Component Renaming (Starting November 11, 2025)**  
+> Component renaming (starting November 11, 2025)
+>
 > We are renaming components in the Container Network Logs feature to improve clarity and consistency:
 >
-> **What's Changing**
+> What's changing
+>
 > - **CRD**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
 > - **CLI flag**: `--enable-retinanetworkflowlog` → `--enable-container-network-logs`
 > - **Log Analytics table**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
 > 
-> **Action Items for Existing Users to Enable New Naming**
+> Action items for existing users to enable new naming
+>
 > 1. **Update Azure CLI** (MUST - First step!):
+>
 >    ```bash
 >    az upgrade
 >    ```
+>
 > 2. **Update Preview CLI Extension** (MUST):
+>
 >    ```bash
 >    az extension update --name aks-preview
 >    ```
+>
 > 3. **Disable Monitoring**:
+>
 >    ```bash
 >    az aks disable-addons -a monitoring -n <cluster-name> -g <resource-group>
 >    ```
+>
 > 4. **Re-enable Monitoring**:
+>
 >    ```bash
 >    az aks enable-addons -a monitoring --enable-high-log-scale-mode -g <resource-group> -n <cluster-name>
 >    ```
+>
 > 5. **Re-enable ACNS Container Network Logs**:
+>
 >    ```bash
 >    az aks update --enable-acns --enable-container-network-logs -g <resource-group> -n <cluster-name>
 >    ```
+>
 > 6. **Apply new ContainerNetworkLog CRD**: Apply your updated CRD configuration with the new naming.
+>
 > 7. **Reimport Grafana Dashboards**: Import the updated dashboards to reflect the new table names.
 >
-> **Notes**
+> [!NOTE]
 > - Previously collected data stays in your workspace in old table RetinaNetworkFlowLogs.
 > - After re-enabling, allow a short delay before new data appears in new table ContainerNetworkLog.
 
@@ -481,21 +495,21 @@ Ensure that your Managed Grafana workspace can access and search all monitoring 
 
 **Use case 2**: If you're not a subscription Owner or User Access Administrator, or if your Log Analytics and Managed Grafana workspaces are in different subscriptions, Grafana can't access Log Analytics and the subscription. The Grafana workspace must have the Monitoring Reader role in the relevant subscription to access prebuilt Grafana dashboards. In this scenario, complete these steps to provide access:
 
-1. In your Managed Grafana workspace, go to **Settings** > **Identity**.
+   1. In your Managed Grafana workspace, go to **Settings** > **Identity**.
 
-   :::image type="content" source="./media/advanced-container-networking-services/grafana-identity.png" alt-text="Screenshot of the identity option in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-identity.png":::
+      :::image type="content" source="./media/advanced-container-networking-services/grafana-identity.png" alt-text="Screenshot of the identity option in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-identity.png":::
 
-1. Select **Azure role assignments** > **Add role assignments**.
+   1. Select **Azure role assignments** > **Add role assignments**.
 
-   :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in a Grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
+      :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in a Grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
 
-1. For **Scope**, enter **Subscription**. Select your subscription. Set **Role** to **Monitoring Reader**, and then select **Save**.
+   1. For **Scope**, enter **Subscription**. Select your subscription. Set **Role** to **Monitoring Reader**, and then select **Save**.
   
-    :::image type="content" source="./media/advanced-container-networking-services/grafana-subscription-selection.png" alt-text="Screenshot of entering subscription details in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-subscription-selection.png":::
+      :::image type="content" source="./media/advanced-container-networking-services/grafana-subscription-selection.png" alt-text="Screenshot of entering subscription details in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-subscription-selection.png":::
 
-1. Verify the data source for the Managed Grafana instance. To verify the subscription for the data source for the Grafana dashboards, check the **Data source** tab in the Managed Grafana instance:
+   1. Verify the data source for the Managed Grafana instance. To verify the subscription for the data source for the Grafana dashboards, check the **Data source** tab in the Managed Grafana instance:
 
-   :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking the data source in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
+      :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking the data source in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
 
 #### Visualization in Grafana dashboards
 
