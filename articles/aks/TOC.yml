@@ -32,6 +32,8 @@
           href: tutorial-kubernetes-scale.md
         - name: 8 - Upgrade cluster
           href: tutorial-kubernetes-upgrade-cluster.md
+    - name: Create and manage AKS resources in the Azure portal with Kubernetes center
+      href: kubernetes-center-azure-portal.md
 - name: Pricing, quotas, and version support
   items:
     - name: Pricing tiers for AKS
@@ -75,6 +77,12 @@
               href: learn/quick-kubernetes-deploy-terraform.md
         - name: Create a Linux-based AKS Automatic cluster
           items:
+            - name: Use managed system node pools
+              items:
+                - name: Overview
+                  href: automatic/aks-automatic-managed-system-node-pools-about.md
+                - name: Create an AKS Automatic cluster with managed system node pools
+                  href: automatic/aks-automatic-managed-system-node-pools.md
             - name: From a code repository
               href: automatic/quick-automatic-from-code.md
             - name: Inside a managed virtual network
@@ -801,7 +809,13 @@
         - name: Microsoft Entra pod identity
           href: use-azure-ad-pod-identity.md
         - name: Pod Sandboxing
-          href: use-pod-sandboxing.md
+          items:
+            - name: Pod Sandboxing overview
+              href: concepts-pod-sandboxing.md
+            - name: Pod Sandboxing considerations
+              href: considerations-pod-sandboxing.md
+            - name: Deploy Pod Sandboxing
+              href: use-pod-sandboxing.md
         - name: Network policies
           items:
             - name: Secure pod traffic with network policies
@@ -1016,8 +1030,10 @@
               href: deploy-ray-tuning.md
         - name: AI toolchain operator (KAITO)
           items:
-            - name: Deploy an AI model
+            - name: Deploy an AI model using the Azure CLI
               href: ai-toolchain-operator.md
+            - name: Deploy an AI model using the Azure portal
+              href: ai-toolchain-operator-azure-portal.md
             - name: Fine-tune an AI model for inferencing
               href: ai-toolchain-operator-fine-tune.md
             - name: Monitor your inference service with the AI toolchain operator

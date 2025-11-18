@@ -1,100 +1,58 @@
 ---
-title: Pod Sandboxing (preview) with Azure Kubernetes Service (AKS)
-description: Learn about and deploy Pod Sandboxing (preview), also referred to as Kernel Isolation, on an Azure Kubernetes Service (AKS) cluster.
+title: Pod Sandboxing with Azure Kubernetes Service (AKS)
+description: Learn about and deploy Pod Sandboxing on an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, build-2023
-ms.date: 06/07/2023
+ms.date: 11/18/2025
 author: davidsmatlak
 ms.author: davidsmatlak
 
-# Customer intent: As a cloud administrator, I want to implement Pod Sandboxing on an Azure Kubernetes Service cluster, so that I can enhance the security of container workloads by isolating them from untrusted or potentially malicious code.
+# Customer intent: As a cloud administrator, I want to implement Pod Sandboxing on an Azure Kubernetes Service cluster, so that I can enhance the security of container workloads by isolating them from untrusted or potentially malicious code/workloads.
 ---
 
-# Pod Sandboxing (preview) with Azure Kubernetes Service (AKS)
 
-To help secure and protect your container workloads from untrusted or potentially malicious code, AKS now includes a mechanism called Pod Sandboxing (preview). Pod Sandboxing provides an isolation boundary between the container application and the shared kernel and compute resources of the container host such as CPU, memory, and networking. Pod Sandboxing complements other security measures or data protection controls with your overall architecture to help you meet regulatory, industry, or governance compliance requirements for securing sensitive information.
+# Pod Sandboxing with Azure Kubernetes Service (AKS)
+
+To help secure and protect your container workloads from untrusted or potentially malicious code, AKS now includes a mechanism called Pod Sandboxing. Pod Sandboxing provides an isolation boundary between the container application and the shared kernel and compute resources of the container host such as CPU, memory, and networking. Applications are spun up in isolated, lightweight pod virtual machines (VMs). Pod Sandboxing complements other security measures or data protection controls with your overall architecture to help you meet regulatory, industry, or governance compliance requirements for securing sensitive information.
 
 This article helps you understand this new feature, and how to implement it.
-
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 ## Prerequisites
 
 - The Azure CLI version 2.44.1 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
-- The `aks-preview` Azure CLI extension version 0.5.123 or later.
-
-- Register the `KataVMIsolationPreview` feature in your Azure subscription.
-
-- AKS supports Pod Sandboxing (preview) on version 1.24.0 and higher with all AKS network plugins.
+- AKS supports Pod Sandboxing on Kubernetes version 1.27.0 and higher.
 
 - To manage a Kubernetes cluster, use the Kubernetes command-line client [kubectl][kubectl]. Azure Cloud Shell comes with `kubectl`. You can install kubectl locally using the [az aks install-cli][az-aks-install-cmd] command.
 
-### Install the aks-preview Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-To install the aks-preview extension, run the following command:
-
-```azurecli-interactive
-az extension add --name aks-preview
-```
-
-Run the following command to update to the latest version of the extension released:
-
-```azurecli-interactive
-az extension update --name aks-preview
-```
-
-### Register the KataVMIsolationPreview feature flag
-
-Register the `KataVMIsolationPreview` feature flag by using the [az feature register][az-feature-register] command, as shown in the following example:
-
-```azurecli-interactive
-az feature register --namespace "Microsoft.ContainerService" --name "KataVMIsolationPreview"
-```
-
-It takes a few minutes for the status to show *Registered*. Verify the registration status by using the [az feature show][az-feature-show] command:
-
-```azurecli-interactive
-az feature show --namespace "Microsoft.ContainerService" --name "KataVMIsolationPreview"
-```
-
-When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [az provider register][az-provider-register] command:
-
-```azurecli-interactive
-az provider register --namespace "Microsoft.ContainerService"
-```
-
 ## Limitations
 
-The following are constraints with this preview of Pod Sandboxing (preview):
+The following are constraints applicable to Pod Sandboxing:
 
-* Kata containers may not reach the IOPS performance limits that traditional containers can reach on Azure Files and high performance local SSD.
+* Kata containers might not reach the IOPS performance limits that traditional containers can reach on Azure Files and high-performance local SSD.
+
 
 * [Microsoft Defender for Containers][defender-for-containers] doesn't support assessing Kata runtime pods.
 
-* [Kata][kata-network-limitations] host-network isn't supported.
+* [Kata][kata-network-limitations] host-network access isn't supported. It isn't possible to directly access the host networking configuration from within the VM.
+
+* CPU and memory allocation with Pod Sandboxing has other considerations compared to `runc`. Reference the memory management sections in the [considerations page][kata-considerations].
 
 ## How it works
 
-To achieve this functionality on AKS, [Kata Containers][kata-containers-overview] running on the Azure Linux container host for AKS stack delivers hardware-enforced isolation. Pod Sandboxing extends the benefits of hardware isolation such as a separate kernel for each Kata pod. Hardware isolation allocates resources for each pod and doesn't share them with other Kata Containers or namespace containers running on the same host.
+Pod Sandboxing on AKS builds on top of the open-source [Kata Containers][kata-containers-overview] project. Kata Containers running on the Azure Linux container host for AKS provides VM based isolation and a separate kernel for each pod. Pod Sandboxing allows users to allocate resources for each pod and doesn't share them with other Kata Containers or namespace containers running on the same host.
 
-The solution architecture is based on the following components:
+The solution architecture is based on the following main components:
 
 * The [Azure Linux container host for AKS][azurelinux-overview]
 * Microsoft Hyper-V Hypervisor
-* Azure-tuned Dom0 Linux Kernel
 * Open-source [Cloud-Hypervisor][cloud-hypervisor] Virtual Machine Monitor (VMM)
-* Integration with [Kata Container][kata-container] framework
+* Integration with [Kata Container][kata-container] for the runtime
 
-Deploying Pod Sandboxing using Kata Containers is similar to the standard containerd workflow to deploy containers. The deployment includes kata-runtime options that you can define in the pod template.
+Deploying Pod Sandboxing using Kata Containers is similar to the standard `containerd` workflow to deploy containers. Clusters with Pod Sandboxing enabled come with a specific runtime class that can be referenced in a pod manifest (`runtimeClassName: kata-vm-isolation`).
 
-To use this feature with a pod, the only difference is to add **runtimeClassName** *kata-mshv-vm-isolation* to the pod spec.
-
-When a pod uses the *kata-mshv-vm-isolation* runtimeClass, it creates a VM to serve as the pod sandbox to host the containers. The VM's default memory is 2 GB and the default CPU is one core if the [Container resource manifest][container-resource-manifest] (`containers[].resources.limits`) doesn't specify a limit for CPU and memory. When you specify a limit for CPU or memory in the container resource manifest, the VM has `containers[].resources.limits.cpu` with the `1` argument to use *one + xCPU*, and `containers[].resources.limits.memory` with the `2` argument to specify *2 GB + yMemory*. Containers can only use CPU and memory to the limits of the containers. The `containers[].resources.requests` are ignored in this preview while we work to reduce the CPU and memory overhead.
+To use this feature with a pod, the only difference is to add the **runtimeClassName**, `kata-vm-isolation` to the pod spec. When a pod uses the `kata-vm-isolation` runtimeClass, the hypervisor spins up a lightweight virtual machine with its own kernel, for the workload to operate in.
 
 ## Deploy new cluster
 
@@ -102,30 +60,30 @@ Perform the following steps to deploy an Azure Linux AKS cluster using the Azure
 
 1. Create an AKS cluster using the [az aks create][az-aks-create] command and specifying the following parameters:
 
-   * **--workload-runtime**: Specify *KataMshvVmIsolation* to enable the Pod Sandboxing feature on the node pool. With this parameter, these other parameters shall satisfy the following requirements. Otherwise, the command fails and reports an issue with the corresponding parameter(s).
-    * **--os-sku**: *AzureLinux*. Only the Azure Linux os-sku supports this feature in this preview release.
+   * **--workload-runtime**: Specify *KataVmIsolation* to enable the Pod Sandboxing feature on the node pool. With this parameter, these other parameters should satisfy the following requirements. Otherwise, the command fails and reports an issue with the corresponding parameters.
+    * **--os-sku**: *AzureLinux*. Only the Azure Linux os-sku supports this feature.
     * **--node-vm-size**: Any Azure VM size that is a generation 2 VM and supports nested virtualization works. For example, [Dsv3][dv3-series] VMs.
 
    The following example creates a cluster named *myAKSCluster* with one node in the *myResourceGroup*:
 
     ```azurecli-interactive
-    az aks create 
+    az aks create
         --name myAKSCluster \
         --resource-group myResourceGroup \
         --os-sku AzureLinux \
-        --workload-runtime KataMshvVmIsolation \
+        --workload-runtime KataVmIsolation \
         --node-vm-size Standard_D4s_v3 \
-        --node-count 1 \
+        --node-count 3 \
         --generate-ssh-keys
     ```
 
-2. Run the following command to get access credentials for the Kubernetes cluster. Use the [az aks get-credentials][aks-get-credentials] command and replace the values for the cluster name and the resource group name.
+1. Run the following command to get access credentials for the Kubernetes cluster. Use the [az aks get-credentials][aks-get-credentials] command and replace the values for the cluster name and the resource group name.
 
     ```azurecli-interactive
     az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
     ```
 
-3. List all Pods in all namespaces using the [kubectl get pods][kubectl-get-pods] command.
+1. List all Pods in all namespaces using the [kubectl get pods][kubectl-get-pods] command.
 
     ```bash
     kubectl get pods --all-namespaces
@@ -135,106 +93,92 @@ Perform the following steps to deploy an Azure Linux AKS cluster using the Azure
 
 To use this feature with an existing AKS cluster, the following requirements must be met:
 
-* Follow the steps to [register the KataVMIsolationPreview][register-the-katavmisolationpreview-feature-flag] feature flag.
-* Verify the cluster is running Kubernetes version 1.24.0 and higher.
+* Verify the cluster is running Kubernetes version 1.27.0 and higher.
 
-Use the following command to enable Pod Sandboxing (preview) by creating a node pool to host it.
+Use the following command to enable Pod Sandboxing by creating a node pool to host it.
 
 1. Add a node pool to your AKS cluster using the [az aks nodepool add][az-aks-nodepool-add] command. Specify the following parameters:
 
    * **--resource-group**: Enter the name of an existing resource group to create the AKS cluster in.
    * **--cluster-name**: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
    * **--name**: Enter a unique name for your clusters node pool, such as *nodepool2*.
-   * **--workload-runtime**: Specify *KataMshvVmIsolation* to enable the Pod Sandboxing feature on the node pool. Along with the `--workload-runtime` parameter, these other parameters shall satisfy the following requirements. Otherwise, the command fails and reports an issue with the corresponding parameter(s).
-     * **--os-sku**: *AzureLinux*. Only the Azure Linux os-sku supports this feature in the preview release.
+   * **--workload-runtime**: Specify *KataVmIsolation* to enable the Pod Sandboxing feature on the node pool. Along with the `--workload-runtime` parameter, these other parameters shall satisfy the following requirements. Otherwise, the command fails and reports an issue with the corresponding parameter.
+     * **--os-sku**: *AzureLinux*. Only the Azure Linux os-sku supports this feature.
      * **--node-vm-size**: Any Azure VM size that is a generation 2 VM and supports nested virtualization works. For example, [Dsv3][dv3-series] VMs.
 
    The following example adds a node pool to *myAKSCluster* with one node in *nodepool2* in the *myResourceGroup*:
 
     ```azurecli-interactive
-    az aks nodepool add --cluster-name myAKSCluster --resource-group myResourceGroup --name nodepool2 --os-sku AzureLinux --workload-runtime KataMshvVmIsolation --node-vm-size Standard_D4s_v3
+    az aks nodepool add --cluster-name myAKSCluster --resource-group myResourceGroup --name nodepool2 --os-sku AzureLinux --workload-runtime KataVmIsolation --node-vm-size Standard_D4s_v3
     ```
 
-2. Run the [az aks update][az-aks-update] command to enable pod sandboxing (preview) on the cluster.
+1. Run the [az aks update][az-aks-update] command to enable pod sandboxing on the cluster.
 
     ```azurecli-interactive
     az aks update --name myAKSCluster --resource-group myResourceGroup
     ```
+## Deploying your applications
 
-## Deploy a trusted application
+With Pod Sandboxing, you can deploy a mix of "normal" pods that don't utilize the Kata runtime alongside Kata pods that do utilize the runtime. The main difference between the two, when deploying, lies in the fact that a Kata pod has the line `runtimeClassName: kata-vm-isolation` in its spec.
 
-To demonstrate deployment of a trusted application on the shared kernel in the AKS cluster, perform the following steps.
+### Deploy an application with the Kata runtime
 
-1. Create a file named *trusted-app.yaml* to describe a trusted pod, and then paste the following manifest.
+To deploy a pod with the Kata runtime on your AKS cluster, perform the following steps.
 
-    ```yml
+1. Create a file named *kata-app.yaml* to describe your kata pod, and then paste the following manifest.
+
+    ```yaml
     kind: Pod
     apiVersion: v1
     metadata:
-      name: trusted
+      name: isolated-pod
     spec:
+      runtimeClassName: kata-vm-isolation
       containers:
-      - name: trusted
+      - name: kata
         image: mcr.microsoft.com/aks/fundamental/base-ubuntu:v0.0.11
         command: ["/bin/sh", "-ec", "while :; do echo '.'; sleep 5 ; done"]
     ```
 
-2. Deploy the Kubernetes pod by running the [kubectl apply][kubectl-apply] command and specify your *trusted-app.yaml* file:
+   The value for **runtimeClassNameSpec** is `kata-vm-isolation`.
+
+1. Deploy the Kubernetes pod by running the [kubectl apply][kubectl-apply] command and specify your *kata-app.yaml* file:
 
     ```bash
-    kubectl apply -f trusted-app.yaml
+    kubectl apply -f kata-app.yaml
     ```
 
    The output of the command resembles the following example:
 
     ```output
-    pod/trusted created
+    pod/isolated-pod created
     ```
 
-## Deploy an untrusted application
+## (Optional) Verify Kernel Isolation configuration
 
-To demonstrate the deployment of an untrusted application into the pod sandbox on the AKS cluster, perform the following steps.
+If you would like to verify the difference between the kernel of a Kata and non-Kata pod, you can spin up another workload that doesn't have the Kata runtime.
 
-1. Create a file named *untrusted-app.yaml* to describe an untrusted pod, and then paste the following manifest.
+  ```yaml
+  kind: Pod
+  apiVersion: v1
+  metadata:
+    name: normal-pod
+  spec:
+    containers:
+    - name: non-kata
+      image: mcr.microsoft.com/aks/fundamental/base-ubuntu:v0.0.11
+      command: ["/bin/sh", "-ec", "while :; do echo '.'; sleep 5 ; done"]
+  ```
 
-    ```yml
-    kind: Pod
-    apiVersion: v1
-    metadata:
-      name: untrusted
-    spec:
-      runtimeClassName: kata-mshv-vm-isolation
-      containers:
-      - name: untrusted
-        image: mcr.microsoft.com/aks/fundamental/base-ubuntu:v0.0.11
-        command: ["/bin/sh", "-ec", "while :; do echo '.'; sleep 5 ; done"]
-    ```
-
-   The value for **runtimeClassNameSpec** is `kata-mhsv-vm-isolation`.
-
-2. Deploy the Kubernetes pod by running the [kubectl apply][kubectl-apply] command and specify your *untrusted-app.yaml* file:
+1. To access a container inside the AKS cluster, start a shell session by running the [kubectl exec][kubectl-exec] command. In this example, you're accessing the container inside *kata-pod*.
 
     ```bash
-    kubectl apply -f untrusted-app.yaml
+    kubectl exec -it isolated-pod -- /bin/sh
     ```
 
-   The output of the command resembles the following example:
+   Kubectl connects to your cluster, runs `/bin/sh` inside the first container within `isolated-pod`, and forwards your terminal's input and output streams to the container's process. You can also start a shell session to the container hosting the non-Kata pod to see the differences.
 
-    ```output
-    pod/untrusted created
-    ```
-
-## Verify Kernel Isolation configuration
-
-1. To access a container inside the AKS cluster, start a shell session by running the [kubectl exec][kubectl-exec] command. In this example, you're accessing the container inside the *untrusted* pod.
-
-    ```bash
-    kubectl exec -it untrusted -- /bin/bash
-    ```
-
-   Kubectl connects to your cluster, runs `/bin/sh` inside the first container within the *untrusted* pod, and forward your terminal's input and output streams to the container's process. You can also start a shell session to the container hosting the *trusted* pod.
-
-2. After starting a shell session to the container of the *untrusted* pod, you can run commands to verify that the *untrusted* container is running in a pod sandbox. You'll notice that it has a different kernel version compared to the *trusted* container outside the sandbox.
+1. After starting a shell session to the container from *kata-pod*, you can run commands to verify that the *kata* container is running in a pod sandbox. Notice that it has a different kernel version compared to the non-Kata container outside the sandbox.
 
    To see the kernel version run the following command:
 
@@ -245,14 +189,14 @@ To demonstrate the deployment of an untrusted application into the pod sandbox o
    The following example resembles output from the pod sandbox kernel:
 
     ```output
-    root@untrusted:/# uname -r
-    5.15.48.1-8.cm2
+    [user]/# uname -r
+    6.6.96.mshv1
     ```
 
-3. Start a shell session to the container of the *trusted* pod to verify the kernel output:
+1. Start a shell session to the container from *normal-pod* to verify the kernel output:
 
     ```bash
-    kubectl exec -it trusted -- /bin/bash
+    kubectl exec -it normal-pod -- /bin/bash
     ```
 
    To see the kernel version run the following command:
@@ -261,10 +205,10 @@ To demonstrate the deployment of an untrusted application into the pod sandbox o
     uname -r
     ```
 
-   The following example resembles output from the VM that is running the *trusted* pod, which is a different kernel than the *untrusted* pod running within the pod sandbox:
+   The following example resembles output from the VM that's running *normal-pod*, which is a different kernel than the Kata pod running within the pod sandbox:
 
     ```output
-    5.15.80.mshv2-hvl1.m2
+    6.6.100.mshv1-1.azl3
     ```
 
 ## Cleanup
@@ -275,15 +219,17 @@ When you're finished evaluating this feature, to avoid Azure charges, clean up y
 az aks delete --resource-group myResourceGroup --name myAKSCluster
 ```
 
-If you enabled Pod Sandboxing (preview) on an existing cluster, you can remove the pod(s) using the [kubectl delete pod][kubectl-delete-pod] command.
+If you deployed Pod Sandboxing on an existing cluster, you can remove the pods using the [kubectl delete pod][kubectl-delete-pod] command.
 
 ```bash
-kubectl delete pod pod-name
+kubectl get pods
+kubectl delete pod <kata-pod-name>
 ```
 
 ## Next steps
 
-Learn more about [Azure Dedicated hosts][azure-dedicated-hosts] for nodes with your AKS cluster to use hardware isolation and control over Azure platform maintenance events.
+- Learn more about [Azure Dedicated hosts][azure-dedicated-hosts] for nodes with your AKS cluster to use hardware isolation and control over Azure platform maintenance events.
+- To further explore Pod Sandboxing isolation and explore workload scenarios, try out the [Pod Sandboxing labs][kata-labs].
 
 <!-- EXTERNAL LINKS -->
 [kata-containers-overview]: https://katacontainers.io/
@@ -297,10 +243,11 @@ Learn more about [Azure Dedicated hosts][azure-dedicated-hosts] for nodes with y
 [kata-network-limitations]: https://github.com/kata-containers/kata-containers/blob/main/docs/Limitations.md#host-network
 [cloud-hypervisor]: https://www.cloudhypervisor.org
 [kata-container]: https://katacontainers.io
+[kata-labs]: https://azure-samples.github.io/aks-labs/docs/security/pod-sandboxing-on-aks
 
 <!-- INTERNAL LINKS -->
 [install-azure-cli]: /cli/azure
-[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-register]: /cli/azure/feature#az_feature_register
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
@@ -322,4 +269,4 @@ Learn more about [Azure Dedicated hosts][azure-dedicated-hosts] for nodes with y
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [azurelinux-cluster-config]: cluster-configuration.md#azure-linux-container-host-for-aks
 [register-the-katavmisolationpreview-feature-flag]: #register-the-katavmisolationpreview-feature-flag
-
+[kata-considerations]: considerations-pod-sandboxing.md
