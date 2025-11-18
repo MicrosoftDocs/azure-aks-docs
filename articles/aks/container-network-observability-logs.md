@@ -48,9 +48,9 @@ ms.date:  11/11/2025
 > - Previously collected data stays in your workspace in old table RetinaNetworkFlowLogs.
 > - After re-enabling, allow a short delay before new data appears in new table ContainerNetworkLog.
 
-Container network logs in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) for Azure Kubernetes Service (AKS) give you deep visibility into network traffic in your AKS clusters.
+Container network logs in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) for Azure Kubernetes Service (AKS) provide deep visibility into network traffic in your AKS clusters.
 
-The logs capture essential metadata, including source and destination IP addresses, pod and service names, ports, protocols, and traffic direction for detailed insight into network behavior.
+The logs capture essential metadata, including source and destination IP addresses, pod and service names, ports, protocols, and traffic direction. This provides detailed insight into network behavior.
 
 Container network logs capture Layer 3 (IP), Layer 4 (TCP/UDP), and Layer 7 (HTTP/gRPC/Kafka) traffic to help you effectively monitor connectivity, troubleshoot, visualize network topology, and enforce security policy.
 
@@ -61,19 +61,19 @@ Choose from two modes:
 
 ## Stored logs
 
-Stored logs mode ensures continuous log generation and collection in the AKS cluster when you enable Advanced Container Networking Services and set up custom filters. Log collection is disabled by default.
+Stored logs mode ensures continuous log generation and collection in the AKS cluster when you enable Advanced Container Networking Services and set up custom filters. By default, log collection is disabled.
 
 To enable log collection, you define *custom resources* to specify the types of traffic to monitor. Examples include namespaces, pods, services, and protocols. This feature remains active until you disable it.
 
-Stored logs mode supports extended log retention, but it also supports traffic filtering. For reduced storage cost and easier analysis, you can collect and retain logs that are relevant to you.
+Stored logs mode supports extended log retention and traffic filtering. For reduced storage costs and easier analysis, you can collect and retain only the logs that are relevant to you.
 
 ### How stored logs mode works
 
 Advanced Container Networking Services uses eBPF technology with Cilium to fetch logs from nodes in your cluster. To start collecting logs, you define one or more custom resources to specify the types of traffic to monitor.
 
-Custom resources give you fine-grained control to define and capture traffic that is relevant to you. The Cilium agent running on each node collects the network traffic that matches the criteria set in the custom resources. The logs are stored in JSON format on the host, providing a structured and accessible format for further use.
+Custom resources provide fine-grained control to define and capture the traffic that is relevant to you. The Cilium agent running on each node collects network traffic that matches the criteria set in the custom resources. The logs are stored in JSON format on the host, providing a structured and accessible format for further use.
 
-Alternatively, if the Azure Monitoring add-on is enabled, agents for Container insights collect the logs from the host, apply the default throttling limits, and send them to a Log Analytics workspace. The system aggregates and stores log efficiently to give you visibility into network traffic for monitoring, troubleshooting, and helping you enforce security.
+Alternatively, if the Azure Monitoring add-on is enabled, agents for Container insights collect the logs from the host, apply the default throttling limits, and send them to a Log Analytics workspace. The system aggregates and stores logs efficiently to provide visibility into network traffic for monitoring, troubleshooting, and security enforcement.
 
 :::image type="content" source="./media/advanced-container-networking-services/how-container-network-logs-works.png" alt-text="Diagram of how container network logs work." lightbox="./media/advanced-container-networking-services/how-container-network-logs-works.png":::
 
@@ -81,21 +81,21 @@ To read more about throttling and Container insights, see the [Container insight
 
 ### Key capabilities of stored logs mode
 
-* *Customizable filters.* You can configure logging by defining custom resources of the [ContainerNetworkLog](./how-to-configure-container-network-logs.md#containernetworklog-crd-template) type. Use custom resources to apply granular filters by namespace, pod, service, port, protocol, verdict, or traffic direction (ingress or egress). The flexibility ensures precise data collection tailored to specific use cases. Only relevant traffic is logged, and storage is optimized for improved performance, compliance, and troubleshooting.
+* *Customizable filters.* You can configure logging by defining custom resources of the [ContainerNetworkLog](./how-to-configure-container-network-logs.md#containernetworklog-crd-template) type. Use custom resources to apply granular filters by namespace, pod, service, port, protocol, verdict, or traffic direction (ingress or egress). This flexibility ensures precise data collection tailored to specific use cases. Only relevant traffic is logged, and storage is optimized for improved performance, compliance, and troubleshooting.
 
 * *Log storage options.* The container network logs feature has two primary storage options: unmanaged storage and managed storage.
 
-  * **Unmanaged storage:** When a custom resource is applied to begin logs collection, network flow logs are stored locally on the host nodes at the `/var/log/acns/hubble` fixed mount location. This storage location is temporary because the node itself isn't a persistent storage solution. Also, when the log files reach a size of 50 MB, they're automatically rotated, so older logs are overwritten. This storage solution is suitable for real-time monitoring, but it doesn't support long-term storage or retention.
+  * **Unmanaged storage:** When a custom resource is applied to begin log collection, network flow logs are stored locally on the host nodes at the `/var/log/acns/hubble` fixed mount location. This storage location is temporary because the node itself isn't a persistent storage solution. When the log files reach a size of 50 MB, they're automatically rotated and older logs are overwritten. This storage solution is suitable for real-time monitoring, but it doesn't support long-term storage or retention.
   
-     For more log management capabilities, you can integrate partner logging services like an OpenTelemetry collector. Partner integrations give you flexibility to manage logs outside the Azure ecosystem and are useful if you already deployed a specific log management platform.
+     For additional log management capabilities, you can integrate partner logging services like an OpenTelemetry collector. Partner integrations provide flexibility to manage logs outside the Azure ecosystem and are useful if you've already deployed a specific log management platform.
 
-  * **Managed storage:** For long-term retention and advanced analytics, we recommend that you configure Azure monitoring in your AKS cluster to collect and store logs in a Log Analytics workspace. This setup helps ensure secure and compliant log storage. It also gives you access to powerful capabilities like anomaly detection, performance tuning, and historical data analysis. You can use historical logs to identify trends, baseline behaviors, and proactively address recurring issues.
+  * **Managed storage:** For long-term retention and advanced analytics, we recommend that you configure Azure monitoring in your AKS cluster to collect and store logs in a Log Analytics workspace. This setup ensures secure and compliant log storage. It also provides access to powerful capabilities like anomaly detection, performance tuning, and historical data analysis. You can use historical logs to identify trends, baseline behaviors, and proactively address recurring issues.
 
-    For example, you can use the managed service for Prometheus to configure alerts on both metrics and logs for real-time monitoring and to rapidly detect outliers.
+    For example, you can use the managed service for Prometheus to configure alerts on both metrics and logs for real-time monitoring and rapid detection of outliers.
 
-    You use the same workspace for log storage. You set up log storage space during onboarding. Both Analytics and Basic logs table plans are supported plans for storage for this feature. For more detailed information on table plans, see [Azure Monitor Logs](/azure/azure-monitor/logs/data-platform-logs).
+    You use the same workspace for log storage. You set up log storage space during onboarding. Both Analytics and Basic log table plans are supported for this feature. For more detailed information on table plans, see [Azure Monitor Logs](/azure/azure-monitor/logs/data-platform-logs).
 
-* *Simple visualization in Log Analytics and Grafana dashboards.* Logs and data presented in Grafana dashboards simplifies complex information, facilitates data comprehension, and helps you make decisions more quickly.
+* *Simple visualization in Log Analytics and Grafana dashboards.* Logs and data presented in Grafana dashboards simplify complex information, facilitate data comprehension, and help you make decisions more quickly.
 
 ### Logs visualization in the Azure portal
 
@@ -125,27 +125,27 @@ You can visualize, query, and analyze flow logs in the Azure portal in the Log A
 
 The Azure portal dashboards have the following major components:
 
-* *A comprehensive overview of network health.*   You see key metrics, like total flow logs, unique requests, dropped requests, and forwarded requests for quick anomaly detection and efficient troubleshooting. The dashboard categorizes statistics by protocol and behavior, including DNS dropped requests, HTTP 2xx responses, Layer 4 request and response rates, and dropped request counts. A service dependency graph visualizes application or cluster interactions, highlighting traffic flow, bottlenecks, and dependencies for performance optimization.
+* *A comprehensive overview of network health.* You see key metrics like total flow logs, unique requests, dropped requests, and forwarded requests for quick anomaly detection and efficient troubleshooting. The dashboard categorizes statistics by protocol and behavior, including DNS dropped requests, HTTP 2xx responses, Layer 4 request and response rates, and dropped request counts. A service dependency graph visualizes application or cluster interactions, highlighting traffic flow, bottlenecks, and dependencies for performance optimization.
 
   :::image type="content" source="./media/advanced-container-networking-services/flow-log-stats.png" alt-text="Screenshot of flow logs stats and a service dependency graph." lightbox="./media/advanced-container-networking-services/flow-log-stats.png":::
 
-* *Flow logs and error logs for quick analysis.*   You can filter flow logs for root-cause analysis. For example, for Domain Name System (DNS) issues, filter error logs by the DNS protocol.
+* *Flow logs and error logs for quick analysis.* You can filter flow logs for root-cause analysis. For example, to troubleshoot Domain Name System (DNS) issues, filter error logs by the DNS protocol.
 
   :::image type="content" source="./media/advanced-container-networking-services/flow-log-snapshot.png" alt-text="Screenshot of flow logs and error logs." lightbox="./media/advanced-container-networking-services/flow-log-snapshot.png":::
 
-  Separating sections of flow logs and error logs helps you more quickly analyze issues. You can quickly identify and address errors without sifting through unrelated information to improve efficiency in troubleshooting and debugging processes.
+  Separating flow logs and error logs helps you analyze issues more quickly. You can identify and address errors without sifting through unrelated information, which improves efficiency in troubleshooting and debugging processes.
 
-  Use clear labels and timestamps for each log entry to more easily pinpoint specific events or errors in the system or processes.
+  Use clear labels and timestamps for each log entry to more easily pinpoint specific events or errors in your systems or processes.
 
   :::image type="content" source="./media/advanced-container-networking-services/flow-log-filters.png" alt-text="Screenshot of available filters in the Azure portal dashboards." lightbox="./media/advanced-container-networking-services/flow-log-filters.png":::
 
-* *Top namespaces, workloads, and DNS errors.*   Network flow logs visualization is vital for monitoring and analyzing communication in an AKS cluster. It gives you insight into namespaces, workloads, and port and query usage. It helps you identify trends, detect bottlenecks, and diagnose issues. Spot significant network activity, view drop requests, and assess protocol distribution (for example, TCP versus UDP). This overview section of the dashboard supports cluster health, resource optimization, and security by detecting and displaying unusual traffic patterns.
+* *Top namespaces, workloads, and DNS errors.* Network flow log visualization is vital for monitoring and analyzing communication in an AKS cluster. It provides insight into namespaces, workloads, port usage, and query usage. It helps you identify trends, detect bottlenecks, and diagnose issues. Spot significant network activity, view dropped requests, and assess protocol distribution (for example, TCP versus UDP). This overview section of the dashboard supports cluster health, resource optimization, and security by detecting and displaying unusual traffic patterns.
 
   :::image type="content" source="./media/advanced-container-networking-services/top-namespaces.png" alt-text="Screenshot of top namespaces and pod metrics." lightbox="./media/advanced-container-networking-services/top-namespaces.png":::
 
 ## On-demand logs
 
-Advanced Container Networking Services offers on-demand capture of network flow logs. Get real-time visibility without prior configuration or persistent storage by using the Hubble CLI and the Hubble UI. This mode for getting on-demand logs is available. To learn how to set up on-demand logs storage, see [Configure the Hubble CLI and Hubble UI](./how-to-configure-container-network-logs.md#configure-on-demand-logs-mode).
+Advanced Container Networking Services offers on-demand capture of network flow logs. Get real-time visibility without prior configuration or persistent storage by using the Hubble CLI and the Hubble UI. This on-demand logs mode is available. To learn how to set up on-demand log storage, see [Configure the Hubble CLI and Hubble UI](./how-to-configure-container-network-logs.md#configure-on-demand-logs-mode).
 
 ### Hubble CLI
 
@@ -157,17 +157,17 @@ The Hubble command-line interface (CLI) provides a flexible and interactive way 
 
 The Hubble web-based interface offers an intuitive and visual platform for monitoring. With features like live traffic dashboards, flow summaries, and searchable logs, you can easily track service-to-service communication, detect anomalies, and gain insights into cluster activity.
 
-The tools in the Hubble UI provide real-time visibility and actionable insights for faster troubleshooting and improved network management.
+The Hubble UI tools provide real-time visibility and actionable insights for faster troubleshooting and improved network management.
 
 :::image type="content" source="./media/advanced-container-networking-services/hubble-UI-snapshot.png" alt-text="Screenshot of the Hubble UI." lightbox="./media/advanced-container-networking-services/hubble-UI-snapshot.png":::
 
 ## Key benefits of on-demand logs
 
-* *Faster issue resolution.* With detailed and actionable insights into network traffic, you can identify and resolve connectivity or performance issues more quickly, minimizing downtime, and disruptions.
-* *Optimized operational efficiency.* Aggregated and efficiently stored logs reduce data management overhead. Your team can focus on analysis and decision-making instead of on managing large volumes of raw data.
-* *Enhanced application reliability.* By monitoring service-to-service communication and detecting anomalies, you can proactively address potential issues, ensuring a smoother and more reliable application experience.
-* *Improved decision-making.* Visualizing network patterns in Azure Managed Grafana and applying service maps gives you clear insights into your application’s network behavior. The result is improved infrastructure planning and optimization.
-* *Cost savings.* Efficient log aggregation and customizable logging scopes reduce storage and data ingestion costs for a cost-effective solution for long-term network monitoring.
+* *Faster issue resolution.* With detailed and actionable insights into network traffic, you can identify and resolve connectivity or performance issues more quickly, minimizing downtime and disruptions.
+* *Optimized operational efficiency.* Aggregated and efficiently stored logs reduce data management overhead. Your team can focus on analysis and decision-making instead of managing large volumes of raw data.
+* *Enhanced application reliability.* By monitoring service-to-service communication and detecting anomalies, you can proactively address potential issues and ensure a smoother and more reliable application experience.
+* *Improved decision-making.* Visualizing network patterns in Azure Managed Grafana and applying service maps provide clear insights into your application's network behavior. This leads to improved infrastructure planning and optimization.
+* *Cost savings.* Efficient log aggregation and customizable logging scopes reduce storage and data ingestion costs, providing a cost-effective solution for long-term network monitoring.
 * *Streamlined compliance and security.* Persistent and comprehensive logs support audit trails, regulatory compliance, and quick identification of suspicious traffic. They help you maintain a secure and compliant environment.
 
 ## Limitations

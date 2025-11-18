@@ -61,11 +61,11 @@ By capturing container network logs, you can effectively track network traffic, 
 
 * The minimum version of the Azure CLI required to complete the steps in this article is **2.75.0**. To find your version, run `az --version`  in the Azure CLI. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-* Container network logs in stored logs mode works only for Cilium data planes.
+* Container network logs in stored logs mode work only for Cilium data planes.
 
-* Container network logs in on-demand mode works for both Cilium and non-Cilium data planes.
+* Container network logs in on-demand mode work for both Cilium and non-Cilium data planes.
 
-* If your existing cluster is <= **1.32**, upgrade the cluster to the latest available Kubernetes version.
+* If your existing cluster is version 1.32 or earlier, upgrade the cluster to the latest available Kubernetes version.
 
 * The minimum version of the `aks-preview` Azure CLI extension to complete the steps in this article is `19.0.07`.
 
@@ -169,7 +169,7 @@ az aks create \
 
 ### Configure custom resources for log filtering  
 
-To configure container network logs in stored logs mode, you must define specific custom resources to set filters for logs collection. When at least one custom resource is defined, logs are collected and stored on the host node at `/var/log/acns/hubble/events.log`.
+To configure container network logs in stored logs mode, you must define specific custom resources to set filters for log collection. When at least one custom resource is defined, logs are collected and stored on the host node at `/var/log/acns/hubble/events.log`.
 
 To configure logging, you must define and apply the `ContainerNetworkLog` type of custom resource. You set filters like namespace, pod, service, port, protocol, and verdict. Multiple custom resources can exist in a cluster simultaneously. If no custom resource is defined with nonempty filters, no logs are saved in the designated location.
 
@@ -231,8 +231,8 @@ The following table describes the fields in the custom resource definition:
 |----------------------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------|--------------|
 | `includefilters`                 | []filter | A list of filters that define network flows to include. Each filter specifies the source, destination, protocol, and other matching criteria. Include filters can't be empty and must have at least one filter. | Mandatory    |
 | `filters.name`            | String           | The name of the filter.                                                                                                                | Optional    |
-| `filters.protocol`        | []string | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`. Because it's an optional parameter, if it isn't specified, logs with all protocols are included.                                                      | Optional     |
-| `filters.verdict`         | []string | The verdict of the flow to match. Valid values are `forwarded` and `dropped`. Because it's an optional parameter, if it isn't specified, logs with all verdicts are included.                                                        | Optional     |
+| `filters.protocol`        | []string | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`. This parameter is optional. If not specified, logs with all protocols are included.                                                      | Optional     |
+| `filters.verdict`         | []string | The verdict of the flow to match. Valid values are `forwarded` and `dropped`. This parameter is optional. If not specified, logs with all verdicts are included.                                                        | Optional     |
 | `filters.from`            | Endpoint          | Specifies the source of the network flow. Can include IP addresses, label selectors, and namespace/pod pairs.                           | Optional    |
 | `Endpoint.ip`         | []string | It can be a single IP or a CIDR.                                                                                                         | Optional     |
 | `Endpoint.labelSelector` | Object           | A label selector is a mechanism to filter and query resources based on labels, so you can identify specific subsets of resources. A label selector can include two components: `matchLabels` and `matchExpressions`. Use `matchLabels` for straightforward matching by specifying a key/value pair (for example, `{"app": "frontend"}`). For more advanced criteria, use `matchExpressions`, where you define a label key, an operator (such as `In`, `NotIn`, `Exists`, or `DoesNotExist`), and an optional list of values. Ensure that the conditions in both `matchLabels` and `matchExpressions` are met, because they're logically combined by `AND`. If no conditions are specified, the selector matches all resources. To match none, leave the selector null. Carefully define your label selector to target the correct set of resources.  | Optional     |
@@ -251,7 +251,7 @@ The following table describes the fields in the custom resource definition:
   > [!TIP]
   > For a practical example of a ContainerNetworkLog custom resource configuration, see the [sample CRD in the AKS Labs documentation](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#enable-flow-logs-for-the-pets-namespace).
 
-Logs stored locally on host nodes are temporary because the host or node itself isn't a persistent storage solution. Also, logs on host nodes are rotated when their size reaches 50 MB. For longer-term storage and analysis, we recommend that you configure the Azure Monitor Agent on the cluster to collect and retain logs in the Log Analytics workspace.
+Logs stored locally on host nodes are temporary because the host or node itself isn't a persistent storage solution. Logs on host nodes are also rotated when their size reaches 50 MB. For longer-term storage and analysis, we recommend that you configure the Azure Monitor Agent on the cluster to collect and retain logs in the Log Analytics workspace.
 
 Alternatively, you can integrate a partner logging service like an OpenTelemetry collector for more log management options.
 
@@ -295,19 +295,19 @@ export RESOURCE_GROUP="<aks-resource-group>"
 
 To enable container network logs on an existing cluster:
 
-1. Check whether monitoring addons is already enabled on that cluster:
+1. Check whether monitoring add-ons are already enabled on that cluster:
 
     ```azurecli
      az aks addon list -g $RESOURCE_GROUP -n $CLUSTER_NAME
     ```
 
-2. If monitoring addons is enabled, disable monitoring addons:
+2. If monitoring add-ons are enabled, disable monitoring add-ons:
 
     ```azurecli
      az aks disable-addons -a monitoring -g $RESOURCE_GROUP -n $CLUSTER_NAME
     ```
 
-   You complete this step because monitoring addons might already be enabled, but not for high scale. For more information, see [High-scale mode](/azure/azure-monitor/containers/container-insights-high-scale).
+   Complete this step because monitoring add-ons might already be enabled, but not for high scale. For more information, see [High-scale mode](/azure/azure-monitor/containers/container-insights-high-scale).
 
 3. Set Azure Monitor to `enable-high-log-scale-mode`:
 
@@ -422,7 +422,7 @@ Check which custom resource definitions are installed for flow logs:
 ```azurecli
    k get containernetworklog
 ```
-it will list all the `ContainerNetworkLog` custom resources created in the cluster.
+This command lists all the `ContainerNetworkLog` custom resources created in the cluster.
 
 Validate that the `ContainerNetworkLog` custom resource is applied:
 
@@ -450,13 +450,13 @@ Status:
   State:      CONFIGURED
   Timestamp:  2025-05-01T11:24:48Z
 ```
-User can apply multiple `ContainerNetworkLog` custom resources in the cluster. Each custom resource will have its own status.
+Users can apply multiple `ContainerNetworkLog` custom resources in the cluster. Each custom resource has its own status.
 
 ### Querying Container Network Flow Logs in Log Analytics dashboard
 
-Since Container Network Flow Logs are enabled with Log Analytics workspace, we have access to historical logs that allow us to analyze network traffic patterns over time. We can query these logs using the `RetinaNetworkFlowLogs` table to perform detailed forensic analysis and troubleshooting.
+When Container Network Flow Logs are enabled with a Log Analytics workspace, you have access to historical logs that allow you to analyze network traffic patterns over time. You can query these logs using the `ContainerNetworkLog` table to perform detailed forensic analysis and troubleshooting.
 
-Customers can use Kusto Query Language (KQL) for analyzing network data in Log Analytics. This historical data is invaluable for understanding network behavior patterns, identifying security incidents, troubleshooting connectivity issues, and performing root cause analysis over extended periods. The ability to correlate network events across time helps in detecting intermittent issues and understanding traffic flows that may not be apparent in real-time monitoring.
+Customers can use Kusto Query Language (KQL) to analyze network data in Log Analytics. This historical data is invaluable for understanding network behavior patterns, identifying security incidents, troubleshooting connectivity issues, and performing root cause analysis over extended periods. The ability to correlate network events across time helps detect intermittent issues and understand traffic flows that may not be apparent in real-time monitoring.
 
 To see sample queries that can be applied for troubleshooting connectivity issues, refer to the [progressive diagnosis using flow logs](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#progressive-diagnosis-using-flow-logs) in the AKS Labs documentation.
 
@@ -479,7 +479,7 @@ Ensure that your Managed Grafana workspace can access and search all monitoring 
 
 **Use case 1**: If you're a subscription Owner or a User Access Administrator, when a Managed Grafana workspace is created, it comes with the Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources in the subscription. The new Managed Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources and view any logs stored in Log Analytics workspaces in the subscription.
 
-**Use case 2**:  If you're not a subscription Owner or User Access Administrator, or if your Log Analytics and Managed Garfana workspace are in different subscriptions, Grafana can't access Log Analytics and the subscription. The Grafana workspace must have the Monitoring Reader role in the relevant subscription to access to prebuilt Grafana dashboards. In this scenario, complete these steps to provide access:
+**Use case 2**: If you're not a subscription Owner or User Access Administrator, or if your Log Analytics and Managed Grafana workspaces are in different subscriptions, Grafana can't access Log Analytics and the subscription. The Grafana workspace must have the Monitoring Reader role in the relevant subscription to access prebuilt Grafana dashboards. In this scenario, complete these steps to provide access:
 
 1. In your Managed Grafana workspace, go to **Settings** > **Identity**.
 
@@ -499,13 +499,16 @@ Ensure that your Managed Grafana workspace can access and search all monitoring 
 
 #### Visualization in Grafana dashboards
 
-Azure Monitor dashboards with Grafana enable you to use Grafana's query, transformation, and visualization capability on metrics and logs collected in Azure Monitor. you can use this option as an alternative to visualize container network flow logs.
-1.  Navigate to left pane of the kubernetes cluster in the Azure portal.
-1.  Select **Dashboards with Grafana (Preview)**.
-1.  Browse the list of available dashboards in the Azure Monitor or Azure Managed Prometheus listings.
-1.  Select a dashboard, for example **Azure | Insights | Containers | Networking | Flow Logs**.You can visualize container network flow logs for analysis by using two prebuilt Grafana dashboards. You can access the dashboards either through Azure Managed Grafana or in the Azure portal.
+Azure Monitor dashboards with Grafana enable you to use Grafana's query, transformation, and visualization capabilities on metrics and logs collected in Azure Monitor. You can use this option as an alternative to visualize container network flow logs.
 
-1. To simplify log analysis, we provide preconfigured two Azure Managed Grafana dashboards:
+1. Navigate to the left pane of the Kubernetes cluster in the Azure portal.
+1. Select **Dashboards with Grafana (Preview)**.
+1. Browse the list of available dashboards in the Azure Monitor or Azure Managed Prometheus listings.
+1. Select a dashboard, for example **Azure | Insights | Containers | Networking | Flow Logs**.
+
+You can visualize container network flow logs for analysis by using two prebuilt Grafana dashboards. You can access the dashboards either through Azure Managed Grafana or in the Azure portal.
+
+To simplify log analysis, we provide two preconfigured Azure Managed Grafana dashboards:
 
     * Go to **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs**. This dashboard provides visualizations in which AKS workloads communicate with each other, including network requests, responses, drops, and errors. Currently, you must use [ID 23155](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//) to import these dashboards.
 
@@ -525,9 +528,9 @@ To proceed, you must have an AKS cluster with [Advanced Container Networking Ser
 
 The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features. The features include:
 
-* **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability).
+* **Container Network Observability:** Provides insights into your network traffic. To learn more, visit [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability).
 
-* **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
+* **Container Network Security:** Offers security features like FQDN filtering. To learn more, visit [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
 #### [Cilium](#tab/cilium)
 
