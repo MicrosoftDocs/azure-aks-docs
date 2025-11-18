@@ -117,7 +117,7 @@ You can visualize, query, and analyze flow logs in the Azure portal in the Log A
 
     :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of a Flow Logs (External) Grafana dashboard in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
 
-    For more information, see [Set up Azure Managed Grafana with Advanced Container Networking Services](./how-to-configure-container-network-logs.md#visualization-by-using-azure-managed-grafana).
+    For more information, see [Set up Azure Managed Grafana with Advanced Container Networking Services](./how-to-configure-container-network-logs.md#visualization-in-grafana-dashboards).
 
 * Access the flow logs in the Azure portal via the **Dashboards with Grafana** option.
 

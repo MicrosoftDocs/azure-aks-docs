@@ -553,7 +553,7 @@ az aks create \
     --network-dataplane cilium \
     --node-count 2 \
     --pod-cidr 192.168.0.0/16 \
-    --kubernetes-version 1.33.0 \
+    --kubernetes-version 1.33 \
     --enable-acns
 ```
 
@@ -577,6 +577,8 @@ az aks create \
     --pod-cidr 192.168.0.0/16 \
     --enable-acns
 ```
+
+---
 
 ### Enable Advanced Container Networking Services on an existing cluster
 
