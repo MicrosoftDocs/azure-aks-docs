@@ -65,7 +65,7 @@ By capturing container network logs, you can effectively track network traffic, 
 
 * Container network logs in on-demand mode work for both Cilium and non-Cilium data planes.
 
-* If your existing cluster is version 1.32 or earlier, upgrade the cluster to the latest available Kubernetes version.
+* If your existing cluster is version 1.33  or earlier, upgrade the cluster to the latest available Kubernetes version.
 
 * The minimum version of the `aks-preview` Azure CLI extension to complete the steps in this article is `19.0.07`.
 
@@ -163,7 +163,7 @@ az aks create \
     --network-dataplane cilium \
     --node-count 2 \
     --pod-cidr 192.168.0.0/16 \
-    --kubernetes-version 1.32 \
+    --kubernetes-version 1.33 or later \
     --enable-acns
 ```
 
@@ -510,13 +510,13 @@ You can visualize container network flow logs for analysis by using two prebuilt
 
 To simplify log analysis, we provide two preconfigured Azure Managed Grafana dashboards:
 
-    * Go to **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs**. This dashboard provides visualizations in which AKS workloads communicate with each other, including network requests, responses, drops, and errors. Currently, you must use [ID 23155](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//) to import these dashboards.
+- Go to **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs**. This dashboard provides visualizations in which AKS workloads communicate with each other, including network requests, responses, drops, and errors. Currently, you must use [ID 23155](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//) to import these dashboards.
 
-      :::image type="content" source="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png" alt-text="Screenshot of Grafana dashboards in Azure Monitor." lightbox="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png" alt-text="Screenshot of Grafana dashboards in Azure Monitor." lightbox="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png":::
 
-    * Go to **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs (External Traffic)**. This dashboard provides visualizations in which AKS workloads send and receive communications from outside an AKS cluster, including network requests, responses, drops, and errors. Use [ID 23156](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic//).
-
-     :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of a flow log (external) Grafana dashboard in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
+- Go to **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs (External Traffic)**. This dashboard provides visualizations in which AKS workloads send and receive communications from outside an AKS cluster, including network requests, responses, drops, and errors. Use [ID 23156](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic//).
+     
+    :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of a flow log (external) Grafana dashboard in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
 
 For more information about how to use this dashboard, see the [overview of container network logs](container-network-observability-logs.md).
 
@@ -956,9 +956,9 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
     `Flow logs requires '--enable-acns', advanced networking to be enabled, and the monitoring addon to be enabled.`
 
-* If the cluster Kubernetes version is earlier than version 1.32.0, trying to run `--enable-container-network-logs` results in an error  message:
+* If the cluster Kubernetes version is earlier than version 1.33.0, trying to run `--enable-container-network-logs` results in an error  message:
 
-    `The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.32.0 or later.`
+    `The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.33.0 or later.`
 
     where `%s` is your Kubernetes version.
 

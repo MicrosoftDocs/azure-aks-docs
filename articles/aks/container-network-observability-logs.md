@@ -161,7 +161,7 @@ The Hubble UI tools provide real-time visibility and actionable insights for fas
 
 :::image type="content" source="./media/advanced-container-networking-services/hubble-UI-snapshot.png" alt-text="Screenshot of the Hubble UI." lightbox="./media/advanced-container-networking-services/hubble-UI-snapshot.png":::
 
-## Key benefits of on-demand logs
+### Key benefits of on-demand logs
 
 * *Faster issue resolution.* With detailed and actionable insights into network traffic, you can identify and resolve connectivity or performance issues more quickly, minimizing downtime and disruptions.
 * *Optimized operational efficiency.* Aggregated and efficiently stored logs reduce data management overhead. Your team can focus on analysis and decision-making instead of managing large volumes of raw data.
