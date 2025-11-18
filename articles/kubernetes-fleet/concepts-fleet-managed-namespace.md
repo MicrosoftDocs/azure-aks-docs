@@ -91,6 +91,8 @@ For example, a developer in `team-A` which owns the `team-A` managed namespace w
 > [!IMPORTANT]
 > When you assign these RBAC roles at a managed namespace scope, access is granted to any unmanaged Kubernetes namespaces on member clusters with the same name, regardless of whether they were placed by the managed namespace.
 
+> [!NOTE]
+> In preview, custom resources are not supported for these roles.
 ## Next steps
 
 - Learn how to [create and use a multi-cluster managed namespace](./howto-managed-namespaces.md).
