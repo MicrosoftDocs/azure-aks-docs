@@ -253,7 +253,7 @@ The following table outlines the key differences and limitations of using Azure 
 | Option | Azure Cloud Shell | Azure Bastion (preview) |
 |--------|-------------------|--------------------------|
 | Key differences | • Best for ad-hoc or infrequent use. <br> • Cost-effective, browser-based access. <br> • Comes with preinstalled tools like `az cli` and `kubectl`. | • Persistent, long-running access. <br> • Suited for managing multiple clusters. <br> • Use your own native client tooling. |
-| Limitations | • Not supported with AKS Automatic clusters or clusters with network resource group (NRG) lockdown. <br> • You can't have multiple Cloud Shell sessions in different VNets at the same time. | • Not supported with AKS Automatic clusters or clusters with NRG lockdown. <br> • Not supported when public FQDN is disabled on the cluster. |
+| Limitations | • Not supported with AKS Automatic clusters or clusters with network resource group (NRG) lockdown. <br> • You can't have multiple Cloud Shell sessions in different VNets at the same time. | • Not supported with AKS Automatic clusters or clusters with NRG lockdown.|
 
 ## Connect via Azure Cloud Shell
 
