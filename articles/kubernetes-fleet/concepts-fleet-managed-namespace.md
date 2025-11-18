@@ -20,7 +20,7 @@ This article provides a conceptual overview of multi-cluster managed namespaces.
 
 With multi-cluster managed namespaces on targeted member clusters, platform administrators can define resource quotas, network policies, labels, annotations, and control access to namespace resources. Fleet Manager then automatically places the namespace and its associated resources on the designated member clusters. This extends the capability of AKS managed namespaces, which provide a way to logically isolate workloads within a single cluster. 
 
-If the platform administrator specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object, with a [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type) placement policy, to propagate the namespace to the selected member clusters. 
+If the platform administrator specifies member clusters during namespace creation or update, the managed namespace generates a read-only Cluster Resource Placement (CRP) object, with a [PickFixed](./concepts-resource-propagation.md#pickfixed-placement-type) placement policy, to propagate the namespace to the selected member clusters. This CRP will have the **same** name as the managed namespace.
 
 Administrators can also control two key behaviors: 
 * Adoption Policy: How conflicts are resolved when a managed namespace is placed on a member cluster that already has an unmanaged namespace with the same name
@@ -88,6 +88,8 @@ To control access to a managed namespace on member clusters, managed namespaces 
 
 For example, a developer in `team-A` which owns the `team-A` managed namespace would need to read and write Kubernetes resources in the namespace on the hub cluster. They would also need to read objects in the `team-A` namespace on the member clusters which it exists on. Consequently, the platform administrator would assign them **Azure Kubernetes Fleet Manager RBAC Writer** at the fleet scope and **Azure Kubernetes Fleet Manager RBAC Reader for Member Clusters** at the managed namespace scope for these respective requirements.
 
+> [!IMPORTANT]
+> When you assign these RBAC roles at a managed namespace scope, access is granted to any unmanaged Kubernetes namespaces on member clusters with the same name, regardless of whether they were placed by the managed namespace.
 
 ## Next steps
 
