@@ -20,7 +20,7 @@ This article guides you through deploying an application using AKS desktop, enab
 
 - You need an Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account][Azure account].
 - You must have an AKS cluster available through the Azure portal or an Azure Container Registry with your application image that you want to deploy.
-- Your AKS cluster must have a namespace for use.
+- The [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) downloaded.
 - [Install AKS desktop][install AKS desktop]. AKS desktop supports the following operating systems:
 
   - Windows
@@ -29,7 +29,7 @@ This article guides you through deploying an application using AKS desktop, enab
 
   - Mac
 
-- If you decide to create an AKS managed project, your cluster must be Microsoft Entra ID authenticated. You can run the following command on an existing cluster to perform this action. You can also add multiple admin groups by adding `ObjectID_1,ObjectID_2,...`:
+- If you decide to create an AKS managed project, your cluster must be Microsoft Entra ID authenticated. We reccomend you use AKS Automatic for your cluster SKU in AKS desktop as Microsoft Entra ID comes standard. You can run the following command on an existing cluster to perform this action. You can also add multiple admin groups by adding `ObjectID_1,ObjectID_2,...`:
 
   ```azurecli
   az aks update --resource-group YourResourceGroupName --name YourManagedClusterName --enable-aad --aad-admin-group-object-ids <ObjectID_1> --aad-tenant-id <TenantID>
@@ -37,19 +37,19 @@ This article guides you through deploying an application using AKS desktop, enab
 
 ## Sign into your account
 
-The first time you open AKS desktop, you need to sign into your Azure account. To sign in, follow these steps:
+The first time you open AKS desktop, you need to sign into your Azure account. Signing in allows you to see AKS clusters and Projects that you have access to. To sign in, follow these steps:
 
 1. In the left pane, select **Home**, then select **Sign in with Azure**.
 1. Select the account that you want to use.
 
 Once signed in, you have the ability to add clusters that you have access to into AKS desktop.
 
-## Add a cluster to AKS desktop (Preview)
+## Cluster Management: Add a cluster to AKS desktop
 
 > [!NOTE]
 > The recommendation is to use an AKS Automatic cluster when using AKS desktop. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
 
-When you add a cluster, you're given two options to add a cluster to AKS desktop. The available options are:
+When you sign in, you're given two options to add a cluster to AKS desktop. The available options are:
 
 - From your Azure subscription
 - Uploading a KubeConfig file
