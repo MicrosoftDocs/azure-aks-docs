@@ -73,7 +73,7 @@ By capturing container network logs, you can effectively track network traffic, 
 
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-* The minimum version of the Azure CLI required to complete the steps in this article is **2.75.0**. To find your version, run `az --version`  in the Azure CLI. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+* The minimum version of the Azure CLI required to complete the steps in this article is 2.75.0. To find your version, run `az --version`  in the Azure CLI. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 * Container network logs in stored logs mode work only for Cilium data planes.
 
@@ -168,7 +168,7 @@ az aks create \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
     --generate-ssh-keys \
-    --location <location> \
+    --location $LOCATION \
     --max-pods 250 \
     --network-plugin azure \
     --network-plugin-mode overlay \
@@ -432,7 +432,7 @@ Expected output:
 Check which custom resource definitions are installed for flow logs:
 
 ```azurecli
-   k get containernetworklog
+   kubectl get containernetworklog
 ```
 This command lists all the `ContainerNetworkLog` custom resources created in the cluster.
 
