@@ -432,14 +432,14 @@ Expected output:
 Check which custom resource definitions are installed for flow logs:
 
 ```azurecli
-   kubectl get containernetworklog
+  kubectl get containernetworklog 
 ```
 This command lists all the `ContainerNetworkLog` custom resources created in the cluster.
 
 Validate that the `ContainerNetworkLog` custom resource is applied:
 
 ```azurecli
-   kubectl describe containernetworklogs <cr-name>
+   k describe containernetworklog <cr-name>
 ```
 
 Expect to see a `Spec` node that contains `Include filters` and a `Status` node. The value for `Status` > `State` should be `CONFIGURED` (not `FAILED`).
