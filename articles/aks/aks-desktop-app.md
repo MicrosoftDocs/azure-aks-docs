@@ -20,7 +20,7 @@ This article guides you through deploying an application using AKS desktop, enab
 
 - You need an Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account][Azure account].
 - You must have an AKS cluster available through the Azure portal or an Azure Container Registry with your application image that you want to deploy.
-- The [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) downloaded.
+- The [Azure CLI](/cli/azure/install-azure-cli?view=azure-cli-latest) must be installed on your device.
 - [Install AKS desktop][install AKS desktop]. AKS desktop supports the following operating systems:
 
   - Windows
@@ -29,7 +29,7 @@ This article guides you through deploying an application using AKS desktop, enab
 
   - Mac
 
-- If you decide to create an AKS managed project, your cluster must be Microsoft Entra ID authenticated. We reccomend you use AKS Automatic for your cluster SKU in AKS desktop as Microsoft Entra ID comes standard. You can run the following command on an existing cluster to perform this action. You can also add multiple admin groups by adding `ObjectID_1,ObjectID_2,...`:
+- If you decide to create an AKS managed project, your cluster must be Microsoft Entra ID authenticated. We recommend you use AKS Automatic for your cluster SKU in AKS desktop as Microsoft Entra ID comes standard. You can run the following command on an existing cluster to perform this action. You can also add multiple admin groups by adding `ObjectID_1,ObjectID_2,...`:
 
   ```azurecli
   az aks update --resource-group YourResourceGroupName --name YourManagedClusterName --enable-aad --aad-admin-group-object-ids <ObjectID_1> --aad-tenant-id <TenantID>
@@ -44,7 +44,7 @@ The first time you open AKS desktop, you need to sign into your Azure account. S
 
 Once signed in, you have the ability to add clusters that you have access to into AKS desktop.
 
-## Cluster Management: Add a cluster to AKS desktop
+## Add a cluster
 
 > [!NOTE]
 > The recommendation is to use an AKS Automatic cluster when using AKS desktop. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
@@ -89,7 +89,7 @@ If you followed the Azure method first, follow these steps:
 
 ---
 
-## Add additional clusters to AKS desktop (Preview)
+## Add additional clusters
 
 1. In the bottom left pane, select **Add Cluster**. You can choose to load from your kubeconfig file or from Azure.
 1. Using the Azure method, under **Providers**, select **Add**.
@@ -101,7 +101,7 @@ If you followed the Azure method first, follow these steps:
 
    ![A video demonstrating how to add additional clusters to the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-add-additional-clusters.gif)
 
-## Remove a cluster from AKS desktop (Preview)
+## Remove a cluster
 
 To delete a cluster from AKS desktop, follow these steps:
 
@@ -195,7 +195,7 @@ Once you create your first project, AKS desktop places you directly into the new
 1. Under **Advanced**, choose which settings you'd like to apply to your app, then select **Next**.
 1. Review your app deployment configuration. Select **Deploy**, then select **Close**.
 
-   ![A video demonstrating how to deploy a new application into the AKS desktop app project.](media/aks-desktop-app/aks-desktop-app-deploy-application.gif)
+   ![A video demonstrating how to deploy a new application into the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-deploy-application.gif)
 
 # [Kubernetes YAML](#tab/kubernetes-yaml)
 
@@ -230,7 +230,6 @@ You can provide feedback by visiting the [official AKS desktop GitHub repository
 - Learn more about [AKS desktop overview](aks-desktop-overview.md)
 - Learn how to [Get started with AKS desktop (Preview)](aks-desktop-permissions.md)
 - Explore [AKS Automatic clusters](auto-upgrade-cluster.md)
-
 
 <!-- LINKS - external -->
 [AKS desktop GitHub repository]: https://github.com/Azure/aks-desktop
