@@ -94,13 +94,6 @@ az extension add --name aks-preview
 az extension update --name aks-preview
 ```
 
-## Configure stored logs mode for container network logs
-
-This section provides two paths for setting up container network logs based on your current situation:
-
-- **[New clusters](#new-clusters)**: Complete setup for new AKS clusters 
-- **[Existing clusters](#existing-clusters)**: Enable container network logs on existing AKS clusters
-
 ### Register the AdvancedNetworkingFlowLogsPreview feature flag
 
 First, register the AdvancedNetworkingFlowLogsPreview feature flag by using the  [`az feature register`](/cli/azure/feature#az-feature-register) command:
@@ -126,13 +119,18 @@ When the feature shows **Registered**, refresh the registration of the `Microsof
 * If the log table plan is set to Basic logs, the prebuilt Grafana dashboards don't function as expected.
 * The Auxiliary logs table plan isn't supported.
 
-### Deployment methods
 
+## Configure stored logs mode for container network logs
+
+### Deployment methods
 You can onboard to container network logs using different deployment methods:
 
 # [Azure CLI](#tab/cli)
 
-The Azure CLI method is described in the sections below for both [new clusters](#new-clusters) and [existing clusters](#existing-clusters).
+This section provides two paths for setting up container network logs based on your current situation:
+
+- **[New clusters](#new-clusters)**: Complete setup for new AKS clusters 
+- **[Existing clusters](#existing-clusters)**: Enable container network logs on existing AKS clusters
 
 # [ARM Template](#tab/arm)
 
@@ -341,7 +339,7 @@ To enable container network logs on an existing cluster:
          -n $CLUSTER_NAME
     ```
 
-5. Apply the same [ContainerNetworkLog custom resource](#containernetworklog-crd-template) as described in the new cluster section to start collecting logs.
+5. Create the CRD as per the [ContainerNetworkLog template](#containernetworklog-crd-template) mentioned above and apply it to start log collection in log analytics workspace.
 
    > [!TIP]
    > For a practical example of a ContainerNetworkLog custom resource configuration, see the [sample CRD in the AKS Labs documentation](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#enable-flow-logs-for-the-pets-namespace).
@@ -393,7 +391,7 @@ To capture Layer 7 (L7) flow data and DNS errors/flows in your container network
 
   For more information, see [Configure a Layer 7 policy](./how-to-apply-l7-policies.md) and [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md)
 
-## Common post-setup steps
+## Common post-setup steps to verify configuration
 
 The following steps apply to both new and existing cluster setups.
 
@@ -475,7 +473,7 @@ Customers can use Kusto Query Language (KQL) to analyze network data in Log Anal
 To see sample queries that can be applied for troubleshooting connectivity issues, refer to the [progressive diagnosis using flow logs](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#progressive-diagnosis-using-flow-logs) in the AKS Labs documentation.
 
 ### Azure Managed Grafana
-You can access Azure Monitor dashboards with Grafana through the Azure portal from Azure Monitor or Azure Kubernetes Services.
+You can access prebuilt Grafana dashboards through the Azure portal. Navigate to either the Azure Monitor resource or your Azure Kubernetes Service (AKS) cluster to view and interact with these dashboards. but before that: 
 1. Make sure that the Azure logs pods are running:
 
     ```azurecli
@@ -489,7 +487,7 @@ You can access Azure Monitor dashboards with Grafana through the Azure portal fr
     ama-logs-fd568                                   3/3     Running   1 (40m ago)   44m
     ama-logs-rs-65bdd98f75-hqnd2                     2/2     Running   1 (43m ago)   22h
     
-Ensure that your Managed Grafana workspace can access and search all monitoring data in the relevant subscription. This step is required to access prebuilt dashboards for network flow logs.  
+2. Ensure that your Managed Grafana workspace can access and search all monitoring data in the relevant subscription. This step is required to access prebuilt dashboards for network flow logs.  
 
 **Use case 1**: If you're a subscription Owner or a User Access Administrator, when a Managed Grafana workspace is created, it comes with the Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources in the subscription. The new Managed Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources and view any logs stored in Log Analytics workspaces in the subscription.
 
