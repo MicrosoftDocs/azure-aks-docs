@@ -179,7 +179,7 @@ With the workload definition deployed, it's now possible to test the intelligent
 
 ## Test workload placement policies
 
-You can use the following samples, along with the [conceptual documentation](./concepts-resource-propagation.md#introduce-clusterresourceplacement-api), as guides to writing your own `ClusterResourcePlacement` object.
+You can use the following samples, along with the [conceptual documentation](./concepts-resource-propagation.md#using-clusterresourceplacement-to-deploy-cluster-scoped-resources), as guides to writing your own `ClusterResourcePlacement` object.
   
 > [!NOTE]
 > If you want to try out each sample policy, be sure to delete the previous `ClusterResourcePlacement` object.

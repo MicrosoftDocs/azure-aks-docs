@@ -1,5 +1,5 @@
 ---
-title: "Kubernetes resource placement from hub cluster to member clusters"
+title: "Using ClusterResourcePlacement to deploy cluster-scoped resources"
 description: This article describes the concept of Kubernetes resource propagation from hub cluster to member clusters.
 ms.date: 06/16/2025
 author: sjwaight
@@ -9,7 +9,7 @@ ms.topic: concept-article
 # Customer intent: As a platform admin, I want to propagate Kubernetes resources from a hub cluster to multiple member clusters, so that I can manage workloads and access control across diverse environments.
 ---
 
-# Introduce ClusterResourcePlacement API
+# Using ClusterResourcePlacement to deploy cluster-scoped resources
 
 This article describes the ClusterResourcePlacement API, which enables [resource placement from hub clusters to member clusters](./concepts-multi-cluster-workload-management.md) using Azure Kubernetes Fleet Manager.
 
@@ -31,7 +31,9 @@ Fleet Manager supports these custom resources based on the [CNCF project KubeFle
 
 ## ClusterResourcePlacement API overview
 
-A `ClusterResourcePlacement` object is used to tell the fleet scheduler how to place a given set of cluster-scoped objects from the fleet hub cluster onto member clusters. Namespace-scoped objects like Deployments, StatefulSets, DaemonSets, ConfigMaps, Secrets, and PersistentVolumeClaims are included when their containing namespace is selected.
+A `ClusterResourcePlacement` object is used to tell the fleet scheduler how to place a given set of cluster-scoped objects from the fleet hub cluster onto member clusters. When selecting a namespace, all namespace-scoped objects within it—like Deployments, StatefulSets, DaemonSets, ConfigMaps, Secrets, and PersistentVolumeClaims—are included and propagated together.
+
+For scenarios requiring fine-grained control over individual namespace-scoped resources within a namespace, see [`ResourcePlacement`](./concepts-namespace-scoped-resource-propagation.md), which enables selective propagation of specific resources rather than entire namespaces.
 
 With `ClusterResourcePlacement`, you can:
 
@@ -39,6 +41,44 @@ With `ClusterResourcePlacement`, you can:
 * Specify placement policies to select member clusters. These policies can explicitly select clusters by names, or dynamically select clusters based on cluster labels and properties. 
 * Specify rollout strategies to safely roll out any updates of the selected Kubernetes resources to multiple target clusters.
 * View the propagation progress for each target cluster.
+
+## Resource selection
+
+`ClusterResourcePlacement` supports selecting cluster-scoped resources and namespaces using resource selectors. Each resource selector can specify:
+
+* **Group, Version, Kind (GVK)**: The type of Kubernetes resource to select.
+* **Name**: The name of a specific resource.
+* **Label selectors**: Labels to match multiple resources.
+
+### Namespace selection scope (preview)
+
+> [!IMPORTANT]
+> The `selectionScope` field is available in the `placement.kubernetes-fleet.io/v1beta1` API version as a preview feature. It is not available in the `placement.kubernetes-fleet.io/v1` API.
+
+When selecting a namespace resource, you can use the `selectionScope` field to control whether to propagate only the namespace itself or the namespace and all its contents:
+
+* **Default behavior** (when `selectionScope` is not specified): Propagates the namespace and all resources within it.
+* **`NamespaceOnly`**: Propagates only the namespace object itself, without any resources within the namespace. This is useful when you want to establish namespaces across clusters while managing individual resources separately using [`ResourcePlacement`](./concepts-namespace-scoped-resource-propagation.md).
+
+The following example shows how to propagate only the namespace without its contents using the v1beta1 API:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: namespace-only-crp
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: my-app
+      version: v1
+      selectionScope: NamespaceOnly
+  policy:
+    placementType: PickAll
+```
+
+This approach enables a workflow where platform administrators use `ClusterResourcePlacement` to establish namespaces, while application teams use [`ResourcePlacement`](./concepts-namespace-scoped-resource-propagation.md) for fine-grained control over specific resources within those namespaces.
 
 ## Placement types
 
@@ -520,6 +560,7 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 ## Next steps
 
 * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
+* [Using ResourcePlacement to deploy namespace-scoped resources](./concepts-namespace-scoped-resource-propagation.md).
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).

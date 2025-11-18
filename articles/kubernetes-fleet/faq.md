@@ -137,7 +137,7 @@ az fleet updaterun show \
     --query "status.nodeImageSelection.selectedNodeImageVersions"
 ```
 
-You can also use the `View JSON` option in the Update Run Overview page in the Azure Portal to view the raw data for an update run.
+You can also use the `View JSON` option in the Update Run Overview page in the Azure portal to view the raw data for an update run.
 
 ### My update run is in a pending state for quite some time. What should I do?
 
@@ -185,9 +185,10 @@ Yes. You can edit the existing strategy to include approvals. However, existing 
 
 ### Can I select resources inside a namespace for propagation?
 
-Fleet Manager only currently supports propagating resources at the cluster and namespace level. You can't select individual resources inside a namespace for propagation.
+Yes. Fleet Manager supports both cluster-scoped and namespace-scoped resource placement:
 
-Provide [feedback](https://github.com/Azure/AKS/issues/5067) if support for intra-namespace resource placement is important for you.
+* **ClusterResourcePlacement**: Propagates cluster-scoped resources and entire namespaces (including all their contents) to member clusters. For more information, see [Using ClusterResourcePlacement to deploy cluster-scoped resources](./concepts-resource-propagation.md).
+* **ResourcePlacement**: Provides fine-grained control to select and propagate specific namespace-scoped resources (such as ConfigMaps, Secrets, Deployments) within a namespace. For more information, see [Using ResourcePlacement to deploy namespace-scoped resources](./concepts-namespace-scoped-resource-propagation.md).
 
 ## Automated Deployments FAQs
 
