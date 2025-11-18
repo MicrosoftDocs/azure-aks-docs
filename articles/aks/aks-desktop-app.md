@@ -20,7 +20,7 @@ This article guides you through deploying an application using AKS desktop, enab
 
 - You need an Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account][Azure account].
 - You must have an AKS cluster available through the Azure portal or an Azure Container Registry with your application image that you want to deploy.
-- The [Azure CLI](/cli/azure/install-azure-cli?view=azure-cli-latest) must be installed on your device.
+- The [Azure CLI](/cli/azure/install-azure-cli?view=azure-cli-latest&preserve-view=true) must be installed on your device.
 - [Install AKS desktop][install AKS desktop]. AKS desktop supports the following operating systems:
 
   - Windows
