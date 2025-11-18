@@ -99,3 +99,8 @@ You can provide feedback by visiting the [official AKS desktop GitHub repository
 - Learn how to [Deploy an application via AKS desktop (Preview)](aks-desktop-app.md)
 - Learn about [Managed namespaces (preview)](concepts-managed-namespaces.md)
 - [Use the cluster autoscaler in AKS](cluster-autoscaler.md)
+
+<!-- LINKS - external -->
+[AKS desktop GitHub repository]: https://github.com/Azure/aks-desktop
+[Azure account]: https://azure.microsoft.com/free
+[install AKS desktop]: https://github.com/Azure/aks-desktop/releases
