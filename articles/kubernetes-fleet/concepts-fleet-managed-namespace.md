@@ -88,6 +88,8 @@ To control access to a managed namespace on member clusters, managed namespaces 
 
 For example, a developer in `team-A` which owns the `team-A` managed namespace would need to read and write Kubernetes resources in the namespace on the hub cluster. They would also need to read objects in the `team-A` namespace on the member clusters which it exists on. Consequently, the platform administrator would assign them **Azure Kubernetes Fleet Manager RBAC Writer** at the fleet scope and **Azure Kubernetes Fleet Manager RBAC Reader for Member Clusters** at the managed namespace scope for these respective requirements.
 
+In preview, custom resources are **not** supported for these roles.
+
 > [!IMPORTANT]
 > When you assign these RBAC roles at a managed namespace scope, access is granted to any unmanaged Kubernetes namespaces on member clusters with the same name, regardless of whether they were placed by the managed namespace.
 
