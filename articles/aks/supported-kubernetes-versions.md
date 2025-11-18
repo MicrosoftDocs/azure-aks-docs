@@ -45,15 +45,15 @@ Check the AKS Kubernetes release calendar for upcoming version releases. To see 
 
 > [!NOTE]
 > [!NOTE]
-> AKS follows a 12-month support policy for generally available (GA) Kubernetes versions. To learn more about our Kubernetes version support policy, see the [FAQ](./supported-kubernetes-versions.md#faq). Unless an explicit date is provided, the End of Life (EOL) date is the last day of the specified month. For example, "Mar 2026" indicates March 31st, 2026.
+> AKS follows a 12-month support policy for generally available (GA) Kubernetes versions. To learn more about our Kubernetes version support policy, see the [FAQ](./supported-kubernetes-versions.md#faq). Unless an explicit date is provided, the End of Life (EOL) date is the last day of the specified month. For example, "Mar 2026" indicates March 31, 2026.
 
 For the past release history, see [Kubernetes history](https://github.com/kubernetes/kubernetes/releases).
 
 |  K8s version | Upstream release  | AKS preview  | AKS GA  | End of life | Platform support |
 |--------------|-------------------|--------------|---------|-------------|-----------------------|
 | 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Until 1.33 GA |
-| 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22nd, 2025 | Until 1.34 GA |
-| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1st, 2025 | Until 1.35 GA |
+| 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22, 2025 | Until 1.34 GA |
+| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1, 2025 | Until 1.35 GA |
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Until 1.36 GA |
 | 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Until 1.37 GA |
 | 1.34 | Aug 2025 | Oct 2025 | Nov 2025 | Nov 2026 | Until 1.38 GA |
@@ -71,8 +71,8 @@ Long-term support (LTS) needs to be enabled in order to get extended support. Yo
 | 1.27 | Apr 2023 | Jun 2023 | Jul 2023 | Jul 2024 | Jul 2025|
 | 1.28 | Aug 2023 | Sep 2023 | Nov 2023 | Jan 2025 | Feb 2026|
 | 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Apr 2026|
-| 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22nd, 2025 | Jul 2026|
-| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1st, 2025 | Nov 2026|
+| 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22, 2025 | Jul 2026|
+| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1, 2025 | Nov 2026|
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Mar 2027|
 | 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Jun 2027|
 | 1.34 | Aug 2025 | Oct 2025 | Nov 2025 | Nov 2026 | Nov 2027 |
@@ -368,7 +368,7 @@ For minor versions not supported by AKS, scaling in or out should continue to wo
 The control plane must be within a window of versions from all node pools. For details on upgrading the control plane or node pools, visit documentation on [upgrading node pools](manage-node-pools.md#upgrade-a-cluster-control-plane-with-multiple-node-pools).
 
 ### What is the allowed difference in versions between control plane and node pool?
-The [version skew policy](https://kubernetes.io/releases/version-skew-policy/) now allows a difference of upto 3 versions between control plane and agent pools. AKS follows this skew version policy change starting from version 1.28 onwards.
+The [version skew policy](https://kubernetes.io/releases/version-skew-policy/) now allows a difference of up to three versions between control plane and agent pools. AKS follows this skew version policy change starting from version 1.28 onwards.
 
 ### Can I skip multiple AKS versions during cluster upgrade?
 
@@ -379,7 +379,7 @@ If you upgrade a supported AKS cluster, Kubernetes minor versions can't be skipp
 * *1.27.x* -> *1.29.x*: not allowed.
 
 
-For control plane version upgrades, you can go upto 3 minor versions for community supported versions in sequential fashion.
+For control plane version upgrades, you can go up to three minor versions for community supported versions in sequential fashion.
 
 
 To upgrade from *1.27.x* -> *1.29.x*:
@@ -387,7 +387,7 @@ To upgrade from *1.27.x* -> *1.29.x*:
 1. Upgrade from *1.27.x* -> *1.28.x*.
 2. Upgrade from *1.28.x* -> *1.29.x*.
 
-Note starting from 1.28 version onwards, agentpool versions can be up to 3 versions older to control plane versions per [version skew policy](https://kubernetes.io/releases/version-skew-policy/). If your version is much behind the minimum supported version, you might have to do more than one control plane upgrade operation to get to the minimum supported version. For example, if your current control plane version is *1.23.x* and you intend to upgrade to a minimum supported version of *1.27.x* as an example. You might have to upgrade sequentially 4 times from *1.23.x* in order to get to *1.27.x*. Also note that Agent pool versions can be upgraded to the control plane minor version. In the previous example you can upgrade agentpool version twice, once from *1.23.x* to *1.25.x*, when the control plane version is at *1.25.x*. And then from *1.25.x* to *1.27.x*, when control plane version is at *1.27.x*. When you upgrade in-place, like control plane and agent pool together the same rules applicable to control plane upgrade applies.
+Note starting from 1.28 version onwards, agentpool versions can be up to three versions older to control plane versions per [version skew policy](https://kubernetes.io/releases/version-skew-policy/). If your version is much behind the minimum supported version, you might have to do more than one control plane upgrade operation to get to the minimum supported version. For example, if your current control plane version is *1.23.x* and you intend to upgrade to a minimum supported version of *1.27.x* as an example. You might have to upgrade sequentially four times from *1.23.x* in order to get to *1.27.x*. Also note that Agent pool versions can be upgraded to the control plane minor version. In the previous example you can upgrade agentpool version twice, once from *1.23.x* to *1.25.x*, when the control plane version is at *1.25.x*. And then from *1.25.x* to *1.27.x*, when control plane version is at *1.27.x*. When you upgrade in-place, like control plane and agent pool together the same rules applicable to control plane upgrade applies.
 
 If performing an upgrade from an _unsupported version_ the upgrade is done without any guarantee of functionality and is excluded from the service-level agreements and limited warranty. Clusters running _unsupported version_ has the flexibility of decoupling control plane upgrades with node pool upgrades. However if your version is out of date, we recommend that you re-create the cluster.
 
