@@ -14,14 +14,14 @@ ms.author: alalve
 This article guides you through deploying an application using AKS desktop, enabling you to manage your containerized workloads with an intuitive, application-centric interface.
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop).
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at the official [AKS desktop GitHub repository][AKS desktop GitHub repository].
 
 ## Prerequisites
 
-- You need an Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account](https://azure.microsoft.com/free).
+- You need an Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account][Azure account].
 - You must have an AKS cluster available through the Azure portal or an Azure Container Registry with your application image that you want to deploy.
 - Your AKS cluster must have a namespace for use.
-- [Install AKS desktop](https://github.com/Azure/aks-desktop/releases). AKS desktop supports the following operating systems:
+- [Install AKS desktop][install AKS desktop]. AKS desktop supports the following operating systems:
 
   - Windows
 
@@ -209,7 +209,7 @@ To access this information for your specific cluster, follow these steps:
 
 ## Join the community and provide feedback for AKS desktop (Preview)
 
-You can provide feedback by visiting the [official AKS desktop GitHub repository](https://github.com/Azure/aks-desktop). To provide your feedback, follow these steps:
+You can provide feedback by visiting the [official AKS desktop GitHub repository][AKS desktop GitHub repository]. To provide your feedback, follow these steps:
 
 1. Select the **Issue** button.
 1. Select **New Issue**, and select the appropriate issue.
@@ -220,3 +220,9 @@ You can provide feedback by visiting the [official AKS desktop GitHub repository
 - Learn more about [AKS desktop overview](aks-desktop-overview.md)
 - Learn how to [Get started with AKS desktop (Preview)](aks-desktop-permissions.md)
 - Explore [AKS Automatic clusters](auto-upgrade-cluster.md)
+
+
+<!-- LINKS - external -->
+[AKS desktop GitHub repository]: https://github.com/Azure/aks-desktop
+[Azure account]: https://azure.microsoft.com/free
+[install AKS desktop]: https://github.com/Azure/aks-desktop/releases
