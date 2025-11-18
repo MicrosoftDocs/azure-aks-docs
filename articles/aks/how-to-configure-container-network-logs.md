@@ -553,7 +553,7 @@ az aks create \
     --network-dataplane cilium \
     --node-count 2 \
     --pod-cidr 192.168.0.0/16 \
-    --kubernetes-version 1.29 \
+    --kubernetes-version 1.33.0 \
     --enable-acns
 ```
 
@@ -561,6 +561,7 @@ az aks create \
 
 > [!NOTE]
 > The [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature isn't available for non-Cilium clusters.
+>
 
 ```azurecli
 # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
