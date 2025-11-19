@@ -76,7 +76,7 @@ This might take 5-10 minutes to complete.
 
 ### Azure OpenAI (Recommended)
 
-- Set up an Azure Open AI resource by following the [Microsoft documentation](/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
+- Set up an Azure OpenAI resource by following the [Microsoft documentation](/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
 
 > [!NOTE]
 > For the deployment name, use the same name as the model name such as gpt-4o, gpt-4o-mini depending on the access. You can use any region where you have access and quota for the model
@@ -88,7 +88,7 @@ This might take 5-10 minutes to complete.
 
 > [!NOTE] 
 > The API version is not the model version, you can use any API version that is available and supported [here](/azure/ai-foundry/openai/api-version-lifecycle))
->  The Azure API Base refers to the Azure Open AI end point (which usually ends in openai.azure.com/), not the target URI of the deployment in Azure AI Foundry.
+>  The Azure API Base refers to the Azure OpenAI end point (which usually ends in openai.azure.com/), not the target URI of the deployment in Azure AI Foundry.
 
 
 
