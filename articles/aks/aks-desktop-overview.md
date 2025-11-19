@@ -89,7 +89,7 @@ Once you deploy an application to a Project through AKS desktop, you're greeted 
 | **Scaling** | Configure application scaling using Horizontal Pod Autoscaler (HPA) or manual settings. |
 | **Environment variables** | Manage environment variables for your application. |
 
-![The project overview screen of a cluster in the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-project-overview.png)
+[![The project overview screen of a cluster in the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-project-overview.png)](aks-desktop-app-project-overview.png#lightbox)
 
 ## Join the community and provide feedback for AKS desktop (Preview)
 
