@@ -74,15 +74,13 @@ This might take 5-10 minutes to complete.
 > [!NOTE]
 > We recommend using newer models such as GPT-4o, GPT-4o-mini, or Claude Sonnet 4.0 for better performance. Choose a model with a high context size of at least 128,000 tokens or higher.
 
-### [Azure OpenAI (recommended)]
-
 ### Azure OpenAI (Recommended)
 
-1. Set up an Azure Open AI resource by following the [Microsoft documentation](/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
+- Set up an Azure Open AI resource by following the [Microsoft documentation](/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
 
 > [!NOTE]
-> For the deployment name, please use the same name as the model name such as gpt-4o, gpt-4o-mini depending on the access. You can use any region where you have access and quota for the model
-> In the deployment, please select as high token limit per minute (TPM) as possible. We recommend upwards of 1M TPM for good performance
+> For the deployment name, use the same name as the model name such as gpt-4o, gpt-4o-mini depending on the access. You can use any region where you have access and quota for the model
+> In the deployment, select as high token limit per minute (TPM) as possible. We recommend upwards of 1M TPM for good performance
 2. [Deploy the model](/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) you plan to use in the Azure AI Foundry Portal.
 3. Once deployed, note your API base URL and API key, 
 <img width="1713" height="817" alt="image" src="https://github.com/user-attachments/assets/400021fd-5604-4cd2-9faf-407145c52669" />
@@ -95,7 +93,7 @@ This might take 5-10 minutes to complete.
 
 
 ### Other LLM providers
-We also support any OpenAI compatible model, please check the documentation of the LLM provider for instructions on how to create an account and retrieve the API key
+We also support any OpenAI compatible model, check the documentation of the LLM provider for instructions on how to create an account and retrieve the API key
 
 
 ## Initialize the agentic CLI for AKS
@@ -121,14 +119,14 @@ We also support any OpenAI compatible model, please check the documentation of t
     Enter your API key: 
     Enter value for AZURE_API_BASE:  (Hint: https://{your-custom-endpoint}.openai.azure.com/) https://test-example.openai.azure.com
     Enter value for AZURE_API_VERSION:  (Default: 2025-04-01-preview)
-    LLM configuration setup successfully.
+    LLM configuration setup sucessfully.
     ```
 
     > [!NOTE]
-    > The API key will appear as empty as you type, so make sure to use the right API key. You can also skip the `init` experience by providing the values in the config file. The Azure API Base refers to the Azure OpenAI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Azure AI Foundry. If the LLM configuration fails, please double check your API key and/or the `AZURE_API_BASE`.
+    > The API key will appear as empty as you type, so make sure to use the right API key. You can also skip the `init` experience by providing the values in the config file. The Azure API Base refers to the Azure OpenAI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Azure AI Foundry. If the LLM configuration fails, double check your API key and/or the `AZURE_API_BASE`.
 
     > [!NOTE]
-    > The `init` experience has to be sucessfully completed to be able to use the agentic CLI. Please check the config file option or the troubleshooting docs if the `init` fails
+    > The `init` experience has to be sucessfully completed to be able to use the agentic CLI. Check the config file option or the troubleshooting docs if the `init` fails
 
 ---
 
@@ -182,7 +180,7 @@ The `--model` parameter determines which LLM and provider analyzes your cluster.
 
 ### Configuration file
 
-The LLM configuration is stored in a config file through  the the `az aks agent-init` experience. If the init command doesnt work, you can still use the config file by adding the variables manually.  Please see  [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml) for an example config file. The default configuration file path can be found through the `az aks agent --help` command.
+The LLM configuration is stored in a config file through  the `az aks agent-init` experience. If the init command doesn't work, you can still use the config file by adding the variables manually.  See  [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml) for an example config file. The default configuration file path can be found through the `az aks agent --help` command.
 
 The config file currently supports the following parameters:
 
@@ -266,7 +264,7 @@ User: why is my node unhealthy
 ```
 
 > [!NOTE]
-> In the MCP server integration, please provide the name of the cluster and the resource group at the start of the agent experience. Unlike the regular mode where the cluster context is picked up automatically, the MCP server integration currently doesn't support it.
+> In the MCP server integration, provide the name of the cluster and the resource group at the start of the agent experience. Unlike the regular mode where the cluster context is picked up automatically, the MCP server integration currently doesn't support it.
 
 To check the status of the MCP server, you can use the `--status` flag:
 
