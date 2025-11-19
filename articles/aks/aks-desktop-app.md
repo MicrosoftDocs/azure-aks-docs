@@ -30,11 +30,7 @@ This article guides you through deploying an application using AKS desktop, enab
 
   - Mac
 
-- If you decide to create an AKS managed project, your cluster must be Microsoft Entra ID authenticated. We recommend you use AKS Automatic for your cluster SKU in AKS desktop as Microsoft Entra ID comes standard. You can run the following command on an existing cluster to perform this action. You can also add multiple admin groups by adding `ObjectID_1,ObjectID_2,...`:
-
-  ```azurecli
-  az aks update --resource-group YourResourceGroupName --name YourManagedClusterName --enable-aad --aad-admin-group-object-ids <ObjectID_1> --aad-tenant-id <TenantID>
-  ```
+- Your cluster must be Microsoft Entra ID authenticated, to make sure your cluster is Entra ID authenticated. Use an [AKS Automatic cluster](intro-aks-automatic.md).
 
 ## Sign into your account
 
@@ -51,7 +47,7 @@ Once signed in, you have the ability to add clusters that you have access to int
 ## Add a cluster
 
 > [!NOTE]
-> The recommendation is to use an AKS Automatic cluster when using AKS desktop. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
+> The recommendation is to use an AKS Automatic cluster when using AKS desktop. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the Project view. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
 
 When you sign in, you're given two options to add a cluster to AKS desktop. The available options are:
 
@@ -117,13 +113,13 @@ To delete a cluster from AKS desktop and your kubeconfig, follow these steps:
 
 ## Create a new Project
 
-When you create a project on a cluster, any user with access to the associated namespace can view the project. Namespace access and labeling determine which users can see each project, since projects are tied to namespaces.
+When you create a Project on a cluster, any user with access to the associated namespace can view the Project. Namespace access and labeling determine which users can see each Project, since Projects are tied to namespaces. To learn more about Projects, visit the Projects overview [Link to projects overview page in aks-desktop-overview.md]
 
 There are three methods you can choose from to deploy your application using AKS desktop:
 
-# [AKS managed project](#tab/aks-managed-project)
+# [AKS managed Project](#tab/aks-managed-Project)
 
-To manage your project using this method, the **aks-preview** extension must be installed by running the following command:
+To manage your Project using this method, the **aks-preview** extension must be installed by running the following command:
 
 ```azurecli
 az extension add --name aks-preview
@@ -135,32 +131,32 @@ You must also register the namespace preview feature for first time use. Under *
 
 Once these prerequisites are complete, perform the following steps:
 
-1. Provide a project name. Adding a project description is optional.
+1. Provide a Project name. Adding a Project description is optional.
 1. Select your subscription.
 1. Select your cluster. Your cluster must be Microsoft Entra ID authenticated.
 1. Select **Next**.
 1. Under **Networking Policies**, choose the ingress and egress for your network traffic. Then select **Next**.
 1. Under **Compute Quota**, adjust the quota based on your needs. Then select **Next**.
-1. Under **Access**, assign the project to one or more users and permission level for each under **Role**. Then select **Next**.
-1. Under **Review**, verify the settings for your project, then select **Create Project**.
+1. Under **Access**, assign the Project to one or more users and permission level for each under **Role**. Then select **Next**.
+1. Under **Review**, verify the settings for your Project, then select **Create Project**.
 1. Add your application name, then select **Create Application**.
 
-![A video demonstrating how to create a new AKS-managed project in the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-create-new-project-aks-managed.gif)
+![A video demonstrating how to create a new AKS-managed Project in the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-create-new-project-aks-managed.gif)
 
-# [YAML project](#tab/yaml-project)
+# [YAML Project](#tab/yaml-Project)
 
-1. Provide a project name.
-1. Select a cluster to add to your project.
+1. Provide a Project name.
+1. Select a cluster to add to your Project.
 1. Under **Load resources**, you can choose the following:
 
    1. Select a `.yaml` or `.yml` file to load. You can also drag and drop your file into AKS desktop. Then select **Create**.
 
    1. Select **Load from URL**, paste your YAML URL, select **Load**, then select **Create**.
 
-# [New project](#tab/new-project)
+# [New Project](#tab/new-Project)
 
-1. Provide a project name.
-1. Select a cluster to add to your project. You can add more once a cluster is selected.
+1. Provide a Project name.
+1. Select a cluster to add to your Project. You can add more once a cluster is selected.
 1. Use an existing namespace or type a new namespace to use.
 1. Select **Create**.
 
@@ -168,20 +164,20 @@ Once these prerequisites are complete, perform the following steps:
 
 ## Remove a Project
 
-To delete a project from AKS desktop, follow these steps:
+To delete a Project from AKS desktop, follow these steps:
 
 1. In the left pane, select the **Home** button.
-1. Under **Projects**, select your project under the **Name** column.
-1. Within your project, to the far right, select the trash can button.
-1. Under the **Delete Project** window, select the **Delete Project** button to remove your project from the given namespace.
+1. Under **Projects**, select your Project under the **Name** column.
+1. Within your Project, to the far right, select the trash can button.
+1. Under the **Delete Project** window, select the **Delete Project** button to remove your Project from the given namespace.
 
-   If you also want to the delete the namespace along with your project (which also removes associated resources), tick the box **Also delete the namespaces**. Then select **Delete Project**.
+   If you also want to the delete the namespace along with your Project (which also removes associated resources), tick the box **Also delete the namespaces**. Then select **Delete Project**.
 
 ## Deploy an application into a Project
 
-We recommend that you always create a new project when deploying a new application.
+We recommend that you always create a new Project when deploying a new application.
 
-Once you create your first project, AKS desktop places you directly into the newly created project. Within your project, select **Deploy Application** from the top right corner. There are two sources you can choose from to deploy your app. Choose one of the two, then select **Next**:
+Once you create your first Project, AKS desktop places you directly into the newly created Project. Within your Project, select **Deploy Application** from the top right corner. There are two sources you can choose from to deploy your app. Choose one of the two, then select **Next**:
 
 # [Container Image](#tab/container-image)
 
@@ -209,6 +205,23 @@ Once you create your first project, AKS desktop places you directly into the new
 1. Review the resources to deploy, select **Deploy**, then select **Close**.
 
 ---
+
+## Project overview
+
+Once your project is created and your app is deployed, you will be greated to the project overview page. Inside the project page, you can do the following: 
+
+| Feature | Description |
+|--|--|
+| **Kubernetes resources** | View all Kubernetes resources deployed in your Project, including workloads and network configuration. |
+| **Access** | Grant or remove access to your Project. |
+| **Map** | Visualize how Kubernetes resources in your Project interact, showing data flow between deployments and services. |
+| **Logs** | Access streaming logs for your application. |
+| **Metrics** | View detailed metrics such as CPU, memory, and resource usage for your application. |
+| **Scaling** | Configure application scaling using Horizontal Pod Autoscaler (HPA) or manual settings. |
+| **Environment variables** | Manage environment variables for your application. |
+
+
+Show pic of project overview page.
 
 ## View cluster data and metrics
 

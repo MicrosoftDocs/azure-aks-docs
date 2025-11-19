@@ -13,7 +13,7 @@ ms.author: alalve
 
 AKS desktop delivers an application-focused experience for deploying and managing workloads on Azure Kubernetes Service (AKS). It accelerates time to business value by providing a guided, self-service user experience (UX) built on supported AKS features, best practices, and open-source [Headlamp](https://headlamp.dev/). Designed to work within your existing environment and tools, it enables team collaboration through role-based access control (RBAC) while abstracting complexity without removing control.
 
-You can install AKS desktop by visiting the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/releases). AKS desktop supports the following operating systems:
+You can install the early preview build of AKS desktop by visiting the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/releases). AKS desktop supports the following operating systems:
 
   - Windows
 
@@ -26,9 +26,9 @@ You can install AKS desktop by visiting the official [AKS desktop GitHub reposit
 
 ## Why AKS desktop?
 
-It's common for Kubernetes users to express frustration with how hard application development can be. From deploying apps and tuning configurations to finding the right logs and setting up proper monitoring, there are plenty of small but constant pain points that add up fast. What was supposed to be an exciting path toward modernizing your stack often turns into a cycle of hiring specialized talent, spending more, and burning hours learning proprietary tools that seem to change every few months. And after all that effort, you do eventually see business value, but at an increasingly higher cost and a slower time to value.
+It's common for Kubernetes developers to express frustration with how hard application development can be. From deploying apps and tuning configurations to finding the right logs and setting up proper monitoring, there are plenty of small but constant pain points that add up fast. What was supposed to be an exciting path toward modernizing your stack often turns into a cycle of hiring specialized talent, spending more, and burning hours learning proprietary tools that seem to change every few months. And after all that effort, you do eventually see business value, but at an increasingly higher cost and a slower time to value.
 
-To fix these problems, we created AKS desktop, an application centric UI experience built on top of open-source Headlamp. Our goal with AKS desktop is simple: provide faster time to business value by building on top of AKS best practices and configurations to abstract but not remove Kubernetes.
+To fix these problems, we created AKS desktop, a cloud native application centric UI experience built on top of open-source Headlamp. Our goal with AKS desktop is simple: provide faster time to business value by building on top of AKS best practices and configurations to abstract but not remove Kubernetes.
 
 AKS desktop provides the following benefits:
 
@@ -50,11 +50,11 @@ AKS desktop provides the following benefits:
 
 - **Multi-cloud capabilities** - View and access Kubernetes clusters across any cloud.
 
-- **Kubeconfig management** - Easily sign into your Azure account and merge your cluster credentials.
+- **Kubeconfig management** - Easily sign into your Azure account and merge your cluster credentials into your local kubeconfig. This kubeconfig can also be used by the CLI.
 
 - **User and resource management collaboration**:
 
-  - Teams can view the same project.
+  - Teams can view the same Project.
 
   - UI that honors RBAC roles enabling persona scoped experiences.
 
@@ -66,24 +66,24 @@ AKS desktop provides the following benefits:
 
 ## What are Projects?
 
-Per Headlamp's documentation:
+AKS desktop is focused on providing an easy to understand cloud native application centric experience. To do this, we have built on top of Headlamps Project experience. Per Headlamp's documentation:
 
 > "Projects make Kubernetes easier to manage by grouping related resources into a single, application-centric view that is designed with developers in mind. Instead of navigating cluster-wide lists or searching for labels, Projects let you organize workloads across one or more namespaces and even multiple clusters into a logical group. This approach gives developers clarity on their application as a whole, making collaboration, troubleshooting, and onboarding much simpler."
 
-In AKS desktop, an AKS managed project is linked directly by default to an [AKS managed namespace](concepts-managed-namespaces.md), which is a way to logically isolate workloads and teams within a cluster. This feature enables administrators to enforce resource quotas, apply network policies, and manage access control at the namespace level. A project can be made up of one or more applications. For this preview, we recommend you have one application per Project. If you wish to learn more about the Project concept, visit [Headlamp's open-source documentation](https://headlamp.dev/docs/latest/learn/projects).
+In AKS desktop, an AKS managed Project is linked directly by default to an [AKS managed namespace](concepts-managed-namespaces.md), which is a way to logically isolate workloads and teams within a cluster. This feature enables administrators to enforce resource quotas, apply network policies, and manage access control at the namespace level. A Project can be made up of one or more applications. For this preview, we recommend you have one application per Project. If you wish to learn more about the Project concept, visit [Headlamp's open-source documentation](https://headlamp.dev/docs/latest/learn/projects).
 
 ## What is the Project Overview screen?
 
 > [!NOTE]
 > It might take up to 10 minutes for the metrics to populate.
 
-Once you deploy an application to a project through AKS desktop, you're greeted with the Project Overview screen. The Project Overview screen is an overview of your application highlighting the most important parts that matter to application developers. With these tools at your disposal, the Project Overview screen is your centralized control hub, giving you visibility, insights, and direct actions to manage, monitor, and optimize your application. These features are:
+Once you deploy an application to a Project through AKS desktop, you're greeted with the Project Overview screen. The Project Overview screen is an overview of your application highlighting the most important parts that matter to application developers. With these tools at your disposal, the Project Overview screen is your centralized control hub, giving you visibility, insights, and direct actions to manage, monitor, and optimize your application. These features are:
 
 | Feature | Description |
 |--|--|
-| **Kubernetes resources** | View all Kubernetes resources deployed in your project, including workloads and network configuration. |
-| **Access** | Grant or remove access to your project. |
-| **Map** | Visualize how Kubernetes resources in your project interact, showing data flow between deployments and services. |
+| **Kubernetes resources** | View all Kubernetes resources deployed in your Project, including workloads and network configuration. |
+| **Access** | Grant or remove access to your Project. |
+| **Map** | Visualize how Kubernetes resources in your Project interact, showing data flow between deployments and services. |
 | **Logs** | Access streaming logs for your application. |
 | **Metrics** | View detailed metrics such as CPU, memory, and resource usage for your application. |
 | **Scaling** | Configure application scaling using Horizontal Pod Autoscaler (HPA) or manual settings. |
