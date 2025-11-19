@@ -119,14 +119,14 @@ We also support any OpenAI compatible model, check the documentation of the LLM 
     Enter your API key: 
     Enter value for AZURE_API_BASE:  (Hint: https://{your-custom-endpoint}.openai.azure.com/) https://test-example.openai.azure.com
     Enter value for AZURE_API_VERSION:  (Default: 2025-04-01-preview)
-    LLM configuration setup sucessfully.
+    LLM configuration setup succcessfully.
     ```
 
     > [!NOTE]
     > The API key will appear as empty as you type, so make sure to use the right API key. You can also skip the `init` experience by providing the values in the config file. The Azure API Base refers to the Azure OpenAI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Azure AI Foundry. If the LLM configuration fails, double check your API key and/or the `AZURE_API_BASE`.
 
     > [!NOTE]
-    > The `init` experience has to be sucessfully completed to be able to use the agentic CLI. Check the config file option or the troubleshooting docs if the `init` fails
+    > The `init` experience has to be successfully completed to be able to use the agentic CLI. Check the config file option or the troubleshooting docs if the `init` fails
 
 ---
 
