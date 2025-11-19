@@ -22,7 +22,7 @@ You can install AKS desktop by visiting the official [AKS desktop GitHub reposit
   - Mac
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete features, and more. You may also experience slow refresh times. If you're interested in shaping the AKS desktop experience, need help, or have any questions, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/issues).
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete features, and more. You might also experience slow refresh times. If you're interested in shaping the AKS desktop experience, need help, or have any questions, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/issues).
 
 ## Why AKS desktop?
 
@@ -62,7 +62,7 @@ AKS desktop provides the following benefits:
 
 ## AKS desktop limitations
 
-**AKS desktop is optimized for [AKS Automatic clusters](intro-aks-automatic.md)**. AKS desktop was built for AKS Automatic clusters and does not currently support AKS standard SKU. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
+**AKS desktop is optimized for [AKS Automatic clusters](intro-aks-automatic.md)**. AKS desktop was built for AKS Automatic clusters and doesn't currently support AKS standard SKU. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
 
 ## What are Projects?
 
@@ -75,7 +75,7 @@ In AKS desktop, an AKS managed project is linked directly by default to an [AKS 
 ## What is the Project Overview screen?
 
 > [!NOTE]
-> It may take up to 10 minutes for the metrics to populate.
+> It might take up to 10 minutes for the metrics to populate.
 
 Once you deploy an application to a project through AKS desktop, you're greeted with the Project Overview screen. The Project Overview screen is an overview of your application highlighting the most important parts that matter to application developers. With these tools at your disposal, the Project Overview screen is your centralized control hub, giving you visibility, insights, and direct actions to manage, monitor, and optimize your application. These features are:
 

@@ -14,7 +14,7 @@ ms.author: alalve
 This article guides you through deploying an application using AKS desktop, enabling you to manage your containerized workloads with an intuitive, application-centric interface.
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete features, and more. You may also experience slow refresh times. If you're interested in shaping the AKS desktop experience, need help, or have any questions, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/issues).
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete features, and more. You might also experience slow refresh times. If you're interested in shaping the AKS desktop experience, need help, or have any questions, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/issues).
 
 ## Prerequisites
 
