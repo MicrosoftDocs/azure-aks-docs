@@ -93,7 +93,7 @@ Once you deploy an application to a project through AKS desktop, you're greeted 
 
 During the preview, formal support for AKS desktop is limited or not available. The best ways to receive support, report issues, or provide feedback is to engage directly with the engineering team. Whether you have questions, concerns, bug reports, or feature requests, we encourage you to connect with us on GitHub. To provide feedback or report an issue, follow these steps:
 
-1. Visit the official [AKS desktop GitHub repository][https://github.com/Azure/aks-desktop/issues].
+1. Visit the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/issues).
 1. Select the **Issues** tab.
 1. Select **New Issue**, and select the appropriate issue template.
 1. Fill out the required fields for the issue. Then select **Submit new issue** to share your feedback with the team.
