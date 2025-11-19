@@ -27,8 +27,7 @@ To learn about what LocalDNS is, including architecture details, and key capabil
 * LocalDNS is only supported on node pools running Azure Linux or Ubuntu 22.04 or newer.
 * LocalDNS only supports Virtual Machine Scale Set node pools.
 * The Virtual Machine (VM) SKU used for your node pool must have at least 4 vCPUs (cores) to support LocalDNS.
-
-* LocalDNS does not work with customers using Azure CNI powered by Cilium (ACNS) with the FQDN filtering feature. For details, see [Apply FQDN filtering policies in AKS](https://learn.microsoft.com/en-us/azure/aks/how-to-apply-fqdn-filtering-policies?tabs=non-cilium).
+* LocalDNS is not compatible with [applied FQDN filter policies in Advanced Container Networking Services (ACNS)](https://learn.microsoft.com/en-us/azure/aks/how-to-apply-fqdn-filtering-policies?tabs=non-cilium).
 
 ## Create or update an AKS node pool with LocalDNS
 
