@@ -36,6 +36,7 @@ For more information, see [agentic CLI for Azure Kubernetes Service (AKS) overvi
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 1. Add the agentic CLI for AKS extension to your Azure CLI installation using the [`az extension add`](/cli/azure/extension#az-extension-add) command, or update to the latest version if you already have it installed using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
+This might take 5-10 minutes to complete.
 
     ```azurecli-interactive
     # Install the extension
@@ -73,36 +74,27 @@ For more information, see [agentic CLI for Azure Kubernetes Service (AKS) overvi
 > [!NOTE]
 > We recommend using newer models such as GPT-4o, GPT-4o-mini, or Claude Sonnet 4.0 for better performance. Choose a model with a high context size of at least 128,000 tokens or higher.
 
-### [Azure OpenAI (recommended)](#tab/azure-openai)
+### Azure OpenAI (Recommended)
 
-1. Set up an Azure OpenAI resource by following the steps in [Create an Azure OpenAI in Azure AI Foundry Models resource](/azure/ai-foundry/openai/how-to/create-resource#create-a-resource).
+- Set up an Azure OpenAI resource by following the [Microsoft documentation](/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
 
-   > [!IMPORTANT]
-   > For the deployment name, use the same name as the model's name (such as `gpt-4o` or `gpt-4o-mini`) depending on access. You can use any region where you have access and quota for the model. In the deployment, select the highest possible token limit per minute (TPM). We recommend upwards of 1M TPM for good performance. If you need to increase your quota, see [Manage Azure OpenAI in Azure AI Foundry Models quota](/azure/ai-foundry/openai/how-to/quota).
+> [!NOTE]
+> For the deployment name, use the same name as the model name such as gpt-4o, gpt-4o-mini depending on the access. You can use any region where you have access and quota for the model
+> In the deployment, select as high token limit per minute (TPM) as possible. We recommend upwards of 1M TPM for good performance
+2. [Deploy the model](/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) you plan to use in the Azure AI Foundry Portal.
+3. Once deployed, note your API base URL and API key, 
+<img width="1713" height="817" alt="image" src="https://github.com/user-attachments/assets/400021fd-5604-4cd2-9faf-407145c52669" />
 
-1. Deploy the model by following the steps in [Deploy an Azure OpenAI in Azure AI Foundry Models resource](/azure/ai-foundry/openai/how-to/create-resource#deploy-a-model).
-1. Set environment variables with your API base URL and API key, as shown in the following examples:
 
-    ```bash
-    # Linux/Mac
-    export AZURE_API_BASE="https://<your-endpoint>.openai.azure.com/"
-    export AZURE_API_VERSION="2025-04-01-preview"
-    export AZURE_API_KEY="<your-api-key>"
+> [!NOTE] 
+> The API version is not the model version, you can use any API version that is available and supported [here](/azure/ai-foundry/openai/api-version-lifecycle))
+>  The Azure API Base refers to the Azure OpenAI end point (which usually ends in openai.azure.com/), not the target URI of the deployment in Azure AI Foundry.
 
-    # Windows
-    $env:AZURE_API_VERSION="2025-04-01-preview"
-    $env:AZURE_API_BASE="https://<your-endpoint>.openai.azure.com"
-    $env:AZURE_API_KEY="<your-api-key>"
-    ```
 
-    > [!NOTE]
-    > - The API version isn't the model version. You can use any available and supported API version.
-    > - The Azure API Base refers to the Azure OpenAI endpoint, not the target URI of the deployment in Azure AI Foundry.
-    > - You must specify the model when using Azure OpenAI using the [`az aks agent`](/cli/azure/aks#az-aks-agent) command with the `--model` parameter.
 
-### [Other supported providers](#tab/other-providers)
+### Other LLM providers
+We also support any OpenAI compatible model, check the documentation of the LLM provider for instructions on how to create an account and retrieve the API key
 
-We also support any OpenAI compatible model. For other LLM providers, contact [Microsoft support](https://support.microsoft.com) for assistance.
 
 ## Initialize the agentic CLI for AKS
 
@@ -116,7 +108,7 @@ We also support any OpenAI compatible model. For other LLM providers, contact [M
 
     ```output
     Welcome to AKS Agent LLM configuration setup. Type '/exit' to exit.
-     1. azure
+     1. Azure Open AI
      2. openai
      3. anthropic
      4. gemini
@@ -131,13 +123,34 @@ We also support any OpenAI compatible model. For other LLM providers, contact [M
     ```
 
     > [!NOTE]
-    > The API key will appear as empty as you type, so make sure to use the right API key. You can also skip the `init` experience by providing the values in the config file. The Azure API Base refers to the Azure OpenAI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Azure AI Foundry. If the LLM configuration fails, please double check your API key and/or the `AZURE_API_BASE`.
+    > The API key will appear as empty as you type, so make sure to use the right API key. You can also skip the `init` experience by providing the values in the config file. The Azure API Base refers to the Azure OpenAI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Azure AI Foundry. If the LLM configuration fails, double check your API key and/or the `AZURE_API_BASE`.
+
+    > [!NOTE]
+    > The `init` experience has to be successfully completed to be able to use the agentic CLI. Check the config file option or the troubleshooting docs if the `init` fails
 
 ---
 
-## Use the agentic CLI for AKS
+## Use agentic CLI for AKS
 
 You can now start using the agentic CLI for AKS to troubleshoot your clusters and get intelligent insights using natural language queries. The following sections outline key parameters and example queries to get you started.
+
+### Basic queries
+
+You can use the following example queries to get started with the agentic CLI for AKS:
+
+> [!NOTE]
+> If you have multiple models set up, you can specify the model to use for each query using the `--model` parameter. For example, `--model=azure/gpt-4o`.
+
+```azurecli-interactive
+az aks agent "How many nodes are in my cluster?"
+az aks agent "What is the Kubernetes version on the cluster?"
+az aks agent "Why is coredns not working on my cluster?"
+az aks agent "Why is my cluster in a failed state?"
+```
+
+By default, the experience uses interactive mode where you can continue asking questions with retained context until you want to exit. To quit the experience, type `/exit`.
+
+
 
 ### Agentic CLI for AKS parameters
 
@@ -164,7 +177,7 @@ The `--model` parameter determines which LLM and provider analyzes your cluster.
 
 ### Configuration file
 
-You can specify some of the common parameters in a config file instead of the `init` experience. See the [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml) for an example configuration file.
+The LLM configuration is stored in a config file through  the `az aks agent-init` experience. If the init command doesn't work, you can still use the config file by adding the variables manually.  See  [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml) for an example config file. The default configuration file path can be found through the `az aks agent --help` command.
 
 The config file currently supports the following parameters:
 
@@ -173,27 +186,11 @@ The config file currently supports the following parameters:
 - Custom toolsets
 - Azure environment variables
 
-You can use your config file by specifying the `--config-file` parameter with the path to your config file when using the [`az aks agent`](/cli/azure/aks#az-aks-agent) command.
+You can also use your config file by specifying the `--config-file` parameter with the path to your config file when using the [`az aks agent`](/cli/azure/aks#az-aks-agent) command.
 
 ```azurecli-interactive
 az aks agent "Check kubernetes pod resource usage" --config-file exampleconfig.yaml
 ```
-
-### Basic queries
-
-You can use the following example queries to get started with the agentic CLI for AKS:
-
-> [!NOTE]
-> If you have multiple models set up, you can specify the model to use for each query using the `--model` parameter. For example, `--model=azure/gpt-4o`.
-
-```azurecli-interactive
-az aks agent "How many nodes are in my cluster?"
-az aks agent "What is the Kubernetes version on the cluster?"
-az aks agent "Why is coredns not working on my cluster?"
-az aks agent "Why is my cluster in a failed state?"
-```
-
-By default, the experience uses interactive mode where you can continue asking questions with retained context until you want to exit. To quit the experience, type `/exit`.
 
 ### Interactive commands
 
@@ -252,54 +249,9 @@ The following example shows how to start the MCP server and use it with the agen
 az aks agent "why is my node unhealthy" --model=azure/gpt-4o --aks-mcp --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 Loaded models: ['azure/gpt-4o']                                                                                           
 Refreshing available datasources (toolsets)                                                                               
-❌ Toolset slab: Environment variable SLAB_API_KEY was not set                                                            
-✅ Toolset kubernetes/kube-prometheus-stack                                                                               
-❌ Toolset argocd/core: Environment variable ARGOCD_AUTH_TOKEN was not set                                                
-❌ Toolset confluence: Environment variable CONFLUENCE_BASE_URL was not set                                               
-✅ Toolset core_investigation                                                                                             
-❌ Toolset robusta: Integration with Robusta cloud is disabled                                                            
-✅ Toolset internet                                                                                                       
-❌ Toolset opensearch/status: The toolset is missing its configuration                                                    
-❌ Toolset grafana/tempo: The toolset is missing its configuration                                                        
-❌ Toolset grafana/loki: Missing Loki configuration. Check your config.                                                   
-❌ Toolset newrelic: No configuration provided                                                                            
-❌ Toolset grafana/grafana: The toolset is missing its configuration                                                      
-❌ Toolset notion: Notion toolset is misconfigured. Authorization header is required.                                     
-❌ Toolset kafka/admin: The toolset is missing its configuration                                                          
-❌ Toolset datadog/logs: Missing config for dd_api_key, dd_app_key, or site_api_url. For details:                         
-https://holmesgpt.dev/data-sources/builtin-toolsets/datadog/                                                              
-❌ Toolset datadog/general: Missing config for dd_api_key, dd_app_key, or site_api_url. For details:                      
-https://holmesgpt.dev/data-sources/builtin-toolsets/datadog/                                                              
-❌ Toolset datadog/metrics: Missing config for dd_api_key, dd_app_key, or site_api_url. For details:                      
-https://holmesgpt.dev/data-sources/builtin-toolsets/datadog/                                                              
-❌ Toolset datadog/traces: No configuration provided for Datadog Traces toolset                                           
-✅ Toolset datadog/rds                                                                                                    
-❌ Toolset opensearch/logs: Missing OpenSearch configuration. Check your config.                                          
-❌ Toolset opensearch/traces: Missing opensearch traces URL. Check your config                                            
-❌ Toolset opensearch/query_assist: Environment variable OPENSEARCH_URL was not set                                       
-❌ Toolset coralogix/logs: The toolset is missing its configuration                                                       
-❌ Toolset rabbitmq/core: RabbitMQ toolset is misconfigured. 'management_url' is required.                                
-❌ Toolset git: Missing one or more required Git configuration values.                                                    
-❌ Toolset MongoDBAtlas: Missing config credentials.                                                                      
-✅ Toolset runbook                                                                                                        
-❌ Toolset azure/sql: The toolset is missing its configuration                                                            
-❌ Toolset ServiceNow: Missing config credentials.                                                                        
-❌ Toolset aws/security: `aws sts get-caller-identity` returned 127                                                       
-❌ Toolset aws/rds: `aws sts get-caller-identity` returned 127                                                            
-❌ Toolset docker/core: `docker version` returned 127                                                                     
-❌ Toolset cilium/core: `cilium status` returned 127                                                                      
-❌ Toolset hubble/observability: `hubble version` returned 127                                                            
+..                                                                                                                       
 **✅ Toolset aks-mcp  **                                                                                                      
-❌ Toolset kubernetes/krew-extras: `kubectl version --client && kubectl lineage --version` returned 1                     
-✅ Toolset helm/core                                                                                                      
-Toolset statuses are cached to /Users/aritraghosh/.azure/toolsets_status.json                                             
-✅ Toolset kubernetes/kube-prometheus-stack                                                                               
-✅ Toolset internet                                                                                                       
-✅ Toolset core_investigation                                                                                             
-✅ Toolset datadog/rds                                                                                                    
-✅ Toolset runbook                                                                                                        
-✅ Toolset aks-mcp                                                                                                        
-✅ Toolset helm/core                                                                                                      
+..                                                                                                   
 NO ENABLED LOGGING TOOLSET                                                                                                
 Using model: azure/gpt-4o (128,000 total tokens, 16,384 output tokens)                                                    
 This tool uses AI to generate responses and may not always be accurate.
@@ -309,7 +261,7 @@ User: why is my node unhealthy
 ```
 
 > [!NOTE]
-> In the MCP server integration, please provide the name of the cluster and the resource group at the start of the agent experience. Unlike the regular mode where the cluster context is picked up automatically, the MCP server integration currently doesn't support it.
+> In the MCP server integration, provide the name of the cluster and the resource group at the start of the agent experience. Unlike the regular mode where the cluster context is picked up automatically, the MCP server integration currently doesn't support it.
 
 To check the status of the MCP server, you can use the `--status` flag:
 
