@@ -53,9 +53,7 @@
           - name: Introduction to ResourcePlacement
             href: concepts-namespace-scoped-resource-propagation.md
           - name: Defining a placement rollout strategy
-            href: concepts-rollout-strategy.md
-          - name: Automated deployments overview
-            href: concepts-automated-deployments.md        
+            href: concepts-rollout-strategy.md       
           - name: Controlling eviction and disruption
             href: concepts-eviction-disruption.md
           - name: Placement strategy and resource snapshots
@@ -64,6 +62,8 @@
             href: concepts-placement-takeover.md
           - name: Detecting and managing workload drift
             href: concepts-placement-drift.md 
+        - name: Automated deployments overview
+          href: concepts-automated-deployments.md 
     - name: Multi-cluster networking 
       items:
         - name: DNS-based load balancing across multiple clusters
@@ -102,26 +102,28 @@
       href: howto-migrate-updates-from-terraform.md
     - name: Place and manage workloads on multiple clusters
       items:
-        - name: Access Fleet hub cluster API
+        - name: Access Fleet Manager hub cluster
           href: access-fleet-hub-cluster-kubernetes-api.md
-        - name: Multi-cluster cluster-scoped resource placement
+        - name: Placing cluster-scoped resources
           href: quickstart-resource-propagation.md
-        - name: Multi-cluster namespace-scoped resource placement
+        - name: Placing namespace-scoped resources
           href: quickstart-namespace-scoped-resource-propagation.md
-        - name: Understand the placement status
+        - name: Control cluster order for resource placement 
+          href: howto-staged-update-run.md
+        - name: Understanding placement status
           href: howto-understand-placement.md
-        - name: Intelligent multi-cluster resource placement using cluster properties
+        - name: Intelligent resource placement using cluster properties
           href: intelligent-resource-placement.md
-        - name: Use Automated Deployments to drive multi-cluster resource placement
-          href: howto-automated-deployments.md
-        - name: Use envelope objects to place resources
+        - name: Placing reserved resources with envelopes
           href: quickstart-envelope-reserved-resources.md
-        - name: Use taints and tolerations for workload scheduling
+        - name: Use taints and tolerations
           href: use-taints-tolerations.md
-        - name: Use overrides to customize cluster-scoped resources
+        - name: Customize cluster-scoped resources with overrides
           href: cluster-resource-override.md
-        - name: Use overrides to customize namespace-scope resources
-          href: resource-override.md  
+        - name: Customize namespace-scoped resources with overrides
+          href: resource-override.md
+        - name: Use Automated Deployments with resource placement
+          href: howto-automated-deployments.md
     - name: Use Managed Fleet Namespaces for multi-cluster multi-tenancy
       items:
         - name: Create Managed Fleet Namespaces

@@ -78,6 +78,9 @@ The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) control
 
 Managed Fleet Namespaces use existing Azure Role Based Access Control (RBAC) [control plane roles](./concepts-rbac.md#control-plane) to manage and access managed namespaces. The existing [data plane RBAC roles](./concepts-rbac.md#data-plane) are applied to interact with the Managed Fleet Namespace instance created on the Fleet Manager hub cluster. 
 
+> [!IMPORTANT]
+> When you assign RBAC roles at a Managed Fleet Namespace scope, access is granted to any unmanaged Kubernetes namespaces on member clusters with the same name.
+
 To control access to a Managed Fleet Namespace on member clusters, use the following built-in roles, which can be applied at the namespace scope:
 
 | Role | Description |
@@ -88,10 +91,8 @@ To control access to a Managed Fleet Namespace on member clusters, use the follo
 | Azure Kubernetes Fleet Manager RBAC Cluster Admin for Member Clusters | • Full read/write access to all Kubernetes resources on the member cluster. |
 
 For example, a developer in `team-A` which uses the `team-A` Managed Fleet Namespace would need to read and write Kubernetes resources in the namespace on the Fleet Manager hub cluster. The developer would also need to read Kubernetes objects in the `team-A` namespace on the member clusters on which it exists. So, the platform administrator would assign them **Azure Kubernetes Fleet Manager RBAC Writer** at the fleet scope and **Azure Kubernetes Fleet Manager RBAC Reader for Member Clusters** at the Managed Fleet Namespace scope for these respective requirements.
-In preview, custom resources are **not** supported for these roles.
 
-> [!IMPORTANT]
-> When you assign these RBAC roles at a managed namespace scope, access is granted to any unmanaged Kubernetes namespaces on member clusters with the same name, regardless of whether they were placed by the managed namespace.
+During preview, custom resources are **not** supported for these roles.
 
 ## Next steps
 
