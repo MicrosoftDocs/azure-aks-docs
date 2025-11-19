@@ -35,7 +35,7 @@ This article guides you through deploying an application using AKS desktop, enab
 ## Sign into your account
 
 > [!IMPORTANT]
-> **AKS desktop is optimized for [AKS Automatic clusters](intro-aks-automatic.md)**. AKS desktop was built for AKS Automatic clusters and does not currently support AKS standard SKU. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
+> **AKS desktop is optimized for [AKS Automatic clusters](intro-aks-automatic.md)**. AKS desktop was built for AKS Automatic clusters and doesn't currently support AKS standard SKU. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
 
 The first time you open AKS desktop, you need to sign into your Azure account. Signing in allows you to see AKS clusters and Projects that you have access to. To sign in, follow these steps:
 
