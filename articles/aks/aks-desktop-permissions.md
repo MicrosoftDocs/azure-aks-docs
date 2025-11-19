@@ -4,7 +4,7 @@ description: Learn how to set up Azure Kubernetes Service (AKS) desktop with the
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: how-to
-ms.date: 11/18/2025
+ms.date: 11/19/2025
 ms.author: alalve
 # Customer intent: As a cluster operator or developer, I want to understand the setup requirements and permissions for AKS desktop, so that I can configure my environment based on my role.
 ---
@@ -20,13 +20,13 @@ AKS desktop builds on existing AKS and Azure features to provide an application-
 When you create projects in AKS desktop, [AKS managed namespaces](concepts-managed-namespaces.md) are created in the same resource group as your cluster.
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop).
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop).
 
 ## Prerequisites
 
 These prerequisites apply to all users:
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account](https://azure.microsoft.com/free).
 
 - Ensure you have Azure CLI version 2.64.0 or later installed and configured. Check your version with `az --version`. For installation or upgrade instructions, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
@@ -137,15 +137,15 @@ az aks update \
 
 As a cluster operator, you have two options for how developers work with projects in AKS desktop:
 
-- **Option A: Self-service model** - Developers create and manage their own projects. This gives developers full autonomy but requires granting them the **Azure Kubernetes Service Namespace Contributor** role.
+- **Option A: Self-service model** - Developers create and manage their own projects. This approach gives developers full autonomy but requires granting them the **Azure Kubernetes Service Namespace Contributor** role.
 
-- **Option B: Managed model** - You create projects on behalf of developers and grant them access. This provides more control over project creation but requires you to assign three roles per developer.
+- **Option B: Managed model** - You create projects on behalf of developers and grant them access. This approach provides more control over project creation but requires you to assign three roles per developer.
 
 Choose the option that best fits your organization's governance and operational model.
 
 ### Option A: Enable developers to create their own projects
 
-To allow developers to create their own projects, assign them the **Azure Kubernetes Service Namespace Contributor** role on the AKS cluster. AKS desktop projects create [AKS managed namespaces](/articles/aks/concepts-managed-namespaces.md) behind the scenes, and this role grants the necessary permissions.
+To allow developers to create their own projects, assign them the **Azure Kubernetes Service Namespace Contributor** role on the AKS cluster. AKS desktop projects create [AKS managed namespaces](concepts-managed-namespaces.md) behind the scenes, and this role grants the necessary permissions.
 
 Assign the role using the `az role assignment create` command:
 
@@ -212,7 +212,7 @@ az role assignment create \
 ```
 
 > [!IMPORTANT]
-> All three roles are required for developers to successfully access and work with their projects in AKS desktop. Without the **Azure Kubernetes Service Cluster User Role**, developers cannot download the kubeconfig file needed to connect to the cluster.
+> All three roles are required for developers to successfully access and work with their projects in AKS desktop. Without the **Azure Kubernetes Service Cluster User Role**, developers can't download the kubeconfig file needed to connect to the cluster.
 
 ## Step 4 (Optional): Allow project creators to assign access
 
@@ -242,7 +242,7 @@ As a developer, you work within an existing AKS desktop environment to deploy ap
 
 To work with AKS desktop as a developer, your cluster operator must assign you three essential roles:
 
-1. **Azure Kubernetes Service Cluster User Role** - Allows you to download cluster credentials using `az aks get-credentials`. This is required to connect to the cluster from your local machine or through AKS desktop.
+1. **Azure Kubernetes Service Cluster User Role** - Allows you to download cluster credentials using `az aks get-credentials`, which is a requirement to connect to the cluster from your local machine or through AKS desktop.
 
 2. **Azure Kubernetes Service Namespace User** - Grants access to your assigned managed namespace/project.
 
@@ -339,7 +339,7 @@ az role assignment create \
     --scope $AKS_ID/namespaces/$namespaceName
 ```
 
-### Step 4 (Optional): Grant permissions to view metrics
+### Step 4 (Optional): Grant permissions for viewing metrics
 
 To grant permissions to view metrics, follow the steps in the [View application metrics](#view-application-metrics) section.
 
