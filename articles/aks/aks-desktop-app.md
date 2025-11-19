@@ -139,6 +139,7 @@ Once these prerequisites are complete, perform the following steps:
 1. Under **Compute Quota**, adjust the quota based on your needs. Then select **Next**.
 1. Under **Access**, assign the project to one or more users and permission level for each under **Role**. Then select **Next**.
 1. Under **Review**, verify the settings for your project, then select **Create Project**.
+1. Add your application name, then select **Create Application**.
 
 ![A video demonstrating how to create a new AKS-managed project in the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-create-new-project-aks-managed.gif)
 
