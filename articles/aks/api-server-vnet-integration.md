@@ -25,7 +25,7 @@ API Server VNet Integration is supported for public or private clusters. You can
 - You must have Azure CLI version 2.73.0 or later installed. You can check your version using the `az --version` command.
 
 ## Limitations
-* API Server VNet Integration does not support encrypted virtual networks.
+* API Server VNet Integration does not support [Virtual Network Encryption](/azure/virtual-network/virtual-network-encryption-overview). Clusters deployed on **v3 or earlier AKS node SKUs** (which do not support VNet Encryption) are allowed but traffic will not be encrypted. Clusters deployed on **v4 or later AKS node SKUs** (which support VNet Encryption) are blocked because encrypted VNets are incompatible with API Server VNet Integration. See [AKS supported VM SKUs](quotas-skus-regions#supported-vm-sizes) for details.
 
 ## Availability
 - API Server VNet Integration is available in all GA public cloud regions except eastus2 and qatarcentral. We are continually working on enabling this feature in these regions and will update this page when these regions become available.
