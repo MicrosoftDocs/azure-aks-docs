@@ -11,9 +11,9 @@ ms.author: alalve
 
 # AKS desktop overview (Preview)
 
-AKS desktop delivers an application-focused experience for deploying and managing workloads on Azure Kubernetes Service (AKS). It accelerates time to business value by providing a guided, self-service user experience (UX) built on supported AKS features, best practices, and open-source [Headlamp](https://headlamp.dev/). Designed to work within your existing environment and tools, it enables team collaboration through role-based access control (RBAC) while abstracting complexity without removing control.
+AKS desktop delivers an application-focused experience for deploying and managing workloads on Azure Kubernetes Service (AKS). It accelerates time to business value by providing a guided, self-service user experience (UX) built on supported AKS features, best practices, and open-source [Headlamp][Headlamp]. Designed to work within your existing environment and tools, it enables team collaboration through role-based access control (RBAC) while abstracting complexity without removing control.
 
-You can install [AKS desktop](https://github.com/Azure/aks-desktop/releases) by visiting the official AKS desktop repository. AKS desktop supports the following operating systems:
+You can install [AKS desktop][install AKS desktop] by visiting the official AKS desktop repository. AKS desktop supports the following operating systems:
 
   - Windows
 
@@ -22,7 +22,7 @@ You can install [AKS desktop](https://github.com/Azure/aks-desktop/releases) by 
   - Mac
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop).
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete additional features, and more. If you're interested in shaping the AKS desktop experience, need help, or have any questions, engage with the engineers and product team at the official [AKS desktop GitHub repository][AKS desktop GitHub repository].
 
 ## Why AKS desktop?
 
@@ -62,7 +62,7 @@ AKS desktop provides the following benefits:
 
 ## AKS desktop limitations
 
-**AKS desktop is optimized for AKS Automatic clusters**. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
+**AKS desktop is optimized for [AKS Automatic clusters][what-is-aks-automatic]**. While standard SKU clusters work in AKS desktop, you might not see the full benefits of the project view. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
 
 ## What are Projects?
 
@@ -70,7 +70,7 @@ Per Headlamp's documentation:
 
 > "Projects make Kubernetes easier to manage by grouping related resources into a single, application-centric view that is designed with developers in mind. Instead of navigating cluster-wide lists or searching for labels, Projects let you organize workloads across one or more namespaces and even multiple clusters into a logical group. This approach gives developers clarity on their application as a whole, making collaboration, troubleshooting, and onboarding much simpler."
 
-In AKS desktop, an AKS managed project is linked directly by default to an [AKS managed namespace](concepts-managed-namespaces.md), which is a way to logically isolate workloads and teams within a cluster. This feature enables administrators to enforce resource quotas, apply network policies, and manage access control at the namespace level. A project can be made up of one or more applications. For this preview, we recommend you have one application per Project. If you wish to learn more about the Project concept, visit [Headlamp's open-source documentation](https://headlamp.dev/docs/latest/learn/projects).
+In AKS desktop, an AKS managed project is linked directly by default to an [AKS managed namespace](/articles/aks/concepts-managed-namespaces.md), which is a way to logically isolate workloads and teams within a cluster. This feature enables administrators to enforce resource quotas, apply network policies, and manage access control at the namespace level. A project can be made up of one or more applications. For this preview, we recommend you have one application per Project. If you wish to learn more about the Project concept, visit [Headlamp's open-source documentation][Headlamp docs].
 
 ## What is the Project Overview screen?
 
@@ -88,11 +88,14 @@ Once you deploy an application to a project through AKS desktop, you're greeted 
 
 ## Join the community and provide feedback for AKS desktop (Preview)
 
-You can provide feedback by visiting the [official AKS desktop GitHub repository](https://github.com/Azure/aks-desktop). To provide your feedback, follow these steps:
+During the preview, formal support for AKS desktop is limited or not available. The best way to get help, report issues, or provide feedback is to engage directly with the engineering team on the [official AKS desktop GitHub repository][AKS desktop GitHub repository].
 
-1. Select the **Issue** button.
-1. Select **New Issue**, then select the appropriate issue.
-1. Fill out the appropriate fields for the issue. Then select the **Create** button to submit your information.
+Whether you have questions, concerns, bug reports, or feature requests, we encourage you to connect with us on GitHub. To provide feedback or report an issue, follow these steps:
+
+1. Visit the [AKS desktop GitHub repository][AKS desktop GitHub repository].
+1. Select the **Issues** tab.
+1. Select **New Issue**, and select the appropriate issue template.
+1. Fill out the required fields for the issue. Then select **Submit new issue** to share your feedback with the team.
 
 ## Next steps
 
@@ -101,6 +104,11 @@ You can provide feedback by visiting the [official AKS desktop GitHub repository
 - [Use the cluster autoscaler in AKS](cluster-autoscaler.md)
 
 <!-- LINKS - external -->
+[Headlamp]: https://headlamp.dev/
+[Headlamp docs]: https://headlamp.dev/docs/latest/learn/projects
 [AKS desktop GitHub repository]: https://github.com/Azure/aks-desktop
 [Azure account]: https://azure.microsoft.com/free
 [install AKS desktop]: https://github.com/Azure/aks-desktop/releases
+
+<!-- LINKS - internal -->
+[what-is-aks-automatic]: ../intro-aks-automatic.md

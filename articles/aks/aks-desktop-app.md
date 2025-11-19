@@ -14,13 +14,14 @@ ms.author: alalve
 This article guides you through deploying an application using AKS desktop, enabling you to manage your containerized workloads with an intuitive, application-centric interface.
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete additional features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at the official [AKS desktop GitHub repository][AKS desktop GitHub repository].
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete additional features, and more. If you're interested in shaping the AKS desktop experience, need help, or have any questions, engage with the engineers and product team at the official [AKS desktop GitHub repository][AKS desktop GitHub repository].
 
 ## Prerequisites
 
 - You need an Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account][Azure account].
 - You must have an AKS cluster available through the Azure portal or an Azure Container Registry with your application image that you want to deploy.
 - The [Azure CLI](/cli/azure/install-azure-cli?view=azure-cli-latest&preserve-view=true) must be installed on your device.
+- an [AKS Automatic cluster][what-is-aks-automatic].
 - [Install AKS desktop][install AKS desktop]. AKS desktop supports the following operating systems:
 
   - Windows
@@ -103,7 +104,7 @@ If you followed the Azure method first, follow these steps:
 
 ## Remove a cluster
 
-To delete a cluster from AKS desktop, follow these steps:
+To delete a cluster from AKS desktop and your kubeconfig, follow these steps:
 
 1. Under the **Home** screen, tick the box next to the cluster you want to remove.
 1. To the far right under **Actions**, select the three dots, then select **Delete**.
@@ -220,11 +221,14 @@ To access this information for your specific cluster, follow these steps:
 
 ## Join the community and provide feedback for AKS desktop (Preview)
 
-You can provide feedback by visiting the [official AKS desktop GitHub repository][AKS desktop GitHub repository]. To provide your feedback, follow these steps:
+During the preview, formal support for AKS desktop is limited or not available. The best way to get help, report issues, or provide feedback is to engage directly with the engineering team on the [official AKS desktop GitHub repository][AKS desktop GitHub repository].
 
-1. Select the **Issue** button.
-1. Select **New Issue**, and select the appropriate issue.
-1. Fill out the appropriate fields for the issue. Then select the **Create** button to submit your information.
+Whether you have questions, concerns, bug reports, or feature requests, we encourage you to connect with us on GitHub. To provide feedback or report an issue, follow these steps:
+
+1. Visit the [AKS desktop GitHub repository][AKS desktop GitHub repository].
+1. Select the **Issues** tab.
+1. Select **New Issue**, and select the appropriate issue template.
+1. Fill out the required fields for the issue. Then select **Submit new issue** to share your feedback with the team.
 
 ## Next steps
 
@@ -236,3 +240,6 @@ You can provide feedback by visiting the [official AKS desktop GitHub repository
 [AKS desktop GitHub repository]: https://github.com/Azure/aks-desktop
 [Azure account]: https://azure.microsoft.com/free
 [install AKS desktop]: https://github.com/Azure/aks-desktop/releases
+
+<!-- LINKS - internal -->
+[what-is-aks-automatic]: ../intro-aks-automatic.md
