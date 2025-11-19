@@ -12,7 +12,7 @@ ms.topic: concept-article
 
 **Applies to** :heavy_check_mark: Fleet Manager with hub cluster
 
-This article provides a conceptual overview of Azure Kubernetes Fleet Manager's Managed Fleet Namespaces that provide a centrally managed multi-cluster muti-tenancy solution.
+This article provides a conceptual overview of Azure Kubernetes Fleet Manager's Managed Fleet Namespaces that provide a centrally managed multi-cluster multi-tenancy solution.
  
 [!INCLUDE [preview_features_note](./includes/preview/preview-callout.md)]
 
