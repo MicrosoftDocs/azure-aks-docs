@@ -86,7 +86,7 @@ Create a new multi-cluster managed namespace using the [`az fleet namespace crea
 
 ## Delegate access to a Managed Fleet Namespace
 
-You can now access to a user for the Managed Fleet Namespace across member clusters using one of the [built-in roles](./concepts-fleet-managed-namespace.md#managed-fleet-namespace-built-in-roles).
+You can now grant access to a user for the Managed Fleet Namespace across member clusters using one of the [built-in roles](./concepts-fleet-managed-namespace.md#managed-fleet-namespace-built-in-roles).
 
 Create a role assignment using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. 
 
