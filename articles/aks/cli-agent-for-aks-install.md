@@ -87,7 +87,7 @@ This might take 5-10 minutes to complete.
 
 
 > [!NOTE] 
-> The API version is not the model version, you can use any API version that is available and supported [here](/azure/ai-foundry/openai/api-version-lifecycle?))
+> The API version is not the model version, you can use any API version that is available and supported [here](/azure/ai-foundry/openai/api-version-lifecycle))
 >  The Azure API Base refers to the Azure Open AI end point (which usually ends in openai.azure.com/), not the target URI of the deployment in Azure AI Foundry.
 
 
@@ -119,7 +119,7 @@ We also support any OpenAI compatible model, check the documentation of the LLM 
     Enter your API key: 
     Enter value for AZURE_API_BASE:  (Hint: https://{your-custom-endpoint}.openai.azure.com/) https://test-example.openai.azure.com
     Enter value for AZURE_API_VERSION:  (Default: 2025-04-01-preview)
-    LLM configuration setup succcessfully.
+    LLM configuration setup successfully.
     ```
 
     > [!NOTE]
@@ -130,7 +130,7 @@ We also support any OpenAI compatible model, check the documentation of the LLM 
 
 ---
 
-## Use  agentic CLI for AKS
+## Use agentic CLI for AKS
 
 You can now start using the agentic CLI for AKS to troubleshoot your clusters and get intelligent insights using natural language queries. The following sections outline key parameters and example queries to get you started.
 
@@ -170,9 +170,6 @@ By default, the experience uses interactive mode where you can continue asking q
 ### Model specification
 
 The `--model` parameter determines which LLM and provider analyzes your cluster.
-
-> [!NOTE]
-> The model parameter isn't required if you have only model configured in the `az aks agent-init` experience. This is relevant if you have multiple models stored in the config file.
 
 - **For OpenAI**, use the model name directly (for example, `gpt-4o`).
 - **For Azure OpenAI**, use `azure/<deployment name>` (for example, `azure/gpt-4o`).
