@@ -13,8 +13,8 @@ author: schaffererin
 
 This article shows you how to install the Open Service Mesh (OSM) add-on on an Azure Kubernetes Service (AKS) cluster. The OSM add-on installs the OSM mesh on your cluster. The OSM mesh is a service mesh that provides traffic management, policy enforcement, and telemetry collection for your applications. For more information about the OSM mesh, see [Open Service Mesh](https://openservicemesh.io/).
 
-> [!NOTE]
-> With the retirement of [Open Service Mesh (OSM)](https://docs.openservicemesh.io/) by the Cloud Native Computing Foundation (CNCF), we recommend identifying your OSM configurations and migrating them to an equivalent Istio configuration. For information about migrating from OSM to Istio, see [Migration guidance for Open Service Mesh (OSM) configurations to Istio](open-service-mesh-istio-migration-guidance.md).
+> [!IMPORTANT]
+> Microsoft has announced the retirement of the [Open Service Mesh (OSM) add-on for AKS](https://azure.microsoft.com/updates?id=open-service-mesh-add-on-for-aks-will-be-retired-on-september-30-2027). The upstream OSM project has also been retired by the [Cloud Native Computing Foundation (CNCF)](https://docs.openservicemesh.io/). Identify any existing OSM configurations and migrate them to equivalent Istio configurations. For migration steps, see [Migration guidance for Open Service Mesh (OSM) configurations to Istio](open-service-mesh-istio-migration-guidance.md).
 
 > [!IMPORTANT]
 > Based on the version of Kubernetes your cluster is running, the OSM add-on installs a different version of OSM.
