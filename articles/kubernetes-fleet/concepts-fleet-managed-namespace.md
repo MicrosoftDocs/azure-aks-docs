@@ -92,7 +92,7 @@ To control access to a Managed Fleet Namespace on member clusters, use the follo
 
 For example, a developer in `team-A` which uses the `team-A` Managed Fleet Namespace would need to read and write Kubernetes resources in the namespace on the Fleet Manager hub cluster. The developer would also need to read Kubernetes objects in the `team-A` namespace on the member clusters on which it exists. So, the platform administrator would assign them **Azure Kubernetes Fleet Manager RBAC Writer** at the fleet scope and **Azure Kubernetes Fleet Manager RBAC Reader for Member Clusters** at the Managed Fleet Namespace scope for these respective requirements.
 
-During preview, custom resources are **not** supported for these roles.
+During preview, access control for Kubernetes Custom Resources (CRs) are **not** supported for these roles.
 
 ## Next steps
 

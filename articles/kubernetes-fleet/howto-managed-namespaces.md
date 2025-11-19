@@ -22,8 +22,9 @@ If you're looking to view or access existing Managed Fleet Namespaces you have a
 ## Known limitations
 
 * When a Managed Fleet Namespace adopts a single cluster [Managed Kubernetes Namespace](../aks/concepts-managed-namespaces.md) or vice versa, it may lead to conflicting ownership. To avoid, use a delete policy of `keep` for both the Managed Fleet and Kubernetes Namespaces.
-* Clusters must have a Kubernetes version of at least 1.30.0. Clusters below this version **will not** block users on the cluster from modifying the placed Kubernetes resources.
 * Clusters you specify must be members of the fleet managed by the same Fleet Manager which controls the Managed Fleet Namespace.
+* Clusters must have a Kubernetes version of at least 1.30.0. Clusters below this version **will not** block users on the cluster from modifying the placed Kubernetes resources.
+* RBAC roles assigned to a Managed Fleet Namespace scope will grant equivalent access to any unmanaged Kubernetes namespaces on member clusters with the same name.
 
 ## Before you begin
 
