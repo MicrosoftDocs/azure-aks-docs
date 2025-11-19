@@ -20,9 +20,12 @@ AKS desktop builds on existing AKS and Azure features to provide an application-
 When you create projects in AKS desktop, [AKS managed namespaces](concepts-managed-namespaces.md) are created in the same resource group as your cluster.
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete features, and more. If you're interested in shaping the AKS desktop experience, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop).
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete features, and more. You may also experience slow refresh times. If you're interested in shaping the AKS desktop experience, need help, or have any questions, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/issues).
 
 ## Prerequisites
+
+> [!IMPORANT]
+> **AKS desktop is optimized for [AKS Automatic clusters](intro-aks-automatic.md)**. AKS desktop was built for AKS Automatic clusters and does not currently support AKS standard SKU. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
 
 These prerequisites apply to all users:
 
@@ -265,6 +268,9 @@ When a project is created in AKS desktop:
 To deploy applications, you need the **Writer** or **Admin** role. For more information, see [Managed namespaces built-in roles](concepts-managed-namespaces.md#managed-namespaces-built-in-roles).
 
 ## View application metrics
+
+> [!NOTE]
+> It may take up to 10 minutes for the metrics to populate once an application is deployed.
 
 In the project home screen, you can view metrics for your application, such as CPU, memory, and network usage. These metrics are sourced from the Managed Prometheus endpoint backed by an Azure Monitor workspace.
 

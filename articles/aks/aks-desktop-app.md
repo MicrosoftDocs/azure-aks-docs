@@ -14,7 +14,7 @@ ms.author: alalve
 This article guides you through deploying an application using AKS desktop, enabling you to manage your containerized workloads with an intuitive, application-centric interface.
 
 > [!NOTE]
-> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete features, and more. If you're interested in shaping the AKS desktop experience, need help, or have any questions, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop).
+> AKS desktop is in early stages of public preview. During the public preview, AKS desktop might undergo design changes, add or delete features, and more. You may also experience slow refresh times. If you're interested in shaping the AKS desktop experience, need help, or have any questions, engage with the engineers and product team at the official [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/issues).
 
 ## Prerequisites
 
@@ -37,6 +37,9 @@ This article guides you through deploying an application using AKS desktop, enab
   ```
 
 ## Sign into your account
+
+> [!IMPORANT]
+> **AKS desktop is optimized for [AKS Automatic clusters](intro-aks-automatic.md)**. AKS desktop was built for AKS Automatic clusters and does not currently support AKS standard SKU. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
 
 The first time you open AKS desktop, you need to sign into your Azure account. Signing in allows you to see AKS clusters and Projects that you have access to. To sign in, follow these steps:
 
