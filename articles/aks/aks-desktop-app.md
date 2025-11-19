@@ -4,7 +4,7 @@ description: Learn how to deploy and manage applications on Azure Kubernetes Ser
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: how-to
-ms.date: 11/17/2025
+ms.date: 11/18/2025
 ms.author: alalve
 # Customer intent: As a developer, I want to deploy an application to Azure Kubernetes Service using AKS desktop, so that I can quickly deploy and manage my containerized applications without writing detailed Kubernetes manifests.
 ---
@@ -117,25 +117,6 @@ When you create a project on a cluster, any user with access to the associated n
 
 There are three methods you can choose from to deploy your application using AKS desktop:
 
-# [New project](#tab/new-project)
-
-1. Provide a project name.
-1. Select a cluster to add to your project. You can add more once a cluster is selected.
-1. Use an existing namespace or type a new namespace to use.
-1. Select **Create**.
-
-   ![A video demonstrating how to create a new project in the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-create-new-project.gif)
-
-# [YAML project](#tab/yaml-project)
-
-1. Provide a project name.
-1. Select a cluster to add to your project.
-1. Under **Load resources**, you can choose the following:
-
-   1. Select a `.yaml` or `.yml` file to load. You can also drag and drop your file into AKS desktop. Then select **Create**.
-
-   1. Select **Load from URL**, paste your YAML URL, select **Load**, then select **Create**.
-
 # [AKS managed project](#tab/aks-managed-project)
 
 To manage your project using this method, the **aks-preview** extension must be installed by running the following command:
@@ -158,6 +139,25 @@ Once these prerequisites are complete, perform the following steps:
 1. Under **Compute Quota**, adjust the quota based on your needs. Then select **Next**.
 1. Under **Access**, assign the project to one or more users and permission level for each under **Role**. Then select **Next**.
 1. Under **Review**, verify the settings for your project, then select **Create Project**.
+
+![A video demonstrating how to create a new AKS-managed project in the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-create-new-project-aks-managed.gif)
+
+# [YAML project](#tab/yaml-project)
+
+1. Provide a project name.
+1. Select a cluster to add to your project.
+1. Under **Load resources**, you can choose the following:
+
+   1. Select a `.yaml` or `.yml` file to load. You can also drag and drop your file into AKS desktop. Then select **Create**.
+
+   1. Select **Load from URL**, paste your YAML URL, select **Load**, then select **Create**.
+
+# [New project](#tab/new-project)
+
+1. Provide a project name.
+1. Select a cluster to add to your project. You can add more once a cluster is selected.
+1. Use an existing namespace or type a new namespace to use.
+1. Select **Create**.
 
 ---
 

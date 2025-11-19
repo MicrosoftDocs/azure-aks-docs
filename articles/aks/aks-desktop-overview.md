@@ -4,7 +4,7 @@ description: Learn how to use AKS desktop to deploy and manage workloads on Azur
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: overview
-ms.date: 11/17/2025
+ms.date: 11/18/2025
 ms.author: alalve
 # Customer intent: As a developer, I want to use AKS desktop to deploy and manage applications on Azure Kubernetes Service without needing deep Kubernetes expertise, so that I can accelerate time to business value.
 ---

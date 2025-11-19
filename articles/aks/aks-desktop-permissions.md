@@ -4,7 +4,7 @@ description: Learn how to set up Azure Kubernetes Service (AKS) desktop with the
 ms.subservice: aks-developer
 author: qpetraroia
 ms.topic: how-to
-ms.date: 11/17/2025
+ms.date: 11/18/2025
 ms.author: alalve
 # Customer intent: As a cluster operator or developer, I want to understand the setup requirements and permissions for AKS desktop, so that I can configure my environment based on my role.
 ---
