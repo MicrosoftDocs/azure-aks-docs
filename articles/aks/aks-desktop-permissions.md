@@ -43,49 +43,6 @@ These prerequisites apply to all users:
 > [!IMPORTANT]
 > **AKS desktop is optimized for [AKS Automatic clusters](intro-aks-automatic.md)**. AKS desktop was built for AKS Automatic clusters and doesn't currently support AKS standard SKU. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
 
-## Understanding AKS desktop RBAC roles
-
-AKS desktop uses Azure RBAC to control access to managed namespaces and cluster resources. Understanding these roles is essential for properly configuring permissions.
-
-The following table summarizes the key permissions needed for each role:
-
-| Role | Task | Required Permission |
-|------|------|---------------------|
-| **Cluster Operator** | Create infrastructure resources | Contributor role on resource group. |
-| **Cluster Operator** | Assign permissions to others | User Access Administrator role. |
-| **Cluster Operator** | Enable Project creation for users | Grant Azure Kubernetes Service Namespace Contributor role. |
-| **Cluster Operator** | Grant developer access to Projects | Assign three roles: Azure Kubernetes Service Cluster User Role, Azure Kubernetes Service Namespace User, and one Kubernetes RBAC role. |
-| **Project Creator** | Create Projects | Azure Kubernetes Service Namespace Contributor role on cluster. |
-| **Project Creator** | Assign Project access to others | User Access Administrator role (optional). |
-| **Developer** | Access cluster and download kubeconfig | Azure Kubernetes Service Cluster User Role on cluster. |
-| **Developer** | Access assigned namespace/Project | Azure Kubernetes Service Namespace User role on namespace. |
-| **Developer** | Deploy applications | Azure Kubernetes Service RBAC Writer or Admin role on namespace. |
-| **Developer** | View application metrics | Monitoring Data Reader role on Azure Monitor workspace. |
-| **Developer** | View resources (read-only) | Azure Kubernetes Service RBAC Reader role on namespace. |
-
-### Namespace access roles
-
-| Role | Description |
-|------|-------------|
-| **Azure Kubernetes Service Namespace Contributor** | Allows access to create, update, and delete managed namespaces on a cluster. |
-| **Azure Kubernetes Service Namespace User** | Allows read-only access to a managed namespace on a cluster. Allows access to list credentials on the namespace. This role is required for all users who need to work with a namespace. |
-
-### Kubernetes RBAC roles for namespaces
-
-Managed namespaces use the following built-in roles for data plane operations:
-
-| Role | Description |
-|------|-------------|
-| **Azure Kubernetes Service RBAC Reader** | Allows read-only access to see most objects in a namespace. It doesn't allow viewing roles or role bindings. This role doesn't allow viewing Secrets, since reading the contents of Secrets enables access to ServiceAccount credentials in the namespace, which would allow API access as any ServiceAccount in the namespace (a form of privilege escalation). |
-| **Azure Kubernetes Service RBAC Writer** | Allows read/write access to most objects in a namespace. This role doesn't allow viewing or modifying roles or role bindings. However, this role allows accessing Secrets and running Pods as any ServiceAccount in the namespace, so it can be used to gain the API access levels of any ServiceAccount in the namespace. |
-| **Azure Kubernetes Service RBAC Admin** | Allows read/write access to most resources in a namespace, including the ability to create roles and role bindings within the namespace. This role doesn't allow write access to resource quota or to the namespace itself. |
-
-### Cluster access role
-
-| Role | Description |
-|------|-------------|
-| **Azure Kubernetes Service Cluster User Role** | Allows the use of `az aks get-credentials` without the `--admin` flag. On a Microsoft Entra ID-enabled cluster, this downloads an empty entry into `.kube/config`, which triggers browser-based authentication when first used by kubectl. **This role is crucial for developers to access the cluster and work with their assigned namespaces.** |
-
 ## Choose your scenario
 
 AKS desktop supports two primary user scenarios. Select the scenario that matches your role:
@@ -181,9 +138,11 @@ When developers create their own Projects, they automatically receive **Owner** 
 
 If you prefer to create Projects on behalf of developers, you must assign three essential roles to enable them to access the cluster and work within their assigned namespace:
 
-1. **Azure Kubernetes Service Cluster User Role** - Allows developers to download the cluster credentials using `az aks get-credentials`
-2. **Azure Kubernetes Service Namespace User** - Grants access to the managed namespace
-3. One of the Kubernetes RBAC roles (**Reader**, **Writer**, or **Admin**) - Controls what actions they can perform in the namespace
+- **Azure Kubernetes Service Cluster User Role** - Allows developers to download the cluster credentials using `az aks get-credentials`
+
+- **Azure Kubernetes Service Namespace User** - Grants access to the managed namespace
+
+- One of the Kubernetes RBAC roles (**Reader**, **Writer**, or **Admin**) - Controls what actions they can perform in the namespace
 
 #### Assign cluster access
 
@@ -214,7 +173,9 @@ az role assignment create \
 Finally, assign the appropriate Kubernetes RBAC role based on what the developer needs to do:
 
 - Use **Azure Kubernetes Service RBAC Reader** for read-only access
+
 - Use **Azure Kubernetes Service RBAC Writer** for deploying applications
+
 - Use **Azure Kubernetes Service RBAC Admin** for full administrative control
 
 ```azurecli-interactive
@@ -261,14 +222,17 @@ As a developer, you work within an existing AKS desktop environment to deploy ap
 
 To work with AKS desktop as a developer, your cluster operator must assign you three essential roles:
 
-1. **Azure Kubernetes Service Cluster User Role** - Allows you to download cluster credentials using `az aks get-credentials`, which is a requirement to connect to the cluster from your local machine or through AKS desktop.
+- **Azure Kubernetes Service Cluster User Role** - Allows you to download cluster credentials using `az aks get-credentials`, which is a requirement to connect to the cluster from your local machine or through AKS desktop.
 
-2. **Azure Kubernetes Service Namespace User** - Grants access to your assigned managed namespace/Project.
+- **Azure Kubernetes Service Namespace User** - Grants access to your assigned managed namespace/Project.
 
-3. **One Kubernetes RBAC role** - Controls what actions you can perform:
-   - **Azure Kubernetes Service RBAC Reader** - Read-only access to resources
-   - **Azure Kubernetes Service RBAC Writer** - Read and write access to deploy apps
-   - **Azure Kubernetes Service RBAC Admin** - Full administrative access
+- **One Kubernetes RBAC role** - Controls what actions you can perform:
+
+  - **Azure Kubernetes Service RBAC Reader** - Read-only access to resources
+
+  - **Azure Kubernetes Service RBAC Writer** - Read and write access to deploy apps
+
+  - **Azure Kubernetes Service RBAC Admin** - Full administrative access
 
 ### How permissions are assigned
 
@@ -277,8 +241,11 @@ When a Project is created in AKS desktop:
 - **Project creator** - Automatically receives **Owner** role on the managed namespace and all necessary permissions to deploy applications.
 
 - **Other users** - Must be granted access by the cluster operator or Project creator. They receive:
+
   - **Azure Kubernetes Service Cluster User Role** on the cluster
+
   - **Azure Kubernetes Service Namespace User** role on the namespace
+
   - One of the Kubernetes RBAC roles (Reader, Writer, or Admin)
 
 To deploy applications, you need the **Writer** or **Admin** role. For more information, see [Managed namespaces built-in roles](concepts-managed-namespaces.md#managed-namespaces-built-in-roles).
@@ -366,6 +333,49 @@ az role assignment create \
 To grant permissions to view metrics, follow the steps in the [View application metrics](#view-application-metrics) section.
 
 ---
+
+## Understanding AKS desktop RBAC roles
+
+AKS desktop uses Azure RBAC to control access to managed namespaces and cluster resources. Understanding these roles is essential for properly configuring permissions.
+
+The following table summarizes the key permissions needed for each role:
+
+| Role | Task | Required Permission |
+|------|------|---------------------|
+| **Cluster Operator** | Create infrastructure resources | Contributor role on resource group. |
+| **Cluster Operator** | Assign permissions to others | User Access Administrator role. |
+| **Cluster Operator** | Enable Project creation for users | Grant Azure Kubernetes Service Namespace Contributor role. |
+| **Cluster Operator** | Grant developer access to Projects | Assign three roles: Azure Kubernetes Service Cluster User Role, Azure Kubernetes Service Namespace User, and one Kubernetes RBAC role. |
+| **Project Creator** | Create Projects | Azure Kubernetes Service Namespace Contributor role on cluster. |
+| **Project Creator** | Assign Project access to others | User Access Administrator role (optional). |
+| **Developer** | Access cluster and download kubeconfig | Azure Kubernetes Service Cluster User Role on cluster. |
+| **Developer** | Access assigned namespace/Project | Azure Kubernetes Service Namespace User role on namespace. |
+| **Developer** | Deploy applications | Azure Kubernetes Service RBAC Writer or Admin role on namespace. |
+| **Developer** | View application metrics | Monitoring Data Reader role on Azure Monitor workspace. |
+| **Developer** | View resources (read-only) | Azure Kubernetes Service RBAC Reader role on namespace. |
+
+### Namespace access roles
+
+| Role | Description |
+|------|-------------|
+| **Azure Kubernetes Service Namespace Contributor** | Allows access to create, update, and delete managed namespaces on a cluster. |
+| **Azure Kubernetes Service Namespace User** | Allows read-only access to a managed namespace on a cluster. Allows access to list credentials on the namespace. This role is required for all users who need to work with a namespace. |
+
+### Kubernetes RBAC roles for namespaces
+
+Managed namespaces use the following built-in roles for data plane operations:
+
+| Role | Description |
+|------|-------------|
+| **Azure Kubernetes Service RBAC Reader** | Allows read-only access to see most objects in a namespace. It doesn't allow viewing roles or role bindings. This role doesn't allow viewing Secrets, since reading the contents of Secrets enables access to ServiceAccount credentials in the namespace, which would allow API access as any ServiceAccount in the namespace (a form of privilege escalation). |
+| **Azure Kubernetes Service RBAC Writer** | Allows read/write access to most objects in a namespace. This role doesn't allow viewing or modifying roles or role bindings. However, this role allows accessing Secrets and running Pods as any ServiceAccount in the namespace, so it can be used to gain the API access levels of any ServiceAccount in the namespace. |
+| **Azure Kubernetes Service RBAC Admin** | Allows read/write access to most resources in a namespace, including the ability to create roles and role bindings within the namespace. This role doesn't allow write access to resource quota or to the namespace itself. |
+
+### Cluster access role
+
+| Role | Description |
+|------|-------------|
+| **Azure Kubernetes Service Cluster User Role** | Allows the use of `az aks get-credentials` without the `--admin` flag. On a Microsoft Entra ID-enabled cluster, this downloads an empty entry into `.kube/config`, which triggers browser-based authentication when first used by kubectl. **This role is crucial for developers to access the cluster and work with their assigned namespaces.** |
 
 ## Next steps
 

@@ -30,7 +30,7 @@ This article guides you through deploying an application using AKS desktop, enab
 
   - Mac
 
-- Your cluster must be Microsoft Entra ID authenticated, to make sure your cluster is Entra ID authenticated. Use an [AKS Automatic cluster](intro-aks-automatic.md).
+- Your cluster must be Microsoft Entra ID authenticated. To ensure your cluster is Microsoft Entra ID authenticated, use an [AKS Automatic cluster](intro-aks-automatic.md).
 
 ## Sign into your account
 
@@ -113,11 +113,11 @@ To delete a cluster from AKS desktop and your kubeconfig, follow these steps:
 
 ## Create a new Project
 
-When you create a Project on a cluster, any user with access to the associated namespace can view the Project. Namespace access and labeling determine which users can see each Project, since Projects are tied to namespaces. To learn more about Projects, visit the Projects overview [Link to projects overview page in aks-desktop-overview.md]
+When you create a Project on a cluster, any user with access to the associated namespace can view the Project. Namespace access and labeling determine which users can see each Project, since Projects are tied to namespaces. To learn more, see [What is the Project Overview screen?](aks-desktop-overview#what-is-the-project-overview-screen).
 
 There are three methods you can choose from to deploy your application using AKS desktop:
 
-# [AKS managed Project](#tab/aks-managed-Project)
+# [AKS managed project](#tab/aks-managed-project)
 
 To manage your Project using this method, the **aks-preview** extension must be installed by running the following command:
 
@@ -143,7 +143,7 @@ Once these prerequisites are complete, perform the following steps:
 
 ![A video demonstrating how to create a new AKS-managed Project in the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-create-new-project-aks-managed.gif)
 
-# [YAML Project](#tab/yaml-Project)
+# [YAML Project](#tab/yaml-project)
 
 1. Provide a Project name.
 1. Select a cluster to add to your Project.
@@ -153,7 +153,7 @@ Once these prerequisites are complete, perform the following steps:
 
    1. Select **Load from URL**, paste your YAML URL, select **Load**, then select **Create**.
 
-# [New Project](#tab/new-Project)
+# [New Project](#tab/new-project)
 
 1. Provide a Project name.
 1. Select a cluster to add to your Project. You can add more once a cluster is selected.
@@ -205,23 +205,6 @@ Once you create your first Project, AKS desktop places you directly into the new
 1. Review the resources to deploy, select **Deploy**, then select **Close**.
 
 ---
-
-## Project overview
-
-Once your project is created and your app is deployed, you will be greated to the project overview page. Inside the project page, you can do the following: 
-
-| Feature | Description |
-|--|--|
-| **Kubernetes resources** | View all Kubernetes resources deployed in your Project, including workloads and network configuration. |
-| **Access** | Grant or remove access to your Project. |
-| **Map** | Visualize how Kubernetes resources in your Project interact, showing data flow between deployments and services. |
-| **Logs** | Access streaming logs for your application. |
-| **Metrics** | View detailed metrics such as CPU, memory, and resource usage for your application. |
-| **Scaling** | Configure application scaling using Horizontal Pod Autoscaler (HPA) or manual settings. |
-| **Environment variables** | Manage environment variables for your application. |
-
-
-Show pic of project overview page.
 
 ## View cluster data and metrics
 

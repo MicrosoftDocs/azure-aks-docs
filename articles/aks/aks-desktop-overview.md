@@ -50,7 +50,7 @@ AKS desktop provides the following benefits:
 
 - **Multi-cloud capabilities** - View and access Kubernetes clusters across any cloud.
 
-- **Kubeconfig management** - Easily sign into your Azure account and merge your cluster credentials into your local kubeconfig. This kubeconfig can also be used by the CLI.
+- **Kubeconfig management** - Sign in to your Azure account and seamlessly merge cluster credentials into your local kubeconfig file, making it accessible for use with the CLI.
 
 - **User and resource management collaboration**:
 
@@ -66,7 +66,7 @@ AKS desktop provides the following benefits:
 
 ## What are Projects?
 
-AKS desktop is focused on providing an easy to understand cloud native application centric experience. To do this, we have built on top of Headlamps Project experience. Per Headlamp's documentation:
+AKS desktop uses Headlamp's Projects feature to simplify Kubernetes management for developers. Projects group related resources—such as workloads, services, and configurations—into logical units, making it easier to organize, monitor, and collaborate on applications. This approach streamlines navigation, improves visibility, and supports teamwork by providing an application-focused view across namespaces and clusters. According to Headlamp's documentation:
 
 > "Projects make Kubernetes easier to manage by grouping related resources into a single, application-centric view that is designed with developers in mind. Instead of navigating cluster-wide lists or searching for labels, Projects let you organize workloads across one or more namespaces and even multiple clusters into a logical group. This approach gives developers clarity on their application as a whole, making collaboration, troubleshooting, and onboarding much simpler."
 
@@ -88,6 +88,8 @@ Once you deploy an application to a Project through AKS desktop, you're greeted 
 | **Metrics** | View detailed metrics such as CPU, memory, and resource usage for your application. |
 | **Scaling** | Configure application scaling using Horizontal Pod Autoscaler (HPA) or manual settings. |
 | **Environment variables** | Manage environment variables for your application. |
+
+![The project overview screen of a cluster in the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-project-overview.png)
 
 ## Join the community and provide feedback for AKS desktop (Preview)
 
