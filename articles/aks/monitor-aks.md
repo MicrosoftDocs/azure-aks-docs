@@ -21,7 +21,7 @@ The Kubernetes platform is a complex, distributed system. You must monitor your 
 - For data visualization, see [Azure Workbooks](/azure/azure-monitor/visualize/workbooks-overview) and [Monitor your Azure services in Grafana](/azure/azure-monitor/visualize/grafana-plugin).
 
 > [!TIP]
-> You can use Microsoft Copilot in Azure to configure monitoring on your AKS clusters in the Azure portal. For more information, see [Work with AKS clusters efficiently by using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#configure-monitoring-on-clusters).
+> You can use Azure Copilot to configure monitoring on your AKS clusters in the Azure portal. For more information, see [Work with AKS clusters efficiently by using Azure Copilot](/azure/copilot/work-aks-clusters#configure-monitoring-on-clusters).
 
 [!INCLUDE [horz-monitor-insights](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-insights.md)]
 

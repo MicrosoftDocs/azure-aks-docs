@@ -48,8 +48,10 @@
           href: concepts-multi-cluster-workload-management.md
         - name: Managing workloads using cluster resource placement
           items:
-          - name: Introduction to cluster resource placement API
+          - name: Introduction to ClusterResourcePlacement
             href: concepts-resource-propagation.md
+          - name: Introduction to ResourcePlacement
+            href: concepts-namespace-scoped-resource-propagation.md
           - name: Defining a placement rollout strategy
             href: concepts-rollout-strategy.md
           - name: Automated deployments overview
@@ -102,8 +104,10 @@
       items:
         - name: Access Fleet hub cluster API
           href: access-fleet-hub-cluster-kubernetes-api.md
-        - name: Multi-cluster resource placement using cluster resource placement
+        - name: Multi-cluster cluster-scoped resource placement
           href: quickstart-resource-propagation.md
+        - name: Multi-cluster namespace-scoped resource placement
+          href: quickstart-namespace-scoped-resource-propagation.md
         - name: Understand the placement status
           href: howto-understand-placement.md
         - name: Intelligent multi-cluster resource placement using cluster properties
