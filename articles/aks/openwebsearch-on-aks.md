@@ -21,9 +21,9 @@ Long-running Azure operations might time out at the CLI. To keep the flow resili
 
 ## Set up the environment
 
-Define the environment variables used after AKS provisioning. Azure-specific variables (resource group, cluster name, ACR identifiers) are now managed by [`create_aks_infrastructure.md`](create_aks_infrastructure.md); this article assumes they're already exported in the current shell. Unique names still append the timestamp-based `HASH` to avoid collisions when generating new resources (for example, custom images).
+Define the environment variables used after AKS provisioning. Azure-specific variables (resource group, cluster name, ACR identifiers) are now managed by [`create-aks-infrastructure.md`](create-aks-infrastructure.md); this article assumes they're already exported in the current shell. Unique names still append the timestamp-based `HASH` to avoid collisions when generating new resources (for example, custom images).
 
-Use the following commands to ensure runtime variables are ready while asserting that Azure and ACRvalues have been supplied by [`create_aks_infrastructure.md`](create_aks_infrastructure.md).
+Use the following commands to ensure runtime variables are ready while asserting that Azure and ACRvalues have been supplied by [`create-aks-infrastructure.md`](create-aks-infrastructure.md).
 
 ```bash
 export HASH="${HASH:-$(date -u +"%y%m%d%H%M")}"  # YYMMDDHHMM stamp
@@ -73,7 +73,7 @@ export TEST_SEARCH_QUERY="${TEST_SEARCH_QUERY:-open source vector database compa
 export TEST_FETCH_GITHUB_REPO="${TEST_FETCH_GITHUB_REPO:-Aas-ee/open-webSearch}"
 ```
 
-<!--- Summary: Ensures runtime variables are ready while asserting that Azure and ACRvalues have been supplied by `docs/create_aks_infrastructure.md`. --->
+<!--- Summary: Ensures runtime variables are ready while asserting that Azure and ACRvalues have been supplied by `docs/create-aks-infrastructure.md`. --->
 
 ## Prerequisites
 
@@ -95,7 +95,7 @@ command -v npm >/dev/null || echo "npm missing"
 command -v jq >/dev/null || echo "jq missing (optional)"
 ```
 
-Run the executable guide to [Create an AKS Cluster](create_aks_infrastructure.md) to validate Azure access, create the resource group, provision Azure Container Registry, deploy the AKS cluster, add any optional node pools, and attach the registry to the cluster. That guide also exports the Azure-related environment variables this document consumes. Return here once it reports completion.
+Run the executable guide to [Create an AKS Cluster](create-aks-infrastructure.md) to validate Azure access, create the resource group, provision Azure Container Registry, deploy the AKS cluster, add any optional node pools, and attach the registry to the cluster. That guide also exports the Azure-related environment variables this document consumes. Return here once it reports completion.
 
 ### Verify environment variable values
 
