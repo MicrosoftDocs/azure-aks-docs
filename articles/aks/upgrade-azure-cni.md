@@ -23,20 +23,6 @@ You can update an existing AKS cluster to Azure CNI Overlay if the cluster:
 - Doesn't have network policies enabled. If you need to uninstall the network policy engine before upgrading your cluster, follow the steps in [Uninstall Azure Network Policy Manager or Calico](use-network-policies.md#uninstall-azure-network-policy-manager-or-calico).
 - Doesn't use any Windows node pools with Docker as the container runtime.
 
-Keep these considerations and limitations in mind:
-
-- Upgrading an existing cluster to Azure CNI Overlay is an irreversible process.
-
-- The update process triggers node pools to be reimaged simultaneously. Upgrading each node pool separately to Azure CNI Overlay isn't supported. Any disruptions to cluster networking are similar to a node image update or Kubernetes version upgrade where each node in a node pool is reimaged.
-
-- Before Windows OS build 20348.1668, there was a limitation around Windows overlay pods incorrectly routing packets from host network pods via Source Network Address Translation (SNAT). This limitation had a detrimental effect for clusters who were upgrading to Azure CNI Overlay. To avoid this issue, use Windows OS build 20348.1668 or later.
-
-- If you're using a custom `azure-ip-masq-agent` configuration to include additional IP ranges that shouldn't send SNAT packets from pods, upgrading to Azure CNI Overlay can break connectivity to these ranges. Pod IPs from the overlay space are unreachable by anything outside the cluster nodes.
-
-- For old clusters, a ConfigMap might be left over from a previous version of `azure-ip-masq-agent`. If this ConfigMap (named `azure-ip-masq-agent-config`) exists and isn't intentionally in place, you should delete it before upgrading.
-
-- If you're not using a custom `ip-masq-agent` configuration, only the `azure-ip-masq-agent-config-reconciled` ConfigMap should exist with respect to Azure `ip-masq-agent` ConfigMap. It's updated automatically during the update process.
-
 ### [Azure CNI](#tab/azure-cni)
 
 Update an existing Azure Container Networking Interface (CNI) cluster to use Azure CNI Overlay by using the [`az aks update`][az-aks-update] command.
@@ -85,6 +71,20 @@ az aks update \
 When you update Azure CNI Node Subnet, update either the IPAM networking mode or the data plane. Upgrading both in a single operation isn't supported.
 
 ---
+
+Keep these considerations and limitations in mind:
+
+- Upgrading an existing cluster to Azure CNI Overlay is an irreversible process.
+
+- The update process triggers node pools to be reimaged simultaneously. Upgrading each node pool separately to Azure CNI Overlay isn't supported. Any disruptions to cluster networking are similar to a node image update or Kubernetes version upgrade where each node in a node pool is reimaged.
+
+- Before Windows OS build 20348.1668, there was a limitation around Windows overlay pods incorrectly routing packets from host network pods via Source Network Address Translation (SNAT). This limitation had a detrimental effect for clusters who were upgrading to Azure CNI Overlay. To avoid this issue, use Windows OS build 20348.1668 or later.
+
+- If you're using a custom `azure-ip-masq-agent` configuration to include additional IP ranges that shouldn't send SNAT packets from pods, upgrading to Azure CNI Overlay can break connectivity to these ranges. Pod IPs from the overlay space are unreachable by anything outside the cluster nodes.
+
+- For old clusters, a ConfigMap might be left over from a previous version of `azure-ip-masq-agent`. If this ConfigMap (named `azure-ip-masq-agent-config`) exists and isn't intentionally in place, you should delete it before upgrading.
+
+- If you're not using a custom `ip-masq-agent` configuration, only the `azure-ip-masq-agent-config-reconciled` ConfigMap should exist with respect to Azure `ip-masq-agent` ConfigMap. It's updated automatically during the update process.
 
 ## Update the data plane to Azure CNI Powered by Cilium
 

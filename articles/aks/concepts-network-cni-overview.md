@@ -12,7 +12,7 @@ ms.custom: fasttrack-edit
 
 # Azure Kubernetes Service (AKS) CNI networking overview
 
-Kubernetes uses Container Networking Interface (CNI) plugins to manage networking in Kubernetes clusters. CNI plug-ins are responsible for assigning IP addresses to pods, network routing between pods, Kubernetes Service routing, and more.
+Kubernetes uses Container Networking Interface (CNI) plugins to manage networking in Kubernetes clusters. CNI plug-ins are responsible for assigning IP addresses to pods, network routing between pods, Kubernetes service routing, and more.
 
 Azure Kubernetes Service (AKS) provides multiple CNI plugins that you can use in your clusters, depending on your networking requirements.
 
@@ -100,7 +100,7 @@ When you're planning your network configuration for AKS, keep these requirements
 
 - The virtual network for the AKS cluster must allow outbound internet connectivity.
 - AKS clusters can't use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for address ranges for the Kubernetes service, pods, or cluster virtual networks.
-- In bring-your-own-virtual-network scenarios, the cluster identity that the AKS cluster uses must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network. If you want to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
+- In scenarios where you bring your own virtual network, the cluster identity that the AKS cluster uses must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network. If you want to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
   - `Microsoft.Network/virtualNetworks/subnets/join/action`
   - `Microsoft.Authorization/roleAssignments/write`
   - `Microsoft.Network/virtualNetworks/subnets/read` (needed only if you're defining your own subnets and CIDRs)
