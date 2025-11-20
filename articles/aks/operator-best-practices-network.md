@@ -62,7 +62,7 @@ As each node and pod receives its own IP address, plan out the address ranges fo
   * With Azure CNI networking, each running node has default limits to the number of pods.
 * Avoid using IP address ranges that overlap with existing network resources.
   * It's necessary to allow connectivity to on-premises or peered networks in Azure.
-* To handle scale out events or cluster upgrades, you need extra IP addresses available in the assigned subnet.
+* To handle scale-out events or cluster upgrades, you need extra IP addresses available in the assigned subnet.
   * This extra address space is especially important if you use Windows Server containers, as those node pools require an upgrade to apply the latest security patches. For more information on Windows Server nodes, see [Upgrade a node pool in AKS][nodepool-upgrade].
 
 To calculate the IP address required, see [Configure Azure CNI networking in AKS][advanced-networking].
