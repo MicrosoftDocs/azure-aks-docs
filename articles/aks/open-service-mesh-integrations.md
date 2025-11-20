@@ -133,7 +133,7 @@ Ingress allows for traffic external to the mesh to be routed to services within 
     EOF
     ```
 
-2. Verify the `Gateway` and `HTTPRoute` resources were successfully deployed using the `kubectl get gateway` and `kubectl get httproute` commands. Make note of the external fully qualified domain name on the Gatewy resource.
+2. Verify the `Gateway` and `HTTPRoute` resources were successfully deployed using the `kubectl get gateway` and `kubectl get httproute` commands. Make note of the external fully qualified domain name on the Gateway resource.
 
     ```console
     # Gateway resource
