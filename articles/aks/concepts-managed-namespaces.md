@@ -97,7 +97,7 @@ Managed namespaces uses the following built-in roles for the data plane.
 | ---- | ------------|
 | [Azure Kubernetes Service RBAC Reader][aks-rbac-reader] | Allows read-only access to see most objects in a namespace. It doesn't allow viewing roles or role bindings. This role doesn't allow viewing Secrets, since reading the contents of Secrets enables access to ServiceAccount credentials in the namespace, which would allow API access as any ServiceAccount in the namespace (a form of privilege escalation).|
 | [Azure Kubernetes Service RBAC Writer][aks-rbac-writer] | Allows read/write access to most objects in a namespace. This role doesn't allow viewing or modifying roles or role bindings. However, this role allows accessing Secrets and running Pods as any ServiceAccount in the namespace, so it can be used to gain the API access levels of any ServiceAccount in the namespace. |
-[Azure Kubernetes Service RBAC Admin][aks-rbac-admin] |  Allows read/write access to most resources in a namespace, including the ability to create roles and role bindings within the namespace. This role doesn't allow write access to resource quota or to the namespace itself. |
+| [Azure Kubernetes Service RBAC Admin][aks-rbac-admin] |  Allows read/write access to most resources in a namespace, including the ability to create roles and role bindings within the namespace. This role doesn't allow write access to resource quota or to the namespace itself. |
 
 ## Managed namespaces use cases
 
@@ -190,7 +190,8 @@ You can further use [Azure RBAC roles](#managed-namespaces-built-in-roles), scop
 
 ## Next steps
 
-Learn how to [create and use managed namespaces on Azure Kubernetes Service (AKS)][managed-namespaces].
+* Learn how to [create and use managed namespaces on Azure Kubernetes Service (AKS)][managed-namespaces].
+* Learn about [multi-cluster managed namespaces][fleet-managed-namespace] with Azure Kubernetes Fleet Manager.
 
 <!--- External Links --->
 [meaning-of-cpu]: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-cpu
@@ -213,4 +214,5 @@ Learn how to [create and use managed namespaces on Azure Kubernetes Service (AKS
 [aks-network-policies]: use-network-policies.md
 [aks-resource-quotas]: operator-best-practices-scheduler.md#enforce-resource-quotas
 [managed-namespaces]: managed-namespaces.md
+[fleet-managed-namespace]: ../kubernetes-fleet/concepts-fleet-managed-namespace.md
 [managed-namespaces-cli]: /cli/azure/aks/namespace
