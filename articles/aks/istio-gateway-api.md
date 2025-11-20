@@ -136,7 +136,7 @@ You should see an `HTTP 200` response.
 
 ### Securing Istio ingress traffic with the Kubernetes Gateway API
 
-The Istio add-on supports syncing secrets from Azure Key Vault (AKV) for securing Gateway API-based ingress traffic with [Transport Layer Security (TLS) termination][istio-tls-termination] or [Server Name Indication (SNI) passthrough][istio-sni-passthrough]. You can follow the instructions below to sync secrets from AKV onto your AKS cluster using the [AKV Secrets Store Container Storage Interface (CSI) Driver add-on][aks-csi-driver] and terminate TLS at the ingress gateway
+The Istio add-on supports syncing secrets from Azure Key Vault (AKV) for securing Gateway API-based ingress traffic with [Transport Layer Security (TLS) termination][istio-tls-termination] or [Server Name Indication (SNI) passthrough][istio-sni-passthrough]. You can follow the instructions below to sync secrets from AKV onto your AKS cluster using the [AKV Secrets Store Container Storage Interface (CSI) Driver add-on][aks-csi-driver] and terminate TLS at the ingress gateway.
 
 #### Required client/server certificates and keys
 
