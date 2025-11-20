@@ -48,14 +48,14 @@ sections:
       - question: |
           What Linux operating systems (OS) are supported on AKS?
         answer: |
-          AKS supports 4 main Linux operating systems, including Ubuntu Linux, [Azure Linux](./use-azure-linux.md), [Azure Linux OS Guard](./use-azure-linux-os-guard.md), and [Flatcar Container Linux for AKS](./flatcar-container-linux-for-AKS.md). When specifying `--os-type Linux` during node pool creation or cluster creation, the default OS is Ubuntu Linux.
+          AKS supports four main Linux operating systems, including Ubuntu Linux, [Azure Linux](./use-azure-linux.md), [Azure Linux OS Guard](./use-azure-linux-os-guard.md), and [Flatcar Container Linux for AKS](./flatcar-container-linux-for-AKS.md). When specifying `--os-type Linux` during node pool creation or cluster creation, the default OS is Ubuntu Linux.
 
       - question: |
           What operating systems (OS) versions are supported on AKS?
         answer: |
-          When using `--os-sku Ubuntu`, AKS defaults to Ubuntu 22.04 in kubernetes version 1.25-1.34. AKS defaults to Ubuntu 24.04 in kubernetes version 1.35+. 
-          When using `--os-sku AzureLinux`, AKS defaults to Azure Linux 3.0 in kubernetes versions 1.32+. 
-          In some scenarios like FIPS-enabled node pools, the default OS version may differ. See [node images](./node-images.md) for more information.
+          When using `--os-sku Ubuntu`, AKS defaults to Ubuntu 22.04 in Kubernetes versions 1.25-1.34. AKS defaults to Ubuntu 24.04 in Kubernetes versions 1.35+. 
+          When using `--os-sku AzureLinux`, AKS defaults to Azure Linux 3.0 in Kubernetes versions 1.32+. 
+          In some scenarios, like FIPS-enabled node pools, the default OS version might differ. See [node images](./node-images.md) for more information.
 
       - question: |
           Can I move or migrate my cluster between Azure tenants?
@@ -390,5 +390,5 @@ sections:
       - question: |
           Which Windows OS versions are deprecated on AKS?
         answer: |
-          Starting on 1 March 2026, AKS will no longer support Windows Server 2019 node pools. Windows Server 2019 can't be used in kubernetes version 1.33+. For more information on this retirement, see [Retirement: Windows Server 2019 node pools on AKS](https://github.com/Azure/AKS/issues/4091).
-          Starting on 15 March 2027, AKS will no longer support Windows Server 2022 node pools. Windows Server 2022 can't be used in kubernetes version 1.36+. For more information on this retirement, see [Retirement: Windows Server 2022 node pools on AKS](https://github.com/Azure/AKS/issues/4168).
+          Starting on 1 March 2026, AKS will no longer support Windows Server 2019 node pools. Kubernetes versions 1.33+ can't use Windows Server 2019. For more information on this retirement, see [Retirement: Windows Server 2019 node pools on AKS](https://github.com/Azure/AKS/issues/4091).
+          Starting on 15 March 2027, AKS will no longer support Windows Server 2022 node pools. Kubernetes versions 1.36+ can't use Windows Server 2022. For more information on this retirement, see [Retirement: Windows Server 2022 node pools on AKS](https://github.com/Azure/AKS/issues/4168).
