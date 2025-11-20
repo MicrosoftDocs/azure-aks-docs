@@ -117,13 +117,12 @@ Recommendations can have one of the following attestation statuses:
 | 1.4.2 | Ensure that the `--bind-address` argument is set to 127.0.0.1 | Automated | L1 | Equivalent Control | Pod's IP is used|
 | 2 | `etcd` | | | | |
 | 2.1 | Ensure that the `--cert-file` and `--key-file` arguments are set as appropriate | Automated | L1 | Pass | |
-| 2.2 | Ensure that the `--cert-file` and `--key-file` arguments are set as appropriate | Automated | L1 | Pass | |
-| 2.3 | Ensure that the `--client-cert-auth` argument is set to true | Automated | L1 | Pass | |
-| 2.4 | Ensure that the `--auto-tls` argument isn't set to true | Automated | L1 | Pass | Parameter is not set, which will set the default value as false (which is compliant) |
-| 2.5 | Ensure that the `--peer-cert-file` and `--peer-key-file` arguments are set as appropriate | Automated | L1 | Pass | |
-| 2.6 | Ensure that the `--peer-client-cert-auth` argument is set to true | Automated | L1 | Pass | |
-| 2.7 | Ensure that the `--peer-auto-tls` argument isn't set to true | Automated | L1 | Pass | Parameter is not set, which will set the default value as false (which is compliant) |
-| 2.8 | Ensure that a unique Certificate Authority is used for `etcd` | Manual | L2 | Pass | `--client-ca-file` for api-server is different from `--trusted-ca-file` for etcd|
+| 2.2 | Ensure that the `--client-cert-auth` argument is set to true | Automated | L1 | Pass | |
+| 2.3 | Ensure that the `--auto-tls` argument isn't set to true | Automated | L1 | Pass | Parameter is not set, which will set the default value as false (which is compliant) |
+| 2.4 | Ensure that the `--peer-cert-file` and `--peer-key-file` arguments are set as appropriate | Automated | L1 | Pass | |
+| 2.5 | Ensure that the `--peer-client-cert-auth` argument is set to true | Automated | L1 | Pass | |
+| 2.6 | Ensure that the `--peer-auto-tls` argument isn't set to true | Automated | L1 | Pass | Parameter is not set, which will set the default value as false (which is compliant) |
+| 2.7 | Ensure that a unique Certificate Authority is used for `etcd` | Manual | L2 | Pass | `--client-ca-file` for api-server is different from `--trusted-ca-file` for etcd|
 | 3 | Control Plane Configuration | | | | |
 | 3.1 | Authentication and Authorization | | | | |
 | 3.1.1 | Client certificate authentication shouldn't be used for users | Manual | L1 | Pass | When you deploy an AKS cluster, local accounts are enabled by default. You can [disable local accounts][disable-local-accounts] to disable client certificates for authentication. |
