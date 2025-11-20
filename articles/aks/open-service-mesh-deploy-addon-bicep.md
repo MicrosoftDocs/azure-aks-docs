@@ -4,7 +4,7 @@ description: Use a Bicep template to deploy the Open Service Mesh (OSM) add-on t
 ms.topic: how-to
 ms.custom: devx-track-bicep
 ms.date: 09/25/2024
-ms.author: pgibson
+ms.author: schaffererin
 author: schaffererin
 # Customer intent: As a cloud developer, I want to deploy the Open Service Mesh add-on to an Azure Kubernetes Service cluster using a Bicep template, so that I can efficiently manage microservices communication and ensure proper service mesh configurations.
 ---

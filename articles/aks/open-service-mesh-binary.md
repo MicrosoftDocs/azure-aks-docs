@@ -4,7 +4,7 @@ description: Download and configure the Open Service Mesh (OSM) client library
 ms.topic: concept-article
 ms.custom: linux-related-content
 ms.date: 09/25/2024
-ms.author: pgibson
+ms.author: schaffererin
 author: schaffererin
 zone_pivot_groups: client-operating-system
 # Customer intent: As a cloud engineer, I want to download and configure the Open Service Mesh client library for AKS, so that I can effectively manage and operate my service mesh environment while ensuring compatibility with Kubernetes versions.
