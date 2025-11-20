@@ -91,6 +91,7 @@ The Istio-based service mesh add-on for AKS designates features and [configurati
 [aks-release-notes]: https://github.com/Azure/AKS/releases
 [aks-release-status]: https://releases.aks.azure.com/
 [istio-support-calendar]: https://istio.io/latest/docs/releases/supported-releases/#support-status-of-istio-releases
+[az-aks-mesh-get-revisions]: https://learn.microsoft.com/en-us/cli/azure/aks/mesh?view=azure-cli-latest#az-aks-mesh-get-revisions 
 
 <!-- LINKS - Internal -->
 [istio-deploy-addon]: ./istio-deploy-addon.md
