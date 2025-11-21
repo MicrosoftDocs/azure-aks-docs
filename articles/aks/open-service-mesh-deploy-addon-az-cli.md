@@ -4,7 +4,7 @@ description: Use Azure CLI to install the Open Service Mesh (OSM) add-on on an A
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 09/25/2024
-ms.author: pgibson
+ms.author: schaffererin
 author: schaffererin
 # Customer intent: As a Kubernetes administrator, I want to install the Open Service Mesh add-on using Azure CLI, so that I can manage traffic, enforce policies, and collect telemetry for my applications running on an Azure Kubernetes Service cluster.
 ---
