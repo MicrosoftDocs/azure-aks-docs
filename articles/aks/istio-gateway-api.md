@@ -642,13 +642,19 @@ kubectl delete gateways.gateway.networking.k8s.io httpbin-gateway
 kubectl delete httproute httpbin
 ```
 
-If you created a custom `ConfigMap`, also delete that:
+If you created a ConfigMap to customize your `Gateway`, run the following command to delete the ConfigMap:
 
 ```bash
 kubectl delete configmap gw-options
 ```
 
-If you 
+If you created a SecretProviderClass and secret to use for TLS termination, delete the following resources as well:
+
+```bash
+kubectl delete secret httpbin-credential
+kubectl delete pod secrets-store-sync-httpbin
+kubectl-delete secretproviderclass httpbin-credential-spc
+```
 
 ## Next steps
 
