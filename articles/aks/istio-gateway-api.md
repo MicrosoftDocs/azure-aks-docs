@@ -653,7 +653,7 @@ If you created a SecretProviderClass and secret to use for TLS termination, dele
 ```bash
 kubectl delete secret httpbin-credential
 kubectl delete pod secrets-store-sync-httpbin
-kubectl-delete secretproviderclass httpbin-credential-spc
+kubectl delete secretproviderclass httpbin-credential-spc
 ```
 
 ## Next steps
