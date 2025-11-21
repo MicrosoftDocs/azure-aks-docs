@@ -138,7 +138,7 @@ Ingress allows for traffic external to the mesh to be routed to services within 
     ```console
     # Gateway resource
     kubectl get gateway gateway-01 -n test-infra -o yaml
-    # HTTPRotue resource
+    # HTTPRoute resource
     kubectl get httproute contoso-route -n test-infra -o yaml
     ```
 
