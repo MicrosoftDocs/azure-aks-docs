@@ -13,7 +13,7 @@ ms.service: azure-kubernetes-service
 
 The Open Service Mesh (OSM) add-on integrates with features provided by Azure and some open source projects.
 
-> [!IMPORTANT]
+> [!WARNING]
 > Microsoft has announced the retirement of the [Open Service Mesh (OSM) add-on for AKS](https://azure.microsoft.com/updates?id=open-service-mesh-add-on-for-aks-will-be-retired-on-september-30-2027). The upstream OSM project has also been retired by the [Cloud Native Computing Foundation (CNCF)](https://docs.openservicemesh.io/). Identify any existing OSM configurations and migrate them to equivalent Istio configurations. For migration steps, see [Migration guidance for Open Service Mesh (OSM) configurations to Istio](open-service-mesh-istio-migration-guidance.md).
 
 > [!IMPORTANT]
