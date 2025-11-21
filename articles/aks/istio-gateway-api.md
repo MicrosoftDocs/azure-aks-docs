@@ -173,7 +173,7 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     az aks enable-addons --addons azure-keyvault-secrets-provider --resource-group $RESOURCE_GROUP --name $CLUSTER
     ```
     
-3. Authorize the user-assigned managed identity of the add-on to access Azure Key Vault resource using access policy. Alternatively, if your Key Vault is using Azure RBAC for the permissions model, follow the instructions [here][akv-rbac-guide] to assign an Azure role of Key Vault Secrets User for the add-on's user-assigned managed identity.
+3. If your Key Vault is using Azure RBAC for the permissions model, follow the instructions [here][akv-rbac-guide] to assign an Azure role of Key Vault Secrets User for the add-on's user-assigned managed identity. Alternatively, if your key vault is using the vault access policy permissions model, authorize the user-assigned managed identity of the add-on to access Azure Key Vault resource using access policy:
     
     ```bash
     OBJECT_ID=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER --query 'addonProfiles.azureKeyvaultSecretsProvider.identity.objectId' -o tsv | tr -d '\r')
@@ -190,7 +190,7 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     az keyvault secret set --vault-name $AKV_NAME --name test-httpbin-crt --file httpbin_certs/httpbin.example.com.crt
     ```
 
-5. Use the following manifest to deploy SecretProviderClass to provide Azure Key Vault specific parameters to the CSI driver.
+5. Use the following manifest to deploy the SecretProviderClass to provide Azure Key Vault specific parameters to the CSI driver.
     
     ```bash
     cat <<EOF | kubectl apply -f -
@@ -333,7 +333,7 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
         tls:
           mode: Terminate
           certificateRefs:
-          - name: httpbin-credential-2
+          - name: httpbin-credential
         allowedRoutes:
           namespaces:
             from: Selector
@@ -375,9 +375,9 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     Get the gateway address and port:
 
     ```bash
-    kubectl wait --for=condition=programmed gtw httpbin-gateway
-    export INGRESS_HOST=$(kubectl get gtw httpbin-gateway -o jsonpath='{.status.addresses[0].value}')
-    export SECURE_INGRESS_PORT=$(kubectl get gtw httpbin-gateway -o jsonpath='{.spec.listeners[?(@.name=="https")].port}')
+    kubectl wait --for=condition=programmed gateways.gateway.networking.k8s.io httpbin-gateway
+    export INGRESS_HOST=$(kubectl get gateways.gateway.networking.k8s.io httpbin-gateway -o jsonpath='{.status.addresses[0].value}')
+    export SECURE_INGRESS_PORT=$(kubectl get gateways.gateway.networking.k8s.io httpbin-gateway -o jsonpath='{.spec.listeners[?(@.name=="https")].port}')
     ```
 
 2. Send an HTTPS request to access the `httpbin` service:
@@ -632,6 +632,24 @@ kubectl get deployment httpbin-gateway-istio -ojsonpath='{.metadata.labels.test\
 ```output
 updated-per-gateway
 ```
+
+## Cleanup Resources
+
+Run the following commands to delete the `Gateway` and `HttpRoute`:
+
+```bash
+kubectl delete gateways.gateway.networking.k8s.io httpbin-gateway
+kubectl delete httproute httpbin
+```
+
+If you created a custom `ConfigMap`, also delete that:
+
+```bash
+kubectl delete configmap gw-options
+```
+
+If you 
+
 ## Next steps
 
 * [Deploy egress gateways for the Istio service mesh add-on][istio-deploy-egress]
@@ -646,6 +664,7 @@ updated-per-gateway
 [managed-gateway-addon]: managed-gateway-api.md
 [annotation-customizations]: #annotation-customizations
 [azure-aks-load-balancer-annotations]: configure-load-balancer-standard.md#customizations-via-kubernetes-annotations
+[akv-rbac-guide]: /azure/key-vault/general/rbac-guide
 
 [istio-gateway-auto-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#automated-deployment
 [istio-gateway-manual-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#manual-deployment
