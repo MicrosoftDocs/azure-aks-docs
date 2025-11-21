@@ -88,6 +88,13 @@ Keep these considerations and limitations in mind:
 
 ## Update the data plane to Azure CNI Powered by Cilium
 
+When you enable Cilium in a cluster that uses a different network policy engine (Azure Network Policy Manager or Calico), the network policy engine is uninstalled and replaced with Cilium. For more information, see [Uninstall Azure Network Policy Manager or Calico](./use-network-policies.md#uninstall-azure-network-policy-manager-or-calico).
+
+You can update an existing cluster to Azure CNI Powered by Cilium if the cluster doesn't have any Windows node pools.
+
+> [!WARNING]
+> The update process triggers node pools to be reimaged simultaneously. Updating each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image update or [Kubernetes version upgrade](./upgrade-cluster.md) where each node in a node pool is reimaged. Cilium begins enforcing network policies only after all nodes are reimaged.
+
 To perform the update, you need Azure CLI version 2.52.0 or later. Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install the Azure CLI](/cli/azure/install-azure-cli).
 
 Update an existing cluster to Azure CNI Powered by Cilium by using the [`az aks update`][az-aks-update] command.
@@ -98,14 +105,6 @@ az aks update \
   --resource-group $RESOURCE_GROUP \
   --network-dataplane cilium
 ```
-
-Keep these considerations and limitations in mind:
-
-- When you enable Cilium in a cluster that uses a different network policy engine (Azure Network Policy Manager or Calico), the network policy engine is uninstalled and replaced with Cilium. For more information, see [Uninstall Azure Network Policy Manager or Calico](./use-network-policies.md#uninstall-azure-network-policy-manager-or-calico).
-
-- You can update an existing cluster to Azure CNI Powered by Cilium if the cluster doesn't have any Windows node pools.
-
-- The update process triggers node pools to be reimaged simultaneously. Updating each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image update or [Kubernetes version upgrade](./upgrade-cluster.md) where each node in a node pool is reimaged. Cilium begins enforcing network policies only after all nodes are reimaged.
 
 <!-- LINKS - Internal -->
 [az-aks-update]: /cli/azure/aks#az-aks-update
