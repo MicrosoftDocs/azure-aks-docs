@@ -49,4 +49,3 @@ Learn more about [Open Service Mesh][osm].
 <!-- LINKS - Internal -->
 [az-aks-disable-addon]: /cli/azure/aks#az-aks-disable-addons
 [osm]: ./open-service-mesh-about.md
-
