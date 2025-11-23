@@ -424,7 +424,8 @@ You can expand your Pod CIDR space on AKS Overlay clusters with Linux nodes only
 ### Limitations
 
  - Windows nodes and hybrid node scenarios aren't supported.
- - Only expansion is allowed. Shrinking or changing the Pod CIDR returns an error.
+ - This feature is currently only supported with Kubernetes version 1.33.
+ - Only expansion is allowed without changing the base IP. Shrinking or changing the Pod CIDR returns an error.
  - Adding discontinuous Pod CIDR isn't supported. The new Pod CIDR must be a larger superset that completely contains the original range.
  - IPv6 Pod CIDR expansion isn't supported.
  - Changing multiple Pod CIDR blocks via `--pod-cidrs` isn't supported.
