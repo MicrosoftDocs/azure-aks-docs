@@ -1,98 +1,70 @@
 ---
 title: Use Container Storage Interface (CSI) driver for Azure Disk on Azure Kubernetes Service (AKS)
 description: Learn how to use the Container Storage Interface (CSI) driver for Azure Disk in an Azure Kubernetes Service (AKS) cluster.
-ms.topic: concept-article
+ms.topic: how-to
 ms.custom: biannual
 ms.subservice: aks-storage
-ms.date: 06/10/2025
+ms.date: 11/24/2025
 author: schaffererin
 ms.author: schaffererin
+ms.contributor: alalve
 
 # Customer intent: "As a Kubernetes administrator, I want to implement the Azure Disk CSI driver in my AKS cluster so that I can efficiently manage storage provisioning and enhance performance for my containerized applications."
 ---
 
-# Use the Azure Disk Container Storage Interface (CSI) driver in Azure Kubernetes Service (AKS)
+# Azure Disk CSI driver in AKS
 
 The Azure Disks Container Storage Interface (CSI) driver is a [CSI specification](https://github.com/container-storage-interface/spec/blob/master/spec.md)-compliant driver used by Azure Kubernetes Service (AKS) to manage the lifecycle of Azure Disk.
 
-The CSI is a standard for exposing arbitrary block and file storage systems to containerized workloads on Kubernetes. By adopting and using CSI, AKS now can write, deploy, and iterate plug-ins to expose new or improve existing storage systems in Kubernetes. Using CSI drivers in AKS avoids having to touch the core Kubernetes code and wait for its release cycles.
+The CSI is a standard for exposing arbitrary block and file storage systems to containerized workloads on Kubernetes. By adopting and using CSI, AKS now can write, deploy, and iterate plug-ins to expose new or improve existing storage systems in Kubernetes. Using CSI drivers in AKS avoids having to touch the core Kubernetes code and wait for its release cycles. To create an AKS cluster with CSI driver support, see [Enable CSI driver on AKS](csi-storage-drivers.md).
 
-To create an AKS cluster with CSI driver support, see [Enable CSI driver on AKS](csi-storage-drivers.md). This article describes how to use the Azure Disk CSI driver.
+A [persistent volume](concepts-storage.md#persistent-volumes) (PV) represents a piece of storage that's provisioned for use with Kubernetes pods. A PV is used by one or more pods and can be dynamically or statically provisioned. This article shows you how to dynamically create PVs with Azure disk for use by a single pod in an AKS cluster. For static provisioning, see [Create an Azure Disk](azure-csi-disk-storage-provision.md#statically-provision-a-volume).
+
+For more information on Kubernetes volumes, see [Storage options for applications in AKS](concepts-storage.md).
+
+This article describes how to use the Azure Disk CSI driver.
 
 > [!NOTE]
-> *In-tree drivers* refers to the current storage drivers that are part of the core Kubernetes code versus the new CSI drivers, which are plug-ins.
+> *In-tree drivers* refer to the current storage drivers that are part of the core Kubernetes code versus the new CSI drivers, which are plug-ins.
 
 ## Azure Disk CSI driver features
 
 In addition to in-tree driver features, Azure Disk CSI driver supports the following features:
 
 - Performance improvements during concurrent disk attach and detach
+
   - In-tree drivers attach or detach disks in serial, while CSI drivers attach or detach disks in batch. There's significant improvement when there are multiple disks attaching to one node.
+
 - Premium SSD v1 and v2 are supported.
-  -  `PremiumV2_LRS` only supports `None` caching mode
+
+  - `PremiumV2_LRS` only supports `None` caching mode
+
 - Zone-redundant storage (ZRS) disk support
+
   - `Premium_ZRS`, `StandardSSD_ZRS` disk types are supported. ZRS disk could be scheduled on the zone or non-zone node, without the restriction that disk volume should be co-located in the same zone as a given node. For more information, including which regions are supported, see [Zone-redundant storage for managed disks](/azure/virtual-machines/disks-redundancy).
-- [Snapshot](#volume-snapshots)
+
+- [Volume snapshot](#understand-volume-snapshots)
 - [Volume clone](#clone-volumes)
 - [Resize disk PV without downtime](#resize-a-persistent-volume-without-downtime)
 
 > [!NOTE]
 > Depending on the VM SKU that's being used, the Azure Disk CSI driver might have a per-node volume limit. For some powerful VMs (for example, 16 cores), the limit is 64 volumes per node. To identify the limit per VM SKU, review the **Max data disks** column for each VM SKU offered. For a list of VM SKUs offered and their corresponding detailed capacity limits, see [General purpose virtual machine sizes][general-purpose-machine-sizes].
 
-## Use CSI persistent volumes with Azure Disks
+## Prerequisites
 
-A [persistent volume](concepts-storage.md#persistent-volumes) (PV) represents a piece of storage that's provisioned for use with Kubernetes pods. A PV can be used by one or many pods and can be dynamically or statically provisioned. This article shows you how to dynamically create PVs with Azure disk for use by a single pod in an AKS cluster. For static provisioning, see [Create a static volume with Azure Disks](azure-csi-disk-storage-provision.md#statically-provision-a-volume).
+- You must have an AKS cluster with the Azure Disk CSI driver enabled. The CSI driver is enabled by default on AKS clusters running Kubernetes version 1.21 or later.
 
-For more information on Kubernetes volumes, see [Storage options for applications in AKS][concepts-storage].
+- Azure CLI version 2.37.0 or later is installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-## Dynamically create Azure Disks PVs by using the built-in storage classes
+- The `kubectl` command-line tool is installed and configured to connect to your AKS cluster.
 
-A storage class is used to define how a unit of storage is dynamically created with a persistent volume. For more information on Kubernetes storage classes, see [Kubernetes storage classes][kubernetes-storage-classes].
-
-When you use the Azure Disk CSI driver on AKS, there are two more built-in `StorageClasses` that use the Azure Disk CSI storage driver. The other CSI storage classes are created with the cluster alongside the in-tree default storage classes.
-
-- `managed-csi`: Uses Azure Standard SSD locally redundant storage (LRS) to create a managed disk. Effective starting with Kubernetes version 1.29, in Azure Kubernetes Service (AKS) clusters deployed across multiple availability zones, this storage class utilizes Azure Standard SSD zone-redundant storage (ZRS) to create managed disks.
-- `managed-csi-premium`: Uses Azure Premium LRS to create a managed disk. Effective starting with Kubernetes version 1.29, in Azure Kubernetes Service (AKS) clusters deployed across multiple availability zones, this storage class utilizes Azure Premium zone-redundant storage (ZRS) to create managed disks.
-
-The reclaim policy in both storage classes ensures that the underlying Azure Disks are deleted when the respective PV is deleted. The storage classes also configure the PVs to be expandable. You just need to edit the persistent volume claim (PVC) with the new size.
-
-To use these storage classes, create a [PVC](concepts-storage.md#persistent-volume-claims) and respective pod that references and uses them. A PVC is used to automatically provision storage based on a storage class. A PVC can use one of the pre-created storage classes or a user-defined storage class to create an Azure-managed disk for the desired SKU and size. When you create a pod definition, the PVC is specified to request the desired storage.
-
-Create an example pod and respective PVC by running the [kubectl apply][kubectl-apply] command:
-
-```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/master/deploy/example/pvc-azuredisk-csi.yaml
-kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/master/deploy/example/nginx-pod-azuredisk.yaml
-```
-
-The output of the command resembles the following example:
-
-```output
-persistentvolumeclaim/pvc-azuredisk created
-pod/nginx-azuredisk created
-```
-
-After the pod is in the running state, run the following command to create a new file called `test.txt`.
-
-```bash
-kubectl exec nginx-azuredisk -- touch /mnt/azuredisk/test.txt
-```
-
-To validate the disk is correctly mounted, run the following command and verify you see the `test.txt` file in the output:
-
-```bash
-kubectl exec nginx-azuredisk -- ls /mnt/azuredisk
-
-lost+found
-outfile
-test.txt
-```
+- A storage class configured to use the Azure Disk CSI driver (`disk.csi.azure.com`).
 
 ## Create a custom storage class
 
 The default storage classes are suitable for most common scenarios. For some cases, you might want to have your own storage class customized with your own parameters. For example, you might want to change the `volumeBindingMode` class.
 
-You can use a `volumeBindingMode: Immediate` class that guarantees it occurs immediately once the PVC is created. When your node pools are topology constrained, for example when using availability zones, PVs would be bound or provisioned without knowledge of the pod's scheduling requirements.
+You can use a `volumeBindingMode: Immediate` class that guarantees it occurs immediately once the persistent volume claim (PVC) is created. When your node pools are topology constrained, for example when using availability zones, PVs would be bound or provisioned without knowledge of the pod's scheduling requirements.
 
 To address this scenario, you can use `volumeBindingMode: WaitForFirstConsumer`, which delays the binding and provisioning of a PV until a pod that uses the PVC is created. This way, the PV conforms and is provisioned in the availability zone (or other topology) that's specified by the pod's scheduling constraints. The default storage classes use `volumeBindingMode: WaitForFirstConsumer` class.
 
@@ -111,7 +83,8 @@ reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
 ```
 
-Create the storage class by running the [kubectl apply][kubectl-apply] command and specify your `sc-azuredisk-csi-waitforfirstconsumer.yaml` file:
+Create the storage class by running the [kubectl apply][kubectl-apply] command and specify your
+`sc-azuredisk-csi-waitforfirstconsumer.yaml` file:
 
 ```bash
 kubectl apply -f sc-azuredisk-csi-waitforfirstconsumer.yaml
@@ -123,24 +96,81 @@ The output of the command resembles the following example:
 storageclass.storage.k8s.io/azuredisk-csi-waitforfirstconsumer created
 ```
 
-## Volume snapshots
+## Create Azure Disk PVs using built-in storage classes
 
-The Azure Disk CSI driver supports creating [snapshots of persistent volumes](https://kubernetes-csi.github.io/docs/snapshot-restore-feature.html). As part of this capability, the driver can perform either *full* or [*incremental* snapshots](/azure/virtual-machines/disks-incremental-snapshots) depending on the value set in the `incremental` parameter (by default, it's true).
+A storage class is used to define how a unit of storage is dynamically created with a persistent volume. For more information on Kubernetes storage classes, see [Kubernetes storage classes][kubernetes-storage-classes].
 
-The following table provides details for all of the parameters.
+When you use the Azure Disk CSI driver on AKS, there are two more built-in `StorageClasses` that use the Azure Disk CSI storage driver. The other CSI storage classes are created with the cluster alongside the in-tree default storage classes.
 
-|Name | Meaning | Available Value | Mandatory | Default value
-|--- | --- | --- | --- | ---
-|resourceGroup | Resource group for storing snapshot shots | EXISTING RESOURCE GROUP | No | If not specified, snapshot will be stored in the same resource group as source Azure Disks
-|incremental | Take [full or incremental snapshot](/azure/virtual-machines/windows/incremental-snapshots) | `true`, `false` | No | `true`
-|tags | Azure Disks [tags](/azure/azure-resource-manager/management/tag-resources) | Tag format: 'key1=val1,key2=val2' | No | ""
-|userAgent | User agent used for [customer usage attribution](/azure/marketplace/azure-partner-customer-usage-attribution) | | No  | Generated Useragent formatted `driverName/driverVersion compiler/version (OS-ARCH)`
-|subscriptionID | Specify Azure subscription ID where Azure Disks will be created  | Azure subscription ID | No | If not empty, `resourceGroup` must be provided, `incremental` must set as `false`
+- `managed-csi`: Creates managed disks using Azure Standard SSD with locally redundant storage (LRS). Starting with Kubernetes version 1.29, for AKS clusters deployed across multiple availability zones, this storage class uses Azure Standard SSD zone-redundant storage (ZRS) to provision managed disks.
+
+- `managed-csi-premium`: Provisions managed disks using Azure Premium LRS. Beginning with Kubernetes version 1.29, for AKS clusters spanning multiple availability zones, this storage class automatically uses Azure Premium ZRS to create managed disks.
+
+The reclaim policy in both storage classes ensures that the underlying Azure Disks are deleted when the respective PV is deleted. The storage classes also configure the PVs to be expandable. You just need to edit the PVC with the new size.
+
+To use these storage classes, create a [PVC](concepts-storage.md#persistent-volume-claims) and respective pod that references and uses them. A PVC is used to automatically provision storage based on a storage class. A PVC can use one of the pre-created storage classes or a user-defined storage class to create an Azure-managed disk for the desired SKU and size. When you create a pod definition, the PVC is specified to request the desired storage.
+
+Create an example pod and respective PVC by running the [kubectl apply][kubectl-apply] command:
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/master/deploy/example/pvc-azuredisk-csi.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/master/deploy/example/nginx-pod-azuredisk.yaml
+```
+
+The output of the command resembles the following example:
+
+```output
+persistentvolumeclaim/pvc-azuredisk created
+pod/nginx-azuredisk created
+```
+
+After the pod is in the running state, run the following command to create a new file called `test.txt`:
+
+```bash
+kubectl exec nginx-azuredisk -- touch /mnt/azuredisk/test.txt
+```
+
+To validate the disk is correctly mounted, run the following command and verify you see the `test.txt` file in the output:
+
+```bash
+kubectl exec nginx-azuredisk -- ls /mnt/azuredisk
+
+lost+found
+outfile
+test.txt
+```
+
+## Understand volume snapshots
+
+The Azure Disk CSI driver supports [volume snapshots](https://kubernetes-csi.github.io/docs/snapshot-restore-feature.html), enabling you to capture the state of persistent volumes at specific points in time for backup and restore operations. Volume snapshots let you create point-in-time copies of your persistent data without interrupting running applications. You can use these snapshots to create new volumes or restore existing ones to a previous state.
+
+You can create two types of snapshots:
+
+- **Full snapshots**: Capture the complete state of the disk.
+
+- **Incremental snapshots**: Capture only the changes since the last snapshot, offering better storage efficiency and cost savings. [Incremental snapshots](/azure/virtual-machines/disks-incremental-snapshots) are the default behavior when the `incremental` parameter is set to `true` in your VolumeSnapshotClass.
+
+The following table provides details for these parameters.
+
+| Name | Meaning | Available Value | Mandatory | Default value |
+|--|--|--|--|--|
+|resourceGroup | Resource group for storing snapshot shots | EXISTING RESOURCE GROUP | No | If not specified, snapshots are stored in the same resource group as source Azure Disks |
+|incremental | Take [full or incremental snapshot](/azure/virtual-machines/windows/incremental-snapshots) | `true`, `false` | No | `true` |
+|tags | Azure Disks [tags](/azure/azure-resource-manager/management/tag-resources) | Tag format: 'key1=val1,key2=val2' | No | "" |
+|userAgent | User agent used for [customer usage attribution](/azure/marketplace/azure-partner-customer-usage-attribution) | | No  | Generated Useragent formatted `driverName/driverVersion compiler/version (OS-ARCH)` |
+|subscriptionID | Specify Azure subscription ID where Azure Disks are created | Azure subscription ID | No | If not empty, `resourceGroup` must be provided, `incremental` must set as `false` |
+
+Volume snapshots support the following scenarios:
+
+- **Backup and restore**: Create point-in-time backups of stateful application data and restore when
+  needed.
+- **Data cloning**: Clone existing volumes to create new persistent volumes with the same data.
+- **Disaster recovery**: Quickly recover from data loss or corruption.
 
 ### Create a volume snapshot
 
 > [!NOTE]
-> Before proceeding, ensure that the application is not writing data to the source disk.
+> Before proceeding, ensure that the application isn't writing data to the source disk.
 
 For an example of this capability, create a [volume snapshot class](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/snapshot/storageclass-azuredisk-snapshot.yaml) with the [kubectl apply][kubectl-apply] command:
 
@@ -154,7 +184,7 @@ The output of the command resembles the following example:
 volumesnapshotclass.snapshot.storage.k8s.io/csi-azuredisk-vsc created
 ```
 
-Now let's create a [volume snapshot](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/snapshot/azuredisk-volume-snapshot.yaml) from the PVC that [we dynamically created at the beginning of this tutorial](#dynamically-create-azure-disks-pvs-by-using-the-built-in-storage-classes), `pvc-azuredisk`.
+Create a [volume snapshot](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/snapshot/azuredisk-volume-snapshot.yaml) from the PVC that was created earlier in this article.
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/master/deploy/example/snapshot/azuredisk-volume-snapshot.yaml
@@ -203,7 +233,7 @@ Events:                                <none>
 
 ### Create a new PVC based on a volume snapshot
 
-You can create a new PVC based on a volume snapshot. Use the snapshot created in the previous step, and create a [new PVC](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/snapshot/pvc-azuredisk-snapshot-restored.yaml) and a [new pod](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/snapshot/nginx-pod-restored-snapshot.yaml) to consume it.
+You can create a new PVC based on a volume snapshot. Use the snapshot created in the previous step, and create a [new PVC](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/snapshot/pvc-azuredisk-snapshot-restored.yaml) and a [new pod](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/snapshot/nginx-pod-restored-snapshot.yaml) to consume it:
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/master/deploy/example/snapshot/pvc-azuredisk-snapshot-restored.yaml
@@ -217,7 +247,7 @@ persistentvolumeclaim/pvc-azuredisk-snapshot-restored created
 pod/nginx-restored created
 ```
 
-Finally, let's make sure it's the same PVC created before by checking the contents by running the following command:
+To make sure it's the same PVC created before, check the contents by running the following command:
 
 ```bash
 kubectl exec nginx-restored -- ls /mnt/azuredisk
@@ -231,13 +261,14 @@ outfile
 test.txt
 ```
 
-As expected, we can still see our previously created `test.txt` file.
+We can still see our previously created `test.txt` file as expected.
 
 ## Clone volumes
 
-A cloned volume is defined as a duplicate of an existing Kubernetes volume. For more information on cloning volumes in Kubernetes, see the conceptual documentation for [volume cloning](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#volume-cloning).
+A cloned volume is defined as a duplicate of an existing Kubernetes volume. For more information on cloning volumes in Kubernetes, see [volume cloning](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#volume-cloning).
 
-The CSI driver for Azure Disks supports volume cloning. To demonstrate, create a [cloned volume](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/cloning/nginx-pod-restored-cloning.yaml) of the [previously created](#dynamically-create-azure-disks-pvs-by-using-the-built-in-storage-classes) `azuredisk-pvc` and [a new pod to consume it](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/cloning/nginx-pod-restored-cloning.yaml).
+Create a [cloned volume](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/cloning/nginx-pod-restored-cloning.yaml)
+of the [previously created](#create-azure-disk-pvs-using-built-in-storage-classes) `azuredisk-pvc` and a [new pod](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/cloning/nginx-pod-restored-cloning.yaml) to consume it.
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/master/deploy/example/cloning/pvc-azuredisk-cloning.yaml
@@ -272,7 +303,7 @@ You can request a larger volume for a PVC. Edit the PVC object, and specify a la
 > [!NOTE]
 > A new PV is never created to satisfy the claim. Instead, an existing volume is resized.
 
-In AKS, the built-in `managed-csi` storage class already supports expansion, so use the [PVC created earlier with this storage class](#dynamically-create-azure-disks-pvs-by-using-the-built-in-storage-classes). The PVC requested a 10-Gi persistent volume. You can confirm by running the following command:
+In AKS, the built-in `managed-csi` storage class already supports expansion, so use the [previously created](#create-azure-disk-pvs-using-built-in-storage-classes) one. The PVC requested a 10-Gi persistent volume. You can confirm by running the following command:
 
 ```bash
 kubectl exec -it nginx-azuredisk -- df -h /mnt/azuredisk
@@ -293,6 +324,7 @@ kubectl patch pvc pvc-azuredisk --type merge --patch '{"spec": {"resources": {"r
 
 > [!NOTE]
 > Shrinking persistent volumes is currently not supported. Trying to patch an existing PVC with a smaller size than the current one leads to the following error message:
+>
 > `The persistentVolumeClaim "pvc-azuredisk" is invalid: spec.resources.requests.storage: Forbidden: field can not be less than previous value.`
 
 The output of the command resembles the following example:
@@ -301,7 +333,7 @@ The output of the command resembles the following example:
 persistentvolumeclaim/pvc-azuredisk patched
 ```
 
-Run the following command to confirm the volume size has increased:
+Run the following command to confirm the volume size increased:
 
 ```bash
 kubectl get pv
@@ -310,8 +342,8 @@ kubectl get pv
 The output of the command resembles the following example:
 
 ```output
-NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                     STORAGECLASS   REASON   AGE
-pvc-391ea1a6-0191-4022-b915-c8dc4216174a   15Gi       RWO            Delete           Bound    default/pvc-azuredisk                     managed-csi             2d2h
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                     STORAGECLASS   REASON   AGE
+pvc-391ea1a6-0191-4022-b915-c8dc4216174a   15Gi       RWO            Delete           Bound    default/pvc-azuredisk     managed-csi             2d2h
 (...)
 ```
 
@@ -341,34 +373,23 @@ Filesystem      Size  Used Avail Use% Mounted on
 /dev/sdc         15G   46M   15G   1% /mnt/azuredisk
 ```
 
-## On-demand bursting
+If your pod has *multiple containers*, you can specify which container by running the following command:
 
-On-demand disk bursting model allows disk bursts whenever its needs exceed its current capacity. This model generates extra charges anytime the disk bursts. On-demand bursting is only available for premium SSDs larger than 512 GiB. For more information on premium SSDs provisioned IOPS and throughput per disk, see [Premium SSD size][az-premium-ssd]. Alternatively, credit-based bursting is where the disk will burst only if it has burst credits accumulated in its credit bucket. Credit-based bursting doesn't generate extra charges when the disk bursts. Credit-based bursting is only available for premium SSDs 512 GiB and smaller, and standard SSDs 1024 GiB and smaller. For more information on on-demand bursting, see [On-demand bursting][az-on-demand-bursting].
-
-> [!IMPORTANT]
-> The default `managed-csi-premium` storage class has on-demand bursting disabled and uses credit-based bursting. Any premium SSD dynamically created by a persistent volume claim based on the default `managed-csi-premium` storage class also has on-demand bursting disabled.
-
-To create a premium SSD persistent volume with [on-demand bursting][az-on-demand-bursting] enabled, you can create a new storage class with the [enableBursting][csi-driver-parameters] parameter set to `true` as shown in the following YAML template. For more information on enabling on-demand bursting, see [On-demand bursting][az-on-demand-bursting]. For more information on building your own storage class with on-demand bursting enabled, see [Create a Burstable Managed CSI Premium Storage Class][create-burstable-storage-class].
-
-```yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: burstable-managed-csi-premium
-provisioner: disk.csi.azure.com
-parameters:
-  skuname: Premium_LRS
-  enableBursting: "true"
-reclaimPolicy: Delete
-volumeBindingMode: WaitForFirstConsumer
-allowVolumeExpansion: true
+```bash
+kubectl exec -it nginx-azuredisk -c <ContainerName> -- df -h /mnt/azuredisk
 ```
 
 ## Windows containers
 
-The Azure Disk CSI driver supports Windows nodes and containers. If you want to use Windows containers, follow the [Windows containers quickstart][aks-quickstart-cli] to add a Windows node pool.
+The Azure Disk CSI driver supports Windows nodes and containers. If you want to use Windows
+containers, follow the [Windows containers quickstart][aks-quickstart-cli] to add a Windows node
+pool.
 
-After you have a Windows node pool, you can now use the built-in storage classes like `managed-csi`. You can deploy an example [Windows-based stateful set](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/windows/statefulset.yaml) that saves timestamps into the file `data.txt` by running the following [kubectl apply][kubectl-apply] command:
+After you have a Windows node pool, you can now use the built-in storage classes like `managed-csi`.
+You can deploy an example
+[Windows-based stateful set](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/windows/statefulset.yaml)
+that saves timestamps into the file `data.txt` by running the following
+[kubectl apply][kubectl-apply] command:
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/master/deploy/example/windows/statefulset.yaml
@@ -393,6 +414,29 @@ The output of the command resembles the following example:
 2020-08-27 08:13:42Z
 2020-08-27 08:13:44Z
 (...)
+```
+
+## On-demand bursting
+
+On-demand disk bursting model allows disk bursts whenever its needs exceed its current capacity. This model generates extra charges anytime the disk bursts. On-demand bursting is only available for premium SSDs larger than 512 GiB. For more information on premium SSDs provisioned IOPS and throughput per disk, see [Premium SSD size][az-premium-ssd]. Alternatively, credit-based bursting is where the disk will burst only if it has burst credits accumulated in its credit bucket. Credit-based bursting doesn't generate extra charges when the disk bursts. Credit-based bursting is only available for premium SSDs 512 GiB and smaller, and standard SSDs 1,024 GiB and smaller. For more information on on-demand bursting, see [On-demand bursting][az-on-demand-bursting].
+
+> [!IMPORTANT]
+> The default `managed-csi-premium` storage class has on-demand bursting disabled and uses credit-based bursting. Any premium SSD dynamically created by a persistent volume claim based on the default `managed-csi-premium` storage class also has on-demand bursting disabled.
+
+To create a premium SSD persistent volume with [on-demand bursting][az-on-demand-bursting] enabled, you can create a new storage class with the [enableBursting][csi-driver-parameters] parameter set to `true` as shown in the following YAML template. For more information on enabling on-demand bursting, see [On-demand bursting][az-on-demand-bursting]. For more information on building your own storage class with on-demand bursting enabled, see [Create a Burstable Managed CSI Premium Storage Class][create-burstable-storage-class].
+
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: burstable-managed-csi-premium
+provisioner: disk.csi.azure.com
+parameters:
+  skuname: Premium_LRS
+  enableBursting: "true"
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
 ```
 
 ## Next steps
@@ -440,4 +484,3 @@ The output of the command resembles the following example:
 [az-premium-ssd]: /azure/virtual-machines/disks-types#premium-ssds
 [general-purpose-machine-sizes]: /azure/virtual-machines/sizes-general
 [disk-based-solutions]: /azure/cloud-adoption-framework/scenarios/app-platform/aks/storage#disk-based-solutions
-
