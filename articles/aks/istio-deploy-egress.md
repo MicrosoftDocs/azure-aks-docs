@@ -90,7 +90,7 @@ You can configure the `outboundTrafficPolicy.mode` on a mesh-wide level using th
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: istio-shared-configmap-asm-1-24
+  name: istio-shared-configmap-asm-1-27
   namespace: aks-istio-system
 data:
   mesh: |-
@@ -109,7 +109,7 @@ kubectl label namespace $ISTIO_EGRESS_NAMESPACE istio.io/rev=$ASM_REVISION
 Then, deploy the sample application:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/curl/curl.yaml -n $ISTIO_EGRESS_NAMESPACE
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.27/samples/curl/curl.yaml -n $ISTIO_EGRESS_NAMESPACE
 ```
 
 You should see the `curl` pod running with an injected sidecar container:
