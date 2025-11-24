@@ -61,6 +61,12 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
         :::image type="content" source="media/quick-windows-container-deploy-portal/add-node-pool-windows.png" alt-text="Screenshot showing how to create a node pool running Windows Server 2022." lightbox="media/quick-windows-container-deploy-portal/add-node-pool-windows.png":::
 
+> [!NOTE]
+> - [Windows Server 2019 retires on March 1, 2026](https://github.com/Azure/AKS/issues/4091). After that date, AKS will no longer produce new node images or provide security patches. Windows Server 2019 is not supported in Kubernetes version 1.33 and above. Starting on April 1, 2027, AKS will remove all existing node images for Windows Server 2019, meaning that scaling operations will fail.
+> - [Windows Server 2022 retires on March 15, 2027](https://github.com/Azure/AKS/issues/4168). After that date, AKS will no longer produce new node images or provide security patches. Windows Server 2022 is not supported in Kubernetes version 1.36 and above. Starting on April 1, 2028, AKS will remove all existing node images for Windows Server 2022, meaning that scaling operations will fail.
+>
+> For more information, see [AKS release notes][aks-release-notes]. To stay up to date on the latest Windows Server OS versions and learn more about our roadmap of what's planned for support on AKS, see our [AKS public roadmap](https://github.com/azure/aks/projects/1).
+
 1. Select **Review + create** to run validation on the cluster configuration. After validation completes, select **Create**.
 
     It takes a few minutes to create the AKS cluster. When your deployment is complete, navigate to your resource by selecting **Go to resource**, or by browsing to the AKS cluster resource group and selecting the AKS resource.
