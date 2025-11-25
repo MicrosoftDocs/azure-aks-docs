@@ -135,16 +135,15 @@ To create a Windows node pool, you need to specify a supported `OsType` and `OsS
 
 | `OsType` | `OsSku` | Default | Supported K8s versions | Details |
 |--|--|--|--|--|
-| `windows` | `Windows2025` | Not default. Currently in preview. | 1.32+ | Updated defaults: containerd 2.0, Generation 2 image is used by default. |
-| `windows` | `Windows2022` | Default in K8s 1.25-1.34 | Not available in K8s 1.35+ | Retires in March 2027. Updated defaults: FIPS is enabled by default |
-| `windows` | `Windows2019` | Default in K8s 1.24 and below | Not available in K8s 1.32+ | Retires in March 2026. |
+| `windows` | `Windows2025` | Currently in preview. Not default. | 1.32+ | Updated defaults: containerd 2.0, Generation 2 image is used by default. |
+| `windows` | `Windows2022` | Default in K8s 1.25-1.35 | Not available in K8s 1.36+ | Retires in March 2027. Updated defaults: FIPS is enabled by default. |
+| `windows` | `Windows2019` | Default in K8s 1.24 and below | Not available in K8s 1.33+ | Retires in March 2026. |
 
-Windows Server 2022 is the default operating system for Kubernetes versions 1.25-1.34. Windows Server 2019 is the default OS for earlier versions. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster.
+Windows Server 2022 is the default operating system for Kubernetes versions 1.25-1.35. Windows Server 2019 is the default OS for earlier versions. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster.
 
 > [!NOTE]
->
-> - Windows Server 2022 retires after Kubernetes version 1.34 reaches end of support and won't be supported in Kubernetes version 1.35 and above.
-> - Windows Server 2019 retires after Kubernetes version 1.32 reaches end of support and won't be supported in Kubernetes version 1.33 and above.
+> - [Windows Server 2019 retires on March 1, 2026](https://github.com/Azure/AKS/issues/4091). After that date, AKS will no longer produce new node images or provide security patches. After that date, you will not be able to create new node pools with Windows Server 2019 on any Kubernetes version. All existing node pools with Windows Server 2019 will be unsupported. Windows Server 2019 is not supported in Kubernetes version 1.33 and above. Starting on April 1, 2027, AKS will remove all existing node images for Windows Server 2019, meaning that scaling operations will fail.
+> - [Windows Server 2022 retires on March 15, 2027](https://github.com/Azure/AKS/issues/4168). After that date, AKS will no longer produce new node images or provide security patches. After that date, you will not be able to create new node pools with Windows Server 2022 on any Kubernetes version. All existing node pools with Windows Server 2022 will be unsupported. Windows Server 2022 is not supported in Kubernetes version 1.36 and above. Starting on April 1, 2028, AKS will remove all existing node images for Windows Server 2022, meaning that scaling operations will fail.
 >
 > For more information, see [AKS release notes][aks-release-notes]. To stay up to date on the latest Windows Server OS versions and learn more about our roadmap of what's planned for support on AKS, see our [AKS public roadmap](https://github.com/azure/aks/projects/1).
 
