@@ -26,6 +26,12 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - If you're unfamiliar with the Azure Cloud Shell, review [Overview of Azure Cloud Shell](/azure/cloud-shell/overview).
 - Make sure that the identity you're using to create your cluster has the appropriate minimum permissions. For more details on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
 
+> [!NOTE]
+> - [Windows Server 2019 retires on March 1, 2026](https://github.com/Azure/AKS/issues/4091). After that date, AKS will no longer produce new node images or provide security patches. After that date, you will not be able to create new node pools with Windows Server 2019 on any Kubernetes version. All existing node pools with Windows Server 2019 will be unsupported. Windows Server 2019 is not supported in Kubernetes version 1.33 and above. Starting on April 1, 2027, AKS will remove all existing node images for Windows Server 2019, meaning that scaling operations will fail.
+> - [Windows Server 2022 retires on March 15, 2027](https://github.com/Azure/AKS/issues/4168). After that date, AKS will no longer produce new node images or provide security patches. After that date, you will not be able to create new node pools with Windows Server 2022 on any Kubernetes version. All existing node pools with Windows Server 2022 will be unsupported. Windows Server 2022 is not supported in Kubernetes version 1.36 and above. Starting on April 1, 2028, AKS will remove all existing node images for Windows Server 2022, meaning that scaling operations will fail.
+>
+> For more information, see [AKS release notes][aks-release-notes]. To stay up to date on the latest Windows Server OS versions and learn more about our roadmap of what's planned for support on AKS, see our [AKS public roadmap](https://github.com/azure/aks/projects/1).
+
 ## Create an AKS cluster
 
 1. Sign in to the [Azure portal][azure-portal].
@@ -38,9 +44,9 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
     - Under **Cluster details**:
       - **Cluster preset configuration**: Select **Dev/Test**. For more details on preset configurations, see [Cluster configuration presets in the Azure portal][preset-config].
 
-        > [!NOTE]
-        > You can change the preset configuration when creating your cluster by selecting **Compare presets** and choosing a different option.
-        > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-presets.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-presets.png":::
+          > [!NOTE]
+          > You can change the preset configuration when creating your cluster by selecting **Compare presets** and choosing a different option.
+          > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-presets.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-presets.png":::
 
       - **Kubernetes cluster name**: Enter a cluster name, such as *myAKSCluster*.
       - **Region**: Select a region, such as *East US 2*.
@@ -60,12 +66,6 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
     - Leave the default values for the remaining settings, and select **Add**.
 
         :::image type="content" source="media/quick-windows-container-deploy-portal/add-node-pool-windows.png" alt-text="Screenshot showing how to create a node pool running Windows Server 2022." lightbox="media/quick-windows-container-deploy-portal/add-node-pool-windows.png":::
-
-> [!NOTE]
-> - [Windows Server 2019 retires on March 1, 2026](https://github.com/Azure/AKS/issues/4091). After that date, AKS will no longer produce new node images or provide security patches. After that date, you will not be able to create new node pools with Windows Server 2019 on any Kubernetes version. All existing node pools with Windows Server 2019 will be unsupported. Windows Server 2019 is not supported in Kubernetes version 1.33 and above. Starting on April 1, 2027, AKS will remove all existing node images for Windows Server 2019, meaning that scaling operations will fail.
-> - [Windows Server 2022 retires on March 15, 2027](https://github.com/Azure/AKS/issues/4168). After that date, AKS will no longer produce new node images or provide security patches. After that date, you will not be able to create new node pools with Windows Server 2022 on any Kubernetes version. All existing node pools with Windows Server 2022 will be unsupported. Windows Server 2022 is not supported in Kubernetes version 1.36 and above. Starting on April 1, 2028, AKS will remove all existing node images for Windows Server 2022, meaning that scaling operations will fail.
->
-> For more information, see [AKS release notes][aks-release-notes]. To stay up to date on the latest Windows Server OS versions and learn more about our roadmap of what's planned for support on AKS, see our [AKS public roadmap](https://github.com/azure/aks/projects/1).
 
 1. Select **Review + create** to run validation on the cluster configuration. After validation completes, select **Create**.
 
