@@ -136,7 +136,261 @@ You should see an `HTTP 200` response.
 
 ### Securing Istio ingress traffic with the Kubernetes Gateway API
 
-The Istio add-on supports syncing secrets from Azure Key Vault (AKV) for securing Gateway API-based ingress traffic with [Transport Layer Security (TLS) termination][istio-tls-termination] or [Server Name Indication (SNI) passthrough][istio-sni-passthrough]. You can follow the [secure ingress gateway][istio-secure-gateways] document for syncing secrets from AKV onto your AKS cluster using the [AKV Secrets Store Container Storage Interface (CSI) Driver add-on][aks-csi-driver].
+The Istio add-on supports syncing secrets from Azure Key Vault (AKV) for securing Gateway API-based ingress traffic with [Transport Layer Security (TLS) termination][istio-tls-termination] or [Server Name Indication (SNI) passthrough][istio-sni-passthrough]. You can follow the instructions below to sync secrets from AKV onto your AKS cluster using the [AKV Secrets Store Container Storage Interface (CSI) Driver add-on][aks-csi-driver] and terminate TLS at the ingress gateway.
+
+#### Required client/server certificates and keys
+
+1. Create a root certificate and private key for signing the certificates for sample services:
+
+```bash
+mkdir httpbin_certs
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=example Inc./CN=example.com' -keyout httpbin_certs/example.com.key -out httpbin_certs/example.com.crt
+```
+
+2. Generate a certificate and a private key for `httpbin.example.com`:
+
+```bash
+openssl req -out httpbin_certs/httpbin.example.com.csr -newkey rsa:2048 -nodes -keyout httpbin_certs/httpbin.example.com.key -subj "/CN=httpbin.example.com/O=httpbin organization"
+openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey httpbin_certs/example.com.key -set_serial 0 -in httpbin_certs/httpbin.example.com.csr -out httpbin_certs/httpbin.example.com.crt
+```
+
+#### Configure a TLS ingress gateway
+
+##### Set up Azure Key Vault and sync secrets to the cluster
+
+1. Create Azure Key Vault
+
+    You need an [Azure Key Vault resource][akv-quickstart] to supply the certificate and key inputs to the Istio add-on.
+
+    ```bash
+    export AKV_NAME=<azure-key-vault-resource-name>  
+    az keyvault create --name $AKV_NAME --resource-group $RESOURCE_GROUP --location $LOCATION
+    ```
+    
+2. Enable [Azure Key Vault provider for Secret Store CSI Driver][akv-addon] add-on on your cluster.
+
+    ```bash
+    az aks enable-addons --addons azure-keyvault-secrets-provider --resource-group $RESOURCE_GROUP --name $CLUSTER
+    ```
+    
+3. If your Key Vault is using Azure RBAC for the permissions model, follow the instructions [here][akv-rbac-guide] to assign an Azure role of Key Vault Secrets User for the add-on's user-assigned managed identity. Alternatively, if your key vault is using the vault access policy permissions model, authorize the user-assigned managed identity of the add-on to access Azure Key Vault resource using access policy:
+    
+    ```bash
+    OBJECT_ID=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER --query 'addonProfiles.azureKeyvaultSecretsProvider.identity.objectId' -o tsv | tr -d '\r')
+    CLIENT_ID=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER --query 'addonProfiles.azureKeyvaultSecretsProvider.identity.clientId')
+    TENANT_ID=$(az keyvault show --resource-group $RESOURCE_GROUP --name $AKV_NAME --query 'properties.tenantId')
+    
+    az keyvault set-policy --name $AKV_NAME --object-id $OBJECT_ID --secret-permissions get list
+    ```
+
+4. Create secrets in Azure Key Vault using the certificates and keys.
+
+    ```bash
+    az keyvault secret set --vault-name $AKV_NAME --name test-httpbin-key --file httpbin_certs/httpbin.example.com.key
+    az keyvault secret set --vault-name $AKV_NAME --name test-httpbin-crt --file httpbin_certs/httpbin.example.com.crt
+    ```
+
+5. Use the following manifest to deploy the SecretProviderClass to provide Azure Key Vault specific parameters to the CSI driver.
+    
+    ```bash
+    cat <<EOF | kubectl apply -f -
+    apiVersion: secrets-store.csi.x-k8s.io/v1
+    kind: SecretProviderClass
+    metadata:
+      name: httpbin-credential-spc
+    spec:
+      provider: azure
+      secretObjects:
+      - secretName: httpbin-credential
+        type: kubernetes.io/tls
+        data:
+        - objectName: test-httpbin-key
+          key: tls.key
+        - objectName: test-httpbin-crt
+          key: tls.crt
+      parameters:
+        useVMManagedIdentity: "true"
+        userAssignedIdentityID: $CLIENT_ID 
+        keyvaultName: $AKV_NAME
+        cloudName: ""
+        objects:  |
+          array:
+            - |
+              objectName: test-httpbin-key
+              objectType: secret
+              objectAlias: "test-httpbin-key"
+            - |
+              objectName: test-httpbin-crt
+              objectType: secret
+              objectAlias: "test-httpbin-crt"
+        tenantId: $TENANT_ID
+    EOF
+    ```
+
+    Alternatively, to reference a certificate object type directly from Azure Key Vault, use the following manifest to deploy SecretProviderClass. In this example, `test-httpbin-cert-pxf` is the name of the certificate object in Azure Key Vault. Refer to [obtain certificates and keys][akv-csi-driver-obtain-cert-and-keys] section for more information. 
+    
+    ```bash
+    cat <<EOF | kubectl apply -f -
+    apiVersion: secrets-store.csi.x-k8s.io/v1
+    kind: SecretProviderClass
+    metadata:
+      name: httpbin-credential-spc
+    spec:
+      provider: azure
+      secretObjects:
+      - secretName: httpbin-credential
+        type: kubernetes.io/tls
+        data:
+        - objectName: test-httpbin-key
+          key: tls.key
+        - objectName: test-httpbin-crt
+          key: tls.crt
+      parameters:
+        useVMManagedIdentity: "true"
+        userAssignedIdentityID: $CLIENT_ID 
+        keyvaultName: $AKV_NAME
+        cloudName: ""
+        objects:  |
+          array:
+            - |
+              objectName: test-httpbin-cert-pfx  #certificate object name from keyvault
+              objectType: secret
+              objectAlias: "test-httpbin-key"
+            - |
+              objectName: test-httpbin-cert-pfx #certificate object name from keyvault
+              objectType: cert
+              objectAlias: "test-httpbin-crt"
+        tenantId: $TENANT_ID
+    EOF
+    ``` 
+
+6. Use the following manifest to deploy a sample pod. The secret store CSI driver requires a pod to reference the SecretProviderClass resource to ensure secrets sync from Azure Key Vault to the cluster.
+    
+    ```bash
+    cat <<EOF | kubectl apply -f -
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: secrets-store-sync-httpbin
+    spec:
+      containers:
+        - name: busybox
+          image: mcr.microsoft.com/oss/busybox/busybox:1.33.1
+          command:
+            - "/bin/sleep"
+            - "10"
+          volumeMounts:
+          - name: secrets-store01-inline
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
+      volumes:
+        - name: secrets-store01-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "httpbin-credential-spc"
+    EOF
+    ```
+
+    - Verify that the `httpbin-credential` secret is created in the `default` namespace as defined in the SecretProviderClass resource.
+    
+        ```bash
+        kubectl describe secret/httpbin-credential
+        ```       
+        Example output:
+        ```output
+        Name:         httpbin-credential
+        Namespace:    default
+        Labels:       secrets-store.csi.k8s.io/managed=true
+        Annotations:  <none>
+        
+        Type:  kubernetes.io/tls
+        
+        Data
+        ====
+        tls.crt:  1180 bytes
+        tls.key:  1675 bytes
+        ```
+
+##### Deploy TLS Gateway
+
+1. Create a Kubernetes Gateway that references the `httpbin-credential` secret under the TLS configuration:
+
+    ```bash
+    cat <<EOF | kubectl apply -f -
+    apiVersion: gateway.networking.k8s.io/v1
+    kind: Gateway
+    metadata:
+      name: httpbin-gateway
+    spec:
+      gatewayClassName: istio
+      listeners:
+      - name: https
+        hostname: "httpbin.example.com"
+        port: 443
+        protocol: HTTPS
+        tls:
+          mode: Terminate
+          certificateRefs:
+          - name: httpbin-credential
+        allowedRoutes:
+          namespaces:
+            from: Selector
+            selector:
+              matchLabels:
+                kubernetes.io/metadata.name: default
+    EOF
+    ```
+
+    > [!NOTE]
+    > In the gateway definition, `tls.certificateRefs.name` must match the `secretName` in SecretProviderClass resource.
+
+    Then, create a corresponding `HTTPRoute` to configure the gateway's ingress traffic routes:
+
+    ```bash
+    cat <<EOF | kubectl apply -f -
+    apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    metadata:
+      name: httpbin
+    spec:
+      parentRefs:
+      - name: httpbin-gateway
+      hostnames: ["httpbin.example.com"]
+      rules:
+      - matches:
+        - path:
+            type: PathPrefix
+            value: /status
+        - path:
+            type: PathPrefix
+            value: /delay
+        backendRefs:
+        - name: httpbin
+          port: 8000
+    EOF
+    ```
+
+    Get the gateway address and port:
+
+    ```bash
+    kubectl wait --for=condition=programmed gateways.gateway.networking.k8s.io httpbin-gateway
+    export INGRESS_HOST=$(kubectl get gateways.gateway.networking.k8s.io httpbin-gateway -o jsonpath='{.status.addresses[0].value}')
+    export SECURE_INGRESS_PORT=$(kubectl get gateways.gateway.networking.k8s.io httpbin-gateway -o jsonpath='{.spec.listeners[?(@.name=="https")].port}')
+    ```
+
+2. Send an HTTPS request to access the `httpbin` service:
+
+    ```bash
+    curl -v -HHost:httpbin.example.com --resolve "httpbin.example.com:$SECURE_INGRESS_PORT:$INGRESS_HOST" \
+    --cacert httpbin_certs/example.com.crt "https://httpbin.example.com:$SECURE_INGRESS_PORT/status/418"
+    ```
+
+    You should see the httpbin service return the 418 I’m a Teapot code.
+
+    > [!NOTE]
+    > To configure HTTPS ingress access to an HTTPS service, i.e., configure an ingress gateway to perform SNI passthrough instead of TLS termination on incoming requests, update the tls mode in the gateway definition to `Passthrough`. This instructs the gateway to pass the ingress traffic “as is”, without terminating TLS.
 
 ## Resource customizations
 
@@ -378,6 +632,30 @@ kubectl get deployment httpbin-gateway-istio -ojsonpath='{.metadata.labels.test\
 ```output
 updated-per-gateway
 ```
+
+## Cleanup Resources
+
+Run the following commands to delete the `Gateway` and `HttpRoute`:
+
+```bash
+kubectl delete gateways.gateway.networking.k8s.io httpbin-gateway
+kubectl delete httproute httpbin
+```
+
+If you created a ConfigMap to customize your `Gateway`, run the following command to delete the ConfigMap:
+
+```bash
+kubectl delete configmap gw-options
+```
+
+If you created a SecretProviderClass and secret to use for TLS termination, delete the following resources as well:
+
+```bash
+kubectl delete secret httpbin-credential
+kubectl delete pod secrets-store-sync-httpbin
+kubectl delete secretproviderclass httpbin-credential-spc
+```
+
 ## Next steps
 
 * [Deploy egress gateways for the Istio service mesh add-on][istio-deploy-egress]
@@ -392,6 +670,7 @@ updated-per-gateway
 [managed-gateway-addon]: managed-gateway-api.md
 [annotation-customizations]: #annotation-customizations
 [azure-aks-load-balancer-annotations]: configure-load-balancer-standard.md#customizations-via-kubernetes-annotations
+[akv-rbac-guide]: /azure/key-vault/general/rbac-guide
 
 [istio-gateway-auto-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#automated-deployment
 [istio-gateway-manual-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#manual-deployment
