@@ -20,7 +20,7 @@ Updating an existing cluster to Azure CNI Overlay is an irreversible process.
 
 You can update an existing AKS cluster to Azure CNI Overlay if the cluster:
 
-- Is on Kubernetes version 1.22 or later.
+- Is on Kubernetes version 1.27 or later.
 - Doesn't use the [dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md) feature.
 - Doesn't have network policies enabled. If you need to uninstall the network policy engine before updating your cluster, follow the steps in [Uninstall Azure Network Policy Manager or Calico](use-network-policies.md#uninstall-azure-network-policy-manager-or-calico).
 - Doesn't use any Windows node pools with Docker as the container runtime.
