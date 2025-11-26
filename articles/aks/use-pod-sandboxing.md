@@ -246,7 +246,7 @@ kubectl delete pod <kata-pod-name>
 [kata-labs]: https://azure-samples.github.io/aks-labs/docs/security/pod-sandboxing-on-aks
 
 <!-- INTERNAL LINKS -->
-[install-azure-cli]: /cli/azure
+[install-azure-cli]: /cli/azure/install-azure-cli
 [az-feature-register]: /cli/azure/feature#az_feature_register
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
