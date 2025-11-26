@@ -306,8 +306,8 @@
           href: use-windows-hpc.md
         - name: Use Windows Annual Channel for Containers
           href: windows-annual-channel.md
-        - name: Upgrade from Windows Server 2019 to 2022
-          href: upgrade-windows-2019-2022.md
+        - name: Upgrade Windows OS version
+          href: upgrade-windows-os.md
         - name: Create Dockerfiles for Windows Server containers
           href: /virtualization/windowscontainers/manage-docker/manage-windows-dockerfile?context=/azure/aks/context/aks-context
         - name: Optimize Dockerfiles for Windows Server containers

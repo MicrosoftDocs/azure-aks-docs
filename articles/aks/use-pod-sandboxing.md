@@ -20,7 +20,7 @@ This article helps you understand this new feature, and how to implement it.
 
 ## Prerequisites
 
-- The Azure CLI version 2.44.1 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- The Azure CLI version 2.80.0 or later. Run `az --version` to find the version of your Azure CLI, and run `az upgrade` to upgrade. For more details, see the steps at [Install Azure CLI][install-azure-cli].
 
 - AKS supports Pod Sandboxing on Kubernetes version 1.27.0 and higher.
 
@@ -246,7 +246,7 @@ kubectl delete pod <kata-pod-name>
 [kata-labs]: https://azure-samples.github.io/aks-labs/docs/security/pod-sandboxing-on-aks
 
 <!-- INTERNAL LINKS -->
-[install-azure-cli]: /cli/azure
+[install-azure-cli]: /cli/azure/install-azure-cli
 [az-feature-register]: /cli/azure/feature#az_feature_register
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-show]: /cli/azure/feature#az-feature-show

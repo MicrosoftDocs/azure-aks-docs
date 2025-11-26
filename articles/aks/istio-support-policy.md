@@ -99,3 +99,4 @@ The Istio-based service mesh add-on for AKS designates features and [configurati
 [istio-patch-upgrade]: ./istio-upgrade.md#patch-version-upgrade
 [istio-meshconfig]: ./istio-meshconfig.md#allowed-supported-and-blocked-meshconfig-values
 [aks-lts]: ./long-term-support.md
+[az-aks-mesh-get-revisions]: /cli/azure/aks/mesh#az-aks-mesh-get-revisions
