@@ -104,7 +104,7 @@ spec:
   template:
     spec:
       requirements:
-        - key: karpenter.azure.com/sku-storage-ephemeral-os-maxsize
+        - key: karpenter.azure.com/sku-storage-ephemeralos-maxsize
           operator: Gt
           values: ["128"]  # Require ephemeral disk larger than 128 GB
       nodeClassRef:
