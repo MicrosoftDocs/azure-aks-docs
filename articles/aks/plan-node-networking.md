@@ -20,10 +20,11 @@ You need to configure networking for AKS nodes (Azure virtual machines (VMs)) to
 
 When setting up node networking, you can choose between **Load Balancer**, **NAT Gateway**, and **User Defined Routing (UDR)** :
 
-| | Load Balancer | NAT Gateway | User Defined Routing (UDR) |
-|---|---|---|---|
-| Diagram of networking components | :::image type="content" source="./media/plan-networking/load-balancer.png" alt-text="Screenshot of a diagram of the networking components of a Load Balancer."::: | :::image type="content" source="./media/plan-networking/nat-gateway.png" alt-text="Screenshot of a diagram of the networking components of a NAT Gateway."::: | :::image type="content" source="./media/plan-networking/user-defined-routing.png" alt-text="Screenshot of a diagram of the networking components of a User Defined Routing (UDR)."::: |
-| Features & functionality | • Default configuration. <br>  • Managed entirely by AKS. <br> • Follows [Azure Standard Load Balancer](/azure/load-balancer/load-balancer-overview) rules. <br> • Provides fixed SNAT ports assigned per node upon node creation. | • Can select a managed or user-assigned (BYO) option. <br> • Provides improved SNAT port handling over Load Balancer. <br> • Requires extra configuration for zone redundancy. | • Used for explicit network control with BYO VNet. <br> • Managed by you, providing a more customizable experience. <br> • Must have a default route to an Azure Firewall, vWAN, or third-party network virtual appliance (NVA). <br> • Typically doesn't support external Load Balancer services directly. |
+| Node networking option | Diagram of networking components | Features & functionality |
+|------------------------|----------------------------------|--------------------------|
+| Load Balancer | :::image type="content" source="./media/plan-networking/load-balancer.png" alt-text="Screenshot of a diagram of the networking components of a Load Balancer."::: | • Default configuration. <br>  • Managed entirely by AKS. <br> • Follows [Azure Standard Load Balancer](/azure/load-balancer/load-balancer-overview) rules. <br> • Provides fixed SNAT ports assigned per node upon node creation. |
+| NAT Gateway | :::image type="content" source="./media/plan-networking/nat-gateway.png" alt-text="Screenshot of a diagram of the networking components of a NAT Gateway."::: | • Can select a managed or user-assigned (BYO) option. <br> • Provides improved SNAT port handling over Load Balancer. <br> • Requires extra configuration for zone redundancy. |
+| User Defined Routing (UDR) | :::image type="content" source="./media/plan-networking/user-defined-routing.png" alt-text="Screenshot of a diagram of the networking components of a User Defined Routing (UDR)."::: | • Used for explicit network control with BYO VNet. <br> • Managed by you, providing a more customizable experience. <br> • Must have a default route to an Azure Firewall, vWAN, or third-party network virtual appliance (NVA). <br> • Typically doesn't support external Load Balancer services directly. |
 
 ## Recommendations
 

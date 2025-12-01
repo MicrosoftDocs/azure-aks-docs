@@ -20,10 +20,10 @@ The Azure-managed AKS control plane consists of several components that help man
 
 When setting up control plane networking, you can choose a **public cluster** or a **private cluster**:
 
-| | Public cluster | Private cluster |
-|---|---|---|
-| Diagram of networking components | :::image type="content" source="./media/plan-networking/public-cluster.png" alt-text="Screenshot of a diagram of the networking components of a public AKS cluster.":::| :::image type="content" source="./media/plan-networking/private-cluster.png" alt-text="Screenshot of a diagram of the networking components of a private AKS cluster"::: |
-| Features & functionality | • API server accessible via a *public IP address*, allowing users and nodes to connect without any extra configuration. <br> • You can restrict access to certain source IP ranges. <br> • Uses konnectivity tunnel for node and pod access. <br> • Supports [API Server VNet Integration](#api-server-vnet-integration-preview). | • API server accessible via internal IP address, with [Azure Private DNS](/azure/dns/private-dns-overview) used for API server hostname. <br> • Uses [Azure Private Link](/azure/private-link/private-link-overview) to securely connect to the API server. <br> • Uses konnectivity tunnel for node and pod access. <br> • Supports [API Server VNet Integration](#api-server-vnet-integration-preview). |
+| Control plane networking option | Diagram of networking components | Features & functionality |
+|---------------------------------|----------------------------------|--------------------------|
+| Public cluster | :::image type="content" source="./media/plan-networking/public-cluster.png" alt-text="Screenshot of a diagram of the networking components of a public AKS cluster."::: | • API server accessible via a _public IP address_, allowing users and nodes to connect without any extra configuration. <br> • You can restrict access to certain source IP ranges. <br> • Uses konnectivity tunnel for node and pod access. <br> • Supports [API Server VNet Integration](#api-server-vnet-integration-preview). |
+| Private cluster | :::image type="content" source="./media/plan-networking/private-cluster.png" alt-text="Screenshot of a diagram of the networking components of a private AKS cluster"::: | • API server accessible via internal IP address, with [Azure Private DNS](/azure/dns/private-dns-overview) used for API server hostname. <br> • Uses [Azure Private Link](/azure/private-link/private-link-overview) to securely connect to the API server. <br> • Uses konnectivity tunnel for node and pod access. <br> • Supports [API Server VNet Integration](#api-server-vnet-integration-preview). |
 
 ### API Server VNet Integration (preview)
 

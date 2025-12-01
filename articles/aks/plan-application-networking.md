@@ -20,9 +20,10 @@ Application networking controls how the applications running in your Kubernetes 
 
 When setting up application networking, you can choose between a **Load Balancer Service with layer-4 load balancing** or **Ingress controllers with layer-7 load balancing**:
 
-| | Load Balancer Service | Ingress controllers |
-|---|---|---|
-| Features & functionality | • Uses a Kubernetes `LoadBalancer` Service to directly expose an application on a public or private IP. <br> • Supports multiple ports and any TCP or UDP traffic. <br> • Requires *at least one* unique IP:port pair per application. | • Exposes an application behind a layer-7 reverse proxy. <br> • Usable only for HTTP-like traffic (HTTP, HTTPS, gRPC). <br> • Can share a single public IP and ports for all ingress definitions on the same ingress controller. <br> • Managed ingress options include: Managed ingress-nginx through the [application routing add-on](./app-routing.md), [Azure Application Gateway for Containers (recommended)](/azure/application-gateway/for-containers/overview), and [Istio ingress gateway](./istio-about.md). |
+| Application networking option | Features & functionality |
+|-------------------|--------------------------|
+| Load Balancer Service | • Uses a Kubernetes `LoadBalancer` Service to directly expose an application on a public or private IP. <br> • Supports multiple ports and any TCP or UDP traffic. <br> • Requires _at least one_ unique IP:port pair per application. |
+| Ingress controllers | • Exposes an application behind a layer-7 reverse proxy. <br> • Usable only for HTTP-like traffic (HTTP, HTTPS, gRPC). <br> • Can share a single public IP and ports for all ingress definitions on the same ingress controller. <br> • Managed ingress options include: Managed ingress-nginx through the [application routing add-on](./app-routing.md), [Azure Application Gateway for Containers (recommended)](/azure/application-gateway/for-containers/overview), and [Istio ingress gateway](./istio-about.md). |
 
 ## Recommendations
 
