@@ -16,7 +16,7 @@ In this article, you learn pod networking options for Azure Kubernetes Service (
 
 Pod networking controls how pods have IP addresses assigned and defined how pods communicate with each other, cluster nodes, and destinations outside the cluster. Kubernetes provides pod networking through a _Container Network Interface (CNI)_ plugin, which is responsible for managing pod IP addresses and network connectivity.
 
-When setting up pod networking, you need to plan for **IP address management (IPAM)** and **routing and transport (dataplane)**.
+When setting up pod networking, you need to plan for **IP address management (IPAM)** and **routing and transport (data plane)**.
 
 ## IP address management (IPAM) options
 
@@ -31,11 +31,11 @@ Keep the following considerations in mind when deciding between **Azure CNI Pod 
 
 | | Azure CNI Pod Subnet with Dynamic IP Allocation | Azure CNI Pod Subnet with Static Block Allocation | Azure CNI Node Subnet |
 |---|---|---|---|
-| Considerations | • Involves some complexity and management, as you need to delegate a subnet for your nodes and pods and ensure it's properly scoped to handle the scale you need. <br> • Limitation of _64,000 IPs_. | • Requires careful planning, as you need to allocate a specific range of IPs for your pods and ensure it doesn't overlap with other subnets. <br> • Can get _up to 1,000,000 IPs_. <br> • IPs might not be used as efficiently, which could lead to wastage. | • AKS manages the subnet for you, simplifying the setup. <br> • Limitation of _64,000 IPs_. |
+| Considerations | • Involves some complexity and management. You need to delegate a subnet for your nodes and pods, and ensure you properly scope it to handle the scale you need. <br> • Limitation of _64,000 IPs_. | • Requires careful planning, as you need to allocate a specific range of IPs for your pods and ensure it doesn't overlap with other subnets. <br> • Can get _up to 1,000,000 IPs_. <br> • IPs might not be used as efficiently, which could lead to wastage. | • AKS manages the subnet for you, simplifying the setup. <br> • Limitation of _64,000 IPs_. |
 
-## Routing and transport (dataplane) options
+## Routing and transport (data plane) options
 
-When setting up your dataplane, you can choose between [**Azure CNI Powered by Cilium eBPF Dataplane**](./azure-cni-powered-by-cilium.md), [**Azure IPTables Dataplane**](./configure-azure-cni.md), and [**BYO CNI**](./use-byo-cni.md):
+When setting up your data plane, you can choose between [**Azure CNI Powered by Cilium eBPF data plane**](./azure-cni-powered-by-cilium.md), [**Azure IPTables data plane**](./configure-azure-cni.md), and [**BYO CNI**](./use-byo-cni.md):
 
 | | Azure CNI Powered by Cilium | Azure IPTables | BYO CNI |
 |---|---|---|---|
