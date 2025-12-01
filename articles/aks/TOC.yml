@@ -476,6 +476,18 @@
   items:
       - name: Networking concepts
         href: concepts-network.md
+      - name: Plan networking
+        items:
+          - name: Overview
+            href: plan-networking.md
+          - name: Plan control plane networking
+            href: plan-control-plane-networking.md
+          - name: Plan node networking
+            href: plan-node-networking.md
+          - name: Plan pod networking
+            href: plan-pod-networking.md
+          - name: Plan application networking
+            href: plan-application-networking.md
       - name: IP address planning
         href: concepts-network-ip-address-planning.md
       - name: Services
