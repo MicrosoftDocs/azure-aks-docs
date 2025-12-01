@@ -1,7 +1,7 @@
 ---
 title: Use Key Management Service (KMS) Etcd Encryption in Azure Kubernetes Service (AKS)
 description: Learn how to use Key Management Service (KMS) etcd encryption for a public or private key vault with AKS.
-ms.date: 09/26/2024
+ms.date: 12/01/2025
 ms.subservice: aks-security
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -53,6 +53,7 @@ The following limitations apply when you integrate KMS etcd encryption with AKS:
 - If a cluster has KMS turned on and has a private key vault, it must use the [API Server VNet Integration][api-server-vnet-integration] tunnel. Konnectivity isn't supported.
 - Using the Virtual Machine Scale Sets API to scale the nodes in the cluster down to zero deallocates the nodes. The cluster then goes down and becomes unrecoverable.
 - After you turn off KMS, you can't delete or expire the keys. Such behaviors would cause the API server to stop working.
+- If a cluster has KMS enabled to use a private key vault and is a private cluster with VNet integration, NSGs must allow TCP port 443 to the private endpoint IP of the private key vault from the API server. This needs to be considered when using additional rules in API subnet NSG, cluster subnet NSG.
 
 :::zone pivot="public-kv"
 
