@@ -475,7 +475,15 @@
 - name: Networking
   items:
       - name: Networking concepts
-        href: concepts-network.md
+        items:
+          - name: Overview concepts
+            href: concepts-network.md
+          - name: IP address planning
+            href: concepts-network-ip-address-planning.md
+          - name: Services
+            href: concepts-network-services.md
+          - name: Advanced Container Networking Services (ACNS) overview
+            href: advanced-container-networking-services-overview.md
       - name: Plan networking
         items:
           - name: Overview
@@ -488,12 +496,6 @@
             href: plan-pod-networking.md
           - name: Plan application networking
             href: plan-application-networking.md
-      - name: IP address planning
-        href: concepts-network-ip-address-planning.md
-      - name: Services
-        href: concepts-network-services.md
-      - name: Advanced Container Networking Services (ACNS) overview
-        href: advanced-container-networking-services-overview.md
       - name: Ingress
         items:
           - name: Overview
