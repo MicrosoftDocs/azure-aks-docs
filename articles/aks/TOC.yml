@@ -256,8 +256,12 @@
       items:
         - name: Create node pools
           href: create-node-pools.md
-        - name: Manage node pools
-          href: manage-node-pools.md
+        - name: Scale node pools
+          href: scale-node-pools.md
+        - name: Upgrade node pools
+          href: upgrade-node-pools.md
+        - name: Assign capacity reservation groups to node pools
+          href: use-capacity-reservation-groups.md
         - name: Reduce image pull time with Artifact Streaming on AKS
           href: artifact-streaming.md
         - name: Use generation 2 VMs
