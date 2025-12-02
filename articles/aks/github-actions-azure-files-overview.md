@@ -45,7 +45,7 @@ Self-hosting GitHub Actions runners on AKS provides organizations with greater c
 * You need the following resources installed:
   * [Azure CLI][install-azure-cli] version 2.56 or later.
   * [Azure Kubernetes Service (AKS) preview extension][install-aks-preview].
-  * [jg][install-jq] version 1.5 or later.
+  * [jq][install-jq] version 1.5 or later.
   * [kubectl][install-kubectl] version 1.21.0 or later.
   * [openssl][install-openssl] version 3.3.1 or later.
   * [Visual Studio Code][install-vscode] or another code editor of your choice.
