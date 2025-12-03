@@ -173,16 +173,16 @@ The `whenToApply` property features two options:
 
 * `Always`: Fleet Manager periodically applies the workload definition from the hub cluster to matching member clusters, regardless of their drifted status. This behavior is the default for both `ClusterResourcePlacement` and `ResourcePlacement` without an explicit `whenToApply` setting.
 
-* `IfNotDrifted`: Fleet Manager checks for drifts periodically. If drifts are found, Fleet Manager stops applying the hub cluster workload definition and report in the resource placement status.
+* `IfNotDrifted`: Fleet Manager checks for drifts periodically. If drifts are found, Fleet Manager stops applying the hub cluster workload definition and reports in the resource placement status.
 
 > [!NOTE]
 > The presence of drifts **doesn't stop** Fleet Manager from rolling out newer workload versions. If you edit the workload definition on the hub cluster, Fleet Manager always applies the new workload definition.
 
 ### Define which fields are used for comparison
 
-You can use an optional `comparisonOptions` property to fine-tune how `whenToApply` determines configuration differences.
+You can use an optional `comparisonOption` property to fine-tune how `whenToApply` determines configuration differences.
 
-* `PartialComparison`: only fields that are present on the hub cluster workload and on the target cluster workload are used for value comparison. Any extra unmanaged fields on the target cluster workload are ignored. This behavior is the default without an explicit `comparisonOptions` setting.
+* `PartialComparison`: only fields that are present on the hub cluster workload and on the target cluster workload are used for value comparison. Any extra unmanaged fields on the target cluster workload are ignored. This behavior is the default without an explicit `comparisonOption` setting.
 
 * `FullComparison`: all fields on the workload definition on the Fleet hub cluster must be present on the selected member cluster. If the target cluster has any extra unmanaged fields, then it fails comparison.
 
@@ -243,7 +243,9 @@ spec:
       unavailablePeriodSeconds: 1                
 ```
 
-### Placement behavior summaryThe following table summarizes the placement behavior depending on the `whenToApply` and `comparisonOption` values selected.
+### Placement behavior summary
+
+The following table summarizes the placement behavior depending on the `whenToApply` and `comparisonOption` values selected.
 
 | `whenToApply` setting | `comparisonOption` setting | Field type | Outcome
 | -------- | ------- | -------- | ------- 
