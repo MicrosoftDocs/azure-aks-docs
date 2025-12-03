@@ -11,7 +11,7 @@ ms.topic: concept-article
 
 # Taking over existing workloads with Azure Kubernetes Fleet Manager resource placement (preview)
 
-When a multi-cluster environment matures the presence of a specific workload on multiple clusters is a common situation. One reason to add clusters to a fleet is to centralize management of workloads to improve visibility and manageability of workloads across multiple clusters. However, adding clusters with existing workloads to a fleet can lead to placement conflicts when Fleet Manager attempts to place a managed workload onto an added member cluster. 
+When a multi-cluster environment matures, the presence of a specific workload on multiple clusters is a common situation. One reason to add clusters to a fleet is to centralize management of workloads to improve visibility and manageability of workloads across multiple clusters. However, adding clusters with existing workloads to a fleet can lead to placement conflicts when Fleet Manager attempts to place a managed workload onto an added member cluster. 
 
 In this article, we look at how to use the `whenToTakeOver` property of an `applyStrategy` in a resource placement (cluster-scoped `ClusterResourcePlacement` or namespace-scoped `ResourcePlacement`) to explicitly control how Fleet Manager handles existing workloads when performing placements.
 
@@ -20,13 +20,13 @@ In this article, we look at how to use the `whenToTakeOver` property of an `appl
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-beta.md)]
 
-## Workload take over options
+## Workload takes over options
 
-The starting point for workload take over is to deploying the workload manifests onto your Fleet Manager [hub cluster][fleet-hub-cluster]. Once deployed you define a `ClusterResourcePlacement` or `ResourcePlacement` that specifies an explicit takeover behavior using the `whenToTakeOver` property.
+The starting point for workload takes over is to deploying the workload manifests onto your Fleet Manager [hub cluster][fleet-hub-cluster]. Once deployed you define a `ClusterResourcePlacement` or `ResourcePlacement` that specifies an explicit takeover behavior using the `whenToTakeOver` property.
 
 The `whenToTakeOver` property allows the following values:
 
-* `Always`: Fleet Manager applies the corresponding workload from the hub cluster immediately, and any value differences in managed fields are overwritten on the target cluster. This behavior is the default for a CRP without an explicit `whenToTakeOver` setting.
+* `Always`: Fleet Manager applies the corresponding workload from the hub cluster immediately, and any value differences in managed fields are overwritten on the target cluster. This behavior is the default for a cluster resource placement without an explicit `whenToTakeOver` setting.
 
 * `IfNoDiff`: Fleet Manager checks for configuration differences when it finds an existing workload and only applies the hub cluster workload if no configuration differences are found. 
 
