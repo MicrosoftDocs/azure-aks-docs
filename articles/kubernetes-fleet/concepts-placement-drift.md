@@ -115,7 +115,7 @@ kubectl get resourceplacement.v1beta1.placement.kubernetes-fleet.io rp-reportdif
     | jq '[.[] | select (.diffedPlacements != null)] | map({clusterName, diffedPlacements})'
 ```
 
-The command results in a response containing JSON similar to the following snippet. In this sample we can see that someone has directly overwritten the owner label on this cluster. 
+The command results in a response containing JSON similar to the following snippet. In this sample, we can see that someone has directly overwritten the owner label on this cluster. 
 
 ```json
 {
@@ -146,9 +146,9 @@ Fleet Manager reports the following information about configuration differences:
 * `diffedPlacements`: a list of differences detected, with the following details:
     * `group`, `kind`, `version`, `namespace`, and `name`: identifying properties of the resource that has configuration differences (not all are shown in the sample).
     * `observationTime`: when the current difference detail was collected.
-    * `firstDiffedObservedTime`: when the difference was first observed (may differ from `observationTime`).
+    * `firstDiffedObservedTime`: when the difference was first observed (might differ from `observationTime`).
     * `observedDiffs`: the diff details, specifically:
-        * `path`: A JSON path ([RFC 6901](https://datatracker.ietf.org/doc/html/rfc6901)) that points to the field with a different value;
+        * `path`: A JSON path ([Request for Comments (RFC) 6901](https://datatracker.ietf.org/doc/html/rfc6901)) that points to the field with a different value;
         * `valueInHub`: the value at the JSON path as seen from the hub cluster workload definition (the desired state). If this value is absent, the field doesn't exist in the hub cluster workload definition.
         * `valueInMember`: the value at the JSON path as seen from the member cluster workload (the current state). If this value is absent, the field doesn't exist on the member cluster.
     * `targetClusterObservedGeneration`: the generation of the member cluster workload.
@@ -173,7 +173,7 @@ The `whenToApply` property features two options:
 
 * `Always`: Fleet Manager periodically applies the workload definition from the hub cluster to matching member clusters, regardless of their drifted status. This behavior is the default for both `ClusterResourcePlacement` and `ResourcePlacement` without an explicit `whenToApply` setting.
 
-* `IfNotDrifted`: Fleet Manager checks for drifts periodically. If drifts are found, Fleet Manager will stop applying the hub cluster workload definition and report in the resource placement status.
+* `IfNotDrifted`: Fleet Manager checks for drifts periodically. If drifts are found, Fleet Manager stops applying the hub cluster workload definition and report in the resource placement status.
 
 > [!NOTE]
 > The presence of drifts **doesn't stop** Fleet Manager from rolling out newer workload versions. If you edit the workload definition on the hub cluster, Fleet Manager always applies the new workload definition.
@@ -188,7 +188,7 @@ You can use an optional `comparisonOptions` property to fine-tune how `whenToApp
 
 ### ClusterResourcePlacement example
 
-In the following sample, if a change is found in any field (managed or unmanaged) the placement will fail.
+In the following sample, if a change is found in any field (managed or unmanaged) the placement fails.
 
 ```yml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -217,7 +217,7 @@ spec:
 
 ### ResourcePlacement example
 
-In the following sample, if a change is found in any field (managed or unmanaged) the placement will fail.
+In the following sample, if a change is found in any field (managed or unmanaged) the placement fails.
 
 ```yml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -252,7 +252,7 @@ spec:
 | `IfNotDrifted` | `FullComparison` | Any field is edited/added on member cluster. | Apply error reported, plus the drift details.
 | `Always` | `PartialComparison` | Managed field (hub cluster workload definition) edited on member cluster. | Change is overwritten.
 | `Always` | `PartialComparison` | Unmanaged field (not present in hub cluster workload definition) is edited/added on member cluster. | Change is ignored and left untouched.
-| `Always` | `FullComparison` |  Any field is edited/added on member cluster. | Managed fields will be overwritten; Drift details reported on unmanaged fields, but not considered as an apply error. 
+| `Always` | `FullComparison` |  Any field is edited/added on member cluster. | Managed fields are overwritten; Drift details reported on unmanaged fields, but not considered as an apply error. 
 
 ## Next steps
 
