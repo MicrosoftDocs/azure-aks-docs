@@ -20,7 +20,7 @@ In this article, we look at how to use the `whenToTakeOver` property of an `appl
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-beta.md)]
 
-## Workload takes over options
+## Workload takeover options
 
 The starting point for workload takes over is to deploying the workload manifests onto your Fleet Manager [hub cluster][fleet-hub-cluster]. Once deployed you define a `ClusterResourcePlacement` or `ResourcePlacement` that specifies an explicit takeover behavior using the `whenToTakeOver` property.
 
@@ -238,7 +238,9 @@ kubectl get clusterresourceplacement.v1beta1.placement.kubernetes-fleet.io web-2
 ```bash
 kubectl get resourceplacement.v1beta1.placement.kubernetes-fleet.io web-2-rp -n web-2 -o jsonpath='{.status.placementStatuses}' \
     | jq '[.[] | select (.failedPlacements != null)] | map({clusterName, failedPlacements})'
-```Each cluster that failed placement due to a configuration difference returns an entry similar to the following sample.
+```
+
+Each cluster that failed placement due to a configuration difference returns an entry similar to the following sample.
 
 ```json
 {
