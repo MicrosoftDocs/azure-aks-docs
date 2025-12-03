@@ -107,7 +107,9 @@ Apply the `ResourcePlacement` to your Fleet Manager hub cluster.
 kubectl apply -f web-2-rp.yaml
 ```
 
-### Check placement statusFleet Manager attempts to place the workload and when it finds a matching workload on a target member cluster returns a `failedPlacement` response.
+### Check placement status
+
+Fleet Manager attempts to place the workload and when it finds a matching workload on a target member cluster returns a `failedPlacement` response.
 
 You can determine which member clusters failed placement due to a clashing workload using the following commands. The [jq command](https://github.com/jqlang/jq) is used to format the output.
 
