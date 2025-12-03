@@ -8,7 +8,7 @@ ms.date: 04/25/2025
 ms.author: nshankar
 ---
 
-# Deploy egress gateways for Istio service mesh add-on for Azure Kubernetes Service (Preview)
+# Deploy egress gateways for Istio service mesh add-on for Azure Kubernetes Service
 
 This article shows you how to deploy egress gateways for the Istio service mesh add-on for Azure Kubernetes Service (AKS) cluster.
 
@@ -32,21 +32,9 @@ The Istio add-on egress gateway also builds on top of and requires the [Static E
 
 This guide assumes you followed the [documentation][istio-deploy-addon] to enable the Istio add-on on an AKS cluster.
 
-### Install the `aks-preview` Azure CLI extension
+### Update Azure CLI version
 
-Install the `aks-preview` extension if you're using Azure CLI. You must use `aks-preview` version `14.0.0b2` or higher.
-
-1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
+You must use `azure-cli` version `2.80.0` or higher. Run `az --version` to find your `azure-cli` version, and run `az upgrade` to upgrade.
 
 ### Enable and configure Static Egress Gateway
 
@@ -102,7 +90,7 @@ You can configure the `outboundTrafficPolicy.mode` on a mesh-wide level using th
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: istio-shared-configmap-asm-1-24
+  name: istio-shared-configmap-asm-1-27
   namespace: aks-istio-system
 data:
   mesh: |-
@@ -121,7 +109,7 @@ kubectl label namespace $ISTIO_EGRESS_NAMESPACE istio.io/rev=$ASM_REVISION
 Then, deploy the sample application:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/curl/curl.yaml -n $ISTIO_EGRESS_NAMESPACE
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.27/samples/curl/curl.yaml -n $ISTIO_EGRESS_NAMESPACE
 ```
 
 You should see the `curl` pod running with an injected sidecar container:
