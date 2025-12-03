@@ -149,7 +149,7 @@ Each cluster that fails placement due to an existing workload returns an entry s
 
 ## Safely take over matching workloads
 
-To proceed with the take over of an existing workload you can modify the existing resource placement, changing `whenToTakeOver` to `IfNoDiff`.
+To proceed with the take over of an existing workload you can modify the existing `ClusterResourcePlacement` or `ResourcePlacement`, changing `whenToTakeOver` to `IfNoDiff`.
 
 Fleet Manager applies the hub cluster workload in place of the existing workload on the target cluster where there are no differences between managed fields on both workloads. Extra fields are ignored.
 
