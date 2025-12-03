@@ -8,6 +8,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli
 ms.date: 08/16/2024
+zone_pivot_groups: azure-cni-overlay-create-cluster
 # Customer intent: "As a Kubernetes administrator, I want to understand how to configure Azure CNI Overlay networking in AKS so that I can efficiently manage IP address allocation and scale my containerized applications without running into address exhaustion issues."
 ---
 
@@ -22,47 +23,55 @@ In this article, you learn how to configure Azure CNI Overlay networking in Azur
 
 - An Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/) before you begin.
 - Azure CLI version 2.48.0 or later. To install or upgrade Azure CLI, see [Install Azure CLI](/cli/azure/install-azure-cli).
-- For dual-stack networking, you need Kubernetes version 1.26.3 or later.
+- An existing Azure resource group. If you need to create one, see [Create Azure resource groups](/azure/azure-resource-manager/management/manage-resource-groups-cli#create-resource-groups).
 
-## Create an AKS cluster with Azure CNI Overlay
+:::zone pivot="aks-cni-overlay-cluster-dual-stack"
 
-- Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command with the `--network-plugin-mode` set to `overlay`. If you don't specify a pod CIDR, AKS assigns a default space of `viz. 10.244.0.0/16`.
+## Unsupported features in Azure CNI Overlay AKS clusters with dual-stack networking
+
+The following features aren't supported for Azure CNI Overlay AKS clusters with dual-stack networking:
+
+- [Azure network policies](./use-network-policies.md)
+- [Calico network policies](./use-network-policies.md)
+- [NAT Gateway](./nat-gateway.md)
+- The [virtual nodes add-on](./virtual-nodes.md)
+
+:::zone-end
+
+:::zone pivot="aks-cni-overlay-cluster"
+
+## Key parameters for Azure CNI Overlay AKS clusters
+
+The following table describes the key parameters for configuring Azure CNI Overlay networking in AKS clusters:
+
+| Parameter | Description |
+|-----------|-------------|
+| `--network-plugin` | Set to `azure` to use Azure CNI networking. |
+| `--network-plugin-mode` | Set to `overlay` to enable Azure CNI Overlay networking. |
+| `--pod-cidr` | Specify a custom pod CIDR block for the cluster. |
+
+## Create an Azure CNI Overlay AKS cluster
+
+- Create an Azure CNI Overlay AKS cluster using the [`az aks create`][az-aks-create] command with the `--network-plugin-mode` set to `overlay`. If you don't specify a value for `--pod-cidr`, AKS assigns a default space of `10.244.0.0/16`.
 
     ```azurecli-interactive
-    # Set environment variables>
-    CLUSTER_NAME=<your-aks-cluster-name>
-    RESOURCE_GROUP=<your-resource-group>
-    LOCATION=<your-region>
-    
-    # Create an AKS cluster with Azure CNI Overlay
     az aks create \
         --name $CLUSTER_NAME \
         --resource-group $RESOURCE_GROUP \
-        --location $LOCATION \
+        --location $REGION \
         --network-plugin azure \
         --network-plugin-mode overlay \
         --pod-cidr 192.168.0.0/16 \
         --generate-ssh-keys
     ```
 
-### Add a new node pool to a dedicated subnet
+## Add a new node pool to a dedicated subnet
 
-After you created a cluster with Azure CNI Overlay, you can create another node pool and assign the nodes to a new subnet of the same VNet. This approach is useful if you want to control the ingress or egress IPs of the host to/from targets in the same virtual network (VNet) or peered VNets.
+After you create the Azure CNI Overlay AKS cluster, you can create another node pool and assign the nodes to a new subnet of the same VNet. This approach is useful if you want to control the ingress or egress IPs of the host to/from targets in the same virtual network (VNet) or peered VNets.
 
 - Add a new node pool to the cluster using the [`az aks nodepool add`](/cli/azure/aks#az_aks_nodepool_add) command and specify the subnet resource ID with the `--vnet-subnet-id` parameter. For example:
 
     ```azurecli-interactive
-    # Set environment variables
-    CLUSTER_NAME=<your-aks-cluster-name>
-    RESOURCE_GROUP=<your-resource-group>
-    LOCATION=<your-region>
-    NODE_POOL_NAME=<your-nodepool-name>
-    SUBSCRIPTION_ID=$(az account show --query id -o tsv)
-    VNET_NAME=<your-vnet-name>
-    SUBNET_NAME=<your-subnet-name>
-    SUBNET_RESOURCE_ID="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$SUBNET_NAME"
-    
-    # Add a new node pool to the cluster in the specified subnet
     az aks nodepool add \
       --resource-group $RESOURCE_GROUP \
       --cluster-name $CLUSTER_NAME \
@@ -72,46 +81,35 @@ After you created a cluster with Azure CNI Overlay, you can create another node 
       --vnet-subnet-id $SUBNET_RESOURCE_ID
     ```
 
-## Create an AKS cluster with Azure CNI Overlay and dual-stack networking
+:::zone-end
 
-You can deploy your AKS clusters in a dual-stack mode when using Overlay networking and a dual-stack Azure virtual network (VNet). In this configuration, nodes receive both an IPv4 and IPv6 address from the Azure VNet subnet. Pods receive an IPv4 and IPv6 address from a different address space to the Azure VNet subnet of the nodes. Network address translation (NAT) is then configured so that the pods can reach resources on the Azure VNet. The source IP address of the traffic is NAT'd to the node's primary IP address of the same family (_IPv4 to IPv4_ and _IPv6 to IPv6_).
+:::zone pivot="aks-cni-overlay-cluster-dual-stack"
+
+## About Azure CNI Overlay AKS clusters with dual-stack networking
+
+> [!IMPORTANT]
+> You need Kubernetes version 1.26.3 or later to create Azure CNI Overlay AKS clusters with dual-stack networking.
+
+You can deploy your Azure CNI Overlay AKS clusters in a dual-stack mode with an Azure virtual network (VNet). In this configuration, nodes receive both an IPv4 and IPv6 address from the Azure VNet subnet. Pods receive an IPv4 and IPv6 address from a different address space to the Azure VNet subnet of the nodes. Network address translation (NAT) is then configured so that the pods can reach resources on the Azure VNet. The source IP address of the traffic is NAT'd to the node's primary IP address of the same family (_IPv4 to IPv4_ and _IPv6 to IPv6_).
 
 > [!NOTE]
 > You can also deploy dual-stack networking clusters with Azure CNI Powered by Cilium. For more information, see [Azure CNI Powered by Cilium dual-stack networking](./azure-cni-powered-by-cilium.md#dual-stack-networking-with-azure-cni-powered-by-cilium).
 
-### Dual-stack networking limitations
+## Key parameters for Azure CNI Overlay AKS clusters with dual-stack networking
 
-The following features aren't supported with dual-stack networking:
+The following table describes the key parameters for configuring Azure CNI Overlay AKS clusters with dual-stack networking:
 
-- [Azure network policies](./use-network-policies.md)
-- [Calico network policies](./use-network-policies.md)
-- [NAT Gateway](./nat-gateway.md)
-- The [virtual nodes add-on](./virtual-nodes.md)
+| Parameter | Description |
+|-----------|-------------|
+| `--ip-families` | Takes a comma-separated list of IP families to enable on the cluster. Only `ipv4` or `ipv4,ipv6` are supported. |
+| `--pod-cidrs` | Takes a comma-separated list of CIDR notation IP ranges to assign pod IPs from. The count and order of ranges in this list must match the value provided to `--ip-families`. If no values are supplied, the default value of `10.244.0.0/16,fd12:3456:789a::/64` is used. |
+| `--service-cidrs` | Takes a comma-separated list of CIDR notation IP ranges to assign service IPs from. The count and order of ranges in this list must match the value provided to `--ip-families`. If no values are supplied, the default value of `10.0.0.0/16,fd12:3456:789a:1::/108` is used. The IPv6 subnet assigned to `--service-cidrs` can be no larger than a /108. |
 
-### Dual-stack networking parameters
-
-The following parameters support dual-stack clusters:
-
-- **`--ip-families`**: Takes a comma-separated list of IP families to enable on the cluster.
-  - Only `ipv4` or `ipv4,ipv6` are supported.
-- **`--pod-cidrs`**: Takes a comma-separated list of CIDR notation IP ranges to assign pod IPs from.
-  - The count and order of ranges in this list must match the value provided to `--ip-families`.
-  - If no values are supplied, the default value `10.244.0.0/16,fd12:3456:789a::/64` is used.
-- **`--service-cidrs`**: Takes a comma-separated list of CIDR notation IP ranges to assign service IPs from.
-  - The count and order of ranges in this list must match the value provided to `--ip-families`.
-  - If no values are supplied, the default value `10.0.0.0/16,fd12:3456:789a:1::/108` is used.
-  - The IPv6 subnet assigned to `--service-cidrs` can be no larger than a /108.
-
-### [Create a dual-stack AKS cluster with Azure CNI Overlay with Linux node pools](#tab/dual-stack-linux)
+## Create an Azure CNI Overlay AKS cluster with dual-stack networking (Linux)
 
 1. Create an Azure resource group for the cluster using the [`az group create`][az-group-create] command.
 
     ```azurecli-interactive
-    # Set environment variables
-    RESOURCE_GROUP=<your-resource-group>
-    REGION=<your-region>
-    
-    # Create a resource group
     az group create --location $REGION --name $RESOURCE_GROUP
     ```
 
@@ -119,20 +117,22 @@ The following parameters support dual-stack clusters:
 
     ```azurecli-interactive
     az aks create \
-        --location <region> \
-        --resource-group <resourceGroupName> \
-        --name <clusterName> \
+        --location $REGION \
+        --resource-group $RESOURCE_GROUP \
+        --name $CLUSTER_NAME \
         --network-plugin azure \
         --network-plugin-mode overlay \
         --ip-families ipv4,ipv6 \
         --generate-ssh-keys
     ```
 
-### [Create a dual-stack AKS cluster with Azure CNI Overlay with Windows node pools (preview)](#tab/dual-stack-windows)
+## Create an Azure CNI Overlay AKS cluster with dual-stack networking (Windows)
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-#### Install the `aks-preview` Azure CLI extension
+Before you create an Azure CNI Overlay AKS cluster with dual-stack networking with Windows node pools, you need to install the `aks-preview` Azure CLI extension and register the `AzureOverlayDualStackPreview` feature flag in your subscription.
+
+### Install the `aks-preview` Azure CLI extension
 
 1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
 
@@ -146,7 +146,7 @@ The following parameters support dual-stack clusters:
     az extension update --name aks-preview
     ```
 
-#### Register the `AzureOverlayDualStackPreview` feature flag
+### Register the `AzureOverlayDualStackPreview` feature flag
 
 1. Register the `AzureOverlayDualStackPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
@@ -168,36 +168,24 @@ The following parameters support dual-stack clusters:
     az provider register --namespace Microsoft.ContainerService
     ```
 
-#### Create a dual-stack AKS cluster with Azure CNI Overlay
+### Create a dual-stack Azure CNI Overlay AKS cluster and add a Windows node pool
 
-- Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command.
+1. Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command.
 
     ```azurecli-interactive
-    # Set environment variables
-    CLUSTER_NAME=<your-aks-cluster-name>
-    RESOURCE_GROUP=<your-resource-group>
-    LOCATION=<your-region>
-
-    # Create an AKS cluster with Azure CNI Overlay and dual-stack networking
     az aks create \
         --name $CLUSTER_NAME \
         --resource-group $RESOURCE_GROUP \
-        --location $LOCATION \
+        --location $REGION \
         --network-plugin azure \
         --network-plugin-mode overlay \
         --ip-families ipv4,ipv6 \
         --generate-ssh-keys
     ```
 
-#### Add a Windows node pool to the cluster
-
-- Add a Windows node pool to the cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command.
+1. Add a Windows node pool to the cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
     ```azurecli-interactive
-    # Set environment variable
-    WINDOWS_NODE_POOL_NAME=<your-windows-node-pool-name>
-
-    # Add a Windows node pool to the cluster
     az aks nodepool add \
         --resource-group $RESOURCE_GROUP \
         --cluster-name $CLUSTER_NAME \
@@ -208,7 +196,9 @@ The following parameters support dual-stack clusters:
 
 ---
 
-## Deploy an example workload to the AKS Overlay cluster
+:::zone-end
+
+## Deploy an example workload to the Azure CNI Overlay AKS cluster
 
 Once the cluster is created, you can deploy your workloads. The following sections walk you through an example workload deployment of an NGINX web server exposed via an IPv4 and IPv6 `LoadBalancer` type service.
 
@@ -223,7 +213,7 @@ You can expose the NGINX deployment using either `kubectl` commands or YAML mani
 > [!IMPORTANT]
 > There are currently **two limitations** pertaining to IPv6 services in AKS:
 >
-> - Azure Load Balancer sends health probes to IPv6 destinations from a link-local address. In Azure Linux node pools, you can't route this traffic to a pod, so traffic flowing to IPv6 services deployed with `externalTrafficPolicy: Cluster` fail.
+> - Azure Load Balancer sends health probes to IPv6 destinations from a link-local address. In **Azure Linux node pools**, you can't route this traffic to a pod, so traffic flowing to IPv6 services deployed with `externalTrafficPolicy: Cluster` fail.
 > - You must deploy IPv6 services with `externalTrafficPolicy: Local`, which causes `kube-proxy` to respond to the probe on the node.
 
 #### [kubectl deployment](#tab/kubectl)
@@ -307,7 +297,7 @@ You can expose the NGINX deployment using either `kubectl` commands or YAML mani
         app: nginx
       name: nginx-ipv6
     spec:
-      externalTrafficPolicy: Cluster
+      externalTrafficPolicy: Local # Deploying the IPv6 service with `externalTrafficPolicy: Local`, which causes `kube-proxy` to respond to the probe on the node
       ipFamilies:
      - IPv6
       ports:
@@ -337,9 +327,10 @@ You can expose the NGINX deployment using either `kubectl` commands or YAML mani
 
 ## Related content
 
-- To learn how to upgrade existing clusters to Azure CNI Overlay, see [Upgrade Azure CNI IPAM modes and data plane technology](./upgrade-azure-cni.md).
-- To learn how to expand your pod CIDR space in Azure CNI Overlay clusters, see [Expand pod CIDR space in Azure CNI Overlay clusters](./azure-cni-overlay-pod-cidr.md).
-- To learn how to use AKS with your own Container Network Interface (CNI) plugin, see [Bring your own Container Network Interface (CNI) plugin](./use-byo-cni.md).
+To learn more about Azure CNI Overlay networking on AKS, see the following articles:
+
+- [Upgrade Azure CNI IPAM modes and data plane technology](./upgrade-azure-cni.md)
+- [Expand pod CIDR space in Azure CNI Overlay clusters](./azure-cni-overlay-pod-cidr.md)
 
 <!-- LINKS - internal -->
 [az-provider-register]: /cli/azure/provider#az-provider-register
