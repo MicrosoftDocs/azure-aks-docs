@@ -11,7 +11,7 @@ ms.topic: concept-article
 
 # Taking over existing workloads with Azure Kubernetes Fleet Manager resource placement (preview)
 
-When a multi-cluster environment matures, the presence of a specific workload on multiple clusters is a common situation. One reason to add clusters to a fleet is to centralize management of workloads to improve visibility and manageability of workloads across multiple clusters. However, adding clusters with existing workloads to a fleet can lead to placement conflicts when Fleet Manager attempts to place a managed workload onto an added member cluster. 
+When a multi-cluster environment matures, the presence of a specific workload on multiple clusters is a common situation. One reason to add clusters to a fleet is to centralize management of workloads to improve visibility and manageability of workloads across multiple clusters. However, adding clusters with existing workloads to a fleet can lead to placement conflicts when Fleet Manager attempts to place a managed workload onto an added member cluster.
 
 In this article, we look at how to use the `whenToTakeOver` property of an `applyStrategy` in a resource placement (cluster-scoped `ClusterResourcePlacement` or namespace-scoped `ResourcePlacement`) to explicitly control how Fleet Manager handles existing workloads when performing placements.
 
@@ -28,7 +28,7 @@ The `whenToTakeOver` property allows the following values:
 
 * `Always`: Fleet Manager applies the corresponding workload from the hub cluster immediately, and any value differences in managed fields are overwritten on the target cluster. This behavior is the default for a cluster resource placement without an explicit `whenToTakeOver` setting.
 
-* `IfNoDiff`: Fleet Manager checks for configuration differences when it finds an existing workload and only applies the hub cluster workload if no configuration differences are found. 
+* `IfNoDiff`: Fleet Manager checks for configuration differences when it finds an existing workload and only applies the hub cluster workload if no configuration differences are found.
 
 * `Never`: Fleet Manager ignores existing workloads and doesn't apply the hub cluster workload. Fleet manager still identifies matching workloads and raises an apply error, allowing you to safely check for the presence of existing workloads.
 
@@ -55,7 +55,7 @@ spec:
   resourceSelectors:
     - group: ""
       kind: Namespace
-      version: v1 
+      version: v1
       labelSelector:
         matchLabels:
           app: web-2
@@ -63,11 +63,11 @@ spec:
     placementType: PickAll
   strategy:
     applyStrategy:
-      whenToTakeOver: Never     
+      whenToTakeOver: Never
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 100%
-      unavailablePeriodSeconds: 1            
+      unavailablePeriodSeconds: 1
 ```
 
 Apply the `ClusterResourcePlacement` to your Fleet Manager hub cluster.
@@ -94,11 +94,11 @@ spec:
     placementType: PickAll
   strategy:
     applyStrategy:
-      whenToTakeOver: Never     
+      whenToTakeOver: Never
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 100%
-      unavailablePeriodSeconds: 1            
+      unavailablePeriodSeconds: 1
 ```
 
 Apply the `ResourcePlacement` to your Fleet Manager hub cluster.
@@ -164,7 +164,7 @@ spec:
   resourceSelectors:
     - group: ""
       kind: Namespace
-      version: v1 
+      version: v1
       labelSelector:
         matchLabels:
           app: web-2
@@ -177,7 +177,7 @@ spec:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 100%
-      unavailablePeriodSeconds: 1            
+      unavailablePeriodSeconds: 1
 ```
 
 Apply the `ClusterResourcePlacement` to your Fleet Manager hub cluster.
@@ -209,7 +209,7 @@ spec:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 100%
-      unavailablePeriodSeconds: 1            
+      unavailablePeriodSeconds: 1
 ```
 
 Apply the `ResourcePlacement` to your Fleet Manager hub cluster.
