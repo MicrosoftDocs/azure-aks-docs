@@ -26,7 +26,7 @@ The starting point for workload takes over is to deploying the workload manifest
 
 The `whenToTakeOver` property allows the following values:
 
-* `Always`: Fleet Manager applies the corresponding workload from the hub cluster immediately, and any value differences in managed fields are overwritten on the target cluster. This behavior is the default for a cluster resource placement without an explicit `whenToTakeOver` setting.
+* `Always`: Fleet Manager applies the corresponding workload from the hub cluster immediately, and any value differences in managed fields are overwritten on the target cluster. This behavior is the default for both `ClusterResourcePlacement` and `ResourcePlacement` without an explicit `whenToTakeOver` setting.
 
 * `IfNoDiff`: Fleet Manager checks for configuration differences when it finds an existing workload and only applies the hub cluster workload if no configuration differences are found.
 
