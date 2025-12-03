@@ -174,7 +174,7 @@ You can either [grant access to your key vault for the identity after cluster cr
     az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
     ```
 
-2. Create a new YAML named *gmsa-spec.yaml* and paste in the following YAML. Make sure you replace the placeholders with your own values.
+2. Create a new YAML named *gmsa-spec.yaml* and paste in the following YAML. Make sure you replace the placeholders with your own values. Placeholders are indicated with angle brackets (`<>`), for example replace `<GMSA_ACCOUNT_USERNAME>` with an account name like `gmsa-account`.
 
     ```YAML
     apiVersion: windows.k8s.io/v1
@@ -184,23 +184,26 @@ You can either [grant access to your key vault for the identity after cluster cr
     credspec:
       ActiveDirectoryConfig:
         GroupManagedServiceAccounts:
-        - Name: $GMSA_ACCOUNT_USERNAME
-          Scope: $NETBIOS_DOMAIN_NAME
-        - Name: $GMSA_ACCOUNT_USERNAME
-          Scope: $DNS_DOMAIN_NAME
+        - Name: <GMSA_ACCOUNT_USERNAME>  # GMSA account username like gmsa-account
+          Scope: <NETBIOS_DOMAIN_NAME>   # NetBIOS domain name like contoso
+        - Name: <GMSA_ACCOUNT_USERNAME>  # GMSA account username like gmsa-account
+          Scope: <DNS_DOMAIN_NAME>       # Fully qualified domain name like contoso.com
         HostAccountConfig:
           PluginGUID: '{CCC2A336-D7F3-4818-A213-272B7924213E}'
           PortableCcgVersion: "1"
-          PluginInput: "ObjectId=$MANAGED_ID;SecretUri=$SECRET_URI"  # SECRET_URI takes the form https://$akvName.vault.azure.net/secrets/$akvSecretName
+          PluginInput: "ObjectId=<MANAGED_IDENTITY_OBJECT_ID>;SecretUri=https://<KEY_VAULT_NAME>.vault.azure.net/secrets/<KEY_VAULT_SECRET_NAME>"
+            # MANAGED_IDENTITY_OBJECT_ID is managed identity object ID GUID
+            # KEY_VAULT_NAME is the name of your key vault, like myGMSAVault
+            # KEY_VAULT_SECRET_NAME is the name of the key vault secret you created, like GMSADomainUserCred
       CmsPlugins:
      - ActiveDirectory
       DomainJoinConfig:
-        DnsName: $DNS_DOMAIN_NAME
-        DnsTreeName: $DNS_ROOT_DOMAIN_NAME
-        Guid:  $AD_DOMAIN_OBJECT_GUID
-        MachineAccountName: $GMSA_ACCOUNT_USERNAME
-        NetBiosName: $NETBIOS_DOMAIN_NAME
-        Sid: $GMSA_SID
+        DnsName: <DNS_DOMAIN_NAME>           # Fully qualified domain name like contoso.com
+        DnsTreeName: <DNS_ROOT_DOMAIN_NAME>  # Root domain name like contoso.com
+        Guid:  <DOMAIN_OBJECT_GUID>          # Entra domain object GUID like 66aa66aa-bb77-cc88-dd99-00ee00ee00ee
+        MachineAccountName: <GMSA_ACCOUNT_USERNAME>  # GMSA account username like gmsa-account
+        NetBiosName: <NETBIOS_DOMAIN_NAME>   # NetBIOS domain name like contoso
+        Sid: <DOMAIN_OBJECT_SID>             # Entra domain object SID like S-1-5-21-1111111111-2222222222-3333333333
     ```
 
 > [!NOTE]
