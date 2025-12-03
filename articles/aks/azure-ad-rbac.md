@@ -18,14 +18,19 @@ Azure Kubernetes Service (AKS) can be configured to use Microsoft Entra ID for u
 This article shows you how to:
 
 * Control access using Kubernetes RBAC in an AKS cluster based on Microsoft Entra group membership.
+
 * Create example groups and users in Microsoft Entra ID.
+
 * Create Roles and RoleBindings in an AKS cluster granting the appropriate permissions, such as to create and view resources.
 
 ## Prerequisites
 
 * You have an existing AKS cluster with Microsoft Entra integration enabled. If you need an AKS cluster with this configuration, see [Integrate Microsoft Entra ID with AKS][azure-ad-aks-cli].
+
 * Kubernetes RBAC is enabled by default during AKS cluster creation. To upgrade an existing cluster with Microsoft Entra integration and Kubernetes RBAC, see [Enable Microsoft Entra integration on your existing AKS cluster][enable-azure-ad-integration-existing-cluster].
+
 * Make sure that Azure CLI version 2.0.61 or later is installed and configured. To find the version, run `az --version`. To install or upgrade, see [Install Azure CLI][install-azure-cli].
+
 * If using Terraform, install [Terraform][terraform-on-azure] version 2.99.0 or later.
 
 Use the Azure portal or Azure CLI to verify Microsoft Entra integration with Kubernetes RBAC is enabled.
@@ -52,7 +57,7 @@ If enabled, the output shows the value for `enableAzureRbac` is `false`.
 
 <a name='create-demo-groups-in-azure-ad'></a>
 
-## Create demo groups in Microsoft Entra ID
+## Create groups in Microsoft Entra ID
 
 This section teaches you how to create two user roles to show how Kubernetes RBAC and Microsoft Entra ID control access cluster resources. The following two example roles are:
 
@@ -114,7 +119,7 @@ In production environments, you can use existing users and groups within a Micro
 
 <a name='create-demo-users-in-azure-ad'></a>
 
-## Create demo users in Microsoft Entra ID
+## Create users in Microsoft Entra ID
 
 After you create the example Microsoft Entra ID groups for application developers and SREs, the next step is to create two corresponding user accounts. These users are used to sign in to the AKS cluster and validate the Kubernetes RBAC integration described later in this article.
 
@@ -132,7 +137,7 @@ The following command prompts you for the password and sets it to *AAD_DEV_PW* f
 echo "Please enter the secure password for application developers: " && read AAD_DEV_PW
 ```
 
-### Create the user accounts
+### Create user accounts
 
 # [App Dev](#tab/appdev)
 
@@ -184,9 +189,9 @@ echo "Please enter the secure password for application developers: " && read AAD
 
 ## Create AKS cluster resources
 
-# [App Dev](#tab/appdev)
-
 We have our Microsoft Entra groups, users, and Azure role assignments created. Now, you configure the AKS cluster to allow these different groups access to specific resources.
+
+# [App Dev](#tab/appdev)
 
 1. Get the cluster admin credentials using the [`az aks get-credentials`][az-aks-get-credentials] command. In one of the following sections, you get the regular *user* cluster credentials to see the Microsoft Entra authentication flow in action.
 
@@ -264,8 +269,6 @@ We have our Microsoft Entra groups, users, and Azure role assignments created. N
    ```
 
 # [SRE](#tab/sre)
-
-Repeat the previous steps to create a namespace, Role, and RoleBinding for the SREs:
 
 1. Create a namespace for the *SRE* using the [`kubectl create namespace`][kubectl-create] command:
 
@@ -426,8 +429,7 @@ To confirm that our Microsoft Entra group membership and Kubernetes RBAC work co
 
 ### Create and view cluster resources outside of the assigned namespace
 
-To view pods outside of the *dev* namespace. Use the [`kubectl get pods`][kubectl-get] command using
-`--all-namespaces`:
+To view pods outside of the *dev* namespace. Use the [`kubectl get pods`][kubectl-get] command using `--all-namespaces`:
 
 ```console
 kubectl get pods --all-namespaces
@@ -440,17 +442,15 @@ following example output:
 Error from server (Forbidden): pods is forbidden: User "aksdev@contoso.com" cannot list resource "pods" in API group "" at the cluster scope
 ```
 
-In the same way, schedule a pod in a different namespace, such as the *SRE* namespace. The user's
-group membership doesn't align with a Kubernetes Role and RoleBinding to grant these permissions, as
-shown in the following example output:
+In the same way, schedule a pod in a different namespace, such as the *SRE* namespace. The user's group membership doesn't align with a Kubernetes Role and RoleBinding to grant these permissions, as shown in the following example output:
 
 ```console
 $ kubectl run nginx-dev --image=mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine --namespace sre
 
-Error from server (Forbidden): pods is forbidden: User "aksdev@contoso.com" cannot create resource "pods" in API group "" in the namespace "sre"
+Error from server (Forbidden): pods is forbidden: User "akssre@contoso.com" cannot create resource "pods" in API group "" in the namespace "sre"
 ```
 
-## Clean up cluster resources
+### Clean up cluster resources
 
 To clean up all of the resources, run the following commands:
 
@@ -477,8 +477,9 @@ az ad group delete --group opssre
 
 ## Next steps
 
-- For more information about how to secure Kubernetes clusters, see [Access and identity options for AKS][rbac-authorization].
-- For best practices on identity and resource control, see [Best practices for authentication and authorization in AKS][operator-best-practices-identity].
+* For more information about how to secure Kubernetes clusters, see [Access and identity options for AKS][rbac-authorization].
+
+* For best practices on identity and resource control, see [Best practices for authentication and authorization in AKS][operator-best-practices-identity].
 
 <!-- LINKS - external -->
 [kubectl-create]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#create
