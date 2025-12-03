@@ -1,7 +1,7 @@
 ---
 title: Use Key Management Service (KMS) Etcd Encryption in Azure Kubernetes Service (AKS)
 description: Learn how to use Key Management Service (KMS) etcd encryption for a public or private key vault with AKS.
-ms.date: 09/26/2024
+ms.date: 12/01/2025
 ms.subservice: aks-security
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -32,7 +32,7 @@ For more information on using KMS, see [Using a KMS provider for data encryption
 
 > [!WARNING]
 >
-> Starting on September 15, 2024, Konnectivity is no longer supported for private key vaults for new subscriptions or subscriptions that didn't previously use this configuration. For subscriptions currently using this configuration or used it in the past 60 days, support will continue until AKS version 1.30 reaches end of life for community support.
+> Starting on September 15, 2024, Konnectivity is no longer supported for private key vaults for new subscriptions or subscriptions that didn't previously use this configuration. For subscriptions currently using this configuration or used it in the past 60 days, support continues until AKS version 1.30 reaches end of life for community support.
 >
 > KMS supports Konnectivity or [API Server VNet Integration][api-server-vnet-integration] for public key vaults.
 >
@@ -46,13 +46,14 @@ The following limitations apply when you integrate KMS etcd encryption with AKS:
 
 - Deleting the key, the key vault, or the associated identity isn't supported.
 - KMS etcd encryption doesn't work with system-assigned managed identity. The key vault access policy must be set before the feature is turned on. System-assigned managed identity isn't available until after the cluster is created. Consider the cycle dependency.
-- Because the firewall blocks traffic from the KMS plugin to Key Vault, two scenarios are not supported. First, Azure Key Vault cannot be configured with the firewall option "Allow public access from specific virtual networks and IP addresses." Second, Azure Key Vault cannot be configured with "Disable public access" unless [API Server VNet Integration](api-server-vnet-integration.md) is enabled.
+- Because the firewall blocks traffic from the KMS plugin to Key Vault, two scenarios aren't supported. First, Azure Key Vault can't be configured with the firewall option _Allow public access from specific virtual networks and IP addresses_. Second, Azure Key Vault can't be configured with _Disable public access_ unless [API Server VNet Integration](api-server-vnet-integration.md) is enabled.
 - The maximum number of secrets supported by a cluster with KMS turned on is _2,000_. However, it's important to note that [KMS v2][kms-v2-support] isn't limited by this restriction and can handle a higher number of secrets.
 - Bring your own (BYO) Azure key vault from another tenant isn't supported.
 - With KMS turned on, you can't change the associated key vault mode (public versus private). To [update a key vault mode][update-a-key-vault-mode], you must first turn off KMS, and then turn it on again.
 - If a cluster has KMS turned on and has a private key vault, it must use the [API Server VNet Integration][api-server-vnet-integration] tunnel. Konnectivity isn't supported.
 - Using the Virtual Machine Scale Sets API to scale the nodes in the cluster down to zero deallocates the nodes. The cluster then goes down and becomes unrecoverable.
 - After you turn off KMS, you can't delete or expire the keys. Such behaviors would cause the API server to stop working.
+- For a private cluster with KMS enabled and virtual network integration that uses a private key vault, the network security group (NSG) must allow TCP port 443 from the API server to the private key vault's private endpoint IP address. This limitation needs to be considered when using other rules in the API subnet NSG or cluster subnet NSG.
 
 :::zone pivot="public-kv"
 
@@ -177,7 +178,7 @@ The following sections describe how to turn on KMS for a public key vault on a n
         --azure-keyvault-kms-key-id $KEY_ID \
         --generate-ssh-keys
     ```
-  
+
 ### Enable a public key vault and KMS on an existing AKS cluster
 
 1. Enable KMS on a public key vault on an existing cluster using the [`az aks update`][az-aks-update] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-id` parameters.
