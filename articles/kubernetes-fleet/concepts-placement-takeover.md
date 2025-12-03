@@ -16,7 +16,7 @@ When a multi-cluster environment matures the presence of a specific workload on 
 In this article, we look at how to use the `whenToTakeOver` property of an `applyStrategy` in a resource placement (cluster-scoped `ClusterResourcePlacement` or namespace-scoped `ResourcePlacement`) to explicitly control how Fleet Manager handles existing workloads when performing placements.
 
 > [!NOTE]
-> If you aren't already familiar with Fleet Manager's resource placement concepts, read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
+> If you aren't already familiar with Fleet Manager's resource placement concepts, read the [cluster-scoped resource placement overview][learn-conceptual-crp] and the [namespace-scoped resource placement overview][learn-conceptual-rp] before reading this article.
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-beta.md)]
 
@@ -173,7 +173,7 @@ spec:
   strategy:
     applyStrategy:
       whenToTakeOver: IfNoDiff
-      comparisonOption: partialComparison
+      comparisonOption: PartialComparison
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 100%
@@ -205,7 +205,7 @@ spec:
   strategy:
     applyStrategy:
       whenToTakeOver: IfNoDiff
-      comparisonOption: partialComparison
+      comparisonOption: PartialComparison
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 100%
@@ -264,12 +264,14 @@ At this point you must decide on how to handle the drift, by either including th
 
 ## Next steps
 
-* [Detect and manage drift for resources placed using cluster resource placement](./concepts-placement-drift.md).
+* [Detect and manage drift for resources placed using resource placement](./concepts-placement-drift.md).
 * [Control eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
-* [Define a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
+* [Define a rollout strategy for a resource placement](./concepts-rollout-strategy.md).
 * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
+* [Use namespace-scoped resource placement to deploy workloads across multiple clusters](./quickstart-namespace-scoped-resource-propagation.md).
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 
 <!-- LINKS - external -->
 [learn-conceptual-crp]: ./concepts-resource-propagation.md
+[learn-conceptual-rp]: ./concepts-namespace-scoped-resource-propagation.md
 [fleet-hub-cluster]: ./access-fleet-hub-cluster-kubernetes-api.md
