@@ -123,7 +123,7 @@ In production environments, you can use existing users and groups within a Micro
 
 After you create the example Microsoft Entra ID groups for application developers and SREs, the next step is to create two corresponding user accounts. These users are used to sign in to the AKS cluster and validate the Kubernetes RBAC integration described later in this article.
 
-Before you begin, you must set the user principal name (UPN) and password for the application developers. The UPN must include the verified domain name of your tenant, for example `aksdev@contoso.com`. In order to figure out (or set) the verified domain names in your tenant, see [Managing custom domain names in your Microsoft Entra ID](/entra/identity/users/domains-manage).
+Before you begin, you must set the user principal name (UPN) and password for the application developers. The UPN must include the verified domain name of your tenant. For example, an application developer user, `aksdev@contoso.com`. In order to figure out (or set) the verified domain names in your tenant, see [Managing custom domain names in your Microsoft Entra ID](/entra/identity/users/domains-manage).
 
 The following command prompts you for the UPN and sets it to *AAD_DEV_UPN* so it can be used in a later command:
 
@@ -159,7 +159,7 @@ echo "Please enter the secure password for application developers: " && read AAD
 
 # [SRE](#tab/sre)
 
-1. Set the UPN and password for SREs. The UPN must include the verified domain name of your tenant, for example `akssre@contoso.com`. The following command prompts you for the UPN and sets it to *AAD_SRE_UPN* for use in a later command:
+1. Set the UPN and password for SREs. The UPN must include the verified domain name of your tenant. For example, an SRE user, `akssre@contoso.com`. The following command prompts you for the UPN and sets it to *AAD_SRE_UPN* for use in a later command:
 
    ```azurecli-interactive
    echo "Please enter the UPN for SREs: " && read AAD_SRE_UPN
@@ -351,7 +351,7 @@ Now, test that the expected permissions work when you create and manage resource
    kubectl run nginx-dev --image=mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine --namespace dev
    ```
 
-1. Enter the credentials for the *appdev* account (enter *your* own credentials) created earlier at the sign-in prompt. Once you're successfully signed in, the account token is cached for future `kubectl` commands. The NGINX is successfully scheduled as shown in the following example output:
+1. Enter the credentials for the *appdev* group account (enter *your* own credentials) at the sign-in prompt. Once you're successfully signed in, the account token is cached for future `kubectl` commands. The NGINX is successfully scheduled as shown in the following example output:
 
    ```console
    $ kubectl run nginx-dev --image=mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine --namespace dev
@@ -386,7 +386,7 @@ To confirm that our Microsoft Entra group membership and Kubernetes RBAC work co
    az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing
    ```
 
-1. Schedule and view pods in the assigned *SRE* namespace. When prompted, sign in with the *opssre* account credentials (enter *your* own credentials) created earlier in this article.
+1. Schedule and view pods in the assigned *SRE* namespace. When prompted, sign in with the *opssre* group account credentials (enter *your* own credentials).
 
    ```console
    kubectl run nginx-sre --image=mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine --namespace sre
