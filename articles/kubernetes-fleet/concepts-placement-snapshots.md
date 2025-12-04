@@ -1,7 +1,7 @@
 ---
 title: "Understanding snapshots for Azure Kubernetes Fleet Manager resource placement"
 description: This article describes how Fleet Manager's cluster resource placement and resource placement manage snapshots.
-ms.date: 12/02/2025
+ms.date: 12/04/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -22,6 +22,10 @@ In this article, we explore these objects so you can understand them should you 
 > If you aren't already familiar with Fleet Manager's resource placement:
 > - For cluster-scoped resources, read the [conceptual overview of ClusterResourcePlacement (CRP)][learn-conceptual-crp]
 > - For namespace-scoped resources, read the [conceptual overview of ResourcePlacement (RP)][learn-conceptual-rp]
+
+## How resource snapshots are created
+
+Any change to resources covered by the scope of CRP or RP resource selector will automatically trigger the creation of a new resource snapshot within 60 seconds.
 
 ## Viewing resource snapshots
 
