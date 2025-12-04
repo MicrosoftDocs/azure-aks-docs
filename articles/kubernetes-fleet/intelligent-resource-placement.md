@@ -184,7 +184,7 @@ You can use the following samples as guides to writing your own resource placeme
 Each example shows both `ClusterResourcePlacement` (for cluster-scoped resources and entire namespaces) and `ResourcePlacement` (for specific namespace-scoped resources) variants.
   
 > [!NOTE]
-> If you want to try out each sample policy, be sure to delete the previous placement object before applying the next one.
+> To try out each sample policy, delete the previous `ClusterResourcePlacement` or `ResourcePlacement` before applying the next one.
 
 ### Placement based on cluster node count
 
