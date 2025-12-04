@@ -262,7 +262,7 @@ az aks create \
 
 Learn more about networking in AKS in the following articles:
 
-* [Upgrade Azure CNI IPAM modes and Dataplane Technology](upgrade-azure-cni.md).
+* [Upgrade Azure CNI IPAM modes and Dataplane Technology](update-azure-cni.md).
 
 * [Use a static IP address with the Azure Kubernetes Service (AKS) load balancer](static-ip.md)
 

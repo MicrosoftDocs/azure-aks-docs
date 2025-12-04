@@ -16,14 +16,14 @@ ms.custom:
 # Secure traffic between pods by using network policies in AKS
 
 > [!IMPORTANT] 
-> On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on **Windows** nodes in AKS.
+> On **30 September 2026**, we'll end support for Azure Network Policy Manager (NPM) on **Windows** nodes in AKS.
 > 
 > This change applies only to customers who have already onboarded to NPM. **Subscriptions that were not previously registered with this feature will no longer be able to onboard**. Existing onboarded customers can continue using NPM until the end-of-support date.
 >
 >  To ensure your setup continues to receive support, security updates, and deployment compatibility, please explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
 
 > [!IMPORTANT] 
-> On **30 September 2028**, we’ll end support for Azure Network Policy Manager (NPM) on **Linux** nodes in AKS.
+> On **30 September 2028**, we'll end support for Azure Network Policy Manager (NPM) on **Linux** nodes in AKS.
 > 
 > To avoid service disruptions, you'll need to [migrate AKS clusters running Linux nodes from NPM to Cilium Network Policy](./migrate-from-npm-to-cilium-network-policy.md) by that date. 
 
@@ -65,7 +65,7 @@ To enforce the specified policies, Azure Network Policy Manager for Linux uses L
 ## Limitations of Azure Network Policy Manager
 
 > [!NOTE]
-> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./upgrade-azure-cni.md) to use Cilium as the network policy engine.
+> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./update-azure-cni.md) to use Cilium as the network policy engine.
 
 Azure NPM doesn't support IPv6. Otherwise, it fully supports the network policy specifications in Linux.
 
@@ -139,7 +139,7 @@ az aks create \
 ### Create an AKS cluster with Azure Network Policy Manager enabled - Windows Server 2022 (preview)
 
 > [!IMPORTANT] 
-> On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on Windows nodes in AKS.
+> On **30 September 2026**, we'll end support for Azure Network Policy Manager (NPM) on Windows nodes in AKS.
 >
 > This change applies only to customers who have already onboarded to NPM. **Subscriptions that were not previously registered with this feature will no longer be able to onboard.** Existing onboarded customers can continue using NPM until the end-of-support date.
 > 
