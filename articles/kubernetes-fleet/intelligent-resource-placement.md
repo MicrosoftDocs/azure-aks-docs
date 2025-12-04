@@ -2,7 +2,7 @@
 title: "Intelligent Cross-Cluster Kubernetes Resource Placement Using Azure Kubernetes Fleet Manager"
 description: Learn how to use Azure Kubernetes Fleet Manager to intelligently place your workloads on target member clusters based on cost and resource availability.
 ms.topic: how-to
-ms.date: 05/23/2025
+ms.date: 12/04/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -15,13 +15,13 @@ ms.custom:
 
 Application developers often need to deploy Kubernetes resources into multiple clusters located in cloud and on-premises environments. Fleet operators often need to pick the best clusters for workloads based on heuristics (such as cost of compute) or available resources (such as memory and CPU). It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how you can address these scenarios by using the intelligent Kubernetes resource placement capability in Azure Kubernetes Fleet Manager.
 
-The resource placement capability of Fleet Manager can make scheduling decisions based on the following cluster properties:
+Fleet Manager supports intelligent placement for both cluster-scoped (`ClusterResourcePlacement`) and namespace-scoped (`ResourcePlacement`) resources. The resource placement capability can make scheduling decisions based on the following cluster properties:
 
 * Node count
 * Cost of compute/memory in target member clusters
 * Resource (CPU/memory) availability in target member clusters
 
-For more information about the concepts in this article, see [Kubernetes resource placement from hub cluster to member clusters](./concepts-resource-propagation.md).
+For more information about the concepts in this article, see [cluster-scoped resource placement](./concepts-resource-propagation.md) and [namespace-scoped resource placement](./concepts-namespace-scoped-resource-propagation.md).
 
 ## Prerequisites
 
@@ -179,16 +179,20 @@ With the workload definition deployed, it's now possible to test the intelligent
 
 ## Test workload placement policies
 
-You can use the following samples, along with the [conceptual documentation](./concepts-resource-propagation.md#using-clusterresourceplacement-to-deploy-cluster-scoped-resources), as guides to writing your own `ClusterResourcePlacement` object.
+You can use the following samples, along with the [cluster-scoped resource placement documentation](./concepts-resource-propagation.md) and [namespace-scoped resource placement documentation](./concepts-namespace-scoped-resource-propagation.md), as guides to writing your own resource placement objects.
+
+Each example shows both `ClusterResourcePlacement` (for cluster-scoped resources and entire namespaces) and `ResourcePlacement` (for specific namespace-scoped resources) variants.
   
 > [!NOTE]
-> If you want to try out each sample policy, be sure to delete the previous `ClusterResourcePlacement` object.
+> If you want to try out each sample policy, be sure to delete the previous placement object before applying the next one.
 
 ### Placement based on cluster node count
 
 This example shows a property sorter that uses the `Descending` order. This order means that Fleet Manager prefers clusters with higher node counts.
 
 The cluster with the highest node count receives a weight of 20, and the cluster with the lowest receives a weight of 0. Other clusters receive proportional weights calculated via the [weight calculation formula](./concepts-resource-propagation.md#how-property-ranking-works).
+
+#### ClusterResourcePlacement example
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -214,11 +218,40 @@ spec:
                   sortOrder: Descending
 ```
 
+#### ResourcePlacement example
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ResourcePlacement
+metadata:
+  name: rp-demo
+  namespace: test-app
+spec:
+  resourceSelectors:
+    - group: "apps"
+      kind: Deployment
+      name: nginx-deployment
+      version: v1
+  policy:
+    placementType: PickN
+    numberOfClusters: 10
+    affinity:
+        clusterAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 20
+              preference:
+                propertySorter:
+                  name: kubernetes-fleet.io/node-count
+                  sortOrder: Descending
+```
+
 ### Placement with label selector and property sorter
 
 In this example, a cluster receives a weight only if it has the label `env=prod`. If the cluster satisfies that label constraint, it's given proportional weight based on the amount of total CPU in that member cluster.
 
 This example demonstrates how you can use both the label selector and the property sorter for `preferredDuringSchedulingIgnoredDuringExecution` affinity. A member cluster that fails the label selector doesn't receive any weight. Member clusters that satisfy the label selector receive proportional weights, as specified under the property sorter.
+
+#### ClusterResourcePlacement example
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -247,9 +280,41 @@ spec:
                   sortOrder: Descending
 ```
 
+#### ResourcePlacement example
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ResourcePlacement
+metadata:
+  name: rp-demo
+  namespace: test-app
+spec:
+  resourceSelectors:
+    - group: "apps"
+      kind: Deployment
+      name: nginx-deployment
+      version: v1
+  policy:
+    placementType: PickN
+    numberOfClusters: 10
+    affinity:
+        clusterAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 20
+              preference:
+                labelSelector:
+                  matchLabels:
+                    env: prod
+                propertySorter:
+                  name: resources.kubernetes-fleet.io/total-cpu
+                  sortOrder: Descending
+```
+
 ### Placement based on memory and CPU core cost
 
 Because the sorter in this example has an `Ascending` order, Fleet Manager prefers clusters with lower memory and CPU core costs. The cluster with the lowest memory and CPU core cost receives a weight of 20, and the cluster with the highest receives a weight of 0. Other clusters receive proportional weights calculated via the weight calculation formula.
+
+#### ClusterResourcePlacement example
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -280,19 +345,61 @@ spec:
                 sortOrder: Ascending
 ```
 
+#### ResourcePlacement example
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ResourcePlacement
+metadata:
+  name: rp-demo
+  namespace: test-app
+spec:
+  resourceSelectors:
+    - group: "apps"
+      kind: Deployment
+      name: nginx-deployment
+      version: v1
+  policy:
+    placementType: PickN
+    numberOfClusters: 2
+    affinity:
+      clusterAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 20
+            preference:
+              propertySorter:
+                name: kubernetes.azure.com/per-gb-memory-core-cost
+                sortOrder: Ascending
+          - weight: 20
+            preference:
+              propertySorter:
+                name: kubernetes.azure.com/per-cpu-core-cost
+                sortOrder: Ascending
+```
+
 ## View the status of a placement
 
-If you want to view the status of a placement, you can use either the Azure portal or the kubectl command.
+You can view the status of a placement using either the Azure portal or the kubectl command.
 
-You can find details on how to view a placement's progress in [Use the ClusterResourcePlacement API to propagate resources to member clusters](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters).
+For details on how to view placement progress:
+
+* For `ClusterResourcePlacement`, see [Use the ClusterResourcePlacement API to propagate resources to member clusters](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters).
+* For `ResourcePlacement`, see [Use ResourcePlacement to place namespace-scoped resources](./quickstart-namespace-scoped-resource-propagation.md#use-resourceplacement-to-place-namespace-scoped-resources).
 
 ## Clean up resources
 
-For details on how to remove a cluster resource placement via the Azure portal or the kubectl command, see [Clean up resources](./quickstart-resource-propagation.md#clean-up-resources) in the article about propagating resources.
+To remove a resource placement:
 
-## Related content
+* For `ClusterResourcePlacement`, see [Clean up resources](./quickstart-resource-propagation.md#clean-up-resources).
+* For `ResourcePlacement`, see [Clean up resources](./quickstart-namespace-scoped-resource-propagation.md#clean-up-resources).
 
-* To learn more about resource placement, see the open-source [KubeFleet documentation](https://kubefleet.dev/docs/concepts/crp/).
+## Next steps
+
+* [Cluster-scoped resource placement using ClusterResourcePlacement](./concepts-resource-propagation.md)
+* [Namespace-scoped resource placement using ResourcePlacement](./concepts-namespace-scoped-resource-propagation.md)
+* [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md)
+* [Use namespace-scoped resource placement to deploy workloads across multiple clusters](./quickstart-namespace-scoped-resource-propagation.md)
+* [Define a rollout strategy for a resource placement](./concepts-rollout-strategy.md)
 
 <!-- LINKS -->
 [fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-manager-resource
