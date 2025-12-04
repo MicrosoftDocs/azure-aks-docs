@@ -7,7 +7,7 @@ ms.author: schaffererin
 author: schaffererin
 ms.subservice: aks-integration
 ms.custom: devx-track-azurecli, annual
-ms.date: 12/03/2025
+ms.date: 12/08/2025
 # Customer intent: "As a Kubernetes administrator, I want to configure role-based access control using Microsoft Entra group membership, so that I can restrict cluster resource access based on user identities and enhance security in my Azure Kubernetes Service environment."
 ---
 
@@ -351,7 +351,7 @@ Now, test that the expected permissions work when you create and manage resource
    kubectl run nginx-dev --image=mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine --namespace dev
    ```
 
-1. Enter the credentials for your own *appdev* group account created earlier at the sign-in prompt. Once you're successfully signed in, the account token is cached for future `kubectl` commands. The NGINX is successfully scheduled as shown in the following example output:
+1. Enter the credentials for the *appdev* account (enter *your* own credentials) created earlier at the sign-in prompt. Once you're successfully signed in, the account token is cached for future `kubectl` commands. The NGINX is successfully scheduled as shown in the following example output:
 
    ```console
    $ kubectl run nginx-dev --image=mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine --namespace dev
@@ -386,7 +386,7 @@ To confirm that our Microsoft Entra group membership and Kubernetes RBAC work co
    az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing
    ```
 
-1. Try to schedule and view pods in the assigned *SRE* namespace. When prompted, sign in with your own *opssre* group account credentials created earlier in this article.
+1. Schedule and view pods in the assigned *SRE* namespace. When prompted, sign in with the *opssre* account credentials (enter *your* own credentials) created earlier in this article.
 
    ```console
    kubectl run nginx-sre --image=mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine --namespace sre
