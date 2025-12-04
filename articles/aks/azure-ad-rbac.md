@@ -351,7 +351,7 @@ Now, test that the expected permissions work when you create and manage resource
    kubectl run nginx-dev --image=mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine --namespace dev
    ```
 
-1. Enter the credentials for your own `appdev@contoso.com` account created at the start of the article as the sign-in prompt. Once you're successfully signed in, the account token is cached for future `kubectl` commands. The NGINX is successfully scheduled as shown in the following example output:
+1. Enter the credentials for your own *appdev* group account created earlier at the sign-in prompt. Once you're successfully signed in, the account token is cached for future `kubectl` commands. The NGINX is successfully scheduled as shown in the following example output:
 
    ```console
    $ kubectl run nginx-dev --image=mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine --namespace dev
@@ -386,7 +386,7 @@ To confirm that our Microsoft Entra group membership and Kubernetes RBAC work co
    az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing
    ```
 
-1. Try to schedule and view pods in the assigned *SRE* namespace. When prompted, sign in with your own `opssre@contoso.com` credentials created at the start of the article.
+1. Try to schedule and view pods in the assigned *SRE* namespace. When prompted, sign in with your own *opssre* group account credentials created earlier in this article.
 
    ```console
    kubectl run nginx-sre --image=mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine --namespace sre
@@ -435,8 +435,7 @@ To view pods outside of the *dev* namespace. Use the [`kubectl get pods`][kubect
 kubectl get pods --all-namespaces
 ```
 
-The user's group membership doesn't have a Kubernetes Role that allows this action, as shown in the
-following example output:
+The user's group membership doesn't have a Kubernetes Role that allows this action, as shown in the following example output:
 
 ```console
 Error from server (Forbidden): pods is forbidden: User "aksdev@contoso.com" cannot list resource "pods" in API group "" at the cluster scope
