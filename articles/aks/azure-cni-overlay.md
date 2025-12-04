@@ -61,7 +61,7 @@ Like Azure CNI Overlay, Kubenet assigns IP addresses to pods from an address spa
 > The private CIDR ranges available for the Pod CIDR are defined in [RFC 1918](https://tools.ietf.org/html/rfc1918) and [RFC 6598](https://tools.ietf.org/html/rfc6598). While we don't block the use of public IP ranges, they are considered out of Microsoft's support scope. We recommend using private IP ranges for pod CIDR. 
 
 > [!IMPORTANT]
-> When using Azure CNI in Overlay mode, ensure that the Pod CIDR doesn't overlap with any external IP addresses or networks (such as on-premises networks, peered VNets, or ExpressRoute). If an external host uses an IP within the Pod CIDR, packets destined for that host from the Pod may be redirected into the overlay network and SNAT’d by the node, causing the external endpoint to become unreachable.
+> When using Azure CNI in Overlay mode, ensure that the Pod CIDR doesn't overlap with any external IP addresses or networks (such as on-premises networks, peered VNets, or ExpressRoute). If an external host uses an IP within the Pod CIDR, packets destined for that host from the Pod may be redirected into the overlay network and SNAT'd by the node, causing the external endpoint to become unreachable.
 
 ## Network security groups
 
@@ -477,7 +477,7 @@ aks-nodepool1-13347454-vmss000002 10.244.0.0/16
 
 ## Next steps
 
-To learn how to upgrade existing clusters to Azure CNI overlay, see [Upgrade Azure CNI IPAM modes and Dataplane Technology](upgrade-azure-cni.md).
+To learn how to upgrade existing clusters to Azure CNI overlay, see [Upgrade Azure CNI IPAM modes and Dataplane Technology](update-azure-cni.md).
 
 To learn how to utilize AKS with your own Container Network Interface (CNI) plugin, see [Bring your own Container Network Interface (CNI) plugin](use-byo-cni.md).
 
