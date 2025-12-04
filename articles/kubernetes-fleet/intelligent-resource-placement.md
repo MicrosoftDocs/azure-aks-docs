@@ -179,7 +179,7 @@ With the workload definition deployed, it's now possible to test the intelligent
 
 ## Test workload placement policies
 
-You can use the following samples, along with the [cluster-scoped resource placement documentation](./concepts-resource-propagation.md) and [namespace-scoped resource placement documentation](./concepts-namespace-scoped-resource-propagation.md), as guides to writing your own resource placement objects.
+You can use the following samples as guides to writing your own resource placement objects. For more information, see the [cluster-scoped resource placement documentation](./concepts-resource-propagation.md) and [namespace-scoped resource placement documentation](./concepts-namespace-scoped-resource-propagation.md).
 
 Each example shows both `ClusterResourcePlacement` (for cluster-scoped resources and entire namespaces) and `ResourcePlacement` (for specific namespace-scoped resources) variants.
   
@@ -247,7 +247,7 @@ spec:
 
 ### Placement with label selector and property sorter
 
-In this example, a cluster receives a weight only if it has the label `env=prod`. If the cluster satisfies that label constraint, it's given proportional weight based on the amount of total CPU in that member cluster.
+In this example, a cluster receives a weight only if it has the label `env=prod`. If the cluster satisfies that label constraint, Fleet Manager gives it proportional weight based on the amount of total CPU in that member cluster.
 
 This example demonstrates how you can use both the label selector and the property sorter for `preferredDuringSchedulingIgnoredDuringExecution` affinity. A member cluster that fails the label selector doesn't receive any weight. Member clusters that satisfy the label selector receive proportional weights, as specified under the property sorter.
 
