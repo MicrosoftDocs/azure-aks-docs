@@ -22,7 +22,7 @@ In this article, we look at how to use the `whenToTakeOver` property of an `appl
 
 ## Workload takeover options
 
-The starting point for workload takes over is to deploying the workload manifests onto your Fleet Manager [hub cluster][fleet-hub-cluster]. Once deployed you define a `ClusterResourcePlacement` or `ResourcePlacement` that specifies an explicit takeover behavior using the `whenToTakeOver` property.
+The starting point for workload takeover is to deploy the workload manifests onto your Fleet Manager [hub cluster][fleet-hub-cluster]. Once deployed you define a `ClusterResourcePlacement` or `ResourcePlacement` that specifies an explicit takeover behavior using the `whenToTakeOver` property.
 
 The `whenToTakeOver` property allows the following values:
 
