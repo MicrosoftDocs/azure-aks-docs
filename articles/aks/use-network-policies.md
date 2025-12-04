@@ -408,7 +408,7 @@ kubectl label pod client -n demo app=client
 ## Move to self managed Calico
 As noted above, while Calico has a tremendous amount of features, AKS only supports its use for vanilla Kubernetes network policies. Other features are not tested.
 If you want to move to self managed calico to take advantage of these Tigera maintains a document here: https://docs.tigera.io/calico/latest/getting-started/kubernetes/managed-public-cloud/aks-migrate
-While we enourage you to read that doc but essentially you will be setting  --network-policy none as per below then follwing their install directions.
+We encourage you to read that document. Essentially, you'll set `--network-policy none` as shown below, then follow their installation directions.
 
 ## Uninstall Azure Network Policy Manager or Calico
 
