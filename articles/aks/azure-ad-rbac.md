@@ -378,7 +378,7 @@ Now, test that the expected permissions work when you create and manage resource
 
 ### Test SRE access to AKS cluster resources
 
-To confirm that our Microsoft Entra group membership and Kubernetes RBAC work correctly between different users and groups, try the previous commands when signed in as the *opssre* user.
+To confirm that our Microsoft Entra group membership and Kubernetes RBAC work correctly between different users and groups, try the previous commands when signed in as the *akssre* user.
 
 1. Reset the *kubeconfig* context using the [`az aks get-credentials`][az-aks-get-credentials] command that clears the previously cached authentication token for the *aksdev* user.
 
