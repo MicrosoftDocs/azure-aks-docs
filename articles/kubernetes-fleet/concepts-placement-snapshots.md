@@ -20,8 +20,8 @@ In this article, we explore these objects so you can understand them should you 
 
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's resource placement:
-> - For cluster-scoped resources, read the [conceptual overview of ClusterResourcePlacement (CRP)][learn-conceptual-crp]
-> - For namespace-scoped resources, read the [conceptual overview of ResourcePlacement (RP)][learn-conceptual-rp]
+> - For cluster-scoped resources, read the [conceptual overview of ClusterResourcePlacement (CRP)][learn-conceptual-crp].
+> - For namespace-scoped resources, read the [conceptual overview of ResourcePlacement (RP)][learn-conceptual-rp].
 
 ## How resource snapshots are created
 
