@@ -7,7 +7,7 @@ author: aritragho
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
-# Customer intent: As a cluster administrator or SRE, I want to use the AI-powered CLI Agent for AKS to efficiently troubleshoot my AKS clusters and get intelligent cluster insights, so that I can quickly diagnose and resolve issues.
+# Customer intent: As a cluster administrator or SRE, I want to use the AI-powered CLI agent for AKS to efficiently troubleshoot my AKS clusters and get intelligent cluster insights so that I can quickly diagnose and resolve issues.
 ---
 
 # About the agentic CLI for Azure Kubernetes Service (AKS) (preview)
@@ -16,11 +16,11 @@ This article provides an overview of the agentic CLI for Azure Kubernetes Servic
 
 ## Agentic CLI for AKS overview
 
-The agentic CLI for AKS provides the `az aks agent` command group, which allows you to ask natural language questions about your cluster's health, configuration, and issues.
+The agentic CLI for AKS provides the `az aks agent` command group. You can use it to ask natural language questions about your cluster's health, configuration, and issues.
 
-### Get cluster information, configurations and insights
+### Get cluster information, configurations, and insights
 
-The agentic CLI for AKS enables you to quickly gather detailed information about your AKS clusters, including:
+You can use the agentic CLI for AKS to quickly gather detailed information about your AKS clusters, including:
 
 - Comprehensive cluster status and configuration details.
 - Real-time cluster metrics and health information.
@@ -29,10 +29,10 @@ The agentic CLI for AKS enables you to quickly gather detailed information about
 
 ### Troubleshoot advanced AKS, Kubernetes, and health issues
 
-The agentic CLI for AKS leverages AI to help you troubleshoot complex issues by providing:
+The agentic CLI for AKS uses AI to help you troubleshoot complex issues by providing:
 
 - AI-powered diagnostics that analyze complex cluster problems.
-- Intelligent issue detection across AKS control plane, node pools, and workloads.
+- Intelligent issue detection across the AKS control plane, node pools, and workloads.
 - Automated root cause analysis for networking, storage, and security issues.
 - Guided troubleshooting workflows with step-by-step remediation suggestions.
 - Integration with Microsoft's extensive Kubernetes troubleshooting knowledge base.
@@ -41,21 +41,21 @@ The agentic CLI for AKS leverages AI to help you troubleshoot complex issues by 
 
 To maximize the effectiveness of the agentic CLI for AKS, consider the following best practices:
 
-- **Start with broad diagnostic queries**: Begin with general questions like "What's wrong with my cluster?" and let the AI guide you to specific issues.
-- **Use descriptive problem statements**: Provide context about symptoms you're observing for better AI analysis.
-- **Review AI recommendations carefully**: Always understand the suggested solutions before implementing them.
-- **Leverage historical analysis**: Ask about patterns and trends in cluster behavior over time.
-- **Provide feedback**: Help improve the AI by providing feedback on the accuracy and usefulness of diagnostic responses.
-- **Use alongside traditional monitoring**: Complement AI insights with Azure Monitor and other observability tools.
+- **Start with broad diagnostic queries:** Begin with general questions like, What's wrong with my cluster? Let the AI guide you to specific issues.
+- **Use descriptive problem statements:** Provide context about symptoms that you observe for better AI analysis.
+- **Review AI recommendations carefully:** Always understand the suggested solutions before you implement them.
+- **Use historical analysis:** Ask about patterns and trends in cluster behavior over time.
+- **Provide feedback:** Help improve the AI by providing feedback on the accuracy and usefulness of diagnostic responses.
+- **Use alongside traditional monitoring:** Complement AI insights with Azure Monitor and other observability tools.
 
 ## Security considerations
 
-Keep the following security considerations in mind when using the agentic CLI for AKS:
+Keep the following security considerations in mind when you use the agentic CLI for AKS:
 
-- Ensure proper RBAC permissions are configured.
-- Use Azure AD integration for authentication.
+- Ensure that proper role-based access control permissions are configured.
+- Use Microsoft Entra integration for authentication.
 - Follow the principle of least privilege.
-- Audit command usage through Azure activity logs.
+- Audit command use through Azure activity logs.
 
 ## Get started with the agentic CLI for AKS
 
