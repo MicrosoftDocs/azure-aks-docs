@@ -174,23 +174,35 @@ az fleet namespace delete \
 
 ## Create a new Managed Fleet Namespace 
 
+You can create a new Managed Fleet Namespace from within Fleet Manager, or via Kubernetes Center.
+
+Starting in Fleet Manager:
+
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the left menu, under **Fleet Resources**, select **Namespaces**.
 1. From the menu select **+ Create**, then **Managed Fleet Namespace**.
 
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-01.png" alt-text="Screenshot of the Azure portal menu for creating a Managed Fleet Namespace in Azure Kubernetes Fleet Manager." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-01.png":::
 
-You can also use Kubernetes Center's Managed Namespace experience.
+Starting in Kubernetes Center Managed Namespaces.
 
 1. Open [Kubernetes Center - Managed namespaces](https://portal.azure.com/#view/Microsoft_Azure_KubernetesFleet/KubernetesHub.MenuView/~/managedNamespaces) in the Azure portal.
 1. From the menu select **+ Create**, then **Managed Fleet Namespace**.
-1. On the **Basics** tab, select the **Subscription** and **Fleet Manager** where the Managed Fleet Namespace will be created.
 
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png" alt-text="Screenshot of the Azure portal Kubernetes Center menu for creating a Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png":::
 
-The remaining create experience is the same for both starting points.
+The remaining steps are same from both starting points.
 
-1. Complete the **Basics** tab as follows.
+1. Complete the **Project details** details:
+    * If you start from Kubernetes Center you need to first select the **Subscription** and **Fleet Manager** instance.
+    * **Scope - New** - this is a new Kubernetes namespace that doesn't exist on the Fleet Manager hub cluster.
+    * **Scope - Convert to Managed** - the Kubernetes namespace exists on the Fleet Manager hub cluster and will be converted to Managed. 
+    * **Name** - the name of the Managed Fleet Namespace to be created (displayed when **Scope - New** is selected).
+    * **Namespace** - select the existing namespace to convert (displayed when **Scope - Convert to Managed** is selected).
+
+:::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png" alt-text="Screenshot of the Azure portal showing Basics tab with Project details completed." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png":::
+
+1. Select the Entra ID identities that will be granted **Access** to the Managed Fleet Namespace. 
 
 ## Delegate access to a Managed Fleet Namespace
 
