@@ -178,7 +178,7 @@ az fleet namespace delete \
 1. From the left menu, under **Fleet Resources**, select **Namespaces**.
 1. From the menu select **+ Create**, then **Managed Fleet Namespace**.
 
-:::image type="content" source="./media/media/managed-fleet-namespace/create-managed-fleet-namespace-01.png" alt-text="Screenshot of the Azure portal menu for creating a Managed Fleet Namespace in Azure Kubernetes Fleet Manager." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-01.png":::
+:::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-01.png" alt-text="Screenshot of the Azure portal menu for creating a Managed Fleet Namespace in Azure Kubernetes Fleet Manager." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-01.png":::
 
 You can also use Kubernetes Center's Managed Namespace experience.
 
@@ -186,8 +186,7 @@ You can also use Kubernetes Center's Managed Namespace experience.
 1. From the menu select **+ Create**, then **Managed Fleet Namespace**.
 1. On the **Basics** tab, select the **Subscription** and **Fleet Manager** where the Managed Fleet Namespace will be created.
 
-/home/simon/work/azure-aks-docs-pr/articles/kubernetes-fleet/media/managed-fleet-namespace/
-:::image type="content" source="./media/media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png" alt-text="Screenshot of the Azure portal Kubernetes Center menu for creating a Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png":::
+:::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png" alt-text="Screenshot of the Azure portal Kubernetes Center menu for creating a Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png":::
 
 The remaining create experience is the same for both starting points.
 
