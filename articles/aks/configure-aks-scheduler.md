@@ -145,15 +145,16 @@ In this example, the configured scheduler prioritizes scheduling pods on nodes w
       rawConfig: |
         apiVersion: kubescheduler.config.k8s.io/v1
         kind: KubeSchedulerConfiguration
-      - schedulerName: node-binpacking-scheduler
-        pluginConfig:
-        - name: NodeResourcesFit
-          args:
-            scoringStrategy:
-              type: MostAllocated
-              resources:
-              - name: cpu
-                weight: 1
+        profiles:
+        - schedulerName: node-binpacking-scheduler
+            pluginConfig:
+            - name: NodeResourcesFit
+              args:
+                scoringStrategy:
+                  type: MostAllocated
+                  resources:
+                  - name: cpu
+                    weight: 1
     ```
 
     - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
@@ -449,3 +450,4 @@ To learn more about the AKS scheduler and best practices, see the following reso
 [az-extension-add]: /cli/azure/extension#az-extension-add
 
 [az-extension-update]: /cli/azure/extension#az-extension-update
+
