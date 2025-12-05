@@ -15,16 +15,16 @@ ms.custom:
 
 # Secure traffic between pods by using network policies in AKS
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > On **30 September 2026**, we'll end support for Azure Network Policy Manager (NPM) on **Windows** nodes in AKS.
-> 
+>
 > This change applies only to customers who have already onboarded to NPM. **Subscriptions that were not previously registered with this feature will no longer be able to onboard**. Existing onboarded customers can continue using NPM until the end-of-support date.
 >
->  To ensure your setup continues to receive support, security updates, and deployment compatibility, explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
+>  To ensure your setup continues to receive support, security updates, and deployment compatibility, explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico][calico-support] by that date.
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > On **30 September 2028**, we'll end support for Azure Network Policy Manager (NPM) on **Linux** nodes in AKS.
-> 
+>
 > To avoid service disruptions, you'll need to [migrate AKS clusters running Linux nodes from NPM to Cilium Network Policy](./migrate-from-npm-to-cilium-network-policy.md) by that date. 
 
 [!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
@@ -49,7 +49,7 @@ Azure provides three Network Policy engines for enforcing network policies:
 * _Azure Network Policy Manager_.
 * _Calico_, an open-source network and network security solution founded by [Tigera][tigera].
 
-Cilium is our recommended Network Policy engine. Cilium enforces network policy on the traffic using Linux Berkeley Packet Filter (BPF), which is more efficient than _IPTables_. See more details in [Azure CNI Powered by Cilium documentation](./azure-cni-powered-by-cilium.md).  
+Cilium is our recommended Network Policy engine. Cilium enforces network policy on the traffic using Linux Berkeley Packet Filter (BPF), which is more efficient than _IPTables_. See more details in [Azure CNI Powered by Cilium documentation](./azure-cni-powered-by-cilium.md).
 To enforce the specified policies, Azure Network Policy Manager for Linux uses Linux _IPTables_. Azure Network Policy Manager for Windows uses _Host Network Service (HNS) ACLPolicies_. Policies are translated into sets of allowed and disallowed IP pairs. These pairs are then programmed as `IPTable` or `HNS ACLPolicy` filter rules.
 
 ## Differences between Network Policy engines: Cilium, Azure NPM, and Calico
@@ -138,12 +138,12 @@ az aks create \
 
 ### Create an AKS cluster with Azure Network Policy Manager enabled - Windows Server 2022 (preview)
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > On **30 September 2026**, we'll end support for Azure Network Policy Manager (NPM) on Windows nodes in AKS.
 >
 > This change applies only to customers who already onboarded to NPM. **Subscriptions that were not previously registered with this feature will no longer be able to onboard.** Existing onboarded customers can continue using NPM until the end-of-support date.
-> 
->  To ensure your setup continues to receive support, security updates, and deployment compatibility, explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
+>
+>  To ensure your setup continues to receive support, security updates, and deployment compatibility, explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico][calico-support] by that date.
 
 In this section, you create a cluster with Windows node pools and Azure Network Policy Manager enabled.
 
@@ -283,12 +283,12 @@ az aks update
 
 Example command to install Calico:
 > [!WARNING]
-> This warning applies to upgrading Kubenet clusters with Calico enabled to Azure CNI Overlay with Calico enabled.  
-> - In Kubenet clusters with Calico enabled, Calico is used as both a CNI and network policy engine.  
+> This warning applies to upgrading Kubenet clusters with Calico enabled to Azure CNI Overlay with Calico enabled.
+> - In Kubenet clusters with Calico enabled, Calico is used as both a CNI and network policy engine.
 > - In Azure CNI clusters, Calico is used only for network policy enforcement, not as a CNI. This can cause a short delay between when the pod starts and when Calico allows outbound traffic from the pod.
 >
 >  AKS recommends using Cilium instead of Calico to avoid this issue. Learn more about Cilium at [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md)
->  
+>
 
 ```azurecli
 az aks update
@@ -408,7 +408,7 @@ kubectl label pod client -n demo app=client
 
 ## Move to self-managed Calico
 
-As shown in the [table's other features](#differences-between-network-policy-engines-cilium-azure-npm-and-calico), AKS only supports Calico for standard Kubernetes network policies and doesn't test other features. If you want to move to self-managed Calico, follow the Tiegra instructions at [Migrate from Azure-managed Calico to self-managed Calico](https://docs.tigera.io/calico/latest/getting-started/kubernetes/managed-public-cloud/aks-migrate). The Tiegra documentation mentions that for self-managed Calico you set `--network-policy none` like in the [uninstall section](#uninstall-azure-network-policy-manager-or-calico).
+As shown in the [table's other features](#differences-between-network-policy-engines-cilium-azure-npm-and-calico), AKS only supports Calico for standard Kubernetes network policies and doesn't test other features. If you want to move to self-managed Calico, follow the Tiegra instructions at [Migrate from Azure-managed Calico to self-managed Calico][calico-self-managed]. The Tiegra documentation mentions that for self-managed Calico you set `--network-policy none` like in the [uninstall section](#uninstall-azure-network-policy-manager-or-calico).
 
 ## Uninstall Azure Network Policy Manager or Calico
 
@@ -459,6 +459,7 @@ To learn more about policies, see [Kubernetes network policies][kubernetes-netwo
 [calico-support]: https://www.tigera.io/tigera-products/calico/
 [calico-logs]: https://docs.tigera.io/calico/3.25/operations/troubleshoot/component-logs
 [calico-aks-cleanup]: https://github.com/Azure/aks-engine/blob/master/docs/topics/calico-3.3.1-cleanup-after-upgrade.yaml
+[calico-self-managed]: https://docs.tigera.io/calico/latest/getting-started/kubernetes/managed-public-cloud/aks-migrate
 
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
@@ -472,4 +473,3 @@ To learn more about policies, see [Kubernetes network policies][kubernetes-netwo
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [dsr]: ../load-balancer/load-balancer-multivip-overview.md#rule-type-2-backend-port-reuse-by-using-floating-ip
-
