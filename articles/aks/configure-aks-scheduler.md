@@ -142,7 +142,10 @@ In this example, the configured scheduler prioritizes scheduling pods on nodes w
     metadata:
       name: upstream
     spec:
-      profiles:
+      rawConfig: |
+        apiVersion: kubescheduler.config.k8s.io/v1
+        kind: KubeSchedulerConfiguration
+        profiles:
       - schedulerName: node-binpacking-scheduler
         pluginConfig:
         - name: NodeResourcesFit
@@ -445,4 +448,5 @@ To learn more about the AKS scheduler and best practices, see the following reso
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-extension-add]: /cli/azure/extension#az-extension-add
+
 [az-extension-update]: /cli/azure/extension#az-extension-update
