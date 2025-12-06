@@ -147,7 +147,7 @@ In this example, the configured scheduler prioritizes scheduling pods on nodes w
         kind: KubeSchedulerConfiguration
         profiles:
         - schedulerName: node-binpacking-scheduler
-          - pluginConfig:
+          pluginConfig:
               - name: NodeResourcesFit
                 args:
                   scoringStrategy:
@@ -196,7 +196,7 @@ Pod topology spread is a scheduling strategy that seeks to distribute pods evenl
         kind: KubeSchedulerConfiguration
         profiles:
         - schedulerName: pod-distribution-scheduler
-          - pluginConfig:
+          pluginConfig:
               - name: PodTopologySpread
                 args:
                   apiVersion: kubescheduler.config.k8s.io/v1
@@ -450,5 +450,6 @@ To learn more about the AKS scheduler and best practices, see the following reso
 [az-extension-add]: /cli/azure/extension#az-extension-add
 
 [az-extension-update]: /cli/azure/extension#az-extension-update
+
 
 
