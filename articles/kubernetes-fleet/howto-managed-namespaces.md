@@ -30,6 +30,7 @@ If you're looking to view or access existing Managed Fleet Namespaces you have a
 
 - You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 - You need a Fleet Manager with a hub cluster. If you don't have one, see [create and join at least one Azure Kubernetes Service (AKS) cluster to the fleet](./quickstart-create-fleet-and-members.md).
+- Ensure user performing steps has the [Role Based Access Control Administrator][rbac-admin] role assigned for the Fleet Manager.
 - Understand the Managed Fleet Namespace concept by [reading the overview](./concepts-fleet-managed-namespace.md).
 
 :::zone target="docs" pivot="azure-cli"
@@ -184,23 +185,22 @@ Starting in Fleet Manager:
 
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-01.png" alt-text="Screenshot of the Azure portal menu for creating a Managed Fleet Namespace in Azure Kubernetes Fleet Manager." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-01.png":::
 
-Starting in Kubernetes Center Managed Namespaces.
+Starting in Kubernetes Center:
 
 * Open [Kubernetes Center - Managed namespaces](https://portal.azure.com/#view/Microsoft_Azure_KubernetesFleet/KubernetesHub.MenuView/~/managedNamespaces) in the Azure portal.
 * From the menu select **+ Create**, then **Managed Fleet Namespace**.
 
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png" alt-text="Screenshot of the Azure portal Kubernetes Center menu for creating a Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png":::
 
-The remaining steps are same from both starting points.
+* If you start from Kubernetes Center you need to first select a **Subscription** and **Fleet Manager** instance.
 
-* Complete the **Project details** details:
-    * If you start from Kubernetes Center you need to first select the **Subscription** and **Fleet Manager** instance.
-    * **Scope - New** - this is a new Kubernetes namespace that doesn't exist on the Fleet Manager hub cluster.
-    * **Scope - Convert to Managed** - the Kubernetes namespace exists on the Fleet Manager hub cluster and will be converted to Managed. 
-    * **Name** - the name of the Managed Fleet Namespace to be created (displayed when **Scope - New** is selected).
-    * **Namespace** - select the existing namespace on the Fleet Manager hub cluster to convert (displayed when **Scope - Convert to Managed** is selected).
+* Select one of the following options for **Scope**:
+    * **New** - create a new Kubernetes namespace that doesn't exist on the Fleet Manager hub cluster.
+    * **Convert to Managed** - the Kubernetes namespace exists on the Fleet Manager hub cluster and will be converted to a Managed Fleet Namespace. 
 
-:::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png" alt-text="Screenshot of the Azure portal showing Basics tab with Project details completed." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png":::
+* For a new namspace, provide the **Name** to use, or if converting existing, select the **Namespace** on the Fleet Manager hub cluster to convert.
+
+:::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png" alt-text="Screenshot of the Azure portal showing the Basics tab with Project details completed for a new Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png":::
 
 * Select the Entra ID identities that will be granted **Access** to the Managed Fleet Namespace. 
 
@@ -242,3 +242,4 @@ Delete a multi-cluster managed namespace using the [`az fleet namespace delete`]
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-account-set]: /cli/azure/account#az-account-set
 [az-extension-add]: /cli/azure/extension#az-extension-add
+[rbac-admin]: /azure/role-based-access-control/built-in-roles/privileged#role-based-access-control-administrator
