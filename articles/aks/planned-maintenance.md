@@ -1,13 +1,13 @@
 ---
-title: Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service (AKS) cluster 
-titleSuffix: Azure Kubernetes Service
+title: Use Planned Maintenance to Schedule and Control Upgrades for Azure Kubernetes Service (AKS) Clusters
 description: Learn how to use planned maintenance to schedule and control cluster and node image upgrades in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 05/29/2024
-ms.author: kaarthis
+ms.author: schaffererin
+ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
-author: kaarthis
+author: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to configure planned maintenance for my AKS cluster, so that I can schedule and control upgrades without impacting my workloads."
 ---
 
@@ -17,49 +17,50 @@ This article shows you how to use planned maintenance to schedule and control cl
 
 Regular maintenance is performed on your AKS cluster automatically. There are two types of maintenance operations:
 
-* *AKS-initiated maintenance* involves the weekly releases that AKS performs to keep your cluster up to date with the latest features and fixes.
-* *User-initiated maintenance* includes [cluster auto-upgrades][aks-upgrade] and [node operating system (OS) automatic security updates][node-image-auto-upgrade].
+- **AKS-initiated maintenance** involves the weekly releases that AKS performs to keep your cluster up to date with the latest features and fixes.
+- **User-initiated maintenance** includes [cluster auto-upgrades][aks-upgrade] and [node operating system (OS) automatic security updates][node-image-auto-upgrade].
 
 When you use the feature of planned maintenance in AKS, you can run both types of maintenance in a cadence of your choice to minimize workload impact.
 
 > [!NOTE]
-> You can use planned maintenance to schedule the timing of automatic upgrades, but enabling or disabling planned maintenance won't enable or disable automatic upgrades.
+> You can use planned maintenance to schedule the timing of automatic upgrades, but enabling or disabling planned maintenance doesn't enable or disable automatic upgrades.
 
 ## Before you begin
 
-* This article assumes that you have an existing AKS cluster. If you don't have an AKS cluster, see [Create an AKS cluster](./learn/quick-kubernetes-deploy-cli.md).
-* If you're using the Azure CLI, upgrade to the latest version by using the [`az upgrade`](/cli/azure/update-azure-cli#manual-update) command.
+- This article assumes that you have an existing AKS cluster. If you don't have an AKS cluster, see [Create an AKS cluster](./learn/quick-kubernetes-deploy-cli.md).
+- If you're using the Azure CLI, upgrade to the latest version using the [`az upgrade`](/cli/azure/update-azure-cli#manual-update) command.
 
 ## Considerations
 
 When you use planned maintenance, the following considerations apply:
 
-* AKS reserves the right to break planned maintenance windows for unplanned, reactive maintenance operations that are urgent or critical. These maintenance operations might even run during the `notAllowedTime` or `notAllowedDates` periods defined in your configuration.
-* Maintenance operations are considered *best effort only* and aren't guaranteed to occur within a specified window.
+- AKS reserves the right to break planned maintenance windows for unplanned, reactive maintenance operations that are urgent or critical. These maintenance operations might even run during the `notAllowedTime` or `notAllowedDates` periods defined in your configuration.
+- Maintenance operations are considered _best effort only_ and aren't guaranteed to occur within a specified window.
 
 ## Schedule configuration types for planned maintenance
 
 Three schedule configuration types are available for planned maintenance:
 
-* `default` is a basic configuration for controlling AKS releases, which covers control plane components and system add-ons upgrade. The releases can take up to two weeks to roll out to all regions from the initial time of shipping, because of Azure safe deployment practices.
+- `default` is a basic configuration for controlling AKS releases, which covers control plane components and system add-ons upgrade. The releases can take up to two weeks to roll out to all regions from the initial time of shipping, because of Azure safe deployment practices.
 
-  Choose `default` to schedule these updates in a manner that's least disruptive for you. You can monitor the status of an ongoing AKS release by region with the [weekly release tracker][release-tracker].  
-* `aksManagedAutoUpgradeSchedule` controls when to perform cluster upgrades scheduled by your designated auto-upgrade channel. You can configure more finely controlled cadence and recurrence settings with this configuration compared to the `default` configuration. For more information on cluster auto-upgrade, see [Automatically upgrade an Azure Kubernetes Service cluster][aks-upgrade].
-* `aksManagedNodeOSUpgradeSchedule` controls when to perform the node OS security patching scheduled by your node OS auto-upgrade channel. You can configure more finely controlled cadence and recurrence settings with this configuration compared to the `default` configuration. For more information on node OS auto-upgrade channels, see [Automatically patch and update AKS cluster node images][node-image-auto-upgrade].
+  Choose `default` to schedule these updates in a manner that's least disruptive for you. You can monitor the status of an ongoing AKS release by region with the [weekly release tracker][release-tracker].
 
-We recommend using `aksManagedAutoUpgradeSchedule` for all cluster k8s version upgrade scenarios and `aksManagedNodeOSUpgradeSchedule` for all node OS security patching scenarios.
+- `aksManagedAutoUpgradeSchedule` controls when to perform cluster upgrades scheduled by your designated auto-upgrade channel. You can configure more finely controlled cadence and recurrence settings with this configuration compared to the `default` configuration. For more information on cluster auto-upgrade, see [Automatically upgrade an Azure Kubernetes Service cluster][aks-upgrade].
+- `aksManagedNodeOSUpgradeSchedule` controls when to perform the node OS security patching scheduled by your node OS auto-upgrade channel. You can configure more finely controlled cadence and recurrence settings with this configuration compared to the `default` configuration. For more information on node OS auto-upgrade channels, see [Automatically patch and update AKS cluster node images][node-image-auto-upgrade].
+
+We recommend using `aksManagedAutoUpgradeSchedule` for all cluster Kubernetes version upgrade scenarios and `aksManagedNodeOSUpgradeSchedule` for all node OS security patching scenarios.
 
 The `default` option is meant exclusively for AKS weekly releases. Use `default` if you want to control the upgrade schedule for AKS control plane components (such as API Server, ETCD, etc) and add-ons (such as CoreDNS, Metrics Server, etc).
 
-All 3 types of configurations: `default`, `aksManagedAutoUpgradeSchedule`, `aksManagedNodeOSUpgradeSchedule` can co-exist.
+All three types of configurations can coexist.
 
 ## Create a maintenance window
 
 > [!NOTE]
 > When you're using auto-upgrade, to ensure proper functionality, use a maintenance window with a duration of four hours or more.
 
-> [!NOTE] 
-> From the 2023-05-01 API version onwards, please use the below properties for `default` configuration.
+> [!NOTE]
+> From the 2023-05-01 API version onwards, please use the properties in the following table for `default` configuration.
 
 An `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintenance window and `default` configuration from 2023-05-01 API version onwards has the following properties:
 
@@ -76,8 +77,10 @@ An `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintena
 |`durationHours`|The duration of the window for maintenance to run.|Not applicable|
 |`notAllowedDates`|A range of dates that maintenance can't run, determined by `start` and `end` child properties. It's applicable only when you're creating the maintenance window by using a configuration file.|Not applicable|
 
-> [!NOTE] 
-> Creating a `default` configuration with the below deprecated properties will be automatically migrated to the new properties shown above.
+### Deprecated properties
+
+> [!NOTE]
+> If you create a `default` configuration with the following deprecated properties, it's automatically migrated to the new properties shown in the previous table.
 
 **[Deprecated]** A `default` maintenance window has the following legacy properties:
 
@@ -88,20 +91,18 @@ An `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintena
 |`timeInWeek.hourSlots`|A list of hour-long time slots to perform maintenance on a particular day in a `default` configuration.|Not applicable|
 |`notAllowedTime`|A range of dates that maintenance can't run, determined by `start` and `end` child properties. This property is applicable only when you're creating the maintenance window by using a configuration file.|Not applicable|
 
-
 ### Schedule types
-Four schedule types are supported—`Daily`, `Weekly`, `AbsoluteMonthly`, and `RelativeMonthly`.  
-The table below shows which types are available for each maintenance-configuration option.
 
-> **Note**  
-> Starting June 2025, the `Daily` schedule type will also be supported for `aksManagedClusterAutoUpgradeSchedule`.
+Four schedule types are supported: `Daily`, `Weekly`, `AbsoluteMonthly`, and `RelativeMonthly`.
+
+The following table shows which types are available for each maintenance-configuration option:
 
 | Schedule type   | `default` | `aksManagedClusterAutoUpgradeSchedule` | `aksManagedNodeOSUpgradeSchedule` |
 |-----------------|:---------:|:--------------------------------------:|:---------------------------------:|
-| Daily           | ❌        | ✅ (after Jun 2025)                    | ✅                                 |
-| Weekly          | ✅        | ✅                                     | ✅                                 |
-| AbsoluteMonthly | ❌        | ✅                                     | ✅                                 |
-| RelativeMonthly | ❌        | ✅                                     | ✅                                 |
+| Daily           | Unsupported ❌ | Supported ✅ (after Jun 2025) | Supported ✅ |
+| Weekly          | Supported ✅ | Supported ✅ | Supported ✅ |
+| AbsoluteMonthly | Unsupported ❌ | Supported ✅ | Supported ✅ |
+| RelativeMonthly | Unsupported ❌ | Supported ✅ | Supported ✅ |
 
 All of the fields shown for each schedule type are required.
 
@@ -155,37 +156,37 @@ Valid values for `weekIndex` include `First`, `Second`, `Third`, `Fourth`, and `
 
 ### [Azure CLI](#tab/azure-cli)
 
-Add a maintenance window configuration to an AKS cluster by using the [`az aks maintenanceconfiguration add`][az-aks-maintenanceconfiguration-add] command.
+Add a maintenance window configuration to an AKS cluster using the [`az aks maintenanceconfiguration add`][az-aks-maintenanceconfiguration-add] command.
 
 The first example adds a new `default` configuration that schedules maintenance to run from 1:00 AM to 5:00 AM every Monday in the `UTC` time zone. The second example adds a new `aksManagedAutoUpgradeSchedule` configuration that schedules maintenance to run every third Friday between 12:00 AM and 8:00 AM in the `UTC+5:30` time zone.
 
 ```azurecli-interactive
 # Add a new default configuration
-az aks maintenanceconfiguration add --resource-group myResourceGroup --cluster-name myAKSCluster --name default --schedule-type Weekly --day-of-week Monday --interval-weeks 1 --duration 4 --utc-offset +00:00 --start-time 01:00
+az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name default --schedule-type Weekly --day-of-week Monday --interval-weeks 1 --duration 4 --utc-offset +00:00 --start-time 01:00
 
 # Add a new aksManagedAutoUpgradeSchedule configuration
-az aks maintenanceconfiguration add --resource-group myResourceGroup --cluster-name myAKSCluster --name aksManagedAutoUpgradeSchedule --schedule-type Weekly --day-of-week Friday --interval-weeks 3 --duration 8 --utc-offset +05:30 --start-time 00:00
+az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name aksManagedAutoUpgradeSchedule --schedule-type Weekly --day-of-week Friday --interval-weeks 3 --duration 8 --utc-offset +05:30 --start-time 00:00
 ```
 
 ### [Azure portal](#tab/azure-portal)
 
-1. In the Azure portal, go to your AKS cluster.
-2. From the service menu, under **Settings**, select **Cluster configuration**.
-3. Under **Upgrade** > **Automatic upgrade scheduler**, select **Add schedule**.
+1. In the Azure portal, navigate to your AKS cluster resource.
+1. From the service menu, under **Settings**, select **Cluster configuration**.
+1. Under **Upgrade** > **Automatic upgrade scheduler**, select **Add schedule**.
 
     :::image type="content" source="./media/planned-maintenance/add-schedule-portal.png" alt-text="Screenshot that shows the option to add a schedule in the Azure portal.":::
 
-4. On the **Add maintenance schedule** pane, configure the following maintenance window settings:
+1. On the **Add maintenance schedule** pane, configure the following maintenance window settings:
 
-    * **Repeats**: Select the frequency for the maintenance window. We recommend selecting **Weekly**.
-    * **Frequency**: Select the day of the week for the maintenance window. We recommend selecting **Sunday**.
-    * **Maintenance start date**: Select the start date for the maintenance window.
-    * **Maintenance start time**: Select the start time for the maintenance window.
-    * **UTC offset**: Select the UTC offset for the maintenance window. The default is **+00:00**.
+    - **Repeats**: Select the frequency for the maintenance window. We recommend selecting **Weekly**.
+    - **Frequency**: Select the day of the week for the maintenance window. We recommend selecting **Sunday**.
+    - **Maintenance start date**: Select the start date for the maintenance window.
+    - **Maintenance start time**: Select the start time for the maintenance window.
+    - **UTC offset**: Select the UTC offset for the maintenance window. The default is **+00:00**.
 
     :::image type="content" source="./media/planned-maintenance/add-maintenance-schedule-portal.png" alt-text="Screenshot that shows the pane for adding a maintenance schedule in the Azure portal.":::
 
-5. Select **Save** > **Apply**.
+1. Select **Save** > **Apply**.
 
 ### [JSON file](#tab/json-file)
 
@@ -245,16 +246,16 @@ You can use a JSON file to create a maintenance configuration instead of using p
     }
     ```
 
-2. Add the maintenance window configuration by using the [`az aks maintenanceconfiguration add`][az-aks-maintenanceconfiguration-add] command with the `--config-file` parameter.
+1. Add the maintenance window configuration using the [`az aks maintenanceconfiguration add`][az-aks-maintenanceconfiguration-add] command with the `--config-file` parameter.
 
     The first example adds a new `default` configuration by using the `default.json` file. The second example adds a new `aksManagedAutoUpgradeSchedule` configuration by using the `autoUpgradeWindow.json` file.
 
     ```azurecli-interactive
     # Add a new default configuration
-    az aks maintenanceconfiguration add -g myResourceGroup --cluster-name myAKSCluster --name default --config-file ./default.json
+    az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name default --config-file ./default.json
 
     # Add a new aksManagedAutoUpgradeSchedule configuration
-    az aks maintenanceconfiguration add -g myResourceGroup --cluster-name myAKSCluster --name aksManagedAutoUpgradeSchedule --config-file ./autoUpgradeWindow.json
+    az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name aksManagedAutoUpgradeSchedule --config-file ./autoUpgradeWindow.json
     ```
 
 ---
@@ -263,25 +264,25 @@ You can use a JSON file to create a maintenance configuration instead of using p
 
 ### [Azure CLI](#tab/azure-cli)
 
-Update an existing maintenance configuration by using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command.
+Update an existing maintenance configuration using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command.
 
 The following example updates the `default` configuration to schedule maintenance to run from 2:00 AM to 6:00 AM every Friday:
 
 ```azurecli-interactive
-az aks maintenanceconfiguration update --resource-group myResourceGroup --cluster-name myAKSCluster --name default --schedule-type Weekly --day-of-week Friday --interval-weeks 1 --duration 4 --utc-offset +00:00 --start-time 02:00
+az aks maintenanceconfiguration update --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name default --schedule-type Weekly --day-of-week Friday --interval-weeks 1 --duration 4 --utc-offset +00:00 --start-time 02:00
 
 ```
 
 ### [Azure portal](#tab/azure-portal)
 
-1. In the Azure portal, go to your AKS cluster.
-2. From the service menu, under **Settings**, select **Cluster configuration**.
-3. Under **Upgrade** > **Automatic upgrade scheduler**, select **Edit schedule**.
+1. In the Azure portal, navigate to your AKS cluster resource.
+1. From the service menu, under **Settings**, select **Cluster configuration**.
+1. Under **Upgrade** > **Automatic upgrade scheduler**, select **Edit schedule**.
 
     :::image type="content" source="./media/planned-maintenance/edit-schedule-portal.png" alt-text="Screenshot that shows the option for editing a schedule in the Azure portal.":::
 
-4. On the **Edit maintenance schedule** pane, update the maintenance window settings as needed.
-5. Select **Save** > **Apply**.
+1. On the **Edit maintenance schedule** pane, update the maintenance window settings as needed.
+1. Select **Save** > **Apply**.
 
 ### [JSON file](#tab/json-file)
 
@@ -313,28 +314,28 @@ az aks maintenanceconfiguration update --resource-group myResourceGroup --cluste
     }
     ```
 
-2. Update the maintenance window configuration by using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command with the `--config-file` parameter:
+2. Update the maintenance window configuration using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command with the `--config-file` parameter:
 
     ```azurecli-interactive
-    az aks maintenanceconfiguration update --resource-group myResourceGroup --cluster-name myAKSCluster --name default --config-file ./default.json
+    az aks maintenanceconfiguration update --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name default --config-file ./default.json
     ```
 
 ---
 
 ## List all maintenance windows in an existing cluster
 
-List the current maintenance configuration windows in your AKS cluster by using the [`az aks maintenanceconfiguration list`][az-aks-maintenanceconfiguration-list] command:
+List the current maintenance configuration windows in your AKS cluster using the [`az aks maintenanceconfiguration list`][az-aks-maintenanceconfiguration-list] command:
 
 ```azurecli-interactive
-az aks maintenanceconfiguration list --resource-group myResourceGroup --cluster-name myAKSCluster
+az aks maintenanceconfiguration list --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME
 ```
 
 ## Show a specific maintenance configuration window in an existing cluster
 
-View a specific maintenance configuration window in your AKS cluster by using the [`az aks maintenanceconfiguration show`][az-aks-maintenanceconfiguration-show] command with the `--name` parameter:
+View a specific maintenance configuration window in your AKS cluster using the [`az aks maintenanceconfiguration show`][az-aks-maintenanceconfiguration-show] command with the `--name` parameter:
 
 ```azurecli-interactive
-az aks maintenanceconfiguration show --resource-group myResourceGroup --cluster-name myAKSCluster --name aksManagedAutoUpgradeSchedule
+az aks maintenanceconfiguration show --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name aksManagedAutoUpgradeSchedule
 ```
 
 The following example output shows the maintenance window for `aksManagedAutoUpgradeSchedule`:
@@ -376,85 +377,89 @@ The following example output shows the maintenance window for `aksManagedAutoUpg
 
 ### [Azure CLI](#tab/azure-cli)
 
-Delete a maintenance configuration window in your AKS cluster by using the [`az aks maintenanceconfiguration delete`][az-aks-maintenanceconfiguration-delete] command.
+Delete a maintenance configuration window in your AKS cluster using the [`az aks maintenanceconfiguration delete`][az-aks-maintenanceconfiguration-delete] command.
 
 The following example deletes the `autoUpgradeSchedule` maintenance configuration:
 
 ```azurecli-interactive
-az aks maintenanceconfiguration delete --resource-group myResourceGroup --cluster-name myAKSCluster --name autoUpgradeSchedule
+az aks maintenanceconfiguration delete --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name autoUpgradeSchedule
 ```
 
 ### [Azure portal](#tab/azure-portal)
 
-1. In the Azure portal, go to your AKS cluster.
-2. From the service menu, under **Settings**, select **Cluster configuration**.
-3. Under **Upgrade** > **Automatic upgrade scheduler**, select **Edit schedule**.
+1. In the Azure portal, navigate to your AKS cluster resource.
+1. From the service menu, under **Settings**, select **Cluster configuration**.
+1. Under **Upgrade** > **Automatic upgrade scheduler**, select **Edit schedule**.
 
     :::image type="content" source="./media/planned-maintenance/edit-schedule-portal.png" alt-text="Screenshot that shows the option for editing a schedule in the Azure portal.":::
 
-4. On the **Edit maintenance schedule** pane, select **Remove schedule**.
+1. On the **Edit maintenance schedule** pane, select **Remove schedule**.
 
     :::image type="content" source="./media/planned-maintenance/remove-schedule-portal.png" alt-text="Screenshot that shows the pane for editing a maintenance window with the button for removing a schedule in the Azure portal.":::
 
 ### [JSON file](#tab/json-file)
 
-Delete a maintenance configuration window in your AKS cluster by using the [`az aks maintenanceconfiguration delete`][az-aks-maintenanceconfiguration-delete] command.
+Delete a maintenance configuration window in your AKS cluster using the [`az aks maintenanceconfiguration delete`][az-aks-maintenanceconfiguration-delete] command.
 
 The following example deletes the `autoUpgradeSchedule` maintenance configuration:
 
 ```azurecli-interactive
-az aks maintenanceconfiguration delete --resource-group myResourceGroup --cluster-name myAKSCluster --name autoUpgradeSchedule
+az aks maintenanceconfiguration delete --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name autoUpgradeSchedule
 ```
 
 ---
 
-## FAQ
+## Frequently asked questions (FAQ)
 
-* How can I check the existing maintenance configurations in my cluster?
+### How can I check the existing maintenance configurations in my cluster?
 
-  Use the `az aks maintenanceconfiguration show` command.
+Use the `az aks maintenanceconfiguration show` command.
   
-* Can reactive, unplanned maintenance happen during the `notAllowedDates` periods too?
+### Can reactive, unplanned maintenance happen during the `notAllowedDates` periods too?
 
-  Yes. AKS reserves the right to break these windows for unplanned, reactive maintenance operations that are urgent or critical.
+Yes. AKS reserves the right to break these windows for unplanned, reactive maintenance operations that are urgent or critical.
 
-* How can I tell if a maintenance event occurred?
+### How can I tell if a maintenance event occurred?
 
-  For releases, check your cluster's region and look up information in [weekly releases][release-tracker] to see if it matches your maintenance schedule. To view the status of your automatic upgrades, look up [activity logs][monitor-aks] on your cluster. You can also look up specific upgrade-related events, as mentioned in [Upgrade an AKS cluster][aks-upgrade].
+For releases, check your cluster's region and look up information in [weekly releases][release-tracker] to see if it matches your maintenance schedule. To view the status of your automatic upgrades, look up [activity logs][monitor-aks] on your cluster. You can also look up specific upgrade-related events, as mentioned in [Upgrade an AKS cluster][aks-upgrade].
   
-  AKS also emits upgrade-related Azure Event Grid events. To learn more, see [AKS as an Event Grid source][aks-eventgrid].
+AKS also emits upgrade-related Azure Event Grid events. To learn more, see [AKS as an Event Grid source][aks-eventgrid].
 
-* Can I use more than one maintenance configuration at the same time?
+### Can I use more than one maintenance configuration at the same time?
 
-  Yes, you can run all three configurations simultaneously: `default`, `aksManagedAutoUpgradeSchedule`, and `aksManagedNodeOSUpgradeSchedule`. If the windows overlap, AKS decides the running order.
+Yes, you can run all three configurations simultaneously: `default`, `aksManagedAutoUpgradeSchedule`, and `aksManagedNodeOSUpgradeSchedule`. If the windows overlap, AKS decides the running order.
 
-* I configured a maintenance window, but the upgrade didn't happen. Why?
+### I configured a maintenance window, but the upgrade didn't happen. Why?
 
-  AKS auto-upgrade needs a certain amount of time, usually not more than 15 minutes, to take the maintenance window into consideration. We recommend at least 15 minutes between the creation or update of a maintenance configuration and the scheduled start time.
+AKS auto-upgrade needs a certain amount of time, usually not more than 15 minutes, to take the maintenance window into consideration. We recommend at least 15 minutes between the creation or update of a maintenance configuration and the scheduled start time.
 
-  Also, ensure that your cluster is started when the planned maintenance window starts. If the cluster is stopped, its control plane is deallocated and no operations can be performed.
+Also, ensure that your cluster is started when the planned maintenance window starts. If the cluster is stopped, its control plane is deallocated and no operations can be performed.
 
-* Why was one of my agent pools upgraded outside the maintenance window?
+### Why was one of my agent pools upgraded outside the maintenance window?
 
-  If an agent pool isn't upgraded (for example, because pod disruption budgets prevented it), it might be upgraded later, outside the maintenance window. This scenario is called a "catch-up upgrade." It avoids letting agent pools be upgraded with a different version from the AKS control plane.
+If an agent pool isn't upgraded (for example, because pod disruption budgets prevented it), it might be upgraded later, outside the maintenance window. This scenario is called a _catch-up upgrade_. It avoids letting agent pools be upgraded with a different version from the AKS control plane.
 
-  Another reason why an agent pool could be upgraded unexpectedly is when there is no defined maintenance configuration, or if it's been deleted. In that case, a cluster with auto-upgrade *but without a maintenance configuration* will be upgraded at random times (*fallback schedule*), which might be an undesired timeframe.
+Another reason why an agent pool could be upgraded unexpectedly is when there is no defined maintenance configuration, or if it's been deleted. In that case, a cluster with auto-upgrade _but without a maintenance configuration_ will be upgraded at random times (_fallback schedule_), which might be an undesired timeframe.
 
-* Are there any best practices for the maintenance configurations?
+### Are there any best practices for the maintenance configurations?
 
-  We recommend setting the [node OS security updates][node-image-auto-upgrade] schedule to a weekly cadence if you're using the `NodeImage` channel, because a new node image is shipped every week. You can also opt in for the `SecurityPatch` channel to receive daily security updates.
+We recommend setting the [node OS security updates][node-image-auto-upgrade] schedule to a weekly cadence if you're using the `NodeImage` channel, because a new node image is shipped every week. You can also opt in for the `SecurityPatch` channel to receive daily security updates.
   
-  Set the [auto-upgrade][auto-upgrade] schedule to a monthly cadence to stay current with the Kubernetes N-2 [support policy][aks-support-policy].
+Set the [auto-upgrade][auto-upgrade] schedule to a monthly cadence to stay current with the Kubernetes N-2 [support policy][aks-support-policy].
   
-  For a detailed discussion of upgrade best practices and other considerations, see [AKS patch and upgrade guidance][upgrade-operators-guide].
+For a detailed discussion of upgrade best practices and other considerations, see [AKS patch and upgrade guidance][upgrade-operators-guide].
 
-* Can I configure all my clusters in a single subscription to use the same maintenance configuration?
+### Can I configure all my clusters in a single subscription to use the same maintenance configuration?
 
-  We don't recommend using the same maintenance configuration for multiple clusters in a single subscription, as doing so can lead to ARM throttling errors causing cluster upgrades to fail. Instead, we recommend staggering the maintenance windows for each cluster to avoid these errors.
+We don't recommend using the same maintenance configuration for multiple clusters in a single subscription, as doing so can lead to ARM throttling errors causing cluster upgrades to fail. Instead, we recommend staggering the maintenance windows for each cluster to avoid these errors.
 
-## Next steps
+### Why did my node pools get upgraded twice during the same maintenance window?
 
-* To get started with upgrading your AKS cluster, see [Upgrade options for AKS clusters][aks-upgrade].
+If a newer version of the node image becomes available during the maintenance window, AKS will perform a second upgrade to ensure that your node pools are running the latest version. This is a normal behavior and doesn't indicate an issue.
+
+## Related content
+
+To get started with upgrading your AKS cluster, see [Upgrade options for AKS clusters][aks-upgrade].
 
 <!-- LINKS - Internal -->
 [aks-upgrade]: upgrade-cluster.md
