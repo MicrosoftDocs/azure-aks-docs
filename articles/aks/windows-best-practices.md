@@ -141,7 +141,7 @@ To learn more about Windows containers on AKS, see the following resources:
 <!-- LINKS - internal -->
 [azure-cni-overlay]: ./azure-cni-overlay.md
 [azure-cni-dynamic-ip-allocation]: ./configure-azure-cni-dynamic-ip-allocation.md
-[azure-cni-choose-network-model]: ./azure-cni-overlay.md#choosing-a-network-model-to-use
+[azure-cni-choose-network-model]: ./concepts-network-azure-cni-overlay.md#choose-a-network-model
 [network-concepts-for-aks-applications]: ./concepts-network.md
 [windows-vs-linux]: ./windows-vs-linux-containers.md
 [azurenpm-vs-calico]: ./use-network-policies.md#differences-between-network-policy-engines-cilium-azure-npm-and-calico

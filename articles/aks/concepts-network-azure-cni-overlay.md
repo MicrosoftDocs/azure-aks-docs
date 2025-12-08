@@ -95,7 +95,7 @@ If you wish to restrict traffic between workloads in the cluster, we recommend u
 
 You can configure the maximum number of pods per node at the time of cluster creation or when you add a new node pool. The default for Azure CNI Overlay is 250. The maximum value you can specify in Azure CNI Overlay is 250, and the minimum value is 10. The maximum pods per node value configured during creation of a node pool applies to the nodes in that node pool only.
 
-## Choosing a network model to use
+## Choose a network model
 
 Azure CNI offers two IP addressing options for pods: the **traditional configuration that assigns VNet IPs to pods** and **Overlay networking**. The choice of which option to use for your AKS cluster is a balance between flexibility and advanced configuration needs. The following considerations help outline when each network model might be the most appropriate:
 
@@ -125,7 +125,7 @@ Azure CNI Overlay has the following limitations:
 To get started with Azure CNI Overlay in AKS, see the following articles:
 
 - [Configure Azure CNI Overlay networking in Azure Kubernetes Service (AKS)](./azure-cni-overlay.md)
-- [Expand pod CIDR space in Azure CNI Overlay Azure Kubernetes Service (AKS) clusters](./azure-cni-overlay-pod-cidr.md)
+- [Expand pod CIDR space in Azure CNI Overlay Azure Kubernetes Service (AKS) clusters](./azure-cni-overlay-pod-expand.md)
 
 <!-- LINKS - Internal -->
 [aks-egress]: limit-egress-traffic.md

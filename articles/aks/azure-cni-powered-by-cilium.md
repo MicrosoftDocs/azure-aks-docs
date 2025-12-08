@@ -37,7 +37,7 @@ Azure CNI Powered by Cilium can be deployed using two different methods for assi
 
 - Assign IP addresses from a virtual network (similar to existing Azure CNI with Dynamic Pod IP Assignment)
 
-If you aren't sure which option to select, read ["Choosing a network model to use."](./azure-cni-overlay.md#choosing-a-network-model-to-use)
+If you aren't sure which option to select, read ["Choosing a network model to use."](./concepts-network-azure-cni-overlay.md#choose-a-network-model)
 
 ## Versions
 
