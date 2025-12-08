@@ -1,5 +1,5 @@
 ---
-title: "Use Taints on Member Clusters and Toleration on Resource Placements in Azure Kubernetes Fleet Manager"
+title: "Use Taints on Member Clusters and Tolerations on Resource Placements in Azure Kubernetes Fleet Manager"
 description: Learn how to use taints on MemberCluster resources and tolerations on ClusterResourcePlacement and ResourcePlacement resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 12/08/2025
