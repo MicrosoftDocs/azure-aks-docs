@@ -564,7 +564,7 @@
               - name: Create an Azure CNI Overlay cluster
                 href: azure-cni-overlay.md
               - name: Expand pod CIDR space in Azure CNI Overlay clusters
-                href: azure-cni-overlay-pod-cidr.md
+                href: azure-cni-overlay-pod-expand.md
           - name: Kubenet
             items:
               - name: Use kubenet
