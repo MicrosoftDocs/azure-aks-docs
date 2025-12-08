@@ -50,7 +50,7 @@ Three schedule configuration types are available for planned maintenance:
 
 We recommend using `aksManagedAutoUpgradeSchedule` for all cluster Kubernetes version upgrade scenarios and `aksManagedNodeOSUpgradeSchedule` for all node OS security patching scenarios.
 
-The `default` option is meant exclusively for AKS weekly releases. Use `default` if you want to control the upgrade schedule for AKS control plane components (such as API Server, ETCD, etc) and add-ons (such as CoreDNS, Metrics Server, etc).
+The `default` option is meant exclusively for AKS weekly releases. Use `default` if you want to control the upgrade schedule for AKS control plane components (such as API Server, ETCD, etc.) and add-ons (such as CoreDNS, Metrics Server, etc.).
 
 All three types of configurations can coexist.
 
@@ -60,7 +60,7 @@ All three types of configurations can coexist.
 > When you're using auto-upgrade, to ensure proper functionality, use a maintenance window with a duration of four hours or more.
 
 > [!NOTE]
-> From the 2023-05-01 API version onwards, please use the properties in the following table for `default` configuration.
+> From the 2023-05-01 API version onwards, use the properties in the following table for `default` configuration.
 
 An `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintenance window and `default` configuration from 2023-05-01 API version onwards has the following properties:
 
@@ -80,7 +80,7 @@ An `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintena
 ### Deprecated properties
 
 > [!NOTE]
-> If you create a `default` configuration with the following deprecated properties, it's automatically migrated to the new properties shown in the previous table.
+> If you create a `default` configuration with the following deprecated properties, it migrates automatically to the new properties shown in the previous table.
 
 **[Deprecated]** A `default` maintenance window has the following legacy properties:
 
@@ -190,7 +190,7 @@ az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-n
 
 ### [JSON file](#tab/json-file)
 
-You can use a JSON file to create a maintenance configuration instead of using parameters. When you use this method, you can prevent maintenance during a range of dates by specifying `notAllowedDates` for `default`, `aksManagedAutoUpgradeSchedule` and `aksManagedNodeOSUpgradeSchedule` configurations.
+You can use a JSON file to create a maintenance configuration instead of using parameters. When you use this method, you can prevent maintenance during a range of dates by specifying `notAllowedDates` for `default`, `aksManagedAutoUpgradeSchedule`, and `aksManagedNodeOSUpgradeSchedule` configurations.
 
 1. Create a JSON file with the maintenance window settings.
 
@@ -437,15 +437,15 @@ Also, ensure that your cluster is started when the planned maintenance window st
 
 ### Why was one of my agent pools upgraded outside the maintenance window?
 
-If an agent pool isn't upgraded (for example, because pod disruption budgets prevented it), it might be upgraded later, outside the maintenance window. This scenario is called a _catch-up upgrade_. It avoids letting agent pools be upgraded with a different version from the AKS control plane.
+If an agent pool isn't upgraded (for example, because pod disruption budgets prevented it), it might be upgraded later, outside the maintenance window. This scenario is referred to as a _catch-up upgrade_. It avoids letting agent pools be upgraded with a different version from the AKS control plane.
 
-Another reason why an agent pool could be upgraded unexpectedly is when there is no defined maintenance configuration, or if it's been deleted. In that case, a cluster with auto-upgrade _but without a maintenance configuration_ will be upgraded at random times (_fallback schedule_), which might be an undesired timeframe.
+Another reason why an agent pool could be upgraded unexpectedly is when there's no defined maintenance configuration or if it was deleted. In that case, a cluster with auto-upgrade _but without a maintenance configuration_ is upgraded at random times (_fallback schedule_), which might be an undesired timeframe.
 
 ### Are there any best practices for the maintenance configurations?
 
 We recommend setting the [node OS security updates][node-image-auto-upgrade] schedule to a weekly cadence if you're using the `NodeImage` channel, because a new node image is shipped every week. You can also opt in for the `SecurityPatch` channel to receive daily security updates.
   
-Set the [auto-upgrade][auto-upgrade] schedule to a monthly cadence to stay current with the Kubernetes N-2 [support policy][aks-support-policy].
+You can set the [auto-upgrade][auto-upgrade] schedule to a monthly cadence to stay current with the Kubernetes N-2 [support policy][aks-support-policy].
   
 For a detailed discussion of upgrade best practices and other considerations, see [AKS patch and upgrade guidance][upgrade-operators-guide].
 
@@ -455,7 +455,7 @@ We don't recommend using the same maintenance configuration for multiple cluster
 
 ### Why did my node pools get upgraded twice during the same maintenance window?
 
-If a newer version of the node image becomes available during the maintenance window, AKS will perform a second upgrade to ensure that your node pools are running the latest version. This is a normal behavior and doesn't indicate an issue.
+If a newer version of the node image becomes available during the maintenance window, AKS performs a second upgrade to ensure that your node pools are running the latest version. This behavior is normal and doesn't indicate an issue.
 
 ## Related content
 
