@@ -22,8 +22,9 @@ This article shows you how to configure identity bindings to overcome these work
 
 1. Read the [conceptual doc for identity bindings][identity-bindings-concepts] to understand how identity binding works.
 
-1. Install or update the Azure CLI version to 2.73.0 or later. Run az --version to find the version, and run az upgrade to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-installation].
-
+1. [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+ - This article requires version 2.73.0 or later of the Azure CLI.
+ 
 1. Install or update the Azure CLI `aks-preview` extension version `18.0.0b26` or later.
 
     ```bash
@@ -319,4 +320,3 @@ az group delete --name $RESOURCE_GROUP --yes --no-wait
 [k8s-rbac-subjects]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-subjects
 [managed-identities-overview]: /azure/active-directory/managed-identities-azure-resources/overview
 [jwt-ms]: https://jwt.ms/
-[azure-cli-installation]: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
