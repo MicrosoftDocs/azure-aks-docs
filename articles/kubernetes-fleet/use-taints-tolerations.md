@@ -1,5 +1,5 @@
 ---
-title: "Use Taints on Member Clusters and Tolerations on Resource Placements in Azure Kubernetes Fleet Manager"
+title: "Use Taints on Member Clusters and Toleration on Resource Placements in Azure Kubernetes Fleet Manager"
 description: Learn how to use taints on MemberCluster resources and tolerations on ClusterResourcePlacement and ResourcePlacement resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 12/08/2025
@@ -124,13 +124,13 @@ In this example, you add a taint to a `MemberCluster` resource. Then you try to 
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-1. Create a namespace on the hub cluster to contain the `ResourcePlacement` resource:
+1. To create a namespace on the hub cluster to contain the `ResourcePlacement` resource, run the following command:
 
     ```bash
     kubectl create ns app-ns
     ```
 
-2. Create resources in the namespace to propagate to the member cluster:
+2. To create resources in the namespace to propagate to the member cluster, run the following command:
 
     ```bash
     kubectl create configmap app-config -n app-ns --from-literal=env=production
@@ -492,13 +492,13 @@ In this example, you add a toleration to a resource placement to propagate resou
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-1. Create a namespace on the hub cluster to contain the `ResourcePlacement` resource:
+1. To create a namespace on the hub cluster to contain the `ResourcePlacement` resource, run the following command:
 
     ```bash
     kubectl create ns app-ns
     ```
 
-2. Create resources in the namespace to propagate to the member cluster:
+2. To create resources in the namespace to propagate to the member cluster, run the following command:
 
     ```bash
     kubectl create configmap app-config -n app-ns --from-literal=env=production
