@@ -133,6 +133,20 @@ Before you begin, make sure you have the following:
 
 If you don't specify the `osSKU` or `osType`, AKS defaults to `--os-type Linux` and `--os-sku Ubuntu`.
 
+## Upgrade an existing node pool with a CVM to Ubuntu 24.04
+
+- Upgrade an existing node pool with a CVM to Ubuntu 24.04 from Ubuntu 20.04 using the [`az aks nodepool update`][az-aks-nodepool-update] command. Set the `os-sku` as `Ubuntu2404`.
+
+  ```azurecli-interactive
+    az aks nodepool update \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name cvmnodepool \
+        --os-sku Ubuntu2404
+    ```
+> [!NOTE]
+> A node pool which is Ubuntu 24.04 with a CVM is supported from AKS cluster 1.33 version. Additionally, before Ubuntu 24.04 becomes GA, you need to register the `Ubuntu2404Preview` feature. For more information, see [`here`][Ubuntu2404Preview] to register the feature.
+
 ## Verify the node pool uses CVM
 
 1. Verify a node pool uses CVM using the [`az aks nodepool show`][az-aks-nodepool-show] command and verify the `vmSize` is `Standard_DCa4_v5`.
@@ -209,9 +223,11 @@ In this article, you learned how to add a node pool with CVM to an AKS cluster.
 [az-aks-nodepool-list]: /cli/azure/aks/nodepool#az-aks-nodepool-list
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
 [az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [resize-your-nodepool]: ./resize-node-pool.md
 [trusted-launch]: ./use-trusted-launch.md
 [flatcar]: ./flatcar-container-linux-for-aks.md
 [os-guard]: ./use-azure-linux-os-guard.md
 [node-images]: ./node-images.md
+[Ubuntu2404Preview]: /azure/aks/upgrade-os-version#register-ubuntu2404preview-feature-flag
 
