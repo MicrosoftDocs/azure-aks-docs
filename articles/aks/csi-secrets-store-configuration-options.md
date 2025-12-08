@@ -14,14 +14,15 @@ ms.custom: template-how-to, devx-track-azurecli
 
 Follow the steps in [Use the Azure Key Vault provider for Secrets Store CSI Driver in an AKS cluster](./csi-secrets-store-driver.md) and [Provide an identity to access the Azure Key Vault provider for Secrets Store CSI Driver in AKS](./csi-secrets-store-identity-access.md). Once you complete these steps, you can apply extra configurations or perform troubleshooting.
 
+## Prerequisites
+
+---
+
 ## Configuration options
 
-### Enable and disable auto-rotation
+### Manage auto-rotation
 
-Once you enable auto-rotation for Azure Key Vault Secrets Provider, it updates the pod mount and the Kubernetes secret defined in the `secretObjects` field of `SecretProviderClass`. It does so by polling for changes periodically, based on the rotation poll interval you defined. The default rotation poll interval is *two minutes*.
-
-
-When a secret updates in an external secrets store after initial pod deployment, the Kubernetes Secret and the pod mount periodically update depending on how the application consumes the secret data.
+Once you enable auto-rotation for Azure Key Vault Secrets Provider, it updates the pod mount and the Kubernetes secret defined in the `secretObjects` field of `SecretProviderClass`. It does so by polling for changes periodically, based on the rotation poll interval you defined. The default rotation poll interval is *two minutes*. When a secret update is in an external secrets store after initial pod deployment, the Kubernetes Secret and the pod mount periodically update depending on how the application consumes the secret data.
 
 * Mount the Kubernetes Secret as a volume: Use the auto-rotation and sync K8s secrets features of Secrets Store CSI Driver. The application needs to watch for changes from the mounted Kubernetes Secret volume. When the CSI Driver updates the Kubernetes Secret, the corresponding volume contents automatically update as well.
 
@@ -29,9 +30,9 @@ When a secret updates in an external secrets store after initial pod deployment,
 
 * Use the Kubernetes Secret for an environment variable: Restart the pod to get the latest secret as an environment variable. Use a tool such as [Reloader][reloader] to watch for changes on the synced Kubernetes Secret and perform rolling upgrades on pods.
 
-#### Enable auto-rotation on a new AKS cluster
+# [Enable](#tab/enable)
 
-* Enable auto-rotation of secrets on a new cluster using the [`az aks create`][az-aks-create] command and enable the `enable-secret-rotation` add-on.
+1. To enable auto-rotation of secrets on a new AKS cluster using the [`az aks create`][az-aks-create] command and enable the `enable-secret-rotation` add-on, run the following command:
 
     ```azurecli-interactive
     az aks create \
@@ -42,39 +43,41 @@ When a secret updates in an external secrets store after initial pod deployment,
         --generate-ssh-keys
     ```
 
-#### Enable auto-rotation on an existing AKS cluster
+1. To update an existing AKS cluster to enable auto-rotation of secrets using the [`az aks addon update`][az-aks-addon-update] command and the `enable-secret-rotation` parameter, run the following command:
 
-* Update an existing cluster to enable auto-rotation of secrets using the [`az aks addon update`][az-aks-addon-update] command and the `enable-secret-rotation` parameter.
+   ```azurecli-interactive
+   az aks addon update --resource-group myResourceGroup --name myAKSCluster2 --addon azure-keyvault-secrets-provider --enable-secret-rotation
+   ```
 
-    ```azurecli-interactive
-    az aks addon update --resource-group myResourceGroup --name myAKSCluster2 --addon azure-keyvault-secrets-provider --enable-secret-rotation
-    ```
-
-#### Specify a custom rotation interval
-
-* Specify a custom rotation interval using the [`az aks addon update`][az-aks-addon-update] command with the `rotation-poll-interval` parameter.
-
-    ```azurecli-interactive
-    az aks addon update --resource-group myResourceGroup --name myAKSCluster2 --addon azure-keyvault-secrets-provider --enable-secret-rotation --rotation-poll-interval 5m
-    ```
-
-#### Disable auto-rotation
+# [Disable](#tab/disable)
 
 To disable auto-rotation, you first need to disable the add-on. Then, you can re-enable the add-on without the `enable-secret-rotation` parameter.
 
-1. Disable the secrets provider add-on using the [`az aks addon disable`][az-aks-addon-disable] command.
+1. Disable the secrets provider add-on using the [`az aks addon disable`][az-aks-addon-disable]
+   command:
 
-    ```azurecli-interactive
-    az aks addon disable --resource-group myResourceGroup --name myAKSCluster2 --addon azure-keyvault-secrets-provider
-    ```
+    ```azurecli-interactive az aks addon disable --resource-group myResourceGroup --name
+    myAKSCluster2 --addon
+    azure-keyvault-secrets-provider ```
 
-2. Re-enable the secrets provider add-on without the `enable-secret-rotation` parameter using the [`az aks addon enable`][az-aks-addon-enable] command.
+1. Re-enable the secrets provider add-on without the `enable-secret-rotation` parameter using the
+   [`az aks addon enable`][az-aks-addon-enable] command:
 
-    ```azurecli-interactive
-    az aks addon enable --resource-group myResourceGroup --name myAKSCluster2 --addon azure-keyvault-secrets-provider
-    ```
+   ```azurecli-interactive
+   az aks addon enable --resource-group myResourceGroup --name myAKSCluster2 --addon azure-keyvault-secrets-provider
+   ```
 
 If you are already using a `SecretProviderClass`, you can update the add-on without disabling it first by using `az aks addon enable` without specifying the `enable-secret-rotation` parameter.
+
+# [Custom](#tab/custom)
+
+To specify a custom rotation interval using the [`az aks addon update`][az-aks-addon-update] command with the `rotation-poll-interval` parameter, run the following command:
+
+   ```azurecli-interactive
+   az aks addon update --resource-group myResourceGroup --name myAKSCluster2 --addon azure-keyvault-secrets-provider --enable-secret-rotation --rotation-poll-interval 5m
+   ```
+
+---
 
 ### Sync mounted content with a Kubernetes secret
 
@@ -103,7 +106,7 @@ You might want to create a Kubernetes secret to mirror your mounted secrets cont
     > [!NOTE]
     > Make sure the `objectName` in the `secretObjects` field matches the file name of the mounted content. If you use `objectAlias` instead, it should match the object alias.
 
-#### Set an environment variable to reference Kubernetes secrets
+### Set an environment variable to reference Kubernetes secrets
 
 > [!NOTE]
 > The example YAML demonstrates access to a secret through env variables and volume/volumeMount. This is for illustrative purposes. A typical application would use one method or the other. However, be aware that in order for a secret to be available through env variables, it first must be mounted by at least one pod.
@@ -141,9 +144,9 @@ You might want to create a Kubernetes secret to mirror your mounted secrets cont
               secretProviderClass: "azure-sync"
     ```
 
-### Access metrics
+## Access metrics
 
-#### The Azure Key Vault provider
+### The Azure Key Vault provider
 
 Metrics are served via Prometheus from port 8898, but this port isn't exposed outside the pod by default.
 
@@ -153,7 +156,7 @@ Metrics are served via Prometheus from port 8898, but this port isn't exposed ou
     kubectl port-forward -n kube-system ds/aks-secrets-store-provider-azure 8898:8898 & curl localhost:8898/metrics
     ```
 
-##### Metrics provided by the Azure Key Vault provider for Secrets Store CSI Driver
+#### Metrics provided by the Azure Key Vault provider for Secrets Store CSI Driver
 
 |Metric|Description|Tags|
 |----|----|----|
@@ -204,7 +207,7 @@ Metrics are served from port 8095, but this port isn't exposed outside the pod b
     > kubectl delete -f https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer-windows.yaml
     > ```
 
-2. Upgrade your existing AKS cluster with the feature using the [`az aks enable-addons`][az-aks-enable-addons] command.
+1. Upgrade your existing AKS cluster with the feature using the [`az aks enable-addons`][az-aks-enable-addons] command.
 
     ```azurecli-interactive
     az aks enable-addons --addons azure-keyvault-secrets-provider --name myAKSCluster --resource-group myResourceGroup
