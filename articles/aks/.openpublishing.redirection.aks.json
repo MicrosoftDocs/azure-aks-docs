@@ -596,6 +596,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/upgrade-azure-cni.md",
+            "redirect_url": "/azure/aks/update-azure-cni",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/gpu-cluster.md",
             "redirect_url": "/azure/aks/use-nvidia-gpu",
             "redirect_document_id": false

@@ -532,7 +532,7 @@
             href: limit-egress-traffic.md
           - name: Configure Static Egress Gateway
             href: configure-static-egress-gateway.md
-          - name: Deploy Istio egress gateways (preview)
+          - name: Deploy Istio egress gateways
             href: istio-deploy-egress.md
       - name: CNI
         items:
@@ -551,8 +551,8 @@
               - name: Use Azure CNI Pod Subnet - Static Block Allocation
                 href: configure-azure-cni-static-block-allocation.md
             href: concepts-network-azure-cni-pod-subnet.md
-          - name: Upgrade Azure CNI IPAM and dataplane
-            href: upgrade-azure-cni.md
+          - name: Update Azure CNI IPAM and dataplane
+            href: update-azure-cni.md
           - name: Migrate from Network Policy Manager to Cilium Network policy
             href: migrate-from-npm-to-cilium-network-policy.md
           - name: Use dual-stack networking

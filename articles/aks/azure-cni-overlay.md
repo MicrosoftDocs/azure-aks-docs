@@ -327,8 +327,176 @@ Expose the NGINX deployment using either `kubectl` commands or YAML manifests.
 
 To learn more about Azure CNI Overlay networking on AKS, see the following articles:
 
+<<<<<<< HEAD
 - [Upgrade Azure CNI IPAM modes and data plane technology](./upgrade-azure-cni.md)
 - [Expand pod CIDR space in Azure CNI Overlay clusters](./azure-cni-overlay-pod-cidr.md)
+=======
+### Prerequisites
+
+* You must have Kubernetes version 1.29 or greater.
+
+### Set up Overlay clusters with Azure CNI Powered by Cilium
+
+Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command. Make sure to use the argument `--network-dataplane cilium` to specify the Cilium data plane.
+
+```azurecli-interactive
+clusterName="myOverlayCluster"
+resourceGroup="myResourceGroup"
+location="westcentralus"
+
+az aks create \
+    --name $clusterName \
+    --resource-group $resourceGroup \
+    --location $location \
+    --network-plugin azure \
+    --network-plugin-mode overlay \
+    --network-dataplane cilium \
+    --ip-families ipv4,ipv6 \
+    --generate-ssh-keys
+```
+
+For more information on Azure CNI Powered by Cilium, see [Azure CNI Powered by Cilium][azure-cni-powered-by-cilium].
+
+## Dual-stack networking Windows node pools - (Preview)
+
+You can deploy your dual-stack AKS clusters with Windows node pools.
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+### Install the aks-preview Azure CLI extension
+
+* Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
+
+    ```azurecli
+    az extension add --name aks-preview
+    ```
+
+* Update to the latest version of the extension released using the [`az extension update`][az-extension-update] command.
+
+    ```azurecli
+    az extension update --name aks-preview
+    ```
+
+### Register the 'AzureOverlayDualStackPreview' feature flag
+
+1. Register the `AzureOverlayDualStackPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
+    ```
+
+    It takes a few minutes for the status to show *Registered*.
+
+2. Verify the registration status using the [`az feature show`][az-feature-show] command:
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
+    ```
+
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+### Set up an Overlay cluster
+
+Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command.
+
+```azurecli-interactive
+clusterName="myOverlayCluster"
+resourceGroup="myResourceGroup"
+location="westcentralus"
+
+az aks create \
+    --name $clusterName \
+    --resource-group $resourceGroup \
+    --location $location \
+    --network-plugin azure \
+    --network-plugin-mode overlay \
+    --ip-families ipv4,ipv6 \
+    --generate-ssh-keys
+```
+
+### Add a Windows node pool to the cluster
+
+Add a Windows node pool to the cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command.
+
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group $resourceGroup \
+    --cluster-name $clusterName \
+    --os-type Windows \
+    --name winpool1 \
+    --node-count 2
+```
+
+## Pod CIDR Expansion - (Preview)
+
+You can expand your Pod CIDR space on AKS Overlay clusters with Linux nodes only. The operation uses `az aks update`, and allows expansions without recreating your AKS cluster.
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+### Limitations
+
+ - Windows nodes and hybrid node scenarios aren't supported.
+ - This feature is currently only supported with Kubernetes version 1.33.
+ - Only expansion is allowed without changing the base IP. Shrinking or changing the Pod CIDR returns an error.
+ - Adding discontinuous Pod CIDR isn't supported. The new Pod CIDR must be a larger superset that completely contains the original range.
+ - IPv6 Pod CIDR expansion isn't supported.
+ - Changing multiple Pod CIDR blocks via `--pod-cidrs` isn't supported.
+ - If an [Azure Availability Zone](./availability-zones.md) is down during the expansion operation, new nodes may appear as unready. These nodes are expected to reconcile once the Availability Zone is up.
+
+### Register the `EnableAzureCNIOverlayPodCIDRExpansion` feature flag
+
+Register the `EnableAzureCNIOverlayPodCIDRExpansion` feature flag using the  [`az feature register`](/cli/azure/feature#az_feature_register) command.
+
+```azurecli-interactive
+az feature register --namespace Microsoft.ContainerService --name EnableAzureCNIOverlayPodCIDRExpansion
+```
+
+Verify successful registration using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for the registration to complete.
+
+```azurecli-interactive
+az feature show --namespace "Microsoft.ContainerService" --name "EnableAzureCNIOverlayPodCIDRExpansion"
+```
+
+Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
+
+###  Expand Pod CIDR on an Overlay cluster - Preview
+
+Starting from a Pod CIDR block of `10.244.0.0/18`, the `az aks update` operation allows expanding the Pod CIDR space.
+
+```azurecli-interactive
+az aks update \
+    --name $clusterName \
+    --resource-group $resourceGroup \
+    --pod-cidr 10.244.0.0/16
+```
+
+> [!NOTE]
+> Although the update command may successfully complete and show the new Pod CIDR in the network profile, make sure to validate the new cluster state through the `NodeNetworkConfig`.
+
+### Validate new Pod CIDR Block
+
+Verify the state of the upgrade operation by checking the `NodeNetworkConfig` to view the state.
+
+```bash-interactive
+kubectl get nnc -A -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.status.networkContainers[0].subnetAddressSpace}{"\n"}{end}'
+```
+
+```output
+aks-nodepool1-13347454-vmss000000 10.244.0.0/16
+aks-nodepool1-13347454-vmss000001 10.244.0.0/16
+aks-nodepool1-13347454-vmss000002 10.244.0.0/16
+```
+
+## Next steps
+
+To learn how to upgrade existing clusters to Azure CNI overlay, see [Upgrade Azure CNI IPAM modes and Dataplane Technology](update-azure-cni.md).
+
+To learn how to utilize AKS with your own Container Network Interface (CNI) plugin, see [Bring your own Container Network Interface (CNI) plugin](use-byo-cni.md).
+>>>>>>> 15863aba3d30950d64e4ec193756a4f1991c4b33
 
 <!-- LINKS - internal -->
 [az-provider-register]: /cli/azure/provider#az-provider-register
