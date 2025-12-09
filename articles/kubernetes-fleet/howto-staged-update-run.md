@@ -1,6 +1,6 @@
 ---
-title: "How to use ClusterStagedUpdateRun to orchestrate staged rollouts"
-description: Learn how to use ClusterStagedUpdateRun to rollout resources to member clusters in a staged manner and rollback resources to a previous version in Azure Kubernetes Fleet Manager.
+title: "Orchestrate staged rollouts with staged update runs"
+description: Learn how to use staged update runs to rollout resources to member clusters in a staged manner and rollback resources to a previous version in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 07/18/2025
 author: arvindth
@@ -9,11 +9,19 @@ ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a DevOps engineer, I want to use staged update runs to control how workloads are deployed across multiple clusters, so that I can minimize risk and ensure reliable rollouts through progressive deployment strategies."
 ---
 
-# Use ClusterStagedUpdateRun to orchestrate staged rollouts across member clusters
+# Orchestrate staged rollouts across member clusters
 
 Azure Kubernetes Fleet Manager staged update runs provide a controlled approach to deploying workloads across multiple member clusters using a stage-by-stage process. This approach allows you to minimize risk by deploying to targeted clusters sequentially, with optional wait times and approval gates between stages.
 
 This article shows you how to create and execute staged update runs to deploy workloads progressively and roll back to previous versions when needed.
+
+> [!NOTE]
+> Azure Kubernetes Fleet Manager provides two approaches for staged updates:
+>
+> - **Cluster-scoped**: Use `ClusterStagedUpdateRun` with `ClusterResourcePlacement` for fleet administrators managing infrastructure-level changes
+> - **Namespace-scoped**: Use `StagedUpdateRun` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces
+>
+> The examples in this article demonstrate both approaches using tabs. Choose the tab that matches your deployment scope.
 
 ## Prerequisites
 
@@ -57,7 +65,9 @@ These labels allow us to create stages that group clusters by environment and co
 
 ## Prepare workloads for placement
 
-Next, publish workloads to the hub cluster so that they can be placed onto member clusters.
+Publish workloads to the hub cluster so that they can be placed onto member clusters.
+
+### [ClusterResourcePlacement](#tab/clusterresourceplacement)
 
 Create a namespace and configmap for the workload on the hub cluster:
 
@@ -88,6 +98,9 @@ spec:
     type: External
 ```
 
+> [!NOTE]
+> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `ClusterStagedUpdateRun`.
+
 All three clusters should be scheduled since we use the `PickAll` policy, but no resources should be deployed on the member clusters yet because we didn't create a `ClusterStagedUpdateRun`.
 
 Verify the placement is scheduled:
@@ -103,6 +116,60 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1                                           51s
 ```
 
+### [ResourcePlacement](#tab/resourceplacement)
+
+Create a namespace on the hub cluster to contain the `ResourcePlacement` resource and application resources:
+
+```bash
+kubectl create ns my-app-namespace
+kubectl create deployment web-app --image=nginx:1.20 --replicas=3 -n my-app-namespace
+kubectl expose deployment web-app --port=80 --target-port=80 -n my-app-namespace
+```
+
+Create a namespace-scoped `ResourcePlacement` to deploy the application:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ResourcePlacement
+metadata:
+  name: web-app-placement
+  namespace: my-app-namespace
+spec:
+  resourceSelectors:
+    - group: "apps"
+      kind: Deployment
+      name: web-app
+      version: v1
+    - group: ""
+      kind: Service
+      name: web-app
+      version: v1
+  policy:
+    placementType: PickAll
+  strategy:
+    type: External
+```
+
+> [!NOTE]
+> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
+
+All three clusters should be scheduled, but no resources should be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
+
+Verify the placement is scheduled:
+
+```bash
+kubectl get rp web-app-placement -n my-app-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
+web-app-placement   1     True        1                                           45s
+```
+
+---
+
 ## Work with resource snapshots
 
 Fleet Manager creates resource snapshots when resources change. Each snapshot has a unique index that you can use to reference specific versions of your resources.
@@ -111,6 +178,8 @@ Fleet Manager creates resource snapshots when resources change. Each snapshot ha
 > For more information about resource snapshots and how they work, see [Understanding resource snapshots](./howto-understand-placement.md#understanding-resource-snapshots).
 
 ### Check current resource snapshots
+
+### [ClusterResourcePlacement](#tab/clusterresourceplacement)
 
 To check current resource snapshots:
 
@@ -127,7 +196,28 @@ example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapsho
 
 We only have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
 
+### [ResourcePlacement](#tab/resourceplacement)
+
+Check the resource snapshots for the namespace-scoped placement:
+
+```bash
+kubectl get resourcesnapshots -n my-app-namespace --show-labels
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                           GEN   AGE   LABELS
+web-app-placement-0-snapshot   1     63s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
+```
+
+We only have one version of the snapshot. It's the current latest and has resource-index 0.
+
+---
+
 ### Create a new resource snapshot
+
+### [ClusterResourcePlacement](#tab/clusterresourceplacement)
 
 Now modify the configmap with a new value:
 
@@ -224,6 +314,8 @@ spec:
 
 ## Deploy a ClusterStagedUpdateStrategy
 
+### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+
 A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
 
 ```yaml
@@ -250,6 +342,93 @@ spec:
 ```
 
 ## Deploy a ClusterStagedUpdateRun to roll out latest change
+
+### [ResourcePlacement](#tab/resourceplacement)
+
+Update the deployment to a new version:
+
+```bash
+kubectl set image deployment/web-app web-app=nginx:1.21 -n my-app-namespace
+```
+
+Verify the new snapshot is created:
+
+```bash
+kubectl get resourcesnapshots -n my-app-namespace --show-labels
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                           GEN   AGE    LABELS
+web-app-placement-0-snapshot   1     4m3s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
+web-app-placement-1-snapshot   1     23s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=1
+```
+
+---
+
+## Deploy a staged update strategy
+
+### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+
+A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateStrategy
+metadata:
+  name: example-strategy
+spec:
+  stages:
+    - name: staging
+      labelSelector:
+        matchLabels:
+          environment: staging
+      afterStageTasks:
+        - type: TimedWait
+          waitTime: 1m
+    - name: canary
+      labelSelector:
+        matchLabels:
+          environment: canary
+      sortingLabelKey: order
+      afterStageTasks:
+        - type: Approval
+```
+
+### [ResourcePlacement](#tab/resourceplacement)
+
+Create a namespace-scoped `StagedUpdateStrategy`:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateStrategy
+metadata:
+  name: app-rollout-strategy
+  namespace: my-app-namespace
+spec:
+  stages:
+    - name: staging
+      labelSelector:
+        matchLabels:
+          environment: staging
+      afterStageTasks:
+        - type: TimedWait
+          waitTime: 30s
+    - name: canary
+      labelSelector:
+        matchLabels:
+          environment: canary
+      sortingLabelKey: order
+      afterStageTasks:
+        - type: Approval
+```
+
+---
+
+## Deploy a staged update run to roll out latest change
+
+### [ClusterResourcePlacement](#tab/clusterresourceplacement)
 
 A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our ClusterResourcePlacement (CRP), we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, and the latest resource snapshot index ("1"):
 
@@ -436,6 +615,54 @@ NAME                 UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
 example-run-canary   example-run   canary                                 2m39s
 ```
 
+### [ResourcePlacement](#tab/resourceplacement)
+
+Create a namespace-scoped staged update run to rollout the new image version:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateRun
+metadata:
+  name: web-app-rollout-v1-21
+  namespace: my-app-namespace
+spec:
+  placementName: web-app-placement
+  resourceSnapshotIndex: "1"
+  stagedRolloutStrategyName: app-rollout-strategy
+```
+
+The staged update run is initialized and running:
+
+```bash
+kubectl get sur web-app-rollout-v1-21 -n my-app-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                     PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+web-app-rollout-v1-21    web-app-placement   1                         0                       True                      12s
+```
+
+After the 30 second `TimedWait` has elapsed, check for the approval request:
+
+```bash
+kubectl get approvalrequests -n my-app-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                             STAGED-UPDATE-RUN        STAGE    APPROVED   APPROVALACCEPTED   AGE
+web-app-rollout-v1-21-canary     web-app-rollout-v1-21    canary                                 45s
+```
+
+---
+
+## Approve the staged update run
+
+### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+
 We can approve the `ClusterApprovalRequest` by creating a json patch file and applying it:
 
 ```bash
@@ -487,6 +714,51 @@ NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDE
 example-run   example-placement   1                         0                       True          True        5m28s
 ```
 
+### [ResourcePlacement](#tab/resourceplacement)
+
+Approve the request to proceed to the canary stage:
+
+```bash
+cat << EOF > approval-ns.json
+{
+  "status": {
+    "conditions": [
+      {
+        "lastTransitionTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+        "message": "Approved for production rollout",
+        "observedGeneration": 1,
+        "reason": "ManualApproval",
+        "status": "True",
+        "type": "Approved"
+      }
+    ]
+  }
+}
+EOF
+
+kubectl patch approvalrequests web-app-rollout-v1-21-canary -n my-app-namespace \
+  --type='merge' --subresource=status --patch-file approval-ns.json
+```
+
+Verify the rollout completion:
+
+```bash
+kubectl get sur web-app-rollout-v1-21 -n my-app-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                     PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+web-app-rollout-v1-21    web-app-placement   1                         0                       True          True        3m15s
+```
+
+---
+
+## Verify the rollout completion
+
+### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+
 The `ClusterResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
 
 ```bash
@@ -516,7 +788,28 @@ metadata:
 
 ## Deploy a second ClusterStagedUpdateRun to roll back to a previous version
 
-Now suppose the workload admin wants to roll back the configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new ClusterStagedUpdateRun with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
+### [ResourcePlacement](#tab/resourceplacement)
+
+The `ResourcePlacement` shows the rollout completed and resources are available:
+
+```bash
+kubectl get rp web-app-placement -n my-app-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
+web-app-placement   1     True        1               True        1               6m22s
+```
+
+---
+
+## Deploy a second staged update run to roll back
+
+### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+
+Suppose the workload admin wants to roll back the configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new ClusterStagedUpdateRun with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -591,27 +884,60 @@ metadata:
   ...
 ```
 
+### [ResourcePlacement](#tab/resourceplacement)
+
+To rollback to the previous version (nginx:1.20), create another staged update run referencing the earlier snapshot:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateRun
+metadata:
+  name: web-app-rollback-v1-20
+  namespace: my-app-namespace
+spec:
+  placementName: web-app-placement
+  resourceSnapshotIndex: "0"
+  stagedRolloutStrategyName: app-rollout-strategy
+```
+
+Follow the same monitoring and approval process to complete the rollback.
+
+---
+
+## Key differences between approaches
+
+| Aspect | Cluster-Scoped | Namespace-Scoped |
+|--------|----------------|------------------|
+| **Strategy Resource** | `ClusterStagedUpdateStrategy` | `StagedUpdateStrategy` |
+| **Update Run Resource** | `ClusterStagedUpdateRun` | `StagedUpdateRun` |
+| **Target Placement** | `ClusterResourcePlacement` | `ResourcePlacement` |
+| **Approval Resource** | `ClusterApprovalRequest` (short name: `careq`) | `ApprovalRequest` (short name: `areq`) |
+| **Snapshot Resource** | `ClusterResourceSnapshot` | `ResourceSnapshot` |
+| **Scope** | Cluster-wide | Namespace-bound |
+| **Use Case** | Infrastructure rollouts | Application rollouts |
+| **Permissions** | Cluster-admin level | Namespace-level |
+
 ## Clean up resources
 
 When you're finished with this tutorial, you can clean up the resources you created:
 
 ```bash
-# Delete the staged update runs
+# Clean up cluster-scoped resources
 kubectl delete csur example-run example-run-2
-
-# Delete the staged update strategy
 kubectl delete csus example-strategy
-
-# Delete the cluster resource placement
 kubectl delete crp example-placement
-
-# Delete the test namespace (this will also delete the configmap)
 kubectl delete namespace test-namespace
+
+# Clean up namespace-scoped resources
+kubectl delete sur web-app-rollout-v1-21 web-app-rollback-v1-20 -n my-app-namespace
+kubectl delete sus app-rollout-strategy -n my-app-namespace
+kubectl delete rp web-app-placement -n my-app-namespace
+kubectl delete namespace my-app-namespace
 ```
 
 ## Next steps
 
-In this article, you learned how to use ClusterStagedUpdateRun to orchestrate staged rollouts across member clusters. You created staged update strategies, executed progressive rollouts, and performed rollbacks to previous versions.
+In this article, you learned how to use staged update runs to orchestrate rollouts across member clusters. You created staged update strategies for both cluster-scoped and namespace-scoped deployments, executed progressive rollouts, and performed rollbacks to previous versions.
 
 To learn more about staged update runs and related concepts, see the following resources:
 
