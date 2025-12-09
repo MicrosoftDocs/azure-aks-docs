@@ -78,6 +78,9 @@ kubectl create cm test-cm --from-literal=key=value1 -n test-namespace
 
 To deploy the resources, create a ClusterResourcePlacement:
 
+> [!NOTE]
+> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `ClusterStagedUpdateRun`.
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacement
@@ -94,9 +97,6 @@ spec:
   strategy:
     type: External
 ```
-
-> [!NOTE]
-> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `ClusterStagedUpdateRun`.
 
 All three clusters should be scheduled since we use the `PickAll` policy, but no resources should be deployed on the member clusters yet because we didn't create a `ClusterStagedUpdateRun`.
 
@@ -135,6 +135,7 @@ spec:
       kind: Namespace
       name: test-namespace
       version: v1
+      selectionScope: NamespaceOnly
   policy:
     placementType: PickAll
 ```
@@ -152,7 +153,10 @@ NAME                       GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILAB
 test-namespace-placement   1     True        1               True        1               30s
 ```
 
-Now create a namespace-scoped ResourcePlacement to deploy the configmap:
+To deploy the configmap, create a namespace-scoped ResourcePlacement:
+
+> [!NOTE]
+> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -172,10 +176,7 @@ spec:
     type: External
 ```
 
-> [!NOTE]
-> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
-
-All three clusters should be scheduled since we use the `PickAll` policy, but the configmap should not be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
+All three clusters should be scheduled since we use the `PickAll` policy, but the configmap shouldn't be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
 
 Verify the placement is scheduled:
 
@@ -427,7 +428,7 @@ spec:
 
 ### [ClusterResourcePlacement](#tab/clusterresourceplacement)
 
-A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence:
+A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -454,7 +455,7 @@ spec:
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-A `StagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence:
+A `StagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -680,7 +681,7 @@ apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: StagedUpdateRun
 metadata:
   name: example-run
-  namespace: app-namespace
+  namespace: test-namespace
 spec:
   placementName: example-placement
   resourceSnapshotIndex: "1"
@@ -690,7 +691,7 @@ spec:
 The staged update run is initialized and running:
 
 ```bash
-kubectl get sur example-run -n app-namespace
+kubectl get sur example-run -n test-namespace
 ```
 
 Your output should look similar to the following example:
