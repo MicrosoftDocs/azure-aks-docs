@@ -312,37 +312,6 @@ spec:
       namespace: test-namespace
 ```
 
-## Deploy a ClusterStagedUpdateStrategy
-
-### [ClusterResourcePlacement](#tab/clusterresourceplacement)
-
-A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ClusterStagedUpdateStrategy
-metadata:
-  name: example-strategy
-spec:
-  stages:
-    - name: staging
-      labelSelector:
-        matchLabels:
-          environment: staging
-      afterStageTasks:
-        - type: TimedWait
-          waitTime: 1m
-    - name: canary
-      labelSelector:
-        matchLabels:
-          environment: canary
-      sortingLabelKey: order
-      afterStageTasks:
-        - type: Approval
-```
-
-## Deploy a ClusterStagedUpdateRun to roll out latest change
-
 ### [ResourcePlacement](#tab/resourceplacement)
 
 Update the deployment to a new version:
