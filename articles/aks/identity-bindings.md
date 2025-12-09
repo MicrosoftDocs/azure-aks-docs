@@ -4,7 +4,7 @@ description: Learn how to enable and configure identity bindings on Azure Kubern
 ms.topic: how-to
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 11/10/2025
+ms.date: 12/09/2025
 ms.custom: preview
 author: shashankbarsin
 ms.author: shasb
