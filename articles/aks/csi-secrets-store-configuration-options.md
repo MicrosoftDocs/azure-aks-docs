@@ -26,7 +26,7 @@ Follow the steps in the following articles before proceeding with this guide. On
 
 ### Manage auto rotation
 
-Once you enable auto rotation for Azure Key Vault Secrets Provider, it updates the pod mount and the Kubernetes secret defined in the `secretObjects` field of `SecretProviderClass`. It does so by polling for changes periodically, based on the rotation poll interval you defined. The default rotation poll interval is *two minutes*. When a secret update is within external secrets store after initial pod deployment, the Kubernetes Secret and the pod mount periodically update depending on how the application consumes the secret data.
+Once you enable auto rotation for Azure Key Vault Secrets Provider, it updates the pod mount and the Kubernetes secret defined in the `secretObjects` field of `SecretProviderClass`. It does so by polling for changes periodically, based on the rotation poll interval you defined. The default rotation poll interval is *two minutes*. When a secret is updated in the external secrets store after the initial pod deployment, both the Kubernetes Secret and the pod mount are periodically refreshed. The update frequency and method depend on how your application accesses the secret data.
 
 * **Mount the Kubernetes Secret as a volume**: Use the auto rotation and sync K8s secrets features of Secrets Store CSI Driver. The application needs to watch for changes from the mounted Kubernetes Secret volume. When the CSI Driver updates the Kubernetes Secret, the corresponding volume contents automatically update as well.
 
@@ -60,9 +60,9 @@ To disable auto rotation, you first need to disable the add-on. Then, you can re
 1. Disable the secrets provider add-on using the [`az aks addon disable`][az-aks-addon-disable]
    command:
 
-    ```azurecli-interactive az aks addon disable --resource-group myResourceGroup --name
-    myAKSCluster2 --addon
-    azure-keyvault-secrets-provider ```
+   ```azurecli-interactive
+   az aks addon disable --resource-group myResourceGroup --name myAKSCluster2 --addon azure-keyvault-secrets-provider
+   ```
 
 1. Re-enable the secrets provider add-on without the `enable-secret-rotation` parameter using the
    [`az aks addon enable`][az-aks-addon-enable] command:
@@ -208,8 +208,8 @@ These metrics provide visibility into the internal operations of the CSI driver 
 |total_node_unpublish_error|The total number of errors with volume unmount requests.|`os_type=<runtime os>`|
 |total_sync_k8s_secret|The total number of Kubernetes secrets synced.|`os_type=<runtime os`, `provider=<provider name>`|
 |sync_k8s_secret_duration_sec|The distribution of how long it took to sync the Kubernetes secret.|`os_type=<runtime os>`|
-|total_rotation_reconcile|The total number of rotations reconciles.|`os_type=<runtime os>`, `rotated=<true or false>`|
-|total_rotation_reconcile_error|The total number of rotations reconciles with errors.|`os_type=<runtime os>`, `rotated=<true or false>`, `error_type=<error code>`|
+|total_rotation_reconcile|The total amount of rotation reconciles.|`os_type=<runtime os>`, `rotated=<true or false>`|
+|total_rotation_reconcile_error|The total amount of rotation reconciles with errors.|`os_type=<runtime os>`, `rotated=<true or false>`, `error_type=<error code>`|
 |total_rotation_reconcile_error|The distribution of how long it took to rotate secrets-store content for pods.|`os_type=<runtime os>`|
 
 ---
