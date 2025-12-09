@@ -1,5 +1,5 @@
 ---
-title: Monitor Azure Kubernetes Service
+title: Monitor Azure Kubernetes Service (AKS)
 description: Learn how to monitor Azure Kubernetes Service (AKS) as it supports your critical applications and business processes. 
 ms.date: 09/06/2024
 ms.custom: horz-monitor, copilot-scenario-highlight
@@ -11,7 +11,7 @@ ms.subservice: aks-monitoring
 #Customer intent: As a cloud administrator, I want to implement comprehensive monitoring for Azure Kubernetes Service (AKS) so that I can ensure performance and reliability in my critical applications and manage resource utilization effectively.
 ---
 
-# Monitor Azure Kubernetes Service
+# Monitor Azure Kubernetes Service (AKS)
 
 The Kubernetes platform is a complex, distributed system. You must monitor your Kubernetes deployment at multiple levels. Although Azure Kubernetes Service (AKS) is a managed Kubernetes service, the same rigor is required for monitoring your deployment at multiple levels. This article provides high-level information and best practices for monitoring an AKS cluster.
 
