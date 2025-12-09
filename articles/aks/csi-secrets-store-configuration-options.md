@@ -157,11 +157,12 @@ spec:
    > [!TIP]
    > If you installed the driver and provider using deployment YAMLs, you can delete the components using the following `kubectl delete` command:
    >
-   > ```bash # Delete AKV provider pods from Linux nodes kubectl delete -f
-   > https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer.yaml
+   > ```bash
+   > # Delete AKV provider pods from Linux nodes
+   > kubectl delete -f https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer.yaml
    >
-   > # Delete AKV provider pods from Windows nodes kubectl delete -f
-   > https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer-windows.yaml
+   > # Delete AKV provider pods from Windows nodes
+   > kubectl delete -f https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer-windows.yaml
    > ```
 
 1. Upgrade your existing AKS cluster with the feature using the
