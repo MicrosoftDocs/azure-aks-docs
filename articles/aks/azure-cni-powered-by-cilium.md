@@ -285,8 +285,6 @@ az aks create \
     --generate-ssh-keys
 ```
 
-For more information on Azure CNI Powered by Cilium, see [Azure CNI Powered by Cilium][azure-cni-powered-by-cilium].
-
 ## Next steps
 
 Learn more about networking in AKS in the following articles:

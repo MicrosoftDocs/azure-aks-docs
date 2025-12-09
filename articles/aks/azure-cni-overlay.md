@@ -182,7 +182,7 @@ Before you create an Azure CNI Overlay AKS cluster with dual-stack networking wi
         --generate-ssh-keys
     ```
 
-1. Add a Windows node pool to the cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command.
+1. Add a Windows node pool to the cluster using the [`az aks nodepool add`](/cli/azure/aks#az_aks_nodepool_add) command.
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -211,7 +211,7 @@ Expose the NGINX deployment using either `kubectl` commands or YAML manifests.
 > [!IMPORTANT]
 > There are currently **two limitations** pertaining to IPv6 services in AKS:
 >
-> - Azure Load Balancer sends health probes to IPv6 destinations from a link-local address. In **Azure Linux node pools**, you can't route this traffic to a pod, so traffic flowing to IPv6 services deployed with `externalTrafficPolicy: Cluster` fail.
+> - Azure Load Balancer sends health probes to IPv6 destinations from a link-local address. In **Azure Linux node pools**, you can't route this traffic to a pod, so traffic flowing to IPv6 services deployed with `externalTrafficPolicy: Cluster` fails.
 > - You must deploy IPv6 services with `externalTrafficPolicy: Local`, which causes `kube-proxy` to respond to the probe on the node.
 
 #### [kubectl deployment](#tab/kubectl)
