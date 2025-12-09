@@ -1,6 +1,6 @@
 ---
 title: "Orchestrate staged rollouts with staged update runs"
-description: Learn how to use staged update runs to rollout resources to member clusters in a staged manner and rollback resources to a previous version in Azure Kubernetes Fleet Manager.
+description: Learn how to use staged update runs to deploy resources to member clusters in stages and roll back to previous versions in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 07/18/2025
 author: arvindth
@@ -11,7 +11,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Orchestrate staged rollouts across member clusters
 
-Azure Kubernetes Fleet Manager staged update runs provide a controlled approach to deploying workloads across multiple member clusters using a stage-by-stage process. This approach allows you to minimize risk by deploying to targeted clusters sequentially, with optional wait times and approval gates between stages.
+Azure Kubernetes Fleet Manager staged update runs provide a controlled approach to deploying workloads across multiple member clusters using a stage-by-stage process. To minimize risk, this approach deploys to targeted clusters sequentially, with optional wait times and approval gates between stages.
 
 This article shows you how to create and execute staged update runs to deploy workloads progressively and roll back to previous versions when needed.
 
@@ -61,7 +61,7 @@ This tutorial demonstrates staged update runs using a demo fleet environment wit
 | member2      | environment=staging         |
 | member3      | environment=canary, order=1 |
 
-These labels allow us to create stages that group clusters by environment and control the deployment order within each stage.
+To group clusters by environment and control the deployment order within each stage, these labels allow us to create stages.
 
 ## Prepare workloads for placement
 
@@ -118,7 +118,7 @@ example-placement   1     True        1                                         
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-Create a namespace on the hub cluster to contain the `ResourcePlacement` resource and application resources:
+To contain the `ResourcePlacement` resource and application resources, create a namespace on the hub cluster:
 
 ```bash
 kubectl create ns my-app-namespace
@@ -126,7 +126,7 @@ kubectl create deployment web-app --image=nginx:1.20 --replicas=3 -n my-app-name
 kubectl expose deployment web-app --port=80 --target-port=80 -n my-app-namespace
 ```
 
-Create a namespace-scoped `ResourcePlacement` to deploy the application:
+To deploy the application, create a namespace-scoped `ResourcePlacement`:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -456,7 +456,7 @@ NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDE
 example-run   example-placement   1                         0                       True                      7s
 ```
 
-A more detailed look at the status after the one minute `TimedWait` has elapsed:
+A more detailed look at the status after the one-minute `TimedWait` elapses:
 
 ```bash
 kubectl get csur example-run -o yaml
@@ -602,7 +602,7 @@ status:
     startTime: "2025-07-22T21:29:23Z"
 ```
 
-We can see that the TimedWait period for staging stage has elapsed and we also see that the `ClusterApprovalRequest` object for the approval task in canary stage was created. We can check the generated ClusterApprovalRequest and see that it's not approved yet
+We can see that the TimedWait period for staging stage elapses and we also see that the `ClusterApprovalRequest` object for the approval task in canary stage was created. We can check the generated ClusterApprovalRequest and see that no one approved it yet
 
 ```bash
 kubectl get clusterapprovalrequest
@@ -617,7 +617,7 @@ example-run-canary   example-run   canary                                 2m39s
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-Create a namespace-scoped staged update run to rollout the new image version:
+Create a namespace-scoped staged update run to roll out the new image version:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -644,7 +644,7 @@ NAME                     PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SN
 web-app-rollout-v1-21    web-app-placement   1                         0                       True                      12s
 ```
 
-After the 30 second `TimedWait` has elapsed, check for the approval request:
+After the 30-second `TimedWait` has elapses, check for the approval request:
 
 ```bash
 kubectl get approvalrequests -n my-app-namespace
@@ -688,7 +688,7 @@ Submit a patch request to approve using the JSON file created.
 kubectl patch clusterapprovalrequests example-run-canary --type='merge' --subresource=status --patch-file approval.json
 ```
 
-Then verify that it's approved:
+Then verify that you approved the request:
 
 ```bash
 kubectl get clusterapprovalrequest
@@ -836,7 +836,7 @@ example-run     example-placement   1                         0                 
 example-run-2   example-placement   0                         0                       True                      9s
 ```
 
-After the one minute `TimedWait` has elapsed, we should see the `ClusterApprovalRequest` object created for the new `ClusterStagedUpdateRun`:
+After the one-minute `TimedWait` elapses, we should see the `ClusterApprovalRequest` object created for the new `ClusterStagedUpdateRun`:
 
 ```bash
 kubectl get clusterapprovalrequest
@@ -886,7 +886,7 @@ metadata:
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-To rollback to the previous version (nginx:1.20), create another staged update run referencing the earlier snapshot:
+To roll back to the previous version, create another staged update run referencing the earlier snapshot:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -900,7 +900,7 @@ spec:
   stagedRolloutStrategyName: app-rollout-strategy
 ```
 
-Follow the same monitoring and approval process to complete the rollback.
+To complete the rollback, follow the same monitoring and approval process.
 
 ---
 
