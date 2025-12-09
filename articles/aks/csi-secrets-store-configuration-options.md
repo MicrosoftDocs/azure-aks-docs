@@ -208,8 +208,8 @@ These metrics provide visibility into the internal operations of the CSI driver 
 |total_node_unpublish_error|The total number of errors with volume unmount requests.|`os_type=<runtime os>`|
 |total_sync_k8s_secret|The total number of Kubernetes secrets synced.|`os_type=<runtime os`, `provider=<provider name>`|
 |sync_k8s_secret_duration_sec|The distribution of how long it took to sync the Kubernetes secret.|`os_type=<runtime os>`|
-|total_rotation_reconcile|The total amount of rotation reconciles.|`os_type=<runtime os>`, `rotated=<true or false>`|
-|total_rotation_reconcile_error|The total amount of rotation reconciles with errors.|`os_type=<runtime os>`, `rotated=<true or false>`, `error_type=<error code>`|
+|total_rotation_reconcile|The total number of volume rotation reconcile operations.|`os_type=<runtime os>`, `rotated=<true or false>`|
+|total_rotation_reconcile_error|The total number of reconcile operations that resulted in errors.|`os_type=<runtime os>`, `rotated=<true or false>`, `error_type=<error code>`|
 |total_rotation_reconcile_error|The distribution of how long it took to rotate secrets-store content for pods.|`os_type=<runtime os>`|
 
 ---
