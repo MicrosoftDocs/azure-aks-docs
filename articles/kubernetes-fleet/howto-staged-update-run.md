@@ -118,23 +118,53 @@ example-placement   1     True        1                                         
 Create a namespace and configmap for the workload on the hub cluster:
 
 ```bash
-kubectl create ns app-namespace
-kubectl create cm app-config --from-literal=version=v1 -n app-namespace
+kubectl create ns test-namespace
+kubectl create cm test-cm --from-literal=key=value1 -n test-namespace
 ```
 
-To deploy the resources, create a namespace-scoped ResourcePlacement:
+Since `ResourcePlacement` is namespace-scoped, first deploy the namespace to all member clusters using a `ClusterResourcePlacement`:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: test-namespace-placement
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: test-namespace
+      version: v1
+  policy:
+    placementType: PickAll
+```
+
+Verify the namespace is deployed to all member clusters:
+
+```bash
+kubectl get crp test-namespace-placement
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                       GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
+test-namespace-placement   1     True        1               True        1               30s
+```
+
+Now create a namespace-scoped ResourcePlacement to deploy the configmap:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourcePlacement
 metadata:
   name: example-placement
-  namespace: app-namespace
+  namespace: test-namespace
 spec:
   resourceSelectors:
     - group: ""
       kind: ConfigMap
-      name: app-config
+      name: test-cm
       version: v1
   policy:
     placementType: PickAll
@@ -145,12 +175,12 @@ spec:
 > [!NOTE]
 > The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
 
-All three clusters should be scheduled since we use the `PickAll` policy, but no resources should be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
+All three clusters should be scheduled since we use the `PickAll` policy, but the configmap should not be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
 
 Verify the placement is scheduled:
 
 ```bash
-kubectl get rp example-placement -n app-namespace
+kubectl get rp example-placement -n test-namespace
 ```
 
 Your output should look similar to the following example:
@@ -193,7 +223,7 @@ We only have one version of the snapshot. It's the current latest (`kubernetes-f
 To check current resource snapshots:
 
 ```bash
-kubectl get resourcesnapshots -n app-namespace --show-labels
+kubectl get resourcesnapshots -n test-namespace --show-labels
 ```
 
 Your output should look similar to the following example:
@@ -309,13 +339,13 @@ spec:
 Now modify the configmap with a new value:
 
 ```bash
-kubectl edit cm app-config -n app-namespace
+kubectl edit cm test-cm -n test-namespace
 ```
 
-Update the value from `v1` to `v2`:
+Update the value from `value1` to `value2`:
 
 ```bash
-kubectl get configmap app-config -n app-namespace -o yaml
+kubectl get configmap test-cm -n test-namespace -o yaml
 ```
 
 Your output should look similar to the following example:
@@ -323,12 +353,12 @@ Your output should look similar to the following example:
 ```yaml
 apiVersion: v1
 data:
-  version: v2 # value updated here, old value: v1
+  key: value2 # value updated here, old value: value1
 kind: ConfigMap
 metadata:
   creationTimestamp: ...
-  name: app-config
-  namespace: app-namespace
+  name: test-cm
+  namespace: test-namespace
   resourceVersion: ...
   uid: ...
 ```
@@ -336,7 +366,7 @@ metadata:
 Now you should see two versions of resource snapshots with index 0 and 1 respectively:
 
 ```bash
-kubectl get resourcesnapshots -n app-namespace --show-labels
+kubectl get resourcesnapshots -n test-namespace --show-labels
 ```
 
 Your output should look similar to the following example:
@@ -350,7 +380,7 @@ example-placement-1-snapshot   1     10s    kubernetes-fleet.io/is-latest-snapsh
 The latest label is set to example-placement-1-snapshot, which contains the latest configmap data:
 
 ```bash
-kubectl get resourcesnapshots example-placement-1-snapshot -n app-namespace -o yaml
+kubectl get resourcesnapshots example-placement-1-snapshot -n test-namespace -o yaml
 ```
 
 Your output should look similar to the following example:
@@ -370,7 +400,7 @@ metadata:
     kubernetes-fleet.io/parent-CRP: example-placement
     kubernetes-fleet.io/resource-index: "1"
   name: example-placement-1-snapshot
-  namespace: app-namespace
+  namespace: test-namespace
   ownerReferences:
   - apiVersion: placement.kubernetes-fleet.io/v1beta1
     blockOwnerDeletion: true
@@ -384,11 +414,11 @@ spec:
   selectedResources:
   - apiVersion: v1
     data:
-      version: v2 # latest value: v2, old value: v1
+      key: value2 # latest value: value2, old value: value1
     kind: ConfigMap
     metadata:
-      name: app-config
-      namespace: app-namespace
+      name: test-cm
+      namespace: test-namespace
 ```
 
 ---
@@ -431,7 +461,7 @@ apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: StagedUpdateStrategy
 metadata:
   name: example-strategy
-  namespace: app-namespace
+  namespace: test-namespace
 spec:
   stages:
     - name: staging
@@ -673,7 +703,7 @@ example-run   example-placement   1                         0                   
 After the one-minute `TimedWait` elapses, check for the approval request:
 
 ```bash
-kubectl get approvalrequests -n app-namespace
+kubectl get approvalrequests -n test-namespace
 ```
 
 Your output should look similar to the following example:
@@ -764,13 +794,13 @@ EOF
 Submit a patch request to approve using the JSON file created.
 
 ```bash
-kubectl patch approvalrequests example-run-canary -n app-namespace --type='merge' --subresource=status --patch-file approval.json
+kubectl patch approvalrequests example-run-canary -n test-namespace --type='merge' --subresource=status --patch-file approval.json
 ```
 
 Then verify that you approved the request:
 
 ```bash
-kubectl get approvalrequests -n app-namespace
+kubectl get approvalrequests -n test-namespace
 ```
 
 Your output should look similar to the following example:
@@ -783,7 +813,7 @@ example-run-canary   example-run         canary   True       True               
 The `StagedUpdateRun` now is able to proceed and complete:
 
 ```bash
-kubectl get sur example-run -n app-namespace
+kubectl get sur example-run -n test-namespace
 ```
 
 Your output should look similar to the following example:
@@ -833,7 +863,7 @@ metadata:
 The `ResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
 
 ```bash
-kubectl get rp example-placement -n app-namespace
+kubectl get rp example-placement -n test-namespace
 ```
 
 Your output should look similar to the following example:
@@ -843,17 +873,17 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1               True        1               8m55s
 ```
 
-The configmap app-config should be deployed on all three member clusters, with latest data:
+The configmap test-cm should be deployed on all three member clusters, with latest data:
 
 ```yaml
 apiVersion: v1
 data:
-  version: v2
+  key: value2
 kind: ConfigMap
 metadata:
   ...
-  name: app-config
-  namespace: app-namespace
+  name: test-cm
+  namespace: test-namespace
   ...
 ```
 
@@ -940,14 +970,14 @@ metadata:
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-Suppose the workload admin wants to roll back the configmap change, reverting the value `v2` back to `v1`. Instead of manually updating the configmap from hub, they can create a new StagedUpdateRun with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
+Suppose the workload admin wants to roll back the configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new StagedUpdateRun with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: StagedUpdateRun
 metadata:
   name: example-run-2
-  namespace: app-namespace
+  namespace: test-namespace
 spec:
   placementName: example-placement
   resourceSnapshotIndex: "0"
@@ -957,7 +987,7 @@ spec:
 Let's check the new `StagedUpdateRun`:
 
 ```bash
-kubectl get sur -n app-namespace
+kubectl get sur -n test-namespace
 ```
 
 Your output should look similar to the following example:
@@ -971,7 +1001,7 @@ example-run-2   example-placement   0                         0                 
 After the one-minute `TimedWait` elapses, we should see the `ApprovalRequest` object created for the new `StagedUpdateRun`:
 
 ```bash
-kubectl get approvalrequests -n app-namespace
+kubectl get approvalrequests -n test-namespace
 ```
 
 Your output should look similar to the following example:
@@ -985,13 +1015,13 @@ example-run-canary     example-run         canary   True       True             
 To approve the new `ApprovalRequest` object, let's reuse the same `approval.json` file to patch it:
 
 ```bash
-kubectl patch approvalrequests example-run-2-canary -n app-namespace --type='merge' --subresource=status --patch-file approval.json
+kubectl patch approvalrequests example-run-2-canary -n test-namespace --type='merge' --subresource=status --patch-file approval.json
 ```
 
 Verify if the new object is approved:
 
 ```bash
-kubectl get approvalrequests -n app-namespace
+kubectl get approvalrequests -n test-namespace
 ```
 
 Your output should look similar to the following example:
@@ -1002,17 +1032,17 @@ example-run-2-canary   example-run-2       canary   True       True             
 example-run-canary     example-run         canary   True       True               15m
 ```
 
-The configmap `app-config` should now be deployed on all three member clusters, with the data reverted to `v1`:
+The configmap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
 
 ```yaml
 apiVersion: v1
 data:
-  version: v1
+  key: value1
 kind: ConfigMap
 metadata:
   ...
-  name: app-config
-  namespace: app-namespace
+  name: test-cm
+  namespace: test-namespace
   ...
 ```
 
@@ -1035,19 +1065,26 @@ metadata:
 
 When you're finished with this tutorial, you can clean up the resources you created:
 
+### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+
 ```bash
-# Clean up cluster-scoped resources
 kubectl delete csur example-run example-run-2
 kubectl delete csus example-strategy
 kubectl delete crp example-placement
 kubectl delete namespace test-namespace
-
-# Clean up namespace-scoped resources
-kubectl delete sur example-run example-run-2 -n app-namespace
-kubectl delete sus example-strategy -n app-namespace
-kubectl delete rp example-placement -n app-namespace
-kubectl delete namespace app-namespace
 ```
+
+### [ResourcePlacement](#tab/resourceplacement)
+
+```bash
+kubectl delete sur example-run example-run-2 -n test-namespace
+kubectl delete sus example-strategy -n test-namespace
+kubectl delete rp example-placement -n test-namespace
+kubectl delete crp test-namespace-placement
+kubectl delete namespace test-namespace
+```
+
+---
 
 ## Next steps
 
