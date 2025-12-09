@@ -154,8 +154,8 @@ spec:
    helm delete <release name>
    ```
 
-   > [!TIP] If you installed the driver and provider using deployment YAMLs, you can delete the
-   > components using the following `kubectl delete` command:
+   > [!TIP]
+   > If you installed the driver and provider using deployment YAMLs, you can delete the components using the following `kubectl delete` command:
    >
    > ```bash # Delete AKV provider pods from Linux nodes kubectl delete -f
    > https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer.yaml
