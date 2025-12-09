@@ -78,9 +78,6 @@ kubectl create cm test-cm --from-literal=key=value1 -n test-namespace
 
 To deploy the resources, create a ClusterResourcePlacement:
 
-> [!NOTE]
-> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `ClusterStagedUpdateRun`.
-
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacement
@@ -118,31 +115,26 @@ example-placement   1     True        1                                         
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-To contain the `ResourcePlacement` resource and application resources, create a namespace on the hub cluster:
+Create a namespace and configmap for the workload on the hub cluster:
 
 ```bash
-kubectl create ns my-app-namespace
-kubectl create deployment web-app --image=nginx:1.20 --replicas=3 -n my-app-namespace
-kubectl expose deployment web-app --port=80 --target-port=80 -n my-app-namespace
+kubectl create ns app-namespace
+kubectl create cm app-config --from-literal=version=v1 -n app-namespace
 ```
 
-To deploy the application, create a namespace-scoped `ResourcePlacement`:
+To deploy the resources, create a namespace-scoped ResourcePlacement:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourcePlacement
 metadata:
-  name: web-app-placement
-  namespace: my-app-namespace
+  name: example-placement
+  namespace: app-namespace
 spec:
   resourceSelectors:
-    - group: "apps"
-      kind: Deployment
-      name: web-app
-      version: v1
     - group: ""
-      kind: Service
-      name: web-app
+      kind: ConfigMap
+      name: app-config
       version: v1
   policy:
     placementType: PickAll
@@ -153,19 +145,19 @@ spec:
 > [!NOTE]
 > The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
 
-All three clusters should be scheduled, but no resources should be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
+All three clusters should be scheduled since we use the `PickAll` policy, but no resources should be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
 
 Verify the placement is scheduled:
 
 ```bash
-kubectl get rp web-app-placement -n my-app-namespace
+kubectl get rp example-placement -n app-namespace
 ```
 
 Your output should look similar to the following example:
 
 ```output
 NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-web-app-placement   1     True        1                                           45s
+example-placement   1     True        1                                           51s
 ```
 
 ---
@@ -198,20 +190,20 @@ We only have one version of the snapshot. It's the current latest (`kubernetes-f
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-Check the resource snapshots for the namespace-scoped placement:
+To check current resource snapshots:
 
 ```bash
-kubectl get resourcesnapshots -n my-app-namespace --show-labels
+kubectl get resourcesnapshots -n app-namespace --show-labels
 ```
 
 Your output should look similar to the following example:
 
 ```output
 NAME                           GEN   AGE   LABELS
-web-app-placement-0-snapshot   1     63s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
+example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
 ```
 
-We only have one version of the snapshot. It's the current latest and has resource-index 0.
+We only have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
 
 ---
 
@@ -314,24 +306,89 @@ spec:
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-Update the deployment to a new version:
+Now modify the configmap with a new value:
 
 ```bash
-kubectl set image deployment/web-app web-app=nginx:1.21 -n my-app-namespace
+kubectl edit cm app-config -n app-namespace
 ```
 
-Verify the new snapshot is created:
+Update the value from `v1` to `v2`:
 
 ```bash
-kubectl get resourcesnapshots -n my-app-namespace --show-labels
+kubectl get configmap app-config -n app-namespace -o yaml
+```
+
+Your output should look similar to the following example:
+
+```yaml
+apiVersion: v1
+data:
+  version: v2 # value updated here, old value: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: ...
+  name: app-config
+  namespace: app-namespace
+  resourceVersion: ...
+  uid: ...
+```
+
+Now you should see two versions of resource snapshots with index 0 and 1 respectively:
+
+```bash
+kubectl get resourcesnapshots -n app-namespace --show-labels
 ```
 
 Your output should look similar to the following example:
 
 ```output
 NAME                           GEN   AGE    LABELS
-web-app-placement-0-snapshot   1     4m3s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=0
-web-app-placement-1-snapshot   1     23s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=web-app-placement,kubernetes-fleet.io/resource-index=1
+example-placement-0-snapshot   1     2m6s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
+example-placement-1-snapshot   1     10s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
+```
+
+The latest label is set to example-placement-1-snapshot, which contains the latest configmap data:
+
+```bash
+kubectl get resourcesnapshots example-placement-1-snapshot -n app-namespace -o yaml
+```
+
+Your output should look similar to the following example:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: ResourceSnapshot
+metadata:
+  annotations:
+    kubernetes-fleet.io/number-of-enveloped-object: "0"
+    kubernetes-fleet.io/number-of-resource-snapshots: "1"
+    kubernetes-fleet.io/resource-hash: 10dd7a3d1e5f9849afe956cfbac080a60671ad771e9bda7dd34415f867c75648
+  creationTimestamp: "2025-07-22T21:26:54Z"
+  generation: 1
+  labels:
+    kubernetes-fleet.io/is-latest-snapshot: "true"
+    kubernetes-fleet.io/parent-CRP: example-placement
+    kubernetes-fleet.io/resource-index: "1"
+  name: example-placement-1-snapshot
+  namespace: app-namespace
+  ownerReferences:
+  - apiVersion: placement.kubernetes-fleet.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ResourcePlacement
+    name: example-placement
+    uid: e7d59513-b3b6-4904-864a-c70678fd6f65
+  resourceVersion: "19994"
+  uid: 79ca0bdc-0b0a-4c40-b136-7f701e85cdb6
+spec:
+  selectedResources:
+  - apiVersion: v1
+    data:
+      version: v2 # latest value: v2, old value: v1
+    kind: ConfigMap
+    metadata:
+      name: app-config
+      namespace: app-namespace
 ```
 
 ---
@@ -367,14 +424,14 @@ spec:
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-Create a namespace-scoped `StagedUpdateStrategy`:
+A `StagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: StagedUpdateStrategy
 metadata:
-  name: app-rollout-strategy
-  namespace: my-app-namespace
+  name: example-strategy
+  namespace: app-namespace
 spec:
   stages:
     - name: staging
@@ -383,7 +440,7 @@ spec:
           environment: staging
       afterStageTasks:
         - type: TimedWait
-          waitTime: 30s
+          waitTime: 1m
     - name: canary
       labelSelector:
         matchLabels:
@@ -586,44 +643,44 @@ example-run-canary   example-run   canary                                 2m39s
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-Create a namespace-scoped staged update run to roll out the new image version:
+A `StagedUpdateRun` executes the rollout of a `ResourcePlacement` following a `StagedUpdateStrategy`. To trigger the staged update run for our ResourcePlacement (RP), we create a `StagedUpdateRun` specifying the RP name, updateRun strategy name, and the latest resource snapshot index ("1"):
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: StagedUpdateRun
 metadata:
-  name: web-app-rollout-v1-21
-  namespace: my-app-namespace
+  name: example-run
+  namespace: app-namespace
 spec:
-  placementName: web-app-placement
+  placementName: example-placement
   resourceSnapshotIndex: "1"
-  stagedRolloutStrategyName: app-rollout-strategy
+  stagedRolloutStrategyName: example-strategy
 ```
 
 The staged update run is initialized and running:
 
 ```bash
-kubectl get sur web-app-rollout-v1-21 -n my-app-namespace
+kubectl get sur example-run -n app-namespace
 ```
 
 Your output should look similar to the following example:
 
 ```output
-NAME                     PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-web-app-rollout-v1-21    web-app-placement   1                         0                       True                      12s
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True                      7s
 ```
 
-After the 30-second `TimedWait` has elapses, check for the approval request:
+After the one-minute `TimedWait` elapses, check for the approval request:
 
 ```bash
-kubectl get approvalrequests -n my-app-namespace
+kubectl get approvalrequests -n app-namespace
 ```
 
 Your output should look similar to the following example:
 
 ```output
-NAME                             STAGED-UPDATE-RUN        STAGE    APPROVED   APPROVALACCEPTED   AGE
-web-app-rollout-v1-21-canary     web-app-rollout-v1-21    canary                                 45s
+NAME                 STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-canary   example-run         canary                                 2m39s
 ```
 
 ---
@@ -685,41 +742,55 @@ example-run   example-placement   1                         0                   
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-Approve the request to proceed to the canary stage:
+We can approve the `ApprovalRequest` by creating a json patch file and applying it:
 
 ```bash
-cat << EOF > approval-ns.json
-{
-  "status": {
+cat << EOF > approval.json
+"status": {
     "conditions": [
-      {
-        "lastTransitionTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-        "message": "Approved for production rollout",
-        "observedGeneration": 1,
-        "reason": "ManualApproval",
-        "status": "True",
-        "type": "Approved"
-      }
+        {
+            "lastTransitionTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "message": "lgtm",
+            "observedGeneration": 1,
+            "reason": "testPassed",
+            "status": "True",
+            "type": "Approved"
+        }
     ]
-  }
 }
 EOF
-
-kubectl patch approvalrequests web-app-rollout-v1-21-canary -n my-app-namespace \
-  --type='merge' --subresource=status --patch-file approval-ns.json
 ```
 
-Verify the rollout completion:
+Submit a patch request to approve using the JSON file created.
 
 ```bash
-kubectl get sur web-app-rollout-v1-21 -n my-app-namespace
+kubectl patch approvalrequests example-run-canary -n app-namespace --type='merge' --subresource=status --patch-file approval.json
+```
+
+Then verify that you approved the request:
+
+```bash
+kubectl get approvalrequests -n app-namespace
 ```
 
 Your output should look similar to the following example:
 
 ```output
-NAME                     PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-web-app-rollout-v1-21    web-app-placement   1                         0                       True          True        3m15s
+NAME                 STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-canary   example-run         canary   True       True               3m35s
+```
+
+The `StagedUpdateRun` now is able to proceed and complete:
+
+```bash
+kubectl get sur example-run -n app-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True          True        5m28s
 ```
 
 ---
@@ -759,17 +830,31 @@ metadata:
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-The `ResourcePlacement` shows the rollout completed and resources are available:
+The `ResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
 
 ```bash
-kubectl get rp web-app-placement -n my-app-namespace
+kubectl get rp example-placement -n app-namespace
 ```
 
 Your output should look similar to the following example:
 
 ```output
 NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-web-app-placement   1     True        1               True        1               6m22s
+example-placement   1     True        1               True        1               8m55s
+```
+
+The configmap app-config should be deployed on all three member clusters, with latest data:
+
+```yaml
+apiVersion: v1
+data:
+  version: v2
+kind: ConfigMap
+metadata:
+  ...
+  name: app-config
+  namespace: app-namespace
+  ...
 ```
 
 ---
@@ -855,21 +940,81 @@ metadata:
 
 ### [ResourcePlacement](#tab/resourceplacement)
 
-To roll back to the previous version, create another staged update run referencing the earlier snapshot:
+Suppose the workload admin wants to roll back the configmap change, reverting the value `v2` back to `v1`. Instead of manually updating the configmap from hub, they can create a new StagedUpdateRun with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: StagedUpdateRun
 metadata:
-  name: web-app-rollback-v1-20
-  namespace: my-app-namespace
+  name: example-run-2
+  namespace: app-namespace
 spec:
-  placementName: web-app-placement
+  placementName: example-placement
   resourceSnapshotIndex: "0"
-  stagedRolloutStrategyName: app-rollout-strategy
+  stagedRolloutStrategyName: example-strategy
 ```
 
-To complete the rollback, follow the same monitoring and approval process.
+Let's check the new `StagedUpdateRun`:
+
+```bash
+kubectl get sur -n app-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME            PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run     example-placement   1                         0                       True          True        13m
+example-run-2   example-placement   0                         0                       True                      9s
+```
+
+After the one-minute `TimedWait` elapses, we should see the `ApprovalRequest` object created for the new `StagedUpdateRun`:
+
+```bash
+kubectl get approvalrequests -n app-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                   STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-2-canary   example-run-2       canary                                 75s
+example-run-canary     example-run         canary   True       True               14m
+```
+
+To approve the new `ApprovalRequest` object, let's reuse the same `approval.json` file to patch it:
+
+```bash
+kubectl patch approvalrequests example-run-2-canary -n app-namespace --type='merge' --subresource=status --patch-file approval.json
+```
+
+Verify if the new object is approved:
+
+```bash
+kubectl get approvalrequests -n app-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                   STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-2-canary   example-run-2       canary   True       True               2m7s
+example-run-canary     example-run         canary   True       True               15m
+```
+
+The configmap `app-config` should now be deployed on all three member clusters, with the data reverted to `v1`:
+
+```yaml
+apiVersion: v1
+data:
+  version: v1
+kind: ConfigMap
+metadata:
+  ...
+  name: app-config
+  namespace: app-namespace
+  ...
+```
 
 ---
 
@@ -898,10 +1043,10 @@ kubectl delete crp example-placement
 kubectl delete namespace test-namespace
 
 # Clean up namespace-scoped resources
-kubectl delete sur web-app-rollout-v1-21 web-app-rollback-v1-20 -n my-app-namespace
-kubectl delete sus app-rollout-strategy -n my-app-namespace
-kubectl delete rp web-app-placement -n my-app-namespace
-kubectl delete namespace my-app-namespace
+kubectl delete sur example-run example-run-2 -n app-namespace
+kubectl delete sus example-strategy -n app-namespace
+kubectl delete rp example-placement -n app-namespace
+kubectl delete namespace app-namespace
 ```
 
 ## Next steps
