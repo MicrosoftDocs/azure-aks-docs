@@ -22,6 +22,9 @@ This article shows you how to configure identity bindings to overcome these work
 
 1. Read the [conceptual doc for identity bindings][identity-bindings-concepts] to understand how identity binding works.
 
+1. [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+  - This article requires version 2.73.0 or later of the Azure CLI.
+ 
 1. Install or update the Azure CLI `aks-preview` extension version `18.0.0b26` or later.
 
     ```bash
