@@ -249,7 +249,7 @@ metadata:
     app: nginx-test
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-configurations: \"team1-lb\"
-    # service.beta.kubernetes.io/azure-load-balancer-internal: "true" # If want to create an internal load balancer. 
+    # service.beta.kubernetes.io/azure-load-balancer-internal: "true" # If you want to create an internal load balancer. 
 spec:
   selector:
     app: nginx-test
