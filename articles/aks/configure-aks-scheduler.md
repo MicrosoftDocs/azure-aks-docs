@@ -57,12 +57,6 @@ In this article, you learn how to deploy example scheduler profiles in Azure Kub
 
     It takes a few minutes for the status to show _Registered_.
 
-1. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "UserDefinedSchedulerConfigurationPreview"
-    ```
-
 1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
 
     ```azurecli-interactive
@@ -450,6 +444,7 @@ To learn more about the AKS scheduler and best practices, see the following reso
 [az-extension-add]: /cli/azure/extension#az-extension-add
 
 [az-extension-update]: /cli/azure/extension#az-extension-update
+
 
 
 
