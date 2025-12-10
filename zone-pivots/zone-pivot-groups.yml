@@ -156,3 +156,12 @@ groups:
     title: User-assigned managed identity
   - id: pre-created-kubelet
     title: Pre-created kubelet managed identity
+# Owner: schaffererin
+- id: azure-cni-overlay-create-cluster
+  title: Choose a networking configuration
+  prompt: Choose a networking configuration
+  pivots:
+  - id: aks-cni-overlay-cluster
+    title: Azure CNI Overlay cluster
+  - id: aks-cni-overlay-cluster-dual-stack
+    title: Azure CNI Overlay cluster with dual-stack networking
