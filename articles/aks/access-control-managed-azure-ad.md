@@ -81,7 +81,7 @@ After implementing your Conditional Access policy, verify that it works as expec
 
 ## Configure Conditional Access for SSH access to cluster nodes
 
-When you enable Entra ID based SSH access on your AKS cluster nodes, you can apply Conditional Access policies to control SSH access to the nodes. This provides additional security by enforcing device compliance, multi-factor authentication, or other conditions before users can SSH into cluster nodes.
+When you enable Entra ID based SSH access on your AKS cluster nodes, you can apply Conditional Access policies to control SSH access to the nodes. This provides additional security by enforcing device compliance, multifactor authentication, or other conditions before users can SSH into cluster nodes.
 
 1. In the Azure portal, go to the **Microsoft Entra ID** page and select **Enterprise applications**.
 1. Select **Conditional Access** > **Policies** > **New policy**.
