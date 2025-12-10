@@ -86,7 +86,7 @@ When using a custom virtual network with AKS Automatic, you must create and dele
 
 ### Network security group requirements
 
-If you have added Network Security Group (NSG) rules to restrict traffic between different subnets in your custom virtual network, ensure that the NSG security rules permit the required types of communication between cluster components. 
+If you have added Network Security Group (NSG) rules to restrict traffic between different subnets in your custom virtual network, ensure that the NSG security rules permit the required types of communication between cluster components.
 
 For detailed NSG requirements when using custom virtual networks with AKS clusters, see [Custom virtual network requirements][concepts-network-custom-vnet].
 
@@ -98,7 +98,7 @@ Create a managed identity using the [`az identity create`][az-identity-create] c
 
 ## Create an AKS Automatic cluster in a custom virtual network
 
-To create an AKS Automatic cluster, use the [az aks create][az-aks-create] command. 
+To create an AKS Automatic cluster, use the [az aks create][az-aks-create] command.
 
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/public/sh/create-aks.sh" interactive="cloudshell-bash" highlight="5,6,7":::
 
@@ -208,13 +208,13 @@ Save the Bicep file **aks.bicep** to your local computer.
 > [!IMPORTANT]
 > The Bicep file sets the `clusterName` param to *aksAutomaticCluster*. If you want a different cluster name, make sure to update the string to your preferred cluster name.
 
-Deploy the Bicep file using the Azure CLI. You need to provide the API server subnet resource ID, the cluster subnet resource ID, and user assigned identity principal ID.
+Deploy the Bicep file using the Azure CLI. You need to provide the API server subnet resource ID, the cluster subnet resource ID, and user assigned managed identity resource ID.
 
 ```azurecli-interactive
 az deployment group create --resource-group <resource-group> --template-file aks.bicep \
 --parameters apiServerSubnetId=<API server subnet resource id> \
 --parameters clusterSubnetId=<cluster subnet resource id> \
---parameters uamiPrincipalId=<user assigned identity prinicipal id>
+--parameters uamiId=<user assigned identity id>
 ```
 
 ## Connect to the cluster
