@@ -454,49 +454,19 @@ Use the [`az aks update`][az-aks-update] command to update the SSH public key (p
 
 ::: zone-end
 
-## SSH service status
+## Verify SSH service status
 
-#### [Node-shell](#tab/node-shell)
+::: zone pivot="disabled-ssh"
 
-Perform the following steps to use node-shell onto one node and inspect SSH service status using `systemctl`.
+After disabling SSH, you can verify that the SSH service is inactive on your cluster nodes.
 
-1. Get standard bash shell by running the command `kubectl node-shell <node>` command.
-
-    ```bash
-    kubectl node-shell aks-nodepool1-20785627-vmss000001
-    ```
-
-2. Run the `systemctl` command to check the status of the SSH service.
-
-    ```bash
-    systemctl status ssh
-    ```
-
-If SSH is disabled, the following sample output shows the results:
-
-```output
-ssh.service - OpenBSD Secure Shell server
-     Loaded: loaded (/lib/systemd/system/ssh.service; disabled; vendor preset: enabled)
-     Active: inactive (dead) since Wed 2024-01-03 15:36:57 UTC; 20min ago
-```
-
-If SSH is enabled, the following sample output shows the results:
-
-```output
-ssh.service - OpenBSD Secure Shell server
-     Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: enabled)
-     Active: active (running) since Wed 2024-01-03 15:40:20 UTC; 19min ago
-```
-
-#### [Using run-command](#tab/run-command)
-
-If node-shell isn't available, you can use the Virtual Machine Scale Set [`az vmss run-command invoke`][run-command-invoke] to check SSH service status.
+Use the Virtual Machine Scale Set [`az vmss run-command invoke`][run-command-invoke] command to check SSH service status.
 
 ```azurecli-interactive
-az vmss run-command invoke --resource-group myResourceGroup --name myVMSS --command-id RunShellScript --instance-id 0 --scripts "systemctl status ssh"
+az vmss run-command invoke --resource-group <node-resource-group> --name <vmss-name> --command-id RunShellScript --instance-id 0 --scripts "systemctl status ssh"
 ```
 
-The following sample output shows the json message returned:
+The following sample output shows the expected result when SSH is disabled:
 
 ```json
 {
@@ -505,16 +475,73 @@ The following sample output shows the json message returned:
       "code": "ProvisioningState/succeeded",
       "displayStatus": "Provisioning succeeded",
       "level": "Info",
-      "message": "Enable succeeded: \n[stdout]\n○ ssh.service - OpenBSD Secure Shell server\n     Loaded: loaded (/lib/systemd/system/ssh.service; disabled; vendor preset: enabled)\n     Active: inactive (dead) since Wed 2024-01-03 15:36:53 UTC; 25min ago\n       Docs: man:sshd(8)\n             man:sshd_config(5)\n   Main PID: 827 (code=exited, status=0/SUCCESS)\n        CPU: 22ms\n\nJan 03 15:36:44 aks-nodepool1-20785627-vmss000000 systemd[1]: Starting OpenBSD Secure Shell server...\nJan 03 15:36:44 aks-nodepool1-20785627-vmss000000 sshd[827]: Server listening on 0.0.0.0 port 22.\nJan 03 15:36:44 aks-nodepool1-20785627-vmss000000 sshd[827]: Server listening on :: port 22.\nJan 03 15:36:44 aks-nodepool1-20785627-vmss000000 systemd[1]: Started OpenBSD Secure Shell server.\nJan 03 15:36:53 aks-nodepool1-20785627-vmss000000 systemd[1]: Stopping OpenBSD Secure Shell server...\nJan 03 15:36:53 aks-nodepool1-20785627-vmss000000 sshd[827]: Received signal 15; terminating.\nJan 03 15:36:53 aks-nodepool1-20785627-vmss000000 systemd[1]: ssh.service: Deactivated successfully.\nJan 03 15:36:53 aks-nodepool1-20785627-vmss000000 systemd[1]: Stopped OpenBSD Secure Shell server.\n\n[stderr]\n",
-      "time": null
+      "message": "Enable succeeded: \n[stdout]\n○ ssh.service - OpenBSD Secure Shell server\n     Loaded: loaded (/lib/systemd/system/ssh.service; disabled; vendor preset: enabled)\n     Active: inactive (dead) since Wed 2024-01-03 15:36:53 UTC; 25min ago\n..."
     }
   ]
 }
 ```
 
-Search for the word **Active** and its value should be `Active: inactive (dead)`, which indicates SSH is disabled on the node.
+Search for the word **Active** and verify that its value is `Active: inactive (dead)`, which confirms SSH is disabled on the node.
 
----
+::: zone-end
+
+::: zone pivot="entraid-ssh"
+
+After enabling Entra ID based SSH, you can verify that the SSH service is active and configured for Entra ID authentication on your cluster nodes.
+
+Use the Virtual Machine Scale Set [`az vmss run-command invoke`][run-command-invoke] command to check SSH service status.
+
+```azurecli-interactive
+az vmss run-command invoke --resource-group <node-resource-group> --name <vmss-name> --command-id RunShellScript --instance-id 0 --scripts "systemctl status ssh"
+```
+
+The following sample output shows the expected result when SSH is enabled:
+
+```json
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Enable succeeded: \n[stdout]\n● ssh.service - OpenBSD Secure Shell server\n     Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: enabled)\n     Active: active (running) since Wed 2024-01-03 15:40:20 UTC; 19min ago\n..."
+    }
+  ]
+}
+```
+
+Search for the word **Active** and verify that its value is `Active: active (running)`, which confirms SSH is enabled on the node.
+
+::: zone-end
+
+::: zone pivot="local-user-ssh"
+
+After configuring local user SSH, you can verify that the SSH service is active on your cluster nodes.
+
+Use the Virtual Machine Scale Set [`az vmss run-command invoke`][run-command-invoke] command to check SSH service status.
+
+```azurecli-interactive
+az vmss run-command invoke --resource-group <node-resource-group> --name <vmss-name> --command-id RunShellScript --instance-id 0 --scripts "systemctl status ssh"
+```
+
+The following sample output shows the expected result when SSH is enabled:
+
+```json
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Enable succeeded: \n[stdout]\n● ssh.service - OpenBSD Secure Shell server\n     Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: enabled)\n     Active: active (running) since Wed 2024-01-03 15:40:20 UTC; 19min ago\n..."
+    }
+  ]
+}
+```
+
+Search for the word **Active** and verify that its value is `Active: active (running)`, which confirms SSH is enabled on the node.
+
+::: zone-end
 
 ## Next steps
 
