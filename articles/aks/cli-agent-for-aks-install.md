@@ -265,9 +265,9 @@ az aks-agent --status
 
 Remove the agentic CLI for AKS extension by using the [`az extension remove`](/cli/azure/extension#az-extension-remove) command.
 
-    ```azurecli-interactive
-    az extension remove --name aks-agent --debug
-    ```
+```azurecli-interactive
+az extension remove --name aks-agent --debug
+```
 
 ## Related content
 
