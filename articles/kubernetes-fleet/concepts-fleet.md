@@ -1,5 +1,5 @@
 ---
-title: "Azure Kubernetes Fleet Manager and member clusters"
+title: "Azure Kubernetes Fleet Manager fleets and member clusters"
 description: This article provides a conceptual overview of Azure Kubernetes Fleet Manager and member clusters.
 ms.date: 12/10/2025
 author: sjwaight
@@ -9,7 +9,7 @@ ms.topic: concept-article
 # Customer intent: "As a cloud administrator, I want to manage multiple Kubernetes clusters as a single entity using a fleet resource, so that I can orchestrate updates and maintain consistency across clusters."
 ---
 
-# Azure Kubernetes Fleet Manager and member clusters
+# Azure Kubernetes Fleet Manager fleets and member clusters
 
 This article provides a conceptual overview of fleets and member clusters in Azure Kubernetes Fleet Manager.
 
@@ -25,15 +25,15 @@ For more information about the configuration options for Fleet Manager see [choo
 
 You can join [supported Kubernetes clusters](./concepts-member-cluster-types.md) as members. Member clusters must reside in the same Microsoft Entra tenant as the Fleet Manager, but they can be in different Azure regions, resource groups, or subscriptions.
 
-When Fleet Manager is configured with a hub cluster, a `MemberCluster` Kubernetes resource is created to represent a member cluster-scoped API on the hub cluster, acting as a representation of a cluster within the fleet. This API offers a dependable way for multi-cluster application placements to identify registered clusters within a fleet. It also facilitates applications in querying a list of clusters managed by the Fleet Manager or in observing cluster statuses for subsequent actions.
+When Fleet Manager is configured with a hub cluster, a `MemberCluster` Kubernetes resource is created on the hub cluster to represent each member cluster. The API for this resource offers a dependable way for multi-cluster application placements to identify registered clusters within a fleet. It also facilitates querying a list of clusters managed by the Fleet Manager or in observing cluster statuses for placement management actions.
 
 ### Labels
 
-When Fleet Manager is configured with a hub cluster, Member clusters can have service-defined and user-defined labels associated with them, which are used to select clusters for workload placement. When you define a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#using-clusterresourceplacement-to-deploy-cluster-scoped-resources), you can use label selectors to target specific member clusters based on their labels. This allows you to deploy workloads only to clusters that match certain criteria, such as region, environment, team, or other custom attributes.
+When Fleet Manager is configured with a hub cluster, Member clusters can have service-defined and user-defined labels associated with them, which are used to select clusters for workload placement. When you define a [ClusterResourcePlacement](./concepts-resource-propagation.md#using-clusterresourceplacement-to-deploy-cluster-scoped-resources), you can use label selectors to target specific member clusters based on their labels. This allows you to deploy workloads only to clusters that match certain criteria, such as region, environment, team, or other custom attributes.
 
 By default, Fleet populates these [service-defined labels](./concepts-resource-propagation.md#labels) on each member cluster.
 
-Member labels should be modified using the Azure CLI or REST API. They may not be modified directly on the `MemberCluster` resource in the hub cluster.
+Member labels should be modified using the Azure CLI or REST API. They may not be modified directly on the `MemberCluster` resource on the hub cluster.
 
 ### Taints
 
@@ -45,12 +45,11 @@ When Fleet Manager is configured with a hub cluster, member clusters support the
 
 Once a `MemberCluster` is tainted, it lets the [KubeFleet scheduler](./concepts-scheduler-scheduling-framework.md) know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#using-clusterresourceplacement-to-deploy-cluster-scoped-resources) or [ResourcePlacement](./concepts-namespace-scoped-resource-propagation.md) to the `MemberCluster`.
 
-For more information, see the [KubeFleet components documentation](https://kubefleet.dev/docs/concepts/components/).
-
 ## Next steps
 
 * [Choosing a fleet type](./concepts-choosing-fleet.md).
 * [Create a fleet and join member clusters](./quickstart-create-fleet-and-members.md).
 * [Fleet Manager hub cluster overview](./concepts-lifecycle.md).
 * [Supported Kubernetes clusters](./concepts-member-cluster-types.md).
+* [KubeFleet components documentation](https://kubefleet.dev/docs/concepts/components/).
 * [Fleet Manager Frequently Asked Questions](./faq.md).
