@@ -1016,6 +1016,10 @@
         href: passive-cold-solution.md
 - name: AI and machine learning
   items:
+    - name: Create Azure AKS infrastructure
+      href: create-aks-infrastructure.md
+    - name: Deploy Open-WebSearch MCP Server on AKS
+      href: openwebsearch-on-aks.md  
     - name: Machine learning operations (MLOps)
       items:
         - name: Best practices
@@ -1063,7 +1067,7 @@
             - name: Integrate an MCP server
               href: ai-toolchain-operator-mcp.md
         - name: Deploy data and ML pipelines with Flyte
-          href: use-flyte.md
+          href: use-flyte.md    
     - name: Work with clusters using Copilot
       href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: GPUs
