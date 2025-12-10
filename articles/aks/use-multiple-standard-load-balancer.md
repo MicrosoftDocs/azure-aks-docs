@@ -1,5 +1,5 @@
 ---
-title: Use multiple public load balancers in Azure Kubernetes Service (preview)
+title: Use multiple load balancers in Azure Kubernetes Service (preview)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure multiple Standard SKU public load balancers to scale LoadBalancer Services in Azure Kubernetes Service (AKS).
 ms.subservice: aks-networking
@@ -11,7 +11,7 @@ author: davidsmatlak
 ms.service: azure-kubernetes-service
 ---
 
-# Use multiple public load balancers in Azure Kubernetes Service (preview)
+# Use multiple load balancers in Azure Kubernetes Service (preview)
 
 Azure Kubernetes Service (AKS) normally provisions one Standard Load Balancer (SLB) for all `LoadBalancer` Services in a cluster. Because each node NIC is limited to [**300 inbound load‑balancing rules** and **8 private‑link services**](/azure/azure-resource-manager/management/azure-subscription-service-limits#load-balancer), large clusters or port‑heavy workloads can quickly exhaust these limits.
 
@@ -249,6 +249,7 @@ metadata:
     app: nginx-test
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-configurations: \"team1-lb\"
+    # service.beta.kubernetes.io/azure-load-balancer-internal: "true" # If you want to create an internal load balancer. 
 spec:
   selector:
     app: nginx-test
