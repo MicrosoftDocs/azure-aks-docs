@@ -286,7 +286,7 @@ Now, we can try to access the AKS cluster using the **normal** user, who is a me
     az login --username n01@$DOMAIN --password ${NUSERPASSWORD}
     ```
 
-    Micorsoft recommends you use the most secure method available to sign in to Azure. For more information, see the following articles:
+    Microsoft recommends you use the most secure method available to sign in to Azure. For more information, see the following articles:
 
     - [Sign in with credentials on the command line](/cli/azure/authenticate-azure-cli-interactively#sign-in-with-credentials-on-the-command-line)
     - [Sign into Azure interactively using the Azure CLI](/cli/azure/authenticate-azure-cli-interactively)
