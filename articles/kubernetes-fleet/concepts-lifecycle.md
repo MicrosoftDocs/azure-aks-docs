@@ -1,5 +1,5 @@
 ---
-title: Fleet hub cluster overview
+title: Azure Kubernetes Fleet Manager hub cluster overview
 description: This article provides an overview on the Azure Kubernetes Fleet Manager hub cluster.
 ms.date: 08/01/2025
 author: sjwaight
@@ -12,6 +12,20 @@ ms.topic: concept-article
 # Fleet Manager hub cluster overview
 
 When enabled, the Fleet Manager hub cluster serves as the central management point for Kubernetes resource propagation across member clusters using [resource placement](./concepts-resource-propagation.md).
+
+## What are Fleet Manager hub clusters?
+
+Fleet Manager's Kubernetes resource placement is implemented using [KubeFleet](https://kubefleet.dev/), an open-source CNCF project that provides multi-cluster management capabilities for Kubernetes resources. 
+In this configuration, a fleet consists of the following components:
+
+:::image type="content" source="./media/concepts-fleet/fleet-architecture.png" alt-text="A diagram of the fleet resource when configured with a hub cluster, including the hub cluster agent and the member cluster agent.":::
+
+* **fleet-hub-agent**: A Kubernetes controller that creates and reconciles all the fleet-related custom resources (CRs) in the hub cluster.
+* **fleet-member-agent**: A Kubernetes controller that creates and reconciles all the fleet-related CRs in the member clusters. This controller pulls the latest CRs from the hub cluster and consistently reconciles the member clusters to match the desired state.
+
+In Azure Kubernetes Fleet Manager, hub clusters play a crucial role in managing multiple member clusters, but they are optional.
+
+The hub cluster facilitates the orchestration of updates and resource management across member clusters. However, you can create a fleet without a hub cluster. This flexibility allows you to manage clusters as a single entity without the need for a dedicated hub. This would be more suitable for simpler setups or specific use cases.
 
 ## Hub cluster configuration
 
