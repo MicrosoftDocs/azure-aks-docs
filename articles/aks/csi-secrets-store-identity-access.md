@@ -62,7 +62,7 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
 2. Create a managed identity using the [`az identity create`][az-identity-create] command.
 
     > [!NOTE]
-    > This step assumes you have an existing AKS cluster with workload identity enabled. If workload identity isn't enabled, see [Enable workload identity on an existing AKS cluster](./workload-identity-deploy-cluster.md#update-an-existing-aks-cluster) to enable it.
+    > This step assumes you have an existing AKS cluster with workload identity enabled. If workload identity isn't enabled, see [Enable workload identity on an existing AKS cluster](./workload-identity-deploy-cluster.md#enable-oidc-issuer-and-microsoft-entra-workload-id-on-an-aks-cluster) to enable it.
 
     ```azurecli-interactive
     az identity create --name $UAMI --resource-group $RESOURCE_GROUP
