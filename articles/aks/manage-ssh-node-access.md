@@ -91,7 +91,7 @@ AKS supports the following configuration options to manage SSH access on cluster
         az extension update --name aks-preview
         ```
 - Appropriate Azure RBAC permissions to access nodes:
-    - **Required action**: `Microsoft.Compute/virtualMachineScaleSets/*/read` - to read VM scale set information
+    - **Required action**: `Microsoft.Compute/virtualMachineScaleSets/*/read` - to read Virtual Machine Scale Sets information
         - **Required data action**: 
             - `Microsoft.Compute/virtualMachineScaleSets/virtualMachines/login/action` - to authenticate and log in to VMs as regular user.
             - `Microsoft.Compute/virtualMachines/loginAsAdmin/action` - to login with root user privileges.
