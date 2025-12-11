@@ -156,7 +156,7 @@ To mitigate the vulnerability at the cluster level, you can use the Azure built-
    * **Allowed capabilities**: `["kube-system", "gatekeeper-system", "azure-arc"]`
    * **Required drop capabilities**: `["NET_RAW"]`
 
-   ![A screenshot of a custom mitigation policy for Azure pod-managed identities.](media/azure-pod-managed-identities/use-azure-ad-pod-identity-kubenet-mitigation-capabilities.png)
+   ![A screenshot of a custom mitigation policy for Azure pod-managed identities.](media/azure-pod-managed-identities/azure-pod-identity-kubenet-mitigation.png)
 
 1. Progress through the policy assignment and select **Create**.
 
