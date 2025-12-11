@@ -44,22 +44,28 @@ You can assign data plane roles at the Fleet hub cluster scope, or at an individ
 
 ## Example role assignments
 
-You can grant Azure RBAC roles using the [Azure CLI][azure-cli-overview]. For example, to create a role assignment at the Kubernetes Fleet hub cluster scope:
+You can grant Azure RBAC roles using the [Azure CLI][azure-cli-overview]. For example, to create a role assignment at the Fleet Manager scope:
 
 ```azurecli-interactive
 IDENTITY=$(az ad signed-in-user show --output tsv --query id)
 FLEET_ID=$(az fleet show --resource-group $GROUP --name $FLEET --output tsv --query id)
 
-az role assignment create --role 'Azure Kubernetes Fleet Manager RBAC Reader' --assignee "$IDENTITY" --scope "$FLEET_ID"
+az role assignment create \
+    --role 'Azure Kubernetes Fleet Manager RBAC Reader' \
+    --assignee "$IDENTITY" \
+    --scope "$FLEET_ID"
 ```
 
-You can also scope role assignments to an individual Kubernetes namespace. For example, to create a role assignment for a Kubernetes Fleet hub's default Kubernetes namespace:
+You can also scope role assignments to an individual Kubernetes namespace. For example, to create a role assignment for a Fleet Manager hub cluster's default Kubernetes namespace:
 
 ```azurecli-interactive
 IDENTITY=$(az ad signed-in-user show --output tsv --query id)
 FLEET_ID=$(az fleet show --resource-group $GROUP --name $FLEET --output tsv --query id)
 
-az role assignment create --role 'Azure Kubernetes Fleet Manager RBAC Reader' --assignee "$IDENTITY" --scope "$FLEET_ID/namespaces/default"
+az role assignment create \
+    --role 'Azure Kubernetes Fleet Manager RBAC Reader' \
+    --assignee "$IDENTITY" \
+    --scope "$FLEET_ID/namespaces/default"
 ```
 
 <!-- LINKS -->
