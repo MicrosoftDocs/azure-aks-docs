@@ -1,40 +1,56 @@
 ---
-title: Use Microsoft Entra pod-managed identities in Azure Kubernetes Service (Preview)
+title: Use Microsoft Entra pod-managed identities in AKS (Preview)
 description: Learn how to use Microsoft Entra pod-managed identities in Azure Kubernetes Service (AKS)
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 08/29/2024
+ms.date: 12/12/2025
 author: schaffererin
 ms.author: schaffererin
-
 # Customer intent: "As a cloud administrator, I want to implement Microsoft Entra pod-managed identities in my Azure Kubernetes Service cluster, so that I can securely manage identities and access to Azure resources for my applications."
 ---
 
-# Use Microsoft Entra pod-managed identities in Azure Kubernetes Service (Preview)
+# Use Microsoft Entra pod-managed identities in AKS (Preview)
 
-Microsoft Entra pod-managed identities use Kubernetes primitives to associate [managed identities for Azure resources][az-managed-identities] and identities in Microsoft Entra ID with pods. Administrators create identities and bindings as Kubernetes primitives that allow pods to access Azure resources that rely on Microsoft Entra ID as an identity provider.
+Microsoft Entra pod-managed identities use Azure Kubernetes Service (AKS) primitives to associate [managed identities for Azure resources][az-managed-identities] and identities in Microsoft Entra ID with pods. Administrators create identities and bindings as Kubernetes primitives that allow pods to access Azure resources that rely on Microsoft Entra ID as an identity provider.
+
+Microsoft Entra pod-managed identities in AKS have the following limitations:
+
+* Each cluster supports up to 200 pod-managed identities.
+* Each cluster supports up to 200 pod-managed identity exceptions.
+* Pod-managed identities are supported only on Linux node pools.
+* This feature is supported only on clusters backed by Virtual Machine Scale Sets.
+
 
 > [!IMPORTANT]
-> We recommend you review [Microsoft Entra Workload ID][workload-identity-overview].
-> This authentication method replaces pod-managed identity (preview), which integrates with the
-> Kubernetes native capabilities to federate with any external identity providers on behalf of the
-> application.
+> We recommend you review [Microsoft Entra Workload ID][workload-identity-overview]. This authentication method replaces pod-managed identity (preview), which integrates with the Kubernetes native capabilities to federate with any external identity providers on behalf of the application.
 >
-> The open source Microsoft Entra pod-managed identity (preview) in Azure Kubernetes Service was deprecated on 10/24/2022, and the project archived in Sept. 2023. For more information, see the [deprecation notice](https://github.com/Azure/aad-pod-identity#-announcement). The AKS Pod Identity Managed add-on will be patched and supported through Sept 2025 to allow time for customers to move over to [Microsoft Entra Workload ID][workload-identity-overview]
->
-> To disable the AKS Managed add-on, use the following command: `az feature unregister --namespace "Microsoft.ContainerService" --name "EnablePodIdentityPreview"`.
+> The open source Microsoft Entra pod-managed identity (preview) in Azure Kubernetes Service was deprecated on October 24, 2022, and the project archived in September 2023. For more information, see the [deprecation notice](https://github.com/Azure/aad-pod-identity#-announcement). The AKS Pod Identity Managed add-on is patched and supported through September 2025 to allow time for customers to move over to [Microsoft Entra Workload ID][workload-identity-overview].
 
-## Before you begin
+## Operation mode options
 
-You must have the Azure CLI version 2.20.0 or later installed.
+Microsoft Entra pod-managed identity supports two modes of operation:
 
-## Limitations
+* **Standard Mode**: In this mode, the following two components are deployed to the AKS cluster:
 
-* A maximum of 200 pod-managed identities are allowed for a cluster.
-* A maximum of 200 pod-managed identity exceptions are allowed for a cluster.
-* Pod-managed identities are available on Linux node pools only.
-* This feature is only supported for Virtual Machine Scale Sets backed clusters.
+  * [Managed Identity Controller (MIC)](https://azure.github.io/aad-pod-identity/docs/concepts/mic/): An MIC is a Kubernetes controller that watches for changes to pods, [AzureIdentity](https://azure.github.io/aad-pod-identity/docs/concepts/azureidentity/), and [AzureIdentityBinding](https://azure.github.io/aad-pod-identity/docs/concepts/azureidentitybinding/) through the Kubernetes API Server. When it detects a relevant change, the MIC adds or deletes     [AzureAssignedIdentity](https://azure.github.io/aad-pod-identity/docs/concepts/azureassignedidentity/) as needed. Specifically, when a pod is scheduled, the MIC assigns the managed identity on Azure to the underlying Virtual Machine Scale Set used by the node pool during the creation phase. When all pods using the identity are deleted, it removes the identity from the Virtual Machine Scale Set of the node pool, unless the same managed identity is used by other pods. The MIC takes similar actions when AzureIdentity or AzureIdentityBinding are created or deleted.
+
+  * [Node Managed Identity (NMI)](https://azure.github.io/aad-pod-identity/docs/concepts/nmi/): NMI is a pod that runs as a DaemonSet on each node in the AKS cluster. NMI intercepts security token requests to the [Azure Instance Metadata Service](/azure/virtual-machines/linux/instance-metadata-service?tabs=linux) on each node. NMI intercepts token requests and redirects them to itself. It then checks if the pod is authorized to access the requested identity and, if so, retrieves the token from the Microsoft Entra tenant on behalf of the application.
+
+* **Managed Mode**: This mode offers only NMI. When installed via the AKS cluster add-on, Azure manages creation of Kubernetes primitives (AzureIdentity and AzureIdentityBinding) and identity assignment in response to CLI commands by the user. Otherwise, if installed via Helm chart, the identity needs to be manually assigned and managed per the user. For more information, see [Pod identity in managed mode](https://azure.github.io/aad-pod-identity/docs/configure/pod_identity_in_managed_mode/).
+
+When you install the Microsoft Entra pod-managed identity via Helm chart or YAML manifest as shown in the [Installation Guide](https://azure.github.io/aad-pod-identity/docs/getting-started/installation/), you can choose between the `standard` and `managed` mode. If you instead decide to install the
+Microsoft Entra pod-managed identity using the AKS cluster add-on as shown in this article, the setup uses the `managed` mode.
+
+## Prerequisites
+
+Your Microsoft Entra pod-managed identities in AKS must meet the following requirements:
+
+* The Azure CLI version 2.20.0 or later is installed.
+
+* Your AKS cluster is at version 1.26 or later.
+
+* You must have the appropriate permissions such as the **Owner** or **Contributor** role.
 
 ## Install the aks-preview Azure CLI extension
 
@@ -52,15 +68,22 @@ Run the following command to update to the latest version of the extension relea
 az extension update --name aks-preview
 ```
 
-## Register the 'EnablePodIdentityPreview' feature flag
+## Register the EnablePodIdentityPreview feature flag
 
-Register the `EnablePodIdentityPreview` feature flag by using the [az feature register][az-feature-register] command, as shown in the following example:
+Register the `EnablePodIdentityPreview` feature flag by using the [az feature register][az-feature-register] command as shown in the following example:
 
 ```azurecli-interactive
 az feature register --namespace "Microsoft.ContainerService" --name "EnablePodIdentityPreview"
 ```
 
-It takes a few minutes for the status to show *Registered*. Verify the registration status by using the [az feature show][az-feature-show] command:
+> [!TIP]
+> To disable the AKS Managed add-on, run the following command:
+>
+> ```azurecli-interactive
+> az feature unregister --namespace "Microsoft.ContainerService" --name "EnablePodIdentityPreview"
+> ```
+
+It takes a few minutes for the status to show as *Registered*. Verify the registration status by using the [az feature show][az-feature-show] command:
 
 ```azurecli-interactive
 az feature show --namespace "Microsoft.ContainerService" --name "EnablePodIdentityPreview"
@@ -72,46 +95,43 @@ When the status reflects *Registered*, refresh the registration of the *Microsof
 az provider register --namespace Microsoft.ContainerService
 ```
 
-## Operation mode options
+## Manage an AKS cluster with pod-managed identities
 
-Microsoft Entra pod-managed identity supports two modes of operation:
+You can manage your AKS cluster with either the Azure Container Networking Interface (CNI) or Kubenet network plugin when enabling Microsoft Entra pod-managed identities.
 
-* **Standard Mode**: In this mode, the following two components are deployed to the AKS cluster: 
-  * [Managed Identity Controller (MIC)](https://azure.github.io/aad-pod-identity/docs/concepts/mic/): An MIC is a Kubernetes controller that watches for changes to pods, [AzureIdentity](https://azure.github.io/aad-pod-identity/docs/concepts/azureidentity/) and [AzureIdentityBinding](https://azure.github.io/aad-pod-identity/docs/concepts/azureidentitybinding/) through the Kubernetes API Server. When it detects a relevant change, the MIC adds or deletes [AzureAssignedIdentity](https://azure.github.io/aad-pod-identity/docs/concepts/azureassignedidentity/) as needed. Specifically, when a pod is scheduled, the MIC assigns the managed identity on Azure to the underlying Virtual Machine Scale Set used by the node pool during the creation phase. When all pods using the identity are deleted, it removes the identity from the Virtual Machine Scale Set of the node pool, unless the same managed identity is used by other pods. The MIC takes similar actions when AzureIdentity or AzureIdentityBinding are created or deleted.
-  * [Node Managed Identity (NMI)](https://azure.github.io/aad-pod-identity/docs/concepts/nmi/): NMI is a pod that runs as a DaemonSet on each node in the AKS cluster. NMI intercepts security token requests to the [Azure Instance Metadata Service](/azure/virtual-machines/linux/instance-metadata-service?tabs=linux) on each node, redirect them to itself and validates if the pod has access to the identity it's requesting a token for and fetch the token from the Microsoft Entra tenant on behalf of the application.
-* **Managed Mode**: This mode offers only NMI. When installed via the AKS cluster add-on, Azure manages creation of Kubernetes primitives (AzureIdentity and AzureIdentityBinding) and identity assignment in response to CLI commands by the user. Otherwise, if installed via Helm chart, the identity needs to be manually assigned and managed by the user. For more information, see [Pod identity in managed mode](https://azure.github.io/aad-pod-identity/docs/configure/pod_identity_in_managed_mode/).
+# [Azure CNI](#tab/azurecni)
 
-When you install the Microsoft Entra pod-managed identity via Helm chart or YAML manifest as shown in the [Installation Guide](https://azure.github.io/aad-pod-identity/docs/getting-started/installation/), you can choose between the `standard` and `managed` mode. If you instead decide to install the Microsoft Entra pod-managed identity using the AKS cluster add-on as shown in this article, the setup will use the `managed` mode.
+1. Create an AKS cluster with Azure CNI and pod-managed identity enabled with the default recommended configuration. The following commands use [az group create][az-group-create] to create a resource group named *myResourceGroup* and the [`az aks create`][az-aks-create] command to create an AKS cluster named *myAKSCluster* in the *myResourceGroup* resource group.
 
-## Create an AKS cluster with Azure Container Networking Interface (CNI)
+   ```azurecli-interactive
+   az group create --name myResourceGroup --location eastus
+   az aks create \
+       --resource-group myResourceGroup \
+       --name myAKSCluster \
+       --enable-pod-identity \
+       --network-plugin azure \
+       --generate-ssh-keys
+   ```
 
-> [!NOTE]
-> This is the default recommended configuration
+1. Use [`az aks get-credentials`][az-aks-get-credentials] to sign in to your AKS cluster. This command also downloads and configures the `kubectl` client certificate on your development computer.
 
-Create an AKS cluster with Azure CNI and pod-managed identity enabled. The following commands use [az group create][az-group-create] to create a resource group named *myResourceGroup* and the [az aks create][az-aks-create] command to create an AKS cluster named *myAKSCluster* in the *myResourceGroup* resource group.
+   ```azurecli-interactive
+   az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+   ```
 
-```azurecli-interactive
-az group create --name myResourceGroup --location eastus
-az aks create \
-    --resource-group myResourceGroup \
-    --name myAKSCluster \
-    --enable-pod-identity \
-    --network-plugin azure \
-    --generate-ssh-keys
-```
+When you enable pod-managed identity on your AKS cluster, the system adds an `AzurePodIdentityException` named *aks-addon-exception* to the *kube-system* namespace. An `AzurePodIdentityException` lets pods with certain labels access the Azure Instance Metadata Service (IMDS) endpoint without interception by the NMI server. The *aks-addon-exception* allows AKS first-party addons, such as Microsoft Entra pod-managed identity, to operate without requiring you to manually configure an `AzurePodIdentityException`. Optionally, you can add, remove, and update an `AzurePodIdentityException` using:
 
-Use [az aks get-credentials][az-aks-get-credentials] to sign in to your AKS cluster. This command also downloads and configures the `kubectl` client certificate on your development computer.
+* `az aks pod-identity exception add`
 
-```azurecli-interactive
-az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
-```
+* `az aks pod-identity exception delete`
 
-> [!NOTE]
-> When you enable pod-managed identity on your AKS cluster, an AzurePodIdentityException named *aks-addon-exception* is added to the *kube-system* namespace. An AzurePodIdentityException allows pods with certain labels to access the Azure Instance Metadata Service (IMDS) endpoint without being intercepted by the NMI server. The *aks-addon-exception* allows AKS first-party addons, such as Microsoft Entra pod-managed identity, to operate without having to manually configure an AzurePodIdentityException. Optionally, you can add, remove, and update an AzurePodIdentityException using `az aks pod-identity exception add`, `az aks pod-identity exception delete`, `az aks pod-identity exception update`, or `kubectl`.
+* `az aks pod-identity exception update`
+
+* Or `kubectl`
 
 ## Update an existing AKS cluster with Azure CNI
 
-Update an existing AKS cluster with Azure CNI to include pod-managed identity.
+To update an existing AKS cluster with Azure CNI to include pod-managed identity, run the following command:
 
 ```azurecli-interactive
 az aks update --resource-group $MY_RESOURCE_GROUP --name $MY_CLUSTER --enable-pod-identity
@@ -119,26 +139,24 @@ az aks update --resource-group $MY_RESOURCE_GROUP --name $MY_CLUSTER --enable-po
 
 <a name='using-kubenet-network-plugin-with-azure-active-directory-pod-managed-identities'></a>
 
-## Using Kubenet network plugin with Microsoft Entra pod-managed identities
+# [Kubenet network plugin](kubenet-np)
 
-> [!IMPORTANT]
-> Running Microsoft Entra pod-managed identity in a cluster with Kubenet is not a recommended configuration due to security concerns. Default Kubenet configuration fails to prevent ARP spoofing, which could be utilized by a pod to act as another pod and gain access to an identity it's not intended to have. Please follow the mitigation steps and configure policies before enabling Microsoft Entra pod-managed identity in a cluster with Kubenet.
+> [!WARNING]
+> Running Microsoft Entra pod-managed identity in a cluster with Kubenet **isn't recommended** due to security risks. The default Kubenet configuration doesn't prevent Address Resolution Protocol (ARP) spoofing, which could allow a pod to impersonate another pod and access unintended identities. To reduce this risk, implement the mitigation steps and configure appropriate policies **before** enabling Microsoft Entra pod-managed identity with Kubenet.
 
-### Mitigation
-
-To mitigate the vulnerability at the cluster level, you can use the Azure built-in policy "Kubernetes cluster containers should only use allowed capabilities" to limit the CAP_NET_RAW attack.  
+To mitigate the vulnerability at the cluster level, you can use the Azure built-in policy **Kubernetes cluster containers should only use allowed capabilities** to limit the CAP_NET_RAW attack.
 
 Add NET_RAW to "Required drop capabilities"
 
 ![image](https://user-images.githubusercontent.com/50749048/118558790-206b8880-b735-11eb-9e48-236b81116812.png)
 
-If you are not using Azure Policy, you can use OpenPolicyAgent admission controller together with Gatekeeper validating webhook. Provided you have Gatekeeper already installed in your cluster, add the ConstraintTemplate of type K8sPSPCapabilities:
+If you aren't using Azure Policy, you can use OpenPolicyAgent admission controller together with Gatekeeper validating webhook. Provided you have Gatekeeper already installed in your cluster, add the ConstraintTemplate of type K8sPSPCapabilities:
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper-library/master/library/pod-security-policy/capabilities/template.yaml
 ```
 
-Add a template to limit the spawning of Pods with the NET_RAW capability:
+Add a template to limit the spawning of Pods with the NET_RAW capability, for example:
 
 ```yml
 apiVersion: constraints.gatekeeper.sh/v1beta1
@@ -160,7 +178,7 @@ spec:
 
 [!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
 
-Create an AKS cluster with Kubenet network plugin and pod-managed identity enabled.
+To create an AKS cluster with Kubenet network plugin and pod-managed identity enabled, run the following command:
 
 ```azurecli-interactive
 az aks create \
@@ -173,18 +191,19 @@ az aks create \
 
 ## Update an existing AKS cluster with Kubenet network plugin
 
-Update an existing AKS cluster with Kubenet network plugin to include pod-managed identity.
+To update an existing AKS cluster with Kubenet network plugin to include pod-managed identity, run the following command:
 
 ```azurecli-interactive
 az aks update --resource-group $MY_RESOURCE_GROUP --name $MY_CLUSTER --enable-pod-identity --enable-pod-identity-with-kubenet
 ```
 
+---
+
 ## Create an identity
 
-> [!IMPORTANT]
-> You must have the relevant permissions (for example, Owner) on your subscription to create the identity.
+You must have the relevant permissions (for example, **Owner**) on your subscription to create the identity.
 
-Create an identity which will be used by the demo pod with [az identity create][az-identity-create] and set the *IDENTITY_CLIENT_ID* and *IDENTITY_RESOURCE_ID* variables.
+To create an identity to be used by the demo pod with [az identity create][az-identity-create], set the *IDENTITY_CLIENT_ID* and *IDENTITY_RESOURCE_ID* variables, run the following command:
 
 ```azurecli-interactive
 az group create --name myIdentityResourceGroup --location eastus
@@ -197,15 +216,15 @@ export IDENTITY_RESOURCE_ID="$(az identity show --resource-group ${IDENTITY_RESO
 
 ## Assign permissions for the managed identity
 
-The managed identity that will be assigned to the pod needs to be granted permissions that align with the actions it will be taking.
+The managed identity assigned to the pod must be granted appropriate permissions based on the operations the pod performs. Ensure that you assign only the minimum required roles to follow security best practices.
 
-To run the demo, the *IDENTITY_CLIENT_ID* managed identity must have Virtual Machine Contributor permissions in the resource group that contains the Virtual Machine Scale Set of your AKS cluster.
+To run the demo, the *IDENTITY_CLIENT_ID* managed identity must have **Virtual Machine Contributor** permissions in the resource group that contains the Virtual Machine Scale Set of your AKS cluster.
 
 ```azurecli-interactive
 # Obtain the name of the resource group containing the Virtual Machine Scale set of your AKS cluster, commonly called the node resource group
 NODE_GROUP=$(az aks show --resource-group myResourceGroup --name myAKSCluster --query nodeResourceGroup -o tsv)
 
-# Obtain the id of the node resource group 
+# Obtain the id of the node resource group
 NODES_RESOURCE_ID=$(az group show --name $NODE_GROUP -o tsv --query "id")
 
 # Create a role assignment granting your managed identity permissions on the node resource group
@@ -214,7 +233,7 @@ az role assignment create --role "Virtual Machine Contributor" --assignee "$IDEN
 
 ## Create a pod identity
 
-Create a pod-managed identity for the cluster using `az aks pod-identity add`.
+Create a pod-managed identity for the cluster using the `az aks pod-identity add` command:
 
 ```azurecli-interactive
 export POD_IDENTITY_NAME="my-pod-identity"
@@ -223,12 +242,11 @@ az aks pod-identity add --resource-group myResourceGroup --cluster-name myAKSClu
 ```
 
 > [!NOTE]
-> The "POD_IDENTITY_NAME" has to be a valid [DNS subdomain name] as defined in [RFC 1123].
-
-> [!NOTE]
+> The "POD_IDENTITY_NAME" has to be a valid Domain Name System [(DNS) subdomain name] as defined in [RFC 1123].
+>
 > When you assign the pod-managed identity by using `pod-identity add`, the Azure CLI attempts to grant the Managed Identity Operator role over the pod-managed identity (*IDENTITY_RESOURCE_ID*) to the cluster identity.
 
-Azure will create an AzureIdentity resource in your cluster representing the identity in Azure, and an AzureIdentityBinding resource which connects the AzureIdentity to a selector. You can view these resources with
+Azure creates an AzureIdentity resource in your cluster representing the identity in Azure, and an AzureIdentityBinding resource that connects the AzureIdentity to a selector. You can view these resources by running the following command:
 
 ```azurecli-interactive
 kubectl get azureidentity -n $POD_IDENTITY_NAMESPACE
@@ -237,7 +255,7 @@ kubectl get azureidentitybinding -n $POD_IDENTITY_NAMESPACE
 
 ## Run a sample application
 
-For a pod to use Microsoft Entra pod-managed identity, the pod needs an *aadpodidbinding* label with a value that matches a selector from a *AzureIdentityBinding*. By default, the selector will match the name of the pod-managed identity, but it can also be set using the `--binding-selector` option when calling `az aks pod-identity add`.
+For a pod to use Microsoft Entra pod-managed identity, the pod needs an *aadpodidbinding* label with a value that matches a selector from a *AzureIdentityBinding*. By default, the selector matches the name of the pod-managed identity, but it can also be set using the `--binding-selector` option when calling `az aks pod-identity add`.
 
 To run a sample application using Microsoft Entra pod-managed identity, create a `demo.yaml` file with the following contents. Replace *POD_IDENTITY_NAME*, *IDENTITY_CLIENT_ID*, and *IDENTITY_RESOURCE_GROUP* with the values from the previous steps. Replace *SUBSCRIPTION_ID* with your subscription ID.
 
@@ -276,34 +294,34 @@ spec:
     kubernetes.io/os: linux
 ```
 
-Notice the pod definition has an *aadpodidbinding* label with a value that matches the name of the pod-managed identity you ran `az aks pod-identity add` in the previous step.
+Notice the pod definition has an `aadpodidbinding` label with a value that matches the name of the pod-managed identity you ran `az aks pod-identity add` in the previous step.
 
-Deploy `demo.yaml` to the same namespace as your pod-managed identity using `kubectl apply`:
+1. Deploy the `demo.yaml` to the same namespace as your pod-managed identity using `kubectl apply`:
 
-```bash
-kubectl apply -f demo.yaml --namespace $POD_IDENTITY_NAMESPACE
-```
+   ```bash
+   kubectl apply -f demo.yaml --namespace $POD_IDENTITY_NAMESPACE
+   ```
 
-Verify the sample application successfully runs using `kubectl logs`.
+1. Verify the sample application successfully runs using `kubectl logs`:
 
-```bash
-kubectl logs demo --follow --namespace $POD_IDENTITY_NAMESPACE
-```
+   ```bash
+   kubectl logs demo --follow --namespace $POD_IDENTITY_NAMESPACE
+   ```
 
-Verify that the logs show a token is successfully acquired and the *GET* operation is successful.
+   Verify that the logs show a token is successfully acquired and that the HTTP *GET* request operation is successful.
 
-```output
-...
-successfully doARMOperations vm count 0
-successfully acquired a token using the MSI, msiEndpoint(http://169.254.169.254/metadata/identity/oauth2/token)
-successfully acquired a token, userAssignedID MSI, msiEndpoint(http://169.254.169.254/metadata/identity/oauth2/token) clientID(xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
-successfully made GET on instance metadata
-...
-```
+   ```output
+   ...
+   successfully doARMOperations vm count 0
+   successfully acquired a token using the MSI, msiEndpoint(http://169.254.169.254/metadata/identity/oauth2/token)
+   successfully acquired a token, userAssignedID MSI, msiEndpoint(http://169.254.169.254/metadata/identity/oauth2/token) clientID(xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+   successfully made GET on instance metadata
+   ...
+   ```
 
 ## Run an application with multiple identities
 
-To enable an application to use multiple identities, set the `--binding-selector` to the same selector when creating pod identities.
+To enable an application to use multiple identities, set the `--binding-selector` to the same selector when creating pod identities:
 
 ```azurecli-interactive
 az aks pod-identity add --resource-group myResourceGroup --cluster-name myAKSCluster --namespace ${POD_IDENTITY_NAMESPACE}  --name ${POD_IDENTITY_NAME_1} --identity-resource-id ${IDENTITY_RESOURCE_ID_1} --binding-selector myMultiIdentitySelector
@@ -324,34 +342,43 @@ metadata:
 
 ## Disable pod-managed identity on an existing cluster
 
-To disable pod-managed identity on an existing cluster, remove the pod-managed identities from the cluster. Then disable the feature on the cluster.
+1. To disable pod-managed identity on an existing cluster, remove the pod-managed identities from the cluster by running the following command:
 
-```azurecli
-az aks pod-identity delete --name ${POD_IDENTITY_NAME} --namespace ${POD_IDENTITY_NAMESPACE} --resource-group myResourceGroup --cluster-name myAKSCluster
-```
+   ```azurecli
+   az aks pod-identity delete --name ${POD_IDENTITY_NAME} --namespace ${POD_IDENTITY_NAMESPACE} --resource-group myResourceGroup --cluster-name myAKSCluster
+   ```
 
-```azurecli
-az aks update --resource-group myResourceGroup --name myAKSCluster --disable-pod-identity
-```
+1. Then disable the feature on the cluster by running the following command:
 
-## Clean up
+   ```azurecli
+   az aks update --resource-group myResourceGroup --name myAKSCluster --disable-pod-identity
+   ```
 
-To remove a Microsoft Entra pod-managed identity from your cluster, remove the sample application and the pod-managed identity from the cluster. Then remove the identity and the role assignment of cluster identity.
+## Clean up resources
+
+To remove a Microsoft Entra pod-managed identity from your cluster, remove the sample application and the pod-managed identity from the cluster.
 
 ```bash
 kubectl delete pod demo --namespace $POD_IDENTITY_NAMESPACE
 ```
 
-```azurecli
-az aks pod-identity delete --name ${POD_IDENTITY_NAME} --namespace ${POD_IDENTITY_NAMESPACE} --resource-group myResourceGroup --cluster-name myAKSCluster
-```
+Then remove the identity and the role assignment of cluster identity.
 
-```azurecli
-az identity delete --resource-group ${IDENTITY_RESOURCE_GROUP} --name ${IDENTITY_NAME}
-```
+```bash
+az aks pod-identity delete \
+  --name ${POD_IDENTITY_NAME} \
+  --namespace ${POD_IDENTITY_NAMESPACE} \
+  --resource-group myResourceGroup \
+  --cluster-name myAKSCluster
 
-```azurecli
-az role assignment delete --role "Managed Identity Operator" --assignee "$IDENTITY_CLIENT_ID" --scope "$IDENTITY_RESOURCE_ID"
+az identity delete \
+  --resource-group ${IDENTITY_RESOURCE_GROUP} \
+  --name ${IDENTITY_NAME}
+
+az role assignment delete \
+  --role "Managed Identity Operator" \
+  --assignee "$IDENTITY_CLIENT_ID" \
+  --scope "$IDENTITY_RESOURCE_ID"
 ```
 
 ## Next steps
@@ -373,5 +400,4 @@ For more information on managed identities, see [Managed identities for Azure re
 
 <!-- LINKS - external -->
 [RFC 1123]: https://tools.ietf.org/html/rfc1123
-[DNS subdomain name]: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names
-
+[(DNS) subdomain name]: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names
