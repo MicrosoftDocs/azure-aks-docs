@@ -43,7 +43,7 @@ This article provides an overview and examples of how to use kubelogin for all s
 ## How authentication works
 
 > [!NOTE]
-> AKS clusters that are integrated with Microsoft Entra ID and running Kubernetes version 1.24 or later automatically use the kubelogin format. If your AKS Microsoft Entra integrated cluster uses Kubernetes 1.24 or earlier, you must manually convert the kubeconfig file format to use the kubelogin exec plugin. For more information, see [Example device code authentication](#example-device-code-authentication).
+> AKS clusters that are integrated with Microsoft Entra ID and running Kubernetes version 1.24 or later automatically use the kubelogin format. If your AKS Microsoft Entra integrated cluster uses Kubernetes 1.24 or earlier, you must manually convert the kubeconfig file format to use the kubelogin exec plugin.
 
 For most interactions with kubelogin, you use the `convert-kubeconfig` subcommand. The subcommand uses the kubeconfig file that's specified in `--kubeconfig` or in the `KUBECONFIG` environment variable to convert the final kubeconfig file to exec format based on the specified authentication method.
 
@@ -95,11 +95,11 @@ The following table outlines parameters that you can use with Azure CLI authenti
 
 ## Sign in to Azure
 
-- Sign in to Azure using the [`az login`](/cli/azure/authenticate-azure-cli-interactively#interactive-login) command.
+Sign in to Azure using the [`az login`](/cli/azure/authenticate-azure-cli-interactively#interactive-login) command.
 
-    ```azurecli-interactive
-    az login
-    ```
+```azurecli-interactive
+az login
+```
 
 :::zone-end
 
@@ -202,9 +202,13 @@ Before you run the `convert-kubeconfig` subcommand, export the kubeconfig file p
 export KUBECONFIG=/path/to/kubeconfig
 ```
 
+:::zone pivot="device-code, azure-cli, web-browser-interactive, managed-identity, workload-identity"
+
 ## Convert the kubeconfig file
 
 Run the `convert-kubeconfig` subcommand to convert the kubeconfig file to use the exec plugin for your chosen authentication method.
+
+:::zone-end
 
 :::zone pivot="device-code"
 
@@ -352,21 +356,21 @@ kubelogin convert-kubeconfig -l workloadidentity
 
 ## Remove cached tokens
 
-- Remove cached tokens using the `kubelogin remove-tokens` command.
+Remove cached tokens using the `kubelogin remove-tokens` command.
 
-    ```bash
-    kubelogin remove-tokens
-    ```
+```bash
+kubelogin remove-tokens
+```
 
 :::zone-end
 
 ## Get node information
 
-- Get node information using the `kubectl get` command.
+Get node information using the `kubectl get` command.
 
-    ```bash
-    kubectl get nodes
-    ```
+```bash
+kubectl get nodes
+```
 
 ## How to use kubelogin with AKS
 
