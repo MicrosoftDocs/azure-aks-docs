@@ -47,14 +47,6 @@ This article provides an overview and examples of how to use kubelogin for all s
 
 For most interactions with kubelogin, you use the `convert-kubeconfig` subcommand. The subcommand uses the kubeconfig file that's specified in `--kubeconfig` or in the `KUBECONFIG` environment variable to convert the final kubeconfig file to exec format based on the specified authentication method.
 
-The following parameter flags are common to use in kubelogin subcommands (in general, these flags are ready to use when you get the kubeconfig file from AKS):
-
-| Parameter | Description |
-|-----------|-------------|
-| `--tenant-id` | The Microsoft Entra tenant ID. |
-| `--client-id` | The application ID of the public client application. This client app is used only in the device code, web browser interactive, and OAuth 2.0 Resource Owner Password Credentials (ROPC) (workflow identity) sign-in methods. |
-| `--server-id` | The application ID of the web app or resource server. The token is issued to this resource. |
-
 The authentication methods that kubelogin implements are Microsoft Entra OAuth 2.0 token grant flows. In each authentication method, the token isn't cached on the file system.
 
 :::zone pivot="device-code"
