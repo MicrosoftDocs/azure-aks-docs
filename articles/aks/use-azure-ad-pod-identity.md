@@ -146,17 +146,27 @@ az aks update --resource-group $MY_RESOURCE_GROUP --name $MY_CLUSTER --enable-po
 
 To mitigate the vulnerability at the cluster level, you can use the Azure built-in policy **Kubernetes cluster containers should only use allowed capabilities** to limit the CAP_NET_RAW attack.
 
-Add NET_RAW to "Required drop capabilities"
+1. In the Azure portal, type **Policy** in the search bar at the top of the page, then select **Policy**.
+1. In the left menu, expand **Authoring**, then select **Definitions**.
+1. In the right pane, use the search box to filter for the **Kubernetes cluster containers should only use allowed capabilities** policy and select it.
+1. Select **Assign policy** at the top left.
+1. Progress to **Parameters** and fill in the fields with the following information:
 
-![image](https://user-images.githubusercontent.com/50749048/118558790-206b8880-b735-11eb-9e48-236b81116812.png)
+   * **Effect**: `Audit`
+   * **Allowed capabilities**: `["kube-system", "gatekeeper-system", "azure-arc"]`
+   * **Required drop capabilities**: `["NET_RAW"]`
 
-If you aren't using Azure Policy, you can use OpenPolicyAgent admission controller together with Gatekeeper validating webhook. Provided you have Gatekeeper already installed in your cluster, add the ConstraintTemplate of type K8sPSPCapabilities:
+   ![A screenshot of a custom mitigation policy for Azure pod-managed identities.](media/azure-pod-managed-identities/use-azure-ad-pod-identity-kubenet-mitigation-capabilities.png)
+
+1. Progress through the policy assignment and select **Create**.
+
+If you're not using Azure Policy, you can use the Open Policy Agent (OPA) admission controller with the Gatekeeper validating webhook. If Gatekeeper is already installed in your cluster, add a `ConstraintTemplate` of type `K8sPSPCapabilities`:
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper-library/master/library/pod-security-policy/capabilities/template.yaml
 ```
 
-Add a template to limit the spawning of Pods with the NET_RAW capability, for example:
+Add a template to limit the spawning of pods with the `NET_RAW` capability, for example:
 
 ```yml
 apiVersion: constraints.gatekeeper.sh/v1beta1
@@ -199,7 +209,7 @@ az aks update --resource-group $MY_RESOURCE_GROUP --name $MY_CLUSTER --enable-po
 
 ---
 
-## Create an identity
+## Create a managed identity
 
 You must have the relevant permissions (for example, **Owner**) on your subscription to create the identity.
 
@@ -231,9 +241,9 @@ NODES_RESOURCE_ID=$(az group show --name $NODE_GROUP -o tsv --query "id")
 az role assignment create --role "Virtual Machine Contributor" --assignee "$IDENTITY_CLIENT_ID" --scope $NODES_RESOURCE_ID
 ```
 
-## Create a pod identity
+## Create a pod-managed identity
 
-Create a pod-managed identity for the cluster using the `az aks pod-identity add` command:
+To create a pod-managed identity for the cluster using `az aks pod-identity add`, run the following command:
 
 ```azurecli-interactive
 export POD_IDENTITY_NAME="my-pod-identity"
