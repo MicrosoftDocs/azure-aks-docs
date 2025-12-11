@@ -276,11 +276,11 @@ kubelogin convert-kubeconfig -l interactive --pop-enabled --pop-claims "u=/ARM/I
 > [!NOTE]
 > The command-line argument method stores the secret in the kubeconfig file.
 
-- Run the `convert-kubeconfig` subcommand with the client ID and client secret or client certificate parameters.
+Run the `convert-kubeconfig` subcommand with the client ID and client secret or client certificate parameters.
 
-    ```bash
-    kubelogin convert-kubeconfig -l spn --client-id <service-principal-client-id> --client-secret <service-principal-client-secret>
-    ```
+```bash
+kubelogin convert-kubeconfig -l spn --client-id <service-principal-client-id> --client-secret <service-principal-client-secret>
+```
 
 ### [Use a client certificate](#tab/client-certificate)
 
