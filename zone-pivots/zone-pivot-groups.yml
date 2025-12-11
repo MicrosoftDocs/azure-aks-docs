@@ -156,3 +156,20 @@ groups:
     title: User-assigned managed identity
   - id: pre-created-kubelet
     title: Pre-created kubelet managed identity
+# Owner: schaffererin
+- id: kubelogin-auth-methods
+  title: Choose a kubelogin authentication method
+  prompt: Choose a kubelogin authentication method
+  pivots:
+  - id: device-code
+    title: Device code
+  - id: azure-cli
+    title: Azure CLI
+  - id: web-browser-interactive
+    title: Web browser interactive
+  - id: service-principal
+    title: Service principal
+  - id: managed-identity
+    title: Managed identity
+  - id: workload-identity
+    title: Workload identity
