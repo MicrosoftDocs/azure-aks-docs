@@ -1,7 +1,7 @@
 ---
 title: "Azure Kubernetes Fleet Manager member cluster types"
 description: This article provides a conceptual overview of the different types of member clusters supported in Azure Kubernetes Fleet Manager.
-ms.date: 09/30/2025
+ms.date: 12/11/2025
 author: ealianis
 ms.author: sehobbs
 ms.service: azure-kubernetes-fleet-manager
@@ -17,8 +17,6 @@ Azure Kubernetes Fleet Manager supports two types of member clusters:
 
 > [!IMPORTANT]
 > Azure Kubernetes Fleet Manager's support for Arc-enabled Kubernetes clusters is currently in Preview. [See below for limitations and requirements](#arc-enabled-kubernetes-clusters-important-considerations).
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-beta.md)]
 
 The following table outlines which Azure Kubernetes Fleet Manager capabilities are supported for each member cluster type.
 

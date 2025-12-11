@@ -20,7 +20,7 @@ Managed namespaces in Azure Kubernetes Service (AKS) provide a way to logically 
 ### Prerequisites
 
 - An Azure account with an active subscription. If you don't have one, you can [create an account for free][create-azure-subscription].
-- An [AKS cluster][quick-automatic-managed-network] set up in your Azure environment with [Azure role-based access control for Kubernetes authorization][azure-rbac-k8s].
+- An [AKS cluster][quick-automatic-managed-network] set up in your Azure environment with [Azure role-based access control for Kubernetes authorization][azure-rbac-k8s] is required if you intend to utilize Azure RBAC roles.
 - To use the network policy feature, the AKS cluster needs to be [configured with a network policy engine][aks-network-policy-options]. Cilium is our recommended engine.
 
 | Prerequisite                     | Notes                                                                 |

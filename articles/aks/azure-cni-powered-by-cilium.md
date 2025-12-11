@@ -37,7 +37,7 @@ Azure CNI Powered by Cilium can be deployed using two different methods for assi
 
 - Assign IP addresses from a virtual network (similar to existing Azure CNI with Dynamic Pod IP Assignment)
 
-If you aren't sure which option to select, read ["Choosing a network model to use."](./azure-cni-overlay.md#choosing-a-network-model-to-use)
+If you aren't sure which option to select, read ["Choosing a network model to use."](./concepts-network-azure-cni-overlay.md#choose-a-network-model)
 
 ## Versions
 
@@ -258,11 +258,38 @@ az aks create \
     No, AKS clusters created with network data plane as Cilium don't use Kube-Proxy.
     If the AKS clusters are on [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md) and are upgraded to AKS clusters running Azure CNI powered by Cilium, new nodes workloads are created without kube-proxy. Older workloads are also migrated to run without kube-proxy as a part of this upgrade process.
 
+## Dual-stack networking with Azure CNI Powered by Cilium
+
+You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. This also allows you to control your IPv6 traffic with the Cilium Network Policy engine.
+
+> [!IMPORTANT]
+> You must have Kubernetes version 1.29 or greater.
+
+### Set up Overlay clusters with Azure CNI Powered by Cilium
+
+Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command. Make sure to use the argument `--network-dataplane cilium` to specify the Cilium data plane.
+
+```azurecli-interactive
+clusterName="myOverlayCluster"
+resourceGroup="myResourceGroup"
+location="westcentralus"
+
+az aks create \
+    --name $clusterName \
+    --resource-group $resourceGroup \
+    --location $location \
+    --network-plugin azure \
+    --network-plugin-mode overlay \
+    --network-dataplane cilium \
+    --ip-families ipv4,ipv6 \
+    --generate-ssh-keys
+```
+
 ## Next steps
 
 Learn more about networking in AKS in the following articles:
 
-* [Upgrade Azure CNI IPAM modes and Dataplane Technology](upgrade-azure-cni.md).
+* [Upgrade Azure CNI IPAM modes and Dataplane Technology](update-azure-cni.md).
 
 * [Use a static IP address with the Azure Kubernetes Service (AKS) load balancer](static-ip.md)
 

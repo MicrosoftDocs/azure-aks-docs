@@ -57,12 +57,6 @@ In this article, you learn how to deploy example scheduler profiles in Azure Kub
 
     It takes a few minutes for the status to show _Registered_.
 
-1. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "UserDefinedSchedulerConfigurationPreview"
-    ```
-
 1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
 
     ```azurecli-interactive
@@ -142,16 +136,19 @@ In this example, the configured scheduler prioritizes scheduling pods on nodes w
     metadata:
       name: upstream
     spec:
-      profiles:
-      - schedulerName: node-binpacking-scheduler
-        pluginConfig:
-        - name: NodeResourcesFit
-          args:
-            scoringStrategy:
-              type: MostAllocated
-              resources:
-              - name: cpu
-                weight: 1
+      rawConfig: |
+        apiVersion: kubescheduler.config.k8s.io/v1
+        kind: KubeSchedulerConfiguration
+        profiles:
+        - schedulerName: node-binpacking-scheduler
+          pluginConfig:
+              - name: NodeResourcesFit
+                args:
+                  scoringStrategy:
+                    type: MostAllocated
+                    resources:
+                      - name: cpu
+                        weight: 1
     ```
 
     - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
@@ -193,7 +190,7 @@ Pod topology spread is a scheduling strategy that seeks to distribute pods evenl
         kind: KubeSchedulerConfiguration
         profiles:
         - schedulerName: pod-distribution-scheduler
-          - pluginConfig:
+          pluginConfig:
               - name: PodTopologySpread
                 args:
                   apiVersion: kubescheduler.config.k8s.io/v1
@@ -445,4 +442,9 @@ To learn more about the AKS scheduler and best practices, see the following reso
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-extension-add]: /cli/azure/extension#az-extension-add
+
 [az-extension-update]: /cli/azure/extension#az-extension-update
+
+
+
+

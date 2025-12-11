@@ -90,10 +90,10 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     TEST SUITE: None
     NOTES:
     external-secrets has been deployed successfully in namespace airflow!
-    
+
     In order to begin using ExternalSecrets, you will need to set up a SecretStore
     or ClusterSecretStore resource (for example, by creating a 'vault' SecretStore).
-    
+
     More information on the different types of SecretStores and how to configure them
     can be found in our Github: https://github.com/external-secrets/external-secrets
     ```
@@ -140,11 +140,11 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
       secretStoreRef:
         kind: SecretStore
         name: azure-store
-    
+
       target:
         name: ${AKS_AIRFLOW_LOGS_STORAGE_SECRET_NAME}
         creationPolicy: Owner
-    
+
       data:
         # name of the SECRET in the Azure KV (no prefix is by default a SECRET)
         - secretKey: azurestorageaccountname
@@ -272,7 +272,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 
     ```bash
     cat <<EOF> airflow_values.yaml
-    
+
     images:
       airflow:
         repository: $MY_ACR_REGISTRY.azurecr.io/airflow
@@ -315,20 +315,20 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
         repository: $MY_ACR_REGISTRY.azurecr.io/git-sync
         tag: v4.3.0
         pullPolicy: IfNotPresent
-    
-    
+
+
     # Airflow executor
     executor: "KubernetesExecutor"
-    
+
     # Environment variables for all airflow containers
     env:
       - name: ENVIRONMENT
         value: dev
-    
+
     extraEnv: |
       - name: AIRFLOW__CORE__DEFAULT_TIMEZONE
         value: 'America/New_York'
-    
+
     # Configuration for postgresql subchart
     # Not recommended for production! Instead, spin up your own Postgresql server and use the `data` attribute in this
     # yaml file.
@@ -338,11 +338,11 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
         registry: $MY_ACR_REGISTRY.azurecr.io
         repository: postgresql
         tag: 16.1.0-debian-11-r15
-    
+
     # Enable pgbouncer. See https://airflow.apache.org/docs/helm-chart/stable/production-guide.html#pgbouncer
     pgbouncer:
       enabled: true
-    
+
     dags:
       gitSync:
         enabled: true
@@ -355,26 +355,26 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
         # sshKeySecret: airflow-git-ssh-secret
         # knownHosts: |
         #   github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
-    
+
     logs:
       persistence:
         enabled: true
         existingClaim: pvc-airflow-logs
         storageClassName: azureblob-fuse-premium
-    
+
     # We disable the log groomer sidecar because we use Azure Blob Storage for logs, with lifecyle policy set.
     triggerer:
       logGroomerSidecar:
         enabled: false
-    
+
     scheduler:
       logGroomerSidecar:
         enabled: false
-    
+
     workers:
       logGroomerSidecar:
         enabled: false
-    
+
     EOF
     ```
 
@@ -409,7 +409,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 4. Install the Apache Airflow chart using the `helm install` command.
 
     ```bash
-    helm install airflow apache-airflow/airflow --namespace airflow --create-namespace -f airflow_values.yaml --debug
+    helm install airflow apache-airflow/airflow --version 1.15.0 --namespace airflow --create-namespace -f airflow_values.yaml --debug
     ```
 
     Example output:
@@ -423,10 +423,10 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     TEST SUITE: None
     NOTES:
     Thank you for installing Apache Airflow 3.0.2!
-    
+
     Your release is named airflow.
     You can now access your dashboard(s) by executing the following command(s) and visiting the corresponding port at localhost in your browser:
-    
+
     Airflow Webserver:     kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow
     Default Webserver (Airflow UI) Login credentials:
         username: admin
@@ -435,18 +435,18 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
         username: postgres
         password: postgres
         port: 5432
-    
+
     You can get Fernet Key value by running the following:
-    
+
         echo Fernet Key: $(kubectl get secret --namespace airflow airflow-fernet-key -o jsonpath="{.data.fernet-key}" | base64 --decode)
-    
+
     ###########################################################
     #  WARNING: You should set a static webserver secret key  #
     ###########################################################
-    
+
     You are using a dynamically generated webserver secret key, which can lead to
     unnecessary restarts of your Airflow components.
-    
+
     Information on how to set a static webserver secret key can be found here:
     https://airflow.apache.org/docs/helm-chart/stable/production-guide.html#webserver-secret-key
     ```
@@ -483,7 +483,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     ```
 
 2. Open your browser and navigate to `localhost:8080` to access the Airflow UI.
-3. Use the default webserver URL and login credentials provided during the Airflow Helm chart installation to log in.
+3. To sign in, use the default webserver URL and sign-in credentials provided during the Airflow Helm chart installation.
 4. Explore and manage your workflows securely through the Airflow UI.
 
 ## Integrate Git with Airflow
@@ -491,7 +491,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 **Integrating Git with Apache Airflow** enables seamless version control and streamlined management of your workflow definitions, ensuring that all DAGs are both organized and easily auditable.
 
 1. **Set up a Git repository for DAGs**. Create a dedicated Git repository to house all your Airflow DAG definitions. This repository serves as the central source of truth for your workflows, allowing you to manage, track, and collaborate on DAGs effectively.
-2. **Configure Airflow to sync DAGs from Git**. Update Airflow’s configuration to automatically pull DAGs from your Git repository by setting the Git repository URL and any required authentication credentials directly in Airflow’s configuration files or through Helm chart values. This setup enables automated synchronization of DAGs, ensuring that Airflow is always up to date with the latest version of your workflows.
+2. **Configure Airflow to sync DAGs from Git**. Update Airflow's configuration to automatically pull DAGs from your Git repository by setting the Git repository URL and any required authentication credentials directly in Airflow's configuration files or through Helm chart values. This setup enables automated synchronization of DAGs, ensuring that Airflow is always up to date with the latest version of your workflows.
 
 This integration enhances the development and deployment workflow by introducing full version control, enabling rollbacks, and supporting team collaboration in a production-grade setup.
 

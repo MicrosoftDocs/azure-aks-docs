@@ -22,7 +22,7 @@ You might not need to continuously run your AKS workloads. For example, you migh
 * You can't stop node pools from clusters which use the [Node Autoprovisioning (NAP)](node-autoprovision.md) feature.
 
 > [!TIP]
-> You can use Microsoft Copilot in Azure to stop and start your node pools in the Azure portal. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#start-and-stop-node-pools).
+> You can use Azure Copilot to stop and start your node pools in the Azure portal. For more information, see [Work with AKS clusters efficiently using Azure Copilot](/azure/copilot/work-aks-clusters#start-and-stop-node-pools).
 
 ## Before you begin
 

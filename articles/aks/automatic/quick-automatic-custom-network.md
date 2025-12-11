@@ -13,7 +13,7 @@ zone_pivot_groups: bicep-azure-cli
 
 **Applies to:** :heavy_check_mark: AKS Automatic
 
-[Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
+[Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. AKS Automatic also includes a [pod readiness SLA][azure-sla] that guarantees 99.9% of pod readiness operations complete within 5 minutes, guaranteeing reliable, self-healing infrastructure for your applications. This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
 
 In this quickstart, you learn to:
 
@@ -86,7 +86,7 @@ When using a custom virtual network with AKS Automatic, you must create and dele
 
 ### Network security group requirements
 
-If you have added Network Security Group (NSG) rules to restrict traffic between different subnets in your custom virtual network, ensure that the NSG security rules permit the required types of communication between cluster components. 
+If you have added Network Security Group (NSG) rules to restrict traffic between different subnets in your custom virtual network, ensure that the NSG security rules permit the required types of communication between cluster components.
 
 For detailed NSG requirements when using custom virtual networks with AKS clusters, see [Custom virtual network requirements][concepts-network-custom-vnet].
 
@@ -98,7 +98,7 @@ Create a managed identity using the [`az identity create`][az-identity-create] c
 
 ## Create an AKS Automatic cluster in a custom virtual network
 
-To create an AKS Automatic cluster, use the [az aks create][az-aks-create] command. 
+To create an AKS Automatic cluster, use the [az aks create][az-aks-create] command.
 
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/public/sh/create-aks.sh" interactive="cloudshell-bash" highlight="5,6,7":::
 
@@ -208,13 +208,13 @@ Save the Bicep file **aks.bicep** to your local computer.
 > [!IMPORTANT]
 > The Bicep file sets the `clusterName` param to *aksAutomaticCluster*. If you want a different cluster name, make sure to update the string to your preferred cluster name.
 
-Deploy the Bicep file using the Azure CLI. You need to provide the API server subnet resource ID, the cluster subnet resource ID, and user assigned identity principal ID.
+Deploy the Bicep file using the Azure CLI. You need to provide the API server subnet resource ID, the cluster subnet resource ID, and user assigned managed identity resource ID.
 
 ```azurecli-interactive
 az deployment group create --resource-group <resource-group> --template-file aks.bicep \
 --parameters apiServerSubnetId=<API server subnet resource id> \
 --parameters clusterSubnetId=<cluster subnet resource id> \
---parameters uamiPrincipalId=<user assigned identity prinicipal id>
+--parameters uamiId=<user assigned identity id>
 ```
 
 ## Connect to the cluster
@@ -386,3 +386,4 @@ To learn more about AKS Automatic, continue to the introduction.
 [policy-for-kubernetes]: /azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks
 [concepts-network-custom-vnet]: ../concepts-network.md#custom-virtual-network-requirements
 [az-provider-register]: /azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider
+[azure-sla]: https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services

@@ -429,7 +429,7 @@ kubectl delete pod pod-name
 [download-setup-key-script]: https://github.com/microsoft/confidential-container-demos/blob/add-kafka-demo/kafka/setup-key.sh
 
 <!-- INTERNAL LINKS -->
-[upgrade-cluster-enable-workload-identity]: workload-identity-deploy-cluster.md#update-an-existing-aks-cluster
+[upgrade-cluster-enable-workload-identity]: workload-identity-deploy-cluster.md#deploy-and-configure-microsoft-entra-workload-id-on-an-azure-kubernetes-service-aks-cluster
 [deploy-and-configure-workload-identity]: workload-identity-deploy-cluster.md
 [install-azure-cli]: /cli/azure/install-azure-cli
 [entra-id-workload-identity-overview]: /azure/active-directory/workload-identities/workload-identities-overview
