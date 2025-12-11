@@ -10,62 +10,24 @@ ms.author: vaibhavarora
 # Customer intent: As a cluster operator or developer, I want to improve my DNS resolution performance and resiliency for my AKS cluster.
 ---
 
-# Configure LocalDNS in Azure Kubernetes Service (Preview)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+# Configure LocalDNS in Azure Kubernetes Service
 
 ## Introduction
 
-LocalDNS is a feature in Azure Kubernetes Service (AKS) designed to enhance the Domain Name System (DNS) resolution performance and resiliency for workloads running in your cluster. By deploying a local DNS proxy on each node, LocalDNS reduces DNS query latency, improves reliability during network disruptions, and provides advanced configuration options for DNS caching and forwarding. This article explains how LocalDNS works, its configuration options, and how to enable, verify, and troubleshoot LocalDNS in your AKS clusters.
+LocalDNS is a feature in Azure Kubernetes Service (AKS) designed to enhance the Domain Name System (DNS) resolution performance and resiliency for workloads running in your cluster. By deploying a DNS proxy on each node, LocalDNS reduces DNS query latency, improves reliability during network disruptions, and provides advanced configuration options for DNS caching and forwarding. This article explains how LocalDNS works, its configuration options, and how to enable, verify, and troubleshoot LocalDNS in your AKS clusters.
 
 To learn about what LocalDNS is, including architecture details, and key capabilities, refer to [DNS Resolution in Azure Kubernetes Service (AKS)](./dns-concepts.md).
 
 ## Before you begin
 
 * This article assumes that you have an existing AKS cluster with Kubernetes versions 1.31+. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-* This article requires version 2.61.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
-* This article requires the `aks-preview` Azure CLI extension version 18.0.0b19 or later.
+* This article requires version 2.80.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
 * Your AKS cluster can't have node autoprovisioning enabled to use LocalDNS.
 * LocalDNS requires your AKS cluster to be running Kubernetes version 1.31 or later.
 * LocalDNS is only supported on node pools running Azure Linux or Ubuntu 22.04 or newer.
 * LocalDNS only supports Virtual Machine Scale Set node pools.
 * The Virtual Machine (VM) SKU used for your node pool must have at least 4 vCPUs (cores) to support LocalDNS.
-
-### Install the `aks-preview` Azure CLI extension
-
-1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `LocalDNS` feature flag
-
-1. Register the `LocalDNS` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "LocalDNSPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "LocalDNSPreview"
-    ```
-
-3. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
+* LocalDNS is not compatible with [applied FQDN filter policies in Advanced Container Networking Services (ACNS)](./how-to-apply-fqdn-filtering-policies.md).
 
 ## Create or update an AKS node pool with LocalDNS
 
@@ -96,6 +58,9 @@ LocalDNS uses a JSON-based configuration file _localdnsconfig.json_ to define DN
 
 ### Default LocalDNS configuration
 The default LocalDNS configuration provides a balanced setup that optimizes both internal and external DNS resolution for most AKS workloads. You can use this configuration as a starting point and customize it to better suit your cluster's specific DNS requirements.
+
+> [!NOTE]
+> When customizing LocalDNS, use the following configuration format as your template. You can add additional server blocks, however adding unsupported or additional top-level properties will cause validation failures.
 
 ```json
 {
@@ -338,6 +303,8 @@ This process ensures the AKS Resource Provider is aware of the DNS changes and a
 
 For information on LocalDNS in AKS, see [LocalDNS in Azure Kubernetes Service (conceptual)](./dns-concepts.md).
 
+For comprehensive troubleshooting guidance on DNS issues when using LocalDNS, see [Troubleshoot LocalDNS issues in AKS](https://learn.microsoft.com/troubleshoot/azure/azure-kubernetes/connectivity/dns/troubleshoot-localdns).
+
 For details on how to customize CoreDNS in AKS, refer to the [CoreDNS customization guide](./coredns-custom.md).
 
 For information on the CoreDNS project, see [the CoreDNS upstream project page][coreDNS].
@@ -352,8 +319,3 @@ To learn more about core network concepts, see [Network concepts for application
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
-[az-extension-add]: /cli/azure/extension#az-extension-add
-[az-extension-update]: /cli/azure/extension#az-extension-update
-[az-feature-register]: /cli/azure/feature#az-feature-register
-[az-feature-show]: /cli/azure/feature#az-feature-show
-[az-provider-register]: /cli/azure/provider#az-provider-register

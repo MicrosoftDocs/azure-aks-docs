@@ -53,6 +53,10 @@ NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies
   * Link flapping shouldn't occur under normal operating conditions and might result in degraded inter-node communication for distributed workloads.
   * It can also signal physical layer issues, misconfigured firmware, or driver instability.
 
+* **NVIDIA GRID Driver License Check**: For NVIDIA VM SKUs that support GRID driver, this condition verifies license status of the installed GRID driver on [supported NVIDIA VM SKUs](/azure/virtual-machines/sizes/gpu-accelerated/nvadsa10v5-series).
+
+  * Invalid might indicate the installed GRID driver is not licensed.
+
 ## Frequently asked questions
 
 ### Does Node Problem Detector (NPD) automatically remediate GPU node issues?
@@ -61,7 +65,7 @@ NPD doesn't take direct action to remediate GPU-enabled node issues. NPD detects
 
 ### On which Azure VM sizes does AKS conduct GPU health monitoring through NPD?
 
-Currently, NPD conducts health checks on GPU nodes provisioned with the `Standard_ND96asr_v4` or `Standard_ND96isr_H100_v5` VM size on AKS.
+Currently, NPD conducts health checks on GPU nodes provisioned with the `Standard_ND96asr_v4` or `Standard_ND96isr_H100_v5` VM size on AKS. Also on [A10 SKU](/azure/virtual-machines/sizes/gpu-accelerated/nvadsa10v5-series) for GRID Driver License checks.
 
 ### Does NPD monitor the health of multi-instance GPU (MIG) node pools?
 

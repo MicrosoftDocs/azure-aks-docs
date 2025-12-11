@@ -23,7 +23,7 @@ The Kubernetes API server is the core of the Kubernetes control plane and is the
 - To learn what IP addresses to include when integrating your AKS cluster with Azure DevOps, see the Azure DevOps [Allowed IP addresses and domain URLs][azure-devops-allowed-network-cfg] article.
 
 > [!TIP]
-> From the Azure portal, you can use Microsoft Copilot in Azure to make changes to the IP addresses that can access your cluster. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#enable-ip-address-authorization).
+> From the Azure portal, you can use Azure Copilot to make changes to the IP addresses that can access your cluster. For more information, see [Work with AKS clusters efficiently using Azure Copilot](/azure/copilot/work-aks-clusters#enable-ip-address-authorization).
 
 ### Limitations
 
@@ -50,9 +50,9 @@ To secure access to the otherwise publicly accessible AKS control plane / API se
 > - The cluster egress IP address (firewall, NAT gateway, or other address, depending on your [outbound type][egress-outboundtype]).
 > - Any range that represents networks that you'll administer the cluster from.
 >
-> The upper limit for the number of IP ranges you can specify is 200.
+> You can specify up to 200 authorized IP ranges. To go beyond this limit, consider using [API Server VNet Integration][api-server-vnet-integration], which supports up to 2,000 authorized IP ranges.
 >
-> The rules can take up to two minutes to propagate. Please allow up to that time when testing the connection.
+> The rules can take up to two minutes to propagate. Allow up to that time when testing the connection.
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -143,11 +143,11 @@ When you enable API server authorized IP ranges during cluster creation, the out
     ```
 
 - To allow multiple IP address ranges, you can list several IP addresses, separated by commas.
-  
+
     ```azurecli-interactive
     az aks update --resource-group myResourceGroup --name myAKSCluster --api-server-authorized-ip-ranges 73.140.245.0/24,193.168.1.0/24,194.168.1.0/24
     ```
-  
+
     You can also use *0.0.0.0/32* when specifying the `--api-server-authorized-ip-ranges` parameter to allow only the public IP of the Standard SKU load balancer.
 
 ### [Azure PowerShell](#tab/azure-powershell)
@@ -241,7 +241,7 @@ Another option is to configure a jumpbox with the necessary tooling inside a sep
     ```bash
     # Add to AKS approved list using Azure CLI
     az aks update --resource-group $RG --name $AKSNAME --api-server-authorized-ip-ranges $CURRENT_IP/24,73.140.245.0/24
-    
+
     # Add to AKS approved list using Azure PowerShell
     Set-AzAksCluster -ResourceGroupName $RG -Name $AKSNAME -ApiServerAccessAuthorizedIpRange '$CURRENT_IP/24,73.140.245.0/24'
     ```

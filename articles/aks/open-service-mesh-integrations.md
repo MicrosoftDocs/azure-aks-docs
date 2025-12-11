@@ -2,7 +2,7 @@
 title: Integrations with Open Service Mesh on Azure Kubernetes Service (AKS)
 description: Integrations with Open Service Mesh on Azure Kubernetes Service (AKS)
 ms.topic: concept-article
-ms.date: 09/25/2024
+ms.date: 11/10/2025
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -13,8 +13,8 @@ ms.service: azure-kubernetes-service
 
 The Open Service Mesh (OSM) add-on integrates with features provided by Azure and some open source projects.
 
-> [!NOTE]
-> With the retirement of [Open Service Mesh (OSM)](https://docs.openservicemesh.io/) by the Cloud Native Computing Foundation (CNCF), we recommend identifying your OSM configurations and migrating them to an equivalent Istio configuration. For information about migrating from OSM to Istio, see [Migration guidance for Open Service Mesh (OSM) configurations to Istio](open-service-mesh-istio-migration-guidance.md).
+> [!WARNING]
+> Microsoft has announced the retirement of the [Open Service Mesh (OSM) add-on for AKS](https://azure.microsoft.com/updates?id=open-service-mesh-add-on-for-aks-will-be-retired-on-september-30-2027). The upstream OSM project has also been retired by the [Cloud Native Computing Foundation (CNCF)](https://docs.openservicemesh.io/). Identify any existing OSM configurations and migrate them to equivalent Istio configurations. For migration steps, see [Migration guidance for Open Service Mesh (OSM) configurations to Istio](open-service-mesh-istio-migration-guidance.md).
 
 > [!IMPORTANT]
 > Integrations with open source projects aren't covered by the [AKS support policy][aks-support-policy].
@@ -23,41 +23,37 @@ The Open Service Mesh (OSM) add-on integrates with features provided by Azure an
 
 Ingress allows for traffic external to the mesh to be routed to services within the mesh. With OSM, you can configure most ingress solutions to work with your mesh, but OSM works best with one of the following solutions:
 
+* [Application Gateway for Containers][application-gateway-for-containers]
 * [Application Routing][app-routing]
 * [NGINX ingress][osm-nginx]
 * [Contour ingress][osm-contour]
 
-> [!NOTE]
-> At this time, [Azure Gateway Ingress Controller (AGIC)][agic] only works for HTTP backends. If you configure OSM to use AGIC, AGIC won't be used for other backends, such as HTTPS and mTLS.
-
-### Use the Azure Gateway Ingress Controller (AGIC) with the OSM add-on for HTTP ingress
-
-> [!IMPORTANT]
-> You can't configure [Azure Gateway Ingress Controller (AGIC)][agic] for HTTPS ingress.
+### Use the Azure Application Gateway for Containers with the OSM add-on for HTTP ingress
 
 #### Create a namespace and deploy the application service
 
-1. Installing the AGIC ingress controller.
-2. Create a namespace for the application service using the `kubectl create ns` command.
+1. [Deploy Application Gateway for Containers' ALB Controller](/azure/application-gateway/for-containers/quickstart-deploy-application-gateway-for-containers-alb-controller).
+2. [Create Application Gateway for Containers](/azure/application-gateway/for-containers/quickstart-create-application-gateway-for-containers-managed-by-alb-controller) resource
+3. Create a namespace for the application service using the `kubectl create ns` command.
 
     ```console
     kubectl create ns httpbin
     ```
 
-3. Add the namespace to the mesh using the `osm namespace add` OSM CLI command.
+4. Add the namespace to the mesh using the `osm namespace add` OSM CLI command.
 
     ```console
     osm namespace add httpbin
     ```
 
-4. Deploy the application service to the namespace using the `kubectl apply` command.
+5. Deploy the application service to the namespace using the `kubectl apply` command.
 
     ```console
     export RELEASE_BRANCH=release-v1.2
     kubectl apply -f https://raw.githubusercontent.com/openservicemesh/osm-docs/$RELEASE_BRANCH/manifests/samples/httpbin/httpbin.yaml -n httpbin
     ```
 
-5. Verify the pods are up and running and have the envoy sidecar injected using the `kubectl get pods` command.
+6. Verify the pods are up and running and have the envoy sidecar injected using the `kubectl get pods` command.
 
     ```console
     kubectl get pods -n httpbin
@@ -70,7 +66,7 @@ Ingress allows for traffic external to the mesh to be routed to services within 
     httpbin-7c6464475-9wrr8   2/2     Running   0          6d20h
     ```
 
-6. List the details of the service using the `kubectl get svc` command.
+7. List the details of the service using the `kubectl get svc` command.
 
     ```console
     kubectl get svc -n httpbin
@@ -85,28 +81,40 @@ Ingress allows for traffic external to the mesh to be routed to services within 
 
 #### Deploy the ingress configurations and verify access to the application service
 
-1. Deploy the following `Ingress` and `IngressBackend` configurations to allow external clients to access the `httpbin` service on port `14001` using the `kubectl apply` command.
+1. Deploy the following `Gateway`, `HTTPRoute`, and `IngressBackend` configurations to allow external clients to access the `httpbin` service on port `14001` using the `kubectl apply` command.
 
     ```console
     kubectl apply -f <<EOF
-    apiVersion: networking.k8s.io/v1
-    kind: Ingress
+    apiVersion: gateway.networking.k8s.io/v1
+    kind: Gateway
     metadata:
-      name: httpbin
+      name: gateway-01
       namespace: httpbin
       annotations:
-        kubernetes.io/ingress.class: azure/application-gateway
+        alb.networking.azure.io/alb-namespace: <alb-namespace>
+        alb.networking.azure.io/alb-name: <alb-name>
     spec:
+      gatewayClassName: azure-alb-external
+      listeners:
+      - name: httpbin-listener
+        port: 80
+        protocol: HTTP
+        allowedRoutes:
+          namespaces:
+            from: Same
+    ---
+    apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    metadata:
+      name: httpbin-route
+      namespace: httpbin
+    spec:
+      parentRefs:
+      - name: gateway-01
       rules:
-     - http:
-          paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: httpbin
-                port:
-                  number: 14001
+      - backendRefs:
+        - name: httpbin
+          port: 14001
     ---
     kind: IngressBackend
     apiVersion: policy.openservicemesh.io/v1alpha1
@@ -125,17 +133,60 @@ Ingress allows for traffic external to the mesh to be routed to services within 
     EOF
     ```
 
-2. Verify the `Ingress` object was successfully deployed using the `kubectl get ingress` command and make note of the external IP address.
+2. Verify the `Gateway` and `HTTPRoute` resources were successfully deployed using the `kubectl get gateway` and `kubectl get httproute` commands. Make note of the external fully qualified domain name on the Gateway resource.
 
     ```console
-    kubectl get ingress -n httpbin
+    # Gateway resource
+    kubectl get gateway gateway-01 -n test-infra -o yaml
+    # HTTPRoute resource
+    kubectl get httproute contoso-route -n test-infra -o yaml
     ```
 
-    Your output should look similar to the following example output:
+    Your `Gateway` output should look similar to the following example output:
 
     ```output
-    NAME      CLASS    HOSTS   ADDRESS         PORTS   AGE
-    httpbin   <none>   *       20.85.173.179   80      6d20h
+    status:
+      addresses:
+      - type: Hostname
+        value: xxxx.yyyy.alb.azure.com
+      conditions:
+      - lastTransitionTime: "2023-06-19T21:04:55Z"
+        message: Valid Gateway
+        observedGeneration: 1
+        reason: Accepted
+        status: "True"
+        type: Accepted
+      - lastTransitionTime: "2023-06-19T21:04:55Z"
+        message: Application Gateway For Containers resource has been successfully updated.
+        observedGeneration: 1
+        reason: Programmed
+        status: "True"
+        type: Programmed
+      listeners:
+      - attachedRoutes: 0
+        conditions:
+        - lastTransitionTime: "2023-06-19T21:04:55Z"
+          message: ""
+          observedGeneration: 1
+          reason: ResolvedRefs
+          status: "True"
+          type: ResolvedRefs
+        - lastTransitionTime: "2023-06-19T21:04:55Z"
+          message: Listener is accepted
+          observedGeneration: 1
+          reason: Accepted
+          status: "True"
+          type: Accepted
+        - lastTransitionTime: "2023-06-19T21:04:55Z"
+          message: Application Gateway For Containers resource has been successfully updated.
+          observedGeneration: 1
+          reason: Programmed
+          status: "True"
+          type: Programmed
+        name: https-listener
+        supportedKinds:
+        - group: gateway.networking.k8s.io
+          kind: HTTPRoute
     ```
 
 3. Verify the `IngressBackend` object was successfully deployed using the `kubectl get ingressbackend` command.
@@ -154,7 +205,8 @@ Ingress allows for traffic external to the mesh to be routed to services within 
 4. Verify you can access the `httpbin` service using the external IP address of the ingress service and the following `curl` command.
 
     ```console
-    curl -sI http://<external-ip>/get
+    fqdn=$(kubectl get gateway gateway-01 -n httpbin -o jsonpath='{.status.addresses[0].value}')
+    curl -sI http://$fqdn/get
     ```
 
 5. Confirm you receive a response with `status 200`.
@@ -230,7 +282,7 @@ OSM has several types of certificates it uses to operate on your AKS cluster. OS
 This article covered the Open Service Mesh (OSM) add-on integrations with features provided by Azure and some open source projects. To learn more about OSM, see [About OSM in AKS][about-osm-in-aks].
 
 <!-- LINKS -->
-[agic]: /azure/application-gateway/ingress-controller-overview
+[application-gateway-for-containers]: /azure/application-gateway/for-containers/overview
 [aks-support-policy]: support-policies.md
 [azure-monitor]: /azure/azure-monitor/overview
 [osm-nginx]: https://release-v1-0.docs.openservicemesh.io/docs/demos/ingress_k8s_nginx/
