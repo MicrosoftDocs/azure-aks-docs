@@ -139,7 +139,7 @@ az aks update --resource-group $MY_RESOURCE_GROUP --name $MY_CLUSTER --enable-po
 
 <a name='using-kubenet-network-plugin-with-azure-active-directory-pod-managed-identities'></a>
 
-# [Kubenet network plugin](kubenet-np)
+# [Kubenet network plugin](#tab/kubenet-np)
 
 > [!WARNING]
 > Running Microsoft Entra pod-managed identity in a cluster with Kubenet **isn't recommended** due to security risks. The default Kubenet configuration doesn't prevent Address Resolution Protocol (ARP) spoofing, which could allow a pod to impersonate another pod and access unintended identities. To reduce this risk, implement the mitigation steps and configure appropriate policies **before** enabling Microsoft Entra pod-managed identity with Kubenet.
