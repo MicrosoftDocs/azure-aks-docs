@@ -43,7 +43,7 @@ When Fleet Manager is configured with a hub cluster, member clusters support the
 * `value`: The value of the taint.
 * `effect`: The effect of the taint, such as `NoSchedule`.
 
-Once a `MemberCluster` is tainted, it lets the [KubeFleet scheduler](./concepts-scheduler-scheduling-framework.md) know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#using-clusterresourceplacement-to-deploy-cluster-scoped-resources) or [ResourcePlacement](./concepts-namespace-scoped-resource-propagation.md) to the `MemberCluster`.
+Once a `MemberCluster` is tainted, it lets the KubeFleet scheduler know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#using-clusterresourceplacement-to-deploy-cluster-scoped-resources) or [ResourcePlacement](./concepts-namespace-scoped-resource-propagation.md) to the `MemberCluster`.
 
 ## Next steps
 
