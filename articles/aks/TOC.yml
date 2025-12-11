@@ -186,7 +186,7 @@
                       href: istio-gateway-api.md
                 - name: Egress
                   items:
-                    - name: Deploy egress gateways (preview)
+                    - name: Deploy egress gateways
                       href: istio-deploy-egress.md
             - name: Security
               items:
