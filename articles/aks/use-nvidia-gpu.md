@@ -391,6 +391,12 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
     Adding run metadata for 499
     ```
 
+## Upgrading a node pool
+
+Whether you want to [update][az-aks-nodepool-update] or [upgrade][az-aks-nodepool-upgrade] your node pools, you might notice that there is no `--gpu-driver` parameter for either operation. You might run into an error like `unrecognized arguments: --gpu-driver none` if you attempt to pass the parameter. There is no need to call on the parameter, as the value is not effected by any such operations.
+
+When you first create your node pool, whatever parameter you declare for `--gpu-driver` will not be impacted by upgrade/update operations. If you don't want any drivers to be installed, and selected `--gpu-driver None` when creating your node pool, drivers will not be installed in any subsequent updates/upgrades.
+
 ## Clean up resources
 
 Remove the associated Kubernetes objects you created in this article using the [`kubectl delete job`][kubectl delete] command.
@@ -424,6 +430,7 @@ kubectl delete jobs samples-tf-mnist-demo
 <!-- LINKS - internal -->
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-vm-list-skus]: /cli/azure/vm
