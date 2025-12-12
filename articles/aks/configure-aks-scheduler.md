@@ -175,7 +175,7 @@ In this example, the configured scheduler prioritizes scheduling pods on nodes w
 
 ## Configure pod topology spread
 
-Pod topology spread is a scheduling strategy that seeks to distribute pods evenly across failure domains (such as availability zones or regions) to ensure high availability and fault tolerance in the event of zone or node failures. This strategy helps prevent the risk of all replicas of a pod being placed in the same failure domain. For more configuration guidance, see the [Kubernetes Pod Topology Spread Constraints documentation](topology-spread-constraints/).
+Pod topology spread is a scheduling strategy that seeks to distribute pods evenly across failure domains (such as availability zones or regions) to ensure high availability and fault tolerance in the event of zone or node failures. This strategy helps prevent the risk of all replicas of a pod being placed in the same failure domain. For more configuration guidance, see the [Kubernetes Pod Topology Spread Constraints documentation][topology-spread-constraints/].
 
 1. Create a file named `pod-topology-spreader-scheduler.yaml` and paste in the following manifest:
 
@@ -446,6 +446,7 @@ To learn more about the AKS scheduler and best practices, see the following reso
 
 <!-- LINKS - external -->
 [topology-spread-constraints/]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+
 
 
 
