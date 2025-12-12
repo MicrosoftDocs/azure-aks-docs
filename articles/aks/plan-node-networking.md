@@ -30,9 +30,8 @@ When setting up node networking, you can choose between **Load Balancer**, **NAT
 
 Our **general recommendation** is to use a **Load Balancer**. If you have a **high volume of outbound connections**, consider using a **NAT Gateway** for better SNAT port management. If you have any **custom egress needs (Azure Firewall, NVA, etc.)**, you might want to explore **User Defined Routing (UDR)**.
 
-## Next step
+## Related content
 
-To continue planning your AKS networking, see the following article:
-
-> [!div class="nextstepaction"]
-> [Plan application networking for Azure Kubernetes Service (AKS)](./plan-application-networking.md)
+- [Plan control plane networking for Azure Kubernetes Service (AKS)](./plan-control-plane-networking.md)
+- [Plan pod networking for Azure Kubernetes Service (AKS)](./plan-pod-networking.md)
+- [Plan application networking for Azure Kubernetes Service (AKS)](./plan-application-networking.md)

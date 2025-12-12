@@ -41,9 +41,8 @@ Our **general recommendation** is to use a **public cluster**, as it simplifies 
 
 Once generally available (GA), we recommend enabling [API Server VNet Integration](#api-server-vnet-integration-preview) for both public and private clusters to enhance security and simplify network management.
 
-## Next step
+## Related content
 
-To continue planning your AKS networking, see the following article:
-
-> [!div class="nextstepaction"]
-> [Plan node networking for Azure Kubernetes Service (AKS)](./plan-node-networking.md)
+- [Plan node networking for Azure Kubernetes Service (AKS)](./plan-node-networking.md)
+- [Plan pod networking for Azure Kubernetes Service (AKS)](./plan-pod-networking.md)
+- [Plan application networking for Azure Kubernetes Service (AKS)](./plan-application-networking.md)

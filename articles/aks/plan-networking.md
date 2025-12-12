@@ -24,10 +24,3 @@ Each component has its own networking requirements, considerations, and options.
 - [Plan application networking for Azure Kubernetes Service (AKS)](./plan-application-networking.md)
 
 Each article poses a question to help guide your planning, and then provides options, recommendations, and best practices.
-
-## Next step
-
-To start planning your AKS networking, see the following article:
-
-> [!div class="nextstepaction"]
-> [Plan control plane networking for Azure Kubernetes Service (AKS)](./plan-control-plane-networking.md)

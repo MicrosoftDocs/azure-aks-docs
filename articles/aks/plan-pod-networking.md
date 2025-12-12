@@ -51,9 +51,8 @@ When setting up your data plane, you can choose between [**Azure CNI Powered by 
 
 Our **general recommendation** is to use **Azure CNI Overlay**. If you **need direct IP access and have efficiency or scale requirements**, consider using **Azure CNI Pod Subnet with Dynamic IP Allocation** or **Azure CNI Pod Subnet with Static Block Allocation**. If you **need direct pod IP access and want simplified management**, consider using **Azure CNI Node Subnet**.
 
-## Next step
+## Related content
 
-To continue planning your AKS networking, see the following article:
-
-> [!div class="nextstepaction"]
-> [Plan application networking for Azure Kubernetes Service (AKS)](./plan-application-networking.md)
+- [Plan control plane networking for Azure Kubernetes Service (AKS)](./plan-control-plane-networking.md)
+- [Plan node networking for Azure Kubernetes Service (AKS)](./plan-node-networking.md)
+- [Plan application networking for Azure Kubernetes Service (AKS)](./plan-application-networking.md)

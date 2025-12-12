@@ -31,8 +31,6 @@ For **non-HTTP traffic**, we recommend using **Load Balancer Service with layer-
 
 ## Related content
 
-To learn more about networking in AKS, see the following articles:
-
-- [IP address planning for your Azure Kubernetes Service (AKS) clusters](./concepts-network-ip-address-planning.md)
-- [Best practices for network connectivity and security in Azure Kubernetes Service (AKS)](./operator-best-practices-network.md)
-- [Outbound network and FQDN rules for Azure Kubernetes Service (AKS) clusters](./outbound-rules-control-egress.md)
+- [Plan control plane networking for Azure Kubernetes Service (AKS)](./plan-control-plane-networking.md)
+- [Plan node networking for Azure Kubernetes Service (AKS)](./plan-node-networking.md)
+- [Plan pod networking for Azure Kubernetes Service (AKS)](./plan-pod-networking.md)
