@@ -51,11 +51,11 @@ The following table lists the policies that become active and the Kubernetes res
 
 If you want to submit an idea or request for Deployment Safeguards, open an issue in the [AKS GitHub repository][aks-gh-repo] and add `[Deployment Safeguards request]` to the beginning of the title.
 
-## Pod Security Standards in Deployment Safeguards (AKS Automatic)
+## Pod Security Standards in Deployment Safeguards
 > [!NOTE]
-> Baseline Pod Security Standards are now turned on by default in AKS Automatic. Currently Pod Security Standards in Deployment Safeguards are not available in Standard SKU.
+> Baseline Pod Security Standards are now turned on by default in AKS Automatic.The baseline Pod Security Standards in AKS Automatic can not be turned off.
 
-In AKS Automatic, [Baseline Pod Security Standards][pod-security-standards] are now enabled by default. To ensure your workloads deploy successfully, make sure each manifest complies with the Baseline Pod Security requirements.
+Deployment Safeguards also supports the ability to turn on [Baseline, Restricted and Privileged Pod Security Standards][pod-security-standards]. To ensure your workloads deploy successfully, make sure each manifest complies with the Baseline or Restricted Pod Security requirements. By default, Azure Kubernetes Service uses Privileged Pod Security Standards.
 
 Policy|Error Message|Fix
 -|-|-
@@ -69,6 +69,12 @@ SELinux|`SELinux type must be one of: undefined/empty, container_t, container_in
 /proc Mount Type|ProcMount must be undefined/nil or 'Default' in spec.containers[*].securityContext.procMount|set "*   `spec.containers[*].securityContext.procMount`" to 'Default' or have it be undefined.
 Seccomp|`Seccomp profile must not be explicitly set to Unconfined. Allowed values are: undefined/nil, RuntimeDefault, or Localhost`| Set `securityContext.seccompProfile.type` on the pod or containers to one of the allowed values.
 Sysctls|`Disallowed sysctl detected. Only baseline Kubernetes pod security standard sysctls are permitted`|Remove the disallowed systctls( see the [oss spec](https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline) for specific list).
+Volume Types(PSS Restricted Only)|`Only the following volume types are allowed under restricted policy: configMap, csi, downwardAPI, emptyDir, ephemeral, persistentVolumeClaim, projected, secret`| Remove any volumes that are not one of the allowed types
+Privilege Escalation(PSS Restricted Only)|`Privilege escalation must be set to false under restricted policy`| `*   `spec.containers[*].securityContext.allowPrivilegeEscalation`` must explicitly be set to false for each container, initContainer, and ephemeralContainer
+Running as Non-Root(PSS Restricted only)|`Containers must not run as root user in spec.containers[*].securityContext.runAsNonRoot`| spec.containers[*].securityContext.runAsNonRoot must explicitly be set to false for each container, initContainer, and ephemeralContainer
+Run as Non-Root User(PSS Restricted Only)|`'Containers must not run as root user: spec.securityContext.runAsUser is set to 0'`| set securityContext.runAsUser to some non-zero value, or leave it undefined for the pod level, and each container, initContainer, and ephemeralContainer
+Seccomp(PSS Restricted Only)|`Seccomp profile must be "RuntimeDefault" or "Localhost" under restricted policy`| Set `securityContext.seccompProfile.type` on the pod or containers to one of the allowed values. This differs from the baseline in the fact that the restricted policy does not allow an undefined value
+Capabiilities(PSS Restricted Only)|`All containers must drop ALL capabilities under restricted policy` or `Only NET_BIND_SERVICE may be added to capabilities under restricted policy`| All containers must drop "ALL" capabilities, and are only permitted to add "NET_BIND_SERVICE" 
 
 ## Enable Deployment Safeguards
 
@@ -103,6 +109,17 @@ For example, to exclude the namespaces `ns1` and `ns2`, use a space separated li
 
 ```azurecli-interactive
 az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warn --excluded-ns ns1 ns2 
+```
+
+### Turn on Pod Security Standards
+
+>[!NOTE]
+> Azure Kubernetes Service by default uses `Privileged` Pod Security Standards. If you wish to return back to default settings, set the `--pss-level` flag to `Privileged`.,
+
+To turn on Pod Security Standards in Deployment Safeguards, use the `pss-level` flag to choose between `Baseline`, `Restricted`, or `Privileged`.
+
+```azurecli-interactive
+az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warn --pss-level <Baseline|Restricted|Privileged>
 ```
 
 ### Update your deployment safeguard version
