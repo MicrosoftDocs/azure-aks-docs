@@ -45,7 +45,7 @@ The following table describes the key parameters for configuring Azure CNI Overl
 
 The default network plugin behavior depends on whether you explicitly set `--network-plugin`:
 
-- If you don't specify `--network-plugin`, AKS defaults to Azure CNI (`azure`) with overlay mode.
+- If you don't specify `--network-plugin`, AKS defaults to Azure CNI Overlay.
 - If you specify `--network-plugin=azure` and omit `--network-plugin-mode`, AKS intentionally uses VNet (node subnet) mode for backward compatibility.
 
 ## Create an Azure CNI Overlay AKS cluster
