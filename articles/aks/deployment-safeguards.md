@@ -53,7 +53,7 @@ If you want to submit an idea or request for Deployment Safeguards, open an issu
 
 ## Pod Security Standards in Deployment Safeguards
 > [!NOTE]
-> Baseline Pod Security Standards are now turned on by default in AKS Automatic. The baseline Pod Security Standards in AKS Automatic cannot be turned off.
+> Baseline Pod Security Standards are now turned on by default in AKS Automatic. The baseline Pod Security Standards in AKS Automatic can't be turned off.
 
 Deployment Safeguards also supports the ability to turn on [Baseline, Restricted and Privileged Pod Security Standards][pod-security-standards]. To ensure your workloads deploy successfully, make sure each manifest complies with the Baseline or Restricted Pod Security requirements. By default, Azure Kubernetes Service uses Privileged Pod Security Standards.
 
@@ -69,17 +69,17 @@ SELinux|`SELinux type must be one of: undefined/empty, container_t, container_in
 /proc Mount Type|ProcMount must be undefined/nil or 'Default' in spec.containers[*].securityContext.procMount|Set "*   `spec.containers[*].securityContext.procMount`" to 'Default' or have it be undefined.
 Seccomp|`Seccomp profile must not be explicitly set to Unconfined. Allowed values are: undefined/nil, RuntimeDefault, or Localhost`| Set `securityContext.seccompProfile.type` on the pod or containers to one of the allowed values.
 Sysctls|`Disallowed sysctl detected. Only baseline Kubernetes pod security standard sysctls are permitted`|Remove the disallowed systctls( see the [oss spec](https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline) for specific list).
-Volume Types (PSS Restricted Only)|`Only the following volume types are allowed under restricted policy: configMap, csi, downwardAPI, emptyDir, ephemeral, persistentVolumeClaim, projected, secret`| Remove any volumes that are not one of the allowed types.
+Volume Types (PSS Restricted Only)|`Only the following volume types are allowed under restricted policy: configMap, csi, downwardAPI, emptyDir, ephemeral, persistentVolumeClaim, projected, secret`| Remove any volumes that aren't one of the allowed types.
 Privilege Escalation (PSS Restricted Only)|`Privilege escalation must be set to false under restricted policy`| `*   `spec.containers[*].securityContext.allowPrivilegeEscalation`` must explicitly be set to false for each container, initContainer, and ephemeralContainer.
 Running as Non-Root (PSS Restricted only)|`Containers must not run as root user in spec.containers[*].securityContext.runAsNonRoot`| spec.containers[*].securityContext.runAsNonRoot must explicitly be set to false for each container, initContainer, and ephemeralContainer.
 Run as Non-Root User (PSS Restricted Only)|`'Containers must not run as root user: spec.securityContext.runAsUser is set to 0'`| set securityContext.runAsUser to some non-zero value, or leave it undefined for the pod level, and each container, initContainer, and ephemeralContainer.
-Seccomp (PSS Restricted Only)|`Seccomp profile must be "RuntimeDefault" or "Localhost" under restricted policy`| Set `securityContext.seccompProfile.type` on the pod or containers to one of the allowed values. This differs from the baseline in the fact that the restricted policy does not allow an undefined value.
+Seccomp (PSS Restricted Only)|`Seccomp profile must be "RuntimeDefault" or "Localhost" under restricted policy`| Set `securityContext.seccompProfile.type` on the pod or containers to one of the allowed values. This differs from the baseline in the fact that the restricted policy doesn't allow an undefined value.
 Capabilities (PSS Restricted Only)|`All containers must drop ALL capabilities under restricted policy` or `Only NET_BIND_SERVICE may be added to capabilities under restricted policy`| All containers must drop "ALL" capabilities, and are only permitted to add "NET_BIND_SERVICE". 
 
 ## Enable Deployment Safeguards
 
 >[!NOTE]
-> Using the Deployment Safeguards `Enforce` level means you're opting in to deployments being blocked and mutated. Please consider how these policies might work with your AKS cluster before enabling `Enforce`.
+> Using the Deployment Safeguards `Enforce` level means you're opting in to deployments being blocked and mutated. Consider how these policies might work with your AKS cluster before enabling `Enforce`.
 
 ### Enable Deployment Safeguards on an existing cluster
 
@@ -149,7 +149,7 @@ $ kubectl apply -f deployment.yaml
 Error from server (Forbidden): error when creating "deployment.yaml": admission webhook "validation.gatekeeper.sh" denied the request: [azurepolicy-k8sazurev1antiaffinityrules-ceffa082711831ebffd1] Deployment with 2 replicas should have either podAntiAffinity or topologySpreadConstraints set to avoid disruptions due to nodes crashing
 ```
 
-If your Kubernetes resources comply with the applicable mutation safeguards and meet all other safeguard requirements, they will be successfully deployed, as shown in the following example:
+If your Kubernetes resources comply with the applicable mutation safeguards and meet all other safeguard requirements, they'll be successfully deployed, as shown in the following example:
 
 ```
 $ kubectl apply -f deployment.yaml
@@ -182,11 +182,11 @@ No. If you have an idea for a safeguard, open an issue in the [AKS GitHub reposi
 
 #### Can I pick and choose which mutations I want in Enforcement?
 
-No. Deployment Safeguards is all or nothing. Once you turn on Warn or Enforce, all safeguards will be active.
+No. Deployment Safeguards is all or nothing. Once you turn on Warn or Enforce, all safeguards are active.
 
 #### Why did my deployment resource get admitted even though it wasn't following best practices?
 
-Deployment Safeguards enforce best practice standards through Azure Policy controls and has policies that validate against Kubernetes resources. To evaluate and enforce cluster components, Azure Policy extends [Gatekeeper](https://open-policy-agent.github.io/gatekeeper/website/). Gatekeeper enforcement also currently operates in a [`fail-open` model](https://open-policy-agent.github.io/gatekeeper/website/docs/failing-closed/#considerations). As there's no guarantee that Gatekeeper will respond to our networking call, we make sure that in that case, the validation is skipped so that the deny doesn't block your deployments.
+Deployment Safeguards enforce best practice standards through Azure Policy controls and has policies that validate against Kubernetes resources. To evaluate and enforce cluster components, Azure Policy extends [Gatekeeper](https://open-policy-agent.github.io/gatekeeper/website/). Gatekeeper enforcement also currently operates in a [`fail-open` model](https://open-policy-agent.github.io/gatekeeper/website/docs/failing-closed/#considerations). As there's no guarantee that Gatekeeper responds to our networking call, we make sure that in that case, the validation is skipped so that the deny doesn't block your deployments.
 
 To learn more, see [workload validation in Gatekeeper](https://open-policy-agent.github.io/gatekeeper/website/docs/workload-resources/).
 
