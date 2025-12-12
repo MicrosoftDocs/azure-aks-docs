@@ -40,12 +40,17 @@ The following table describes the key parameters for configuring Azure CNI Overl
 | Parameter | Description |
 |-----------|-------------|
 | `--network-plugin` | Set to `azure` to use Azure CNI networking. |
-| `--network-plugin-mode` | Set to `overlay` to enable Azure CNI Overlay networking. |
+| `--network-plugin-mode` | Set to `overlay` to enable Azure CNI Overlay networking. This setting applies only when `--network-plugin=azure`. |
 | `--pod-cidr` | Specify a custom pod CIDR block for the cluster. The default is `10.244.0.0/16`. |
+
+The default network plugin behavior depends on whether you explicitly set `--network-plugin`:
+
+- If you don't specify `--network-plugin`, AKS defaults to Azure CNI (`azure`) with overlay mode.
+- If you specify `--network-plugin=azure` and omit `--network-plugin-mode`, AKS intentionally uses VNet (node subnet) mode for backward compatibility.
 
 ## Create an Azure CNI Overlay AKS cluster
 
-- Create an Azure CNI Overlay AKS cluster using the [`az aks create`][az-aks-create] command with the `--network-plugin-mode` set to `overlay`. If you don't specify a value for `--pod-cidr`, AKS assigns the default value of `10.244.0.0/16`.
+- Create an Azure CNI Overlay AKS cluster using the [`az aks create`][az-aks-create] command with `--network-plugin=azure` and `--network-plugin-mode=overlay`. If you don't specify a value for `--pod-cidr`, AKS assigns the default value of `10.244.0.0/16`.
 
     ```azurecli-interactive
     az aks create \
