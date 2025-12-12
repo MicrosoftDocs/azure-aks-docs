@@ -114,9 +114,9 @@ az aks safeguards update --resource-group <resource-group-name> --name <cluster-
 ### Turn on Pod Security Standards
 
 >[!NOTE]
-> Azure Kubernetes Service by default uses `Privileged` Pod Security Standards. If you wish to return back to default settings, set the `--pss-level` flag to `Privileged`.,
+> Azure Kubernetes Service (AKS) uses `Privileged` Pod Security Standards by default. If you want to revert to the default configuration, set the `--pss-level` flag to `Privileged`.
 
-To turn on Pod Security Standards in Deployment Safeguards, use the `pss-level` flag to choose between `Baseline`, `Restricted`, or `Privileged`.
+To enable Pod Security Standards in Deployment Safeguards, use the `--pss-level` flag to select one of the following levels: `Baseline`, `Restricted`, or `Privileged`.
 
 ```azurecli-interactive
 az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warn --pss-level <Baseline|Restricted|Privileged>
