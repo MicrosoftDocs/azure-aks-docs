@@ -58,6 +58,10 @@ This article shows you how to configure identity bindings to overcome these work
 
 - Ensure Kubernetes cluster admin (or equivalent) permissions to create `ClusterRole` and `ClusterRoleBinding` resources.
 
+## Limitations
+
+- Identity Binding isn't supported on clusters with [API server VNet integration](/azure/aks/api-server-vnet-integration).
+
 ## Create test resources
 
 Create a resource group, an AKS cluster with workload identity enabled, and a user-assigned managed identity (UAMI):
