@@ -82,7 +82,7 @@ Previously, workload identity required egress to `login.microsoftonline.com` so 
 
 ### What limitations exist for identity bindings?
 
-The Identity bindings feature is not supported on clusters configured with [API server VNet integration](/azure/aks/api-server-vnet-integration).
+Identity bindings aren't yet supported on clusters configured with [API server VNet integration][api-server-vnet-integration].
 
 ## Next steps
 
@@ -97,6 +97,7 @@ Proceed to [Set up identity bindings][identity-bindings-how-to] for a step-by-st
 [python-azure-identity]: /python/api/overview/azure/identity-readme
 [general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
 [managed-identities-overview]: /azure/active-directory/managed-identities-azure-resources/overview
+[api-server-vnet-integration]: /azure/aks/api-server-vnet-integration
 
 <!-- EXTERNAL LINKS -->
 [go-azidentity]: https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity
