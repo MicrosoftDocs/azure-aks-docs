@@ -60,7 +60,7 @@ This article shows you how to configure identity bindings to overcome these work
 
 ## Limitations
 
-- Identity bindings aren't supported on clusters with [API server VNet integration](/azure/aks/api-server-vnet-integration).
+- The Identity bindings feature is not supported on clusters configured with [API server VNet integration](/azure/aks/api-server-vnet-integration).
 
 ## Create test resources
 
