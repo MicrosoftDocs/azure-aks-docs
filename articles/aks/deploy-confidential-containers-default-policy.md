@@ -22,7 +22,8 @@ In general, getting started with AKS Confidential Containers involves the follow
 * Deploy your application in confidential computing
 
 > [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+> As the Confidential Containers preview is sunsetting, it will not be upgraded to Azure Linux 3.0. Customers can continue testing the preview offering on Azure Linux 2 until it is officially sunset in March 2026. To learn more, see the [GitHub issue][kata-cc-retirement].
 
 ## Prerequisites
 
@@ -427,6 +428,7 @@ kubectl delete pod pod-name
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-scale]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#scale
 [download-setup-key-script]: https://github.com/microsoft/confidential-container-demos/blob/add-kafka-demo/kafka/setup-key.sh
+[kata-cc-retirement]: https://github.com/Azure/AKS/issues/3781#issuecomment-3440725467
 
 <!-- INTERNAL LINKS -->
 [upgrade-cluster-enable-workload-identity]: workload-identity-deploy-cluster.md#deploy-and-configure-microsoft-entra-workload-id-on-an-azure-kubernetes-service-aks-cluster
