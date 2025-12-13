@@ -4,7 +4,7 @@ description: Learn how to enable and configure identity bindings on Azure Kubern
 ms.topic: how-to
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 12/09/2025
+ms.date: 12/13/2025
 ms.custom: preview
 author: shashankbarsin
 ms.author: shasb
@@ -60,7 +60,7 @@ This article shows you how to configure identity bindings to overcome these work
 
 ## Limitations
 
-- Identity Binding isn't supported on clusters with [API server VNet integration](/azure/aks/api-server-vnet-integration).
+- Identity bindings aren't supported on clusters with [API server VNet integration](/azure/aks/api-server-vnet-integration).
 
 ## Create test resources
 

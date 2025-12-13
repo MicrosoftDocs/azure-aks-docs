@@ -4,7 +4,7 @@ description: Learn the concepts of identity bindings on Azure Kubernetes Service
 ms.topic: conceptual
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 11/10/2025
+ms.date: 12/13/2025
 ms.custom: preview
 author: shashankbarsin
 ms.author: shasb
@@ -79,6 +79,10 @@ There's no automatic garbage collection of the FIC today when the last identity 
 ### What networking prerequisites exist for identity bindings?
 
 Previously, workload identity required egress to `login.microsoftonline.com` so workloads could exchange service account tokens for Microsoft Entra access tokens. With identity bindings, token exchange requests route through a cluster-specific identity binding proxy operated by AKS. Direct egress to `login.microsoftonline.com` for token exchange isn't required.
+
+### What limitations exist for identity bindings?
+
+Identity bindings aren't supported on clusters with [API server VNet integration](/azure/aks/api-server-vnet-integration).
 
 ## Next steps
 
