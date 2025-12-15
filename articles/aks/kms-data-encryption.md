@@ -331,20 +331,7 @@ To enable the AKS API server to access the private key vault, create a private e
         --name $SUBNET_NAME \
         --vnet-name $VNET_NAME \
         --resource-group $RESOURCE_GROUP \
-        --disable-private-endpoint-network-policies true
-    ```
-
-1. Create a private endpoint for the key vault.
-
-    ```azurecli-interactive
-    az network private-endpoint create \
-        --name $PRIVATE_ENDPOINT_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --vnet-name $VNET_NAME \
-        --subnet $SUBNET_NAME \
-        --private-connection-resource-id $KEY_VAULT_RESOURCE_ID \
-        --group-id vault \
-        --connection-name "${KEY_VAULT_NAME}-connection"
+        --private-endpoint-network-policies Disabled
     ```
 
 1. Create a private DNS zone for Azure Key Vault.
@@ -366,7 +353,20 @@ To enable the AKS API server to access the private key vault, create a private e
         --registration-enabled false
     ```
 
-1. Create a DNS zone group for the private endpoint.
+1. Create a private endpoint for the key vault.
+
+    ```azurecli-interactive
+    az network private-endpoint create \
+        --name $PRIVATE_ENDPOINT_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --vnet-name $VNET_NAME \
+        --subnet $SUBNET_NAME \
+        --private-connection-resource-id $KEY_VAULT_RESOURCE_ID \
+        --group-id vault \
+        --connection-name "${KEY_VAULT_NAME}-connection"
+    ```
+
+1. Create a DNS zone group for the private endpoint. This automatically creates the required DNS A record for the key vault in the private DNS zone.
 
     ```azurecli-interactive
     az network private-endpoint dns-zone-group create \
@@ -376,6 +376,16 @@ To enable the AKS API server to access the private key vault, create a private e
         --private-dns-zone "privatelink.vaultcore.azure.net" \
         --zone-name "privatelink-vaultcore-azure-net"
     ```
+
+1. Verify the private DNS configuration by checking that the A record was created.
+
+    ```azurecli-interactive
+    az network private-dns record-set a list \
+        --resource-group $RESOURCE_GROUP \
+        --zone-name "privatelink.vaultcore.azure.net"
+    ```
+
+    The output should show an A record for your key vault name pointing to the private endpoint's private IP address.
 
 ### Create a user-assigned managed identity
 
