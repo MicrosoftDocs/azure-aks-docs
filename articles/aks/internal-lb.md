@@ -15,16 +15,16 @@ ms.date: 03/25/2025
 
 # Use an internal load balancer with Azure Kubernetes Service (AKS)
 
-You can create and use an internal load balancer to restrict access to your applications in Azure Kubernetes Service (AKS). An internal load balancer doesn't have a public IP and makes a Kubernetes service accessible only to applications that can reach the private IP. These applications can be within the same VNET or in another VNET through VNET peering. This article shows you how to create and use an internal load balancer with AKS.
+You can create and use an internal load balancer to restrict access to your applications in Azure Kubernetes Service (AKS). An internal load balancer doesn't have a public IP and makes a Kubernetes service accessible only to applications that can reach the private IP. These applications can be within the same virtual network or in another virtual network through virtual network peering. This article shows you how to create and use an internal load balancer with AKS.
 
 > [!IMPORTANT]
-> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). At this moment there is no integrated option to use the Azure AKS API operation to migrate the Load Balancer SKU. The Load Balancer SKU decision must be done at cluster creation time. Therefore, if you're currently using Basic Load Balancer, take the necessary steps to migrate your workloads to a new created cluster with the new default Standard Load Balancer SKU prior to the retirement date.
+> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). There's no integrated option to use the Azure AKS API operation to migrate the Load Balancer SKU. The Load Balancer SKU decision must be done at cluster creation time. Therefore, if you're currently using Basic Load Balancer, take the necessary steps to migrate your workloads to a new created cluster with the new default Standard Load Balancer SKU prior to the retirement date.
 
 ## Before you begin
 
 * This article assumes that you have an existing AKS cluster. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 * You need the Azure CLI version 2.0.59 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* If you want to use an existing subnet or resource group, the AKS cluster identity needs permission to manage network resources. For information, see [Configure Azure CNI networking in AKS][advanced-networking]. If you're configuring your load balancer to use an [IP address in a different subnet][different-subnet], ensure the AKS cluster identity also has read access to that subnet.
+* If you want to use an existing subnet or resource group, the AKS cluster identity needs permission to manage network resources. For information, see [Configure Azure CNI networking in AKS][advanced-networking]. If you're configuring your load balancer to use an [IP address in a different subnet][different-subnet], ensure the AKS cluster identity also has `Read` access to that subnet.
   * For more information on permissions, see [Delegate AKS access to other Azure resources][aks-sp].
 
 ## Create an internal load balancer
@@ -140,7 +140,7 @@ For more information on configuring your load balancer in a different subnet, se
 ### Before you begin
 
 * You need Kubernetes version 1.22.x or later.
-* You need an existing resource group with a VNet and subnet. This resource group is where you [create the private endpoint](#create-a-private-endpoint-to-the-private-link-service). If you don't have these resources, see [Create a virtual network and subnet][aks-vnet-subnet].
+* You need an existing resource group with a virtual network and subnet. This resource group is where you [create the private endpoint](#create-a-private-endpoint-to-the-private-link-service). If you don't have these resources, see [Create a virtual network and subnet][aks-vnet-subnet].
 
 ### Create a Private Link service connection
 
@@ -231,14 +231,13 @@ You can use the following annotations to customize the PLS resource:
 |------------|-------|-------------|----------|---------|
 | `service.beta.kubernetes.io/azure-pls-create` | `"true"` | Boolean indicating whether a PLS needs to be created. | Required | |
 | `service.beta.kubernetes.io/azure-pls-name` | `<PLS name>` | String specifying the name of the PLS resource to be created. | Optional | `"pls-<LB frontend config name>"` |
-| `service.beta.kubernetes.io/azure-pls-resource-group` | `Resource Group name` | String specifying the name of the Resource Group where the PLS resource will be created | Optional | `MC_ resource` |
-| `service.beta.kubernetes.io/azure-pls-ip-configuration-subnet` |`<Subnet name>` | String indicating the subnet to which the PLS will be deployed. This subnet must exist in the same VNET as the backend pool. PLS NAT IPs are allocated within this subnet. | Optional | If `service.beta.kubernetes.io/azure-load-balancer-internal-subnet`, this ILB subnet is used. Otherwise, the default subnet from config file is used. |
+| `service.beta.kubernetes.io/azure-pls-resource-group` | `Resource Group name` | String specifying the name of the Resource Group where the PLS resource is created | Optional | `MC_ resource` |
+| `service.beta.kubernetes.io/azure-pls-ip-configuration-subnet` |`<Subnet name>` | String indicating the subnet to which the PLS is deployed. This subnet must exist in the same virtual network as the backend pool. PLS NAT IPs are allocated within this subnet. | Optional | If `service.beta.kubernetes.io/azure-load-balancer-internal-subnet`, this ILB subnet is used. Otherwise, the default subnet from config file is used. |
 | `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count` | `[1-8]` | Total number of private NAT IPs to allocate. | Optional | 1 |
-| `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address` | `"10.0.0.7 ... 10.0.0.10"` | A space separated list of static **IPv4** IPs to be allocated. (IPv6 is not supported right now.) Total number of IPs should not be greater than the ip count specified in `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count`. If there are fewer IPs specified, the rest are dynamically allocated. The first IP in the list is set as `Primary`. |  Optional | All IPs are dynamically allocated. |
-| `service.beta.kubernetes.io/azure-pls-fqdns` | `"fqdn1 fqdn2"` | A space separated list of fqdns associated with the PLS. | Optional | `[]` |
-| `service.beta.kubernetes.io/azure-pls-proxy-protocol` | `"true"` or `"false"` | Boolean indicating whether the TCP PROXY protocol should be enabled on the PLS to pass through connection information, including the link ID and source IP address. Note that the backend service MUST support the PROXY protocol or the connections will fail. | Optional | `false` |
-| `service.beta.kubernetes.io/azure-pls-visibility` | `"sub1 sub2 sub3 … subN"` or `"*"` | A space separated list of Azure subscription ids for which the private link service is visible. Use `"*"` to expose the PLS to all subs (Least restrictive). | Optional | Empty list `[]` indicating role-based access control only: This private link service will only be available to individuals with role-based access control permissions within your directory. (Most restrictive) |
-| `service.beta.kubernetes.io/azure-pls-auto-approval` | `"sub1 sub2 sub3 … subN"` | A space separated list of Azure subscription ids. This allows PE connection requests from the subscriptions listed to the PLS to be automatically approved. This only works when visibility is set to "*". |  Optional | `[]` |
+| `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address` | `"10.0.0.7 ... 10.0.0.10"` | A space separated list of static **IPv4** IPs to be allocated. (IPv6 isn't supported right now.) Total number of IPs shouldn't be greater than the ip count specified in `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count`. If there are fewer IPs specified, the rest are dynamically allocated. The first IP in the list is set as `Primary`. |  Optional | All IPs are dynamically allocated. |
+| `service.beta.kubernetes.io/azure-pls-proxy-protocol` | `"true"` or `"false"` | Boolean indicating whether the TCP PROXY protocol should be enabled on the PLS to pass through connection information, including the link ID and source IP address. The backend service MUST support the PROXY protocol or the connections fails. | Optional | `false` |
+| `service.beta.kubernetes.io/azure-pls-visibility` | `"sub1 sub2 sub3 … subN"` or `"*"` | A space separated list of Azure subscription IDs for which the private link service is visible. Use `"*"` to expose the PLS to all subs (Least restrictive). | Optional | Empty list `[]` indicating role-based access control only: This private link service is only available to individuals with role-based access control permissions within your directory. (Most restrictive) |
+| `service.beta.kubernetes.io/azure-pls-auto-approval` | `"sub1 sub2 sub3 … subN"` | A space separated list of Azure subscription IDs. This allows PE connection requests from the subscriptions listed to the PLS to be automatically approved. This only works when visibility is set to `"*"`. |  Optional | `[]` |
 
 ## Use private networks
 

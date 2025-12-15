@@ -55,6 +55,7 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 *   Traffic traversing Envoy proxies do come with latency. Users may experience noticeable latency degradation beyond 3,000 requests per second.
 *    As part of our observability solution, we provide envoy_http_rq_total metrics. These metrics give the total request count, which could be used to derive requests per seconds (rps).
 *    During a Cilium upgrade or rollout, existing sessions can be gracefully closed. Applications are expected to handle these interruptions gracefully—typically by implementing retry mechanisms at the connection or request level. New connections initiated during the rollout aren't impacted.
+*   L7 policy isn't supported by CiliumClusterwideNetworkPolicy(CCNP).
 *	L7 policy through Advanced Container Networking Services (ACNS)  isn't  compatible with L7 policies implemented via alternate methods such as Istio. The following table summarizes the supported scenarios.
  
 | Feature/Component                                  | L7 Policies using AKS, Istio - Managed addon    |

@@ -38,6 +38,8 @@ For AKS node pools, we recommend a minimum size of *Standard_NC6s_v3*. The NVv4 
 ## Limitations
 
 * If you're using an Azure Linux GPU-enabled node pool, automatic security patches aren't applied. Refer to your current AKS API version for the default behavior of node OS upgrade channel.
+* [Flatcar Container Linux for AKS][flatcar] isn't supported with NVIDIA GPU on AKS.
+* [Azure Linux with OS Guard for AKS][os-guard] isn't supported with NVIDIA GPU on AKS.
 
 > [!NOTE]
 > For AKS API version 2023-06-01 or later, the default channel for node OS upgrade is *NodeImage*. For previous versions, the default channel is *None*. To learn more, see [auto-upgrade](./auto-upgrade-node-image.md).
@@ -80,62 +82,62 @@ You can deploy a DaemonSet for the NVIDIA device plugin, which runs a pod on eac
 
 To use the default OS SKU, you create the node pool without specifying an OS SKU. The node pool is configured for the default operating system based on the Kubernetes version of the cluster.
 
-1. Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command.
+Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name gpunp \
-        --node-count 1 \
-        --node-vm-size Standard_NC6s_v3 \
-        --node-taints sku=gpu:NoSchedule \
-        --enable-cluster-autoscaler \
-        --min-count 1 \
-        --max-count 3
-    ```
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name gpunp \
+    --node-count 1 \
+    --node-vm-size Standard_NC6s_v3 \
+    --node-taints sku=gpu:NoSchedule \
+    --enable-cluster-autoscaler \
+    --min-count 1 \
+    --max-count 3
+```
 
-    This command adds a node pool named *gpunp* to *myAKSCluster* in *myResourceGroup* and uses parameters to configure the following node pool settings:
+This command adds a node pool named *gpunp* to *myAKSCluster* in *myResourceGroup* and uses parameters to configure the following node pool settings:
 
-    * `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC6s_v3*.
-    * `--node-taints`: Specifies a *sku=gpu:NoSchedule* taint on the node pool.
-    * `--enable-cluster-autoscaler`: Enables the cluster autoscaler.
-    * `--min-count`: Configures the cluster autoscaler to maintain a minimum of one node in the node pool.
-    * `--max-count`: Configures the cluster autoscaler to maintain a maximum of three nodes in the node pool.
+* `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC6s_v3*.
+* `--node-taints`: Specifies a *sku=gpu:NoSchedule* taint on the node pool.
+* `--enable-cluster-autoscaler`: Enables the cluster autoscaler.
+* `--min-count`: Configures the cluster autoscaler to maintain a minimum of one node in the node pool.
+* `--max-count`: Configures the cluster autoscaler to maintain a maximum of three nodes in the node pool.
 
-    > [!NOTE]
-    > Taints and VM sizes can only be set for node pools during node pool creation, but you can update autoscaler settings at any time.
+> [!NOTE]
+> Taints and VM sizes can only be set for node pools during node pool creation, but you can update autoscaler settings at any time.
 
 ##### [Azure Linux node pool](#tab/add-azure-linux-gpu-node-pool)
 
 To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` during node pool creation. The `os-type` is set to `Linux` by default.
 
-1. Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--os-sku` flag set to `AzureLinux`.
+Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--os-sku` flag set to `AzureLinux`.
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name gpunp \
-        --node-count 1 \
-        --os-sku AzureLinux \
-        --node-vm-size Standard_NC6s_v3 \
-        --node-taints sku=gpu:NoSchedule \
-        --enable-cluster-autoscaler \
-        --min-count 1 \
-        --max-count 3
-    ```
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name gpunp \
+    --node-count 1 \
+    --os-sku AzureLinux \
+    --node-vm-size Standard_NC6s_v3 \
+    --node-taints sku=gpu:NoSchedule \
+    --enable-cluster-autoscaler \
+    --min-count 1 \
+    --max-count 3
+```
 
-    This command adds a node pool named *gpunp* to *myAKSCluster* in *myResourceGroup* and uses parameters to configure the following node pool settings:
+This command adds a node pool named *gpunp* to *myAKSCluster* in *myResourceGroup* and uses parameters to configure the following node pool settings:
 
-    * `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC6s_v3*.
-    * `--node-taints`: Specifies a *sku=gpu:NoSchedule* taint on the node pool.
-    * `--enable-cluster-autoscaler`: Enables the cluster autoscaler.
-    * `--min-count`: Configures the cluster autoscaler to maintain a minimum of one node in the node pool.
-    * `--max-count`: Configures the cluster autoscaler to maintain a maximum of three nodes in the node pool.
+* `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC6s_v3*.
+* `--node-taints`: Specifies a *sku=gpu:NoSchedule* taint on the node pool.
+* `--enable-cluster-autoscaler`: Enables the cluster autoscaler.
+* `--min-count`: Configures the cluster autoscaler to maintain a minimum of one node in the node pool.
+* `--max-count`: Configures the cluster autoscaler to maintain a maximum of three nodes in the node pool.
 
-    > [!NOTE]
-    > Taints and VM sizes can only be set for node pools during node pool creation, but you can update autoscaler settings at any time. Certain SKUs, including A100 and H100 VM SKUs, aren't available for Azure Linux. For more information, see [GPU-optimized VM sizes in Azure][gpu-skus].
+> [!NOTE]
+> Taints and VM sizes can only be set for node pools during node pool creation, but you can update autoscaler settings at any time. Certain SKUs, including A100 and H100 VM SKUs, aren't available for Azure Linux. For more information, see [GPU-optimized VM sizes in Azure][gpu-skus].
 
 ---
 
@@ -423,6 +425,7 @@ kubectl delete jobs samples-tf-mnist-demo
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-vm-list-skus]: /cli/azure/vm
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
@@ -441,3 +444,5 @@ kubectl delete jobs samples-tf-mnist-demo
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [NVadsA10]: /azure/virtual-machines/nva10v5-series
+[flatcar]: ./flatcar-container-linux-for-aks.md
+[os-guard]: ./use-azure-linux-os-guard.md

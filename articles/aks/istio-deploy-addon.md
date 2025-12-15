@@ -17,7 +17,7 @@ This article shows you how to install the Istio-based service mesh add-on for Az
 For more information on Istio and the service mesh add-on, see [Istio-based service mesh add-on for Azure Kubernetes Service][istio-about].
 
 > [!TIP]
-> You can use Microsoft Copilot in Azure to help deploy Istio to your AKS clusters in the Azure portal. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#install-and-work-with-istio).
+> You can use Azure Copilot to help deploy Istio to your AKS clusters in the Azure portal. For more information, see [Work with AKS clusters efficiently using Azure Copilot](/azure/copilot/work-aks-clusters#install-and-work-with-istio).
 
 ## Before you begin
 
@@ -237,6 +237,7 @@ To test this sample application against ingress, check out [next-steps](#next-st
 * [Scale istiod and ingress gateway HPA][istio-scaling-guide]
 * [Collect metrics for Istio service mesh add-on workloads in Azure Managed Prometheus][istio-metrics-managed-prometheus]
 * [Deploy egress gateways for the Istio service mesh add-on][istio-egress-gateway]
+* [Enable Istio CNI for Istio service mesh add-on (Preview)][istio-cni]
 
 <!--- External Links --->
 [install-aks-cluster-istio-bicep]: https://github.com/Azure-Samples/aks-istio-addon-bicep
@@ -256,5 +257,6 @@ To test this sample application against ingress, check out [next-steps](#next-st
 [istio-metrics-managed-prometheus]: istio-metrics-managed-prometheus.md
 [aks-system-nodes]: /azure/aks/use-system-pools
 [istio-egress-gateway]: istio-deploy-egress.md
+[istio-cni]: istio-cni.md
 [istio-aks-compatibility]: istio-support-policy.md#aks-compatibility
 

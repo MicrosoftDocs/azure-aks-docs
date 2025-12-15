@@ -24,6 +24,11 @@
       "source_path_from_root": "/articles/kubernetes-fleet/quickstart-access-fleet-kubernetes-api.md",
       "redirect_url": "/azure/kubernetes-fleet/access-fleet-hub-cluster-kubernetes-api",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/kubernetes-fleet/concepts-scheduler-scheduling-framework.md",
+      "redirect_url": "/azure/kubernetes-fleet/overview",
+      "redirect_document_id": false
     }
   ]
 }

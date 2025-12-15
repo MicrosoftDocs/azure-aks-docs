@@ -14,7 +14,7 @@ zone_pivot_groups: bicep-azure-cli-portal
 
 **Applies to:** :heavy_check_mark: AKS Automatic
 
-[Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. 
+[Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. AKS Automatic also includes a [pod readiness SLA][azure-sla] that guarantees 99.9% of pod readiness operations complete within 5 minutes, guaranteeing reliable, self-healing infrastructure for your applications. 
 
 In this quickstart, you learn to:
 
@@ -416,3 +416,4 @@ To learn more about AKS Automatic, continue to the introduction.
 [availability-zones]: /azure/reliability/availability-zones-region-support
 [policy-for-kubernetes]: /azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks
 [az-provider-register]: /azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider
+[azure-sla]: https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services

@@ -21,8 +21,8 @@ The third party partners featured in this article have introduction guides to he
 |----------|----------|
 | **DevOps** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [Sysdig](#sysdig) <br> • [VictoriaMetrics](#victoriametrics) |
 | **Networking** | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) |
-| **Observability** | • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [New Relic](#new-relic) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) |
-| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [CrowdStrike](#crowdstrike) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Sysdig](#sysdig)  <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
+| **Observability** | • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Elastic](#elastic) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [New Relic](#new-relic) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) |
+| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [CrowdStrike](#crowdstrike) <br> • [Elastic](#elastic) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Sysdig](#sysdig)  <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Upwind](#upwind) <br> • [Wiz](#wiz) |
 | **Storage** | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) <br> • [VictoriaMetrics](#victoriametrics) |
 | **Config management** | • [Corent](#corent) <br> • [Sysdig](#sysdig) |
 | **Migration** | • [Catalogic](#catalogic) |
@@ -310,6 +310,18 @@ Fully automated, AI-assisted observability across Azure environments Dynatrace i
 
 For more information, see [Dynatrace Solutions](https://www.dynatrace.com/technologies/azure-monitoring/) and [Dynatrace on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/dynatrace.dynatrace_portal_integration?tab=Overview).
 
+### Elastic
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/elastic-logo.png":::
+
+| Solution | Categories |
+|----------|------------|
+| Elastic | Observability <br> Security |
+
+Elastic, the Search AI Company, enables everyone to securely harness search powered AI to find the answers they need in real-time using all their data, at scale. Elastic’s solutions for search, observability and security are built on the Elastic Search AI Platform, the development platform used by thousands of companies, including more than 50% of the Fortune 500.
+
+For more information, see [Elastic Solutions](https://www.elastic.co/).
+
 ### New Relic
 
 :::image type="icon" source="./media/azure-linux-aks-partner-solutions/new-relic.png":::
@@ -429,6 +441,18 @@ TID enforces fetching certified versions of Istio and enables only compatible ve
 </details>
 
 For more information, see [Tetrate documentation](https://docs.tetrate.io/) and [Tetrate on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/tetrate1598353087553.tetrateistio?tab=overview).
+
+### Upwind
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/upwind.png":::
+
+| Solution | Categories |
+|----------|------------|
+| Upwind | Security |
+
+Upwind secures your cloud deployments, configurations, and applications through a runtime fabric that provides real-time visibility from the inside out. Use Upwind to get a live map of your network and application topology, prioritize fixes based on real usage, and detect threats as they happen.
+
+For more information, see [Upwind documentation](https://www.upwind.io/) and [Upwind on Azure Marketplace](https://marketplace.microsoft.com/product/saas/upwindsecurityinc1754856292483.upwind-security?tab=Overview).
 
 ### Wiz
 

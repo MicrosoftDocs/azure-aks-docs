@@ -1,5 +1,5 @@
 ---
-title: Fleet hub cluster overview
+title: Azure Kubernetes Fleet Manager hub cluster overview
 description: This article provides an overview on the Azure Kubernetes Fleet Manager hub cluster.
 ms.date: 08/01/2025
 author: sjwaight
@@ -12,6 +12,19 @@ ms.topic: concept-article
 # Fleet Manager hub cluster overview
 
 When enabled, the Fleet Manager hub cluster serves as the central management point for Kubernetes resource propagation across member clusters using [resource placement](./concepts-resource-propagation.md).
+
+## What are Fleet Manager hub clusters?
+
+In Azure Kubernetes Fleet Manager, hub clusters play a crucial role in managing multiple member clusters, but they're optional.
+
+The hub cluster facilitates resource placement and Fleet Managed Namespaces via a managed version of [KubeFleet](https://kubefleet.dev/).
+
+In this configuration, a fleet consists of the following components:
+
+:::image type="content" source="./media/concepts-fleet/fleet-architecture.png" alt-text="A diagram of the fleet resource when configured with a hub cluster, including the hub cluster agent and the member cluster agent.":::
+
+* **fleet-hub-agent**: A Kubernetes controller that creates and reconciles all the fleet-related custom resources (CRs) in the hub cluster.
+* **fleet-member-agent**: A Kubernetes controller that creates and reconciles all the fleet-related CRs in the member clusters. This controller pulls the latest CRs from the hub cluster and consistently reconciles the member clusters to match the desired state.
 
 ## Hub cluster configuration
 
@@ -38,7 +51,7 @@ The hub cluster has the following restrictions that ensure it functions as requi
 
 In order for Fleet Manager to create and keep hub clusters up-to-date with the latest patches, ensure that:
 
-- **Azure policy doesn't block cluster creation.** The hub cluster is a managed AKS cluster. If you are unable to create AKS clusters you can't create a Fleet Manager hub cluster.
+- **Azure policy doesn't block cluster creation.** The hub cluster is a managed AKS cluster. If you can't create AKS clusters you can't create a Fleet Manager hub cluster.
 
 - **Subscription has sufficient quota.** One extra VM instance of the hub cluster's node is required during the cluster upgrade process. For more information on increasing quota, see [documentation on quota][quotas-regional-quota-requests].
 

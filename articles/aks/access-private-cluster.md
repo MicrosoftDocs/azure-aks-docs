@@ -23,7 +23,7 @@ With the Azure CLI, you can use `command invoke` to access private clusters with
 With the Azure portal, you can use the `Run command` feature to run commands on your private cluster. The `Run command` feature uses the same `command invoke` functionality to run commands on your cluster.
 
 > [!TIP]
-> You can use Microsoft Copilot in Azure to run `kubectl` commands in the Azure portal. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#run-cluster-commands).
+> You can use Azure Copilot to run `kubectl` commands in the Azure portal. For more information, see [Work with AKS clusters efficiently using Azure Copilot](/azure/copilot/work-aks-clusters#run-cluster-commands).
 
 The pod created by the `Run command` provides `kubectl` and `helm` for operating your cluster. `jq`, `xargs`, `grep`, and `awk` are available for Bash support.
 
