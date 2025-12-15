@@ -289,7 +289,7 @@ resource "null_resource" "trigger_update_run" {
 
 You can also use the Azure portal or Azure CLI to start the update run. For more information, see [Manage an update run][manage-update-run].
 
-### Enable auto-upgrade
+## Enable auto-upgrade
 
 Once you're familiar with update runs, you can [enable auto-upgrade][fleet-auto-upgrade] for your clusters. Auto-upgrade automatically creates and executes update runs when AKS releases new Kubernetes versions. This means you no longer need to monitor for new Kubernetes versions and manually create update runs. 
 
