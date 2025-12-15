@@ -289,9 +289,9 @@ resource "null_resource" "trigger_update_run" {
 
 You can also use the Azure portal or Azure CLI to start the update run. For more information, see [Manage an update run][manage-update-run].
 
-## Enable Fleet Manager Auto-upgrade
+## Define a Fleet Manager Auto-upgrade profile
 
-Once you're familiar with update runs, you can enable [Fleet Manager Auto-upgrade][fleet-auto-upgrade] for your clusters. Fleet Manager Auto-upgrade automatically creates and executes update runs when AKS releases new Kubernetes versions. This means you no longer need to monitor for new Kubernetes versions and manually create update runs. 
+Once you're familiar with update runs, you can define a [Fleet Manager Auto-upgrade profile][fleet-auto-upgrade] for your member clusters. Fleet Manager Auto-upgrade profiles automatically creates and executes update runs when AKS releases new Kubernetes versions. This means you no longer need to monitor for new Kubernetes versions and manually create update runs. 
 
 You can choose the Stable or Rapid Kubernetes release channels to automatically increment the Kubernetes minor when a new minor is released, or if you want only patch releases for a minor you can use the [Target Kubernetes minor version channel](./update-automation.md#target-kubernetes-minor-version-updates-preview) which is currently in preview.
 
