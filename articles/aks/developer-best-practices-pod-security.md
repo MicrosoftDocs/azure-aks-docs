@@ -112,7 +112,7 @@ This article focused on how to secure your pods. To implement some of these area
 
 [apparmor-seccomp]: operator-best-practices-cluster-security.md#secure-container-access-to-resources
 
-[secure-container-userns]: secure-container-access.md#user-namespaces
+[secure-container-userns]: secure-container-access.md#overview-of-user-namespaces
 
 [microsoft-authentication-library]: /azure/active-directory/develop/msal-overview
 
