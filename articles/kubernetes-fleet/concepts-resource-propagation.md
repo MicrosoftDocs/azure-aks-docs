@@ -27,7 +27,7 @@ Application developers often need to deploy Kubernetes resources onto multiple c
 It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. Fleet Manager provides Kubernetes resource propagation to enable at-scale management of Kubernetes resources. With Fleet Manager, you can create Kubernetes resources on a Fleet-managed hub cluster 
 and propagate them to selected member clusters via Kubernetes Custom Resources: `MemberCluster` and `ClusterResourcePlacement`.
 
-Fleet Manager supports these custom resources based on the [CNCF project KubeFleet](https://github.com/kubefleet-dev/kubefleet) which you can read more about on the [KubeFleet documentation site][fleet-github].
+Fleet Manager's support for custom resources is based on the [KubeFleet CNCF project](https://kubefleet.dev/).
 
 ## ClusterResourcePlacement API overview
 
@@ -267,7 +267,7 @@ Cost properties are decimals, which represent a per-hour cost in US Dollars for 
 | resources.kubernetes-fleet.io/available-memory | Available memory resource units of cluster. |
 | kubernetes.azure.com/per-cpu-core-cost | The per-CPU core cost of the cluster.  |
 | kubernetes.azure.com/per-gb-memory-cost | The per-GiB memory cost of the cluster. | 
-| kubernetes.azure.com/vm-sizes/{vm-sku-name}/capacity | The available number of nodes of type [vm-sku-name][vm-sku-name] in the cluster. |
+| kubernetes.azure.com/vm-sizes/{vm-sku-name}/capacity | The available number of nodes of type [vm-sku-name][vm-sku-name] in the cluster (* preview - v1beta1 API). |
 
 #### Specifying selection matching criteria
 
