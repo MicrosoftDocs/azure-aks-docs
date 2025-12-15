@@ -740,14 +740,20 @@
           href: use-oidc-issuer.md
         - name: KMS etcd encryption
           items:
-            - name: Use KMS etcd encryption
-              href: use-kms-etcd-encryption.md
-            - name: Update key vault mode
-              href: update-kms-key-vault.md
-            - name: Migrate to KMS v2
-              href: use-kms-v2.md
-            - name: Observability for KMS etcd encryption
+            - name: Data encryption concepts
+              href: kms-data-encryption-concepts.md
+            - name: Enable KMS data encryption
+              href: kms-data-encryption.md
+            - name: Observability for KMS
               href: kms-observability.md
+            - name: Legacy KMS experience
+              items:
+                - name: Use KMS etcd encryption (legacy)
+                  href: use-kms-etcd-encryption.md
+                - name: Update key vault mode
+                  href: update-kms-key-vault.md
+                - name: Migrate to KMS v2
+                  href: use-kms-v2.md
         - name: Secure container access to resources
           href: secure-container-access.md
     - name: Node security

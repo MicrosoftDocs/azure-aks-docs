@@ -1,20 +1,25 @@
 ---
-title: Use Key Management Service (KMS) Etcd Encryption in Azure Kubernetes Service (AKS)
-description: Learn how to use Key Management Service (KMS) etcd encryption for a public or private key vault with AKS.
-ms.date: 12/01/2025
+title: Use Key Management Service (KMS) Etcd Encryption in Azure Kubernetes Service (AKS) (legacy)
+description: Learn how to use Key Management Service (KMS) etcd encryption for a public or private key vault with AKS using the legacy KMS experience.
+ms.date: 12/14/2025
 ms.subservice: aks-security
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.custom:
   - devx-track-azurecli
   - build-2025
-author: davidsmatlak
-ms.author: davidsmatlak
+author: shashankbarsin
+ms.author: shasb
 zone_pivot_groups: public-or-private-kv
 # Customer intent: As a Kubernetes administrator, I want to enable Key Management Service etcd encryption in my Azure Kubernetes Service cluster, so that I can ensure the security of sensitive data stored in etcd while maintaining control over key management and access policies.
 ---
 
-# Add Key Management Service (KMS) etcd encryption to an Azure Kubernetes Service (AKS) cluster
+# Add Key Management Service (KMS) etcd encryption to an Azure Kubernetes Service (AKS) cluster (legacy)
+
+> [!IMPORTANT]
+> This article describes the legacy KMS experience for AKS. For new clusters running Kubernetes version 1.33 or later, we recommend using the new [KMS data encryption](kms-data-encryption.md) experience, which offers platform-managed keys, customer-managed keys with automatic key rotation, and a simplified configuration experience.
+>
+> For conceptual information about data encryption options, see [Data encryption at rest concepts for AKS](kms-data-encryption-concepts.md).
 
 This article shows you how to turn on encryption at rest for a public or private key vault using Azure Key Vault and the Key Management Service (KMS) plugin on AKS. You can use the KMS plugin to:
 
@@ -406,8 +411,10 @@ After you change the key ID (including changing either the key name or the key v
 
 For more information on using KMS with AKS, see the following articles:
 
+- [Enable KMS data encryption in AKS](./kms-data-encryption.md) - The new KMS experience with platform-managed keys and automatic key rotation
+- [Data encryption at rest concepts for AKS](./kms-data-encryption-concepts.md)
 - [Update the key vault mode for an Azure Kubernetes Service (AKS) cluster with KMS etcd encryption](./update-kms-key-vault.md)
-- [Use KMS v2 for etcd encryption in Azure Kubernetes Service (AKS)](./use-kms-v2.md)
+- [Migrate to KMS v2 for etcd encryption in Azure Kubernetes Service (AKS)](./use-kms-v2.md)
 - [Observability for KMS etcd encryption in Azure Kubernetes Service (AKS)](./kms-observability.md)
 
 <!-- LINKS -->
