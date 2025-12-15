@@ -129,6 +129,7 @@ param clusterName string = 'aksbyocni'
 param location string = resourceGroup().location
 param kubernetesVersion string = '1.22'
 param nodeCount int = 3
+param nodeSize string = 'Standard_B2ms'
 param podCidr string = '10.2.0.0/16'
 
 resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-06-01' = {
