@@ -18,7 +18,7 @@ In this article, you learn how to secure container access to resources for your 
 > [!IMPORTANT]
 > Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
-## About container access security
+## Overview of container access security
 
 In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access.
 
@@ -29,7 +29,7 @@ To improve the host isolation and decrease lateral movement on Linux, you can us
 Built-in Linux security features are only available on Linux nodes and pods.
 
 > [!NOTE]
-> Currently, Kubernetes environments aren't completely safe for hostile multitenant usage. Other security features, like _Microsoft Defender for Containers_, _AppArmor_, _seccomp_, _user namespaces_, _Pod Security Admission_, or _Kubernetes RBAC for nodes_, efficiently block exploits.
+> Currently, Kubernetes environments aren't safe for hostile multitenant usage. Other security features, like _Microsoft Defender for Containers_, _AppArmor_, _seccomp_, _user namespaces_, _Pod Security Admission_, or _Kubernetes Role-Based Access Control (RBAC) for nodes_, efficiently block exploits.
 >
 > For true security when running hostile multitenant workloads, only trust a hypervisor. The security domain for Kubernetes becomes the entire cluster, not an individual node.
 >
@@ -41,14 +41,14 @@ Built-in Linux security features are only available on Linux nodes and pods.
 
 - An existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 - Minimum Kubernetes version 1.33 for the control plane and worker nodes. If you're not using Kubernetes version 1.33 or higher, you need to [upgrade your Kubernetes version][upgrade-aks-cluster].
-- Worker nodes running Azure Linux 3.0 or Ubuntu 24.04. If you're not using these OS versions, you won't have the minimum [stack requirements][userns-requirements] to enable user namespaces, so you need to [upgrade your OS version][upgrade-os-version].
+- Worker nodes running Azure Linux 3.0 or Ubuntu 24.04 to ensure you meet the minimum [stack requirements][userns-requirements] to enable user namespaces. If you need to upgrade your operating system (OS) version, see [upgrade your OS version][upgrade-os-version].
 
 ## Limitations for user namespaces
 
 - User namespaces is a Linux kernel feature and isn't supported for Windows node pools.
 - Check the [Kubernetes documentation for user namespaces][k8s-userns] for any other limitations.
 
-## About user namespaces
+## Overview of user namespaces
 
 Linux pods run using several namespaces by default: a network namespaces to isolate the network identity and a PID namespace to isolate the processes. A [user namespace (user_namespace)][userns-man] isolates the users inside the container from the users on the host. It also limits the scope of capabilities and the pod's interactions with the rest of the system.
 
@@ -103,7 +103,7 @@ The Kubernetes implementation has some key benefits. To learn more, see the [Kub
     0  833617920      65536
     ```
 
-    This indicates that root inside the container (UID 0) is mapped to user 65536 on the host.
+    This output indicates that root inside the container (UID 0) is mapped to user 65536 on the host.
 
 ## Common vulnerabilities and exposures (CVEs) mitigated by user namespaces
 
@@ -131,12 +131,12 @@ Keep in mind that this list isn't exhaustive. To learn more, see [Kubernetes v1.
 
 - Azure Linux 3.0 doesn't offer AppArmor support. For Azure Linux 3.0 nodes, we recommend using SELinux instead of AppArmor for mandatory access control.
 
-## About AppArmor
+## Overview of AppArmor
 
 To limit container actions, you can use the [AppArmor][k8s-apparmor] Linux kernel security module. AppArmor is available as part of the underlying AKS node operating system (OS) and is enabled by default. You can create AppArmor profiles that restrict read, write, or execute actions, or system functions like mounting filesystems. Default AppArmor profiles restrict access to various `/proc` and `/sys` locations and provide a means to logically isolate containers from the underlying node. AppArmor works for any application that runs on Linux, not just Kubernetes pods.
 
 > [!NOTE]
-> Prior to Kubernetes v1.30, AppArmor was specified through annotations. From v1.30 onwards, AppArmor is specified through the `securityContext` field in the pod specification. For more information, see the [Kubernetes AppArmor documentation][k8s-apparmor].
+> Before Kubernetes v1.30, AppArmor was specified through annotations. From v1.30 onwards, AppArmor is specified through the `securityContext` field in the pod specification. For more information, see the [Kubernetes AppArmor documentation][k8s-apparmor].
 
 ![AppArmor profiles in use in an AKS cluster to limit container actions](media/operator-best-practices-container-security/apparmor.png)
 
@@ -187,7 +187,7 @@ The following example creates a profile that prevents writing to files from with
 
 ## Deploy a pod with the custom AppArmor profile
 
-1. Deploy a simple _"Hello AppArmor"_ pod with the deny-write profile.
+1. Deploy a _"Hello AppArmor"_ pod with the deny-write profile.
 
     ```yml
     apiVersion: v1
@@ -205,13 +205,13 @@ The following example creates a profile that prevents writing to files from with
         command: [ "sh", "-c", "echo 'Hello AppArmor!' && sleep 1h" ]
     ```
 
-1. Apply the pod manifest using the `kubectl apply` command.
+2. Apply the pod manifest using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f hello-apparmor.yaml
     ```
 
-1. Exec into the pod and verify the container is running with the AppArmor profile.
+3. Exec into the pod and verify the container is running with the AppArmor profile.
 
     ```bash
     kubectl exec hello-apparmor -- cat /proc/1/attr/current
@@ -261,7 +261,7 @@ The following example creates a profile that prevents writing to files from with
 - `SeccompDefault` isn't a supported parameter for Windows node pools.
 - `SeccompDefault` is available starting with the `2024-09-02-preview` API.
 
-## About default seccomp profiles (preview)
+## Overview of default seccomp profiles (preview)
 
 While AppArmor works for any Linux application, [seccomp (or _secure computing_)][seccomp] works at the process level. Seccomp is also a Linux kernel security module and is natively supported by the `containerd` runtime used by AKS nodes. With seccomp, you can limit a container's system calls. Seccomp establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors and allows you to specify a default profile for all workloads in the node.
 
@@ -270,18 +270,18 @@ You can apply default seccomp profiles using [custom node configurations][custom
 ### Restrict container system calls with seccomp
 
 1. [Follow steps to apply a seccomp profile in your kubelet configuration][custom-node-configuration] by specifying `"seccompDefault": "RuntimeDefault"`.
-1. Check that the configuration was applied to the nodes by [connecting to the host][node-access] and verifying configuration changes have been made on the filesystem.
+1. Check that the configuration was applied to the nodes by [connecting to the host][node-access] and verifying configuration changes were made on the filesystem.
 
 #### Resolve workload failures with seccomp
 
-When `SeccompDefault` is enabled, the container runtime default seccomp profile is used by default for all workloads scheduled on the node. This might cause workloads to fail due to blocked syscalls. If a workload failure occurs, you might see errors such as:
+When `SeccompDefault` is enabled, the container runtime default seccomp profile is used by default for all workloads scheduled on the node, which might cause workloads to fail due to blocked syscalls. If a workload failure occurs, you might see errors such as:
 
 - Workload is existing unexpectedly after the feature is enabled, with "permission denied" error.
 - Seccomp error messages can also be seen in auditd or syslog by replacing SCMP_ACT_ERRNO with SCMP_ACT_LOG in the default profile.
 
 If you experience these errors, we recommend that you change your seccomp profile to `Unconfined`. `Unconfined` places no restrictions on syscalls, allowing all system calls to be executed.
 
-## About custom seccomp profiles
+## Overview of custom seccomp profiles
 
 With a custom seccomp profile, you have more granular control over restricted syscalls by using filters to specify what actions to allow or deny, and annotating within a pod YAML manifest to associate with the seccomp filter.
 
@@ -405,11 +405,11 @@ AKS uses the [containerd](https://github.com/containerd/containerd/blob/f0a32c66
 
 Both [Docker][seccomp] and [containerd](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51) maintain allowlists of safe syscalls. When changes are made to [Docker][seccomp] and [containerd](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51), AKS updates the default configuration to match. Updates to this list might cause workload failure. For release updates, see [AKS release notes](https://github.com/Azure/AKS/releases).
 
-The following table lists significant syscalls that are effectively blocked because they aren't on the allowlist. This isn't an exhaustive list. If any of the blocked syscalls are required by your workload, don't use the `RuntimeDefault` seccomp profile.
+The following table lists significant syscalls that are effectively blocked because they aren't on the allowlist. This list isn't exhaustive. If your workload requires any of the blocked syscalls, don't use the `RuntimeDefault` seccomp profile.
 
 |  Blocked syscall | Description  |
 |--------------|-------------------|
-| `acct`| Accounting syscall which could let containers disable their own resource limits or process accounting. Also gated by `CAP_SYS_PACCT`. |
+| `acct`| Accounting syscall, which could let containers disable their own resource limits or process accounting. Also gated by `CAP_SYS_PACCT`. |
 |`add_key` | Prevent containers from using the kernel keyring, which isn't namespaced. |
 | `bpf` |	Deny loading potentially persistent bpf programs into kernel, already gated by `CAP_SYS_ADMIN`. |
 | `clock_adjtime` |	Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`. |
@@ -440,7 +440,7 @@ The following table lists significant syscalls that are effectively blocked beca
 |`process_vm_writev` |	Restrict process inspection capabilities, already blocked by dropping `CAP_SYS_PTRACE`.|
 |`ptrace` |	Tracing/profiling syscall. Blocked in Linux kernel versions before 4.8 to avoid seccomp bypass. Tracing/profiling arbitrary processes is already blocked by dropping CAP_SYS_PTRACE, because it could leak information on the host.|
 |`query_module` |	Deny manipulation and functions on kernel modules. Obsolete.|
-|`quotactl` |	Quota syscall which could let containers disable their own resource limits or process accounting. Also gated by `CAP_SYS_ADMIN`.|
+|`quotactl` |	Quota syscall, which could let containers disable their own resource limits or process accounting. Also gated by `CAP_SYS_ADMIN`.|
 |`reboot` |	Don't let containers reboot the host. Also gated by `CAP_SYS_BOOT`.|
 |`request_key` |	Prevent containers from using the kernel keyring, which isn't namespaced.|
 |`set_mempolicy` |	Syscall that modifies kernel memory and NUMA settings. Already gated by `CAP_SYS_NICE`.|
