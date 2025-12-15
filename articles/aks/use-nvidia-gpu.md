@@ -395,7 +395,7 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
 
 Whether you want to [update][az-aks-nodepool-update] or [upgrade][az-aks-nodepool-upgrade] your node pools, you might notice that there is no `--gpu-driver` parameter for either operation. You might run into an error like `unrecognized arguments: --gpu-driver none` if you attempt to pass the parameter. There is no need to call on the parameter, as the value is not affected by any such operations.
 
-When you first create your node pool, whatever parameter you declare for `--gpu-driver` will not be impacted by upgrade/update operations. If you don't want any drivers to be installed, and selected `--gpu-driver` `none` when creating your node pool, drivers will not be installed in any subsequent updates/upgrades.
+When you first create your node pool, whatever parameter you declare for `--gpu-driver` will not be impacted by upgrade/update operations. If you don't want any drivers to be installed, and selected `--gpu-driver None` when creating your node pool, drivers will not be installed in any subsequent updates/upgrades.
 
 ## Clean up resources
 
