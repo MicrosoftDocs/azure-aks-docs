@@ -267,7 +267,7 @@ Cost properties are decimals, which represent a per-hour cost in US Dollars for 
 | resources.kubernetes-fleet.io/available-memory | Available memory resource units of cluster. |
 | kubernetes.azure.com/per-cpu-core-cost | The per-CPU core cost of the cluster.  |
 | kubernetes.azure.com/per-gb-memory-cost | The per-GiB memory cost of the cluster. | 
-| kubernetes.azure.com/vm-sizes/{vm-sku-name}/capacity | The available number of nodes of type [vm-sku-name][vm-sku-name] in the cluster (* preview - v1beta1 API). |
+| kubernetes.azure.com/vm-sizes/{vm-sku-name}/capacity | The available number of nodes of type [vm-sku-name][vm-sku-name] in the cluster*.<br/>Example VM SKU name: NV16as_v4.<br/>* In preview via v1beta1 API. |
 
 #### Specifying selection matching criteria
 
