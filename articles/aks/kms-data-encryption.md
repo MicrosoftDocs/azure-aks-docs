@@ -370,25 +370,25 @@ az aks update \
 
 After enabling KMS encryption, verify the configuration.
 
-    ```azurecli-interactive
-    az aks show --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --query 'securityProfile'
-    ```
+```azurecli-interactive
+az aks show --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --query 'securityProfile'
+```
 
-    The output includes the KMS configuration:
+The output includes the KMS configuration:
 
-    ```json
-    {
-      "azureKeyVaultKms": {
-        "enabled": true,
-        "keyId": "https://<key-vault-name>.vault.azure.net/keys/<key-name>",
-        "keyVaultNetworkAccess": "Public",
-        "keyVaultResourceId": "<key-vault-resource-id>"
-      },
-      "kubernetesResourceObjectEncryptionProfile": {
-        "infrastructureEncryption": "Enabled"
-      }
+```json
+{
+    "azureKeyVaultKms": {
+    "enabled": true,
+    "keyId": "https://<key-vault-name>.vault.azure.net/keys/<key-name>",
+    "keyVaultNetworkAccess": "Public",
+    "keyVaultResourceId": "<key-vault-resource-id>"
+    },
+    "kubernetesResourceObjectEncryptionProfile": {
+    "infrastructureEncryption": "Enabled"
     }
-    ```
+}
+```
 
 ## Migrate between key management options
 
