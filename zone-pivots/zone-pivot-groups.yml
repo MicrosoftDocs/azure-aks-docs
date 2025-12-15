@@ -181,3 +181,13 @@ groups:
     title: Azure CNI Overlay cluster
   - id: aks-cni-overlay-cluster-dual-stack
     title: Azure CNI Overlay cluster with dual-stack networking
+- id: secure-container-access
+  title: Choose a secure container access method
+  prompt: Choose a secure container access method
+  pivots:
+  - id: user-namespaces
+    title: User namespaces
+  - id: apparmor
+    title: AppArmor
+  - id: seccomp
+    title: Seccomp
