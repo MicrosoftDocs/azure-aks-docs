@@ -328,41 +328,6 @@ To enable the AKS API server to access the private key vault, create a private e
         --address-prefix $PE_SUBNET_PREFIX
     ```
 
-1. Create a subnet for the AKS cluster nodes.
-
-    ```azurecli-interactive
-    az network vnet subnet create \
-        --name $AKS_SUBNET_NAME \
-        --vnet-name $VNET_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --address-prefix $AKS_SUBNET_PREFIX
-    
-    # Get the AKS subnet resource ID
-    export AKS_SUBNET_ID=$(az network vnet subnet show \
-        --name $AKS_SUBNET_NAME \
-        --vnet-name $VNET_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --query id -o tsv)
-    ```
-
-1. Create a delegated subnet for the API server. The subnet must be delegated to `Microsoft.ContainerService/managedClusters` for API Server VNet Integration.
-
-    ```azurecli-interactive
-    az network vnet subnet create \
-        --name $APISERVER_SUBNET_NAME \
-        --vnet-name $VNET_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --address-prefix $APISERVER_SUBNET_PREFIX \
-        --delegations Microsoft.ContainerService/managedClusters
-    
-    # Get the API server subnet resource ID
-    export APISERVER_SUBNET_ID=$(az network vnet subnet show \
-        --name $APISERVER_SUBNET_NAME \
-        --vnet-name $VNET_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --query id -o tsv)
-    ```
-
 1. Disable network policies for private endpoints on the subnet.
 
     ```azurecli-interactive
@@ -476,26 +441,63 @@ To enable the AKS API server to access the private key vault, create a private e
 
 Create a new AKS cluster with KMS encryption using customer-managed keys with a private key vault. The cluster must use API Server VNet Integration to access the private key vault.
 
-> [!NOTE]
-> For private key vault scenarios, you must enable [API Server VNet Integration][api-server-vnet-integration] on your cluster.
+1. Create a subnet for the AKS cluster nodes.
 
-```azurecli-interactive
-az aks create \
-    --name $CLUSTER_NAME \
-    --resource-group $RESOURCE_GROUP \
-    --kubernetes-version 1.33.0 \
-    --network-plugin azure \
-    --vnet-subnet-id $AKS_SUBNET_ID \
-    --apiserver-subnet-id $APISERVER_SUBNET_ID \
-    --enable-apiserver-vnet-integration \
-    --kms-infrastructure-encryption Enabled \
-    --enable-azure-keyvault-kms \
-    --azure-keyvault-kms-key-id $KEY_ID_NO_VERSION \
-    --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID \
-    --azure-keyvault-kms-key-vault-network-access Private \
-    --assign-identity $IDENTITY_RESOURCE_ID \
-    --generate-ssh-keys
-```
+    ```azurecli-interactive
+    az network vnet subnet create \
+        --name $AKS_SUBNET_NAME \
+        --vnet-name $VNET_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --address-prefix $AKS_SUBNET_PREFIX
+    
+    # Get the AKS subnet resource ID
+    export AKS_SUBNET_ID=$(az network vnet subnet show \
+        --name $AKS_SUBNET_NAME \
+        --vnet-name $VNET_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --query id -o tsv)
+    ```
+
+1. Create a delegated subnet for the API server. The subnet must be delegated to `Microsoft.ContainerService/managedClusters` for API Server VNet Integration.
+
+    ```azurecli-interactive
+    az network vnet subnet create \
+        --name $APISERVER_SUBNET_NAME \
+        --vnet-name $VNET_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --address-prefix $APISERVER_SUBNET_PREFIX \
+        --delegations Microsoft.ContainerService/managedClusters
+    
+    # Get the API server subnet resource ID
+    export APISERVER_SUBNET_ID=$(az network vnet subnet show \
+        --name $APISERVER_SUBNET_NAME \
+        --vnet-name $VNET_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --query id -o tsv)
+    ```
+
+1. Create the AKS cluster with API Server VNet Integration and KMS encryption.
+
+    > [!NOTE]
+    > For private key vault scenarios, you must enable [API Server VNet Integration][api-server-vnet-integration] on your cluster.
+
+    ```azurecli-interactive
+    az aks create \
+        --name $CLUSTER_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --kubernetes-version 1.33.0 \
+        --network-plugin azure \
+        --vnet-subnet-id $AKS_SUBNET_ID \
+        --apiserver-subnet-id $APISERVER_SUBNET_ID \
+        --enable-apiserver-vnet-integration \
+        --kms-infrastructure-encryption Enabled \
+        --enable-azure-keyvault-kms \
+        --azure-keyvault-kms-key-id $KEY_ID_NO_VERSION \
+        --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID \
+        --azure-keyvault-kms-key-vault-network-access Private \
+        --assign-identity $IDENTITY_RESOURCE_ID \
+        --generate-ssh-keys
+    ```
 
 ### Enable customer-managed keys on an existing cluster (private)
 
