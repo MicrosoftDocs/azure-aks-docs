@@ -111,7 +111,8 @@ For information on how to deploy the following template, see the [ARM template d
         "dnsPrefix": "[parameters('clusterName')]",
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
         "networkProfile": {
-          "networkPlugin": "none"
+          "networkPlugin": "none",
+          "podCidr": "[parameters('pod-cidr')]"
         }
       }
     }
@@ -128,7 +129,7 @@ param clusterName string = 'aksbyocni'
 param location string = resourceGroup().location
 param kubernetesVersion string = '1.22'
 param nodeCount int = 3
-param nodeSize string = 'Standard_B2ms'
+param podCidr string = '10.2.0.0/16'
 
 resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-06-01' = {
   name: clusterName
@@ -149,6 +150,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-06-01' = {
     kubernetesVersion: kubernetesVersion
     networkProfile: {
       networkPlugin: 'none'
+      podCidr: podCidr
     }
   }
 }
