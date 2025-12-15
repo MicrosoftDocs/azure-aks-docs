@@ -36,7 +36,7 @@ Using Fleet Manager Update Runs to manage Kubernetes updates across your cluster
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager Update Runs, read the [Update Run documentation][learn-update-run] before reading this article.
 
-## Example multi-cluster environment using Terragrunt and Terraform
+## Example environment with Terragrunt and Terraform
 
 To help illustrate how to migrate to Fleet Manager we have an example multi-cluster environment using Terragrunt and Terraform to manage Azure Kubernetes Service (AKS) clusters. The following folder structure is used to hold the Terraform and Terragrunt configuration files.
 
