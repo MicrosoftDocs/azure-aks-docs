@@ -291,6 +291,92 @@ For enhanced security, you can use a private key vault that's only accessible th
         --public-network-access Disabled
     ```
 
+### Create a private endpoint for the key vault
+
+To enable the AKS API server to access the private key vault, create a private endpoint in the same virtual network where the API server is VNet integrated. For more information, see [Integrate Key Vault with Azure Private Link][keyvault-private-link].
+
+1. Set environment variables for the virtual network, subnet, and private endpoint. Replace the placeholder values with your own.
+
+    ```azurecli-interactive
+    export VNET_NAME="<your-vnet-name>"
+    export VNET_ADDRESS_PREFIX="10.0.0.0/8"
+    export SUBNET_NAME="<your-subnet-name>"
+    export SUBNET_PREFIX="10.1.0.0/16"
+    export PRIVATE_ENDPOINT_NAME="${KEY_VAULT_NAME}-pe"
+    ```
+
+1. Create a virtual network. This virtual network is used for API Server VNet Integration when creating the AKS cluster.
+
+    ```azurecli-interactive
+    az network vnet create \
+        --name $VNET_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --address-prefix $VNET_ADDRESS_PREFIX
+    ```
+
+1. Create a subnet for the private endpoint.
+
+    ```azurecli-interactive
+    az network vnet subnet create \
+        --name $SUBNET_NAME \
+        --vnet-name $VNET_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --address-prefix $SUBNET_PREFIX
+    ```
+
+1. Disable network policies for private endpoints on the subnet.
+
+    ```azurecli-interactive
+    az network vnet subnet update \
+        --name $SUBNET_NAME \
+        --vnet-name $VNET_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --disable-private-endpoint-network-policies true
+    ```
+
+1. Create a private endpoint for the key vault.
+
+    ```azurecli-interactive
+    az network private-endpoint create \
+        --name $PRIVATE_ENDPOINT_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --vnet-name $VNET_NAME \
+        --subnet $SUBNET_NAME \
+        --private-connection-resource-id $KEY_VAULT_RESOURCE_ID \
+        --group-id vault \
+        --connection-name "${KEY_VAULT_NAME}-connection"
+    ```
+
+1. Create a private DNS zone for Azure Key Vault.
+
+    ```azurecli-interactive
+    az network private-dns zone create \
+        --resource-group $RESOURCE_GROUP \
+        --name "privatelink.vaultcore.azure.net"
+    ```
+
+1. Link the private DNS zone to the virtual network.
+
+    ```azurecli-interactive
+    az network private-dns link vnet create \
+        --resource-group $RESOURCE_GROUP \
+        --zone-name "privatelink.vaultcore.azure.net" \
+        --name "${VNET_NAME}-dns-link" \
+        --virtual-network $VNET_NAME \
+        --registration-enabled false
+    ```
+
+1. Create a DNS zone group for the private endpoint.
+
+    ```azurecli-interactive
+    az network private-endpoint dns-zone-group create \
+        --resource-group $RESOURCE_GROUP \
+        --endpoint-name $PRIVATE_ENDPOINT_NAME \
+        --name "default" \
+        --private-dns-zone "privatelink.vaultcore.azure.net" \
+        --zone-name "privatelink-vaultcore-azure-net"
+    ```
+
 ### Create a user-assigned managed identity
 
 1. Create a user-assigned managed identity for the cluster.
@@ -450,3 +536,4 @@ With KMS data encryption, key rotation is handled differently depending on your 
 [use-kms-etcd-encryption]: use-kms-etcd-encryption.md
 [api-server-vnet-integration]: api-server-vnet-integration.md
 [azure-encryption-atrest]: /azure/security/fundamentals/encryption-atrest
+[keyvault-private-link]: /azure/key-vault/general/private-link-service
