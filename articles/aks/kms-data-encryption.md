@@ -24,9 +24,9 @@ AKS supports two key management options:
 
 For more information about encryption concepts and key options, see [Data encryption at rest concepts for AKS][kms-data-encryption-concepts].
 
-## Prerequisites
-
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+## Prerequisites
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
@@ -370,20 +370,6 @@ az aks update \
 
 After enabling KMS encryption, verify the configuration.
 
-1. Get the cluster credentials.
-
-    ```azurecli-interactive
-    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
-    ```
-
-1. Verify the cluster is running.
-
-    ```azurecli-interactive
-    kubectl get nodes
-    ```
-
-1. Check the KMS configuration.
-
     ```azurecli-interactive
     az aks show --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --query 'securityProfile'
     ```
@@ -403,24 +389,6 @@ After enabling KMS encryption, verify the configuration.
       }
     }
     ```
-
-## Test secret encryption
-
-Create a test secret to verify that encryption is working.
-
-```bash
-# Create a test namespace
-kubectl create namespace kms-test
-
-# Create a test secret
-kubectl create secret generic test-secret \
-    --from-literal=username=admin \
-    --from-literal=password=supersecret \
-    --namespace=kms-test
-
-# Verify the secret was created
-kubectl get secret test-secret --namespace=kms-test -o yaml
-```
 
 ## Migrate between key management options
 
@@ -459,16 +427,7 @@ az aks update \
 With KMS data encryption, key rotation is handled differently depending on your key management option:
 
 - **Platform-managed keys**: Key rotation is automatic. No action is required.
-- **Customer-managed keys**: When you rotate the key version in Azure Key Vault, the KMS controller detects the rotation periodically and uses the new key version. To immediately apply the new key version, stop and start the cluster:
-
-    ```azurecli-interactive
-    # Rotate the key in Azure Key Vault
-    az keyvault key rotate --name $KEY_NAME --vault-name $KEY_VAULT_NAME
-    
-    # Stop and start the cluster to apply the new key version immediately
-    az aks stop --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
-    az aks start --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
-    ```
+- **Customer-managed keys**: When you rotate the key version in Azure Key Vault, the KMS controller detects the rotation periodically (every 6 hours) and uses the new key version.
 
 > [!NOTE]
 > Unlike the legacy KMS experience, with this new implementation you don't need to manually re-encrypt secrets after key rotation. The platform handles this automatically.
