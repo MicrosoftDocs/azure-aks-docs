@@ -263,14 +263,15 @@ The following example creates a profile that prevents writing to files from with
 
 ## Overview of default seccomp profiles (preview)
 
-While AppArmor works for any Linux application, [seccomp (or _secure computing_)][seccomp] works at the process level. Seccomp is also a Linux kernel security module and is natively supported by the `containerd` runtime used by AKS nodes. With seccomp, you can limit a container's system calls. Seccomp establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors and allows you to specify a default profile for all workloads in the node.
+While AppArmor works for any Linux application, [seccomp (or _secure computing_)][seccomp] works at the process level. Seccomp is also a Linux kernel security module. The `containerd` runtime used by AKS nodes provides native support for seccomp. With seccomp, you can limit a container's system calls. Seccomp establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors and allows you to specify a default profile for all workloads in the node.
 
 You can apply default seccomp profiles using [custom node configurations][custom-node-configuration] when creating a new Linux node pool. There are two values supported on AKS include `RuntimeDefault` and `Unconfined`. Some workloads might require a lower number of syscall restrictions than others. This means that they can fail during runtime with the `RuntimeDefault` profile. To mitigate such a failure, you can specify the `Unconfined` profile. If your workload requires a custom profile, see [Configure a custom seccomp profile](#configure-a-custom-seccomp-profile).
 
 ### Restrict container system calls with seccomp
 
 1. [Follow steps to apply a seccomp profile in your kubelet configuration][custom-node-configuration] by specifying `"seccompDefault": "RuntimeDefault"`.
-1. Check that the configuration was applied to the nodes by [connecting to the host][node-access] and verifying configuration changes were made on the filesystem.
+1. [Connect to the host][node-access].
+1. Verify the configuration was applied to the nodes.
 
 #### Resolve workload failures with seccomp
 
@@ -283,10 +284,13 @@ If you experience these errors, we recommend that you change your seccomp profil
 
 ## Overview of custom seccomp profiles
 
-With a custom seccomp profile, you have more granular control over restricted syscalls by using filters to specify what actions to allow or deny, and annotating within a pod YAML manifest to associate with the seccomp filter.
+With a custom seccomp profile, you have more granular control over restricted syscalls for your containers. You can create your own seccomp profiles by:
+
+- Using filters to specify what actions to allow or deny.
+- Annotating within a pod YAML manifest to associate with the seccomp filter.
 
 > [!NOTE]
-> For help troubleshooting your seccomp profile, see [Troubleshoot seccomp profile configuration in Azure Kubernetes Service (AKS)](/troubleshoot/azure/azure-kubernetes/security/troubleshoot-seccomp-profiles).
+> For help with troubleshooting your seccomp profile, see [Troubleshoot seccomp profile configuration in Azure Kubernetes Service (AKS)](/troubleshoot/azure/azure-kubernetes/security/troubleshoot-seccomp-profiles).
 
 ### Configure a custom seccomp profile
 
@@ -453,7 +457,7 @@ The following table lists significant syscalls that are effectively blocked beca
 |`_sysctl` |	Obsolete, replaced by /proc/sys.|
 |`umount` |	Should be a privileged operation. Also gated by `CAP_SYS_ADMIN`.|
 |`umount2` |	Should be a privileged operation. Also gated by `CAP_SYS_ADMIN`.|
-|`unshare` |	Deny cloning new namespaces for processes. Also gated by `CAP_SYS_ADMIN`, with the exception of unshare --user.|
+|`unshare` |	Deny cloning new namespaces for processes. Also gated by `CAP_SYS_ADMIN` (except for unshare --user).|
 |`uselib` |	Older syscall related to shared libraries, unused for a long time.|
 |`userfaultfd` |	Userspace page fault handling, largely needed for process migration.|
 |`ustat` |	Obsolete syscall.|
