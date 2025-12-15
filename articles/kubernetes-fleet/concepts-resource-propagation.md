@@ -1,7 +1,7 @@
 ---
 title: "Using ClusterResourcePlacement to deploy cluster-scoped resources"
 description: This article describes the concept of Kubernetes resource propagation from hub cluster to member clusters.
-ms.date: 06/16/2025
+ms.date: 12/15/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
