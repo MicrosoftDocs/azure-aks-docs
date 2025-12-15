@@ -268,8 +268,8 @@ For enhanced security, you can use a private key vault that's only accessible th
 
 1. Create a key in the key vault.
 
-    > [!IMPORTANT]
-    > Create the key before disabling public network access on the key vault.
+    > [!NOTE]
+    > This document illustrates creating a key vault with public network access initially, then switching to private access. In production environments, you should create and manage your key vault as private from the start using the appropriate network connectivity options. For guidance on managing private key vaults, see [Integrate Key Vault with Azure Private Link][keyvault-private-link].
 
     ```azurecli-interactive
     export KEY_NAME="<your-key-name>"
