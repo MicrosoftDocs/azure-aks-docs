@@ -1,6 +1,6 @@
 ---
 title: Set up a Custom Domain Name and SSL Certificate with the Application Routing Add-on for Azure Kubernetes Service (AKS)
-description: Understand the advanced configuration options that are supported with the application routing add-on for Azure Kubernetes Service (AKS). 
+description: Understand the advanced configuration options that are supported with the application routing add-on for Azure Kubernetes Service (AKS).
 ms.subservice: aks-networking
 ms.author: davidsmatlak
 author: davidsmatlak
@@ -238,7 +238,7 @@ Learn about monitoring the Ingress-nginx controller metrics included with the ap
 [rbac-owner]: /azure/role-based-access-control/built-in-roles#owner
 [rbac-classic]: /azure/role-based-access-control/rbac-and-directory-admin-roles#classic-subscription-administrator-roles
 [app-routing-add-on-basic-configuration]: app-routing.md
-[csi-secrets-store-autorotation]: csi-secrets-store-configuration-options.md#enable-and-disable-auto-rotation
+[csi-secrets-store-autorotation]: csi-secrets-store-configuration-options.md#manage-auto-rotation
 [azure-key-vault-overview]: /azure/key-vault/general/overview
 [az-aks-approuting-update]: /cli/azure/aks/approuting#az-aks-approuting-update
 [az-aks-approuting-zone]: /cli/azure/aks/approuting/zone
