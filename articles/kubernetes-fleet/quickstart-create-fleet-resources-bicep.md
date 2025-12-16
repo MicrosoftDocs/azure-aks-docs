@@ -35,7 +35,7 @@ You can create a Fleet Manager resource to later group your AKS clusters as memb
 > Once a Fleet Manager resource has been created, it's possible to upgrade a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public has been selected it cannot be changed.
 
 
-### [Fleet Manager resource without hub cluster](#tab/without-hub-cluster)
+### [Fleet Manager without hub cluster](#tab/without-hub-cluster)
 
 If you only want to use Fleet Manager for update orchestration, you can create a hubless Fleet Manager with the following Bicep:
 
@@ -65,7 +65,7 @@ If you only want to use Fleet Manager for update orchestration, you can create a
 
 
 
-### [Fleet Manager resource with hub cluster](#tab/with-hub-cluster)
+### [Fleet Manager with hub cluster](#tab/with-hub-cluster)
 
 If you want to use Fleet Manager for Kubernetes object propagation in addition to update orchestration, then you need to create the Fleet Manager resource with the hub cluster.
 

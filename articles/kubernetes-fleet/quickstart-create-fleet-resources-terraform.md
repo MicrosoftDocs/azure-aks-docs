@@ -63,233 +63,234 @@ If you want to use Fleet Manager for Kubernetes object propagation or Managed Fl
 
 Fleet Manager hub clusters support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
 
-- Create a directory you can use to test the sample Terraform code and make it your current directory.
+1. Create a directory you can use to test the sample Terraform code and make it your current directory.
 
-- Create a file named `providers.tf` and insert the following code:
+1. Create a file named `providers.tf` and insert the following code:
 
-```terraform
-terraform {
- required_providers {
-    azapi = {
-      source  = "azure/azapi"
-      version = "~> 2.0"
+    ```terraform
+    terraform {
+     required_providers {
+        azapi = {
+          source  = "azure/azapi"
+          version = "~> 2.0"
+        }
+        azurerm = {
+          source  = "hashicorp/azurerm"
+          version = "~> 4.0"
+        }
+        random = {
+          source  = "hashicorp/random"
+          version = "~> 3.1"
+        }
+      }
     }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 4.0"
+    provider "azurerm" {
+      features {}
     }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.1"
+    provider "azapi" {
     }
-  }
-}
-provider "azurerm" {
-  features {}
-}
-provider "azapi" {
-}
 ```
 
-- Create a file named `main.tf` and insert the following code:
+1. Create a file named `main.tf` and insert the following code:
 
-```terraform
-# Generate random suffix for unique resource names
-resource "random_string" "suffix" {
-  length  = 4
-  special = false
-  upper   = false
-}
-
-# Local values for resource naming
-locals {
-  resource_group_name = coalesce(var.resource_group_name, "rg-fleet-example-${random_string.suffix.result}")
-  fleet_name = coalesce(var.fleet_name, "fleet-example-${random_string.suffix.result}")
-}
-
-# Resource Group
-resource "azurerm_resource_group" "fleet_rg" {
-  name     = local.resource_group_name
-  location = var.location
-}
-```
+    ```terraform
+    # Generate random suffix for unique resource names
+    resource "random_string" "suffix" {
+      length  = 4
+      special = false
+      upper   = false
+    }
+    
+    # Local values for resource naming
+    locals {
+      resource_group_name = coalesce(var.resource_group_name, "rg-fleet-example-${random_string.suffix.result}")
+      fleet_name = coalesce(var.fleet_name, "fleet-example-${random_string.suffix.result}")
+    }
+    
+    # Resource Group
+    resource "azurerm_resource_group" "fleet_rg" {
+      name     = local.resource_group_name
+      location = var.location
+    }
+    ```
 
 #### Public hub cluster
 
-- Create a file named `fleet.tf` and insert the following code:
+1. Create a file named `fleet.tf` and insert the following code:
 
-```terraform
-resource "azapi_resource" "fleet-public" {
-  type      = "Microsoft.ContainerService/fleets@2025-03-01"
-  name      = "${local.fleet_name}-pub"
-  location  = azurerm_resource_group.fleet_rg.location
-  parent_id = azurerm_resource_group.fleet_rg.id
-
-  body = {
-    properties = {
-      hubProfile = {
-        agentProfile = {
-          vmSize = var.hub_cluster_vm_size
+    ```terraform
+    resource "azapi_resource" "fleet-public" {
+      type      = "Microsoft.ContainerService/fleets@2025-03-01"
+      name      = "${local.fleet_name}-pub"
+      location  = azurerm_resource_group.fleet_rg.location
+      parent_id = azurerm_resource_group.fleet_rg.id
+    
+      body = {
+        properties = {
+          hubProfile = {
+            agentProfile = {
+              vmSize = var.hub_cluster_vm_size
+            }
+            apiServerAccessProfile = {
+              enablePrivateCluster = false
+              enableVnetIntegration = false
+            }
+            dnsPrefix = "${local.fleet_name}-pub"
+          }
         }
-        apiServerAccessProfile = {
-          enablePrivateCluster = false
-          enableVnetIntegration = false
-        }
-        dnsPrefix = "${local.fleet_name}-pub"
       }
+    
+      identity {
+        type = "SystemAssigned"
+      }
+    
+      depends_on = [
+        azurerm_resource_group.fleet_rg
+      ]
     }
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
-
-  depends_on = [
-    azurerm_resource_group.fleet_rg
-  ]
-}
-```
+    ```
 
 #### Private hub cluster
 
 [!INCLUDE [private-fleet-prerequisites.md](./includes/private-fleet/private-fleet-prerequisites.md)]
 
-- Fetch Fleet Manager's service principal object ID:
+1. Fetch Fleet Manager's service principal object ID:
 
-```azurecli-interactive
-az ad sp list \
-    --display-name "Azure Kubernetes Service - Fleet RP" \
-    --query "[].{id:id}" \
-    --output tsv
-```
+    ```azurecli-interactive
+    az ad sp list \
+        --display-name "Azure Kubernetes Service - Fleet RP" \
+        --query "[].{id:id}" \
+        --output tsv
+    ```
+    
+    ```output
+    xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    ```
 
-```output
-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-```
+1. Create a file named `identity.tf` and insert the following code, updating the placeholder `principal_id` to match the output from the earlier service principal query:
 
-- Create a file named `identity.tf` and insert the following code, updating the placeholder `principal_id` to match the output from the earlier service principal query:
-
-```terraform
-##
-# REQUIRED: Assign Network Contributor Role to "Azure Kubernetes Service - Fleet RP" to enable hub cluster updates
-##
-resource "azurerm_role_assignment" "fleet_identity_01_network_contributor" {
-  scope                = azurerm_subnet.hub-cluster-subnet.id
-  role_definition_name = "Network Contributor"
-  principal_id         = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  principal_type       = "ServicePrincipal"
-
-  depends_on = [azurerm_subnet.hub-cluster-subnet]
-}
-
-##
-# REQUIRED: Create User Assigned Managed Identity for Fleet Manager
-##
-resource "azurerm_user_assigned_identity" "fleet_user_assigned_identity" {
-  location            = azurerm_resource_group.fleet_rg.location
-  name                = "${local.fleet_name}-uai"
-  resource_group_name = azurerm_resource_group.fleet_rg.name
-}
-
-# REQUIRED: Assign Managed Identity the Network Contributor Role scoped to Hub Cluster API Server Subnet
-resource "azurerm_role_assignment" "fleet_user_assign_id_api_subnet_network_contributor" {
-  scope                = azurerm_subnet.fleet-hub-apiserver-subnet.id
-  role_definition_name = "Network Contributor"
-  principal_id         = azurerm_user_assigned_identity.fleet_user_assigned_identity.principal_id
-  principal_type       = "ServicePrincipal"
-
-  depends_on = [azurerm_subnet.fleet-hub-apiserver-subnet, azurerm_user_assigned_identity.fleet_user_assigned_identity]
-}
-
-# REQUIRED: Assign Managed Identity the Network Contributor Role scoped to Hub Cluster Subnet
-resource "azurerm_role_assignment" "fleet_user_assign_id_hub_subnet_network_contributor" {
-  scope                = azurerm_subnet.hub-cluster-subnet.id
-  role_definition_name = "Network Contributor"
-  principal_id         = azurerm_user_assigned_identity.fleet_user_assigned_identity.principal_id
-  principal_type       = "ServicePrincipal"
-
-  depends_on = [azurerm_subnet.hub-cluster-subnet, azurerm_user_assigned_identity.fleet_user_assigned_identity]
-}
-```
-
-- Create a file named `vnet.tf` and insert the following code. If you want to use an existing virtual network you can replace the contents of `vnet.tf` file with resource references only, ensuring you have the correct subnets and delegations in place.
-
-```terraform
-resource "azurerm_virtual_network" "hub-vnet" {
-  name                = "${local.fleet_name}-vnet"
-  location            = azurerm_resource_group.fleet_rg.location
-  resource_group_name = azurerm_resource_group.fleet_rg.name
-  address_space       = ["10.224.0.0/12"]
-}
-
-resource "azurerm_subnet" "hub-cluster-subnet" {
-  name                 = "fleet-hub-cluster-subnet"
-  resource_group_name  = azurerm_resource_group.fleet_rg.name
-  virtual_network_name = azurerm_virtual_network.hub-vnet.name
-  address_prefixes     = ["10.224.0.0/15"]
-  private_endpoint_network_policies = "Disabled"
-  private_link_service_network_policies_enabled = true
-}
-
-resource "azurerm_subnet" "fleet-hub-apiserver-subnet" {
-  name                 = "fleet-hub-apiserver-subnet"
-  resource_group_name  = azurerm_resource_group.fleet_rg.name
-  virtual_network_name = azurerm_virtual_network.hub-vnet.name
-  address_prefixes     = ["10.226.0.0/15"]
-  delegation {
-    name = "aksApiServerSubnetDelegation"
-    service_delegation {
-      name    = "Microsoft.ContainerService/managedClusters"
+    ```terraform
+    ##
+    # REQUIRED: Assign Network Contributor Role to "Azure Kubernetes Service - Fleet RP" to enable hub cluster updates
+    ##
+    resource "azurerm_role_assignment" "fleet_identity_01_network_contributor" {
+      scope                = azurerm_subnet.hub-cluster-subnet.id
+      role_definition_name = "Network Contributor"
+      principal_id         = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      principal_type       = "ServicePrincipal"
+    
+      depends_on = [azurerm_subnet.hub-cluster-subnet]
     }
-  }
-}
-```
+    
+    ##
+    # REQUIRED: Create User Assigned Managed Identity for Fleet Manager
+    ##
+    resource "azurerm_user_assigned_identity" "fleet_user_assigned_identity" {
+      location            = azurerm_resource_group.fleet_rg.location
+      name                = "${local.fleet_name}-uai"
+      resource_group_name = azurerm_resource_group.fleet_rg.name
+    }
+    
+    # REQUIRED: Assign Managed Identity the Network Contributor Role scoped to Hub Cluster API Server Subnet
+    resource "azurerm_role_assignment" "fleet_user_assign_id_api_subnet_network_contributor" {
+      scope                = azurerm_subnet.fleet-hub-apiserver-subnet.id
+      role_definition_name = "Network Contributor"
+      principal_id         = azurerm_user_assigned_identity.fleet_user_assigned_identity.principal_id
+      principal_type       = "ServicePrincipal"
+    
+      depends_on = [azurerm_subnet.fleet-hub-apiserver-subnet, azurerm_user_assigned_identity.fleet_user_assigned_identity]
+    }
+    
+    # REQUIRED: Assign Managed Identity the Network Contributor Role scoped to Hub Cluster Subnet
+    resource "azurerm_role_assignment" "fleet_user_assign_id_hub_subnet_network_contributor" {
+      scope                = azurerm_subnet.hub-cluster-subnet.id
+      role_definition_name = "Network Contributor"
+      principal_id         = azurerm_user_assigned_identity.fleet_user_assigned_identity.principal_id
+      principal_type       = "ServicePrincipal"
+    
+      depends_on = [azurerm_subnet.hub-cluster-subnet, azurerm_user_assigned_identity.fleet_user_assigned_identity]
+    }
+    ```
 
-- Create a file named `fleet.tf` and insert the following code:
-
-```terraform
-locals {
-  fleet_name = coalesce(var.fleet_name, "fleet-example-${random_string.suffix.result}")
-}
-
-# Fleet Resource
-resource "azapi_resource" "fleet" {
-  type      = "Microsoft.ContainerService/fleets@2025-03-01"
-  name      = local.fleet_name
-  location  = azurerm_resource_group.fleet_rg.location
-  parent_id = azurerm_resource_group.fleet_rg.id
-
-  body = {
-    properties = {
-      hubProfile = {
-        agentProfile = {
-          subnetId = azurerm_subnet.hub-cluster-subnet.id
-          vmSize = var.hub_cluster_vm_size
+1. Create a file named `vnet.tf` and insert the following code. If you want to use an existing virtual network you can replace the contents of `vnet.tf` file with resource references only, ensuring you have the correct subnets and delegations in place.
+    
+    ```terraform
+    resource "azurerm_virtual_network" "hub-vnet" {
+      name                = "${local.fleet_name}-vnet"
+      location            = azurerm_resource_group.fleet_rg.location
+      resource_group_name = azurerm_resource_group.fleet_rg.name
+      address_space       = ["10.224.0.0/12"]
+    }
+    
+    resource "azurerm_subnet" "hub-cluster-subnet" {
+      name                 = "fleet-hub-cluster-subnet"
+      resource_group_name  = azurerm_resource_group.fleet_rg.name
+      virtual_network_name = azurerm_virtual_network.hub-vnet.name
+      address_prefixes     = ["10.224.0.0/15"]
+      private_endpoint_network_policies = "Disabled"
+      private_link_service_network_policies_enabled = true
+    }
+    
+    resource "azurerm_subnet" "fleet-hub-apiserver-subnet" {
+      name                 = "fleet-hub-apiserver-subnet"
+      resource_group_name  = azurerm_resource_group.fleet_rg.name
+      virtual_network_name = azurerm_virtual_network.hub-vnet.name
+      address_prefixes     = ["10.226.0.0/15"]
+      delegation {
+        name = "aksApiServerSubnetDelegation"
+        service_delegation {
+          name    = "Microsoft.ContainerService/managedClusters"
         }
-        apiServerAccessProfile = {
-          enablePrivateCluster = true
-          enableVnetIntegration = true
-          subnetId = azurerm_subnet.fleet-hub-apiserver-subnet.id
-        }
-        dnsPrefix = local.fleet_name
       }
     }
-  }
+    ```
 
-  identity {
-    type = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.fleet_user_assigned_identity.id]
-  }
+1. Create a file named `fleet.tf` and insert the following code:
 
-  depends_on = [
-    azurerm_resource_group.fleet_rg,
-    azurerm_role_assignment.fleet_identity_01_network_contributor, 
-    azurerm_user_assigned_identity.fleet_user_assigned_identity, 
-    azurerm_role_assignment.fleet_user_assign_id_api_subnet_network_contributor,
-    azurerm_role_assignment.fleet_user_assign_id_hub_subnet_network_contributor
-  ]
-}
-```
+    ```terraform
+    locals {
+      fleet_name = coalesce(var.fleet_name, "fleet-example-${random_string.suffix.result}")
+    }
+    
+    # Fleet Resource
+    resource "azapi_resource" "fleet" {
+      type      = "Microsoft.ContainerService/fleets@2025-03-01"
+      name      = local.fleet_name
+      location  = azurerm_resource_group.fleet_rg.location
+      parent_id = azurerm_resource_group.fleet_rg.id
+    
+      body = {
+        properties = {
+          hubProfile = {
+            agentProfile = {
+              subnetId = azurerm_subnet.hub-cluster-subnet.id
+              vmSize = var.hub_cluster_vm_size
+            }
+            apiServerAccessProfile = {
+              enablePrivateCluster = true
+              enableVnetIntegration = true
+              subnetId = azurerm_subnet.fleet-hub-apiserver-subnet.id
+            }
+            dnsPrefix = local.fleet_name
+          }
+        }
+      }
+    
+      identity {
+        type = "UserAssigned"
+        identity_ids = [azurerm_user_assigned_identity.fleet_user_assigned_identity.id]
+      }
+    
+      depends_on = [
+        azurerm_resource_group.fleet_rg,
+        azurerm_role_assignment.fleet_identity_01_network_contributor, 
+        azurerm_user_assigned_identity.fleet_user_assigned_identity, 
+        azurerm_role_assignment.fleet_user_assign_id_api_subnet_network_contributor,
+        azurerm_role_assignment.fleet_user_assign_id_hub_subnet_network_contributor
+      ]
+    }
+    ```
+
 ---
 
 #### Initialize Terraform
