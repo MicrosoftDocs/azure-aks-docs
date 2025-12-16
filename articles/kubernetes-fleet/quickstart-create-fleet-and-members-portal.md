@@ -1,21 +1,23 @@
 ---
-title: "Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure portal"
-description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure portal.
-ms.date: 03/20/2024
+title: "Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Azure portal"
+description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager and join member clusters using Azure portal.
+ms.date: 12/16/2025
 author: shashankbarsin
 ms.author: shasb
 ms.service: azure-kubernetes-fleet-manager
 ms.custom: template-quickstart, mode-other
 ms.devlang: azurecli
 ms.topic: quickstart
-# Customer intent: As a cloud architect, I want to create an Azure Kubernetes Fleet Manager resource and join member clusters, so that I can manage and orchestrate multiple Kubernetes clusters for improved scalability and application deployment.
+# Customer intent: As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using the Azure portal, so that I can manage and orchestrate multiple Kubernetes clusters for improved scalability and application deployment.
 ---
 
-# Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure portal
+# Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Azure portal
+
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 Get started with Azure Kubernetes Fleet Manager by using the Azure portal to create a Fleet Manager and join [supported Kubernetes clusters](./concepts-member-cluster-types.md) as members.
 
-## Prerequisites
+## Before you begin
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
@@ -67,4 +69,8 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure portal to cre
 
 ## Next steps
 
-* [Access Fleet hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
+* [Access Fleet Manager hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
+* [Deploy cluster-scoped resources across multiple clusters](./quickstart-resource-propagation.md).
+* [Deploy namespace-scoped resources across multiple clusters](./quickstart-namespace-scoped-resource-propagation.md).
+* [Create and configure Managed Fleet Namespaces](./howto-managed-namespaces.md).
+* [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
