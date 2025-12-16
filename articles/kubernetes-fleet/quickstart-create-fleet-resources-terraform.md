@@ -34,14 +34,14 @@ Learn how to create an Azure Kubernetes Fleet Manager using Terraform.
 
 ## Create a Fleet Manager
 
-You can create a Fleet Manager and later add your AKS and Arc-enabled clusters as member clusters.  If the Fleet Manager has a hub cluster, additional features are enabled, such as [Kubernetes object propagation](./concepts-resource-propagation.md) and [Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md). For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
+You can create a Fleet Manager and later add your AKS and Arc-enabled clusters as member clusters.  If the Fleet Manager has a hub cluster, more features are enabled, such as [Kubernetes object propagation](./concepts-resource-propagation.md) and [Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md). For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
 
 > [!NOTE]
-> Once a Fleet Manager is created, it's possible to switch from a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public has been selected it cannot be changed.
+> Once a Fleet Manager is created, it's possible to upgrade a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public is selected it can't be changed.
 
 ### [Fleet Manager without hub cluster](#tab/without-hub-cluster)
 
-To create a Fleet Manager resource without a hub cluster, implement the following Terraform code
+To create a Fleet Manager without a hub cluster, use the following steps.
 
 1. Create a directory you can use to test the sample Terraform code and make it your current directory.
 
