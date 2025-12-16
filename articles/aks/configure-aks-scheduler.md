@@ -253,7 +253,7 @@ You can customize the upstream scheduler with multiple profiles and customize ea
 
 In the following example, we create two scheduling profiles called **scheduler-one** and **scheduler-two**:
 
-The fields `percentageOfNodesToScore`, `podInitialBackoffSeconds`, `podMaxBackoffSeconds`, are applicable to both schedulers.
+The fields `percentageOfNodesToScore`, `podInitialBackoffSeconds`, `podMaxBackoffSeconds`, appliy globally to all profiles defined.
 
 - `percentageOfNodesToScore` specifies the percentage of cluster nodes the scheduler evaluates during scoring to balance scheduling accuracy and speed. So **percentageOfNodesToScore: 40** means the scheduler will sample 40% of nodes instead of the entire cluster.
 - `podInitialBackoffSeconds` defines the initial delay before retrying a failed scheduling attempt to prevent rapid, repeated retries. So **podInitialBackoffSeconds: 1** means the scheduler waits 1 second before the first retry.
@@ -454,6 +454,7 @@ To learn more about the AKS scheduler and best practices, see the following reso
 
 <!-- LINKS - external -->
 [topology-spread-constraints/]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+
 
 
 
