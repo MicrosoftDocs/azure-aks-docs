@@ -43,19 +43,18 @@ You can create a Fleet Manager and later add your AKS and Arc-enabled clusters a
 
 To create a Fleet Manager resource without a hub cluster, implement the following Terraform code
 
-#### Implement the Terraform code
-- Create a directory you can use to test the sample Terraform code and make it your current directory.
+1. Create a directory you can use to test the sample Terraform code and make it your current directory.
 
-- Create a file named `providers.tf` and insert the following code:
+1. Create a file named `providers.tf` and insert the following code:
     [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/providers.tf)]
 
-- Create a file named `main.tf` and insert the following code:
+1. Create a file named `main.tf` and insert the following code:
     [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/main.tf)]
 
-- Create a file named `variables.tf` and insert the following code:
+1. Create a file named `variables.tf` and insert the following code:
     [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/variables.tf)]
 
-- Create a file named `outputs.tf` and insert the following code:
+1. Create a file named `outputs.tf` and insert the following code:
     [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/outputs.tf)]
 
 ### [Fleet Manager with hub cluster](#tab/with-hub-cluster)
