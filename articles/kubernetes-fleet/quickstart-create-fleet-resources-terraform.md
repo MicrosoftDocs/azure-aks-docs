@@ -59,7 +59,7 @@ To create a Fleet Manager resource without a hub cluster, implement the followin
 
 ### [Fleet Manager with hub cluster](#tab/with-hub-cluster)
 
-If you want to use Fleet Manager for Kubernetes object propagation or Managed Fleet Namespaces as well as cluster upgrades, then you need to create the Fleet Manager with a hub cluster.
+To use Fleet Manager for Kubernetes object propagation or Managed Fleet Namespaces in addition to cluster upgrades, you need to create the Fleet Manager with a hub cluster.
 
 Fleet Manager hub clusters support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
 
@@ -147,7 +147,7 @@ Fleet Manager hub clusters support both public and private modes for network acc
 1. Create a file named `fleet.tf` and insert the following code:
 
     ```terraform
-    resource "azapi_resource" "fleet-public" {
+    resource "azapi_resource" "fleet_public" {
       type      = "Microsoft.ContainerService/fleets@2025-03-01"
       name      = "${local.fleet_name}-pub"
       location  = azurerm_resource_group.fleet_rg.location
@@ -275,11 +275,7 @@ Fleet Manager hub clusters support both public and private modes for network acc
 
 1. Create a file named `fleet.tf` and insert the following code:
 
-    ```terraform
-    locals {
-      fleet_name = coalesce(var.fleet_name, "fleet-example-${random_string.suffix.result}")
-    }
-    
+    ```terraform   
     # Fleet Resource
     resource "azapi_resource" "fleet" {
       type      = "Microsoft.ContainerService/fleets@2025-03-01"
