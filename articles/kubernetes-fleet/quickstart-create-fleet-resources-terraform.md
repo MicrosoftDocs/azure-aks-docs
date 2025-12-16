@@ -332,46 +332,48 @@ Fleet Manager hub clusters support both public and private modes for network acc
 
 #### Verify the results
 
-1. Verify results using either Azure CLI or Azure PowerShell.
-    ### [Azure CLI](#tab/azure-cli)
-    
-    1. Get the Azure resource group name.
-    
-        ```console
-        resource_group_name=$(terraform output -raw resource_group_name)
-        ```
-    
-    1. Get the Fleet Manager name.
-    
-        ```console
-        batch_name=$(terraform output -raw fleet_name)
-        ```
-    
-    1. Run [az fleet show](/cli/azure/fleet#az-fleet-show) to view the Azure Kubernetes Fleet Manager.
-    
-        ```azurecli
-        az fleet show --resource-group $resource_group_name --name $fleet_name
-        ```
-    
-    ### [Azure PowerShell](#tab/azure-powershell)
-    
-    1. Get the Azure resource group name.
-    
-        ```powershell
-        $resource_group_name=$(terraform output -raw resource_group_name)
-        ```
-    
-    1. Get the Fleet Manager name.
-    
-        ```powershell
-        $batch_name=$(terraform output -raw fleet_name)
-        ```
-    
-    1. Run [Get-AzFleet](/powershell/module/az.fleet/get-azfleet) to view the Azure Kubernetes Fleet Manager.
-    
-        ```azurepowershell
-        Get-AzFleet -ResourceGroupName $resource_group_name -Name $fleet_name
-        ```
+Verify results using either Azure CLI or Azure PowerShell.
+
+### [Azure CLI](#tab/azure-cli)
+
+1. Get the Azure resource group name.
+
+    ```console
+    resource_group_name=$(terraform output -raw resource_group_name)
+    ```
+
+1. Get the Fleet Manager name.
+
+    ```console
+    batch_name=$(terraform output -raw fleet_name)
+    ```
+
+1. Run [az fleet show](/cli/azure/fleet#az-fleet-show) to view the Azure Kubernetes Fleet Manager.
+
+    ```azurecli
+    az fleet show --resource-group $resource_group_name --name $fleet_name
+    ```
+
+### [Azure PowerShell](#tab/azure-powershell)
+
+1. Get the Azure resource group name.
+
+    ```powershell
+    $resource_group_name=$(terraform output -raw resource_group_name)
+    ```
+
+1. Get the Fleet Manager name.
+
+    ```powershell
+    $batch_name=$(terraform output -raw fleet_name)
+    ```
+
+1. Run [Get-AzFleet](/powershell/module/az.fleet/get-azfleet) to view the Azure Kubernetes Fleet Manager.
+
+    ```azurepowershell
+    Get-AzFleet -ResourceGroupName $resource_group_name -Name $fleet_name
+    ```
+---
     
 #### Clean up resources
 
