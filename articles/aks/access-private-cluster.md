@@ -218,9 +218,9 @@ For information on the most common issues with `az aks command invoke` and how t
 
 In this article, you learned how to access a private cluster and run commands on that cluster. For more information on AKS clusters, see the following articles:
 
-* [Use a private endpoint connection in AKS](./private-clusters.md#use-a-private-endpoint-connection)
-* [Virtual networking peering in AKS](./private-clusters.md#virtual-network-peering)
-* [Hub and spoke with custom DNS in AKS](./private-clusters.md#hub-and-spoke-with-custom-dns)
+* [Use a private endpoint connection in AKS](./private-cluster-connect.md#use-a-private-endpoint-connection)
+* [Virtual networking peering in AKS](./private-cluster-connect.md#connect-using-virtual-network-vnet-peering)
+* [Hub and spoke with custom DNS in AKS](./private-clusters.md#hub-and-spoke-with-custom-dns-for-private-aks-clusters)
 
 <!-- links - internal -->
 [command-invoke-troubleshoot]: /troubleshoot/azure/azure-kubernetes/resolve-az-aks-command-invoke-failures

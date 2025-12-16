@@ -60,7 +60,7 @@ This option creates a separate VNet with the necessary resources for Cloud Shell
     - The deployment creates a new resource group named `RG-CloudShell-PrivateClusterConnection-{RANDOM_ID}`.
 1. Once the deployment succeeds, under **Set cluster context**, select **Open Cloud Shell**.
 
-:::image type="content" source="media/access-private-cluster/azure-portal-private-cluster-connect.png" alt-text="Screenshot of the Azure portal at a private cluster's resource page showing the Connect button with the Cloud Shell tab selected." lightbox="media/access-private-cluster/azure-portal-private-cluster-connect-expanded.png":::
+:::image type="content" source="./media/access-private-cluster/azure-portal-cloud-shell-connect.png" alt-text="Screenshot of the Azure portal at a private cluster's resource page showing the Connect button with the Cloud Shell tab selected.":::
 
 > [!NOTE]
 > If you already configured Cloud Shell in a VNet for a particular cluster, repeating these steps ensures your Cloud Shell user settings are correctly aligned with that VNet.

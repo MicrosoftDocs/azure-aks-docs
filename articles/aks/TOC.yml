@@ -634,7 +634,7 @@
           - name: Use API Server VNet integration
             href: api-server-vnet-integration.md
           - name: Private endpoint
-            href: private-clusters.md#use-a-private-endpoint-connection
+            href: private-cluster-connect.md#use-a-private-endpoint-connection
           - name: Diagnose and solve UDP packet drops
             href: troubleshoot-udp-packet-drops.md
           - name: Container Network Security
