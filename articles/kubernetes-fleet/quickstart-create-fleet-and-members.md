@@ -1,9 +1,9 @@
 ---
-title: "Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI"
-description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI.
+title: "Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Azure CLI"
+description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager and join member clusters using Azure CLI.
 author: sjwaight
 ms.author: simonwaight
-ms.date: 05/13/2025
+ms.date: 12/16/2025
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: quickstart
 ms.custom:
@@ -14,7 +14,7 @@ ms.custom:
   - build-2024
   - build-2025
 ms.devlang: azurecli
-# Customer intent: "As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using the Azure CLI, so that I can manage and orchestrate multiple Kubernetes clusters from a centralized resource."
+# Customer intent: As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using the Azure CLI, so that I can manage and orchestrate multiple Kubernetes clusters for improved scalability and application deployment.
 ---
 
 # Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Azure CLI

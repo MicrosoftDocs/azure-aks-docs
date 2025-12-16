@@ -1,13 +1,14 @@
 ---
-title: "Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Terraform"
-description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager resource and join member clusters using Terraform.
-ms.date: 04/15/2025
+title: "Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Terraform"
+description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager and join member clusters using Terraform.
+ms.date: 12/16/2025
 author: muhammadali
 ms.author: alimuhammad
 ms.service: azure-kubernetes-fleet-manager
 ms.custom: template-quickstart, mode-other
 ms.devlang: azurecli
 ms.topic: quickstart
+# Customer intent: As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using the Terraform, so that I can manage and orchestrate multiple Kubernetes clusters for improved scalability and application deployment.
 ---
 
 # Quickstart: Create an Azure Kubernetes Fleet Manager using Terraform

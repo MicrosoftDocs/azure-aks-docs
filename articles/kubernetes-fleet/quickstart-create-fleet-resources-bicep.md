@@ -1,20 +1,21 @@
 ---
-title: "Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Bicep"
-description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager resource and join member clusters using Bicep.
-ms.date: 04/15/2025
+title: "Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Bicep"
+description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager and join member clusters using Bicep.
+ms.date: 12/16/2025
 author: muhammadali
 ms.author: alimuhammad
 ms.service: azure-kubernetes-fleet-manager
 ms.custom: template-quickstart, mode-other
 ms.devlang: azurecli
 ms.topic: quickstart
+# Customer intent: As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using Bicep, so that I can manage and orchestrate multiple Kubernetes clusters for improved scalability and application deployment.
 ---
 
 # Quickstart: Create an Azure Kubernetes Fleet Manager using Bicep
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
-Get started with Azure Kubernetes Fleet Manager by using Bicep to create a Fleet Manager resource.
+Learn how to create an Azure Kubernetes Fleet Manager using Bicep.
 
 ## Before you begin
 
@@ -26,13 +27,13 @@ Get started with Azure Kubernetes Fleet Manager by using Bicep to create a Fleet
 * [Install or upgrade Azure CLI](/cli/azure/install-azure-cli) to version `2.71.0` or later.
     - Ensure **fleet** extension is updated to version `1.5.2` or higher.
 
-## Create a Fleet Manager resource
+## Create a Fleet Manager
 
-You can create a Fleet Manager resource to later group your AKS clusters as member clusters.  If the Fleet Manager hub is enabled, other preview features are enabled, such as Kubernetes object propagation to member clusters. For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
+You can create a Fleet Manager and later add your AKS and Arc-enabled clusters as member clusters.  If the Fleet Manager has a hub cluster, additional features are enabled, such as [Kubernetes object propagation](./concepts-resource-propagation.md) and [Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md). For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
 
 
 > [!IMPORTANT]
-> Once a Fleet Manager resource has been created, it's possible to upgrade a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public has been selected it cannot be changed.
+> Once a Fleet Manager has been created, it's possible to upgrade a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public has been selected it cannot be changed.
 
 
 ### [Fleet Manager without hub cluster](#tab/without-hub-cluster)
