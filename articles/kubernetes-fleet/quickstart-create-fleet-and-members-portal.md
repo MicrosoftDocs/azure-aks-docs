@@ -17,7 +17,7 @@ ms.topic: quickstart
 
 Get started with Azure Kubernetes Fleet Manager by using the Azure portal to create a Fleet Manager and join [supported Kubernetes clusters](./concepts-member-cluster-types.md) as members.
 
-## Before you being
+## Before you begin
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 

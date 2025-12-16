@@ -8,7 +8,7 @@ ms.service: azure-kubernetes-fleet-manager
 ms.custom: template-quickstart, mode-other
 ms.devlang: azurecli
 ms.topic: quickstart
-# Customer intent: As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using the Terraform, so that I can manage and orchestrate multiple Kubernetes clusters for improved scalability and application deployment.
+# Customer intent: As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using Terraform, so that I can manage and orchestrate multiple Kubernetes clusters for improved scalability and application deployment.
 ---
 
 # Quickstart: Create an Azure Kubernetes Fleet Manager using Terraform
