@@ -19,9 +19,11 @@ ms.devlang: azurecli
 
 # Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Azure CLI
 
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
+
 Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create a Fleet Manager and join [supported Kubernetes clusters](./concepts-member-cluster-types.md) as members.
 
-## Prerequisites
+## Before yoy begin
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
@@ -105,7 +107,7 @@ The following output example resembles successful creation of the resource group
 }
 ```
 
-## Create a Fleet Manager resource
+## Create a Fleet Manager
 
 You can create a Fleet Manager at any time, selecting to later add [supported Kubernetes clusters](./concepts-member-cluster-types.md) as members. When created via the Azure CLI, by default, Fleet Manager enables member cluster grouping and update orchestration. If the Fleet Manager is created with a hub cluster, intelligent Kubernetes object placement and load balancing across multiple member clusters is possible. For more information, see the [conceptual overview of fleet types](./concepts-choosing-fleet.md), which provides a comparison of different fleet configurations.
 
@@ -318,6 +320,10 @@ Fleet currently supports joining existing AKS clusters or Arc-enabled Kubernetes
 ## Next steps
 
 * [Access Fleet Manager hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
+* [Deploy cluster-scoped resources across multiple clusters](./quickstart-resource-propagation.md).
+* [Deploy namespace-scoped resources across multiple clusters](./quickstart-namespace-scoped-resource-propagatio.md).
+* [Create and configure Managed Fleet Namespaces](./howto-managed-namespaces.md).
+* [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
 
 <!-- INTERNAL LINKS -->
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli

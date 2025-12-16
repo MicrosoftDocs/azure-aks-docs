@@ -10,11 +10,13 @@ ms.devlang: azurecli
 ms.topic: quickstart
 ---
 
-# Quickstart: Create an Azure Kubernetes Fleet Manager resource using an ARM template
+# Quickstart: Create an Azure Kubernetes Fleet Manager using an ARM template
+
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 Get started with Azure Kubernetes Fleet Manager by using the ARM template to create a Fleet Manager resource.
 
-## Prerequisites
+## Before you begin
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
@@ -25,7 +27,7 @@ Get started with Azure Kubernetes Fleet Manager by using the ARM template to cre
     - Ensure **fleet** extension is updated to version `1.5.2` or higher.
 
 
-## Create a Fleet Manager resource
+## Create a Fleet Manager
 
 You can create a Fleet Manager resource to later group your AKS clusters as member clusters.  If the Fleet Manager hub is enabled, other preview features are enabled, such as Kubernetes object propagation to member clusters. For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
 
@@ -34,7 +36,7 @@ You can create a Fleet Manager resource to later group your AKS clusters as memb
 > Once a Fleet Manager resource has been created, it's possible to upgrade a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public has been selected it cannot be changed.
 
 
-### [Fleet Manager resource without hub cluster](#tab/without-hub-cluster)
+### [Fleet Manager without hub cluster](#tab/without-hub-cluster)
 
 If you only want to use Fleet Manager for update orchestration, you can create a hubless Fleet Manager with the following ARM template:
 
@@ -57,7 +59,8 @@ If you only want to use Fleet Manager for update orchestration, you can create a
 3. Select **Review + Create** > **Create**.
 
 
-### [Fleet Manager resource with hub cluster](#tab/with-hub-cluster)
+### [Fleet Manager with hub cluster](#tab/with-hub-cluster)
+
 If you want to use Fleet Manager for Kubernetes object propagation in addition to update orchestration, then you need to create the Fleet Manager resource with the hub cluster.
 
 Fleet Manager clusters with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
@@ -123,3 +126,7 @@ xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ## Next steps
 
 * [Access Fleet Manager hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
+* [Deploy cluster-scoped resources across multiple clusters](./quickstart-resource-propagation.md).
+* [Deploy namespace-scoped resources across multiple clusters](./quickstart-namespace-scoped-resource-propagatio.md).
+* [Create and configure Managed Fleet Namespaces](./howto-managed-namespaces.md).
+* [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).

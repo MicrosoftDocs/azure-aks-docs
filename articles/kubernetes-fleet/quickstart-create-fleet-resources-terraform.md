@@ -10,11 +10,13 @@ ms.devlang: azurecli
 ms.topic: quickstart
 ---
 
-# Quickstart: Create an Azure Kubernetes Fleet Manager resource using Terraform
+# Quickstart: Create an Azure Kubernetes Fleet Manager using Terraform
 
-Get started with Azure Kubernetes Fleet Manager by using Terraform to create a Fleet resource.
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
-## Prerequisites
+Learn how to create an Azure Kubernetes Fleet Manager using Terraform.
+
+## Before you begin
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
@@ -23,7 +25,7 @@ Get started with Azure Kubernetes Fleet Manager by using Terraform to create a F
 * [Install and configure Terraform](/azure/developer/terraform/quickstart-configure).
 
 > [!IMPORTANT]
-> If you're using the 4.x azurerm provider, you must [explicitly specify the Azure subscription ID](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/4.0-upgrade-guide#specifying-subscription-id-is-now-mandatory) to authenticate to Azure before running the Terraform commands.
+> If you're using the 4.x AzureRM Terraform provider, you must [explicitly specify the Azure subscription ID](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/4.0-upgrade-guide#specifying-subscription-id-is-now-mandatory) to authenticate to Azure before running commands.
 >
 > One way to specify the Azure subscription ID without putting it in the `providers` block is to specify the subscription ID in an environment variable named `ARM_SUBSCRIPTION_ID`.
 >
@@ -31,11 +33,12 @@ Get started with Azure Kubernetes Fleet Manager by using Terraform to create a F
 
 ## Create a Fleet Manager
 
-You can create a Fleet Manager resource to later group your AKS clusters as member clusters.  If the Fleet Manager has a hub cluster, other features are enabled, such as Kubernetes object propagation to member clusters and Managed Fleet Namespaces. For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
+You can create a Fleet Manager and later add your AKS and Arc-enabled clusters as member clusters.  If the Fleet Manager has a hub cluster, additional features are enabled, such as [Kubernetes object propagation](./concepts-resource-propagation.md) and [Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md). For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
 
-Once a Fleet Manager is created, it's possible to switch from a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public has been selected it cannot be changed.
+> [!NOTE]
+> Once a Fleet Manager is created, it's possible to switch from a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public has been selected it cannot be changed.
 
-### [Fleet Manager resource without hub cluster](#tab/without-hub-cluster)
+### [Fleet Manager without hub cluster](#tab/without-hub-cluster)
 
 To create a Fleet Manager resource without a hub cluster, implement the following Terraform code
 
@@ -54,73 +57,11 @@ To create a Fleet Manager resource without a hub cluster, implement the followin
 - Create a file named `outputs.tf` and insert the following code:
     [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/outputs.tf)]
 
-#### Initialize Terraform
+### [Fleet Manager with hub cluster](#tab/with-hub-cluster)
 
-[!INCLUDE [terraform-init.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-init.md)]
-
-#### Create a Terraform execution plan
-
-[!INCLUDE [terraform-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan.md)]
-
-#### Apply a Terraform execution plan
-
-[!INCLUDE [terraform-apply-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-apply-plan.md)]
-
-#### Verify the results
-
-1. Verify results using either Azure CLI or Azure PowerShell.
-    ### [Azure CLI](#tab/azure-cli)
-    
-    1. Get the Azure resource group name.
-    
-        ```console
-        resource_group_name=$(terraform output -raw resource_group_name)
-        ```
-    
-    1. Get the Fleet Manager name.
-    
-        ```console
-        batch_name=$(terraform output -raw fleet_name)
-        ```
-    
-    1. Run [az fleet show](/cli/azure/fleet#az-fleet-show) to view the Azure Kubernetes Fleet Manager.
-    
-        ```azurecli
-        az fleet show --resource-group $resource_group_name --name $fleet_name
-        ```
-    
-    ### [Azure PowerShell](#tab/azure-powershell)
-    
-    1. Get the Azure resource group name.
-    
-        ```powershell
-        $resource_group_name=$(terraform output -raw resource_group_name)
-        ```
-    
-    1. Get the Fleet Manager name.
-    
-        ```powershell
-        $batch_name=$(terraform output -raw fleet_name)
-        ```
-    
-    1. Run [Get-AzFleet](/powershell/module/az.fleet/get-azfleet) to view the Azure Kubernetes Fleet Manager.
-    
-        ```azurepowershell
-        Get-AzFleet -ResourceGroupName $resource_group_name -Name $fleet_name
-        ```
-    
-#### Clean up resources
-
-[!INCLUDE [terraform-plan-destroy.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan-destroy.md)]
-
-### [Fleet Manager resource with hub cluster](#tab/with-hub-cluster)
-
-If you want to use Fleet Manager for Kubernetes object propagation as well as cluster upgrades, then you need to create the Fleet Manager with a hub cluster.
+If you want to use Fleet Manager for Kubernetes object propagation or Managed Fleet Namespaces as well as cluster upgrades, then you need to create the Fleet Manager with a hub cluster.
 
 Fleet Manager hub clusters support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
-
-> [!NOTE]
-> Once a hub cluster is created as public or private its access mode can't be changed.
 
 - Create a directory you can use to test the sample Terraform code and make it your current directory.
 
@@ -211,39 +152,19 @@ resource "azapi_resource" "fleet-public" {
 
 #### Private hub cluster
 
-If you want to use an existing virtual network you can replace the contents of `vnet.tf` file with resource references only, ensuring you have the correct subnets and delegations in place.
+[!INCLUDE [private-fleet-prerequisites.md](./includes/private-fleet/private-fleet-prerequisites.md)]
 
-- Create a file named `vnet.tf` and insert the following code. 
+- Fetch Fleet Manager's service principal object ID:
 
-```terraform
-resource "azurerm_virtual_network" "hub-vnet" {
-  name                = "${local.fleet_name}-vnet"
-  location            = azurerm_resource_group.fleet_rg.location
-  resource_group_name = azurerm_resource_group.fleet_rg.name
-  address_space       = ["10.224.0.0/12"]
-}
+```azurecli-interactive
+az ad sp list \
+    --display-name "Azure Kubernetes Service - Fleet RP" \
+    --query "[].{id:id}" \
+    --output tsv
+```
 
-resource "azurerm_subnet" "hub-cluster-subnet" {
-  name                 = "fleet-hub-cluster-subnet"
-  resource_group_name  = azurerm_resource_group.fleet_rg.name
-  virtual_network_name = azurerm_virtual_network.hub-vnet.name
-  address_prefixes     = ["10.224.0.0/15"]
-  private_endpoint_network_policies = "Disabled"
-  private_link_service_network_policies_enabled = true
-}
-
-resource "azurerm_subnet" "fleet-hub-apiserver-subnet" {
-  name                 = "fleet-hub-apiserver-subnet"
-  resource_group_name  = azurerm_resource_group.fleet_rg.name
-  virtual_network_name = azurerm_virtual_network.hub-vnet.name
-  address_prefixes     = ["10.226.0.0/15"]
-  delegation {
-    name = "aksApiServerSubnetDelegation"
-    service_delegation {
-      name    = "Microsoft.ContainerService/managedClusters"
-    }
-  }
-}
+```output
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 - Create a file named `identity.tf` and insert the following code, updating the placeholder `principal_id` to match the output from the earlier service principal query:
@@ -288,6 +209,39 @@ resource "azurerm_role_assignment" "fleet_user_assign_id_hub_subnet_network_cont
   principal_type       = "ServicePrincipal"
 
   depends_on = [azurerm_subnet.hub-cluster-subnet, azurerm_user_assigned_identity.fleet_user_assigned_identity]
+}
+```
+
+- Create a file named `vnet.tf` and insert the following code. If you want to use an existing virtual network you can replace the contents of `vnet.tf` file with resource references only, ensuring you have the correct subnets and delegations in place.
+
+```terraform
+resource "azurerm_virtual_network" "hub-vnet" {
+  name                = "${local.fleet_name}-vnet"
+  location            = azurerm_resource_group.fleet_rg.location
+  resource_group_name = azurerm_resource_group.fleet_rg.name
+  address_space       = ["10.224.0.0/12"]
+}
+
+resource "azurerm_subnet" "hub-cluster-subnet" {
+  name                 = "fleet-hub-cluster-subnet"
+  resource_group_name  = azurerm_resource_group.fleet_rg.name
+  virtual_network_name = azurerm_virtual_network.hub-vnet.name
+  address_prefixes     = ["10.224.0.0/15"]
+  private_endpoint_network_policies = "Disabled"
+  private_link_service_network_policies_enabled = true
+}
+
+resource "azurerm_subnet" "fleet-hub-apiserver-subnet" {
+  name                 = "fleet-hub-apiserver-subnet"
+  resource_group_name  = azurerm_resource_group.fleet_rg.name
+  virtual_network_name = azurerm_virtual_network.hub-vnet.name
+  address_prefixes     = ["10.226.0.0/15"]
+  delegation {
+    name = "aksApiServerSubnetDelegation"
+    service_delegation {
+      name    = "Microsoft.ContainerService/managedClusters"
+    }
+  }
 }
 ```
 
@@ -336,28 +290,71 @@ resource "azapi_resource" "fleet" {
   ]
 }
 ```
-
-
-
-
-- Create a directory you can use to test the sample Terraform code and make it your current directory.
-
-- Create a file named `providers.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/providers.tf)]
-
-- Create a file named `main.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/main.tf)]
-
-- Create a file named `variables.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/variables.tf)]
-
-- Create a file named `outputs.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/outputs.tf)]
-
-Fleet Manager resource cannot be created using Terraform yet.
-
 ---
+
+#### Initialize Terraform
+
+[!INCLUDE [terraform-init.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-init.md)]
+
+#### Create a Terraform execution plan
+
+[!INCLUDE [terraform-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan.md)]
+
+#### Apply a Terraform execution plan
+
+[!INCLUDE [terraform-apply-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-apply-plan.md)]
+
+#### Verify the results
+
+1. Verify results using either Azure CLI or Azure PowerShell.
+    ### [Azure CLI](#tab/azure-cli)
+    
+    1. Get the Azure resource group name.
+    
+        ```console
+        resource_group_name=$(terraform output -raw resource_group_name)
+        ```
+    
+    1. Get the Fleet Manager name.
+    
+        ```console
+        batch_name=$(terraform output -raw fleet_name)
+        ```
+    
+    1. Run [az fleet show](/cli/azure/fleet#az-fleet-show) to view the Azure Kubernetes Fleet Manager.
+    
+        ```azurecli
+        az fleet show --resource-group $resource_group_name --name $fleet_name
+        ```
+    
+    ### [Azure PowerShell](#tab/azure-powershell)
+    
+    1. Get the Azure resource group name.
+    
+        ```powershell
+        $resource_group_name=$(terraform output -raw resource_group_name)
+        ```
+    
+    1. Get the Fleet Manager name.
+    
+        ```powershell
+        $batch_name=$(terraform output -raw fleet_name)
+        ```
+    
+    1. Run [Get-AzFleet](/powershell/module/az.fleet/get-azfleet) to view the Azure Kubernetes Fleet Manager.
+    
+        ```azurepowershell
+        Get-AzFleet -ResourceGroupName $resource_group_name -Name $fleet_name
+        ```
+    
+#### Clean up resources
+
+[!INCLUDE [terraform-plan-destroy.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan-destroy.md)]
 
 ## Next steps
 
 * [Access Fleet Manager hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
+* [Deploy cluster-scoped resources across multiple clusters](./quickstart-resource-propagation.md).
+* [Deploy namespace-scoped resources across multiple clusters](./quickstart-namespace-scoped-resource-propagatio.md).
+* [Create and configure Managed Fleet Namespaces](./howto-managed-namespaces.md).
+* [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
