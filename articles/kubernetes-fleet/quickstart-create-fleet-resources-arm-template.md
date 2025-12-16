@@ -63,7 +63,8 @@ If you want to use Fleet Manager for Kubernetes object propagation in addition t
 Fleet Manager with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
 
 #### Public hub cluster
-To create a public Fleet Manager resource with a hub cluster, use the following ARM template
+
+To create a Fleet Manager with a public hub cluster, use the following ARM template.
 
 ##### Review the template
 :::code language="json" source="~/quickstart-templates/quickstarts/microsoft.kubernetes/fleet-hubful/azuredeploy.json":::
