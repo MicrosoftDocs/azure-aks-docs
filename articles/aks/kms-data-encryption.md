@@ -237,7 +237,12 @@ az aks update \
 
 ## Enable customer-managed key encryption with a private key vault
 
-For enhanced security, you can use a private key vault that's only accessible through private endpoints. This configuration requires the AKS cluster to use [API Server VNet Integration][api-server-vnet-integration] so the API server can access the private key vault. This section shows how to configure customer-managed keys with a private key vault.
+For enhanced security, you can use a private key vault that has public network access disabled. You can enable AKS to access the private key vault using one of the following options:
+
+- **Private endpoint with API Server VNet Integration (recommended)**: Use [API Server VNet Integration][api-server-vnet-integration] with a private endpoint for the key vault. This approach is recommended because it works even when a [network security perimeter][keyvault-network-security-perimeter] is configured for the key vault.
+- **Allow trusted Azure services**: Configure the key vault firewall to [allow trusted Azure services][keyvault-trusted-services] to bypass the firewall.
+
+This section shows how to configure customer-managed keys with a private key vault using the recommended private endpoint approach.
 
 ### Create a private key vault and key
 
@@ -294,6 +299,9 @@ For enhanced security, you can use a private key vault that's only accessible th
 ### Create a private endpoint for the key vault
 
 To enable the AKS API server to access the private key vault, create a private endpoint in the same virtual network where the API server is VNet integrated. For more information, see [Integrate Key Vault with Azure Private Link][keyvault-private-link].
+
+> [!NOTE]
+> As an alternative to using a private endpoint with API Server VNet Integration, you can configure the key vault firewall to [allow trusted Azure services][keyvault-trusted-services] to bypass the firewall. However, the private endpoint approach is recommended because it works even when a [network security perimeter][keyvault-network-security-perimeter] is configured for the key vault.
 
 1. Set environment variables for the virtual network, subnet, and private endpoint. Replace the placeholder values with your own.
 
@@ -605,3 +613,5 @@ With KMS data encryption, key rotation is handled differently depending on your 
 [api-server-vnet-integration]: api-server-vnet-integration.md
 [azure-encryption-atrest]: /azure/security/fundamentals/encryption-atrest
 [keyvault-private-link]: /azure/key-vault/general/private-link-service
+[keyvault-trusted-services]: /azure/key-vault/general/overview-vnet-service-endpoints#trusted-services
+[keyvault-network-security-perimeter]: /azure/key-vault/general/network-security#network-security-perimeter

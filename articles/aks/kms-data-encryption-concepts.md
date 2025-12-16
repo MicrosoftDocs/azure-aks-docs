@@ -82,7 +82,7 @@ When using customer-managed keys, you can configure the network access for your 
 | Network access | Description | Use case |
 |----------------|-------------|----------|
 | **Public** | Key vault is accessible over the public internet with authentication. | Development environments, simpler setup |
-| **Private** | Key vault is only accessible through private endpoints. Requires the AKS cluster to use [API Server VNet Integration][api-server-vnet-integration] so the API server can access the private key vault. | Production environments, enhanced security |
+| **Private** | Key vault has public network access disabled. You can enable AKS to access the key vault using one of the following options: (1) Use [API Server VNet Integration][api-server-vnet-integration] with a private endpoint for the key vault (recommended), or (2) Configure the key vault firewall to [allow trusted Azure services][keyvault-trusted-services]. | Production environments, enhanced security |
 
 ## Comparing encryption key options
 
@@ -94,13 +94,12 @@ When using customer-managed keys, you can configure the network access for your 
 | **Network isolation** | N/A | No | Yes |
 | **Regulatory compliance** | Basic | Enhanced | Maximum |
 
-## Requirements and limitations
+## Requirements
 
-### Kubernetes version requirement
+* The new [KMS encryption with platform-managed keys or customer-managed keys with automatic key rotation][kms-data-encryption] experience requires **Kubernetes version 1.33 or later**.
+* The new [KMS encryption with platform-managed keys or customer-managed keys with automatic key rotation][kms-data-encryption] experience is only supported on AKS clusters where [managed identity is used for the cluster's identity][managed-identity-clusters].
 
-KMS encryption with platform-managed keys or customer-managed keys with automatic key rotation requires **Kubernetes version 1.33 or later**.
-
-### Limitations
+## Limitations
 
 - **No downgrade**: After enabling the new KMS encryption experience, you can't disable the feature.
 - **Key deletion**: Deleting the encryption key or key vault makes your secrets unrecoverable.
@@ -117,6 +116,8 @@ KMS encryption with platform-managed keys or customer-managed keys with automati
 [api-server-vnet-integration]: api-server-vnet-integration.md
 [azure-encryption-atrest]: /azure/security/fundamentals/encryption-atrest
 [azure-encryption-models]: /azure/security/fundamentals/encryption-models
+[managed-identity-clusters]: use-managed-identity.md
+[keyvault-trusted-services]: /azure/key-vault/general/overview-vnet-service-endpoints#trusted-services
 
 <!-- EXTERNAL LINKS -->
 [k8s-kms-provider]: https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/
