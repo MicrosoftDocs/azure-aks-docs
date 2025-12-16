@@ -71,6 +71,8 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 * L7 policy isn't supported by CiliumClusterwideNetworkPolicy (CCNP).
 
+* Label customization is supported and will not be reverted during cluster upgrade. This is required for high-churning workloads that generate high count of Cilium identities. For detailed Cilium label exclusion rule information, please check [the official Cilium label documentation](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels).
+
 ## Considerations
 
 To gain capabilities such as observability into your network traffic and security features like Fully Qualified Domain Name (FQDN) based filtering and Layer 7-based network policies on your cluster, consider enabling [Advanced Container Networking services](./advanced-container-networking-services-overview.md) on your clusters.
