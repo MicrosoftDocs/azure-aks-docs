@@ -5,7 +5,7 @@ author: davidsmatlak
 ms.author: davidsmatlak
 ms.subservice: aks-security
 ms.topic: how-to
-ms.date: 12/10/2025
+ms.date: 12/16/2025
 ms.custom: devx-track-azurecli
 # Customer intent: As a Kubernetes administrator, I want to configure and troubleshoot the Azure Key Vault provider for the Secrets Store CSI Driver in AKS, so that I can securely manage and automate the handling of secrets in my Kubernetes environment.
 ---
