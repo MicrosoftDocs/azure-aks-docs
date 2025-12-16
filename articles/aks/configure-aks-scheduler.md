@@ -18,7 +18,7 @@ In this article, you learn how to deploy example scheduler profiles in Azure Kub
 ## Limitations
 
 - AKS currently doesn't manage the deployment of third-party schedulers or out-of-tree scheduling plugins.
-- AKS doesn't support in-tree scheduling plugins targeting the `aks-system` scheduler. This restriction is in place to help prevent unexpected changes to AKS add-ons enabled on your cluster.
+- AKS doesn't support in-tree scheduling plugins targeting the `aks-system` scheduler. This restriction is in place to help prevent unexpected changes to AKS add-ons enabled on your cluster. Additionally, you can't define a `profile` called `aks-system`.
 
 ## Prerequisites
 
@@ -126,9 +126,9 @@ You can enable schedule profile configuration on a new or existing AKS cluster.
 
 Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes, within the set configuration. This strategy helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes.
 
-In this example, the configured scheduler prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. 
+In this example, the configured scheduler prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. The CRD must be named `upstream`.
 
-1. Create a file named `bin-pack-cpu-scheduler.yaml` and paste in the following manifest:
+1. Create a file named `bin-pack-cpu-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
 
     ```yaml
     apiVersion: aks.azure.com/v1alpha1
@@ -175,9 +175,9 @@ In this example, the configured scheduler prioritizes scheduling pods on nodes w
 
 ## Configure pod topology spread
 
-Pod topology spread is a scheduling strategy that seeks to distribute pods evenly across failure domains (such as availability zones or regions) to ensure high availability and fault tolerance in the event of zone or node failures. This strategy helps prevent the risk of all replicas of a pod being placed in the same failure domain. For more configuration guidance, see the [Kubernetes Pod Topology Spread Constraints documentation][topology-spread-constraints/].
+Pod topology spread is a scheduling strategy that seeks to distribute pods evenly across failure domains (such as availability zones or regions) to ensure high availability and fault tolerance in the event of zone or node failures. This strategy helps prevent the risk of all replicas of a pod being placed in the same failure domain. For more configuration guidance, see the [Kubernetes Pod Topology Spread Constraints documentation][topology-spread-constraints/]. The CRD must be named `upstream`.
 
-1. Create a file named `pod-topology-spreader-scheduler.yaml` and paste in the following manifest:
+1. Create a file named `pod-topology-spreader-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
 
     ```yaml
     apiVersion: aks.azure.com/v1alpha1
@@ -249,7 +249,15 @@ Pod topology spread is a scheduling strategy that seeks to distribute pods evenl
 
 ## Configure multiple scheduler profiles
 
-You can customize the upstream scheduler with multiple profiles and customize each profile with multiple plugins while using the same configuration file. In the following example, we create two scheduling profiles called **scheduler-one** and **scheduler-two**:
+You can customize the upstream scheduler with multiple profiles and customize each profile with multiple plugins while using the same configuration file. As a reminder, the CRD must be named `upstream` and user-configured fields include `percentageOfNodesToScore`, `podInitialBackoffSeconds`, `podMaxBackoffSeconds`, and `profiles`.
+
+In the following example, we create two scheduling profiles called **scheduler-one** and **scheduler-two**:
+
+The fields `percentageOfNodesToScore`, `podInitialBackoffSeconds`, `podMaxBackoffSeconds`, are applicable to both schedulers.
+
+- `percentageOfNodesToScore` specifies the percentage of cluster nodes the scheduler evaluates during scoring to balance scheduling accuracy and speed. So **percentageOfNodesToScore: 40** means the scheduler will sample 40% of nodes instead of the entire cluster.
+- `podInitialBackoffSeconds` defines the initial delay before retrying a failed scheduling attempt to prevent rapid, repeated retries. So **podInitialBackoffSeconds: 1** means the scheduler waits 1 second before the first retry.
+- `podMaxBackoffSeconds` sets the maximum delay the scheduler will wait between exponential backoff retries for unschedulable pods. So **podMaxBackoffSeconds: 8** means the retry delay will never exceed 8 seconds even as backoff increases.
 
 - **scheduler-one** prioritizes placing pods across zones and nodes for balanced distribution with the following settings:
 
@@ -267,7 +275,7 @@ You can customize the upstream scheduler with multiple profiles and customize ea
 > [!NOTE] 
 > You might need to adjust zones and other parameters based on your workload type.
 
-1. Create a file named `aks-scheduler-customization.yaml` and paste in the following manifest:
+1. Create a file named `aks-scheduler-customization.yaml`, with the CRD named `upstream`, and paste in the following manifest:
 
     ```yaml
     apiVersion: aks.azure.com/v1alpha1
@@ -446,6 +454,7 @@ To learn more about the AKS scheduler and best practices, see the following reso
 
 <!-- LINKS - external -->
 [topology-spread-constraints/]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+
 
 
 
