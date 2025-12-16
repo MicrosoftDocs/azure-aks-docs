@@ -193,7 +193,6 @@ az aks create \
     | ----------------- | -------- | ------- |
     | Cilium Endpoint Slices | ✔️ | ✔️ |
     | K8s Network Policies | ✔️ | ✔️ |
-    | Local Redirect Policy | ✔️ | ✔️ |
     | Cilium L3/L4 Network Policies | ✔️ | ✔️ |
     | Cilium Clusterwide Network Policy | ✔️ | ✔️ |
     | FQDN Filtering | ❌ | ✔️ |
@@ -244,10 +243,6 @@ az aks create \
 
     > [!NOTE]
     > It isn't currently possible to specify a `NetworkPolicy` with an `ipBlock` to allow traffic to node IPs.
-
-- **Does Azure CNI powered by Cilium support Local Redirect Policy?**
-
-    Local Redirect Policy is supported. Local Redirect Policy on Azure CNI powered by Cilium enables pods to route traffic directly to local endpoints on the same node, reducing cross-node hops and improving latency for services like DNS and health probes.
 
 - **Does AKS configure CPU or memory limits on the Cilium `daemonset`?**
 
