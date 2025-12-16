@@ -20,7 +20,7 @@ In a private cluster, the control plane or API server has internal IP addresses 
 
 The control plane or API server is in an AKS-managed Azure resource group, and your cluster or node pool is in your resource group. The server and the cluster or node pool can communicate with each other through the [Azure Private Link service][private-link-service] in the API server virtual network and a private endpoint exposed on the subnet of your AKS cluster.
 
-When you create a private AKS cluster, AKS creates both private and public FQDNs with corresponding DNS zones by default. For detailed DNS configuration options, see [Configure a private DNS zone, private DNS subzone, or custom subdomain](#configure-a-private-dns-zone-private-dns-subzone-or-custom-subdomain-for-a-private-aks-cluster).
+When you create a private AKS cluster, AKS creates both private and public fully qualified domain names (FQDNs) with corresponding DNS zones by default. For detailed DNS configuration options, see [Configure a private DNS zone, private DNS subzone, or custom subdomain](#configure-a-private-dns-zone-private-dns-subzone-or-custom-subdomain-for-a-private-aks-cluster).
 
 ## Region availability
 
@@ -116,7 +116,7 @@ Keep the following limitations in mind when using custom DNS with private AKS cl
     - `--enable-private-cluster`: Enables private cluster mode.
     - `--network-plugin azure`: Specifies the Azure CNI networking plugin.
     - `--vnet-subnet-id`: The resource ID of an existing subnet in a virtual network.
-    - `--dns-service-ip`: An available IP address within the Kubernetes service address range that will be used for the cluster DNS service.
+    - `--dns-service-ip`: An available IP address within the Kubernetes service address range to use for the cluster DNS service.
     - `--service-cidr`: A CIDR notation IP range from which to assign service cluster IPs.
 
     ```azurecli-interactive
@@ -289,7 +289,7 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
     kubectl get nodes
     ```
 
-    The command returns output similar to the following:
+    The command returns output similar to the following example output:
 
     ```output
     NAME                                STATUS   ROLES   AGE    VERSION

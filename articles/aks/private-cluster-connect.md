@@ -60,7 +60,7 @@ This option creates a separate VNet with the necessary resources for Cloud Shell
     - The deployment creates a new resource group named `RG-CloudShell-PrivateClusterConnection-{RANDOM_ID}`.
 1. Once the deployment succeeds, under **Set cluster context**, select **Open Cloud Shell**.
 
-:::image type="content" source="media/access-private-cluster/azure-portal-private-cluster-connect.png" alt-text="Screenshot of the Azure Portal at a private cluster's resource page showing the Connect button with the Cloud Shell tab selected." lightbox="media/access-private-cluster/azure-portal-private-cluster-connect-expanded.png":::
+:::image type="content" source="media/access-private-cluster/azure-portal-private-cluster-connect.png" alt-text="Screenshot of the Azure portal at a private cluster's resource page showing the Connect button with the Cloud Shell tab selected." lightbox="media/access-private-cluster/azure-portal-private-cluster-connect-expanded.png":::
 
 > [!NOTE]
 > If you already configured Cloud Shell in a VNet for a particular cluster, repeating these steps ensures your Cloud Shell user settings are correctly aligned with that VNet.
@@ -268,7 +268,7 @@ Once the `A` record is created, link the private DNS zone to the virtual network
 
 > [!WARNING]
 >
-> - If the private cluster is stopped and restarted, the private cluster's original private link service is removed and recreated, which breaks the connection between your private endpoint and the private cluster. To resolve this issue, delete and recreate any user-created private endpoints linked to the private cluster. If the recreated private endpoints have new IP addresses, you'll also need to update DNS records.
+> - If the private cluster is stopped and restarted, the private cluster's original private link service is removed and recreated, which breaks the connection between your private endpoint and the private cluster. To resolve this issue, delete and recreate any user-created private endpoints linked to the private cluster. If the recreated private endpoints have new IP addresses, you also need to update DNS records.
 > - If you update the DNS records in the private DNS zone, ensure the host that you're trying to connect from is using the updated DNS records. You can verify this using the `nslookup` command. If you notice the updates aren't reflected in the output, you might need to flush the DNS cache on your machine and try again.
 
 :::zone-end
