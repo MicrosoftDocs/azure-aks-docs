@@ -134,7 +134,9 @@
           items:
             - name: Create a private cluster
               href: private-clusters.md
-            - name: Access a Private API Server VNet Integration Cluster from Another Virtual Network
+            - name: Establish connectivity to a private cluster
+              href: private-cluster-connect.md
+            - name: Access a private API Server VNet Integration cluster from another virtual network
               href: private-apiserver-vnet-integration-cluster.md
             - name: Access a private cluster remotely
               href: access-private-cluster.md
@@ -632,7 +634,7 @@
           - name: Use API Server VNet integration
             href: api-server-vnet-integration.md
           - name: Private endpoint
-            href: private-clusters.md#use-a-private-endpoint-connection
+            href: private-cluster-connect.md#use-a-private-endpoint-connection
           - name: Diagnose and solve UDP packet drops
             href: troubleshoot-udp-packet-drops.md
           - name: Container Network Security
@@ -1240,7 +1242,7 @@
       items:
         - name: Overview
           href: stateful-workloads-overview.md
-        - name: Deploy a MongoDB cluster
+        - name: Deploy MongoDB using Percona
           items:
             - name: Overview
               href: mongodb-overview.md
@@ -1256,7 +1258,7 @@
               href: upgrade-mongodb-cluster.md
             - name: Monitor with Percona Monitoring and Management
               href: monitor-aks-mongodb.md
-        - name: Deploy a highly available PostgreSQL database
+        - name: Deploy PostgreSQL using CloudNativePG
           items:
             - name: Overview
               href: postgresql-ha-overview.md
@@ -1266,7 +1268,7 @@
               href: deploy-postgresql-ha.md
             - name: Test PostgreSQL
               href: validate-postgresql-ha.md
-        - name: Deploy a Valkey cluster
+        - name: Deploy Valkey
           items:
             - name: Overview
               href: valkey-overview.md
@@ -1296,7 +1298,7 @@
               href: kafka-deploy.md
             - name: Configure monitoring and networking for the Kafka cluster
               href: kafka-configure.md
-        - name: Deploy GitHub Actions using Azure Files
+        - name: Deploy GitHub Actions
           items:
             - name: Overview
               href: github-actions-azure-files-overview.md
