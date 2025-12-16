@@ -22,14 +22,18 @@ Get started with Azure Kubernetes Fleet Manager by using Terraform to create a F
 * An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * [Install and configure Terraform](/azure/developer/terraform/quickstart-configure).
 
-## Create a Fleet Manager resource
-
-You can create a Fleet Manager resource to later group your AKS clusters as member clusters.  If the Fleet Manager hub is enabled, other preview features are enabled, such as Kubernetes object propagation to member clusters. For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
-
-
 > [!IMPORTANT]
-> Once a Fleet Manager resource has been created, it's possible to upgrade a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public has been selected it cannot be changed.
+> If you're using the 4.x azurerm provider, you must [explicitly specify the Azure subscription ID](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/4.0-upgrade-guide#specifying-subscription-id-is-now-mandatory) to authenticate to Azure before running the Terraform commands.
+>
+> One way to specify the Azure subscription ID without putting it in the `providers` block is to specify the subscription ID in an environment variable named `ARM_SUBSCRIPTION_ID`.
+>
+> For more information, see the [Azure provider reference documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#argument-reference).
 
+## Create a Fleet Manager
+
+You can create a Fleet Manager resource to later group your AKS clusters as member clusters.  If the Fleet Manager has a hub cluster, other features are enabled, such as Kubernetes object propagation to member clusters and Managed Fleet Namespaces. For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
+
+Once a Fleet Manager is created, it's possible to switch from a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public has been selected it cannot be changed.
 
 ### [Fleet Manager resource without hub cluster](#tab/without-hub-cluster)
 
@@ -49,13 +53,6 @@ To create a Fleet Manager resource without a hub cluster, implement the followin
 
 - Create a file named `outputs.tf` and insert the following code:
     [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/outputs.tf)]
-
-> [!IMPORTANT]
-> If you're using the 4.x azurerm provider, you must [explicitly specify the Azure subscription ID](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/4.0-upgrade-guide#specifying-subscription-id-is-now-mandatory) to authenticate to Azure before running the Terraform commands.
->
-> One way to specify the Azure subscription ID without putting it in the `providers` block is to specify the subscription ID in an environment variable named `ARM_SUBSCRIPTION_ID`.
->
-> For more information, see the [Azure provider reference documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#argument-reference).
 
 #### Initialize Terraform
 
@@ -118,7 +115,276 @@ To create a Fleet Manager resource without a hub cluster, implement the followin
 
 ### [Fleet Manager resource with hub cluster](#tab/with-hub-cluster)
 
-Public and Private hub cluster Fleet Manager resource cannot be created using Terraform yet.
+If you want to use Fleet Manager for Kubernetes object propagation as well as cluster upgrades, then you need to create the Fleet Manager with a hub cluster.
+
+Fleet Manager hub clusters support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
+
+#### Public hub cluster
+
+> [!NOTE]
+> Once create a public hub cluster it can't be converted to private.
+
+- Create a directory you can use to test the sample Terraform code and make it your current directory.
+
+- Create a file named `providers.tf` and insert the following code:
+- 
+```terraform
+terraform {
+ required_providers {
+    azapi = {
+      source  = "azure/azapi"
+      version = "~> 2.0"
+    }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.1"
+    }
+  }
+}
+provider "azurerm" {
+  features {}
+}
+provider "azapi" {
+}
+```
+
+- Create a file named `main.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/main.tf)]
+
+```terraform
+resource "random_pet" "rg_name" {
+  prefix = var.resource_group_name_prefix
+}
+resource "azurerm_resource_group" "fleet_rg" {
+  name     = random_pet.rg_name.id
+  location = var.resource_group_location
+}
+
+resource "random_string" "fleet_name" {
+  length  = 63
+  lower   = true
+  numeric = false
+  special = false
+  upper   = false
+}
+
+resource "azurerm_kubernetes_fleet_manager" "fleet" {
+
+  location            = azurerm_resource_group.fleet_rg.location
+  name                = coalesce(var.fleet_name, random_string.fleet_name.result)
+  resource_group_name = azurerm_resource_group.fleet_rg.name
+}
+
+```
+
+- Create a file named `variables.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/variables.tf)]
+
+- Create a file named `outputs.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/outputs.tf)]
+
+
+
+##### Implement the Terraform code
+- Create a directory you can use to test the sample Terraform code and make it your current directory.
+
+- Create a file named `providers.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/providers.tf)]
+
+- Create a file named `main.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/main.tf)]
+
+- Create a file named `variables.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/variables.tf)]
+
+- Create a file named `outputs.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/outputs.tf)]
+
+#### Private hub cluster 
+
+[!INCLUDE [private-fleet-prerequisites.md](./includes/private-fleet/private-fleet-prerequisites.md)]
+
+> [!NOTE]
+> Once create a private hub cluster it can't be converted to public.
+
+Start by fetching Fleet Manager's service principal object ID which is a pre-existing identity:
+
+```azurecli-interactive
+az ad sp list \
+    --display-name "Azure Kubernetes Service - Fleet RP" \
+    --query "[].{id:id}"\
+    --output tsv
+```
+
+```output
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+##### Implement the Terraform code
+
+- Create a directory you can use to test the sample Terraform code and make it your current directory.
+
+- Create a file named `providers.tf` and insert the following code:
+
+```terraform
+terraform {
+ required_providers {
+    azapi = {
+      source  = "azure/azapi"
+      version = "~> 2.0"
+    }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.1"
+    }
+  }
+}
+provider "azurerm" {
+  features {}
+}
+provider "azapi" {
+}
+```
+
+- Create a file named `main.tf` and insert the following code:
+
+```terraform
+# Generate random suffix for unique resource names
+resource "random_string" "suffix" {
+  length  = 4
+  special = false
+  upper   = false
+}
+
+# Local values for resource naming
+locals {
+  resource_group_name = coalesce(var.resource_group_name, "rg-fleet-example-${random_string.suffix.result}")
+}
+
+# Resource Group
+resource "azurerm_resource_group" "fleet_rg" {
+  name     = local.resource_group_name
+  location = var.location
+}
+```
+
+- Create a file named `identity.tf` and insert the following code, updating the principal_id to match the output from the earlier service principal query:
+
+```terraform
+##
+# REQUIRED: Assign Network Contributor Role to "Azure Kubernetes Service - Fleet RP" to enable hub cluster updates
+##
+resource "azurerm_role_assignment" "fleet_identity_01_network_contributor" {
+  scope                = azurerm_subnet.hub-cluster-subnet.id
+  role_definition_name = "Network Contributor"
+  principal_id         = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  principal_type       = "ServicePrincipal"
+
+  depends_on = [azurerm_subnet.hub-cluster-subnet]
+}
+
+##
+# REQUIRED: Create User Assigned Managed Identity for Fleet Manager
+##
+resource "azurerm_user_assigned_identity" "fleet_user_assigned_identity" {
+  location            = azurerm_resource_group.fleet_rg.location
+  name                = "${local.fleet_name}-uai"
+  resource_group_name = azurerm_resource_group.fleet_rg.name
+}
+
+# REQUIRED: Assign Managed Identity the Network Contributor Role scoped to Hub Cluster API Server Subnet
+resource "azurerm_role_assignment" "fleet_user_assign_id_api_subnet_network_contributor" {
+  scope                = azurerm_subnet.fleet-hub-apiserver-subnet.id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_user_assigned_identity.fleet_user_assigned_identity.principal_id
+  principal_type       = "ServicePrincipal"
+
+  depends_on = [azurerm_subnet.fleet-hub-apiserver-subnet, azurerm_user_assigned_identity.fleet_user_assigned_identity]
+}
+
+# REQUIRED: Assign Managed Identity the Network Contributor Role scoped to Hub Cluster Subnet
+resource "azurerm_role_assignment" "fleet_user_assign_id_hub_subnet_network_contributor" {
+  scope                = azurerm_subnet.hub-cluster-subnet.id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_user_assigned_identity.fleet_user_assigned_identity.principal_id
+  principal_type       = "ServicePrincipal"
+
+  depends_on = [azurerm_subnet.hub-cluster-subnet, azurerm_user_assigned_identity.fleet_user_assigned_identity]
+}
+```
+
+- Create a file named `fleet.tf` and insert the following code:
+
+```terraform
+locals {
+  fleet_name = coalesce(var.fleet_name, "fleet-example-${random_string.suffix.result}")
+}
+
+# Fleet Resource
+resource "azapi_resource" "fleet" {
+  type      = "Microsoft.ContainerService/fleets@2025-03-01"
+  name      = local.fleet_name
+  location  = azurerm_resource_group.fleet_rg.location
+  parent_id = azurerm_resource_group.fleet_rg.id
+
+  body = {
+    properties = {
+      hubProfile = {
+        agentProfile = {
+          subnetId = azurerm_subnet.hub-cluster-subnet.id
+          vmSize = var.hub_cluster_vm_size
+        }
+        apiServerAccessProfile = {
+          enablePrivateCluster = true
+          enableVnetIntegration = true
+          subnetId = azurerm_subnet.fleet-hub-apiserver-subnet.id
+        }
+        dnsPrefix = local.fleet_name
+      }
+    }
+  }
+
+  identity {
+    type = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.fleet_user_assigned_identity.id]
+  }
+
+  depends_on = [
+    azurerm_resource_group.fleet_rg,
+    azurerm_role_assignment.fleet_identity_01_network_contributor, 
+    azurerm_user_assigned_identity.fleet_user_assigned_identity, 
+    azurerm_role_assignment.fleet_user_assign_id_api_subnet_network_contributor,
+    azurerm_role_assignment.fleet_user_assign_id_hub_subnet_network_contributor
+  ]
+}
+```
+
+
+
+
+- Create a directory you can use to test the sample Terraform code and make it your current directory.
+
+- Create a file named `providers.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/providers.tf)]
+
+- Create a file named `main.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/main.tf)]
+
+- Create a file named `variables.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/variables.tf)]
+
+- Create a file named `outputs.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/outputs.tf)]
+
+Fleet Manager resource cannot be created using Terraform yet.
 
 ---
 
