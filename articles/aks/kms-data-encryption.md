@@ -613,5 +613,5 @@ With KMS data encryption, key rotation is handled differently depending on your 
 [api-server-vnet-integration]: api-server-vnet-integration.md
 [azure-encryption-atrest]: /azure/security/fundamentals/encryption-atrest
 [keyvault-private-link]: /azure/key-vault/general/private-link-service
-[keyvault-trusted-services]: /azure/key-vault/general/overview-vnet-service-endpoints#trusted-services
+[keyvault-trusted-services]: /azure/key-vault/general/network-security#key-vault-firewall-enabled-trusted-services-only
 [keyvault-network-security-perimeter]: /azure/key-vault/general/network-security#network-security-perimeter
