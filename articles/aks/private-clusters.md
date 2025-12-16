@@ -62,7 +62,7 @@ Keep the following considerations in mind when deploying private AKS clusters in
 
   To prevent the failure, choose **one** of the following supported configurations:
 
-  - **Custom private DNS zone**: Provide a precreated private zone and set `privateDNSZone` / `--private-dns-zone` to its resource ID. Link that zone to the appropriate VNet (for example, the hub VNet) and set `publicDNS` to `false` / use `--disable-public-fqdn`..
+  - **Custom private DNS zone**: Provide a precreated private zone and set `privateDNSZone` / `--private-dns-zone` to its resource ID. Link that zone to the appropriate VNet (for example, the hub VNet) and set `publicDNS` to `false` / use `--disable-public-fqdn`.
   - **Public DNS only**: Disable private zone creation by setting `privateDNSZone` / `--private-dns-zone` to `none` **and** leave `publicDNS` at its default value (`true`) / don't use `--disable-public-fqdn`.
 
 - If you're using [bring your own (BYO) route table with kubenet](./configure-kubenet.md#bring-your-own-subnet-and-route-table-with-kubenet) and BYO DNS with private clusters, cluster creation fails. You need to associate the [`RouteTable`](./configure-kubenet.md#bring-your-own-subnet-and-route-table-with-kubenet) in the node resource group to the subnet after the cluster creation failed to make the creation successful.
@@ -173,7 +173,7 @@ You can configure private DNS settings for a private AKS cluster using the Azure
 
 | Setting | Description |
 |---------|-------------|
-| `system` | The default value when configuring a a private DNS zone. If you omit `--private-dns-zone` / `privateDNSZone`, AKS creates a private DNS zone in the node resource group. |
+| `system` | The default value when configuring a private DNS zone. If you omit `--private-dns-zone` / `privateDNSZone`, AKS creates a private DNS zone in the node resource group. |
 | `none` | If you set `--private-dns-zone` / `privateDNSZone` to `none`, AKS doesn't create a private DNS zone. |
 | `<custom-private-dns-zone-resource-id>` | To use this parameter, you need to create a private DNS zone in the following format for Azure global cloud: `privatelink.<region>.azmk8s.io` or `<subzone>.privatelink.<region>.azmk8s.io`. You need the resource ID of the private DNS zone for future use. You also need a user-assigned identity or service principal with the [Private DNS Zone Contributor][private-dns-zone-contributor-role] and [Network Contributor][network-contributor-role] roles. For clusters using API Server VNet integration, a private DNS zone supports the naming format of `private.<region>.azmk8s.io` or `<subzone>.private.<region>.azmk8s.io`. You **can't change or delete this resource after creating the cluster**, as it can cause performance issues and cluster upgrade failures. You can use `--fqdn-subdomain <subdomain>` with `<custom-private-dns-zone-resource-id>` only to provide subdomain capabilities to `privatelink.<region>.azmk8s.io`. If you're specifying a subzone, there's a 32 character limit for the `<subzone>` name. |
 
