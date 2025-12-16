@@ -134,7 +134,9 @@
           items:
             - name: Create a private cluster
               href: private-clusters.md
-            - name: Access a Private API Server VNet Integration Cluster from Another Virtual Network
+            - name: Establish connectivity to a private cluster
+              href: private-cluster-connect.md
+            - name: Access a private API Server VNet Integration cluster from another virtual network
               href: private-apiserver-vnet-integration-cluster.md
             - name: Access a private cluster remotely
               href: access-private-cluster.md
