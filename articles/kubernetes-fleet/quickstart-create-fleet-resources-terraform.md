@@ -89,7 +89,35 @@ Fleet Manager hub clusters support both public and private modes for network acc
     }
     provider "azapi" {
     }
-```
+    ```
+
+1. Create a file named `variables.tf` insert the following code.
+
+    ```terraform
+    variable "location" {
+      description = "The Azure region where resources will be created"
+      type        = string
+      default     = "Australia East"
+    }
+    
+    variable "resource_group_name" {
+      description = "The name of the resource group"
+      type        = string
+      default     = null
+    }
+    
+    variable "fleet_name" {
+      description = "The name of the Fleet"
+      type        = string
+      default     = null
+    }
+    
+    variable "hub_cluster_vm_size" {
+      description = "VM size for the Fleet hub cluster"
+      type        = string
+      default     = "Standard_D2s_v3"
+    }
+    ```
 
 1. Create a file named `main.tf` and insert the following code:
 
