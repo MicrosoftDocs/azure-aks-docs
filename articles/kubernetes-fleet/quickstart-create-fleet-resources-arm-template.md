@@ -127,6 +127,6 @@ xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
 * [Access Fleet Manager hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
 * [Deploy cluster-scoped resources across multiple clusters](./quickstart-resource-propagation.md).
-* [Deploy namespace-scoped resources across multiple clusters](./quickstart-namespace-scoped-resource-propagatio.md).
+* [Deploy namespace-scoped resources across multiple clusters](./quickstart-namespace-scoped-resource-propagation.md).
 * [Create and configure Managed Fleet Namespaces](./howto-managed-namespaces.md).
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
