@@ -119,112 +119,8 @@ If you want to use Fleet Manager for Kubernetes object propagation as well as cl
 
 Fleet Manager hub clusters support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
 
-#### Public hub cluster
-
 > [!NOTE]
-> Once create a public hub cluster it can't be converted to private.
-
-- Create a directory you can use to test the sample Terraform code and make it your current directory.
-
-- Create a file named `providers.tf` and insert the following code:
-- 
-```terraform
-terraform {
- required_providers {
-    azapi = {
-      source  = "azure/azapi"
-      version = "~> 2.0"
-    }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 4.0"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.1"
-    }
-  }
-}
-provider "azurerm" {
-  features {}
-}
-provider "azapi" {
-}
-```
-
-- Create a file named `main.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/main.tf)]
-
-```terraform
-resource "random_pet" "rg_name" {
-  prefix = var.resource_group_name_prefix
-}
-resource "azurerm_resource_group" "fleet_rg" {
-  name     = random_pet.rg_name.id
-  location = var.resource_group_location
-}
-
-resource "random_string" "fleet_name" {
-  length  = 63
-  lower   = true
-  numeric = false
-  special = false
-  upper   = false
-}
-
-resource "azurerm_kubernetes_fleet_manager" "fleet" {
-
-  location            = azurerm_resource_group.fleet_rg.location
-  name                = coalesce(var.fleet_name, random_string.fleet_name.result)
-  resource_group_name = azurerm_resource_group.fleet_rg.name
-}
-
-```
-
-- Create a file named `variables.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/variables.tf)]
-
-- Create a file named `outputs.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/outputs.tf)]
-
-
-
-##### Implement the Terraform code
-- Create a directory you can use to test the sample Terraform code and make it your current directory.
-
-- Create a file named `providers.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/providers.tf)]
-
-- Create a file named `main.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/main.tf)]
-
-- Create a file named `variables.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/variables.tf)]
-
-- Create a file named `outputs.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/outputs.tf)]
-
-#### Private hub cluster 
-
-[!INCLUDE [private-fleet-prerequisites.md](./includes/private-fleet/private-fleet-prerequisites.md)]
-
-> [!NOTE]
-> Once create a private hub cluster it can't be converted to public.
-
-Start by fetching Fleet Manager's service principal object ID which is a pre-existing identity:
-
-```azurecli-interactive
-az ad sp list \
-    --display-name "Azure Kubernetes Service - Fleet RP" \
-    --query "[].{id:id}"\
-    --output tsv
-```
-
-```output
-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-```
-
-##### Implement the Terraform code
+> Once a hub cluster is created as public or private its access mode can't be changed.
 
 - Create a directory you can use to test the sample Terraform code and make it your current directory.
 
@@ -267,6 +163,7 @@ resource "random_string" "suffix" {
 # Local values for resource naming
 locals {
   resource_group_name = coalesce(var.resource_group_name, "rg-fleet-example-${random_string.suffix.result}")
+  fleet_name = coalesce(var.fleet_name, "fleet-example-${random_string.suffix.result}")
 }
 
 # Resource Group
@@ -276,7 +173,80 @@ resource "azurerm_resource_group" "fleet_rg" {
 }
 ```
 
-- Create a file named `identity.tf` and insert the following code, updating the principal_id to match the output from the earlier service principal query:
+#### Public hub cluster
+
+- Create a file named `fleet.tf` and insert the following code:
+
+```terraform
+resource "azapi_resource" "fleet-public" {
+  type      = "Microsoft.ContainerService/fleets@2025-03-01"
+  name      = "${local.fleet_name}-pub"
+  location  = azurerm_resource_group.fleet_rg.location
+  parent_id = azurerm_resource_group.fleet_rg.id
+
+  body = {
+    properties = {
+      hubProfile = {
+        agentProfile = {
+          vmSize = var.hub_cluster_vm_size
+        }
+        apiServerAccessProfile = {
+          enablePrivateCluster = false
+          enableVnetIntegration = false
+        }
+        dnsPrefix = "${local.fleet_name}-pub"
+      }
+    }
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  depends_on = [
+    azurerm_resource_group.fleet_rg
+  ]
+}
+```
+
+#### Private hub cluster
+
+If you want to use an existing virtual network you can replace the contents of `vnet.tf` file with resource references only, ensuring you have the correct subnets and delegations in place.
+
+- Create a file named `vnet.tf` and insert the following code. 
+
+```terraform
+resource "azurerm_virtual_network" "hub-vnet" {
+  name                = "${local.fleet_name}-vnet"
+  location            = azurerm_resource_group.fleet_rg.location
+  resource_group_name = azurerm_resource_group.fleet_rg.name
+  address_space       = ["10.224.0.0/12"]
+}
+
+resource "azurerm_subnet" "hub-cluster-subnet" {
+  name                 = "fleet-hub-cluster-subnet"
+  resource_group_name  = azurerm_resource_group.fleet_rg.name
+  virtual_network_name = azurerm_virtual_network.hub-vnet.name
+  address_prefixes     = ["10.224.0.0/15"]
+  private_endpoint_network_policies = "Disabled"
+  private_link_service_network_policies_enabled = true
+}
+
+resource "azurerm_subnet" "fleet-hub-apiserver-subnet" {
+  name                 = "fleet-hub-apiserver-subnet"
+  resource_group_name  = azurerm_resource_group.fleet_rg.name
+  virtual_network_name = azurerm_virtual_network.hub-vnet.name
+  address_prefixes     = ["10.226.0.0/15"]
+  delegation {
+    name = "aksApiServerSubnetDelegation"
+    service_delegation {
+      name    = "Microsoft.ContainerService/managedClusters"
+    }
+  }
+}
+```
+
+- Create a file named `identity.tf` and insert the following code, updating the placeholder `principal_id` to match the output from the earlier service principal query:
 
 ```terraform
 ##
