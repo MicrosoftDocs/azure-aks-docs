@@ -87,7 +87,7 @@ spec:
 ### Static Private IP Support (Preview)
 
 > [!IMPORTANT]
-> Static private IP support requires clusters running Kubernetes version 1.34 or later and a subscription with the `Microsoft.ContainerService/StaticEgressGatewayPreview` Azure Feature Exposure Control (AFEC) flag enabled. Follow [Register preview feature](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/preview-features?tabs=azure-portal#register-preview-feature) to request the feature flag before creating the Gateway VirtualMachiens node pool.
+> Static private IP support requires clusters running Kubernetes version 1.34 or later and a subscription with the `Microsoft.ContainerService/StaticEgressGatewayPreview` Azure Feature Exposure Control (AFEC) flag enabled. Follow [Register preview feature](/azure/azure-resource-manager/management/preview-features#register-preview-feature) to request the feature flag before creating the Gateway VirtualMachines node pool.
 
 If you must keep egress traffic on private addresses, enable private IP support on the gateway node pool. Use the same `az aks nodepool add` command and set the node pool to use the VirtualMachines VM set type while disabling public IP provisioning:
 
