@@ -1,7 +1,7 @@
 ---
-title: 'Access a private Azure Kubernetes Service (AKS) cluster using the command invoke or Run command feature'
+title: 'Access a Private Azure Kubernetes Service (AKS) Cluster using the Command Invoke or Run Command Feature'
 description: Learn how to access a private Azure Kubernetes Service (AKS) cluster using the Azure CLI command invoke feature or the Azure portal Run command feature.
-ms.topic: concept-article
+ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, innovation-engine, copilot-scenario-highlight, annual
 ms.date: 06/10/2025
@@ -18,7 +18,7 @@ ms.author: schaffererin
 
 When you access a private Azure Kubernetes Service (AKS) cluster, you need to connect to the cluster from the cluster virtual network (VNet), a peered network, or a configured private endpoint. These approaches require extra configuration, such as setting up a VPN or Express Route.
 
-With the Azure CLI, you can use `command invoke` to access private clusters without the need to configure a VPN or Express Route. `command invoke` allows you to remotely invoke commands, like `kubectl` and `helm`, on your private cluster through the Azure API without directly connecting to the cluster. The `Microsoft.ContainerService/managedClusters/runcommand/action` and `Microsoft.ContainerService/managedclusters/commandResults/read` actions control the permissions for using `command invoke`.
+With the Azure CLI, you can use `command invoke` to access private clusters without the need to configure a VPN or Express Route. `command invoke` allows you to remotely invoke commands, like `kubectl` and `helm`, on your private cluster through the Azure API without directly connecting to the cluster. The RBAC actions `Microsoft.ContainerService/managedClusters/runcommand/action` and `Microsoft.ContainerService/managedClusters/commandResults/read` control the permissions for using `command invoke`.
 
 With the Azure portal, you can use the `Run command` feature to run commands on your private cluster. The `Run command` feature uses the same `command invoke` functionality to run commands on your cluster. The pod created by `Run command` provides `kubectl` and `helm` for operating your cluster. `jq`, `xargs`, `grep`, and `awk` are available for Bash support.
 
@@ -27,27 +27,39 @@ With the Azure portal, you can use the `Run command` feature to run commands on 
 
 ## Prerequisites
 
-To use the `command invoke` or `Run command` feature to access a private AKS cluster, you need the following prerequisites:
+**System and permission requirements**
 
-- An existing private AKS cluster. If you don't have one, see [Create a private AKS cluster](./private-clusters.md).
-- The Azure CLI version 2.24.0 or later. Check your version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-- Access to the `Microsoft.ContainerService/managedClusters/runcommand/action` and `Microsoft.ContainerService/managedclusters/commandResults/read` roles on the cluster.
+| Requirement type | Specification | How to verify |
+|------------------|---------------|---------------|
+| **Azure CLI version** | 2.24.0 or later | Use the [`az --version`](/cli/azure/install-azure-cli) command to check your version. |
+| **Private AKS cluster** | Must already exist | If you don't have an existing private cluster, follow the steps in [Create a private AKS cluster](./private-clusters.md). |
+| **RBAC actions** | `Microsoft.ContainerService/managedClusters/runcommand/action` and `Microsoft.ContainerService/managedClusters/commandResults/read` | Check using the Azure portal Access control (IAM) page or the [`az role assignment list`](/cli/azure/role/assignment#az-role-assignment-list) Azure CLI command. |
 
-### Limitations
+**Run command pod resource specifications**
 
-This feature is designed to simplify cluster access and is **_not designed for programmatic access_**. You should use direct API access via Bastion, VPN, or Express Route for programmatic calls to your cluster.
+| Resource type | Value | Impact |
+|---------------|-------|--------|
+| **CPU requests** | 200m | Minimum CPU reserved for command pod |
+| **Memory requests** | 500Mi | Minimum memory reserved for command pod |
+| **CPU limits** | 500m | Maximum CPU available to command pod |
+| **Memory limits** | 1Gi | Maximum memory available to command pod |
+| **Azure Resource Manager (ARM) API timeout** | 60 seconds | Maximum time for pod scheduling |
+| **Output size limit** | 512kB | Maximum command output size |
 
-If you have a program invoke Kubernetes using `Run command`, the following disadvantages apply:
+### Limitations and considerations
 
-- You only get _exitCode_ and _text output_, and you lose API level details.
-- One extra hop introduces extra failure points.
+**Design scope**
 
-The pod created by `Run command` has `200m CPU` and `500Mi memory` requests, and `500m CPU` and `1Gi memory` limits. In cases where all your nodes are full or over committed, the pod might be unable to be scheduled within the Azure Resource Manager (ARM) API timeout of 60 seconds, which means the `Run command` invocation fails.
+- **Not for programmatic access**: Use Bastion, VPN, or ExpressRoute for automated API calls.
+- **Pod scheduling dependency**: Requires sufficient cluster resources (see the [resource specifications](#prerequisites)).
+- **Output limitations**: _exitCode_ and _text_ only, no API-level details.
+- **Network constraints apply**: Subject to cluster networking and security restrictions.
 
-`command invoke` runs the commands from your cluster, so any commands you run in this manner are subject to your configured networking restrictions and any other configured restrictions. Make sure there are enough nodes and resources in your cluster to schedule the command pod.
+**Potential failure points**
 
-> [!NOTE]
-> The output for `command invoke` is limited to 512kB in size.
+- Pod scheduling failure if nodes are resource-constrained.
+- ARM API timeout (60 seconds) if pod can't be scheduled quickly.
+- Output truncation if response exceeds 512kB limit.
 
 ## Use `command invoke` on a private AKS cluster with the Azure CLI
 
