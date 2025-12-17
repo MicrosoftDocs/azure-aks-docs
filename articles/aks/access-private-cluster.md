@@ -46,7 +46,7 @@ With the Azure portal, you can use the `Run command` feature to run commands on 
 | **Azure Resource Manager (ARM) API timeout** | 60 seconds | Maximum time for pod scheduling |
 | **Output size limit** | 512kB | Maximum command output size |
 
-### Limitations and considerations
+## Limitations and considerations
 
 **Design scope**
 
