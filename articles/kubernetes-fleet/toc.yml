@@ -28,10 +28,8 @@
           href: concepts-lifecycle.md
         - name: Member cluster types
           href: concepts-member-cluster-types.md
-        - name: Use Azure RBAC to control resource access
+        - name: Use Azure RBAC to control access
           href: concepts-rbac.md
-        - name: Scheduler and scheduling framework
-          href: concepts-scheduler-scheduling-framework.md
         - name: Preview API lifecycle
           href: concepts-preview-api-lifecycle.md
         - name: Kubernetes version support

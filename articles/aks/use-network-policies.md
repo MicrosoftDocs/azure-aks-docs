@@ -15,16 +15,16 @@ ms.custom:
 
 # Secure traffic between pods by using network policies in AKS
 
-> [!IMPORTANT] 
-> On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on **Windows** nodes in AKS.
-> 
+> [!IMPORTANT]
+> On **30 September 2026**, we'll end support for Azure Network Policy Manager (NPM) on **Windows** nodes in AKS.
+>
 > This change applies only to customers who have already onboarded to NPM. **Subscriptions that were not previously registered with this feature will no longer be able to onboard**. Existing onboarded customers can continue using NPM until the end-of-support date.
 >
->  To ensure your setup continues to receive support, security updates, and deployment compatibility, please explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
+>  To ensure your setup continues to receive support, security updates, and deployment compatibility, explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico][calico-support] by that date.
 
-> [!IMPORTANT] 
-> On **30 September 2028**, we’ll end support for Azure Network Policy Manager (NPM) on **Linux** nodes in AKS.
-> 
+> [!IMPORTANT]
+> On **30 September 2028**, we'll end support for Azure Network Policy Manager (NPM) on **Linux** nodes in AKS.
+>
 > To avoid service disruptions, you'll need to [migrate AKS clusters running Linux nodes from NPM to Cilium Network Policy](./migrate-from-npm-to-cilium-network-policy.md) by that date. 
 
 [!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
@@ -49,7 +49,7 @@ Azure provides three Network Policy engines for enforcing network policies:
 * _Azure Network Policy Manager_.
 * _Calico_, an open-source network and network security solution founded by [Tigera][tigera].
 
-Cilium is our recommended Network Policy engine. Cilium enforces network policy on the traffic using Linux Berkeley Packet Filter (BPF), which is generally more efficient than "IPTables". See more details in [Azure CNI Powered by Cilium documentation](./azure-cni-powered-by-cilium.md).  
+Cilium is our recommended Network Policy engine. Cilium enforces network policy on the traffic using Linux Berkeley Packet Filter (BPF), which is more efficient than _IPTables_. See more details in [Azure CNI Powered by Cilium documentation](./azure-cni-powered-by-cilium.md).
 To enforce the specified policies, Azure Network Policy Manager for Linux uses Linux _IPTables_. Azure Network Policy Manager for Windows uses _Host Network Service (HNS) ACLPolicies_. Policies are translated into sets of allowed and disallowed IP pairs. These pairs are then programmed as `IPTable` or `HNS ACLPolicy` filter rules.
 
 ## Differences between Network Policy engines: Cilium, Azure NPM, and Calico
@@ -59,13 +59,13 @@ To enforce the specified policies, Azure Network Policy Manager for Linux uses L
 | Supported platforms                      | Linux, Windows Server 2022 (Preview).                     | Linux, Windows Server 2019 and 2022.  | Linux.
 | Supported networking options             | Azure Container Networking Interface (CNI).                  | Azure CNI (Linux, Windows Server 2019 and 2022) and kubenet (Linux). | Azure CNI.
 | Compliance with Kubernetes specification | All policy types supported | All policy types are supported. | All policy types are supported.
-| Other features                           | None.                       | While Calico has many features that AKS doesn't block, AKS does not test or Support them. [History](https://github.com/Azure/AKS/issues/4038) | [FQDN](./container-network-security-fqdn-filtering-concepts.md), L3/4, [L7](./container-network-security-l7-policy-concepts.md)
+| Other features                           | None.                       | While Calico has many features that AKS doesn't block, AKS doesn't test or support them. [History](https://github.com/Azure/AKS/issues/4038) | [FQDN](./container-network-security-fqdn-filtering-concepts.md), L3/4, [L7](./container-network-security-l7-policy-concepts.md)
 | Support                                  | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team.
 
 ## Limitations of Azure Network Policy Manager
 
 > [!NOTE]
-> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./upgrade-azure-cni.md) to use Cilium as the network policy engine.
+> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./update-azure-cni.md) to use Cilium as the network policy engine.
 
 Azure NPM doesn't support IPv6. Otherwise, it fully supports the network policy specifications in Linux.
 
@@ -89,13 +89,13 @@ To limit the chance of hitting this race condition, you can reduce the size of t
 
 ### Filtering load balancer or service traffic
 
-Kubernetes service routing for both inbound and outbound services often involves rewriting the source and destination IPs on traffic that is being processed, including traffic that comes into the cluster from a LoadBalancer service. This rewrite behavior means that traffic being received from or sent to an external service may not be properly processed by network policies (see the [Kubernetes Network Policies documentation][kubernetes-network-policies] for more details).
+Kubernetes service routing for both inbound and outbound services often involves rewriting the source and destination IPs on traffic that's being processed, including traffic that comes into the cluster from a LoadBalancer service. This rewrite behavior means that traffic being received from or sent to an external service might not be properly processed by network policies (see the [Kubernetes Network Policies documentation][kubernetes-network-policies] for more details).
 
 To restrict what sources can send traffic to a load balancer service, use the `spec.loadBalancerSourceRanges` to configure traffic blocking that is applied before any rewrites occur. More information is available in the [AKS standard load balancer](/azure/aks/load-balancer-standard#restrict-inbound-traffic-to-specific-ip-ranges) documentation.
 
 ## Before you begin
 
-You need the Azure CLI version 2.0.61 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+You need the Azure CLI version 2.0.61 or later installed and configured. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 ## Create an AKS cluster and enable network policy
 
@@ -138,12 +138,12 @@ az aks create \
 
 ### Create an AKS cluster with Azure Network Policy Manager enabled - Windows Server 2022 (preview)
 
-> [!IMPORTANT] 
-> On **30 September 2026**, we’ll end support for Azure Network Policy Manager (NPM) on Windows nodes in AKS.
+> [!IMPORTANT]
+> On **30 September 2026**, we'll end support for Azure Network Policy Manager (NPM) on Windows nodes in AKS.
 >
-> This change applies only to customers who have already onboarded to NPM. **Subscriptions that were not previously registered with this feature will no longer be able to onboard.** Existing onboarded customers can continue using NPM until the end-of-support date.
-> 
->  To ensure your setup continues to receive support, security updates, and deployment compatibility, please explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico](https://www.tigera.io/tigera-products/calico/) by that date. 
+> This change applies only to customers who already onboarded to NPM. **Subscriptions that were not previously registered with this feature will no longer be able to onboard.** Existing onboarded customers can continue using NPM until the end-of-support date.
+>
+>  To ensure your setup continues to receive support, security updates, and deployment compatibility, explore alternative options, such as using [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico][calico-support] by that date.
 
 In this section, you create a cluster with Windows node pools and Azure Network Policy Manager enabled.
 
@@ -270,8 +270,8 @@ az aks nodepool add \
 ## Install Azure Network Policy Manager or Calico in an existing cluster
 Installing Azure Network Policy Manager or Calico on existing AKS clusters is also supported.
 > [!WARNING]
-> The upgrade process triggers each node pool to be re-imaged simultaneously. Upgrading each node pool separately isn't supported.
-> Within each node pool, nodes are re-imaged following the same process as in a standard Kubernetes version upgrade operation whereby buffer nodes are temporarily added to minimize disruption to running applications while the node re-imaging process is ongoing. Therefore any disruptions that may occur are similar to what you would expect during a node image upgrade or [Kubernetes version upgrade](./upgrade-cluster.md) operation.
+> The upgrade process triggers each node pool to be reimaged simultaneously. Upgrading each node pool separately isn't supported.
+> Within each node pool, nodes are reimaged following the same process as in a standard Kubernetes version upgrade operation whereby buffer nodes are temporarily added to minimize disruption to running applications while the node reimaging process is ongoing. Therefore any disruptions that might occur are similar to what you would expect during a node image upgrade or [Kubernetes version upgrade](./upgrade-cluster.md) operation.
 
 Example command to install Azure Network Policy Manager:
 ```azurecli
@@ -283,12 +283,12 @@ az aks update
 
 Example command to install Calico:
 > [!WARNING]
-> This warning applies to upgrading Kubenet clusters with Calico enabled to Azure CNI Overlay with Calico enabled.  
-> - In Kubenet clusters with Calico enabled, Calico is used as both a CNI and network policy engine.  
+> This warning applies to upgrading Kubenet clusters with Calico enabled to Azure CNI Overlay with Calico enabled.
+> - In Kubenet clusters with Calico enabled, Calico is used as both a CNI and network policy engine.
 > - In Azure CNI clusters, Calico is used only for network policy enforcement, not as a CNI. This can cause a short delay between when the pod starts and when Calico allows outbound traffic from the pod.
 >
 >  AKS recommends using Cilium instead of Calico to avoid this issue. Learn more about Cilium at [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md)
->  
+>
 
 ```azurecli
 az aks update
@@ -298,6 +298,7 @@ az aks update
 ```
 
 ## Upgrade an existing cluster that has Azure NPM or Calico installed to Azure CNI Powered by Cilium
+
 To upgrade an existing cluster that has Network Policy engine installed to Azure CNI Powered by Cilium, see [Upgrade an existing cluster to Azure CNI Powered by Cilium](upgrade-aks-ipam-and-dataplane.md)
 
 ## Verify network policy setup
@@ -359,7 +360,7 @@ In the client's shell, run the following command to verify connectivity with the
 
 ### Test connectivity with network policy
 
-To add network policies create a file named `demo-policy.yaml` and paste the following YAML manifest:
+To add network policies, create a file named `demo-policy.yaml` and paste the following YAML manifest:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -405,21 +406,25 @@ Run the following command to label the `client` and verify connectivity with the
 kubectl label pod client -n demo app=client
 ```
 
+## Move to self-managed Calico
+
+As shown in the [table's other features](#differences-between-network-policy-engines-cilium-azure-npm-and-calico), AKS only supports Calico for standard Kubernetes network policies and doesn't test other features. If you want to move to self-managed Calico, follow the Tiegra instructions at [Migrate from Azure-managed Calico to self-managed Calico][calico-self-managed]. The Tiegra documentation mentions that for self-managed Calico you set `--network-policy none` like in the [uninstall section](#uninstall-azure-network-policy-manager-or-calico).
+
 ## Uninstall Azure Network Policy Manager or Calico
 
 Requirements:
  - Azure CLI version 2.63 or later
 
-
 > [!NOTE]
- > - The uninstall process does _**not**_ remove Custom Resource Definitions (CRDs) and Custom Resources (CRs) used by Calico. These CRDs and CRs all have names ending with either "projectcalico.org" or "tigera.io".
+ > - The uninstall process does _**not**_ remove Custom Resource Definitions (CRDs) and Custom Resources (CRs) used by Calico. These CRDs and CRs all have names ending with either _projectcalico.org_ or _tigera.io_.
  > These CRDs and associated CRs can be manually deleted _after_ Calico is successfully uninstalled (deleting the CRDs before removing Calico breaks the cluster).
- > - The upgrade will not remove any NetworkPolicy resources in the cluster, but after the uninstall these policies are no longer enforced.
+ > - The upgrade won't remove any Network Policy resources in the cluster, but after the uninstall these policies are no longer enforced.
 
 > [!WARNING]
-> The upgrade process triggers each node pool to be re-imaged simultaneously. Upgrading each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image upgrade or [Kubernetes version upgrade](./upgrade-cluster.md) where each node in a node pool is re-imaged.
+> The upgrade process triggers each node pool to be reimaged simultaneously. Upgrading each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image upgrade or [Kubernetes version upgrade](./upgrade-cluster.md) where each node in a node pool is reimaged.
 
 To remove Azure Network Policy Manager or Calico from a cluster, run the following command:
+
 ```azurecli
 az aks update
     --resource-group $RESOURCE_GROUP_NAME \
@@ -454,6 +459,7 @@ To learn more about policies, see [Kubernetes network policies][kubernetes-netwo
 [calico-support]: https://www.tigera.io/tigera-products/calico/
 [calico-logs]: https://docs.tigera.io/calico/3.25/operations/troubleshoot/component-logs
 [calico-aks-cleanup]: https://github.com/Azure/aks-engine/blob/master/docs/topics/calico-3.3.1-cleanup-after-upgrade.yaml
+[calico-self-managed]: https://docs.tigera.io/calico/latest/getting-started/kubernetes/managed-public-cloud/aks-migrate
 
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
@@ -467,4 +473,3 @@ To learn more about policies, see [Kubernetes network policies][kubernetes-netwo
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [dsr]: ../load-balancer/load-balancer-multivip-overview.md#rule-type-2-backend-port-reuse-by-using-floating-ip
-

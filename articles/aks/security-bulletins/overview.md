@@ -25,6 +25,36 @@ These updates cover security information related to the following AKS components
 
 ---
 
+## AKS-2025-0013  Portworx Half-Blind SSRF in kube-controller-manager
+
+**Published Date**: December 1, 2025
+
+### Description
+This bulletin provides an update regarding a recent vulnerability in the Kubernetes kube-controller-manager when using the in-tree Portworx StorageClass. This issue allows authorized users to leak arbitrary information from unprotected endpoints in the control plane’s host network (including link-local or loopback services). 
+
+The in-tree Portworx StorageClass has been disabled by default starting in Kubernetes v1.31 via the CSIMigrationPortworx feature gate. As a result, currently supported versions ≥ v1.32 are not impacted unless the CSIMigrationPortworx feature gate has been manually disabled.
+
+### References
+
+- [CVE-2025-13281](https://github.com/kubernetes/kubernetes/issues/135525)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- AKS v1.28-akslts
+- AKS v1.29-akslts
+- AKS v1.30-akslts
+
+**Resolutions**
+
+- A security patch has been rolled out for the impacted lts versions.
+- **No action is required**. The patch will be automatically applied to your cluster during your configured or default [maintenance window](../planned-maintenance.md).
+
+---
+
 ## AKS-2025-0012 Runc CVEs - CVE-2025-31133, CVE-2025-52565, CVE-2025-52881
 
 **Published Date**: November 7, 2025

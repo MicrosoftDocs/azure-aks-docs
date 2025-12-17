@@ -1,7 +1,7 @@
 ---
 title: AKS Regulated Cluster for PCI DSS 4.0.1 - Network Security
 description: Networking considerations for an AKS cluster configured in accordance with PCI DSS 4.0.1.
-ms.date: 06/25/2025
+ms.date: 11/10/2025
 ms.subservice: aks-security
 ms.topic: concept-article
 author: schaffererin
@@ -119,7 +119,7 @@ For a PCI DSS infrastructure, you're responsible for securing the CDE by using n
 
 This architecture uses different firewall technologies to inspect traffic flowing to and from the cluster that hosts the CDE:
 
-- Azure Application Gateway serves as the traffic router, and its integrated web application firewall (WAF) secures inbound (ingress) traffic to the cluster.
+- Azure Application Gateway for Containers serves as the traffic router, and its integrated web application firewall (WAF) secures inbound (ingress) traffic to the cluster.
 
 - Azure Firewall secures all outbound (egress) traffic from any network and its subnets.
 
@@ -174,7 +174,7 @@ Have processes at least every six months to review the network configurations an
 
 - Azure Firewall rules.
 - NSG rules.
-- Azure Application Gateway and WAF rules.
+- Azure Application Gateway for Containers and WAF rules.
 - Native Kubernetes network policies.
 - Firewall controls on the applicable Azure resources. For example, this architecture uses a rule on Azure Container Registry that only allows traffic from a private endpoint.
 - Any other network controls added to the architecture.
@@ -212,9 +212,9 @@ Restrict inbound and outbound traffic to that which is necessary for the cardhol
 
 By design, Azure virtual networks can't be directly reached from the public internet. All inbound (or *ingress*) traffic must go through an intermediate traffic router. However, by default, all components in the network can reach public endpoints. You can disable that behavior by [configuring a private subnet](/azure/virtual-network/ip-services/default-outbound-access#utilize-the-private-subnet-parameter) or by using a UDR to send all outbound traffic through a firewall. That outbound (or *egress*) traffic must be explicitly secured to allow only secure ciphers and TLS 1.2 or later.
 
-- Azure Application Gateway's integrated WAF intercepts all HTTP(S) ingress traffic and routes inspected traffic to the cluster.
+- Azure Application Gateway for Containers' integrated WAF intercepts all HTTP(S) ingress traffic and routes inspected traffic to the cluster.
 
-   This traffic can originate from trusted or untrusted networks. Application Gateway is provisioned in a subnet of the spoke network and secured by an NSG. As traffic flows in, WAF rules allow or deny, and Application Gateway routes traffic to the configured backend. For example, Application Gateway protects the CDE by denying the following types of traffic:
+   This traffic can originate from trusted or untrusted networks. Application Gateway for Containers is provisioned in a subnet of the spoke network and secured by an NSG. As traffic flows in, WAF rules allow or deny, and Application Gateway for Containers routes traffic to the configured backend. For example, Application Gateway for Containers protects the CDE by denying the following types of traffic:
 
   - All traffic that's not TLS-encrypted.
   - Traffic outside the port range for control plane communication from the Azure infrastructure.
@@ -288,7 +288,7 @@ Review the following best practices for implementing a DMZ:
 
 - Don't configure public IP addresses on the node pool nodes.
 - Use Azure Policy to ensure Kubernetes doesn't expose a public load balancer. Traffic within the cluster must be routed through internal load balancers.
-- Only expose internal load balancers to Azure Application Gateway integrated with WAF.
+- Only expose internal load balancers to Azure Application Gateway for Containers integrated with WAF.
 - All network controls should specify source, destination, port, and protocol restrictions, where applicable.
 - Don't expose the API server to the internet. When you run the cluster in private mode, the endpoint isn't exposed and communication between the node pools and the API server is over a private network.
 
@@ -300,7 +300,7 @@ Limit inbound Internet traffic to IP addresses within the DMZ.
 
 ##### Your responsibilities
 
-In the cluster network, have an NSG on the subnet with the internal load balancer. Configure rules to only accept traffic from subnet that has Azure Application Gateway integrated with WAF. Within the AKS cluster, use Kubernetes `NetworkPolicies` to restrict ingress traffic to the pods.
+In the cluster network, have an NSG on the subnet with the internal load balancer. Configure rules to only accept traffic from subnet that has Azure Application Gateway for Containers integrated with WAF. Within the AKS cluster, use Kubernetes `NetworkPolicies` to restrict ingress traffic to the pods.
 
 #### Requirement 1.3.3
 
@@ -355,7 +355,7 @@ Don't disclose private IP addresses and routing information to unauthorized part
 
 To meet this requirement, a public AKS cluster isn't an option. A private cluster keeps DNS records off the public internet by using a private DNS zone. However, it's still possible to [Create a private AKS cluster with a public DNS address](/azure/aks/private-clusters#create-a-private-aks-cluster-with-a-public-dns-address). We recommend *explicitly* disabling this feature by setting `enablePrivateClusterPublicFQDN` to `false` to prevent disclosure of your control plane's private IP address. Consider using Azure Policy to enforce the use of private clusters without public DNS records.
 
-Also, use a private DNS zone for routing between the subnet that has Azure Application Gateway integrated with WAF and the subnet that has the internal load balancer. Ensure that no HTTP responses include any private IP information in the headers or body. Ensure any logs that might contain IP and DNS records aren't exposed outside of operational needs.
+Also, use a private DNS zone for routing between the subnet that has Azure Application Gateway for Containers integrated with WAF and the subnet that has the internal load balancer. Ensure that no HTTP responses include any private IP information in the headers or body. Ensure any logs that might contain IP and DNS records aren't exposed outside of operational needs.
 
 An Azure service that's connected through Private Link doesn't have a public DNS record exposing your private IP addresses. Your infrastructure should make optimal use of Private Link.
 
@@ -456,7 +456,7 @@ Enable only necessary services, protocols, daemons, etc., as required for the fu
 
 ##### Your responsibilities
 
-Review the features and the implications before enabling them. Default settings might include features you don't need, and those features might need visibility into the workload. An example of this is the ciphers in the default SSL policy for Azure Application Gateway. Check if the policy is overly permissive. The recommendation is to create a custom policy by selecting only the ciphers you need.
+Review the features and the implications before enabling them. Default settings might include features you don't need, and those features might need visibility into the workload. An example of this is the ciphers in the default TLS policy for Azure Application Gateway for Containers. Check if the policy is overly permissive. The recommendation is to create a custom policy by selecting only the ciphers you need.
 
 For components where you have complete control, remove all unnecessary system services from the images. For example, review the images for jump boxes and build agents and remove any components that aren't needed.
 
@@ -468,7 +468,7 @@ Implement additional security features for any required services, protocols, or 
 
 ##### Your responsibilities
 
-Application Gateway has an integrated WAF and negotiates the TLS handshake for the request sent to its public endpoint, allowing only secure ciphers. The reference implementation only supports TLS 1.2 and approved ciphers.
+Application Gateway for Containers has an integrated WAF and negotiates the TLS handshake for the request sent to its public endpoint, allowing only secure ciphers. The reference implementation only supports TLS 1.2 and approved ciphers.
 
 Suppose you have a legacy device that needs to interact with the CDE through Azure Application Gateway. To meet that requirement, Application Gateway must enable an insecure protocol. Document that exception and monitor if that protocol is used beyond that legacy device. Disable that protocol immediately after that legacy interaction is discontinued.
 

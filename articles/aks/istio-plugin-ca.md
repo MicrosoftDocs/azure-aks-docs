@@ -49,16 +49,13 @@ The add-on requires Azure CLI version 2.57.0 or later installed. You can run `az
     > When rotating certificates, to control how quickly the secrets are synced down to the cluster you can use the `--rotation-poll-interval` parameter of the Azure Key Vault Secrets Provider add-on. For example:
     > `az aks addon update --resource-group $RESOURCE_GROUP --name $CLUSTER --addon azure-keyvault-secrets-provider --enable-secret-rotation --rotation-poll-interval 20s`
 
-1. Authorize the user-assigned managed identity of the add-on to have access to the Azure Key Vault resource:
+1. If your Key Vault is using Azure RBAC for the permissions model, follow the instructions [here][akv-rbac-guide] to assign an Azure role of Key Vault Secrets User for the add-on's user-assigned managed identity. Alternatively, if your key vault is using the vault access policy permissions model, authorize the user-assigned managed identity of the add-on to access Azure Key Vault resource using access policy:
 
     ```bash
     OBJECT_ID=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER --query 'addonProfiles.azureKeyvaultSecretsProvider.identity.objectId' -o tsv)
 
     az keyvault set-policy --name $AKV_NAME --object-id $OBJECT_ID --secret-permissions get
     ```
-
-    > [!NOTE]
-    > If you created your Key Vault with Azure RBAC Authorization for your permission model instead of Vault Access Policy, follow the instructions [here][akv-rbac-guide] to create permissions for the managed identity. Add an Azure role assignment for `Key Vault Secrets User` for the add-on's user-assigned managed identity. 
 
 ## Set up Istio-based service mesh addon with plug-in CA certificates
 
