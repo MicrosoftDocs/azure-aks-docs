@@ -316,7 +316,7 @@ The following table summarizes our migration or deployment recommendations for y
 [openid-connect-overview]: /azure/active-directory/develop/v2-protocols-oidc
 [deploy-configure-workload-identity-cluster]: workload-identity-deploy-cluster.md
 [workload-identity-migration-sidecar]: workload-identity-migrate-from-pod-identity.md
-[auto-rotation]: certificate-rotation.md#certificate-auto-rotation
+[auto-rotation]: certificate-rotation.md#certificate-autorotation
 [aks-virtual-nodes]: virtual-nodes.md
 [unsupported-regions-user-assigned-managed-identities]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#unsupported-regions-user-assigned-managed-identities
 [general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
