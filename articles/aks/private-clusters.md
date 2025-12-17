@@ -34,8 +34,7 @@ Private clusters are available in public regions, Azure Government, and Microsof
   - The cluster's DNS zone should be what you forward to _168.63.129.16_. You can find more information on zone names in [Azure services DNS zone configuration][az-dns-zone].
 - Existing AKS clusters enabled with API Server VNet integration can have private cluster mode enabled. For more information, see [Enable or disable private cluster mode on an existing cluster with API Server VNet integration][api-server-vnet-integration].
 
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Limitations and considerations for private AKS clusters
 
@@ -58,7 +57,7 @@ Keep the following considerations in mind when deploying private AKS clusters in
 - The private DNS zone is linked only to the VNet that the cluster nodes are attached to (3), which means that the private endpoint can only be resolved by hosts in that linked VNet. In scenarios where no custom DNS is configured on the VNet (default), it works without issue as hosts point at _168.63.129.16_ for DNS that can resolve records in the private DNS zone because of the link.
 - If you keep the default private DNS zone behavior, AKS tries to link the zone directly to the spoke VNet that hosts the cluster even when the zone is already linked to a hub VNet.
   
-  In spoke VNets that use custom DNS servers, this action can fail if the cluster’s managed identity lacks **Network Contributor** on the spoke VNet.
+  In spoke VNets that use custom DNS servers, this action can fail if the cluster's managed identity lacks **Network Contributor** on the spoke VNet.
 
   To prevent the failure, choose **one** of the following supported configurations:
 
