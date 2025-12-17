@@ -71,7 +71,7 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 * L7 policy isn't supported by CiliumClusterwideNetworkPolicy (CCNP).
 
-* Kubernetes label customization is supported and will not be reverted during cluster upgrade. Since Cilum uses Cilium identities as unique identity for provisioning endpoints, high-churning workloads such as Spark jobs generate high count of Cilium identities. To avoid workloads hitting Cilium identity limits (65535), excluding Spark job's labels '!spark-app-name !spark-app-selector' in the Cilium configmap significantly reduces Cilium identity churn. For detailed Cilium Kubernetes label exclusion rule information, please check [the official Cilium label documentation](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels).
+* Cilum uses Cilium identities as unique identity for provisioning endpoints, so high-churning workloads such as Spark jobs generate high count of Cilium identities. To avoid workloads hitting Cilium identity limits (65535), excluding Spark job's labels like '!spark-app-name !spark-app-selector' in the Cilium configmap can significantly reduce Cilium identity generation. For more details on Cilium identity exclusion rules, please check [the official Cilium label documentation](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels).
 
 ## Considerations
 
