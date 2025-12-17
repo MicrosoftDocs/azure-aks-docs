@@ -7,6 +7,7 @@ ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 10/18/2024
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes administrator, I want to configure a Static Egress Gateway in my AKS cluster, so that I can manage egress traffic with fixed source IP addresses for secure and consistent communication with external systems.
 ---
 
@@ -20,7 +21,6 @@ This article provides step-by-step instructions to set up a Static Egress Gatewa
 ## Limitations and considerations
 
 - Static Egress Gateway isn't supported in clusters with [Azure CNI Pod Subnet][azure-cni-pod-subnet].
-- Static Egress Gateway does not support Private IP's assigned to the gateway node pool. The gateway node pool must have a public IP prefix assigned to it.
 - Kubernetes network policies won't apply to traffic leaving the cluster through the gateway node pool.
   - This shouldn't affect cluster traffic control as **only** egress traffic from annotated pods **routed to the gateway node pool** are affected.  
 
@@ -83,6 +83,25 @@ spec:
 
 > [!TIP]
 > If you don't set `publicIpPrefixId`, a public IP prefix will be created for you automatically. When running `kubectl describe StaticGatewayConfiguration <gateway-config-name> -n <namespace>`, you can see the "Egress Ip Prefix" in the status. This is the newly created public IP prefix. You can also use an existing public IP prefix by specifying its resource ID in the `publicIpPrefixId` argument. You need to grant "Network Contributor" role to AKS cluster's identity in this case.
+
+### Static Private IP Support (Preview)
+
+> [!IMPORTANT]
+> Static private IP support requires clusters running Kubernetes version 1.34 or later and a subscription with the `Microsoft.ContainerService/StaticEgressGatewayPreview` Azure Feature Exposure Control (AFEC) flag enabled. Follow [Register preview feature](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/preview-features?tabs=azure-portal#register-preview-feature) to request the feature flag before creating the Gateway VirtualMachiens node pool.
+
+If you must keep egress traffic on private addresses, enable private IP support on the gateway node pool. Use the same `az aks nodepool add` command and set the node pool to use the VirtualMachines VM set type while disabling public IP provisioning:
+
+```azurecli-interactive
+az aks nodepool add --cluster-name <cluster-name> \
+  --name <nodepool-name> \
+  --resource-group <resource-group> \
+  --mode gateway \
+  --node-count <number-of-nodes> \
+  --vm-set-type VirtualMachines \
+  --gateway-prefix-size <prefix-size>
+```
+
+In this configuration, the `provisionPublicIps=false` setting keeps the private IPs allocated to the gateway nodes for the lifetime of the `StaticGatewayConfiguration`. When you run `kubectl describe StaticGatewayConfiguration <gateway-config-name> -n <namespace>`, the `egressIpPrefix` field shows a comma-separated list of those static private IPs. You continue to use the same APIs and manifests for the rest of the workflow, including the `StaticGatewayConfiguration` resource and the pod annotations.
 
 ## Annotate Pods to Use the Gateway Configuration
 
