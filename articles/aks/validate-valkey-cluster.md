@@ -21,7 +21,7 @@ This guide demonstrates how to validate the resiliency of a Valkey cluster deplo
 
 The following steps show how to build a sample client application for Valkey.
 
-The sample client application uses the [Locust load testing framework](https://docs.locust.io/en/stable/) to simulate a workload on the [Valkey cluster you configued and deployed](./deploy-valkey-cluster.md). The Python code implements a _Locust User class_ that connects to the Valkey cluster and performs a _set and get_ operation. You can [expand this class to implement more complex operations][writing-a-locustfile].
+The sample client application uses the [Locust load testing framework](https://docs.locust.io/en/stable/) to simulate a workload on the [Valkey cluster you configured and deployed](./deploy-valkey-cluster.md). The Python code implements a _Locust User class_ that connects to the Valkey cluster and performs a _set and get_ operation. You can [expand this class to implement more complex operations][writing-a-locustfile].
 
 > [!NOTE]
 > We recommend that you use the most secure authentication flow available. The authentication flow described in this procedure requires a very high degree of trust in the application and carries risks that aren't present in other flows. You should only use this flow when other more secure flows, such as managed identities, aren't viable.
