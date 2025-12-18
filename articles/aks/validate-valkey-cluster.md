@@ -15,13 +15,16 @@ ms.custom: 'stateful-workloads'
 This guide demonstrates how to validate the resiliency of a Valkey cluster deployed on Azure Kubernetes Service (AKS) using the Locust load testing framework. It walks through building a test client, deploying it to AKS, simulating failures, and analyzing cluster behavior.
 
 > [!NOTE]
-> This article contains references to the term _master_, which is a term that Microsoft no longer uses. When the term is removed from the Valkey software, we'll remove it from this article.
+> This article contains references to the term _master_ (primary), which is a term that Microsoft no longer uses. When the term is removed from the Valkey software, we'll remove it from this article.
 
-## Build and push a sample client application for Valkey
+## Build sample client application for Valkey
 
-The following steps show how to build a sample client application for Valkey and push the Docker image of the application to Azure Container Registry (ACR).
+The following steps show how to build a sample client application for Valkey.
 
-The sample client application uses the [Locust load testing framework](https://docs.locust.io/en/stable/) to simulate a workload on the Valkey cluster.
+The sample client application uses the [Locust load testing framework](https://docs.locust.io/en/stable/) to simulate a workload on the [Valkey cluster you configued and deployed](./deploy-valkey-cluster.md). The Python code implements a _Locust User class_ that connects to the Valkey cluster and performs a _set and get_ operation. You can [expand this class to implement more complex operations][writing-a-locustfile].
+
+> [!NOTE]
+> We recommend that you use the most secure authentication flow available. The authentication flow described in this procedure requires a very high degree of trust in the application and carries risks that aren't present in other flows. You should only use this flow when other more secure flows, such as managed identities, aren't viable.
 
 1. Create the _Dockerfile_ and `requirements.txt` and place them in a new directory using the following commands:
 
@@ -42,7 +45,7 @@ The sample client application uses the [Locust load testing framework](https://d
     EOF
     ```
 
-1. Create the `locustfile.py` file with the following content:
+1. Create the `locustfile.py` file that contains the Valkey client application code:
 
     ```bash
     cat > locustfile.py <<EOF
@@ -136,14 +139,26 @@ The sample client application uses the [Locust load testing framework](https://d
     EOF
     ```
 
-    This python code implements a Locust User class that connects to the Valkey cluster and performs a *set and get* operation. You can [expand this class to implement more complex operations][writing-a-locustfile].
+## Build and push the Docker image to ACR
 
-    Microsoft recommends that you use the most secure authentication flow available. The authentication flow described in this procedure requires a very high degree of trust in the application, and carries risks that are not present in other flows. You should only use this flow when other more secure flows, such as managed identities, aren't viable.
-
-1. Build the Docker image and upload it to ACR using the [`az acr build`](/cli/azure/acr#az-acr-build) command.
+1. Build the Docker image and upload it to Azure Container Registry (ACR) using the [`az acr build`](/cli/azure/acr#az-acr-build) command.
 
     ```azurecli-interactive
     az acr build --image valkey-client --registry ${MY_ACR_REGISTRY} .
+    ```
+
+1. Verify the image was pushed successfully using the [`az acr repository list`](/cli/azure/acr/repository#az-acr-repository-list) command.
+
+    ```azurecli-interactive
+    az acr repository list --name ${MY_ACR_REGISTRY} --output table
+    ```
+
+    The output should show the `valkey-client` image, as in the following example:
+
+    ```output
+    Result
+    ----------------
+    valkey-client
     ```
 
 ## Deploy the sample client pod to AKS
@@ -197,25 +212,25 @@ The sample client application uses the [Locust load testing framework](https://d
 
 ## Simulate failure and observe Valkey cluster behavior
 
-1. Simulate an outage by deleting the `StatefulSet` using the `kubectl delete` command with the [`--cascade=orphan`](https://kubernetes.io/docs/tasks/run-application/delete-stateful-set/) flag. The goal is to be able to delete a single Pod without the StatefulSet immediately recreating the deleted Pod.
+1. Simulate an outage by deleting the `StatefulSet` using the `kubectl delete` command with the [`--cascade=orphan`](https://kubernetes.io/docs/tasks/run-application/delete-stateful-set/) flag. The goal is to be able to delete a single pod without the `StatefulSet` immediately recreating the deleted pod.
 
     ```bash
     kubectl delete statefulset valkey-masters --cascade=orphan
     ```
 
-1. Delete the `valkey-masters-0` Pod using the `kubectl delete pod` command.
+1. Delete the `valkey-masters-0` pod using the `kubectl delete pod` command.
 
     ```bash
     kubectl delete pod valkey-masters-0
     ```
 
-1. Check the list of Pods using the `kubectl get pods` command.
+1. Check the list of pods using the `kubectl get pods` command.
 
     ```bash
     kubectl get pods
     ```
 
-    The output should indicate that the Pod `valkey-masters-0` was deleted:
+    The output should indicate that the pod `valkey-masters-0` was deleted. The other pods should be in the `Running` state, as shown in the following example:
 
     ```output
     NAME                READY   STATUS    RESTARTS   AGE
@@ -227,7 +242,7 @@ The sample client application uses the [Locust load testing framework](https://d
     valkey-replicas-2   1/1     Running   0          16m
     ```
 
-1. Get the logs of the `valkey-replicas-0` Pod using the `kubectl logs valkey-replicas-0` command.
+1. Get the logs of the `valkey-replicas-0` pod using the `kubectl logs valkey-replicas-0` command.
 
     ```bash
     kubectl logs valkey-replicas-0
@@ -277,11 +292,11 @@ The sample client application uses the [Locust load testing framework](https://d
     1:M 05 Nov 2024 12:19:12.616 * Cluster state changed: ok
     ```
 
-    During this time window of 18 seconds, we observe that writes to the shard that belongs to the deleted Pod are failing, and the Valkey cluster is electing a new primary. The request latency spikes to 60 ms during this time window.
+    During this time window of 18 seconds, we observe that writes to the shard that belongs to the deleted pod are failing, and the Valkey cluster is electing a new primary. The request latency spikes to _60 ms_ during this time window.
 
     :::image type="content" source="media/valkey-stateful-workload/percentile.png" alt-text="Screenshot of a graph showing the 95th percentile of request latencies spiking to 60 ms.":::
 
-    After the new primary is elected, the Valkey cluster continues to serve requests with a latency of around 2 ms.
+    After the new primary is elected, the Valkey cluster continues to serve requests with a latency of around _2 ms_.
 
 ## Next step
 
