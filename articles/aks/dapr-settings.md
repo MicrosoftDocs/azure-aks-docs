@@ -6,7 +6,7 @@ ms.author: hannahhunter
 ms.topic: how-to
 ms.custom: build-2023, devx-track-azurecli, linux-related-content
 ms.subservice: aks-developer
-ms.date: 12/06/2024
+ms.date: 12/12/2025
 # Customer intent: "As a Kubernetes developer, I want to configure the Dapr extension for Azure Kubernetes Service, so that I can enable high availability, manage mTLS certificates, and customize settings for better service communication and security."
 ---
 
@@ -22,8 +22,42 @@ After [completing the prerequisites for installing the Dapr extension](./dapr.md
 
 The extension enables you to set Dapr configuration options by using the `--configuration-settings` parameter in the Azure CLI or `configurationSettings` property in a Bicep template.
 
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
+
+## Update configuration settings
+
 > [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+> Some configuration options cannot be modified post-creation. Adjustments to these options require deletion and recreation of the extension, applicable to the following settings:
+> * `global.ha.*`
+> * `dapr_placement.*`
+>
+> HA is enabled by default. Disabling it requires deletion and recreation of the extension.
+
+To update your Dapr configuration settings, recreate the extension with the desired state. For example, let's say you previously created and installed the extension using the following configuration:
+
+```azurecli-interactive
+az k8s-extension create --cluster-type managedClusters \
+--cluster-name myAKSCluster \
+--resource-group myResourceGroup \
+--name dapr \
+--extension-type Microsoft.Dapr \
+--auto-upgrade-minor-version true \  
+--configuration-settings "global.ha.enabled=true" \
+--configuration-settings "dapr_operator.replicaCount=2" 
+```
+
+To update the `dapr_operator.replicaCount` from two to three, use the following command:
+
+```azurecli-interactive
+az k8s-extension create --cluster-type managedClusters \
+--cluster-name myAKSCluster \
+--resource-group myResourceGroup \
+--name dapr \
+--extension-type Microsoft.Dapr \
+--auto-upgrade-minor-version true \
+--configuration-settings "global.ha.enabled=true" \
+--configuration-settings "dapr_operator.replicaCount=3"
+```
 
 ## Manage mTLS certificates
 
@@ -165,8 +199,8 @@ az k8s-extension create --cluster-type managedClusters \
 --auto-upgrade-minor-version true \
 --configuration-settings "global.ha.enabled=true" \
 --configuration-settings "dapr_operator.replicaCount=2" \
---configuration-settings "global.daprControlPlaneOs=linux” \
---configuration-settings "global.daprControlPlaneArch=amd64”
+--configuration-settings "global.daprControlPlaneOs=linux" \
+--configuration-settings "global.daprControlPlaneArch=amd64"
 ```
 
 # [Bicep](#tab/bicep)
@@ -293,29 +327,9 @@ az k8s-extension show --cluster-type managedClusters \
 --name dapr
 ```
 
-## Update configuration settings
+## Set Dapr monitoring log levels
 
-> [!IMPORTANT]
-> Some configuration options cannot be modified post-creation. Adjustments to these options require deletion and recreation of the extension, applicable to the following settings:
-> * `global.ha.*`
-> * `dapr_placement.*`
->
-> HA is enabled by default. Disabling it requires deletion and recreation of the extension.
-
-To update your Dapr configuration settings, recreate the extension with the desired state. For example, let's say you previously created and installed the extension using the following configuration:
-
-```azurecli-interactive
-az k8s-extension create --cluster-type managedClusters \
---cluster-name myAKSCluster \
---resource-group myResourceGroup \
---name dapr \
---extension-type Microsoft.Dapr \
---auto-upgrade-minor-version true \  
---configuration-settings "global.ha.enabled=true" \
---configuration-settings "dapr_operator.replicaCount=2" 
-```
-
-To update the `dapr_operator.replicaCount` from two to three, use the following command:
+You can configure settings for the Dapr monitoring component with your AKS cluster extension. For exmaple, to update `dapr_monitoring` log levels to "warn" (only notified when receiving a warning or error), set the following `configuration-settings`:
 
 ```azurecli-interactive
 az k8s-extension create --cluster-type managedClusters \
@@ -325,7 +339,7 @@ az k8s-extension create --cluster-type managedClusters \
 --extension-type Microsoft.Dapr \
 --auto-upgrade-minor-version true \
 --configuration-settings "global.ha.enabled=true" \
---configuration-settings "dapr_operator.replicaCount=3"
+--configuration-settings "dapr_monitoring.logLevel=warn"
 ```
 
 ## Set the outbound proxy for Dapr extension for Azure Arc on-premises

@@ -191,3 +191,22 @@ groups:
     title: AppArmor
   - id: seccomp
     title: Seccomp
+# Owner: schaffererin
+- id: private-cluster-connect
+  title: Choose a private cluster connection method
+  prompt: Choose a private cluster connection method
+  pivots:
+  - id: azure-cloud-shell
+    title: Azure Cloud Shell
+  - id: azure-bastion
+    title: Azure Bastion
+  - id: vnet-peering
+    title: VNet peering
+  - id: private-endpoint
+    title: Private endpoint
+  - id: vm-same-vnet
+    title: VM in the same VNet
+  - id: express-route-or-vpn
+    title: ExpressRoute or VPN
+  - id: aks-command-invoke
+    title: AKS command invoke

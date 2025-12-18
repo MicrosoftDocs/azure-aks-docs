@@ -402,6 +402,6 @@ To remove a resource placement:
 * [Define a rollout strategy for a resource placement](./concepts-rollout-strategy.md)
 
 <!-- LINKS -->
-[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-manager-resource
+[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-manager
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update

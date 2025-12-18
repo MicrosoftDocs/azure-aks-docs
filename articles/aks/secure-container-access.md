@@ -15,9 +15,6 @@ zone_pivot_groups: secure-container-access
 
 In this article, you learn how to secure container access to resources for your Azure Kubernetes Service (AKS) workloads using the _user namespaces_, _AppArmor_, and _seccomp_ built-in Linux security features.
 
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
-
 ## Overview of container access security
 
 In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access.
@@ -258,8 +255,8 @@ The following example creates a profile that prevents writing to files from with
 
 ## Seccomp limitations
 
+- AKS only supports the default seccomp profiles (`RuntimeDefault` and `Unconfined`). Custom seccomp profiles aren't supported.
 - `SeccompDefault` isn't a supported parameter for Windows node pools.
-- `SeccompDefault` is available starting with the `2024-09-02-preview` API.
 
 ## Overview of default seccomp profiles (preview)
 
@@ -416,10 +413,10 @@ The following table lists significant syscalls that are effectively blocked beca
 | `acct`| Accounting syscall, which could let containers disable their own resource limits or process accounting. Also gated by `CAP_SYS_PACCT`. |
 |`add_key` | Prevent containers from using the kernel keyring, which isn't namespaced. |
 | `bpf` |	Deny loading potentially persistent bpf programs into kernel, already gated by `CAP_SYS_ADMIN`. |
-| `clock_adjtime` |	Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`. |
-|`clock_settime` |	Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`.|
+| `clock_adjtime` | Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`. |
+|`clock_settime` | Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`.|
 | `clone` |	Deny cloning new namespaces. Also gated by `CAP_SYS_ADMIN for CLONE_*` flags, except `CLONE_NEWUSER`. |
-| `create_module` |	Deny manipulation and functions on kernel modules. Obsolete. Also gated by `CAP_SYS_MODULE`. |
+| `create_module` 	Deny manipulation and functions on kernel modules. Obsolete. Also gated by `CAP_SYS_MODULE`. |
 | `delete_module` |	Deny manipulation and functions on kernel modules. Also gated by `CAP_SYS_MODULE`. |
 | `finit_module` |	Deny manipulation and functions on kernel modules. Also gated by `CAP_SYS_MODULE`.|
 | `get_kernel_syms`|	Deny retrieval of exported kernel and module symbols. Obsolete.|
