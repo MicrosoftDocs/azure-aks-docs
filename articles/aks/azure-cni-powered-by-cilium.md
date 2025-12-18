@@ -56,7 +56,7 @@ See [Supported Kubernetes Versions](./supported-kubernetes-versions.md) for more
 Cilium enforces [network policies to allow or deny traffic between pods](./operator-best-practices-network.md#control-traffic-flow-with-network-policies). With Cilium, you don't need to install a separate network policy engine such as Azure Network Policy Manager or Calico.
 
 ## Local Redirect Policy (LRP)
-LRP starts to be supported after K8s v1.29, Cilium v1.14. For LRP to work with Advanced Container Networking Services (ACNS) - FQDN Filtering, the Cilium Network Policy egress labels need to match with node-local DNS cache pod labels.
+LRP starts to be supported K8s v1.29 and up, Cilium v1.14 and up. For LRP to work with Advanced Container Networking Services (ACNS) - FQDN Filtering, the Cilium Network Policy egress labels need to match with node-local DNS cache pod labels.
 
 
 ## Limitations
@@ -75,7 +75,7 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 * L7 policy isn't supported by CiliumClusterwideNetworkPolicy (CCNP).
 
-* AKS Local DNS is not compatible with Advanced Container Networking Services (ACNS) - FQDN Filtering; Kubernetes node-local DNS with Local Redirect Policy (LRP) is compatible with ACNS - FQDN Filtering. 
+* AKS Local DNS is not compatible with Advanced Container Networking Services (ACNS) - FQDN Filtering. 
 
 ## Considerations
 
