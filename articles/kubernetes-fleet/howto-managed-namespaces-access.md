@@ -4,7 +4,7 @@ description: Learn how to find and access your Managed Fleet Namespaces.
 author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
-ms.date: 12/05/2025
+ms.date: 12/19/2025
 ms.service: azure-kubernetes-fleet-manager
 zone_pivot_groups: azure-portal-azure-cli
 # Customer intent: "As an application developer or team lead, I want to find the managed namespaces I have access to and monitor their resource usage across all clusters so I can understand deployment status and determine if quota adjustments are needed."

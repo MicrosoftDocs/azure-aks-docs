@@ -4,7 +4,7 @@ description: Learn how to create Managed Fleet Namespaces to define resource quo
 author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
-ms.date: 12/05/2025
+ms.date: 12/19/2025
 ms.service: azure-kubernetes-fleet-manager
 zone_pivot_groups: azure-portal-azure-cli
 # Customer intent: "As a platform admin, I want to define a namespace and deploy it across selected fleet clusters so I can delegate application teams access to resources on any cluster where the namespace exists."
@@ -189,16 +189,13 @@ Starting in Kubernetes Center:
 
 * Open [Kubernetes Center - Managed namespaces](https://portal.azure.com/#view/Microsoft_Azure_KubernetesFleet/KubernetesHub.MenuView/~/managedNamespaces) in the Azure portal.
 * From the menu select **+ Create**, then **Managed Fleet Namespace**.
+* Select a **Subscription** and **Fleet Manager** instance.
 
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png" alt-text="Screenshot of the Azure portal Kubernetes Center menu for creating a Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png":::
 
-* If you start from Kubernetes Center you need to first select a **Subscription** and **Fleet Manager** instance.
-
 * Select one of the following options for **Scope**:
-    * **New** - create a new Kubernetes namespace that doesn't exist on the Fleet Manager hub cluster.
-    * **Convert to Managed** - the Kubernetes namespace exists on the Fleet Manager hub cluster and will be converted to a Managed Fleet Namespace. 
-
-* For a new namspace, provide the **Name** to use, or if converting existing, select the **Namespace** on the Fleet Manager hub cluster to convert.
+    * **New** - create a new Kubernetes namespace that doesn't exist on the Fleet Manager hub cluster. Prove the **Name** for the new namespace.
+    * **Convert to Managed** - the Kubernetes namespace exists on the Fleet Manager hub cluster and will be converted to a Managed Fleet Namespace. Select the **Namespace** on the Fleet Manager hub cluster to convert
 
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png" alt-text="Screenshot of the Azure portal showing the Basics tab with Project details completed for a new Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png":::
 
