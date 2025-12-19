@@ -188,10 +188,10 @@ groups:
   pivots:
   - id: pmk
     title: Platform-managed keys
-  - id: cmk-public
-    title: Customer-managed keys (public key vault)
   - id: cmk-private
     title: Customer-managed keys (private key vault)
+  - id: cmk-public
+    title: Customer-managed keys (public key vault)
 # Owner: schaffererin
 - id: private-cluster-connect
   title: Choose a private cluster connection method

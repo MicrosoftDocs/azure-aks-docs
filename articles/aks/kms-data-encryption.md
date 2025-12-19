@@ -1,5 +1,5 @@
 ---
-title: Enable KMS data encryption in Azure Kubernetes Service (AKS)
+title: Enable KMS data encryption in Azure Kubernetes Service (AKS) clusters (Preview)
 description: Learn how to enable Key Management Service (KMS) data encryption with platform-managed keys or customer-managed keys in AKS.
 ms.date: 12/14/2025
 ms.subservice: aks-security
@@ -13,7 +13,7 @@ zone_pivot_groups: kms-key-type
 # Customer intent: As a Kubernetes administrator, I want to enable KMS data encryption in my AKS cluster so that I can encrypt Kubernetes secrets at rest with platform-managed or customer-managed keys.
 ---
 
-# Enable KMS data encryption in Azure Kubernetes Service (AKS)
+# Enable KMS data encryption in Azure Kubernetes Service (AKS) clusters (Preview)
 
 This article shows you how to enable Key Management Service (KMS) data encryption for Kubernetes secrets in Azure Kubernetes Service (AKS). KMS encryption encrypts Kubernetes secrets stored in etcd using Azure Key Vault keys.
 
@@ -113,122 +113,6 @@ az aks update \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
     --kms-infrastructure-encryption Enabled
-```
-
-:::zone-end
-
-:::zone pivot="cmk-public"
-
-## Enable customer-managed key encryption with a public key vault
-
-With customer-managed keys, you create and manage your own Azure Key Vault and encryption keys. This section shows how to configure customer-managed keys with a public key vault.
-
-### Create a key vault and key
-
-1. Create a key vault with Azure RBAC enabled.
-
-    ```azurecli-interactive
-    export KEY_VAULT_NAME="<your-key-vault-name>"
-    
-    az keyvault create \
-        --name $KEY_VAULT_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --enable-rbac-authorization true \
-        --public-network-access Enabled
-    
-    # Get the key vault resource ID
-    export KEY_VAULT_RESOURCE_ID=$(az keyvault show --name $KEY_VAULT_NAME --resource-group $RESOURCE_GROUP --query id -o tsv)
-    ```
-
-1. Assign yourself the Key Vault Crypto Officer role to create a key.
-
-    ```azurecli-interactive
-    az role assignment create \
-        --role "Key Vault Crypto Officer" \
-        --assignee-object-id $(az ad signed-in-user show --query id -o tsv) \
-        --assignee-principal-type "User" \
-        --scope $KEY_VAULT_RESOURCE_ID
-    ```
-
-1. Create a key in the key vault.
-
-    ```azurecli-interactive
-    export KEY_NAME="<your-key-name>"
-    
-    az keyvault key create --name $KEY_NAME --vault-name $KEY_VAULT_NAME
-    
-    # Get the key ID (without version for automatic rotation)
-    export KEY_ID=$(az keyvault key show --name $KEY_NAME --vault-name $KEY_VAULT_NAME --query 'key.kid' -o tsv)
-    export KEY_ID_NO_VERSION=$(echo $KEY_ID | sed 's|/[^/]*$||')
-    ```
-
-### Create a user-assigned managed identity
-
-1. Create a user-assigned managed identity for the cluster.
-
-    ```azurecli-interactive
-    export IDENTITY_NAME="<your-identity-name>"
-    
-    az identity create --name $IDENTITY_NAME --resource-group $RESOURCE_GROUP
-    
-    # Get the identity details
-    export IDENTITY_OBJECT_ID=$(az identity show --name $IDENTITY_NAME --resource-group $RESOURCE_GROUP --query 'principalId' -o tsv)
-    export IDENTITY_RESOURCE_ID=$(az identity show --name $IDENTITY_NAME --resource-group $RESOURCE_GROUP --query 'id' -o tsv)
-    ```
-
-1. Assign the required roles to the managed identity.
-
-    ```azurecli-interactive
-    # Assign Key Vault Crypto User role for encrypt/decrypt operations
-    az role assignment create \
-        --role "Key Vault Crypto User" \
-        --assignee-object-id $IDENTITY_OBJECT_ID \
-        --assignee-principal-type "ServicePrincipal" \
-        --scope $KEY_VAULT_RESOURCE_ID
-    
-    # Assign Key Vault Contributor role for key management
-    az role assignment create \
-        --role "Key Vault Contributor" \
-        --assignee-object-id $IDENTITY_OBJECT_ID \
-        --assignee-principal-type "ServicePrincipal" \
-        --scope $KEY_VAULT_RESOURCE_ID
-    ```
-
-### Create a new AKS cluster with customer-managed keys
-
-Create a new AKS cluster with KMS encryption using customer-managed keys.
-
-```azurecli-interactive
-az aks create \
-    --name $CLUSTER_NAME \
-    --resource-group $RESOURCE_GROUP \
-    --kubernetes-version 1.33.0 \
-    --kms-infrastructure-encryption Enabled \
-    --enable-azure-keyvault-kms \
-    --azure-keyvault-kms-key-id $KEY_ID_NO_VERSION \
-    --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID \
-    --azure-keyvault-kms-key-vault-network-access Public \
-    --assign-identity $IDENTITY_RESOURCE_ID \
-    --generate-ssh-keys
-```
-
-### Enable customer-managed keys on an existing cluster
-
-Enable KMS encryption with customer-managed keys on an existing AKS cluster.
-
-> [!NOTE]
-> The cluster must be running Kubernetes version 1.33 or later.
-
-```azurecli-interactive
-az aks update \
-    --name $CLUSTER_NAME \
-    --resource-group $RESOURCE_GROUP \
-    --kms-infrastructure-encryption Enabled \
-    --enable-azure-keyvault-kms \
-    --azure-keyvault-kms-key-id $KEY_ID_NO_VERSION \
-    --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID \
-    --azure-keyvault-kms-key-vault-network-access Public \
-    --assign-identity $IDENTITY_RESOURCE_ID
 ```
 
 :::zone-end
@@ -359,6 +243,122 @@ az aks update \
     --azure-keyvault-kms-key-id $KEY_ID_NO_VERSION \
     --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID \
     --azure-keyvault-kms-key-vault-network-access Private \
+    --assign-identity $IDENTITY_RESOURCE_ID
+```
+
+:::zone-end
+
+:::zone pivot="cmk-public"
+
+## Enable customer-managed key encryption with a public key vault
+
+With customer-managed keys, you create and manage your own Azure Key Vault and encryption keys. This section shows how to configure customer-managed keys with a public key vault.
+
+### Create a key vault and key
+
+1. Create a key vault with Azure RBAC enabled.
+
+    ```azurecli-interactive
+    export KEY_VAULT_NAME="<your-key-vault-name>"
+    
+    az keyvault create \
+        --name $KEY_VAULT_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --enable-rbac-authorization true \
+        --public-network-access Enabled
+    
+    # Get the key vault resource ID
+    export KEY_VAULT_RESOURCE_ID=$(az keyvault show --name $KEY_VAULT_NAME --resource-group $RESOURCE_GROUP --query id -o tsv)
+    ```
+
+1. Assign yourself the Key Vault Crypto Officer role to create a key.
+
+    ```azurecli-interactive
+    az role assignment create \
+        --role "Key Vault Crypto Officer" \
+        --assignee-object-id $(az ad signed-in-user show --query id -o tsv) \
+        --assignee-principal-type "User" \
+        --scope $KEY_VAULT_RESOURCE_ID
+    ```
+
+1. Create a key in the key vault.
+
+    ```azurecli-interactive
+    export KEY_NAME="<your-key-name>"
+    
+    az keyvault key create --name $KEY_NAME --vault-name $KEY_VAULT_NAME
+    
+    # Get the key ID (without version for automatic rotation)
+    export KEY_ID=$(az keyvault key show --name $KEY_NAME --vault-name $KEY_VAULT_NAME --query 'key.kid' -o tsv)
+    export KEY_ID_NO_VERSION=$(echo $KEY_ID | sed 's|/[^/]*$||')
+    ```
+
+### Create a user-assigned managed identity
+
+1. Create a user-assigned managed identity for the cluster.
+
+    ```azurecli-interactive
+    export IDENTITY_NAME="<your-identity-name>"
+    
+    az identity create --name $IDENTITY_NAME --resource-group $RESOURCE_GROUP
+    
+    # Get the identity details
+    export IDENTITY_OBJECT_ID=$(az identity show --name $IDENTITY_NAME --resource-group $RESOURCE_GROUP --query 'principalId' -o tsv)
+    export IDENTITY_RESOURCE_ID=$(az identity show --name $IDENTITY_NAME --resource-group $RESOURCE_GROUP --query 'id' -o tsv)
+    ```
+
+1. Assign the required roles to the managed identity.
+
+    ```azurecli-interactive
+    # Assign Key Vault Crypto User role for encrypt/decrypt operations
+    az role assignment create \
+        --role "Key Vault Crypto User" \
+        --assignee-object-id $IDENTITY_OBJECT_ID \
+        --assignee-principal-type "ServicePrincipal" \
+        --scope $KEY_VAULT_RESOURCE_ID
+    
+    # Assign Key Vault Contributor role for key management
+    az role assignment create \
+        --role "Key Vault Contributor" \
+        --assignee-object-id $IDENTITY_OBJECT_ID \
+        --assignee-principal-type "ServicePrincipal" \
+        --scope $KEY_VAULT_RESOURCE_ID
+    ```
+
+### Create a new AKS cluster with customer-managed keys
+
+Create a new AKS cluster with KMS encryption using customer-managed keys.
+
+```azurecli-interactive
+az aks create \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --kubernetes-version 1.33.0 \
+    --kms-infrastructure-encryption Enabled \
+    --enable-azure-keyvault-kms \
+    --azure-keyvault-kms-key-id $KEY_ID_NO_VERSION \
+    --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID \
+    --azure-keyvault-kms-key-vault-network-access Public \
+    --assign-identity $IDENTITY_RESOURCE_ID \
+    --generate-ssh-keys
+```
+
+### Enable customer-managed keys on an existing cluster
+
+Enable KMS encryption with customer-managed keys on an existing AKS cluster.
+
+> [!NOTE]
+> The cluster must be running Kubernetes version 1.33 or later.
+
+```azurecli-interactive
+az aks update \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --kms-infrastructure-encryption Enabled \
+    --enable-azure-keyvault-kms \
+    --azure-keyvault-kms-key-id $KEY_ID_NO_VERSION \
+    --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID \
+    --azure-keyvault-kms-key-vault-network-access Public \
     --assign-identity $IDENTITY_RESOURCE_ID
 ```
 
