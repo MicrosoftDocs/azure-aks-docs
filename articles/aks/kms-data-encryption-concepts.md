@@ -82,7 +82,7 @@ When using customer-managed keys, you can configure the network access for your 
 | Network access | Description | Use case |
 |----------------|-------------|----------|
 | **Public** | Key vault is accessible over the public internet with authentication. | Development environments, simpler setup |
-| **Private** | Key vault has public network access disabled. You can enable AKS to access the key vault using one of the following options: (1) Use [API Server VNet Integration][api-server-vnet-integration] with a private endpoint for the key vault (recommended because it works even when a [network security perimeter][keyvault-network-security-perimeter] is configured for the key vault), or (2) Configure the key vault firewall to [allow trusted Azure services][keyvault-trusted-services]. | Production environments, enhanced security |
+| **Private** | Key vault has public network access disabled. AKS accesses the key vault through the [trusted services firewall exception][keyvault-trusted-services]. | Production environments, enhanced security |
 
 ## Comparing encryption key options
 
@@ -103,6 +103,7 @@ When using customer-managed keys, you can configure the network access for your 
 
 - **No downgrade**: After enabling the new KMS encryption experience, you can't disable the feature.
 - **Key deletion**: Deleting the encryption key or key vault makes your secrets unrecoverable.
+- **Private endpoint access**: Key vault access using [private link/endpoint][keyvault-private-link] isn't yet supported. For private key vaults, use the [trusted services firewall exception][keyvault-trusted-services].
 
 ## Related content
 
@@ -113,11 +114,11 @@ When using customer-managed keys, you can configure the network access for your 
 
 <!-- INTERNAL LINKS -->
 [kms-data-encryption]: kms-data-encryption.md
-[api-server-vnet-integration]: api-server-vnet-integration.md
 [azure-encryption-atrest]: /azure/security/fundamentals/encryption-atrest
 [azure-encryption-models]: /azure/security/fundamentals/encryption-models
 [managed-identity-clusters]: use-managed-identity.md
 [keyvault-trusted-services]: /azure/key-vault/general/network-security#key-vault-firewall-enabled-trusted-services-only
+[keyvault-private-link]: /azure/key-vault/general/private-link-service
 
 <!-- EXTERNAL LINKS -->
 [k8s-kms-provider]: https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/

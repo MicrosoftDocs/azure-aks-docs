@@ -237,16 +237,14 @@ az aks update \
 
 ## Enable customer-managed key encryption with a private key vault
 
-For enhanced security, you can use a private key vault that has public network access disabled. You can enable AKS to access the private key vault using one of the following options:
+For enhanced security, you can use a private key vault that has public network access disabled. AKS accesses the private key vault through the [trusted services firewall exception][keyvault-trusted-services]. This section shows how to configure customer-managed keys with a private key vault.
 
-- **Private endpoint with API Server VNet Integration (recommended)**: Use [API Server VNet Integration][api-server-vnet-integration] with a private endpoint for the key vault. This approach is recommended because it works even when a [network security perimeter][keyvault-network-security-perimeter] is configured for the key vault.
-- **Allow trusted Azure services**: Configure the key vault firewall to [allow trusted Azure services][keyvault-trusted-services] to bypass the firewall.
+### Create a key vault and key with trusted services access
 
-This section shows how to configure customer-managed keys with a private key vault using the recommended private endpoint approach.
+> [!NOTE]
+> This section illustrates creating a key vault with public network access initially, then enabling the firewall with trusted services bypass. This approach is for illustrative purposes only. In production environments, you should create and manage your key vault as private from the start. For guidance on managing private key vaults, see [Azure Key Vault network security][keyvault-network-security].
 
-### Create a private key vault and key
-
-1. Create a private key vault with Azure RBAC enabled.
+1. Create a key vault with Azure RBAC enabled.
 
     ```azurecli-interactive
     export KEY_VAULT_NAME="<your-key-vault-name>"
@@ -273,9 +271,6 @@ This section shows how to configure customer-managed keys with a private key vau
 
 1. Create a key in the key vault.
 
-    > [!NOTE]
-    > This document illustrates creating a key vault with public network access initially, then switching to private access. In production environments, you should create and manage your key vault as private from the start using the appropriate network connectivity options. For guidance on managing private key vaults, see [Integrate Key Vault with Azure Private Link][keyvault-private-link].
-
     ```azurecli-interactive
     export KEY_NAME="<your-key-name>"
     
@@ -286,118 +281,17 @@ This section shows how to configure customer-managed keys with a private key vau
     export KEY_ID_NO_VERSION=$(echo $KEY_ID | sed 's|/[^/]*$||')
     ```
 
-1. Disable public network access on the key vault.
+1. Enable the key vault firewall with trusted services bypass.
 
     ```azurecli-interactive
     az keyvault update \
         --name $KEY_VAULT_NAME \
         --resource-group $RESOURCE_GROUP \
         --default-action Deny \
-        --public-network-access Disabled
+        --bypass AzureServices
     ```
 
-### Create a private endpoint for the key vault
-
-To enable the AKS API server to access the private key vault, create a private endpoint in the same virtual network where the API server is VNet integrated. For more information, see [Integrate Key Vault with Azure Private Link][keyvault-private-link].
-
-> [!NOTE]
-> As an alternative to using a private endpoint with API Server VNet Integration, you can configure the key vault firewall to [allow trusted Azure services][keyvault-trusted-services] to bypass the firewall. However, the private endpoint approach is recommended because it works even when a [network security perimeter][keyvault-network-security-perimeter] is configured for the key vault.
-
-1. Set environment variables for the virtual network, subnet, and private endpoint. Replace the placeholder values with your own.
-
-    ```azurecli-interactive
-    export VNET_NAME="<your-vnet-name>"
-    export VNET_ADDRESS_PREFIX="10.0.0.0/8"
-    export PE_SUBNET_NAME="pe-subnet"
-    export PE_SUBNET_PREFIX="10.1.0.0/24"
-    export AKS_SUBNET_NAME="aks-subnet"
-    export AKS_SUBNET_PREFIX="10.2.0.0/16"
-    export APISERVER_SUBNET_NAME="apiserver-subnet"
-    export APISERVER_SUBNET_PREFIX="10.3.0.0/28"
-    export PRIVATE_ENDPOINT_NAME="${KEY_VAULT_NAME}-pe"
-    ```
-
-1. Create a virtual network. This virtual network is used for API Server VNet Integration when creating the AKS cluster.
-
-    ```azurecli-interactive
-    az network vnet create \
-        --name $VNET_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --address-prefix $VNET_ADDRESS_PREFIX
-    ```
-
-1. Create a subnet for the private endpoint.
-
-    ```azurecli-interactive
-    az network vnet subnet create \
-        --name $PE_SUBNET_NAME \
-        --vnet-name $VNET_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --address-prefix $PE_SUBNET_PREFIX
-    ```
-
-1. Disable network policies for private endpoints on the subnet.
-
-    ```azurecli-interactive
-    az network vnet subnet update \
-        --name $PE_SUBNET_NAME \
-        --vnet-name $VNET_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --private-endpoint-network-policies Disabled
-    ```
-
-1. Create a private DNS zone for Azure Key Vault.
-
-    ```azurecli-interactive
-    az network private-dns zone create \
-        --resource-group $RESOURCE_GROUP \
-        --name "privatelink.vaultcore.azure.net"
-    ```
-
-1. Link the private DNS zone to the virtual network.
-
-    ```azurecli-interactive
-    az network private-dns link vnet create \
-        --resource-group $RESOURCE_GROUP \
-        --zone-name "privatelink.vaultcore.azure.net" \
-        --name "${VNET_NAME}-dns-link" \
-        --virtual-network $VNET_NAME \
-        --registration-enabled false
-    ```
-
-1. Create a private endpoint for the key vault.
-
-    ```azurecli-interactive
-    az network private-endpoint create \
-        --name $PRIVATE_ENDPOINT_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --vnet-name $VNET_NAME \
-        --subnet $PE_SUBNET_NAME \
-        --private-connection-resource-id $KEY_VAULT_RESOURCE_ID \
-        --group-id vault \
-        --connection-name "${KEY_VAULT_NAME}-connection"
-    ```
-
-1. Create a DNS zone group for the private endpoint. This automatically creates the required DNS A record for the key vault in the private DNS zone.
-
-    ```azurecli-interactive
-    az network private-endpoint dns-zone-group create \
-        --resource-group $RESOURCE_GROUP \
-        --endpoint-name $PRIVATE_ENDPOINT_NAME \
-        --name "default" \
-        --private-dns-zone "privatelink.vaultcore.azure.net" \
-        --zone-name "privatelink-vaultcore-azure-net"
-    ```
-
-1. Verify the private DNS configuration by checking that the A record was created.
-
-    ```azurecli-interactive
-    az network private-dns record-set a list \
-        --resource-group $RESOURCE_GROUP \
-        --zone-name "privatelink.vaultcore.azure.net"
-    ```
-
-    The output should show an A record for your key vault name pointing to the private endpoint's private IP address.
+    The `--default-action Deny` parameter blocks public network access, and the `--bypass AzureServices` parameter allows trusted Azure services (including AKS) to access the key vault.
 
 ### Create a user-assigned managed identity
 
@@ -429,90 +323,32 @@ To enable the AKS API server to access the private key vault, create a private e
         --assignee-object-id $IDENTITY_OBJECT_ID \
         --assignee-principal-type "ServicePrincipal" \
         --scope $KEY_VAULT_RESOURCE_ID
-    
-    # Assign Network Contributor role on the AKS subnet
-    az role assignment create \
-        --role "Network Contributor" \
-        --assignee-object-id $IDENTITY_OBJECT_ID \
-        --assignee-principal-type "ServicePrincipal" \
-        --scope $AKS_SUBNET_ID
-    
-    # Assign Network Contributor role on the API server subnet
-    az role assignment create \
-        --role "Network Contributor" \
-        --assignee-object-id $IDENTITY_OBJECT_ID \
-        --assignee-principal-type "ServicePrincipal" \
-        --scope $APISERVER_SUBNET_ID
     ```
 
 ### Create a new AKS cluster with customer-managed keys (private)
 
-Create a new AKS cluster with KMS encryption using customer-managed keys with a private key vault. The cluster must use API Server VNet Integration to access the private key vault.
+Create a new AKS cluster with KMS encryption using customer-managed keys with a private key vault.
 
-1. Create a subnet for the AKS cluster nodes.
-
-    ```azurecli-interactive
-    az network vnet subnet create \
-        --name $AKS_SUBNET_NAME \
-        --vnet-name $VNET_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --address-prefix $AKS_SUBNET_PREFIX
-    
-    # Get the AKS subnet resource ID
-    export AKS_SUBNET_ID=$(az network vnet subnet show \
-        --name $AKS_SUBNET_NAME \
-        --vnet-name $VNET_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --query id -o tsv)
-    ```
-
-1. Create a delegated subnet for the API server. The subnet must be delegated to `Microsoft.ContainerService/managedClusters` for API Server VNet Integration.
-
-    ```azurecli-interactive
-    az network vnet subnet create \
-        --name $APISERVER_SUBNET_NAME \
-        --vnet-name $VNET_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --address-prefix $APISERVER_SUBNET_PREFIX \
-        --delegations Microsoft.ContainerService/managedClusters
-    
-    # Get the API server subnet resource ID
-    export APISERVER_SUBNET_ID=$(az network vnet subnet show \
-        --name $APISERVER_SUBNET_NAME \
-        --vnet-name $VNET_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --query id -o tsv)
-    ```
-
-1. Create the AKS cluster with API Server VNet Integration and KMS encryption.
-
-    > [!NOTE]
-    > For private key vault scenarios, you must enable [API Server VNet Integration][api-server-vnet-integration] on your cluster.
-
-    ```azurecli-interactive
-    az aks create \
-        --name $CLUSTER_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --kubernetes-version 1.33.0 \
-        --network-plugin azure \
-        --vnet-subnet-id $AKS_SUBNET_ID \
-        --apiserver-subnet-id $APISERVER_SUBNET_ID \
-        --enable-apiserver-vnet-integration \
-        --kms-infrastructure-encryption Enabled \
-        --enable-azure-keyvault-kms \
-        --azure-keyvault-kms-key-id $KEY_ID_NO_VERSION \
-        --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID \
-        --azure-keyvault-kms-key-vault-network-access Private \
-        --assign-identity $IDENTITY_RESOURCE_ID \
-        --generate-ssh-keys
-    ```
+```azurecli-interactive
+az aks create \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --kubernetes-version 1.33.0 \
+    --kms-infrastructure-encryption Enabled \
+    --enable-azure-keyvault-kms \
+    --azure-keyvault-kms-key-id $KEY_ID_NO_VERSION \
+    --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID \
+    --azure-keyvault-kms-key-vault-network-access Private \
+    --assign-identity $IDENTITY_RESOURCE_ID \
+    --generate-ssh-keys
+```
 
 ### Enable customer-managed keys on an existing cluster (private)
 
 Enable KMS encryption with customer-managed keys using a private key vault on an existing AKS cluster.
 
 > [!NOTE]
-> The cluster must be running Kubernetes version 1.33 or later and must have [API Server VNet Integration][api-server-vnet-integration] enabled.
+> The cluster must be running Kubernetes version 1.33 or later.
 
 ```azurecli-interactive
 az aks update \
@@ -610,8 +446,6 @@ With KMS data encryption, key rotation is handled differently depending on your 
 [kms-data-encryption-concepts]: kms-data-encryption-concepts.md
 [kms-observability]: kms-observability.md
 [use-kms-etcd-encryption]: use-kms-etcd-encryption.md
-[api-server-vnet-integration]: api-server-vnet-integration.md
 [azure-encryption-atrest]: /azure/security/fundamentals/encryption-atrest
-[keyvault-private-link]: /azure/key-vault/general/private-link-service
 [keyvault-trusted-services]: /azure/key-vault/general/network-security#key-vault-firewall-enabled-trusted-services-only
-[keyvault-network-security-perimeter]: /azure/key-vault/general/network-security#network-security-perimeter
+[keyvault-network-security]: /azure/key-vault/general/network-security
