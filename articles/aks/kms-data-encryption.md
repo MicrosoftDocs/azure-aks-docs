@@ -1,7 +1,7 @@
 ---
 title: Enable KMS data encryption in Azure Kubernetes Service (AKS) clusters (Preview)
 description: Learn how to enable Key Management Service (KMS) data encryption with platform-managed keys or customer-managed keys in AKS.
-ms.date: 12/14/2025
+ms.date: 12/19/2025
 ms.subservice: aks-security
 ms.topic: how-to
 ms.service: azure-kubernetes-service

@@ -1,7 +1,7 @@
 ---
 title: Data encryption at rest concepts for Azure Kubernetes Service (AKS)
 description: Learn about encryption at rest for Kubernetes secrets in Azure Kubernetes Service (AKS) using Azure Key Vault and the KMS provider.
-ms.date: 12/14/2025
+ms.date: 12/19/2025
 ms.subservice: aks-security
 ms.topic: concept-article
 ms.service: azure-kubernetes-service

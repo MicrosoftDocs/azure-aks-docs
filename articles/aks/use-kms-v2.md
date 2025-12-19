@@ -1,7 +1,7 @@
 ---
 title: Migrate to Key Management Service (KMS) v2 in Azure Kubernetes Service (AKS)
 description: Learn how to migrate to KMS v2 for clusters with versions older than 1.27.
-ms.date: 12/14/2025
+ms.date: 12/19/2025
 ms.subservice: aks-security
 ms.topic: how-to
 ms.service: azure-kubernetes-service
