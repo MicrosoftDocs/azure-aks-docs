@@ -756,14 +756,20 @@
       href: use-oidc-issuer.md
     - name: KMS etcd encryption
       items:
-      - name: Use KMS etcd encryption
-        href: use-kms-etcd-encryption.md
-      - name: Update key vault mode
-        href: update-kms-key-vault.md
-      - name: Migrate to KMS v2
-        href: use-kms-v2.md
-      - name: Observability for KMS etcd encryption
+      - name: Data encryption concepts
+        href: kms-data-encryption-concepts.md
+      - name: Enable KMS data encryption
+        href: kms-data-encryption.md
+      - name: Observability for KMS
         href: kms-observability.md
+      - name: Legacy KMS experience
+        items:
+        - name: Use KMS etcd encryption (legacy)
+          href: use-kms-etcd-encryption.md
+        - name: Update key vault mode
+          href: update-kms-key-vault.md
+        - name: Migrate to KMS v2
+          href: use-kms-v2.md
     - name: Secure container access to resources
       href: secure-container-access.md
   - name: Node security
@@ -792,55 +798,6 @@
       href: kubernetes-service-principal.md
     - name: Enable Microsoft Entra integration
       items:
-        - name: Cluster security best practices
-          href: operator-best-practices-cluster-security.md
-        - name: Azure kubelogin
-          href: kubelogin-authentication.md
-        - name: Managed identities
-          items:
-            - name: Overview
-              href: managed-identity-overview.md
-            - name: Enable a managed identity on your cluster
-              href: use-managed-identity.md
-        - name: Create a service principal
-          href: kubernetes-service-principal.md
-        - name: Enable access to AKS clusters using Trusted Access
-          href: trusted-access-feature.md
-        - name: Limit access to cluster configuration file
-          href: control-kubeconfig-access.md
-        - name: Define API server authorized IP ranges
-          href: api-server-authorized-ip-ranges.md
-        - name: Manage cluster certificates and rotation
-          href: certificate-rotation.md
-        - name: Use custom certificate authorities
-          href: custom-certificate-authority.md
-        - name: Use Azure Policy
-          href: use-azure-policy.md
-        - name: Control deployments with Azure Policy
-          href: /azure/governance/policy/concepts/policy-for-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Enforce best practices with deployment safeguards
-          href: deployment-safeguards.md
-        - name: Create an OIDC Issuer for your cluster
-          href: use-oidc-issuer.md
-        - name: KMS etcd encryption
-          items:
-            - name: Data encryption concepts
-              href: kms-data-encryption-concepts.md
-            - name: Enable KMS data encryption
-              href: kms-data-encryption.md
-            - name: Observability for KMS
-              href: kms-observability.md
-            - name: Legacy KMS experience
-              items:
-                - name: Use KMS etcd encryption (legacy)
-                  href: use-kms-etcd-encryption.md
-                - name: Update key vault mode
-                  href: update-kms-key-vault.md
-                - name: Migrate to KMS v2
-                  href: use-kms-v2.md
-        - name: Secure container access to resources
-          href: secure-container-access.md
-    - name: Node security
       - name: AKS-managed Microsoft Entra ID
         items:
         - name: Enable AKS-managed Microsoft Entra integration
