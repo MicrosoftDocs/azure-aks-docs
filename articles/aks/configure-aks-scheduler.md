@@ -3,7 +3,7 @@ title: Configure Scheduler Profiles on Azure Kubernetes Service (AKS) (preview)
 description: Learn how to set scheduler profiles to achieve advanced scheduling behaviors on Azure Kubernetes Service (AKS).
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 09/30/2025
+ms.date: 12/11/2025
 ms.author: sachidesai
 author: sachidesai
 # Customer intent: "As a Kubernetes cluster operator, I want to implement advanced scheduling strategies using one or more configurable profiles, so that I can effectively manage workload distribution and resource allocation across my AKS clusters."
@@ -18,7 +18,7 @@ In this article, you learn how to deploy example scheduler profiles in Azure Kub
 ## Limitations
 
 - AKS currently doesn't manage the deployment of third-party schedulers or out-of-tree scheduling plugins.
-- AKS doesn't support in-tree scheduling plugins targeting the `aks-system` scheduler. This restriction is in place to help prevent unexpected changes to AKS add-ons enabled on your cluster.
+- AKS doesn't support in-tree scheduling plugins targeting the `aks-system` scheduler. This restriction is in place to help prevent unexpected changes to AKS add-ons enabled on your cluster. Additionally, you can't define a `profile` called `aks-system`.
 
 ## Prerequisites
 
@@ -56,12 +56,6 @@ In this article, you learn how to deploy example scheduler profiles in Azure Kub
     ```
 
     It takes a few minutes for the status to show _Registered_.
-
-1. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "UserDefinedSchedulerConfigurationPreview"
-    ```
 
 1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
 
@@ -132,9 +126,9 @@ You can enable schedule profile configuration on a new or existing AKS cluster.
 
 Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes, within the set configuration. This strategy helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes.
 
-In this example, the configured scheduler prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. 
+In this example, the configured scheduler prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. The CRD must be named `upstream`.
 
-1. Create a file named `aks-scheduler-customization.yaml` and paste in the following manifest:
+1. Create a file named `bin-pack-cpu-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
 
     ```yaml
     apiVersion: aks.azure.com/v1alpha1
@@ -146,7 +140,7 @@ In this example, the configured scheduler prioritizes scheduling pods on nodes w
         apiVersion: kubescheduler.config.k8s.io/v1
         kind: KubeSchedulerConfiguration
         profiles:
-        - schedulerName: node-binpacking-scheduler
+        - schedulerName: node-binpacking-cpu-scheduler
           pluginConfig:
               - name: NodeResourcesFit
                 args:
@@ -164,7 +158,7 @@ In this example, the configured scheduler prioritizes scheduling pods on nodes w
 1. Apply the scheduling configuration manifest using the `kubectl apply` command.
 
     ```bash
-    kubectl apply -f aks-scheduler-customization.yaml
+    kubectl apply -f bin-pack-cpu-scheduler.yaml
     ```
 
 1. To target this scheduling mechanism for specific workloads, update your pod deployments with the following `schedulerName`:
@@ -173,7 +167,7 @@ In this example, the configured scheduler prioritizes scheduling pods on nodes w
     ...
     ...
         spec:
-          schedulerName: node-binpacking-scheduler
+          schedulerName: node-binpacking-cpu-scheduler
     ...
     ...
     ```
@@ -181,9 +175,9 @@ In this example, the configured scheduler prioritizes scheduling pods on nodes w
 
 ## Configure pod topology spread
 
-Pod topology spread is a scheduling strategy that seeks to distribute pods evenly across failure domains (such as availability zones or regions) to ensure high availability and fault tolerance in the event of zone or node failures. This strategy helps prevent the risk of all replicas of a pod being placed in the same failure domain. For more configuration guidance, see the [Kubernetes Pod Topology Spread Constraints documentation] (https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/).
+Pod topology spread is a scheduling strategy that seeks to distribute pods evenly across failure domains (such as availability zones or regions) to ensure high availability and fault tolerance in the event of zone or node failures. This strategy helps prevent the risk of all replicas of a pod being placed in the same failure domain. For more configuration guidance, see the [Kubernetes Pod Topology Spread Constraints documentation][topology-spread-constraints/]. The CRD must be named `upstream`.
 
-1. Create a file named `aks-scheduler-customization.yaml` and paste in the following manifest:
+1. Create a file named `pod-topology-spreader-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
 
     ```yaml
     apiVersion: aks.azure.com/v1alpha1
@@ -211,13 +205,13 @@ Pod topology spread is a scheduling strategy that seeks to distribute pods evenl
     - `PodTopologySpread` plugin instructs the scheduler to try and distribute pods as evenly as possible across availability zones. 
     - `whenUnsatisfiable: ScheduleAnyway` specifies schedule to schedule pods despite the inability to meet the topology constraints. This avoids pod scheduling failures when exact distribution isn't feasible.
     -  `List` type applies the default constraints as a list of rules. The scheduler uses the rules in the order they're defined, and they apply to all pods that don’t specify custom topology spread constraints.
-    -  `maxSkew: 1` means the number of pods can differ by at most _1_ between any two zones.
+    -  `maxSkew: 1` means the number of pods can differ by at most _1_ between any two availability zones.
     -  `topologyKey: topology.kubernetes.io/zone` indicates that the scheduler should spread pods across availability zones.
 
 1. Apply the scheduling configuration manifest using the `kubectl apply` command.
 
     ```bash
-    kubectl apply -f aks-scheduler-customization.yaml
+    kubectl apply -f pod-topology-spreader-scheduler.yaml
     ```
 
 1. To target this scheduling mechanism for specific workloads, update your pod deployments with the following `schedulerName`:
@@ -239,7 +233,7 @@ Pod topology spread is a scheduling strategy that seeks to distribute pods evenl
     ```yaml
     ...
     ...
-    `- schedulerName: default_scheduler` 
+        - schedulerName: default_scheduler
     ...
     ...
     ```
@@ -255,25 +249,32 @@ Pod topology spread is a scheduling strategy that seeks to distribute pods evenl
 
 ## Configure multiple scheduler profiles
 
-You can customize the upstream scheduler with multiple profiles and customize each profile with multiple plugins while using the same configuration file. In the following example, we create two scheduling profiles called **scheduler-one** and **scheduler-two**:
+You can customize the upstream scheduler with multiple profiles and customize each profile with multiple plugins while using the same configuration file. As a reminder, the CRD must be named `upstream` and user-configured fields include `percentageOfNodesToScore`, `podInitialBackoffSeconds`, `podMaxBackoffSeconds`, and `profiles`.
 
-- **scheduler-one** prioritizes placing pods across zones and nodes for balanced distribution with the following settings:
+In the following example, we create two scheduling profiles called **scheduler-one** and **scheduler-two**. The fields `percentageOfNodesToScore`, `podInitialBackoffSeconds`, `podMaxBackoffSeconds`, apply globally to all profiles defined.
 
-     - Enforces strict zonal distribution and _preferred_ node distribution using `PodTopologySpread`.
-     - Honors hard pod affinity rules and considers the soft affinity rules with `InterPodAffinity`.
-     -  _Prefers_ nodes in specific zones to reduce cross-zone networking using `NodeAffinity`.
+**global parameters**
+- `percentageOfNodesToScore` specifies the percentage of cluster nodes the scheduler evaluates during scoring to balance scheduling accuracy and speed. So **percentageOfNodesToScore: 40** means the scheduler will sample 40% of nodes instead of the entire cluster.
+- `podInitialBackoffSeconds` defines the initial delay before retrying a failed scheduling attempt to prevent rapid, repeated retries. So **podInitialBackoffSeconds: 1** means the scheduler waits 1 second before the first retry.
+- `podMaxBackoffSeconds` sets the maximum delay the scheduler will wait between exponential backoff retries for unschedulable pods. So **podMaxBackoffSeconds: 8** means the retry delay will never exceed 8 seconds even as backoff increases.
 
-- **scheduler-two** prioritizes placing pods on nodes with available storage, CPU, and memory resources for timely resource-efficient resource usage with the following settings:
+**scheduler-one** prioritizes placing pods across zones and nodes for balanced distribution with the following settings:
 
-    - Ensures pods are placed on nodes where PVCs can bind to PVs using `VolumeBinding`.
-    - Validates that nodes and volumes satisfy zonal requirements using `VolumeZone` to avoid cross-zone storage access.
-    - Prioritizes nodes based on CPU, memory, and ephemeral storage utilization, with `NodeResourcesFit`.
-    - Favors nodes that already have the required container images using `ImageLocality`.
+ - Enforces strict zonal distribution and _preferred_ node distribution using `PodTopologySpread`.
+ - Honors hard pod affinity rules and considers the soft affinity rules with `InterPodAffinity`.
+ -  _Prefers_ nodes in specific zones to reduce cross-zone networking using `NodeAffinity`.
+
+**scheduler-two** prioritizes placing pods on nodes with available storage, CPU, and memory resources for timely resource-efficient resource usage with the following settings:
+
+- Ensures pods are placed on nodes where PVCs can bind to PVs using `VolumeBinding`.
+- Validates that nodes and volumes satisfy zonal requirements using `VolumeZone` to avoid cross-zone storage access.
+- Prioritizes nodes based on CPU, memory, and ephemeral storage utilization, with `NodeResourcesFit`.
+- Favors nodes that already have the required container images using `ImageLocality`.
 
 > [!NOTE] 
 > You might need to adjust zones and other parameters based on your workload type.
 
-1. Create a file named `aks-scheduler-customization.yaml` and paste in the following manifest:
+1. Create a file named `aks-scheduler-customization.yaml`, with the CRD named `upstream`, and paste in the following manifest:
 
     ```yaml
     apiVersion: aks.azure.com/v1alpha1
@@ -448,8 +449,15 @@ To learn more about the AKS scheduler and best practices, see the following reso
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-extension-add]: /cli/azure/extension#az-extension-add
-
 [az-extension-update]: /cli/azure/extension#az-extension-update
+
+<!-- LINKS - external -->
+[topology-spread-constraints/]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+
+
+
+
+
 
 
 

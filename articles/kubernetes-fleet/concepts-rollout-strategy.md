@@ -313,4 +313,3 @@ For simpler scenarios where percentage-based rollouts suffice, consider using th
 
 <!-- LINKS - external -->
 [learn-conceptual-crp]: ./concepts-resource-propagation.md
-[placement-snapshots]: ./concepts-placement-snapshots.md

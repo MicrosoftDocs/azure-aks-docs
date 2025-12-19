@@ -109,7 +109,7 @@ In `redis.yaml`, the component is configured to use Entra ID Authentication usin
 
 ### Configure the Node.js app
 
-In `node.yaml`, the pod spec has [the label added to use workload identity,](./workload-identity-deploy-cluster.md#deploy-your-application):
+In `node.yaml`, the pod spec has the label added to use workload identity:
 
 ```yaml
 labels:
@@ -119,7 +119,7 @@ labels:
 
 1. Navigate to the `deploy` directory and open `node.yaml`.
 
-1. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
+2. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
    - This value should be the same service account you used to create the federated identity credential.
 
 ### Apply the configuration
@@ -180,7 +180,7 @@ labels:
 
 ### Configure the Python app
 
-In `python.yaml`, the pod spec has [the label added to use workload identity,](./workload-identity-deploy-cluster.md#deploy-your-application):
+In `python.yaml`, the pod spec has the label added to use workload identity:
 
 ```yaml
 labels:
@@ -190,7 +190,7 @@ labels:
 
 1. Navigate to the `deploy` directory and open `python.yaml`.
 
-1. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
+2. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
    - This value should be the same service account you used to create the federated identity credential.
 
 ### Apply the configuration
@@ -272,7 +272,7 @@ Remove-AzResourceGroup -Name MyResourceGroup
 [az-group-delete]: /cli/azure/group#az-group-delete
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
 [dapr-create-extension]: ./dapr.md
-[workload-identity]: ./workload-identity-deploy-cluster.md#create-an-aks-cluster
+[workload-identity]: ./workload-identity-deploy-cluster.md#deploy-and-configure-microsoft-entra-workload-id-on-an-azure-kubernetes-service-aks-cluster
 [managed-identity]: ./workload-identity-deploy-cluster.md#create-a-managed-identity
 [service-account]: ./workload-identity-deploy-cluster.md#create-a-kubernetes-service-account
 [federated-identity-cred]: ./workload-identity-deploy-cluster.md#create-the-federated-identity-credential

@@ -19,17 +19,16 @@ The third party partners featured in this article have introduction guides to he
 
 |          | Partners |
 |----------|----------|
-| **DevOps** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [Sysdig](#sysdig) <br> • [VictoriaMetrics](#victoriametrics) |
-| **Networking** | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) |
-| **Observability** | • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Elastic](#elastic) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [New Relic](#new-relic) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) |
-| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [CrowdStrike](#crowdstrike) <br> • [Elastic](#elastic) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Sysdig](#sysdig)  <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Upwind](#upwind) <br> • [Wiz](#wiz) |
-| **Storage** | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) <br> • [VictoriaMetrics](#victoriametrics) |
-| **Config management** | • [Corent](#corent) <br> • [Sysdig](#sysdig) |
-| **Migration** | • [Catalogic](#catalogic) |
-| **Monitoring** | • [VictoriaMetrics](#victoriametrics) |
+| **DevOps** | * [Advantech](#advantech) <br> * [Akuity](#akuity) <br> * [Anchore](#anchore) <br> * [Hashicorp](#hashicorp) <br> * [Kong](#kong) <br> * [Kubecost](#kubecost) <br> * [NetApp](#netapp) <br> * [Sysdig](#sysdig) <br> * [VictoriaMetrics](#victoriametrics) |
+| **Networking** | * [Buoyant](#buoyant) <br> * [Isovalent](#isovalent) <br> * [Solo.io](#soloio) <br> * [Tetrate](#tetrate) <br> * [Tigera](#tigera-inc) |
+| **Observability** | * [Buoyant](#buoyant) <br> * [Dynatrace](#dynatrace) <br> * [Elastic](#elastic) <br> * [Isovalent](#isovalent) <br> * [Kubecost](#kubecost) <br> * [New Relic](#new-relic) <br> * [Solo.io](#soloio) <br> * [Tigera](#tigera-inc) <br> * [VictoriaMetrics](#victoriametrics) |
+| **Security** | * [Anchore](#anchore) <br> * [Buoyant](#buoyant) <br> * [CrowdStrike](#crowdstrike) <br> * [Elastic](#elastic) <br> * [Isovalent](#isovalent) <br> * [Kong](#kong) <br> * [Palo Alto Networks](#palo-alto-networks) <br> * [Qualys](#qualys) <br> * [Solo.io](#soloio) <br> * [Sysdig](#sysdig)  <br> * [Tetrate](#tetrate) <br> * [Tigera](#tigera-inc) <br> * [Upwind](#upwind) <br> * [Wiz](#wiz) |
+| **Storage** | * [Catalogic](#catalogic) <br> * [Veeam](#veeam) <br> * [VictoriaMetrics](#victoriametrics) |
+| **Config management** | * [Corent](#corent) <br> * [Sysdig](#sysdig) |
+| **Migration** | * [Catalogic](#catalogic) |
+| **Monitoring** | * [VictoriaMetrics](#victoriametrics) |
 
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## DevOps
 
@@ -101,7 +100,7 @@ Anchore is a software bill of materials (SBOM) powered software supply chain man
 
 It provides continuous visibility into supply chain security risks. Anchore takes a developer-friendly approach that minimizes friction by embedding automation into development toolchains to generate SBOMs and accurately identify vulnerabilities, malware, misconfigurations, and secrets for faster remediation.
 
-We’re passionate about protecting software supply chains by making it easier for developers and security teams to deliver secure cloud-native software. Together, we’ve built a platform and open source tools that help organizations secure the software they build without compromising velocity.
+We're passionate about protecting software supply chains by making it easier for developers and security teams to deliver secure cloud-native software. Together, we've built a platform and open source tools that help organizations secure the software they build without compromising velocity.
 
 </details>
 
@@ -144,9 +143,9 @@ A unified Konnect control plane empowers businesses to:
 * Browse APIs, reference documentation, test endpoints, and create applications using specific APIs through a customizable and unified API portal for developers.
 * Create a single source of truth by cataloging all services with the Service Hub.
 * Access key statistics, monitor vital signs, and spot patterns in real time to see how your APIs and gateways are performing.
-* Deliver a fully Kubernetes-centric operational lifecycle model through the integration of DevOps-ready config-driven API management layer and KIC’s unrivaled runtime performance.
+* Deliver a fully Kubernetes-centric operational lifecycle model through the integration of DevOps-ready config-driven API management layer and KIC's unrivaled runtime performance.
 
-Kong’s extensive ecosystem of community and enterprise plugins delivers critical functionality, including authentication, authorization, rate limiting, request enforcement, and caching, without increasing API platform’s footprint.
+Kong's extensive ecosystem of community and enterprise plugins delivers critical functionality, including authentication, authorization, rate limiting, request enforcement, and caching, without increasing API platform's footprint.
 
 </details>
 
@@ -178,7 +177,7 @@ For more information, see [Kubecost Solutions](https://www.kubecost.com/) and [I
 |----------|------------|
 | Ocean | DevOps |
 
-Spot Ocean allows organizations to effectively manage their containers’ infrastructure at scale, transparently and with minimal effort.
+Spot Ocean allows organizations to effectively manage their containers' infrastructure at scale, transparently and with minimal effort.
 
 <details> <summary> See more </summary><br>
 
@@ -296,7 +295,7 @@ For more information, see [Tigera Solutions](https://www.tigera.io/) and [Tigera
 
 ## Observability
 
-Observability provides deep insights into your systems, enabling rapid issue detection and resolution to enhance your application’s reliability and performance.
+Observability provides deep insights into your systems, enabling rapid issue detection and resolution to enhance your application's reliability and performance.
 
 ### Dynatrace
 
@@ -318,7 +317,7 @@ For more information, see [Dynatrace Solutions](https://www.dynatrace.com/techno
 |----------|------------|
 | Elastic | Observability <br> Security |
 
-Elastic, the Search AI Company, enables everyone to securely harness search powered AI to find the answers they need in real-time using all their data, at scale. Elastic’s solutions for search, observability and security are built on the Elastic Search AI Platform, the development platform used by thousands of companies, including more than 50% of the Fortune 500.
+Elastic, the Search AI Company, enables everyone to securely harness search powered AI to find the answers they need in real-time using all their data, at scale. Elastic's solutions for search, observability and security are built on the Elastic Search AI Platform, the development platform used by thousands of companies, including more than 50% of the Fortune 500.
 
 For more information, see [Elastic Solutions](https://www.elastic.co/).
 
@@ -352,7 +351,7 @@ Ensure the integrity and confidentiality of applications and foster trust and co
 |----------|------------|
 | Falcon Cloud Security   | Security   |
 
-Powered by the CrowdStrike Security Cloud and world-class AI, the CrowdStrike Falcon® platform leverages real-time indicators of attack, threat intelligence, evolving adversary tradecraft and enriched telemetry from across the enterprise to deliver hyper-accurate detections, automated protection and remediation, elite threat hunting and prioritized observability of vulnerabilities.
+Powered by the CrowdStrike Security Cloud and world-class AI, the CrowdStrike Falcon&reg; platform leverages real-time indicators of attack, threat intelligence, evolving adversary tradecraft and enriched telemetry from across the enterprise to deliver hyper-accurate detections, automated protection and remediation, elite threat hunting and prioritized observability of vulnerabilities.
 
 <details> <summary> See more </summary><br>
 

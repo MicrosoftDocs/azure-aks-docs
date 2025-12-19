@@ -12,7 +12,7 @@ ms.custom: 'stateful-workloads'
 
 # Deploy a Valkey cluster on Azure Kubernetes Service (AKS)
 
-This article summarizes the steps to deploy Valkey, an open source (BSD) high-performance key/value datastore, on Azure Kubernetes Service (AKS). The Valkey deployment focuses on leveraging replicas and availability zones for high availability and resilience. The goal of this solution is to deploy Valkey on AKS with a comparable level of service to the Azure Cache for Redis Premium tier. We also provide guidance to test the resilience of your Valkey deployment using the [Locust load testing framework](https://github.com/locustio/locust).
+This article summarizes the steps to deploy Valkey, an open source (BSD) high-performance key/value datastore, on Azure Kubernetes Service (AKS). The Valkey deployment focuses on leveraging replicas and availability zones for high availability and resilience. We also provide guidance to test the resilience of your Valkey deployment using the [Locust load testing framework](https://github.com/locustio/locust).
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
@@ -20,28 +20,28 @@ This article summarizes the steps to deploy Valkey, an open source (BSD) high-pe
 
 [Valkey][valkey] is a fork of the [Redis project][redis] that preserves its original open-source license. Valkey is a high performance database that supports a key-value datastore, and you can use it for caching, session storage, message queues, and more. A _Valkey cluster_ has multiple nodes that are responsible for hosting your Valkey data stores. Valkey shards data into smaller portions and disperses it among the nodes. In a simplified Valkey cluster consisting of _three_ primary nodes, a single replica node supports each node to enable basic failover capabilities. The data is distributed across the nodes, enabling the cluster to continue functioning even if one of the nodes fails.
 
-:::image type="content" source="./media/valkey-stateful-workload/valkey-cluster.png" alt-text="Architecture diagram of Valkey deployed on AKS with three primary nodes and one replica for each primary":::
+:::image type="content" source="./media/valkey-stateful-workload/valkey-cluster.png" alt-text="Architecture diagram of Valkey deployed on AKS with three primary nodes and one replica for each primary.":::
 
 For more information, see the [Valkey documentation][valkey-docs].
 
 ## Valkey solution overview
 
-The goal of this solution is to deploy Valkey on AKS with the same level of service as the [Azure Cache for Redis][azure-cache-for-redis] Premium tier.
+This solution deploys three Valkey primary pods across two availability zones with one replica pod per primary in a third zone, running on `Standard_E64_v5` SKU nodes. We create two distinct `StatefulSet` resources with `spec.affinity` rules ensuring zone distribution for high availability. The goal of this solution is to deploy Valkey on AKS with the same level of service as the [Azure Cache for Redis][azure-cache-for-redis] Premium tier.
 
 The following table lists key features of the Azure Cache for Redis Premium tier and the proposed Valkey solution:
 
 | Azure Cache for Redis Premium tier | Valkey solution |
 | --- | --- |
-| **Memory up to 1.2 TB** | Using _three_ Valkey primaries running on the `Standard_E64_v5` SKU. |
+| **Memory up to 1.2 TB** | Using _three_ primary nodes running on the `Standard_E64_v5` SKU. |
 | **Replication** | Adding at least _one_ replica pod per primary pod. |
 | **Zone redundancy** | Placing primary and replica pods in different availability zones. |
 
-We create two distinct [`StatefulSet`][kubernetes-stateful-sets] resources: one for the Valkey primaries and one for the replicas. The `spec.affinity` of the `StatefulSet` API places the primary pods in two different availability zones and the replica pods in another third availability zone. This approach ensures that a single zone failure doesn't impact the availability for any Valkey shard.
+We create two distinct [`StatefulSet`][kubernetes-stateful-sets] resources: one for the Valkey primary pods and one for the replica pods. The `spec.affinity` of the `StatefulSet` API places the primary pods in two different availability zones and the replica pods in another third availability zone.
 
 > [!NOTE]
 > Note that the solution suggested in this article differs from the Valkey documentation, where cluster Pods belong to a single `StatefulSet`, and the `spec.affinity` only ensures that the Pods are placed on different nodes. The automatic Valkey cluster initialization presented in the Valkey documentation doesn't ensure that the primary and replica Pods for the same shard are placed in different availability zones.
 
-## Next steps
+## Next step
 
 > [!div class="nextstepaction"]
 > [Create the infrastructure resources for running a Valkey cluster on AKS][create-valkey-infrastructure]
