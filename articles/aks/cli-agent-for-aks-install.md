@@ -80,7 +80,7 @@ Set up an Azure OpenAI resource by following the steps in the [Microsoft documen
 > For the deployment name, use the same name as the model name, such as gpt-4o or gpt-4o-mini, depending on the access. You can use any region where you have access and quota for the model.
 > In the deployment, select a token-per-minute (TPM) limit as high as possible. We recommend upward of a 1-million TPM for good performance.
 1. [Deploy the model](/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) that you plan to use in the Microsoft Foundry portal.
-1. After deployment is finished, note your API base URL and API key.
+1. After deployment is finished, note your API base URL and API key.<br>
 
    <img width="1713" height="817" alt="image" src="https://github.com/user-attachments/assets/400021fd-5604-4cd2-9faf-407145c52669" />
 
