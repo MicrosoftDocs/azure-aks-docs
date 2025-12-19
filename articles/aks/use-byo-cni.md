@@ -36,6 +36,7 @@ Microsoft still provides support for issues that aren't related to CNI.
 * The subnet assigned to the AKS node pool can't be a [delegated subnet](/azure/virtual-network/subnet-delegation-overview).
 * AKS doesn't apply network security groups (NSGs) to its subnet or modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure that the security rules in the NSGs allow traffic within the node's Classless Inter-Domain Routing (CIDR) range. For more information, see [Network security groups][aks-network-nsg].
 * AKS doesn't create a route table in the managed virtual network.
+* You must specify a Pod CIDR (IP address range for pods). The AKS control plane uses this range for internal traffic routing to pods, even though pod IP assignment will be managed by your custom CNI. If no pod CIDR is provided, control plane to pod communication may fail or be misrouted. You must select a pod CIDR that does not conflict with any other network in your environment and avoids Azure reserved ranges, such as, `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24`. For example, you might use a range such as `10.XX.0.0/16` that is unique to your cluster. This ensures that the control plane can route directly to pod IPs on your nodes, and no IP overlap will occur if you integrate with other networks or clusters.
 
 ## Create an AKS cluster with no CNI plugin preinstalled
 
@@ -55,6 +56,7 @@ Microsoft still provides support for issues that aren't related to CNI.
         --resource-group myResourceGroup \
         --name myAKSCluster \
         --network-plugin none \
+        --pod-cidr "10.10.0.0/16" \
         --generate-ssh-keys
     ```
 
@@ -109,7 +111,8 @@ For information on how to deploy the following template, see the [ARM template d
         "dnsPrefix": "[parameters('clusterName')]",
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
         "networkProfile": {
-          "networkPlugin": "none"
+          "networkPlugin": "none",
+          "podCidr": "[parameters('pod-cidr')]"
         }
       }
     }
@@ -127,6 +130,7 @@ param location string = resourceGroup().location
 param kubernetesVersion string = '1.22'
 param nodeCount int = 3
 param nodeSize string = 'Standard_B2ms'
+param podCidr string = '10.2.0.0/16'
 
 resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-06-01' = {
   name: clusterName
@@ -147,6 +151,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-06-01' = {
     kubernetesVersion: kubernetesVersion
     networkProfile: {
       networkPlugin: 'none'
+      podCidr: podCidr
     }
   }
 }

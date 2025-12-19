@@ -17,14 +17,6 @@ ms.author: allyford
 
 In this article, you learn how to create AKS node pools using Confidential VM sizes.
 
-> [!CAUTION]
-> In this article, there are references to a feature that is using Ubuntu OS versions that are being deprecated for AKS.
->- Starting on 17 March 2027, AKS will no longer support Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. [Upgrade your node pools](./upgrade-aks-cluster.md) to kubernetes version 1.34+ to migrate to a supported Ubuntu version.
->For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues).
-
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
-
 ## AKS supported confidential VM sizes
 
 Azure offers a choice of [Trusted Execution Environment (TEE)][TEE] options from both AMD and Intel. These TEEs allow you to create Confidential VM environments with excellent price-to-performance ratios, all without requiring any code changes.
@@ -55,7 +47,7 @@ This table includes the supported OS versions:
 
 |OS Type|OS SKU|CVM support|CVM default|
 |--|--|--|--|
-|Linux|`Ubuntu`|Supported|Ubuntu 20.04 is default for K8s version 1.24-1.33. Ubuntu 24.04 is default for K8s version 1.34-1.38.|
+|Linux|`Ubuntu`|Supported|Ubuntu 20.04 is default for K8s version 1.24-1.33. Ubuntu 24.04 is the default for K8s version 1.34-1.38. |
 |Linux|`Ubuntu2204`|Not Supported|AKS doesn't support CVM for Ubuntu 22.04.|
 |Linux|`Ubuntu2404`|Supported| CVM is supported on `Ubuntu2404` in K8s 1.32-1.38. |
 |Linux|`AzureLinux`| Supported on Azure Linux 3.0| Azure Linux 3 is default when enabling CVM for K8s version 1.28-1.36.|
@@ -82,7 +74,11 @@ Before you begin, make sure you have the following:
 - CVM sizes must be available for your subscription in the region where the cluster is created. You must have sufficient quota to create a node pool with a CVM size.
 - If you're using Azure Linux os, you need to install the `aks-preview` extension, update the `aks-preview` extension, and register the preview feature flag. If you're using Ubuntu, you can skip these steps.
 
-### Install `aks-preview` extension
+### If you are using Azure Linux
+
+CVMs for Ubuntu is GA, but CVMs with Azure Linux is currently still in preview. If you would like to use CVM node pools with Azure Linux as the OS of choice, ensure you enable the extension and register the flag.
+
+#### Install `aks-preview` extension
 
 1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
 
@@ -98,7 +94,7 @@ Before you begin, make sure you have the following:
     az extension update --name aks-preview
     ```
 
-### Register `AzureLinuxCVMPreview` feature flag
+#### Register `AzureLinuxCVMPreview` feature flag
 
 1. Register the `AzureLinuxCVMPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
@@ -132,6 +128,20 @@ Before you begin, make sure you have the following:
     ```
 
 If you don't specify the `osSKU` or `osType`, AKS defaults to `--os-type Linux` and `--os-sku Ubuntu`.
+
+## Upgrade an existing node pool with a CVM to Ubuntu 24.04
+
+- Upgrade an existing node pool with a CVM to Ubuntu 24.04 from Ubuntu 20.04 using the [`az aks nodepool update`][az-aks-nodepool-update] command. Set the `os-sku` as `Ubuntu2404`.
+
+  ```azurecli-interactive
+    az aks nodepool update \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name cvmnodepool \
+        --os-sku Ubuntu2404
+    ```
+> [!NOTE]
+> A node pool which is Ubuntu 24.04 with a CVM is supported from AKS cluster 1.33 version. Additionally, before Ubuntu 24.04 becomes GA, you need to register the `Ubuntu2404Preview` feature. For more information, see [`here`][Ubuntu2404Preview] to register the feature.
 
 ## Verify the node pool uses CVM
 
@@ -209,9 +219,11 @@ In this article, you learned how to add a node pool with CVM to an AKS cluster.
 [az-aks-nodepool-list]: /cli/azure/aks/nodepool#az-aks-nodepool-list
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
 [az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [resize-your-nodepool]: ./resize-node-pool.md
 [trusted-launch]: ./use-trusted-launch.md
 [flatcar]: ./flatcar-container-linux-for-aks.md
 [os-guard]: ./use-azure-linux-os-guard.md
 [node-images]: ./node-images.md
+[Ubuntu2404Preview]: /azure/aks/upgrade-os-version#register-ubuntu2404preview-feature-flag
 

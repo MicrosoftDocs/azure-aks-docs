@@ -76,7 +76,7 @@ The [delete policy](../aks/concepts-managed-namespaces.md#delete-policy) control
 
 ## Managed Fleet Namespace built-in roles
 
-Managed Fleet Namespaces use existing Azure Role Based Access Control (RBAC) [control plane roles](./concepts-rbac.md#control-plane) to manage and access managed namespaces. The existing [data plane RBAC roles](./concepts-rbac.md#data-plane) are applied to interact with the Managed Fleet Namespace instance created on the Fleet Manager hub cluster. 
+Managed Fleet Namespaces use existing Azure Role Based Access Control (RBAC) [Azure Resource Manager roles](./concepts-rbac.md#azure-resource-manager) to manage and access managed namespaces. The existing [Kubernetes data plane roles](./concepts-rbac.md#kubernetes-data-plane) are applied to interact with the Managed Fleet Namespace instance created on the Fleet Manager hub cluster. 
 
 > [!IMPORTANT]
 > When you assign RBAC roles at a Managed Fleet Namespace scope, access is granted to any unmanaged Kubernetes namespaces on member clusters with the same name.

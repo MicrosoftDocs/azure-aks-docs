@@ -1,7 +1,7 @@
 ---
-title: "Choose an Azure Kubernetes Fleet Manager option"
-description: This article provides a conceptual overview of the various Azure Kubernetes Fleet Manager options and why you may choose a specific configuration.
-ms.date: 05/23/2025
+title: "Choosing an Azure Kubernetes Fleet Manager option"
+description: This article provides an overview of the various Azure Kubernetes Fleet Manager options and why you may choose a specific configuration.
+ms.date: 12/10/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -24,9 +24,9 @@ The following table outlines the supported capabilities of Fleet Manager with an
 |**Hub cluster hosting**| <span class='red-x'>&#10060;</span> |<span class='green-check'>&#9989;</span> |
 |**Kubernetes and node image updates**| <span class='green-check'>&#9989;</span> | <span class='green-check'>&#9989;</span> |
 |**Workload placement**| <span class='red-x'>&#10060;</span> | <span class='green-check'>&#9989;</span> |
-|**Multi-cluster managed namespaces**| <span class='red-x'>&#10060;</span> | <span class='green-check'>&#9989;</span> |
+|**Managed Fleet Namespaces**| <span class='red-x'>&#10060;</span> | <span class='green-check'>&#9989;</span> |
 |**DNS load balancing**| <span class='red-x'>&#10060;</span> | <span class='green-check'>&#9989;</span> |
-|**Billing considerations**| No cost | You pay cost associated with the hub, which is a single node standard-tier AKS-cluster. |
+|**Billing considerations**| No cost | You pay for hub cluster, which is a single node standard-tier AKS cluster. |
 |**Converting fleet types**| Can upgrade to a Fleet Manager with a hub cluster. | Can't be downgraded to a Fleet Manager resource without a hub cluster.|
 
 ## Fleet Manager without hub cluster
@@ -72,7 +72,7 @@ Now that you understand the different types of Kubernetes fleet resources, see [
 [aks-private-cluster-connect]: /azure/aks/private-clusters?tabs=azure-portal#options-for-connecting-to-the-private-cluster
 [azure-policy-overview]: /azure/governance/policy/overview
 [quickstart-create-fleet]: quickstart-create-fleet-and-members.md
-[create-fleet-without-hub]: quickstart-create-fleet-and-members.md?tabs=without-hub-cluster#create-a-fleet-manager-resource
+[create-fleet-without-hub]: quickstart-create-fleet-and-members.md?tabs=without-hub-cluster#create-a-fleet-manager
 [create-public-hub-cluster]: quickstart-create-fleet-and-members.md?tabs=with-hub-cluster#public-hub-cluster
 [create-private-hub-cluster]: quickstart-create-fleet-and-members.md?tabs=with-hub-cluster#private-hub-cluster
 
