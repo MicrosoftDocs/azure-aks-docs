@@ -89,10 +89,9 @@ When using customer-managed keys, you can configure the network access for your 
 | Feature | Platform-managed keys | Customer-managed keys (Public) | Customer-managed keys (Private) |
 |---------|----------------------|-------------------------------|--------------------------------|
 | **Key ownership** | Microsoft manages | Customer manages | Customer manages |
-| **Key rotation** | Automatic | Manual | Manual |
+| **Key rotation** | Automatic | [User configurable][keyvault-key-rotation] | [User configurable][keyvault-key-rotation] |
 | **Key vault creation** | Automatic | Customer creates | Customer creates |
 | **Network isolation** | N/A | No | Yes |
-| **Regulatory compliance** | Basic | Enhanced | Maximum |
 
 ## Requirements
 
@@ -119,6 +118,7 @@ When using customer-managed keys, you can configure the network access for your 
 [managed-identity-clusters]: use-managed-identity.md
 [keyvault-trusted-services]: /azure/key-vault/general/network-security#key-vault-firewall-enabled-trusted-services-only
 [keyvault-private-link]: /azure/key-vault/general/private-link-service
+[keyvault-key-rotation]: /azure/key-vault/keys/how-to-configure-key-rotation
 
 <!-- EXTERNAL LINKS -->
 [k8s-kms-provider]: https://kubernetes.io/docs/tasks/administer-cluster/kms-provider/
