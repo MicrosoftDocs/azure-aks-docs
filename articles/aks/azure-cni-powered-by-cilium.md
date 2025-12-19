@@ -50,6 +50,10 @@ For more information on AKS versioning and release timelines, see [Supported Kub
 
 Cilium enforces [network policies to allow or deny traffic between pods](./operator-best-practices-network.md#control-traffic-flow-with-network-policies). With Cilium, you don't need to install a separate network policy engine such as Azure Network Policy Manager or Calico.
 
+## Local Redirect Policy (LRP)
+LRP starts to be supported K8s v1.29 and up, Cilium v1.14 and up. For LRP to work with Advanced Container Networking Services (ACNS) - FQDN Filtering, the Cilium Network Policy egress labels need to match with node-local DNS cache pod labels.
+
+
 ## Limitations
 
 Azure CNI powered by Cilium currently has the following limitations:
@@ -62,6 +66,8 @@ Azure CNI powered by Cilium currently has the following limitations:
 - L7 policy isn't supported by `CiliumClusterwideNetworkPolicy` (CCNP).
 
 * Cilum uses Cilium identities as unique identity for provisioning endpoints, so high-churning workloads such as Spark jobs generate high count of Cilium identities. To avoid workloads hitting Cilium identity limits (65535), excluding Spark job's labels like '!spark-app-name !spark-app-selector' in the Cilium configmap can significantly reduce Cilium identity generation. For more details on Cilium identity exclusion rules, please check [the official Cilium label documentation](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels).
+
+* AKS Local DNS is not compatible with Advanced Container Networking Services (ACNS) - FQDN Filtering. 
 
 ## Considerations
 
