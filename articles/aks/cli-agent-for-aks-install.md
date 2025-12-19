@@ -18,8 +18,8 @@ For more information, see the [agentic CLI for AKS overview](./cli-agent-for-aks
 
 ## Prerequisites
 
-- The Azure CLI version 2.76 or later. To verify your Azure CLI version, use the [`az version`](/cli/azure/reference-index#az-version) command.
-- A large language model (LLM) API key. You must bring your own API key from one of the supported providers:
+- Use the Azure CLI version 2.76 or later. To verify your Azure CLI version, use the [`az version`](/cli/azure/reference-index#az-version) command.
+- Have a large language model (LLM) API key. You must bring your own API key from one of the supported providers:
   - Azure OpenAI (recommended).
   - OpenAI or other LLM providers compatible with OpenAPI specifications.
 - Ensure that you're signed in to the proper subscription by using the [`az account set`](/cli/azure/account#az-account-set) command.
@@ -79,14 +79,14 @@ Set up an Azure OpenAI resource by following the steps in the [Microsoft documen
 > [!NOTE]
 > For the deployment name, use the same name as the model name, such as gpt-4o or gpt-4o-mini, depending on the access. You can use any region where you have access and quota for the model.
 > In the deployment, select a token-per-minute (TPM) limit as high as possible. We recommend upward of a 1-million TPM for good performance.
-1. [Deploy the model](/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) that you plan to use in the Azure AI Foundry portal.
+1. [Deploy the model](/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) that you plan to use in the Microsoft Foundry portal.
 1. After deployment is finished, note your API base URL and API key.
 
    <img width="1713" height="817" alt="image" src="https://github.com/user-attachments/assets/400021fd-5604-4cd2-9faf-407145c52669" />
 
 The API version isn't the model version. You can use any API version that's available and supported on [this webpage](/azure/ai-foundry/openai/api-version-lifecycle).
 
-The Azure API base refers to the Azure OpenAI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Azure AI Foundry.
+The Azure API base refers to the Azure OpenAI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Foundry.
 
 ### Other LLM providers
 
@@ -118,9 +118,9 @@ We also support any OpenAI-compatible model. Check the documentation of the LLM 
     LLM configuration setup successfully.
     ```
 
-    The API key appears empty as you type, so make sure to use the correct API key. You can also skip the `init` experience by providing the values in the config file. The Azure API base refers to the Azure OpenAI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Azure AI Foundry. If the LLM configuration fails, double-check your API key or `AZURE_API_BASE`.
+    The API key appears empty as you type, so make sure to use the correct API key. You can also skip the `init` experience by providing the values in the configuration file. The Azure API base refers to the Azure OpenAI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Foundry. If the LLM configuration fails, double-check your API key or `AZURE_API_BASE`.
 
-    The `init` experience must be successfully completed for you to use the agentic CLI. If `init` fails, check the config file option or the troubleshooting docs.
+    The `init` experience must be successfully completed for you to use the agentic CLI. If `init` fails, check the configuration file option or the troubleshooting documentation.
 
 ---
 
@@ -130,7 +130,7 @@ You can now start using the agentic CLI for AKS to troubleshoot your clusters an
 
 ### Basic queries
 
-You can use the following example queries to get started with the agentic CLI for AKS:
+You can use the following example queries to get started with the agentic CLI for AKS.
 
 > [!NOTE]
 > If you have multiple models set up, you can specify the model to use for each query by using the `--model` parameter. For example, `--model=azure/gpt-4o`.
@@ -142,14 +142,14 @@ az aks agent "Why is coredns not working on my cluster?"
 az aks agent "Why is my cluster in a failed state?"
 ```
 
-By default, the experience uses interactive mode, where you can continue asking questions with retained context until you want to exit. To quit the experience, enter `/exit`.
+By default, the experience uses interactive mode, where you can continue asking questions with retained context until you want to leave. To leave the experience, enter `/exit`.
 
 ### Agentic CLI for AKS parameters
 
 | Parameter | Description |
 |-----------|-------------|
 | `--api-key` | API key to use for the LLM. (If not given, uses the environment variables `AZURE_API_KEY` and `OPENAI_API_KEY`.) |
-| `--config-file` | Path to the config file. Default: `/Users/<>/.azure/aksAgent.config`. |
+| `--config-file` | Path to the configuration file. Default: `/Users/<>/.azure/aksAgent.config`. |
 | `--max-steps` | Maximum number of steps that the LLM can take to investigate the issue. Default: 10. |
 | `--model` | Model to use for the LLM. |
 | `--name`, `-n` | Name of the managed cluster. |
@@ -169,16 +169,16 @@ The `--model` parameter determines which LLM and provider analyzes your cluster.
 
 ### Configuration file
 
-The LLM configuration is stored in a config file through the `az aks agent-init` experience. If the `init` command doesn't work, you can still use the config file by adding the variables manually. For an example config file, see [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml). You can find the default config file path through the `az aks agent --help` command.
+The LLM configuration is stored in a configuration file through the `az aks agent-init` experience. If the `init` command doesn't work, you can still use the configuration file by adding the variables manually. For an example configuration file, see [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml). You can find the default configuration file path through the `az aks agent --help` command.
 
-The config file currently supports the following parameters:
+The configuration file currently supports the following parameters:
 
 - Model
 - API key
 - Custom toolsets
 - Azure environment variables
 
-You can also use your config file by specifying the `--config-file` parameter with the path to your config file when you use the [`az aks agent`](/cli/azure/aks#az-aks-agent) command.
+You can also use your configuration file by specifying the `--config-file` parameter with the path to your configuration file when you use the [`az aks agent`](/cli/azure/aks#az-aks-agent) command.
 
 ```azurecli-interactive
 az aks agent "Check kubernetes pod resource usage" --config-file exampleconfig.yaml
@@ -190,16 +190,16 @@ The `az aks agent` has a set of subcommands that aid the troubleshooting experie
 
 | Command | Description |
 |---------|-------------|
-| `/exit` | Exit interactive mode. |
-| `/help` | Show help message with all commands. |
-| `/clear` | Clear screen and reset conversation context. |
+| `/exit` | Leave the interactive mode. |
+| `/help` | Show help messages with all commands. |
+| `/clear` | Clear the screen and reset the conversation context. |
 | `/tools` | Show available toolsets and their status. |
-| `/auto` | Toggle autodisplay of tool outputs after responses. |
+| `/auto` | Switch the display of tool outputs after responses. |
 | `/last` | Show all tool outputs from the last response. |
-| `/run` | Run a Bash command and optionally share with LLM. |
-| `/shell` | Drop into interactive shell, and then optionally share the session with LLM. |
-| `/context` | Show conversation context size and token count. |
-| `/show` | Show specific tool output in a scrollable view. |
+| `/run` | Run a Bash command and optionally share it with LLM. |
+| `/shell` | Drop into the interactive shell and then optionally share the session with LLM. |
+| `/context` | Show the conversation context size and token count. |
+| `/show` | Show the specific tool output in a scrollable view. |
 | `/feedback` | Provide feedback on the agent's response. |
 
 ### Disable interactive mode
@@ -213,7 +213,7 @@ az aks agent "Why are the pods in Crashloopbackoff in the kube-system namespace"
 
 ### Toolsets
 
-The agentic CLI for AKS includes prebuilt integrations for popular monitoring and observability tools through toolsets. Some integrations work automatically with Kubernetes, while others require API keys or configuration.
+The agentic CLI for AKS includes prebuilt integrations for popular monitoring and observability tools through toolsets. Some integrations work automatically with Kubernetes. Other integrations require API keys or configuration.
 
 For AKS, there are specific toolsets that help with the troubleshooting experience. These toolsets appear in the output at the start of the experience:
 

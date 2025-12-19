@@ -18,13 +18,13 @@ This article provides guidance on troubleshooting common issues with the agentic
 
 If you run into any issues when you use the agentic CLI for AKS, try the following troubleshooting steps:
 
-- Check that your large language model (LLM) provider is configured correctly. If you used `az aks agent-init` to set your LLM parameters, check your config file at `path/to/aksAgent.yaml`. If you use a custom config file, ensure that your parameters are set correctly.
+- Check that your large language model (LLM) provider is configured correctly. If you used `az aks agent-init` to set your LLM parameters, check your configuration file at `path/to/aksAgent.yaml`. If you use a custom configuration file, ensure that your parameters are set correctly.
 - Check if you're using the right model by using the `--model` parameter (if needed for Azure OpenAI).
 - Confirm cluster connectivity by using the `kubectl cluster-info` command.
 - If you see requests retrying to `/chat/completions` in the responses, you're throttled by the token-per-minute (TPM) limits from the LLM. Increase the TPM limit or [apply for more quota](/azure/ai-foundry/openai/how-to/quota).
 - If outputs vary, it might be because of LLM response variability or intermittent Model Context Protocol (MCP) server connections.
 - Ensure that the deployment name is the same as the model name in the Azure OpenAI deployments.
-- If the `aks-agent` installation is failing, try to uninstall and reinstall the latest Azure CLI.
+- If the `aks-agent` installation is failing, try to uninstall the Azure CLI and reinstall the latest version.
 
 ## Common issues and solutions
 
@@ -54,7 +54,7 @@ Try reinstalling the Azure CLI client.
 
 ### Error: litellm.AuthenticationError: AzureException AuthenticationError - Access denied due to invalid subscription key
 
-This error is likely because of an issue with the variables setup for the Azure OpenAI deployment. Check the config file, your environment variables, and the flags that you pass when you invoke the command. If there's a conflict, the tool uses the flags first, the config file next, and the environment variables as fallback.
+This error is likely because of an issue with the variables setup for the Azure OpenAI deployment. Check the configuration file, your environment variables, and the flags that you pass when you invoke the command. If there's a conflict, the tool uses the flags first, the configuration file next, and the environment variables as fallback.
 
 ## Get help
 

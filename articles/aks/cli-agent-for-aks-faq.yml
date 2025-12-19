@@ -43,7 +43,9 @@ sections:
 
           The agentic CLI for AKS isn't meant to be used as a generic coding or AI agent beyond the scope of AKS interactions. It can't access the internet to answer generic questions.
 
-          The agentic CLI for AKS is optimized for AKS-specific scenarios. It integrates with tools like kubectl, the Azure CLI, Inspektor Gadget, and Azure Monitor, but it can make mistakes. The agent might occasionally miss subtle signals, misinterpret noisy telemetry, or suggest mitigations that require human validation. For example, it might misattribute a Domain Name System (DNS) failure to a network policy when the root cause is a misconfigured upstream DNS server. This scenario might occur especially if telemetry is incomplete or permissions are restricted. To avoid automation bias, you should treat the agent's output as a helpful starting point and not a final verdict. It excels at surfacing likely causes and guiding investigation, but human oversight is essential. Human review is necessary in complex or high-stakes environments.
+          The agentic CLI for AKS is optimized for AKS-specific scenarios. It integrates with tools like kubectl, the Azure CLI, Inspektor Gadget, and Azure Monitor, but it can make mistakes. The agent might occasionally miss subtle signals, misinterpret noisy telemetry, or suggest mitigations that require human validation. For example, it might misattribute a Domain Name System (DNS) failure to a network policy when the root cause is a misconfigured upstream DNS server. This scenario might occur especially if telemetry is incomplete or permissions are restricted. 
+          
+          To avoid automation bias, you should treat the agent's output as a helpful starting point and not a final verdict. It excels at surfacing likely causes and guiding investigation, but human oversight is essential. Human review is necessary in complex or high-stakes environments.
 
           As for AI models, we recommend that you use an Azure OpenAI deployed model, such as GPT4o or GPTo3. You can also use one directly from the OpenAI API platform. You can use any LLM model provider supported by Open API specifications, such as Anthropic and Gemini.
       
@@ -53,8 +55,12 @@ sections:
         answer: |
           The agentic CLI for AKS is being evaluated through a combination of internal testing and programmatic evaluations designed to ensure that its diagnostic capabilities are accurate, relevant, and meaningful.
 
-          For programmatic evaluations, we measured standard responsible AI metrics such as groundedness, UPIA and XPIA jailbreak, harmful content, and conversation quality (such as coherence and fluency). These tests help us identify gaps in reasoning, tooling integration, and prompt execution. A core metric for success is the accuracy of the agent's diagnosis and the relevance of its recommendations. Did the agent correctly identify the root cause and suggest actionable, context-aware mitigations?
+          For programmatic evaluations, we measured standard responsible AI metrics such as groundedness, UPIA and XPIA jailbreak, harmful content, and conversation quality (such as coherence and fluency). 
+          
+          These tests help us identify gaps in reasoning, tooling integration, and prompt execution. A core metric for success is the accuracy of the agent's diagnosis and the relevance of its recommendations. Did the agent correctly identify the root cause and suggest actionable, context-aware mitigations?
+          
           We conduct internal bug bashes and red teams to rigorously test the agent's behavior across various cases. We check for node health degradation, DNS failures, upgrade disruptions, and pod scheduling problems.
+          
           We recognize the dynamic nature of agentic-AI interactions, and we welcome your feedback as part of the preview. You can share feedback directly with us at _aksagentcli@service.microsoft.com_. You can also [open a GitHub issue](https://github.com/Azure/agentic-cli-for-aks/issues).
       
       - question: |
@@ -77,9 +83,13 @@ sections:
           What operational factors and settings allow for effective and responsible use of the agentic CLI for AKS?
 
         answer: |
-          To use the agentic CLI for AKS effectively and responsibly, several operational settings play a key role. The agent is designed to operate in read-only mode by default, which ensures safe diagnostics without making changes to the cluster. When write operations are needed, such as deploying debug pods or executing remediation steps, they require explicit user approval to maintain user control and minimize unintended effects. The agent runs locally on your machine and also supports bring-your-own AI providers. For this reason, you can configure your own LLM API keys. This setup ensures that you can bring your organization's approved AI providers and endpoints. All data processing happens locally to preserve data privacy and align with enterprise security standards.
+          To use the agentic CLI for AKS effectively and responsibly, several operational settings play a key role. The agent is designed to operate in read-only mode by default, which ensures safe diagnostics without making changes to the cluster. When write operations are needed, such as deploying debug pods or executing remediation steps, they require explicit user approval to maintain user control and minimize unintended effects. 
+          
+          The agent runs locally on your machine and also supports bring-your-own AI providers. For this reason, you can configure your own LLM API keys. This setup ensures that you can bring your organization's approved AI providers and endpoints. All data processing happens locally to preserve data privacy and align with enterprise security standards.
 
-          The agent also offers configurable verbosity settings, which you can use to toggle between concise summaries and detailed diagnostic outputs depending on your needs. This flexibility supports the gathering of both quick insights and full transparency into the agent's reasoning and tool execution. Integration with Azure identity and RBAC further ensures that the agent accesses only resources that you're authorized to view. This restriction simplifies setup and enforces secure access boundaries. Together, these settings create a secure, privacy-conscious, and user-controlled environment for troubleshooting AKS clusters with AI assistance.
+          The agent also offers configurable verbosity settings, which you can use to toggle between concise summaries and detailed diagnostic outputs depending on your needs. This flexibility supports the gathering of both quick insights and full transparency into the agent's reasoning and tool execution. 
+          
+          Integration with Azure identity and RBAC further ensures that the agent accesses only resources that you're authorized to view. This restriction simplifies setup and enforces secure access boundaries. Together, these settings create a secure, privacy-conscious, and user-controlled environment for troubleshooting AKS clusters with AI assistance.
       
       - question: |
           How can I provide feedback or get help with the agentic CLI for AKS?
@@ -112,9 +122,13 @@ sections:
         answer: |
           When you use the agentic CLI for AKS with plugins, several types of issues might arise that can affect the reliability or accuracy of the troubleshooting experience.
           
-          One common challenge is the incorrect invocation of tools because of misconfigured prompts. Plugins often rely on prompt templates to guide the AI's reasoning and tool selection. Even small errors in prompt logic or structure can lead to the wrong tools being triggered or the right tools being used in the wrong context. The result might be misleading diagnostics or incomplete investigations. Another risk is the generation of fabricated or incorrect outputs, especially when plugins return incomplete, outdated, or ambiguous data. In such cases, the AI might attempt to "fill in the gaps" with plausible-sounding but incorrect explanations. Errors can also occur when telemetry is missing or when the plugin is used in a cluster configuration it doesn't support. For example, a private cluster might lack access to certain APIs or tools.
+          One common challenge is the incorrect invocation of tools because of misconfigured prompts. Plugins often rely on prompt templates to guide the AI's reasoning and tool selection. Even small errors in prompt logic or structure can lead to the wrong tools being triggered or the right tools being used in the wrong context. The result might be misleading diagnostics or incomplete investigations. 
+          
+          Another risk is the generation of fabricated or incorrect outputs, especially when plugins return incomplete, outdated, or ambiguous data. In such cases, the AI might attempt to "fill in the gaps" with plausible-sounding but incorrect explanations. Errors can also occur when telemetry is missing or when the plugin is used in a cluster configuration it doesn't support. For example, a private cluster might lack access to certain APIs or tools.
 
-          To mitigate these risks, the agentic CLI for AKS includes several safeguards. Verbose logging and error reporting can help you trace exactly what tools were invoked, what data was returned, and how the AI interpreted it. The reports make it easier to spot and correct issues. You can also manually override or disable specific plugins if you suspect they're causing problems or returning unreliable data. Finally, clear documentation and community support are essential for plugin development and maintenance. Well-documented plugins with examples, version compatibility notes, and known limitations help you understand how to use them responsibly and contribute improvements when needed. Using the latest generation LLM/reasoning models from leading AI providers also reduces the risk of incorrect information.
+          To mitigate these risks, the agentic CLI for AKS includes several safeguards. Verbose logging and error reporting can help you trace exactly what tools were invoked, what data was returned, and how the AI interpreted it. The reports make it easier to spot and correct issues. You can also manually override or disable specific plugins if you suspect they're causing problems or returning unreliable data. 
+          
+          Finally, clear documentation and community support are essential for plugin development and maintenance. Well-documented plugins with examples, version compatibility notes, and known limitations help you understand how to use them responsibly and contribute improvements when needed. Using the latest generation LLM/reasoning models from leading AI providers also reduces the risk of incorrect information.
 
 additionalContent: |
 

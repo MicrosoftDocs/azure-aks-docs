@@ -41,7 +41,7 @@ The agentic CLI for AKS uses AI to help you troubleshoot complex issues by provi
 
 To maximize the effectiveness of the agentic CLI for AKS, consider the following best practices:
 
-- **Start with broad diagnostic queries:** Begin with general questions like, What's wrong with my cluster? Let the AI guide you to specific issues.
+- **Start with broad diagnostic queries:** Begin with general questions, like "What's wrong with my cluster?" Let the AI guide you to specific issues.
 - **Use descriptive problem statements:** Provide context about symptoms that you observe for better AI analysis.
 - **Review AI recommendations carefully:** Always understand the suggested solutions before you implement them.
 - **Use historical analysis:** Ask about patterns and trends in cluster behavior over time.
