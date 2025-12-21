@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.author: davidsmatlak
 author: davidsmatlak
 ms.subservice: aks-upgrade
-ms.date: 04/06/2025
+ms.date: 12/19/2025
 ms.custom: aks-upgrade, automation, innovation-engine
 # Customer intent: "As a DevOps engineer, I want to enable automatic upgrades for my Kubernetes clusters, so that I can ensure my environment remains secure and up to date without manual intervention."
 ---
@@ -15,7 +15,7 @@ ms.custom: aks-upgrade, automation, innovation-engine
 > [!div class="nextstepaction"]
 > [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321740)
 
-Part of the AKS cluster lifecycle involves performing periodic upgrades to the latest Kubernetes version. It’s important you apply the latest security releases or upgrade to get the latest features. Before learning about auto-upgrade, make sure you understand the [AKS cluster upgrade fundamentals][upgrade-aks-cluster].
+Part of the AKS cluster lifecycle involves performing periodic upgrades to the latest Kubernetes version. It's important you apply the latest security releases or upgrade to get the latest features. Before learning about auto-upgrade, make sure you understand the [AKS cluster upgrade fundamentals][upgrade-aks-cluster].
 
 > [!NOTE]
 > Any upgrade operation, whether performed manually or automatically, upgrades the node image version if it's not already on the latest version. The latest version is contingent on a full AKS release and can be determined by visiting the [AKS release tracker][release-tracker].
@@ -36,7 +36,7 @@ AKS also initiates auto-upgrades for unsupported clusters. When a cluster in an 
 
 ## Cluster auto-upgrade limitations
 
-If you’re using cluster auto-upgrade, you can no longer upgrade the control plane first, and then upgrade the individual node pools. Cluster auto-upgrade always upgrades the control plane and the node pools together. You can't upgrade the control plane only. Running the `az aks upgrade --control-plane-only` command raises the following error: `NotAllAgentPoolOrchestratorVersionSpecifiedAndUnchanged: Using managed cluster api, all Agent pools' OrchestratorVersion must be all specified or all unspecified. If all specified, they must be stay unchanged or the same with control plane.`
+If you're using cluster auto-upgrade, you can no longer upgrade the control plane first, and then upgrade the individual node pools. Cluster auto-upgrade always upgrades the control plane and the node pools together. You can't upgrade the control plane only. Running the `az aks upgrade --control-plane-only` command raises the following error: `NotAllAgentPoolOrchestratorVersionSpecifiedAndUnchanged: Using managed cluster api, all Agent pools' OrchestratorVersion must be all specified or all unspecified. If all specified, they must be stay unchanged or the same with control plane.`
 
 If using the `node-image` (legacy and not to be used) cluster auto-upgrade channel or the `NodeImage` node image auto-upgrade channel, Linux [unattended upgrades][unattended-upgrades] are disabled by default.
 
@@ -52,29 +52,29 @@ The following upgrade channels are available:
 | `patch`| automatically upgrades the cluster to the latest supported patch version when it becomes available while keeping the minor version the same.| For example, if a cluster runs version *1.17.7*, and versions *1.17.9*, *1.18.4*, *1.18.6*, and *1.19.1* are available, the cluster upgrades to *1.17.9*.|
 | `stable`| automatically upgrades the cluster to the latest supported patch release on minor version *N-1*, where *N* is the latest supported minor version.| For example, if a cluster runs version *1.17.7* and versions *1.17.9*, *1.18.4*, *1.18.6*, and *1.19.1* are available, the cluster upgrades to *1.18.6*.|
 | `rapid`| automatically upgrades the cluster to the latest supported patch release on the latest supported minor version.| In cases where the cluster's Kubernetes version is an *N-2* minor version, where *N* is the latest supported minor version, the cluster first upgrades to the latest supported patch version on *N-1* minor version. For example, if a cluster runs version *1.17.7* and versions *1.17.9*, *1.18.4*, *1.18.6*, and *1.19.1* are available, the cluster first upgrades to *1.18.6*, then upgrades to *1.19.1*.|
-| `node-image`(legacy)| automatically upgrades the node image to the latest version available.| Microsoft provides patches and new images for image nodes frequently (usually weekly), but your running nodes don't get the new images unless you do a node image upgrade. Turning on the node-image channel automatically updates your node images whenever a new version is available. If you use this channel, Linux [unattended upgrades] are disabled by default. Node image upgrades work on patch versions that are deprecated, so long as the minor Kubernetes version is still supported. This channel is no longer recommended and is planned for deprecation in future. For an option that can automatically upgrade node images, see the `NodeImage` channel in [node image auto-upgrade][node-image-auto-upgrade]. |
+| `node-image`(legacy)| automatically upgrades the node image to the latest version available.| Microsoft provides patches and new images for image nodes frequently (weekly), but your running nodes don't get the new images unless you do a node image upgrade. Turning on the node-image channel automatically updates your node images whenever a new version is available. If you use this channel, Linux [unattended upgrades] are disabled by default. Node image upgrades work on patch versions that are deprecated, so long as the minor Kubernetes version is still supported. This channel is no longer recommended and is planned for deprecation in future. For an option that can automatically upgrade node images, see the `NodeImage` channel in [node image auto-upgrade][node-image-auto-upgrade]. |
 
 > [!NOTE]
 >
 > Keep the following information in mind when using cluster auto-upgrade:
 >
-> * Cluster auto-upgrade only updates to GA versions of Kubernetes and doesn't update to preview versions.
+> - Cluster auto-upgrade only updates to GA versions of Kubernetes and doesn't update to preview versions.
 >
-> * With AKS, you can create a cluster without specifying the exact patch version. When you create a cluster without designating a patch, the cluster runs the minor version's latest GA patch. To learn more, see [AKS support window][supported-kubernetes-versions].
+> - With AKS, you can create a cluster without specifying the exact patch version. When you create a cluster without designating a patch, the cluster runs the minor version's latest GA patch. To learn more, see [AKS support window][supported-kubernetes-versions].
 >
-> * Auto-upgrade requires the cluster's Kubernetes version to be within the [AKS support window][supported-kubernetes-versions], even if using the `node-image` channel.
+> - Auto-upgrade requires the cluster's Kubernetes version to be within the [AKS support window][supported-kubernetes-versions], even if using the `node-image` channel.
 >
-> * If you're using the preview API `11-02-preview` or later, and you select the `node-image` cluster auto-upgrade channel, the [node image auto-upgrade channel][node-image-auto-upgrade] automatically sets to `NodeImage`.
+> - If you're using the preview API `11-02-preview` or later, and you select the `node-image` cluster auto-upgrade channel, the [node image auto-upgrade channel][node-image-auto-upgrade] automatically sets to `NodeImage`.
 >
-> * Each cluster can only be associated with a single auto-upgrade channel. This is because your specified channel determines the Kubernetes version that runs on the cluster.
->   
-> * If your cluster has no auto-upgrade channel and you enable it for LTS *(Long-Term Support)*, it will default to a `patch` auto-upgrade channel.
+> - Each cluster can only be associated with a single auto-upgrade channel. The reason is because your specified channel determines the Kubernetes version that runs on the cluster.
+>
+> - If your cluster has no auto-upgrade channel and you enable it for Long-Term Support (LTS), the cluster defaults to a `patch` auto-upgrade channel.
 
 ## Use cluster auto-upgrade with a new AKS cluster
 
 ### [Azure CLI](#tab/azure-cli)
 
-* Set the auto-upgrade channel when creating a new cluster using the [`az aks create`][az-aks-create] command and the `auto-upgrade-channel` parameter.
+Set the auto-upgrade channel when creating a new cluster using the [`az aks create`][az-aks-create] command and the `auto-upgrade-channel` parameter.
 
 ```text
 export RANDOM_SUFFIX=$(openssl rand -hex 3)
@@ -86,11 +86,11 @@ az aks create --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME --auto-u
 ### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
-2. In the **Basics** tab, under **Cluster details**, select the desired auto-upgrade channel from the **Automatic upgrade** dropdown. We recommend selecting the **Enabled with patch (recommended)** option.
+1. In the **Basics** tab, under **Cluster details**, select the desired auto-upgrade channel from the **Automatic upgrade** dropdown. We recommend selecting the **Enabled with patch (recommended)** option.
 
-    :::image type="content" source="./media/auto-upgrade-cluster/portal-autoupgrade-new-cluster.png" alt-text="The screenshot of the create blade for an AKS cluster in the Azure portal. The automatic upgrade field shows 'Enabled with patch (recommended)' selected.":::
+    :::image type="content" source="./media/auto-upgrade-cluster/portal-autoupgrade-new-cluster.png" alt-text="Screenshot of the automatic upgrade field that shows Enabled with patch (recommended) selected.":::
 
-3. Complete the remaining steps to create the cluster.
+1. To create the cluster, complete the remaining steps.
 
 ---
 
@@ -98,7 +98,7 @@ az aks create --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME --auto-u
 
 ### [Azure CLI](#tab/azure-cli)
 
-* Set the auto-upgrade channel on an existing cluster using the [`az aks update`][az-aks-update] command with the `auto-upgrade-channel` parameter.
+Set the auto-upgrade channel on an existing cluster using the [`az aks update`][az-aks-update] command with the `auto-upgrade-channel` parameter.
 
 ```azurecli-interactive
 az aks update --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME --auto-upgrade-channel stable
@@ -120,17 +120,17 @@ Results:
 
 ### [Azure portal](#tab/azure-portal)
 
-1. In the Azure portal, navigate to your AKS cluster.
-2. In the service menu, under **Settings**, select **Cluster configuration**.
-3. Under **Upgrade** > **Kubernetes version**, select **Upgrade version**.
+1. In the Azure portal, go to your AKS cluster.
+1. In the service menu, under **Settings**, select **Upgrades**.
+1. Under **Upgrade** > **Kubernetes version**, select **Upgrade version**.
 
-    :::image type="content" source="./media/auto-upgrade-cluster/portal-autoupgrade-existing-cluster.png" alt-text="The screenshot of the upgrade blade for an AKS cluster in the Azure portal.":::
+    :::image type="content" source="./media/auto-upgrade-cluster/portal-autoupgrade-existing-cluster.png" alt-text="Screenshot of the upgrade cluster page for an AKS cluster in the Azure portal.":::
 
-4. On the **Upgrade Kubernetes version** page, select the desired auto-upgrade channel from the **Automatic upgrade** dropdown. We recommend selecting the **Enabled with patch (recommended)** option.
+1. On the **Upgrade Kubernetes version** page, select the desired auto-upgrade channel from the **Automatic upgrade** dropdown. We recommend selecting the **Enabled with patch (recommended)** option.
 
-    :::image type="content" source="./media/auto-upgrade-cluster/portal-autoupgrade-upgrade-page-existing-cluster.png" alt-text="The screenshot of the Upgrade Kubernetes page for an AKS cluster in the Azure portal.":::
+    :::image type="content" source="./media/auto-upgrade-cluster/portal-autoupgrade-upgrade-page-existing-cluster.png" alt-text="Screenshot of the Upgrade Kubernetes version page for an AKS cluster in the Azure portal.":::
 
-5. Select **Save**.
+1. Select **Save**.
 
 ---
 
@@ -147,12 +147,12 @@ For more information on how to set a maintenance window with Planned Maintenance
 
 Use the following best practices to help maximize your success when using auto-upgrade:
 
-* To ensure your cluster is always in a supported version (i.e within the N-2 rule), choose either `stable` or `rapid` channels.
-* If you're interested in getting the latest patches as soon as possible, use the `patch` channel. The `node-image` channel is a good fit if you want your agent pools to always run the most recent node images.
-* To automatically upgrade node images while using a different cluster upgrade channel, consider using the [node image auto-upgrade][node-image-auto-upgrade] `NodeImage` channel.
-* Follow [Operator best practices][operator-best-practices-scheduler].
-* Follow [PDB best practices][pdb-best-practices].
-* For upgrade troubleshooting information, see the [AKS troubleshooting documentation][aks-troubleshoot-docs].
+- To ensure your cluster is always in a supported version, for example within the N-2 rule, choose either `stable` or `rapid` channels.
+- If you're interested in getting the latest patches as soon as possible, use the `patch` channel. The `node-image` channel is a good fit if you want your agent pools to always run the most recent node images.
+- To automatically upgrade node images while using a different cluster upgrade channel, consider using the [node image auto-upgrade][node-image-auto-upgrade] `NodeImage` channel.
+- Follow [Operator best practices][operator-best-practices-scheduler].
+- Follow [PodDisruptionBudget (PDB) best practices][pdb-best-practices].
+- For upgrade troubleshooting information, see the [AKS troubleshooting documentation][aks-troubleshoot-docs].
 
 For a detailed discussion of upgrade best practices and other considerations, see [AKS patch and upgrade guidance][upgrade-operators-guide].
 
