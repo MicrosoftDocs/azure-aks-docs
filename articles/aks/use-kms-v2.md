@@ -1,16 +1,19 @@
 ---
-title: Migrate to Key Management Service (KMS) v2 in Azure Kubernetes Service (AKS)
+title: Migrate to Key Management Service (KMS) v2 in Azure Kubernetes Service (AKS) (legacy)
 description: Learn how to migrate to KMS v2 for clusters with versions older than 1.27.
-ms.date: 09/26/2024
+ms.date: 12/22/2025
 ms.subservice: aks-security
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-author: davidsmatlak
-ms.author: davidsmatlak
+author: shashankbarsin
+ms.author: shasb
 # Customer intent: As a Kubernetes administrator, I want to migrate to KMS v2 so I don't face as many limitations with my encryption setup.
 ---
 
-# Migrate to Key Management Service (KMS) v2 in Azure Kubernetes Service (AKS)
+# Migrate to Key Management Service (KMS) v2 in Azure Kubernetes Service (AKS) (legacy)
+
+> [!IMPORTANT]
+> This article applies to clusters using the legacy KMS experience that need to migrate from KMS v1 to KMS v2. For clusters running Kubernetes version 1.33 or later, we recommend using the new [KMS data encryption](kms-data-encryption.md) experience, which offers platform-managed keys, customer-managed keys with automatic key rotation, and a simplified configuration experience.
 
 In this article, you learn how to migrate to KMS v2 for clusters with versions older than 1.27. Beginning in AKS version 1.27, turning on the KMS feature configures KMS v2. With KMS v2, you aren't limited to the 2,000 secrets that earlier versions support. For more information, see [KMS v2 improvements](https://kubernetes.io/blog/2023/05/16/kms-v2-moves-to-beta/).
 
