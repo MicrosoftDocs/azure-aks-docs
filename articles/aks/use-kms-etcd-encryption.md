@@ -1,7 +1,7 @@
 ---
 title: Use Key Management Service (KMS) Etcd Encryption in Azure Kubernetes Service (AKS) (legacy)
 description: Learn how to use Key Management Service (KMS) etcd encryption for a public or private key vault with AKS using the legacy KMS experience.
-ms.date: 12/19/2025
+ms.date: 12/22/2025
 ms.subservice: aks-security
 ms.topic: how-to
 ms.service: azure-kubernetes-service
