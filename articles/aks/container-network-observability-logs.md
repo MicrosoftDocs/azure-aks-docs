@@ -20,7 +20,7 @@ ms.date:  11/11/2025
 >
 > - **CRD**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
 > - **CLI flag**: `--enable-retinanetworkflowlog` → `--enable-container-network-logs`
-> - **Log Analytics table**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
+> - **Log Analytics table**: `RetinaNetworkFlowLogs` → `ContainerNetworkLogs`
 > 
 > Action items for existing users to enable new naming
 >
@@ -60,7 +60,7 @@ ms.date:  11/11/2025
 >
 > [!NOTE]
 > - Previously collected data stays in your workspace in old table RetinaNetworkFlowLogs.
-> - After re-enabling, allow a short delay before new data appears in new table ContainerNetworkLog.
+> - After re-enabling, allow a short delay before new data appears in new table ContainerNetworkLogs.
 
 Container network logs in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) for Azure Kubernetes Service (AKS) provide comprehensive, context-rich visibility into every network flow within your cluster. While metrics tell you *what* is happening in your network (such as bandwidth usage or error rates), container network logs tell you *why* by capturing the complete story of each connection—including who initiated it, what protocols were used, and whether the traffic was allowed or blocked.
 
