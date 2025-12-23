@@ -367,7 +367,7 @@
       - name: Upgrade node OS images
         href: upgrade-node-image.md
       - name: Customize node surge upgrade
-        href: uupgrade-aks-node-pools-rolling.md#customize-node-surge
+        href: upgrade-aks-node-pools-rolling.md#customize-node-surge
       - name: Process node OS updates with kured
         href: upgrade-node-image-kured.md
   - name: Automate upgrades
