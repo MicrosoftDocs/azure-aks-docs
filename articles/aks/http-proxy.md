@@ -82,8 +82,8 @@ Example input:
 
 ```json
 {
-  "httpProxy": "http://myproxy.server.com:8080/", 
-  "httpsProxy": "https://myproxy.server.com:8080/", 
+  "httpProxy": "http://myproxy.server.com:8080", 
+  "httpsProxy": "https://myproxy.server.com:8080", 
   "noProxy": [
     "localhost",
     "127.0.0.1"
