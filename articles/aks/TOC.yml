@@ -365,7 +365,7 @@
       - name: Upgrade node OS images
         href: upgrade-node-image.md
       - name: Customize node surge upgrade
-        href: upgrade-aks-control-plane.md#surge-node-capacity-planning
+        href: uupgrade-aks-node-pools-rolling.md#customize-node-surge
       - name: Process node OS updates with kured
         href: upgrade-node-image-kured.md
   - name: Automate upgrades
@@ -632,7 +632,7 @@
           - name: Use API Server VNet integration
             href: api-server-vnet-integration.md
           - name: Private endpoint
-            href: private-clusters.md#use-a-private-endpoint-connection
+            href: private-cluster-connect.md?pivots=private-endpoint
           - name: Diagnose and solve UDP packet drops
             href: troubleshoot-udp-packet-drops.md
           - name: Container Network Security
