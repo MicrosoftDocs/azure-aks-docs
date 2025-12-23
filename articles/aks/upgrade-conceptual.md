@@ -1,7 +1,7 @@
 ---
 title: How Azure Kubernetes Service cluster upgrades work
 description: Learn the step-by-step process of how AKS performs rolling upgrades to minimize disruption to your running workloads.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.subservice: aks-upgrade
 ms.custom: azure-kubernetes-service
 ms.date: 09/18/2025
