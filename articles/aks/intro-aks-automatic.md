@@ -98,7 +98,7 @@ To learn more about AKS Automatic, follow the quickstart to create a cluster.
 [nrg-lockdown]: node-resource-group-lockdown.md
 [node-auto-repair]: node-auto-repair.md
 [cluster-upgrades]: auto-upgrade-cluster.md
-[cluster-upgrade-channels]: auto-upgrade-cluster.md?tabs=azure-cli#cluster-auto-upgrade-channels
+[cluster-upgrade-channels]: auto-upgrade-cluster.md#cluster-autoupgrade-channels
 [stop-cluster-upgrade-api-breaking-changes]: stop-cluster-upgrade-api-breaking-changes.md
 [planned-maintenance]: planned-maintenance.md
 [azure-rbac-for-k8s-auth]: manage-azure-rbac.md
