@@ -20,7 +20,7 @@ This article is intended for users of a managed namespace who need to discover a
 ## Before you begin 
 
 * You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
-* You need an existing Managed Fleet Namespace. If you don't have one, see [create a multi-cluster Managed Fleet Namespace](./howto-managed-namespaces.md).
+* You need an existing Managed Fleet Namespace. If you don't have one, see [create and configure Managed Fleet Namespaces](./howto-managed-namespaces.md).
 * Understand the Managed Fleet Namespace concept by [reading the overview](./concepts-fleet-managed-namespace.md).
 
 :::zone target="docs" pivot="azure-cli"
@@ -78,7 +78,7 @@ Always          Delete         "aaaaaaaa-0b0b-1c1c-2d2d-333333333333   westus2  
 
 ## View a Managed Fleet Namespace's configuration
 
-View a specific multi-cluster managed namespace's details by using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
+View a specific Managed Fleet Namespace's details by using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
 
 ```azurecli-interactive
 az fleet namespace show \ 

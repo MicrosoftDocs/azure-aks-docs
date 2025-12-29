@@ -69,7 +69,7 @@ If you're looking to view or access existing Managed Fleet Namespaces you have a
 
 ## Create a new Managed Fleet Namespace 
 
-Create a new multi-cluster managed namespace using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command.
+Create a new Managed Fleet Namespace using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command.
 
 ```azurecli-interactive
     az fleet namespace create \
@@ -144,7 +144,7 @@ az fleet namespace create \
 
 ## View a Managed Fleet Namespace's configuration
 
-View a specific multi-cluster managed namespace's details by using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
+View a specific Managed Fleet Namespace's details by using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
 
 ```azurecli-interactive
 az fleet namespace show \ 
@@ -164,7 +164,7 @@ Always          Delete         "aaaaaaaa-0b0b-1c1c-2d2d-333333333333   westus2  
 
 ## Delete a Managed Fleet Namespace
 
-Delete a multi-cluster managed namespace using the [`az fleet namespace delete`](/cli/azure/fleet/namespace#az-fleet-namespace-delete) command.
+Delete a Managed Fleet Namespace using the [`az fleet namespace delete`](/cli/azure/fleet/namespace#az-fleet-namespace-delete) command.
 
 ```azurecli-interactive
 az fleet namespace delete \
@@ -173,8 +173,10 @@ az fleet namespace delete \
     --name my-managed-namespace 
 ```
 
-> [!IMPORTANT]
-> RBAC roles placed on the managed namespace are deleted when the managed namespace is deleted, regardless of the delete policy configuration.
+> [!WARNING]
+> Deleting a Fleet Managed Namespace with a `DeletePolicy` set to `delete` is a permanent action. If you are unsure, you should update the policy to `keep` to keep the namespace.
+>
+> Azure RBAC assignments are alawys deleted to avoid dangling permissions.
 
 :::zone-end
 
