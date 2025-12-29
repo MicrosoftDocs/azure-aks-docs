@@ -99,7 +99,7 @@ Always          Delete         "aaaaaaaa-0b0b-1c1c-2d2d-333333333333   westus2  
 
 :::zone target="docs" pivot="azure-portal"
 
-## View the Managed Fleet Namespaces you can access
+## View Managed Fleet Namespaces you can access
 
 You can locate Managed Fleet Namespace from within Fleet Manager, or via Kubernetes center.
 
@@ -119,11 +119,17 @@ Starting in Kubernetes center:
 
 :::image type="content" source="./media/managed-namespace/view-managed-fleet-namespace-02.png" alt-text="Screenshot of the Azure portal showing the list of Managed namespaces in Kubernetes center filtered to Managed Fleet Namespace." lightbox="./media/managed-namespace/view-managed-fleet-namespace-02.png":::
 
-## View a Managed Fleet Namespace's configuration
+## View a Managed Fleet Namespace configuration
 
 View a Managed Fleet Namespace's configuration on its overview by selecting the namespace from the list.
 
 :::image type="content" source="./media/managed-namespace/view-managed-fleet-namespace-overview.png" alt-text="Screenshot of the Azure portal showing the overview screen for a Managed Fleet Namespace." lightbox="./media/managed-namespace/view-managed-fleet-namespace-overview.png":::
+
+## View Managed Fleet Namespace member clusters
+
+From the Managed Fleet Namespace overview select **Member clusters** on the left navigation to view the member clusters the namespace is distributed to.
+
+:::image type="content" source="./media/managed-namespace/view-managed-fleet-namespace-member-clusters.png" alt-text="Screenshot of the Azure portal showing the member clusters that host the selected Managed Fleet Namespace." lightbox="./media/managed-namespace/view-managed-fleet-namespace-member-clusters.png"::: 
 
 :::zone-end
 
@@ -152,8 +158,8 @@ az fleet namespace get-credentials \
 
 ## Next steps
 
-- Understand the concept of Managed Fleet Namespaces by [reading the overview](./concepts-fleet-managed-namespace.md).
-- Learn how to [create and use a multi-cluster managed namespace](./howto-managed-namespaces.md).
+* Understand the concept of Managed Fleet Namespaces by [reading the overview](./concepts-fleet-managed-namespace.md).
+* Learn how to [create and use a Managed Fleet Namespace](./howto-managed-namespaces.md).
 
 <!-- INTERNAL LINKS -->
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
