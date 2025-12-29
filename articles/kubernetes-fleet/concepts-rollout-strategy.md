@@ -242,9 +242,9 @@ Each stage in the strategy can specify:
 
 * **Label selector** to determine which clusters belong to the stage
 * **Sorting order** for clusters within the stage using `sortingLabelKey` (optional - clusters are sorted alphabetically by name if not specified)
-* **Before-stage tasks** approval requirement (optional, up to 1 task per stage)
-* **After-stage tasks** either timed wait or approval requirement (optional, up to 2 tasks per stage, maximum one of each type)
-* **Max concurrency** to determine the maximum number of clusters to update concurrently within the stage (optional) 
+* **Before-stage tasks** approval requirement (optional - up to 1 task per stage)
+* **After-stage tasks** either timed wait or approval requirement (optional - up to 2 tasks per stage, maximum one of each type)
+* **Max concurrency** to determine the maximum number of clusters to update concurrently within the stage (optional - can be an absolute number >= 1 or a percentage from 1 to 100, fractional results are rounded down with a minimum of 1) 
 
 #### ClusterStagedUpdateRun (cluster-scoped)
 
@@ -254,10 +254,10 @@ kind: ClusterStagedUpdateRun
 metadata:
   name: my-app-rollout
 spec:
-  placementName: my-app-placement # ClusterResourcePlacement name the update run is applied to.
-  resourceSnapshotIndex: "0" # ClusterResourceSnapshot index of the selected resources to be updated across clusters (optional). If not stated, will use latest resource snapshot.
-  stagedRolloutStrategyName: three-stage-strategy # The name of the update strategy to use.
-  state: Run # Controls the execution state of the update run.
+  placementName: my-app-placement # Required - ClusterResourcePlacement name the update run is applied to.
+  resourceSnapshotIndex: "0" # Optional - ClusterResourceSnapshot index of the selected resources to be updated across clusters.
+  stagedRolloutStrategyName: three-stage-strategy # Required - The name of the update strategy to use.
+  state: Run # Optional - Controls the execution state of the update run.
 ```
 
 #### StagedUpdateRun (namespace-scoped)
@@ -269,10 +269,10 @@ metadata:
   name: my-app-rollout
   namespace: my-app
 spec:
-  placementName: my-app-placement # ResourcePlacement name the update run is applied to.
-  resourceSnapshotIndex: "0" # ResourceSnapshot index of the selected resources to be updated across clusters (optional). If not stated, will use latest resource snapshot.
-  stagedRolloutStrategyName: three-stage-strategy # The name of the update strategy to use.
-  state: Run # Controls the execution state of the update run. 
+  placementName: my-app-placement # Required - ResourcePlacement name the update run is applied to.
+  resourceSnapshotIndex: "0" # Optional - ResourceSnapshot index of the selected resources to be updated across clusters.
+  stagedRolloutStrategyName: three-stage-strategy # Required - The name of the update strategy to use.
+  state: Run # Optional - Controls the execution state of the update run. 
 ```
 
 ### Stage progression
