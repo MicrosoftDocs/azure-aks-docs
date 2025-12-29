@@ -196,6 +196,8 @@ spec:
         matchLabels:
           environment: production
       sortingLabelKey: order
+      beforeStageTasks:
+        - type: Approval
 ```
 
 #### StagedUpdateStrategy (namespace-scoped)
@@ -227,6 +229,8 @@ spec:
         matchLabels:
           environment: production
       sortingLabelKey: order
+      beforeStageTasks:
+        - type: Approval
 ```
 
 ### Stage configuration
@@ -235,6 +239,7 @@ Each stage in the strategy can specify:
 
 * **Label selector** to determine which clusters belong to the stage
 * **Sorting order** for clusters within the stage using `sortingLabelKey` (optional - clusters are sorted alphabetically by name if not specified)
+* **Before-stage tasks** approval requirement (optional, up to 1 task per stage)
 * **After-stage tasks** either timed wait or approval requirement (optional, up to 2 tasks per stage, maximum one of each type)
 
 #### ClusterStagedUpdateRun (cluster-scoped)
@@ -246,8 +251,9 @@ metadata:
   name: my-app-rollout
 spec:
   placementName: my-app-placement # ClusterResourcePlacement name the update run is applied to.
-  resourceSnapshotIndex: "0" # ClusterResourceSnapshot index of the selected resources to be updated across clusters.
+  resourceSnapshotIndex: "0" # ClusterResourceSnapshot index of the selected resources to be updated across clusters (optional). If not stated, will use latest resource snapshot.
   stagedRolloutStrategyName: three-stage-strategy # The name of the update strategy to use.
+  state: Run # Controls the execution state of the update run.
 ```
 
 #### StagedUpdateRun (namespace-scoped)
@@ -260,19 +266,32 @@ metadata:
   namespace: my-app
 spec:
   placementName: my-app-placement # ResourcePlacement name the update run is applied to.
-  resourceSnapshotIndex: "0" # ResourceSnapshot index of the selected resources to be updated across clusters.
+  resourceSnapshotIndex: "0" # ResourceSnapshot index of the selected resources to be updated across clusters (optional). If not stated, will use latest resource snapshot.
   stagedRolloutStrategyName: three-stage-strategy # The name of the update strategy to use.
+  state: Run # Controls the execution state of the update run. 
 ```
+
+### Update Run States
+
+The `state` field in update runs controls the execution behavior of staged rollouts. The following states are available:
+
+* **Initialize**: The update run doesn't execute (run) but only initializes the rollout process. Use this state to prepare the update run without starting the actual deployment.
+
+* **Run**: If starting with this state, the update run initializes and executes the rollout. If the update run is already initialized, it only executes the rollout. Use this state to resume an update run that was previously stopped.
+
+* **Stop**: Stops the update run. This state allows currently updating clusters to finish their updates before completely stopping the rollout process.
 
 ### Stage progression
 
 Fleet Manager processes stages sequentially:
 
-1. All clusters in a stage receive updates according to their sort order
-2. After all clusters in a stage are successfully updated, any configured after-stage tasks execute
-3. The next stage begins only after all previous after stage tasks complete
+1. Any configured before-stage tasks execute
+2. All clusters in a stage receive updates according to their sort order
+3. After all clusters in a stage are successfully updated, any configured after-stage tasks execute
+4. The next stage begins only after all previous after stage tasks complete
 
 For approval-based progression, Fleet Manager creates a `ClusterApprovalRequest` (for cluster-scoped placements) or `ApprovalRequest` (for namespace-scoped placements) resource that must be approved before continuing to the next stage.
+
 
 ### Example deployment pattern
 
