@@ -119,7 +119,7 @@ Starting in Kubernetes center:
 
 :::image type="content" source="./media/managed-namespace/view-managed-fleet-namespace-02.png" alt-text="Screenshot of the Azure portal showing the list of Managed namespaces in Kubernetes center filtered to Managed Fleet Namespace." lightbox="./media/managed-namespace/view-managed-fleet-namespace-02.png":::
 
-## View a Managed Fleet Namespace configuration
+## View Managed Fleet Namespace configuration
 
 View a Managed Fleet Namespace's configuration on its overview by selecting the namespace from the list.
 
@@ -137,7 +137,11 @@ From the Managed Fleet Namespace overview select **Member clusters** on the left
 
 You can retrieve either the kubeconfig to access the multi-cluster managed namespace on the Fleet Manager hub cluster, or on a specific member cluster. If you access the hub cluster, you can utilize Fleet Manager's [intelligent resource placement](intelligent-resource-placement.md) to replicate your resources to member clusters.
 
-### Access Managed Fleet Namespace on Fleet Manager hub clusters
+### Access Managed Fleet Namespace 
+
+Get credentials to access the namespace on the Fleet Manager hub cluster using the following command. 
+
+You can use the hub cluster to stage workload deployments or configurations that can be distributed along with the namespace onto every member cluster to which it is deployed.
 
 ```azurecli-interactive
 az fleet namespace get-credentials \ 
@@ -146,7 +150,7 @@ az fleet namespace get-credentials \
     --name ${FLEET_NAMESPACE_NAME}
 ```
 
-### Access Managed Fleet Namespace on a specific member cluster
+Get credentials to access the namespace on member cluster by providing the `member` parameter. 
 
 ```azurecli-interactive
 az fleet namespace get-credentials \ 
