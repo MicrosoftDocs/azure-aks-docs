@@ -1,7 +1,7 @@
 ---
 title: "Defining a rollout strategy for Azure Kubernetes Fleet Manager resource placement"
 description: This article describes how to define a rollout strategy for Fleet Manager's cluster resource placement and resource placement.
-ms.date: 12/02/2025
+ms.date: 12/29/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -291,7 +291,6 @@ Fleet Manager processes stages sequentially:
 4. The next stage begins only after all previous after stage tasks complete
 
 For approval-based progression, Fleet Manager creates a `ClusterApprovalRequest` (for cluster-scoped placements) or `ApprovalRequest` (for namespace-scoped placements) resource that must be approved before continuing to the next stage.
-
 
 ### Example deployment pattern
 
