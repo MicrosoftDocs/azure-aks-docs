@@ -217,6 +217,7 @@ spec:
       afterStageTasks:
         - type: TimedWait
           waitTime: 1h
+      maxConcurrency: 50%  # Update 50% of production clusters at once
     - name: canary
       labelSelector:
         matchLabels:
@@ -224,6 +225,7 @@ spec:
       sortingLabelKey: name
       afterStageTasks:
         - type: Approval
+      maxConcurrency: 2  # Update 2 clusters concurrently
     - name: production
       labelSelector:
         matchLabels:
@@ -231,6 +233,7 @@ spec:
       sortingLabelKey: order
       beforeStageTasks:
         - type: Approval
+      maxConcurrency: 1  # Sequential updates (default)
 ```
 
 ### Stage configuration
@@ -241,6 +244,8 @@ Each stage in the strategy can specify:
 * **Sorting order** for clusters within the stage using `sortingLabelKey` (optional - clusters are sorted alphabetically by name if not specified)
 * **Before-stage tasks** approval requirement (optional, up to 1 task per stage)
 * **After-stage tasks** either timed wait or approval requirement (optional, up to 2 tasks per stage, maximum one of each type)
+* **Max concurrency** to determine the maximum number of clusters to update concurrently within the stage (optional) 
+  > [!NOTE] Max concurrency can be an absolute number (e.g., `5`) or percentage (e.g., `50%`). Defaults to `1` (sequential). Fractional results are rounded down with a minimum of 1.
 
 #### ClusterStagedUpdateRun (cluster-scoped)
 
@@ -270,16 +275,6 @@ spec:
   stagedRolloutStrategyName: three-stage-strategy # The name of the update strategy to use.
   state: Run # Controls the execution state of the update run. 
 ```
-
-### Update Run States
-
-The `state` field in update runs controls the execution behavior of staged rollouts. The following states are available:
-
-* **Initialize**: The update run doesn't execute (run) but only initializes the rollout process. Use this state to prepare the update run without starting the actual deployment.
-
-* **Run**: If starting with this state, the update run initializes and executes the rollout. If the update run is already initialized, it only executes the rollout. Use this state to resume an update run that was previously stopped.
-
-* **Stop**: Stops the update run. This state allows currently updating clusters to finish their updates before completely stopping the rollout process.
 
 ### Stage progression
 
