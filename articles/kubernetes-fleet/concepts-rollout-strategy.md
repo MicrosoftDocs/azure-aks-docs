@@ -184,6 +184,7 @@ spec:
       afterStageTasks:
         - type: TimedWait
           waitTime: 1h
+      maxConcurrency: 50%  # Update 50% of production clusters at once
     - name: canary
       labelSelector:
         matchLabels:
@@ -191,6 +192,7 @@ spec:
       sortingLabelKey: name
       afterStageTasks:
         - type: Approval
+      maxConcurrency: 2  # Update 2 clusters concurrently
     - name: production
       labelSelector:
         matchLabels:
@@ -198,6 +200,7 @@ spec:
       sortingLabelKey: order
       beforeStageTasks:
         - type: Approval
+      maxConcurrency: 1  # Sequential updates (default)
 ```
 
 #### StagedUpdateStrategy (namespace-scoped)
