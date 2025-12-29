@@ -109,7 +109,7 @@ Starting in Fleet Manager:
 * From the left menu, under **Fleet Resources**, select **Namespaces**.
 * Managed Fleet Namespaces you have access to are shown in the namespaces list.
 
-:::image type="content" source="./media/managed-namespace/view-managed-fleet-namespace-01.png" alt-text="Screenshot of the Azure portal showing the list of namespaces including the Managed Fleet Namespace." lightbox="./media/managed-namespace/view-managed-fleet-namespace-01.png":::
+:::image type="content" source="./media/managed-namespace/view-managed-fleet-namespace-fleet-manager.png" alt-text="Screenshot of the Azure portal showing the list of namespaces including the Managed Fleet Namespace." lightbox="./media/managed-namespace/view-managed-fleet-namespace-in-fleet-manager.png":::
 
 Starting in Kubernetes center:
 
@@ -117,7 +117,7 @@ Starting in Kubernetes center:
 * Set the **Type** filter to **Managed Fleet Namespace**.
 * Managed Fleet Namespaces you have access to are shown in the namespaces list.
 
-:::image type="content" source="./media/managed-namespace/view-managed-fleet-namespace-02.png" alt-text="Screenshot of the Azure portal showing the list of Managed namespaces in Kubernetes center filtered to Managed Fleet Namespace." lightbox="./media/managed-namespace/view-managed-fleet-namespace-02.png":::
+:::image type="content" source="./media/managed-namespace/view-managed-fleet-namespace-kubernetes-center.png" alt-text="Screenshot of the Azure portal showing the list of Managed namespaces in Kubernetes center filtered to Managed Fleet Namespace." lightbox="./media/managed-namespace/view-managed-fleet-namespace-kubernetes-center.png":::
 
 ## View Managed Fleet Namespace configuration
 
