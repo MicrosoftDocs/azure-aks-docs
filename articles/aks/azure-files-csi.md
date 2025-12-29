@@ -4,7 +4,7 @@ description: Learn how to use the Container Storage Interface (CSI) driver for A
 ms.topic: concept-article
 ms.custom:
 ms.subservice: aks-storage
-ms.date: 04/25/2025
+ms.date: 12/23/2025
 author: schaffererin
 ms.author: schaffererin
 
@@ -561,7 +561,7 @@ mountOptions:
 ```
 
 > [!NOTE]
-> The EiT feature is now available in preview starting with AKS version 1.33. Please note that ARM64 nodes aren't currently supported.
+> The EiT feature is now available in preview starting with AKS version 1.33. Please note that Ubuntu 20.04, Azure Linux, arm64 and Windows nodes aren't currently supported.
 >
 > The feature is supported for the following [Linux distributions](/azure/storage/files/encryption-in-transit-for-nfs-shares#overview) in these [supported regions](/azure/storage/files/encryption-in-transit-for-nfs-shares#supported-regions).
 

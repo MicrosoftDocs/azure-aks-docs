@@ -3,7 +3,7 @@ title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using the A
 titleSuffix: Azure Kubernetes Service
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) using the Azure portal.
 ms.topic: quickstart
-ms.date: 05/13/2024
+ms.date: 12/19/2025
 ms.custom: mvc, mode-ui
 ms.author: schaffererin
 author: schaffererin
@@ -28,7 +28,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
 - [!INCLUDE [quickstarts-free-trial-note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 - If you're unfamiliar with the Azure Cloud Shell, review [Overview of Azure Cloud Shell](/azure/cloud-shell/overview).
-- Make sure that the identity you use to create your cluster has the appropriate minimum permissions. For more details on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
+- Make sure that the identity you use to create your cluster has the appropriate minimum permissions. For more information about access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
 
 [!INCLUDE [azure linux 2.0 retirement](../includes/azure-linux-retirement.md)]
 
@@ -36,34 +36,34 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
 1. Sign in to the [Azure portal][azure-portal].
 1. On the Azure portal home page, select **Create a resource**.
-1. In the **Categories** section, select **Containers** > **Azure Kubernetes Service (AKS)**.
+1. In the **Categories** section, select **Infrastructure Services** > **Azure Kubernetes Service (AKS)**.
 1. On the **Basics** tab, configure the following settings:
     - Under **Project details**:
         - **Subscription**: Select the Azure subscription you want to use for this AKS cluster.
-        - **Resource group**: Select **Create new**, enter a resource group name, such as *myResourceGroup*, and then select **Ok**. While you can select an existing resource group, for testing or evaluation purposes, we recommend creating a resource group to temporarily host these resources and avoid impacting your production or development workloads.
+        - **Resource group**: Select **Create new**, enter a resource group name, like _myResourceGroup_, and then select **Ok**. While you can select an existing resource group, for testing or evaluation purposes, we recommend creating a resource group to temporarily host these resources and avoid impacting your production or development workloads.
     - Under **Cluster details**:
-      - **Cluster preset configuration**: Select **Dev/Test**. For more details on preset configurations, see [Cluster configuration presets in the Azure portal][preset-config].
+      - **Cluster preset configuration**: Select **Dev/Test**. For more details about preset configurations, see [Cluster configuration presets in the Azure portal][preset-config]. You can change the preset configuration when creating your cluster by selecting **Compare presets** and choosing a different option.
 
-        > [!NOTE]
-        > You can change the preset configuration when creating your cluster by selecting **Compare presets** and choosing a different option.
-        > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-presets.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-presets.png":::
+      :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-presets.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-presets.png":::
 
-      - **Kubernetes cluster name**: Enter a cluster name, such as *myAKSCluster*.
-      - **Region**: Select a region, such as *East US 2*.
-      - **Availability zones**: Select **None**.
+      - **Kubernetes cluster name**: Enter a cluster name, like _myAKSCluster_.
+      - **Region**: Select a region, like _East US 2_.
+      - **Fleet manager**: **None**
+      - **Availability zones**: **None**. Deselect any selected zones.
       - **AKS pricing tier**: Select **Free**.
       - Leave the default values for the remaining settings, and select **Next**.
 
         :::image type="content" source="media/quick-kubernetes-deploy-portal/create-cluster.png" alt-text="Screenshot showing how to configure an AKS cluster in Azure portal." lightbox="media/quick-kubernetes-deploy-portal/create-cluster.png":::
 
 1. On the **Node pools** tab, configure the following settings:
-    - Select **Add node pool** and enter a **Node pool name**, such as *nplinux*.
+    - Select **Add node pool** and select **Add a Virtual Machine Scale Set node pool**
+    - **Name**: Enter a name like _nplinux_.
     - **Mode**: Select **User**.
     - **OS SKU**: Select **Ubuntu Linux**.
     - **Availability zones**: Select **None**.
     - Leave the **Enable Azure Spot instances** checkbox unchecked.
-    - **Node size**: Select **Choose a size**. On the **Select a VM size** page, select **D2s_v3**, and then select **Select**.
-    - Leave the default values for the remaining settings, and select **Add**.
+    - **Node size**: Select **Choose a size**. On the **Select a VM size** page, search for **D2s_v5**, select that VM size, and **Select**.
+    - Use the default values for the remaining settings, and select **Add**.
 
         :::image type="content" source="media/quick-kubernetes-deploy-portal/create-linux-node-pool.png" alt-text="Screenshot showing how to create a node pool running Ubuntu Linux." lightbox="media/quick-kubernetes-deploy-portal/create-linux-node-pool.png":::
 
@@ -123,7 +123,7 @@ If you're using Cloud Shell, open it with the `>_` button on the top of the Azur
 
 ## Deploy the application
 
-You use a manifest file to create all the objects required to run the [AKS Store application](https://github.com/Azure-Samples/aks-store-demo). A Kubernetes manifest file defines a cluster's desired state, such as which container images to run. The manifest includes the following Kubernetes deployments and services:
+You use a manifest file to create all the objects required to run the [AKS Store application](https://github.com/Azure-Samples/aks-store-demo). A Kubernetes manifest file defines a cluster's desired state, like which container images to run. The manifest includes the following Kubernetes deployments and services:
 
 :::image type="content" source="media/quick-kubernetes-deploy-portal/aks-store-architecture.png" alt-text="Screenshot of Azure Store sample architecture." lightbox="media/quick-kubernetes-deploy-portal/aks-store-architecture.png":::
 
@@ -133,10 +133,10 @@ You use a manifest file to create all the objects required to run the [AKS Store
 - **Rabbit MQ**: Message queue for an order queue.
 
 > [!NOTE]
-> We don't recommend running stateful containers, such as Rabbit MQ, without persistent storage for production. These are used here for simplicity, but we recommend using managed services, such as Azure CosmosDB or Azure Service Bus.
+> We don't recommend running stateful containers, like Rabbit MQ, without persistent storage for production. These containers are used here for simplicity, but we recommend using managed services, like Azure Cosmos DB or Azure Service Bus.
 
 1. In the Cloud Shell, open an editor and create a file named `aks-store-quickstart.yaml`.
-2. Paste the following manifest into the editor:
+1. Paste the following manifest into the editor:
 
     ```YAML
     apiVersion: apps/v1
@@ -431,7 +431,7 @@ You use a manifest file to create all the objects required to run the [AKS Store
 
     If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
-3. Deploy the application using the `kubectl apply` command and specify the name of your YAML manifest:
+1. Deploy the application using the `kubectl apply` command and specify the name of your YAML manifest:
 
     ```bash
     kubectl apply -f aks-store-quickstart.yaml
