@@ -217,12 +217,12 @@ Select the Microsoft Entra users and groups that will access the Managed Fleet N
 
 ### Add network policies and compute quota
 
-Set policies and quota.
+Control the flow of network traffic into and out of the namespace on each cluster it is distributed to, along with defining the CPU and memory resource quotas for the namespace.  
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-04.png" alt-text="Screenshot of the Azure portal showing completed Networking policies and Compute quota for a new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-04.png":::
 
 > [!NOTE]
-> These settings are optional. This allows you to create and distribute a Managed Fleet Namespace without networking policies or quota controls applied immediately.
+> These settings are optional. You can create and distribute a Managed Fleet Namespace without networking policies or quota controls applied.
 >
 > Users with a `Microsoft.ContainerService/managedClusters/networking.k8s.io/networkpolicies/write` action, such as `Azure Kubernetes Service RBAC Writer`, on the Microsoft Entra ID role they're assigned can add more network policies through the Kubernetes API.
 >
@@ -238,19 +238,25 @@ You can control which member clusters to distribute the managed namespace to by 
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-05.png" alt-text="Screenshot of the Azure portal showing two member clusters selected to host a new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-05.png":::
 
+> [!NOTE]
+> This step is optional. If you don't provide any member clusters the Managed Fleet Namespace is deployed only to the Fleet Manager hub cluster. You can add member clusters at a later time. 
+
 ### Set labels, annotations and tags
 
 Define optional Kubernetes labels and annotations, and Azure Resource Manager (ARM) tags which provide metadata that can be used for automation and resource management.
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-06.png" alt-text="Screenshot of the Azure portal showing settings for labels and annotations for a new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-06.png":::
 
-### Create and distribute
+> [!NOTE]
+> This step is optional. You can manage labels, annotations and tags at a later time.
+
+### Create the Managed Fleet Namespace
 
 Once you have configured all properties for the new Managed Fleet Namespace you can confirm the details before creating the namespace by selecting **Create**.
 
-An Azure Resource Manager deployment is immediately started, which initiates a Fleet Manager workload placement to distribute the namespace to the selected clusters.
+An Azure Resource Manager deployment is immediately started, which initiates a Fleet Manager workload placement to distribute the namespace to any selected clusters.
 
-Once the deployment is completed, you can find the Managed Fleet Namespace in the list of namespaces for the Fleet Manager. 
+Once the deployment is completed, you can find the Managed Fleet Namespace in the list of namespaces for the Fleet Manager.
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-view.png" alt-text="Screenshot of the Azure portal showing the new Managed Fleet Namespace listed with the namespaces on the Fleet Manager hub cluster." lightbox="./media/managed-namespace/create-managed-fleet-namespace-view.png":::
 
@@ -258,7 +264,7 @@ To review the rollout of the Kubernetes namespace across clusters, use [Resource
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-crp-status.png" alt-text="Screenshot of the Azure portal showing the resource placement status of the new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-crp-status.png":::
 
-## Modify member clusters
+## Configure existing Managed Fleet Namespace
 
 You can locate Managed Fleet Namespace from within Fleet Manager, or via Kubernetes center.
 
@@ -272,10 +278,23 @@ Starting in Kubernetes center:
 * Open [Kubernetes center - Managed namespaces](https://portal.azure.com/#view/Microsoft_Azure_KubernetesFleet/KubernetesHub.MenuView/~/managedNamespaces) in the Azure portal.
 * Set the **Type** filter to **Managed Fleet Namespace**.
 
-The remaining steps are the same:
+### Modify configuration
 
-* Open the Managed Fleet Namespace's overview by selecting it from the list.
-* In the left navigation, select **Member clusters**.
+Modify networking policies, resource quotas, labels, annotations, and tags by selecting **edit** next to the appropriate item in the Managed Fleet Namespace overview screen.
+
+Selecting **edit** next to labels, annotations or tags, opens a dialog box where you can modify any of these three items.
+
+Selecting **edit** next to any of the network policy or resource quota options opens a dialog box where you can modify any of these items.
+
+:::image type="content" source="./media/managed-namespace/modify-managed-fleet-namespace-overview.png" alt-text="Screenshot of the Azure portal showing the overview screen for a Managed Fleet Namespace with edit options highlighted in red boxes." lightbox="./media/managed-namespace/modify-managed-fleet-namespace-overview.png":::
+
+### Modify user or group access
+
+A Managed Fleet Namespace is an Azure Resource Manager (ARM) resource, so managing user and group access can be achieved by selecting **Access control (IAM)** in the left navigation in the Manage Fleet Namespace overview screen.
+
+### Modify member clusters
+
+On the Managed Fleet Namespace overview select **Member clusters** in the left navigation.
 
 To remove member clusters:
 
@@ -291,28 +310,7 @@ To add member clusters:
 
 :::image type="content" source="./media/managed-namespace/remove-member-cluster-managed-fleet-namespace.png" alt-text="Screenshot of the Azure portal showing a single member cluster selected ready to be removed from the Managed Fleet Namespace." lightbox="./media/managed-namespace/remove-member-cluster-managed-fleet-namespace.png":::
 
-Once the clusters hosting the Managed Fleet Namespace are modified, the overview is updated to display the clusters actively hosting the namespace.  
-
-To review the rollout of the Kubernetes namespace across clusters, use [Resource placements](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters), looking for the resource placement named the same as the Managed Fleet Namespace.
-
-## View a Managed Fleet Namespace's configuration
-
-You can locate Managed Fleet Namespace from within Fleet Manager, or via Kubernetes center.
-
-Starting in Fleet Manager:
-
-* In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
-* From the left menu, under **Fleet Resources**, select **Namespaces**.
-* Open the Managed Fleet Namespace's overview by selecting it from the namespace list.
-
-Starting in Kubernetes center:
-
-* Open [Kubernetes center - Managed namespaces](https://portal.azure.com/#view/Microsoft_Azure_KubernetesFleet/KubernetesHub.MenuView/~/managedNamespaces) in the Azure portal.
-* Set the **Type** filter to **Managed Fleet Namespace**.
-* Open the Managed Fleet Namespace's overview by selecting it from the namespace list.
-
-:::image type="content" source="./media/managed-namespace/view-managed-fleet-namespace-overview.png" alt-text="Screenshot of the Azure portal showing the overview screen for a Managed Fleet Namespace." lightbox="./media/managed-namespace/view-managed-fleet-namespace-overview.png":::
-articles/kubernetes-fleet/media/managed-namespace/
+Once the clusters hosting the Managed Fleet Namespace are modified, the overview is updated to display the clusters actively hosting the namespace. 
 
 ## Delete a Managed Fleet Namespace
 
