@@ -24,7 +24,7 @@ If you're looking to view or access existing Managed Fleet Namespaces you have a
 * When a Managed Fleet Namespace adopts a single cluster [Managed Kubernetes Namespace](../aks/concepts-managed-namespaces.md) or vice versa, it may lead to conflicting ownership. To avoid, use a delete policy of `keep` for both the Managed Fleet and Kubernetes Namespaces.
 * Clusters you specify must be members of the fleet managed by the same Fleet Manager hosting the Managed Fleet Namespace.
 * Clusters must have a Kubernetes version of at least 1.30.0. Clusters below this version **will not** block users on the cluster from modifying the placed Kubernetes resources.
-* RBAC roles assigned to a Managed Fleet Namespace scope will grant equivalent access to any unmanaged Kubernetes namespaces on member clusters with the same name.
+* RBAC roles assigned to a Managed Fleet Namespace scope grants equivalent access to any unmanaged Kubernetes namespaces on member clusters with the same name.
 
 ## Before you begin
 
@@ -174,9 +174,9 @@ az fleet namespace delete \
 ```
 
 > [!WARNING]
-> Deleting a Fleet Managed Namespace with a `DeletePolicy` set to `delete` is a permanent action. If you are unsure, you should update the policy to `keep` to keep the namespace.
+> Deleting a Fleet Managed Namespace with a `DeletePolicy` set to `delete` is a permanent action. If you're unsure, you should update the policy to `keep` to keep the namespace.
 >
-> Azure RBAC assignments are alawys deleted to avoid dangling permissions.
+> Azure RBAC assignments are always deleted to avoid dangling permissions.
 
 :::zone-end
 
@@ -210,7 +210,7 @@ Starting in Kubernetes center:
 
 ### Assign user or group access
 
-Select the Microsoft Entra users and groups that will access the Managed Fleet Namespace on clusters it is distributed to.
+Select the Microsoft Entra users and groups that access the Managed Fleet Namespace on clusters it's distributed to.
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-03.png" alt-text="Screenshot of the Azure portal showing completed Access details for a new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-03.png":::
 
@@ -219,7 +219,7 @@ Select the Microsoft Entra users and groups that will access the Managed Fleet N
 
 ### Add network policies and compute quota
 
-Control the flow of network traffic into and out of the namespace on each cluster it is distributed to, along with defining the CPU and memory resource quotas for the namespace.  
+Control the flow of network traffic into and out of the namespace on each cluster it's distributed to, along with defining the CPU and memory resource quotas for the namespace.  
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-04.png" alt-text="Screenshot of the Azure portal showing completed Networking policies and Compute quota for a new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-04.png":::
 
@@ -234,7 +234,7 @@ Control the flow of network traffic into and out of the namespace on each cluste
 
 Define which member clusters to distribute the managed namespace to by adding them as follows.
 
-* From the menu select **+ Add**.
+* From the menu, select **+ Add**.
 * In the **Select member clusters** dialog search for the member clusters, selecting them by checking the box.
 * Finally, choose **Select** to add the member clusters.
 
@@ -243,28 +243,28 @@ Define which member clusters to distribute the managed namespace to by adding th
 > [!NOTE]
 > This step is optional. If you don't provide any member clusters the Managed Fleet Namespace is deployed only to the Fleet Manager hub cluster. You can add member clusters at a later time. 
 
-### Set labels, annotations and tags
+### Set labels, annotations, and tags
 
-Define optional Kubernetes labels and annotations, and Azure Resource Manager (ARM) tags which provide metadata that can be used for automation and resource management.
+Define optional Kubernetes labels and annotations, and Azure Resource Manager (ARM) tags that provide metadata that can be used for automation and resource management.
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-06.png" alt-text="Screenshot of the Azure portal showing settings for labels and annotations for a new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-06.png":::
 
 > [!NOTE]
-> This step is optional. You can manage labels, annotations and tags at a later time.
+> This step is optional. You can manage labels, annotations, and tags at a later time.
 
 ### Create the Managed Fleet Namespace
 
-Once you have configured all properties for the new Managed Fleet Namespace you can confirm the details before creating the namespace by selecting **Create**.
+Once you have configured all properties for the new Managed Fleet Namespace, you can confirm the details before creating the namespace by selecting **Create**.
 
 An Azure Resource Manager deployment is immediately started, which initiates a Fleet Manager workload placement to distribute the namespace to the selected clusters.
 
 Once the deployment is completed, you can find the Managed Fleet Namespace in the list of namespaces for the Fleet Manager.
 
-:::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-view.png" alt-text="Screenshot of the Azure portal showing the new Managed Fleet Namespace listed with the namespaces on the Fleet Manager hub cluster." lightbox="./media/managed-namespace/create-managed-fleet-namespace-view.png":::
+:::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-view.png" alt-text="Screenshot of the Azure portal with the new Managed Fleet Namespace listed with other namespaces on the hub cluster." lightbox="./media/managed-namespace/create-managed-fleet-namespace-view.png":::
 
 To review the rollout of the Kubernetes namespace across clusters, use [Resource placements](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters), looking for the resource placement named the same as the Managed Fleet Namespace.
 
-:::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-crp-status.png" alt-text="Screenshot of the Azure portal showing the resource placement status of the new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-crp-status.png":::
+:::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-placement-status.png" alt-text="Screenshot of the Azure portal showing the resource placement status of the new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-placement-status.png":::
 
 ## Configure existing Managed Fleet Namespace
 
@@ -300,7 +300,7 @@ On the Managed Fleet Namespace overview select **Member clusters** in the left n
 
 To remove member clusters:
 
-* Select the cluster(s) to remove by checking the box on the left of the row.
+* Select the clusters to remove by checking the box on the left of the row.
 * In the top navigation select **Remove**.
 * Confirm the action and select **Remove**.
 
@@ -320,11 +320,11 @@ On the Managed Fleet Namespace overview select **Delete** in the top navigation.
 
 In the **Delete Managed Fleet Namespace** confirmation select the option you want:
 
-* **Keep namespace, remove management capabilities:** the Managed Fleed Namespace is convered into a standard Kubernetes namespace, remaining on the Fleet Manager hub cluster and member clusters, but no longer managed by Azure Resource Manager (ARM).
+* **Keep namespace, remove management capabilities:** the Managed Fleet Namespace is converted into a standard Kubernetes namespace, remaining on the Fleet Manager hub cluster and member clusters, but no longer managed by Azure Resource Manager (ARM).
 * **Delete namespace and all associated resources:** the Managed Fleet Namespace ARM resource is deleted, along with the Kubernetes namespace on both the Fleet Manager hub cluster and member clusters.
 
 > [!WARNING]
-> Deleting the namespace and all associated resources is a permanent action. If you are unsure, you should elect to keep the namespace.
+> Deleting the namespace and all associated resources is a permanent action. If you're unsure, you should elect to keep the namespace.
 >
 > In both cases Azure RBAC assignments are deleted to avoid dangling permissions.
 
