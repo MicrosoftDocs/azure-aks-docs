@@ -245,7 +245,6 @@ Each stage in the strategy can specify:
 * **Before-stage tasks** approval requirement (optional, up to 1 task per stage)
 * **After-stage tasks** either timed wait or approval requirement (optional, up to 2 tasks per stage, maximum one of each type)
 * **Max concurrency** to determine the maximum number of clusters to update concurrently within the stage (optional) 
-  > [!NOTE] Max concurrency can be an absolute number (e.g., `5`) or percentage (e.g., `50%`). Defaults to `1` (sequential). Fractional results are rounded down with a minimum of 1.
 
 #### ClusterStagedUpdateRun (cluster-scoped)
 
