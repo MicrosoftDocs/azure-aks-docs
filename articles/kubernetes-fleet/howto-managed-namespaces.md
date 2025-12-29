@@ -67,7 +67,7 @@ If you're looking to view or access existing Managed Fleet Namespaces you have a
     az account set --subscription ${SUBSCRIPTION_ID}
     ```
 
-## Create a new Managed Fleet Namespace 
+## Create new Managed Fleet Namespace 
 
 Create a new Managed Fleet Namespace using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command.
 
