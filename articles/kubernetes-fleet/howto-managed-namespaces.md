@@ -13,7 +13,7 @@ zone_pivot_groups: azure-portal-azure-cli
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-This article shows you how to use Fleet Manager to create a Managed Fleet Namespace that defines resource quotas, network policies, and delegated user access for the namespaces on multiple clusters.
+This article shows you how to use Fleet Manager to create and configure a Managed Fleet Namespace that defines resource quotas, network policies, and delegated user access for the namespaces on multiple clusters.
 
 If you're looking to view or access existing Managed Fleet Namespaces you have access to, see [view and access Managed Fleet Namespaces](./howto-managed-namespaces-access.md).
 
@@ -93,7 +93,7 @@ Create a new multi-cluster managed namespace using the [`az fleet namespace crea
 >
 > When using networking policies, users with a `Microsoft.ContainerService/managedClusters/networking.k8s.io/networkpolicies/write` action, such as `Azure Kubernetes Service RBAC Writer`, on the Microsoft Entra ID role they're assigned can add more network policies through the Kubernetes API.
 >
-> For example, if an admin applies a `Deny All` policy for ingress/egress, and a user applies an `Allow` policy for a namespace via the Kubernetes API, the `Allow` policy takes priority over the `Deny All` policy, and traffic is allowed to flow for the namespace. This is standard Kubernetes behavior.
+> For example, if an admin applies a `Deny All` policy for ingress/egress, and a user applies an `Allow` policy for a namespace via the Kubernetes API, the `Allow` policy takes priority over the `Deny All` policy, and traffic is allowed to flow for the namespace. This additive behavior is standard for networking policies.
 
 ## Assign user or group access
 
@@ -226,7 +226,7 @@ Set policies and quota.
 >
 > Users with a `Microsoft.ContainerService/managedClusters/networking.k8s.io/networkpolicies/write` action, such as `Azure Kubernetes Service RBAC Writer`, on the Microsoft Entra ID role they're assigned can add more network policies through the Kubernetes API.
 >
-> For example, if an admin applies a `Deny All` policy for ingress/egress, and a user applies an `Allow` policy for a namespace via the Kubernetes API, the `Allow` policy takes priority over the `Deny All` policy, and traffic is allowed to flow for the namespace. This is standard Kubernetes behavior.
+> For example, if an admin applies a `Deny All` policy for ingress/egress, and a user applies an `Allow` policy for a namespace via the Kubernetes API, the `Allow` policy takes priority over the `Deny All` policy, and traffic is allowed to flow for the namespace. This additive behavior is standard for networking policies.
 
 ## Select member clusters
 
@@ -241,6 +241,22 @@ You can control which member clusters to distribute the managed namespace to by 
 ## Set labels, annotations and tags
 
 Define optional Kubernetes labels and annotations, and Azure Resource Manager (ARM) tags which provide metadata that can be used for automation and resource management.
+
+:::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-06.png" alt-text="Screenshot of the Azure portal showing settings for labels and annotations for a new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-06.png":::
+
+## Create and distribute
+
+Once you have configured all properties for the new Managed Fleet Namespace you can confirm the details before creating the namespace by selecting **Create**.
+
+An Azure Resource Manager deployment is immediately started, which initiates a Fleet Manager workload placement to distribute the namespace to the selected clusters.
+
+Once the deployment is completed, you can find the Managed Fleet Namespace in the list of namespaces for the Fleet Manager. 
+
+:::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-view.png" alt-text="Screenshot of the Azure portal showing the new Managed Fleet Namespace listed with the namespaces on the Fleet Manager hub cluster." lightbox="./media/managed-namespace/create-managed-fleet-namespace-view.png":::
+
+To review the rollout of the Kubernetes namespace across clusters, use [Resource placements](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters), looking for the resource placement named the same as the Managed Fleet Namespace.
+
+:::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-crp-status.png" alt-text="Screenshot of the Azure portal showing the resource placement status of the new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-crp-status.png":::
 
 ## Remove member clusters from a Managed Fleet Namespace
 
