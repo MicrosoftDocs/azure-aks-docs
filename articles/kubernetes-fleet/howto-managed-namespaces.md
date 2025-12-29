@@ -112,18 +112,18 @@ az role assignment create \
 
 ## Add member clusters
 
-You can control which member clusters to deploy the managed namespace to by specifying the desired list of member cluster names. Any unmanaged namespaces with the same name on member clusters not in the specified list remain untouched.
+You can control which member clusters to deploy the managed namespace to by specifying the desired list of member cluster names.
 
 Specify the full list of member clusters you want to deploy the managed namespace to using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command with the `--member-cluster-names` parameter. The managed namespace is propagated to all clusters in the list.
 
-In this example, the managed namespace is deployed to `clusterA`, `clusterB`, and `clusterC`.
+In this example, the managed namespace is deployed to `contoso-prd-01-fm` and `contoso-prd-02-fm`.
 
 ```azurecli-interactive
 az fleet namespace create \
     --resource-group $GROUP \
     --fleet-name $FLEET \
     --name my-managed-namespace \
-    --member-cluster-names clusterA clusterB clusterC
+    --member-cluster-names contoso-prd-01-fm contoso-prd-02-fm
 ```
 
 ## Remove member clusters
@@ -132,14 +132,14 @@ You can remove member clusters from a Managed Fleet Namespace by excluding them 
 
 Specify the list of member clusters you want the managed namespace to remain on using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command with the `--member-cluster-names` parameter. The managed namespace is removed from any clusters excluded from the list.
 
-In this example, the managed namespace is removed from `clusterC`.
+In this example, the managed namespace is removed from `contoso-prd-02-fm`.
 
 ```azurecli-interactive
 az fleet namespace create \
     --resource-group $GROUP \
     --fleet-name $FLEET \
     --name my-managed-namespace \
-    --member-cluster-names clusterA clusterB
+    --member-cluster-names contoso-prd-01-fm
 ```
 
 ## View a Managed Fleet Namespace's configuration
@@ -230,7 +230,7 @@ Control the flow of network traffic into and out of the namespace on each cluste
 
 ### Select member clusters
 
-You can control which member clusters to distribute the managed namespace to by adding them as follows. Any unmanaged namespaces with the same name on member clusters not in the specified list remain untouched.
+Define which member clusters to distribute the managed namespace to by adding them as follows.
 
 * From the menu select **+ Add**.
 * In the **Select member clusters** dialog search for the member clusters, selecting them by checking the box.
@@ -254,7 +254,7 @@ Define optional Kubernetes labels and annotations, and Azure Resource Manager (A
 
 Once you have configured all properties for the new Managed Fleet Namespace you can confirm the details before creating the namespace by selecting **Create**.
 
-An Azure Resource Manager deployment is immediately started, which initiates a Fleet Manager workload placement to distribute the namespace to any selected clusters.
+An Azure Resource Manager deployment is immediately started, which initiates a Fleet Manager workload placement to distribute the namespace to the selected clusters.
 
 Once the deployment is completed, you can find the Managed Fleet Namespace in the list of namespaces for the Fleet Manager.
 
@@ -329,4 +329,3 @@ Delete a multi-cluster managed namespace using the [`az fleet namespace delete`]
 [az-account-set]: /cli/azure/account#az-account-set
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [rbac-admin]: /azure/role-based-access-control/built-in-roles/privileged#role-based-access-control-administrator
-[entra-role-portal]: /entra/fundamentals/how-to-assign-roles-to-users
