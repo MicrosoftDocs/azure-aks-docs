@@ -449,7 +449,7 @@ spec:
         matchLabels:
           environment: canary
       sortingLabelKey: order
-      afterStageTasks:
+      beforeStageTasks:
         - type: Approval
 ```
 
@@ -477,9 +477,34 @@ spec:
         matchLabels:
           environment: canary
       sortingLabelKey: order
-      afterStageTasks:
+      beforeStageTasks:
         - type: Approval
 ```
+
+---
+
+## Understanding update run states
+
+Staged update runs use a state field to control their execution behavior. Understanding these states and their transitions is essential for managing rollouts effectively.
+
+### Available states
+
+* **Initialize**: Sets up the update run without executing the rollout. Use this state to prepare and validate the update run configuration before starting deployment.
+
+* **Run**: Executes the staged rollout. If starting fresh, this state both initializes and executes the update run. If the update run is already initialized, it only executes the rollout. Use this state to start or resume update runs.
+
+* **Stop**: Gracefully halts the update run. This state allows in progess clusters to complete their updates before stopping the entire rollout process.
+
+### State transition rules
+
+The following state transitions are supported:
+
+* **Initialize → Run**: Start execution after initialization
+* **Run → Stop**: Stop a running update run
+* **Stop → Run**: Resume a stopped update run
+
+> [!TIP]
+> Always verify the current state of your update run before attempting state changes. Use `kubectl get csur <run-name>` or `kubectl get sur <run-name> -n <namespace>` to check the current state and status.
 
 ---
 
@@ -498,7 +523,16 @@ spec:
   placementName: example-placement
   resourceSnapshotIndex: "1"
   stagedRolloutStrategyName: example-strategy
+  state: Run
 ```
+
+> [!NOTE]
+> The `resourceSnapshotIndex` field controls which resource snapshot version to deploy. You have several options:
+> - Leave empty (`""`) or omit the field entirely to use the latest resource snapshot
+> - Specify the latest resource snapshot index (e.g., `"1"`) to explicitly target the newest version
+> - Specify an older resource snapshot index (e.g., `"0"`) to deploy or roll back to a previous version
+>
+> Using an empty string or the latest index both result in deploying the most recent changes.
 
 The staged update run is initialized and running:
 
@@ -532,6 +566,7 @@ spec:
   placementName: example-placement
   resourceSnapshotIndex: "1"
   stagedRolloutStrategyName: example-strategy
+  state: Run
 status:
   conditions:
   - lastTransitionTime: "2025-07-22T21:28:08Z"
@@ -551,6 +586,7 @@ status:
     stageName: kubernetes-fleet.io/deleteStage
   policyObservedClusterCount: 3 # number of clusters to be updated
   policySnapshotIndexUsed: "0"
+  resourceSnpashotIndexUsed: "1"
   stagedUpdateStrategySnapshot: # snapshot of the strategy used for this update run
     stages:
     - afterStageTasks:
@@ -560,7 +596,7 @@ status:
         matchLabels:
           environment: staging
       name: staging
-    - afterStageTasks:
+    - beforeStageTasks:
       - type: Approval
       labelSelector:
         matchLabels:
@@ -573,7 +609,7 @@ status:
       - lastTransitionTime: "2025-07-22T21:29:23Z"
         message: Wait time elapsed
         observedGeneration: 1
-        reason: AfterStageTaskWaitTimeElapsed
+        reason: StageTaskWaitTimeElapsed
         status: "True" # the wait after-stage task has completed
         type: WaitTimeElapsed
       type: TimedWait
@@ -608,49 +644,19 @@ status:
     endTime: "2025-07-22T21:29:23Z"
     stageName: staging
     startTime: "2025-07-22T21:28:08Z"
-  - afterStageTaskStatus:
-    - approvalRequestName: example-run-canary # ClusterApprovalRequest name for this stage
+  - beforeStageTaskStatus:
+    - approvalRequestName: example-run-before-canary # ClusterApprovalRequest name for this stage for before stage task
       conditions:
       - lastTransitionTime: "2025-07-22T21:29:53Z"
         message: ClusterApprovalRequest is created
         observedGeneration: 1
-        reason: AfterStageTaskApprovalRequestCreated
+        reason: StageTaskApprovalRequestCreated
         status: "True"
         type: ApprovalRequestCreated
       type: Approval
-    clusters:
-    - clusterName: member3 # according to the labelSelector and sortingLabelKey, member3 is selected first in this stage
-      conditions:
-      - lastTransitionTime: "2025-07-22T21:29:23Z"
-        message: Cluster update started
-        observedGeneration: 1
-        reason: ClusterUpdatingStarted
-        status: "True"
-        type: Started
-      - lastTransitionTime: "2025-07-22T21:29:38Z"
-        message: Cluster update completed successfully
-        observedGeneration: 1
-        reason: ClusterUpdatingSucceeded
-        status: "True" # member3 update is completed
-        type: Succeeded
-    - clusterName: member1 # member1 is selected after member3 because of order=2 label
-      conditions:
-      - lastTransitionTime: "2025-07-22T21:29:38Z"
-        message: Cluster update started
-        observedGeneration: 1
-        reason: ClusterUpdatingStarted
-        status: "True"
-        type: Started
-      - lastTransitionTime: "2025-07-22T21:29:53Z"
-        message: Cluster update completed successfully
-        observedGeneration: 1
-        reason: ClusterUpdatingSucceeded
-        status: "True" # member1 update is completed
-        type: Succeeded
     conditions:
     - lastTransitionTime: "2025-07-22T21:29:53Z"
-      message: All clusters in the stage are updated, waiting for after-stage tasks
-        to complete
+      message: Not all before-stage tasks are completed, waiting for approval
       observedGeneration: 1
       reason: StageUpdatingWaiting
       status: "False" # stage canary is waiting for approval task completion
@@ -668,8 +674,8 @@ kubectl get clusterapprovalrequest
 Your output should look similar to the following example:
 
 ```output
-NAME                 UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-canary   example-run   canary                                 2m39s
+NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-before-canary   example-run   canary                                 2m39s
 ```
 
 ### [ResourcePlacement](#tab/resourceplacement)
@@ -686,7 +692,16 @@ spec:
   placementName: example-placement
   resourceSnapshotIndex: "1"
   stagedRolloutStrategyName: example-strategy
+  state: Run
 ```
+
+> [!NOTE]
+> The `resourceSnapshotIndex` field controls which resource snapshot version to deploy. You have several options:
+> - Leave empty (`""`) or omit the field entirely to use the latest resource snapshot
+> - Specify the latest resource snapshot index (e.g., `"1"` as shown above) to explicitly target the newest version
+> - Specify an older resource snapshot index (e.g., `"0"`) to deploy or roll back to a previous version
+>
+> Using an empty string or the latest index both result in deploying the most recent changes.
 
 The staged update run is initialized and running:
 
@@ -710,8 +725,8 @@ kubectl get approvalrequests -n test-namespace
 Your output should look similar to the following example:
 
 ```output
-NAME                 STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-canary   example-run         canary                                 2m39s
+NAME                        STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-before-canary   example-run         canary                                 2m39s
 ```
 
 ---
@@ -742,7 +757,7 @@ EOF
 Submit a patch request to approve using the JSON file created.
 
 ```bash
-kubectl patch clusterapprovalrequests example-run-canary --type='merge' --subresource=status --patch-file approval.json
+kubectl patch clusterapprovalrequests example-run-before-canary --type='merge' --subresource=status --patch-file approval.json
 ```
 
 Then verify that you approved the request:
@@ -754,9 +769,11 @@ kubectl get clusterapprovalrequest
 Your output should look similar to the following example:
 
 ```output
-NAME                 UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-canary   example-run   canary   True       True               3m35s
+NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-before-canary   example-run   canary   True       True               3m35s
 ```
+> [!NOTE] A stage can have a before stage task of type approval and an after stage task type of approval. 
+> The approval request name will contain `-before-` for before stage tasks or `-after-` for after stage tasks to help you differentiate which stage task it is for.
 
 The `ClusterStagedUpdateRun` now is able to proceed and complete:
 
@@ -795,7 +812,7 @@ EOF
 Submit a patch request to approve using the JSON file created.
 
 ```bash
-kubectl patch approvalrequests example-run-canary -n test-namespace --type='merge' --subresource=status --patch-file approval.json
+kubectl patch approvalrequests example-run-before-canary -n test-namespace --type='merge' --subresource=status --patch-file approval.json
 ```
 
 Then verify that you approved the request:
@@ -807,9 +824,11 @@ kubectl get approvalrequests -n test-namespace
 Your output should look similar to the following example:
 
 ```output
-NAME                 STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-canary   example-run         canary   True       True               3m35s
+NAME                        STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-before-canary   example-run         canary   True       True               3m35s
 ```
+> [!NOTE] A stage can have a before stage task of type approval and an after stage task type of approval. 
+> The approval request name will contain `-before-` for before stage tasks or `-after-` for after stage tasks to help you differentiate which stage task it is for.
 
 The `StagedUpdateRun` now is able to proceed and complete:
 
@@ -905,6 +924,7 @@ spec:
   placementName: example-placement
   resourceSnapshotIndex: "0"
   stagedRolloutStrategyName: example-strategy
+  state: Run
 ```
 
 Let's check the new `ClusterStagedUpdateRun`:
@@ -930,15 +950,15 @@ kubectl get clusterapprovalrequest
 Your output should look similar to the following example:
 
 ```output
-NAME                   UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-2-canary   example-run-2   canary                                 75s
-example-run-canary     example-run     canary   True       True               14m
+NAME                          UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-2-before-canary   example-run-2   canary                                 75s
+example-run-before-canary     example-run     canary   True       True               14m
 ```
 
 To approve the new `ClusterApprovalRequest` object, let's reuse the same `approval.json` file to patch it:
 
 ```bash
-kubectl patch clusterapprovalrequests example-run-2-canary --type='merge' --subresource=status --patch-file approval.json
+kubectl patch clusterapprovalrequests example-run-2-before-canary --type='merge' --subresource=status --patch-file approval.json
 ```
 
 Verify if the new object is approved:
@@ -951,8 +971,8 @@ Your output should look similar to the following example:
 
 ```output
 NAME                   UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-2-canary   example-run-2   canary   True       True               2m7s
-example-run-canary     example-run     canary   True       True               15m
+example-run-2-before-canary   example-run-2   canary   True       True               2m7s
+example-run-before-canary     example-run     canary   True       True               15m
 ```
 
 The configmap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
@@ -983,6 +1003,7 @@ spec:
   placementName: example-placement
   resourceSnapshotIndex: "0"
   stagedRolloutStrategyName: example-strategy
+  state: Run
 ```
 
 Let's check the new `StagedUpdateRun`:
@@ -1008,15 +1029,15 @@ kubectl get approvalrequests -n test-namespace
 Your output should look similar to the following example:
 
 ```output
-NAME                   STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-2-canary   example-run-2       canary                                 75s
-example-run-canary     example-run         canary   True       True               14m
+NAME                          STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-2-before-canary   example-run-2       canary                                 75s
+example-run-before-canary     example-run         canary   True       True               14m
 ```
 
 To approve the new `ApprovalRequest` object, let's reuse the same `approval.json` file to patch it:
 
 ```bash
-kubectl patch approvalrequests example-run-2-canary -n test-namespace --type='merge' --subresource=status --patch-file approval.json
+kubectl patch approvalrequests example-run-2-before-canary -n test-namespace --type='merge' --subresource=status --patch-file approval.json
 ```
 
 Verify if the new object is approved:
@@ -1028,9 +1049,9 @@ kubectl get approvalrequests -n test-namespace
 Your output should look similar to the following example:
 
 ```output
-NAME                   STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-2-canary   example-run-2       canary   True       True               2m7s
-example-run-canary     example-run         canary   True       True               15m
+NAME                          STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-2-before-canary   example-run-2       canary   True       True               2m7s
+example-run-before-canary     example-run         canary   True       True               15m
 ```
 
 The configmap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
