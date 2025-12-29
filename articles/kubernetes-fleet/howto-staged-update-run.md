@@ -444,6 +444,7 @@ spec:
       afterStageTasks:
         - type: TimedWait
           waitTime: 1m
+      maxConcurrency: 1
     - name: canary
       labelSelector:
         matchLabels:
@@ -451,6 +452,7 @@ spec:
       sortingLabelKey: order
       beforeStageTasks:
         - type: Approval
+      maxConcurrency: 50%
 ```
 
 ### [ResourcePlacement](#tab/resourceplacement)
@@ -472,6 +474,7 @@ spec:
       afterStageTasks:
         - type: TimedWait
           waitTime: 1m
+      maxConcurrency: 1
     - name: canary
       labelSelector:
         matchLabels:
@@ -479,6 +482,7 @@ spec:
       sortingLabelKey: order
       beforeStageTasks:
         - type: Approval
+      maxConcurrency: 50%
 ```
 
 ---
@@ -503,7 +507,7 @@ The following state transitions are supported:
 * **Run → Stop**: Stop a running update run
 * **Stop → Run**: Resume a stopped update run
 
-> [!TIP]
+> [!NOTE]
 > Always verify the current state of your update run before attempting state changes. Use `kubectl get csur <run-name>` or `kubectl get sur <run-name> -n <namespace>` to check the current state and status.
 
 ---
@@ -595,12 +599,14 @@ status:
       labelSelector:
         matchLabels:
           environment: staging
+      maxConcurrency: 1
       name: staging
     - beforeStageTasks:
       - type: Approval
       labelSelector:
         matchLabels:
           environment: canary
+      maxConcurrency: 50%
       name: canary
       sortingLabelKey: order
   stagesStatus: # detailed status for each stage
