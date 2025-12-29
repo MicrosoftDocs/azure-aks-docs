@@ -133,15 +133,13 @@ From the Managed Fleet Namespace overview select **Member clusters** on the left
 
 :::zone-end
 
-## Retrieve the kubeconfig for a Managed Fleet Namespace
+## Access Managed Fleet Namespace 
 
 You can retrieve either the kubeconfig to access the multi-cluster managed namespace on the Fleet Manager hub cluster, or on a specific member cluster. If you access the hub cluster, you can utilize Fleet Manager's [intelligent resource placement](intelligent-resource-placement.md) to replicate your resources to member clusters.
 
-### Access Managed Fleet Namespace 
+### Retrieve the kubeconfig
 
 Get credentials to access the namespace on the Fleet Manager hub cluster using the following command. 
-
-You can use the hub cluster to stage workload deployments or configurations that can be distributed along with the namespace onto every member cluster to which it is deployed.
 
 ```azurecli-interactive
 az fleet namespace get-credentials \ 
