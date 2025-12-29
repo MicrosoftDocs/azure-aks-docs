@@ -121,7 +121,9 @@ Starting in Kubernetes center:
 
 ## View a Managed Fleet Namespace's configuration
 
-View a specific multi-cluster managed namespace's details by using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
+View a Managed Fleet Namespace's configuration on its overview by selecting the namespace from the list.
+
+:::image type="content" source="./media/managed-namespace/view-managed-fleet-namespace-overview.png" alt-text="Screenshot of the Azure portal showing the overview screen for a Managed Fleet Namespace." lightbox="./media/managed-namespace/view-managed-fleet-namespace-overview.png":::
 
 :::zone-end
 
@@ -147,8 +149,6 @@ az fleet namespace get-credentials \
     --name ${FLEET_NAMESPACE_NAME} \ 
     --member myMemberCluster
 ```
-
-
 
 ## Next steps
 
