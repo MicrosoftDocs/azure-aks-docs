@@ -13,7 +13,7 @@ zone_pivot_groups: azure-portal-azure-cli
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-This article shows you how to use Fleet Manager to create and configure a Managed Fleet Namespace that defines resource quotas, network policies, and delegated user access for the namespaces on multiple clusters.
+This article shows you how to use Fleet Manager to create a Managed Fleet Namespace that defines resource quotas, network policies, and delegated user access for the namespaces on multiple clusters.
 
 If you're looking to view or access existing Managed Fleet Namespaces you have access to, see [view and access Managed Fleet Namespaces](./howto-managed-namespaces-access.md).
 
@@ -90,7 +90,7 @@ Create a new multi-cluster managed namespace using the [`az fleet namespace crea
 
 ## Delegate access to a Managed Fleet Namespace
 
-You can now grant access to a user for the Managed Fleet Namespace across member clusters using one of the [built-in roles](./concepts-fleet-managed-namespace.md#managed-fleet-namespace-built-in-roles).
+You can now grant access to a user for the Managed Fleet Namespace across member clusters using one of the [Azure RBAC built-in roles](./concepts-fleet-managed-namespace.md#managed-fleet-namespace-built-in-roles).
 
 Create a role assignment using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. 
 
@@ -175,7 +175,7 @@ az fleet namespace delete \
 
 ## Create a new Managed Fleet Namespace 
 
-You can create a new Managed Fleet Namespace from within Fleet Manager, or via Kubernetes Center.
+You can create a new Managed Fleet Namespace from within Fleet Manager, or via Kubernetes center.
 
 Starting in Fleet Manager:
 
@@ -185,27 +185,41 @@ Starting in Fleet Manager:
 
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-01.png" alt-text="Screenshot of the Azure portal menu for creating a Managed Fleet Namespace in Azure Kubernetes Fleet Manager." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-01.png":::
 
-Starting in Kubernetes Center:
+Starting in Kubernetes center:
 
-* Open [Kubernetes Center - Managed namespaces](https://portal.azure.com/#view/Microsoft_Azure_KubernetesFleet/KubernetesHub.MenuView/~/managedNamespaces) in the Azure portal.
+* Open [Kubernetes center - Managed namespaces](https://portal.azure.com/#view/Microsoft_Azure_KubernetesFleet/KubernetesHub.MenuView/~/managedNamespaces) in the Azure portal.
 * From the menu select **+ Create**, then **Managed Fleet Namespace**.
 * Select a **Subscription** and **Fleet Manager** instance.
 
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png" alt-text="Screenshot of the Azure portal Kubernetes Center menu for creating a Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-kubernetes-center-01.png":::
 
 * Select one of the following options for **Scope**:
-    * **New** - create a new Kubernetes namespace that doesn't exist on the Fleet Manager hub cluster. Prove the **Name** for the new namespace.
-    * **Convert to Managed** - the Kubernetes namespace exists on the Fleet Manager hub cluster and will be converted to a Managed Fleet Namespace. Select the **Namespace** on the Fleet Manager hub cluster to convert
+    * **New** - create a new Kubernetes namespace that doesn't exist on the Fleet Manager hub cluster. Enter a **Name** for the new namespace.
+    * **Convert to Managed** - use an existing Kubernetes namespace on the Fleet Manager hub cluster. Select the **Namespace** from the list of namespaces on the Fleet Manager hub cluster.
 
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png" alt-text="Screenshot of the Azure portal showing the Basics tab with Project details completed for a new Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png":::
 
-* Select the Entra ID identities that will be granted **Access** to the Managed Fleet Namespace. 
+## Assign access to a Managed Fleet Namespace
 
-## Delegate access to a Managed Fleet Namespace
+Select the Microsoft Entra users and groups that will **Access** to the Managed Fleet Namespace.
 
-You can now grant access to a user for the Managed Fleet Namespace across member clusters using one of the [built-in roles](./concepts-fleet-managed-namespace.md#managed-fleet-namespace-built-in-roles).
+:::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-03.png" alt-text="Screenshot of the Azure portal showing completed Access details for a new Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-03.png":::
 
-Create a role assignment using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. 
+You can now grant access to a user for the Managed Fleet Namespace across member clusters using one of the [Azure RBAC built-in roles](./concepts-fleet-managed-namespace.md#managed-fleet-namespace-built-in-roles).
+
+Create the necessary role assignments using the [Microsoft Entra admin center][entra-role-portal]. 
+
+> [!NOTE]
+> This step is optional to allow you can create and distribute a Managed Fleet Namespace, adding user access controls at a later stage. 
+
+## Add network policies and compute quota
+
+Set policies and quota.
+
+:::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-04.png" alt-text="Screenshot of the Azure portal showing completed Networking policies and Compute quota for a new Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-04.png":::
+
+> [!NOTE]
+> The setting of networking policies and compute quota are optional. This allows you to create and distribute a Managed Fleet Namespace, adding network policies and quota controls at a later stage.
 
 ## Add member clusters to a Managed Fleet Namespace
 
@@ -240,3 +254,4 @@ Delete a multi-cluster managed namespace using the [`az fleet namespace delete`]
 [az-account-set]: /cli/azure/account#az-account-set
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [rbac-admin]: /azure/role-based-access-control/built-in-roles/privileged#role-based-access-control-administrator
+[entra-role-portal]: /entra/fundamentals/how-to-assign-roles-to-users
