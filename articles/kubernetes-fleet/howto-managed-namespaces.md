@@ -258,25 +258,61 @@ To review the rollout of the Kubernetes namespace across clusters, use [Resource
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-crp-status.png" alt-text="Screenshot of the Azure portal showing the resource placement status of the new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-crp-status.png":::
 
-## Remove member clusters from a Managed Fleet Namespace
+## Modify member clusters
+
+You can locate Managed Fleet Namespace from within Fleet Manager, or via Kubernetes center.
+
+Starting in Fleet Manager:
 
 * In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 * From the left menu, under **Fleet Resources**, select **Namespaces**.
-* Open the Managed Fleet Namespace's overview by selecting it from the namespace list.
+
+Starting in Kubernetes center:
+
+* Open [Kubernetes center - Managed namespaces](https://portal.azure.com/#view/Microsoft_Azure_KubernetesFleet/KubernetesHub.MenuView/~/managedNamespaces) in the Azure portal.
+* Set the **Type** filter to **Managed Fleet Namespace**.
+
+The remaining steps are the same:
+
+* Open the Managed Fleet Namespace's overview by selecting it from the list.
 * In the left navigation, select **Member clusters**.
+
+To remove member clusters:
+
 * Select the cluster(s) to remove by checking the box on the left of the row.
 * In the top navigation select **Remove**.
 * Confirm the action and select **Remove**.
 
+To add member clusters:
+
+* From the menu select **+ Add**.
+* In the **Add member clusters** dialog search for the member clusters, selecting them by checking the box.
+* Finally, choose **Add** to add the member clusters.
+
 :::image type="content" source="./media/managed-namespace/remove-member-cluster-managed-fleet-namespace.png" alt-text="Screenshot of the Azure portal showing a single member cluster selected ready to be removed from the Managed Fleet Namespace." lightbox="./media/managed-namespace/remove-member-cluster-managed-fleet-namespace.png":::
 
-Once the selected clusters are removed, the overview is updated to display only the remaining clusters.  
+Once the clusters hosting the Managed Fleet Namespace are modified, the overview is updated to display the clusters actively hosting the namespace.  
 
 To review the rollout of the Kubernetes namespace across clusters, use [Resource placements](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters), looking for the resource placement named the same as the Managed Fleet Namespace.
 
 ## View a Managed Fleet Namespace's configuration
 
-View a specific multi-cluster managed namespace's details by using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
+You can locate Managed Fleet Namespace from within Fleet Manager, or via Kubernetes center.
+
+Starting in Fleet Manager:
+
+* In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
+* From the left menu, under **Fleet Resources**, select **Namespaces**.
+* Open the Managed Fleet Namespace's overview by selecting it from the namespace list.
+
+Starting in Kubernetes center:
+
+* Open [Kubernetes center - Managed namespaces](https://portal.azure.com/#view/Microsoft_Azure_KubernetesFleet/KubernetesHub.MenuView/~/managedNamespaces) in the Azure portal.
+* Set the **Type** filter to **Managed Fleet Namespace**.
+* Open the Managed Fleet Namespace's overview by selecting it from the namespace list.
+
+:::image type="content" source="./media/managed-namespace/view-managed-fleet-namespace-overview.png" alt-text="Screenshot of the Azure portal showing the overview screen for a Managed Fleet Namespace." lightbox="./media/managed-namespace/view-managed-fleet-namespace-overview.png":::
+articles/kubernetes-fleet/media/managed-namespace/
 
 ## Delete a Managed Fleet Namespace
 
