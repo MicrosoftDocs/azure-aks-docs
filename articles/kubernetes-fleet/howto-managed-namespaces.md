@@ -88,6 +88,13 @@ Create a new multi-cluster managed namespace using the [`az fleet namespace crea
         --adoption-policy never
 ```
 
+> [!NOTE]
+> These settings are optional: networking policies, compute quota, and deletion and adoption policy, labels and annotations. 
+>
+> When using networking policies, users with a `Microsoft.ContainerService/managedClusters/networking.k8s.io/networkpolicies/write` action, such as `Azure Kubernetes Service RBAC Writer`, on the Microsoft Entra ID role they're assigned can add more network policies through the Kubernetes API.
+>
+> For example, if an admin applies a `Deny All` policy for ingress/egress, and a user applies an `Allow` policy for a namespace via the Kubernetes API, the `Allow` policy takes priority over the `Deny All` policy, and traffic is allowed to flow for the namespace. This is standard Kubernetes behavior.
+
 ## Delegate access to a Managed Fleet Namespace
 
 You can now grant access to a user for the Managed Fleet Namespace across member clusters using one of the [Azure RBAC built-in roles](./concepts-fleet-managed-namespace.md#managed-fleet-namespace-built-in-roles).
@@ -199,18 +206,14 @@ Starting in Kubernetes center:
 
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png" alt-text="Screenshot of the Azure portal showing the Basics tab with Project details completed for a new Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-02.png":::
 
-## Assign access to a Managed Fleet Namespace
+## Assign user or group access
 
-Select the Microsoft Entra users and groups that will **Access** to the Managed Fleet Namespace.
+Select the Microsoft Entra users and groups that will access the Managed Fleet Namespace on clusters it is distributed to.
 
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-03.png" alt-text="Screenshot of the Azure portal showing completed Access details for a new Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-03.png":::
 
-You can now grant access to a user for the Managed Fleet Namespace across member clusters using one of the [Azure RBAC built-in roles](./concepts-fleet-managed-namespace.md#managed-fleet-namespace-built-in-roles).
-
-Create the necessary role assignments using the [Microsoft Entra admin center][entra-role-portal]. 
-
 > [!NOTE]
-> This step is optional to allow you can create and distribute a Managed Fleet Namespace, adding user access controls at a later stage. 
+> This step is optional. You can create and distribute a Managed Fleet Namespace without assigning users or groups. This allows you to distribute the namespace without granting access immediately.
 
 ## Add network policies and compute quota
 
@@ -219,7 +222,11 @@ Set policies and quota.
 :::image type="content" source="./media/managed-fleet-namespace/create-managed-fleet-namespace-04.png" alt-text="Screenshot of the Azure portal showing completed Networking policies and Compute quota for a new Managed Fleet Namespace." lightbox="./media/managed-fleet-namespace/create-managed-fleet-namespace-04.png":::
 
 > [!NOTE]
-> The setting of networking policies and compute quota are optional. This allows you to create and distribute a Managed Fleet Namespace, adding network policies and quota controls at a later stage.
+> These settings are optional. This allows you to create and distribute a Managed Fleet Namespace without networking policies or quota controls applied immediately.
+>
+> Users with a `Microsoft.ContainerService/managedClusters/networking.k8s.io/networkpolicies/write` action, such as `Azure Kubernetes Service RBAC Writer`, on the Microsoft Entra ID role they're assigned can add more network policies through the Kubernetes API.
+>
+> For example, if an admin applies a `Deny All` policy for ingress/egress, and a user applies an `Allow` policy for a namespace via the Kubernetes API, the `Allow` policy takes priority over the `Deny All` policy, and traffic is allowed to flow for the namespace. This is standard Kubernetes behavior.
 
 ## Add member clusters to a Managed Fleet Namespace
 
