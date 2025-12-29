@@ -206,7 +206,7 @@ Starting in Kubernetes center:
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-02.png" alt-text="Screenshot of the Azure portal showing the Basics tab with Project details completed for a new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-02.png":::
 
-## Assign user or group access
+### Assign user or group access
 
 Select the Microsoft Entra users and groups that will access the Managed Fleet Namespace on clusters it is distributed to.
 
@@ -215,7 +215,7 @@ Select the Microsoft Entra users and groups that will access the Managed Fleet N
 > [!NOTE]
 > This step is optional. You can create and distribute a Managed Fleet Namespace without assigning users or groups. This allows you to distribute the namespace without granting access immediately.
 
-## Add network policies and compute quota
+### Add network policies and compute quota
 
 Set policies and quota.
 
@@ -228,7 +228,7 @@ Set policies and quota.
 >
 > For example, if an admin applies a `Deny All` policy for ingress/egress, and a user applies an `Allow` policy for a namespace via the Kubernetes API, the `Allow` policy takes priority over the `Deny All` policy, and traffic is allowed to flow for the namespace. This additive behavior is standard for networking policies.
 
-## Select member clusters
+### Select member clusters
 
 You can control which member clusters to distribute the managed namespace to by adding them as follows. Any unmanaged namespaces with the same name on member clusters not in the specified list remain untouched.
 
@@ -238,13 +238,13 @@ You can control which member clusters to distribute the managed namespace to by 
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-05.png" alt-text="Screenshot of the Azure portal showing two member clusters selected to host a new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-05.png":::
 
-## Set labels, annotations and tags
+### Set labels, annotations and tags
 
 Define optional Kubernetes labels and annotations, and Azure Resource Manager (ARM) tags which provide metadata that can be used for automation and resource management.
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-06.png" alt-text="Screenshot of the Azure portal showing settings for labels and annotations for a new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-06.png":::
 
-## Create and distribute
+### Create and distribute
 
 Once you have configured all properties for the new Managed Fleet Namespace you can confirm the details before creating the namespace by selecting **Create**.
 
@@ -260,7 +260,19 @@ To review the rollout of the Kubernetes namespace across clusters, use [Resource
 
 ## Remove member clusters from a Managed Fleet Namespace
 
-You can remove member clusters from a Managed Fleet Namespace by excluding them from the list of member clusters you want the namespace on.
+* In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
+* From the left menu, under **Fleet Resources**, select **Namespaces**.
+* Open the Managed Fleet Namespace's overview by selecting it from the namespace list.
+* In the left navigation, select **Member clusters**.
+* Select the cluster(s) to remove by checking the box on the left of the row.
+* In the top navigation select **Remove**.
+* Confirm the action and select **Remove**.
+
+:::image type="content" source="./media/managed-namespace/remove-member-cluster-managed-fleet-namespace.png" alt-text="Screenshot of the Azure portal showing a single member cluster selected ready to be removed from the Managed Fleet Namespace." lightbox="./media/managed-namespace/remove-member-cluster-managed-fleet-namespace.png":::
+
+Once the selected clusters are removed, the overview is updated to display only the remaining clusters.  
+
+To review the rollout of the Kubernetes namespace across clusters, use [Resource placements](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters), looking for the resource placement named the same as the Managed Fleet Namespace.
 
 ## View a Managed Fleet Namespace's configuration
 
