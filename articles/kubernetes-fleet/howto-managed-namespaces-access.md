@@ -133,11 +133,9 @@ From the Managed Fleet Namespace overview select **Member clusters** on the left
 
 :::zone-end
 
-## Access Managed Fleet Namespace 
+## Access a Managed Fleet Namespace 
 
-You can retrieve either the kubeconfig to access the multi-cluster managed namespace on the Fleet Manager hub cluster, or on a specific member cluster. If you access the hub cluster, you can utilize Fleet Manager's [intelligent resource placement](intelligent-resource-placement.md) to replicate your resources to member clusters.
-
-### Retrieve the kubeconfig
+You can retrieve the kubeconfig to access a Managed Fleet Namespace on either the Fleet Manager hub cluster, or on a specific member cluster. If you access the hub cluster, you can utilize Fleet Manager's [intelligent resource placement](intelligent-resource-placement.md) to replicate your resources to member clusters, avoiding the need to manually redeploy the same artifacts on each cluster.
 
 Get credentials to access the namespace on the Fleet Manager hub cluster using the following command. 
 
@@ -161,7 +159,7 @@ az fleet namespace get-credentials \
 ## Next steps
 
 * Understand the concept of Managed Fleet Namespaces by [reading the overview](./concepts-fleet-managed-namespace.md).
-* Learn how to [create and use a Managed Fleet Namespace](./howto-managed-namespaces.md).
+* Learn how to [create and configure a Managed Fleet Namespace](./howto-managed-namespaces.md).
 
 <!-- INTERNAL LINKS -->
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli

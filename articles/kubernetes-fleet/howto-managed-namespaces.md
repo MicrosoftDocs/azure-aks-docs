@@ -314,7 +314,17 @@ Once the clusters hosting the Managed Fleet Namespace are modified, the overview
 
 ## Delete a Managed Fleet Namespace
 
-Delete a multi-cluster managed namespace using the [`az fleet namespace delete`](/cli/azure/fleet/namespace#az-fleet-namespace-delete) command.
+On the Managed Fleet Namespace overview select **Delete** in the top navigation.
+
+In the **Delete Managed Fleet Namespace** confirmation select the option you want:
+
+* **Keep namespace, remove management capabilities:** the Managed Fleed Namespace is convered into a standard Kubernetes namespace, remaining on the Fleet Manager hub cluster and member clusters, but no longer managed by Azure Resource Manager (ARM).
+* **Delete namespace and all associated resources:** the Managed Fleet Namespace ARM resource is deleted, along with the Kubernetes namespace on both the Fleet Manager hub cluster and member clusters.
+
+> [!WARNING]
+> Deleting the namespace and all associated resources is a permanent action. If you are unsure, you should elect to keep the namespace.
+>
+> In both cases Azure RBAC assignments are deleted to avoid dangling permissions.
 
 :::zone-end
 
