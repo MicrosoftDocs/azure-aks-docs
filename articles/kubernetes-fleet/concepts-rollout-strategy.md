@@ -309,6 +309,31 @@ spec:
   state: Run # Optional - Controls the execution state of the update run. 
 ```
 
+### Understanding update run states
+
+Staged update runs use a state field to control their execution behavior. Understanding these states and their transitions is essential for managing rollouts effectively.
+
+### Available states
+
+* **Initialize**: Sets up the update run without executing the rollout. Use this state to prepare and validate the update run configuration before starting deployment.
+
+* **Run**: Executes the staged rollout. If starting fresh, this state both initializes and executes the update run. If the update run is already initialized, it only executes the rollout. Use this state to start or resume update runs.
+
+* **Stop**: Gracefully halts the update run. This state allows in progress clusters to complete their updates before stopping the entire rollout process.
+
+### State transition rules
+
+The following state transitions are supported:
+
+* **Initialize → Run**: Start execution after initialization
+* **Run → Stop**: Stop a running update run
+* **Stop → Run**: Resume a stopped update run
+
+> [!NOTE]
+> Always verify the current state of your update runs before attempting state changes. 
+> Use `kubectl get csur <update-run-name>` or `kubectl get sur <update-run-name> -n <namespace>` to check the current state and status.
+
+
 ### Stage progression
 
 Fleet Manager processes stages sequentially:
