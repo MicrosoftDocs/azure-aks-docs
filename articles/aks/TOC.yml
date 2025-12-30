@@ -742,6 +742,8 @@
           href: control-kubeconfig-access.md
         - name: Define API server authorized IP ranges
           href: api-server-authorized-ip-ranges.md
+        - name: Use service tags for API server authorized IP ranges
+          href: api-server-service-tags.md
         - name: Manage cluster certificates and rotation
           href: certificate-rotation.md
         - name: Use custom certificate authorities
