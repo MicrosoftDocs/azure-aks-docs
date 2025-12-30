@@ -124,7 +124,7 @@
           href: howto-automated-deployments.md
     - name: Use Managed Fleet Namespaces for multi-cluster multi-tenancy
       items:
-        - name: Create Managed Fleet Namespaces
+        - name: Create and configure Managed Fleet Namespaces
           href: howto-managed-namespaces.md
         - name: View and access Managed Fleet Namespaces
           href: howto-managed-namespaces-access.md
@@ -146,8 +146,10 @@
     href: /cli/azure/fleet
   - name: REST
     href: /rest/api/fleet
-  - name: Terraform
+  - name: Terraform (AzureRM)
     href: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_fleet_manager
+  - name: Terraform (AzAPI)
+    href: https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.ContainerService_fleets
   - name: PowerShell
     href: /powershell/module/az.fleet
   - name: .NET
