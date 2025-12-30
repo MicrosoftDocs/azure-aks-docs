@@ -529,7 +529,7 @@ kubectl patch csur example-run --type merge -p '{"spec":{"state":"Run"}}'
 ```
 
 > [!NOTE]
-> You can also create an update run with the `state` field set to `Run` initially, which both initializes and starts progressing the update run in a single step.
+> You can also create an update run with the `state` field set to `Run` initially, which both initialize and starts progressing the update run in a single step.
 
 The staged update run is initialized and running:
 
@@ -724,7 +724,7 @@ example-run-before-canary   example-run         canary                          
 
 ## Approve the staged update run
 > [!TIP]
-For more information, see [Approval Requests](./concepts-rollout-strategy.md#approval-requests)
+For more information, see [Approval Requests](./concepts-rollout-strategy.md)
 
 ### [ClusterResourcePlacement](#tab/clusterresourceplacement)
 
