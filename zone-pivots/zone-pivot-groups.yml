@@ -211,3 +211,14 @@ groups:
     title: ExpressRoute or VPN
   - id: aks-command-invoke
     title: AKS command invoke
+# Owner: schaffererin
+- id: api-server-authorized-ip-ranges
+  title: Choose an interaction method
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: azure-powershell
+    title: Azure PowerShell
+  - id: azure-portal
+    title: Azure portal
