@@ -179,26 +179,6 @@ spec:
     type: External  # Rollout is controlled by ClusterStagedUpdateRun, ClusterStagedUpdateStrategy.
 ```
 
-#### ResourcePlacement with external strategy
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ResourcePlacement
-metadata:
-  name: my-app-placement
-  namespace: my-app
-spec:
-  resourceSelectors:
-    - group: "apps"
-      kind: Deployment
-      name: my-deployment
-      version: v1
-  policy:
-    placementType: PickAll
-  strategy:
-    type: External  # Rollout is controlled by StagedUpdateRun, StagedUpdateStrategy.
-```
-
 #### ClusterStagedUpdateStrategy (cluster-scoped)
 
 ```yaml
@@ -232,6 +212,26 @@ spec:
       beforeStageTasks:
         - type: Approval
       maxConcurrency: 1  # Sequential updates (default)
+```
+
+#### ResourcePlacement with external strategy
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ResourcePlacement
+metadata:
+  name: my-app-placement
+  namespace: my-app
+spec:
+  resourceSelectors:
+    - group: "apps"
+      kind: Deployment
+      name: my-deployment
+      version: v1
+  policy:
+    placementType: PickAll
+  strategy:
+    type: External  # Rollout is controlled by StagedUpdateRun, StagedUpdateStrategy.
 ```
 
 #### StagedUpdateStrategy (namespace-scoped)
@@ -309,9 +309,19 @@ spec:
   state: Run # Optional - Controls the execution state of the update run. 
 ```
 
+### Specifying rollout
+
+The `resourceSnapshotIndex` field controls which resource snapshot version to deploy. You have several options:
+- Leave empty (`""`) or omit the field entirely to use the latest resource snapshot
+- Specify the latest resource snapshot index (like the example `"1"`) to explicitly target the newest version
+- Specify an older resource snapshot index (for example, `"0"`) to deploy or roll back to a previous version
+ 
+For more information on resource snapshots, see [Work with resource snapshots](./howto-staged-update-run.md#work-with-resource-snapshots).
+
+
 ### Understanding update run states
 
-Staged update runs use a state field to control their execution behavior. Understanding these states and their transitions is essential for managing rollouts effectively.
+Staged update runs use a `state` field to control their execution behavior. Understanding these states and their transitions is essential for managing rollouts effectively.
 
 ### Available states
 
@@ -346,7 +356,11 @@ Fleet Manager processes stages sequentially:
 > [!NOTE] 
 > If a resource placement on a cluster fails, the entire update run is aborted.
 
+### Approval Requests
+
 For approval-based progression, Fleet Manager creates a `ClusterApprovalRequest` (for cluster-scoped placements) or `ApprovalRequest` (for namespace-scoped placements) resource that must be approved before continuing to the next stage.
+
+A stage can have a before stage task of type approval and an after stage task type of approval. To help differentiate which approval request is for what stage tasks, the approval request name will contain `-before-` for before stage tasks or `-after-` for after stage tasks.
 
 ## Next steps
 
