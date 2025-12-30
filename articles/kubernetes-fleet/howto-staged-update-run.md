@@ -1,5 +1,5 @@
 ---
-title: "Orchestrate staged rollouts with staged update runs"
+title: "Control cluster order for resource placement"
 description: Learn how to use staged update runs to deploy resources to member clusters in stages and roll back to previous versions in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 07/18/2025
@@ -269,7 +269,7 @@ metadata:
   uid: ...
 ```
 
-Now you should see two versions of resource snapshots with index 0 and 1 respectively:
+Now you should see two versions of resource snapshots with index 0 and 1 respectively, the latest being index 1:
 
 ```bash
 kubectl get clusterresourcesnapshots --show-labels
@@ -424,7 +424,7 @@ spec:
 
 ---
 
-## Deploy a staged update strategy
+## Create a staged update strategy
 
 ### [ClusterResourcePlacement](#tab/clusterresourceplacement)
 
@@ -487,32 +487,9 @@ spec:
 
 ---
 
-## Understanding update run states
-
-Staged update runs use a state field to control their execution behavior. Understanding these states and their transitions is essential for managing rollouts effectively.
-
-### Available states
-
-* **Initialize**: Sets up the update run without executing the rollout. Use this state to prepare and validate the update run configuration before starting deployment.
-
-* **Run**: Executes the staged rollout. If starting fresh, this state both initializes and executes the update run. If the update run is already initialized, it only executes the rollout. Use this state to start or resume update runs.
-
-* **Stop**: Gracefully halts the update run. This state allows in progess clusters to complete their updates before stopping the entire rollout process.
-
-### State transition rules
-
-The following state transitions are supported:
-
-* **Initialize → Run**: Start execution after initialization
-* **Run → Stop**: Stop a running update run
-* **Stop → Run**: Resume a stopped update run
-
-> [!NOTE]
-> Always verify the current state of your update run before attempting state changes. Use `kubectl get csur <run-name>` or `kubectl get sur <run-name> -n <namespace>` to check the current state and status.
-
----
-
-## Deploy a staged update run to roll out latest change
+## Prepare a state staged update run to rollout changes
+> [!TIP]
+ For more information about staged update runs, see [staged update strategy](./concepts-rollout-strategy.md#staged-update-strategy-preview)
 
 ### [ClusterResourcePlacement](#tab/clusterresourceplacement)
 
@@ -527,16 +504,32 @@ spec:
   placementName: example-placement
   resourceSnapshotIndex: "1"
   stagedRolloutStrategyName: example-strategy
-  state: Run
+  state: Initialize
+```
+
+The staged update run is initialized but not running:
+
+```bash
+kubectl get csur example-run
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True                      7s
+```
+
+## Start a staged update run
+
+To start the execution of a staged update run, you need to patch the `state` field in the spec to `Run`. This action causes the update run to begin progressing through its defined stages:
+
+```bash
+kubectl patch csur example-run --type merge -p '{"spec":{"state":"Run"}}'
 ```
 
 > [!NOTE]
-> The `resourceSnapshotIndex` field controls which resource snapshot version to deploy. You have several options:
-> - Leave empty (`""`) or omit the field entirely to use the latest resource snapshot
-> - Specify the latest resource snapshot index (e.g., `"1"`) to explicitly target the newest version
-> - Specify an older resource snapshot index (e.g., `"0"`) to deploy or roll back to a previous version
->
-> Using an empty string or the latest index both result in deploying the most recent changes.
+> You can also create an update run with the `state` field set to `Run` initially, which both initializes and starts progressing the update run in a single step.
 
 The staged update run is initialized and running:
 
@@ -575,13 +568,13 @@ status:
   conditions:
   - lastTransitionTime: "2025-07-22T21:28:08Z"
     message: ClusterStagedUpdateRun initialized successfully
-    observedGeneration: 1
+    observedGeneration: 2
     reason: UpdateRunInitializedSuccessfully
     status: "True" # the updateRun is initialized successfully
     type: Initialized
   - lastTransitionTime: "2025-07-22T21:29:53Z"
     message: The updateRun is waiting for after-stage tasks in stage canary to complete
-    observedGeneration: 1
+    observedGeneration: 2
     reason: UpdateRunWaiting
     status: "False" # the updateRun is still progressing and waiting for approval
     type: Progressing
@@ -614,7 +607,7 @@ status:
     - conditions:
       - lastTransitionTime: "2025-07-22T21:29:23Z"
         message: Wait time elapsed
-        observedGeneration: 1
+        observedGeneration: 2
         reason: StageTaskWaitTimeElapsed
         status: "True" # the wait after-stage task has completed
         type: WaitTimeElapsed
@@ -624,26 +617,26 @@ status:
       conditions:
       - lastTransitionTime: "2025-07-22T21:28:08Z"
         message: Cluster update started
-        observedGeneration: 1
+        observedGeneration: 2
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: "2025-07-22T21:28:23Z"
         message: Cluster update completed successfully
-        observedGeneration: 1
+        observedGeneration: 2
         reason: ClusterUpdatingSucceeded
         status: "True" # member2 is updated successfully
         type: Succeeded
     conditions:
     - lastTransitionTime: "2025-07-22T21:28:23Z"
       message: All clusters in the stage are updated and after-stage tasks are completed
-      observedGeneration: 1
+      observedGeneration: 2
       reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: "2025-07-22T21:29:23Z"
       message: Stage update completed successfully
-      observedGeneration: 1
+      observedGeneration: 2
       reason: StageUpdatingSucceeded
       status: "True" # stage staging has completed successfully
       type: Succeeded
@@ -655,7 +648,7 @@ status:
       conditions:
       - lastTransitionTime: "2025-07-22T21:29:53Z"
         message: ClusterApprovalRequest is created
-        observedGeneration: 1
+        observedGeneration: 2
         reason: StageTaskApprovalRequestCreated
         status: "True"
         type: ApprovalRequestCreated
@@ -663,7 +656,7 @@ status:
     conditions:
     - lastTransitionTime: "2025-07-22T21:29:53Z"
       message: Not all before-stage tasks are completed, waiting for approval
-      observedGeneration: 1
+      observedGeneration: 2
       reason: StageUpdatingWaiting
       status: "False" # stage canary is waiting for approval task completion
       type: Progressing
@@ -701,14 +694,6 @@ spec:
   state: Run
 ```
 
-> [!NOTE]
-> The `resourceSnapshotIndex` field controls which resource snapshot version to deploy. You have several options:
-> - Leave empty (`""`) or omit the field entirely to use the latest resource snapshot
-> - Specify the latest resource snapshot index (e.g., `"1"` as shown above) to explicitly target the newest version
-> - Specify an older resource snapshot index (e.g., `"0"`) to deploy or roll back to a previous version
->
-> Using an empty string or the latest index both result in deploying the most recent changes.
-
 The staged update run is initialized and running:
 
 ```bash
@@ -738,6 +723,8 @@ example-run-before-canary   example-run         canary                          
 ---
 
 ## Approve the staged update run
+> [!TIP]
+For more information, see [Approval Requests](./concepts-rollout-strategy.md#approval-requests)
 
 ### [ClusterResourcePlacement](#tab/clusterresourceplacement)
 
@@ -778,8 +765,6 @@ Your output should look similar to the following example:
 NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
 example-run-before-canary   example-run   canary   True       True               3m35s
 ```
-> [!NOTE] A stage can have a before stage task of type approval and an after stage task type of approval. 
-> The approval request name will contain `-before-` for before stage tasks or `-after-` for after stage tasks to help you differentiate which stage task it is for.
 
 The `ClusterStagedUpdateRun` now is able to proceed and complete:
 
@@ -833,8 +818,6 @@ Your output should look similar to the following example:
 NAME                        STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
 example-run-before-canary   example-run         canary   True       True               3m35s
 ```
-> [!NOTE] A stage can have a before stage task of type approval and an after stage task type of approval. 
-> The approval request name will contain `-before-` for before stage tasks or `-after-` for after stage tasks to help you differentiate which stage task it is for.
 
 The `StagedUpdateRun` now is able to proceed and complete:
 
@@ -880,6 +863,112 @@ metadata:
   name: test-cm
   namespace: test-namespace
   ...
+```
+
+## Stop a staged update run
+
+To stop the execution of a running staged update run, you need to patch the `state` field in the spec to `Stop`. This action gracefully halts the update run, allowing in-progress clusters to complete their updates before stopping the entire rollout process:
+
+```bash
+kubectl patch csur example-run --type merge -p '{"spec":{"state":"Stop"}}'
+```
+
+The staged update run is initialized and no longer running:
+
+```bash
+kubectl get csur example-run
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True                      7s
+```
+
+A more detailed look at the status after the update run stops:
+
+```bash
+kubectl get csur example-run -o yaml
+```
+
+Your output should look similar to the following example:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateRun
+metadata:
+  ...
+  name: example-run
+  ...
+spec:
+  placementName: example-placement
+  resourceSnapshotIndex: "1"
+  stagedRolloutStrategyName: example-strategy
+  state: Stop
+status:
+  conditions:
+  - lastTransitionTime: "2025-07-22T21:28:08Z"
+    message: ClusterStagedUpdateRun initialized successfully
+    observedGeneration: 3
+    reason: UpdateRunInitializedSuccessfully
+    status: "True" # the updateRun is initialized successfully
+    type: Initialized
+  - lastTransitionTime: "2025-07-22T21:28:23Z"
+    message: The update run has been stopped
+    observedGeneration: 3
+    reason: UpdateRunStopped
+    status: "False" # the updateRun has stopped progressing
+    type: Progressing
+  deletionStageStatus:
+    clusters: [] # no clusters need to be cleaned up
+    stageName: kubernetes-fleet.io/deleteStage
+  policyObservedClusterCount: 3 # number of clusters to be updated
+  policySnapshotIndexUsed: "0"
+  resourceSnpashotIndexUsed: "1"
+  stagedUpdateStrategySnapshot: # snapshot of the strategy used for this update run
+    stages:
+    - afterStageTasks:
+      - type: TimedWait
+        waitTime: 1m0s
+      labelSelector:
+        matchLabels:
+          environment: staging
+      maxConcurrency: 1
+      name: staging
+    - beforeStageTasks:
+      - type: Approval
+      labelSelector:
+        matchLabels:
+          environment: canary
+      maxConcurrency: 50%
+      name: canary
+      sortingLabelKey: order
+  stagesStatus: # detailed status for each stage
+  - clusters:
+    - clusterName: member2 # stage staging contains member2 cluster only
+      conditions:
+      - lastTransitionTime: "2025-07-22T21:28:08Z"
+        message: Cluster update started
+        observedGeneration: 3
+        reason: ClusterUpdatingStarted
+        status: "True"
+        type: Started
+      - lastTransitionTime: "2025-07-22T21:28:23Z"
+        message: Cluster update completed successfully
+        observedGeneration: 3
+        reason: ClusterUpdatingSucceeded
+        status: "True" # member2 is updated successfully
+        type: Succeeded
+    conditions:
+    - lastTransitionTime: "2025-07-22T21:28:23Z"
+      message: All the updating clusters have finished updating, the stage is now stopped, waiting to be resumed
+      observedGeneration: 3
+      reason: StageUpdatingStopped
+      status: "False"
+      type: Progressing
+    stageName: staging
+    startTime: "2025-07-22T21:28:08Z"
 ```
 
 ## Deploy a second ClusterStagedUpdateRun to roll back to a previous version
