@@ -9,7 +9,7 @@ ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a DevOps engineer, I want to use staged update runs to control how workloads are deployed across multiple clusters, so that I can minimize risk and ensure reliable rollouts through progressive deployment strategies."
 ---
 
-# "Control cluster order for resource placement
+# Control cluster order for resource placement
 
 Azure Kubernetes Fleet Manager placement staged update runs provide a controlled approach to deploying Kubernetes workloads across multiple member clusters using a stage-by-stage process. To minimize risk, this approach deploys to targeted clusters sequentially, with optional wait times and approval gates between stages.
 
@@ -23,11 +23,9 @@ This article shows you how to create and execute staged update runs to deploy wo
 >
 > The examples in this article demonstrate both approaches using tabs. Choose the tab that matches your deployment scope.
 
---
+## Before you begin
 
-# Before you begin
-
-## Prerequisites
+### Prerequisites
 
 * You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
@@ -53,7 +51,7 @@ This article shows you how to create and execute staged update runs to deploy wo
   az extension update --name fleet
   ```
 
-## Configure the demo environment
+### Configure the demo environment
 
 This demo runs on a Fleet Manager with a hub cluster and three member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
 
@@ -71,7 +69,7 @@ To group clusters by environment and control the deployment order within each st
 
 Publish Kubernetes workloads to the hub cluster so that they can be placed onto member clusters.
 
-### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+#### [ClusterResourcePlacement](#tab/clusterresourceplacement)
 
 Create a Namespace and Configmap for the workload on the hub cluster:
 
@@ -80,7 +78,7 @@ kubectl create namespace test-namespace
 kubectl create configmap test-cm --from-literal=key=value1 -n test-namespace
 ```
 
-To deploy the resources, create a ClusterResourcePlacement:
+To deploy the resources, create a `ClusterResourcePlacement`:
 
 > [!NOTE]
 > The `spec.strategy.type` is set to `External` to allow rollout triggered with a `ClusterStagedUpdateRun`.
@@ -117,7 +115,7 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1                                           51s
 ```
 
-### [ResourcePlacement](#tab/resourceplacement)
+#### [ResourcePlacement](#tab/resourceplacement)
 
 Create a Namespace and Configmap for the workload on the hub cluster:
 
@@ -157,7 +155,7 @@ NAME                       GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILAB
 test-namespace-placement   1     True        1               True        1               30s
 ```
 
-To deploy the Configmap, create a namespace-scoped ResourcePlacement:
+To deploy the Configmap, create a namespace-scoped `ResourcePlacement`:
 
 > [!NOTE]
 > The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
