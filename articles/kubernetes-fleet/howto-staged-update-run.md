@@ -540,7 +540,7 @@ spec:
 The staged update run is initialized but not running:
 
 ```bash
-kubectl get clusterstagedupdaterrun example-run
+kubectl get stagedupdaterrun example-run -n test-namespace
 ```
 
 Your output should look similar to the following example:
@@ -747,8 +747,7 @@ Your output should look similar to the following example:
 NAME                        STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
 example-run-before-canary   example-run         canary                                 2m39s
 ```
-> [!TIP]
-> For more information about staged update runs, see [staged update strategy](./concepts-rollout-strategy.md#staged-update-strategy-preview)
+
 ---
 
 ## Approve the staged update run
@@ -926,7 +925,9 @@ metadata:
 
 ## Stop a staged update run
 
-To stop the execution of a running staged update run, you need to patch the `state` field in the spec to `Stop`. This action gracefully halts the update run, allowing in-progress clusters to complete their updates before stopping the entire rollout process:
+### [ClusterStagedUpdateRun](#tab/stopclusterstagedupdaterun)
+
+To stop the execution of a running cluster staged update run, you need to patch the `state` field in the spec to `Stop`. This action gracefully halts the update run, allowing in-progress clusters to complete their updates before stopping the entire rollout process:
 
 ```bash
 kubectl patch clusterstagedupdaterun example-run --type merge -p '{"spec":{"state":"Stop"}}'
@@ -1029,6 +1030,114 @@ status:
     stageName: staging
     startTime: "2025-07-22T21:28:08Z"
 ```
+
+### [StagedUpdateRun](#tab/stopstagedupdaterun)
+
+To stop the execution of a running staged update run, you need to patch the `state` field in the spec to `Stop`. This action gracefully halts the update run, allowing in-progress clusters to complete their updates before stopping the entire rollout process:
+
+```bash
+kubectl patch stagedupdaterun example-run -n test-namespace --type merge -p '{"spec":{"state":"Stop"}}'
+```
+
+The staged update run is initialized and no longer running:
+
+```bash
+kubectl get stagedupdaterun example-run -n test-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True                      7s
+```
+
+A more detailed look at the status after the update run stops:
+
+```bash
+kubectl get stagedupdaterun example-run -n test-namespace -o yaml
+```
+
+Your output should look similar to the following example:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateRun
+metadata:
+  ...
+  name: example-run
+  namespace: test-namespace
+  ...
+spec:
+  placementName: example-placement
+  resourceSnapshotIndex: "1"
+  stagedRolloutStrategyName: example-strategy
+  state: Stop
+status:
+  conditions:
+  - lastTransitionTime: "2025-07-22T21:28:08Z"
+    message: StagedUpdateRun initialized successfully
+    observedGeneration: 3
+    reason: UpdateRunInitializedSuccessfully
+    status: "True" # the updateRun is initialized successfully
+    type: Initialized
+  - lastTransitionTime: "2025-07-22T21:28:23Z"
+    message: The update run has been stopped
+    observedGeneration: 3
+    reason: UpdateRunStopped
+    status: "False" # the updateRun has stopped progressing
+    type: Progressing
+  deletionStageStatus:
+    clusters: [] # no clusters need to be cleaned up
+    stageName: kubernetes-fleet.io/deleteStage
+  policyObservedClusterCount: 3 # number of clusters to be updated
+  policySnapshotIndexUsed: "0"
+  resourceSnpashotIndexUsed: "1"
+  stagedUpdateStrategySnapshot: # snapshot of the strategy used for this update run
+    stages:
+    - afterStageTasks:
+      - type: TimedWait
+        waitTime: 1m0s
+      labelSelector:
+        matchLabels:
+          environment: staging
+      maxConcurrency: 1
+      name: staging
+    - beforeStageTasks:
+      - type: Approval
+      labelSelector:
+        matchLabels:
+          environment: canary
+      maxConcurrency: 50%
+      name: canary
+      sortingLabelKey: order
+  stagesStatus: # detailed status for each stage
+  - clusters:
+    - clusterName: member2 # stage staging contains member2 cluster only
+      conditions:
+      - lastTransitionTime: "2025-07-22T21:28:08Z"
+        message: Cluster update started
+        observedGeneration: 3
+        reason: ClusterUpdatingStarted
+        status: "True"
+        type: Started
+      - lastTransitionTime: "2025-07-22T21:28:23Z"
+        message: Cluster update completed successfully
+        observedGeneration: 3
+        reason: ClusterUpdatingSucceeded
+        status: "True" # member2 is updated successfully
+        type: Succeeded
+    conditions:
+    - lastTransitionTime: "2025-07-22T21:28:23Z"
+      message: All the updating clusters have finished updating, the stage is now stopped, waiting to be resumed
+      observedGeneration: 3
+      reason: StageUpdatingStopped
+      status: "False"
+      type: Progressing
+    stageName: staging
+    startTime: "2025-07-22T21:28:08Z"
+```
+
 ---
 
 
