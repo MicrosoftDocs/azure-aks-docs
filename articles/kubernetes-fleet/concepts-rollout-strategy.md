@@ -141,8 +141,7 @@ For simpler scenarios where percentage-based rollouts suffice, consider using th
 
 > [!NOTE]
 > The staged update strategy works identically for both `ClusterResourcePlacement` and `ResourcePlacement`, with the only difference being the scope of the custom resources (cluster-scoped vs namespace-scoped).
-
-> [!TIP]
+>
 > To learn how to implement staged update runs step-by-step, see [How to use ClusterStagedUpdateRun to orchestrate staged rollouts](./howto-staged-update-run.md).
 
 
@@ -339,6 +338,8 @@ The following state transitions are supported:
 * **Run → Stop**: Stop a running update run
 * **Stop → Run**: Resume a stopped update run
 
+Once an update run finishes, the update run can't be restarted. 
+
 > [!NOTE]
 > Always verify the current state of your update runs before attempting state changes. 
 > Use `kubectl get csur <update-run-name>` or `kubectl get sur <update-run-name> -n <namespace>` to check the current state and status.
@@ -361,6 +362,11 @@ Fleet Manager processes stages sequentially:
 For approval-based progression, Fleet Manager creates a `ClusterApprovalRequest` (for cluster-scoped placements) or `ApprovalRequest` (for namespace-scoped placements) resource that must be approved before continuing to the next stage.
 
 A stage can have a before stage task of type approval and an after stage task type of approval. To help differentiate which approval request is for what stage tasks, the approval request name will contain `-before-` for before stage tasks or `-after-` for after stage tasks.
+
+**Example approval request names:**
+- `my-update-run-before-canary` - Before-stage approval task for the "canary" stage of update run "my-update-run"
+- `my-update-run-after-staging` - After-stage approval task for the "staging" stage of update run "my-update-run"
+- 
 
 ## Next steps
 
