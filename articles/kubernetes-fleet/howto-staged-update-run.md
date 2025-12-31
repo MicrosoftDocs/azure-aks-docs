@@ -428,7 +428,7 @@ spec:
 
 ## Create a staged update strategy
 
-### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+### [ClusterStagedUpdateStrategy](#tab/clusterstagedupdatestrategy)
 
 A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
 
@@ -457,7 +457,7 @@ spec:
       maxConcurrency: 50%
 ```
 
-### [ResourcePlacement](#tab/resourceplacement)
+### [StagedUpdateStrategy](#tab/stagedupdatestrategy)
 
 A `StagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
 
@@ -491,7 +491,7 @@ spec:
 
 ## Prepare a staged update run to rollout changes
 
-### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+### [ClusterStagedUpdateRun](#tab/clusterstagedupdaterun)
 
 A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our ClusterResourcePlacement (CRP), we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, and the latest resource snapshot index ("1"):
 
@@ -676,7 +676,7 @@ NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED  
 example-run-before-canary   example-run   canary                                 2m39s
 ```
 
-### [ResourcePlacement](#tab/resourceplacement)
+### [StagedUpdateRun](#tab/stagedupdaterun)
 
 A `StagedUpdateRun` executes the rollout of a `ResourcePlacement` following a `StagedUpdateStrategy`. To trigger the staged update run for our ResourcePlacement (RP), we create a `StagedUpdateRun` specifying the RP name, updateRun strategy name, and the latest resource snapshot index ("1"):
 
@@ -970,43 +970,10 @@ status:
     stageName: staging
     startTime: "2025-07-22T21:28:08Z"
 ```
-
-## Deploy a second ClusterStagedUpdateRun to roll back to a previous version
-
-### [ResourcePlacement](#tab/resourceplacement)
-
-The `ResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
-
-```bash
-kubectl get resourceplacement example-placement -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-example-placement   1     True        1               True        1               8m55s
-```
-
-The Configmap test-cm should be deployed on all three member clusters, with latest data:
-
-```yaml
-apiVersion: v1
-data:
-  key: value2
-kind: ConfigMap
-metadata:
-  ...
-  name: test-cm
-  namespace: test-namespace
-  ...
-```
-
 ---
+## Deploy a second staged update run to roll back to a previous version
 
-## Deploy a second staged update run to roll back
-
-### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+### [Second ClusterStagedUpdateRun](#tab/secondclusterstagedupdaterun)
 
 Suppose the workload admin wants to roll back the Configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the Configmap from hub, they can create a new `ClusterStagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
@@ -1083,8 +1050,9 @@ metadata:
   namespace: test-namespace
   ...
 ```
+---
 
-### [ResourcePlacement](#tab/resourceplacement)
+### [Second StagedUpdateRun](#tab/secondstagedupdaterun)
 
 Suppose the workload admin wants to roll back the Configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new `StagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
