@@ -366,7 +366,6 @@ A stage can have a before stage task of type approval and an after stage task ty
 **Example approval request names:**
 - `my-update-run-before-canary` - Before-stage approval task for the "canary" stage of update run "my-update-run"
 - `my-update-run-after-staging` - After-stage approval task for the "staging" stage of update run "my-update-run"
-- 
 
 ## Next steps
 
