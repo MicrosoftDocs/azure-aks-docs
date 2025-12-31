@@ -491,7 +491,7 @@ spec:
 
 ## Prepare a staged update run to rollout changes
 
-### [ClusterStagedUpdateRun](#tab/clusterstagedupdaterun)
+### [ClusterStagedUpdateRun](#tab/prepareclusterstagedupdaterun)
 
 A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our ClusterResourcePlacement (CRP), we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, and the latest resource snapshot index ("1"):
 
@@ -520,7 +520,42 @@ NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDE
 example-run   example-placement   1                         0                       True                      7s
 ```
 
+### [StagedUpdateRun](#tab/preparestagedupdaterun)
+
+A `StagedUpdateRun` executes the rollout of a `ResourcePlacement` following a `StagedUpdateStrategy`. To trigger the staged update run for our ResourcePlacement (RP), we create a `StagedUpdateRun` specifying the RP name, updateRun strategy name, and the latest resource snapshot index ("1"):
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateRun
+metadata:
+  name: example-run
+  namespace: test-namespace
+spec:
+  placementName: example-placement
+  resourceSnapshotIndex: "1"
+  stagedRolloutStrategyName: example-strategy
+  state: Initialize
+```
+
+The staged update run is initialized but not running:
+
+```bash
+kubectl get clusterstagedupdaterrun example-run
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True                      7s
+```
+---
+
+
 ## Start a staged update run
+
+### [ClusterStagedUpdateRun](#tab/startclusterstagedupdaterun)
+
 To start the execution of a staged update run, you need to patch the `state` field in the spec to `Run`:
 
 ```bash
@@ -675,24 +710,17 @@ Your output should look similar to the following example:
 NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
 example-run-before-canary   example-run   canary                                 2m39s
 ```
----
 
-### [StagedUpdateRun](#tab/stagedupdaterun)
+### [StagedUpdateRun](#tab/startstagedupdaterun)
 
-A `StagedUpdateRun` executes the rollout of a `ResourcePlacement` following a `StagedUpdateStrategy`. To trigger the staged update run for our ResourcePlacement (RP), we create a `StagedUpdateRun` specifying the RP name, updateRun strategy name, and the latest resource snapshot index ("1"):
+To start the execution of a staged update run, you need to patch the `state` field in the spec to `Run`:
 
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: StagedUpdateRun
-metadata:
-  name: example-run
-  namespace: test-namespace
-spec:
-  placementName: example-placement
-  resourceSnapshotIndex: "1"
-  stagedRolloutStrategyName: example-strategy
-  state: Run
+```bash
+kubectl patch stagedupdaterrun example-run -n test-namespace --type merge -p '{"spec":{"state":"Run"}}'
 ```
+
+> [!NOTE]
+> You can also create an update run with the `state` field set to `Run` initially, which both initialize and starts progressing the update run in a single step.
 
 The staged update run is initialized and running:
 
@@ -724,8 +752,6 @@ example-run-before-canary   example-run         canary                          
 ---
 
 ## Approve the staged update run
-> [!TIP]
-For more information, see [Approval Requests](./concepts-rollout-strategy.md)
 
 ### [ClusterApprovalRequest](#tab/clusterapprovalrequest)
 
@@ -837,7 +863,7 @@ example-run   example-placement   1                         0                   
 
 ## Verify the rollout completion
 
-### [ClusterResourcePlacement](#tab/completeclusterresourceplacement)
+### [ClusterResourcePlacement](#tab/verifyclusterresourceplacement)
 
 The `ClusterResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
 
@@ -865,7 +891,39 @@ metadata:
   namespace: test-namespace
   ...
 ```
+
+### [ResourcePlacement](#tab/verifyresourceplacement)
+
+The `ResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
+
+```bash
+kubectl get resourceplacement example-placement -n test-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
+example-placement   1     True        1               True        1               8m55s
+```
+
+The Configmap test-cm should be deployed on all three member clusters, with latest data:
+
+```yaml
+apiVersion: v1
+data:
+  key: value2
+kind: ConfigMap
+metadata:
+  ...
+  name: test-cm
+  namespace: test-namespace
+  ...
+```
+
 ---
+
+
 ## Stop a staged update run
 
 To stop the execution of a running staged update run, you need to patch the `state` field in the spec to `Stop`. This action gracefully halts the update run, allowing in-progress clusters to complete their updates before stopping the entire rollout process:
@@ -972,6 +1030,8 @@ status:
     startTime: "2025-07-22T21:28:08Z"
 ```
 ---
+
+
 ## Deploy a second staged update run to roll back to a previous version
 
 ### [Second ClusterStagedUpdateRun](#tab/secondclusterstagedupdaterun)
@@ -1051,7 +1111,6 @@ metadata:
   namespace: test-namespace
   ...
 ```
----
 
 ### [Second StagedUpdateRun](#tab/secondstagedupdaterun)
 
