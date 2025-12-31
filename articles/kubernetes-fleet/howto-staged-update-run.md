@@ -204,7 +204,7 @@ Fleet Manager creates resource snapshots when resources change. Each snapshot ha
 
 ### Check current resource snapshots
 
-### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+### [ClusterResourceSnapshots](#tab/clusterresourcesnapshots)
 
 To check current resource snapshots:
 
@@ -221,7 +221,7 @@ example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapsho
 
 We only have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
 
-### [ResourcePlacement](#tab/resourceplacement)
+### [ResourceSnapshots](#tab/resourcesnapshots)
 
 To check current resource snapshots:
 
@@ -242,7 +242,7 @@ We only have one version of the snapshot. It's the current latest (`kubernetes-f
 
 ### Create a new resource snapshot
 
-### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+### [ClusterResourceSnapshots](#tab/createclusterresourcesnapshots)
 
 Now modify the Configmap with a new value:
 
@@ -337,7 +337,7 @@ spec:
       namespace: test-namespace
 ```
 
-### [ResourcePlacement](#tab/resourceplacement)
+### [ResourceSnapshots](#tab/createresourcesnapshots)
 
 Now modify the Configmap with a new value:
 
@@ -675,6 +675,7 @@ Your output should look similar to the following example:
 NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
 example-run-before-canary   example-run   canary                                 2m39s
 ```
+---
 
 ### [StagedUpdateRun](#tab/stagedupdaterun)
 
@@ -726,7 +727,7 @@ example-run-before-canary   example-run         canary                          
 > [!TIP]
 For more information, see [Approval Requests](./concepts-rollout-strategy.md)
 
-### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+### [ClusterApprovalRequest](#tab/clusterapprovalrequest)
 
 We can approve the `ClusterApprovalRequest` by creating a json patch file and applying it:
 
@@ -779,7 +780,7 @@ NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDE
 example-run   example-placement   1                         0                       True          True        5m28s
 ```
 
-### [ResourcePlacement](#tab/resourceplacement)
+### [ApprovalRequest](#tab/approvalrequest)
 
 We can approve the `ApprovalRequest` by creating a json patch file and applying it:
 
@@ -836,7 +837,7 @@ example-run   example-placement   1                         0                   
 
 ## Verify the rollout completion
 
-### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+### [ClusterResourcePlacement](#tab/completeclusterresourceplacement)
 
 The `ClusterResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
 
@@ -1150,7 +1151,7 @@ metadata:
 
 When you're finished with this tutorial, you can clean up the resources you created:
 
-### [ClusterResourcePlacement](#tab/clusterresourceplacement)
+### [ClusterResourcePlacement](#tab/cleanupclusterresourceplacement)
 
 ```bash
 kubectl delete clusterstagedupdaterun example-run example-run-2
@@ -1159,7 +1160,7 @@ kubectl delete clusterresourceplacement example-placement
 kubectl delete namespace test-namespace
 ```
 
-### [ResourcePlacement](#tab/resourceplacement)
+### [ResourcePlacement](#tab/cleanupresourceplacement)
 
 ```bash
 kubectl delete stagedupdaterun example-run example-run-2 -n test-namespace
