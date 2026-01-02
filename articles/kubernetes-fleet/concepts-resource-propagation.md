@@ -588,5 +588,4 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 [fleet-tolerations]: ./use-taints-tolerations.md
 [fleet-snapshots]: ./concepts-placement-snapshots.md
 [fleet-status]: ./howto-understand-placement.md
-[crp-status-scope]: https://kubefleet.dev/docs/how-tos/crp#statusreportingscope
 [vm-sku-name]: /azure/virtual-machines/vm-naming-conventions
