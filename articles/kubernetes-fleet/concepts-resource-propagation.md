@@ -545,6 +545,18 @@ Events:
 ```
 For more information, see the [documentation on how to understand the placement result][fleet-status].
 
+## ClusterResourcePlacementStatus
+
+The `ClusterResourcePlacementStatus` is a namespaced resource that mirrors the placement status of a corresponding cluster-scoped `ClusterResourcePlacement` object. It provides namespace-scoped access to cluster-scoped placement status information.
+
+Key features:
+
+* **Namespace-scoped access**: Allows users with namespace-level permissions to view placement status without requiring cluster-scoped access.
+* **Status mirroring**: Contains the same placement status information as the parent `ClusterResourcePlacement` but is accessible within a specific namespace.
+* **Optional feature**: Only created when `StatusReportingScope` is set to `NamespaceAccessible`. Once set, `StatusReportingScope` is immutable.
+
+When `StatusReportingScope` is set to `NamespaceAccessible` for a `ClusterResourcePlacement`, only one namespace resource selector is allowed, and it's immutable. Therefore, the namespace resource selector can't be changed after creation.
+
 ## Placement change triggers
 
 The Fleet scheduler prioritizes the stability of existing workload placements. This prioritization can limit the number of changes that cause a workload to be removed and rescheduled. The following scenarios can trigger placement changes:
@@ -576,4 +588,5 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 [fleet-tolerations]: ./use-taints-tolerations.md
 [fleet-snapshots]: ./concepts-placement-snapshots.md
 [fleet-status]: ./howto-understand-placement.md
+[crp-status-scope]: https://kubefleet.dev/docs/how-tos/crp#statusreportingscope
 [vm-sku-name]: /azure/virtual-machines/vm-naming-conventions
