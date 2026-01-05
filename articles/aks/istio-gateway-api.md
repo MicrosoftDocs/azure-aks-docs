@@ -676,5 +676,5 @@ If you no longer need the resources created in this article, you can delete them
 [akv-create]: /cli/azure/keyvault#az-keyvault-create
 [az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
 [akv-set-policy]: /cli/azure/keyvault#az-keyvault-set-policy
-[akv-csi-driver-set-secret]: ./csi-secrets-store-driver.md#create-secrets-in-azure-key-vault
-[kubectl-apply]: /cli/kubernetes/kubectl/kubectl-apply
+[akv-csi-driver-set-secret]: ./csi-secrets-store-driver.md
+[kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/
