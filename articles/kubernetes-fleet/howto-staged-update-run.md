@@ -617,7 +617,7 @@ status:
     stageName: kubernetes-fleet.io/deleteStage
   policyObservedClusterCount: 3 # number of clusters to be updated
   policySnapshotIndexUsed: "0"
-  resourceSnpashotIndexUsed: "1"
+  resourceSnapshotIndexUsed: "1"
   stagedUpdateStrategySnapshot: # snapshot of the strategy used for this update run
     stages:
     - afterStageTasks:
@@ -985,7 +985,7 @@ status:
     stageName: kubernetes-fleet.io/deleteStage
   policyObservedClusterCount: 3 # number of clusters to be updated
   policySnapshotIndexUsed: "0"
-  resourceSnpashotIndexUsed: "1"
+  resourceSnapshotIndexUsed: "1"
   stagedUpdateStrategySnapshot: # snapshot of the strategy used for this update run
     stages:
     - afterStageTasks:
@@ -1092,7 +1092,7 @@ status:
     stageName: kubernetes-fleet.io/deleteStage
   policyObservedClusterCount: 3 # number of clusters to be updated
   policySnapshotIndexUsed: "0"
-  resourceSnpashotIndexUsed: "1"
+  resourceSnapshotIndexUsed: "1"
   stagedUpdateStrategySnapshot: # snapshot of the strategy used for this update run
     stages:
     - afterStageTasks:
