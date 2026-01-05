@@ -251,26 +251,25 @@ Pod topology spread is a scheduling strategy that seeks to distribute pods evenl
 
 You can customize the upstream scheduler with multiple profiles and customize each profile with multiple plugins while using the same configuration file. As a reminder, the CRD must be named `upstream` and user-configured fields include `percentageOfNodesToScore`, `podInitialBackoffSeconds`, `podMaxBackoffSeconds`, and `profiles`.
 
-In the following example, we create two scheduling profiles called **scheduler-one** and **scheduler-two**:
+In the following example, we create two scheduling profiles called **scheduler-one** and **scheduler-two**. The fields `percentageOfNodesToScore`, `podInitialBackoffSeconds`, `podMaxBackoffSeconds`, apply globally to all profiles defined.
 
-The fields `percentageOfNodesToScore`, `podInitialBackoffSeconds`, `podMaxBackoffSeconds`, appliy globally to all profiles defined.
-
+**global parameters**
 - `percentageOfNodesToScore` specifies the percentage of cluster nodes the scheduler evaluates during scoring to balance scheduling accuracy and speed. So **percentageOfNodesToScore: 40** means the scheduler will sample 40% of nodes instead of the entire cluster.
 - `podInitialBackoffSeconds` defines the initial delay before retrying a failed scheduling attempt to prevent rapid, repeated retries. So **podInitialBackoffSeconds: 1** means the scheduler waits 1 second before the first retry.
 - `podMaxBackoffSeconds` sets the maximum delay the scheduler will wait between exponential backoff retries for unschedulable pods. So **podMaxBackoffSeconds: 8** means the retry delay will never exceed 8 seconds even as backoff increases.
 
-- **scheduler-one** prioritizes placing pods across zones and nodes for balanced distribution with the following settings:
+**scheduler-one** prioritizes placing pods across zones and nodes for balanced distribution with the following settings:
 
-     - Enforces strict zonal distribution and _preferred_ node distribution using `PodTopologySpread`.
-     - Honors hard pod affinity rules and considers the soft affinity rules with `InterPodAffinity`.
-     -  _Prefers_ nodes in specific zones to reduce cross-zone networking using `NodeAffinity`.
+ - Enforces strict zonal distribution and _preferred_ node distribution using `PodTopologySpread`.
+ - Honors hard pod affinity rules and considers the soft affinity rules with `InterPodAffinity`.
+ -  _Prefers_ nodes in specific zones to reduce cross-zone networking using `NodeAffinity`.
 
-- **scheduler-two** prioritizes placing pods on nodes with available storage, CPU, and memory resources for timely resource-efficient resource usage with the following settings:
+**scheduler-two** prioritizes placing pods on nodes with available storage, CPU, and memory resources for timely resource-efficient resource usage with the following settings:
 
-    - Ensures pods are placed on nodes where PVCs can bind to PVs using `VolumeBinding`.
-    - Validates that nodes and volumes satisfy zonal requirements using `VolumeZone` to avoid cross-zone storage access.
-    - Prioritizes nodes based on CPU, memory, and ephemeral storage utilization, with `NodeResourcesFit`.
-    - Favors nodes that already have the required container images using `ImageLocality`.
+- Ensures pods are placed on nodes where PVCs can bind to PVs using `VolumeBinding`.
+- Validates that nodes and volumes satisfy zonal requirements using `VolumeZone` to avoid cross-zone storage access.
+- Prioritizes nodes based on CPU, memory, and ephemeral storage utilization, with `NodeResourcesFit`.
+- Favors nodes that already have the required container images using `ImageLocality`.
 
 > [!NOTE] 
 > You might need to adjust zones and other parameters based on your workload type.
@@ -454,6 +453,7 @@ To learn more about the AKS scheduler and best practices, see the following reso
 
 <!-- LINKS - external -->
 [topology-spread-constraints/]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+
 
 
 

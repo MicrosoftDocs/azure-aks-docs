@@ -1,16 +1,16 @@
 ---
-title: Update the Key Vault Mode for an Azure Kubernetes Service (AKS) Cluster with KMS Etcd Encryption
+title: Update the Key Vault Mode for an Azure Kubernetes Service (AKS) Cluster with KMS Etcd Encryption (legacy)
 description: Learn how to update the key vault mode from public to private or private to public for an AKS cluster with Key Management Service (KMS) etcd encryption.
-ms.date: 09/26/2024
+ms.date: 12/22/2025
 ms.subservice: aks-security
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-author: davidsmatlak
-ms.author: davidsmatlak
+author: shashankbarsin
+ms.author: shasb
 # Customer intent: As a Kubernetes administrator, I want to update the key vault mode for my AKS cluster with KMS etcd encryption, so that I can change the key vault from public to private or private to public as needed.
 ---
 
-# Update the key vault mode for an Azure Kubernetes Service (AKS) cluster with Key Management Service (KMS) etcd encryption
+# Update the key vault mode for an Azure Kubernetes Service (AKS) cluster with Key Management Service (KMS) etcd encryption (legacy)
 
 This article shows you how to update the key vault mode from public to private or private to public for an Azure Kubernetes Service (AKS) cluster with Key Management Service (KMS) etcd encryption.
 

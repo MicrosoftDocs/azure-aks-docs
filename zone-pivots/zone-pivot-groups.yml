@@ -192,6 +192,17 @@ groups:
     title: Azure CNI Overlay cluster
   - id: aks-cni-overlay-cluster-dual-stack
     title: Azure CNI Overlay cluster with dual-stack networking
+# Owner: shashankbarsin
+- id: kms-key-type
+  title: Choose a key management option
+  prompt: Choose a key management option
+  pivots:
+  - id: pmk
+    title: Platform-managed keys
+  - id: cmk-private
+    title: Customer-managed keys (private key vault)
+  - id: cmk-public
+    title: Customer-managed keys (public key vault)
 # Owner: schaffererin
 - id: private-cluster-connect
   title: Choose a private cluster connection method
@@ -211,3 +222,14 @@ groups:
     title: ExpressRoute or VPN
   - id: aks-command-invoke
     title: AKS command invoke
+# Owner: schaffererin
+- id: api-server-authorized-ip-ranges
+  title: Choose an interaction method
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: azure-powershell
+    title: Azure PowerShell
+  - id: azure-portal
+    title: Azure portal

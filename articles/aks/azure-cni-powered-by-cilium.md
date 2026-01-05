@@ -7,6 +7,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli, build-2023
 ms.date: 12/16/2025
+
 # Customer intent: As a cloud architect, I want to configure an AKS cluster with Azure CNI Powered by Cilium, so that I can achieve high-performance networking and enhanced security for my containerized applications.
 ---
 
@@ -50,6 +51,10 @@ For more information on AKS versioning and release timelines, see [Supported Kub
 
 Cilium enforces [network policies to allow or deny traffic between pods](./operator-best-practices-network.md#control-traffic-flow-with-network-policies). With Cilium, you don't need to install a separate network policy engine such as Azure Network Policy Manager or Calico.
 
+## Local Redirect Policy (LRP)
+
+LRP starts to be supported from Kubernetes v1.29 and up, Cilium v1.14 and up. For LRP to work with Advanced Container Networking Services (ACNS) - FQDN Filtering, the Cilium Network Policy egress labels need to match with node-local DNS cache pod labels.
+
 ## Limitations
 
 Azure CNI powered by Cilium currently has the following limitations:
@@ -60,6 +65,8 @@ Azure CNI powered by Cilium currently has the following limitations:
 - Network policies aren't applied to pods using host networking (`spec.hostNetwork: true`) because these pods use the host identity instead of having individual identities.
 - Cilium Endpoint Slices are supported in Kubernetes version 1.32 and above. Cilium Endpoint Slices don't support configuration of how Cilium Endpoints are grouped. Priority namespace through `cilium.io/ces-namespace` isn't supported.
 - L7 policy isn't supported by `CiliumClusterwideNetworkPolicy` (CCNP).
+- Cilium uses Cilium identities as unique identity for provisioning endpoints, so high-churning workloads such as Spark jobs generate high count of Cilium identities. To avoid workloads hitting Cilium identity limits (65535), excluding Spark job's labels like `!spark-app-name` and `!spark-app-selector` in the Cilium configmap can significantly reduce Cilium identity generation. For more details on Cilium identity exclusion rules, check [the official Cilium label documentation](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels).
+- AKS Local DNS isn't compatible with Advanced Container Networking Services (ACNS) - FQDN Filtering.
 
 ## Considerations
 
@@ -73,6 +80,8 @@ To gain capabilities such as observability into your network traffic and securit
 Previous AKS API versions (`2022-09-02preview` to `2023-01-02preview`) used the field [`networkProfile.ebpfDataplane=cilium`](https://github.com/Azure/azure-rest-api-specs/blob/06dbe269f7d9c709cc225c92358b38c3c2b74d60/specification/containerservice/resource-manager/Microsoft.ContainerService/aks/preview/2022-09-02-preview/managedClusters.json#L6939-L6955). AKS API versions since `2023-02-02preview` use the field [`networkProfile.networkDataplane=cilium`](https://github.com/Azure/azure-rest-api-specs/blob/06dbe269f7d9c709cc225c92358b38c3c2b74d60/specification/containerservice/resource-manager/Microsoft.ContainerService/aks/preview/2023-02-02-preview/managedClusters.json#L7152-L7173) to enable Azure CNI Powered by Cilium.
 
 ## Create a new AKS Cluster with Azure CNI Powered by Cilium
+
+The following sections use the [`az aks create`][az-aks-create] command to create a cluster and assign IP addresses.
 
 ### Option 1: Assign IP addresses from an overlay network
 
@@ -186,7 +195,7 @@ az aks create \
     | L7 Network Policies (HTTP/gRPC/Kafka) | ❌ | ✔️ |
     | Container Network Observability (Metrics and Flow logs) | ❌ | ✔️ |
     | eBPF Host Routing | ❌ | ✔️ |
-   
+
 
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
 
@@ -278,3 +287,4 @@ Learn more about networking in AKS in the following articles:
 
 <!-- LINKS - Internal -->
 [aks-ingress-basic]: ingress-basic.md
+[az-aks-create]: /cli/azure/aks#az-aks-create

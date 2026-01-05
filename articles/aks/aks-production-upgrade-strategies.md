@@ -133,7 +133,7 @@ az aks get-credentials --resource-group myRG-green --name myaks-green
 # Apply your Kubernetes manifests in order:
 kubectl apply -f ./your-manifests/namespace.yaml      # Create namespace
 kubectl apply -f ./your-manifests/secrets/           # Deploy secrets
-kubectl apply -f ./your-manifests/configmaps/        # Deploy config maps  
+kubectl apply -f ./your-manifests/configmaps/        # Deploy config maps
 kubectl apply -f ./your-manifests/deployments/       # Deploy applications
 kubectl apply -f ./your-manifests/services/          # Deploy services
 
@@ -338,7 +338,7 @@ Create `upgrade-stages.json`:
       "afterStageWaitInSeconds": 1800
     },
     {
-      "name": "testing", 
+      "name": "testing",
       "groups": [{ "name": "test-clusters" }],
       "afterStageWaitInSeconds": 3600
     },
@@ -362,7 +362,7 @@ az fleet member create \
   --member-cluster-id "/subscriptions/.../clusters/aks-dev-east" \
   --group dev-clusters
 
-# Add test clusters  
+# Add test clusters
 az fleet member create \
   --resource-group fleet-rg \
   --fleet-name production-fleet \
@@ -489,7 +489,7 @@ kubectl apply -f ./canary-manifests/
 kubectl patch service api-service -p '{"spec":{"selector":{"version":"canary"}}}'
 ./scripts/monitor-error-rate.sh 15-minutes
 
-# Phase 2: Background jobs (50% traffic)  
+# Phase 2: Background jobs (50% traffic)
 kubectl scale deployment batch-processor --replicas=3
 ./scripts/validate-job-completion.sh
 
@@ -509,10 +509,10 @@ data:
   test-script: |
     # Test new security features
     kubectl auth can-i create pods --as=service-account:default:test-sa
-    
+
     # Validate performance improvements
     kubectl top nodes --use-protocol-buffers=true
-    
+
     # Check new API versions
     kubectl api-versions | grep "v1.30"
 ```
@@ -556,7 +556,7 @@ az aks maintenance-configuration create \
   --duration 4
 ```
 
-To learn more, see [Planned maintenance configuration](./planned-maintenance.md) and [Auto-upgrade channels](./auto-upgrade-cluster.md#cluster-auto-upgrade-channels).
+To learn more, see [Planned maintenance configuration](./planned-maintenance.md) and [Autoupgrade channels](./auto-upgrade-cluster.md#cluster-autoupgrade-channels).
 
 #### Step 2: Automated security scanning
 
@@ -772,13 +772,13 @@ spec:
       for: 1m
       annotations:
         summary: "Node upgrade in progress"
-    
+
     - alert: HighErrorRate
       expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.01
       for: 2m
       annotations:
         summary: "High error rate during upgrade"
-    
+
     - alert: PodEvictionFailed
       expr: increase(kube_pod_container_status_restarts_total[5m]) > 5
       for: 1m
