@@ -67,13 +67,14 @@ az feature register --namespace "Microsoft.ContainerService" --name "ManagedGate
 
 ## Install the Managed Gateway API CRDs
 
-Once you finish the prerequisite steps, you can run the `az aks create` command to install the Managed Gateway API CRDs on a newly created cluster:
+Once you finish the prerequisite steps, you can run the `az aks create` command to install the Managed Gateway API CRDs on a newly created cluster. Note that you must also enable an implementation of the Gateway API to enable the managed CRD installation. See [above](#requirements-and-limitations) for a list of supported implementations.
 
 ```azurecli-interactive
- az aks create -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-gateway-api
+ # Example: enable the managed Gateway API installation with the Istio service mesh add-on 
+ az aks create -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-gateway-api --enable-azure-service-mesh
 ```
 
-To install the Managed Gateway API CRDs on an existing cluster, you can run:
+To install the Managed Gateway API CRDs on an existing cluster with a supported implementation enabled, you can run:
 
 ```azurecli-interactive
  az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-gateway-api

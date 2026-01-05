@@ -75,7 +75,7 @@ In AKS desktop, an AKS managed Project is linked directly by default to an [AKS 
 ## What is the Project Overview screen?
 
 > [!NOTE]
-> It might take up to 10 minutes for the metrics to populate.
+> When you deploy an application to AKS Desktop for the first time, metrics may take 5–10 minutes to appear as data begins flowing into managed Prometheus. After this initial delay, metrics should load within seconds. If metrics do not appear, try refreshing AKS Desktop.
 
 Once you deploy an application to a Project through AKS desktop, you're greeted with the Project Overview screen. The Project Overview screen is an overview of your application highlighting the most important parts that matter to application developers. With these tools at your disposal, the Project Overview screen is your centralized control hub, giving you visibility, insights, and direct actions to manage, monitor, and optimize your application. These features are:
 

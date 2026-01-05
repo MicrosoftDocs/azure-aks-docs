@@ -4,7 +4,7 @@ description: Learn how to enable and configure identity bindings on Azure Kubern
 ms.topic: how-to
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 11/10/2025
+ms.date: 12/09/2025
 ms.custom: preview
 author: shashankbarsin
 ms.author: shasb
@@ -20,9 +20,13 @@ This article shows you how to configure identity bindings to overcome these work
 
 ## Prerequisites
 
-1. Read the [conceptual doc for identity bindings][identity-bindings-concepts] to understand how identity binding works.
+- Read the [conceptual doc for identity bindings][identity-bindings-concepts] to understand how identity binding works.
 
-1. Install or update the Azure CLI `aks-preview` extension version `18.0.0b26` or later.
+[!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+
+- This article requires version 2.73.0 or later of the Azure CLI.
+ 
+- Install or update the Azure CLI `aks-preview` extension version `18.0.0b26` or later.
 
     ```bash
     # Install the aks-preview extension
@@ -32,7 +36,7 @@ This article shows you how to configure identity bindings to overcome these work
     az extension update --name aks-preview
     ```
 
-1. Register the `IdentityBindingPreview` feature flag:
+- Register the `IdentityBindingPreview` feature flag:
 
     ```bash
     # Register the feature flag
@@ -48,11 +52,11 @@ This article shows you how to configure identity bindings to overcome these work
     > [!NOTE]
     > Feature registration can take 10-15 minutes to complete. You can proceed with the next steps once the feature shows as "Registered".
 
-1. Ensure the following Azure permissions on the identity and cluster scope:
+- Ensure the following Azure permissions on the identity and cluster scope:
    - `Microsoft.ManagedIdentity/userAssignedIdentities/federatedIdentityCredentials/write`
    - `Microsoft.ContainerService/managedClusters/write`
 
-1. Ensure Kubernetes cluster admin (or equivalent) permissions to create `ClusterRole` and `ClusterRoleBinding` resources.
+- Ensure Kubernetes cluster admin (or equivalent) permissions to create `ClusterRole` and `ClusterRoleBinding` resources.
 
 ## Create test resources
 

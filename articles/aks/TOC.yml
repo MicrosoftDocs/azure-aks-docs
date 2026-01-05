@@ -134,7 +134,9 @@
           items:
             - name: Create a private cluster
               href: private-clusters.md
-            - name: Access a Private API Server VNet Integration Cluster from Another Virtual Network
+            - name: Establish connectivity to a private cluster
+              href: private-cluster-connect.md
+            - name: Access a private API Server VNet Integration cluster from another virtual network
               href: private-apiserver-vnet-integration-cluster.md
             - name: Access a private cluster remotely
               href: access-private-cluster.md
@@ -186,7 +188,7 @@
                       href: istio-gateway-api.md
                 - name: Egress
                   items:
-                    - name: Deploy egress gateways (preview)
+                    - name: Deploy egress gateways
                       href: istio-deploy-egress.md
             - name: Security
               items:
@@ -236,7 +238,7 @@
           href: scale-down-mode.md
         - name: Connect securely to cluster nodes
           href: node-access.md
-        - name: Manage SSH key
+        - name: Manage SSH access to nodes
           href: manage-ssh-node-access.md
         - name: Deploy trusted launch on AKS
           href: use-trusted-launch.md
@@ -256,8 +258,12 @@
       items:
         - name: Create node pools
           href: create-node-pools.md
-        - name: Manage node pools
-          href: manage-node-pools.md
+        - name: Scale node pools
+          href: scale-node-pools.md
+        - name: Upgrade node pools
+          href: upgrade-node-pools.md
+        - name: Assign capacity reservation groups to node pools
+          href: use-capacity-reservation-groups.md
         - name: Reduce image pull time with Artifact Streaming on AKS
           href: artifact-streaming.md
         - name: Use generation 2 VMs
@@ -306,8 +312,8 @@
           href: use-windows-hpc.md
         - name: Use Windows Annual Channel for Containers
           href: windows-annual-channel.md
-        - name: Upgrade from Windows Server 2019 to 2022
-          href: upgrade-windows-2019-2022.md
+        - name: Upgrade Windows OS version
+          href: upgrade-windows-os.md
         - name: Create Dockerfiles for Windows Server containers
           href: /virtualization/windowscontainers/manage-docker/manage-windows-dockerfile?context=/azure/aks/context/aks-context
         - name: Optimize Dockerfiles for Windows Server containers
@@ -475,13 +481,27 @@
 - name: Networking
   items:
       - name: Networking concepts
-        href: concepts-network.md
-      - name: IP address planning
-        href: concepts-network-ip-address-planning.md
-      - name: Services
-        href: concepts-network-services.md
-      - name: Advanced Container Networking Services (ACNS) overview
-        href: advanced-container-networking-services-overview.md
+        items:
+          - name: Overview concepts
+            href: concepts-network.md
+          - name: IP address planning
+            href: concepts-network-ip-address-planning.md
+          - name: Services
+            href: concepts-network-services.md
+          - name: Advanced Container Networking Services (ACNS) overview
+            href: advanced-container-networking-services-overview.md
+      - name: Plan networking
+        items:
+          - name: Overview
+            href: plan-networking.md
+          - name: Plan control plane networking
+            href: plan-control-plane-networking.md
+          - name: Plan node networking
+            href: plan-node-networking.md
+          - name: Plan pod networking
+            href: plan-pod-networking.md
+          - name: Plan application networking
+            href: plan-application-networking.md
       - name: Ingress
         items:
           - name: Overview
@@ -528,7 +548,7 @@
             href: limit-egress-traffic.md
           - name: Configure Static Egress Gateway
             href: configure-static-egress-gateway.md
-          - name: Deploy Istio egress gateways (preview)
+          - name: Deploy Istio egress gateways
             href: istio-deploy-egress.md
       - name: CNI
         items:
@@ -547,8 +567,8 @@
               - name: Use Azure CNI Pod Subnet - Static Block Allocation
                 href: configure-azure-cni-static-block-allocation.md
             href: concepts-network-azure-cni-pod-subnet.md
-          - name: Upgrade Azure CNI IPAM and dataplane
-            href: upgrade-azure-cni.md
+          - name: Update Azure CNI IPAM and dataplane
+            href: update-azure-cni.md
           - name: Migrate from Network Policy Manager to Cilium Network policy
             href: migrate-from-npm-to-cilium-network-policy.md
           - name: Use dual-stack networking
@@ -557,8 +577,10 @@
             items:
               - name: Overview
                 href: concepts-network-azure-cni-overlay.md
-              - name: Use Azure CNI Overlay
+              - name: Create an Azure CNI Overlay cluster
                 href: azure-cni-overlay.md
+              - name: Expand pod CIDR space in Azure CNI Overlay clusters
+                href: azure-cni-overlay-pod-expand.md
           - name: Kubenet
             items:
               - name: Use kubenet
@@ -612,7 +634,7 @@
           - name: Use API Server VNet integration
             href: api-server-vnet-integration.md
           - name: Private endpoint
-            href: private-clusters.md#use-a-private-endpoint-connection
+            href: private-cluster-connect.md#use-a-private-endpoint-connection
           - name: Diagnose and solve UDP packet drops
             href: troubleshoot-udp-packet-drops.md
           - name: Container Network Security
@@ -776,9 +798,9 @@
                   href: enable-authentication-microsoft-entra-id.md
                 - name: Manage local accounts
                   href: manage-local-accounts-managed-azure-ad.md
-                - name: Cluster access control with Conditional Access
+                - name: Cluster and node access control with Conditional Access
                   href: access-control-managed-azure-ad.md
-                - name: Cluster access control with Privileged Identity Management
+                - name: Cluster and node access control with Privileged Identity Management
                   href: privileged-identity-management.md
             - name: Microsoft Entra integration (legacy)
               href: azure-ad-integration-cli.md
@@ -1010,6 +1032,10 @@
         href: passive-cold-solution.md
 - name: AI and machine learning
   items:
+    - name: Create Azure AKS infrastructure
+      href: create-aks-infrastructure.md
+    - name: Deploy Open-WebSearch MCP Server on AKS
+      href: openwebsearch-on-aks.md  
     - name: Machine learning operations (MLOps)
       items:
         - name: Best practices
@@ -1057,7 +1083,7 @@
             - name: Integrate an MCP server
               href: ai-toolchain-operator-mcp.md
         - name: Deploy data and ML pipelines with Flyte
-          href: use-flyte.md
+          href: use-flyte.md    
     - name: Work with clusters using Copilot
       href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: GPUs
@@ -1216,7 +1242,7 @@
       items:
         - name: Overview
           href: stateful-workloads-overview.md
-        - name: Deploy a MongoDB cluster
+        - name: Deploy MongoDB using Percona
           items:
             - name: Overview
               href: mongodb-overview.md
@@ -1232,7 +1258,7 @@
               href: upgrade-mongodb-cluster.md
             - name: Monitor with Percona Monitoring and Management
               href: monitor-aks-mongodb.md
-        - name: Deploy a highly available PostgreSQL database
+        - name: Deploy PostgreSQL using CloudNativePG
           items:
             - name: Overview
               href: postgresql-ha-overview.md
@@ -1242,7 +1268,7 @@
               href: deploy-postgresql-ha.md
             - name: Test PostgreSQL
               href: validate-postgresql-ha.md
-        - name: Deploy a Valkey cluster
+        - name: Deploy Valkey
           items:
             - name: Overview
               href: valkey-overview.md
@@ -1272,7 +1298,7 @@
               href: kafka-deploy.md
             - name: Configure monitoring and networking for the Kafka cluster
               href: kafka-configure.md
-        - name: Deploy GitHub Actions using Azure Files
+        - name: Deploy GitHub Actions
           items:
             - name: Overview
               href: github-actions-azure-files-overview.md

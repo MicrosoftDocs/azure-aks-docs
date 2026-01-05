@@ -110,6 +110,16 @@ groups:
     title: GitHub
   - id: google-identity
     title: Google Identity
+- id: aks-ssh-access-type
+  title: Choose an SSH access method
+  prompt: Choose an SSH access method
+  pivots:
+  - id: disabled-ssh
+    title: Disabled SSH
+  - id: entraid-ssh
+    title: Entra ID based SSH
+  - id: local-user-ssh
+    title: Local User SSH
 # Owner: schaffererin
 - id: app-routing-nginx-configuration
   title: Choose a configuration option
@@ -154,6 +164,72 @@ groups:
   - id: csi-blob
     title: Azure Blob
   - id: csi-disk
-    title: Azure Disk
+    title: Axure Disk
   - id: csi-files
     title: Azure Files
+# Owner: schaffererin
+- id: kubelogin-auth-methods
+  title: Choose a kubelogin authentication method
+  prompt: Choose a kubelogin authentication method
+  pivots:
+  - id: device-code
+    title: Device code
+  - id: azure-cli
+    title: Azure CLI
+  - id: web-browser-interactive
+    title: Web browser interactive
+  - id: service-principal
+    title: Service principal
+  - id: managed-identity
+    title: Managed identity
+  - id: workload-identity
+    title: Workload identity
+- id: azure-cni-overlay-create-cluster
+  title: Choose a networking configuration
+  prompt: Choose a networking configuration
+  pivots:
+  - id: aks-cni-overlay-cluster
+    title: Azure CNI Overlay cluster
+  - id: aks-cni-overlay-cluster-dual-stack
+    title: Azure CNI Overlay cluster with dual-stack networking
+# Owner: shashankbarsin
+- id: kms-key-type
+  title: Choose a key management option
+  prompt: Choose a key management option
+  pivots:
+  - id: pmk
+    title: Platform-managed keys
+  - id: cmk-private
+    title: Customer-managed keys (private key vault)
+  - id: cmk-public
+    title: Customer-managed keys (public key vault)
+# Owner: schaffererin
+- id: private-cluster-connect
+  title: Choose a private cluster connection method
+  prompt: Choose a private cluster connection method
+  pivots:
+  - id: azure-cloud-shell
+    title: Azure Cloud Shell
+  - id: azure-bastion
+    title: Azure Bastion
+  - id: vnet-peering
+    title: VNet peering
+  - id: private-endpoint
+    title: Private endpoint
+  - id: vm-same-vnet
+    title: VM in the same VNet
+  - id: express-route-or-vpn
+    title: ExpressRoute or VPN
+  - id: aks-command-invoke
+    title: AKS command invoke
+# Owner: schaffererin
+- id: api-server-authorized-ip-ranges
+  title: Choose an interaction method
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: azure-powershell
+    title: Azure PowerShell
+  - id: azure-portal
+    title: Azure portal

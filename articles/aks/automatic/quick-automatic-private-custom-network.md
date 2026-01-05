@@ -420,8 +420,8 @@ To learn more about AKS Automatic, continue to the introduction.
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [private-cluster]: ../private-clusters.md
 [az-vm-create]: /cli/azure/vm#az-vm-create
-[connect-private-cluster]: ../private-clusters.md#options-for-connecting-to-the-private-cluster
-[virtual-network-peering]: ../private-clusters.md#virtual-network-peering
+[connect-private-cluster]: ../private-cluster-connect.md
+[virtual-network-peering]: ../private-cluster-connect.md#connect-using-virtual-network-vnet-peering
 [express-route-or-vpn]: /azure/expressroute/expressroute-about-virtual-network-gateways
 [private-endpoint-service]: ../private-apiserver-vnet-integration-cluster.md
 [access-private-cluster]: ../access-private-cluster.md
