@@ -106,7 +106,7 @@ The following table describes the key parameters for configuring dual-stack netw
 | Parameter | Description |
 | --------- | ----------- |
 | `--ip-families` | Takes a comma-separated list of IP families to enable on the cluster. Only `ipv4` and `ipv4,ipv6` are supported. |
-| `--pod-cidrs` | Takes a comma-separated list of CIDR notation IP ranges to assign pod IPs from. The count and order of ranges in this list must match the value provided to `--ip-families`. If you don't supply any values, the parameter uses the default value of `10.244.0.0/16,fd12:3456:789a::/64`. |
+| `--pod-cidrs` | Takes a comma-separated list of Classless Inter-Domain Routing (CIDR) notation IP ranges to assign pod IPs from. The count and order of ranges in this list must match the value provided to `--ip-families`. If you don't supply any values, the parameter uses the default value of `10.244.0.0/16,fd12:3456:789a::/64`. |
 | `--service-cidrs` | Takes a comma-separated list of CIDR notation IP ranges to assign service IPs from. The count and order of ranges in this list must match the value provided to `--ip-families`. If you don't supply any values, the parameter uses the default value of `10.0.0.0/16,fd12:3456:789a:1::/108`. The IPv6 subnet assigned to `--service-cidrs` can be no larger than `/108`. |
 
 ## Create an Azure CNI Overlay AKS cluster with dual-stack networking (Linux)
@@ -204,7 +204,7 @@ Before you create an Azure CNI Overlay AKS cluster with dual-stack networking wi
 
 ## Deploy an example workload to the Azure CNI Overlay AKS cluster
 
-Deploy dual-stack AKS CNI Overlay clusters with IPv4/IPv6 addresses on VM nodes. This example deploys an NGINX web server and exposes it by using a `LoadBalancer` service with both IPv4 and IPv6 addresses.
+Deploy dual-stack AKS CNI Overlay clusters with IPv4/IPv6 addresses on virtual machine nodes. This example deploys an NGINX web server and exposes it by using a `LoadBalancer` service with both IPv4 and IPv6 addresses.
 
 > [!NOTE]
 > We recommend using the application routing add-on for ingress in AKS clusters. However, for demonstration purposes, this example deploys an NGINX web server without the application routing add-on. For more information about the add-on, see [Managed NGINX ingress with the application routing add-on](app-routing.md).

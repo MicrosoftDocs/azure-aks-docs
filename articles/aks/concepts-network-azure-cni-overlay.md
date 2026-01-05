@@ -15,7 +15,7 @@ ms.custom: fasttrack-edit
 
 Azure CNI Overlay is a networking model for Azure Kubernetes Service (AKS) that provides efficient IP address management and high-performance pod communication. This article provides an overview of Azure CNI Overlay, including its architecture, IP address planning, and differences from the traditional kubenet networking model.
 
-## Overview of Overlay networking
+## Overview of overlay networking
 
 The traditional [Azure Container Networking Interface (CNI)](./configure-azure-cni.md) assigns a virtual network IP address to every pod. It assigns this IP address from a reserved set of IPs on every node *or* a separate subnet reserved for pods. This approach requires IP address planning and might lead to address exhaustion, which introduces difficulties scaling your clusters as your application demands grow.
 
@@ -25,7 +25,9 @@ A separate routing domain is created in the Azure networking stack for the pod's
 
 :::image type="content" source="media/azure-cni-Overlay/azure-cni-overlay.png" alt-text="Diagram that shows two nodes with three pods each running in an overlay network. Pod traffic to endpoints outside the cluster is routed via NAT.":::
 
-Communication with endpoints outside the cluster, such as on-premises and peered virtual networks, uses the node IP through NAT. Azure CNI translates the source IP (overlay IP of the pod) of the traffic to the primary IP address of the VM, which enables the Azure networking stack to route the traffic to the destination. Endpoints outside the cluster can't connect to a pod directly. You have to publish the pod's application as a Kubernetes Load Balancer service to make it reachable on the virtual network.
+Communication with endpoints outside the cluster, such as on-premises and peered virtual networks, uses the node IP through network address translation (NAT). Azure CNI translates the source IP (overlay IP of the pod) of the traffic to the primary IP address of the VM. This translation enables the Azure networking stack to route the traffic to the destination.
+
+Endpoints outside the cluster can't connect to a pod directly. You have to publish the pod's application as a Kubernetes Load Balancer service to make it reachable on the virtual network.
 
 You can provide outbound (egress) connectivity to the internet for overlay pods by using a [standard load balancer](./egress-outboundtype.md#outbound-type-of-loadbalancer) or [managed NAT gateway](./nat-gateway.md). You can also control egress traffic by directing it to a firewall via [user-defined routes on the cluster subnet](./egress-outboundtype.md#outbound-type-of-userdefinedrouting).
 
@@ -38,7 +40,7 @@ Like Azure CNI Overlay, kubenet assigns IP addresses to pods from an address spa
 | Area | Azure CNI Overlay | kubenet |
 | ----- | ---------------- | ------- |
 | Cluster scale | 5,000 nodes and 250 pods per node | 400 nodes and 250 pods per node |
-| Network configuration | Simple - no extra configurations required for pod networking | Complex - requires route tables and UDRs on cluster subnet for pod networking |
+| Network configuration | Simple - no extra configurations required for pod networking | Complex - requires route tables and user-defined routes on the cluster subnet for pod networking |
 | Pod connectivity performance | Performance on par with VMs in a virtual network | Extra hop adds latency |
 | Kubernetes network policies | Azure network policies, Calico, Cilium | Calico |
 | OS platforms supported | Linux, Windows Server 2022, Windows Server 2019 | Linux only |
@@ -94,7 +96,7 @@ If you want to restrict traffic between workloads in the cluster, we recommend u
 
 You can configure the maximum number of pods per node at the time of cluster creation or when you add a new node pool. The default for Azure CNI Overlay is 250. The maximum value that you can specify in Azure CNI Overlay is 250, and the minimum value is 10. The value for maximum pods per node that you configure during creation of a node pool applies to the nodes in that node pool only.
 
-## Choose a network model
+## Choosing a network model
 
 Azure CNI offers two IP addressing options for pods: *overlay networking* and the *traditional configuration that assigns virtual network IPs to pods*. The choice of which option to use for your AKS cluster is a balance between flexibility and advanced configuration needs. The following considerations help outline when each network model might be the most appropriate.
 
