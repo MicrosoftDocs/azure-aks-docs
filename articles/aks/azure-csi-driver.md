@@ -277,14 +277,6 @@ the NFS protocol.
    ```
 
 ::: zone-end
-
-## Next steps
-
-- To learn how to set up a static or dynamic persistent volume, see
-  [Create and use a volume with Azure Blob storage][azure-csi-blob-storage-provision].
-- For more about storage best practices, see
-  [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
-
 ::: zone pivot="csi-disk"
 
 The Azure Disks Container Storage Interface (CSI) driver is a [CSI specification](https://github.com/container-storage-interface/spec/blob/master/spec.md)-compliant driver used by Azure Kubernetes Service (AKS) to manage the lifecycle of Azure Disk.
@@ -711,11 +703,6 @@ reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
 ```
-
-## Next steps
-
-- For more information about storage best practices, see [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
-- For more information about disk-based storage solutions, see [Disk-based solutions in AKS][disk-based-solutions].
 
 ::: zone-end
 ::: zone pivot="csi-files"
@@ -1461,14 +1448,14 @@ The output of the commands resembles the following example:
 (...)
 ```
 
+::: zone-end
+
 ## Next steps
 
-- For best practices when using Azure Files, see
-  [Provision Azure Files storage](azure-csi-files-storage-provision.md#best-practices).
-- For more about storage best practices, see
-  [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
-
-::: zone-end
+- For more information about disk-based storage solutions, see [Disk-based solutions in AKS][disk-based-solutions].
+- For more information about storage best practices, see [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
+- For best practices when using Azure Files, see [Provision Azure Files storage](azure-csi-files-storage-provision.md#best-practices).
+- To learn how to set up a static or dynamic blob PV, see [Create and use a volume with Azure Blob storage][azure-csi-blob-storage-provision].
 
 <!-- LINKS - external -->
 [access-modes]: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
