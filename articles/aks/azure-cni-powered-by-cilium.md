@@ -255,7 +255,7 @@ You must have Kubernetes version 1.29 or greater.
 
 ### Set up Overlay clusters with Azure CNI Powered by Cilium
 
-Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command. Make sure to use the argument `--network-dataplane cilium` to specify the Cilium data plane.
+Create a cluster with Azure CNI Overlay using the [az aks create](https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-create) command. Make sure to use the argument `--network-dataplane cilium` to specify the Cilium data plane.
 
 ```azurecli-interactive
 clusterName="myOverlayCluster"
