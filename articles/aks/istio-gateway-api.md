@@ -19,7 +19,7 @@ The Istio service mesh add-on supports both [Istio's own ingress traffic managem
 ## Limitations and considerations
 
 - Using the Kubernetes Gateway API for [egress traffic management][istio-deploy-egress] with the Istio service mesh add-on is only supported for the [manual deployment model][istio-gateway-manual-deployment].
-- ConfigMap customizations for `Gateway` resources must fall within the Resource customization allowlist. Fields not on the allowlist are disallowed and blocked via add-on managed webhooks. For more information, see the [Istio service mesh add-on add-on support policy][istio-support-policy].
+- ConfigMap customizations for `Gateway` resources must fall within the Resource customization allow list. Fields not on the allow list are disallowed and blocked via add-on managed webhooks. For more information, see the [Istio service mesh add-on support policy][istio-support-policy].
 
 ## Prerequisites
 
@@ -439,9 +439,9 @@ data:
 ...
 ```
 
-You can modify these settings for all Istio `Gateways` at a `GatewayClass` level by updating the `istio-gateway-class-defaults` ConfigMap, or you can set them for individual `Gateway` resources. For both the `GatewayClass`-level and `Gateway`-level `ConfigMaps`, you must add fields to the allowlist for the given resource. If there are customizations both for the `GatewayClass` and an individual `Gateway`, the `Gateway`-level configuration takes precedence.
+You can modify these settings for all Istio `Gateways` at a `GatewayClass` level by updating the `istio-gateway-class-defaults` ConfigMap, or you can set them for individual `Gateway` resources. For both the `GatewayClass`-level and `Gateway`-level `ConfigMaps`, you must add fields to the allow list for the given resource. If there are customizations both for the `GatewayClass` and an individual `Gateway`, the `Gateway`-level configuration takes precedence.
 
-## Deployment customization allowlist fields
+## Deployment customization allow list fields
 
 | Field path | Description |
 |------------|----------|
@@ -466,7 +466,7 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 | `spec.template.spec.tolerations` | Pod scheduling |
 | `spec.template.spec.topologySpreadConstraints` | Pod scheduling |
 
-## Service customization allowlist fields
+## Service customization allow list fields
 
 | Field path | Description |
 |------------|----------|
@@ -478,7 +478,7 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 | `spec.externalTrafficPolicy` | Service traffic policy |
 | `spec.internalTrafficPolicy` | Service traffic policy |
 
-## HorizontalPodAutoscaler (HPA) customization allowlist fields
+## HorizontalPodAutoscaler (HPA) customization allow list fields
 
 | Field path | Description |
 |------------|----------|
@@ -494,7 +494,7 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 | `spec.minReplicas` | HPA minimum replica count. Must not be below 2. |
 | `spec.maxReplicas` | HPA maximum replica count |
 
-## PodDisruptionBudget (PDB) customization allowlist fields
+## PodDisruptionBudget (PDB) customization allow list fields
 
 | Field path | Description |
 |------------|----------|
