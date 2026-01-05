@@ -4,16 +4,16 @@ description: Learn how to use the Container Storage Interface (CSI) driver for A
 ms.topic: how-to
 ms.custom: biannual
 ms.subservice: aks-storage
-ms.date: 12/18/2025
+ms.date: 01/05/2025
 author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-csi-driver
-# Customer intent: "As a Kubernetes administrator, I want to implement the Azure Disk CSI driver in my AKS cluster so that I can efficiently manage storage provisioning and enhance performance for my containerized applications."
+# Customer intent: "As a Kubernetes administrator, I want to implement the Azure CSI driver in my AKS cluster so that I can efficiently manage storage provisioning and enhance performance for my containerized applications."
 ---
 
-::: zone pivot="csi-blob"
+# Using the Azure storage CSI driver
 
-# Use Azure Blob storage CSI driver
+::: zone pivot="csi-blob"
 
 The Azure Blob storage Container Storage Interface (CSI) driver is a
 [CSI specification][csi-specification]-compliant driver used by Azure Kubernetes Service (AKS) to
@@ -60,9 +60,8 @@ Azure Blob storage CSI driver supports the following features:
   make sure that you update the extension to the latest version by calling
   `az extension update --name aks-preview`.
 
-- Perform the steps in this [link][csi-blob-storage-open-source-driver-uninstall-steps] if you
-  previously installed the
-  [CSI Blob Storage open-source driver][csi-blob-storage-open-source-driver] to access Azure Blob
+- Perform the following steps to [clean up the open source driver][csi-blob-storage-open-source-driver-uninstall-steps] if you
+  previously installed the [CSI Blob Storage open-source driver][csi-blob-storage-open-source-driver] to access Azure Blob
   storage from your cluster.
 
 - Your AKS cluster *Control plane* identity (your AKS cluster name) is added to the
@@ -289,10 +288,7 @@ the NFS protocol.
   [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
 
 ::: zone-end
-
 ::: zone pivot="csi-disk"
-
-# Azure Disk CSI driver in AKS
 
 The Azure Disks Container Storage Interface (CSI) driver is a [CSI specification](https://github.com/container-storage-interface/spec/blob/master/spec.md)-compliant driver used by Azure Kubernetes Service (AKS) to manage the lifecycle of Azure Disk.
 
@@ -382,7 +378,7 @@ A storage class is used to define how a unit of storage is dynamically created w
 
 When you use the Azure Disk CSI driver on AKS, there are two more built-in `StorageClasses` that use the Azure Disk CSI storage driver. The other CSI storage classes are created with the cluster alongside the in-tree default storage classes.
 
-- `managed-csi`: Creates managed disks using Azure Standard SSD with locally redundant storage (LRS). Starting with Kubernetes version 1.29, for AKS clusters deployed across multiple availability zones, this storage class uses Azure Standard SSD zone-redundant storage (ZRS) to provision managed disks.
+- `managed-csi`: Creates managed disks using Azure Standard SSD with locally redundant storage (LRS). With Kubernetes version 1.29 for AKS clusters deployed across multiple availability zones, this storage class uses Azure Standard SSD zone-redundant storage (ZRS) to provision managed disks.
 
 - `managed-csi-premium`: Provisions managed disks using Azure Premium LRS. Beginning with Kubernetes version 1.29, for AKS clusters spanning multiple availability zones, this storage class automatically uses Azure Premium ZRS to create managed disks.
 
@@ -727,10 +723,7 @@ allowVolumeExpansion: true
 - For more information about disk-based storage solutions, see [Disk-based solutions in AKS][disk-based-solutions].
 
 ::: zone-end
-
 ::: zone pivot="csi-files"
-
-# Azure Files CSI driver in AKS
 
 The Azure Files Container Storage Interface (CSI) driver is a
 [CSI specification][csi-specification]-compliant driver used by Azure Kubernetes Service (AKS) to
@@ -744,8 +737,8 @@ Kubernetes code and wait for its release cycles.
 To create an AKS cluster with CSI drivers support, see
 [Enable CSI drivers on AKS][csi-drivers-overview].
 
-> [!NOTE] *In-tree drivers* refer to the current storage drivers that are part of the core
-> Kubernetes code versus the new CSI drivers, which are plug-ins.
+> [!NOTE]
+> *In-tree drivers* refer to the current storage drivers that are part of the core Kubernetes code versus the new CSI drivers, which are plug-ins.
 
 ## Prerequisites
 
@@ -819,9 +812,8 @@ class to hold the Azure files share. Choose one of the following
 * **Premium_LRS**: Premium locally redundant storage
 * **Premium_ZRS**: Premium zone-redundant storage
 
-> [!NOTE] Azure Files supports Azure Premium file shares. The minimum file share capacity is 100
-> GiB. We recommend using Azure Premium file shares instead of Standard file shares because Premium
-> file shares offer higher performance, low-latency disk support for I/O-intensive workloads.
+> [!NOTE]
+> Azure Files supports Azure Premium file shares. The minimum file share capacity is 100 GiB. We recommend using Azure Premium file shares instead of Standard file shares because Premium file shares offer higher performance, low-latency disk support for I/O-intensive workloads.
 
 When you use storage CSI drivers on AKS, there are two more built-in `StorageClasses` that uses the
 Azure Files CSI storage drivers. The other CSI storage classes are created with the cluster
@@ -1233,7 +1225,8 @@ This option is optimized for random access workloads with in-place data updates 
 POSIX file system support. This section shows you how to use NFS shares with the Azure File CSI
 driver on an AKS cluster.
 
-> [!NOTE] You can use a private endpoint instead of allowing access to the selected VNet.
+> [!NOTE]
+> You can use a private endpoint instead of allowing access to the selected VNet.
 
 This section explains how to maximize performance and security when using Azure Files NFS 4.1 with
 AKS. Learn how to:
@@ -1538,8 +1531,6 @@ The output of the commands resembles the following example:
 [install-azure-cli]: /cli/azure/install-azure-cli
 [nfs-file-share-mount-options]: /azure/storage/files/storage-files-how-to-mount-nfs-shares#mount-options
 [node-resource-group]: faq.yml
-[operator-best-practices-storage]: operator-best-practices-storage.md
-[operator-best-practices-storage]: operator-best-practices-storage.md
 [operator-best-practices-storage]: operator-best-practices-storage.md
 [persistent-volume]: concepts-storage.md#persistent-volumes
 [persistent-volume-claim-overview]: concepts-storage.md#persistent-volume-claims

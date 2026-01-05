@@ -152,8 +152,8 @@ groups:
   prompt: Choose your CSI driver type
   pivots:
   - id: csi-blob
-    title: Blob
+    title: Azure Blob
   - id: csi-disk
-    title: Disk
+    title: Azure Disk
   - id: csi-files
-    title: Files
+    title: Azure Files
