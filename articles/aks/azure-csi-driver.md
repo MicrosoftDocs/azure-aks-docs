@@ -276,18 +276,15 @@ the NFS protocol.
    kubectl create -f azure-blobfuse-ss.yaml
    ```
 
+::: zone-end
+
 ## Next steps
 
 - To learn how to set up a static or dynamic persistent volume, see
   [Create and use a volume with Azure Blob storage][azure-csi-blob-storage-provision].
-- To learn how to use CSI driver for Azure Disks, see
-  [Use Azure Disks with CSI driver][azure-disk-csi-driver].
-- To learn how to use CSI driver for Azure Files, see
-  [Use Azure Files with CSI driver][azure-files-csi-driver].
 - For more about storage best practices, see
   [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
 
-::: zone-end
 ::: zone pivot="csi-disk"
 
 The Azure Disks Container Storage Interface (CSI) driver is a [CSI specification](https://github.com/container-storage-interface/spec/blob/master/spec.md)-compliant driver used by Azure Kubernetes Service (AKS) to manage the lifecycle of Azure Disk.
@@ -717,8 +714,6 @@ allowVolumeExpansion: true
 
 ## Next steps
 
-- To learn how to use CSI driver for Azure Files, see [Use Azure Files with CSI driver][azure-files-csi].
-- To learn how to use CSI driver for Azure Blob storage, see [Use Azure Blob storage with CSI driver][azure-blob-csi].
 - For more information about storage best practices, see [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
 - For more information about disk-based storage solutions, see [Disk-based solutions in AKS][disk-based-solutions].
 
@@ -1470,10 +1465,6 @@ The output of the commands resembles the following example:
 
 - For best practices when using Azure Files, see
   [Provision Azure Files storage](azure-csi-files-storage-provision.md#best-practices).
-- To learn how to use CSI driver for Azure Disks, see
-  [Use Azure Disks with CSI driver][azure-disk-csi].
-- To learn how to use CSI driver for Azure Blob storage, see
-  [Use Azure Blob storage with CSI driver][azure-blob-csi].
 - For more about storage best practices, see
   [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
 
@@ -1510,10 +1501,7 @@ The output of the commands resembles the following example:
 [az-premium-ssd]: /azure/virtual-machines/disks-types#premium-ssds
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-snapshot-create]: /cli/azure/snapshot#az-snapshot-create
-[azure-blob-csi]: azure-blob-csi.md
 [azure-csi-blob-storage-provision]: azure-csi-blob-storage-provision.md
-[azure-disk-csi]: azure-disk-csi.md
-[azure-disk-csi-driver]: azure-disk-csi.md
 [azure-disk-volume]: azure-disk-volume.md
 [azure-files-csi]: azure-files-csi.md
 [azure-files-csi-driver]: azure-files-csi.md
