@@ -164,7 +164,7 @@ groups:
   - id: csi-blob
     title: Azure Blob
   - id: csi-disk
-    title: Axure Disk
+    title: Azure Disk
   - id: csi-files
     title: Azure Files
 # Owner: schaffererin

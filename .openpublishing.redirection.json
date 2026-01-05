@@ -49,12 +49,12 @@
       "source_path_from_root": "/articles/aks/availability-zones.md",
       "redirect_url": "/azure/aks/availability-zones-overview",
       "redirect_document_id": false
-     },
+    },
     {
       "source_path_from_root": "/articles/aks/availability-zones-overview.md",
       "redirect_url": "/azure/aks/reliability-availability-zones-configure",
       "redirect_document_id": false
-     },
+    },
     {
       "source_path_from_root": "/azure/aks/container-network-observability-concepts.md",
       "redirect_url": "/azure/aks/advanced-container-networking-services-overview.md",
@@ -64,15 +64,26 @@
       "source_path_from_root": "/articles/aks/ha-dr-overview.md",
       "redirect_url": "/azure/aks/reliability-multi-region-deployment-models",
       "redirect_document_id": false
-     },
+    },
     {
       "source_path_from_root": "/articles/aks/aks-zone-resiliency.md",
       "redirect_url": "/azure/aks/reliability-zone-resiliency-recommendations",
       "redirect_document_id": false
-     }
-
-
-
-    
+    },
+    {
+      "source_path_from_root": "/articles/aks/azure-blob-csi.md",
+      "redirect_url": "/articles/aks/azure-csi-driver",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/aks/azure-disk-csi.md",
+      "redirect_url": "/articles/aks/azure-csi-driver",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/aks/azure-files-csi.md",
+      "redirect_url": "/articles/aks/azure-csi-driver",
+      "redirect_document_id": false
+    }
   ]
 }
