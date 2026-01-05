@@ -109,7 +109,7 @@ az aks nodepool add \
     --cluster-name $AKS_CLUSTER_NAME \
     --name $NODEPOOL_NAME \
     --node-count 1 \
-    --labels dept=HR costcenter=5000 \
+    --labels dept=HR costcenter=5000
 ```
 
 The following is example output from the [`az aks nodepool list`][az-aks-nodepool-list] command showing the *labelnp* node pool is *Creating* nodes with the specified *nodeLabels*:
@@ -159,7 +159,7 @@ az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $AKS_CLUSTER_NAME \
     --name $NODEPOOL_NAME \
-    --labels dept=ACCT costcenter=6000 \
+    --labels dept=ACCT costcenter=6000
 ```
 
 Verify the new labels are set:

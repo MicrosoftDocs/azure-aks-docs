@@ -1,16 +1,16 @@
 ---
-title: Observability for Azure Kubernetes Service (AKS) Clusters with Key Management Service (KMS) Etcd Encryption
+title: Observability for Azure Kubernetes Service (AKS) Clusters with Key Management Service (KMS) Etcd Encryption (legacy)
 description: Learn how to view observability metrics and improve observability for AKS clusters with KMS etcd encryption.
-ms.date: 09/26/2024
+ms.date: 12/22/2025
 ms.subservice: aks-security
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-author: davidsmatlak
-ms.author: davidsmatlak
+author: shashankbarsin
+ms.author: shasb
 # Customer intent: As a Kubernetes administrator, I want to view observability metrics for my clusters with KMS etcd encryption so I can improve observability.
 ---
 
-# Observability for Azure Kubernetes Service (AKS) clusters with Key Management Service (KMS) etcd encryption
+# Observability for Azure Kubernetes Service (AKS) clusters with Key Management Service (KMS) etcd encryption (legacy)
 
 This article shows you how to view observability metrics and improve observability for AKS clusters with KMS etcd encryption.
 
@@ -74,8 +74,10 @@ Because the AKS KMS plugin currently only allows bring your own (BYO) key vault 
 
 For more information on using KMS with AKS, see the following articles:
 
+- [Data encryption at rest concepts for AKS](./kms-data-encryption-concepts.md)
+- [Enable KMS data encryption in AKS](./kms-data-encryption.md)
 - [Update the key vault mode for an Azure Kubernetes Service (AKS) cluster with KMS etcd encryption](./update-kms-key-vault.md)
-- [Use KMS v2 for etcd encryption in Azure Kubernetes Service (AKS)](./use-kms-v2.md)
+- [Migrate to KMS v2 for etcd encryption in Azure Kubernetes Service (AKS)](./use-kms-v2.md)
 
 <!-- LINKS -->
 [az-aks-show]: /cli/azure/aks#az-aks-show

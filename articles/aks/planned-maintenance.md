@@ -3,7 +3,7 @@ title: Use Planned Maintenance to Schedule and Control Upgrades for Azure Kubern
 description: Learn how to use planned maintenance to schedule and control cluster and node image upgrades in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 05/29/2024
+ms.date: 12/19/2025
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
@@ -170,9 +170,9 @@ az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-n
 
 ### [Azure portal](#tab/azure-portal)
 
-1. In the Azure portal, navigate to your AKS cluster resource.
-1. From the service menu, under **Settings**, select **Cluster configuration**.
-1. Under **Upgrade** > **Automatic upgrade scheduler**, select **Add schedule**.
+1. In the Azure portal, go to your AKS cluster resource.
+1. From the service menu, under **Settings**, select **Upgrades**.
+1. Under **Upgrade** > **Automatic upgrade scheduler**, select **Add schedule**. For newer clusters, this option is labeled **Edit schedule**.
 
     :::image type="content" source="./media/planned-maintenance/add-schedule-portal.png" alt-text="Screenshot that shows the option to add a schedule in the Azure portal.":::
 
@@ -314,7 +314,7 @@ az aks maintenanceconfiguration update --resource-group $RESOURCE_GROUP --cluste
     }
     ```
 
-2. Update the maintenance window configuration using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command with the `--config-file` parameter:
+1. Update the maintenance window configuration using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command with the `--config-file` parameter:
 
     ```azurecli-interactive
     az aks maintenanceconfiguration update --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name default --config-file ./default.json
@@ -414,7 +414,7 @@ az aks maintenanceconfiguration delete --resource-group $RESOURCE_GROUP --cluste
 ### How can I check the existing maintenance configurations in my cluster?
 
 Use the `az aks maintenanceconfiguration show` command.
-  
+
 ### Can reactive, unplanned maintenance happen during the `notAllowedDates` periods too?
 
 Yes. AKS reserves the right to break these windows for unplanned, reactive maintenance operations that are urgent or critical.
@@ -422,7 +422,7 @@ Yes. AKS reserves the right to break these windows for unplanned, reactive maint
 ### How can I tell if a maintenance event occurred?
 
 For releases, check your cluster's region and look up information in [weekly releases][release-tracker] to see if it matches your maintenance schedule. To view the status of your automatic upgrades, look up [activity logs][monitor-aks] on your cluster. You can also look up specific upgrade-related events, as mentioned in [Upgrade an AKS cluster][aks-upgrade].
-  
+
 AKS also emits upgrade-related Azure Event Grid events. To learn more, see [AKS as an Event Grid source][aks-eventgrid].
 
 ### Can I use more than one maintenance configuration at the same time?
@@ -444,9 +444,9 @@ Another reason why an agent pool could be upgraded unexpectedly is when there's 
 ### Are there any best practices for the maintenance configurations?
 
 We recommend setting the [node OS security updates][node-image-auto-upgrade] schedule to a weekly cadence if you're using the `NodeImage` channel, because a new node image is shipped every week. You can also opt in for the `SecurityPatch` channel to receive daily security updates.
-  
+
 You can set the [auto-upgrade][auto-upgrade] schedule to a monthly cadence to stay current with the Kubernetes N-2 [support policy][aks-support-policy].
-  
+
 For a detailed discussion of upgrade best practices and other considerations, see [AKS patch and upgrade guidance][upgrade-operators-guide].
 
 ### Can I configure all my clusters in a single subscription to use the same maintenance configuration?
