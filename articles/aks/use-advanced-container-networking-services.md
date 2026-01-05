@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 05/28/2024
+zone_pivot_groups: use-advanced-container-networking-services
 # Customer intent: "As a cloud engineer, I want to implement Advanced Container Networking Services in my AKS clusters, so that I can enhance network observability and security for my containerized applications, ensuring they are secure, compliant, and perform optimally."
 ---
 
@@ -17,20 +18,10 @@ This article describes how to enable and disable Advanced Container Networking S
 ## Prerequisites
 
 - An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
-
-[!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
-
 - Azure CLI version 2.71.0 or higher. Find your version using the `az --version` command. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-- [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension). You need version `14.0.0b6` or higher.
+- [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) version `14.0.0b6` or higher.
 - [Register the `AdvancedNetworkingL7PolicyPreview` feature flag](#register-the-advancednetworkingl7policypreview-feature-flag) in your subscription.
-
-## Considerations
-
-Keep the following information in mind when creating or updating a Cilium-based cluster:
-
 - Clusters that have the Cilium data plane support _Container Network Observability_ and _Container Network Security_ in Kubernetes version 1.29 and later.
-- When the `--acns-advanced-networkpolicies` parameter is set to `L7`, both L7 and FQDN filtering policies are enabled. If you want to enable only FQDN filtering, set the parameter to `FQDN`.
-- To disable both features, complete the steps in [Disable Container Network Security](./advanced-container-networking-services-overview.md?tabs=cilium#disable-container-network-security).
 
 ## Install the `aks-preview` Azure CLI extension
 
@@ -60,28 +51,36 @@ Keep the following information in mind when creating or updating a Cilium-based 
     az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingL7PolicyPreview"
     ```
 
+## Set environment variables
+
+The examples in this article use the following environment variables:
+
+| Variable | Description | Example value |
+| -------- | ----------- | ------------- |
+| `RESOURCE_GROUP` | Name of the Azure resource group | `myResourceGroup` |
+| `LOCATION` | Azure region for resources | `eastus` |
+| `CLUSTER_NAME` | Name of the AKS cluster | `myAKSCluster` |
+
+**All commands in this article assume these environment variables are set**. Make sure to replace the example values with your own values.
+
 ## Create a resource group
 
 - Create a resource group using the [`az group create`](/cli/azure/group#az-group-create) command.
 
     ```azurecli-interactive
-    # Set environment variables for the resource group name and location. Make sure you replace the placeholders with your own values.
-    export RESOURCE_GROUP="<resource-group-name>"
-    export LOCATION="<location>"
-
-    # Create the resource group
     az group create --name $RESOURCE_GROUP --location $LOCATION
     ```
 
-## Create a new AKS cluster with Advanced Container Networking Services (Cilium)
+## Create a new AKS cluster with Advanced Container Networking Services
+
+> [!NOTE]
+> When the `--acns-advanced-networkpolicies` parameter is set to `L7`, both Layer 7 and fully qualified domain name (FQDN) filtering policies are enabled. If you want to enable only FQDN filtering, set the parameter to `FQDN`.
+
+:::zone pivot="cilium"
 
 - Create an AKS cluster with Advanced Container Networking Services and Cilium using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--enable-acns` and `--network-dataplane cilium` flags.
 
     ```azurecli-interactive
-    # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
-    export CLUSTER_NAME="<aks-cluster-name>"
-    
-    # Create an AKS cluster
     az aks create \
         --name $CLUSTER_NAME \
         --resource-group $RESOURCE_GROUP \
@@ -93,7 +92,9 @@ Keep the following information in mind when creating or updating a Cilium-based 
         --acns-advanced-networkpolicies <L7/FQDN>
     ```
 
-## Create a new AKS cluster with Advanced Container Networking Services (non-Cilium)
+:::zone-end
+
+:::zone pivot="non-cilium"
 
 > [!IMPORTANT]
 > The [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature isn't available for non-Cilium clusters.
@@ -101,10 +102,6 @@ Keep the following information in mind when creating or updating a Cilium-based 
 - Create an AKS cluster with Advanced Container Networking Services using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--enable-acns` flag.
 
     ```azurecli-interactive
-    # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
-    export CLUSTER_NAME="<aks-cluster-name>"
-    
-    # Create an AKS cluster
     az aks create \
         --name $CLUSTER_NAME \
         --resource-group $RESOURCE_GROUP \
@@ -113,7 +110,11 @@ Keep the following information in mind when creating or updating a Cilium-based 
         --enable-acns
     ```
 
-## Enable Advanced Container Networking Services on an existing cluster (Cilium)
+:::zone-end
+
+## Enable Advanced Container Networking Services on an existing cluster
+
+:::zone pivot="cilium"
 
 - Enable Advanced Container Networking Services on an existing AKS cluster with Cilium using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--enable-acns` flag.
 
@@ -125,7 +126,9 @@ Keep the following information in mind when creating or updating a Cilium-based 
         --acns-advanced-networkpolicies <L7/FQDN>
     ```
 
-## Enable Advanced Container Networking Services on an existing cluster (non-Cilium)
+:::zone-end
+
+:::zone pivot="non-cilium"
 
 - Enable Advanced Container Networking Services on an existing AKS cluster using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--enable-acns` flag.
 
@@ -136,7 +139,9 @@ Keep the following information in mind when creating or updating a Cilium-based 
         --enable-acns
     ```
 
-## Disable Advanced Container Networking Services on an AKS cluster (Cilium and non-Cilium)
+:::zone-end
+
+## Disable Advanced Container Networking Services on an AKS cluster
 
 - Disable Advanced Container Networking Services on an existing AKS cluster using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--disable-acns` flag.
 
@@ -147,7 +152,9 @@ Keep the following information in mind when creating or updating a Cilium-based 
         --disable-acns
     ```
 
-## Disable Container Network Observability on an AKS cluster (Cilium)
+## Disable Container Network Observability on an AKS cluster
+
+:::zone pivot="cilium"
 
 - Disable the Container Network Observability feature without affecting other Advanced Container Networking Services features using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--disable-acns-observability` flag.
 
@@ -159,9 +166,13 @@ Keep the following information in mind when creating or updating a Cilium-based 
         --disable-acns-observability 
     ```
 
-## Disable Container Network Observability on an AKS cluster (non-Cilium)
+:::zone-end
 
-- Disable Advanced Container Networking Services on an existing AKS cluster using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--disable-acns` flag.
+:::zone pivot="non-cilium"
+
+Container Network Observability is the only feature available for non-Cilium clusters, so you can disable it only by disabling the entire Advanced Container Networking Services suite.
+
+- Disable the Container Network Observability feature on an existing AKS cluster using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--disable-acns` flag.
 
     ```azurecli-interactive
     az aks update \
@@ -170,7 +181,11 @@ Keep the following information in mind when creating or updating a Cilium-based 
         --disable-acns 
     ```
 
-## Disable Container Network Security on an AKS cluster (Cilium)
+:::zone-end
+
+:::zone pivot="cilium"
+
+## Disable Container Network Security on an AKS cluster
 
 - Disable the Container Network Security feature without affecting other Advanced Container Networking Services features using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--disable-acns-security` flag.
 
@@ -181,6 +196,8 @@ Keep the following information in mind when creating or updating a Cilium-based 
         --enable-acns \
         --disable-acns-security
     ```
+
+:::zone-end
 
 ## Related content
 
