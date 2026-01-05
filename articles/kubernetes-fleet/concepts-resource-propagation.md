@@ -437,9 +437,9 @@ For more information, see the [documentation on rollout strategies][fleet-rollou
 
 The Fleet scheduler provides two ways to view placement status depending on your access level and requirements:
 
-* **ClusterResourcePlacement status**: View placement status directly on the cluster-scoped `ClusterResourcePlacement` object. Use this approach when you have cluster-level permissions and need to view status for any placement across the fleet. This is the primary method for platform administrators.
+* **ClusterResourcePlacement status**: View placement status directly on the cluster-scoped `ClusterResourcePlacement` object. Use this approach when you have cluster-level permissions and need to view status for any placement across the fleet. This approach is the primary method for platform administrators.
 
-* **ClusterResourcePlacementStatus (preview)**: View placement status through a namespace-scoped `ClusterResourcePlacementStatus` object. Use this approach when you want to enable namespace users to view placement status without granting cluster-level permissions. This requires using the v1beta1 API and setting `statusReportingScope: NamespaceAccessible` on the `ClusterResourcePlacement`. For more information, see the [ClusterResourcePlacementStatus section](#clusterresourceplacementstatus-preview).
+* **ClusterResourcePlacementStatus (preview)**: View placement status through a namespace-scoped `ClusterResourcePlacementStatus` object. Use this approach when you want to enable namespace users to view placement status without granting cluster-level permissions. This approach requires using the v1beta1 API and setting `statusReportingScope: NamespaceAccessible` on the `ClusterResourcePlacement`. For more information, see the [ClusterResourcePlacementStatus section](#clusterresourceplacementstatus-preview).
 
 Both approaches provide the following information:
 
@@ -555,11 +555,11 @@ Events:
 ### ClusterResourcePlacementStatus (preview)
 
 > [!IMPORTANT]
-> The `ClusterResourcePlacementStatus` resource and `StatusReportingScope` field are available in the `placement.kubernetes-fleet.io/v1beta1` API version as a preview feature. They are not available in the `placement.kubernetes-fleet.io/v1` API.
+> The `ClusterResourcePlacementStatus` resource and `StatusReportingScope` field are available in the `placement.kubernetes-fleet.io/v1beta1` API version as a preview feature. They aren't available in the `placement.kubernetes-fleet.io/v1` API.
 
-The `ClusterResourcePlacementStatus` is a namespace-scoped resource that provides the placement status of a corresponding cluster-scoped `ClusterResourcePlacement` object so it is accessible to users of the namespace who don't have cluster-level rights.
+The `ClusterResourcePlacementStatus` is a namespace-scoped resource that provides the placement status of a corresponding cluster-scoped `ClusterResourcePlacement` object so it's accessible to users of the namespace who don't have cluster-level rights.
 
-For namespace users without cluster-level permissions, you can view the same placement status information through a namespace-scoped `ClusterResourcePlacementStatus` object. This requires the `ClusterResourcePlacement` to be configured with `statusReportingScope: NamespaceAccessible` using the v1beta1 API.
+For namespace users without cluster-level permissions, you can view the same placement status information through a namespace-scoped `ClusterResourcePlacementStatus` object. This approach requires the `ClusterResourcePlacement` to be configured with `statusReportingScope: NamespaceAccessible` using the v1beta1 API.
 
 Key features:
 
