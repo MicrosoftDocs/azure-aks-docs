@@ -722,8 +722,6 @@ metadata:
 
 When you're finished with this tutorial, you can clean up the resources you created:
 
-### [ClusterResourcePlacement](#tab/cleanupclusterresourceplacement)
-
 ```bash
 kubectl delete clusterstagedupdaterun example-run example-run-2
 kubectl delete clusterstagedupdatestrategy example-strategy
