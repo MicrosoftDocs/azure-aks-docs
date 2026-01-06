@@ -33,7 +33,7 @@ For dual-stack networking, you need Kubernetes version 1.26.3 or later.
 
 :::zone pivot="aks-cni-overlay-cluster"
 
-## Key parameters for Azure CNI Overlay in AKS clusters
+## Key parameters for Azure CNI Overlay AKS clusters
 
 The following table describes the key parameters for configuring Azure CNI Overlay networking in AKS clusters:
 
