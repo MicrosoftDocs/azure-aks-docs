@@ -224,7 +224,7 @@ Expose the NGINX deployment by using either `kubectl` commands or YAML manifests
 1. Expose the NGINX deployment by using the `kubectl expose deployment nginx` command:
 
     ```bash-interactive
-    kubectl expose deployment nginx --name=nginx-ipv4 --port=80 --type=LoadBalancer'
+    kubectl expose deployment nginx --name=nginx-ipv4 --port=80 --type=LoadBalancer
     kubectl expose deployment nginx --name=nginx-ipv6 --port=80 --type=LoadBalancer --overrides='{"spec":{"ipFamilies": ["IPv6"]}}'
     ```
 
