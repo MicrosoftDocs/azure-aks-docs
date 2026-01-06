@@ -268,7 +268,7 @@ spec:
 
 ## Prepare a staged update run to rollout changes
 
-A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our ClusterResourcePlacement (CRP), we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
+A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our `ClusterResourcePlacement` (CRP), we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -954,7 +954,7 @@ spec:
 
 ## Prepare a staged update run to rollout changes
 
-A `StagedUpdateRun` executes the rollout of a `ResourcePlacement` following a `StagedUpdateStrategy`. To trigger the staged update run for our ResourcePlacement (RP), we create a `StagedUpdateRun` specifying the RP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
+A `StagedUpdateRun` executes the rollout of a `ResourcePlacement` following a `StagedUpdateStrategy`. To trigger the staged update run for our `ResourcePlacement` (RP), we create a `StagedUpdateRun` specifying the RP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -1305,9 +1305,9 @@ kubectl delete namespace test-namespace
 
 | Aspect | Cluster-Scoped | Namespace-Scoped |
 |--------|----------------|------------------|
-| **Strategy Resource** | `ClusterStagedUpdateStrategy` | `StagedUpdateStrategy` |
-| **Update Run Resource** | `ClusterStagedUpdateRun` | `StagedUpdateRun` |
-| **Target Placement** | `ClusterResourcePlacement` | `ResourcePlacement` |
+| **Strategy Resource** | `ClusterStagedUpdateStrategy` (short name: `csus`) | `StagedUpdateStrategy` (short name: `sus`) |
+| **Update Run Resource** | `ClusterStagedUpdateRun` (short name: `csur`) | `StagedUpdateRun` (short name: `sur`) |
+| **Target Placement** | `ClusterResourcePlacement` (short name: `crp`) | `ResourcePlacement` (short name: `rp`) |
 | **Approval Resource** | `ClusterApprovalRequest` (short name: `careq`) | `ApprovalRequest` (short name: `areq`) |
 | **Snapshot Resource** | `ClusterResourceSnapshot` | `ResourceSnapshot` |
 | **Scope** | Cluster-wide | Namespace-bound |
