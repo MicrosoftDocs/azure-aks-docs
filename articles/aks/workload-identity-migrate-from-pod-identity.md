@@ -15,7 +15,7 @@ ms.author: davidsmatlak
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://go.microsoft.com/fwlink/?linkid=2303216)
 
-Migrate AKS pods from pod-managed identities to [Microsoft Entra Workload ID][workload-identity-overview] (workload identity) using one of three approaches based on your current [Azure Identity SDK[azure-identity-libraries] version: latest SDK parallel deployment, migration sidecar proxy (Linux only), or SDK rewrite.
+Migrate AKS pods from pod-managed identities to [Microsoft Entra Workload ID][workload-identity-overview] (workload identity) using one of three approaches based on your current [Azure Identity SDK][azure-identity-libraries] version: latest SDK parallel deployment, migration sidecar proxy (Linux only), or SDK rewrite.
 
 ## Prerequisites
 
