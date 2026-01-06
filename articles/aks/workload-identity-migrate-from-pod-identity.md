@@ -285,7 +285,7 @@ For more information about Microsoft Entra Workload ID, see the [Overview][workl
 [az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [az-aks-pod-identity-delete]: /cli/azure/aks/pod-identity#az-aks-pod-identity-delete
 [azure-identity-supported-versions]: workload-identity-overview.md#prerequisites
-[azure-identity-libraries]: ../active-directory/develop/reference-v2-libraries.md
+[azure-identity-libraries]: /entra/identity-platform/reference-v2-libraries
 [openid-connect-overview]: /azure/active-directory/develop/v2-protocols-oidc
 [install-azure-cli]: /cli/azure/install-azure-cli
 [assign-rbac-managed-identity]: /azure/role-based-access-control/role-assignments-portal-managed-identity
