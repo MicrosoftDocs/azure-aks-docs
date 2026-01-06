@@ -500,8 +500,12 @@
         href: concepts-network-ip-address-planning.md
       - name: Services
         href: concepts-network-services.md
-      - name: Advanced Container Networking Services (ACNS) overview
-        href: advanced-container-networking-services-overview.md
+      - name: Advanced Container Networking Services (ACNS)
+        items:
+          - name: Overview
+            href: advanced-container-networking-services-overview.md
+          - name: Enable or disable ACNS
+            href: use-advanced-container-networking-services.md
       - name: Ingress
         items:
           - name: Overview
