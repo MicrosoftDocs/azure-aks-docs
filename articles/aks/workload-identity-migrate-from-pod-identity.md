@@ -72,7 +72,7 @@ For all migration paths, you need to have the federated trust set up before you 
 
 **Migration approach**: Deploy a migration sidecar that proxies IMDS transactions to OIDC, allowing your existing application code to work without immediate changes.
 
-**Important limitations*"*:
+**Important limitations**:
 
 - **Linux containers only**. Windows containers aren't supported.
 - **Temporary solution** that's not intended for long-term production use.
