@@ -223,6 +223,14 @@ groups:
   - id: azure-portal
     title: Azure portal
 # Owner: schaffererin
+- id: limit-egress-traffic
+  title: Choose a managed identity type
+  prompt: Choose a managed identity type
+  pivots:
+  - id: system
+    title: System-assigned managed identity
+  - id: user
+    title: User-assigned managed identity
 - id: use-advanced-container-networking-services
   title: Choose a data plane option
   prompt: Choose a data plane option
