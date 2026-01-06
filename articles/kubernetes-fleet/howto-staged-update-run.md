@@ -65,11 +65,12 @@ This tutorial demonstrates staged update runs using a demo fleet environment wit
 
 To group clusters by environment and control the deployment order within each stage, these labels allow us to create stages.
 
+
+#### [Cluster-scoped](#tab/clusterscoped)
+
 ## Prepare Kubernetes workloads for placement
 
 Publish Kubernetes workloads to the hub cluster so that they can be placed onto member clusters.
-
-#### [ClusterResourcePlacement](#tab/clusterresourceplacement)
 
 Create a Namespace and Configmap for the workload on the hub cluster:
 
@@ -115,85 +116,6 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1                                           51s
 ```
 
-#### [ResourcePlacement](#tab/resourceplacement)
-
-Create a Namespace and Configmap for the workload on the hub cluster:
-
-```bash
-kubectl create namespace test-namespace
-kubectl create configmap test-cm --from-literal=key=value1 -n test-namespace
-```
-
-Since `ResourcePlacement` is namespace-scoped, first deploy the Namespace to all member clusters using a `ClusterResourcePlacement`:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ClusterResourcePlacement
-metadata:
-  name: test-namespace-placement
-spec:
-  resourceSelectors:
-    - group: ""
-      kind: Namespace
-      name: test-namespace
-      version: v1
-      selectionScope: NamespaceOnly
-  policy:
-    placementType: PickAll
-```
-
-Verify the Namespace is deployed to all member clusters:
-
-```bash
-kubectl get clusterresourceplacement test-namespace-placement
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                       GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-test-namespace-placement   1     True        1               True        1               30s
-```
-
-To deploy the Configmap, create a namespace-scoped `ResourcePlacement`:
-
-> [!NOTE]
-> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ResourcePlacement
-metadata:
-  name: example-placement
-  namespace: test-namespace
-spec:
-  resourceSelectors:
-    - group: ""
-      kind: ConfigMap
-      name: test-cm
-      version: v1
-  policy:
-    placementType: PickAll
-  strategy:
-    type: External
-```
-
-All three clusters should be scheduled since we use the `PickAll` policy, but the Configmap shouldn't be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
-
-Verify the placement is scheduled:
-
-```bash
-kubectl get resourceplacement example-placement -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-example-placement   1     True        1                                           51s
-```
-
----
 
 ## Work with resource snapshots
 
@@ -204,7 +126,6 @@ Fleet Manager creates resource snapshots when resources change. Each snapshot ha
 
 ### Check current resource snapshots
 
-### [ClusterResourceSnapshots](#tab/clusterresourcesnapshots)
 
 To check current resource snapshots:
 
@@ -221,28 +142,7 @@ example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapsho
 
 We only have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
 
-### [ResourceSnapshots](#tab/resourcesnapshots)
-
-To check current resource snapshots:
-
-```bash
-kubectl get resourcesnapshots -n test-namespace --show-labels
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                           GEN   AGE   LABELS
-example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
-```
-
-We only have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
-
----
-
 ### Create a new resource snapshot
-
-### [ClusterResourceSnapshots](#tab/createclusterresourcesnapshots)
 
 Now modify the Configmap with a new value:
 
@@ -337,98 +237,7 @@ spec:
       namespace: test-namespace
 ```
 
-### [ResourceSnapshots](#tab/createresourcesnapshots)
-
-Now modify the Configmap with a new value:
-
-```bash
-kubectl edit configmap test-cm -n test-namespace
-```
-
-Update the value from `value1` to `value2`:
-
-```bash
-kubectl get configmap test-cm -n test-namespace -o yaml
-```
-
-Your output should look similar to the following example:
-
-```yaml
-apiVersion: v1
-data:
-  key: value2 # value updated here, old value: value1
-kind: ConfigMap
-metadata:
-  creationTimestamp: ...
-  name: test-cm
-  namespace: test-namespace
-  resourceVersion: ...
-  uid: ...
-```
-
-Now you should see two versions of resource snapshots with index 0 and 1 respectively:
-
-```bash
-kubectl get resourcesnapshots -n test-namespace --show-labels
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                           GEN   AGE    LABELS
-example-placement-0-snapshot   1     2m6s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
-example-placement-1-snapshot   1     10s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
-```
-
-The latest label is set to example-placement-1-snapshot, which contains the latest Configmap data:
-
-```bash
-kubectl get resourcesnapshots example-placement-1-snapshot -n test-namespace -o yaml
-```
-
-Your output should look similar to the following example:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ResourceSnapshot
-metadata:
-  annotations:
-    kubernetes-fleet.io/number-of-enveloped-object: "0"
-    kubernetes-fleet.io/number-of-resource-snapshots: "1"
-    kubernetes-fleet.io/resource-hash: 10dd7a3d1e5f9849afe956cfbac080a60671ad771e9bda7dd34415f867c75648
-  creationTimestamp: "2025-07-22T21:26:54Z"
-  generation: 1
-  labels:
-    kubernetes-fleet.io/is-latest-snapshot: "true"
-    kubernetes-fleet.io/parent-CRP: example-placement
-    kubernetes-fleet.io/resource-index: "1"
-  name: example-placement-1-snapshot
-  namespace: test-namespace
-  ownerReferences:
-  - apiVersion: placement.kubernetes-fleet.io/v1beta1
-    blockOwnerDeletion: true
-    controller: true
-    kind: ResourcePlacement
-    name: example-placement
-    uid: e7d59513-b3b6-4904-864a-c70678fd6f65
-  resourceVersion: "19994"
-  uid: 79ca0bdc-0b0a-4c40-b136-7f701e85cdb6
-spec:
-  selectedResources:
-  - apiVersion: v1
-    data:
-      key: value2 # latest value: value2, old value: value1
-    kind: ConfigMap
-    metadata:
-      name: test-cm
-      namespace: test-namespace
-```
-
----
-
 ## Create a staged update strategy
-
-### [ClusterStagedUpdateStrategy](#tab/clusterstagedupdatestrategy)
 
 A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
 
@@ -457,43 +266,9 @@ spec:
       maxConcurrency: 50%
 ```
 
-### [StagedUpdateStrategy](#tab/stagedupdatestrategy)
-
-A `StagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: StagedUpdateStrategy
-metadata:
-  name: example-strategy
-  namespace: test-namespace
-spec:
-  stages:
-    - name: staging
-      labelSelector:
-        matchLabels:
-          environment: staging
-      afterStageTasks:
-        - type: TimedWait
-          waitTime: 1m
-      maxConcurrency: 1
-    - name: canary
-      labelSelector:
-        matchLabels:
-          environment: canary
-      sortingLabelKey: order
-      beforeStageTasks:
-        - type: Approval
-      maxConcurrency: 50%
-```
-
----
-
 ## Prepare a staged update run to rollout changes
 
-### [ClusterStagedUpdateRun](#tab/prepareclusterstagedupdaterun)
-
-A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our ClusterResourcePlacement (CRP), we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, and the latest resource snapshot index ("1"):
+A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our ClusterResourcePlacement (CRP), we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -520,41 +295,7 @@ NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDE
 example-run   example-placement   1                         0                       True                      7s
 ```
 
-### [StagedUpdateRun](#tab/preparestagedupdaterun)
-
-A `StagedUpdateRun` executes the rollout of a `ResourcePlacement` following a `StagedUpdateStrategy`. To trigger the staged update run for our ResourcePlacement (RP), we create a `StagedUpdateRun` specifying the RP name, updateRun strategy name, and the latest resource snapshot index ("1"):
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: StagedUpdateRun
-metadata:
-  name: example-run
-  namespace: test-namespace
-spec:
-  placementName: example-placement
-  resourceSnapshotIndex: "1"
-  stagedRolloutStrategyName: example-strategy
-  state: Initialize
-```
-
-The staged update run is initialized but not running:
-
-```bash
-kubectl get stagedupdaterrun example-run -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True                      7s
-```
----
-
-
 ## Start a staged update run
-
-### [ClusterStagedUpdateRun](#tab/startclusterstagedupdaterun)
 
 To start the execution of a staged update run, you need to patch the `state` field in the spec to `Run`:
 
@@ -711,48 +452,7 @@ NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED  
 example-run-before-canary   example-run   canary                                 2m39s
 ```
 
-### [StagedUpdateRun](#tab/startstagedupdaterun)
-
-To start the execution of a staged update run, you need to patch the `state` field in the spec to `Run`:
-
-```bash
-kubectl patch stagedupdaterrun example-run -n test-namespace --type merge -p '{"spec":{"state":"Run"}}'
-```
-
-> [!NOTE]
-> You can also create an update run with the `state` field set to `Run` initially, which both initialize and starts progressing the update run in a single step.
-
-The staged update run is initialized and running:
-
-```bash
-kubectl get stagedupdaterrun example-run -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True                      7s
-```
-
-After the one-minute `TimedWait` elapses, check for the approval request:
-
-```bash
-kubectl get approvalrequests -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                        STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-before-canary   example-run         canary                                 2m39s
-```
-
----
-
 ## Approve the staged update run
-
-### [ClusterApprovalRequest](#tab/clusterapprovalrequest)
 
 We can approve the `ClusterApprovalRequest` by creating a json patch file and applying it:
 
@@ -805,64 +505,7 @@ NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDE
 example-run   example-placement   1                         0                       True          True        5m28s
 ```
 
-### [ApprovalRequest](#tab/approvalrequest)
-
-We can approve the `ApprovalRequest` by creating a json patch file and applying it:
-
-```bash
-cat << EOF > approval.json
-"status": {
-    "conditions": [
-        {
-            "lastTransitionTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "message": "lgtm",
-            "observedGeneration": 1,
-            "reason": "testPassed",
-            "status": "True",
-            "type": "Approved"
-        }
-    ]
-}
-EOF
-```
-
-Submit a patch request to approve using the JSON file created.
-
-```bash
-kubectl patch approvalrequests example-run-before-canary -n test-namespace --type='merge' --subresource=status --patch-file approval.json
-```
-
-Then verify that you approved the request:
-
-```bash
-kubectl get approvalrequests -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                        STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-before-canary   example-run         canary   True       True               3m35s
-```
-
-The `StagedUpdateRun` now is able to proceed and complete:
-
-```bash
-kubectl get stagedupdaterrun example-run -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True          True        5m28s
-```
-
----
-
 ## Verify the rollout completion
-
-### [ClusterResourcePlacement](#tab/verifyclusterresourceplacement)
 
 The `ClusterResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
 
@@ -891,41 +534,7 @@ metadata:
   ...
 ```
 
-### [ResourcePlacement](#tab/verifyresourceplacement)
-
-The `ResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
-
-```bash
-kubectl get resourceplacement example-placement -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-example-placement   1     True        1               True        1               8m55s
-```
-
-The Configmap test-cm should be deployed on all three member clusters, with latest data:
-
-```yaml
-apiVersion: v1
-data:
-  key: value2
-kind: ConfigMap
-metadata:
-  ...
-  name: test-cm
-  namespace: test-namespace
-  ...
-```
-
----
-
-
 ## Stop a staged update run
-
-### [ClusterStagedUpdateRun](#tab/stopclusterstagedupdaterun)
 
 To stop the execution of a running cluster staged update run, you need to patch the `state` field in the spec to `Stop`. This action gracefully halts the update run, allowing in-progress clusters to complete their updates before stopping the entire rollout process:
 
@@ -1031,7 +640,470 @@ status:
     startTime: "2025-07-22T21:28:08Z"
 ```
 
-### [StagedUpdateRun](#tab/stopstagedupdaterun)
+## Deploy a second staged update run to roll back to a previous version
+
+Suppose the workload admin wants to roll back the Configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the Configmap from hub, they can create a new `ClusterStagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateRun
+metadata:
+  name: example-run-2
+spec:
+  placementName: example-placement
+  resourceSnapshotIndex: "0"
+  stagedRolloutStrategyName: example-strategy
+  state: Run
+```
+
+Let's check the new `ClusterStagedUpdateRun`:
+
+```bash
+kubectl get clusterstagedupdaterun
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME            PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run     example-placement   1                         0                       True          True        13m
+example-run-2   example-placement   0                         0                       True                      9s
+```
+
+After the one-minute `TimedWait` elapses, we should see the `ClusterApprovalRequest` object created for the new `ClusterStagedUpdateRun`:
+
+```bash
+kubectl get clusterapprovalrequest
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                          UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-2-before-canary   example-run-2   canary                                 75s
+example-run-before-canary     example-run     canary   True       True               14m
+```
+
+To approve the new `ClusterApprovalRequest` object, let's reuse the same `approval.json` file to patch it:
+
+```bash
+kubectl patch clusterapprovalrequests example-run-2-before-canary --type='merge' --subresource=status --patch-file approval.json
+```
+
+Verify if the new object is approved:
+
+```bash
+kubectl get clusterapprovalrequest                                                                            
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                   UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-2-before-canary   example-run-2   canary   True       True               2m7s
+example-run-before-canary     example-run     canary   True       True               15m
+```
+
+The Configmap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
+
+```yaml
+apiVersion: v1
+data:
+  key: value1
+kind: ConfigMap
+metadata:
+  ...
+  name: test-cm
+  namespace: test-namespace
+  ...
+```
+
+## Clean up resources
+
+When you're finished with this tutorial, you can clean up the resources you created:
+
+### [ClusterResourcePlacement](#tab/cleanupclusterresourceplacement)
+
+```bash
+kubectl delete clusterstagedupdaterun example-run example-run-2
+kubectl delete clusterstagedupdatestrategy example-strategy
+kubectl delete clusterresourceplacement example-placement
+kubectl delete namespace test-namespace
+```
+
+#### [Namespace-scoped](#tab/namespacescoped)
+
+## Prepare Kubernetes workloads for placement
+
+Publish Kubernetes workloads to the hub cluster so that they can be placed onto member clusters.
+
+Create a Namespace and Configmap for the workload on the hub cluster:
+
+```bash
+kubectl create namespace test-namespace
+kubectl create configmap test-cm --from-literal=key=value1 -n test-namespace
+```
+
+Since `ResourcePlacement` is namespace-scoped, first deploy the Namespace to all member clusters using a `ClusterResourcePlacement`:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: test-namespace-placement
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: test-namespace
+      version: v1
+      selectionScope: NamespaceOnly
+  policy:
+    placementType: PickAll
+```
+
+Verify the Namespace is deployed to all member clusters:
+
+```bash
+kubectl get clusterresourceplacement test-namespace-placement
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                       GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
+test-namespace-placement   1     True        1               True        1               30s
+```
+
+To deploy the Configmap, create a namespace-scoped `ResourcePlacement`:
+
+> [!NOTE]
+> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ResourcePlacement
+metadata:
+  name: example-placement
+  namespace: test-namespace
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: ConfigMap
+      name: test-cm
+      version: v1
+  policy:
+    placementType: PickAll
+  strategy:
+    type: External
+```
+
+All three clusters should be scheduled since we use the `PickAll` policy, but the Configmap shouldn't be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
+
+Verify the placement is scheduled:
+
+```bash
+kubectl get resourceplacement example-placement -n test-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
+example-placement   1     True        1                                           51s
+```
+
+## Work with resource snapshots
+
+Fleet Manager creates resource snapshots when resources change. Each snapshot has a unique index that you can use to reference specific versions of your resources.
+
+> [!TIP]
+> For more information about resource snapshots and how they work, see [Understanding resource snapshots](./howto-understand-placement.md#understanding-resource-snapshots).
+
+### Check current resource snapshots
+
+To check current resource snapshots:
+
+```bash
+kubectl get resourcesnapshots -n test-namespace --show-labels
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                           GEN   AGE   LABELS
+example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
+```
+
+We only have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
+
+### Create a new resource snapshot
+
+Now modify the Configmap with a new value:
+
+```bash
+kubectl edit configmap test-cm -n test-namespace
+```
+
+Update the value from `value1` to `value2`:
+
+```bash
+kubectl get configmap test-cm -n test-namespace -o yaml
+```
+
+Your output should look similar to the following example:
+
+```yaml
+apiVersion: v1
+data:
+  key: value2 # value updated here, old value: value1
+kind: ConfigMap
+metadata:
+  creationTimestamp: ...
+  name: test-cm
+  namespace: test-namespace
+  resourceVersion: ...
+  uid: ...
+```
+
+Now you should see two versions of resource snapshots with index 0 and 1 respectively:
+
+```bash
+kubectl get resourcesnapshots -n test-namespace --show-labels
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                           GEN   AGE    LABELS
+example-placement-0-snapshot   1     2m6s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
+example-placement-1-snapshot   1     10s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
+```
+
+The latest label is set to example-placement-1-snapshot, which contains the latest Configmap data:
+
+```bash
+kubectl get resourcesnapshots example-placement-1-snapshot -n test-namespace -o yaml
+```
+
+Your output should look similar to the following example:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: ResourceSnapshot
+metadata:
+  annotations:
+    kubernetes-fleet.io/number-of-enveloped-object: "0"
+    kubernetes-fleet.io/number-of-resource-snapshots: "1"
+    kubernetes-fleet.io/resource-hash: 10dd7a3d1e5f9849afe956cfbac080a60671ad771e9bda7dd34415f867c75648
+  creationTimestamp: "2025-07-22T21:26:54Z"
+  generation: 1
+  labels:
+    kubernetes-fleet.io/is-latest-snapshot: "true"
+    kubernetes-fleet.io/parent-CRP: example-placement
+    kubernetes-fleet.io/resource-index: "1"
+  name: example-placement-1-snapshot
+  namespace: test-namespace
+  ownerReferences:
+  - apiVersion: placement.kubernetes-fleet.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ResourcePlacement
+    name: example-placement
+    uid: e7d59513-b3b6-4904-864a-c70678fd6f65
+  resourceVersion: "19994"
+  uid: 79ca0bdc-0b0a-4c40-b136-7f701e85cdb6
+spec:
+  selectedResources:
+  - apiVersion: v1
+    data:
+      key: value2 # latest value: value2, old value: value1
+    kind: ConfigMap
+    metadata:
+      name: test-cm
+      namespace: test-namespace
+```
+
+## Create a staged update strategy
+
+A `StagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateStrategy
+metadata:
+  name: example-strategy
+  namespace: test-namespace
+spec:
+  stages:
+    - name: staging
+      labelSelector:
+        matchLabels:
+          environment: staging
+      afterStageTasks:
+        - type: TimedWait
+          waitTime: 1m
+      maxConcurrency: 1
+    - name: canary
+      labelSelector:
+        matchLabels:
+          environment: canary
+      sortingLabelKey: order
+      beforeStageTasks:
+        - type: Approval
+      maxConcurrency: 50%
+```
+
+## Prepare a staged update run to rollout changes
+
+A `StagedUpdateRun` executes the rollout of a `ResourcePlacement` following a `StagedUpdateStrategy`. To trigger the staged update run for our ResourcePlacement (RP), we create a `StagedUpdateRun` specifying the RP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: StagedUpdateRun
+metadata:
+  name: example-run
+  namespace: test-namespace
+spec:
+  placementName: example-placement
+  resourceSnapshotIndex: "1"
+  stagedRolloutStrategyName: example-strategy
+  state: Initialize
+```
+
+The staged update run is initialized but not running:
+
+```bash
+kubectl get stagedupdaterrun example-run -n test-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True                      7s
+```
+
+## Start a staged update run
+
+To start the execution of a staged update run, you need to patch the `state` field in the spec to `Run`:
+
+```bash
+kubectl patch stagedupdaterrun example-run -n test-namespace --type merge -p '{"spec":{"state":"Run"}}'
+```
+
+> [!NOTE]
+> You can also create an update run with the `state` field set to `Run` initially, which both initialize and starts progressing the update run in a single step.
+
+The staged update run is initialized and running:
+
+```bash
+kubectl get stagedupdaterrun example-run -n test-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True                      7s
+```
+
+After the one-minute `TimedWait` elapses, check for the approval request:
+
+```bash
+kubectl get approvalrequests -n test-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                        STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-before-canary   example-run         canary                                 2m39s
+```
+
+## Approve the staged update run
+
+We can approve the `ApprovalRequest` by creating a json patch file and applying it:
+
+```bash
+cat << EOF > approval.json
+"status": {
+    "conditions": [
+        {
+            "lastTransitionTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "message": "lgtm",
+            "observedGeneration": 1,
+            "reason": "testPassed",
+            "status": "True",
+            "type": "Approved"
+        }
+    ]
+}
+EOF
+```
+
+Submit a patch request to approve using the JSON file created.
+
+```bash
+kubectl patch approvalrequests example-run-before-canary -n test-namespace --type='merge' --subresource=status --patch-file approval.json
+```
+
+Then verify that you approved the request:
+
+```bash
+kubectl get approvalrequests -n test-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                        STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-before-canary   example-run         canary   True       True               3m35s
+```
+
+The `StagedUpdateRun` now is able to proceed and complete:
+
+```bash
+kubectl get stagedupdaterrun example-run -n test-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run   example-placement   1                         0                       True          True        5m28s
+```
+
+## Verify the rollout completion
+
+The `ResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
+
+```bash
+kubectl get resourceplacement example-placement -n test-namespace
+```
+
+Your output should look similar to the following example:
+
+```output
+NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
+example-placement   1     True        1               True        1               8m55s
+```
+
+The Configmap test-cm should be deployed on all three member clusters, with latest data:
+
+```yaml
+apiVersion: v1
+data:
+  key: value2
+kind: ConfigMap
+metadata:
+  ...
+  name: test-cm
+  namespace: test-namespace
+  ...
+```
+
+## Stop a staged update run
 
 To stop the execution of a running staged update run, you need to patch the `state` field in the spec to `Stop`. This action gracefully halts the update run, allowing in-progress clusters to complete their updates before stopping the entire rollout process:
 
@@ -1138,90 +1210,7 @@ status:
     startTime: "2025-07-22T21:28:08Z"
 ```
 
----
-
-
 ## Deploy a second staged update run to roll back to a previous version
-
-### [Second ClusterStagedUpdateRun](#tab/secondclusterstagedupdaterun)
-
-Suppose the workload admin wants to roll back the Configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the Configmap from hub, they can create a new `ClusterStagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ClusterStagedUpdateRun
-metadata:
-  name: example-run-2
-spec:
-  placementName: example-placement
-  resourceSnapshotIndex: "0"
-  stagedRolloutStrategyName: example-strategy
-  state: Run
-```
-
-Let's check the new `ClusterStagedUpdateRun`:
-
-```bash
-kubectl get clusterstagedupdaterun
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME            PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run     example-placement   1                         0                       True          True        13m
-example-run-2   example-placement   0                         0                       True                      9s
-```
-
-After the one-minute `TimedWait` elapses, we should see the `ClusterApprovalRequest` object created for the new `ClusterStagedUpdateRun`:
-
-```bash
-kubectl get clusterapprovalrequest
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                          UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-2-before-canary   example-run-2   canary                                 75s
-example-run-before-canary     example-run     canary   True       True               14m
-```
-
-To approve the new `ClusterApprovalRequest` object, let's reuse the same `approval.json` file to patch it:
-
-```bash
-kubectl patch clusterapprovalrequests example-run-2-before-canary --type='merge' --subresource=status --patch-file approval.json
-```
-
-Verify if the new object is approved:
-
-```bash
-kubectl get clusterapprovalrequest                                                                            
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                   UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-2-before-canary   example-run-2   canary   True       True               2m7s
-example-run-before-canary     example-run     canary   True       True               15m
-```
-
-The Configmap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
-
-```yaml
-apiVersion: v1
-data:
-  key: value1
-kind: ConfigMap
-metadata:
-  ...
-  name: test-cm
-  namespace: test-namespace
-  ...
-```
-
-### [Second StagedUpdateRun](#tab/secondstagedupdaterun)
 
 Suppose the workload admin wants to roll back the Configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new `StagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
@@ -1300,6 +1289,18 @@ metadata:
   ...
 ```
 
+## Clean up resources
+
+When you're finished with this tutorial, you can clean up the resources you created:
+
+```bash
+kubectl delete stagedupdaterun example-run example-run-2 -n test-namespace
+kubectl delete stagedupdatestrategy example-strategy -n test-namespace
+kubectl delete resourceplacement example-placement -n test-namespace
+kubectl delete clusterresourceplacement test-namespace-placement
+kubectl delete namespace test-namespace
+```
+
 ---
 
 ## Key differences between approaches
@@ -1314,31 +1315,6 @@ metadata:
 | **Scope** | Cluster-wide | Namespace-bound |
 | **Use Case** | Infrastructure rollouts | Application rollouts |
 | **Permissions** | Cluster-admin level | Namespace-level |
-
-## Clean up resources
-
-When you're finished with this tutorial, you can clean up the resources you created:
-
-### [ClusterResourcePlacement](#tab/cleanupclusterresourceplacement)
-
-```bash
-kubectl delete clusterstagedupdaterun example-run example-run-2
-kubectl delete clusterstagedupdatestrategy example-strategy
-kubectl delete clusterresourceplacement example-placement
-kubectl delete namespace test-namespace
-```
-
-### [ResourcePlacement](#tab/cleanupresourceplacement)
-
-```bash
-kubectl delete stagedupdaterun example-run example-run-2 -n test-namespace
-kubectl delete stagedupdatestrategy example-strategy -n test-namespace
-kubectl delete resourceplacement example-placement -n test-namespace
-kubectl delete clusterresourceplacement test-namespace-placement
-kubectl delete namespace test-namespace
-```
-
----
 
 ## Next steps
 
