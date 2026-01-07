@@ -1,5 +1,5 @@
 ---
-title: Bring your own Container Network Interface (CNI) plugin with Azure Kubernetes Service (AKS)
+title: Bring Your Own Container Network Interface (CNI) Plugin with Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to bring your own Container Network Interface (CNI) plugin with Azure Kubernetes Service (AKS).
 author: davidsmatlak
@@ -7,47 +7,48 @@ ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 06/20/2023
-# Customer intent: As an advanced Kubernetes user, I want to deploy an AKS cluster with no preinstalled CNI plugin, so that I can use a custom CNI solution that aligns with my on-premises environment.
+# Customer intent: As an advanced Kubernetes user, I want to deploy an AKS cluster with no preinstalled CNI plugin so that I can use a custom CNI solution that aligns with my on-premises environment.
 ---
 
-# Bring your own Container Network Interface (CNI) plugin with Azure Kubernetes Service (AKS)
+# Bring your own CNI plugin with Azure Kubernetes Service (AKS)
 
-Kubernetes doesn't provide a network interface system by default. Instead, [network plugins][kubernetes-cni] provide this functionality. Azure Kubernetes Service (AKS) provides several supported CNI plugins. For information on supported plugins, see the [AKS networking concepts][aks-network-concepts].
+Kubernetes doesn't provide a network interface system by default. Instead, [network plugins][kubernetes-cni] provide this functionality. Azure Kubernetes Service (AKS) provides several supported Container Network Interface (CNI) plugins. For information on supported plugins, see [Networking concepts for applications in Azure Kubernetes Service][aks-network-concepts].
 
-The supported plugins meet most networking needs in Kubernetes. However, advanced AKS users might want the same CNI plugin used in on-premises Kubernetes environments or to use advanced functionalities available in other CNI plugins.
+The supported plugins meet most networking needs in Kubernetes. However, advanced AKS users might want the same CNI plugin that they used in on-premises Kubernetes environments. Or these users might want to use advanced functionalities available in other CNI plugins.
 
-This article shows how to deploy an AKS cluster with no CNI plugin preinstalled. From there, you can then install any third-party CNI plugin that works in Azure.
+This article shows how to deploy an AKS cluster with no CNI plugin preinstalled. From there, you can install any CNI plugin that works in Azure.
 
 ## Support
 
-Microsoft support can't assist with CNI-related issues in clusters deployed with Bring your own Container Network Interface (BYOCNI). For example, CNI-related issues would cover most east/west (pod to pod) traffic, along with `kubectl proxy` and similar commands. If you want CNI-related support, use a supported AKS network plugin or seek support from the BYOCNI plugin third-party vendor.
+Microsoft support can't assist with CNI-related issues in clusters that you deploy by bringing your own CNI plugin. For example, CNI-related issues would cover most east/west (pod to pod) traffic, along with `kubectl proxy` and similar commands. If you want CNI-related support, use a supported AKS network plugin or seek support from the CNI plugin vendor.
 
-Support is still provided for non-CNI-related issues.
+Microsoft still provides support for issues that aren't related to CNI.
 
 ## Prerequisites
 
-* For Azure Resource Manager (ARM) or Bicep, use at least template version 2022-01-02-preview or 2022-06-01.
-* For Azure CLI, use at least version 2.39.0.
+* For Azure Resource Manager or Bicep, use at least template version 2022-01-02-preview or 2022-06-01.
+* For the Azure CLI, use at least version 2.39.0.
 * The virtual network for the AKS cluster must allow outbound internet connectivity.
-* AKS clusters may not use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for the Kubernetes service address range, pod address range, or cluster virtual network address range.
-* The cluster identity used by the AKS cluster must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network. If you wish to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
+* AKS clusters can't use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for the address range for the Kubernetes service, pods, or cluster virtual network.
+* The cluster identity that the AKS cluster uses must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network. If you want to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
   * `Microsoft.Network/virtualNetworks/subnets/join/action`
   * `Microsoft.Network/virtualNetworks/subnets/read`
 * The subnet assigned to the AKS node pool can't be a [delegated subnet](/azure/virtual-network/subnet-delegation-overview).
-* AKS doesn't apply Network Security Groups (NSGs) to its subnet or modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure the security rules in the NSGs allow traffic within the node CIDR range. For more information, see [Network security groups][aks-network-nsg].
-* No route table is created by AKS in the managed virtual network.
+* AKS doesn't apply network security groups (NSGs) to its subnet or modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure that the security rules in the NSGs allow traffic within the node's Classless Inter-Domain Routing (CIDR) range. For more information, see [Network security groups][aks-network-nsg].
+* AKS doesn't create a route table in the managed virtual network.
+* You must specify a Pod CIDR (IP address range for pods). The AKS control plane uses this range for internal traffic routing to pods, even though pod IP assignment will be managed by your custom CNI. If no pod CIDR is provided, control plane to pod communication may fail or be misrouted. You must select a pod CIDR that does not conflict with any other network in your environment and avoids Azure reserved ranges, such as, `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24`. For example, you might use a range such as `10.XX.0.0/16` that is unique to your cluster. This ensures that the control plane can route directly to pod IPs on your nodes, and no IP overlap will occur if you integrate with other networks or clusters.
 
 ## Create an AKS cluster with no CNI plugin preinstalled
 
 # [Azure CLI](#tab/azure-cli)
 
-1. Create an Azure resource group for your AKS cluster using the [`az group create`][az-group-create] command.
+1. Create an Azure resource group for your AKS cluster by using the [`az group create`][az-group-create] command.
 
     ```azurecli-interactive
     az group create --location eastus --name myResourceGroup
     ```
 
-2. Create an AKS cluster using the [`az aks create`][az-aks-create] command. Pass the `--network-plugin` parameter with the parameter value of `none`.
+2. Create an AKS cluster by using the [`az aks create`][az-aks-create] command. Pass the `--network-plugin` parameter with the parameter value of `none`.
 
     ```azurecli-interactive
     az aks create \
@@ -55,13 +56,13 @@ Support is still provided for non-CNI-related issues.
         --resource-group myResourceGroup \
         --name myAKSCluster \
         --network-plugin none \
+        --pod-cidr "10.10.0.0/16" \
         --generate-ssh-keys
     ```
 
 # [Azure Resource Manager](#tab/azure-resource-manager)
 
-> [!NOTE]
-> For information on how to deploy this template, see the [ARM template documentation][deploy-arm-template].
+For information on how to deploy the following template, see the [ARM template documentation][deploy-arm-template].
 
 ```json
 {
@@ -110,7 +111,8 @@ Support is still provided for non-CNI-related issues.
         "dnsPrefix": "[parameters('clusterName')]",
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
         "networkProfile": {
-          "networkPlugin": "none"
+          "networkPlugin": "none",
+          "podCidr": "[parameters('pod-cidr')]"
         }
       }
     }
@@ -120,8 +122,7 @@ Support is still provided for non-CNI-related issues.
 
 # [Bicep](#tab/bicep)
 
-> [!NOTE]
-> For information on how to deploy this template, see the [Bicep template documentation][deploy-bicep-template].
+For information on how to deploy the following template, see the [Bicep template documentation][deploy-bicep-template].
 
 ```bicep
 param clusterName string = 'aksbyocni'
@@ -129,6 +130,7 @@ param location string = resourceGroup().location
 param kubernetesVersion string = '1.22'
 param nodeCount int = 3
 param nodeSize string = 'Standard_B2ms'
+param podCidr string = '10.2.0.0/16'
 
 resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-06-01' = {
   name: clusterName
@@ -149,6 +151,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-06-01' = {
     kubernetesVersion: kubernetesVersion
     networkProfile: {
       networkPlugin: 'none'
+      podCidr: podCidr
     }
   }
 }
@@ -158,7 +161,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-06-01' = {
 
 ## Deploy a CNI plugin
 
-Once the AKS provisioning completes, the cluster is online, but all the nodes are in a `NotReady` state, as shown in the following example:
+After AKS provisioning finishes, the cluster is online. But all the nodes are in a `NotReady` state, as shown in the following example:
 
   ```bash
     $ kubectl get nodes
@@ -172,13 +175,11 @@ Once the AKS provisioning completes, the cluster is online, but all the nodes ar
 
 At this point, the cluster is ready for installation of a CNI plugin.
 
-## Next steps
+## Related content
 
-Learn more about networking in AKS in the following articles:
-
-* [Use a static IP address with the Azure Kubernetes Service (AKS) load balancer](static-ip.md)
-* [Use an internal load balancer with Azure Kubernetes Service (AKS)](internal-lb.md)
-* [Use the application routing addon in Azure Kubernetes Service (AKS)](app-routing.md)
+* [Use a static IP address with the Azure Kubernetes Service load balancer](static-ip.md)
+* [Use an internal load balancer with Azure Kubernetes Service](internal-lb.md)
+* [Use the application routing add-on in Azure Kubernetes Service](app-routing.md)
 
 <!-- LINKS - External -->
 [kubernetes-cni]: https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/
@@ -189,4 +190,3 @@ Learn more about networking in AKS in the following articles:
 [deploy-bicep-template]: /azure/azure-resource-manager/bicep/deploy-cli
 [az-group-create]: /cli/azure/group#az-group-create
 [deploy-arm-template]: /azure/azure-resource-manager/templates/deploy-cli
-

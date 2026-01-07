@@ -1,20 +1,25 @@
 ---
-title: Use Key Management Service (KMS) Etcd Encryption in Azure Kubernetes Service (AKS)
-description: Learn how to use Key Management Service (KMS) etcd encryption for a public or private key vault with AKS.
-ms.date: 09/26/2024
+title: Use Key Management Service (KMS) Etcd Encryption in Azure Kubernetes Service (AKS) (legacy)
+description: Learn how to use Key Management Service (KMS) etcd encryption for a public or private key vault with AKS using the legacy KMS experience.
+ms.date: 12/22/2025
 ms.subservice: aks-security
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.custom:
   - devx-track-azurecli
   - build-2025
-author: davidsmatlak
-ms.author: davidsmatlak
+author: shashankbarsin
+ms.author: shasb
 zone_pivot_groups: public-or-private-kv
 # Customer intent: As a Kubernetes administrator, I want to enable Key Management Service etcd encryption in my Azure Kubernetes Service cluster, so that I can ensure the security of sensitive data stored in etcd while maintaining control over key management and access policies.
 ---
 
-# Add Key Management Service (KMS) etcd encryption to an Azure Kubernetes Service (AKS) cluster
+# Add Key Management Service (KMS) etcd encryption to an Azure Kubernetes Service (AKS) cluster (legacy)
+
+> [!IMPORTANT]
+> This article describes the legacy KMS experience for AKS. For new clusters running Kubernetes version 1.33 or later, we recommend using the new [KMS data encryption](kms-data-encryption.md) experience, which offers platform-managed keys, customer-managed keys with automatic key rotation, and a simplified configuration experience.
+>
+> For conceptual information about data encryption options, see [Data encryption at rest concepts for AKS](kms-data-encryption-concepts.md).
 
 This article shows you how to turn on encryption at rest for a public or private key vault using Azure Key Vault and the Key Management Service (KMS) plugin on AKS. You can use the KMS plugin to:
 
@@ -32,7 +37,7 @@ For more information on using KMS, see [Using a KMS provider for data encryption
 
 > [!WARNING]
 >
-> Starting on September 15, 2024, Konnectivity is no longer supported for private key vaults for new subscriptions or subscriptions that didn't previously use this configuration. For subscriptions currently using this configuration or used it in the past 60 days, support will continue until AKS version 1.30 reaches end of life for community support.
+> Starting on September 15, 2024, Konnectivity is no longer supported for private key vaults for new subscriptions or subscriptions that didn't previously use this configuration. For subscriptions currently using this configuration or used it in the past 60 days, support continues until AKS version 1.30 reaches end of life for community support.
 >
 > KMS supports Konnectivity or [API Server VNet Integration][api-server-vnet-integration] for public key vaults.
 >
@@ -46,13 +51,14 @@ The following limitations apply when you integrate KMS etcd encryption with AKS:
 
 - Deleting the key, the key vault, or the associated identity isn't supported.
 - KMS etcd encryption doesn't work with system-assigned managed identity. The key vault access policy must be set before the feature is turned on. System-assigned managed identity isn't available until after the cluster is created. Consider the cycle dependency.
-- Azure Key Vault with a firewall setting "allow public access from specific virtual networks and IP addresses" or "disable public access" isn't supported because it blocks traffic from the KMS plugin to the key vault.
+- Because the firewall blocks traffic from the KMS plugin to Key Vault, two scenarios aren't supported. First, Azure Key Vault can't be configured with the firewall option _Allow public access from specific virtual networks and IP addresses_. Second, Azure Key Vault can't be configured with _Disable public access_ unless [API Server VNet Integration](api-server-vnet-integration.md) is enabled.
 - The maximum number of secrets supported by a cluster with KMS turned on is _2,000_. However, it's important to note that [KMS v2][kms-v2-support] isn't limited by this restriction and can handle a higher number of secrets.
 - Bring your own (BYO) Azure key vault from another tenant isn't supported.
 - With KMS turned on, you can't change the associated key vault mode (public versus private). To [update a key vault mode][update-a-key-vault-mode], you must first turn off KMS, and then turn it on again.
 - If a cluster has KMS turned on and has a private key vault, it must use the [API Server VNet Integration][api-server-vnet-integration] tunnel. Konnectivity isn't supported.
 - Using the Virtual Machine Scale Sets API to scale the nodes in the cluster down to zero deallocates the nodes. The cluster then goes down and becomes unrecoverable.
 - After you turn off KMS, you can't delete or expire the keys. Such behaviors would cause the API server to stop working.
+- For a private cluster with KMS enabled and virtual network integration that uses a private key vault, the network security group (NSG) must allow TCP port 443 from the API server to the private key vault's private endpoint IP address. This limitation needs to be considered when using other rules in the API subnet NSG or cluster subnet NSG.
 
 :::zone pivot="public-kv"
 
@@ -177,7 +183,7 @@ The following sections describe how to turn on KMS for a public key vault on a n
         --azure-keyvault-kms-key-id $KEY_ID \
         --generate-ssh-keys
     ```
-  
+
 ### Enable a public key vault and KMS on an existing AKS cluster
 
 1. Enable KMS on a public key vault on an existing cluster using the [`az aks update`][az-aks-update] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-id` parameters.
@@ -405,8 +411,10 @@ After you change the key ID (including changing either the key name or the key v
 
 For more information on using KMS with AKS, see the following articles:
 
+- [Enable KMS data encryption in AKS](./kms-data-encryption.md) - The new KMS experience with platform-managed keys and automatic key rotation
+- [Data encryption at rest concepts for AKS](./kms-data-encryption-concepts.md)
 - [Update the key vault mode for an Azure Kubernetes Service (AKS) cluster with KMS etcd encryption](./update-kms-key-vault.md)
-- [Use KMS v2 for etcd encryption in Azure Kubernetes Service (AKS)](./use-kms-v2.md)
+- [Migrate to KMS v2 for etcd encryption in Azure Kubernetes Service (AKS)](./use-kms-v2.md)
 - [Observability for KMS etcd encryption in Azure Kubernetes Service (AKS)](./kms-observability.md)
 
 <!-- LINKS -->

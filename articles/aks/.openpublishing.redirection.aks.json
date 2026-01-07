@@ -596,6 +596,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/upgrade-azure-cni.md",
+            "redirect_url": "/azure/aks/update-azure-cni",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/gpu-cluster.md",
             "redirect_url": "/azure/aks/use-nvidia-gpu",
             "redirect_document_id": false
@@ -631,8 +636,49 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/manage-node-pools.md",
+            "redirect_url": "/azure/aks/create-node-pools",
+            "redirect_document_id": false
+
+        },
+        {
             "source_path_from_root": "/articles/aks/node-autoprovision-aksnodeclass.md",
             "redirect_url": "/azure/aks/node-auto-provisioning-aksnodeclass",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/upgrade-aks-cluster.md",
+            "redirect_url": "/azure/aks/upgrade-aks-control-plane",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/upgrade-cluster.md",
+            "redirect_url": "/azure/aks/upgrade-options",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/node-image-upgrade.md",
+            "redirect_url": "/azure/aks/upgrade-node-image",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/node-updates-kured.md",
+            "redirect_url": "/azure/aks/upgrade-node-image-kured",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/node-upgrade-github-actions.md",
+            "redirect_url": "/azure/aks/upgrade-github-actions",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/upgrade.md",
+            "redirect_url": "/azure/aks/upgrade-cluster-components",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/how-does-upgrade-happen.md",
+            "redirect_url": "/azure/aks/upgrade-conceptual",
             "redirect_document_id": false
         },
         {

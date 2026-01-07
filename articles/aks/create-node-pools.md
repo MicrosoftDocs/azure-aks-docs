@@ -19,8 +19,7 @@ This article shows you how to create one or more node pools in an AKS cluster.
 > [!NOTE]
 > This feature enables more control over creating and managing multiple node pools and requires separate commands for _create/update/delete_ (CRUD) operations. Previously, cluster operations through [`az aks create`][az-aks-create] or [`az aks update`][az-aks-update] used the managedCluster API and were the only options to change your control plane and a single node pool. This feature exposes a separate operation set for agent pools through the agentPool API and requires use of the [`az aks nodepool`][az-aks-nodepool] command set to execute operations on an individual node pool.
 
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [Retirement: Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Prerequisites
 
@@ -58,7 +57,8 @@ The following limitations apply when you create AKS clusters that support multip
   - For Windows node pools, the length must be between 1-6 characters.
 
 - All node pools must reside in the same virtual network.
-- When you create multiple node pools at cluster creation time, the Kubernetes versions for the node pools must match the version set for the control plane.
+- You can't change the virtual machine (VM) size of a node pool after you create it.
+- When you create multiple node pools at cluster creation time, the Kubernetes versions for the node pools must match the version set for the control plane. You can make updates after provisioning the cluster using per node pool operations.
 
 ## Create specialized node pools
 
@@ -524,28 +524,13 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
 ---
 
-### Check the status of your node pools
+## Check the status of your node pools
 
 - Check the status of your node pools using the [`az aks nodepool list`][az-aks-nodepool-list] command and specify your resource group and cluster name.
 
     ```azurecli-interactive
     az aks nodepool list --resource-group $RESOURCE_GROUP_NAME --cluster-name $CLUSTER_NAME
     ```
-
-## Delete a node pool
-
-If you no longer need a node pool, you can delete it and remove the underlying VM nodes.
-
-> [!CAUTION]
-> When you delete a node pool, AKS doesn't perform cordon and drain, and there are no recovery options for data loss that may occur when you delete a node pool. If pods can't be scheduled on other node pools, those applications become unavailable. Make sure you don't delete a node pool when in-use applications don't have data backups or the ability to run on other node pools in your cluster. To minimize the disruption of rescheduling pods currently running on the node pool you want to delete, perform a cordon and drain on all nodes in the node pool before deleting.
-
-- Delete a node pool using the [`az aks nodepool delete`][az-aks-nodepool-delete] command and specify the node pool name.
-
-    ```azurecli-interactive
-    az aks nodepool delete --resource-group $RESOURCE_GROUP_NAME --cluster-name $CLUSTER_NAME --name $NODE_POOL_NAME --no-wait
-    ```
-
-    It takes a few minutes to delete the nodes and the node pool.
 
 :::zone-end
 
@@ -953,11 +938,25 @@ For more information, see [Flatcar Container Linux for AKS][flatcar].
 
 :::zone-end
 
+## Set taints, labels, or tags for a node pool
+
+When creating a node pool, you can add taints, labels, or tags to it. When you add a taint, label, or tag, all nodes within that node pool also get that taint, label, or tag. We recommend applying these properties to an entire node pool instead of individual nodes. This way, you can easily manage the properties of all nodes in the node pool by updating the node pool properties instead of updating each node individually.
+
+For specific instructions on how to set taints, labels, or tags for a node pool, use the following resources:
+
+- [Use node taints in an Azure Kubernetes Service (AKS) cluster][use-node-taints]
+- [Use labels in an Azure Kubernetes Service (AKS) cluster][use-labels]
+- [Use Azure tags in Azure Kubernetes Service (AKS)][use-tags]
+- [Provide dedicated nodes using taints and tolerations in Azure Kubernetes Service (AKS)][use-taints-tolerations]
+
 ## Next steps
 
-In this article, you learned how to create node pools in an AKS cluster using the Azure CLI.
+In this article, you learned how to create an AKS cluster with a single node pool and add additional node pools to your cluster. To learn more about how to manage your node pools, see the following articles:
 
-To learn how to manage multiple node pools, see [Manage multiple node pools for AKS clusters](./manage-node-pools.md).
+- [Upgrade node pools in Azure Kubernetes Service (AKS)](./upgrade-node-pools.md)
+- [Scale node pools in Azure Kubernetes Service (AKS)](./scale-node-pools.md)
+- [Assign capacity reservation groups to Azure Kubernetes Service (AKS) node pools](./use-capacity-reservation-groups.md)
+- [Delete an Azure Kubernetes Service (AKS) node pool](./delete-node-pool.md)
 
 <!-- LINKS -->
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
@@ -978,3 +977,7 @@ To learn how to manage multiple node pools, see [Manage multiple node pools for 
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-provider-register]: /cli/azure/provider#az-provider-register
+[use-node-taints]: ./use-node-taints.md
+[use-labels]: ./use-labels.md
+[use-tags]: ./use-tags.md
+[use-taints-tolerations]: ./operator-best-practices-advanced-scheduler.md#provide-dedicated-nodes-using-taints-and-tolerations

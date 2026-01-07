@@ -1,5 +1,5 @@
 ---
-title: Configure kube-proxy (iptables/IPVS) (Preview)
+title: Configure kube-proxy (iptables/IPVS/nftables) (Preview)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure kube-proxy to utilize different load balancing configurations with Azure Kubernetes Service (AKS).
 ms.subservice: aks-networking
@@ -14,10 +14,11 @@ author: davidsmatlak
 
 # Configure `kube-proxy` in Azure Kubernetes Service (AKS) (Preview)
 
-`kube-proxy` is a component of Kubernetes that handles routing traffic for services within the cluster. There are two backends available for Layer 3/4 load balancing in upstream `kube-proxy`: iptables and IPVS.
+`kube-proxy` is a component of Kubernetes that handles routing traffic for services within the cluster. There are three backends available for Layer 3/4 load balancing in upstream `kube-proxy`: iptables, IPVS and nftables.
 
 - **iptables** is the default backend utilized in the majority of Kubernetes clusters. It's simple and well-supported, but not as efficient or intelligent as IPVS.
 - **IPVS** uses the Linux Virtual Server, a layer 3/4 load balancer built into the Linux kernel. IPVS provides a number of advantages over the default iptables configuration, including state awareness, connection tracking, and more intelligent load balancing. IPVS *doesn't support Azure Network Policy*.
+- **nftables** is the successor to the iptables API and is designed to provide better performance and scalability than iptables. The nftables proxy mode is essentially a replacement for both the iptables and IPVS modes, with better performance than either of them, and is recommended as a replacement for IPVS.
 
 For more information, see the [Kubernetes documentation on kube-proxy](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/).
 
@@ -29,7 +30,7 @@ For more information, see the [Kubernetes documentation on kube-proxy](https://k
 ## Before you begin
 
 - If using the Azure CLI, you need the `aks-preview` extension. See [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension).
-- If using ARM or the REST API, the AKS API version must be *2022-08-02-preview or later*.
+- If using ARM or the REST API, the AKS API version must be *2022-08-02-preview* or later. Specifically for **nftables** mode, the version must be *2025-09-02-preview* or later.
 - You need to register the `KubeProxyConfigurationPreview` feature flag. See [Register the `KubeProxyConfigurationPreview` feature flag](#register-the-kubeproxyconfigurationpreview-feature-flag).
 
 ### Install the `aks-preview` Azure CLI extension
@@ -73,7 +74,7 @@ For more information, see the [Kubernetes documentation on kube-proxy](https://k
 You can view the full `kube-proxy` configuration structure in the [AKS Cluster Schema][aks-schema-kubeproxyconfig].
 
 - **`enabled`**: Determines deployment of the `kube-proxy` DaemonSet. Defaults to `true`.
-- **`mode`**: You can set to either `IPTABLES` or `IPVS`. Defaults to `IPTABLES`.
+- **`mode`**: You can set to either `IPTABLES`, `IPVS` or `NFTABLES`. Defaults to `IPTABLES`.
 - **`ipvsConfig`**: If `mode` is `IPVS`, this object contains IPVS-specific configuration properties.
   - **`scheduler`**: Determines which connection scheduler to use. Supported values include:
     - **`LeastConnection`**: Sends connections to the backend pod with the fewest connections.

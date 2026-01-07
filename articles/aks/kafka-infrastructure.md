@@ -4,8 +4,8 @@ description: In this article, you prepare the infrastructure for deploying a Kaf
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 09/15/2025
-author: senavar
-ms.author: senavar
+author: carols
+ms.author: carols
 zone_pivot_groups: azure-cli-or-terraform
 ms.custom: 'stateful-workloads'
 # Customer intent: As a cloud architect, I want to prepare the infrastructure for deploying a Kafka cluster on Azure Kubernetes Service, so that I can ensure high availability and efficient resource management for my data workloads.
