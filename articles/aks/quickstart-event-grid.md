@@ -220,6 +220,5 @@ To learn more about AKS, and walk through a complete code to deployment example,
 [az-eventgrid-event-subscription-create]: /cli/azure/eventgrid/event-subscription#az-eventgrid-event-subscription-create
 [new-azeventgridsubscription]: /powershell/module/az.eventgrid/new-azeventgridsubscription
 [az-group-delete]: /cli/azure/group#az-group-delete
-[sp-delete]: kubernetes-service-principal.md#other-considerations
+[sp-delete]: kubernetes-service-principal.md#considerations-when-using-a-service-principal
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
-
