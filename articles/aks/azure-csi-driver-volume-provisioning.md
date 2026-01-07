@@ -107,7 +107,7 @@ In addition to in-tree driver features, Azure Disk CSI driver supports the follo
 * Zone-redundant storage (ZRS) disk support
 
   * `Premium_ZRS`, `StandardSSD_ZRS` disk types are supported. ZRS disk could be scheduled on the
-    zone or non-zone node, without the restriction that disk volume should be co-located in the same
+    zone or non-zone node, without the restriction that disk volume should be colocated in the same
     zone as a given node. For more information, including which regions are supported, see
     [Zone-redundant storage for managed disks](/azure/virtual-machines/disks-redundancy).
 
@@ -279,9 +279,7 @@ you remove the persistent volume from the cluster.
 
 ## Use a persistent volume for storage
 
-A [persistent volume][persistent-volume] (PV) represents a piece of storage that's provisioned for
-use with Kubernetes pods. A PV is used by one or more pods and can be dynamically or statically
-provisioned.
+Kubernetes assigns a [persistent volume][persistent-volume] (PV) as a storage resource to one or more pods. You can provision PVs dynamically through Kubernetes or statically as an administrator.
 
 ::: zone pivot="csi-blob"
 
@@ -375,8 +373,7 @@ Blob storage container. Choose one of the following Azure storage redundancy SKU
 * **Standard_GRS**: Standard geo-redundant storage
 * **Standard_RAGRS**: Standard read-access geo-redundant storage
 
-When you use storage CSI drivers on AKS, there are two additional built-in StorageClasses that use
-the Azure Blob CSI storage driver.
+When you use storage CSI drivers on AKS, there are two other built-in `StorageClasses` that use the Azure Blob CSI storage driver.
 
 The reclaim policy on both storage classes ensures that the underlying Azure Blob storage is deleted
 when the respective PV is deleted. The storage classes also configure the container to be expandable
@@ -867,7 +864,7 @@ container. Use it to update the *skuName* parameter.
 
 In this section, you mount the PV using the NFS protocol or BlobFuse.
 
-# [NFS](#tab/nfs3)
+# [NFS](#tab/nfs4)
 
 Mounting Blob storage using the NFS v3 protocol doesn't authenticate using an account key. Your AKS
 cluster needs to reside in the same or peered virtual network as the agent node. The only way to
@@ -949,7 +946,7 @@ using the NFS protocol.
    kubectl create -f pvc-blob-nfs.yaml
    ```
 
-# [BlobFuse](#tab/blobfuse3)
+# [BlobFuse](#tab/blobfuse4)
 
 Kubernetes needs credentials to access the Blob storage container created earlier, which is either
 an Azure access key or SAS tokens. These credentials are stored in a Kubernetes secret, which is
@@ -961,8 +958,8 @@ referenced when you create a Kubernetes pod.
 
    # [Kubernetes secret](#tab/kubernetes-secret)
 
-   The following example creates a [Secret object][kubernetes-secret] named *azure-secret* and
-   populates the *azurestorageaccountname* and *azurestorageaccountkey* parameters.
+   The following example creates a [Secret object][kubernetes-secret] named `azure-secret` and
+   populates the **azurestorageaccountname** and **azurestorageaccountkey** parameters.
 
    ```bash
    kubectl create secret generic azure-secret --from-literal azurestorageaccountname=NAME --from-literal azurestorageaccountkey="KEY" --type=Opaque
@@ -1078,7 +1075,7 @@ The reclaim policy in both storage classes ensures that the underlying Azure Dis
 To use these storage classes, create a [PVC](concepts-storage.md#persistent-volume-claims) and respective pod that references and uses them. A PVC is used to automatically provision storage based on a storage class. A PVC can use one of the pre-created storage classes or a user-defined storage class to create an Azure-managed disk for the desired SKU and size. When you create a pod definition, the PVC is specified to request the desired storage.
 
 > [!NOTE]
-> Persistent volume claims are specified in GiB but Azure managed disks are billed by SKU for a specific size. These SKUs range from 32GiB for S4 or P4 disks to 32TiB for S80 or P80 disks (in preview). The throughput and IOPS performance of a Premium managed disk depends on the both the SKU and the instance size of the nodes in the AKS cluster. For more information, see [Pricing and performance of managed disks][managed-disk-pricing-performance].
+> Persistent volume claims are specified in GiB but Azure managed disks are billed based on the SKU for a specific size. These SKUs range from 32GiB for S4 or P4 disks to 32TiB for S80 or P80 disks (in preview). The throughput and IOPS performance of a Premium managed disk depends on both the SKU and the instance size of the nodes in the AKS cluster. For more information, see [Pricing and performance of managed disks][managed-disk-pricing-performance].
 
 You can see the precreated storage classes using the [`kubectl get sc`][kubectl-get] command. The following example shows the precreated storage classes available within an AKS cluster:
 
@@ -1149,7 +1146,7 @@ After you create the persistent volume claim, you must verify it has a status of
    [...]
    ```
 
-1. Create a file named `azure-pvc-disk.yaml` and copy in the following manifest. This manifest creates a basic NGINX pod that uses the persistent volume claim named *azure-managed-disk* to mount the Azure Disk at the path `/mnt/azure`. For Windows Server containers, specify a *mountPath* using the Windows path convention, such as *'D:'*.
+1. Create a file named `azure-pvc-disk.yaml` and copy in the following manifest. This manifest creates a basic NGINX pod that uses the persistent volume claim named `azure-managed-disk` to mount the Azure Disk at the path `/mnt/azure`. For Windows Server containers, specify a `mountPath` using the Windows path convention, such as *'D:'*.
 
    ```yaml
    kind: Pod
@@ -1264,7 +1261,7 @@ When you create an Azure disk for use with AKS, you can create the disk resource
    MC_myResourceGroup_myAKSCluster_eastus
    ```
 
-1. Create a disk using the [`az disk create`][az-disk-create] command. Specify the node resource group name and a name for the disk resource, such as *myAKSDisk*. The following example creates a *20*GiB disk, and outputs the ID of the disk after it's created. If you need to create a disk for use with Windows Server containers, add the `--os-type windows` parameter to correctly format the disk.
+1. Create a disk using the [`az disk create`][az-disk-create] command. Specify the node resource group name and a name for the disk resource, such as *myAKSDisk*. The following example creates a *20 GiB* disk, and outputs the ID of the disk after it's created. If you need to create a disk for use with Windows Server containers, add the `--os-type windows` parameter to correctly format the disk.
 
    ```azurecli-interactive
    az disk create \
@@ -1275,9 +1272,9 @@ When you create an Azure disk for use with AKS, you can create the disk resource
    ```
 
    > [!NOTE]
-   > Azure Disks are billed by SKU for a specific size. These SKUs range from 32GiB for S4 or P4 disks to 32TiB for S80 or P80 disks (in preview). The throughput and IOPS performance of a Premium managed disk depends on both the SKU and the instance size of the nodes in the AKS cluster. See [Pricing and Performance of Managed Disks][managed-disk-pricing-performance].
+   > Azure Disks are billed base on the SKU for a specific size. These SKUs range from 32GiB for S4 or P4 disks to 32TiB for S80 or P80 disks (in preview). The throughput and IOPS performance of a Premium managed disk depends on both the SKU and the instance size of the nodes in the AKS cluster. See [Pricing and Performance of Managed Disks][managed-disk-pricing-performance].
 
-   The disk resource ID is displayed once the command has successfully completed, as shown in the following example output. You use the disk ID to mount the disk in the next section.
+   The disk resource ID is displayed once the command completes successfully, as shown in the following example output. You use the disk ID to mount the disk in the next section.
 
    ```output
    /subscriptions/<subscriptionID>/resourceGroups/MC_myAKSCluster_myAKSCluster_eastus/providers/Microsoft.Compute/disks/myAKSDisk
@@ -1417,11 +1414,7 @@ persistent volume claim (PVC) is created. When your node pools are topology cons
 when using availability zones, PVs would be bound or provisioned without knowledge of the pod's
 scheduling requirements.
 
-To address this scenario, you can use `volumeBindingMode: WaitForFirstConsumer`, which delays the
-binding and provisioning of a PV until a pod that uses the PVC is created. This way, the PV conforms
-and is provisioned in the availability zone (or other topology) that's specified by the pod's
-scheduling constraints. The default storage classes use `volumeBindingMode: WaitForFirstConsumer`
-class.
+To address this scenario, you can use `volumeBindingMode: WaitForFirstConsumer`, which delays the binding and provisioning of a PV until a pod that uses the PVC is created. This approach ensures that the persistent volume (PV) is provisioned in the same availability zone or topology as required per the pod's scheduling constraints. The default storage classes use `volumeBindingMode: WaitForFirstConsumer` class.
 
 1. Create a file named `sc-azuredisk-csi-waitforfirstconsumer.yaml`, and then paste the following
 manifest. The storage class is the same as our `managed-csi` storage class, but with a different
@@ -1778,7 +1771,7 @@ When you use storage CSI drivers on AKS, there are two more built-in `StorageCla
 The reclaim policy on both storage classes ensures that the underlying Azure files share is deleted when the respective PV is deleted. Since the storage classes also configure the file shares to be expandable, you just need to edit the [PVC][persistent-volume-claim-overview] with the new size.
 
 > [!NOTE]
-> To have the best experience with Azure Files, please follow these best practices. The location to configure mount options (`mountOptions`) depends on whether you're provisioning dynamic or static persistent volumes.
+> To have the best experience with Azure Files, follow these best practices. The location to configure mount options (`mountOptions`) depends on whether you're provisioning dynamic or static persistent volumes.
 >
   > * If you're dynamically provisioning a volume with a storage class, specify the mount options on the storage class object (kind: `StorageClass`).
   > * If you're statically provisioning a volume, specify the mount options on the  PersistentVolume object (kind: `PersistentVolume`).
@@ -1872,7 +1865,7 @@ A PVC uses the storage class object to dynamically provision an Azure file share
 
 ### Mount the PVC
 
-The following YAML creates a pod that uses the PVC *my-azurefile* to mount the Azure Files file share at the */mnt/azure* path. For Windows Server containers, specify a `mountPath` using the Windows path convention, such as *'D:'*.
+The following YAML creates a pod that uses the PVC *my-azurefile* to mount the Azure Files file share at the */mnt/azure* path. For Windows Server containers, specify a `mountPath` using the Windows path convention, such as *"D:"*.
 
 1. Create a file named `azure-pvc-files.yaml`, and copy in the following YAML. Make sure the `claimName` matches the PVC you created in the previous step.
 
@@ -1991,7 +1984,7 @@ The following parameters are only for the SMB protocol.
 |subscriptionID | Specify Azure subscription ID where Azure file share is created. | Azure subscription ID | No | If not empty, `resourceGroup` must be provided. |
 |storeAccountKey | Specify whether to store account key to Kubernetes secret. | `true` or `false`<br>`false` means driver uses kubelet identity to get account key. | No | `true` |
 |secretName | Specify secret name to store account key. | | No | |
-|secretNamespace | Specify the namespace of secret to store account key. <br><br> **Note:** <br> If `secretNamespace` isn't specified, the secret is created in the same namespace as the pod. | `default`,`kube-system`, etc. | No | PVC namespace, for example `csi.storage.k8s.io/pvc/namespace` |
+|secretNamespace | Specify the namespace of secret to store account key. <br><br> If `secretNamespace` isn't specified, the secret is created in the same namespace as the pod. | `default`,`kube-system`, etc. | No | PVC namespace, for example `csi.storage.k8s.io/pvc/namespace` |
 |useDataPlaneAPI | Specify whether to use [data plane API][data-plane-api] for file share create/delete/resize, which could solve the SRP API throttling issue because the data plane API has almost no limit, while it would fail when there's firewall or Vnet settings on storage account. | `true` or `false` | No | `false` |
 
 The following parameters are only for the NFS protocol.
@@ -2101,7 +2094,7 @@ Before you can use an Azure Files file share as a Kubernetes volume, you must cr
 
 Kubernetes needs credentials to access the file share created in the previous step. These credentials are stored in a [Kubernetes secret][kubernetes-secret], which is referenced when you create a Kubernetes pod.
 
-1. Create the secret using the `kubectl create secret` command. The following example creates a secret named *azure-secret* and populates the *azurestorageaccountname* and *azurestorageaccountkey* from the previous step. To use an existing Azure storage account, provide the account name and key.
+1. Create the secret using the `kubectl create secret` command. The following example creates a secret named `azure-secret` and populates the **azurestorageaccountname** and **azurestorageaccountkey** parameters from the previous step. To use an existing Azure storage account, provide the account name and key.
 
    ```bash
    kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=myAKSStorageAccount --from-literal=azurestorageaccountkey=$STORAGE_KEY
@@ -2395,9 +2388,7 @@ Filesystem                                                                      
 
 ## Use a PV with private Azure Files storage (private endpoint)
 
-If your Azure Files resources are protected with a private endpoint, you must create your own
-storage class. Make sure that you've
-[configured your DNS settings to resolve the private endpoint IP address to the FQDN of the connection string][azure-private-endpoint-dns].
+If your Azure Files resources are protected with a private endpoint, you must create your own storage class. Make sure to configure your [DNS settings to resolve the private endpoint IP address to the FQDN of the connection string][azure-private-endpoint-dns].
 
 Customize the following parameters:
 
@@ -2773,7 +2764,7 @@ output:
 With AKS version 1.33, the
 [Encryption in Transit (EiT)](/azure/storage/files/encryption-in-transit-for-nfs-shares) **Preview**
 feature ensures that all read and writes to the NFS file shares within the VNet are encrypted,
-providing an additional layer of security.
+providing another layer of security.
 
 By setting `encryptInTransit: "true"` in the storage class parameters, you can enable data
 encryption in transit for NFS Azure file shares. For example:
@@ -2857,7 +2848,7 @@ mountOptions:
 
 You can enhance read throughput by [increasing the read-ahead size](/azure/storage/files/nfs-performance#increase-read-ahead-size-to-improve-read-throughput).
 
-While Azure Files supports setting nconnect up to the maximum setting of 16, we recommend configuring the mount options with the optimal setting of nconnect=4. Currently, there are no gains beyond four channels for the Azure Files implementation of nconnect.
+While Azure Files supports setting `nconnect` up to the maximum setting of 16, we recommend configuring the mount options with the optimal setting of `nconnect=4`. Currently, there are no gains beyond four channels for the Azure Files implementation of `nconnect`.
 
 For more information, see [Improve performance for NFS Azure file shares](/azure/storage/files/nfs-performance).
 
