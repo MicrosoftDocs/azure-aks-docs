@@ -7,6 +7,7 @@ author: arvindth
 ms.author: arvindth
 ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a DevOps engineer, I want to use staged update runs to control how workloads are deployed across multiple clusters, so that I can minimize risk and ensure reliable rollouts through progressive deployment strategies."
+zone_pivot_groups: cluster-namespace-scope
 ---
 
 # Control cluster order for resource placement
@@ -701,7 +702,7 @@ kubectl get clusterapprovalrequest
 Your output should look similar to the following example:
 
 ```output
-NAME                   UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
+NAME                          UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
 example-run-2-before-canary   example-run-2   canary   True       True               2m7s
 example-run-before-canary     example-run     canary   True       True               15m
 ```
