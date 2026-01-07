@@ -11,6 +11,8 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Control cluster order for resource placement
 
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
+
 Azure Kubernetes Fleet Manager placement staged update runs provide a controlled approach to deploying Kubernetes workloads across multiple member clusters using a stage-by-stage process. To minimize risk, this approach deploys to targeted clusters sequentially, with optional wait times and approval gates between stages.
 
 This article shows you how to create and execute staged update runs to deploy workloads progressively and roll back to previous versions when needed.
