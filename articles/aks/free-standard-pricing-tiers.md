@@ -37,8 +37,8 @@ The following table compares the Free, Standard, and Premium pricing tiers for A
 
 Standard and Premium tiers include Uptime SLA by default:
 
-- **With availability zones**: 99.95% API server uptime (≤4.38 hours downtime/month)
-- **Without availability zones**: 99.9% API server uptime (≤43.8 minutes downtime/month)
+- **With availability zones**: 99.95% availability of the Kubernetes API server
+- **Without availability zones**: 99.9% availability of the Kubernetes API server
 - **Free tier**: Best-effort uptime (no SLA guarantee)
 
 For more information, see the [SLA](https://azure.microsoft.com/support/legal/sla/kubernetes-service/v1_1/).
