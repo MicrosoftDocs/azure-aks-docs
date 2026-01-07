@@ -68,7 +68,7 @@ This tutorial demonstrates staged update runs using a demo fleet environment wit
 To group clusters by environment and control the deployment order within each stage, these labels allow us to create stages.
 
 
-#### [Cluster-scoped](#tab/clusterscoped)
+:::zone target="docs" pivot="cluster-scope"
 
 ## Prepare Kubernetes workloads for placement
 
@@ -730,8 +730,9 @@ kubectl delete clusterstagedupdatestrategy example-strategy
 kubectl delete clusterresourceplacement example-placement
 kubectl delete namespace test-namespace
 ```
+:::zone-end
 
-#### [Namespace-scoped](#tab/namespacescoped)
+:::zone target="docs" pivot="namespace-scope"  
 
 ## Prepare Kubernetes workloads for placement
 
@@ -1301,7 +1302,7 @@ kubectl delete clusterresourceplacement test-namespace-placement
 kubectl delete namespace test-namespace
 ```
 
----
+:::zone-end
 
 ## Key differences between approaches
 
