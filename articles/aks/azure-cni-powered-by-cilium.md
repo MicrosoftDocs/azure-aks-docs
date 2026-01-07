@@ -67,6 +67,7 @@ Azure CNI powered by Cilium currently has the following limitations:
 - L7 policy isn't supported by `CiliumClusterwideNetworkPolicy` (CCNP).
 - Cilium uses Cilium identities as unique identity for provisioning endpoints, so high-churning workloads such as Spark jobs generate high count of Cilium identities. To avoid workloads hitting Cilium identity limits (65535), excluding Spark job's labels like `!spark-app-name` and `!spark-app-selector` in the Cilium configmap can significantly reduce Cilium identity generation. For more details on Cilium identity exclusion rules, check [the official Cilium label documentation](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels).
 - AKS Local DNS isn't compatible with Advanced Container Networking Services (ACNS) - FQDN Filtering.
+- You can update an existing AKS cluster to Azure CNI Overlay if the cluster doesn't have network policies enabled. If you need to uninstall the network policy engine before updating your cluster, follow the steps in [Uninstall Azure Network Policy Manager or Calico](use-network-policies.md#uninstall-azure-network-policy-manager-or-calico).
 
 ## Considerations
 
