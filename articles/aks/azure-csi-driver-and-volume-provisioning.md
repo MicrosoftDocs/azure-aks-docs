@@ -1,10 +1,10 @@
 ---
-title: Use the Container Storage Interface (CSI) driver in AKS
-description: Learn how to use the Container Storage Interface (CSI) driver for Azure Disk in an Azure Kubernetes Service (AKS) cluster.
+title: Manage the CSI driver in AKS for volume provisioning
+description: Learn how to use the Container Storage Interface (CSI) driver to provision volumes in an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
 ms.custom: biannual
 ms.subservice: aks-storage
-ms.date: 01/07/2025
+ms.date: 01/08/2025
 author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-csi-driver
@@ -113,7 +113,7 @@ In addition to in-tree driver features, Azure Disk CSI driver supports the follo
 
 * [Volume snapshot](#understand-volume-snapshots)
 * [Volume clone](#clone-volumes)
-* [Resize disk PV without downtime](#resize-a-persistent-volume-without-downtime)
+* [Resize disk PV without downtime](#resize-an-azure-disk-pv-without-downtime)
 
 > [!NOTE]
 > Depending on the VM SKU that's being used, the Azure Disk CSI driver might have a per-node volume limit. For some powerful VMs (for example, 16 cores), the limit is 64 volumes per node. To identify the limit per VM SKU, review the **Max data disks** column for each VM SKU offered. For a list of VM SKUs offered and their corresponding detailed capacity limits, see [General purpose virtual machine sizes][general-purpose-machine-sizes].
@@ -727,6 +727,8 @@ The following table includes parameters you can use to define a custom storage c
 |--- | --- | --- | --- | --- |
 |mountPermissions | Specify mounted folder permissions. |The default is `0777`. If set to `0`, the driver won't perform `chmod` after mount. | `0777` | No |
 
+---
+
 ### Static PV provisioning parameters
 
 The following table includes parameters you can use to define your static PV.
@@ -791,7 +793,9 @@ directly from Azure Key Vault.
 |vnetName | Specify the virtual network name. | aksVNet | No | If empty, driver uses the `vnetName` value specified in the Azure cloud config file.|
 |subnetName | Specify the existing subnet name of the agent node. | aksSubnet | No | If empty, the driver updates all the subnets under the cluster virtual network. |
 
-## Create a custom storage class
+---
+
+## Create an Azure Blob custom storage class
 
 The default storage classes suit the most common scenarios, but not all. In some cases, you might
 want to have your own storage class customized with your own parameters. In this section, we provide
@@ -877,7 +881,8 @@ using the NFS protocol.
 1. Create a file named `pv-blob-nfs.yaml` and copy in the following YAML. Under `storageClass`,
    update `resourceGroup`, `storageAccount`, and `containerName`.
 
-   > [!NOTE] The `volumeHandle` value within your YAML should be a unique volumeID for every
+   > [!NOTE]
+   > The `volumeHandle` value within your YAML should be a unique volumeID for every
    > identical storage blob container in the cluster.
    >
    > The characters `#` and `/` are reserved for internal use and can't be used.
@@ -977,7 +982,8 @@ referenced when you create a Kubernetes pod.
    `nodeStateSecretRef`, update `name` with the name of the Secret object created earlier. For
    example:
 
-   > [!NOTE] The `volumeHandle` value within your YAML should be a unique volumeID for every
+   > [!NOTE]
+   > The `volumeHandle` value within your YAML should be a unique volumeID for every
    > identical storage blob container in the cluster.
    >
    > The characters `#` and `/` are reserved for internal use and can't be used.
@@ -1041,6 +1047,8 @@ referenced when you create a Kubernetes pod.
    ```bash
    kubectl create -f pvc-blobfuse.yaml
    ```
+
+---
 
 ::: zone-end
 ::: zone pivot="csi-disk"
@@ -1398,7 +1406,7 @@ To use Azure ultra disk, see [Use ultra disks on Azure Kubernetes Service (AKS)]
 
 For more information on using Azure tags, see [Use Azure tags in Azure Kubernetes Service (AKS)][use-tags].
 
-## Create a custom storage class
+## Create an Azure Disk custom storage class
 
 The default storage classes are suitable for most common scenarios. For some cases, you might want
 to have your own storage class customized with your own parameters. For example, you might want to
@@ -1772,9 +1780,9 @@ The reclaim policy on both storage classes ensures that the underlying Azure fil
 > [!NOTE]
 > To have the best experience with Azure Files, please follow these best practices. The location to configure mount options (`mountOptions`) depends on whether you're provisioning dynamic or static persistent volumes.
 >
-  > * If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: `StorageClass`).
-  > * If you're [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the  PersistentVolume object (kind: `PersistentVolume`).
-  > * If you're [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: `Pod`).
+  > * If you're dynamically provisioning a volume with a storage class, specify the mount options on the storage class object (kind: `StorageClass`).
+  > * If you're statically provisioning a volume, specify the mount options on the  PersistentVolume object (kind: `PersistentVolume`).
+  > * If you're mounting the file share as an inline volume, specify the mount options on the Pod object (kind: `Pod`).
 >
 > We recommend FIO when running benchmarking tests. For more information, see [benchmarking tools and tests](/azure/storage/files/nfs-performance#benchmarking-tools-and-tests).
 
@@ -1946,9 +1954,6 @@ mountOptions:
 parameters:
   skuName: Premium_LRS
 ```
-
-> [!NOTE]
-> The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static PVs. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you're [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you're [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
 
 ### Storage class parameters for dynamic volumes
 
@@ -2351,7 +2356,7 @@ You can request a larger volume for a PVC. Edit the PVC object, and specify a la
 > [!NOTE]
 > A new PV is never created to satisfy the claim. Instead, an existing volume is resized. Shrinking persistent volumes is currently not supported.
 
-In AKS, the built-in `azurefile-csi` storage class already supports expansion, so use the PVC [created earlier with this storage class](#create-azure-files-pvs-using-built-in-storage-classes). The PVC requested a 100 GiB file share. We can confirm that by running:
+In AKS, the built-in `azurefile-csi` storage class already supports expansion, so use the PVC we created earlier with this storage class. The PVC requested a 100 GiB file share. We can confirm that by running:
 
 ```bash
 kubectl exec -it nginx-azurefile -- df -h /mnt/azurefile

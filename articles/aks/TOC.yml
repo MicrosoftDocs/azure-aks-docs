@@ -949,7 +949,7 @@
         - name: CSI storage drivers overview
           href: csi-storage-drivers.md
         - name: Use the Azure CSI driver
-          href: azure-csi-driver.md
+          href: azure-csi-driver-and-volume-provisioning.md
         - name: Migrate from in-tree to CSI driver
           href: csi-migrate-in-tree-volumes.md
     - name: Block storage
