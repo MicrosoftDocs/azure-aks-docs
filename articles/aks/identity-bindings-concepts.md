@@ -4,7 +4,7 @@ description: Learn the concepts of identity bindings on Azure Kubernetes Service
 ms.topic: conceptual
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 11/10/2025
+ms.date: 12/13/2025
 ms.custom: preview
 author: shashankbarsin
 ms.author: shasb
@@ -80,6 +80,10 @@ There's no automatic garbage collection of the FIC today when the last identity 
 
 Previously, workload identity required egress to `login.microsoftonline.com` so workloads could exchange service account tokens for Microsoft Entra access tokens. With identity bindings, token exchange requests route through a cluster-specific identity binding proxy operated by AKS. Direct egress to `login.microsoftonline.com` for token exchange isn't required.
 
+### What limitations exist for identity bindings?
+
+Identity bindings aren't yet supported on clusters configured with [API server VNet integration][api-server-vnet-integration].
+
 ## Next steps
 
 Proceed to [Set up identity bindings][identity-bindings-how-to] for a step-by-step guide.
@@ -93,6 +97,7 @@ Proceed to [Set up identity bindings][identity-bindings-how-to] for a step-by-st
 [python-azure-identity]: /python/api/overview/azure/identity-readme
 [general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
 [managed-identities-overview]: /azure/active-directory/managed-identities-azure-resources/overview
+[api-server-vnet-integration]: /azure/aks/api-server-vnet-integration
 
 <!-- EXTERNAL LINKS -->
 [go-azidentity]: https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity

@@ -4,7 +4,7 @@ description: Learn how to enable and configure identity bindings on Azure Kubern
 ms.topic: how-to
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 12/09/2025
+ms.date: 12/13/2025
 ms.custom: preview
 author: shashankbarsin
 ms.author: shasb
@@ -57,6 +57,10 @@ This article shows you how to configure identity bindings to overcome these work
    - `Microsoft.ContainerService/managedClusters/write`
 
 - Ensure Kubernetes cluster admin (or equivalent) permissions to create `ClusterRole` and `ClusterRoleBinding` resources.
+
+## Limitations
+
+- Identity bindings aren't yet supported on clusters configured with [API server VNet integration][api-server-vnet-integration].
 
 ## Create test resources
 
@@ -315,9 +319,10 @@ az group delete --name $RESOURCE_GROUP --yes --no-wait
 <!-- INTERNAL LINKS -->
 [identity-bindings-concepts]: identity-bindings-concepts.md
 [workload-identity-overview]: workload-identity-overview.md
+[general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
+[managed-identities-overview]: /azure/active-directory/managed-identities-azure-resources/overview
+[api-server-vnet-integration]: /azure/aks/api-server-vnet-integration
 
 <!-- EXTERNAL LINKS -->
-[general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
 [k8s-rbac-subjects]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-subjects
-[managed-identities-overview]: /azure/active-directory/managed-identities-azure-resources/overview
 [jwt-ms]: https://jwt.ms/
