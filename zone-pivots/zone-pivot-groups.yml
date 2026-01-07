@@ -68,9 +68,9 @@ groups:
   prompt: Select your Fleet custom resource scope type
   pivots:
   - id: cluster-scope
-    title: Cluster-scoped Fleet resource
+    title: Cluster-scoped
   - id: namespace-scope
-    title: Namespace-scoped Fleet resource
+    title: Namespace-scoped
 # Owner: allyford
 - id: arm-azure-cli
   title: Interaction type
