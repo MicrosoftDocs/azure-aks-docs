@@ -131,7 +131,7 @@ A public IP created by AKS is an AKS-managed resource, meaning AKS manages the l
 Make sure you meet the following requirements before providing your own outbound public IPs or prefixes:
 
 - You must create and own custom public IP addresses. You can't reuse managed public IP addresses created by AKS as a "bring your own custom IP" because it can cause management conflicts.
-- You must ensure the AKS cluster identity has permissions to access the outbound IP, as per the [required public IP permissions list](kubernetes-service-principal.md#networking).
+- You must ensure the AKS cluster identity has permissions to access the outbound IP, as per the [required public IP permissions list](kubernetes-service-principal.md#grant-access-to-networking-resources).
 - Make sure you meet the [prerequisites and constraints](/azure/virtual-network/ip-services/public-ip-address-prefix#limitations) necessary to configure outbound IPs or outbound IP prefixes.
 
 ### Provide your own outbound public IPs
