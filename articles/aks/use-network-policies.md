@@ -258,8 +258,8 @@ To begin verification of network policy, you create a sample application and set
     kubectl run -it client -n demo --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 --command -- bash
     ```
 
-> [!NOTE]
-> If you want to schedule the client or server on a particular node, add the following bit before the `--command` argument in the pod creation [`kubectl run`][kubectl-run] command: `--overrides='{"spec": { "nodeSelector": {"kubernetes.io/os": "linux|windows"}}}'`.
+    > [!NOTE]
+    > If you want to schedule the client or server on a particular node, add the following bit before the `--command` argument in the pod creation [`kubectl run`][kubectl-run] command: `--overrides='{"spec": { "nodeSelector": {"kubernetes.io/os": "linux|windows"}}}'`.
 
 1. In a separate window, get the IP address of the `server` pod using the `kubectl get pod` command.
 
