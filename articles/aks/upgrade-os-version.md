@@ -92,7 +92,7 @@ Ubuntu 24.04 is the default for `--os-sku Ubuntu` in Kubernetes versions 1.35+. 
 > - [FIPS](./enable-fips-nodes.md) is not supported.
 > - Ubuntu 24.04 is supported in Kubernetes versions 1.32 to 1.38.
 > - You need to update your OS SKU to a supported OS option before upgrading your Kubernetes version to 1.39+. `--os-sku Ubuntu2404` is an option and is intended for testing the new OS Linux version without requiring you to upgrade your Kubernetes version.
-> - You need the preview Azure CLI version 18.0.0b5 or later for _preview_ and version 2.81.0 for _GA_ installed and configured. To find your CLI version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+> - You need the preview Azure CLI version 18.0.0b5 or later for _preview_ and version 2.82.0 for _GA_ installed and configured. To find your CLI version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 Update to `--os-sku Ubuntu2404` on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command.
 
