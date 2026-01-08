@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 10/23/2025
+ms.date: 01/08/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -23,9 +23,9 @@ Fleet Manager is a regional resource. Support for region failover for disaster r
 
 ### How many clusters can I join to Fleet Manager?
 
-Fleet Manager (with or without a hub cluster) supports joining up to 100 AKS clusters.
+Fleet Manager (with or without a hub cluster) supports joining up to 200 Kubernetes clusters. Member clusters can be a mix of AKS and Arc-enabled Kubernetes.
 
-If you would like Fleet Manager to support more than 100 clusters, [add feedback](https://github.com/Azure/AKS/issues/5066).
+If you would like Fleet Manager to support more than 200 clusters, [add feedback](https://github.com/Azure/AKS/issues/5066).
 
 ### What AKS clusters can be joined as members?
 
@@ -49,9 +49,9 @@ az fleet member create \
 
 ### Relationship to Azure Arc-enabled Kubernetes
 
-Fleet Manager supports joining only AKS clusters as member clusters. 
+Fleet Manager supports both AKS clusters and Arc-enabled Kubernetes clusters as members. Arc-enabled cluster support in preview.
 
-Support for joining non-AKS clusters is on our roadmap. Provide [feedback](https://github.com/Azure/AKS/issues/3410) if support for non-AKS clusters is important for you.
+Track general availability of Arc-enabled cluster support via roadmap item [3410](https://github.com/Azure/AKS/issues/3410).
 
 ### Relationship to Azure Kubernetes Service clusters
 
@@ -155,7 +155,7 @@ See the previous question.
 
 ### Editing my update strategy didn't change the existing update runs that used it. Why not?
 
-When an update run is created, a copy of the chosen strategy is made and stored on the update run itself so that changes to the strategy don't affect executing update runs.
+When an update run is created, a copy of the strategy is stored on the update run so that changes to the strategy don't affect executing update runs.
 
 ### Can I preapprove an approval?
 
