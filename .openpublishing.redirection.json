@@ -69,36 +69,6 @@
       "source_path_from_root": "/articles/aks/aks-zone-resiliency.md",
       "redirect_url": "/azure/aks/reliability-zone-resiliency-recommendations",
       "redirect_document_id": false
-    },
-    {
-      "source_path_from_root": "/articles/aks/azure-blob-csi.md",
-      "redirect_url": "/articles/aks/azure-csi-driver-volume-provisioning",
-      "redirect_document_id": true
-    },
-    {
-      "source_path_from_root": "/articles/aks/azure-disk-csi.md",
-      "redirect_url": "/articles/aks/azure-csi-driver-volume-provisioning",
-      "redirect_document_id": false
-    },
-    {
-      "source_path_from_root": "/articles/aks/azure-files-csi.md",
-      "redirect_url": "/articles/aks/azure-csi-driver-volume-provisioning",
-      "redirect_document_id": false
-    },
-    {
-      "source_path_from_root": "/articles/aks/azure-csi-blob-storage-provision.md",
-      "redirect_url": "/articles/aks/azure-csi-driver-volume-provisioning",
-      "redirect_document_id": false
-    },
-    {
-      "source_path_from_root": "/articles/aks/azure-csi-disk-storage-provision.md",
-      "redirect_url": "/articles/aks/azure-csi-driver-volume-provisioning",
-      "redirect_document_id": false
-    },
-    {
-      "source_path_from_root": "/articles/aks/azure-csi-files-storage-provision.md",
-      "redirect_url": "/articles/aks/azure-csi-driver-volume-provisioning",
-      "redirect_document_id": false
     }
   ]
 }
