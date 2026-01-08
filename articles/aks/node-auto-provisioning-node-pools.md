@@ -47,12 +47,11 @@ metadata:
 spec:
   disruption:
     consolidationPolicy: WhenEmptyOrUnderutilized
-    expireAfter: Never
   template:
     spec:
       nodeClassRef:
         name: default
-
+      expireAfter: Never
       # Requirements that constrain the parameters of provisioned nodes.
       # These requirements are combined with pod.spec.affinity.nodeAffinity rules.
       # Operators { In, NotIn, Exists, DoesNotExist, Gt, and Lt } are supported.
