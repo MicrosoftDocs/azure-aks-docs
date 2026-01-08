@@ -1222,36 +1222,6 @@ After you create the persistent volume claim, you must verify it has a status of
    [...]
    ```
 
-### Dynamic storage class parameters for PVCs
-
-The following table includes parameters you can use to define a custom storage class for your PVCs.
-
-|Name | Meaning | Available Value | Mandatory | Default value |
-|--- | --- | --- | :---: | --- |
-|skuName | Azure Disks storage account type (alias: `storageAccountType`)| `Standard_LRS`, `Premium_LRS`, `StandardSSD_LRS`, `PremiumV2_LRS`, `UltraSSD_LRS`, `Premium_ZRS`, `StandardSSD_ZRS` | No | `StandardSSD_LRS`|
-|fsType | File System Type | `ext4`, `ext3`, `ext2`, `xfs`, `btrfs` for Linux, `ntfs` for Windows | No | `ext4` for Linux, `ntfs` for Windows|
-|cachingMode | [Azure Data Disk Host Cache Setting][disk-host-cache-setting](PremiumV2_LRS and UltraSSD_LRS only support `None` caching mode) | `None`, `ReadOnly`, `ReadWrite` | No | `ReadOnly`|
-|resourceGroup | Specify the resource group for the Azure Disks | Existing resource group name | No | If empty, driver uses the same resource group name as current AKS cluster|
-|DiskIOPSReadWrite | [UltraSSD disk][ultra-ssd-disks] or [Premium SSD v2][premiumv2_lrs_disks] IOPS Capability (minimum: 2 IOPS/GiB) | 100~160000 | No | `500`|
-|DiskMBpsReadWrite | [UltraSSD disk][ultra-ssd-disks] or [Premium SSD v2][premiumv2_lrs_disks] Throughput Capability(minimum: 0.032/GiB) | 1~2000 | No | `100`|
-|LogicalSectorSize | Logical sector size in bytes for ultra disk. Supported values are 512 ad 4096. 4096 is the default. | `512`, `4096` | No | `4096`|
-|tags | Azure Disk [tags][azure-tags] | Tag format: `key1=val1,key2=val2` | No | ""|
-|diskEncryptionSetID | ResourceId of the disk encryption set to use for [enabling encryption at rest][disk-encryption] | format: `/subscriptions/{subs-id}/resourceGroups/{rg-name}/providers/Microsoft.Compute/diskEncryptionSets/{diskEncryptionSet-name}` | No | ""|
-|diskEncryptionType | Encryption type of the disk encryption set. | `EncryptionAtRestWithCustomerKey` (by default), `EncryptionAtRestWithPlatformAndCustomerKeys` | No | ""|
-|writeAcceleratorEnabled | [Write Accelerator on Azure Disks][azure-disk-write-accelerator] | `true`, `false` | No | ""|
-|networkAccessPolicy | NetworkAccessPolicy property to prevent generation of the SAS URI for a disk or a snapshot | `AllowAll`, `DenyAll`, `AllowPrivate` | No | `AllowAll`|
-|diskAccessID | Azure Resource ID of the DiskAccess resource to use private endpoints on disks | | No  | ``|
-|enableBursting | [Enable on-demand bursting][on-demand-bursting] beyond the provisioned performance target of the disk. On-demand bursting should only be applied to Premium disk and when the disk size > 512 GB. Ultra and shared disk isn't supported. Bursting is disabled by default. | `true`, `false` | No | `false`|
-|useragent | User agent used for [customer usage attribution][customer-usage-attribution] | | No  | Generated Useragent formatted `driverName/driverVersion compiler/version (OS-ARCH)`|
-|subscriptionID | Specify Azure subscription ID where the Azure Disks is created.  | Azure subscription ID | No | If not empty, `resourceGroup` must be provided.|
-
-The following parameters are only for **v2**.
-
-|Name | Meaning | Available Value | Mandatory | Default value |
-|--- | --- | --- | :---: | --- |
-| maxShares | The total number of shared disk mounts allowed for the disk. Setting the value to 2 or more enables attachment replicas. | Supported values depend on the disk size. See [Share an Azure managed disk][share-azure-managed-disk] for supported values. | No | 1 |
-| maxMountReplicaCount | The number of replicas attachments to maintain. | This value must be in the range `[0..(maxShares - 1)]` | No | If `accessMode` is `ReadWriteMany`, the default is `0`. Otherwise, the default is `maxShares - 1` |
-
 # [Static volume](#tab/static-volume-disk)
 
 When you create an Azure disk for use with AKS, you can create the disk resource in the **node** resource group. This approach allows the AKS cluster to access and manage the disk resource. If you instead create the disk in a separate resource group, you must grant the Azure Kubernetes Service (AKS) managed identity for your cluster the `Contributor` role to the disk's resource group.
@@ -1389,6 +1359,44 @@ If the disk for the `volumeHandle` was created in a separate resource group, you
    kubectl apply -f azure-disk-pod.yaml
    ```
 
+---
+
+## Dynamic storage class parameters for PVCs
+
+The following table includes parameters you can use to define a custom storage class for your PVCs.
+
+# [General](#tab/general-disk)
+
+|Name | Meaning | Available Value | Mandatory | Default value |
+|--- | --- | --- | :---: | --- |
+|skuName | Azure Disks storage account type (alias: `storageAccountType`)| `Standard_LRS`, `Premium_LRS`, `StandardSSD_LRS`, `PremiumV2_LRS`, `UltraSSD_LRS`, `Premium_ZRS`, `StandardSSD_ZRS` | No | `StandardSSD_LRS`|
+|fsType | File System Type | `ext4`, `ext3`, `ext2`, `xfs`, `btrfs` for Linux, `ntfs` for Windows | No | `ext4` for Linux, `ntfs` for Windows|
+|cachingMode | [Azure Data Disk Host Cache Setting][disk-host-cache-setting](PremiumV2_LRS and UltraSSD_LRS only support `None` caching mode) | `None`, `ReadOnly`, `ReadWrite` | No | `ReadOnly`|
+|resourceGroup | Specify the resource group for the Azure Disks | Existing resource group name | No | If empty, driver uses the same resource group name as current AKS cluster|
+|DiskIOPSReadWrite | [UltraSSD disk][ultra-ssd-disks] or [Premium SSD v2][premiumv2_lrs_disks] IOPS Capability (minimum: 2 IOPS/GiB) | 100~160000 | No | `500`|
+|DiskMBpsReadWrite | [UltraSSD disk][ultra-ssd-disks] or [Premium SSD v2][premiumv2_lrs_disks] Throughput Capability(minimum: 0.032/GiB) | 1~2000 | No | `100`|
+|LogicalSectorSize | Logical sector size in bytes for ultra disk. Supported values are 512 ad 4096. 4096 is the default. | `512`, `4096` | No | `4096`|
+|tags | Azure Disk [tags][azure-tags] | Tag format: `key1=val1,key2=val2` | No | ""|
+|diskEncryptionSetID | ResourceId of the disk encryption set to use for [enabling encryption at rest][disk-encryption] | format: `/subscriptions/{subs-id}/resourceGroups/{rg-name}/providers/Microsoft.Compute/diskEncryptionSets/{diskEncryptionSet-name}` | No | ""|
+|diskEncryptionType | Encryption type of the disk encryption set. | `EncryptionAtRestWithCustomerKey` (by default), `EncryptionAtRestWithPlatformAndCustomerKeys` | No | ""|
+|writeAcceleratorEnabled | [Write Accelerator on Azure Disks][azure-disk-write-accelerator] | `true`, `false` | No | ""|
+|networkAccessPolicy | NetworkAccessPolicy property to prevent generation of the SAS URI for a disk or a snapshot | `AllowAll`, `DenyAll`, `AllowPrivate` | No | `AllowAll`|
+|diskAccessID | Azure Resource ID of the DiskAccess resource to use private endpoints on disks | | No | ``|
+|enableBursting | [Enable on-demand bursting][on-demand-bursting] beyond the provisioned performance target of the disk. On-demand bursting should only be applied to Premium disk and when the disk size > 512 GB. Ultra and shared disk isn't supported. Bursting is disabled by default. | `true`, `false` | No | `false`|
+|userAgent | The user agent is used for [customer usage attribution][customer-usage-attribution] | | No | The generated user agent is formatted as `driverName/driverVersion compiler/version (OS-ARCH)`|
+|subscriptionID | Specify Azure subscription ID where the Azure Disks is created. | Azure subscription ID | No | If not empty, `resourceGroup` must be provided.|
+
+# [General v2](#tab/general-disk)
+
+The following parameters are only for **v2**.
+
+|Name | Meaning | Available Value | Mandatory | Default value |
+|--- | --- | --- | :---: | --- |
+| maxShares | The total number of shared disk mounts allowed for the disk. Setting the value to 2 or more enables attachment replicas. | Supported values depend on the disk size. See [Share an Azure managed disk][share-azure-managed-disk] for supported values. | No | 1 |
+| maxMountReplicaCount | The number of replicas attachments to maintain. | This value must be in the range `[0..(maxShares - 1)]` | No | If `accessMode` is `ReadWriteMany`, the default is `0`. Otherwise, the default is `maxShares - 1` |
+
+---
+
 ## Static provisioning parameters for a PV
 
 The following table includes parameters you can use to define a PV.
@@ -1399,16 +1407,6 @@ The following table includes parameters you can use to define a PV.
 |volumeAttributes.fsType | File system type | `ext4`, `ext3`, `ext2`, `xfs`, `btrfs` for Linux, `ntfs` for Windows | No | `ext4` for Linux, `ntfs` for Windows |
 |volumeAttributes.partition | Partition number of the existing disk (only supported on Linux) | `1`, `2`, `3` | No | Empty (no partition) </br>- Make sure partition format is like `-part1` |
 |volumeAttributes.cachingMode | [Disk host cache setting][disk-host-cache-setting] | `None`, `ReadOnly`, `ReadWrite` | No  | `ReadOnly`|
-
----
-
-### Use Azure ultra disks
-
-To use Azure ultra disk, see [Use ultra disks on Azure Kubernetes Service (AKS)][use-ultra-disks].
-
-### Use Azure tags
-
-For more information on using Azure tags, see [Use Azure tags in Azure Kubernetes Service (AKS)][use-tags].
 
 ## Create an Azure Disk custom storage class
 
@@ -1955,84 +1953,6 @@ parameters:
   skuName: Premium_LRS
 ```
 
-### Storage class parameters for dynamic volumes
-
-The following table includes parameters you can use to define a custom storage class for your PVC.
-
-|Name | Meaning | Available Value | Mandatory | Default value |
-|--|--|--|--|--|
-|accountAccessTier | [Access tier for storage account][access-tiers-overview] | Standard account can choose `Hot` or `Cool`, and Premium account can only choose `Premium`. | No | Empty. Use default setting for different storage account types. |
-|accountQuota | Limits the quota for an account. You can specify a maximum quota in GB (102,400 GB by default). If the account exceeds the specified quota, the driver skips selecting the account. | |No |`102400` |
-|allowBlobPublicAccess | Allow or disallow public access to all blobs or containers for storage account created by driver. | `true` or `false` | No | `false` |
-|disableDeleteRetentionPolicy | Specify whether disable DeleteRetentionPolicy for storage account created by driver. | `true` or `false` | No | `false` |
-|folderName | Specify folder name in Azure file share. | Existing folder name in Azure file share. | No | If folder name doesn't exist in file share, the mount fails. |
-|getLatestAccount |Determines whether to get the latest account key based on the creation time. This driver gets the first key by default. |`true` or `false` |No |`false` |
-|location | Specify the Azure region of the Azure storage account.| For example, `eastus`. | No | If empty, driver uses the same location name as current AKS cluster.|
-|matchTags | Match tags when driver tries to find a suitable storage account. | `true` or `false` | No | `false` |
-|networkEndpointType <sup>1</sup>| Specify network endpoint type for the storage account created by driver. If `privateEndpoint` is specified, a private endpoint is created for the storage account. For other cases, a service endpoint is created by default. | "",`privateEndpoint`| No | "" |
-|protocol | Specify file share protocol. | `smb`, `nfs` | No | `smb` |
-|requireInfraEncryption | Specify whether or not the service applies a secondary layer of encryption with platform managed keys for data at rest for storage account created by driver. | `true` or `false` | No | `false` |
-|resourceGroup | Specify the resource group for the Azure Disks.| Existing resource group name | No | If empty, driver uses the same resource group name as current AKS cluster.|
-|selectRandomMatchingAccount | Determines whether to randomly select a matching account. By default, the driver always selects the first matching account in alphabetical order (Note: This driver uses account search cache, which results in uneven distribution of file creation across multiple accounts). | `true` or `false` |No | `false` |
-|server | Specify Azure storage account server address. | Existing server address, for example `accountname.privatelink.file.core.windows.net`. | No | If empty, driver uses default `accountname.file.core.windows.net` or other sovereign cloud account address. |
-|shareAccessTier | [Access tier for file share][storage-tiers] | General purpose v2 account can choose between `TransactionOptimized` (default), `Hot`, and `Cool`. Premium storage account type for file shares only. | No | Empty. Use default setting for different storage account types.|
-|shareName | Specify Azure file share name. | Existing or new Azure file share name. | No | If empty, driver generates an Azure file share name. |
-|shareNamePrefix | Specify Azure file share name prefix created by driver. | Share name can only contain lowercase letters, numbers, hyphens, and length should be fewer than 21 characters. | No | |
-|skuName | Azure Files storage account type (alias: `storageAccountType`)| `Standard_LRS`, `Standard_ZRS`, `Standard_GRS`, `Standard_RAGRS`, `Standard_RAGZRS`,`Premium_LRS`, `Premium_ZRS`, `StandardV2_LRS`, `StandardV2_ZRS`, `StandardV2_GRS`, `StandardV2_GZRS`, `PremiumV2_LRS`, `PremiumV2_ZRS` | No | `Standard_LRS`<br> Minimum file share size for Premium account type is 100 GB.<br> ZRS account type is supported in limited regions.<br> NFS file share only supports Premium account type. <br> Standard V2 SKU names are for [Azure Files provisioned v2 model](/azure/storage/files/understanding-billing#provisioned-v2-model). |
-|storageAccount | Specify an Azure storage account name.| storageAccountName | - No | When a specific storage account name isn't provided, the driver looks for a suitable storage account that matches the account settings within the same resource group. If it fails to find a matching storage account, it creates a new one. However, if a storage account name is specified, the storage account must already exist. |
-|storageEndpointSuffix | Specify Azure storage endpoint suffix. | `core.windows.net`, `core.chinacloudapi.cn`, etc. | No | If empty, driver uses default storage endpoint suffix according to cloud environment. For example, `core.windows.net`. |
-|tags | [Tags][tag-resources] are created in new storage account. | Tag format: 'foo=aaa,bar=bbb' | No | "" |
-
-The following parameters are only for the SMB protocol.
-
-|Name | Meaning | Available Value | Mandatory | Default value |
-|--|--|--|--|--|
-|subscriptionID | Specify Azure subscription ID where Azure file share is created. | Azure subscription ID | No | If not empty, `resourceGroup` must be provided. |
-|storeAccountKey | Specify whether to store account key to Kubernetes secret. | `true` or `false`<br>`false` means driver uses kubelet identity to get account key. | No | `true` |
-|secretName | Specify secret name to store account key. | | No | |
-|secretNamespace | Specify the namespace of secret to store account key. <br><br> If `secretNamespace` isn't specified, the secret is created in the same namespace as the pod. | `default`,`kube-system`, etc. | No | PVC namespace, for example `csi.storage.k8s.io/pvc/namespace` |
-|useDataPlaneAPI | Specify whether to use [data plane API][data-plane-api] for file share create/delete/resize, which could solve the SRP API throttling issue because the data plane API has almost no limit, while it would fail when there's firewall or Vnet settings on storage account. | `true` or `false` | No | `false` |
-
-The following parameters are only for the NFS protocol.
-
-|Name | Meaning | Available Value | Mandatory | Default value |
-|--|--|--|--|--|
-|mountPermissions | Mounted folder permissions. The default is `0777`. If set to `0`, driver doesn't perform `chmod` after mount | `0777` | No | |
-|rootSquashType | Specify root squashing behavior on the share. The default is `NoRootSquash` | `AllSquash`, `NoRootSquash`, `RootSquash` | No | |
-
-The following parameters are only for the VNet setting, such as NFS and private end point.
-
-|Name | Meaning | Available Value | Mandatory | Default value |
-|--|--|--|--|--|
-|fsGroupChangePolicy | Indicates how the driver changes volume's ownership. Pod `securityContext.fsGroupChangePolicy` is ignored. | `OnRootMismatch` (default), `Always`, `None` | No | `OnRootMismatch`|
-|subnetName | Subnet name | Existing subnet name of the agent node. | No | If empty, driver uses the `subnetName` value in Azure cloud config file. |
-|vnetName | Virtual network name | Existing virtual network name. | No | if empty, driver updates all the subnets under the cluster virtual network. |
-|vnetResourceGroup | Specify VNet resource group where virtual network is defined. | Existing resource group name. | No | If empty, driver uses the `vnetResourceGroup` value in Azure cloud config file. |
-
-<sup>1</sup> If the storage account is created by the driver, then you only need to specify `networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the private endpoint and private DNS zone (named `privatelink.file.core.windows.net`) together with the account. If you bring your own storage account, then you need to [create the private endpoint][storage-account-private-endpoint] for the storage account. If you're using Azure Files storage in a network isolated cluster, you must create a custom storage class with "networkEndpointType: privateEndpoint". You can follow this sample for reference:
-
-```bash
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: azurefile-csi
-provisioner: file.csi.azure.com
-allowVolumeExpansion: true
-parameters:
-  skuName: Premium_LRS  # available values: Premium_LRS, Premium_ZRS, Standard_LRS, Standard_GRS, Standard_ZRS, Standard_RAGRS, Standard_RAGZRS
-  networkEndpointType: privateEndpoint
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
-mountOptions:
-  - dir_mode=0777  # modify this permission if you want to enhance the security
-  - file_mode=0777
-  - mfsymlinks
-  - cache=strict  # https://linux.die.net/man/8/mount.cifs
-  - nosharesock  # reduce probability of reconnect race
-  - actimeo=30  # reduce latency for metadata-heavy workload
-  - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
-```
-
 # [Static volume](#tab/static-volume-files)
 
 This section provides guidance for cluster administrators who want to create one or more PVs that include details of an existing Azure Files share to use with a workload.
@@ -2251,7 +2171,105 @@ To mount the Azure Files file share into your pod, you configure the volume in t
    kubectl describe pod mypod
    ```
 
-### Static provisioning parameters for PVs
+---
+
+## Storage class parameters for dynamic volumes
+
+# [General](#tab/general-files)
+
+The following table includes parameters you can use to define a custom storage class for your PVC.
+
+|Name | Meaning | Available Value | Mandatory | Default value |
+|--|--|--|--|--|
+|accountAccessTier | [Access tier for storage account][access-tiers-overview] | Standard account can choose `Hot` or `Cool`, and Premium account can only choose `Premium`. | No | Empty. Use default setting for different storage account types. |
+|accountQuota | Limits the quota for an account. You can specify a maximum quota in GB (102,400 GB by default). If the account exceeds the specified quota, the driver skips selecting the account. | |No |`102400` |
+|allowBlobPublicAccess | Allow or disallow public access to all blobs or containers for storage account created by driver. | `true` or `false` | No | `false` |
+|disableDeleteRetentionPolicy | Specify whether disable DeleteRetentionPolicy for storage account created by driver. | `true` or `false` | No | `false` |
+|folderName | Specify folder name in Azure file share. | Existing folder name in Azure file share. | No | If folder name doesn't exist in file share, the mount fails. |
+|getLatestAccount |Determines whether to get the latest account key based on the creation time. This driver gets the first key by default. |`true` or `false` |No |`false` |
+|location | Specify the Azure region of the Azure storage account.| For example, `eastus`. | No | If empty, driver uses the same location name as current AKS cluster.|
+|matchTags | Match tags when driver tries to find a suitable storage account. | `true` or `false` | No | `false` |
+|networkEndpointType <sup>1</sup>| Specify network endpoint type for the storage account created by driver. If `privateEndpoint` is specified, a private endpoint is created for the storage account. For other cases, a service endpoint is created by default. | "",`privateEndpoint`| No | "" |
+|protocol | Specify file share protocol. | `smb`, `nfs` | No | `smb` |
+|requireInfraEncryption | Specify whether or not the service applies a secondary layer of encryption with platform managed keys for data at rest for storage account created by driver. | `true` or `false` | No | `false` |
+|resourceGroup | Specify the resource group for the Azure Disks.| Existing resource group name | No | If empty, driver uses the same resource group name as current AKS cluster.|
+|selectRandomMatchingAccount | Determines whether to randomly select a matching account. By default, the driver always selects the first matching account in alphabetical order (Note: This driver uses account search cache, which results in uneven distribution of file creation across multiple accounts). | `true` or `false` |No | `false` |
+|server | Specify Azure storage account server address. | Existing server address, for example `accountname.privatelink.file.core.windows.net`. | No | If empty, driver uses default `accountname.file.core.windows.net` or other sovereign cloud account address. |
+|shareAccessTier | [Access tier for file share][storage-tiers] | General purpose v2 account can choose between `TransactionOptimized` (default), `Hot`, and `Cool`. Premium storage account type for file shares only. | No | Empty. Use default setting for different storage account types.|
+|shareName | Specify Azure file share name. | Existing or new Azure file share name. | No | If empty, driver generates an Azure file share name. |
+|shareNamePrefix | Specify Azure file share name prefix created by driver. | Share name can only contain lowercase letters, numbers, hyphens, and length should be fewer than 21 characters. | No | |
+|skuName | Azure Files storage account type (alias: `storageAccountType`)| `Standard_LRS`, `Standard_ZRS`, `Standard_GRS`, `Standard_RAGRS`, `Standard_RAGZRS`,`Premium_LRS`, `Premium_ZRS`, `StandardV2_LRS`, `StandardV2_ZRS`, `StandardV2_GRS`, `StandardV2_GZRS`, `PremiumV2_LRS`, `PremiumV2_ZRS` | No | `Standard_LRS`<br> Minimum file share size for Premium account type is 100 GB.<br> ZRS account type is supported in limited regions.<br> NFS file share only supports Premium account type. <br> Standard V2 SKU names are for [Azure Files provisioned v2 model](/azure/storage/files/understanding-billing#provisioned-v2-model). |
+|storageAccount | Specify an Azure storage account name.| storageAccountName | - No | When a specific storage account name isn't provided, the driver looks for a suitable storage account that matches the account settings within the same resource group. If it fails to find a matching storage account, it creates a new one. However, if a storage account name is specified, the storage account must already exist. |
+|storageEndpointSuffix | Specify Azure storage endpoint suffix. | `core.windows.net`, `core.chinacloudapi.cn`, etc. | No | If empty, driver uses default storage endpoint suffix according to cloud environment. For example, `core.windows.net`. |
+|tags | [Tags][tag-resources] are created in new storage account. | Tag format: 'foo=aaa,bar=bbb' | No | "" |
+
+<sup>1</sup> If the storage account is created by the driver, then you only need to specify
+`networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the
+private endpoint and private DNS zone (named `privatelink.file.core.windows.net`) together with the
+account. If you bring your own storage account, then you need to
+[create the private endpoint][storage-account-private-endpoint] for the storage account. If you're
+using Azure Files storage in a network isolated cluster, you must create a custom storage class with
+"networkEndpointType: privateEndpoint". You can follow this sample for reference:
+
+```bash
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azurefile-csi
+provisioner: file.csi.azure.com
+allowVolumeExpansion: true
+parameters:
+  skuName: Premium_LRS  # available values: Premium_LRS, Premium_ZRS, Standard_LRS, Standard_GRS, Standard_ZRS, Standard_RAGRS, Standard_RAGZRS
+  networkEndpointType: privateEndpoint
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+mountOptions:
+  - dir_mode=0777  # modify this permission if you want to enhance the security
+  - file_mode=0777
+  - mfsymlinks
+  - cache=strict  # https://linux.die.net/man/8/mount.cifs
+  - nosharesock  # reduce probability of reconnect race
+  - actimeo=30  # reduce latency for metadata-heavy workload
+  - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
+```
+
+# [SMB](#tab/smb-files)
+
+The following parameters are only for the SMB protocol.
+
+|Name | Meaning | Available Value | Mandatory | Default value |
+|--|--|--|--|--|
+|subscriptionID | Specify Azure subscription ID where Azure file share is created. | Azure subscription ID | No | If not empty, `resourceGroup` must be provided. |
+|storeAccountKey | Specify whether to store account key to Kubernetes secret. | `true` or `false`<br>`false` means driver uses kubelet identity to get account key. | No | `true` |
+|secretName | Specify secret name to store account key. | | No | |
+|secretNamespace | Specify the namespace of secret to store account key. <br><br> If `secretNamespace` isn't specified, the secret is created in the same namespace as the pod. | `default`,`kube-system`, etc. | No | PVC namespace, for example `csi.storage.k8s.io/pvc/namespace` |
+|useDataPlaneAPI | Specify whether to use [data plane API][data-plane-api] for file share create/delete/resize, which could solve the SRP API throttling issue because the data plane API has almost no limit, while it would fail when there's firewall or Vnet settings on storage account. | `true` or `false` | No | `false` |
+
+# [NFS](#tab/nfs-files)
+
+The following parameters are only for the NFS protocol.
+
+|Name | Meaning | Available Value | Mandatory | Default value |
+|--|--|--|--|--|
+|mountPermissions | Mounted folder permissions. The default is `0777`. If set to `0`, driver doesn't perform `chmod` after mount | `0777` | No | |
+|rootSquashType | Specify root squashing behavior on the share. The default is `NoRootSquash` | `AllSquash`, `NoRootSquash`, `RootSquash` | No | |
+
+# [VNet](#tab/vnet-files)
+
+The following parameters are only for the VNet setting, such as NFS and private end point.
+
+|Name | Meaning | Available Value | Mandatory | Default value |
+|--|--|--|--|--|
+|fsGroupChangePolicy | Indicates how the driver changes volume's ownership. Pod `securityContext.fsGroupChangePolicy` is ignored. | `OnRootMismatch` (default), `Always`, `None` | No | `OnRootMismatch`|
+|subnetName | Subnet name | Existing subnet name of the agent node. | No | If empty, driver uses the `subnetName` value in Azure cloud config file. |
+|vnetName | Virtual network name | Existing virtual network name. | No | if empty, driver updates all the subnets under the cluster virtual network. |
+|vnetResourceGroup | Specify VNet resource group where virtual network is defined. | Existing resource group name. | No | If empty, driver uses the `vnetResourceGroup` value in Azure cloud config file. |
+
+---
+
+## Static provisioning parameters for PVs
+
+# [General](#tab/general-files2)
 
 The following table includes parameters you can use to define a PV.
 
@@ -2264,6 +2282,8 @@ The following table includes parameters you can use to define a PV.
 |volumeAttributes.protocol | Specify file share protocol. | `smb`, `nfs` | No | `smb` |
 |volumeAttributes.server | Specify Azure storage account server address | Existing server address, for example `accountname.privatelink.file.core.windows.net`. | No | If empty, driver uses default `accountname.file.core.windows.net` or other sovereign cloud account address. |
 
+# [SMB](#tab/smb-files2)
+
 The following parameters are only for SMB protocol.
 
 |Name | Meaning | Available Value | Mandatory | Default value |
@@ -2273,6 +2293,8 @@ The following parameters are only for SMB protocol.
 |nodeStageSecretRef.name | Specify a secret name that stores storage account name and key. | Existing secret name. |  No  |If empty, driver uses kubelet identity to get account key.|
 |nodeStageSecretRef.namespace | Specify a secret namespace. | Kubernetes namespace  |  No  ||
 
+# [NFS](#tab/nfs-files2)
+
 The following parameters are only for the NFS protocol.
 
 |Name | Meaning | Available Value | Mandatory | Default value |
@@ -2281,10 +2303,6 @@ The following parameters are only for the NFS protocol.
 |volumeAttributes.mountPermissions | Specify mounted folder permissions. The default is `0777` | | No ||
 
 ---
-
-## Use Azure tags
-
-For more information on using Azure tags, see [Use Azure tags in Azure Kubernetes Service (AKS)][use-tags].
 
 ## Create a PV snapshot class
 
@@ -2900,6 +2918,8 @@ The Azure Files CSI driver also supports Windows nodes and containers. To use Wi
 * For Azure Files CSI driver parameters, see [CSI driver parameters][CSI driver parameters].
 * For more information about disk-based storage solutions, see [Disk-based solutions in AKS][disk-based-solutions].
 * For more information about storage best practices, see [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
+* For more information about Azure ultra disk, see [Use ultra disks on Azure Kubernetes Service (AKS)][use-ultra-disks].
+* For more information about Azure tags, see [Use Azure tags in Azure Kubernetes Service (AKS)][use-tags].
 
 <!-- LINKS - external -->
 [access-modes]: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
