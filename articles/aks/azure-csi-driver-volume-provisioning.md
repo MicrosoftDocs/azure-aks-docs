@@ -111,7 +111,7 @@ In addition to in-tree driver features, Azure Disk CSI driver supports the follo
     zone as a given node. For more information, including which regions are supported, see
     [Zone-redundant storage for managed disks](/azure/virtual-machines/disks-redundancy).
 
-* [Volume snapshot](#understand-volume-snapshots)
+* [Volume snapshot](#learn-about-volume-snapshots)
 * [Volume clone](#clone-volumes)
 * [Resize disk persistent volume without downtime](#resize-an-azure-disk-pv-without-downtime)
 
@@ -1268,7 +1268,7 @@ When you create an Azure disk for use with AKS, you can create the disk resource
    MC_myResourceGroup_myAKSCluster_eastus
    ```
 
-1. Create a disk using the [`az disk create`][az-disk-create] command. Specify the node resource group name and a name for the disk resource, such as *myAKSDisk*. The following example creates a *20 GiB* disk, and outputs the ID of the disk after it's created. If you need to create a disk for use with Windows Server containers, add the `--os-type windows` parameter to correctly format the disk.
+1. Create a disk using the [`az disk create`][az-disk-create] command. Specify the node resource group name and a name for the disk resource, such as *myAKSDisk*. The following example creates a *20 GiB* disk, and outputs the ID of the disk after creation. If you need to create a disk for use with Windows Server containers, add the `--os-type windows` parameter to correctly format the disk.
 
    ```azurecli-interactive
    az disk create \
