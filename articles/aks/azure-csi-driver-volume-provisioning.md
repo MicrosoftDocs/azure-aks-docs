@@ -604,11 +604,13 @@ container. Use it to update the *skuName* parameter.
    storageclass.storage.k8s.io/blob-fuse-premium created
    ```
 
+---
+
 ## Mount an NFS or BlobFuse PV
 
 In this section, you mount the PV using the NFS protocol or BlobFuse.
 
-# [NFS](#tab/nfs-2)
+# [NFS](#tab/nfs)
 
 Mounting Blob storage using the NFS v3 protocol doesn't authenticate using an account key. Your AKS
 cluster needs to reside in the same or peered virtual network as the agent node. The only way to
@@ -687,7 +689,7 @@ using the NFS protocol.
    kubectl create -f pvc-blob-nfs.yaml
    ```
 
-# [BlobFuse](#tab/blobfuse-2)
+# [BlobFuse](#tab/blobfuse)
 
 Kubernetes needs credentials to access the Blob storage container created earlier, which is either
 an Azure access key or SAS tokens. These credentials are stored in a Kubernetes secret, which is
@@ -1077,7 +1079,7 @@ Reducing the size of a PVC isn't supported due to the risk of data loss. You can
 
 The reclaim policy in both storage classes ensures that the underlying Azure Disks are deleted when the respective PV is deleted. The storage classes also configure the PVs to be expandable. You just need to edit the PVC with the new size.
 
-To use these storage classes, create a [PVC](concepts-storage.md#persistent-volume-claims) and respective pod that references and uses them. A PVC is used to automatically provision storage based on a storage class. A PVC can use one of the pre-created storage classes or a user-defined storage class to create an Azure-managed disk for the desired SKU and size. When you create a pod definition, the PVC is specified to request the desired storage.
+To use these storage classes, create a [PVC](concepts-storage.md#persistent-volume-claims) and respective pod that references and uses them. A PVC is used to automatically provision storage based on a storage class. A PVC can use one of the precreated storage classes or a user-defined storage class to create an Azure-managed disk for the desired SKU and size. When you create a pod definition, the PVC is specified to request the desired storage.
 
 > [!NOTE]
 > Persistent volume claims are specified in GiB but Azure managed disks are billed based on the SKU for a specific size. These SKUs range from 32GiB for S4 or P4 disks to 32TiB for S80 or P80 disks (in preview). The throughput and IOPS performance of a Premium managed disk depends on both the SKU and the instance size of the nodes in the AKS cluster. For more information, see [Pricing and performance of managed disks][managed-disk-pricing-performance].
@@ -1098,7 +1100,7 @@ managed-csi         disk.csi.azure.com         1h
 
 # [Dynamic volume](#tab/dynamic-volume-disk)
 
-A PVC automatically provisions storage based on a storage class. In this case, a PVC can use one of the pre-created storage classes to create a standard or premium Azure managed disk.
+A PVC automatically provisions storage based on a storage class. In this case, a PVC can use one of the precreated storage classes to create a standard or premium Azure managed disk.
 
 1. Create a file named `azure-pvc.yaml` and copy in the following manifest. The claim requests a disk named `azure-managed-disk` that's `5 GB` in size with `ReadWriteOnce` access. The *managed-csi* storage class is specified as the storage class.
 
@@ -1352,7 +1354,7 @@ If the disk for the `volumeHandle` was created in a separate resource group, you
    pvc-azuredisk   Bound    pv-azuredisk   20Gi        RWO                           5s
    ```
 
-1. Create an *azure-disk-pod.yaml* file to reference your *PersistentVolumeClaim*. For Windows Server containers, specify a *mountPath* using the Windows path convention, such as *'D:'*.
+1. Create an *azure-disk-pod.yaml* file to reference your *PersistentVolumeClaim*. For Windows Server containers, specify a `mountPath` using the Windows path convention, such as *"D:"*.
 
    ```yaml
    apiVersion: v1
@@ -1451,7 +1453,7 @@ manifest. The storage class is the same as our `managed-csi` storage class, but 
    storageclass.storage.k8s.io/azuredisk-csi-waitforfirstconsumer created
    ```
 
-## Understand volume snapshots
+## Learn about volume snapshots
 
 The Azure Disk CSI driver supports [volume snapshots](https://kubernetes-csi.github.io/docs/snapshot-restore-feature.html), enabling you to capture the state of persistent volumes at specific points in time for backup and restore operations. Volume snapshots let you create point-in-time copies of your persistent data without interrupting running applications. You can use these snapshots to create new volumes or restore existing ones to a previous state.
 
