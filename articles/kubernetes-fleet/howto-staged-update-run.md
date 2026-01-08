@@ -22,7 +22,7 @@ This article shows you how to create and execute staged update runs to deploy wo
 > Azure Kubernetes Fleet Manager provides two approaches for staged updates:
 >
 > - **Cluster-scoped**: Use `ClusterStagedUpdateRun` with `ClusterResourcePlacement` for fleet administrators managing infrastructure-level changes
-> - **Namespace-scoped**: Use `StagedUpdateRun` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces
+> - **Namespace-scoped (preview)**: Use `StagedUpdateRun` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces
 >
 > The examples in this article demonstrate both approaches using tabs. Choose the tab that matches your deployment scope.
 
@@ -68,14 +68,13 @@ This tutorial demonstrates staged update runs using a demo fleet environment wit
 
 To group clusters by environment and control the deployment order within each stage, these labels allow us to create stages.
 
-
 :::zone target="docs" pivot="cluster-scope"
 
 ## Prepare Kubernetes workloads for placement
 
 Publish Kubernetes workloads to the hub cluster so that they can be placed onto member clusters.
 
-Create a Namespace and Configmap for the workload on the hub cluster:
+Create a Namespace and ConfigMap for the workload on the hub cluster:
 
 ```bash
 kubectl create namespace test-namespace
@@ -147,7 +146,7 @@ We only have one version of the snapshot. It's the current latest (`kubernetes-f
 
 ### Create a new resource snapshot
 
-Now modify the Configmap with a new value:
+Now modify the ConfigMap with a new value:
 
 ```bash
 kubectl edit configmap test-cm -n test-namespace
@@ -188,7 +187,7 @@ example-placement-0-snapshot   1     2m6s   kubernetes-fleet.io/is-latest-snapsh
 example-placement-1-snapshot   1     10s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
 ```
 
-The latest label is set to example-placement-1-snapshot, which contains the latest Configmap data:
+The latest label is set to example-placement-1-snapshot, which contains the latest ConfigMap data:
 
 ```bash
 kubectl get clusterresourcesnapshots example-placement-1-snapshot -o yaml
@@ -523,7 +522,7 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1               True        1               8m55s
 ```
 
-The Configmap test-cm should be deployed on all three member clusters, with latest data:
+The ConfigMap test-cm should be deployed on all three member clusters, with latest data:
 
 ```yaml
 apiVersion: v1
@@ -645,7 +644,7 @@ status:
 
 ## Deploy a second staged update run to roll back to a previous version
 
-Suppose the workload admin wants to roll back the Configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the Configmap from hub, they can create a new `ClusterStagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
+Suppose the workload admin wants to roll back the ConfigMap change, reverting the value `value2` back to `value1`. Instead of manually updating the ConfigMap from hub, they can create a new `ClusterStagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -707,7 +706,7 @@ example-run-2-before-canary   example-run-2   canary   True       True          
 example-run-before-canary     example-run     canary   True       True               15m
 ```
 
-The Configmap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
+The ConfigMap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
 
 ```yaml
 apiVersion: v1
@@ -739,14 +738,14 @@ kubectl delete namespace test-namespace
 
 Publish Kubernetes workloads to the hub cluster so that they can be placed onto member clusters.
 
-Create a Namespace and Configmap for the workload on the hub cluster:
+Create a Namespace and ConfigMap for the workload on the hub cluster:
 
 ```bash
 kubectl create namespace test-namespace
 kubectl create configmap test-cm --from-literal=key=value1 -n test-namespace
 ```
 
-Since `ResourcePlacement` is namespace-scoped, first deploy the Namespace to all member clusters using a `ClusterResourcePlacement`:
+Since `ResourcePlacement` is namespace-scoped, first deploy the Namespace to all member clusters using a `ClusterResourcePlacement`, specifying `NamespaceOnly` for the selection scope:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -777,7 +776,7 @@ NAME                       GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILAB
 test-namespace-placement   1     True        1               True        1               30s
 ```
 
-To deploy the Configmap, create a namespace-scoped `ResourcePlacement`:
+To deploy the ConfigMap, create a namespace-scoped `ResourcePlacement`:
 
 > [!NOTE]
 > The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
@@ -800,7 +799,7 @@ spec:
     type: External
 ```
 
-All three clusters should be scheduled since we use the `PickAll` policy, but the Configmap shouldn't be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
+All three clusters should be scheduled since we use the `PickAll` policy, but the ConfigMap shouldn't be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
 
 Verify the placement is scheduled:
 
@@ -841,7 +840,7 @@ We only have one version of the snapshot. It's the current latest (`kubernetes-f
 
 ### Create a new resource snapshot
 
-Now modify the Configmap with a new value:
+Now modify the ConfigMap with a new value:
 
 ```bash
 kubectl edit configmap test-cm -n test-namespace
@@ -882,7 +881,7 @@ example-placement-0-snapshot   1     2m6s   kubernetes-fleet.io/is-latest-snapsh
 example-placement-1-snapshot   1     10s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
 ```
 
-The latest label is set to example-placement-1-snapshot, which contains the latest Configmap data:
+The latest label is set to example-placement-1-snapshot, which contains the latest ConfigMap data:
 
 ```bash
 kubectl get resourcesnapshots example-placement-1-snapshot -n test-namespace -o yaml
@@ -1091,7 +1090,7 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1               True        1               8m55s
 ```
 
-The Configmap test-cm should be deployed on all three member clusters, with latest data:
+The ConfigMap test-cm should be deployed on all three member clusters, with latest data:
 
 ```yaml
 apiVersion: v1
@@ -1214,7 +1213,7 @@ status:
 
 ## Deploy a second staged update run to roll back to a previous version
 
-Suppose the workload admin wants to roll back the Configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new `StagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
+Suppose the workload admin wants to roll back the ConfigMap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new `StagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -1277,7 +1276,7 @@ example-run-2-before-canary   example-run-2       canary   True       True      
 example-run-before-canary     example-run         canary   True       True               15m
 ```
 
-The Configmap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
+The ConfigMap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
 
 ```yaml
 apiVersion: v1
