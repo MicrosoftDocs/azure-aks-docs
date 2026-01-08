@@ -49,9 +49,9 @@ az fleet member create \
 
 ### Relationship to Azure Arc-enabled Kubernetes
 
-Fleet Manager supports joining only AKS clusters as member clusters. 
+Fleet Manager supports joining both AKS clusters and Arc-enabled Kubernetes clusters. Arc-enabled cluster support in preview.
 
-Arc-enabled Kubernetes support is currently in preview. Track general availability via roadmap item [3410](https://github.com/Azure/AKS/issues/3410).
+Track general availability of Arc-enabled cluster support via roadmap item [3410](https://github.com/Azure/AKS/issues/3410).
 
 ### Relationship to Azure Kubernetes Service clusters
 
