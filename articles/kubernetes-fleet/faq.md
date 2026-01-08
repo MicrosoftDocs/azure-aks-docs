@@ -155,7 +155,7 @@ See the previous question.
 
 ### Editing my update strategy didn't change the existing update runs that used it. Why not?
 
-When an update run is created, a copy of the chosen strategy is made and stored on the update run itself so that changes to the strategy don't affect executing update runs.
+When an update run is created, a copy of the strategy is stored on the update run so that changes to the strategy don't affect executing update runs.
 
 ### Can I preapprove an approval?
 
