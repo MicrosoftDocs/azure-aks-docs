@@ -1386,7 +1386,7 @@ The following table includes parameters you can use to define a custom storage c
 |userAgent | The user agent is used for [customer usage attribution][customer-usage-attribution] | | No | The generated user agent is formatted as `driverName/driverVersion compiler/version (OS-ARCH)`|
 |subscriptionID | Specify Azure subscription ID where the Azure Disks is created. | Azure subscription ID | No | If not empty, `resourceGroup` must be provided.|
 
-# [General v2](#tab/general-disk)
+# [General v2](#tab/general-disk-v2)
 
 The following parameters are only for **v2**.
 
