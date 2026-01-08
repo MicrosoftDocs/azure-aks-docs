@@ -594,7 +594,7 @@ spec:
 You can view the status using the `kubectl describe` command:
 
 ```bash
-kubectl describe clusterresourceplacementstatus crp-with-status-reporting -n my-app
+kubectl describe clusterresourceplacementstatuses.v1beta1.placement.kubernetes-fleet.io crp-with-status-reporting -n my-app
 ```
 
 The output contains the same status information as the `ClusterResourcePlacement` but is accessible to users with only namespace-level permissions.
