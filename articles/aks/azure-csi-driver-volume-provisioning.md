@@ -442,31 +442,31 @@ The following YAML creates a pod that uses the PVC **azure-blob-storage** to mou
 
 1. Create a file named `blob-nfs-pv`, and copy the following YAML. Make sure that the **claimName** matches the PVC created in the previous step.
 
-    ```yml
-    kind: Pod
-    apiVersion: v1
-    metadata:
-      name: mypod
-    spec:
-      containers:
-      - name: mypod
-        image: mcr.microsoft.com/oss/nginx/nginx:1.17.3-alpine
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 250m
-            memory: 256Mi
-        volumeMounts:
-        - mountPath: "/mnt/blob"
-          name: volume
-          readOnly: false
-      volumes:
-        - name: volume
-          persistentVolumeClaim:
-            claimName: azure-blob-storage
-    ```
+   ```yml
+   kind: Pod
+   apiVersion: v1
+   metadata:
+     name: mypod
+   spec:
+     containers:
+     - name: mypod
+       image: mcr.microsoft.com/oss/nginx/nginx:1.17.3-alpine
+       resources:
+         requests:
+           cpu: 100m
+           memory: 128Mi
+         limits:
+           cpu: 250m
+           memory: 256Mi
+       volumeMounts:
+       - mountPath: "/mnt/blob"
+         name: volume
+         readOnly: false
+     volumes:
+       - name: volume
+         persistentVolumeClaim:
+           claimName: azure-blob-storage
+   ```
 
 1. Create the pod with the [kubectl apply][kubectl-apply] command:
 
@@ -476,21 +476,21 @@ The following YAML creates a pod that uses the PVC **azure-blob-storage** to mou
 
 1. After the pod is in the running state, run the following command to create a new file called `test.txt`.
 
-    ```bash
-    kubectl exec mypod -- touch /mnt/blob/test.txt
-    ```
+   ```bash
+   kubectl exec mypod -- touch /mnt/blob/test.txt
+   ```
 
 1. To validate the disk is correctly mounted, run the following command, and verify you see the `test.txt` file in the output:
 
-    ```bash
-    kubectl exec mypod -- ls /mnt/blob
-    ```
+   ```bash
+   kubectl exec mypod -- ls /mnt/blob
+   ```
 
-    The output of the command resembles the following example:
+   The output of the command resembles the following example:
 
-    ```output
-    test.txt
-    ```
+   ```output
+   test.txt
+   ```
 
 # [Static volume](#tab/static-volume-blob)
 
@@ -608,7 +608,7 @@ container. Use it to update the *skuName* parameter.
 
 In this section, you mount the PV using the NFS protocol or BlobFuse.
 
-# [NFS](#tab/nfs)
+# [NFS](#tab/nfs2)
 
 Mounting Blob storage using the NFS v3 protocol doesn't authenticate using an account key. Your AKS
 cluster needs to reside in the same or peered virtual network as the agent node. The only way to
@@ -622,8 +622,8 @@ using the NFS protocol.
 1. Create a file named `pv-blob-nfs.yaml` and copy in the following YAML. Under `storageClass`,
    update `resourceGroup`, `storageAccount`, and `containerName`.
 
-   > [!NOTE] The `volumeHandle` value within your YAML should be a unique volumeID for every
-   > identical storage blob container in the cluster.
+   > [!NOTE]
+   > The `volumeHandle` value within your YAML should be a unique volumeID for every identical storage blob container in the cluster.
    >
    > The characters `#` and `/` are reserved for internal use and can't be used.
 
@@ -687,7 +687,7 @@ using the NFS protocol.
    kubectl create -f pvc-blob-nfs.yaml
    ```
 
-# [BlobFuse](#tab/blobfuse)
+# [BlobFuse](#tab/blobfuse2)
 
 Kubernetes needs credentials to access the Blob storage container created earlier, which is either
 an Azure access key or SAS tokens. These credentials are stored in a Kubernetes secret, which is
@@ -967,7 +967,7 @@ The following table includes parameters you can use to define a custom storage c
 
 <sup>1</sup> If the storage account is created by the driver, then you only need to specify `networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the private endpoint and private DNS zone (named `privatelink.blob.core.windows.net`) together with the account. If you bring your own storage account, then you need to [create the private endpoint][storage-account-private-endpoint] for the storage account. If you're using Azure Blob storage in a network isolated cluster, you must create a custom storage class with `networkEndpointType: privateEndpoint`.
 
-# [BlobFuse](#tab/blobfuse)
+# [BlobFuse](#tab/blobfuse3)
 
 |Name | Description | Example | Mandatory | Default value|
 |--- | --- | --- | --- | --- |
@@ -977,7 +977,7 @@ The following table includes parameters you can use to define a custom storage c
 |secretNamespace | Specify the namespace of secret to store account key. | `default`,`kube-system`, etc. | No | PVC namespace |
 |isHnsEnabled | Enable `Hierarchical namespace` for Azure Data Lake storage account. | `true`,`false` | No | `false`|
 
-# [NFS](#tab/nfs)
+# [NFS](#tab/nfs3)
 
 |Name | Description | Example | Mandatory | Default value|
 |--- | --- | --- | --- | --- |
@@ -999,7 +999,7 @@ The following table includes parameters you can use to define your static PV.
 |volumeAttributes.containerName | Specify existing container name. | container | Yes ||
 |volumeAttributes.protocol | Specify BlobFuse mount or NFS v3 mount. | `fuse`, `nfs` | No | `fuse`|
 
-# [BlobFuse](#tab/blobfuse2)
+# [BlobFuse](#tab/blobfuse4)
 
 |Name | Description | Example | Mandatory | Default value|
 |--- | --- | --- | --- | ---|
@@ -1035,7 +1035,7 @@ directly from Azure Key Vault.
 |volumeAttributes.keyVaultSecretName | Specify Azure Key Vault secret name. | Existing Azure Key Vault secret name. | No ||
 |volumeAttributes.keyVaultSecretVersion | Azure Key Vault secret version. | Existing version | No |If empty, driver uses current version.|
 
-# [NFS](#tab/nfs2)
+# [NFS](#tab/nfs4)
 
 |Name | Description | Example | Mandatory | Default value|
 |--- | --- | --- | --- | ---|
