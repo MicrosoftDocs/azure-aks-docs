@@ -15,7 +15,7 @@ The Federal Information Processing Standard (FIPS) 140-2 is a US government stan
 
 > [!CAUTION]
 > In this article, there are references to a feature that may be using Ubuntu OS versions that are being deprecated for AKS.
->- Starting on 17 March 2027, AKS will no longer support Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. [Upgrade your node pools](./upgrade-aks-cluster.md) to kubernetes version 1.34+ to migrate to a supported Ubuntu version.
+>- Starting on March 17, 2027, AKS will no longer support Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. [Upgrade your node pools](./upgrade-aks-cluster.md) to kubernetes version 1.35+ to migrate to a supported Ubuntu version.
 >For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues)
 
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
