@@ -113,7 +113,7 @@ In addition to in-tree driver features, Azure Disk CSI driver supports the follo
 
 * [Volume snapshot](#understand-volume-snapshots)
 * [Volume clone](#clone-volumes)
-* [Resize disk PV without downtime](#resize-an-azure-disk-pv-without-downtime)
+* [Resize disk persistent volume without downtime](#resize-an-azure-disk-pv-without-downtime)
 
 > [!NOTE]
 > Depending on the VM SKU that's being used, the Azure Disk CSI driver might have a per-node volume limit. For some powerful VMs (for example, 16 cores), the limit is 64 volumes per node. To identify the limit per VM SKU, review the **Max data disks** column for each VM SKU offered. For a list of VM SKUs offered and their corresponding detailed capacity limits, see [General purpose virtual machine sizes][general-purpose-machine-sizes].
@@ -398,10 +398,7 @@ of the built-in storage classes or a custom storage class. This PVC creates an A
 container with your specified SKU, size, and protocol. When you create a pod definition, the PVC is
 specified to request the desired storage.
 
-A PVC uses the storage class object to dynamically provision an Azure Blob storage container. The
-following YAML can be used to create a 5 GB PVC with *ReadWriteMany* access, using the built-in
-storage class. For more information on access modes, see the
-[Kubernetes persistent volume][kubernetes-volumes] documentation.
+A PVC uses the storage class object to dynamically provision an Azure Blob storage container. The following YAML can be used to create a 5 GB PVC with *ReadWriteMany* access, using the built-in storage class. For more information on access modes, see the [Kubernetes persistent volume][kubernetes-volumes] documentation.
 
 1. Create a file named `blob-nfs-pvc.yaml` and copy the following YAML:
 
@@ -497,8 +494,7 @@ The following YAML creates a pod that uses the PVC **azure-blob-storage** to mou
 
 # [Static volume](#tab/static-volume-blob)
 
-This section provides guidance for cluster administrators who want to create one or more persistent
-volumes that include details of Blob storage for use by a workload.
+This section provides guidance for cluster administrators who want to create one or more PVs that include details of Blob storage for use by a workload.
 
 ## Create a Blob storage container
 
@@ -526,32 +522,295 @@ Next, create a container for storing blobs following the steps in the
 
 ---
 
+## Create an Azure Blob custom storage class
+
+The default storage classes suit the most common scenarios, but not all. In some cases, you might
+want to have your own storage class customized with your own parameters. In this section, we provide
+two examples with the first one using the NFS protocol, and the second one using BlobFuse.
+
+# [NFS](#tab/nfs)
+
+In this example, the following manifest configures mounting a Blob storage container using the NFS
+protocol. Use it to add the `tags` parameter.
+
+1. Create a file named `blob-nfs-sc.yaml`, and paste the following example manifest:
+
+    ```yml
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: azureblob-nfs-premium
+    provisioner: blob.csi.azure.com
+    parameters:
+      protocol: nfs
+      tags: environment=Development
+    volumeBindingMode: Immediate
+    allowVolumeExpansion: true
+    mountOptions:
+      - nconnect=4
+    ```
+
+1. Create the storage class with the [kubectl apply][kubectl-apply] command:
+
+    ```bash
+    kubectl apply -f blob-nfs-sc.yaml
+    ```
+
+    The output of the command resembles the following example:
+
+    ```output
+    storageclass.storage.k8s.io/blob-nfs-premium created
+    ```
+
+# [BlobFuse](#tab/blobfuse)
+
+In this example, the following manifest configures using BlobFuse and mounts a Blob storage
+container. Use it to update the *skuName* parameter.
+
+1. Create a file named `blobfuse-sc.yaml` and paste the following example manifest:
+
+   ```yml
+   apiVersion: storage.k8s.io/v1
+   kind: StorageClass
+   metadata:
+     name: azureblob-fuse-premium
+   provisioner: blob.csi.azure.com
+   parameters:
+     skuName: Standard_GRS  # available values: Standard_LRS, Premium_LRS, Standard_GRS, Standard_RAGRS
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    allowVolumeExpansion: true
+    mountOptions:
+     - -o allow_other
+     - --file-cache-timeout-in-seconds=120
+     - --use-attr-cache=true
+     - --cancel-list-on-mount-seconds=10  # prevent billing charges on mounting
+     - -o attr_timeout=120
+     - -o entry_timeout=120
+     - -o negative_timeout=120
+     - --log-level=LOG_WARNING  # LOG_WARNING, LOG_INFO, LOG_DEBUG
+     - --cache-size-mb=1000  # Default will be 80% of available memory, eviction will happen beyond that.
+   ```
+
+1. Create the storage class with the [kubectl apply][kubectl-apply] command:
+
+   ```bash
+   kubectl apply -f blobfuse-sc.yaml
+   ```
+
+   The output of the command resembles the following example:
+
+   ```output
+   storageclass.storage.k8s.io/blob-fuse-premium created
+   ```
+
+## Mount an NFS or BlobFuse PV
+
+In this section, you mount the PV using the NFS protocol or BlobFuse.
+
+# [NFS](#tab/nfs)
+
+Mounting Blob storage using the NFS v3 protocol doesn't authenticate using an account key. Your AKS
+cluster needs to reside in the same or peered virtual network as the agent node. The only way to
+secure the data in your storage account is by using a virtual network and other network security
+settings. For more information on how to set up NFS access to your storage account, see
+[Mount Blob Storage by using the Network File System (NFS) 3.0 protocol](/azure/storage/blobs/network-file-system-protocol-support-how-to).
+
+The following example demonstrates how to mount a Blob storage container as a persistent volume
+using the NFS protocol.
+
+1. Create a file named `pv-blob-nfs.yaml` and copy in the following YAML. Under `storageClass`,
+   update `resourceGroup`, `storageAccount`, and `containerName`.
+
+   > [!NOTE] The `volumeHandle` value within your YAML should be a unique volumeID for every
+   > identical storage blob container in the cluster.
+   >
+   > The characters `#` and `/` are reserved for internal use and can't be used.
+
+   ```yml
+   apiVersion: v1
+   kind: PersistentVolume
+   metadata:
+     annotations:
+       pv.kubernetes.io/provisioned-by: blob.csi.azure.com
+     name: pv-blob
+   spec:
+     capacity:
+       storage: 1Pi
+     accessModes:
+       - ReadWriteMany
+     persistentVolumeReclaimPolicy: Retain  # If set as "Delete" container would be removed after pvc deletion
+     storageClassName: azureblob-nfs-premium
+     mountOptions:
+       - nconnect=4
+     csi:
+       driver: blob.csi.azure.com
+       # make sure volumeid is unique for every identical storage blob container in the cluster
+       # character `#` and `/` are reserved for internal use and cannot be used in volumehandle
+       volumeHandle: account-name_container-name
+       volumeAttributes:
+         resourceGroup: resourceGroupName
+         storageAccount: storageAccountName
+         containerName: containerName
+         protocol: nfs
+   ```
+
+   > [!NOTE]
+   > While the [Kubernetes API](https://github.com/kubernetes/kubernetes/blob/release-1.26/pkg/apis/core/types.go#L303-L306) **capacity** attribute is mandatory, this value isn't used by the Azure Blob storage CSI driver because you can flexibly write data until you reach your storage account's capacity limit. The value of the `capacity` attribute is used only for size matching between *PVs* and *PVCs*. We recommend using a fictitious high value. The pod sees a mounted volume with a fictitious size of 5 Petabytes.
+
+1. Run the following command to create the persistent volume using the [kubectl create][kubectl-create] command referencing the YAML file created earlier:
+
+   ```bash
+   kubectl create -f pv-blob-nfs.yaml
+   ```
+
+1. Create a `pvc-blob-nfs.yaml` file with a *PersistentVolumeClaim*. For example:
+
+   ```yml
+   kind: PersistentVolumeClaim
+   apiVersion: v1
+   metadata:
+     name: pvc-blob
+   spec:
+     accessModes:
+       - ReadWriteMany
+     resources:
+       requests:
+         storage: 10Gi
+     volumeName: pv-blob
+     storageClassName: azureblob-nfs-premium
+   ```
+
+1. Run the following command to create the persistent volume claim using the [kubectl create][kubectl-create] command referencing the YAML file created earlier:
+
+   ```bash
+   kubectl create -f pvc-blob-nfs.yaml
+   ```
+
+# [BlobFuse](#tab/blobfuse)
+
+Kubernetes needs credentials to access the Blob storage container created earlier, which is either
+an Azure access key or SAS tokens. These credentials are stored in a Kubernetes secret, which is
+referenced when you create a Kubernetes pod.
+
+1. Use the `kubectl create secret command` to create the secret. You can authenticate using a
+   [Kubernetes secret][kubernetes-secret] or [shared access signature][sas-tokens] (SAS) tokens. You
+   must also provide the account name and key from an existing Azure storage account.
+
+   # [Kubernetes secret](#tab/kubernetes-secret)
+
+   The following example creates a [Secret object][kubernetes-secret] named `azure-secret` and
+   populates the **azurestorageaccountname** and **azurestorageaccountkey** parameters.
+
+   ```bash
+   kubectl create secret generic azure-secret --from-literal azurestorageaccountname=NAME --from-literal azurestorageaccountkey="KEY" --type=Opaque
+   ```
+
+   # [SAS tokens](#tab/sas-tokens)
+
+   The following example creates a [Secret object][kubernets-secret] named *azure-sas-token* and
+   populates the *azurestorageaccountname* and *azurestorageaccountsastoken* parameters.
+
+   ```bash
+   kubectl create secret generic azure-sas-token --from-literal azurestorageaccountname=NAME --from-literal azurestorageaccountsastoken
+   ="sastoken" --type=Opaque
+   ```
+
+1. Create a `pv-blobfuse.yaml` file. Under `volumeAttributes`, update `containerName`. Under
+   `nodeStateSecretRef`, update `name` with the name of the Secret object created earlier. For
+   example:
+
+   > [!NOTE]
+   > The `volumeHandle` value within your YAML should be a unique volumeID for every identical storage blob container in the cluster.
+   >
+   > The characters `#` and `/` are reserved for internal use and can't be used.
+
+   ```yml
+   apiVersion: v1
+   kind: PersistentVolume
+   metadata:
+     annotations:
+       pv.kubernetes.io/provisioned-by: blob.csi.azure.com
+     name: pv-blob
+   spec:
+     capacity:
+       storage: 10Gi
+     accessModes:
+       - ReadWriteMany
+     persistentVolumeReclaimPolicy: Retain  # If set as "Delete" container would be removed after pvc deletion
+     storageClassName: azureblob-fuse-premium
+     mountOptions:
+       - -o allow_other
+       - --file-cache-timeout-in-seconds=120
+     csi:
+       driver: blob.csi.azure.com
+       # volumeid has to be unique for every identical storage blob container in the cluster
+       # character `#`and `/` are reserved for internal use and cannot be used in volumehandle
+       volumeHandle: account-name_container-name
+       volumeAttributes:
+         containerName: containerName
+       nodeStageSecretRef:
+         name: azure-secret
+         namespace: default
+   ```
+
+1. Run the following command to create the PV using the [kubectl create][kubectl-create] command
+   referencing the YAML file created earlier:
+
+   ```bash
+   kubectl create -f pv-blobfuse.yaml
+   ```
+
+1. Create a `pvc-blobfuse.yaml` file with a PV. For example:
+
+   ```yml
+   apiVersion: v1
+   kind: PersistentVolumeClaim
+   metadata:
+     name: pvc-blob
+   spec:
+     accessModes:
+       - ReadWriteMany
+     resources:
+       requests:
+         storage: 10Gi
+     volumeName: pv-blob
+     storageClassName: azureblob-fuse-premium
+   ```
+
+1. Run the following command to create the PVC using the [kubectl create][kubectl-create] command
+   referencing the YAML file created earlier:
+
+   ```bash
+   kubectl create -f pvc-blobfuse.yaml
+   ```
+
 ## Create a pod
 
 The following YAML creates a pod that uses the PV or PVC named **pvc-blob** created earlier, to mount the Azure Blob storage at the `/mnt/blob` path.
 
 1. Create a file named `nginx-pod-blob.yaml`, and copy in the following YAML. Make sure that the **claimName** matches the PVC created in the previous step when creating a PV for NFS or BlobFuse.
 
-    ```yml
-    kind: Pod
-    apiVersion: v1
-    metadata:
-      name: nginx-blob
-    spec:
-      nodeSelector:
-        "kubernetes.io/os": linux
-      containers:
-        - image: mcr.microsoft.com/oss/nginx/nginx:1.17.3-alpine
-          name: nginx-blob
-          volumeMounts:
-            - name: blob01
-              mountPath: "/mnt/blob"
-              readOnly: false
-      volumes:
-        - name: blob01
-          persistentVolumeClaim:
-            claimName: pvc-blob
-    ```
+   ```yml
+   kind: Pod
+   apiVersion: v1
+   metadata:
+     name: nginx-blob
+   spec:
+     nodeSelector:
+       "kubernetes.io/os": linux
+     containers:
+       - image: mcr.microsoft.com/oss/nginx/nginx:1.17.3-alpine
+         name: nginx-blob
+         volumeMounts:
+           - name: blob01
+             mountPath: "/mnt/blob"
+             readOnly: false
+     volumes:
+       - name: blob01
+         persistentVolumeClaim:
+           claimName: pvc-blob
+   ```
 
 1. Run the following command to create the pod and mount the PVC using the [kubectl create][kubectl-create] command:
 
@@ -559,7 +818,7 @@ The following YAML creates a pod that uses the PV or PVC named **pvc-blob** crea
    kubectl create -f nginx-pod-blob.yaml
    ```
 
-1. Run the following command to create an interactive shell session with the pod to verify the Blob storage mounted:
+1. Run the following command to create an interactive shell session with the pod to verify if the Blob storage is mounted:
 
    ```bash
    kubectl exec -it nginx-blob -- df -h
@@ -789,261 +1048,6 @@ directly from Azure Key Vault.
 |vnetResourceGroup | Specify VNet resource group hosting virtual network. | myResourceGroup | No | If empty, driver uses the `vnetResourceGroup` value specified in the Azure cloud config file.|
 |vnetName | Specify the virtual network name. | aksVNet | No | If empty, driver uses the `vnetName` value specified in the Azure cloud config file.|
 |subnetName | Specify the existing subnet name of the agent node. | aksSubnet | No | If empty, the driver updates all the subnets under the cluster virtual network. |
-
----
-
-## Create an Azure Blob custom storage class
-
-The default storage classes suit the most common scenarios, but not all. In some cases, you might
-want to have your own storage class customized with your own parameters. In this section, we provide
-two examples with the first one using the NFS protocol, and the second one using BlobFuse.
-
-# [NFS](#tab/nfs3)
-
-In this example, the following manifest configures mounting a Blob storage container using the NFS
-protocol. Use it to add the `tags` parameter.
-
-1. Create a file named `blob-nfs-sc.yaml`, and paste the following example manifest:
-
-    ```yml apiVersion: storage.k8s.io/v1 kind: StorageClass metadata: name: azureblob-nfs-premium
-    provisioner: blob.csi.azure.com parameters: protocol: nfs tags: environment=Development
-    volumeBindingMode: Immediate allowVolumeExpansion: true mountOptions:
-      - nconnect=4 ```
-
-1. Create the storage class with the [kubectl apply][kubectl-apply] command:
-
-    ```bash kubectl apply -f blob-nfs-sc.yaml ```
-
-    The output of the command resembles the following example:
-
-    ```output storageclass.storage.k8s.io/blob-nfs-premium created ```
-
-# [BlobFuse](#tab/blobfuse3)
-
-In this example, the following manifest configures using BlobFuse and mounts a Blob storage
-container. Use it to update the *skuName* parameter.
-
-1. Create a file named `blobfuse-sc.yaml` and paste the following example manifest:
-
-   ```yml
-   apiVersion: storage.k8s.io/v1
-   kind: StorageClass
-   metadata:
-     name: azureblob-fuse-premium
-   provisioner: blob.csi.azure.com
-   parameters:
-     skuName: Standard_GRS  # available values: Standard_LRS, Premium_LRS, Standard_GRS, Standard_RAGRS
-    reclaimPolicy: Delete
-    volumeBindingMode: Immediate
-    allowVolumeExpansion: true
-    mountOptions:
-     - -o allow_other
-     - --file-cache-timeout-in-seconds=120
-     - --use-attr-cache=true
-     - --cancel-list-on-mount-seconds=10  # prevent billing charges on mounting
-     - -o attr_timeout=120
-     - -o entry_timeout=120
-     - -o negative_timeout=120
-     - --log-level=LOG_WARNING  # LOG_WARNING, LOG_INFO, LOG_DEBUG
-     - --cache-size-mb=1000  # Default will be 80% of available memory, eviction will happen beyond that.
-   ```
-
-1. Create the storage class with the [kubectl apply][kubectl-apply] command:
-
-   ```bash
-   kubectl apply -f blobfuse-sc.yaml
-   ```
-
-   The output of the command resembles the following example:
-
-   ```output
-   storageclass.storage.k8s.io/blob-fuse-premium created
-   ```
-
-## Mount an NFS or BlobFuse PV
-
-In this section, you mount the PV using the NFS protocol or BlobFuse.
-
-# [NFS](#tab/nfs4)
-
-Mounting Blob storage using the NFS v3 protocol doesn't authenticate using an account key. Your AKS
-cluster needs to reside in the same or peered virtual network as the agent node. The only way to
-secure the data in your storage account is by using a virtual network and other network security
-settings. For more information on how to set up NFS access to your storage account, see
-[Mount Blob Storage by using the Network File System (NFS) 3.0 protocol](/azure/storage/blobs/network-file-system-protocol-support-how-to).
-
-The following example demonstrates how to mount a Blob storage container as a persistent volume
-using the NFS protocol.
-
-1. Create a file named `pv-blob-nfs.yaml` and copy in the following YAML. Under `storageClass`,
-   update `resourceGroup`, `storageAccount`, and `containerName`.
-
-   > [!NOTE]
-   > The `volumeHandle` value within your YAML should be a unique volumeID for every
-   > identical storage blob container in the cluster.
-   >
-   > The characters `#` and `/` are reserved for internal use and can't be used.
-
-   ```yml
-   apiVersion: v1
-   kind: PersistentVolume
-   metadata:
-     annotations:
-       pv.kubernetes.io/provisioned-by: blob.csi.azure.com
-     name: pv-blob
-   spec:
-     capacity:
-       storage: 1Pi
-     accessModes:
-       - ReadWriteMany
-     persistentVolumeReclaimPolicy: Retain  # If set as "Delete" container would be removed after pvc deletion
-     storageClassName: azureblob-nfs-premium
-     mountOptions:
-       - nconnect=4
-     csi:
-       driver: blob.csi.azure.com
-       # make sure volumeid is unique for every identical storage blob container in the cluster
-       # character `#` and `/` are reserved for internal use and cannot be used in volumehandle
-       volumeHandle: account-name_container-name
-       volumeAttributes:
-         resourceGroup: resourceGroupName
-         storageAccount: storageAccountName
-         containerName: containerName
-         protocol: nfs
-   ```
-
-   > [!NOTE]
-   > While the [Kubernetes API](https://github.com/kubernetes/kubernetes/blob/release-1.26/pkg/apis/core/types.go#L303-L306) **capacity** attribute is mandatory, this value isn't used by the Azure Blob storage CSI driver because you can flexibly write data until you reach your storage account's capacity limit. The value of the `capacity` attribute is used only for size matching between *PVs* and *PVCs*. We recommend using a fictitious high value. The pod sees a mounted volume with a fictitious size of 5 Petabytes.
-
-1. Run the following command to create the persistent volume using the
-   [kubectl create][kubectl-create] command referencing the YAML file created earlier:
-
-   ```bash
-   kubectl create -f pv-blob-nfs.yaml
-   ```
-
-1. Create a `pvc-blob-nfs.yaml` file with a *PersistentVolumeClaim*. For example:
-
-   ```yml
-   kind: PersistentVolumeClaim
-   apiVersion: v1
-   metadata:
-     name: pvc-blob
-   spec:
-     accessModes:
-       - ReadWriteMany
-     resources:
-       requests:
-         storage: 10Gi
-     volumeName: pv-blob
-     storageClassName: azureblob-nfs-premium
-   ```
-
-1. Run the following command to create the persistent volume claim using the
-   [kubectl create][kubectl-create] command referencing the YAML file created earlier:
-
-   ```bash
-   kubectl create -f pvc-blob-nfs.yaml
-   ```
-
-# [BlobFuse](#tab/blobfuse4)
-
-Kubernetes needs credentials to access the Blob storage container created earlier, which is either
-an Azure access key or SAS tokens. These credentials are stored in a Kubernetes secret, which is
-referenced when you create a Kubernetes pod.
-
-1. Use the `kubectl create secret command` to create the secret. You can authenticate using a
-   [Kubernetes secret][kubernetes-secret] or [shared access signature][sas-tokens] (SAS) tokens. You
-   must also provide the account name and key from an existing Azure storage account.
-
-   # [Kubernetes secret](#tab/kubernetes-secret)
-
-   The following example creates a [Secret object][kubernetes-secret] named `azure-secret` and
-   populates the **azurestorageaccountname** and **azurestorageaccountkey** parameters.
-
-   ```bash
-   kubectl create secret generic azure-secret --from-literal azurestorageaccountname=NAME --from-literal azurestorageaccountkey="KEY" --type=Opaque
-   ```
-
-   # [SAS tokens](#tab/sas-tokens)
-
-   The following example creates a [Secret object][kubernets-secret] named *azure-sas-token* and
-   populates the *azurestorageaccountname* and *azurestorageaccountsastoken* parameters.
-
-   ```bash
-   kubectl create secret generic azure-sas-token --from-literal azurestorageaccountname=NAME --from-literal azurestorageaccountsastoken
-   ="sastoken" --type=Opaque
-   ```
-
-1. Create a `pv-blobfuse.yaml` file. Under `volumeAttributes`, update `containerName`. Under
-   `nodeStateSecretRef`, update `name` with the name of the Secret object created earlier. For
-   example:
-
-   > [!NOTE]
-   > The `volumeHandle` value within your YAML should be a unique volumeID for every
-   > identical storage blob container in the cluster.
-   >
-   > The characters `#` and `/` are reserved for internal use and can't be used.
-
-   ```yml
-   apiVersion: v1
-   kind: PersistentVolume
-   metadata:
-     annotations:
-       pv.kubernetes.io/provisioned-by: blob.csi.azure.com
-     name: pv-blob
-   spec:
-     capacity:
-       storage: 10Gi
-     accessModes:
-       - ReadWriteMany
-     persistentVolumeReclaimPolicy: Retain  # If set as "Delete" container would be removed after pvc deletion
-     storageClassName: azureblob-fuse-premium
-     mountOptions:
-       - -o allow_other
-       - --file-cache-timeout-in-seconds=120
-     csi:
-       driver: blob.csi.azure.com
-       # volumeid has to be unique for every identical storage blob container in the cluster
-       # character `#`and `/` are reserved for internal use and cannot be used in volumehandle
-       volumeHandle: account-name_container-name
-       volumeAttributes:
-         containerName: containerName
-       nodeStageSecretRef:
-         name: azure-secret
-         namespace: default
-   ```
-
-1. Run the following command to create the PV using the
-   [kubectl create][kubectl-create] command referencing the YAML file created earlier:
-
-   ```bash
-   kubectl create -f pv-blobfuse.yaml
-   ```
-
-1. Create a `pvc-blobfuse.yaml` file with a PV. For example:
-
-   ```yml
-   apiVersion: v1
-   kind: PersistentVolumeClaim
-   metadata:
-     name: pvc-blob
-   spec:
-     accessModes:
-       - ReadWriteMany
-     resources:
-       requests:
-         storage: 10Gi
-     volumeName: pv-blob
-     storageClassName: azureblob-fuse-premium
-   ```
-
-1. Run the following command to create the PVC using the
-   [kubectl create][kubectl-create] command referencing the YAML file created earlier:
-
-   ```bash
-   kubectl create -f pvc-blobfuse.yaml
-   ```
 
 ---
 
@@ -1976,7 +1980,6 @@ The following table includes parameters you can use to define a custom storage c
 |storageEndpointSuffix | Specify Azure storage endpoint suffix. | `core.windows.net`, `core.chinacloudapi.cn`, etc. | No | If empty, driver uses default storage endpoint suffix according to cloud environment. For example, `core.windows.net`. |
 |tags | [Tags][tag-resources] are created in new storage account. | Tag format: 'foo=aaa,bar=bbb' | No | "" |
 
-
 The following parameters are only for the SMB protocol.
 
 |Name | Meaning | Available Value | Mandatory | Default value |
@@ -2006,7 +2009,6 @@ The following parameters are only for the VNet setting, such as NFS and private 
 <sup>1</sup> If the storage account is created by the driver, then you only need to specify `networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the private endpoint and private DNS zone (named `privatelink.file.core.windows.net`) together with the account. If you bring your own storage account, then you need to [create the private endpoint][storage-account-private-endpoint] for the storage account. If you're using Azure Files storage in a network isolated cluster, you must create a custom storage class with "networkEndpointType: privateEndpoint". You can follow this sample for reference:
 
 ```bash
----
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -2026,17 +2028,13 @@ mountOptions:
   - nosharesock  # reduce probability of reconnect race
   - actimeo=30  # reduce latency for metadata-heavy workload
   - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
-  ```
-
-### Use Azure tags
-
-For more information on using Azure tags, see [Use Azure tags in Azure Kubernetes Service (AKS)][use-tags].
+```
 
 # [Static volume](#tab/static-volume-files)
 
 This section provides guidance for cluster administrators who want to create one or more PVs that include details of an existing Azure Files share to use with a workload.
 
-### Create an Azure file share
+### Create an Azure Files share
 
 Before you can use an Azure Files file share as a Kubernetes volume, you must create an Azure Storage account and the file share.
 
@@ -2281,7 +2279,11 @@ The following parameters are only for the NFS protocol.
 
 ---
 
-### Create a PV snapshot class
+## Use Azure tags
+
+For more information on using Azure tags, see [Use Azure tags in Azure Kubernetes Service (AKS)][use-tags].
+
+## Create a PV snapshot class
 
 The Azure Files CSI driver supports creating [snapshots of persistent volumes](https://kubernetes-csi.github.io/docs/snapshot-restore-feature.html) and the underlying file shares.
 
@@ -2577,6 +2579,8 @@ To enable managed identity for statically provisioned volumes, follow these step
    ```bash
    kubectl apply -f azurefile-csi-static.yaml
    ```
+
+---
 
 ## Understand Azure Files NFS
 
@@ -2936,6 +2940,7 @@ The Azure Files CSI driver also supports Windows nodes and containers. To use Wi
 [az-snapshot-create]: /cli/azure/snapshot#az-snapshot-create
 [az-storage-account-create]: /cli/azure/storage/account#az-storage-account-create
 [az-storage-share-create]: /cli/azure/storage/share#az-storage-share-create
+[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
 [azure-disk-volume]: azure-disk-volume.md
 [azure-files-csi]: azure-files-csi.md
 [azure-files-csi-driver]: azure-files-csi.md
@@ -2953,6 +2958,7 @@ The Azure Files CSI driver also supports Windows nodes and containers. To use Wi
 [expand-an-azure-managed-disk]: ../virtual-machines/linux/expand-disks.md#expand-an-azure-managed-disk
 [general-purpose-machine-sizes]: /azure/virtual-machines/sizes-general
 [install-azure-cli]: /cli/azure/install-azure-cli
+[manage-blob-storage]: /azure/storage/blobs/blob-containers-cli
 [mount-options]: #mount-options
 [nfs-file-share-mount-options]: /azure/storage/files/storage-files-how-to-mount-nfs-shares#mount-options
 [node-resource-group]: faq.yml
