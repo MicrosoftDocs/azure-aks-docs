@@ -956,8 +956,6 @@
       items:
           - name: Azure Disks
             items:
-                - name: Provision Azure Disk storage
-                  href: azure-csi-disk-storage-provision.md
                 - name: Use Azure Premium SSD v2 disks
                   href: use-premium-v2-disks.md
                 - name: Use Azure ultra disks
@@ -982,10 +980,6 @@
                   href: /azure/storage/container-storage/use-container-storage-with-local-disk?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Shared file storage
       items:
-        - name: Azure Files storage
-          items:
-            - name: Provision Azure Files storage
-              href: azure-csi-files-storage-provision.md
         - name: Azure NetApp Files for AKS
           items:
             - name: Configure Azure NetApp Files for AKS
@@ -998,10 +992,6 @@
               href: azure-netapp-files-dual-protocol.md
             - name: Azure Files and Azure NetApp Files comparison
               href: /azure/storage/files/storage-files-netapp-comparison?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Azure Blob storage
-          items:
-            - name: Provision Azure Blob storage
-              href: azure-csi-blob-storage-provision.md
     - name: Other storage options
       items:
         - name: Azure HPC Cache

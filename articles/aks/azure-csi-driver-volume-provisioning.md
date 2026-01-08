@@ -11,7 +11,7 @@ zone_pivot_groups: azure-csi-driver
 # Customer intent: "As a Kubernetes administrator, I want to implement the Azure CSI driver in my AKS cluster so that I can efficiently manage storage provisioning and enhance performance for my containerized applications."
 ---
 
-# Using the Azure storage CSI driver
+# Azure storage CSI driver and volume provisioning
 
 ::: zone pivot="csi-blob"
 
@@ -608,7 +608,7 @@ container. Use it to update the *skuName* parameter.
 
 In this section, you mount the PV using the NFS protocol or BlobFuse.
 
-# [NFS](#tab/nfs2)
+# [NFS](#tab/nfs-2)
 
 Mounting Blob storage using the NFS v3 protocol doesn't authenticate using an account key. Your AKS
 cluster needs to reside in the same or peered virtual network as the agent node. The only way to
@@ -687,7 +687,7 @@ using the NFS protocol.
    kubectl create -f pvc-blob-nfs.yaml
    ```
 
-# [BlobFuse](#tab/blobfuse2)
+# [BlobFuse](#tab/blobfuse-2)
 
 Kubernetes needs credentials to access the Blob storage container created earlier, which is either
 an Azure access key or SAS tokens. These credentials are stored in a Kubernetes secret, which is
@@ -708,8 +708,8 @@ referenced when you create a Kubernetes pod.
 
    # [SAS tokens](#tab/sas-tokens)
 
-   The following example creates a [Secret object][kubernets-secret] named *azure-sas-token* and
-   populates the *azurestorageaccountname* and *azurestorageaccountsastoken* parameters.
+   The following example creates a [Secret object][kubernetes-secret] named `azure-sas-token` and
+   populates the **azurestorageaccountname** and **azurestorageaccountsastoken** parameters.
 
    ```bash
    kubectl create secret generic azure-sas-token --from-literal azurestorageaccountname=NAME --from-literal azurestorageaccountsastoken
@@ -785,6 +785,8 @@ referenced when you create a Kubernetes pod.
    kubectl create -f pvc-blobfuse.yaml
    ```
 
+---
+
 ## Create a pod
 
 The following YAML creates a pod that uses the PV or PVC named **pvc-blob** created earlier, to mount the Azure Blob storage at the `/mnt/blob` path.
@@ -841,7 +843,7 @@ new pods created to replace failed ones can automatically access the same storag
 following examples demonstrate how to set up a StatefulSet for Blob storage using either BlobFuse or
 the NFS protocol.
 
-# [NFS](#tab/nfs)
+# [NFS](#tab/nfs-3)
 
 1. Create a file named `azure-blob-nfs-ss.yaml` and copy in the following YAML.
 
@@ -890,7 +892,7 @@ the NFS protocol.
    kubectl create -f azure-blob-nfs-ss.yaml
    ```
 
-# [BlobFuse](#tab/blobfuse)
+# [BlobFuse](#tab/blobfuse-3)
 
 1. Create a file named `azure-blobfuse-ss.yaml` and copy in the following YAML.
 
@@ -940,7 +942,6 @@ the NFS protocol.
    ```
 
 ::: zone-end
-
 ::: zone pivot="csi-disk"
 
 ### Dynamic PVC storage class parameters
@@ -1097,7 +1098,7 @@ managed-csi         disk.csi.azure.com         1h
 
 # [Dynamic volume](#tab/dynamic-volume-disk)
 
-A PVC automatically provisions storage based on a storage class. In this case, a PVC can use one of the precreated storage classes to create a standard or premium Azure managed disk.
+A PVC automatically provisions storage based on a storage class. In this case, a PVC can use one of the pre-created storage classes to create a standard or premium Azure managed disk.
 
 1. Create a file named `azure-pvc.yaml` and copy in the following manifest. The claim requests a disk named `azure-managed-disk` that's `5 GB` in size with `ReadWriteOnce` access. The *managed-csi* storage class is specified as the storage class.
 
@@ -2582,7 +2583,7 @@ To enable managed identity for statically provisioned volumes, follow these step
 
 ---
 
-## Understand Azure Files NFS
+## Learn about Azure Files NFS
 
 Azure Files supports the
 [NFS v4.1 protocol](/azure/storage/files/storage-files-how-to-create-nfs-shares). NFS version 4.1
@@ -2942,8 +2943,6 @@ The Azure Files CSI driver also supports Windows nodes and containers. To use Wi
 [az-storage-share-create]: /cli/azure/storage/share#az-storage-share-create
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
 [azure-disk-volume]: azure-disk-volume.md
-[azure-files-csi]: azure-files-csi.md
-[azure-files-csi-driver]: azure-files-csi.md
 [azure-files-pvc]: azure-files-dynamic-pv.md
 [azure-files-usage]: /azure/storage/files/understand-performance#choosing-a-performance-tier-based-on-usage-patterns
 [azure-netapp-files-mount-options-best-practices]: /azure/azure-netapp-files/performance-linux-mount-options#rsize-and-wsize
