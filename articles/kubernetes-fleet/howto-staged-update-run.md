@@ -18,13 +18,15 @@ Azure Kubernetes Fleet Manager placement staged update runs provide a controlled
 
 This article shows you how to create and execute staged update runs to deploy workloads progressively and roll back to previous versions when needed.
 
-> [!NOTE]
-> Azure Kubernetes Fleet Manager provides two approaches for staged updates:
->
-> - **Cluster-scoped**: Use `ClusterStagedUpdateRun` with `ClusterResourcePlacement` for fleet administrators managing infrastructure-level changes
-> - **Namespace-scoped (preview)**: Use `StagedUpdateRun` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces
->
-> The examples in this article demonstrate both approaches using tabs. Choose the tab that matches your deployment scope.
+Azure Kubernetes Fleet Manager supports two scopes for staged updates:
+
+- **Cluster-scoped**: Use `ClusterStagedUpdateRun` with `ClusterResourcePlacement` for fleet administrators managing infrastructure-level changes.
+- **Namespace-scoped (preview)**: Use `StagedUpdateRun` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
+
+The examples in this article demonstrate both approaches using tabs. Choose the tab that matches your deployment scope.
+
+> [!IMPORTANT]
+> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview. Some features demonstrated in this article, such as `selectionScope` in `ClusterResourcePlacement`, are also part of the v1beta1 API and isn't available in the v1 API.
 
 ## Before you begin
 
