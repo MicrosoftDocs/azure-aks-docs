@@ -23,7 +23,7 @@ Fleet Manager is a regional resource. Support for region failover for disaster r
 
 ### How many clusters can I join to Fleet Manager?
 
-Fleet Manager (with or without a hub cluster) supports joining up to 200 Kubernetes clusters (AKS or Arc-enabled Kubernetes).
+Fleet Manager (with or without a hub cluster) supports joining up to 200 Kubernetes clusters. Member clusters can be a mix of AKS and Arc-enabled Kubernetes.
 
 If you would like Fleet Manager to support more than 200 clusters, [add feedback](https://github.com/Azure/AKS/issues/5066).
 
