@@ -770,6 +770,8 @@
               href: use-kms-v2.md
             - name: Observability for KMS etcd encryption
               href: kms-observability.md
+            - name: Use KMS platform-managed keys or customer-managed keys
+              href: kms-data-encryption.md
         - name: Secure container access to resources
           href: secure-container-access.md
     - name: Node security
