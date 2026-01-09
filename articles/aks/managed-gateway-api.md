@@ -126,6 +126,8 @@ To uninstall the Managed Gateway API CRDs, you can run the following command:
 [istio-about]: ./istio-about.md
 [istio-deploy]: ./istio-deploy-addon.md
 [istio-gateway-api]: ./istio-gateway-api.md
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
 
 [kubernetes-gateway-api]: https://gateway-api.sigs.k8s.io/
 [kubernetes-ingress-api]: https://kubernetes.io/docs/concepts/services-networking/ingress/
