@@ -74,7 +74,7 @@ This migration path allows you to continue using your existing Key Vault while g
     az aks update \
         --name $CLUSTER_NAME \
         --resource-group $RESOURCE_GROUP \
-        --kms-infrastructure-encryption "Enabled" \
+        --kms-infrastructure-encryption "Enabled"
     ```
 
 ## Migrate from KMS v2 with private Key Vault to CMK
@@ -90,8 +90,7 @@ This migration path allows you to continue using your existing Key Vault while g
     az aks update \
         --name $CLUSTER_NAME \
         --resource-group $RESOURCE_GROUP \
-        --kms-infrastructure-encryption "Enabled" \
-        --enable-azure-keyvault-kms \
+        --kms-infrastructure-encryption "Enabled"
     ```
 
 ## Important considerations
