@@ -42,7 +42,7 @@ The new KMS experience supports two key management options:
 
 This migration path is ideal if you want to simplify your encryption setup by letting AKS manage the encryption keys. After migration, customer managed key vault and key are not used by KMS.
 
-1. Enable PMK on your existing KMS v2 cluster using the `az aks update` command.
+Enable PMK on your existing KMS v2 cluster using the `az aks update` command.
 
     ```azurecli-interactive
     az aks update \
@@ -54,7 +54,7 @@ This migration path is ideal if you want to simplify your encryption setup by le
 
 ## Migrate from KMS v2 with private Key Vault to PMK
 
-1. Enable PMK on your existing KMS v2 cluster using the `az aks update` command.
+Enable PMK on your existing KMS v2 cluster using the `az aks update` command.
 
     ```azurecli-interactive
     az aks update \
@@ -68,7 +68,11 @@ This migration path is ideal if you want to simplify your encryption setup by le
 
 This migration path allows you to continue using your existing Key Vault while gaining the benefits of the new KMS experience, including automatic key rotation support.
 
-1. Enable CMK on your existing KMS v2 cluster using the `az aks update` command.
+1. Ensure your Key Vault has the following configuration:
+   - Private network access enabled
+   - User-assigned managed identity has "Key Vault Crypto User" and "Key Vault Reader" roles
+
+3. Enable CMK on your existing KMS v2 cluster using the `az aks update` command.
 
     ```azurecli-interactive
     az aks update \
