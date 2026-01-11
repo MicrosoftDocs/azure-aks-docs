@@ -10,7 +10,7 @@ ms.author: zhechengli
 # Customer intent: As a Kubernetes administrator, I want to migrate from KMS v2 to KMS with platform-managed keys to leverage improved encryption capabilities.
 ---
 
-# Migrate to Key Management Service (KMS) with platform-managed or customer-managed keys in Azure Kubernetes Service (AKS)
+# Migrate to Key Management Service (KMS) with platform-managed or customer-managed keys in Azure Kubernetes Service (AKS) (Preview)
 
 > [!IMPORTANT]
 > This article applies to clusters running Kubernetes version 1.33 or later that need to migrate from KMS v2 to the new KMS encryption experience. This experience offers platform-managed keys (PMK), customer-managed keys (CMK) with automatic key rotation, and a simplified configuration experience.
