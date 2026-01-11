@@ -1,6 +1,6 @@
 ---
-title: Migrate to Key Management Service (KMS) with platform-managed or customer-managed keys in Azure Kubernetes Service (AKS)
-description: Learn how to migrate from KMS v2 to KMS with platform-managed keys (PMK) or customer-managed keys (CMK) for enhanced performance and security.
+title: Migrate to Key Management Service (KMS) infrastructure encryption with platform-managed or customer-managed keys in Azure Kubernetes Service (AKS)
+description: Learn how to migrate from KMS v2 to KMS with infrastructure encryption platform-managed keys (PMK) or customer-managed keys (CMK) for enhanced performance and security.
 ms.date: 01/12/2026
 ms.subservice: aks-security
 ms.topic: how-to
@@ -10,7 +10,7 @@ ms.author: zhechengli
 # Customer intent: As a Kubernetes administrator, I want to migrate from KMS v2 to KMS with platform-managed keys to leverage improved encryption capabilities.
 ---
 
-# Migrate to Key Management Service (KMS) with platform-managed or customer-managed keys in Azure Kubernetes Service (AKS) (Preview)
+# Migrate to Key Management Service (KMS) with infrastructure encryption platform-managed or customer-managed keys in Azure Kubernetes Service (AKS) (Preview)
 
 > [!IMPORTANT]
 > This article applies to clusters running Kubernetes version 1.33 or later that need to migrate from KMS v2 to the new KMS encryption experience. This experience offers platform-managed keys (PMK), customer-managed keys (CMK) with automatic key rotation, and a simplified configuration experience.
@@ -38,21 +38,9 @@ The new KMS experience supports two key management options:
 - **Platform-managed key (PMK)**: Azure manages the encryption key automatically. No Key Vault configuration required.
 - **Customer-managed key (CMK)**: You provide your own Key Vault with either public or private network access.
 
-## Migrate from KMS v2 with public Key Vault to PMK
+## Migrate from KMS v2 with public or private Key Vault to PMK
 
 This migration path is ideal if you want to simplify your encryption setup by letting AKS manage the encryption keys. After migration, customer managed key vault and key are not used by KMS.
-
-Enable PMK on your existing KMS v2 cluster using the `az aks update` command.
-
-```azurecli-interactive
-az aks update \
-    --name $CLUSTER_NAME \
-    --resource-group $RESOURCE_GROUP \
-    --kms-infrastructure-encryption "Enabled" \
-    --disable-azure-keyvault-kms
-```
-
-## Migrate from KMS v2 with private Key Vault to PMK
 
 Enable PMK on your existing KMS v2 cluster using the `az aks update` command.
 
