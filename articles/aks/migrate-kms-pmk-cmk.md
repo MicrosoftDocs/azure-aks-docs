@@ -69,7 +69,7 @@ az aks update \
 This migration path allows you to continue using your existing Key Vault while gaining the benefits of the new KMS experience, including automatic key rotation support.
 
 1. Ensure your Key Vault has the following configuration:
-   - Private network access enabled
+   - Public network access enabled
    - User-assigned managed identity has "Key Vault Crypto User" and "Key Vault Reader" roles
 
 3. Enable CMK on your existing KMS v2 cluster using the `az aks update` command.
