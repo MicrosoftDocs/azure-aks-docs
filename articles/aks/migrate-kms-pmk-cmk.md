@@ -44,25 +44,25 @@ This migration path is ideal if you want to simplify your encryption setup by le
 
 Enable PMK on your existing KMS v2 cluster using the `az aks update` command.
 
-    ```azurecli-interactive
-    az aks update \
-        --name $CLUSTER_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --kms-infrastructure-encryption "Enabled" \
-        --disable-azure-keyvault-kms
-    ```
+```azurecli-interactive
+az aks update \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --kms-infrastructure-encryption "Enabled" \
+    --disable-azure-keyvault-kms
+```
 
 ## Migrate from KMS v2 with private Key Vault to PMK
 
 Enable PMK on your existing KMS v2 cluster using the `az aks update` command.
 
-    ```azurecli-interactive
-    az aks update \
-        --name $CLUSTER_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --kms-infrastructure-encryption "Enabled" \
-        --disable-azure-keyvault-kms
-    ```
+```azurecli-interactive
+az aks update \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --kms-infrastructure-encryption "Enabled" \
+    --disable-azure-keyvault-kms
+```
 
 ## Migrate from KMS v2 with public Key Vault to CMK
 
