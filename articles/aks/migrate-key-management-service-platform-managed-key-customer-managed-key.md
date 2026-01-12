@@ -17,7 +17,7 @@ ms.author: zhechengli
 >
 > Migration from KMS v1 to platform-managed or customer-managed keys isn't supported. Upgrade to KMS v2 first.
 >
-> [AKS apiserver virtual network integration][api-server-vnet-integration] is required for KMS v2 with private key vault, while it isn't required in CMK.
+> [AKS apiserver virtual network integration](api-server-vnet-integration.md) is required for KMS v2 with private key vault, while it isn't required in CMK.
 
 In this article, you learn how to migrate from KMS v2 for clusters with version 1.33 or later. The new KMS experience provides enhanced performance and security features, including the option to use platform-managed keys that eliminate the need to manage your own Azure Key Vault.
 
