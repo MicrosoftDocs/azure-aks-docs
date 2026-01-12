@@ -106,7 +106,7 @@ Then you can install or uninstall the Managed Gateway API CRDs.
 
 # [Uninstall CRDs](#tab/uninstall)
 
-1. To uninstall the Managed Gateway API CRDs, run the following command:
+- To uninstall the Managed Gateway API CRDs, run the following command:
 
    ```azurecli-interactive
    az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --disable-gateway-api
