@@ -15,9 +15,9 @@ ms.author: zhechengli
 > [!IMPORTANT]
 > This article applies to clusters running Kubernetes version 1.33 or later that need to migrate from KMS v2 to the new KMS encryption experience. This experience offers platform-managed keys (PMK), customer-managed keys (CMK) with automatic key rotation, and a simplified configuration experience.
 >
-> Migration from KMS v1 to platform-managed or customer-managed keys is not supported. Please upgrade to KMS v2 first.
+> Migration from KMS v1 to platform-managed or customer-managed keys isn't supported. Upgrade to KMS v2 first.
 >
-> AKS apiserver vnet integration is required for KMS v2 with private key vault, while it is not required in CMK.
+> [AKS apiserver virtual network integration][api-server-vnet-integration] is required for KMS v2 with private key vault, while it isn't required in CMK.
 
 In this article, you learn how to migrate from KMS v2 for clusters with version 1.33 or later. The new KMS experience provides enhanced performance and security features, including the option to use platform-managed keys that eliminate the need to manage your own Azure Key Vault.
 
@@ -25,11 +25,10 @@ In this article, you learn how to migrate from KMS v2 for clusters with version 
 
 Before starting the migration, ensure you have:
 
-- An AKS cluster running Kubernetes version 1.33.0 or later
-- Azure CLI version 2.73.0 or later
-- The `aks-preview` extension version 19.0.0b13 or later
-- Appropriate permissions to update AKS clusters
-- For CMK migrations: User-assigned managed identity with Key Vault permissions
+- An AKS cluster running Kubernetes version 1.33.0 or later. [To upgrade AKS](/azure/aks/upgrade-aks-control-plane).
+- Azure CLI version 2.73.0 or later. To install Azure CLI, go to [How to install the Azure CLI](/azure/install-azure-cli).
+- The `aks-preview` extension version 19.0.0b13 or later.
+- For CMK migrations: User-assigned managed identity with Key Vault permissions "Key Vault Crypto User" and "Key Vault Reader".
 
 ## Migration scenarios
 
@@ -42,7 +41,7 @@ The new KMS experience supports two key management options:
 
 This migration path is ideal if you want to simplify your encryption setup by letting AKS manage the encryption keys. After migration, customer managed key vault and key are not used by KMS.
 
-Enable PMK on your existing KMS v2 cluster using the `az aks update` command.
+Enable PMK on your existing KMS v2 cluster using the [`az aks update`][az-aks-update] command.
 
 ```azurecli-interactive
 az aks update \
@@ -57,10 +56,10 @@ az aks update \
 This migration path allows you to continue using your existing Key Vault while gaining the benefits of the new KMS experience, including automatic key rotation support.
 
 1. Ensure your Key Vault has the following configuration:
-   - Public network access enabled
-   - User-assigned managed identity has "Key Vault Crypto User" and "Key Vault Reader" roles
+   - Public network access enabled.
+   - User-assigned managed identity has "Key Vault Crypto User" and "Key Vault Reader" roles.
 
-3. Enable CMK on your existing KMS v2 cluster using the `az aks update` command.
+1. Enable CMK on your existing KMS v2 cluster using the [`az aks update`][az-aks-update] command.
 
     ```azurecli-interactive
     az aks update \
@@ -72,11 +71,11 @@ This migration path allows you to continue using your existing Key Vault while g
 ## Migrate from KMS v2 with private Key Vault to CMK
 
 1. Ensure your Key Vault has the following configuration:
-   - Private network access enabled
-   - "Allow trusted Microsoft services to bypass this firewall" enabled
-   - User-assigned managed identity has "Key Vault Crypto User" and "Key Vault Reader" roles
+   - Private network access enabled.
+   - _Allow trusted Microsoft services to bypass this firewall_ enabled.
+   - User-assigned managed identity has "Key Vault Crypto User" and "Key Vault Reader" roles.
 
-2. Enable CMK on your existing KMS v2 cluster using the `az aks update` command for private Key Vault support.
+1. Enable CMK on your existing KMS v2 cluster using the [`az aks update`][az-aks-update] command for private Key Vault support.
 
     ```azurecli-interactive
     az aks update \
