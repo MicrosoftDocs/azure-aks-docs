@@ -404,13 +404,13 @@
           href: integrations.md
         - name: Integrate ACR with an AKS cluster
           href: cluster-container-registry-integration.md
-        - name: AKS desktop (Preview)
+        - name: AKS desktop
           items:
-            - name: AKS desktop overview (Preview)
+            - name: AKS desktop overview
               href: aks-desktop-overview.md
-            - name: Understand permissions in AKS desktop (Preview)
+            - name: Set up permissions in AKS desktop
               href: aks-desktop-permissions.md
-            - name: Deploy an application using AKS desktop (Preview)
+            - name: Deploy an application using AKS desktop
               href: aks-desktop-app.md
         - name: Use cluster extensions
           items:

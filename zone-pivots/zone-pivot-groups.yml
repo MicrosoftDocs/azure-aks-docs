@@ -258,3 +258,12 @@ groups:
     title: Cilium
   - id: non-cilium
     title: Non-Cilium
+# Owner: schaffererin
+- id: aks-desktop
+  title: AKS desktop
+  prompt: Choose your role in AKS desktop
+  pivots:
+  - id: cluster-operator
+    title: Cluster operator
+  - id: developer
+    title: Developer
