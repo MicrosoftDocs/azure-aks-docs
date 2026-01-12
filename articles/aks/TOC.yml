@@ -773,7 +773,7 @@
             - name: Use KMS platform-managed keys or customer-managed keys
               href: kms-data-encryption.md
             - name: Migrate to KMS with platform-managed or customer-managed keys
-              href: migrate-key-management-service-platform-managed-key-and-customer-managed-key.md
+              href: migrate-key-management-service-platform-managed-key-customer-managed-key.md
         - name: Secure container access to resources
           href: secure-container-access.md
     - name: Node security
