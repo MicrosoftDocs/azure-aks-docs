@@ -31,13 +31,13 @@ When a user attempts to access the Kubernetes API server:
 
 - **Authentication**: The following steps validate the user's identity:
 
-    - **Token presentation**: The user presents a JWT token from their configured identity provider
+  - **Token presentation**: The user presents a JWT token from their configured identity provider
 
-    - **Token validation**: The API server validates the token's signature, issuer, audience, and expiration
+  - **Token validation**: The API server validates the token's signature, issuer, audience, and expiration
 
-    - **Claim processing**: Custom claim validation rules are applied to ensure the token meets your requirements
+  - **Claim processing**: Custom claim validation rules are applied to ensure the token meets your requirements
 
-    - **User mapping**: Claims are mapped to Kubernetes user identity (username, groups, and extra attributes)
+  - **User mapping**: Claims are mapped to Kubernetes user identity (username, groups, and extra attributes)
 
 - **Authorization**: Standard Kubernetes Role-Based Access Control (RBAC) determines what actions the authenticated user can perform
 
