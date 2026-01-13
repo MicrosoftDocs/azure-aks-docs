@@ -78,7 +78,7 @@ To deploy the Azure Store application, you need to connect to your AKS cluster. 
                - containerPort: 15672
                  name: rabbitmq-http
              env:
-                - name: RABBITMQ_DEFAULT_USER
+               - name: RABBITMQ_DEFAULT_USER
                  value: "username"
                - name: RABBITMQ_DEFAULT_PASS
                  value: "password"
@@ -326,8 +326,7 @@ To access the Kubernetes resources, you need access to the AKS cluster, Kubernet
 
 ### Kubernetes resource viewer is inaccessible
 
-You might need to configure authorized IP ranges to enable the Kubernetes resource view for existing
-clusters.
+You might need to configure authorized IP ranges to enable the Kubernetes resource view for existing clusters.
 
 > [!TIP]
 > You can add the AKS feature for [**API server authorized IP ranges**](api-server-authorized-ip-ranges.md) to limit API server access to only the firewall's public endpoint. Another option is to update the `--api-server-authorized-ip-ranges`/`-ApiServerAccessAuthorizedIpRange` to include access for a local client computer or the IP address range from which you're browsing the Azure portal. To allow this access, you need the computer's public IPv4 address. You can find this address using the following Azure CLI or Azure PowerShell commands.
@@ -360,12 +359,9 @@ clusters.
    Set-AzAksCluster -ResourceGroupName <resource-group-name> -Name <aks-cluster-name> -ApiServerAccessAuthorizedIpRange $CURRENT_IP/32
    ```
 
-If your AKS cluster is configured as a *private cluster*, you must access the Azure portal from a
-network that can reach the subnet where your AKS cluster resides. Otherwise, AKS resources are
-inaccessible in the portal due to network connectivity issues. To learn more, see
-[Access an AKS private cluster][/azure/architecture/guide/security/access-azure-kubernetes-service-cluster-api-server#access-an-aks-private-cluster].
-
 ---
+
+If your AKS cluster is configured as a *private cluster*, you must access the Azure portal from a network that can reach the subnet where your AKS cluster resides. Otherwise, AKS resources are inaccessible in the portal due to network connectivity issues. To learn more, see [Access an AKS private cluster](/azure/architecture/guide/security/access-azure-kubernetes-service-cluster-api-server#access-an-aks-private-cluster).
 
 ## Next steps
 
