@@ -26,7 +26,7 @@ In this article, you learn how to migrate from KMS v2 for clusters with version 
 Before starting the migration, ensure you have:
 
 - An AKS cluster running Kubernetes version 1.33.0 or later. [To upgrade AKS](upgrade-aks-control-plane.md).
-- Azure CLI version 2.73.0 or later. To install Azure CLI, go to [How to install the Azure CLI](/azure/install-azure-cli).
+- Azure CLI version 2.73.0 or later. To install Azure CLI, go to [How to install the Azure CLI](/cli/azure/install-azure-cli).
 - The `aks-preview` [az extension](/cli/azure/extension) version 19.0.0b13 or later.
 - For CMK migrations: User-assigned managed identity with Key Vault permissions "Key Vault Crypto User" and "Key Vault Reader".
 
