@@ -19,7 +19,7 @@ This article shows you how to enable Key Management Service (KMS) data encryptio
 
 AKS supports two key management options:
 
-- **Platform-managed keys (PMK)**: AKS automatically creates and manages the encryption keys. This option provides the simplest setup with automatic key rotation.
+- **Platform-managed keys (PMK)**: AKS automatically creates and manages the encryption keys. This option provides the simplest setup with automatic key rotation. The encryption process uses multiple layers of protection and avoids direct customer interaction with Azure Key Vault. All traffic between AKS components and the internal Key Vault is secured using Microsoft’s standard infrastructure for sensitive data. Multiple encryption layers also ensure that even there's any throttling or downtime of dependent Azure services, such issue won't immediately impact PMK functionality. 
 - **Customer-managed keys (CMK)**: You create and manage your own Azure Key Vault and encryption keys. This option provides full control over key lifecycle and meets compliance requirements that mandate customer-managed keys.
 
 For more information about encryption concepts and key options, see [Data encryption at rest concepts for AKS][kms-data-encryption-concepts].
@@ -113,6 +113,24 @@ az aks update \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
     --kms-infrastructure-encryption Enabled
+```
+
+### Verify KMS configuration
+
+After enabling KMS encryption, verify the configuration.
+
+```azurecli-interactive
+az aks show --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --query 'securityProfile'
+```
+
+The output includes the KMS configuration:
+
+```json
+{
+    "kubernetesResourceObjectEncryptionProfile": {
+        "infrastructureEncryption": "Enabled"
+    }
+}
 ```
 
 :::zone-end
@@ -246,6 +264,30 @@ az aks update \
     --assign-identity $IDENTITY_RESOURCE_ID
 ```
 
+### Verify KMS configuration
+
+After enabling KMS encryption, verify the configuration.
+
+```azurecli-interactive
+az aks show --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --query 'securityProfile'
+```
+
+The output includes the KMS configuration:
+
+```json
+{
+    "azureKeyVaultKms": {
+        "enabled": true,
+        "keyId": "https://<key-vault-name>.vault.azure.net/keys/<key-name>",
+        "keyVaultNetworkAccess": "Private",
+        "keyVaultResourceId": "<key-vault-resource-id>"
+    },
+    "kubernetesResourceObjectEncryptionProfile": {
+        "infrastructureEncryption": "Enabled"
+    }
+}
+```
+
 :::zone-end
 
 :::zone pivot="cmk-public"
@@ -362,9 +404,7 @@ az aks update \
     --assign-identity $IDENTITY_RESOURCE_ID
 ```
 
-:::zone-end
-
-## Verify KMS configuration
+### Verify KMS configuration
 
 After enabling KMS encryption, verify the configuration.
 
@@ -387,6 +427,8 @@ The output includes the KMS configuration:
     }
 }
 ```
+
+:::zone-end
 
 ## Migrate between key management options
 
