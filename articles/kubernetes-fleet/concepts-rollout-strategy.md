@@ -356,9 +356,9 @@ Fleet Manager processes stages sequentially:
 
 > [!NOTE] 
 > An update run can abort for multiple reasons, including but not limited to:
-> - Binding spec mismatch compared with the update run configuration. This situation typically happens when another update run preempts the current one.
-> - Validation failures, such as when a cluster joins or leaves the fleet.
-> - Label changes on clusters.
+> - The binding spec doesn't match the update run configuration. This situation typically happens when another update run preempts the current one.
+> - Validation failures occur, such as when a cluster joins or leaves the fleet.
+> - Labels change on clusters.
 >
 > When a resource update fails on a cluster, Fleet Manager continues retrying and marks the cluster status as "stuck" (after retrying for about 5 minutes) rather than aborting the entire update run.
 
