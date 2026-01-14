@@ -356,7 +356,7 @@
       href: stateful-workload-upgrades.md
     - name: Upgrade scenarios hub
       href: upgrade-scenarios-hub.md
-  - name: Perform upgrades
+  - name: Perform upgrades and rollbacks
     items:
     - name: Upgrade cluster control plane
       href: upgrade-aks-control-plane.md

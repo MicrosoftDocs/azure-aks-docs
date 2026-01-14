@@ -17,57 +17,6 @@ Blue-green upgrades for AKS node pools enable zero-downtime node pool updates by
 
 This article explains when to use blue-green upgrades, how the process works, configuration options, and considerations for using this upgrade strategy.
 
-## Prerequisites
-
-- Azure CLI version 2.64.0 or higher. Find your version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-- The [`aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) installed and updated to the latest version.
-- API version `2025-08-02-preview` or later.
-- Sufficient quota for doubling node pool capacity.
-- [Cluster autoscaler](./cluster-autoscaler-overview.md) configured (recommended, but not required).
-
-### Install the `aks-preview` Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-Install or update the `aks-preview` extension using the [`az extension add`](/cli/azure/extension#az-extension-add) and [`az extension update`](/cli/azure/extension#az-extension-update) commands.
-
-```azurecli-interactive
-# Install the aks-preview extension
-az extension add --name aks-preview
-
-# Update the aks-preview extension
-az extension update --name aks-preview
-```
-
-## Supported features for blue-green upgrades
-
-The following features are supported when using blue-green upgrades for AKS node pools:
-
-- [Kubernetes version upgrades](./upgrade-cluster.md)
-- [Node image upgrades](./node-image-upgrade.md)
-- [System and user node pools](./use-system-pools.md)
-- Manual commit and rollback control
-- [Cluster autoscaler](./cluster-autoscaler.md)
-- [Availability zones](/azure/reliability/reliability-aks#availability-zone-support)
-- [PodDisruptionBudgets](./operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets)
-- [Autoupgrade channels](./auto-upgrade-cluster.md) and [Planned Maintenance windows](./planned-maintenance.md)
-- [AKS Communication Manager](./aks-communication-manager.md)
-
-## Blue-green upgrade limitations and considerations
-
-Blue-green upgrades don't support the following features:
-
-- Automated health checks or validations
-- [Virtual machine (VM) pools](./virtual-machines-node-pools.md)
-- [Max unavailable](./upgrade-cluster.md#customize-unavailable-nodes-during-upgrade) setting
-- Undrainable node behavior and `maxBlockedNodes` setting
-
-Keep the following considerations in mind when using blue-green upgrades:
-
-| Resource requirements | Complexity considerations | Time factors |
-| --------------------- | ------------------------- | ------------ |
-| • Requires double the node capacity during the upgrade process, leading to increased infrastructure costs. <br> • You need extra compute quota in your Azure subscription to accommodate the temporary doubling of nodes. <br> • You might encounter regional capacity limits during peak usage periods. | • Requires careful planning for stateful workloads to ensure data consistency during migration. <br> • Requires extra monitoring for both the blue and green node pools during the transition period. | • Longer overall upgrade duration compared to in-place upgrades. <br> • Validation period adds time before final cutover. |
-
 ## When to use blue-green upgrades
 
 Consider blue-green upgrades when:
@@ -88,6 +37,58 @@ Standard rolling upgrades might be more appropriate in the following scenarios:
 - Cost-sensitive deployments where temporary doubling is prohibitive.
 - Simple stateless applications with good disruption handling.
 - Environments with limited available quota or capacity.
+
+## Prerequisites
+
+- Sufficient quota for doubling node pool capacity.
+- Azure CLI version 2.64.0 or higher. Find your version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+- The [`aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) installed and updated to the latest version.
+- API version `2025-08-02-preview` or later.
+- [Cluster autoscaler](./cluster-autoscaler-overview.md) configured (recommended, but not required).
+
+### Install the `aks-preview` Azure CLI extension
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+Install or update the `aks-preview` extension using the [`az extension add`](/cli/azure/extension#az-extension-add) and [`az extension update`](/cli/azure/extension#az-extension-update) commands.
+
+```azurecli-interactive
+# Install the aks-preview extension
+az extension add --name aks-preview
+
+# Update the aks-preview extension
+az extension update --name aks-preview
+```
+
+## Supported features for blue-green upgrades
+
+Blue-green upgrades currently support the following features:
+
+- [Kubernetes version upgrades](./upgrade-cluster.md)
+- [Node image upgrades](./node-image-upgrade.md)
+- [System and user node pools](./use-system-pools.md)
+- Manual commit and rollback control
+- [Cluster autoscaler](./cluster-autoscaler.md)
+- [Availability zones](/azure/reliability/reliability-aks#availability-zone-support)
+- [PodDisruptionBudgets](./operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets)
+- [Autoupgrade channels](./auto-upgrade-cluster.md) and [Planned Maintenance windows](./planned-maintenance.md)
+- [AKS Communication Manager](./aks-communication-manager.md)
+
+## Blue-green upgrade limitations and considerations
+
+Blue-green upgrades currently don't support the following features:
+
+- Automated health checks or validations
+- Automated rollback
+- [Virtual machine (VM) pools](./virtual-machines-node-pools.md)
+- [Max unavailable](./upgrade-cluster.md#customize-unavailable-nodes-during-upgrade) setting
+- Undrainable node behavior and `maxBlockedNodes` setting
+
+Keep the following considerations in mind when using blue-green upgrades:
+
+| Resource requirements | Complexity considerations | Time factors |
+| --------------------- | ------------------------- | ------------ |
+| • Requires double the node capacity during the upgrade process, leading to increased infrastructure costs. <br> • You need extra compute quota in your Azure subscription to accommodate the temporary doubling of nodes. <br> • You might encounter regional capacity limits during peak usage periods. | • Requires careful planning for stateful workloads to ensure data consistency during migration. <br> • Requires extra monitoring for both the blue and green node pools during the transition period. | • Longer overall upgrade duration compared to in-place upgrades. <br> • Validation period adds time before final cutover. |
 
 ## Blue-green upgrade workflow
 
@@ -157,7 +158,7 @@ You can customize the following blue-green upgrade properties (`NodePoolBlueGree
 
 ## Create a node pool with custom blue-green upgrade settings
 
-- Create a node pool with the default blue-green upgrade strategy and settings using the [`az aks nodepool create`](/cli/azure/aks/nodepool#az-aks-nodepool-create) command with the `--upgrade-strategy` parameter set to `bluegreen` and set any desired custom blue-green upgrade settings. The following example creates a new node pool named `myNodePool` in the AKS cluster `myAKSCluster` within the resource group `myResourceGroup`, with custom blue-green upgrade settings:
+- Create a node pool with custom blue-green upgrade settings using the [`az aks nodepool create`](/cli/azure/aks/nodepool#az-aks-nodepool-create) command with the `--upgrade-strategy` parameter set to `bluegreen` and set any desired custom blue-green upgrade settings. The following example creates a new node pool named `myNodePool` in the AKS cluster `myAKSCluster` within the resource group `myResourceGroup`, with custom blue-green upgrade settings:
 
     ```azurecli-interactive
     az aks nodepool create \
@@ -230,7 +231,7 @@ Persistent volumes remain accessible. Pods are gracefully drained and reschedule
 
 ### Can I perform blue-green upgrades across multiple node pools simultaneously?
 
-Yes, different node pools can undergo blue-green upgrades in parallel, but each pool can only have one active upgrade.
+Yes, different node pools can undergo blue-green upgrades in parallel, but each pool can only have one active upgrade. You currently can't control the order of upgrades across multiple pools.
 
 ### How do blue-green upgrades handle node-specific configurations like taints and labels?
 
