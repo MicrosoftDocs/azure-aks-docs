@@ -45,8 +45,7 @@ For AKS node pools, we recommend a minimum size of *Standard_NC6s_v3*. The NVv4 
 
 * Updating an existing node pool to add GPU VM size is not supported on AKS.
 
-> [!NOTE]
-> The AKS GPU image (preview) is retired starting on January 10, 2025. The custom header is no longer available, meaning that you can't create new GPU-enabled node pools using the AKS GPU image. We recommend migrating to or using the default GPU configuration rather than the GPU image, as the GPU image is no longer supported. For more information, see [AKS release notes](https://github.com/Azure/AKS/releases), or view this retirement announcement in our [AKS public roadmap](https://github.com/Azure/AKS/issues/4472).
+[!INCLUDE [aks gpu image retirement](./includes/aks-gpu-image-retirement.md)]
 
 ## Before you begin
 
@@ -207,10 +206,7 @@ This command adds a node pool named *gpunp* to *myAKSCluster* in *myResourceGrou
 
 If you want to control the installation of the NVIDIA drivers or use the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you can skip the default GPU driver installation. Microsoft **doesn't support or manage** the maintenance and compatibility of the NVIDIA drivers as part of the node image deployment.
 
-> [!NOTE]
-> The `gpu-driver` API field is a suggested alternative for customers previously using the `--skip-gpu-driver-install` node pool tag. 
->- The `--skip-gpu-driver-install` node pool tag on AKS will be retired on 14 August 2025. When spinning up a new node pool, the existing behavior of skipping automatic GPU driver installation can be replicated by setting the `--gpu-driver` field to `none`.
->- After 14 August 2025, you will not be able to provision AKS GPU-enabled node pools with the `--skip-gpu-driver-install` node pool tag to bypass this default behavior. For more information, see [`skip-gpu-driver` tag retirement](https://aka.ms/aks/skip-gpu-driver-tag-retirement).
+[!INCLUDE [skip gpu driver install retirement](./includes/skip-gpu-driver-install-retirement.md)]
 
 1. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and set `--gpu-driver` field to `none` to skip default GPU driver installation.
 
@@ -231,7 +227,7 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
 
     If you get the error `unrecognized arguments: --gpu-driver none` then [update the Azure CLI version](/cli/azure/update-azure-cli). For more information, see [Before you begin](#before-you-begin).
 
-1. You can optionally install the NVIDIA GPU Operator following [these steps][nvidia-gpu-operator].
+2. You can optionally install the NVIDIA GPU Operator following [these steps][nvidia-gpu-operator].
 
 ## Confirm that GPUs are schedulable
 
