@@ -26,9 +26,9 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - If you're unfamiliar with the Azure Cloud Shell, review [Overview of Azure Cloud Shell](/azure/cloud-shell/overview).
 - Make sure that the identity you're using to create your cluster has the appropriate minimum permissions. For more details on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
 
-[!INCLUDE [windows server 2019 retirement](./includes/windows-server-2019-retirement.md)]
+[!INCLUDE [windows server 2019 retirement](../includes/windows-server-2019-retirement.md)]
 
-[!INCLUDE [windows server 2022 retirement](./includes/windows-server-2022-retirement.md)]
+[!INCLUDE [windows server 2022 retirement](../includes/windows-server-2022-retirement.md)]
 
 ## Create an AKS cluster
 
