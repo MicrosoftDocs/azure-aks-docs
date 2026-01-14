@@ -212,8 +212,7 @@ spec:
       targetPort: 8080
 ```
 
-> [!IMPORTANT]
-> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you use Basic Load Balancer, make sure to [upgrade](/azure/load-balancer/load-balancer-basic-upgrade-guidance) to Standard Load Balancer before the retirement date.
+[!INCLUDE [basic load balancer retirement](./includes/basic-load-balancer-retirement.md)]
 
 ## Limitations
 
