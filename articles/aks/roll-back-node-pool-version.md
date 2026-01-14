@@ -1,6 +1,6 @@
 ---
 title: Roll Back Node Pool Versions in Azure Kubernetes Service (AKS) (preview)
-description: 
+description: Learn how to roll back node pool versions in Azure Kubernetes Service (AKS) to recover from upgrade issues and maintain cluster stability.
 ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.custom: azure-kubernetes-service
@@ -145,6 +145,6 @@ Yes, if your cluster has autoupgrade enabled, you must disable it before perform
 
 To learn more about node pool upgrades in AKS, see the following articles:
 
-- [Configure blue-green node pool upgrades in Azure Kubernetes Service (AKS)](./blue-green-node-pool-ugprade.md)
+- [Configure blue-green node pool upgrades in Azure Kubernetes Service (AKS)](./blue-green-node-pool-upgrade.md)
 - [Configure rolling upgrades for Azure Kubernetes Service (AKS) node pools](./upgrade-valkey-aks-nodepool.md)
 - [Autoupgrade node OS images in Azure Kubernetes Service (AKS)](./auto-upgrade-node-os-image.md)
