@@ -14,7 +14,7 @@ This article describes OS versions available for Azure Kubernetes Service (AKS) 
 
 [!INCLUDE [ubuntu 22.04 retirement](./includes/ubuntu-22-04-retirement.md)]
 
-[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-2-retirement.md)]
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Supported OS versions
 
