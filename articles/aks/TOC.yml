@@ -370,6 +370,10 @@
         href: upgrade-aks-node-pools-rolling.md#customize-node-surge
       - name: Process node OS updates with kured
         href: upgrade-node-image-kured.md
+      - name: Configure blue-green node pool upgrades
+        href: blue-green-node-pool-ugprade.md
+      - name: Roll back node pool versions
+        href: roll-back-node-pool-version.md
   - name: Automate upgrades
     items:
     - name: Automatically upgrade an AKS cluster
