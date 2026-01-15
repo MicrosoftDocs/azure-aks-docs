@@ -202,6 +202,10 @@ The following sections describe how to turn on KMS for a public key vault on a n
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
+    Note: The error below is safe to ignore when you run the command. This secret is an AKS managed one which is rotated regularly.
+    ```
+    Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
+    ```
 
 ## Rotate existing keys in a public key vault
 
@@ -229,6 +233,10 @@ After you change the key ID (including changing either the key name or the key v
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+    Note: The error below is safe to ignore when you run the command. This secret is an AKS managed one which is rotated regularly.
+    ```
+    Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
     ```
 
 :::zone-end
@@ -355,6 +363,10 @@ The following sections describe how to turn on KMS for a private key vault on a 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
+    Note: The error below is safe to ignore when you run the command. This secret is an AKS managed one which is rotated regularly.
+    ```
+    Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
+    ```
 
 ### Rotate existing keys in a private key vault
 
@@ -384,6 +396,10 @@ After you change the key ID (including changing either the key name or the key v
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
+    Note: The error below is safe to ignore when you run the command. This secret is an AKS managed one which is rotated regularly.
+    ```
+    Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
+    ```
 
 :::zone-end
 
@@ -405,6 +421,10 @@ After you change the key ID (including changing either the key name or the key v
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+    Note: The error below is safe to ignore when you run the command. This secret is an AKS managed one which is rotated regularly.
+    ```
+    Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
     ```
 
 ## Next steps
