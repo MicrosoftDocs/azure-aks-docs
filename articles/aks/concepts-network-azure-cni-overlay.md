@@ -102,7 +102,7 @@ Azure CNI offers two IP addressing options for pods: *overlay networking* and th
 
 Use overlay networking when:
 
-- You want to scale to a large number of pods, but limited by IP address space in your virtual network.
+- You want to scale to a large number of pods but are limited by IP address space in your virtual network.
 - Most of the pod communication is within the cluster.
 - You don't need advanced AKS features, such as virtual nodes.
 
@@ -119,7 +119,7 @@ Azure CNI Overlay has the following limitations:
 
 - VM availability sets aren't supported.
 - You can't use [DCsv2-series](/azure/virtual-machines/dcv2-series) virtual machines in node pools. To meet requirements for confidential computing, consider using [DCasv5 or DCadsv5-series confidential VMs](/azure/virtual-machines/dcasv5-dcadsv5-series) instead.
-- If you're using your own subnet to deploy the cluster, the names of the subnet, the virtual network, and the resource group that contains the virtual network must be 63 characters or fewer. These names are used as labels in AKS worker nodes, so they're subjected to [Kubernetes syntax rules for labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).
+- If you're using your own subnet to deploy the cluster, the names of the subnet, the virtual network, and the resource group that contains the virtual network must be 63 characters or fewer. These names are used as labels in AKS worker nodes, so they're subject to [Kubernetes syntax rules for labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).
 
 ## Related content
 
