@@ -40,6 +40,9 @@ This article shows you how to update the key vault mode from public to private o
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
+    ```
+    Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
+    ```
 
 1. Update the key vault from public to private using the [`az keyvault update`][azure-keyvault-update] command with the `--public-network-access` parameter set to `Disabled`.
 
@@ -74,6 +77,9 @@ This article shows you how to update the key vault mode from public to private o
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+    ```
+    Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
     ```
 
 1. Update the key vault from public to private using the [`az keyvault update`][azure-keyvault-update] command with the `--public-network-access` parameter set to `Enabled`.
