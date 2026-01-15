@@ -76,7 +76,7 @@ You can expand your pod Classless Inter-Domain Routing (CIDR) space on Azure CNI
     > [!NOTE]
     > Although the update operation might successfully finish and show the new pod CIDR in the network profile, be sure to validate the new cluster state through `NodeNetworkConfig` (`nnc`).
 
-1. Verify the state of the upgrade operation by checking  `NodeNetworkConfig` (`nnc`) via the `kubectl get nnc` command. In the output, all node pools should match your new pod CIDR block (for example, `10.244.0.0/16`).
+1. Verify the state of the upgrade operation by checking `NodeNetworkConfig` (`nnc`) via the `kubectl get nnc` command. In the output, all node pools should match your new pod CIDR block (for example, `10.244.0.0/16`).
 
     ```bash-interactive
     kubectl get nnc -A -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.status.networkContainers[0].subnetAddressSpace}{"\n"}{end}'
