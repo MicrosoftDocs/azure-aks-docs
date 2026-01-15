@@ -33,6 +33,9 @@ In this article, you learn how to migrate to KMS v2 for clusters with versions o
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
+    ```
+    Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
+    ```
 
 ## Upgrade your AKS cluster and turn on KMS
 
@@ -51,6 +54,9 @@ In this article, you learn how to migrate to KMS v2 for clusters with versions o
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+    ```
+    Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
     ```
 
 ## Next steps
