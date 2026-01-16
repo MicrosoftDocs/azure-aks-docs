@@ -40,6 +40,7 @@ This article shows you how to update the key vault mode from public to private o
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
+    Note: The error below is safe to ignore when you run the command. This secret is an AKS managed one which is rotated regularly.
     ```
     Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
     ```
@@ -78,6 +79,7 @@ This article shows you how to update the key vault mode from public to private o
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
+    Note: The error below is safe to ignore when you run the command. This secret is an AKS managed one which is rotated regularly.
     ```
     Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
     ```

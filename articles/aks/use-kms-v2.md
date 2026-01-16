@@ -33,6 +33,7 @@ In this article, you learn how to migrate to KMS v2 for clusters with versions o
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
+    Note: The error below is safe to ignore when you run the command. This secret is an AKS managed one which is rotated regularly.
     ```
     Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
     ```
@@ -55,6 +56,7 @@ In this article, you learn how to migrate to KMS v2 for clusters with versions o
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
+    Note: The error below is safe to ignore when you run the command. This secret is an AKS managed one which is rotated regularly.
     ```
     Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
     ```
