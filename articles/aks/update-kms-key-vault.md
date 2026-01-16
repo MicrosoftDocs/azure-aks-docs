@@ -35,14 +35,10 @@ This article shows you how to update the key vault mode from public to private o
     > [!WARNING]
     > After you turn off KMS, the encryption key vault key is still needed. You can't delete or expire it.
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin. Note: The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
-    ```
-    Note: The error below is safe to ignore when you run the command. This secret is an AKS managed one which is rotated regularly.
-    ```
-    Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
     ```
 
 1. Update the key vault from public to private using the [`az keyvault update`][azure-keyvault-update] command with the `--public-network-access` parameter set to `Disabled`.
@@ -74,14 +70,10 @@ This article shows you how to update the key vault mode from public to private o
     > [!WARNING]
     > After you turn off KMS, the encryption key vault key is still needed. You can't delete or expire it.
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin. Note: The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
-    ```
-    Note: The error below is safe to ignore when you run the command. This secret is an AKS managed one which is rotated regularly.
-    ```
-    Operation cannot be fulfilled on secrets 'sh.helm.release.v1.aks-managed-overlay-upgrade-data'
     ```
 
 1. Update the key vault from public to private using the [`az keyvault update`][azure-keyvault-update] command with the `--public-network-access` parameter set to `Enabled`.
