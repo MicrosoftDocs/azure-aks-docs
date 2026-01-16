@@ -327,7 +327,8 @@ spec:
   # LocalDNS mode - allows use of LocalDNS feature
   # Default: Disabled
   # Valid values: Preferred, Required, Disabled
-  LocalDNSMode: Disabled
+  LocalDNS:
+    mode: Disabled
 
   # Virtual network subnet configuration (optional)
   # If not specified, uses the default --vnet-subnet-id from Karpenter installation
