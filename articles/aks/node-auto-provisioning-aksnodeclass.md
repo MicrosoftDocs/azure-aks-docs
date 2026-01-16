@@ -156,7 +156,7 @@ spec:
 
 ## LocalDNS configuration
 
-You can enable the LocalDNS feature, which improves Domain Name System (DNS) resolution performance for your workloads. For more information on LocalDNS, visit our [LocalDNS documentation](https://learn.microsoft.com/azure/aks/localdns-custom). The `mode` of this field by default is set to `Disabled`, and can be set to one of three options:
+LocalDNS deploys a node level DNS proxy that resolves DNS queries closer to workloads, reducing query latency and improving resiliency during transient DNS disruptions. For more information, see the [LocalDNS documentation](https://learn.microsoft.com/azure/aks/localdns-custom). By default, LocalDNS is set to Disabled and can be configured to the following options:
 
 - `Disabled` (default)
 - `Preferred` - If the current orchestrator version supports LocalDNS, prefer enabling LocalDNS
@@ -172,7 +172,7 @@ spec:
 
 ### LocalDNS overrides and custom configurations
 
-You can customize LocalDNS configurations such as `vnetDNSOverrides` and `kubenetDNSOverrides`. 
+You can customize LocalDNS configurations such as `vnetDNSOverrides` and `kubeDNSOverrides`. 
 
 ```yaml
 spec:
