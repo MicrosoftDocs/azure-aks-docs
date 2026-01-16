@@ -28,11 +28,14 @@ In this article, you learn how to migrate to KMS v2 for clusters with versions o
     az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --disable-azure-keyvault-kms
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin. Note: The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
+1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
+
+    > [!NOTE]
+    > The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
 
 ## Upgrade your AKS cluster and turn on KMS
 
@@ -47,11 +50,14 @@ In this article, you learn how to migrate to KMS v2 for clusters with versions o
     - [Enable a public key vault and KMS on an existing AKS cluster](./use-kms-etcd-encryption.md#enable-a-public-key-vault-and-kms-on-an-existing-aks-cluster)
     - [Update an existing AKS cluster to turn on KMS etcd encryption for a private key vault](./use-kms-etcd-encryption.md#update-an-existing-aks-cluster-to-turn-on-kms-etcd-encryption-for-a-private-key-vault)
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin. Note: The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
+1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
+
+    > [!NOTE]
+    > The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
 
 ## Next steps
 
