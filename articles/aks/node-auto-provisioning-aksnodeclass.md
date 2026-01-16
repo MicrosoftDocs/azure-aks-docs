@@ -38,7 +38,7 @@ spec:
   imageFamily: AzureLinux
 ```
 #### FIPS compliant node image configuration
-You can enable Federal Information Process Standard(FIPS) compliant node images also. 
+You can enable Federal Information Process Standard (FIPS) compliant node images also. 
 
 The following example configures the 'AKSNodeClass' to select FIPS-compliant nodes images by setting `fipsMode` to `FIPS`:
 
