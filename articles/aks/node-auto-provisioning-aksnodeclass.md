@@ -38,7 +38,11 @@ spec:
   imageFamily: AzureLinux
 ```
 #### FIPS compliant node image configuration
-You can enable Federal Information Process Standard (FIPS) compliant node images also. 
+You can enable Federal Information Process Standard (FIPS) compliant node images also. For more in FIPS in AKS, visit our [FIPS documentation](./enable-fips-nodes.md)
+
+The `fipsMode` field is set by default to Disabled, and can be set to the following options:
+- FIPS - select FIPS-compliant node images
+- Disabled - do not use FIPS-compliant node images
 
 The following example configures the 'AKSNodeClass' to select FIPS-compliant node images by setting `fipsMode` to `FIPS`:
 
@@ -156,7 +160,7 @@ spec:
 
 ## LocalDNS configuration
 
-LocalDNS deploys a node level DNS proxy that resolves DNS queries closer to workloads, reducing query latency and improving resiliency during transient DNS disruptions. For more information, see the [LocalDNS documentation](https://learn.microsoft.com/azure/aks/localdns-custom). By default, LocalDNS is set to Disabled and can be configured to the following options:
+LocalDNS deploys a node level DNS proxy that resolves DNS queries closer to workloads, reducing query latency and improving resiliency during transient DNS disruptions. For more information, see the [LocalDNS documentation](./localdns-custom.md). By default, LocalDNS is set to Disabled and can be configured to the following options:
 
 - `Disabled` (default)
 - `Preferred` - If the current orchestrator version supports LocalDNS, prefer enabling LocalDNS
