@@ -57,7 +57,6 @@ The following limitations and unsupported features apply to node auto-provisioni
 - Windows node pools aren't supported.
 - IPv6 clusters aren't supported.
 - [Service principals](./kubernetes-service-principal.md) aren't supported. You can use either a system-assigned or user-assigned managed identity.
-- [Disk Encryption Sets](/azure/virtual-machines/disk-encryption-overview) aren't supported.
 - [Custom certificate authority (CA) certificates](./custom-certificate-authority.md) aren't supported.
 - You can't [stop a cluster](./start-stop-cluster.md) enabled with NAP.
 - [HTTP proxy](./http-proxy.md) isn't supported.

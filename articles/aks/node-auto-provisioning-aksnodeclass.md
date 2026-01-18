@@ -37,6 +37,19 @@ The following example configures the `AKSNodeClass` to use the `AzureLinux` imag
 spec:
   imageFamily: AzureLinux
 ```
+#### FIPS compliant node image configuration
+You can enable Federal Information Process Standard (FIPS) compliant node images also. For more in FIPS in AKS, visit our [FIPS documentation](./enable-fips-nodes.md)
+
+The `fipsMode` field is set by default to Disabled, and can be set to the following options:
+- FIPS - select FIPS-compliant node images
+- Disabled - do not use FIPS-compliant node images
+
+The following example configures the 'AKSNodeClass' to select FIPS-compliant node images by setting `fipsMode` to `FIPS`:
+
+```yaml
+spec:
+  fipsMode: FIPS
+```
 
 ## Virtual network (VNet) subnet configuration
 
@@ -144,6 +157,52 @@ The default behavior for `maxPods` depends on the network plugin configuration. 
 spec:
   maxPods: 50  # Allow up to 50 pods per node
 ```
+
+## LocalDNS configuration
+
+LocalDNS deploys a node level DNS proxy that resolves DNS queries closer to workloads, reducing query latency and improving resiliency during transient DNS disruptions. For more information, see the [LocalDNS documentation](./localdns-custom.md). By default, LocalDNS is set to Disabled and can be configured to the following options:
+
+- `Disabled` (default)
+- `Preferred` - If the current orchestrator version supports LocalDNS, prefer enabling LocalDNS
+- `Required` - Enable LocalDNS
+
+### Example LocalDNS configuration
+
+```yaml
+spec:
+  LocalDNS:
+    mode: Required
+``` 
+
+### LocalDNS overrides and custom configurations
+
+You can customize LocalDNS configurations such as `vnetDNSOverrides` and `kubeDNSOverrides`. 
+
+```yaml
+spec:
+  LocalDNS:
+    mode: Preferred
+    vnetDNSOverrides:
+       cacheDuration: 3600
+       forwardDestination: "VnetDNS"
+       forwardPolicy: "Sequential"
+       maxConcurrent: 1000
+       protocol: "PreferUDP"
+       queryLogging: "Error"
+       serveStale: "Immediate"
+       serveStaleDuration: 3600
+       zone: 
+    kubeDNSOverrides:
+       cacheDuration: 3600
+       forwardDestination: "ClusterCoreDNS"
+       maxConcurrent: 1000
+       protocol: "PreferUDP"
+       queryLogging: "Error"
+       serveStale: "Immediate"
+       serveStaleDuration: 3600
+       zone:
+``` 
+    
 
 ## Kubelet configuration
 
@@ -268,6 +327,12 @@ spec:
   # Default: Disabled
   # Valid values: FIPS, Disabled
   fipsMode: Disabled
+
+  # LocalDNS mode - allows use of LocalDNS feature
+  # Default: Disabled
+  # Valid values: Preferred, Required, Disabled
+  LocalDNS:
+    mode: Disabled
 
   # Virtual network subnet configuration (optional)
   # If not specified, uses the default --vnet-subnet-id from Karpenter installation
