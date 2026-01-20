@@ -34,8 +34,11 @@ In this article, you learn how to migrate to KMS v2 for clusters with versions o
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
-    > [!NOTE]
-    > The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
 
 ## Upgrade your AKS cluster and turn on KMS
 
@@ -56,8 +59,11 @@ In this article, you learn how to migrate to KMS v2 for clusters with versions o
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
-    > [!NOTE]
-    > The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
 
 ## Next steps
 

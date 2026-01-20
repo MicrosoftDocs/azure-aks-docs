@@ -41,8 +41,11 @@ This article shows you how to update the key vault mode from public to private o
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
-    > [!NOTE]
-    > The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
 
 1. Update the key vault from public to private using the [`az keyvault update`][azure-keyvault-update] command with the `--public-network-access` parameter set to `Disabled`.
 
@@ -79,8 +82,11 @@ This article shows you how to update the key vault mode from public to private o
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
-    > [!NOTE]
-    > The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
 
 1. Update the key vault from public to private using the [`az keyvault update`][azure-keyvault-update] command with the `--public-network-access` parameter set to `Enabled`.
 

@@ -203,8 +203,11 @@ The following sections describe how to turn on KMS for a public key vault on a n
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
-    > [!NOTE]
-    > The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
 
 ## Rotate existing keys in a public key vault
 
@@ -234,8 +237,11 @@ After you change the key ID (including changing either the key name or the key v
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
-    > [!NOTE]
-    > The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
 
 :::zone-end
 
@@ -362,8 +368,11 @@ The following sections describe how to turn on KMS for a private key vault on a 
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
-    > [!NOTE]
-    > The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
 
 ### Rotate existing keys in a private key vault
 
@@ -394,8 +403,11 @@ After you change the key ID (including changing either the key name or the key v
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
-    > [!NOTE]
-    > The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
 
 :::zone-end
 
@@ -418,8 +430,11 @@ After you change the key ID (including changing either the key name or the key v
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
-    > [!NOTE]
-    > The error is safe to ignore when you run the command: "the object has been modified; please apply your changes to the latest version and try again".
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
 
 ## Next steps
 
