@@ -23,10 +23,10 @@ For more information, see the [agentic CLI for AKS overview](./cli-agent-for-aks
   - Azure OpenAI (recommended).
   - OpenAI or other LLM providers compatible with OpenAPI specifications.
 - Ensure that you're signed in to the proper subscription by using the [`az account set`](/cli/azure/account#az-account-set) command.
-- Configure access to your AKS cluster by using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.
+- Configure access to your AKS cluster by using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command. Replace `<RESOURCE_GROUP>` and `<CLUSTER_NAME>` with your AKS cluster's resource group and name.
 
     ```azurecli-interactive
-    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrite-existing
+    az aks get-credentials --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --overwrite-existing
     ```
 
 - [Install the agentic CLI for AKS extension](#install-the-agentic-cli-for-aks-extension).
@@ -35,7 +35,7 @@ For more information, see the [agentic CLI for AKS overview](./cli-agent-for-aks
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-1. Add the agentic CLI for AKS extension to your Azure CLI installation by using the [`az extension add`](/cli/azure/extension#az-extension-add) command. You can also update to the latest version if you already have it installed by using the [`az extension update`](/cli/azure/extension#az-extension-update) command. This step might take 5 to 10 minutes to complete.
+1. Add the agentic CLI for AKS extension to your Azure CLI installation by using the [`az extension add`](/cli/azure/extension#az-extension-add) command. If the extension is already installed, you can update to the latest version with the [`az extension update`](/cli/azure/extension#az-extension-update) command. This step might take 5 to 10 minutes to complete.
 
     ```azurecli-interactive
     # Install the extension
@@ -94,10 +94,10 @@ We also support any OpenAI-compatible model. Check the documentation of the LLM 
 
 ## Initialize the agentic CLI for AKS
 
-1. Initialize the agentic CLI for AKS by using the [`az aks agent-init`](/cli/azure/aks#az-aks-agent-init) command. This command sets up the necessary configurations and toolsets for the agent.
+1. Initialize the agentic CLI for AKS by using the [`az aks agent-init`](/cli/azure/aks#az-aks-agent-init) command. This command sets up the necessary configurations and toolsets for the agent. Replace `<RESOURCE_GROUP>` and `<CLUSTER_NAME>` with your AKS cluster's resource group and name.
 
     ```azurecli-interactive
-    az aks agent-init
+    az aks agent-init --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME>
     ```
 
 1. Select your LLM provider, and enter LLM details when prompted. For example:
@@ -235,10 +235,10 @@ Using 37 datasources (toolsets). To refresh: use flag `--refresh-toolsets`
 
 As an alternative to the default toolsets, you can enable the [AKS Model Context Protocol (MCP) server](https://github.com/Azure/aks-mcp) with the agentic CLI for AKS. This experience spins up the AKS MCP server locally and uses it as the source for telemetry.
 
-The following example shows how to start the MCP server and use it with the agentic CLI for AKS:
+The following example shows how to start the MCP server and use it with the agentic CLI for AKS. Replace `<RESOURCE_GROUP>` and `<CLUSTER_NAME>` with your AKS cluster's resource group and name.
 
 ```azurecli-interactive
-az aks agent "why is my node unhealthy" --model=azure/gpt-4o --aks-mcp --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
+az aks agent "why is my node unhealthy" --model=azure/gpt-4o --aks-mcp --name <CLUSTER_NAME> --resource-group <RESOURCE_GROUP>
 Loaded models: ['azure/gpt-4o']                                                                                           
 Refreshing available datasources (toolsets)                                                                               
 ..                                                                                                                       
