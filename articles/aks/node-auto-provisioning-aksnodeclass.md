@@ -162,47 +162,57 @@ spec:
 
 LocalDNS deploys a node level DNS proxy that resolves DNS queries closer to workloads, reducing query latency and improving resiliency during transient DNS disruptions. For more information, see the [LocalDNS documentation](./localdns-custom.md). By default, LocalDNS is set to Disabled and can be configured to the following options:
 
-- `Disabled` (default)
-- `Preferred` - If the current orchestrator version supports LocalDNS, prefer enabling LocalDNS
-- `Required` - Enable LocalDNS
+- `Disabled` (default) - Disables the localDNS feature. DNS queries aren't resolved locally on the node.
+- `Preferred` - AKS manages LocalDNS enablement based on the Kubernetes version of the node pool. The configuration is always validated and included, but LocalDNS isn't enabled unless the correct Kubernetes version is used.
+- `Required` - LocalDNS is enforced on the node pool if all prerequisites are satisfied. If the requirements aren't met, the deployment fails.
 
 ### Example LocalDNS configuration
+
+You can customize LocalDNS configurations such as `vnetDNSOverrides` and `kubeDNSOverrides`. For more details on the supported plugins see [Customize LocalDNS](./localdns-custom.md).
 
 ```yaml
 spec:
   LocalDNS:
     mode: Required
-``` 
-
-### LocalDNS overrides and custom configurations
-
-You can customize LocalDNS configurations such as `vnetDNSOverrides` and `kubeDNSOverrides`. 
-
-```yaml
-spec:
-  LocalDNS:
-    mode: Preferred
     vnetDNSOverrides:
-       cacheDuration: 3600
-       forwardDestination: "VnetDNS"
-       forwardPolicy: "Sequential"
-       maxConcurrent: 1000
-       protocol: "PreferUDP"
-       queryLogging: "Error"
-       serveStale: "Immediate"
-       serveStaleDuration: 3600
-       zone: 
+      - zone: "."
+        cacheDuration: "30s"
+        forwardDestination: VnetDNS
+        forwardPolicy: Random
+        maxConcurrent: 80
+        protocol: ForceTCP
+        queryLogging: Log
+        serveStale: Immediate
+        serveStaleDuration: "100s"
+      - zone: "cluster.local"
+        cacheDuration: "40s"
+        forwardDestination: VnetDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 70
+        protocol: PreferUDP
+        queryLogging: Error
+        serveStale: Disable
+        serveStaleDuration: "30s"
     kubeDNSOverrides:
-       cacheDuration: 3600
-       forwardDestination: "ClusterCoreDNS"
-       maxConcurrent: 1000
-       protocol: "PreferUDP"
-       queryLogging: "Error"
-       serveStale: "Immediate"
-       serveStaleDuration: 3600
-       zone:
+      - zone: "."
+        cacheDuration: "30s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: RoundRobin
+        maxConcurrent: 100
+        protocol: PreferUDP
+        queryLogging: Log
+        serveStale: Immediate
+        serveStaleDuration: "60s"
+      - zone: "cluster.local"
+        cacheDuration: "10s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 50
+        protocol: PreferUDP
+        queryLogging: Error
+        serveStale: Disable
+        serveStaleDuration: "30s"
 ``` 
-    
 
 ## Kubelet configuration
 
@@ -333,6 +343,7 @@ spec:
   # Valid values: Preferred, Required, Disabled
   LocalDNS:
     mode: Disabled
+    # additional details on VNETDNSOverrides and KubeDNSOverrides can be added here
 
   # Virtual network subnet configuration (optional)
   # If not specified, uses the default --vnet-subnet-id from Karpenter installation
