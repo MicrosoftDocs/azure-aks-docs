@@ -162,7 +162,7 @@ spec:
 
 LocalDNS deploys a node level DNS proxy that resolves DNS queries closer to workloads, reducing query latency and improving resiliency during transient DNS disruptions. For more information, see the [LocalDNS documentation](./localdns-custom.md). By default, LocalDNS is set to Disabled and can be configured to the following options:
 
-- `Disabled` (default) - Disables the localDNS feature. DNS queries aren't resolved locally on the node.
+- `Disabled` (default) - Disables the LocalDNS feature. DNS queries aren't resolved locally on the node.
 - `Preferred` - AKS manages LocalDNS enablement based on the Kubernetes version of the node pool. The configuration is always validated and included, but LocalDNS isn't enabled unless the correct Kubernetes version is used.
 - `Required` - LocalDNS is enforced on the node pool if all prerequisites are satisfied. If the requirements aren't met, the deployment fails.
 
