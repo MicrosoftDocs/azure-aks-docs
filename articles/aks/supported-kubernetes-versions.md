@@ -390,6 +390,9 @@ Note starting from 1.28 version onwards, agentpool versions can be up to three v
 
 If performing an upgrade from an _unsupported version_ the upgrade is done without any guarantee of functionality and is excluded from the service-level agreements and limited warranty. Clusters running _unsupported version_ has the flexibility of decoupling control plane upgrades with node pool upgrades. However if your version is out of date, we recommend that you re-create the cluster.
 
+  > [!NOTE]
+  > For clusters using LTS, it is possible to upgrade across multiple versions in one step via Portal and CLI both. For example, you can upgrade from LTS version 1.30 to LTS version 1.33 directly. However, even in this case, the upgrade process internally proceeds one minor version at a time and this process is repeated until the target version is reached. Performing an upgrade that spans several minor versions may cause significant changes, and it is not guaranteed that your workloads will function correctly. Therefore, it is recommended upgrading one version at a time. 
+
 ### Can I create a new 1.xx.x cluster during the platform support window?
 
 No, Creation of new clusters isn't possible during Platform Support period.
