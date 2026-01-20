@@ -86,7 +86,7 @@ metadata:
   labels:
     fleet.azure.com/location: eastus2
     fleet.azure.com/resource-group: resource-group
-    fleet.azure.com/subscription-id: 8xxxxxxx-dxxx-4xxx-bxxx-xxxxxxxxxxx8
+    fleet.azure.com/subscription-id: aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e
   name: cluster01
   resourceVersion: "123456"
   uid: 7xxxxxxx-5xxx-4xxx-bxxx-xxxxxxxxxxx4
