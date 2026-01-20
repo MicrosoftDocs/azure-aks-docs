@@ -168,7 +168,7 @@ LocalDNS deploys a node level DNS proxy that resolves DNS queries closer to work
 
 ### Example LocalDNS configuration
 
-You can customize LocalDNS configurations such as `vnetDNSOverrides` and `kubeDNSOverrides`. For more details on the supported plugins see [Customize LocalDNS](./localdns-custom.md).
+You can customize LocalDNS configurations such as `vnetDNSOverrides` and `kubeDNSOverrides`. For more details on the supported plugins, see [Customize LocalDNS](./localdns-custom.md).
 
 ```yaml
 spec:
