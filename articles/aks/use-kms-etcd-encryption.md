@@ -449,7 +449,15 @@ For more information on using KMS with AKS, see the following articles:
 <!-- LINKS -->
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-list]: /cli/azure/aks#az-aks-list
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [api-server-vnet-integration]: api-server-vnet-integration.md
 [kms-v2-support]: ./use-kms-v2.md
 [update-a-key-vault-mode]: ./update-kms-key-vault.md
+[azure-identity-create]: /cli/azure/identity#az-identity-create
+[azure-identity-show]: /cli/azure/identity#az-identity-show
+[azure-keyvault-create]: /cli/azure/keyvault#az-keyvault-create
+[azure-keyvault-key-create]: /cli/azure/keyvault/key#az-keyvault-key-create
+[azure-keyvault-set-policy]: /cli/azure/keyvault#az-keyvault-set-policy
+[azure-keyvault-key-show]: /cli/azure/keyvault/key#az-keyvault-key-show
+[azure-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
