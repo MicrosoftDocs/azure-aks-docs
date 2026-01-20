@@ -319,7 +319,7 @@ For more information, see [Dynatrace Solutions](https://www.dynatrace.com/techno
 
 Elastic, the Search AI Company, enables everyone to securely harness search powered AI to find the answers they need in real-time using all their data, at scale. Elastic's solutions for search, observability and security are built on the Elastic Search AI Platform, the development platform used by thousands of companies, including more than 50% of the Fortune 500.
 
-For more information, see [Elastic Solutions](https://www.elastic.co/), [Elastic Observability on Azure Marketplace](https://marketplace.microsoft.com/en-us/product/saas/elastic.ec-azure-observability?ocid=azure-linux-os-guard-obs), and [Elastic Security on Azure Marketplace](https://marketplace.microsoft.com/en-us/product/saas/elastic.ec-azure-security?ocid=azure-linux-os-guard-sec).
+For more information, see [Elastic Solutions](https://www.elastic.co/), [Elastic Observability on Azure Marketplace](https://marketplace.microsoft.com/product/saas/elastic.ec-azure-observability?ocid=azure-linux-os-guard-obs), and [Elastic Security on Azure Marketplace](https://marketplace.microsoft.com/product/saas/elastic.ec-azure-security?ocid=azure-linux-os-guard-sec).
 
 ### New Relic
 
