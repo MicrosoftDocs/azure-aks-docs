@@ -48,9 +48,7 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 
 * You must have an existing AKS cluster with Kubernetes versions 1.31 or later to use LocalDNS. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 * This article requires version 2.80.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed.
-* Your AKS cluster can't have node autoprovisioning enabled to use LocalDNS.
 * LocalDNS is only supported on node pools running Azure Linux or Ubuntu 22.04 or newer.
-* LocalDNS only supports Virtual Machine Scale Set node pools.
 * The Virtual Machine (VM) SKU used for your node pool must have at least 4 vCPUs (cores) to support LocalDNS.
 * LocalDNS isn't compatible with [applied FQDN filter policies in Advanced Container Networking Services (ACNS)](./how-to-apply-fqdn-filtering-policies.md).
 
@@ -61,6 +59,9 @@ LocalDNS is configured at the node pool level in AKS, meaning you can enable or 
 If you don't specify a custom configuration file, AKS automatically applies a default LocalDNS configuration.
 
 # [Enable](#tab/enable)
+
+> [!NOTE]
+> If you're using Node Auto-Provisioning (NAP), see [LocalDNS configuration](./node-auto-provisioning-aksnodeclass.md#localdns-configuration) for instructions on how to enable LocalDNS with NAP.
 
 To enable LocalDNS during node pool creation, use the following command with your custom configuration file:
 
@@ -78,6 +79,9 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 > Enabling LocalDNS on a node pool initiates a reimage operation on all nodes within that pool. This process can cause temporary disruption to running workloads and might lead to application downtime if not properly managed. You should plan for potential service interruptions and ensure that the applications are configured for high availability or have appropriate disruption budgets in place before enabling this setting.
 
 # [Disable](#tab/disable)
+
+> [!NOTE]
+> If you're using Node Auto-Provisioning (NAP), see [LocalDNS configuration](./node-auto-provisioning-aksnodeclass.md#localdns-configuration) for instructions on how to disable LocalDNS with NAP.
 
 To disable LocalDNS for a node pool, you must update your _localdnsconfig.json_ file by setting the `mode` property to `Disabled`. This change instructs AKS to turn off the local DNS proxy on all nodes in the specified pool, reverting DNS resolution to the default cluster behavior. After updating the configuration file, apply it to the node pool using the Azure CLI to ensure the change takes effect.
 
@@ -121,6 +125,9 @@ Here's an example of how to verify:
    ```
 
 # [Configure](#tab/configure)
+
+> [!NOTE]
+> If you're using Node Auto-Provisioning (NAP), see [LocalDNS configuration](./node-auto-provisioning-aksnodeclass.md#localdns-configuration) for instructions on how to configure LocalDNS with NAP.
 
 LocalDNS uses a JSON-based configuration file _localdnsconfig.json_ to define DNS resolution behavior for each node pool. This file allows you to specify operational modes, server blocks for different DNS domains, and plugin settings such as caching, forwarding, and logging.
 
@@ -186,7 +193,7 @@ LocalDNS can be enabled in three possible modes that define the extent of enforc
 
 * `Required`: In this mode, LocalDNS is enforced on the node pool if all prerequisites are satisfied. If the requirements aren't met, the deployment fails.
 
-* `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally within the AKS cluster.
+* `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally on the node.
 
 * `Preferred`: In this mode, AKS manages LocalDNS enablement based on the Kubernetes version of the node pool. The configuration is always validated and included, but LocalDNS isn't enabled unless the correct Kubernetes version is used.
 

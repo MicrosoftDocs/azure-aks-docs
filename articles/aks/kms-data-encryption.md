@@ -115,6 +115,24 @@ az aks update \
     --kms-infrastructure-encryption Enabled
 ```
 
+### Verify KMS configuration
+
+After enabling KMS encryption, verify the configuration.
+
+```azurecli-interactive
+az aks show --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --query 'securityProfile'
+```
+
+The output includes the KMS configuration:
+
+```json
+{
+    "kubernetesResourceObjectEncryptionProfile": {
+        "infrastructureEncryption": "Enabled"
+    }
+}
+```
+
 :::zone-end
 
 :::zone pivot="cmk-private"
@@ -246,6 +264,30 @@ az aks update \
     --assign-identity $IDENTITY_RESOURCE_ID
 ```
 
+### Verify KMS configuration
+
+After enabling KMS encryption, verify the configuration.
+
+```azurecli-interactive
+az aks show --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --query 'securityProfile'
+```
+
+The output includes the KMS configuration:
+
+```json
+{
+    "azureKeyVaultKms": {
+        "enabled": true,
+        "keyId": "https://<key-vault-name>.vault.azure.net/keys/<key-name>",
+        "keyVaultNetworkAccess": "Private",
+        "keyVaultResourceId": "<key-vault-resource-id>"
+    },
+    "kubernetesResourceObjectEncryptionProfile": {
+        "infrastructureEncryption": "Enabled"
+    }
+}
+```
+
 :::zone-end
 
 :::zone pivot="cmk-public"
@@ -362,9 +404,7 @@ az aks update \
     --assign-identity $IDENTITY_RESOURCE_ID
 ```
 
-:::zone-end
-
-## Verify KMS configuration
+### Verify KMS configuration
 
 After enabling KMS encryption, verify the configuration.
 
@@ -387,6 +427,8 @@ The output includes the KMS configuration:
     }
 }
 ```
+
+:::zone-end
 
 ## Migrate between key management options
 

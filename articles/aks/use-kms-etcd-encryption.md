@@ -203,6 +203,12 @@ The following sections describe how to turn on KMS for a public key vault on a n
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
+
 ## Rotate existing keys in a public key vault
 
 After you change the key ID (including changing either the key name or the key version), you can rotate the existing keys in the public key vault.
@@ -229,6 +235,12 @@ After you change the key ID (including changing either the key name or the key v
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
     ```
 
 :::zone-end
@@ -356,6 +368,12 @@ The following sections describe how to turn on KMS for a private key vault on a 
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
+
 ### Rotate existing keys in a private key vault
 
 After you change the key ID (including changing either the key name or the key version), you can rotate the existing keys in the private key vault.
@@ -385,6 +403,12 @@ After you change the key ID (including changing either the key name or the key v
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
+
 :::zone-end
 
 ## Disable KMS on an AKS cluster
@@ -402,9 +426,14 @@ After you change the key ID (including changing either the key name or the key v
     ```
 
 1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
-
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
     ```
 
 ## Next steps
@@ -420,7 +449,15 @@ For more information on using KMS with AKS, see the following articles:
 <!-- LINKS -->
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-list]: /cli/azure/aks#az-aks-list
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [api-server-vnet-integration]: api-server-vnet-integration.md
 [kms-v2-support]: ./use-kms-v2.md
 [update-a-key-vault-mode]: ./update-kms-key-vault.md
+[azure-identity-create]: /cli/azure/identity#az-identity-create
+[azure-identity-show]: /cli/azure/identity#az-identity-show
+[azure-keyvault-create]: /cli/azure/keyvault#az-keyvault-create
+[azure-keyvault-key-create]: /cli/azure/keyvault/key#az-keyvault-key-create
+[azure-keyvault-set-policy]: /cli/azure/keyvault#az-keyvault-set-policy
+[azure-keyvault-key-show]: /cli/azure/keyvault/key#az-keyvault-key-show
+[azure-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
