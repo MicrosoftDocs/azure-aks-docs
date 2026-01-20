@@ -17,6 +17,10 @@ This article describes the node images available for Azure Kubernetes Service (A
 
 [!INCLUDE [Azure Linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
+[!INCLUDE [Windows Server 2019 retirement](./includes/windows-server-2019-retirement.md)]
+
+[!INCLUDE [Windows Server 2022 retirement](./includes/windows-server-2022-retirement.md)]
+
 > [!IMPORTANT]
 > Older node images can contain unpatched security vulnerabilities and might not work properly with recently released features. Using older images might lead to issues with scaling, node readiness, and security. Depending on the age of the image version, it could also place the cluster outside of the support scope until you perform a node image upgrade. **We recommend that you keep node images [current](https://releases.aks.azure.com/) and enable automatic upgrades**.
 

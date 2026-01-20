@@ -45,8 +45,6 @@ For AKS node pools, we recommend a minimum size of *Standard_NC6s_v3*. The NVv4 
 
 * Updating an existing node pool to add GPU VM size is not supported on AKS.
 
-[!INCLUDE [aks gpu image retirement](./includes/aks-gpu-image-retirement.md)]
-
 ## Before you begin
 
 * This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
