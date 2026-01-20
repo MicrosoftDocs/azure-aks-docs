@@ -343,7 +343,7 @@ spec:
   # Valid values: Preferred, Required, Disabled
   LocalDNS:
     mode: Disabled
-    # additional details on VNETDNSOverrides and KubeDNSOverrides can be added here
+    # additional details on vnetDNSOverrides and kubeDNSOverrides can be added here
 
   # Virtual network subnet configuration (optional)
   # If not specified, uses the default --vnet-subnet-id from Karpenter installation
