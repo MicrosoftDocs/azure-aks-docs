@@ -34,6 +34,12 @@ In this article, you learn how to migrate to KMS v2 for clusters with versions o
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
+
 ## Upgrade your AKS cluster and turn on KMS
 
 1. Upgrade your AKS cluster to version 1.27 or later using the [`az aks upgrade`][az-aks-upgrade] command with the `--kubernetes-version` parameter set to your desired version. The following example upgrades to version `1.27.1`:
@@ -51,6 +57,12 @@ In this article, you learn how to migrate to KMS v2 for clusters with versions o
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
     ```
 
 ## Next steps

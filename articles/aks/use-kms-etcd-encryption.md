@@ -203,6 +203,12 @@ The following sections describe how to turn on KMS for a public key vault on a n
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
+
 ## Rotate existing keys in a public key vault
 
 After you change the key ID (including changing either the key name or the key version), you can rotate the existing keys in the public key vault.
@@ -229,6 +235,12 @@ After you change the key ID (including changing either the key name or the key v
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
     ```
 
 :::zone-end
@@ -356,6 +368,12 @@ The following sections describe how to turn on KMS for a private key vault on a 
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
+
 ### Rotate existing keys in a private key vault
 
 After you change the key ID (including changing either the key name or the key version), you can rotate the existing keys in the private key vault.
@@ -385,6 +403,12 @@ After you change the key ID (including changing either the key name or the key v
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
+
 :::zone-end
 
 ## Disable KMS on an AKS cluster
@@ -402,9 +426,14 @@ After you change the key ID (including changing either the key name or the key v
     ```
 
 1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
-
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
     ```
 
 ## Next steps
