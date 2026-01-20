@@ -302,7 +302,7 @@ rules:
         resources: ["verticalpodautoscalers", "verticalpodautoscalercheckpoints"]
     omitStages:
       - "RequestReceived"
-  # Capture create and delete of internal fleet resources 
+  # Capture create and delete of internal fleet resources
   - level: RequestResponse
     verbs: ["create", "delete"]
     resources:
@@ -319,7 +319,7 @@ rules:
     verbs: ["create", "update", "patch", "delete"]
     resources:
       - group: "placement.kubernetes-fleet.io"
-        resources: ["clusterstagedupdateruns", "clusterresourceplacements", "clusterresourceplacementevictions", "clusterresourceplacementdisruptionbudgets",  "clusterstagedupdatestrategies", "clusterapprovalrequests", "clusterresourceoverrides", "resourceoverrides"]
+        resources: ["clusterstagedupdateruns", "clusterresourceplacements", "clusterresourceplacementevictions", "clusterresourceplacementdisruptionbudgets", "clusterstagedupdatestrategies", "clusterapprovalrequests", "clusterresourceoverrides", "resourceoverrides"]
       - group: "networking.fleet.azure.com"
         resources: ["serviceexports", "multiclusterservices", "trafficmanagerprofiles", "trafficmanagerbackends"]
     omitStages:
