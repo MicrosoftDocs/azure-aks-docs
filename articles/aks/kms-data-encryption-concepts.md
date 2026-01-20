@@ -52,7 +52,7 @@ AKS offers two key management options for KMS encryption:
 
 With platform-managed keys, AKS automatically manages the encryption keys for you:
 
-- AKS creates and manages the Azure Key Vault and encryption keys.
+- AKS creates and manages the encryption keys.
 - Key rotation is handled automatically by the platform.
 - No additional configuration or key vault setup is required.
 
