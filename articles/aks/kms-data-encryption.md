@@ -19,7 +19,7 @@ This article shows you how to enable Key Management Service (KMS) data encryptio
 
 AKS supports two key management options:
 
-- **Platform-managed keys (PMK)**: AKS automatically creates and manages the encryption keys. This option provides the simplest setup with automatic key rotation. All traffic between AKS components and the internal Key Vault is secured using Microsoft’s standard infrastructure for sensitive data.
+- **Platform-managed keys (PMK)**: AKS automatically creates and manages the encryption keys. This option provides the simplest setup with automatic key rotation.
 - **Customer-managed keys (CMK)**: You create and manage your own Azure Key Vault and encryption keys. This option provides full control over key lifecycle and meets compliance requirements that mandate customer-managed keys.
 
 For more information about encryption concepts and key options, see [Data encryption at rest concepts for AKS][kms-data-encryption-concepts].
