@@ -1,8 +1,8 @@
 - name: Azure Kubernetes Service (AKS)
   href: ./index.yml
 - name: What is AKS?
-  href: what-is-aks.md 
-- name: Get started with AKS 
+  href: what-is-aks.md
+- name: Get started with AKS
   items:
     - name: Kubernetes basics
       href: get-started-kubernetes.md
@@ -284,7 +284,7 @@
           href: reduce-latency-ppg.md
     - name: Virtual nodes
       items:
-        - name: Use virtual nodes 
+        - name: Use virtual nodes
           href: virtual-nodes.md
         - name: Use the Azure CLI
           href: virtual-nodes-cli.md
@@ -345,7 +345,7 @@
   - name: About AKS upgrades
     items:
     - name: Upgrade concepts
-      href: upgrade-conceptual.md 
+      href: upgrade-conceptual.md
     - name: Maintain and upgrade cluster components
       href: upgrade-cluster-components.md
     - name: Upgrade options and recommendations
@@ -404,13 +404,13 @@
           href: integrations.md
         - name: Integrate ACR with an AKS cluster
           href: cluster-container-registry-integration.md
-        - name: AKS desktop (Preview)
+        - name: AKS desktop
           items:
-            - name: AKS desktop overview (Preview)
+            - name: AKS desktop overview
               href: aks-desktop-overview.md
-            - name: Understand permissions in AKS desktop (Preview)
+            - name: Set up permissions in AKS desktop
               href: aks-desktop-permissions.md
-            - name: Deploy an application using AKS desktop (Preview)
+            - name: Deploy an application using AKS desktop
               href: aks-desktop-app.md
         - name: Use cluster extensions
           items:
@@ -496,8 +496,20 @@
   items:
       - name: Networking concepts
         href: concepts-network.md
-      - name: IP address planning
-        href: concepts-network-ip-address-planning.md
+      - name: Plan networking for AKS
+        items:
+          - name: Overview
+            href: plan-networking.md
+          - name: Plan control plane networking
+            href: plan-control-plane-networking.md
+          - name: Plan node networking
+            href: plan-node-networking.md
+          - name: Plan pod networking
+            href: plan-pod-networking.md
+          - name: Plan application networking
+            href: plan-application-networking.md
+          - name: IP address planning
+            href: concepts-network-ip-address-planning.md
       - name: Services
         href: concepts-network-services.md
       - name: Advanced Container Networking Services (ACNS)
@@ -770,6 +782,10 @@
               href: use-kms-v2.md
             - name: Observability for KMS etcd encryption
               href: kms-observability.md
+            - name: Use KMS platform-managed keys or customer-managed keys
+              href: kms-data-encryption.md
+            - name: Migrate to KMS with platform-managed or customer-managed keys
+              href: migrate-key-management-service-platform-managed-key-customer-managed-key.md
         - name: Secure container access to resources
           href: secure-container-access.md
     - name: Node security
@@ -952,16 +968,14 @@
       items:
         - name: CSI storage drivers overview
           href: csi-storage-drivers.md
+        - name: Use the Azure CSI driver and provision volumes
+          href: azure-csi-driver-volume-provisioning.md
         - name: Migrate from in-tree to CSI driver
           href: csi-migrate-in-tree-volumes.md
     - name: Block storage
       items:
           - name: Azure Disks
             items:
-                - name: Provision Azure Disk storage
-                  href: azure-csi-disk-storage-provision.md
-                - name: Azure Disks CSI driver
-                  href: azure-disk-csi.md
                 - name: Use Azure Premium SSD v2 disks
                   href: use-premium-v2-disks.md
                 - name: Use Azure ultra disks
@@ -986,12 +1000,6 @@
                   href: /azure/storage/container-storage/use-container-storage-with-local-disk?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Shared file storage
       items:
-        - name: Azure Files storage
-          items:
-            - name: Azure Files CSI driver
-              href: azure-files-csi.md
-            - name: Provision Azure Files storage
-              href: azure-csi-files-storage-provision.md
         - name: Azure NetApp Files for AKS
           items:
             - name: Configure Azure NetApp Files for AKS
@@ -1004,12 +1012,6 @@
               href: azure-netapp-files-dual-protocol.md
             - name: Azure Files and Azure NetApp Files comparison
               href: /azure/storage/files/storage-files-netapp-comparison?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Azure Blob storage
-          items:
-            - name: Azure Blob CSI driver
-              href: azure-blob-csi.md
-            - name: Provision Azure Blob storage
-              href: azure-csi-blob-storage-provision.md
     - name: Other storage options
       items:
         - name: Azure HPC Cache
@@ -1041,7 +1043,7 @@
     - name: Create Azure AKS infrastructure
       href: create-aks-infrastructure.md
     - name: Deploy Open-WebSearch MCP Server on AKS
-      href: openwebsearch-on-aks.md  
+      href: openwebsearch-on-aks.md
     - name: Machine learning operations (MLOps)
       items:
         - name: Best practices
@@ -1089,7 +1091,7 @@
             - name: Integrate an MCP server
               href: ai-toolchain-operator-mcp.md
         - name: Deploy data and ML pipelines with Flyte
-          href: use-flyte.md    
+          href: use-flyte.md
     - name: Work with clusters using Copilot
       href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: GPUs

@@ -164,6 +164,17 @@ groups:
     title: User-assigned managed identity
   - id: pre-created-kubelet
     title: Pre-created kubelet managed identity
+# Owner: alalve
+- id: azure-csi-driver
+  title: Choose your CSI driver type
+  prompt: Choose your CSI driver type
+  pivots:
+  - id: csi-blob
+    title: Azure Blob
+  - id: csi-disk
+    title: Azure Disk
+  - id: csi-files
+    title: Azure Files
 # Owner: schaffererin
 - id: kubelogin-auth-methods
   title: Choose a kubelogin authentication method
@@ -256,3 +267,11 @@ groups:
     title: Azure CLI
   - id: azure-powershell
     title: Azure PowerShell
+- id: aks-desktop
+  title: AKS desktop
+  prompt: Choose your role in AKS desktop
+  pivots:
+  - id: cluster-operator
+    title: Cluster operator
+  - id: developer
+    title: Developer

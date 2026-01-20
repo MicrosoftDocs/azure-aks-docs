@@ -1,12 +1,12 @@
 ---
 title: Monitor Azure Kubernetes Service (AKS)
 description: Learn how to monitor Azure Kubernetes Service (AKS) clusters using built-in monitoring capabilities and integrating with other Azure services for detailed insights into health and performance.
-ms.date: 09/06/2024
+ms.date: 01/20/2026
 ms.custom: horz-monitor, copilot-scenario-highlight
 ms.topic: overview
 ms.service: azure-kubernetes-service
-author: xuhongl
-ms.author: xuhliu
+author: aritraghosh
+ms.author: aritraghosh
 ms.subservice: aks-monitoring
 #Customer intent: As a cloud administrator, I want to implement comprehensive monitoring for Azure Kubernetes Service (AKS) so that I can ensure performance and reliability in my critical applications and manage resource utilization effectively.
 ---
@@ -126,6 +126,271 @@ If the [diagnostic settings for your cluster](monitor-aks-reference.md#resource-
 | All API server logs | Resource-specific mode | `AKSControlPlane`<br>\| `where Category == "kube-apiserver"` |
 
 To access a set of prebuilt queries in the Log Analytics workspace, see the [Log Analytics queries interface](/azure/azure-monitor/logs/queries#queries-interface), and select the **Kubernetes Services** resource type. For a list of common queries for Container insights, see [Container insights queries](/azure/azure-monitor/containers/container-insights-log-query).
+
+#### AKS audit policy
+
+AKS uses a Kubernetes [audit policy](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/) to control what events are logged and what data they contain. The policy defines rules that determine the audit level for different types of API requests based on users, resources, namespaces, and verbs. The following audit levels are used:
+
+- **None**: Events matching this rule aren't logged.
+- **Metadata**: Log request metadata (requesting user, timestamp, resource, verb) but not request or response body.
+- **Request**: Log event metadata and request body but not response body.
+- **RequestResponse**: Log event metadata, request and response bodies.
+
+The following table summarizes the key audit policy rules applied in AKS:
+
+| Audit level | Description | Example events |
+|:---|:---|:---|
+| **None** | High-volume, low-risk read operations | `aksService` user `get`/`list` operations, `kube-proxy` watch on endpoints/services, kubelet `get` on nodes/node status, health check URLs (`/healthz*`, `/version`, `/swagger*`) |
+| **Metadata** | System events, events resources (except creates/updates in `default`/`kube-system`), secrets, configmaps, service accounts, token reviews | Token reviews, secret/configmap access, large CRDs like `installations.operator.tigera.io` |
+| **Request** | Node and pod status updates from kubelets/nodes, delete collection operations, CRD updates for volume snapshots, read operations (`get`/`list`/`watch`) on core API groups, VPA changes | Kubelet status updates, namespace deletions, VPA checkpoint updates |
+| **RequestResponse** | CoreDNS custom configmap updates, Fleet API operations, Karpenter resource changes, all other write operations on core API groups | CoreDNS configuration changes, Fleet member cluster operations, Karpenter node pool changes |
+
+The complete audit policy used in AKS is available for review in the following collapsible section.
+
+<details>
+<summary>View the complete AKS audit policy</summary>
+
+```yaml
+apiVersion: audit.k8s.io/v1
+kind: Policy
+rules:
+  # audit level 'None' for high volume and low risk events
+  - level: None
+    users: ["aksService"]
+    verbs: ["get", "list"]
+  # audit level 'None' for low-risk requests
+  - level: None
+    users: ["system:kube-proxy"]
+    verbs: ["watch"]
+    resources:
+      - group: ""
+        resources: ["endpoints", "services", "services/status"]
+  # audit level 'None' for low-risk requests
+  - level: None
+    users: ["kubelet"] # legacy kubelet identity
+    verbs: ["get"]
+    resources:
+      - group: ""
+        resources: ["nodes", "nodes/status"]
+  # audit level 'None' for low-risk requests
+  - level: None
+    userGroups: ["system:nodes"]
+    verbs: ["get"]
+    resources:
+      - group: ""
+        resources: ["nodes", "nodes/status"]
+  # audit level 'None' for low-risk requests
+  - level: None
+    users:
+      - aksService # the default user/cert used by aks in master node
+      - system:serviceaccount:kube-system:endpoint-controller
+    verbs: ["get", "update"]
+    namespaces: ["kube-system"]
+    resources:
+      - group: ""
+        resources: ["endpoints"]
+  # audit level 'None' for low-risk requests
+  - level: None
+    users: ["system:apiserver"]
+    verbs: ["get"]
+    resources:
+      - group: ""
+        resources: ["namespaces", "namespaces/status", "namespaces/finalize"]
+  # audit level 'None' for low-risk requests
+  - level: None
+    users:
+      - aksService # the default user/cert used by aks in master node
+    verbs: ["get", "list"]
+    resources:
+      - group: "metrics.k8s.io"
+  # Don't log these read-only URLs.
+  - level: None
+    nonResourceURLs:
+      - /healthz*
+      - /version
+      - /swagger*
+  # monitor metadata for system events which are being logged by eventlogger component
+  - level: Metadata
+    verbs: ["create", "update", "patch"]
+    resources:
+      - group: ""
+        resources: ["events"]
+      - group: "events.k8s.io"
+        resources: ["events"]
+    namespaces: ["default", "kube-system"]
+  # Monitoring of actions to detect security/performance relevant activities.
+  - level: Metadata
+    verbs: ["delete", "list"]
+    resources:
+      - group: ""
+        resources: ["events"]
+      - group: "events.k8s.io"
+        resources: ["events"]
+  # Don't log other events requests.
+  - level: None
+    resources:
+      - group: ""
+        resources: ["events"]
+      - group: "events.k8s.io"
+        resources: ["events"]
+  # node and pod status calls from nodes are high-volume and can be large, don't log responses for expected updates from nodes
+  - level: Request
+    users: ["client", "kubelet", "system:node-problem-detector", "system:serviceaccount:kube-system:node-problem-detector", "system:serviceaccount:kube-system:aci-connector-linux"]
+    verbs: ["update","patch"]
+    resources:
+      - group: ""
+        resources: ["nodes/status", "pods/status"]
+    omitStages:
+      - "RequestReceived"
+  # node and pod status calls from nodes are high-volume and can be large, don't log responses for expected updates from nodes
+  - level: Request
+    userGroups: ["system:nodes"]
+    verbs: ["update","patch"]
+    resources:
+      - group: ""
+        resources: ["nodes/status", "pods/status"]
+    omitStages:
+      - "RequestReceived"
+  # deletecollection calls can be large, don't log responses for expected namespace deletions
+  - level: Request
+    users: ["system:serviceaccount:kube-system:namespace-controller"]
+    verbs: ["deletecollection"]
+    omitStages:
+      - "RequestReceived"
+  # ignore response object that has big size
+  - level: Request
+    verbs: ["update","patch"]
+    resources:
+      - group: "apiextensions.k8s.io"
+        resources: ["customresourcedefinitions"]
+        resourceNames: ["volumesnapshotcontents.snapshot.storage.k8s.io", "volumesnapshots.snapshot.storage.k8s.io"]
+    omitStages:
+      - "RequestReceived"
+  # ignore request and response objects for large CRDs that will be filtered down anyway
+  - level: Metadata
+    resources:
+      - group: "apiextensions.k8s.io"
+        resources: ["customresourcedefinitions"]
+        resourceNames: ["installations.operator.tigera.io"]
+    omitStages:
+      - "RequestReceived"
+  # overriding the default behavior of coredns might have security threats for Kubernetes DNS in security perspective, set the level as RequestResponse
+  - level: RequestResponse
+    verbs: ["update","patch"]
+    resources:
+      - group: ""
+        resources: ["configmaps"]
+        resourceNames: ["coredns-custom"]
+    namespaces: ["kube-system"]
+    omitStages:
+      - "RequestReceived"
+  # Secrets, ConfigMaps, ServiceAccounts, TokenRequest and TokenReviews can contain sensitive & binary data,
+  # so only log at the Metadata level.
+  - level: Metadata
+    resources:
+      - group: ""
+        resources: ["secrets", "configmaps", "serviceaccounts", "serviceaccounts/token"]
+      - group: authentication.k8s.io
+        resources: ["tokenreviews"]
+    omitStages:
+      - "RequestReceived"
+  # Capture state of vertical pod autoscalers
+  - level: Request
+    verbs: ["create", "update", "patch", "delete"]
+    resources:
+      - group: "autoscaling.k8s.io"
+        resources: ["verticalpodautoscalers", "verticalpodautoscalercheckpoints"]
+    omitStages:
+      - "RequestReceived"
+  # Capture create and delete of internal fleet resources
+  - level: RequestResponse
+    verbs: ["create", "delete"]
+    resources:
+      - group: "cluster.kubernetes-fleet.io"
+        resources: ["memberclusters", "internalmemberclusters"]
+      - group: "placement.kubernetes-fleet.io"
+        resources: ["works"]
+      - group: "networking.fleet.azure.com"
+        resources: ["internalserviceexports", "internalserviceimports"]
+    omitStages:
+      - "RequestReceived"
+  # Capture CUD of user facing Fleet API
+  - level: RequestResponse
+    verbs: ["create", "update", "patch", "delete"]
+    resources:
+      - group: "placement.kubernetes-fleet.io"
+        resources: ["clusterstagedupdateruns", "clusterresourceplacements", "clusterresourceplacementevictions", "clusterresourceplacementdisruptionbudgets", "clusterstagedupdatestrategies", "clusterapprovalrequests", "clusterresourceoverrides", "resourceoverrides"]
+      - group: "networking.fleet.azure.com"
+        resources: ["serviceexports", "multiclusterservices", "trafficmanagerprofiles", "trafficmanagerbackends"]
+    omitStages:
+      - "RequestReceived"
+  # Capture CUD of user facing Karpenter resources
+  - level: RequestResponse
+    verbs: ["create", "update", "patch", "delete"]
+    resources:
+      - group: "karpenter.azure.com"
+        resources: ["aksnodeclasses", "aksnodeclasses/status"]
+      - group: "karpenter.sh"
+        resources: ["nodepools", "nodepools/status", "nodeclaims", "nodeclaims/status"]
+    omitStages:
+      - "RequestReceived"
+  # Get responses can be large; don't log response
+  - level: Request
+    verbs: ["get", "list", "watch"]
+    resources:
+      - group: ""
+      - group: "admissionregistration.k8s.io"
+      - group: "apiextensions.k8s.io"
+      - group: "apiregistration.k8s.io"
+      - group: "apps"
+      - group: "authentication.k8s.io"
+      - group: "authorization.k8s.io"
+      - group: "autoscaling"
+      - group: "batch"
+      - group: "certificates.k8s.io"
+      - group: "extensions"
+      - group: "metrics.k8s.io"
+      - group: "networking.k8s.io"
+      - group: "policy"
+      - group: "rbac.authorization.k8s.io"
+      - group: "scheduling.k8s.io"
+      - group: "settings.k8s.io"
+      - group: "storage.k8s.io"
+    omitStages:
+      - "RequestReceived"
+  # Default level for known APIs
+  - level: RequestResponse
+    resources:
+      - group: ""
+      - group: "admissionregistration.k8s.io"
+      - group: "apiextensions.k8s.io"
+      - group: "apiregistration.k8s.io"
+      - group: "apps"
+      - group: "authentication.k8s.io"
+      - group: "authorization.k8s.io"
+      - group: "autoscaling"
+      - group: "batch"
+      - group: "certificates.k8s.io"
+      - group: "extensions"
+      - group: "metrics.k8s.io"
+      - group: "networking.k8s.io"
+      - group: "policy"
+      - group: "rbac.authorization.k8s.io"
+      - group: "scheduling.k8s.io"
+      - group: "settings.k8s.io"
+      - group: "storage.k8s.io"
+    omitStages:
+      - "RequestReceived"
+  # Default level for all other requests.
+  - level: Metadata
+    omitStages:
+      - "RequestReceived"
+```
+
+</details>
+
+> [!NOTE]
+> The audit policy is managed by AKS and can't be customized. The policy is designed to balance security observability with performance and cost optimization by reducing log volume for high-frequency, low-risk operations.
 
 ### AKS data plane Container insights logs
 
