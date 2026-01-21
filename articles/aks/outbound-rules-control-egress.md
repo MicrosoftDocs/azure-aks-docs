@@ -76,6 +76,7 @@ The following network and FQDN/application rules are required for an AKS cluster
 
 ### Microsoft Azure operated by 21Vianet required network rules
 
+For information about retired Microsoft Defender for Cloud features, see [Microsoft Defender for Containers](#microsoft-defender-for-containers).
 
 | Destination Endpoint                                                             | Protocol | Port    | Use  |
 |----------------------------------------------------------------------------------|----------|---------|------|
@@ -87,6 +88,8 @@ The following network and FQDN/application rules are required for an AKS cluster
 | **`APIServerPublicIP:443`** `(if running pods/deployments, like Ingress Controller, that access the API Server)` | TCP      | 443     | Required if running pods/deployments that access the API Server (like Ingress Controller), those pod/deployments would use the API IP.  |
 
 ### Microsoft Azure operated by 21Vianet required FQDN / application rules
+
+For information about retired Microsoft Defender for Cloud features, see [Microsoft Defender for Containers](#microsoft-defender-for-containers).
 
 | Destination FQDN                               | Port            | Use      |
 |------------------------------------------------|-----------------|----------|
@@ -164,6 +167,8 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 ### Microsoft Defender for Containers
 
+[!INCLUDE [21vianet-retirement](includes/21vianet-retirement.md)]
+
 #### Required FQDN / application rules
 
 | FQDN                                                       | Port      | Use      |
@@ -215,6 +220,8 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 
 #### Microsoft Azure operated by 21Vianet cloud required FQDN / application rules
 
+For information about retired Microsoft Defender for Cloud features, see [Microsoft Defender for Containers](#microsoft-defender-for-containers).
+
 | Endpoint| Purpose | Port |
 |:---|:---|:---|
 | **`*.ods.opinsights.azure.cn`** | Data ingestion | 443 |
@@ -250,6 +257,8 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 | **`dc.services.visualstudio.com`** | **`HTTPS:443`** | Azure Policy add-on that sends telemetry data to applications insights endpoint. |
 
 #### Microsoft Azure operated by 21Vianet required FQDN / application rules
+
+For information about retired Microsoft Defender for Cloud features, see [Microsoft Defender for Containers](#microsoft-defender-for-containers).
 
 | FQDN                                          | Port      | Use      |
 |-----------------------------------------------|-----------|----------|
