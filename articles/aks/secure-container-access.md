@@ -15,8 +15,7 @@ ms.author: allyford
 
 In this article, you learn how to secure container access to resources for your Azure Kubernetes Service (AKS) workloads.
 
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Overview
 
@@ -52,7 +51,7 @@ The Kubernetes implementation has some key benefits:
 
  * **Prevention of lateral movement**: As the UIDs and GIDs for different containers are mapped to different, nonoverlapping UIDs and GIDs on the host, containers have a harder time attacking each other. For example, suppose container A runs with different UIDs and GIDs on the host than container B. In case of a container breakout, the operations it can do on container B's files and processes are limited: only read/write what a file allows to others. But not even that ends up being possible, as there's an extra prevention on the parent directory of the pod root volume to make sure only the pod GID can access it.
 
- * **Honor Least-privilege principle**: As the UIDs and GIDs are mapped to unprivileged users on the host, only users that need the privilege on the host (and disable user namespaces) get it. Without user namespaces, there's no separation between container’s users and host’s users. We can’t avoid giving privileges on the host to processes that don't need it, when they need privilege just inside the container.
+ * **Honor Least-privilege principle**: As the UIDs and GIDs are mapped to unprivileged users on the host, only users that need the privilege on the host (and disable user namespaces) get it. Without user namespaces, there's no separation between container's users and host's users. We can't avoid giving privileges on the host to processes that don't need it, when they need privilege just inside the container.
 
  * **Enablement of new use cases**: User namespaces allow containers to gain certain capabilities inside their own user namespace without affecting the host. The capabilities granted restricted to the pod unlocks new possibilities, such as running applications that require privileged operations without granting full root access on the host. Common new use-cases that can be implemented securely are: running nested containers and unprivileged container builds.
 
@@ -386,54 +385,54 @@ When changes are made to [Docker][seccomp] and [containerD](https://github.com/c
 |--------------|-------------------|
 | `acct`| Accounting syscall which could let containers disable their own resource limits or process accounting. Also gated by `CAP_SYS_PACCT`. | 
 |`add_key` | Prevent containers from using the kernel keyring, which isn't namespaced. |
-| `bpf` |	Deny loading potentially persistent bpf programs into kernel, already gated by `CAP_SYS_ADMIN`. |
-| `clock_adjtime` |	Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`. |
-|`clock_settime` |	Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`.|
-| `clone` |	Deny cloning new namespaces. Also gated by `CAP_SYS_ADMIN for CLONE_*` flags, except `CLONE_NEWUSER`. |
-| `create_module` |	Deny manipulation and functions on kernel modules. Obsolete. Also gated by `CAP_SYS_MODULE`. |
-| `delete_module` |	Deny manipulation and functions on kernel modules. Also gated by `CAP_SYS_MODULE`. |
-| `finit_module` |	Deny manipulation and functions on kernel modules. Also gated by `CAP_SYS_MODULE`.|
-| `get_kernel_syms`|	Deny retrieval of exported kernel and module symbols. Obsolete.|
-|`get_mempolicy` |	Syscall that modifies kernel memory and NUMA settings. Already gated by `CAP_SYS_NICE`. |
-|`init_module` |	Deny manipulation and functions on kernel modules. Also gated by `CAP_SYS_MODULE`.|
-|`ioperm` |	Prevent containers from modifying kernel I/O privilege levels. Already gated by `CAP_SYS_RAWIO`.|
-|`iopl` |	Prevent containers from modifying kernel I/O privilege levels. Already gated by `CAP_SYS_RAWIO`.|
-|`kcmp` |	Restrict process inspection capabilities, already blocked by dropping `CAP_SYS_PTRACE`.|
-|`kexec_file_load` |	Sister syscall of kexec_load that does the same thing, slightly different arguments. Also gated by `CAP_SYS_BOOT`.|
-|`kexec_load` |	Deny loading a new kernel for later execution. Also gated by `CAP_SYS_BOOT`.|
-|`keyctl` |	Prevent containers from using the kernel keyring, which isn't namespaced.|
-|`lookup_dcookie` |	Tracing/profiling syscall, which could leak information on the host. Also gated by `CAP_SYS_ADMIN`.|
-|`mbind` |	Syscall that modifies kernel memory and NUMA settings. Already gated by `CAP_SYS_NICE`.|
-|`mount` |	Deny mounting, already gated by `CAP_SYS_ADMIN`.|
-|`move_pages` |	Syscall that modifies kernel memory and NUMA settings.|
-|`nfsservctl` |	Deny interaction with the kernel nfs daemon. Obsolete since Linux 3.1.|
-|`open_by_handle_at` |	Cause of an old container breakout. Also gated by `CAP_DAC_READ_SEARCH`.|
-|`perf_event_open` |	Tracing/profiling syscall, which could leak information on the host.|
-|`personality` |	Prevent container from enabling BSD emulation. Not inherently dangerous, but poorly tested, potential for kernel vulns.|
-|`pivot_root` |	Deny pivot_root, should be privileged operation.|
-|`process_vm_readv` |	Restrict process inspection capabilities, already blocked by dropping `CAP_SYS_PTRACE`.|
-|`process_vm_writev` |	Restrict process inspection capabilities, already blocked by dropping `CAP_SYS_PTRACE`.|
-|`ptrace` |	Tracing/profiling syscall. Blocked in Linux kernel versions before 4.8 to avoid seccomp bypass. Tracing/profiling arbitrary processes is already blocked by dropping CAP_SYS_PTRACE, because it could leak information on the host.|
-|`query_module` |	Deny manipulation and functions on kernel modules. Obsolete.|
-|`quotactl` |	Quota syscall which could let containers disable their own resource limits or process accounting. Also gated by `CAP_SYS_ADMIN`.|
-|`reboot` |	Don't let containers reboot the host. Also gated by `CAP_SYS_BOOT`.|
-|`request_key` |	Prevent containers from using the kernel keyring, which isn't namespaced.|
-|`set_mempolicy` |	Syscall that modifies kernel memory and NUMA settings. Already gated by `CAP_SYS_NICE`.|
-|`setns` |	Deny associating a thread with a namespace. Also gated by `CAP_SYS_ADMIN`.|
-|`settimeofday` |	Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`.|
-|`stime` |	Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`.|
-|`swapon` |	Deny start/stop swapping to file/device. Also gated by `CAP_SYS_ADMIN`.|
-|`swapoff` |	Deny start/stop swapping to file/device. Also gated by `CAP_SYS_ADMIN`.|
-|`sysfs` |	Obsolete syscall.|
-|`_sysctl` |	Obsolete, replaced by /proc/sys.|
-|`umount` |	Should be a privileged operation. Also gated by `CAP_SYS_ADMIN`.|
-|`umount2` |	Should be a privileged operation. Also gated by `CAP_SYS_ADMIN`.|
-|`unshare` |	Deny cloning new namespaces for processes. Also gated by `CAP_SYS_ADMIN`, with the exception of unshare --user.|
-|`uselib` |	Older syscall related to shared libraries, unused for a long time.|
-|`userfaultfd` |	Userspace page fault handling, largely needed for process migration.|
-|`ustat` |	Obsolete syscall.|
-|`vm86` |	In kernel x86 real mode virtual machine. Also gated by `CAP_SYS_ADMIN`.|
-|`vm86old` |	In kernel x86 real mode virtual machine. Also gated by `CAP_SYS_ADMIN`.|
+| `bpf` |  Deny loading potentially persistent bpf programs into kernel, already gated by `CAP_SYS_ADMIN`. |
+| `clock_adjtime` |  Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`. |
+|`clock_settime` |  Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`.|
+| `clone` |  Deny cloning new namespaces. Also gated by `CAP_SYS_ADMIN for CLONE_*` flags, except `CLONE_NEWUSER`. |
+| `create_module` |  Deny manipulation and functions on kernel modules. Obsolete. Also gated by `CAP_SYS_MODULE`. |
+| `delete_module` |  Deny manipulation and functions on kernel modules. Also gated by `CAP_SYS_MODULE`. |
+| `finit_module` |  Deny manipulation and functions on kernel modules. Also gated by `CAP_SYS_MODULE`.|
+| `get_kernel_syms`|  Deny retrieval of exported kernel and module symbols. Obsolete.|
+|`get_mempolicy` |  Syscall that modifies kernel memory and NUMA settings. Already gated by `CAP_SYS_NICE`. |
+|`init_module` |  Deny manipulation and functions on kernel modules. Also gated by `CAP_SYS_MODULE`.|
+|`ioperm` |  Prevent containers from modifying kernel I/O privilege levels. Already gated by `CAP_SYS_RAWIO`.|
+|`iopl` |  Prevent containers from modifying kernel I/O privilege levels. Already gated by `CAP_SYS_RAWIO`.|
+|`kcmp` |  Restrict process inspection capabilities, already blocked by dropping `CAP_SYS_PTRACE`.|
+|`kexec_file_load` |  Sister syscall of kexec_load that does the same thing, slightly different arguments. Also gated by `CAP_SYS_BOOT`.|
+|`kexec_load` |  Deny loading a new kernel for later execution. Also gated by `CAP_SYS_BOOT`.|
+|`keyctl` |  Prevent containers from using the kernel keyring, which isn't namespaced.|
+|`lookup_dcookie` |  Tracing/profiling syscall, which could leak information on the host. Also gated by `CAP_SYS_ADMIN`.|
+|`mbind` |  Syscall that modifies kernel memory and NUMA settings. Already gated by `CAP_SYS_NICE`.|
+|`mount` |  Deny mounting, already gated by `CAP_SYS_ADMIN`.|
+|`move_pages` |  Syscall that modifies kernel memory and NUMA settings.|
+|`nfsservctl` |  Deny interaction with the kernel nfs daemon. Obsolete since Linux 3.1.|
+|`open_by_handle_at` |  Cause of an old container breakout. Also gated by `CAP_DAC_READ_SEARCH`.|
+|`perf_event_open` |  Tracing/profiling syscall, which could leak information on the host.|
+|`personality` |  Prevent container from enabling BSD emulation. Not inherently dangerous, but poorly tested, potential for kernel vulns.|
+|`pivot_root` |  Deny pivot_root, should be privileged operation.|
+|`process_vm_readv` |  Restrict process inspection capabilities, already blocked by dropping `CAP_SYS_PTRACE`.|
+|`process_vm_writev` |  Restrict process inspection capabilities, already blocked by dropping `CAP_SYS_PTRACE`.|
+|`ptrace` |  Tracing/profiling syscall. Blocked in Linux kernel versions before 4.8 to avoid seccomp bypass. Tracing/profiling arbitrary processes is already blocked by dropping CAP_SYS_PTRACE, because it could leak information on the host.|
+|`query_module` |  Deny manipulation and functions on kernel modules. Obsolete.|
+|`quotactl` |  Quota syscall which could let containers disable their own resource limits or process accounting. Also gated by `CAP_SYS_ADMIN`.|
+|`reboot` |  Don't let containers reboot the host. Also gated by `CAP_SYS_BOOT`.|
+|`request_key` |  Prevent containers from using the kernel keyring, which isn't namespaced.|
+|`set_mempolicy` |  Syscall that modifies kernel memory and NUMA settings. Already gated by `CAP_SYS_NICE`.|
+|`setns` |  Deny associating a thread with a namespace. Also gated by `CAP_SYS_ADMIN`.|
+|`settimeofday` |  Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`.|
+|`stime` |  Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`.|
+|`swapon` |  Deny start/stop swapping to file/device. Also gated by `CAP_SYS_ADMIN`.|
+|`swapoff` |  Deny start/stop swapping to file/device. Also gated by `CAP_SYS_ADMIN`.|
+|`sysfs` |  Obsolete syscall.|
+|`_sysctl` |  Obsolete, replaced by /proc/sys.|
+|`umount` |  Should be a privileged operation. Also gated by `CAP_SYS_ADMIN`.|
+|`umount2` |  Should be a privileged operation. Also gated by `CAP_SYS_ADMIN`.|
+|`unshare` |  Deny cloning new namespaces for processes. Also gated by `CAP_SYS_ADMIN`, with the exception of unshare --user.|
+|`uselib` |  Older syscall related to shared libraries, unused for a long time.|
+|`userfaultfd` |  Userspace page fault handling, largely needed for process migration.|
+|`ustat` |  Obsolete syscall.|
+|`vm86` |  In kernel x86 real mode virtual machine. Also gated by `CAP_SYS_ADMIN`.|
+|`vm86old` |  In kernel x86 real mode virtual machine. Also gated by `CAP_SYS_ADMIN`.|
 
 ## Next steps
 

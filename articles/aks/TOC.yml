@@ -1,8 +1,8 @@
 - name: Azure Kubernetes Service (AKS)
   href: ./index.yml
 - name: What is AKS?
-  href: what-is-aks.md 
-- name: Get started with AKS 
+  href: what-is-aks.md
+- name: Get started with AKS
   items:
     - name: Kubernetes basics
       href: get-started-kubernetes.md
@@ -34,18 +34,12 @@
           href: tutorial-kubernetes-upgrade-cluster.md
     - name: Create and manage AKS resources in the Azure portal with Kubernetes center
       href: kubernetes-center-azure-portal.md
-- name: Pricing, quotas, and version support
+- name: Pricing and quotas
   items:
     - name: Pricing tiers for AKS
       href: free-standard-pricing-tiers.md
     - name: Quotas and regional limits
       href: quotas-skus-regions.md
-    - name: Track releases and region availability
-      href: release-tracker.md
-    - name: Supported Kubernetes versions
-      href: supported-kubernetes-versions.md
-    - name: Long-term support
-      href: long-term-support.md
     - name: VM sizes, generations, and features
       href: aks-virtual-machine-sizes.md
     - name: AKS preview API lifecycle
@@ -134,7 +128,9 @@
           items:
             - name: Create a private cluster
               href: private-clusters.md
-            - name: Access a Private API Server VNet Integration Cluster from Another Virtual Network
+            - name: Establish connectivity to a private cluster
+              href: private-cluster-connect.md
+            - name: Access a private API Server VNet Integration cluster from another virtual network
               href: private-apiserver-vnet-integration-cluster.md
             - name: Access a private cluster remotely
               href: access-private-cluster.md
@@ -288,7 +284,7 @@
           href: reduce-latency-ppg.md
     - name: Virtual nodes
       items:
-        - name: Use virtual nodes 
+        - name: Use virtual nodes
           href: virtual-nodes.md
         - name: Use the Azure CLI
           href: virtual-nodes-cli.md
@@ -336,65 +332,85 @@
       items:
         - name: Use Flatcar Container Linux for AKS
           href: flatcar-container-linux-for-aks.md
+- name: Versions and upgrades
+  items:
+  - name: AKS versioning
+    items:
+      - name: Supported Kubernetes versions
+        href: supported-kubernetes-versions.md
+      - name: Long-term support
+        href: long-term-support.md
+      - name: AKS component versioning
+        href: aks-component-versioning.md
+  - name: About AKS upgrades
+    items:
+    - name: Upgrade concepts
+      href: upgrade-conceptual.md
+    - name: Maintain and upgrade cluster components
+      href: upgrade-cluster-components.md
+    - name: Upgrade options and recommendations
+      href: upgrade-options.md
+    - name: Production upgrade strategies
+      href: aks-production-upgrade-strategies.md
+    - name: Stateful workload upgrade patterns
+      href: stateful-workload-upgrades.md
+    - name: Upgrade scenarios hub
+      href: upgrade-scenarios-hub.md
+  - name: Perform upgrades
+    items:
+    - name: Upgrade cluster control plane
+      href: upgrade-aks-control-plane.md
+    - name: Upgrade OS version
+      href: upgrade-os-version.md
+    - name: Upgrade node pools
+      items:
+      - name: Upgrade node OS images
+        href: upgrade-node-image.md
+      - name: Customize node surge upgrade
+        href: upgrade-aks-node-pools-rolling.md#customize-node-surge
+      - name: Process node OS updates with kured
+        href: upgrade-node-image-kured.md
+  - name: Automate upgrades
+    items:
+    - name: Automatically upgrade an AKS cluster
+      href: auto-upgrade-cluster.md
+    - name: Automatically upgrade node OS images
+      href: auto-upgrade-node-os-image.md
+    - name: Automatic node OS image upgrades with GitHub Actions
+      href: upgrade-github-actions.md
+    - name: Automate multi-cluster upgrades
+      href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+  - name: Schedule and control upgrades
+    items:
+    - name: Use Planned Maintenance to schedule and control upgrades
+      href: planned-maintenance.md
+    - name: Stop cluster upgrades on API breaking changes
+      href: stop-cluster-upgrade-api-breaking-changes.md
+  - name: Track upgrades and releases
+    items:
+    - name: Track releases and region availability
+      href: release-tracker.md
+    - name: Subscribe to AKS events with Event Grid
+      href: quickstart-event-grid.md
+    - name: AKS Communication Manager
+      href: aks-communication-manager.md
+  - name: Upgrade FAQ
+    href: upgrade-aks-faq.yml
 - name: Manage and optimize clusters
   items:
-    - name: Upgrade
-      items:
-        - name: Maintain and upgrade cluster components
-          href: upgrade.md
-        - name: Upgrade options and recommendations
-          href: upgrade-cluster.md
-        - name: How AKS cluster upgrades work
-          href: how-does-upgrade-happen.md
-        - name: AKS component versioning
-          href: aks-component-versioning.md
-        - name: Upgrade scenarios hub
-          href: upgrade-scenarios-hub.md
-        - name: Perform manual upgrades
-          items:
-            - name: Upgrade an AKS cluster
-              href: upgrade-aks-cluster.md
-            - name: Production upgrade strategies
-              href: aks-production-upgrade-strategies.md
-            - name: Stateful workload upgrade patterns
-              href: stateful-workload-upgrades.md
-            - name: Orchestrate upgrade across multiple clusters
-              href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-            - name: Upgrade node OS images
-              href: node-image-upgrade.md
-            - name: Customize node surge upgrade
-              href: upgrade-aks-cluster.md#customize-node-surge-upgrade
-            - name: Process node OS updates
-              href: node-updates-kured.md
-            - name: Upgrade OS version
-              href: upgrade-os-version.md
-        - name: Configure automatic upgrades
-          items:
-            - name: Automatically upgrade an AKS cluster
-              href: auto-upgrade-cluster.md
-            - name: Use Planned Maintenance to schedule and control upgrades
-              href: planned-maintenance.md
-            - name: Automatically upgrade AKS cluster node OS images
-              href: auto-upgrade-node-os-image.md
-            - name: Upgrade node OS images automatically with GitHub Actions
-              href: node-upgrade-github-actions.md
-            - name: Stop cluster upgrades automatically on API breaking changes
-              href: stop-cluster-upgrade-api-breaking-changes.md
-        - name: Upgrade FAQ
-          href: upgrade-aks-faq.yml
     - name: Add-ons, extensions, and integrations
       items:
         - name: Overview of add-ons, extensions, and integrations
           href: integrations.md
         - name: Integrate ACR with an AKS cluster
           href: cluster-container-registry-integration.md
-        - name: AKS desktop (Preview)
+        - name: AKS desktop
           items:
-            - name: AKS desktop overview (Preview)
+            - name: AKS desktop overview
               href: aks-desktop-overview.md
-            - name: Understand permissions in AKS desktop (Preview)
+            - name: Set up permissions in AKS desktop
               href: aks-desktop-permissions.md
-            - name: Deploy an application using AKS desktop (Preview)
+            - name: Deploy an application using AKS desktop
               href: aks-desktop-app.md
         - name: Use cluster extensions
           items:
@@ -480,12 +496,28 @@
   items:
       - name: Networking concepts
         href: concepts-network.md
-      - name: IP address planning
-        href: concepts-network-ip-address-planning.md
+      - name: Plan networking for AKS
+        items:
+          - name: Overview
+            href: plan-networking.md
+          - name: Plan control plane networking
+            href: plan-control-plane-networking.md
+          - name: Plan node networking
+            href: plan-node-networking.md
+          - name: Plan pod networking
+            href: plan-pod-networking.md
+          - name: Plan application networking
+            href: plan-application-networking.md
+          - name: IP address planning
+            href: concepts-network-ip-address-planning.md
       - name: Services
         href: concepts-network-services.md
-      - name: Advanced Container Networking Services (ACNS) overview
-        href: advanced-container-networking-services-overview.md
+      - name: Advanced Container Networking Services (ACNS)
+        items:
+          - name: Overview
+            href: advanced-container-networking-services-overview.md
+          - name: Enable or disable ACNS
+            href: use-advanced-container-networking-services.md
       - name: Ingress
         items:
           - name: Overview
@@ -618,7 +650,7 @@
           - name: Use API Server VNet integration
             href: api-server-vnet-integration.md
           - name: Private endpoint
-            href: private-clusters.md#use-a-private-endpoint-connection
+            href: private-cluster-connect.md?pivots=private-endpoint
           - name: Diagnose and solve UDP packet drops
             href: troubleshoot-udp-packet-drops.md
           - name: Container Network Security
@@ -726,6 +758,8 @@
           href: control-kubeconfig-access.md
         - name: Define API server authorized IP ranges
           href: api-server-authorized-ip-ranges.md
+        - name: Use service tags for API server authorized IP ranges
+          href: api-server-service-tags.md
         - name: Manage cluster certificates and rotation
           href: certificate-rotation.md
         - name: Use custom certificate authorities
@@ -740,7 +774,11 @@
           href: use-oidc-issuer.md
         - name: KMS etcd encryption
           items:
-            - name: Use KMS etcd encryption
+            - name: Overview of KMS etcd encryption
+              href: kms-data-encryption-concepts.md
+            - name: Use KMS platform-managed keys or customer-managed keys
+              href: kms-data-encryption.md
+            - name: Use KMS etcd encryption (legacy)
               href: use-kms-etcd-encryption.md
             - name: Update key vault mode
               href: update-kms-key-vault.md
@@ -748,6 +786,8 @@
               href: use-kms-v2.md
             - name: Observability for KMS etcd encryption
               href: kms-observability.md
+            - name: Migrate to KMS with platform-managed or customer-managed keys
+              href: migrate-key-management-service-platform-managed-key-customer-managed-key.md
         - name: Secure container access to resources
           href: secure-container-access.md
     - name: Node security
@@ -930,16 +970,14 @@
       items:
         - name: CSI storage drivers overview
           href: csi-storage-drivers.md
+        - name: Use the Azure CSI driver and provision volumes
+          href: azure-csi-driver-volume-provisioning.md
         - name: Migrate from in-tree to CSI driver
           href: csi-migrate-in-tree-volumes.md
     - name: Block storage
       items:
           - name: Azure Disks
             items:
-                - name: Provision Azure Disk storage
-                  href: azure-csi-disk-storage-provision.md
-                - name: Azure Disks CSI driver
-                  href: azure-disk-csi.md
                 - name: Use Azure Premium SSD v2 disks
                   href: use-premium-v2-disks.md
                 - name: Use Azure ultra disks
@@ -964,12 +1002,6 @@
                   href: /azure/storage/container-storage/use-container-storage-with-local-disk?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Shared file storage
       items:
-        - name: Azure Files storage
-          items:
-            - name: Azure Files CSI driver
-              href: azure-files-csi.md
-            - name: Provision Azure Files storage
-              href: azure-csi-files-storage-provision.md
         - name: Azure NetApp Files for AKS
           items:
             - name: Configure Azure NetApp Files for AKS
@@ -982,12 +1014,6 @@
               href: azure-netapp-files-dual-protocol.md
             - name: Azure Files and Azure NetApp Files comparison
               href: /azure/storage/files/storage-files-netapp-comparison?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Azure Blob storage
-          items:
-            - name: Azure Blob CSI driver
-              href: azure-blob-csi.md
-            - name: Provision Azure Blob storage
-              href: azure-csi-blob-storage-provision.md
     - name: Other storage options
       items:
         - name: Azure HPC Cache
@@ -1019,7 +1045,7 @@
     - name: Create Azure AKS infrastructure
       href: create-aks-infrastructure.md
     - name: Deploy Open-WebSearch MCP Server on AKS
-      href: openwebsearch-on-aks.md  
+      href: openwebsearch-on-aks.md
     - name: Machine learning operations (MLOps)
       items:
         - name: Best practices
@@ -1067,7 +1093,7 @@
             - name: Integrate an MCP server
               href: ai-toolchain-operator-mcp.md
         - name: Deploy data and ML pipelines with Flyte
-          href: use-flyte.md    
+          href: use-flyte.md
     - name: Work with clusters using Copilot
       href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: GPUs
@@ -1216,10 +1242,6 @@
       href: monitor-apiserver.md
     - name: View kubelet logs
       href: kubelet-logs.md
-    - name: Subscribe to AKS events with Event Grid
-      href: quickstart-event-grid.md
-    - name: AKS Communication Manager
-      href: aks-communication-manager.md
 - name: Deploy and manage workloads
   items:
     - name: Deploy stateful workloads

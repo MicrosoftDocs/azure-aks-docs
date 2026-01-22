@@ -6,6 +6,8 @@ ms.topic: how-to
 ms.date: 10/28/2024
 ms.author: qpetraroia
 ms.service: azure-kubernetes-service
+ms.collection: ce-skilling-ai-copilot
+ms.update-cycle: 180-days
 # Customer intent: As a developer using GitHub Copilot, I want to leverage AKS plugins to create clusters and deploy manifests, so that I can streamline my workflow and efficiently manage Azure Kubernetes Service without memorizing complex commands.
 ---
 

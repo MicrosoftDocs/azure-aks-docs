@@ -28,8 +28,7 @@ In this article, you learn about:
 > * Capacity planning, surge scenarios, and cluster upgrades.
 > * Storage and networking considerations for data plane performance.
 
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Application autoscaling vs. infrastructure autoscaling
 
@@ -194,8 +193,8 @@ Kubernetes introduced the concept of API Priority and Fairness (APF) to prioriti
 
 | Custom resource | Key features |
 | -------------------- | ------------ |
-| PriorityLevelConfigurations | • Define different priority levels for API requests.<br/> • Specifies a unique name and assigns an integer value representing the priority level. Higher priority levels have lower integer values, indicating they're more critical.<br/> • Can use multiple to categorize requests into different priority levels based on their importance.<br/> • Allow you to specify whether requests at a particular priority level should be subject to rate limits. |
-| FlowSchemas | • Define how API requests should be routed to different priority levels based on request attributes.<br/> • Specify rules that match requests based on criteria like API groups, versions, and resources.<br/> • When a request matches a given rule, the request is directed to the priority level specified in the associated PriorityLevelConfiguration.<br/> • Can use to set the order of evaluation when multiple FlowSchemas match a request to ensure that certain rules take precedence. |
+| PriorityLevelConfigurations | * Define different priority levels for API requests.<br/> * Specifies a unique name and assigns an integer value representing the priority level. Higher priority levels have lower integer values, indicating they're more critical.<br/> * Can use multiple to categorize requests into different priority levels based on their importance.<br/> * Allow you to specify whether requests at a particular priority level should be subject to rate limits. |
+| FlowSchemas | * Define how API requests should be routed to different priority levels based on request attributes.<br/> * Specify rules that match requests based on criteria like API groups, versions, and resources.<br/> * When a request matches a given rule, the request is directed to the priority level specified in the associated PriorityLevelConfiguration.<br/> * Can use to set the order of evaluation when multiple FlowSchemas match a request to ensure that certain rules take precedence. |
 
 Configuring API with PriorityLevelConfigurations and FlowSchemas enables the prioritization of critical API requests over less important requests. This ensures that essential operations don't starve or experience delays because of lower priority requests.
 
@@ -234,10 +233,10 @@ The following table provides a breakdown of suggested use cases for OS disks sup
 
 | OS disk type | Key features | Suggested use cases |
 |--------------|--------------|---------------------|
-| Ephemeral OS disks | • Faster reimaging and boot times.<br/> • Lower read/write latency on OS disk of AKS agent nodes.<br/> • High performance and availability. | • Demanding enterprise workloads, such as SQL Server, Oracle, Dynamics, Exchange Server, MySQL, Cassandra, MongoDB, SAP Business Suite, etc.<br/> • Stateless production workloads that require high availability and low latency. |
-| Premium SSD OS disks | • Consistent performance and low latency.<br/> • High availability. | • Demanding enterprise workloads, such as SQL Server, Oracle, Dynamics, Exchange Server, MySQL, Cassandra, MongoDB, SAP Business Suite, etc.<br/> • Input/output (IO) intensive enterprise workloads. |
-| Standard SSD OS disks | • Consistent performance.<br/> • Better availability and latency compared to Standard HDD disks. | • Web servers.<br/> • Low input/output operations per second (IOPS) application servers.<br/> • Lightly used enterprise applications.<br/> • Dev/test workloads. |
-| Standard HDD disks | • Low cost.<br/> • Exhibits variability in performance and latency. | • Backup storage.<br/> • Mass storage with infrequent access. |
+| Ephemeral OS disks | * Faster reimaging and boot times.<br/> * Lower read/write latency on OS disk of AKS agent nodes.<br/> * High performance and availability. | * Demanding enterprise workloads, such as SQL Server, Oracle, Dynamics, Exchange Server, MySQL, Cassandra, MongoDB, SAP Business Suite, etc.<br/> * Stateless production workloads that require high availability and low latency. |
+| Premium SSD OS disks | * Consistent performance and low latency.<br/> * High availability. | * Demanding enterprise workloads, such as SQL Server, Oracle, Dynamics, Exchange Server, MySQL, Cassandra, MongoDB, SAP Business Suite, etc.<br/> * Input/output (IO) intensive enterprise workloads. |
+| Standard SSD OS disks | * Consistent performance.<br/> * Better availability and latency compared to Standard HDD disks. | * Web servers.<br/> * Low input/output operations per second (IOPS) application servers.<br/> * Lightly used enterprise applications.<br/> * Dev/test workloads. |
+| Standard HDD disks | * Low cost.<br/> * Exhibits variability in performance and latency. | * Backup storage.<br/> * Mass storage with infrequent access. |
 
 #### IOPS and throughput
 

@@ -86,7 +86,7 @@ metadata:
   labels:
     fleet.azure.com/location: eastus2
     fleet.azure.com/resource-group: resource-group
-    fleet.azure.com/subscription-id: 8xxxxxxx-dxxx-4xxx-bxxx-xxxxxxxxxxx8
+    fleet.azure.com/subscription-id: aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e
   name: cluster01
   resourceVersion: "123456"
   uid: 7xxxxxxx-5xxx-4xxx-bxxx-xxxxxxxxxxx4
@@ -402,6 +402,6 @@ To remove a resource placement:
 * [Define a rollout strategy for a resource placement](./concepts-rollout-strategy.md)
 
 <!-- LINKS -->
-[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-manager-resource
+[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-manager
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update

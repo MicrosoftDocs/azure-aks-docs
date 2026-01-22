@@ -5,10 +5,8 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: get-started
-ms.date: 06/26/2025
-
-#customer intent: As an experienced user, I want to get started with advanced Azure Kubernetes Service (AKS) concepts so that I can optimize my containerized applications.
-
+ms.date: 01/21/2026
+# Customer intent: As an experienced user, I want to get started with advanced Azure Kubernetes Service (AKS) concepts so that I can optimize my containerized applications.
 ---
 
 # Advanced Azure Kubernetes Service (AKS) concepts

@@ -17,12 +17,11 @@ Graphical processing units (GPUs) are often used for compute-intensive workloads
 
 This article helps you provision nodes with schedulable GPUs on new and existing AKS clusters.
 
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Supported GPU-enabled VMs
 
-To view the available GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-skus]. AKS does not support all GPU-enabled VM sizes in Azure. If a GPU VM size is not in our list of supported VM sizes, we do not install the necessary GPU software components or provide support. AKS allows the use of unsupported GPU VM sizes after [skipping the automatic GPU driver installation](#skip-gpu-driver-installation).
+To view the available GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-skus]. If a GPU VM size is not in our list of supported VM sizes, AKS does not install the necessary GPU software components or provide support. AKS allows the use of unsupported GPU VM sizes after [skipping the automatic GPU driver installation](#skip-gpu-driver-installation).
 
 Check available and supported VM sizes using the [`az vm list-skus`][az-vm-list-skus] command.
 
@@ -210,7 +209,8 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
 
 > [!NOTE]
 > The `gpu-driver` API field is a suggested alternative for customers previously using the `--skip-gpu-driver-install` node pool tag. 
->- The `--skip-gpu-driver-install` node pool tag on AKS will be retired on 14 August 2025. To retain the existing behavior of skipping automatic GPU driver installation, upgrade your node pools to the latest node image version and set the `--gpu-driver` field to `none`. After 14 August 2025, you will not be able to provision AKS GPU-enabled node pools with the `--skip-gpu-driver-install` node pool tag to bypass this default behavior. For more information, see [`skip-gpu-driver` tag retirement](https://aka.ms/aks/skip-gpu-driver-tag-retirement).
+>- The `--skip-gpu-driver-install` node pool tag on AKS will be retired on 14 August 2025. When spinning up a new node pool, the existing behavior of skipping automatic GPU driver installation can be replicated by setting the `--gpu-driver` field to `none`.
+>- After 14 August 2025, you will not be able to provision AKS GPU-enabled node pools with the `--skip-gpu-driver-install` node pool tag to bypass this default behavior. For more information, see [`skip-gpu-driver` tag retirement](https://aka.ms/aks/skip-gpu-driver-tag-retirement).
 
 1. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and set `--gpu-driver` field to `none` to skip default GPU driver installation.
 
@@ -390,6 +390,12 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
     Adding run metadata for 499
     ```
 
+## Upgrading a node pool
+
+Whether you want to [update][az-aks-nodepool-update] or [upgrade][az-aks-nodepool-upgrade] your node pools, you might notice that there is no `--gpu-driver` parameter for either operation. You might run into an error like `unrecognized arguments: --gpu-driver none` if you attempt to pass the parameter. There is no need to call on the parameter, as the value is not affected by any such operations.
+
+When you first create your node pool, whatever parameter you declare for `--gpu-driver` will not be impacted by upgrade/update operations. If you don't want any drivers to be installed, and selected `--gpu-driver None` when creating your node pool, drivers will not be installed in any subsequent updates/upgrades.
+
 ## Clean up resources
 
 Remove the associated Kubernetes objects you created in this article using the [`kubectl delete job`][kubectl delete] command.
@@ -423,6 +429,7 @@ kubectl delete jobs samples-tf-mnist-demo
 <!-- LINKS - internal -->
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-vm-list-skus]: /cli/azure/vm

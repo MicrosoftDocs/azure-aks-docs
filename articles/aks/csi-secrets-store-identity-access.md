@@ -93,7 +93,7 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
 4. Get the AKS cluster OIDC Issuer URL using the [`az aks show`][az-aks-show] command.
 
     > [!NOTE]
-    > This step assumes you have an existing AKS cluster with the OIDC Issuer URL enabled. If the OIDC Issuer URL isn't enabled, see [Update an AKS cluster with OIDC Issuer](./use-oidc-issuer.md#update-an-aks-cluster-with-oidc-issuer) to enable it.
+    > This step assumes you have an existing AKS cluster with the OIDC Issuer URL enabled. If the OIDC Issuer URL isn't enabled, see [Update an AKS cluster with OIDC Issuer](./use-oidc-issuer.md#enable-the-oidc-issuer-on-an-existing-aks-cluster) to enable it.
 
     ```bash
     export AKS_OIDC_ISSUER="$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query "oidcIssuerProfile.issuerUrl" -o tsv)"

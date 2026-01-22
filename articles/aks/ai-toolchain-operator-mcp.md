@@ -6,6 +6,8 @@ ms.author: sachidesai
 author: sachidesai
 ms.service: azure-kubernetes-service
 ms.date: 10/1/2025
+ms.collection: ce-skilling-ai-copilot
+ms.update-cycle: 180-days
 # Customer intent: As an application developer, I want to integrate MCP-compliant tools with KAITO inference service(s) on an AKS cluster, so that my LLM-powered applications can securely and reliably invoke external APIs and services through standardized tool calling at scale."
 ---
 
