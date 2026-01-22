@@ -54,7 +54,7 @@ Keep the following considerations in mind when using a Microsoft Entra service p
 
     ```azurecli-interactive
     # Set environment variable
-    SERVICE_PRINCIPAL_NAME=<your-service-principal-name
+    SERVICE_PRINCIPAL_NAME=<your-service-principal-name>
 
     # Create the service principal
     az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME
@@ -221,7 +221,7 @@ If you use virtual kubelet to integrate with AKS and run Azure Container Instanc
 
 :::zone pivot="azure-cli"
 
-- Query for the the service principal client ID (`servicePrincipalProfile.clientId`) and delete the service principal using the [`az ad sp delete`][az-ad-sp-delete] command with the `--id` parameter. The [`az aks show`][az-aks-show] command retrieves the client ID for the specified AKS cluster.
+- Query for the service principal client ID (`servicePrincipalProfile.clientId`) and delete the service principal using the [`az ad sp delete`][az-ad-sp-delete] command with the `--id` parameter. The [`az aks show`][az-aks-show] command retrieves the client ID for the specified AKS cluster.
 
     ```azurecli-interactive
     # Set environment variables
