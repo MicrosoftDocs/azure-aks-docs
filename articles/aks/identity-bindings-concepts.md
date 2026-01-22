@@ -1,7 +1,7 @@
 ---
 title: Identity bindings for AKS (Preview)
 description: Learn the concepts of identity bindings on Azure Kubernetes Service (AKS) and how they extend Microsoft Entra workload identity for large scale scenarios that exceed federated identity credential limits.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
 ms.date: 12/13/2025
