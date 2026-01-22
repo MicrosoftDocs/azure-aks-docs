@@ -23,15 +23,17 @@ Native sidecar mode became the default for Istio [starting in version 1.27][isti
 ## Default behavior
 Existing clusters with Istio add-on using the preview `IstioNativeSidecarModePreview` feature flag retain their current native sidecar status regardless of cluster version or Istio add-on revision.
 
-Starting with AKS 1.33 and Istio add-on `asm-1-28`, AKS service mesh add-on uses native sidecar by default for the Envoy proxy. This setting applies based on your cluster version, the ASM add-on revision, and whether the add-on was newly installed or upgraded
+Starting with AKS 1.33 and Istio add-on `asm-1-29`, AKS service mesh add-on uses native sidecar for the Envoy proxy by default for all clusters. This setting applies based on your cluster version, the Azure service mesh add-on revision, and whether the add-on was newly installed or upgraded.
 
-| AKS Version       | ASM Version       | Add-on Install Behavior                 | Upgrade Behavior                               |
+| AKS Version       | ASM Revision       | Add-on Install Behavior                 | Upgrade Behavior                               |
 |-------------------|-------------------|--------------------------------------|------------------------------------------------|
 | < 1.33            | Any              | Disabled                             | Disabled                                       |
 | 1.33+             | < `asm-1-27`       | Disabled                             | Disabled                                       |
 | 1.33+             | `asm-1-27`         | Enabled (transition release)         | Disabled (upgrade does not auto-enable)       |
-| 1.33+             | `asm-1-28`+        | Enabled                              | Enabled (by mesh or cluster upgrade to required versions)         |
+| 1.33+             | `asm-1-28`         | Enabled (transition release)         | Disabled (upgrade does not auto-enable)       |
+| 1.33+             | `asm-1-29`+        | Enabled                              | Enabled (by mesh or cluster upgrade to required versions)         |
 
+This table applies only to the default-enabled behavior, but native sidecar can also be manually enabled if desired as described below. 
 
 ## New clusters
 When creating a new AKS cluster with the [az aks create][az-aks-create] command, choose version `1.33` or newer and Istio `asm-1-27` or newer. The new cluster has native sidecar mode enabled automatically.
@@ -52,6 +54,31 @@ For a new service mesh installation on an existing cluster >= version AKS 1.33, 
 
 ## Existing clusters
 This section describes how to check native sidecar feature status or enable it on an existing cluster.
+
+### Enable native sidecar on existing clusters using asm-1-28 or below
+
+In case you have upgraded an existing cluster to asm-1-27 or asm-1-28 and wish to use native sidecar feature, enable it using the feature flag.
+
+1. Register `IstioNativeSidecarModePreview` feature flag through [az feature register][az-feature-register].
+
+    ```bash
+    az feature register --namespace Microsoft.ContainerService --name IstioNativeSidecarModePreview
+    ```
+
+2. Verify the registration status through [az feature show][az-feature-show].
+
+
+    ```bash
+    az feature show --namespace Microsoft.ContainerService --name IstioNativeSidecarModePreview
+    ```
+
+    It takes a few minutes for the status to show `Registered`.
+
+3. When the status reflects Registered, refresh the registration of the `Microsoft.ContainerService` resource provider through [az provider register][az-provider-register].
+
+    ```bash
+    az provider register --namespace Microsoft.ContainerService
+    ```
 
 ### Check feature status
 
