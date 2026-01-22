@@ -23,7 +23,7 @@ Native sidecar mode became the default for Istio [starting in version 1.27][isti
 ## Default behavior
 Existing clusters with Istio add-on using the preview `IstioNativeSidecarModePreview` feature flag retain their current native sidecar status regardless of cluster version or Istio add-on revision.
 
-Starting with AKS 1.33 and Istio add-on `asm-1-29`, AKS service mesh add-on uses native sidecar for the Envoy proxy by default for all clusters. This setting applies based on your cluster version, the Azure service mesh add-on revision, and whether the add-on was newly installed or upgraded.
+Starting with AKS 1.33 and Istio add-on `asm-1-29`, AKS service mesh add-on uses native sidecar for the Envoy proxy by default for all clusters. Prior to `asm-1-29`, this setting applies based on your cluster version, the Azure service mesh add-on revision, and whether the add-on was newly installed or upgraded.
 
 | AKS Version       | ASM Revision       | Add-on Install Behavior                 | Upgrade Behavior                               |
 |-------------------|-------------------|--------------------------------------|------------------------------------------------|
@@ -33,7 +33,7 @@ Starting with AKS 1.33 and Istio add-on `asm-1-29`, AKS service mesh add-on uses
 | 1.33+             | `asm-1-28`         | Enabled (transition release)         | Disabled (upgrade does not auto-enable)       |
 | 1.33+             | `asm-1-29`+        | Enabled                              | Enabled (by mesh or cluster upgrade to required versions)         |
 
-This table applies only to the default-enabled behavior, but native sidecar can also be manually enabled if desired as described below. 
+This table describes only the default-enabled behavior, but native sidecar can also be manually enabled if desired as described below. 
 
 ## New clusters
 When creating a new AKS cluster with the [az aks create][az-aks-create] command, choose version `1.33` or newer and Istio `asm-1-27` or newer. The new cluster has native sidecar mode enabled automatically.
@@ -53,11 +53,9 @@ For a new service mesh installation on an existing cluster >= version AKS 1.33, 
 
 
 ## Existing clusters
-This section describes how to check native sidecar feature status or enable it on an existing cluster.
+This section describes how to enable native sidecar on an existing cluster and how to check native sidecar feature status.
 
-### Enable native sidecar on existing clusters using asm-1-28 or below
-
-In case you have upgraded an existing cluster to asm-1-27 or asm-1-28 and wish to use native sidecar feature, enable it using the feature flag.
+### Enable native sidecar on clusters with revision <= asm-1-28
 
 1. Register `IstioNativeSidecarModePreview` feature flag through [az feature register][az-feature-register].
 
