@@ -22,7 +22,7 @@ In this quickstart, you create an AKS cluster and subscribe to AKS events.
 * [Azure CLI][azure-cli-install] or [Azure PowerShell][azure-powershell-install] installed.
 
 > [!NOTE]
-> In case there are issues specifically with EventGrid notifications, as can be seen here [Service Outages](https://azure.status.microsoft/status), please note that AKS operations won't be impacted and they are independent of Event Grid outages. 
+> AKS operations are independent of Azure Event Grid availability and aren't impacted during Event Grid [Service Outages](https://azure.status.microsoft/status).
 
 ## Create an AKS cluster
 
@@ -50,7 +50,7 @@ New-AzAksCluster -ResourceGroupName MyResourceGroup -Name MyAKS -Location eastus
 
 ### [Azure CLI](#tab/azure-cli)
 
-Create a namespace and event hub using [az eventhubs namespace create][az-eventhubs-namespace-create] and [az eventhubs eventhub create][az-eventhubs-eventhub-create]. The following example creates a namespace *MyNamespace* and an event hub *MyEventGridHub* in *MyNamespace*, both in the *MyResourceGroup* resource group.
+Create a namespace and event hub using [az event hubs namespace create][az-eventhubs-namespace-create] and [az eventhubs eventhub create][az-eventhubs-eventhub-create]. The following example creates a namespace *MyNamespace* and an event hub *MyEventGridHub* in *MyNamespace*, both in the *MyResourceGroup* resource group.
 
 ```azurecli-interactive
 az eventhubs namespace create --location eastus --name MyNamespace --resource-group MyResourceGroup
@@ -194,9 +194,9 @@ Remove-AzResourceGroup -Name MyResourceGroup
 ---
 
 > [!NOTE]
-> When you delete the cluster, the Microsoft Entra service principal used by the AKS cluster is not removed. For steps on how to remove the service principal, see [AKS service principal considerations and deletion][sp-delete].
+> When you delete the cluster, the Microsoft Entra service principal used by the AKS cluster isn't removed. For steps on how to remove the service principal, see [AKS service principal considerations and deletion][sp-delete].
 > 
-> If you used a managed identity, the identity is managed by the platform and does not require removal.
+> If you used a managed identity, the identity is managed by the platform and doesn't require removal.
 
 ## Next steps
 
@@ -220,6 +220,5 @@ To learn more about AKS, and walk through a complete code to deployment example,
 [az-eventgrid-event-subscription-create]: /cli/azure/eventgrid/event-subscription#az-eventgrid-event-subscription-create
 [new-azeventgridsubscription]: /powershell/module/az.eventgrid/new-azeventgridsubscription
 [az-group-delete]: /cli/azure/group#az-group-delete
-[sp-delete]: kubernetes-service-principal.md#other-considerations
+[sp-delete]: kubernetes-service-principal.md#considerations-when-using-a-service-principal
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
-
