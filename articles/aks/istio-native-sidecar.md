@@ -53,30 +53,7 @@ For a new service mesh installation on an existing cluster >= version AKS 1.33, 
 
 
 ## Existing clusters
-This section describes how to enable native sidecar on an existing cluster and how to check native sidecar feature status.
-
-### Enable native sidecar on clusters with revision <= asm-1-28
-
-1. Register `IstioNativeSidecarModePreview` feature flag through [az feature register][az-feature-register].
-
-    ```bash
-    az feature register --namespace Microsoft.ContainerService --name IstioNativeSidecarModePreview
-    ```
-
-2. Verify the registration status through [az feature show][az-feature-show].
-
-
-    ```bash
-    az feature show --namespace Microsoft.ContainerService --name IstioNativeSidecarModePreview
-    ```
-
-    It takes a few minutes for the status to show `Registered`.
-
-3. When the status reflects Registered, refresh the registration of the `Microsoft.ContainerService` resource provider through [az provider register][az-provider-register].
-
-    ```bash
-    az provider register --namespace Microsoft.ContainerService
-    ```
+This section describes how to check native sidecar feature status.
 
 ### Check feature status
 
@@ -127,8 +104,7 @@ If native sidecar is not enabled, it is likely one of the version prerequisites 
    az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER --query "serviceMeshProfile.istio.revisions" -o tsv
    ```
    
-   To upgrade into native sidecar support, [upgrade your mesh][upgrade-istio] revision to `asm-1-28` or newer.
-    
+   Review the table on default behavior to determine behavior for your revision.    
 
 ## Next steps
 
