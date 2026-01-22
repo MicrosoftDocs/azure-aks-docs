@@ -465,7 +465,7 @@ The following table summarizes the port-specific annotations that can be used to
 | `service.beta.kubernetes.io/port_{port}_health-probe_num-of-probe` | `service.beta.kubernetes.io/azure-load-balancer-health-probe-num-of-probe` | Number of consecutive probe failures before the port is considered unhealthy. |
 | `service.beta.kubernetes.io/port_{port}_health-probe_interval`     | `service.beta.kubernetes.io/azure-load-balancer-health-probe-interval`     | The amount of time between probe attempts.                                    |
 
-### Exclude node pool from Load Balancer backend pool
+## Exclude node pool from Load Balancer backend pool
 
 In certain scenarios, you may want to prevent a node pool from being part of the load balancer’s backend pool. To do this, apply the label `node.kubernetes.io/exclude-from-external-load-balancers=true` to the node pool. 
 
