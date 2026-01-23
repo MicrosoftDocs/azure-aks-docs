@@ -50,7 +50,7 @@ New-AzAksCluster -ResourceGroupName MyResourceGroup -Name MyAKS -Location eastus
 
 ### [Azure CLI](#tab/azure-cli)
 
-Create a namespace and event hub using [az event hubs namespace create][az-eventhubs-namespace-create] and [az eventhubs eventhub create][az-eventhubs-eventhub-create]. The following example creates a namespace *MyNamespace* and an event hub *MyEventGridHub* in *MyNamespace*, both in the *MyResourceGroup* resource group.
+Create a namespace and event hub using [az eventhubs namespace create][az-eventhubs-namespace-create] and [az eventhubs eventhub create][az-eventhubs-eventhub-create]. The following example creates a namespace *MyNamespace* and an event hub *MyEventGridHub* in *MyNamespace*, both in the *MyResourceGroup* resource group.
 
 ```azurecli-interactive
 az eventhubs namespace create --location eastus --name MyNamespace --resource-group MyResourceGroup
