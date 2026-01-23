@@ -27,8 +27,8 @@ Starting with AKS 1.33 and Istio add-on `asm-1-29`, AKS service mesh add-on uses
 |-------------------|-------------------|--------------------------------------|------------------------------------------------|
 | < 1.33            | Any              | Disabled                             | Disabled                                       |
 | 1.33+             | < `asm-1-27`       | Disabled                             | Disabled                                       |
-| 1.33+             | `asm-1-27`         | Enabled (transition release)         | Disabled (upgrade does not auto-enable)       |
-| 1.33+             | `asm-1-28`         | Enabled (transition release)         | Disabled (upgrade does not auto-enable)       |
+| 1.33+             | `asm-1-27`         | Enabled (transition release)         | Disabled (upgrade doesn't auto-enable)       |
+| 1.33+             | `asm-1-28`         | Enabled (transition release)         | Disabled (upgrade doesn't auto-enable)       |
 | 1.33+             | `asm-1-29`+        | Enabled                              | Enabled (by mesh or cluster upgrade to required versions)         |
 
 
@@ -74,7 +74,7 @@ sleep-7656cf8794-5b5j4   istio-init,istio-proxy   sleep
 ```
 
 ### Check prerequisites
-If native sidecar is not enabled, it is likely one of the version prerequisites was not met.
+If native sidecar isn't enabled, it's likely one of the version prerequisites wasn't met.
 
 1. Check that the AKS cluster's Kubernetes control plane version is 1.33 or higher using [az aks show][az-aks-show].
 
@@ -91,7 +91,7 @@ If native sidecar is not enabled, it is likely one of the version prerequisites 
    ```
 
    > [!CAUTION]
-   > Native sidecar mode by default requires both Kubernetes control plane and data plane on version 1.33 or higher. Ensure all your nodes are version 1.33 or newer before enabling the service mesh add-on. Otherwise, native sidecar will not be enabled by default.
+   > Native sidecar mode by default requires both Kubernetes control plane and data plane on version 1.33 or higher. Ensure all your nodes are version 1.33 or newer before enabling the service mesh add-on. Otherwise, native sidecar won't be enabled by default.
 
    If any node pool version is too old, [upgrade the node image][upgrade-node-image] to version `1.33` or newer.
 
