@@ -18,7 +18,7 @@ Set up [identity bindings](./identity-bindings-concepts.md) on your Azure Kubern
 
 ## Prerequisites
 
-- Review [Identity bindings concepts][identity-bindings-concepts] to understand how identity bindings works.
+- Review [Identity bindings concepts][identity-bindings-concepts] to understand how identity bindings work.
 - Azure CLI version 2.73.0 or later. To check your version, use the `az version` command. To install or update the Azure CLI, see [Install the Azure CLI](/cli/azure/install-azure-cli).
 - The [Azure CLI `aks-preview` extension version `18.0.0b26` or later installed](#install-or-update-the-aks-preview-extension).
 - The [`IdentityBindingPreview` feature flag enabled for your subscription](#enable-the-identitybindingpreview-feature-flag).
@@ -63,40 +63,35 @@ Set up [identity bindings](./identity-bindings-concepts.md) on your Azure Kubern
 
 - Identity bindings aren't yet supported on clusters configured with [API server VNet integration][api-server-vnet-integration].
 
-## Create environment variables for test resources
-
-- Create the following environment variables to use when creating test resources. You can replace the placeholder values with your own if desired.
-
-    ```azurecli-interactive
-    export RESOURCE_GROUP="ib-test"
-    export LOCATION="westus2"
-    export CLUSTER_NAME="ib-test-cluster"
-    export MI_NAME="ib-test-mi"
-    ```
-
 ## Create test resources
 
 1. Create an Azure resource group using the [`az group create`](/cli/azure/group#az-group-create) command.
 
     ```azurecli-interactive
+    export RESOURCE_GROUP="ib-test"
+    export LOCATION="westus2"
+
     az group create --name $RESOURCE_GROUP --location $LOCATION
     ```
 
 1. Create an AKS cluster with workload identity and OIDC issuer enabled using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--enable-workload-identity` and `--enable-oidc-issuer` flags.
 
     ```azurecli-interactive
+    export CLUSTER_NAME="ib-test-cluster"
+
     az aks create --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --location $LOCATION --no-ssh-key --enable-workload-identity --enable-oidc-issuer
     ```
 
 1. Create a user-assigned managed identity (UAMI) using the [`az identity create`](/cli/azure/identity#az-identity-create) command.
 
     ```azurecli-interactive
+    export MI_NAME="ib-test-mi"
     az identity create --resource-group $RESOURCE_GROUP --name $MI_NAME
     ```
 
 ## Verify the workload identity webhook version
 
-- Identity binding requires the preview version of the AKS workload identity webhook. Verify the installed webhook version using the following `kubectl get pods` command:
+- Identity binding requires the preview version of the workload identity webhook. Verify the installed webhook version using the following `kubectl get pods` command:
 
     ```bash
     kubectl -n kube-system get pods -l azure-workload-identity.io/system=true -o yaml | grep v1.6.0
@@ -104,12 +99,15 @@ Set up [identity bindings](./identity-bindings-concepts.md) on your Azure Kubern
 
     The output should show `v1.6.0-alpha.1` in the image tag, which confirms the correct version is installed.
 
-## Get the UAMI resource ID
+## Get the UAMI IDs
 
-- Get the resource ID of the UAMI using the [`az identity show`](/cli/azure/identity#az-identity-show) command and set it as an environment variable:
+- Get the resource, principal, client, and tenant IDs of the UAMI and set them as environment variables using the following [`az identity show`](/cli/azure/identity#az-identity-show) commands:
 
     ```azurecli-interactive
-    export MI_RESOURCE_ID=$(az identity show --resource-group $RESOURCE_GROUP --name $MI_NAME --query id -o tsv)
+    export MI_RESOURCE_ID=$(az identity show --resource-group $RESOURCE_GROUP --name $MI_NAME --query id --output tsv)
+    export MI_PRINCIPAL_ID=$(az identity show --resource-group $RESOURCE_GROUP --name $MI_NAME --query principalId --output tsv)
+    export MI_CLIENT_ID=$(az identity show --resource-group $RESOURCE_GROUP --name $MI_NAME --query clientId --output tsv)
+    export MI_TENANT_ID=$(az identity show --resource-group $RESOURCE_GROUP --name $MI_NAME --query tenantId --output tsv)
     ```
 
 ## Create an identity binding
@@ -153,14 +151,6 @@ Set up [identity bindings](./identity-bindings-concepts.md) on your Azure Kubern
 
     ```bash
     export KUBECONFIG="$(pwd)/${CLUSTER_NAME}.kubeconfig"
-    ```
-
-## Get the UAMI client ID
-
-- Get the client ID of the UAMI using the [`az identity show`](/cli/azure/identity#az-identity-show) command and set it as an environment variable:
-
-    ```azurecli-interactive
-    export MI_CLIENT_ID=$(az identity show --resource-group $RESOURCE_GROUP --name $MI_NAME --query clientId -o tsv)
     ```
 
 ## Authorize namespaces and service accounts
@@ -207,92 +197,100 @@ Set up [identity bindings](./identity-bindings-concepts.md) on your Azure Kubern
     EOF
     ```
 
-## Create a key vault and configure access
+## Create a key vault with purge protection and Azure RBAC authorization
 
-LEFT OFF HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-The instructions in this step show how to access secrets, keys, or certificates in an Azure key vault from the pod. The examples in this section configure access to secrets in the key vault for the workload identity, but you can perform similar steps to configure access to keys or certificates.
-
-The following example shows how to use the Azure role-based access control (Azure RBAC) permission model to grant the pod access to the key vault. For more information about the Azure RBAC permission model for Azure Key Vault, see [Grant permission to applications to access an Azure key vault using Azure RBAC](/azure/key-vault/general/rbac-guide).
-
-1. Create a key vault with purge protection and Azure RBAC authorization enabled. You can also use an existing key vault if it's configured for both purge protection and Azure RBAC authorization:
+- Create a key vault with purge protection and Azure RBAC authorization enabled using the [`az keyvault create`](/cli/azure/keyvault#az-keyvault-create) command with the `--enable-purge-protection` and `--enable-rbac-authorization` flags. You can also use an existing key vault if it's configured for both purge protection and Azure RBAC authorization.
 
     ```azurecli-interactive
-    export KEYVAULT_NAME="ib-test"
-    # Ensure the key vault name is between 3-24 characters
-    if [ ${#KEYVAULT_NAME} -gt 24 ]; then
-        KEYVAULT_NAME="${KEYVAULT_NAME:0:24}"
-    fi
+    export KEY_VAULT_NAME="ib-test"
+
     az keyvault create \
-        --name "${KEYVAULT_NAME}" \
-        --resource-group "${RESOURCE_GROUP}" \
-        --location "${LOCATION}" \
+        --name $KEY_VAULT_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --location $LOCATION \
         --enable-purge-protection \
         --enable-rbac-authorization
     ```
 
-1. Assign yourself the Azure RBAC [Key Vault Secrets Officer](/azure/role-based-access-control/built-in-roles/security#key-vault-secrets-officer) role so that you can create a secret in the new key vault:
+## Get the key vault resource ID and URL
+
+1. Get the resource ID of the key vault using the [`az keyvault show`](/cli/azure/keyvault#az-keyvault-show) command and set it as an environment variable:
 
     ```azurecli-interactive
-    export KEYVAULT_RESOURCE_ID=$(az keyvault show --resource-group "${RESOURCE_GROUP}" \
-        --name "${KEYVAULT_NAME}" \
+    export KEY_VAULT_RESOURCE_ID=$(az keyvault show --resource-group $RESOURCE_GROUP \
+        --name $KEY_VAULT_NAME \
         --query id \
         --output tsv)
-
-    export CALLER_OBJECT_ID=$(az ad signed-in-user show --query id -o tsv)
-
-    az role assignment create --assignee "${CALLER_OBJECT_ID}" \
-        --role "Key Vault Secrets Officer" \
-        --scope "${KEYVAULT_RESOURCE_ID}"
     ```
 
-1. Create a secret in the key vault:
-
-    ```azurecli-interactive
-    export KEYVAULT_SECRET_NAME="my-secret"
-    az keyvault secret set \
-        --vault-name "${KEYVAULT_NAME}" \
-        --name "${KEYVAULT_SECRET_NAME}" \
-        --value "Hello\!"
-    ```
-
-1. Assign the [Key Vault Secrets User](/azure/role-based-access-control/built-in-roles/security#key-vault-secrets-user) role to the user-assigned managed identity that you created previously. This step gives the managed identity permission to read secrets from the key vault:
-
-    ```azurecli-interactive
-    export IDENTITY_PRINCIPAL_ID=$(az identity show \
-        --name "${MI_NAME}" \
-        --resource-group "${RESOURCE_GROUP}" \
-        --query principalId \
-        --output tsv)
-
-    az role assignment create \
-        --assignee-object-id "${IDENTITY_PRINCIPAL_ID}" \
-        --role "Key Vault Secrets User" \
-        --scope "${KEYVAULT_RESOURCE_ID}" \
-        --assignee-principal-type ServicePrincipal
-    ```
-
-1. Create an environment variable for the key vault URL:
+1. Get the key vault URL using the [`az keyvault show`](/cli/azure/keyvault#az-keyvault-show) command and set it as an environment variable:
 
     ```azurecli-interactive
     export KEYVAULT_URL="$(az keyvault show \
-        --resource-group ${RESOURCE_GROUP} \
-        --name ${KEYVAULT_NAME} \
+        --resource-group $RESOURCE_GROUP \
+        --name $KEY_VAULT_NAME \
         --query properties.vaultUri \
         --output tsv)"
     ```
 
-1. Annotate the service account with the managed identity information:
+## Configure key vault access and create secret
+
+The following steps show how to access secrets, keys, or certificates in Azure Key Vault from the pod. The examples in this section configure access to secrets in the key vault for the workload identity, but you can perform similar steps to configure access to keys or certificates.
+
+The following example shows how to use the Azure RBAC permission model to grant the pod access to the key vault. For more information about the Azure RBAC permission model for Azure Key Vault, see [Grant permission to applications to access Azure Key Vault using Azure RBAC](/azure/key-vault/general/rbac-guide).
+
+1. Get the object ID of the signed-in user using the [`az ad signed-in-user show`](/cli/azure/ad/signed-in-user#az-ad-signed-in-user-show) command and set it as an environment variable:
+
+    ```azurecli-interactive
+    export CALLER_OBJECT_ID=$(az ad signed-in-user show --query id --output tsv)
+    ```
+
+1. Assign yourself the Azure RBAC [Key Vault Secrets Officer](/azure/role-based-access-control/built-in-roles/security#key-vault-secrets-officer) role on the key vault using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
+
+    ```azurecli-interactive
+    az role assignment create --assignee $CALLER_OBJECT_ID \
+        --role "Key Vault Secrets Officer" \
+        --scope $KEY_VAULT_RESOURCE_ID
+    ```
+
+1. Create a secret in the key vault using the [`az keyvault secret set`](/cli/azure/keyvault/secret#az-keyvault-secret-set) command.
+
+    ```azurecli-interactive
+    export KEY_VAULT_SECRET_NAME="my-secret"
+
+    az keyvault secret set \
+        --vault-name $KEY_VAULT_NAME \
+        --name $KEY_VAULT_SECRET_NAME \
+        --value "Hello\!"
+    ```
+
+1. Assign the [Key Vault Secrets User](/azure/role-based-access-control/built-in-roles/security#key-vault-secrets-user) role to the UAMI using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
+
+    ```azurecli-interactive
+    az role assignment create \
+        --assignee-object-id $MI_PRINCIPAL_ID \
+        --role "Key Vault Secrets User" \
+        --scope $KEY_VAULT_RESOURCE_ID \
+        --assignee-principal-type ServicePrincipal
+    ```
+
+## Annotate service account
+
+1. Annotate the service account with the managed identity tenant ID using the `kubectl annotate` command.
 
     ```bash
-    export MI_TENANT_ID=$(az identity show -g $RESOURCE_GROUP -n $MI_NAME --query tenantId -o tsv)
-    export MI_CLIENT_ID=$(az identity show -g $RESOURCE_GROUP -n $MI_NAME --query clientId -o tsv)
-    
     kubectl annotate sa demo -n demo azure.workload.identity/tenant-id=$MI_TENANT_ID
+    ```
+
+1. Annotate the service account with the managed identity client ID using the `kubectl annotate` command.
+
+    ```bash
     kubectl annotate sa demo -n demo azure.workload.identity/client-id=$MI_CLIENT_ID
     ```
 
-1. Deploy the sample pod that uses identity binding to obtain an access token for the managed identity to access Azure Key Vault:
+## Deploy sample application
+
+- Deploy the sample pod that uses identity binding to obtain an access token for the managed identity to access Azure Key Vault using the following `kubectl apply` command:
 
     ```bash
     kubectl apply -f - <<EOF
@@ -320,7 +318,9 @@ The following example shows how to use the Azure role-based access control (Azur
     EOF
     ```
 
-1. Describe the pod and confirm environment variables and projected token volume mounts are present:
+## Verify access to key vault from sample application
+
+1. Describe the pod and confirm environment variables and projected token volume mounts are present using the `kubectl describe pod` command.
 
     ```bash
     kubectl describe pod demo -n demo
@@ -328,7 +328,7 @@ The following example shows how to use the Azure role-based access control (Azur
 
     Expected output should contain values for `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_FEDERATED_TOKEN_FILE`, `AZURE_AUTHORITY_HOST`, `AZURE_KUBERNETES_TOKEN_PROXY`. `AZURE_KUBERNETES_SNI_NAME`, and `AZURE_KUBERNETES_CA_FILE`.
 
-1. To verify that the pod is able to get a token and access the resource, use the `kubectl logs` command:
+1. Verify the pod can get a token and access the resource using the `kubectl logs` command.
 
     ```bash
     kubectl logs demo -n demo
@@ -340,32 +340,40 @@ The following example shows how to use the Azure role-based access control (Azur
     I1107 20:03:42.865180       1 main.go:77] "successfully got secret" secret="Hello!"
     ```
 
-## Scale out usage across clusters
+## Scale identity bindings across multiple clusters
 
-Identity bindings allow mapping multiple AKS clusters to the same UAMI while still using a single FIC. Repeat the steps from "Create an identity binding" through "Deploy sample application" for additional clusters (creating a new identity binding per cluster) to validate scaled usage patterns.
+Identity bindings allow mapping multiple AKS clusters to the same UAMI while still using a single FIC. To scale identity bindings across multiple clusters, you can repeat the steps from [Create an identity binding](#create-an-identity-binding) through [verify access to key vault from sample application](#verify-access-to-key-vault-from-sample-application) for each extra cluster you want to map to the same UAMI (creating a new identity binding per cluster).
 
-## Clean up (optional)
+## Clean up resources
 
-Delete resources when finished:
+If you no longer need the resources you created in this article, you can clean them up to avoid incurring future costs.
 
-```bash
-kubectl delete pod demo -n demo
-kubectl delete ns demo
-az group delete --name $RESOURCE_GROUP --yes --no-wait
-```
+1. Delete the pod using the `kubectl delete pod` command.
 
-## Next steps
+    ```bash
+    kubectl delete pod demo -n demo
+    ```
 
-* Review [Identity bindings concepts][identity-bindings-concepts].
-* Explore creating additional identity bindings for the same managed identity across more clusters.
+1. Delete the namespace using the `kubectl delete ns` command.
+
+    ```bash
+    kubectl delete ns demo
+    ```
+
+1. Delete the resource group and all related resources using the [`az group delete`](/cli/azure/group#az-group-delete) command.
+
+    ```azurecli-interactive
+    az group delete --name $RESOURCE_GROUP --yes --no-wait
+    ```
+
+## Related content
+
+- [Identity bindings concepts](./identity-bindings-concepts.md)
+- [Access and identity options for Azure Kubernetes Service (AKS) workloads](./concepts-identity.md)
 
 <!-- INTERNAL LINKS -->
 [identity-bindings-concepts]: identity-bindings-concepts.md
-[workload-identity-overview]: workload-identity-overview.md
-[general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
-[managed-identities-overview]: /azure/active-directory/managed-identities-azure-resources/overview
 [api-server-vnet-integration]: /azure/aks/api-server-vnet-integration
 
 <!-- EXTERNAL LINKS -->
 [k8s-rbac-subjects]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-subjects
-[jwt-ms]: https://jwt.ms/
