@@ -61,7 +61,7 @@ az aks nodepool add --name np2 --cluster-name myAKSCluster --resource-group myRe
 
 ## Upgrading a node pool to a snapshot
 
-You can upgrade a node pool to a snapshot configuration so long as the snapshot kubernetes version and node image version are more recent than the versions in the current node pool.
+You can upgrade a node pool to a snapshot configuration so long as the snapshot Kubernetes version and node image version are more recent than the versions in the current node pool and the snapshot node image version is within 90 days of the node image publish date. 
 
 First, you need the resource ID from the snapshot that was previously created, which you can get from the following command:
 
