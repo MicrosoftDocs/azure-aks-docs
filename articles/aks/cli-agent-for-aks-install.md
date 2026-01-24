@@ -12,22 +12,42 @@ ms.subservice: aks-monitoring
 
 # Install and use the agentic CLI for Azure Kubernetes Service (AKS) (preview)
 
-This article shows you how to install, configure, and use the agentic CLI for Azure Kubernetes Service (AKS) to get AI-powered troubleshooting and insights for your AKS clusters.
+This article shows you how to install, configure, and use the agentic CLI for Azure Kubernetes Service (AKS) to get AI-powered troubleshooting and insights for your AKS clusters. The agentic CLI supports two deployment modes: **client mode** for local execution and **cluster mode** for in-cluster deployment.
 
 For more information, see the [agentic CLI for AKS overview](./cli-agent-for-aks-overview.md).
 
+## Deployment modes
+
+The agentic CLI for AKS supports two deployment modes that you can choose during initialization:
+
+> [!NOTE]
+> These two modes are only available from  version  "1.0.0b15" of the aks-agent extension
+
+### Client mode
+
+- **Deployment**: Runs the agent locally using Docker
+- **Authentication**: Uses your local Azure credentials and cluster user credentials
+- **Use case**: Ideal for development, testing, and scenarios where you want to run the agent from your local machine
+- **Requirements**: Requires Docker to be installed locally
+
+### Cluster mode
+
+- **Deployment**: Deploys the agent as a pod within your AKS cluster using Helm
+- **Authentication**: Uses service account and optional workload identity for secure access to cluster and Azure resources
+- **Use case**: Recommended for production scenarios, shared environments, and when you want the agent to run closer to your cluster resources
+- **Requirements**: Requires existing namespace, service account with RBAC permissions, and workload identity setup for Azure resource access
+
 ## Prerequisites
+
+### General requirements
+
+Both deployment modes require the following:
 
 - Use the Azure CLI version 2.76 or later. To verify your Azure CLI version, use the [`az version`](/cli/azure/reference-index#az-version) command.
 - Have a large language model (LLM) API key. You must bring your own API key from one of the supported providers:
   - Azure OpenAI (recommended).
   - OpenAI or other LLM providers compatible with OpenAPI specifications.
 - Ensure that you're signed in to the proper subscription by using the [`az account set`](/cli/azure/account#az-account-set) command.
-- Configure access to your AKS cluster by using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command. Replace `<RESOURCE_GROUP>` and `<CLUSTER_NAME>` with your AKS cluster's resource group and name.
-
-    ```azurecli-interactive
-    az aks get-credentials --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --overwrite-existing
-    ```
 
 - [Install the agentic CLI for AKS extension](#install-the-agentic-cli-for-aks-extension).
 
@@ -64,13 +84,13 @@ For more information, see the [agentic CLI for AKS overview](./cli-agent-for-aks
     ```output
     ...
     "extensions": {
-    "aks-agent": "1.0.0b1",
+    "aks-agent": "1.0.0b15",
     }
     ```
 
 ## Set up your LLM API key
 
-We recommend that you use newer models such as GPT-4o, GPT-4o-mini, or Claude Sonnet 4.0 for better performance. Choose a model with a high context size of at least 128,000 tokens or higher.
+Before proceeding with installation, you need to set up your LLM API key. We recommend that you use newer models such as GPT-4o, GPT-4o-mini, or Claude Sonnet 4.0 for better performance. Choose a model with a high context size of at least 128,000 tokens or higher.
 
 ### Azure OpenAI (recommended)
 
@@ -79,8 +99,9 @@ Set up an Azure OpenAI resource by following the steps in the [Microsoft documen
 > [!NOTE]
 > For the deployment name, use the same name as the model name, such as gpt-4o or gpt-4o-mini, depending on the access. You can use any region where you have access and quota for the model.
 > In the deployment, select a token-per-minute (TPM) limit as high as possible. We recommend upward of a 1-million TPM for good performance.
+
 1. [Deploy the model](/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal#deploy-a-model) that you plan to use in the Microsoft Foundry portal.
-1. After deployment is finished, note your API base URL and API key.<br>
+1. After deployment is finished, note your API base URL and API key.
 
    <img width="1713" height="817" alt="image" src="https://github.com/user-attachments/assets/400021fd-5604-4cd2-9faf-407145c52669" />
 
@@ -92,15 +113,56 @@ The Azure API base refers to the Azure OpenAI endpoint (which usually ends in `o
 
 We also support any OpenAI-compatible model. Check the documentation of the LLM provider for instructions on how to create an account and retrieve the API key.
 
-## Initialize the agentic CLI for AKS
+## Choose your installation path
 
-1. Initialize the agentic CLI for AKS by using the [`az aks agent-init`](/cli/azure/aks#az-aks-agent-init) command. This command sets up the necessary configurations and toolsets for the agent. Replace `<RESOURCE_GROUP>` and `<CLUSTER_NAME>` with your AKS cluster's resource group and name.
+Select the installation guide that matches your preferred deployment mode:
+
+- [Client mode installation](#client-mode-installation) - For local execution using Docker
+- [Cluster mode installation](#cluster-mode-installation) - For in-cluster deployment with workload identity
+
+## Client mode installation
+
+Client mode runs the agent locally using Docker and your existing Azure credentials.
+
+### Prerequisites for client mode
+
+- **Docker**: Docker must be installed and running on your local machine. You can download Docker from [docker.com](https://www.docker.com/get-started/).
+- **Local Azure credentials**: Ensure your Azure credentials are properly configured and you have the necessary permissions to access cluster resources.
+
+### Verify Docker installation
+
+Verify that Docker is installed and running:
+
+```bash
+docker --version
+docker ps
+```
+
+If Docker isn't installed, follow the [Docker installation guide](https://docs.docker.com/get-docker/) for your operating system.
+
+### Initialize client mode
+
+1. Initialize the agentic CLI for client mode by using the [`az aks agent-init`](/cli/azure/aks#az-aks-agent-init) command. Replace `<RESOURCE_GROUP>` and `<CLUSTER_NAME>` with your AKS cluster's resource group and name.
 
     ```azurecli-interactive
     az aks agent-init --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME>
     ```
 
-1. Select your LLM provider, and enter LLM details when prompted. For example:
+1. When prompted to select a deployment mode, choose **Option 2** for client mode:
+
+    ```output
+    🚀 Welcome to AKS Agent initialization!
+
+    Please select the mode you want to use:
+      1. Cluster mode - Deploys agent as a pod in your AKS cluster
+         Uses service account and workload identity for secure access to cluster and Azure resources
+      2. Client mode - Runs agent locally using Docker
+         Uses your local Azure credentials and cluster user credentials for access
+    
+    Enter your choice (1 or 2): 2
+    ```
+
+1. Configure your LLM provider when prompted. For example:
 
     ```output
     Welcome to AKS Agent LLM configuration setup. Type '/exit' to exit.
@@ -118,28 +180,269 @@ We also support any OpenAI-compatible model. Check the documentation of the LLM 
     LLM configuration setup successfully.
     ```
 
-    The API key appears empty as you type, so make sure to use the correct API key. You can also skip the `init` experience by providing the values in the configuration file. The Azure API base refers to the Azure OpenAI endpoint (which usually ends in `openai.azure.com/`), not the target URI of the deployment in Foundry. If the LLM configuration fails, double-check your API key or `AZURE_API_BASE`.
+    > [!NOTE]
+    > The API key appears empty as you type for security. Make sure to enter the correct API key.
 
-    The `init` experience must be successfully completed for you to use the agentic CLI. If `init` fails, check the configuration file option or the troubleshooting documentation.
+4. Verify the initialization was successful. The agent will automatically pull the necessary Docker images when you run your first command.
+
+## Cluster mode installation
+
+Cluster mode deploys the agent as a pod within your AKS cluster using workload identity for secure authentication.
+
+### Prerequisites for cluster mode
+
+- **Workload Identity**: Your AKS cluster must have workload identity enabled. If not enabled, follow the [workload identity setup guide](/azure/aks/workload-identity-deploy-cluster).
+- **Existing namespace**: You must have an existing Kubernetes namespace where the agent will be deployed (such as `kube-system` or a custom namespace).
+- **Service account**: You must create a service account with the appropriate permissions in your target namespace before initialization.
+- **RBAC permissions**: You need to create the necessary Role and RoleBinding for the service account in your namespace.
+- **Cluster permissions**: You need sufficient permissions to:
+  - Deploy Helm charts in the target cluster
+  - Access the target namespace
+  - Create and manage pods in the target namespace
+- **Managed Identity (optional)**: If you want to configure workload identity for Azure resource access, you need a managed identity with appropriate Azure permissions. Follow the [federated identity credential setup guide](https://github.com/Azure/aks-mcp/blob/main/docs/helm-workload-identity.md#step-4-create-federated-identity-credential).
+
+### Verify workload identity
+
+Check if workload identity is enabled on your cluster:
+
+```azurecli-interactive
+az aks show --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --query "securityProfile.workloadIdentity.enabled"
+```
+
+If the output is `true`, workload identity is enabled. If `null` or `false`, you need to enable it:
+
+```azurecli-interactive
+az aks update --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --enable-workload-identity
+```
+
+### Create required Kubernetes resources
+
+Before initializing cluster mode, you must create the necessary Kubernetes resources:
+
+1. **Create or use an existing namespace** (skip if using `kube-system`):
+
+    ```bash
+    kubectl create namespace <NAMESPACE_NAME>
+    ```
+
+2. **Create a service account** in your target namespace:
+
+    ```bash
+    kubectl create serviceaccount <SERVICE_ACCOUNT_NAME> -n <NAMESPACE_NAME>
+    ```
+
+3. **Create appropriate RBAC permissions**. Create a Role and RoleBinding for the service account with comprehensive read access for troubleshooting:
+
+    ```yaml
+    # aks-agent-role.yaml
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      namespace: <NAMESPACE_NAME>
+      name: aks-agent-role
+    rules:
+    # Read access to all resources in the namespace for comprehensive troubleshooting
+    - apiGroups: ["*"]
+      resources: ["*"]
+      verbs: ["get", "list", "watch"]
+    # Additional permissions for agent configuration management
+    - apiGroups: [""]
+      resources: ["configmaps", "secrets"]
+      verbs: ["create", "update", "patch", "delete"]
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: aks-agent-rolebinding
+      namespace: <NAMESPACE_NAME>
+    subjects:
+    - kind: ServiceAccount
+      name: <SERVICE_ACCOUNT_NAME>
+      namespace: <NAMESPACE_NAME>
+    roleRef:
+      kind: Role
+      name: aks-agent-role
+      apiGroup: rbac.authorization.k8s.io
+    ```
+
+    Apply the RBAC configuration:
+
+    ```bash
+    kubectl apply -f aks-agent-role.yaml
+    ```
+
+4. **Verify the resources were created successfully**:
+
+    ```bash
+    kubectl get serviceaccount <SERVICE_ACCOUNT_NAME> -n <NAMESPACE_NAME>
+    kubectl get role aks-agent-role -n <NAMESPACE_NAME>
+    kubectl get rolebinding aks-agent-rolebinding -n <NAMESPACE_NAME>
+    ```
+
+### Initialize cluster mode
+
+1. Initialize the agentic CLI for cluster mode by using the [`az aks agent-init`](/cli/azure/aks#az-aks-agent-init) command. Replace `<RESOURCE_GROUP>` and `<CLUSTER_NAME>` with your AKS cluster's resource group and name.
+
+    ```azurecli-interactive
+    az aks agent-init --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME>
+    ```
+
+1. When prompted to select a deployment mode, choose **Option 1** for cluster mode:
+
+    ```output
+    🚀 Welcome to AKS Agent initialization!
+
+    Please select the mode you want to use:
+      1. Cluster mode - Deploys agent as a pod in your AKS cluster
+         Uses service account and workload identity for secure access to cluster and Azure resources
+      2. Client mode - Runs agent locally using Docker
+         Uses your local Azure credentials and cluster user credentials for access
+    
+    Enter your choice (1 or 2): 1
+    ```
+
+1. **Specify the target namespace** when prompted. Use the namespace where you created the service account:
+
+    ```output
+    ✅ Cluster mode selected. This will set up the agent deployment in your cluster.
+
+    Please specify the namespace where the agent will be deployed.
+
+    Enter namespace (e.g., 'kube-system'): <YOUR_NAMESPACE>
+    ```
+
+1. **Configure your LLM provider** when prompted:
+
+    ```output
+    📦 Using namespace: <YOUR_NAMESPACE>
+    No existing LLM configuration found. Setting up new configuration...
+    Please provide your LLM configuration. Type '/exit' to exit.
+     1. Azure OpenAI
+     2. OpenAI
+     3. Anthropic
+     4. Gemini
+     5. OpenAI Compatible
+     6. For other providers, see https://aka.ms/aks/agentic-cli/init
+    Please choose the LLM provider (1-5): 1
+    ```
+
+1. **Provide service account details** when prompted. Use the service account you created earlier:
+
+    ```output
+    👤 Service Account Configuration
+    The AKS agent requires a service account with appropriate permissions in the '<YOUR_NAMESPACE>'
+    namespace.
+    Please ensure you have created the necessary Role and RoleBinding in your namespace for 
+    this service account.
+
+    Enter service account name: <YOUR_SERVICE_ACCOUNT_NAME>
+    ```
+
+1. **Configure managed identity** (optional). This step is optional but recommended for accessing Azure resources:
+
+    ```output
+    🔑 Managed Identity Configuration
+    To access Azure resources using workload identity, you need to provide the managed 
+    identity client ID.
+    Do you want to configure managed identity client ID? (Y/n):
+    ```
+
+    - Choose `Y` if you want to configure workload identity for Azure resource access
+    - Choose `n` to skip workload identity configuration
+
+1. **Wait for deployment completion**. The initialization will deploy the agent using Helm:
+
+    ```output
+    🚀 Deploying AKS agent (this typically takes less than 2 minutes)...
+    ✅ AKS agent deployed successfully!
+    Verifying deployment status...
+    ✅ AKS agent is ready and running!
+
+    🎉 Initialization completed successfully!
+    ```
+
+1. Verify the deployment was successful:
+
+    ```azurecli-interactive
+    az aks agent --status --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <YOUR_NAMESPACE>
+    ```
+
+    You should see output similar to:
+
+    ```output
+    📊 Checking AKS agent status...
+
+    ✅ Helm Release: deployed
+
+    📦 Deployments:
+      • aks-agent: 1/1 ready
+      • aks-mcp: 1/1 ready
+
+    🐳 Pods:
+      • aks-agent-xxxxx-xxxxx: Running ✓
+      • aks-mcp-xxxxx-xxxxx: Running ✓
+
+    📋 LLM Configurations:
+      • azure/gpt-4o
+        API Base: https://your-service.openai.azure.com/
+        API Version: 2025-04-01-preview
+
+    ✅ AKS agent is ready and running!
+    ```
+
+    You can also verify using kubectl:
+
+    ```bash
+    kubectl get pods -n <YOUR_NAMESPACE> | grep aks-
+    kubectl get deployment -n <YOUR_NAMESPACE> | grep aks-
+    ```
 
 ---
 
 ## Use the agentic CLI for AKS
 
-You can now start using the agentic CLI for AKS to troubleshoot your clusters and get intelligent insights by using natural language queries. The following sections outline key parameters and example queries to get you started.
+Once initialized, you can use the agentic CLI for AKS to troubleshoot your clusters and get intelligent insights by using natural language queries. The command syntax and functionality are the same regardless of whether you selected client mode or cluster mode during initialization.
+
+### Required parameters
+
+All agent commands require the following parameters:
+- `-n` or `--name`: The name of your AKS cluster
+- `-g` or `--resource-group`: The resource group containing your AKS cluster
+
+Additional parameters based on deployment mode:
+
+**For client mode:**
+- `--mode client`: Specifies client mode execution (default mode is cluster)
+
+**For cluster mode:**
+- `--namespace`: The Kubernetes namespace where the agent is deployed (required for cluster mode)
+
+> [!NOTE]
+> The default mode is `cluster`. You only need to specify `--mode client` when using client mode.
 
 ### Basic queries
 
-You can use the following example queries to get started with the agentic CLI for AKS.
+You can use the following example queries to get started with the agentic CLI for AKS. Replace `<RESOURCE_GROUP>` and `<CLUSTER_NAME>` with your actual values.
 
 > [!NOTE]
 > If you have multiple models set up, you can specify the model to use for each query by using the `--model` parameter. For example, `--model=azure/gpt-4o`.
 
+**Client mode examples:**
+
 ```azurecli-interactive
-az aks agent "How many nodes are in my cluster?"
-az aks agent "What is the Kubernetes version on the cluster?"
-az aks agent "Why is coredns not working on my cluster?"
-az aks agent "Why is my cluster in a failed state?"
+az aks agent "How many nodes are in my cluster?" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --mode client
+az aks agent "What is the Kubernetes version on the cluster?" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --mode client
+az aks agent "Why is coredns not working on my cluster?" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --mode client
+az aks agent "Why is my cluster in a failed state?" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --mode client
+```
+
+**Cluster mode examples:**
+
+```azurecli-interactive
+az aks agent "How many nodes are in my cluster?" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <NAMESPACE>
+az aks agent "What is the Kubernetes version on the cluster?" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <NAMESPACE>
+az aks agent "Why is coredns not working on my cluster?" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <NAMESPACE>
+az aks agent "Why is my cluster in a failed state?" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <NAMESPACE>
 ```
 
 By default, the experience uses interactive mode, where you can continue asking questions with retained context until you want to leave. To leave the experience, enter `/exit`.
@@ -148,16 +451,17 @@ By default, the experience uses interactive mode, where you can continue asking 
 
 | Parameter | Description |
 |-----------|-------------|
-| `--api-key` | API key to use for the LLM. (If not given, uses the environment variables `AZURE_API_KEY` and `OPENAI_API_KEY`.) |
-| `--config-file` | Path to the configuration file. Default: `/Users/<>/.azure/aksAgent.config`. |
-| `--max-steps` | Maximum number of steps that the LLM can take to investigate the issue. Default: 10. |
-| `--model` | Model to use for the LLM. |
-| `--name`, `-n` | Name of the managed cluster. |
-| `--no-echo-request` | Disable echoing back the question provided to the AKS agent in the output. |
-| `--no-interactive` | Disable interactive mode. When set, the agent doesn't prompt for input and runs in batch mode. |
+| `--max-steps` | Maximum number of steps the LLM can take to investigate the issue. Default: 40. |
+| `--mode` | The mode decides how the agent is deployed. Allowed values: `client`, `cluster`. Default: `cluster`. |
+| `--model` | Specify the LLM provider and model or deployment to use for the AI assistant. |
+| `--name`, `-n` | Name of the managed cluster. (Required) |
+| `--namespace` | The Kubernetes namespace where the AKS Agent is deployed. Required for cluster mode. |
+| `--no-echo-request` | Disable echoing back the question provided to AKS Agent in the output. |
+| `--no-interactive` | Disable interactive mode. When set, the agent will not prompt for input and will run in batch mode. |
 | `--refresh-toolsets` | Refresh the toolsets status. |
-| `--resource-group`, `-g` | Name of the resource group. |
-| `--show-tool-output` | Show the output of each tool that was called during the analysis. |
+| `--resource-group`, `-g` | Name of resource group. (Required) |
+| `--show-tool-output` | Show the output of each tool that was called. |
+| `--status` | Show AKS agent configuration and status information. |
 
 ### Model specification
 
@@ -169,12 +473,13 @@ The `--model` parameter determines which LLM and provider analyzes your cluster.
 
 ### Configuration file
 
-The LLM configuration is stored in a configuration file through the `az aks agent-init` experience. If the `init` command doesn't work, you can still use the configuration file by adding the variables manually. For an example configuration file, see [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml). You can find the default configuration file path through the `az aks agent --help` command.
+The LLM configuration and deployment mode selection are stored in a configuration file through the `az aks agent-init` experience. If the `init` command doesn't work, you can still use the configuration file by adding the variables manually. For an example configuration file, see [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml). You can find the default configuration file path through the `az aks agent --help` command.
 
 The configuration file currently supports the following parameters:
 
 - Model
 - API key
+- Deployment mode (client or cluster)
 - Custom toolsets
 - Azure environment variables
 
@@ -204,11 +509,18 @@ The `az aks agent` has a set of subcommands that aid the troubleshooting experie
 
 ### Disable interactive mode
 
-To opt out of the default interactive mode, use the `--no-interactive` flag. For example:
+To opt out of the default interactive mode, use the `--no-interactive` flag:
 
+**Client mode:**
 ```azurecli-interactive
-az aks agent "How many pods are in the kube-system namespace" --model=azure/gpt-4o --no-interactive
-az aks agent "Why are the pods in Crashloopbackoff in the kube-system namespace" --model=azure/gpt-4o --no-interactive --show-tool-output
+az aks agent "How many pods are in the kube-system namespace" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --mode client --model=azure/gpt-4o --no-interactive
+az aks agent "Why are the pods in Crashloopbackoff in the kube-system namespace" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --mode client --model=azure/gpt-4o --no-interactive --show-tool-output
+```
+
+**Cluster mode:**
+```azurecli-interactive
+az aks agent "How many pods are in the kube-system namespace" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <NAMESPACE> --model=azure/gpt-4o --no-interactive
+az aks agent "Why are the pods in Crashloopbackoff in the kube-system namespace" --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <NAMESPACE> --model=azure/gpt-4o --no-interactive --show-tool-output
 ```
 
 ### Toolsets
@@ -259,6 +571,70 @@ To check the status of the MCP server, you can use the `--status` flag:
 
 ```azurecli-interactive
 az aks-agent --status
+```
+
+## Clean up agentic CLI deployment
+
+You can clean up the agentic CLI deployment based on the mode you selected during initialization.
+
+### Command parameters
+
+All cleanup commands require the following parameters:
+- `-n` or `--name`: The name of your AKS cluster
+- `-g` or `--resource-group`: The resource group containing your AKS cluster
+- `--namespace`: The Kubernetes namespace where the agent is deployed (required for cluster mode only)
+
+### Clean up client mode
+
+For client mode, the cleanup process removes the local configuration and any downloaded Docker images:
+
+```azurecli-interactive
+az aks agent-cleanup --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --mode client
+```
+
+This command:
+- Removes the local configuration file
+- Resets the agent configuration
+
+### Clean up cluster mode
+
+For cluster mode, the cleanup process removes the deployed resources from your AKS cluster:
+
+```azurecli-interactive
+az aks agent-cleanup --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <NAMESPACE>
+```
+
+This command:
+- Removes the agent pod from the specified namespace
+- Deletes the service account created for the agent
+- Cleans up workload identity configurations (if Azure RBAC was enabled)
+- Removes the dedicated namespace (if it was created during initialization)
+
+Replace `<NAMESPACE>` with the namespace where the agent was deployed (default is usually `aks-agent`).
+
+### Verify cleanup
+
+To verify that the cleanup was successful:
+
+**For client mode:**
+```bash
+# Check if configuration file was removed
+ls ~/.azure/aksAgent.config
+
+# Check for remaining Docker images
+docker images | grep aks-agent
+```
+
+**For cluster mode:**
+```azurecli-interactive
+# Check if agent pod was removed
+kubectl get pods -n <NAMESPACE>
+
+# Check if service account was removed
+kubectl get serviceaccount -n <NAMESPACE>
+
+# Check if namespace was removed (if it was created during init)
+kubectl get namespace <NAMESPACE>
 ```
 
 ## Remove the agentic CLI for AKS extension
