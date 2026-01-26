@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.author: schaffererin
 author: schaffererin
-ms.date: 01/13/2026
+ms.date: 01/26/2026
 # Customer intent: "As a cloud administrator, I want to access and manage Kubernetes resources in my Azure Kubernetes Service cluster through the Azure portal, so that I can effectively monitor and deploy applications within my infrastructure."
 ---
 
@@ -283,14 +283,14 @@ To deploy the Azure Store application, you need to connect to your AKS cluster. 
 
 1. Select **Add**.
 
-   Once the application finishes deploying, you see the following services in the *Services* list:
+Once the application finishes deploying, you see the following services in the *Services* list:
 
-   - `order-service`
-   - `product-service`
-   - `rabbitmq`
-   - `store-front`
+- `order-service`
+- `product-service`
+- `rabbitmq`
+- `store-front`
 
-   :::image type="content" source="media/kubernetes-portal/portal-services.png" alt-text="Screenshot of the Azure Store application services displayed in the Azure portal." lightbox="media/kubernetes-portal/portal-services.png":::
+:::image type="content" source="media/kubernetes-portal/portal-services.png" alt-text="Screenshot of the Azure Store application services displayed in the Azure portal." lightbox="media/kubernetes-portal/portal-services.png":::
 
 ## Monitor deployment insights
 
@@ -324,7 +324,7 @@ If you no longer need the Azure Store application, you can delete the services t
 
 To access the Kubernetes resources, you need access to the AKS cluster, Kubernetes API, and Kubernetes objects. Make sure you're either a **Cluster Administrator** or a user with the appropriate permissions delegated to access the AKS cluster. For more information, see [Access and identity options for AKS][concepts-identity].
 
-### Kubernetes resource viewer is inaccessible
+### Viewing Kubernetes resources are inaccessible
 
 You might need to configure authorized IP ranges to enable the Kubernetes resource view for existing clusters.
 
@@ -345,6 +345,18 @@ You might need to configure authorized IP ranges to enable the Kubernetes resour
    az aks update --resource-group <resource-group-name> --name <aks-cluster-name> --api-server-authorized-ip-ranges $CURRENT_IP/32
    ```
 
+1. After updating your cluster's authorized IP ranges, run the following command to update and merge your kubeconfig:
+
+   ```azurepowershell-interactive
+   az aks get-credentials --resource-group myResourceGroup --name myAksCluster
+   ```
+
+   The expected output informs you of this update:
+
+   ```output
+   Merged "myAksCluster" as current context ...
+   ```
+
 # [Azure PowerShell](#tab/azure-powershell)
 
 1. Retrieve your IP address using the following command:
@@ -359,13 +371,25 @@ You might need to configure authorized IP ranges to enable the Kubernetes resour
    Set-AzAksCluster -ResourceGroupName <resource-group-name> -Name <aks-cluster-name> -ApiServerAccessAuthorizedIpRange $CURRENT_IP/32
    ```
 
+1. After updating your cluster's authorized IP ranges, run the following command to update and merge your kubeconfig:
+
+   ```azurepowershell-interactive
+   Get-AzAksCredential -ResourceGroupName myResourceGroup -Name myAksCluster
+   ```
+
+   The expected output informs you of this update:
+
+   ```output
+   Merged "myAksCluster" as current context ...
+   ```
+
 ---
 
 If your AKS cluster is configured as a *private cluster*, you must access the Azure portal from a network that can reach the subnet where your AKS cluster resides. Otherwise, AKS resources are inaccessible in the portal due to network connectivity issues. To learn more, see [Access an AKS private cluster](/azure/architecture/guide/security/access-azure-kubernetes-service-cluster-api-server#access-an-aks-private-cluster).
 
 ## Next steps
 
-This article showed you how to access Kubernetes resources from the Azure portal. For more information about AKS, [Core concepts for Azure Kubernetes Service (AKS)][core-concepts].
+This article showed you how to access Kubernetes resources from the Azure portal. To learn more information about AKS concepts, see [Core concepts for Azure Kubernetes Service (AKS)][core-concepts].
 
 <!-- LINKS - internal -->
 [concepts-identity]: concepts-identity.md
