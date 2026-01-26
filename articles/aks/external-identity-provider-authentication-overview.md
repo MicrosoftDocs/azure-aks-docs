@@ -52,7 +52,7 @@ While AKS structured authentication allows any OIDC-compliant identity provider,
 
 - **GitHub**: Authenticate using GitHub identities or GitHub Actions
 
-- **Google OIDC**: Use Google accounts for authentication
+- **Google Google OAuth 2.0**: Use Google accounts for authentication
 
 - **Generic OIDC providers**: Any provider implementing OIDC standards
 
@@ -77,7 +77,7 @@ External identity providers must:
 
 ### JWT authenticators
 
-A JWT authenticator is a configuration object that defines how AKS validates and processes tokens from an external identity provider. For example, AKS expects an ID token (JWT) with an audience claim formatted as `api://<your-cluster-id>`. Each JWT authenticator includes:
+A JWT authenticator is a configuration object that defines how AKS validates and processes tokens from an external identity provider. For example, AKS expects an ID token (JWT) whose `aud` (audience) claim matches the audience value you configure for the authenticator, such as `"my-api"` or an OAuth client ID. Each JWT authenticator includes:
 
 - **Issuer configuration**: Specifies the OIDC issuer URL and the expected audience values for tokens.
 
@@ -131,7 +131,7 @@ claims.groups.split(',').map(g, 'aks:jwt:' + g)
 
 - Any network paths involved in the authentication flow
 
-**Validation layers** - Structured authentication provides multiple validation layers from:
+**Validation layers** - Structured authentication provides multiple validation layers:
 
 - **Token signature validation**: Ensures token authenticity
 
