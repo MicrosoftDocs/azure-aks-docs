@@ -154,7 +154,7 @@ The reason for the above recommendation is that:
   
   - Also, since the zone balancing of nodes is handled by underlying Virtual Machine Scale Sets, AKS will not automatically rebalance running workloads.
     
-Using one node pool per availability zone helps overcome these limitations. Cluster Autoscaler treats each node pool as an independent entity, giving users greater flexibility to manage zone-specific scaling behavior. With single‑zone node pools, workloads remain schedulable on node pools in other zones during a zone failure, except when users explicitly define a strict zone‑based **[pod topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)**.
+Using one node pool per availability zone helps overcome these limitations. Cluster Autoscaler treats each node pool as an independent entity, giving users greater flexibility to manage zone-specific scaling behavior. With single-zone node pools, workloads remain schedulable on node pools in other zones during a zone failure, except when users explicitly define a strict zone-based **[pod topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)**.
 
 ## Design a stateless application
 
