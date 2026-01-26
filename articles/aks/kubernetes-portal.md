@@ -324,7 +324,7 @@ If you no longer need the Azure Store application, you can delete the services t
 
 To access the Kubernetes resources, you need access to the AKS cluster, Kubernetes API, and Kubernetes objects. Make sure you're either a **Cluster Administrator** or a user with the appropriate permissions delegated to access the AKS cluster. For more information, see [Access and identity options for AKS][concepts-identity].
 
-### Viewing Kubernetes resources are inaccessible
+### Viewing Kubernetes resources is inaccessible
 
 You might need to configure authorized IP ranges to enable the Kubernetes resource view for existing clusters.
 
@@ -347,7 +347,7 @@ You might need to configure authorized IP ranges to enable the Kubernetes resour
 
 1. After updating your cluster's authorized IP ranges, run the following command to update and merge your kubeconfig:
 
-   ```azurepowershell-interactive
+   ```azurecli-interactive
    az aks get-credentials --resource-group myResourceGroup --name myAksCluster
    ```
 
@@ -389,7 +389,7 @@ If your AKS cluster is configured as a *private cluster*, you must access the Az
 
 ## Next steps
 
-This article showed you how to access Kubernetes resources from the Azure portal. To learn more information about AKS concepts, see [Core concepts for Azure Kubernetes Service (AKS)][core-concepts].
+This article showed you how to access Kubernetes resources from the Azure portal. To learn more about AKS concepts, see [Core concepts for Azure Kubernetes Service (AKS)][core-concepts].
 
 <!-- LINKS - internal -->
 [concepts-identity]: concepts-identity.md
