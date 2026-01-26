@@ -229,7 +229,7 @@ Confirm that the sample application's product page is accessible. The expected o
 
 ### Annotations
 
-The following annotations can be added to the Kubernetes service for the external and internal ingress gateways:
+The following annotations can be added to the Kubernetes service for the external and internal ingress gateways. See the [Cloud Provider Azure Kubernetes LoadBalancer][cloud-provider-azure-lb-annotations] document for more information about these annotations.
 
 - `external-dns.alpha.kubernetes.io/hostname`: for specifying the domain for resource's DNS records. For more information, see [external-dns][external-dns].
 - `service.beta.kubernetes.io/azure-allowed-ip-ranges`: for specifying a list of allowed IP ranges separated by commas.
@@ -244,7 +244,7 @@ The following annotations can be added to the Kubernetes service for the externa
 - `service.beta.kubernetes.io/azure-pip-name`: for specifying the name of a public IP address.
 - `service.beta.kubernetes.io/azure-shared-securityrule`: for exposing the ingress gateway through an [augmented security rule][azure-nsg-docs].
 
-The add-on supports the following health probe annotations for ports `80` and `443`. Learn more about the usage of ports [here][azure-load-balancer-annotations-for-ports].
+The add-on supports the following health probe annotations for ports `80` and `443`:
 
 - `service.beta.kubernetes.io/port_{port}_no_lb_rule`
 - `service.beta.kubernetes.io/port_{port}_no_probe_rule`
@@ -303,7 +303,7 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [azure-nsg-docs]: /azure/virtual-network/network-security-groups-overview#augmented-security-rules
 [azure-service-tags]: /azure/virtual-network/service-tags-overview
 [external-dns]: https://kubernetes-sigs.github.io/external-dns/latest/docs/annotations/annotations/#external-dnsalphakubernetesiohostname
-[azure-load-balancer-annotations-for-ports]: /azure/aks/load-balancer-standard#customize-the-load-balancer-health-probe
+[cloud-provider-azure-lb-annotations]: https://cloud-provider-azure.sigs.k8s.io/topics/loadbalancer/#loadbalancer-annotations
 [kubernetes-docs-load-balancer]: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
 [aks-system-nodes]: /azure/aks/use-system-pools
 [istio-egress-gateway]: istio-deploy-egress.md
