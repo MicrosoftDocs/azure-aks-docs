@@ -355,7 +355,12 @@ Fleet Manager processes stages sequentially:
 4. The next stage begins only after all previous after stage tasks complete
 
 > [!NOTE] 
-> If a resource placement on a cluster fails, the entire update run is aborted.
+> An update run can abort for multiple reasons, including but not limited to:
+> - The binding spec doesn't match the update run configuration. This situation typically happens when another update run preempts the current one.
+> - Validation failures occur, such as when a cluster joins or leaves the fleet.
+> - Labels change on clusters.
+>
+> When a resource update fails on a cluster, Fleet Manager continues retrying and marks the cluster status as "stuck" (after retrying for about 5 minutes) rather than aborting the entire update run.
 
 ### Approval Requests
 
