@@ -259,6 +259,14 @@ groups:
   - id: non-cilium
     title: Non-Cilium
 # Owner: schaffererin
+- id: kubernetes-service-principal
+  title: Select how you want to interact with Azure
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: azure-powershell
+    title: Azure PowerShell
 - id: aks-desktop
   title: AKS desktop
   prompt: Choose your role in AKS desktop

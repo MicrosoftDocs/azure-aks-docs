@@ -394,7 +394,7 @@ For more information on AKS, see the [AKS overview][aks-intro]. For guidance on 
 [az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-group-delete]: /cli/azure/group#az-group-delete
-[sp-delete]: kubernetes-service-principal.md#other-considerations
+[sp-delete]: kubernetes-service-principal.md#considerations-when-using-a-service-principal
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?WT.mc_id=AKSDOCSPAGE
 [azure-powershell-install]: /powershell/azure/install-az-ps
 [get-azakscluster]: /powershell/module/az.aks/get-azakscluster
