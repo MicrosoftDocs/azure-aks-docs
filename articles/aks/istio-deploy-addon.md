@@ -82,7 +82,7 @@ az aks create \
 The following example enables Istio add-on for an existing AKS cluster:
 
 > [!IMPORTANT]
-> You can't enable the Istio add-on on an existing cluster if an OSM add-on is already on your cluster. Uninstall the OSM add-on before installing the Istio add-on.
+> You can't enable the Istio add-on on an existing cluster if an Open Service Mesh (OSM) add-on is already on your cluster. Uninstall the OSM add-on before installing the Istio add-on.
 > For more information, see [uninstall the OSM add-on from your AKS cluster][uninstall-osm-addon].
 > Istio add-on can only be enabled on AKS clusters of version >= 1.23.
 
