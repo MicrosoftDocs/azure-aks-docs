@@ -134,11 +134,27 @@ You can improve application availability and resiliency in AKS using autoscaling
 * Optimize resource utilization and cost efficiency by scaling up or down based on the CPU and memory usage of your pods.
 * Enhance fault tolerance and recovery by adding more nodes or pods when a zone failure occurs.
 
-You can use the [Horizontal Pod Autoscaler (HPA)](./concepts-scale.md#horizontal-pod-autoscaler) and [Cluster Autoscaler](./cluster-autoscaler-overview.md) to implement autoscaling in AKS. The HPA automatically scales the number of pods in a deployment based on observed CPU utilization, memory utilization, custom metrics, and metrics of other services. The Cluster Autoscaler automatically adjusts the number of nodes in a node pool based on the resource requests of the pods running on the nodes. If you want to use both autoscalers together, make sure the node pools with the autoscaler enabled span multiple zones. If the node pool is in a single zone and that zone goes down, the autoscaler can't scale the cluster across zones.
+You can use the [Horizontal Pod Autoscaler (HPA)](./concepts-scale.md#horizontal-pod-autoscaler) and [Cluster Autoscaler](./cluster-autoscaler-overview.md) to implement autoscaling in AKS. The HPA automatically scales the number of pods in a deployment based on observed CPU utilization, memory utilization, custom metrics, and metrics of other services. The Cluster Autoscaler automatically adjusts the number of nodes in a node pool based on pending pods and the resource requests on the pending pods.
 
-The AKS Karpenter Provider preview feature enables node autoprovisioning using [Karpenter](https://karpenter.sh/) on your AKS cluster. For more information, see the [AKS Karpenter Provider feature overview](https://github.com/Azure/karpenter-provider-azure?tab=readme-ov-file#features-overview).
+The AKS Karpenter Provider feature enables node autoprovisioning using [Karpenter](https://karpenter.sh/) on your AKS cluster. For more information, see the [AKS Karpenter Provider feature overview](https://github.com/Azure/karpenter-provider-azure?tab=readme-ov-file#features-overview).
 
 The [Kubernetes Event-driven Autoscaling (KEDA)](https://keda.sh/) add-on for AKS applies event-driven autoscaling to scale your application based on metrics of external services to meet demand. For more information, see [Install the KEDA add-on in Azure Kubernetes Service (AKS)](./keda-deploy-add-on-cli.md).
+
+### Cluster Autoscaler and Availability Zones
+
+When implementing **availability zones with the cluster autoscaler**, we recommend using a single node pool for each zone. You can set the `--balance-similar-node-groups` parameter to `True` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations. When this approach isn't implemented, pods can remain in a pending state during scale ups. 
+
+> [!NOTE]
+> **The Cluster Autoscaler is not zone-aware, and zone allocation is handled by the underlying Virtual Machine Scale Sets and not by AKS**. The above best practice becomes even more relevant when using zone-based **[pod topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)** on a single multi-az node pool, as restrictive constraints may leave pods in a pending state, especially in capacity-constrained regions or during zone-down scenarios.
+
+The reason for the above recommendation is that:
+  - Cluster Autoscaler performs scheduling simulations to determine whether adding a new node in a node pool can accommodate pending pods. It treats all nodes in a node pool as identical, so in a multi-AZ node pool, it cannot predict which zone the underlying Virtual Machine Scale Sets will provision the new node in. **Cluster Autoscaler cannot request nodes based on specific zones**. If the pending pod can be scheduled in the node pool, Cluster Autoscaler will scale up; however, if the new node is provisioned in a zone that violates strict topology spread constraints, the pods will remain pending and autoscaler will not continue scaling-up for the same pod.
+  
+  - AKS uses best-effort zone balancing on the underlying Virtual Machine Scale Sets (VMSS). However, in cases of zonal capacity constraints or zone-down scenarios in one AZ, VMSS will retry provisioning in another zone. If allocation fails in more than one availability zone, VMSS will not create a new node in that node pool, causing the scale-up operation to fail. Cluster Autoscaler will then place the node pool in a [backoff](./cluster-autoscaler-overview.md#node-pool-in-backoff) state.
+  
+  - Also, since the zone balancing of nodes is handled by underlying Virtual Machine Scale Sets, AKS will not automatically rebalance running workloads.
+    
+Using one node pool per availability zone helps overcome these limitations. Cluster Autoscaler treats each node pool as an independent entity, giving users greater flexibility to manage zone-specific scaling behavior. With single-zone node pools, workloads remain schedulable on node pools in other zones during a zone failure, except when users explicitly define a strict zone-based **[pod topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)**.
 
 ## Design a stateless application
 
