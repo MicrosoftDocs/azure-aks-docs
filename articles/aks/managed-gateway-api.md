@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.service: azure-kubernetes-service
 author: nshankar
 ms.author: nshankar
-ms.date: 01/12/2026
+ms.date: 01/26/2026
 # Customer intent: "As a Kubernetes administrator, I want to install the Kubernetes Gateway API Custom Resource Definitions (CRDs) to create Kubernetes Gateway API resources on my cluster."
 ---
 
@@ -15,7 +15,7 @@ ms.date: 01/12/2026
 
 The [Kubernetes Gateway API][kubernetes-gateway-api] is a specification for traffic management on Kubernetes clusters. It was designed as a successor and enhancement of the [Ingress API][kubernetes-ingress-api], which lacked a unified and provider-agnostic approach for advanced traffic routing.
 
-The Managed Gateway API Installation for Azure Kubernetes Service (AKS) installs the Custom Resource Definitions (CRDs) for the Kubernetes Gateway API. With the Managed Gateway API installation, you can use Gateway API functionality in a fully supported mode on AKS. However, you must also use an AKS add-on or extension that implements the Gateway API, such as [the Istio add-on][istio-gateway-api].
+The Managed Gateway API Installation for Azure Kubernetes Service (AKS) installs the Custom Resource Definitions (CRDs) for the Kubernetes Gateway API. With the Managed Gateway API installation, you can use Gateway API functionality in a fully supported mode on AKS. However, you must also use an AKS add-on or extension that implements the Gateway API, such as the [Istio add-on][istio-gateway-api].
 
 ## Gateway API bundle version and AKS Kubernetes version mapping
 
@@ -33,11 +33,11 @@ The following table outlines the supported Kubernetes versions for your AKS clus
 
 Ensure that you have at least one of the following implementations of the Gateway API installed and enabled on your cluster:
 
-* [Istio add-on][istio-deploy] minor revision `asm-1-26` or higher.
+* [Istio add-on][istio-deploy] minor revision `asm-1-26` and later.
 
   * If you already have an existing installation of the Gateway API CRDs on your cluster, then you must only have `standard` channel CRDs installed, and the Gateway API bundle version must be compatible with your cluster's Kubernetes version. See the table for the [bundle version associated with each Kubernetes version](#gateway-api-bundle-version-and-aks-kubernetes-version-mapping).
 
-* Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command if you're using Azure CLI. You must use `aks-preview` version `19.0.0b4` or higher.
+* Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command if you're using Azure CLI. You must use `aks-preview` version `19.0.0b4` and later.
 
   ```azurecli-interactive
   az extension add --name aks-preview
@@ -45,9 +45,9 @@ Ensure that you have at least one of the following implementations of the Gatewa
 
   Update to the latest version of the extension using the [`az extension update`][az-extension-update] command:
 
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
+  ```azurecli-interactive
+  az extension update --name aks-preview
+  ```
 
 ## Manage the Managed Gateway API preview feature
 
@@ -61,7 +61,7 @@ Then you can install or uninstall the Managed Gateway API CRDs.
 
 # [Install CRDs](#tab/install)
 
-1. You can run the `az aks create` command to install the Managed Gateway API CRDs on a newly created cluster. You must also enable an implementation of the Gateway API to enable the managed CRD installation.
+1. You can run the [`az aks create`][az-aks-create] command to install the Managed Gateway API CRDs on a newly created cluster. You must also enable an implementation of the Gateway API to enable the managed CRD installation.
 
    ```azurecli-interactive
    # Example: enable the managed Gateway API installation with the Istio service mesh add-on
@@ -106,11 +106,11 @@ Then you can install or uninstall the Managed Gateway API CRDs.
 
 # [Uninstall CRDs](#tab/uninstall)
 
-- To uninstall the Managed Gateway API CRDs, run the following command:
+To uninstall the Managed Gateway API CRDs, run the [`az aks update`][az-aks-update] command:
 
-   ```azurecli-interactive
-   az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --disable-gateway-api
-   ```
+```azurecli-interactive
+az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --disable-gateway-api
+```
 
 ---
 
@@ -121,8 +121,9 @@ Then you can install or uninstall the Managed Gateway API CRDs.
 [istio-about]: ./istio-about.md
 [istio-deploy]: ./istio-deploy-addon.md
 [istio-gateway-api]: ./istio-gateway-api.md
+[az-aks-create]: /cli/azure/azure-cli-latest#az-aks-create
+[az-aks-update]: /cli/azure/azure-cli-latest#az-aks-update
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
-
 [kubernetes-gateway-api]: https://gateway-api.sigs.k8s.io/
 [kubernetes-ingress-api]: https://kubernetes.io/docs/concepts/services-networking/ingress/
