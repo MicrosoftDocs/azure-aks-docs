@@ -121,8 +121,8 @@ az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --disable-gateway-api
 [istio-about]: ./istio-about.md
 [istio-deploy]: ./istio-deploy-addon.md
 [istio-gateway-api]: ./istio-gateway-api.md
-[az-aks-create]: /cli/azure/azure-cli-latest#az-aks-create
-[az-aks-update]: /cli/azure/azure-cli-latest#az-aks-update
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [kubernetes-gateway-api]: https://gateway-api.sigs.k8s.io/
