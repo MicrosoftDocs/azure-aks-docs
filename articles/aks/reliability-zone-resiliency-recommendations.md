@@ -140,7 +140,7 @@ The AKS Karpenter Provider feature enables node autoprovisioning using [Karpente
 
 The [Kubernetes Event-driven Autoscaling (KEDA)](https://keda.sh/) add-on for AKS applies event-driven autoscaling to scale your application based on metrics of external services to meet demand. For more information, see [Install the KEDA add-on in Azure Kubernetes Service (AKS)](./keda-deploy-add-on-cli.md).
 
-#### Cluster Autoscaler and Availability Zones 
+### Cluster Autoscaler and Availability Zones
 
 When implementing **availability zones with the cluster autoscaler**, we recommend using a single node pool for each zone. You can set the `--balance-similar-node-groups` parameter to `True` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations. When this approach isn't implemented, pods can remain in a pending state during scale ups. 
 
