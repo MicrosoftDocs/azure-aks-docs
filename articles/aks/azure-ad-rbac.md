@@ -1,13 +1,13 @@
 ---
 title: Use Microsoft Entra ID and Kubernetes RBAC for clusters
 titleSuffix: Azure Kubernetes Service
-description: Learn how to use Microsoft Entra group membership to restrict access to cluster resources using Kubernetes role-based access control (Kubernetes RBAC) in Azure Kubernetes Service (AKS)
+description: Learn how to use Microsoft Entra group membership to restrict access to cluster resources using Kubernetes role-based access control (Kubernetes RBAC) in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.author: schaffererin
 author: schaffererin
 ms.subservice: aks-integration
 ms.custom: devx-track-azurecli, annual
-ms.date: 12/16/2025
+ms.date: 01/26/2025
 # Customer intent: "As a Kubernetes administrator, I want to configure role-based access control using Microsoft Entra group membership, so that I can restrict cluster resource access based on user identities and enhance security in my Azure Kubernetes Service environment."
 ---
 
@@ -51,7 +51,7 @@ You can verify using the Azure CLI `az aks show` command. Replace the value *myR
 az aks show --resource-group myResourceGroup --name myAKSCluster
 ```
 
-If enabled, the output shows the value for `enableAzureRbac` is `false`.
+If enabled, the output value for `enableAzureRbac` is `true`.
 
 ---
 
@@ -94,6 +94,9 @@ In production environments, you can use existing users and groups within a Micro
      --role "Azure Kubernetes Service Cluster User Role" \
      --scope $AKS_ID
    ```
+
+   > [!IMPORTANT]
+   > The role name you specify must exactly match the Azure role definition name, including capitalization and spacing.
 
    > [!TIP]
    > If you receive an error such as `Principal 35bfec9328bd4d8d9b54dea6dac57b82 doesn't exist in the directory a5443dcd-cd0e-494d-a387-3039b419f0d5.`, wait a few seconds for the Microsoft Entra group object ID to propagate through the directory then try the `az role assignment create` command again.
@@ -241,7 +244,7 @@ We have our Microsoft Entra groups, users, and Azure role assignments created. N
    az ad group show --group appdev --query id -o tsv
    ```
 
-1. Create a RoleBinding for the *appdev* group to use the previously created Role for namespace access. Create a file named `rolebinding-dev-namespace.yaml` and paste the following YAML manifest. On the last line, replace *groupObjectId*  with the group object ID output from the previous command.
+1. Create a RoleBinding for the *appdev* group to use the previously created Role for namespace access. Create a file named `rolebinding-dev-namespace.yaml` and paste the following YAML manifest. On the last line, replace *groupObjectId* with the group object ID output from the previous command.
 
    ```yaml
    kind: RoleBinding
@@ -255,7 +258,7 @@ We have our Microsoft Entra groups, users, and Azure role assignments created. N
      name: dev-user-full-access
    subjects:
    - kind: Group
-     namespace: dev
+     # Replace the placeholder below with the group's objectId (GUID)
      name: groupObjectId
    ```
 
@@ -321,7 +324,7 @@ We have our Microsoft Entra groups, users, and Azure role assignments created. N
      name: sre-user-full-access
    subjects:
    - kind: Group
-     namespace: sre
+     # Replace the placeholder below with the group's objectId (GUID)
      name: groupObjectId
    ```
 
@@ -463,12 +466,12 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --ad
 kubectl delete namespace dev
 kubectl delete namespace sre
 
-# Delete the Azure AD user accounts for aksdev and akssre.
+# Delete the Microsoft Entra ID user accounts for aksdev and akssre.
 
 az ad user delete --upn-or-object-id $AKSDEV_ID
 az ad user delete --upn-or-object-id $AKSSRE_ID
 
-# Delete the Azure AD groups for appdev and opssre. This also deletes the Azure role assignments.
+# Delete the Microsoft Entra ID groups for appdev and opssre. This also deletes the Azure role assignments.
 
 az ad group delete --group appdev
 az ad group delete --group opssre
