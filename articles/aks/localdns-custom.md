@@ -64,9 +64,8 @@ If you don't specify a custom configuration file, AKS automatically applies a de
 
 # [Enable](#tab/enable)
 
-> [!NOTE] If you're using Node Auto-Provisioning (NAP), see
-> [LocalDNS configuration](./node-auto-provisioning-aksnodeclass.md#localdns-configuration) for
-> instructions on how to enable LocalDNS with NAP.
+> [!NOTE]
+> If you're using Node Auto-Provisioning (NAP), see [LocalDNS configuration](./node-auto-provisioning-aksnodeclass.md#localdns-configuration) for instructions on how to enable LocalDNS with NAP.
 
 To enable LocalDNS during node pool creation, use the following command with your custom configuration file:
 
