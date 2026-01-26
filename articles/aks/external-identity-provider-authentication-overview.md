@@ -52,7 +52,7 @@ While AKS structured authentication allows any OIDC-compliant identity provider,
 
 - **GitHub**: Authenticate using GitHub identities or GitHub Actions
 
-- **Google Google OAuth 2.0**: Use Google accounts for authentication
+- **Google OAuth 2.0**: Use Google accounts for authentication
 
 - **Generic OIDC providers**: Any provider implementing OIDC standards
 
