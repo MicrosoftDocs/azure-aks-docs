@@ -244,7 +244,15 @@ The following annotations can be added to the Kubernetes service for the externa
 - `service.beta.kubernetes.io/azure-pip-name`: for specifying the name of a public IP address.
 - `service.beta.kubernetes.io/azure-shared-securityrule`: for exposing the ingress gateway through an [augmented security rule][azure-nsg-docs].
 
-The add-on supports health probe annotations for ports 80 and 443. Learn more about the usage of ports [here][azure-load-balancer-annotations-for-ports].
+The add-on supports the following health probe annotations for ports `80` and `443`. Learn more about the usage of ports [here][azure-load-balancer-annotations-for-ports].
+
+- `service.beta.kubernetes.io/port_{port}_no_lb_rule`
+- `service.beta.kubernetes.io/port_{port}_no_probe_rule`
+- `service.beta.kubernetes.io/port_{port}_health-probe_protocol`
+- `service.beta.kubernetes.io/port_{port}_health-probe_port`
+- `service.beta.kubernetes.io/port_{port}_health-probe_interval`
+- `service.beta.kubernetes.io/port_{port}_health-probe_num-of-probe`
+- `service.beta.kubernetes.io/port_{port}_health-probe_request-path`
 
 ### External traffic policy
 
