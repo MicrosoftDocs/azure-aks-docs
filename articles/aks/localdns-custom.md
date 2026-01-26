@@ -5,7 +5,7 @@ ms.subservice: aks-networking
 author: vaibhavarora
 ms.author: vaibhavarora
 ms.topic: how-to
-ms.date: 01/13/2026
+ms.date: 01/26/2026
 # Customer intent: As a cluster operator or developer, I want to improve my DNS resolution performance and resiliency for my AKS cluster.
 ---
 
@@ -40,17 +40,21 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 
 - **Use Infrastructure as Code (IaC)**: Store your _localdnsconfig.json_ file in your infrastructure repository and include it in your AKS deployment templates.
 
-- **Network configuration for TCP forwarding**: When using TCP for DNS forwarding to VnetDNS, ensure that your Network Security Groups (NSGs), firewalls, or Network Virtual Appliances (NVAs) don't block TCP traffic between CoreDNS/LocalDNS and VnetDNS servers.
+- **Network configuration for TCP forwarding**: When using TCP for DNS forwarding to VNetDNS, ensure that your Network Security Groups (NSGs), firewalls, or Network Virtual Appliances (NVAs) don't block TCP traffic between CoreDNS/LocalDNS and VNetDNS servers.
 
 - **Avoid enabling both NodeLocal DNSCache and LocalDNS**: It isn't recommended to enable both the upstream Kubernetes NodeLocal DNSCache and LocalDNS in your node pool. While AKS doesn't block this configuration, all DNS traffic is routed through LocalDNS, which might lead to unexpected behavior or reduced benefits from NodeLocal DNSCache.
 
 ## Prerequisites
 
-* You must have an existing AKS cluster with Kubernetes versions 1.31 or later to use LocalDNS. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-* This article requires version 2.80.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed.
-* LocalDNS is only supported on node pools running Azure Linux or Ubuntu 22.04 or newer.
+* You must have an existing AKS cluster with Kubernetes versions 1.31 and later to use LocalDNS. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
+
+* This article requires Azure CLI version 2.80.0 and later. If you're using Azure Cloud Shell, the latest version is already installed.
+
+* LocalDNS is only supported on node pools running Azure Linux or Ubuntu 22.04 and newer.
+
 * The Virtual Machine (VM) SKU used for your node pool must have at least 4 vCPUs (cores) to support LocalDNS.
-* LocalDNS isn't compatible with [applied FQDN filter policies in Advanced Container Networking Services (ACNS)](./how-to-apply-fqdn-filtering-policies.md).
+
+* LocalDNS isn't compatible with applied Fully Qualified Domain Names (FQDN) filter policies in [Advanced Container Networking Services (ACNS)](./how-to-apply-fqdn-filtering-policies.md).
 
 ## Manage LocalDNS on an AKS cluster
 
@@ -60,8 +64,9 @@ If you don't specify a custom configuration file, AKS automatically applies a de
 
 # [Enable](#tab/enable)
 
-> [!NOTE]
-> If you're using Node Auto-Provisioning (NAP), see [LocalDNS configuration](./node-auto-provisioning-aksnodeclass.md#localdns-configuration) for instructions on how to enable LocalDNS with NAP.
+> [!NOTE] If you're using Node Auto-Provisioning (NAP), see
+> [LocalDNS configuration](./node-auto-provisioning-aksnodeclass.md#localdns-configuration) for
+> instructions on how to enable LocalDNS with NAP.
 
 To enable LocalDNS during node pool creation, use the following command with your custom configuration file:
 
@@ -135,7 +140,7 @@ LocalDNS uses a JSON-based configuration file _localdnsconfig.json_ to define DN
 
 The default LocalDNS configuration provides a balanced setup that optimizes both internal and external DNS resolution for most AKS workloads. You can use this configuration as a starting point and customize it to better suit your cluster's specific DNS requirements.
 
-When customizing LocalDNS, use the following configuration format as your template. You can add additional server blocks, however adding unsupported or additional top-level properties causes validation failures.
+When customizing LocalDNS, use the following configuration format as your template. You can define extra server blocks as needed, but adding unsupported or nonstandard top-level properties to the configuration results in validation failures.
 
 ```json
 {
@@ -144,7 +149,7 @@ When customizing LocalDNS, use the following configuration format as your templa
     ".": {
       "queryLogging": "Error",
       "protocol": "PreferUDP",
-      "forwardDestination": "VnetDNS",
+      "forwardDestination": "VNetDNS",
       "forwardPolicy": "Sequential",
       "maxConcurrent": 1000,
       "cacheDurationInSeconds": 3600,
@@ -218,7 +223,7 @@ The default configuration applies to queries from pods using `dnsPolicy:default`
 |--|--|--|--|
 | [`queryLogging`](https://coredns.io/plugins/log/) | Define the logging level for DNS queries. | `Error` | `Error` `Log` |
 | [`protocol`](https://coredns.io/plugins/forward/) | Sets the protocol used for DNS queries (UDP/TCP preference). | `ForceTCP` for cluster.local, else `PreferUDP` | `PreferUDP` `ForceTCP` |
-| [`forwardDestination`](https://coredns.io/plugins/forward/) | Specifies the DNS server to forward queries to. | `ClusterCoreDNS` for cluster.local and kubeDNS traffic, else `VnetDNS` | `VnetDNS` `ClusterCoreDNS` |
+| [`forwardDestination`](https://coredns.io/plugins/forward/) | Specifies the DNS server to forward queries to. | `ClusterCoreDNS` for cluster.local and kubeDNS traffic, else `VNetDNS` | `VNetDNS` `ClusterCoreDNS` |
 | [`forwardPolicy`](https://coredns.io/plugins/forward/) | Determines the policy to use when selecting the upstream DNS server. | `Sequential` | `Random` `RoundRobin` `Sequential` |
 | [`maxConcurrent`](https://coredns.io/plugins/forward/) | Maximum number of concurrent DNS queries handled by LocalDNS. | `1000` | Integer |
 | [`cacheDurationInSeconds`](https://coredns.io/plugins/cache) | Maximum TTL (Time To Live) in seconds for which DNS responses are cached. | `3600` | Integer |
@@ -231,14 +236,12 @@ When creating your LocalDNS configuration, be aware of these validation rules to
 
 - **Root zone (`.`) restrictions**: Under `vnetDNSOverrides`, the `forwardDestination` for the root zone can't be `ClusterCoreDNS`.
 
-- **Cluster.local zone restrictions**: Under both `vnetDNSOverrides` and `kubeDNSOverrides`, the `forwardDestination` for `cluster.local` can't be `VnetDNS`.
+- **Cluster.local zone restrictions**: Under both `vnetDNSOverrides` and `kubeDNSOverrides`, the `forwardDestination` for `cluster.local` can't be `VNetDNS`.
 
 - **Protocol and serveStale compatibility**: When `protocol` is set to `ForceTCP`, `serveStale` can't be set to `Verify`. Use `Immediate` instead.
 
 > [!NOTE]
 > These validation rules are enforced during configuration deployment. Violating them causes the LocalDNS configuration to fail validation.
-
----
 
 ## Create a custom server block in LocalDNS
 
@@ -303,13 +306,14 @@ If DNS queries to specific domains are failing after enabling LocalDNS:
 
 ### Update VNet DNS servers for LocalDNS
 
-When you update custom DNS servers directly in the VNet configuration (using the Azure portal or CLI), these changes aren't automatically applied to your AKS cluster nodes. This happens because updating DNS settings at the VNet level only informs the Network Resource Provider (NRP), but doesn't notify the AKS Resource Provider. As a result, AKS nodes continue to use the previous DNS server settings until further action is taken.
+When you update custom DNS servers directly in the VNet configuration (using the Azure portal or CLI), these changes aren't automatically applied to your AKS cluster nodes. Updating DNS settings at the VNet level only informs the Network Resource Provider (NRP), but doesn't notify the AKS Resource Provider. As a result, AKS nodes continue to use the previous DNS server settings until further action is taken.
 
 To ensure AKS nodes pick up the new VNet DNS server settings:
 
 1. Update the VNet DNS configuration using the Azure portal or APIs as needed.
 
-1. Reimage the node pool through the AKS Resource Provider to apply and persist the DNS changes:
+1. Use the AKS Resource Provider to reimage the node pool, ensuring that the updated DNS settings
+   are applied and retained:
 
    ```azurecli-interactive
    az aks nodepool upgrade --resource-group myResourceGroup --cluster-name myAKSCluster --name mynodepool --node-image-only
