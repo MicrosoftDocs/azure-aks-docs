@@ -51,7 +51,7 @@ You can verify using the Azure CLI `az aks show` command. Replace the value *myR
 az aks show --resource-group myResourceGroup --name myAKSCluster
 ```
 
-If enabled, the output value for `enableAzureRbac` is `true`.
+If you're using Microsoft Entra authentication with Kubernetes RBAC (and not Azure RBAC), the output value for `enableAzureRbac` is `false`.
 
 ---
 
