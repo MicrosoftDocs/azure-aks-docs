@@ -369,7 +369,6 @@ If you no longer need the resources you created in this article, you can clean t
 ## Related content
 
 - [Identity bindings concepts](./identity-bindings-concepts.md)
-- [Access and identity options for Azure Kubernetes Service (AKS) workloads](./concepts-identity.md)
 
 <!-- INTERNAL LINKS -->
 [identity-bindings-concepts]: identity-bindings-concepts.md

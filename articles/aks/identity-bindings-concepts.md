@@ -92,7 +92,6 @@ Identity bindings aren't yet supported on clusters configured with [API server v
 ## Related content
 
 - [Set up identity bindings for Azure Kubernetes Service (AKS)][identity-bindings-how-to]
-- [Workload identity overview for Azure Kubernetes Service (AKS)][workload-identity-overview]
 
 <!-- INTERNAL LINKS -->
 [identity-bindings-how-to]: identity-bindings.md
