@@ -858,12 +858,10 @@
               href: workload-identity-cross-tenant.md
             - name: Migrate your app from pod identity to workload identity
               href: workload-identity-migrate-from-pod-identity.md
-            - name: Identity bindings
-              items:
-                - name: Identity bindings overview
-                  href: identity-bindings-concepts.md
-                - name: Set up identity bindings
-                  href: identity-bindings.md
+            - name: Identity bindings overview
+              href: identity-bindings-concepts.md
+            - name: Set up identity bindings
+              href: identity-bindings.md
         - name: Microsoft Entra pod identity
           href: use-azure-ad-pod-identity.md
         - name: Pod Sandboxing
