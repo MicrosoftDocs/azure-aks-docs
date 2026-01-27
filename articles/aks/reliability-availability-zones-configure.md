@@ -4,8 +4,8 @@ description: Learn how to configure availability zones in Azure Kubernetes Servi
 ms.service: azure-kubernetes-service
 ms.topic: concept-article
 ms.date: 07/28/2025
-author: danbosscher
-ms.author: dabossch
+author: schaffererin
+ms.author: schaffererin
 # Customer intent: "As a cloud architect, I want to configure Azure Kubernetes Service to utilize availability zones, so that I can enhance the reliability and availability of my applications against datacenter failures."
 ---
 
@@ -212,8 +212,7 @@ spec:
       targetPort: 8080
 ```
 
-> [!IMPORTANT]
-> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you use Basic Load Balancer, make sure to [upgrade](/azure/load-balancer/load-balancer-basic-upgrade-guidance) to Standard Load Balancer before the retirement date.
+[!INCLUDE [basic load balancer retirement](./includes/basic-load-balancer-retirement.md)]
 
 ## Limitations
 
