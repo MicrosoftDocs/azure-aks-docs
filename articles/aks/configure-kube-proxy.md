@@ -94,8 +94,7 @@ You can view the full `kube-proxy` configuration structure in the [AKS Cluster S
 > Changing the kube-proxy configuration may cause a slight interruption in cluster service traffic flow.
 
 1. Create a configuration file with the desired `kube-proxy` configuration.
-    - IPVS  
-    For example, the following configuration enables IPVS with the `LeastConnection` scheduler and sets the TCP timeout to 900 seconds.
+    - IPVS: For example, the following configuration enables IPVS with the `LeastConnection` scheduler and sets the TCP timeout to 900 seconds.
     ```json
     {
       "enabled": true,
