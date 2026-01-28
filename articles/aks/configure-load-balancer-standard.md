@@ -472,13 +472,13 @@ In certain scenarios, you may want to prevent a node pool from being part of the
 > [!NOTE]
 > Although the label resides on individual nodes, it must be applied at the node pool level to ensure long-term persistence.
 
-    ```azurecli-interactive
-    az aks nodepool update \
-        --resource-group $RESOURCE_GROUP \
-        --cluster-name $CLUSTER_NAME \
-        --name $NODEPOOL_NAME \
-        --labels node.kubernetes.io/exclude-from-external-load-balancers=true
-    ```
+```azurecli-interactive
+az aks nodepool update \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $CLUSTER_NAME \
+    --name $NODEPOOL_NAME \
+    --labels node.kubernetes.io/exclude-from-external-load-balancers=true
+```
 
 ## Next steps
 
