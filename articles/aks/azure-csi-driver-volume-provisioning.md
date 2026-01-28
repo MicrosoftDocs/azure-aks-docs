@@ -2686,10 +2686,10 @@ mountOptions:
    allowVolumeExpansion: true
    parameters:
      protocol: nfs
-    mountOptions:
-     - nconnect=4
-     - noresvport
-     - actimeo=30
+   mountOptions:
+    - nconnect=4
+    - noresvport
+    - actimeo=30
    ```
 
 1. After you edit and save your YAML file, apply the storage class with the [kubectl apply][kubectl-apply] command:

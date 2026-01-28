@@ -472,8 +472,7 @@ For more information, see [Use the cluster autoscaler in AKS](./cluster-autoscal
 
 In Azure, the [Standard Load Balancer](/azure/load-balancer/skus) SKU is designed to be equipped for load balancing network layer traffic when high performance and low latency are needed. The Standard Load Balancer routes traffic within and across regions and to availability zones for high resiliency. The Standard SKU is the recommended and default SKU to use when creating an AKS cluster.
 
-> [!IMPORTANT]
-> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). We recommend that you use the Standard Load Balancer for new deployments and upgrade existing deployments to the Standard Load Balancer. For more information, see [Upgrading from Basic Load Balancer](/azure/load-balancer/load-balancer-basic-upgrade-guidance).
+[!INCLUDE [basic-load-balancer-retirement](includes/basic-load-balancer-retirement.md)]
 
 The following example shows a `LoadBalancer` service manifest that uses the Standard Load Balancer:
 
