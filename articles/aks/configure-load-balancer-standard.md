@@ -476,6 +476,7 @@ In certain scenarios, you may want to prevent a node pool from being part of the
     az aks nodepool update \
         --resource-group $RESOURCE_GROUP \
         --cluster-name $CLUSTER_NAME \
+        --name $NODEPOOL_NAME \
         --labels node.kubernetes.io/exclude-from-external-load-balancers=true
     ```
 
