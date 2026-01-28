@@ -1,5 +1,5 @@
 ---
-title: Secure container access to resources in Azure Kubernetes Service (AKS)
+title: Secure Container Access to Resources in Azure Kubernetes Service (AKS)
 description: Learn how to limit access to actions that containers can perform, provide the least number of permissions, and avoid the use of root access or privileged escalation.
 author: allyford
 ms.topic: how-to
@@ -125,7 +125,7 @@ Keep in mind that this list isn't exhaustive. To learn more, see [Kubernetes v1.
 - An existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 
 > [!NOTE]
-> Azure Linux 3.0 supports App Armor as of the November 7, 2025 VHD release.
+> Azure Linux 3.0 supports AppArmor as of the November 7, 2025 VHD release.
 
 ## Overview of AppArmor
 
@@ -185,7 +185,7 @@ The following example creates a profile that prevents writing to files from with
 
 1. Deploy a _"Hello AppArmor"_ pod with the deny-write profile.
 
-    ```yml
+    ```yaml
     apiVersion: v1
     kind: Pod
     metadata:
@@ -201,13 +201,13 @@ The following example creates a profile that prevents writing to files from with
         command: [ "sh", "-c", "echo 'Hello AppArmor!' && sleep 1h" ]
     ```
 
-2. Apply the pod manifest using the `kubectl apply` command.
+1. Apply the pod manifest using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f hello-apparmor.yaml
     ```
 
-3. Exec into the pod and verify the container is running with the AppArmor profile.
+1. Exec into the pod and verify the container is running with the AppArmor profile.
 
     ```bash
     kubectl exec hello-apparmor -- cat /proc/1/attr/current
@@ -261,7 +261,7 @@ The following example creates a profile that prevents writing to files from with
 
 While AppArmor works for any Linux application, [seccomp (or _secure computing_)][seccomp] works at the process level. Seccomp is also a Linux kernel security module. The `containerd` runtime used by AKS nodes provides native support for seccomp. With seccomp, you can limit a container's system calls. Seccomp establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors and allows you to specify a default profile for all workloads in the node.
 
-You can apply default seccomp profiles using [custom node configurations][custom-node-configuration] when creating a new Linux node pool. There are two values supported on AKS include `RuntimeDefault` and `Unconfined`. Some workloads might require a lower number of syscall restrictions than others. This means that they can fail during runtime with the `RuntimeDefault` profile. To mitigate such a failure, you can specify the `Unconfined` profile. If your workload requires a custom profile, see [Configure a custom seccomp profile](#configure-a-custom-seccomp-profile).
+You can apply default seccomp profiles using [custom node configurations][custom-node-configuration] when creating a new Linux node pool. AKS supports the `RuntimeDefault` and `Unconfined` values. Some workloads might require a lower number of syscall restrictions than others. This means that they can fail during runtime with the `RuntimeDefault` profile. To mitigate such a failure, you can specify the `Unconfined` profile. If your workload requires a custom profile, see [Configure a custom seccomp profile](#configure-a-custom-seccomp-profile).
 
 ### Restrict container system calls with seccomp
 
@@ -273,7 +273,7 @@ You can apply default seccomp profiles using [custom node configurations][custom
 
 When `SeccompDefault` is enabled, the container runtime default seccomp profile is used by default for all workloads scheduled on the node, which might cause workloads to fail due to blocked syscalls. If a workload failure occurs, you might see errors such as:
 
-- Workload is existing unexpectedly after the feature is enabled, with "permission denied" error.
+- Workload is exiting unexpectedly after the feature is enabled, with "permission denied" error.
 - Seccomp error messages can also be seen in auditd or syslog by replacing SCMP_ACT_ERRNO with SCMP_ACT_LOG in the default profile.
 
 If you experience these errors, we recommend that you change your seccomp profile to `Unconfined`. `Unconfined` places no restrictions on syscalls, allowing all system calls to be executed.
