@@ -19,7 +19,7 @@ To learn about what LocalDNS is, including architecture details, and key capabil
 
 When implementing LocalDNS in your AKS clusters, consider the following best practices:
 
-- **Start with a minimal configuration**: Begin with a simple configuration that uses the `Preferred` mode before moving to `Required` mode. This setup allows you to validate that LocalDNS works as expected without breaking your cluster.
+- **Start with a minimal configuration**: Begin with a simple configuration that uses the `Preferred` mode to validate your LocalDNS configuration syntax before moving to `Required` mode. The `Preferred` mode validates your configuration without enabling LocalDNS, allowing you to catch configuration errors early without impacting your cluster.
 
 - **Implement proper caching strategies**: Configure cache settings based on your workload characteristics:
 
@@ -148,7 +148,7 @@ When customizing LocalDNS, use the following configuration format as your templa
     ".": {
       "queryLogging": "Error",
       "protocol": "PreferUDP",
-      "forwardDestination": "VNetDNS",
+      "forwardDestination": "VnetDNS",
       "forwardPolicy": "Sequential",
       "maxConcurrent": 1000,
       "cacheDurationInSeconds": 3600,
@@ -199,7 +199,7 @@ LocalDNS can be enabled in three possible modes that define the extent of enforc
 
 * `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally on the node.
 
-* `Preferred`: In this mode, AKS manages LocalDNS enablement based on the Kubernetes version of the node pool. The configuration is always validated and included, but LocalDNS isn't enabled unless the correct Kubernetes version is used.
+* `Preferred`: In this mode, AKS validates that your LocalDNS configuration is syntactically correct but **doesn't enable LocalDNS** on the nodes. This validation-only behavior allows you to test your configuration for errors without affecting DNS resolution in your cluster.
 
 The following table summarizes LocalDNS behavior for each mode and Kubernetes version:
 
@@ -207,6 +207,9 @@ The following table summarizes LocalDNS behavior for each mode and Kubernetes ve
 |--|--|--|--|
 | Less than 1.31 | Not supported | Not supported | Not supported |
 | Greater than 1.31 | Config validated, not installed | Installed and enforced | Config validated, not installed |
+
+> [!NOTE]
+> The `Preferred` mode currently serves as a validation-only mode. In a future Kubernetes version, this mode will transition to automatically enabling LocalDNS. For production deployments today, use `Required` mode to enable LocalDNS.
 
 ### Server blocks and supported plugins for LocalDNS
 
