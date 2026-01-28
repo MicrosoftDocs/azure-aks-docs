@@ -26,6 +26,8 @@ When you create a private AKS cluster, AKS creates both private and public fully
 
 Private clusters are available in public regions, Azure Government, and Microsoft Azure operated by 21Vianet regions where [AKS is supported][aks-supported-regions].
 
+[!INCLUDE [21vianet-retirement](includes/21vianet-retirement.md)]
+
 ## Prerequisites for private AKS clusters
 
 - The Azure CLI version 2.28.0 or higher. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].

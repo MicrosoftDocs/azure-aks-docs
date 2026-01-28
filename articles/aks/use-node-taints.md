@@ -255,7 +255,7 @@ This article assumes you have an existing AKS cluster. If you need an AKS cluste
     --cluster-name $CLUSTER_NAME \
     --name $NODE_POOL_NAME \
     --resource-group $RESOURCE_GROUP_NAME \
-    --node-taints "sku=gpu:NoSchedule"
+    --node-taints ""
     ```
 
 ### Remove all node taints

@@ -1,5 +1,5 @@
 ---
-title: Azure Kubernetes Services (AKS) Core Concepts
+title: Azure Kubernetes Service (AKS) Core Concepts
 description: Learn about the core concepts of Azure Kubernetes Service (AKS).
 ms.topic: concept-article
 ms.date: 07/10/2024
@@ -40,11 +40,11 @@ An AKS cluster is divided into two main components:
 
 The Azure managed control plane is composed of several components that help manage the cluster:
 
-| Component | Description |  
-| --------- | ----------- |  
-| `kube-apiserver` | The API server ([kube-apiserver][kube-apiserver]) exposes the Kubernetes API to enable requests to the cluster from inside and outside of the cluster. |  
-| `etcd` | The highly available key-value store [etcd][etcd] helps to maintain the state of your Kubernetes cluster and configuration. |  
-| `kube-scheduler` | The scheduler ([kube-scheduler][kube-scheduler]) helps to make scheduling decisions. It watches for new pods with no assigned node and selects a node for them to run on. |  
+| Component | Description |
+| --------- | ----------- |
+| `kube-apiserver` | The API server ([kube-apiserver][kube-apiserver]) exposes the Kubernetes API to enable requests to the cluster from inside and outside of the cluster. |
+| `etcd` | The highly available key-value store [etcd][etcd] helps to maintain the state of your Kubernetes cluster and configuration. |
+| `kube-scheduler` | The scheduler ([kube-scheduler][kube-scheduler]) helps to make scheduling decisions. It watches for new pods with no assigned node and selects a node for them to run on. |
 | `kube-controller-manager` | The controller manager ([kube-controller-manager][kube-controller-manager]) runs controller processes, such as noticing and responding when nodes go down. |
 | `cloud-controller-manager` | The cloud controller manager ([cloud-controller-manager][cloud-controller-manager]) embeds cloud-specific control logic to run controllers specific to the cloud provider. |
 
@@ -116,8 +116,8 @@ Kubernetes resources, such as pods and deployments, are logically grouped into *
 
 The following namespaces are created by default in an AKS cluster:
 
-| Namespace | Description |  
-| --------- | ----------- |  
+| Namespace | Description |
+| --------- | ----------- |
 | `default` | The [default][kubernetes-namespaces] namespace allows you to start using cluster resources without creating a new namespace. |
 | `kube-node-lease` | The [kube-node-lease][kubernetes-namespaces] namespace enables nodes to communicate their availability to the control plane. |
 | `kube-public` | The [kube-public][kubernetes-namespaces] namespace isn't typically used, but you can use it so that resources are visible across the whole cluster by any user. |

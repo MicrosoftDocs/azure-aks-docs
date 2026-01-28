@@ -90,7 +90,7 @@ For user node pools, VM sizes with fewer than two vCPUs and two GBs of RAM (memo
 
 ### System node pools
 
-For system node pools, VM sizes with fewer than two vCPUs and four GBs of RAM (memory) might not be used. To ensure that the required *kube-system* pods and your applications can reliably be scheduled, the recommendation is to **not use any [B series VMs][b-series-vm] and [Av1 series VMs][a-series-vm]**.
+For system node pools, VM sizes with fewer than two vCPUs and four GBs of RAM (memory) might not be used. To ensure that the required *kube-system* pods and your applications can reliably be scheduled, [B series VMs][b-series-vm] aren't supported for system node pools and [Av1 series VMs][a-series-vm] aren't recommended.
 
 For more information on VM types and their compute resources, see [Sizes for virtual machines in Azure][vm-skus].
 

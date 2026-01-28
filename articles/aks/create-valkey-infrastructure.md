@@ -15,6 +15,15 @@ ms.custom: 'stateful-workloads'
 
 This guide walks through the complete setup process for running a Valkey cluster on AKS. This process includes configuring environment variables, provisioning core Azure resources (such as a resource group, Azure Key Vault, and Azure Container Registry (ACR)), creating an AKS cluster with integrated workload identity and managing secrets. It also covers the creation of a dedicated node pool for Valkey workloads and how to import Valkey images into your private registry. If you prefer infrastructure-as-code, the guide includes an alternative deployment path using Terraform with Azure Verified Modules, ensuring best practices and production readiness.
 
+:::zone pivot="terraform"
+
+To deploy the infrastructure using Terraform, we use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/)[for AKS](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git).
+
+> [!NOTE]
+> If you're planning to run this deployment in production, we recommend looking at [AKS production pattern module for Azure Verified Modules](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production). This module comes coupled with best practice recommendations.
+
+:::zone-end
+
 ## Prerequisites
 
 - If you haven't already, review the [Overview for deploying a Valkey cluster on Azure Kubernetes Service (AKS)][valkey-solution-overview].
@@ -96,9 +105,9 @@ This guide walks through the complete setup process for running a Valkey cluster
 
 ## Create an AKS cluster
 
-In this step, we create an AKS cluster. We enable the Azure KeyVault Secret Provider Addon, which allows the AKS cluster to access secrets stored in Azure Key Vault. We also enable Workload Identity, which allows the AKS cluster to access other Azure resources securely.
+In this step, we create an AKS cluster. We enable the [Azure Key Vault Secrets provider add-on](./csi-secrets-store-driver.md) (`azure-keyvault-secrets-provider`), which allows the AKS cluster to access secrets stored in Azure Key Vault. We also enable [workload identity](./workload-identity-overview.md), which allows the AKS cluster to access other Azure resources securely.
 
-1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
+- Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
     ```azurecli-interactive
     az aks create \
@@ -128,14 +137,18 @@ In this step, we create an AKS cluster. We enable the Azure KeyVault Secret Prov
     cluster-ak-myresourcegroup--9b70ac-hhrizake.portal.hcp.eastus.azmk8s.io  1.28.9                      False                   cluster-ak-myResourceGroup--9b70ac  a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1  False                      True          cluster-ak-myresourcegroup--9b70ac-hhrizake.hcp.eastus.azmk8s.io Base     1.28                 eastus      100              cluster-aks  MC_myResourceGroup-rg_cluster-aks_eastus  Succeeded            myResourceGroup-rg  b1b1b1b1-cccc-dddd-eeee-f2f2f2f2f2f2  KubernetesOfficial
     ```
 
-1. Get the identity ID and the object ID created by the Azure KeyVault Secret Provider Add-on using the [`az aks show`][az-aks-show] command.
+## Get the identity ID and object ID for the Azure Key Vault Secrets provider
+
+- Get the identity ID and the object ID created by the Azure Key Vault Secrets provider add-on using the [`az aks show`][az-aks-show] command.
 
     ```azurecli-interactive
     export userAssignedIdentityID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId --output tsv)
     export userAssignedObjectID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId --output tsv)
     ```
 
-1. Assign the `AcrPull` role to the kubelet identity using the [`az role assignment create`][az-role-assignment-create] command.
+## Assign the `AcrPull` role to the kubelet identity
+
+- Assign the `AcrPull` role to the kubelet identity using the [`az role assignment create`][az-role-assignment-create] command.
 
     ```azurecli-interactive
     export KUBELET_IDENTITY=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --output tsv --query identityProfile.kubeletidentity.objectId)
@@ -156,7 +169,7 @@ In this step, we create an AKS cluster. We enable the Azure KeyVault Secret Prov
 
 ## Create a node pool for the Valkey workload
 
-In this section, we create a node pool dedicated to running the Valkey workload. This node pool has autoscaling disabled and is created with six nodes across two availability zones, because we want to have one secondary per primary in a different zone.
+In this section, we create a node pool dedicated to running the Valkey workload. This node pool has autoscaling disabled and is created with six nodes across two availability zones, because we want to have one secondary per primary in a different zone. The replicas are scheduled in the third zone.
 
 - Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
@@ -199,21 +212,18 @@ In this section, we download the Valkey image from Docker Hub and upload it to A
 
 :::zone pivot="terraform"
 
-## Deploy Valkey infrastructure with Terraform
+## Clone the Terraform module
 
-To deploy the infrastructure using Terraform, we're going to use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/)[for AKS](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git).
-
-> [!NOTE]
-> If you're planning to run this deployment in production, we recommend looking at [AKS production pattern module for Azure Verified Modules](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production). This module comes coupled with best practice recommendations.
-
-1. Clone the git repository with the terraform module.
+- Clone the git repository with the Terraform module.
 
     ```bash
     git clone https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git
     cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads-valkey
     ```
 
-1. Set Valkey variables by creating a `valkey.tfvars` file with the following contents. You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) at this step:
+## Create a Terraform variables file
+
+- Set Valkey variables by creating a `valkey.tfvars` file with the following contents. You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) at this step:
 
     ```terraform
         acr_task_content = <<-EOF
@@ -237,7 +247,9 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
         }
     ```
 
-1. To deploy the infrastructure, run the Terraform commands.In this step, we set the required variables that will be used when deploying Valkey in the next step.
+## Deploy the infrastructure
+
+1. To deploy the infrastructure, run the Terraform commands. In this step, we set the required variables for deploying Valkey.
 
     ```bash
     terraform init
@@ -262,7 +274,7 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
 
 :::zone-end
 
-## Next steps
+## Next step
 
 > [!div class="nextstepaction"]
 > [Configure and deploy the Valkey cluster on AKS][deploy-valkey]

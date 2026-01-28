@@ -2,26 +2,26 @@
 title: Configure and Deploy a Valkey Cluster on Azure Kubernetes Service (AKS)
 description: In this article, you learn how to configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS) using the Kubernetes stateful framework.
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 09/15/2025
 author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-cli-or-terraform
-
+ms.custom: 'stateful-workloads'
 # Customer intent: As a cloud engineer, I want to configure and deploy a Valkey cluster on a Kubernetes environment, so that I can ensure high availability and redundancy for my applications.
 ---
 
 # Configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS)
 
-In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS), including the creation of a Valkey cluster ConfigMap, primary and secondary cluster pods to ensure redundancy and zone replication, and a Pod Disruption Budget (PDB) to ensure high availability.
+In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS), including the creation of a Valkey cluster ConfigMap, primary and replica cluster pods to ensure redundancy and zone replication, and a Pod Disruption Budget (PDB) to ensure high availability.
 
 > [!NOTE]
-> This article contains references to the terms _master_ and _slave_, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
+> This article contains references to the terms _master_ (primary) and _slave_ (replica), which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
 
 ## Connect to the AKS cluster
 
 > [!NOTE]
-> Ensure that if you're using Terraform, you've replaced the placeholders in the code with the actual outputs from the terraform commands that was deployed in the previous step [deploying the infrastructure][create-valkey-cluster]. 
+> If you're using Terraform, make sure you replace the placeholders in the code with the actual outputs from the Terraform commands when [deploying the infrastructure][create-valkey-cluster].
 
 - Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
@@ -31,7 +31,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Create a namespace
 
-1. Create a namespace for the Valkey cluster using the `kubectl create namespace` command.
+- Create a namespace for the Valkey cluster using the `kubectl create namespace` command.
 
     ```bash
     kubectl create namespace valkey --dry-run=client --output yaml | kubectl apply -f -
@@ -43,19 +43,22 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     namespace/valkey created
     ```
 
-## Create secrets
-
 :::zone pivot="azure-cli"
 
+## Create secrets
+
 1. Generate a random password for the Valkey cluster using openssl and store it in your Azure key vault using the [`az keyvault secret set`][az-keyvault-secret-set] command.
-   Set the policy to allow the user-assigned identity to get the secret using the [`az keyvault set-policy`][az-keyvault-set-policy] command.
 
     ```azurecli-interactive
-    SECRET=$(openssl rand -base64 32)
+    export SECRET=$(openssl rand -base64 32)
     echo requirepass $SECRET > /tmp/valkey-password-file.conf
     echo primaryauth $SECRET >> /tmp/valkey-password-file.conf
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name valkey-password-file --file /tmp/valkey-password-file.conf --output none
     rm /tmp/valkey-password-file.conf
+
+1. Set the policy to allow the user-assigned identity to get the secret using the [`az keyvault set-policy`][az-keyvault-set-policy] command.
+
+    ```azurecli-interactive
     az keyvault set-policy --name $MY_KEYVAULT_NAME --object-id $userAssignedObjectID --secret-permissions get --output table
     ```
 
@@ -63,17 +66,20 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 :::zone pivot="terraform"
 
-1. Get the Identity ID and the Object ID created by the Azure KeyVault Secret Provider Addon, using the [`az aks show`][az-aks-show] command.
+## Get the user-assigned identity details
+
+- Get the identity ID and the object ID created by the Azure Key Vault Secrets Provider add-on using the [`az aks show`][az-aks-show] command.
 
     ```azurecli-interactive
     export userAssignedIdentityID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId --output tsv)
     export userAssignedObjectID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId --output tsv)
-
     ```
 
 :::zone-end
 
-1. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
+## Configure access to the Valkey password stored in Azure Key Vault
+
+- Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
 
     ```bash
     export TENANT_ID=$(az account show --query tenantId --output tsv)
@@ -103,7 +109,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Create the Valkey configuration file
 
-1. Create a `ConfigMap` resource to store the Valkey configuration file.
+- Create a `ConfigMap` resource to store the Valkey configuration file.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -279,7 +285,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Create Valkey replica cluster pods
 
-- Create a second `StatefulSet` resource for the Valkey secondaries with a `spec.affinity` goal to keep all replicas in zone 3, preferably in different nodes, using the `kubectl apply` command.
+- Create a second `StatefulSet` resource for the Valkey replicas with a `spec.affinity` goal to keep all replicas in zone 3, preferably in different nodes, using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -427,7 +433,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Create headless services
 
-- Create three headless `Service` resources (the first for the entire cluster, the second for the primaries, and the third for the secondaries) to use to get the IP addresses of the Valkey pods using the `kubectl apply` command.
+- Create three headless `Service` resources (the first for the entire cluster, the second for the primaries, and the third for the replicas) to use to get the IP addresses of the Valkey pods using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -527,13 +533,13 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 In a Valkey cluster, slot allocation is a fundamental part of how data is distributed across nodes. Valkey Clusters (similar to Redis Clusters) divide the key space into _16,384 hash slots_, which are evenly distributed across the primary nodes in the cluster.
 
-In this section, we set up a three-node Valkey cluster with three replicas, ensuring:
+In the following sections, we set up a three-node Valkey cluster with three replicas, ensuring:
 
 - Full slot coverage (all 16,384 slots).
 - High availability via replication.
 - Proper role assignment and cluster health verification.
 
-### Initialize Valkey cluster with primary nodes in zone 1 and 2 and configure slot distribution
+## Initialize Valkey cluster with primary nodes in zone 1 and 2 and configure slot distribution
 
 - Create the cluster with three primary nodes in zone 1 and 2 and evenly distribute all 16,384 hash slots across them using the `kubectl exec` command.
 
@@ -576,7 +582,7 @@ In this section, we set up a three-node Valkey cluster with three replicas, ensu
     [OK] All 16384 slots covered.
     ```
 
-### Add the Valkey replicas in zone 3 to enable high availability
+## Add the Valkey replicas in zone 3 to enable high availability
 
 - Add one replica per primary node in a different zone to ensure fault tolerance and automatic failover capability using the following `kubectl exec` commands.
 
@@ -665,7 +671,7 @@ In this section, we set up a three-node Valkey cluster with three replicas, ensu
     [OK] New node added correctly.
     ```
 
-### Verify the roles of the pods and replication status
+## Verify the roles of the pods and replication status
 
 - Confirm each primary and replica is correctly configured and that replication relationships are established using the following `kubectl exec` commands.
 

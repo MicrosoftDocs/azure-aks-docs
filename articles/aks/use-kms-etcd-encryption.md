@@ -1,20 +1,25 @@
 ---
-title: Use Key Management Service (KMS) Etcd Encryption in Azure Kubernetes Service (AKS)
-description: Learn how to use Key Management Service (KMS) etcd encryption for a public or private key vault with AKS.
-ms.date: 12/01/2025
+title: Use Key Management Service (KMS) Etcd Encryption in Azure Kubernetes Service (AKS) (legacy)
+description: Learn how to use Key Management Service (KMS) etcd encryption for a public or private key vault with AKS using the legacy KMS experience.
+ms.date: 12/22/2025
 ms.subservice: aks-security
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.custom:
   - devx-track-azurecli
   - build-2025
-author: davidsmatlak
-ms.author: davidsmatlak
+author: shashankbarsin
+ms.author: shasb
 zone_pivot_groups: public-or-private-kv
 # Customer intent: As a Kubernetes administrator, I want to enable Key Management Service etcd encryption in my Azure Kubernetes Service cluster, so that I can ensure the security of sensitive data stored in etcd while maintaining control over key management and access policies.
 ---
 
-# Add Key Management Service (KMS) etcd encryption to an Azure Kubernetes Service (AKS) cluster
+# Add Key Management Service (KMS) etcd encryption to an Azure Kubernetes Service (AKS) cluster (legacy)
+
+> [!IMPORTANT]
+> This article describes the legacy KMS experience for AKS. For new clusters running Kubernetes version 1.33 or later, we recommend using the new [KMS data encryption](kms-data-encryption.md) experience, which offers platform-managed keys, customer-managed keys with automatic key rotation, and a simplified configuration experience.
+>
+> For conceptual information about data encryption options, see [Data encryption at rest concepts for AKS](kms-data-encryption-concepts.md).
 
 This article shows you how to turn on encryption at rest for a public or private key vault using Azure Key Vault and the Key Management Service (KMS) plugin on AKS. You can use the KMS plugin to:
 
@@ -198,6 +203,12 @@ The following sections describe how to turn on KMS for a public key vault on a n
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
+
 ## Rotate existing keys in a public key vault
 
 After you change the key ID (including changing either the key name or the key version), you can rotate the existing keys in the public key vault.
@@ -224,6 +235,12 @@ After you change the key ID (including changing either the key name or the key v
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
     ```
 
 :::zone-end
@@ -351,6 +368,12 @@ The following sections describe how to turn on KMS for a private key vault on a 
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
+
 ### Rotate existing keys in a private key vault
 
 After you change the key ID (including changing either the key name or the key version), you can rotate the existing keys in the private key vault.
@@ -380,6 +403,12 @@ After you change the key ID (including changing either the key name or the key v
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
+    ```
+
 :::zone-end
 
 ## Disable KMS on an AKS cluster
@@ -397,23 +426,38 @@ After you change the key ID (including changing either the key name or the key v
     ```
 
 1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
-
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+
+    When you run the command, the following error is safe to ignore:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
     ```
 
 ## Next steps
 
 For more information on using KMS with AKS, see the following articles:
 
+- [Enable KMS data encryption in AKS](./kms-data-encryption.md) - The new KMS experience with platform-managed keys and automatic key rotation
+- [Data encryption at rest concepts for AKS](./kms-data-encryption-concepts.md)
 - [Update the key vault mode for an Azure Kubernetes Service (AKS) cluster with KMS etcd encryption](./update-kms-key-vault.md)
-- [Use KMS v2 for etcd encryption in Azure Kubernetes Service (AKS)](./use-kms-v2.md)
+- [Migrate to KMS v2 for etcd encryption in Azure Kubernetes Service (AKS)](./use-kms-v2.md)
 - [Observability for KMS etcd encryption in Azure Kubernetes Service (AKS)](./kms-observability.md)
 
 <!-- LINKS -->
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-list]: /cli/azure/aks#az-aks-list
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [api-server-vnet-integration]: api-server-vnet-integration.md
 [kms-v2-support]: ./use-kms-v2.md
 [update-a-key-vault-mode]: ./update-kms-key-vault.md
+[azure-identity-create]: /cli/azure/identity#az-identity-create
+[azure-identity-show]: /cli/azure/identity#az-identity-show
+[azure-keyvault-create]: /cli/azure/keyvault#az-keyvault-create
+[azure-keyvault-key-create]: /cli/azure/keyvault/key#az-keyvault-key-create
+[azure-keyvault-set-policy]: /cli/azure/keyvault#az-keyvault-set-policy
+[azure-keyvault-key-show]: /cli/azure/keyvault/key#az-keyvault-key-show
+[azure-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create

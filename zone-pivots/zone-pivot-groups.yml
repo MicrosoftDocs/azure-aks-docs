@@ -63,6 +63,14 @@ groups:
     title: Public hub cluster
   - id: private-hub
     title: Private hub cluster
+- id: cluster-namespace-scope
+  title: Fleet resource scope
+  prompt: Select your Fleet custom resource scope type
+  pivots:
+  - id: cluster-scope
+    title: Cluster-scoped
+  - id: namespace-scope
+    title: Namespace-scoped
 # Owner: allyford
 - id: arm-azure-cli
   title: Interaction type
@@ -156,6 +164,17 @@ groups:
     title: User-assigned managed identity
   - id: pre-created-kubelet
     title: Pre-created kubelet managed identity
+# Owner: alalve
+- id: azure-csi-driver
+  title: Choose your CSI driver type
+  prompt: Choose your CSI driver type
+  pivots:
+  - id: csi-blob
+    title: Azure Blob
+  - id: csi-disk
+    title: Azure Disk
+  - id: csi-files
+    title: Azure Files
 # Owner: schaffererin
 - id: kubelogin-auth-methods
   title: Choose a kubelogin authentication method
@@ -181,6 +200,7 @@ groups:
     title: Azure CNI Overlay cluster
   - id: aks-cni-overlay-cluster-dual-stack
     title: Azure CNI Overlay cluster with dual-stack networking
+# Owner: schaffererin
 - id: secure-container-access
   title: Choose a secure container access method
   prompt: Choose a secure container access method
@@ -191,6 +211,17 @@ groups:
     title: AppArmor
   - id: seccomp
     title: Seccomp
+# Owner: shashankbarsin
+- id: kms-key-type
+  title: Choose a key management option
+  prompt: Choose a key management option
+  pivots:
+  - id: pmk
+    title: Platform-managed keys
+  - id: cmk-private
+    title: Customer-managed keys (private key vault)
+  - id: cmk-public
+    title: Customer-managed keys (public key vault)
 # Owner: schaffererin
 - id: private-cluster-connect
   title: Choose a private cluster connection method
@@ -210,3 +241,48 @@ groups:
     title: ExpressRoute or VPN
   - id: aks-command-invoke
     title: AKS command invoke
+# Owner: schaffererin
+- id: api-server-authorized-ip-ranges
+  title: Choose an interaction method
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: azure-powershell
+    title: Azure PowerShell
+  - id: azure-portal
+    title: Azure portal
+# Owner: schaffererin
+- id: limit-egress-traffic
+  title: Choose a managed identity type
+  prompt: Choose a managed identity type
+  pivots:
+  - id: system
+    title: System-assigned managed identity
+  - id: user
+    title: User-assigned managed identity
+- id: use-advanced-container-networking-services
+  title: Choose a data plane option
+  prompt: Choose a data plane option
+  pivots:
+  - id: cilium
+    title: Cilium
+  - id: non-cilium
+    title: Non-Cilium
+# Owner: schaffererin
+- id: kubernetes-service-principal
+  title: Select how you want to interact with Azure
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: azure-powershell
+    title: Azure PowerShell
+- id: aks-desktop
+  title: AKS desktop
+  prompt: Choose your role in AKS desktop
+  pivots:
+  - id: cluster-operator
+    title: Cluster operator
+  - id: developer
+    title: Developer

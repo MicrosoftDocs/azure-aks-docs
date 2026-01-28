@@ -4,8 +4,8 @@ description: In this article, we provide guidance for deploying the Strimzi Oper
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 09/15/2025
-author: senavar
-ms.author: senavar
+author: carols
+ms.author: carols
 ms.custom: 'stateful-workloads'
 # Customer intent: As a cloud engineer, I want to deploy the Strimzi Operator and a Kafka cluster on Azure Kubernetes Service, so that I can manage scalable and highly available Kafka messaging systems effectively.
 ---
