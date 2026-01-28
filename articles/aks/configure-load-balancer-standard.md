@@ -479,7 +479,6 @@ In certain scenarios, you may want to prevent a node pool from being part of the
         --labels node.kubernetes.io/exclude-from-external-load-balancers=true
     ```
 
-
 ## Next steps
 
 To learn more about Kubernetes services, see the [Kubernetes services documentation][kubernetes-services].
