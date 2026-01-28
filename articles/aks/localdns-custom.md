@@ -148,7 +148,7 @@ When customizing LocalDNS, use the following configuration format as your templa
     ".": {
       "queryLogging": "Error",
       "protocol": "PreferUDP",
-      "forwardDestination": "VNetDNS",
+      "forwardDestination": "VnetDNS",
       "forwardPolicy": "Sequential",
       "maxConcurrent": 1000,
       "cacheDurationInSeconds": 3600,
