@@ -16,21 +16,20 @@ Kubernetes [sidecar containers][k8s-native-sidecar-support] feature aims to prov
 
 Native sidecar is well-suited for Istio. It offers several benefits, including simplified sidecar management, improved reliability, and enhanced coordination. In native sidecar mode, the sidecar always starts before the main application. It also shuts down gracefully after the main app. This behavior removes the need for manual workarounds to handle container lifecycle or Pod termination issues.
 
-Starting from Kubernetes version 1.29, [sidecar containers][k8s-native-sidecar-support] feature is turned on for AKS. With this change, [Istio native sidecar mode][istio-native-sidecar-support] can be used with the Istio add-on for AKS.
-
-Native sidecar mode became the default for Istio [starting in version 1.27][istio-default-native-sidecar]. The Istio-based service mesh on AKS aligns with this behavior with minimal interruption for existing customers.
+Starting from Kubernetes version 1.29, [sidecar containers][k8s-native-sidecar-support] feature is turned on for AKS. With this change, [Istio native sidecar mode][istio-native-sidecar-support] can be used with the Istio add-on for AKS. Native sidecar mode became the default for Istio [starting in version 1.27][istio-default-native-sidecar]. The Istio-based service mesh on AKS aligns with this behavior with minimal interruption for existing customers.
 
 ## Default behavior
 Existing clusters with Istio add-on using the preview `IstioNativeSidecarModePreview` feature flag retain their current native sidecar status regardless of cluster version or Istio add-on revision.
 
-Starting with AKS 1.33 and Istio add-on `asm-1-28`, AKS service mesh add-on uses native sidecar by default for the Envoy proxy. This setting applies based on your cluster version, the ASM add-on revision, and whether the add-on was newly installed or upgraded
+Starting with AKS 1.33 and Istio add-on `asm-1-29`, AKS service mesh add-on uses native sidecar for the Envoy proxy by default for all clusters. Prior to `asm-1-29`, this setting applies based on your cluster version, the Azure service mesh add-on revision, and whether the add-on was newly installed or upgraded.
 
-| AKS Version       | ASM Version       | Add-on Install Behavior                 | Upgrade Behavior                               |
+| AKS Version       | ASM Revision       | Add-on Install Behavior                 | Upgrade Behavior                               |
 |-------------------|-------------------|--------------------------------------|------------------------------------------------|
 | < 1.33            | Any              | Disabled                             | Disabled                                       |
 | 1.33+             | < `asm-1-27`       | Disabled                             | Disabled                                       |
-| 1.33+             | `asm-1-27`         | Enabled (transition release)         | Disabled (upgrade does not auto-enable)       |
-| 1.33+             | `asm-1-28`+        | Enabled                              | Enabled (by mesh or cluster upgrade to required versions)         |
+| 1.33+             | `asm-1-27`         | Enabled (transition release)         | Disabled (upgrade doesn't auto-enable)       |
+| 1.33+             | `asm-1-28`         | Enabled (transition release)         | Disabled (upgrade doesn't auto-enable)       |
+| 1.33+             | `asm-1-29`+        | Enabled                              | Enabled (by mesh or cluster upgrade to required versions)         |
 
 
 ## New clusters
@@ -51,7 +50,7 @@ For a new service mesh installation on an existing cluster >= version AKS 1.33, 
 
 
 ## Existing clusters
-This section describes how to check native sidecar feature status or enable it on an existing cluster.
+This section describes how to check native sidecar feature status.
 
 ### Check feature status
 
@@ -75,7 +74,7 @@ sleep-7656cf8794-5b5j4   istio-init,istio-proxy   sleep
 ```
 
 ### Check prerequisites
-If native sidecar is not enabled, it is likely one of the version prerequisites was not met.
+If native sidecar isn't enabled, it's likely one of the version prerequisites wasn't met.
 
 1. Check that the AKS cluster's Kubernetes control plane version is 1.33 or higher using [az aks show][az-aks-show].
 
@@ -92,7 +91,7 @@ If native sidecar is not enabled, it is likely one of the version prerequisites 
    ```
 
    > [!CAUTION]
-   > Native sidecar mode by default requires both Kubernetes control plane and data plane on version 1.33 or higher. Ensure all your nodes are version 1.33 or newer before enabling the service mesh add-on. Otherwise, native sidecar will not be enabled by default.
+   > Native sidecar mode by default requires both Kubernetes control plane and data plane on version 1.33 or higher. Ensure all your nodes are version 1.33 or newer before enabling the service mesh add-on. Otherwise, native sidecar won't be enabled by default.
 
    If any node pool version is too old, [upgrade the node image][upgrade-node-image] to version `1.33` or newer.
 
@@ -102,8 +101,7 @@ If native sidecar is not enabled, it is likely one of the version prerequisites 
    az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER --query "serviceMeshProfile.istio.revisions" -o tsv
    ```
    
-   To upgrade into native sidecar support, [upgrade your mesh][upgrade-istio] revision to `asm-1-28` or newer.
-    
+   Review the table on default behavior to determine if your revision meets prerequisites.
 
 ## Next steps
 

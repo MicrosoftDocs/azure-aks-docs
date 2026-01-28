@@ -209,7 +209,7 @@ Once an update run with a strategy containing approvals is started, the update r
             beforeGates": [ 
               { 
                 "displayName": "Do not start during business hours!", 
-                "gateId": "/subscriptions/<subscription id>/resourceGroups/<resource group>/providers/Microsoft.ContainerService/fleets/<fleet name>/gates/9ed627b7-f939-45f7-87ec-4e98a728b356", 
+                "gateId": "/subscriptions/<subscription id>/resourceGroups/<resource group>/providers/Microsoft.ContainerService/fleets/<fleet name>/gates/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e", 
                 "status": { 
                   "completedTime": null, 
                   "error": null, 
@@ -248,7 +248,7 @@ Once an update run with a strategy containing approvals is started, the update r
     | jq '.status.stages[] | .beforeGates + .afterGates | .[] | select(.status.state == "Pending")'
     ```
 
-1. Once you find the gate that you want to approve, identify its `gateId`. Note down the last part of the gateId (after the final slash). For example, for the Pending approval in the prior example response use **9ed627b7-f939-45f7-87ec-4e98a728b356**.
+1. Once you find the gate that you want to approve, identify its `gateId`. Note down the last part of the gateId (after the final slash). For example, for the Pending approval in the prior example response use **aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e**.
 
 1. Grant the approval by using the [`az fleet gate approve`][az-fleet-gate-approve] command. Use the identifier that you retrieved in the previous step as the argument to –name.
 
@@ -256,7 +256,7 @@ Once an update run with a strategy containing approvals is started, the update r
     az fleet gate approve \ 
      --resource-group $GROUP \ 
      --fleet-name $FLEET \ 
-     --name 9ed627b7-f939-45f7-87ec-4e98a728b356 
+     --name aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e 
     ```
 
 Alternatively, you can list all gates across all update runs in a fleet. 
@@ -279,7 +279,7 @@ Alternatively, you can list all gates across all update runs in a fleet.
     az fleet gate approve \ 
      --resource-group $GROUP \ 
      --fleet-name $FLEET \ 
-     --name 9ed627b7-f939-45f7-87ec-4e98a728b356 
+     --name aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e 
     ```
 
 ---
@@ -338,4 +338,3 @@ After your update run is complete, you may wish to clean up the gate resources t
 [az-fleet-updaterun-show]: /cli/azure/fleet/updaterun#az-fleet-updaterun-show
 [az-fleet-gate-approve]: /cli/azure/fleet/gate#az-fleet-gate-approve
 [az-fleet-gate-list]: /cli/azure/fleet/gate#az-fleet-gate-list
-

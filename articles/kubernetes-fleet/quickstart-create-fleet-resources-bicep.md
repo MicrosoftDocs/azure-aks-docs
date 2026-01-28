@@ -1,20 +1,23 @@
 ---
-title: "Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Bicep"
-description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager resource and join member clusters using Bicep.
-ms.date: 04/15/2025
+title: "Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Bicep"
+description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager and join member clusters using Bicep.
+ms.date: 12/16/2025
 author: muhammadali
 ms.author: alimuhammad
 ms.service: azure-kubernetes-fleet-manager
 ms.custom: template-quickstart, mode-other
 ms.devlang: azurecli
 ms.topic: quickstart
+# Customer intent: As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using Bicep, so that I can manage and orchestrate multiple Kubernetes clusters for improved scalability and application deployment.
 ---
 
-# Quickstart: Create an Azure Kubernetes Fleet Manager resource using Bicep
+# Quickstart: Create an Azure Kubernetes Fleet Manager using Bicep
 
-Get started with Azure Kubernetes Fleet Manager by using Bicep to create a Fleet Manager resource.
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
-## Prerequisites
+Learn how to create an Azure Kubernetes Fleet Manager using Bicep.
+
+## Before you begin
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
@@ -24,16 +27,16 @@ Get started with Azure Kubernetes Fleet Manager by using Bicep to create a Fleet
 * [Install or upgrade Azure CLI](/cli/azure/install-azure-cli) to version `2.71.0` or later.
     - Ensure **fleet** extension is updated to version `1.5.2` or higher.
 
-## Create a Fleet Manager resource
+## Create a Fleet Manager
 
-You can create a Fleet Manager resource to later group your AKS clusters as member clusters.  If the Fleet Manager hub is enabled, other preview features are enabled, such as Kubernetes object propagation to member clusters. For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
+You can create a Fleet Manager and later add your AKS and Arc-enabled clusters as member clusters.  If the Fleet Manager has a hub cluster, more features are enabled, such as [Kubernetes object propagation](./concepts-resource-propagation.md) and [Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md). For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
 
 
 > [!IMPORTANT]
-> Once a Fleet Manager resource has been created, it's possible to upgrade a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public has been selected it cannot be changed.
+> Once a Fleet Manager is created, it's possible to upgrade a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public is selected it can't be changed.
 
 
-### [Fleet Manager resource without hub cluster](#tab/without-hub-cluster)
+### [Fleet Manager without hub cluster](#tab/without-hub-cluster)
 
 If you only want to use Fleet Manager for update orchestration, you can create a hubless Fleet Manager with the following Bicep:
 
@@ -61,12 +64,11 @@ If you only want to use Fleet Manager for update orchestration, you can create a
     New-AzResourceGroupDeployment -ResourceGroupName myResourceGroup -TemplateFile ./main.bicep"
     ```
 
+### [Fleet Manager with hub cluster](#tab/with-hub-cluster)
 
-
-### [Fleet Manager resource with hub cluster](#tab/with-hub-cluster)
 If you want to use Fleet Manager for Kubernetes object propagation in addition to update orchestration, then you need to create the Fleet Manager resource with the hub cluster.
 
-Fleet Manager clusters with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
+Fleet Manager with a hub cluster supports both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
 
 #### Public hub cluster
 To create a public Fleet Manager resource with a hub cluster, use the following Bicep
@@ -103,7 +105,10 @@ To create a public Fleet Manager resource with a hub cluster, use the following 
 1. Fetch Fleet Manager's service principal object ID:
 
 ```azurecli-interactive
-az ad sp list --display-name "Azure Kubernetes Service - Fleet RP" --query
+az ad sp list \
+    --display-name "Azure Kubernetes Service - Fleet RP" \
+    --query "[].{id:id}" \
+    --output tsv
 ```
 
 ```output
@@ -138,3 +143,7 @@ Deploy the Bicep file with service principal object ID from first step:
 ## Next steps
 
 * [Access Fleet Manager hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
+* [Deploy cluster-scoped resources across multiple clusters](./quickstart-resource-propagation.md).
+* [Deploy namespace-scoped resources across multiple clusters](./quickstart-namespace-scoped-resource-propagation.md).
+* [Create and configure Managed Fleet Namespaces](./howto-managed-namespaces.md).
+* [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).

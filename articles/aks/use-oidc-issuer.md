@@ -1,10 +1,10 @@
 ---
-title: Create an OpenID Connect provider for your AKS cluster
+title: Create an OpenID Connect (OIDC) Provider for your Azure Kubernetes Service (AKS) Cluster
 description: Learn how to configure the OpenID Connect (OIDC) provider for a cluster in Azure Kubernetes Service (AKS).
 author: davidsmatlak
-
 ms.author: yuewu2
 ms.topic: how-to
+ms.service: azure-kubernetes-service
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 10/16/2025
@@ -13,149 +13,166 @@ ms.date: 10/16/2025
 
 # Create an OpenID Connect provider on Azure Kubernetes Service (AKS)
 
-[OpenID Connect][open-id-connect-overview] (OIDC) extends the OAuth 2.0 authorization protocol for use as another authentication protocol issued by Microsoft Entra ID. You can use OIDC to enable single sign-on (SSO) between OAuth-enabled applications on your Azure Kubernetes Service (AKS) cluster by using a security token called an ID token. With your AKS cluster, you can enable the OpenID Connect (OIDC) issuer, which allows Microsoft Entra ID, or another cloud provider's identity and access management platform, to discover the API server's public signing keys.
+This article describes how to create and manage an OpenID Connect (OIDC) provider for your Azure Kubernetes Service (AKS) cluster. The OIDC issuer allows your AKS cluster to integrate with identity providers like Microsoft Entra ID, enabling secure authentication and single sign-on (SSO) capabilities for applications running within the cluster.
 
-AKS rotates the key automatically and periodically. If you don't want to wait, you can rotate the key manually and immediately. The maximum lifetime of the token issued by the OIDC provider is one day.
+## About OpenID Connect (OIDC) on AKS
 
-> [!NOTE]
-> Starting with Kubernetes version **1.34+**, new AKS clusters have the OIDC issuer **enabled by default**. You no longer need to specify `--enable-oidc-issuer` when creating a new 1.34+ cluster. The flag is still accepted and treated as a no-op. For clusters created on versions earlier than 1.34 (or created before this change) where the OIDC issuer wasn't previously enabled, you must enable it manually.
-
-> [!NOTE]
-> For clusters running Kubernetes **v1.30.0 and later**, AKS sets the API server flag `--service-account-extend-token-expiration=false`. Earlier supported versions had the default behavior (token auto extension) effectively enabled. With the flag set to `false`, projected service account tokens follow their configured expiration (and must be refreshed by workloads or libraries such as the Azure Identity SDK). Ensure any in-cluster components relying on long‑lived legacy service account tokens are updated to use projected tokens and to handle rotation appropriately.
-
-> [!WARNING]
-> Enabling the OIDC issuer on an existing cluster changes the current service account token issuer to a new value, which can cause down time as it restarts the API server. If your application pods using a service token remain in a failed state after you enable the OIDC issuer, we recommend you manually restart the pods.
-
-In this article, you learn how to create, update, and manage the OIDC issuer for your cluster.
-
-> [!IMPORTANT]
-> After you enable the OIDC issuer on the cluster, disabling it is not supported.
-> 
-> The token needs to be refreshed periodically. If you use the [SDK][sdk], the rotation is automatic. Otherwise, you need to refresh the token manually every 24 hours.
+[OpenID Connect][open-id-connect-overview] (OIDC) extends the OAuth 2.0 authorization protocol for use as another authentication protocol issued by Microsoft Entra ID. You can use OIDC to enable single sign-on (SSO) between OAuth-enabled applications on your Azure Kubernetes Service (AKS) cluster using a security token called an ID token. You can enable the OIDC issuer on your AKS clusters, which allows Microsoft Entra ID (or another cloud provider's identity and access management platform) to discover the API server's public signing keys.
 
 ## Prerequisites
 
-* The Azure CLI version 2.42.0 or higher. Run `az --version` to find your version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
-* AKS supports the OIDC issuer on version 1.22 and higher.
+**Platform requirements**:
+
+- Azure CLI version 2.42.0+ (`az --version` to check version, [install or upgrade Azure CLI][azure-cli-install] if needed)
+- Minimum Kubernetes version is 1.22+
+
+**Version-specific behavior**:
+
+- OIDC issuer enabled by default (no `--enable-oidc-issuer` flag needed) for Kubernetes version 1.34+
+- Token auto-extension disabled (`--service-account-extend-token-expiration=false`) for Kubernetes version 1.30.0+
+- Manual enablement required if not previously configured for Kubernetes version earlier than 1.34
+
+**Important considerations**:
+
+- You can't disable OIDC issuer once enabled
+- Enabling OIDC issuer on existing clusters requires API server restart (brief downtime)
+- Maximum token lifetime is 24 hours (one day)
+- Projected service account tokens required for Kubernetes 1.30+ clusters
 
 ## Create an AKS cluster with the OIDC issuer
 
-You can create an AKS cluster using the [az aks create][az-aks-create] command with the `--enable-oidc-issuer` parameter to enable the OIDC issuer. The following example creates a cluster named *myAKSCluster* with one node in the *myResourceGroup*:
+- Create an AKS cluster using the [`az aks create`][az-aks-create] command with the `--enable-oidc-issuer` parameter.
 
-```azurecli-interactive
-az aks create \
-    --resource-group myResourceGroup \
-    --name myAKSCluster \
-    --node-count 1 \
-    --enable-oidc-issuer \
-    --generate-ssh-keys
-```
+    ```azurecli-interactive
+    # Set environment variables
+    RESOURCE_GROUP=<your-resource-group-name>
+    CLUSTER_NAME=<your-aks-cluster-name>
+    
+    # Create the AKS cluster with OIDC issuer enabled (OIDC issuer enabled by default for Kubernetes 1.34+)
+    az aks create \
+        --resource-group $RESOURCE_GROUP \
+        --name $CLUSTER_NAME \
+        --node-count 1 \
+        --enable-oidc-issuer \
+        --generate-ssh-keys
+    ```
 
-## Update an AKS cluster with OIDC issuer
+## Enable the OIDC issuer on an existing AKS cluster
 
-You can update an AKS cluster using the [az aks update][az-aks-update] command with the `--enable-oidc-issuer` parameter to enable the OIDC issuer. The following example updates a cluster named *myAKSCluster*:
+- Enable the OIDC issuer on an existing AKS cluster using the [`az aks update`][az-aks-update] command with the `--enable-oidc-issuer` parameter.
 
-```azurecli-interactive
-az aks update --resource-group myResourceGroup --name myAKSCluster --enable-oidc-issuer 
-```
+    ```azurecli-interactive
+    # Set environment variables
+    RESOURCE_GROUP=<your-resource-group-name>
+    CLUSTER_NAME=<your-aks-cluster-name>
 
-## Show the OIDC issuer URL
+    # Enable the OIDC issuer on the existing AKS cluster
+    az aks update \
+        --resource-group $RESOURCE_GROUP \
+        --name $CLUSTER_NAME \
+        --enable-oidc-issuer 
+    ```
 
-To get the OIDC issuer URL, run the [az aks show][az-aks-show] command. Replace the default values for the cluster name and the resource group name.
+## Get the OIDC issuer URL
 
-```azurecli-interactive
-az aks show --name myAKScluster --resource-group myResourceGroup --query "oidcIssuerProfile.issuerUrl" -o tsv
-```
+- Get the OIDC issuer URL using the [`az aks show`][az-aks-show] command.
 
-By default, the issuer is set to use the base URL `https://{region}.oic.prod-aks.azure.com`, where the value for `{region}` matches the location the AKS cluster is deployed in.
+    ```azurecli-interactive
+    # Set environment variables
+    RESOURCE_GROUP=<your-resource-group-name>
+    CLUSTER_NAME=<your-aks-cluster-name>
+
+    # Get the OIDC issuer URL
+    az aks show \
+        --name $CLUSTER_NAME \
+        --resource-group $RESOURCE_GROUP \
+        --query "oidcIssuerProfile.issuerUrl" \
+        -o tsv
+    ```
+
+    By default, the issuer is set to use the base URL `https://{region}.oic.prod-aks.azure.com`, where the value for `{region}` matches the location the AKS cluster is deployed in.
 
 ## Rotate the OIDC key
 
-To rotate the OIDC key, run the [az aks oidc-issuer][az-aks-oidc-issuer] command. Replace the default values for the cluster name and the resource group name.
-
-```azurecli-interactive
-az aks oidc-issuer rotate-signing-keys --name myAKSCluster --resource-group myResourceGroup
-```
-
 > [!IMPORTANT]
-> Once you rotate the key, the old key (key1) expires after 24 hours. Both the old key (key1) and the new key (key2) are valid within the 24-hour period after rotation. If you want to invalidate the old key (key1) immediately, you must rotate the OIDC key twice and restart the pods using projected service account tokens. With this process, key2 and key3 are valid, and key1 is invalid.
+> Keep the following considerations in mind when rotating the OIDC key:
+>
+> - If you want to invalidate the old key immediately after key rotation, you must rotate the OIDC key twice and restart the pods using projected service account tokens.
+> - Both old and new keys remain valid for 24 hours after rotation.
+> - Manual token refresh required every 24 hours (unless using [Azure Identity SDK][sdk], which rotates automatically).
 
-## Check the OIDC keys
+- Rotate the OIDC key using the [`az aks oidc-issuer`][az-aks-oidc-issuer] command.
 
-### Get the OIDC issuer URL
+    ```azurecli-interactive
+    # Set environment variables
+    RESOURCE_GROUP=<your-resource-group-name>
+    CLUSTER_NAME=<your-aks-cluster-name>
 
-To get the OIDC issuer URL, run the [az aks show][az-aks-show] command. Replace the default values for the cluster name and the resource group name.
+    # Rotate the OIDC signing keys
+    az aks oidc-issuer rotate-signing-keys \
+        --name $CLUSTER_NAME \
+        --resource-group $RESOURCE_GROUP
+    ```
 
-```azurecli-interactive
-az aks show --name myAKScluster --resource-group myResourceGroup --query "oidcIssuerProfile.issuerUrl" -o tsv
-```
+## Get the discovery document
 
-The output should resemble the following:
+- Navigate to your [OIDC issuer URL](#get-the-oidc-issuer-url) in your browser and append `/.well-known/openid-configuration` to the URL. For example: `https://eastus.oic.prod-aks.azure.com/.well-known/openid-configuration`.
 
-```output
-https://eastus.oic.prod-aks.azure.com/00000000-0000-0000-0000-000000000000/11111111-1111-1111-1111-111111111111/
-```
+    Your output should resemble the following example output:
 
-By default, the issuer is set to use the base URL `https://{region}.oic.prod-aks.azure.com/{tenant_id}/{uuid}`, where the value for `{region}` matches the location the AKS cluster is deployed in. The value `{uuid}` represents the OIDC key, which is a randomly generated guid for each cluster that is immutable.
-
-### Get the discovery document
-
-To get the discovery document, copy the URL `https://(OIDC issuer URL).well-known/openid-configuration` and open it in browser.
-
-The output should resemble the following:
-
-```output
-{
-  "issuer": "https://eastus.oic.prod-aks.azure.com/ffffffff-eeee-dddd-cccc-bbbbbbbbbbb0/00000000-0000-0000-0000-000000000000/",
-  "jwks_uri": "https://eastus.oic.prod-aks.azure.com/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000/openid/v1/jwks",
-  "response_types_supported": [
-    "id_token"
-  ],
-  "subject_types_supported": [
-    "public"
-  ],
-  "id_token_signing_alg_values_supported": [
-    "RS256"
-  ]
-}
-```
-
-### Get the JWK Set document
-
-To get the JWK Set document, copy the `jwks_uri` from the discovery document and past it in your browser's address bar.
-
-The output should resemble the following:
-
-```output
-{
-  "keys": [
+    ```output
     {
-      "use": "sig",
-      "kty": "RSA",
-      "kid": "xxx",
-      "alg": "RS256",
-      "n": "xxxx",
-      "e": "AQAB"
-    },
-    {
-      "use": "sig",
-      "kty": "RSA",
-      "kid": "xxx",
-      "alg": "RS256",
-      "n": "xxxx",
-      "e": "AQAB"
+      "issuer": "https://eastus.oic.prod-aks.azure.com/ffffffff-eeee-dddd-cccc-bbbbbbbbbbb0/00000000-0000-0000-0000-000000000000/",
+      "jwks_uri": "https://eastus.oic.prod-aks.azure.com/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000/openid/v1/jwks",
+      "response_types_supported": [
+        "id_token"
+      ],
+      "subject_types_supported": [
+        "public"
+      ],
+      "id_token_signing_alg_values_supported": [
+        "RS256"
+      ]
     }
-  ]
-}
-```
+    ```
 
-During key rotation, there's one other key present in the discovery document.
+## Get the JWK Set document
 
-## Next steps
+- Navigate to the [**jwks_uri** from the discovery document](#get-the-discovery-document) in your browser. For example: `https://eastus.oic.prod-aks.azure.com/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000/openid/v1/jwks`.
 
-* See [configure creating a trust relationship between an app and an external identity provider](/azure/active-directory/develop/workload-identity-federation-create-trust) to understand how a federated identity credential creates a trust relationship between an application on your cluster and an external identity provider.
-* Review [Microsoft Entra Workload ID][azure-ad-workload-identity-overview] (preview). This authentication method integrates with the Kubernetes native capabilities to federate with any external identity providers on behalf of the application.
-* See [Secure pod network traffic][secure-pod-network-traffic] to understand how to use the Network Policy engine and create Kubernetes network policies to control the flow of traffic between pods in AKS.
+    Your output should resemble the following example output:
+
+    ```output
+    {
+      "keys": [
+        {
+          "use": "sig",
+          "kty": "RSA",
+          "kid": "xxx",
+          "alg": "RS256",
+          "n": "xxxx",
+          "e": "AQAB"
+        },
+        {
+          "use": "sig",
+          "kty": "RSA",
+          "kid": "xxx",
+          "alg": "RS256",
+          "n": "xxxx",
+          "e": "AQAB"
+        }
+      ]
+    }
+    ```
+
+    > [!NOTE]
+    > During key rotation, there's one other key present in the discovery document.
+
+## Related content
+
+- [Create a trust relationship between an application and an external identity provider](/azure/active-directory/develop/workload-identity-federation-create-trust)
+- [Microsoft Entra Workload ID overview][azure-ad-workload-identity-overview]
+- [Secure pod network traffic][secure-pod-network-traffic]
 
 <!-- LINKS - external -->
 

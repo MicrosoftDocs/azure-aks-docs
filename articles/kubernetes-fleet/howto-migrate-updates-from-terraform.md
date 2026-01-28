@@ -2,7 +2,7 @@
 title: "Migrate Kubernetes updates to Azure Kubernetes Fleet Manager from Terragrunt and Terraform"
 description: "Learn how to migrate Kubernetes updates from Terragrunt and Terraform to Azure Kubernetes Fleet Manager Update Runs."  
 ms.topic: how-to
-ms.date: 07/14/2025
+ms.date: 12/15/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -36,7 +36,7 @@ Using Fleet Manager Update Runs to manage Kubernetes updates across your cluster
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager Update Runs, read the [Update Run documentation][learn-update-run] before reading this article.
 
-## Example multi-cluster environment using Terragrunt and Terraform
+## Example environment with Terragrunt and Terraform
 
 To help illustrate how to migrate to Fleet Manager we have an example multi-cluster environment using Terragrunt and Terraform to manage Azure Kubernetes Service (AKS) clusters. The following folder structure is used to hold the Terraform and Terragrunt configuration files.
 
@@ -289,12 +289,11 @@ resource "null_resource" "trigger_update_run" {
 
 You can also use the Azure portal or Azure CLI to start the update run. For more information, see [Manage an update run][manage-update-run].
 
-### Enable auto-upgrade
+## Define a Fleet Manager Auto-upgrade profile
 
-Once you're familiar with update runs, you can [enable auto-upgrade][fleet-auto-upgrade] for your clusters. Auto-upgrade automatically creates and executes update runs when AKS releases new Kubernetes versions. This means you no longer need to monitor for new Kubernetes versions and manually create update runs.
+Once you're familiar with update runs, you can define a [Fleet Manager Auto-upgrade profile][fleet-auto-upgrade] for your member clusters. Fleet Manager Auto-upgrade profiles automatically creates and executes update runs when AKS releases new Kubernetes versions. This means you no longer need to monitor for new Kubernetes versions and manually create update runs. 
 
-> [!NOTE]
-> Auto-upgrade supports Stable and Rapid Kubernetes release channels today, and automatically increments the Kubernetes minor when a new minor is released. If you want to remain on a specific Kubernetes minor, you shouldn't currently use auto-upgrade. Support for target Kubernetes version for auto-upgrade is under development. Track target minor version support on the [Fleet Manager roadmap](https://github.com/Azure/AKS/issues/4603).
+You can choose the Stable or Rapid Kubernetes release channels to automatically increment the Kubernetes minor when a new minor is released, or if you want only patch releases for a minor you can use the [Target Kubernetes minor version channel](./update-automation.md#target-kubernetes-minor-version-updates-preview) which is currently in preview.
 
 ## Related content
 

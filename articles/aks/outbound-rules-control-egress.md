@@ -17,8 +17,7 @@ This article provides the necessary details that allow you to secure outbound tr
 
 To see an example configuration using Azure Firewall, visit [Control egress traffic using Azure Firewall in AKS](limit-egress-traffic.md).
 
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Background
 
@@ -77,6 +76,7 @@ The following network and FQDN/application rules are required for an AKS cluster
 
 ### Microsoft Azure operated by 21Vianet required network rules
 
+For information about retired Microsoft Defender for Cloud features, see [Microsoft Defender for Containers](#microsoft-defender-for-containers).
 
 | Destination Endpoint                                                             | Protocol | Port    | Use  |
 |----------------------------------------------------------------------------------|----------|---------|------|
@@ -88,6 +88,8 @@ The following network and FQDN/application rules are required for an AKS cluster
 | **`APIServerPublicIP:443`** `(if running pods/deployments, like Ingress Controller, that access the API Server)` | TCP      | 443     | Required if running pods/deployments that access the API Server (like Ingress Controller), those pod/deployments would use the API IP.  |
 
 ### Microsoft Azure operated by 21Vianet required FQDN / application rules
+
+For information about retired Microsoft Defender for Cloud features, see [Microsoft Defender for Containers](#microsoft-defender-for-containers).
 
 | Destination FQDN                               | Port            | Use      |
 |------------------------------------------------|-----------------|----------|
@@ -165,6 +167,8 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 ### Microsoft Defender for Containers
 
+[!INCLUDE [21vianet-retirement](includes/21vianet-retirement.md)]
+
 #### Required FQDN / application rules
 
 | FQDN                                                       | Port      | Use      |
@@ -216,6 +220,8 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 
 #### Microsoft Azure operated by 21Vianet cloud required FQDN / application rules
 
+For information about retired Microsoft Defender for Cloud features, see [Microsoft Defender for Containers](#microsoft-defender-for-containers).
+
 | Endpoint| Purpose | Port |
 |:---|:---|:---|
 | **`*.ods.opinsights.azure.cn`** | Data ingestion | 443 |
@@ -251,6 +257,8 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 | **`dc.services.visualstudio.com`** | **`HTTPS:443`** | Azure Policy add-on that sends telemetry data to applications insights endpoint. |
 
 #### Microsoft Azure operated by 21Vianet required FQDN / application rules
+
+For information about retired Microsoft Defender for Cloud features, see [Microsoft Defender for Containers](#microsoft-defender-for-containers).
 
 | FQDN                                          | Port      | Use      |
 |-----------------------------------------------|-----------|----------|

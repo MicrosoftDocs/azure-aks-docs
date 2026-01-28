@@ -87,7 +87,7 @@ When you enable Entra ID based SSH access on your AKS cluster nodes, you can app
 1. Select **Conditional Access** > **Policies** > **New policy**.
 1. Enter a name for the policy, such as *aks-node-ssh-policy*.
 1. Under **Assignments**, select **Users and groups**. Choose the users and groups you want to apply the policy to.
-1. Under **Cloud apps or actions** > **Include**, select **Select apps**. Search for **Azure Virtual Machine Sign-In** and select **Azure Linux Virtual Machine Sign-In** (application ID: `ce8a2463-e670-4e94-a441-a26e6d88c3e2`).
+1. Under **Cloud apps or actions** > **Include**, select **Select apps**. Search for **Azure Virtual Machine Sign-In** and select **Azure Linux Virtual Machine Sign-In**.
 1. Under **Access controls** > **Grant**, select **Grant access**, **Require device to be marked as compliant**, **Require multi-factor authentication**, and **Require all the selected controls**.
 1. Confirm your settings, set **Enable policy** to **On**, and then select **Create**.
 

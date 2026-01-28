@@ -12,7 +12,7 @@ ms.service: azure-kubernetes-service
 
 # Zone resiliency recommendations for Azure Kubernetes Service (AKS)
 
-Zone resiliency is a key part of running production-grade Kubernetes clusters. With scalability at its core, Kubernetes takes full advantage of independent infrastructure in data centers without incurring additional costs by provisioning new nodes only when necessary. 
+Zone resiliency is a key part of running production-grade Kubernetes clusters. With scalability at its core, Kubernetes takes full advantage of independent infrastructure in data centers without incurring additional costs by provisioning new nodes only when necessary.
 
 >[!IMPORTANT]
 > Scaling a cluster in and out, by adding or removing nodes, isn't enough to ensure application resiliency. You must gain a deeper understanding of your application and its dependencies to better plan for resiliency. AKS allows you to set up availability zones (AZs) for your clusters and node pools to ensure that your applications are resilient to failures and can continue to serve traffic even if an entire zone goes down. For more information on availability zone support features in AKS, see [Reliability in Azure Kubernetes Service (AKS)](/azure/reliability/reliability-aks).
@@ -24,8 +24,6 @@ In this article, you learn about the various recommendations for zone resiliency
 * Design a stateless application
 * Make your storage disk decision
 * Test for availability zone (AZ) resiliency
-
-
 
 ## Make your AKS cluster components zone resilient
 
@@ -103,7 +101,7 @@ spec:
 > [!NOTE]
 > If your application has strict zone spread requirements, where the expected behavior would be to leave a pod in pending state if a suitable node isn't found, you can use `whenUnsatisfiable: DoNotSchedule`. This configuration tells the scheduler to leave the pod in pending if a node in the right zone or different host doesn't exist or can't be scaled up.
 
-For more information on configuring pod distribution and understanding the implications of `MaxSkew`, see the [Kubernetes Pod Topology documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field).
+For more information on configuring pod distribution and understanding the implications of `MaxSkew`, see the [Kubernetes Pod Topology documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field). For example, how `nodeTaintsPolicy: Honor` affects pod distribution.
 
 
 ### Configure AZ-aware networking
@@ -136,11 +134,27 @@ You can improve application availability and resiliency in AKS using autoscaling
 * Optimize resource utilization and cost efficiency by scaling up or down based on the CPU and memory usage of your pods.
 * Enhance fault tolerance and recovery by adding more nodes or pods when a zone failure occurs.
 
-You can use the [Horizontal Pod Autoscaler (HPA)](./concepts-scale.md#horizontal-pod-autoscaler) and [Cluster Autoscaler](./cluster-autoscaler-overview.md) to implement autoscaling in AKS. The HPA automatically scales the number of pods in a deployment based on observed CPU utilization, memory utilization, custom metrics, and metrics of other services. The Cluster Autoscaler automatically adjusts the number of nodes in a node pool based on the resource requests of the pods running on the nodes. If you want to use both autoscalers together, make sure the node pools with the autoscaler enabled span multiple zones. If the node pool is in a single zone and that zone goes down, the autoscaler can't scale the cluster across zones.
+You can use the [Horizontal Pod Autoscaler (HPA)](./concepts-scale.md#horizontal-pod-autoscaler) and [Cluster Autoscaler](./cluster-autoscaler-overview.md) to implement autoscaling in AKS. The HPA automatically scales the number of pods in a deployment based on observed CPU utilization, memory utilization, custom metrics, and metrics of other services. The Cluster Autoscaler automatically adjusts the number of nodes in a node pool based on pending pods and the resource requests on the pending pods.
 
-The AKS Karpenter Provider preview feature enables node autoprovisioning using [Karpenter](https://karpenter.sh/) on your AKS cluster. For more information, see the [AKS Karpenter Provider feature overview](https://github.com/Azure/karpenter-provider-azure?tab=readme-ov-file#features-overview).
+The AKS Karpenter Provider feature enables node autoprovisioning using [Karpenter](https://karpenter.sh/) on your AKS cluster. For more information, see the [AKS Karpenter Provider feature overview](https://github.com/Azure/karpenter-provider-azure?tab=readme-ov-file#features-overview).
 
 The [Kubernetes Event-driven Autoscaling (KEDA)](https://keda.sh/) add-on for AKS applies event-driven autoscaling to scale your application based on metrics of external services to meet demand. For more information, see [Install the KEDA add-on in Azure Kubernetes Service (AKS)](./keda-deploy-add-on-cli.md).
+
+### Cluster Autoscaler and Availability Zones
+
+When implementing **availability zones with the cluster autoscaler**, we recommend using a single node pool for each zone. You can set the `--balance-similar-node-groups` parameter to `True` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations. When this approach isn't implemented, pods can remain in a pending state during scale ups. 
+
+> [!NOTE]
+> **The Cluster Autoscaler is not zone-aware, and zone allocation is handled by the underlying Virtual Machine Scale Sets and not by AKS**. The above best practice becomes even more relevant when using zone-based **[pod topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)** on a single multi-az node pool, as restrictive constraints may leave pods in a pending state, especially in capacity-constrained regions or during zone-down scenarios.
+
+The reason for the above recommendation is that:
+  - Cluster Autoscaler performs scheduling simulations to determine whether adding a new node in a node pool can accommodate pending pods. It treats all nodes in a node pool as identical, so in a multi-AZ node pool, it cannot predict which zone the underlying Virtual Machine Scale Sets will provision the new node in. **Cluster Autoscaler cannot request nodes based on specific zones**. If the pending pod can be scheduled in the node pool, Cluster Autoscaler will scale up; however, if the new node is provisioned in a zone that violates strict topology spread constraints, the pods will remain pending and autoscaler will not continue scaling-up for the same pod.
+  
+  - AKS uses best-effort zone balancing on the underlying Virtual Machine Scale Sets (VMSS). However, in cases of zonal capacity constraints or zone-down scenarios in one AZ, VMSS will retry provisioning in another zone. If allocation fails in more than one availability zone, VMSS will not create a new node in that node pool, causing the scale-up operation to fail. Cluster Autoscaler will then place the node pool in a [backoff](./cluster-autoscaler-overview.md#node-pool-in-backoff) state.
+  
+  - Also, since the zone balancing of nodes is handled by underlying Virtual Machine Scale Sets, AKS will not automatically rebalance running workloads.
+    
+Using one node pool per availability zone helps overcome these limitations. Cluster Autoscaler treats each node pool as an independent entity, giving users greater flexibility to manage zone-specific scaling behavior. With single-zone node pools, workloads remain schedulable on node pools in other zones during a zone failure, except when users explicitly define a strict zone-based **[pod topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)**.
 
 ## Design a stateless application
 
@@ -160,14 +174,14 @@ The following table outlines pros and cons of each disk type:
 
 | Disk type | Pros | Cons |
 | --------- | ---- | ---- |
-| LRS | • Lower cost <br> • Supported for all disk sizes and regions <br> • Easy to use and provision | • Lower availability and durability <br> • Vulnerable to zonal failures <br> • Doesn't support zone or geo-replication |
-| ZRS | • Higher availability and durability <br> • More resilient to zonal failures <br> • Supports zone replication for intra-region resiliency | • Higher cost <br> • Not supported for all disk sizes and regions <br> • Requires extra configuration to enable |
+| LRS | * Lower cost <br> * Supported for all disk sizes and regions <br> * Easy to use and provision | * Lower availability and durability <br> * Vulnerable to zonal failures <br> * Doesn't support zone or geo-replication |
+| ZRS | * Higher availability and durability <br> * More resilient to zonal failures <br> * Supports zone replication for intra-region resiliency | * Higher cost <br> * Not supported for all disk sizes and regions <br> * Requires extra configuration to enable |
 
 For more information on the LRS and ZRS disk types, see [Azure Storage redundancy](/azure/storage/common/storage-redundancy#redundancy-in-the-primary-region). To provision storage disks in AKS, see [Provision Azure Disks storage in Azure Kubernetes Service (AKS)](./azure-csi-files-storage-provision.md).
 
 ### Monitor disk performance
 
-To ensure optimal performance and availability of your storage disks in AKS, you should monitor key metrics, such as IOPS, throughput, and latency. These metrics can help you identify any issues or bottlenecks that might impact your application's performance. If you notice any consistent performance issues, you might want to reconsider your storage disk type or size. You can use Azure Monitor to collect and visualize these metrics and set up alerts to notify you of any performance issues. 
+To ensure optimal performance and availability of your storage disks in AKS, you should monitor key metrics, such as IOPS, throughput, and latency. These metrics can help you identify any issues or bottlenecks that might impact your application's performance. If you notice any consistent performance issues, you might want to reconsider your storage disk type or size. You can use Azure Monitor to collect and visualize these metrics and set up alerts to notify you of any performance issues.
 
 For more information, see [Monitor Azure Kubernetes Service (AKS) with Azure Monitor](./monitor-aks.md).
 
@@ -181,7 +195,7 @@ The following table outlines pros and cons of this method:
 
 | Pros | Cons |
 | ---- | ---- |
-| • Mimics a realistic failure scenario and tests the recovery process <br> • Allows you to verify the availability and durability of your data across regions <br> • Helps you identify any potential issues or bottlenecks in your cluster configuration or application design | • Might cause temporary disruption or degradation of service for your users <br> • Requires manual intervention and coordination to drain and restore the node <br> • Might incur extra costs due to increased network traffic or storage replication |
+| * Mimics a realistic failure scenario and tests the recovery process <br> * Allows you to verify the availability and durability of your data across regions <br> * Helps you identify any potential issues or bottlenecks in your cluster configuration or application design | * Might cause temporary disruption or degradation of service for your users <br> * Requires manual intervention and coordination to drain and restore the node <br> * Might incur extra costs due to increased network traffic or storage replication |
 
 ### Method 2: Simulate an AZ failure using Azure Chaos Studio
 
@@ -191,7 +205,7 @@ The following table outlines pros and cons of this method:
 
 | Pros | Cons |
 | ---- | ---- |
-| • Provides a controlled and automated way to inject faults and monitor the results <br> • Supports various types of faults and scenarios, such as network latency, CPU stress, disk failure, etc. <br> • Integrates with Azure Monitor and other tools to collect and analyze data | • Might require extra configuration and setup to create and run experiments <br> • Might not cover all possible failure modes and edge zones that could occur during a real outage <br> • Might have limitations or restrictions on the scope and/or duration of the experiments |
+| * Provides a controlled and automated way to inject faults and monitor the results <br> * Supports various types of faults and scenarios, such as network latency, CPU stress, disk failure, etc. <br> * Integrates with Azure Monitor and other tools to collect and analyze data | * Might require extra configuration and setup to create and run experiments <br> * Might not cover all possible failure modes and edge zones that could occur during a real outage <br> * Might have limitations or restrictions on the scope and/or duration of the experiments |
 
 For more information, see [What is Azure Chaos Studio?](/azure/chaos-studio/chaos-studio-overview).
 

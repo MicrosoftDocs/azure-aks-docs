@@ -4,8 +4,8 @@ description: In this article, we provide an overview of deploying a Kafka cluste
 ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.date: 09/15/2025
-author: senavar
-ms.author: senavar
+author: carols
+ms.author: carols
 ms.custom: 'stateful-workloads'
 # Customer intent: "As a cloud architect, I want to deploy a Kafka cluster on Azure Kubernetes Service using an automated operator, so that I can efficiently manage and scale our event streaming workloads in a robust and cost-effective manner."
 ---

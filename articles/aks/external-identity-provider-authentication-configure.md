@@ -88,7 +88,7 @@ Configure your external identity provider to support OIDC authentication. Select
      id-token: write
      contents: read
    ```
-3. Set up appropriate repository and organization settings for OIDC token access. Configure [repository OIDC settings](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure) and [organization security policies](https://docs.github.com/en/organizations/managing-organization-settings/restricting-access-to-machine-identities) for token usage.
+3. Set up appropriate repository and organization settings for OIDC token access. Configure [repository OIDC settings](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure) and organization security policies for token usage.
 
 ::: zone-end
 

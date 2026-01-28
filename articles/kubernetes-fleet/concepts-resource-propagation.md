@@ -1,7 +1,7 @@
 ---
 title: "Using ClusterResourcePlacement to deploy cluster-scoped resources"
 description: This article describes the concept of Kubernetes resource propagation from hub cluster to member clusters.
-ms.date: 06/16/2025
+ms.date: 12/15/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -27,7 +27,7 @@ Application developers often need to deploy Kubernetes resources onto multiple c
 It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. Fleet Manager provides Kubernetes resource propagation to enable at-scale management of Kubernetes resources. With Fleet Manager, you can create Kubernetes resources on a Fleet-managed hub cluster 
 and propagate them to selected member clusters via Kubernetes Custom Resources: `MemberCluster` and `ClusterResourcePlacement`.
 
-Fleet Manager supports these custom resources based on the [CNCF project KubeFleet](https://github.com/kubefleet-dev/kubefleet) which you can read more about on the [KubeFleet documentation site][fleet-github].
+Fleet Manager's support for custom resources is based on the [KubeFleet CNCF project](https://kubefleet.dev/).
 
 ## ClusterResourcePlacement API overview
 
@@ -267,6 +267,7 @@ Cost properties are decimals, which represent a per-hour cost in US Dollars for 
 | resources.kubernetes-fleet.io/available-memory | Available memory resource units of cluster. |
 | kubernetes.azure.com/per-cpu-core-cost | The per-CPU core cost of the cluster.  |
 | kubernetes.azure.com/per-gb-memory-cost | The per-GiB memory cost of the cluster. | 
+| kubernetes.azure.com/vm-sizes/{vm-sku-name}/capacity | The available number of nodes of type [vm-sku-name][vm-sku-name] in the cluster*.<br/>Example VM SKU name: NV16as_v4.<br/>* In preview via v1beta1 API. |
 
 #### Specifying selection matching criteria
 
@@ -434,14 +435,22 @@ For more information, see the [documentation on rollout strategies][fleet-rollou
 
 ## Determine placement status
 
-The Fleet scheduler updates details and status on placement decisions onto the `ClusterResourcePlacement` object. The output includes the following information:
+The Fleet scheduler provides two ways to view placement status depending on your access level and requirements:
+
+* **ClusterResourcePlacement status**: View placement status directly on the cluster-scoped `ClusterResourcePlacement` object. Use this approach when you have cluster-level permissions and need to view status for any placement across the fleet. This approach is the primary method for platform administrators.
+
+* **ClusterResourcePlacementStatus (preview)**: View placement status through a namespace-scoped `ClusterResourcePlacementStatus` object. Use this approach when you want to enable namespace users to view placement status without granting cluster-level permissions. This approach requires using the v1beta1 API and setting `statusReportingScope: NamespaceAccessible` on the `ClusterResourcePlacement`. For more information, see the [ClusterResourcePlacementStatus section](#clusterresourceplacementstatus-preview).
+
+Both approaches provide the following information:
 
 * The conditions that currently apply to the placement, which include if the placement was successfully completed.
 * A placement status section for each member cluster, which shows the status of deployment to that cluster.
 
-The following example shows a `ClusterResourcePlacement` that deployed the `test` namespace and the `test-1` ConfigMap into two member clusters using `PickN`. The placement was successfully completed and the resources were placed into the `aks-member-1` and `aks-member-2` clusters.
+### Viewing ClusterResourcePlacement status
 
- You can view this information using the `kubectl describe crp <name>` command.
+The following example shows viewing status directly from a `ClusterResourcePlacement` that deployed the `test` namespace and the `test-1` ConfigMap into two member clusters using `PickN`. The placement was successfully completed and the resources were placed into the `aks-member-1` and `aks-member-2` clusters.
+
+You can view this information using the `kubectl describe crp <name>` command.
 
 ```bash
 kubectl describe crp crp-1
@@ -542,6 +551,54 @@ Events:
   Normal  PlacementSyncSuccess       3m28s (x7 over 3d22h)  cluster-resource-placement-controller  Successfully synchronized the placement
   Normal  PlacementRolloutCompleted  3m28s (x7 over 3d22h)  cluster-resource-placement-controller  Resources have been applied to the selected clusters
 ```
+
+### ClusterResourcePlacementStatus (preview)
+
+> [!IMPORTANT]
+> The `ClusterResourcePlacementStatus` resource and `StatusReportingScope` field are available in the `placement.kubernetes-fleet.io/v1beta1` API version as a preview feature. They aren't available in the `placement.kubernetes-fleet.io/v1` API.
+
+The `ClusterResourcePlacementStatus` is a namespace-scoped resource that provides the placement status of a corresponding cluster-scoped `ClusterResourcePlacement` object so it's accessible to users of the namespace who don't have cluster-level rights.
+
+For namespace users without cluster-level permissions, you can view the same placement status information through a namespace-scoped `ClusterResourcePlacementStatus` object. This approach requires the `ClusterResourcePlacement` to be configured with `statusReportingScope: NamespaceAccessible` using the v1beta1 API.
+
+Key features:
+
+* **Namespace-scoped access**: Allows users with namespace-level permissions to view placement status without requiring cluster-scoped access.
+* **Status mirroring**: Contains the same placement status information as the parent `ClusterResourcePlacement` but is accessible within a specific namespace.
+* **Optional feature**: Only created when `StatusReportingScope` is set to `NamespaceAccessible`. Once set, `StatusReportingScope` is immutable.
+
+When `StatusReportingScope` is set to `NamespaceAccessible` for a `ClusterResourcePlacement`, only one namespace resource selector is allowed, and can't be changed after creation.
+
+#### Configuring ClusterResourcePlacementStatus
+
+To use this feature, specify the v1beta1 API version in your `ClusterResourcePlacement`:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: crp-with-status-reporting
+spec:
+  statusReportingScope: NamespaceAccessible
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: my-app
+      version: v1
+  policy:
+    placementType: PickAll
+```
+
+#### Viewing ClusterResourcePlacementStatus
+
+You can view the status using the `kubectl describe` command:
+
+```bash
+kubectl describe clusterresourceplacementstatuses.v1beta1.placement.kubernetes-fleet.io crp-with-status-reporting -n my-app
+```
+
+The output contains the same status information as the `ClusterResourcePlacement` but is accessible to users with only namespace-level permissions.
+
 For more information, see the [documentation on how to understand the placement result][fleet-status].
 
 ## Placement change triggers
@@ -575,4 +632,4 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 [fleet-tolerations]: ./use-taints-tolerations.md
 [fleet-snapshots]: ./concepts-placement-snapshots.md
 [fleet-status]: ./howto-understand-placement.md
-
+[vm-sku-name]: /azure/virtual-machines/vm-naming-conventions

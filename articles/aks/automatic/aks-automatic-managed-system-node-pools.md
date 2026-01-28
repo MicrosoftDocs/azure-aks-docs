@@ -58,7 +58,7 @@ With managed system node pools on AKS Automatic clusters, AKS manages the [syste
 - AKS Automatic clusters in a custom virtual network (VNet) with managed system node pools aren't supported.
 
 > [!NOTE]
-> Migrations between AKS Automatic clusters and AKS Standard clusters are supported. For more information, see [Update the SKU of an existing AKS cluster](../free-standard-pricing-tiers.md#update-the-sku-of-an-existing-cluster).
+> Migrations between AKS Automatic clusters and AKS Standard clusters are supported. For more information, see [Update the SKU of an existing AKS cluster](../free-standard-pricing-tiers.md#update-an-existing-cluster-from-the-base-sku-to-the-automatic-sku).
 
 ## Region availability
 

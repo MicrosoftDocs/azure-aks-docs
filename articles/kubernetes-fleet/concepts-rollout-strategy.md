@@ -1,7 +1,7 @@
 ---
 title: "Defining a rollout strategy for Azure Kubernetes Fleet Manager resource placement"
-description: This article describes how to define a rollout strategy for Fleet Manager's cluster resource placement and resource placement.
-ms.date: 12/02/2025
+description: This article describes how to define a rollout strategy for Fleet Manager's resource placement.
+ms.date: 12/29/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -115,6 +115,36 @@ The staged update strategy provides fine-grained control over resource rollouts 
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
+### Example deployment pattern
+
+The following diagram illustrates a typical three-stage deployment pattern:
+
+:::image type="content" source="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png" alt-text="Three-stage deployment pattern with staging, canary, and production stages with wait times and approval gates." lightbox="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png":::
+
+This pattern allows you to:
+
+* Deploy to staging clusters first for initial validation
+* Wait a specified time before proceeding to canary clusters
+* Require manual approval before rolling out to production
+* Control the order of updates within canary and production stages
+
+### When to use staged updates
+
+Staged update strategies are ideal when you need:
+
+* **Environment-based rollouts** (dev → staging → production)
+* **Validation Delays** and **Approval gates** between stages
+* **Deterministic ordering** of cluster updates within stages
+* **Reusable deployment patterns** across multiple resource placements
+
+For simpler scenarios where percentage-based rollouts suffice, consider using the inline rolling update strategy instead.
+
+> [!NOTE]
+> The staged update strategy works identically for both `ClusterResourcePlacement` and `ResourcePlacement`, with the only difference being the scope of the custom resources (cluster-scoped vs namespace-scoped).
+>
+> To learn how to implement staged update runs step-by-step, see [How to use ClusterStagedUpdateRun to orchestrate staged rollouts](./howto-staged-update-run.md).
+
+
 ### How staged updates work
 
 Staged updates use different custom resources depending on scope:
@@ -148,6 +178,41 @@ spec:
     type: External  # Rollout is controlled by ClusterStagedUpdateRun, ClusterStagedUpdateStrategy.
 ```
 
+#### ClusterStagedUpdateStrategy (cluster-scoped)
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateStrategy
+metadata:
+  name: three-stage-strategy
+spec:
+  stages:
+    - name: staging
+      labelSelector:
+        matchLabels:
+          environment: staging
+      afterStageTasks:
+        - type: TimedWait
+          waitTime: 1h
+      maxConcurrency: 50%  # Update 50% of staging clusters at once
+    - name: canary
+      labelSelector:
+        matchLabels:
+          environment: canary
+      sortingLabelKey: name
+      afterStageTasks:
+        - type: Approval
+      maxConcurrency: 2  # Update 2 clusters concurrently
+    - name: production
+      labelSelector:
+        matchLabels:
+          environment: production
+      sortingLabelKey: order
+      beforeStageTasks:
+        - type: Approval
+      maxConcurrency: 1  # Sequential updates (default)
+```
+
 #### ResourcePlacement with external strategy
 
 ```yaml
@@ -168,36 +233,6 @@ spec:
     type: External  # Rollout is controlled by StagedUpdateRun, StagedUpdateStrategy.
 ```
 
-#### ClusterStagedUpdateStrategy (cluster-scoped)
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ClusterStagedUpdateStrategy
-metadata:
-  name: three-stage-strategy
-spec:
-  stages:
-    - name: staging
-      labelSelector:
-        matchLabels:
-          environment: staging
-      afterStageTasks:
-        - type: TimedWait
-          waitTime: 1h
-    - name: canary
-      labelSelector:
-        matchLabels:
-          environment: canary
-      sortingLabelKey: name
-      afterStageTasks:
-        - type: Approval
-    - name: production
-      labelSelector:
-        matchLabels:
-          environment: production
-      sortingLabelKey: order
-```
-
 #### StagedUpdateStrategy (namespace-scoped)
 
 ```yaml
@@ -215,6 +250,7 @@ spec:
       afterStageTasks:
         - type: TimedWait
           waitTime: 1h
+      maxConcurrency: 50%  # Update 50% of staging clusters at once
     - name: canary
       labelSelector:
         matchLabels:
@@ -222,20 +258,26 @@ spec:
       sortingLabelKey: name
       afterStageTasks:
         - type: Approval
+      maxConcurrency: 2  # Update 2 clusters concurrently
     - name: production
       labelSelector:
         matchLabels:
           environment: production
       sortingLabelKey: order
+      beforeStageTasks:
+        - type: Approval
+      maxConcurrency: 1  # Sequential updates (default)
 ```
 
 ### Stage configuration
 
 Each stage in the strategy can specify:
 
-* **Label selector** to determine which clusters belong to the stage
-* **Sorting order** for clusters within the stage using `sortingLabelKey` (optional - clusters are sorted alphabetically by name if not specified)
-* **After-stage tasks** either timed wait or approval requirement (optional, up to 2 tasks per stage, maximum one of each type)
+* **Label selector** (`labelSelector`) to determine which clusters belong to the stage
+* **Sorting order** (`sortingLabelKey`) for clusters within the stage using `sortingLabelKey` (optional - clusters are sorted alphabetically by name if not specified)
+* **Before-stage tasks** (`beforeStageTasks`) approval requirement (optional - up to 1 task per stage)
+* **After-stage tasks** (`afterStageTasks`) either timed wait or approval requirement (optional - up to 2 tasks per stage, maximum one of each type)
+* **Max concurrency** (`maxConcurrency`) to determine the maximum number of clusters to update concurrently within the stage (optional - can be an absolute number  from 1 to the number of clusters in the stage, or a percentage from 1 to 100, fractional results are rounded down with a minimum of 1) 
 
 #### ClusterStagedUpdateRun (cluster-scoped)
 
@@ -245,9 +287,10 @@ kind: ClusterStagedUpdateRun
 metadata:
   name: my-app-rollout
 spec:
-  placementName: my-app-placement # ClusterResourcePlacement name the update run is applied to.
-  resourceSnapshotIndex: "0" # ClusterResourceSnapshot index of the selected resources to be updated across clusters.
-  stagedRolloutStrategyName: three-stage-strategy # The name of the update strategy to use.
+  placementName: my-app-placement # Required - ClusterResourcePlacement name the update run is applied to.
+  resourceSnapshotIndex: "0" # Optional - ClusterResourceSnapshot index of the selected resources to be updated across clusters.
+  stagedRolloutStrategyName: three-stage-strategy # Required - The name of the update strategy to use.
+  state: Run # Optional - Controls the execution state of the update run.
 ```
 
 #### StagedUpdateRun (namespace-scoped)
@@ -259,50 +302,75 @@ metadata:
   name: my-app-rollout
   namespace: my-app
 spec:
-  placementName: my-app-placement # ResourcePlacement name the update run is applied to.
-  resourceSnapshotIndex: "0" # ResourceSnapshot index of the selected resources to be updated across clusters.
-  stagedRolloutStrategyName: three-stage-strategy # The name of the update strategy to use.
+  placementName: my-app-placement # Required - ResourcePlacement name the update run is applied to.
+  resourceSnapshotIndex: "0" # Optional - ResourceSnapshot index of the selected resources to be updated across clusters.
+  stagedRolloutStrategyName: three-stage-strategy # Required - The name of the update strategy to use.
+  state: Run # Optional - Controls the execution state of the update run. 
 ```
+
+### Specifying rollout
+
+The `resourceSnapshotIndex` field controls which resource snapshot version to deploy. You have several options:
+- Leave empty (`""`) or omit the field entirely to use the latest resource snapshot
+- Specify the latest resource snapshot index (like the example `"1"`) to explicitly target the newest version
+- Specify an older resource snapshot index (for example, `"0"`) to deploy or roll back to a previous version
+ 
+For more information on resource snapshots, see [Work with resource snapshots](./howto-staged-update-run.md#work-with-resource-snapshots).
+
+
+### Understanding update run states
+
+Staged update runs use a `state` field to control their execution behavior. Understanding these states and their transitions is essential for managing rollouts effectively.
+
+### Available states
+
+* **Initialize**: Sets up the update run without executing the rollout. Use this state to prepare and validate the update run configuration before starting deployment.
+
+* **Run**: Executes the staged rollout. If starting fresh, this state both initializes and executes the update run. If the update run is already initialized, it only executes the rollout. Use this state to start or resume update runs.
+
+* **Stop**: Gracefully halts the update run. This state allows in progress clusters to complete their updates before stopping the entire rollout process.
+
+### State transition rules
+
+The following state transitions are supported:
+
+* **Initialize → Run**: Start execution after initialization
+* **Run → Stop**: Stop a running update run
+* **Stop → Run**: Resume a stopped update run
+
+Once an update run finishes, the update run can't be restarted. 
+
+> [!NOTE]
+> Always verify the current state of your update runs before attempting state changes. 
+> Use `kubectl get csur <update-run-name>` or `kubectl get sur <update-run-name> -n <namespace>` to check the current state and status.
+
 
 ### Stage progression
 
 Fleet Manager processes stages sequentially:
 
-1. All clusters in a stage receive updates according to their sort order
-2. After all clusters in a stage are successfully updated, any configured after-stage tasks execute
-3. The next stage begins only after all previous after stage tasks complete
+1. Any configured before-stage tasks execute
+2. All clusters in a stage receive updates according to their sort order
+3. After all clusters in a stage are successfully updated, any configured after-stage tasks execute
+4. The next stage begins only after all previous after stage tasks complete
+
+> [!NOTE] 
+> An update run can abort for multiple reasons, including but not limited to:
+> - The binding spec doesn't match the update run configuration. This situation typically happens when another update run preempts the current one.
+> - Validation failures occur, such as when a cluster joins or leaves the fleet.
+> - Labels change on clusters.
+>
+> When a resource update fails on a cluster, Fleet Manager continues retrying and marks the cluster status as "stuck" (after retrying for about 5 minutes) rather than aborting the entire update run.
+
+### Approval Requests
 
 For approval-based progression, Fleet Manager creates a `ClusterApprovalRequest` (for cluster-scoped placements) or `ApprovalRequest` (for namespace-scoped placements) resource that must be approved before continuing to the next stage.
 
-### Example deployment pattern
+A stage can have a before stage task of type approval and an after stage task type of approval. To help differentiate which approval request is for what stage tasks, the approval request name will contain `-before-` for before stage tasks or `-after-` for after stage tasks.
 
-The following diagram illustrates a typical three-stage deployment pattern:
-
-:::image type="content" source="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png" alt-text="Three-stage deployment pattern with staging, canary, and production stages with wait times and approval gates." lightbox="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png":::
-
-This pattern allows you to:
-
-* Deploy to staging clusters first for initial validation
-* Wait a specified time before proceeding to canary clusters
-* Require manual approval before rolling out to production
-* Control the order of updates within canary and production stages
-
-### When to use staged updates
-
-Staged update strategies are ideal when you need:
-
-* **Environment-based rollouts** (dev → staging → production)
-* **Validation Delays** and **Approval gates** between stages
-* **Deterministic ordering** of cluster updates within stages
-* **Reusable deployment patterns** across multiple resource placements
-
-For simpler scenarios where percentage-based rollouts suffice, consider using the inline rolling update strategy instead.
-
-> [!NOTE]
-> The staged update strategy works identically for both `ClusterResourcePlacement` and `ResourcePlacement`, with the only difference being the scope of the custom resources (cluster-scoped vs namespace-scoped).
-
-> [!TIP]
-> To learn how to implement staged update runs step-by-step, see [How to use ClusterStagedUpdateRun to orchestrate staged rollouts](./howto-staged-update-run.md).
+**Example approval request names:**
+- `my-update-run-before-canary` - Before-stage approval task for the "canary" stage of update run "my-update-run"
+- `my-update-run-after-staging` - After-stage approval task for the "staging" stage of update run "my-update-run"
 
 ## Next steps
 
@@ -313,4 +381,3 @@ For simpler scenarios where percentage-based rollouts suffice, consider using th
 
 <!-- LINKS - external -->
 [learn-conceptual-crp]: ./concepts-resource-propagation.md
-[placement-snapshots]: ./concepts-placement-snapshots.md
