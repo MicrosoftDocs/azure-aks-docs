@@ -10,7 +10,7 @@ ms.subservice: aks-monitoring
 # Customer intent: As a cluster administrator or SRE, I want to install and configure the agentic CLI for AKS so that I can start troubleshooting my clusters by using natural language queries.
 ---
 
-# Install and use the agentic CLI for Azure Kubernetes Service (AKS) (preview)
+# Install and use the agentic CLI for Azure Kubernetes Service (AKS) (Preview)
 
 This article shows you how to install, configure, and use the agentic CLI for Azure Kubernetes Service (AKS) to get AI-powered troubleshooting and insights for your AKS clusters. The agentic CLI supports two deployment modes: **client mode** for local execution and **cluster mode** for in-cluster deployment.
 
@@ -21,7 +21,7 @@ For more information, see the [agentic CLI for AKS overview](./cli-agent-for-aks
 The agentic CLI for AKS supports two deployment modes that you can choose during initialization:
 
 > [!NOTE]
-> These two modes are only available from  version  "1.0.0b16" of the aks-agent extension
+> These two modes are only available from version "1.0.0b16" of the aks-agent extension
 > 
 
 ### Client mode
@@ -219,10 +219,7 @@ Cluster mode deploys the agent as a pod within your AKS cluster using workload i
 - **Optional**: Complete the [workload identity setup](./cli-agent-for-aks-service-account-workload-identity-setup.md#workload-identity-setup-optional) for enhanced Azure resource access security
 
 **Additional cluster requirements:**
-- **Namespace**: You must have a Kubernetes namespace where the agent will be deployed
-- **Cluster permissions**: You need sufficient permissions to:
-  - Deploy Helm charts in the target cluster
-  - Access the target namespace
+- **Namespace**: You must have a write access to deploy to the Kubernetes namespace where the agent will be deployed
 
 > [!IMPORTANT]
 > Before proceeding with cluster mode initialization, ensure you have completed the [Service account creation](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory). Workload identity setup is optional but recommended for enhanced security.
@@ -289,17 +286,6 @@ Cluster mode deploys the agent as a pod within your AKS cluster using workload i
     > [!NOTE]
     > If you followed the setup guide, use `aks-mcp` as the service account name.
 
-1. **Configure managed identity** (optional). Provide the managed identity client ID if you completed the optional workload identity setup:
-
-    ```output
-    🔑 Managed Identity Configuration
-    To access Azure resources using workload identity, you need to provide the managed 
-    identity client ID.
-    Do you want to configure managed identity client ID? (Y/n):
-    ```
-
-    - Choose `Y` if you completed the workload identity setup and have a managed identity client ID
-    - Choose `n` if you only completed the service account creation (mandatory part)
 
 1. **Wait for deployment completion**. The initialization will deploy the agent using Helm:
 
@@ -547,7 +533,7 @@ az aks agent-cleanup --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --n
 
 This command:
 - Removes the agent pod from the specified namespace
-- Deletes the service account created for the agent
+- Deletes the LLM configuration stored on the cluster
 
 Replace `<NAMESPACE>` with the namespace where the agent was deployed (default is usually `aks-agent`).
 
