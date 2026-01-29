@@ -1,13 +1,12 @@
 ---
 title: Deploy and run workflows with the Dapr extension for Azure Kubernetes Service (AKS)
 description: Learn how to deploy and run Dapr Workflow on your Azure Kubernetes Service (AKS) clusters via the Dapr extension.
-author: hhunter-ms
-ms.author: hannahhunter
-ms.reviewer: nuversky
+author: greenie-msft
+ms.author: nigreenf
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.date: 11/11/2025
-ms.subservice: aks-developer
+ms.subservice: dapr-aks
 ms.custom: devx-track-azurecli
 # Customer intent: As a developer, I want to deploy and run Dapr Workflows on Azure Kubernetes Service, so that I can efficiently orchestrate microservices and handle state management in my applications.
 ---
