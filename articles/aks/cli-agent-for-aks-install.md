@@ -85,13 +85,13 @@ Both deployment modes require the following:
     ```output
     ...
     "extensions": {
-    "aks-agent": "1.0.0b15",
+    "aks-agent": "1.0.0b17",
     }
     ```
 
 ## Set up your LLM API key
-
-Before proceeding with installation, you need to set up your LLM API key. We recommend that you use newer models such as GPT-4o, GPT-4o-mini, or Claude Sonnet 4.0 for better performance. Choose a model with a high context size of at least 128,000 tokens or higher.
+> [!NOTE]
+>  Before proceeding with installation, you need to set up your LLM API key. We recommend that you use newer models such as GPT-5, or Claude Opus MINI for better performance. Choose a model with a high context size of at least 128,000 tokens or higher.
 
 ### Azure OpenAI (recommended)
 
@@ -410,7 +410,7 @@ The `--model` parameter determines which LLM and provider analyzes your cluster.
 
 ### Configuration file
 
-The LLM configuration and deployment mode selection are stored in a configuration file through the `az aks agent-init` experience. If the `init` command doesn't work, you can still use the configuration file by adding the variables manually. For an example configuration file, see [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml). You can find the default configuration file path through the `az aks agent --help` command.
+The LLM configuration and deployment mode selection are stored in a config map through the `az aks agent-init` experience. If the `init` command doesn't work, you can still use the configuration file by adding the variables manually. For an example configuration file, see [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml). You can find the default configuration file path through the `az aks agent --help` command.
 
 The configuration file currently supports the following parameters:
 
