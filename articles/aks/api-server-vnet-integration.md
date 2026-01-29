@@ -215,7 +215,9 @@ AKS clusters configured with API Server VNet Integration can have public network
     ```azurecli-interactive
     az aks update --name <cluster-name> \
     --resource-group <resource-group> \
-    --enable-private-cluster
+    --enable-private-cluster \
+    --enable-apiserver-vnet-integration \
+    --apiserver-subnet-id <apiserver-subnet-resource-id>
     ```
 
 ### Disable private cluster mode
