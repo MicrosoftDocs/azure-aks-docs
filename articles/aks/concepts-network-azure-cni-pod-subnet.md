@@ -62,10 +62,10 @@ The Static Block Allocation mode offers the following benefits:
 Below are some of the limitations of using Azure CNI Static Block allocation:
 - Minimum Kubernetes Version required is 1.28.
 - Maximum subnet size supported is x.x.x.x/12 ~ 1 million IPs.
+- Windows 2019 nodes are not supported in Azure CNI Pod Subnet
 - Only a single mode of operation can be used per subnet. If a subnet uses Static Block allocation mode, it cannot use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
 - Only supported in new clusters or when adding node pools with a different subnet to existing clusters. Migrating or updating existing clusters or node pools is not supported.
 - Across all the CIDR blocks assigned to a node in the node pool, one IP will be selected as the primary IP of the node. Thus, for network administrators selecting the `--max-pods` value try to use the calculation below to best serve your needs and have optimal usage of IPs in the subnet:
-- Windows 2019 nodes are not supported in Azure CNI Pod Subnet
 
 `max_pods = (N * 16) - 1` where `N` is any positive integer and `N` > 0
 
