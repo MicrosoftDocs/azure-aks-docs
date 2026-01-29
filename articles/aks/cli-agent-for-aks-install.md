@@ -21,7 +21,8 @@ For more information, see the [agentic CLI for AKS overview](./cli-agent-for-aks
 The agentic CLI for AKS supports two deployment modes that you can choose during initialization:
 
 > [!NOTE]
-> These two modes are only available from  version  "1.0.0b15" of the aks-agent extension
+> These two modes are only available from  version  "1.0.0b16" of the aks-agent extension
+> 
 
 ### Client mode
 
@@ -113,32 +114,50 @@ The Azure API base refers to the Azure OpenAI endpoint (which usually ends in `o
 
 We also support any OpenAI-compatible model. Check the documentation of the LLM provider for instructions on how to create an account and retrieve the API key.
 
-## Choose your installation path
+## Installation
 
-Select the installation guide that matches your preferred deployment mode:
+Choose your deployment mode and follow the corresponding installation guide:
 
-- [Client mode installation](#client-mode-installation) - For local execution using Docker
-- [Cluster mode installation](#cluster-mode-installation) - For in-cluster deployment with workload identity
-
-## Client mode installation
+# [Client mode](#tab/client-mode)
 
 Client mode runs the agent locally using Docker and your existing Azure credentials.
 
 ### Prerequisites for client mode
 
 - **Docker**: Docker must be installed and running on your local machine. You can download Docker from [docker.com](https://www.docker.com/get-started/).
+- **Docker daemon**: Ensure the Docker daemon is started and running before proceeding with the installation.
 - **Local Azure credentials**: Ensure your Azure credentials are properly configured and you have the necessary permissions to access cluster resources.
 
-### Verify Docker installation
+### Verify Docker installation and start Docker daemon
 
-Verify that Docker is installed and running:
+1. Verify that Docker is installed and the Docker daemon is running:
 
-```bash
-docker --version
-docker ps
-```
+   ```bash
+   docker --version
+   docker ps
+   ```
 
-If Docker isn't installed, follow the [Docker installation guide](https://docs.docker.com/get-docker/) for your operating system.
+   If Docker isn't installed, follow the [Docker installation guide](https://docs.docker.com/get-docker/) for your operating system.
+
+2. **Start the Docker daemon** if it's not running:
+
+   **On macOS/Windows:**
+   - Launch Docker Desktop from your applications
+   - Wait for Docker to start (you'll see the Docker icon in your system tray/menu bar)
+
+   **On Linux:**
+   ```bash
+   sudo systemctl start docker
+   sudo systemctl enable docker  # Enable Docker to start on boot
+   ```
+
+3. Verify Docker is running:
+
+   ```bash
+   docker info
+   ```
+
+   This command should return Docker system information without errors.
 
 ### Initialize client mode
 
@@ -185,99 +204,28 @@ If Docker isn't installed, follow the [Docker installation guide](https://docs.d
 
 4. Verify the initialization was successful. The agent will automatically pull the necessary Docker images when you run your first command.
 
-## Cluster mode installation
+# [Cluster mode](#tab/cluster-mode)
 
 Cluster mode deploys the agent as a pod within your AKS cluster using workload identity for secure authentication.
 
 ### Prerequisites for cluster mode
 
-- **Workload Identity**: Your AKS cluster must have workload identity enabled. If not enabled, follow the [workload identity setup guide](/azure/aks/workload-identity-deploy-cluster).
-- **Existing namespace**: You must have an existing Kubernetes namespace where the agent will be deployed (such as `kube-system` or a custom namespace).
-- **Service account**: You must create a service account with the appropriate permissions in your target namespace before initialization.
-- **RBAC permissions**: You need to create the necessary Role and RoleBinding for the service account in your namespace.
+> [!IMPORTANT]
+> **Mandatory setup**: Before initializing cluster mode, you **must** create a service account with RBAC permissions. Workload identity setup is optional.
+
+**Complete the required setup first:**
+- Follow the **mandatory** [Service account creation](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory) guide. This includes:
+  - Creating the Kubernetes service account with RBAC permissions (**required**)
+- **Optional**: Complete the [workload identity setup](./cli-agent-for-aks-service-account-workload-identity-setup.md#workload-identity-setup-optional) for enhanced Azure resource access security
+
+**Additional cluster requirements:**
+- **Namespace**: You must have a Kubernetes namespace where the agent will be deployed
 - **Cluster permissions**: You need sufficient permissions to:
   - Deploy Helm charts in the target cluster
   - Access the target namespace
-  - Create and manage pods in the target namespace
-- **Managed Identity (optional)**: If you want to configure workload identity for Azure resource access, you need a managed identity with appropriate Azure permissions. Follow the [federated identity credential setup guide](https://github.com/Azure/aks-mcp/blob/main/docs/helm-workload-identity.md#step-4-create-federated-identity-credential).
 
-### Verify workload identity
-
-Check if workload identity is enabled on your cluster:
-
-```azurecli-interactive
-az aks show --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --query "securityProfile.workloadIdentity.enabled"
-```
-
-If the output is `true`, workload identity is enabled. If `null` or `false`, you need to enable it:
-
-```azurecli-interactive
-az aks update --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --enable-workload-identity
-```
-
-### Create required Kubernetes resources
-
-Before initializing cluster mode, you must create the necessary Kubernetes resources:
-
-1. **Create or use an existing namespace** (skip if using `kube-system`):
-
-    ```bash
-    kubectl create namespace <NAMESPACE_NAME>
-    ```
-
-2. **Create a service account** in your target namespace:
-
-    ```bash
-    kubectl create serviceaccount <SERVICE_ACCOUNT_NAME> -n <NAMESPACE_NAME>
-    ```
-
-3. **Create appropriate RBAC permissions**. Create a Role and RoleBinding for the service account with comprehensive read access for troubleshooting:
-
-    ```yaml
-    # aks-agent-role.yaml
-    apiVersion: rbac.authorization.k8s.io/v1
-    kind: Role
-    metadata:
-      namespace: <NAMESPACE_NAME>
-      name: aks-agent-role
-    rules:
-    # Read access to all resources in the namespace for comprehensive troubleshooting
-    - apiGroups: ["*"]
-      resources: ["*"]
-      verbs: ["get", "list", "watch"]
-    # Additional permissions for agent configuration management
-    - apiGroups: [""]
-      resources: ["configmaps", "secrets"]
-      verbs: ["create", "update", "patch", "delete"]
-    ---
-    apiVersion: rbac.authorization.k8s.io/v1
-    kind: RoleBinding
-    metadata:
-      name: aks-agent-rolebinding
-      namespace: <NAMESPACE_NAME>
-    subjects:
-    - kind: ServiceAccount
-      name: <SERVICE_ACCOUNT_NAME>
-      namespace: <NAMESPACE_NAME>
-    roleRef:
-      kind: Role
-      name: aks-agent-role
-      apiGroup: rbac.authorization.k8s.io
-    ```
-
-    Apply the RBAC configuration:
-
-    ```bash
-    kubectl apply -f aks-agent-role.yaml
-    ```
-
-4. **Verify the resources were created successfully**:
-
-    ```bash
-    kubectl get serviceaccount <SERVICE_ACCOUNT_NAME> -n <NAMESPACE_NAME>
-    kubectl get role aks-agent-role -n <NAMESPACE_NAME>
-    kubectl get rolebinding aks-agent-rolebinding -n <NAMESPACE_NAME>
-    ```
+> [!IMPORTANT]
+> Before proceeding with cluster mode initialization, ensure you have completed the [Service account creation](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory). Workload identity setup is optional but recommended for enhanced security.
 
 ### Initialize cluster mode
 
@@ -326,7 +274,7 @@ Before initializing cluster mode, you must create the necessary Kubernetes resou
     Please choose the LLM provider (1-5): 1
     ```
 
-1. **Provide service account details** when prompted. Use the service account you created earlier:
+1. **Provide service account details** when prompted. Use the service account you created during the [mandatory setup](./cli-agent-for-aks-service-account-workload-identity-setup.md):
 
     ```output
     👤 Service Account Configuration
@@ -335,10 +283,13 @@ Before initializing cluster mode, you must create the necessary Kubernetes resou
     Please ensure you have created the necessary Role and RoleBinding in your namespace for 
     this service account.
 
-    Enter service account name: <YOUR_SERVICE_ACCOUNT_NAME>
+    Enter service account name: aks-mcp
     ```
 
-1. **Configure managed identity** (optional). This step is optional but recommended for accessing Azure resources:
+    > [!NOTE]
+    > If you followed the setup guide, use `aks-mcp` as the service account name.
+
+1. **Configure managed identity** (optional). Provide the managed identity client ID if you completed the optional workload identity setup:
 
     ```output
     🔑 Managed Identity Configuration
@@ -347,8 +298,8 @@ Before initializing cluster mode, you must create the necessary Kubernetes resou
     Do you want to configure managed identity client ID? (Y/n):
     ```
 
-    - Choose `Y` if you want to configure workload identity for Azure resource access
-    - Choose `n` to skip workload identity configuration
+    - Choose `Y` if you completed the workload identity setup and have a managed identity client ID
+    - Choose `n` if you only completed the service account creation (mandatory part)
 
 1. **Wait for deployment completion**. The initialization will deploy the agent using Helm:
 
@@ -545,33 +496,9 @@ Using 37 datasources (toolsets). To refresh: use flag `--refresh-toolsets`
 
 ## AKS MCP server integration
 
-As an alternative to the default toolsets, you can enable the [AKS Model Context Protocol (MCP) server](https://github.com/Azure/aks-mcp) with the agentic CLI for AKS. This experience spins up the AKS MCP server locally and uses it as the source for telemetry.
+The [AKS Model Context Protocol (MCP) server](https://github.com/Azure/aks-mcp) is enabled by default with the agentic CLI for AKS. This experience spins up the AKS MCP server locally (or in the cluster with cluster mode) and uses it as the source for telemetry.
 
-The following example shows how to start the MCP server and use it with the agentic CLI for AKS. Replace `<RESOURCE_GROUP>` and `<CLUSTER_NAME>` with your AKS cluster's resource group and name.
 
-```azurecli-interactive
-az aks agent "why is my node unhealthy" --model=azure/gpt-4o --aks-mcp --name <CLUSTER_NAME> --resource-group <RESOURCE_GROUP>
-Loaded models: ['azure/gpt-4o']                                                                                           
-Refreshing available datasources (toolsets)                                                                               
-..                                                                                                                       
-**✅ Toolset aks-mcp  **                                                                                                      
-..                                                                                                   
-NO ENABLED LOGGING TOOLSET                                                                                                
-Using model: azure/gpt-4o (128,000 total tokens, 16,384 output tokens)                                                    
-This tool uses AI to generate responses and may not always be accurate.
-Welcome to AKS AGENT: Type '/exit' to exit, '/help' for commands, '/feedback' to share your thoughts.
-User: why is my node unhealthy
-..
-```
-
-> [!NOTE]
-> In the MCP server integration, provide the name of the cluster and the resource group at the start of the agent experience. Unlike the regular mode where the cluster context is picked up automatically, the MCP server integration currently doesn't support it.
-
-To check the status of the MCP server, you can use the `--status` flag:
-
-```azurecli-interactive
-az aks-agent --status
-```
 
 ## Clean up agentic CLI deployment
 
@@ -582,9 +509,8 @@ You can clean up the agentic CLI deployment based on the mode you selected durin
 All cleanup commands require the following parameters:
 - `-n` or `--name`: The name of your AKS cluster
 - `-g` or `--resource-group`: The resource group containing your AKS cluster
-- `--namespace`: The Kubernetes namespace where the agent is deployed (required for cluster mode only)
 
-### Clean up client mode
+# [Client mode](#tab/client-cleanup)
 
 For client mode, the cleanup process removes the local configuration and any downloaded Docker images:
 
@@ -596,27 +522,10 @@ This command:
 - Removes the local configuration file
 - Resets the agent configuration
 
-### Clean up cluster mode
-
-For cluster mode, the cleanup process removes the deployed resources from your AKS cluster:
-
-```azurecli-interactive
-az aks agent-cleanup --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <NAMESPACE>
-```
-
-This command:
-- Removes the agent pod from the specified namespace
-- Deletes the service account created for the agent
-- Cleans up workload identity configurations (if Azure RBAC was enabled)
-- Removes the dedicated namespace (if it was created during initialization)
-
-Replace `<NAMESPACE>` with the namespace where the agent was deployed (default is usually `aks-agent`).
-
-### Verify cleanup
+### Verify client mode cleanup
 
 To verify that the cleanup was successful:
 
-**For client mode:**
 ```bash
 # Check if configuration file was removed
 ls ~/.azure/aksAgent.config
@@ -625,7 +534,27 @@ ls ~/.azure/aksAgent.config
 docker images | grep aks-agent
 ```
 
-**For cluster mode:**
+# [Cluster mode](#tab/cluster-cleanup)
+
+For cluster mode, the cleanup process removes the deployed resources from your AKS cluster:
+
+**Additional parameter required:**
+- `--namespace`: The Kubernetes namespace where the agent is deployed
+
+```azurecli-interactive
+az aks agent-cleanup --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <NAMESPACE>
+```
+
+This command:
+- Removes the agent pod from the specified namespace
+- Deletes the service account created for the agent
+
+Replace `<NAMESPACE>` with the namespace where the agent was deployed (default is usually `aks-agent`).
+
+### Verify cluster mode cleanup
+
+To verify that the cleanup was successful:
+
 ```azurecli-interactive
 # Check if agent pod was removed
 kubectl get pods -n <NAMESPACE>
@@ -636,6 +565,8 @@ kubectl get serviceaccount -n <NAMESPACE>
 # Check if namespace was removed (if it was created during init)
 kubectl get namespace <NAMESPACE>
 ```
+
+---
 
 ## Remove the agentic CLI for AKS extension
 
