@@ -7,7 +7,7 @@ author: davidsmatlak
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.topic: how-to
-ms.date: 12/04/2023
+ms.date: 01/29/2026
 # Customer intent: As a Kubernetes administrator, I want to set up a custom domain and SSL certificate using the application routing add-on, so that I can securely manage external access to services in my Azure Kubernetes Service cluster.
 ---
 
@@ -47,7 +47,7 @@ To connect to the Kubernetes cluster from your local computer, you use `kubectl`
     # Set environment variables for your resource group and cluster name
     export RESOURCE_GROUP=<resource-group-name>
     export CLUSTER_NAME=<cluster-name>
-    
+
     # Get the AKS cluster credentials
     az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
     ```
@@ -79,7 +79,7 @@ For testing, you can use a self-signed public certificate instead of a Certifica
     # Set environment variables for your key vault name and certificate name
     export KEY_VAULT_NAME=<key-vault-name>
     export KEY_VAULT_CERT_NAME=<key-vault-certificate-name>
-    
+
     # Import the SSL certificate into Azure Key Vault
     az keyvault certificate import --vault-name $KEY_VAULT_NAME --name $KEY_VAULT_CERT_NAME --file aks-ingress-tls.pfx [--password <certificate password if specified>]
     ```
