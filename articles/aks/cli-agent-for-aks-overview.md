@@ -73,7 +73,7 @@ The agentic CLI for AKS supports two deployment modes to accommodate different o
 ### Choosing the right mode
 
 | Consideration | Client Mode | Cluster Mode |
-|---------------|-------------|------------- |
+|---------------|-------------|-------------|
 | **Deployment location** | Local machine | AKS cluster |
 | **Authentication** | Local Azure credentials | Service account + workload identity |
 | **Prerequisites** | Docker | Workload identity enabled |
