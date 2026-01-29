@@ -403,9 +403,9 @@ AKS uses the [containerd](https://github.com/containerd/containerd/blob/f0a32c66
 
 ### Significant syscalls blocked by default profile
 
-Both [Docker][seccomp] and [containerd](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51) maintain allowlists of safe syscalls. When changes are made to [Docker][seccomp] and [containerd](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51), AKS updates the default configuration to match. Updates to this list might cause workload failure. For release updates, see [AKS release notes](https://github.com/Azure/AKS/releases).
+Both [Docker][seccomp] and [containerd](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51) maintain allow lists of safe syscalls. When changes are made to [Docker][seccomp] and [containerd](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51), AKS updates the default configuration to match. Updates to this list might cause workload failure. For release updates, see [AKS release notes](https://github.com/Azure/AKS/releases).
 
-The following table lists significant syscalls that are effectively blocked because they aren't on the allowlist. This list isn't exhaustive. If your workload requires any of the blocked syscalls, don't use the `RuntimeDefault` seccomp profile.
+The following table lists significant syscalls that are effectively blocked because they aren't on the allow list. This list isn't exhaustive. If your workload requires any of the blocked syscalls, don't use the `RuntimeDefault` seccomp profile.
 
 | Blocked syscall | Description |
 | --------------- | ----------- |
