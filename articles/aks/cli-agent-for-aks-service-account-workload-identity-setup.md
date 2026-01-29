@@ -275,7 +275,7 @@ az identity federated-credential list \
 Now that you have completed the mandatory service account setup, you can proceed with the cluster mode installation:
 
 1. Return to the [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-install.md) article
-2. Continue with the [Cluster mode installation](./cli-agent-for-aks-install.md#cluster-mode-installation) section
+2. Continue with the [Installation section](./cli-agent-for-aks-install.md#installation), cluster mode tab
 3. When prompted during initialization, use the values you configured:
    - **Service account name**: `${SERVICE_ACCOUNT_NAME}` (aks-mcp)
    - **Namespace**: `${SERVICE_ACCOUNT_NAMESPACE}`
