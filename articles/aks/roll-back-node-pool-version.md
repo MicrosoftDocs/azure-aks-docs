@@ -105,6 +105,15 @@ The rollback process restores all nodes in a node pool to their previous version
     az aks nodepool rollback --name myNodePool --resource-group myResourceGroup --cluster-name myAKSCluster
     ```
 
+## Monitor node pool rollback status
+
+You can use the following methods to monitor the status of a node pool rollback operation and validate a successful rollback:
+
+- Look up [activity logs](./monitor-aks-reference.md) on your cluster.
+- Look up specific [upgrade-related events](./upgrade-options.md) on your cluster.
+- Subscribe to [AKS events with Azure Event Grid](./quickstart-event-grid.md).
+- If you subscribe to an automatic upgrade channel, you can use [AKS Communication Manager](./aks-communication-manager.md) for upgrade notifications.
+
 ## Post-rollback best practices
 
 After successfully rolling back your node pool, use the following best practices to ensure stability and security:
