@@ -6,6 +6,7 @@ ms.topic: how-to
 ms.custom: build-2024, devx-track-azurecli
 ms.date: 01/29/2026
 ms.author: schaffererin
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes developer, I want to implement Deployment Safeguards in my AKS cluster, so that I can enforce best practices and prevent configuration issues that may compromise the stability of my applications.
 ---
 
