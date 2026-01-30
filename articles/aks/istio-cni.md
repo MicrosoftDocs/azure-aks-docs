@@ -158,27 +158,30 @@ reviews-v2-5b9c77895c-b2b7m     istio-validation        {"drop":["ALL"]}
 reviews-v3-5b57874f5f-kk9rt     istio-validation        {"drop":["ALL"]}
 ```
 
-You can also describe a specific pod to verify the security context:
+You can also check the YAML for a specific pod to verify the security context:
 
 ```bash
-kubectl describe pod <pod-name> | grep -A 10 -B 5 "istio-validation"
+kubectl get pod <pod-name> -n <namespace> -o yaml | grep -A 20 -B 25 "name: istio-validation"
 ```
 
 The output should show that the `istio-validation` init container has no privileged capabilities:
 
 ```output
-Init Containers:
-  istio-validation:
-    Container ID:  containerd://...
-    Image:         mcr.microsoft.com/oss/istio/proxyv2:...
-    ...
-    Security Context:
+initContainers:
+  - args:
+    …
+    name: istio-validation
+    …
+    securityContext:
+      allowPrivilegeEscalation: false
       capabilities:
         drop:
         - ALL
-      runAsGroup:     1337
-      runAsNonRoot:   true
-      runAsUser:      1337
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 1337
+      runAsNonRoot: true
+      runAsUser: 1337
 ```
 
 ## Disable Istio CNI
@@ -223,12 +226,12 @@ After disabling Istio CNI:
     Expected output should show `istio-init` with network capabilities:
 
     ```output
-    details-v1-57bc58c559-722v8     istio-init        {"drop":["ALL"]}
-    productpage-v1-7bb64f657c-jw6gs istio-init        {"drop":["ALL"]}
-    ratings-v1-57d5594c75-4zd49     istio-init        {"drop":["ALL"]}
-    reviews-v1-7fd8f9cd59-mdcf9     istio-init        {"drop":["ALL"]}
-    reviews-v2-7b8bdc9cdf-k9qgb     istio-init        {"drop":["ALL"]}
-    reviews-v3-588854d9d7-s2f7j     istio-init        {"drop":["ALL"]}
+    details-v1-57bc58c559-722v8     istio-init        {"add":["NET_ADMIN","NET_RAW"],"drop":["ALL"]}
+    productpage-v1-7bb64f657c-jw6gs istio-init        {"add":["NET_ADMIN","NET_RAW"],"drop":["ALL"]}
+    ratings-v1-57d5594c75-4zd49     istio-init        {"add":["NET_ADMIN","NET_RAW"],"drop":["ALL"]}
+    reviews-v1-7fd8f9cd59-mdcf9     istio-init        {"add":["NET_ADMIN","NET_RAW"],"drop":["ALL"]}
+    reviews-v2-7b8bdc9cdf-k9qgb     istio-init        {"add":["NET_ADMIN","NET_RAW"],"drop":["ALL"]}
+    reviews-v3-588854d9d7-s2f7j     istio-init        {"add":["NET_ADMIN","NET_RAW"],"drop":["ALL"]}
     ```
 
 
