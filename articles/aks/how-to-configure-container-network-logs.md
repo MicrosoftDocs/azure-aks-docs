@@ -21,7 +21,7 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 >
 > - **CRD**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
 > - **CLI flag**: `--enable-retinanetworkflowlog` → `--enable-container-network-logs`
-> - **Log Analytics table**: `RetinaNetworkFlowLogs` → `ContainerNetworkLog`
+> - **Log Analytics table**: `RetinaNetworkFlowLogs` → `ContainerNetworkLogs`
 > 
 > Action items for existing users to enable new naming
 >
@@ -61,7 +61,7 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 >
 > [!NOTE]
 > - Previously collected data stays in your workspace in old table RetinaNetworkFlowLogs.
-> - After re-enabling, allow a short delay before new data appears in new table ContainerNetworkLog.
+> - After re-enabling, allow a short delay before new data appears in new table ContainerNetworkLogs.
 
 In this article, you complete the steps to configure and use the container network logs feature in Advanced Container Networking Services for Azure Kubernetes Service (AKS). These logs offer persistent network flow monitoring tailored to enhance visibility in containerized environments.
 
