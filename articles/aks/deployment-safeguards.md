@@ -99,8 +99,8 @@ The mutator applies the following logic for CPU resources:
 | Both CPU request and limit are missing | Set both to 500m (default) |
 | CPU request exists but is less than 100m | Set request to 100m (minimum) |
 | CPU limit exists but is less than 100m | Set limit to 100m (minimum) |
-| Only CPU request exists | Leave as-is (no limit added) |
-| Only CPU limit exists | Leave as-is (no request added) |
+| Only CPU request exists | Set request equal to limit |
+| Only CPU limit exists | Set request equal to limit |
 
 ### Memory mutation rules
 
