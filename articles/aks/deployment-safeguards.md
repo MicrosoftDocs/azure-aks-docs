@@ -4,7 +4,7 @@ description: Learn how to use Deployment Safeguards to enforce best practices on
 author: schaffererin
 ms.topic: how-to
 ms.custom: build-2024, devx-track-azurecli
-ms.date: 04/25/2024
+ms.date: 01/29/2026
 ms.author: schaffererin
 # Customer intent: As a Kubernetes developer, I want to implement Deployment Safeguards in my AKS cluster, so that I can enforce best practices and prevent configuration issues that may compromise the stability of my applications.
 ---
@@ -39,8 +39,8 @@ The following table lists the policies that become active and the Kubernetes res
 | Deployment safeguard policy | Mutation outcome if available |
 |--------------|--------------|
 | Cannot Edit Individual Nodes | N/A |
-| Kubernetes cluster containers CPU and memory resource limits shouldn't exceed the specified limits | Sets CPU resource limits to 500m if not set and sets memory limits to 500Mi if no path is present |
-| Must Have Anti Affinity Rules or topologySpreadConstraintsSet | N/A |
+| Kubernetes cluster containers CPU and memory resource limits shouldn't exceed the specified limits | Sets default CPU and memory requests and limits, and enforces minimums. For more information, see [Resource requests mutator](#resource-requests-mutator). |
+| Must Have Anti Affinity Rules or topologySpreadConstraintsSet | Adds pod anti-affinity rules and topology spread constraints to improve workload distribution. For more information, see [Anti-affinity and topology spread mutator](#anti-affinity-and-topology-spread-mutator). |
 | No AKS Specific Labels | N/A |
 | Kubernetes cluster containers should only use allowed images | N/A |
 | Reserved System Pool Taints | Removes the `CriticalAddonsOnly` taint from a user node pool if not set. AKS uses the `CriticalAddonsOnly` taint to keep customer pods away from the system pool. This configuration ensures a clear separation between AKS components and customer pods and prevents eviction of customer pods that don't tolerate the `CriticalAddonsOnly` taint. |
@@ -51,30 +51,186 @@ The following table lists the policies that become active and the Kubernetes res
 
 If you want to submit an idea or request for Deployment Safeguards, open an issue in the [AKS GitHub repository][aks-gh-repo] and add `[Deployment Safeguards request]` to the beginning of the title.
 
-## Pod Security Standards in Deployment Safeguards
+## Resource requests mutator
+
+When Deployment Safeguards is set to `Enforce` level, the resource requests mutator automatically sets CPU and memory requests and limits for containers that don't have them defined or have values below minimum thresholds.
+
+### Default values
+
+When no resources are specified, the mutator sets the following default values:
+
+| Resource | Request | Limit |
+|----------|---------|-------|
+| CPU | 500m | 500m |
+| Memory | 2048Mi (2Gi) | 2048Mi (2Gi) |
+
+### Minimum enforcement
+
+When resources are specified but below thresholds, the mutator enforces the following minimums:
+
+| Resource | Minimum value |
+|----------|---------------|
+| CPU | 100m |
+| Memory | 100Mi |
+
+### Understanding resource units
+
+**CPU units:**
+
+- `m` = millicores (1/1000th of a CPU core)
+- `1000m` = `1` = 1 full CPU core
+- `500m` = 0.5 CPU cores (half a core)
+- `100m` = 0.1 CPU cores (10% of a core)
+
+**Memory units:**
+
+- `Mi` = Mebibytes (binary: 1 Mi = 1,024 × 1,024 bytes)
+- `Gi` = Gibibytes (binary: 1 Gi = 1,024 Mi)
+- `2048Mi` = `2Gi` = 2 gibibytes
+- `100Mi` ≈ 105 MB (decimal)
+
+### CPU mutation rules
+
+The mutator applies the following logic for CPU resources:
+
+| Scenario | Action |
+|----------|--------|
+| Both CPU request and limit are missing | Set both to 500m (default) |
+| CPU request exists but is less than 100m | Set request to 100m (minimum) |
+| CPU limit exists but is less than 100m | Set limit to 100m (minimum) |
+| Only CPU request exists | Leave as-is (no limit added) |
+| Only CPU limit exists | Leave as-is (no request added) |
+
+### Memory mutation rules
+
+The mutator applies the following logic for memory resources:
+
+| Scenario | Action |
+|----------|--------|
+| Both memory request and limit are missing | Set both to 2048Mi (default) |
+| Memory request exists but is less than 100Mi | Set request to 100Mi (minimum) |
+| Memory limit exists but is less than 100Mi | Set limit to 100Mi (minimum) |
+| Only memory request exists | Leave as-is (no limit added) |
+| Only memory limit exists | Leave as-is (no request added) |
+
+### QoS class fix
+
+After CPU and memory mutations are applied, if the request value exceeds the limit for the same resource type, the mutator caps the request to match the limit. This fix maintains valid Kubernetes Quality of Service (QoS) class configurations.
+
+### Cases that are mutated
+
+The resource requests mutator applies changes in the following scenarios:
+
+- **Empty resources**: Containers with no CPU or memory requests or limits receive default values (500m CPU, 2048Mi memory).
+- **Below minimum thresholds**: CPU requests or limits below 100m are increased to 100m. Memory requests or limits below 100Mi are increased to 100Mi.
+- **Invalid QoS scenarios**: When requests exceed limits, requests are lowered to match limits.
+- **Partial resource specifications**: Containers with only requests or only limits (but not both) have minimums enforced where specified.
+- **Multiple containers**: All containers in a pod are processed and mutated appropriately.
+- **Enabled namespaces**: Only workloads in namespaces where the safeguard is enabled are mutated.
+
+### Cases that aren't mutated
+
+The resource requests mutator doesn't apply changes in the following scenarios:
+
+- **Excluded namespaces**: Workloads in namespaces where the safeguard is excluded remain unchanged.
+- **Already compliant resources**: Containers that already have requests and limits above minimum thresholds remain unchanged.
+- **Valid QoS configurations**: When requests are less than or equal to limits and both values are above minimums, no changes occur.
+
+## Anti-affinity and topology spread mutator
+
+When Deployment Safeguards is set to `Enforce` level, the anti-affinity and topology spread mutator automatically adds pod anti-affinity rules and topology spread constraints to improve workload distribution across nodes.
+
+### When the mutator runs
+
+The mutator runs only when all of the following conditions are met:
+
+- Both pod anti-affinity and topology spread constraints don't already exist on the workload.
+- The namespace isn't excluded from Deployment Safeguards.
+- Deployment Safeguards is in `Enforce` mode.
+- The workload doesn't have the `kubernetes.azure.com/managedby=aks` label.
+
+### What the mutator adds
+
+**Label identification**: The mutator identifies pods using the following label priority:
+
+1. `app` label (first priority)
+1. `app.kubernetes.io/name` label (second priority)
+1. Fallback: Creates a `default-antiaffinity-applabel=<workload-name>` label
+
+**Pod anti-affinity**: Adds a preferred pod anti-affinity rule with weight 100 that prefers to schedule pods with matching labels on different nodes. Uses topology key `kubernetes.io/hostname`.
+
+**Topology spread constraints**: Adds a constraint with the following settings:
+
+| Setting | Value |
+|---------|-------|
+| MaxSkew | 1 (allows maximum difference of 1 pod per node) |
+| WhenUnsatisfiable | ScheduleAnyway (best-effort, doesn't block scheduling) |
+| Topology key | `kubernetes.io/hostname` |
+
+### Cases that are mutated
+
+The anti-affinity and topology spread mutator applies changes in the following scenarios:
+
+- **Workloads with `app` label**: Uses the `app` label value for anti-affinity and topology spread selectors.
+- **Workloads with `app.kubernetes.io/name` label**: When no `app` label exists, uses this label for selectors.
+- **Workloads with no app labels**: Creates a default label using the workload name and adds anti-affinity and topology spread rules.
+- **Clean workloads**: Workloads with no existing affinity or topology spread constraints receive both configurations.
+- **Partial affinity**: Workloads with existing node affinity (but no pod anti-affinity) receive pod anti-affinity and topology spread rules.
+- **Enabled namespaces**: Mutations only occur in namespaces where the safeguard is enabled.
+
+### Cases that aren't mutated
+
+The anti-affinity and topology spread mutator doesn't apply changes in the following scenarios:
+
+- **Existing topology spread constraints**: Workloads that already have any topology spread constraints are skipped entirely.
+- **Existing pod anti-affinity**: Workloads with existing required or preferred pod anti-affinity rules are skipped entirely.
+- **Excluded namespaces**: Workloads in namespaces where the safeguard is excluded remain unchanged.
+- **Workloads without identifiable names or labels**: Edge cases where no app name can be determined are skipped gracefully.
+
+## Deployment Safeguards error messages
+
+This section describes the error messages you might encounter when Deployment Safeguards detects noncompliant configurations, along with recommended fixes.
+
+### General safeguard error messages
+
+The following table lists error messages for general Deployment Safeguards policies:
+
+| Policy | Error message | Fix |
+|--------|---------------|-----|
+| Enforce Probes | `Container <container_name> in your Pod <pod_name> has no livenessProbe. Required probes: readinessProbe, livenessProbe` | Add liveness and readiness probes to each container. |
+| No "Latest" Image | `Please specify an explicit version such as '1.0'. Using the latest tag for container %v in Kubernetes is a best practice to ensure reproducibility, prevent unintended updates, and facilitate easier debugging and rollbacks by using explicit and versioned container images.` | Use an explicit image tag other than `latest` or blank. For example, `nginx` isn't allowed, but `nginx:v1.0.0` is allowed. |
+| Enforce CSI Driver | `Storage class <class_name> use intree provisioner kubernetes.io/azure-file is not allowed` or `Storage class <class_name> use intree provisioner kubernetes.io/azure-disk is not allowed` | Use `disk.csi.azure.com` or `file.csi.azure.com` instead. For more information, see [CSI drivers on AKS][csi-drivers-aks]. |
+| Resource Requests | `container <container_name> has no resource requests` | Add CPU and memory requests to your container. |
+| AntiAffinity Rules | `Deployment with 2 replicas should have either podAntiAffinity or topologySpreadConstraints set to avoid disruptions due to nodes crashing` | Define `podAntiAffinity` or `topologySpreadConstraints` on the workload. |
+| Restricted Labels | `Label kubernetes.azure.com is reserved for AKS use only` | Remove the label from your workload. |
+| Restricted Node Edits | `Tainting or labelling individual nodes is not recommended. Please use AZ cli to taint/label nodepools instead` | Use the Azure CLI to taint or label node pools instead of individual nodes. |
+| Restricted Taints | `Taint with key CriticalAddonsOnly is reserved for the system pool only` | Don't taint the user node pool with `CriticalAddonsOnly`. |
+
+### Pod Security Standards error messages
+
 > [!NOTE]
 > Baseline Pod Security Standards are now turned on by default in AKS Automatic. The baseline Pod Security Standards in AKS Automatic can't be turned off.
 
 Deployment Safeguards also supports the ability to turn on [Baseline, Restricted and Privileged Pod Security Standards][pod-security-standards]. To ensure your workloads deploy successfully, make sure each manifest complies with the Baseline or Restricted Pod Security requirements. By default, Azure Kubernetes Service uses Privileged Pod Security Standards.
 
-Policy|Error Message|Fix
--|-|-
-AppArmor|`AppArmor annotation values must be undefined/nil, runtime/default, or localhost/*` or `AppArmor profile type must be one of: undefined/nil, RuntimeDefault, or Localhost`|Remove any specification of AppArmor. Kubernetes by default applies apparmor settings. "On supported hosts, the RuntimeDefault AppArmor profile is applied by default".
-Host Namespaces|`Host network namespaces are disallowed: spec.hostNetwork is set to true'` or `'Host PID namespaces are disallowed: spec.hostPID is set to true'` or `'Host IPC namespaces are disallowed: spec.hostIPC is set to true'`|Set those values to false, or remove specifying the fields.
-Privileged Containers|`'Privileged [ephemeral\|init\|N/A] containers are disallowed: spec.containers[*].securityContext.privileged is set to true'`|Set the appropriate securityContext.privileged field to false, or remove the field.
-Capabilities|Message will start with `'Disallowed capabilities detected`| Remove the capability shown from the container's manifest.
-HostPath volumes|`HostPath volumes are forbidden under restricted security policy unless containers mounting them are from allowed images`|Remove the HostPath volume and volume mount.
-Host Ports|HostPorts are forbidden under baseline security policy| Remove the host port specification from the offending container.
-SELinux|`SELinux type must be one of: undefined/empty, container_t, container_init_t, container_kvm_t, or container_engine_t`|Set the container's securityContext.seLinuxOptions.type field to one of the allowed values.
-/proc Mount Type|ProcMount must be undefined/nil or 'Default' in spec.containers[*].securityContext.procMount|Set "*   `spec.containers[*].securityContext.procMount`" to 'Default' or have it be undefined.
-Seccomp|`Seccomp profile must not be explicitly set to Unconfined. Allowed values are: undefined/nil, RuntimeDefault, or Localhost`| Set `securityContext.seccompProfile.type` on the pod or containers to one of the allowed values.
-Sysctls|`Disallowed sysctl detected. Only baseline Kubernetes pod security standard sysctls are permitted`|Remove the disallowed systctls( see the [oss spec](https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline) for specific list).
-Volume Types (PSS Restricted Only)|`Only the following volume types are allowed under restricted policy: configMap, csi, downwardAPI, emptyDir, ephemeral, persistentVolumeClaim, projected, secret`| Remove any volumes that aren't one of the allowed types.
-Privilege Escalation (PSS Restricted Only)|`Privilege escalation must be set to false under restricted policy`| `*   `spec.containers[*].securityContext.allowPrivilegeEscalation`` must explicitly be set to false for each container, initContainer, and ephemeralContainer.
-Running as Non-Root (PSS Restricted only)|`Containers must not run as root user in spec.containers[*].securityContext.runAsNonRoot`| spec.containers[*].securityContext.runAsNonRoot must explicitly be set to false for each container, initContainer, and ephemeralContainer.
-Run as Non-Root User (PSS Restricted Only)|`'Containers must not run as root user: spec.securityContext.runAsUser is set to 0'`| set securityContext.runAsUser to some non-zero value, or leave it undefined for the pod level, and each container, initContainer, and ephemeralContainer.
-Seccomp (PSS Restricted Only)|`Seccomp profile must be "RuntimeDefault" or "Localhost" under restricted policy`| Set `securityContext.seccompProfile.type` on the pod or containers to one of the allowed values. This differs from the baseline in the fact that the restricted policy doesn't allow an undefined value.
-Capabilities (PSS Restricted Only)|`All containers must drop ALL capabilities under restricted policy` or `Only NET_BIND_SERVICE may be added to capabilities under restricted policy`| All containers must drop "ALL" capabilities, and are only permitted to add "NET_BIND_SERVICE". 
+| Policy | Error message | Fix |
+|--------|---------------|-----|
+| AppArmor | `AppArmor annotation values must be undefined/nil, runtime/default, or localhost/*` or `AppArmor profile type must be one of: undefined/nil, RuntimeDefault, or Localhost` | Remove any specification of AppArmor. Kubernetes by default applies AppArmor settings. On supported hosts, the RuntimeDefault AppArmor profile is applied by default. |
+| Host Namespaces | `Host network namespaces are disallowed: spec.hostNetwork is set to true` or `Host PID namespaces are disallowed: spec.hostPID is set to true` or `Host IPC namespaces are disallowed: spec.hostIPC is set to true` | Set those values to `false`, or remove specifying the fields. |
+| Privileged Containers | `Privileged [ephemeral\|init\|N/A] containers are disallowed: spec.containers[*].securityContext.privileged is set to true` | Set the appropriate `securityContext.privileged` field to `false`, or remove the field. |
+| Capabilities | Message starts with `Disallowed capabilities detected` | Remove the capability shown from the container's manifest. |
+| HostPath Volumes | `HostPath volumes are forbidden under restricted security policy unless containers mounting them are from allowed images` | Remove the HostPath volume and volume mount. |
+| Host Ports | `HostPorts are forbidden under baseline security policy` | Remove the host port specification from the offending container. |
+| SELinux | `SELinux type must be one of: undefined/empty, container_t, container_init_t, container_kvm_t, or container_engine_t` | Set the container's `securityContext.seLinuxOptions.type` field to one of the allowed values. |
+| /proc Mount Type | `ProcMount must be undefined/nil or 'Default' in spec.containers[*].securityContext.procMount` | Set `spec.containers[*].securityContext.procMount` to `Default` or leave it undefined. |
+| Seccomp | `Seccomp profile must not be explicitly set to Unconfined. Allowed values are: undefined/nil, RuntimeDefault, or Localhost` | Set `securityContext.seccompProfile.type` on the pod or containers to one of the allowed values. |
+| Sysctls | `Disallowed sysctl detected. Only baseline Kubernetes pod security standard sysctls are permitted` | Remove the disallowed sysctls. For the specific list, see the [Kubernetes pod security standards specification][pod-security-standards]. |
+| Volume Types (PSS Restricted Only) | `Only the following volume types are allowed under restricted policy: configMap, csi, downwardAPI, emptyDir, ephemeral, persistentVolumeClaim, projected, secret` | Remove any volumes that aren't one of the allowed types. |
+| Privilege Escalation (PSS Restricted Only) | `Privilege escalation must be set to false under restricted policy` | Set `spec.containers[*].securityContext.allowPrivilegeEscalation` to `false` for each container, initContainer, and ephemeralContainer. |
+| Running as Non-Root (PSS Restricted Only) | `Containers must not run as root user in spec.containers[*].securityContext.runAsNonRoot` | Set `spec.containers[*].securityContext.runAsNonRoot` to `true` for each container, initContainer, and ephemeralContainer. |
+| Run as Non-Root User (PSS Restricted Only) | `Containers must not run as root user: spec.securityContext.runAsUser is set to 0` | Set `securityContext.runAsUser` to a nonzero value, or leave it undefined for the pod level and each container, initContainer, and ephemeralContainer. |
+| Seccomp (PSS Restricted Only) | `Seccomp profile must be "RuntimeDefault" or "Localhost" under restricted policy` | Set `securityContext.seccompProfile.type` on the pod or containers to one of the allowed values. This differs from the baseline because the restricted policy doesn't allow an undefined value. |
+| Capabilities (PSS Restricted Only) | `All containers must drop ALL capabilities under restricted policy` or `Only NET_BIND_SERVICE may be added to capabilities under restricted policy` | All containers must drop `ALL` capabilities and are only permitted to add `NET_BIND_SERVICE`. |
 
 ## Enable Deployment Safeguards
 
@@ -215,3 +371,4 @@ To learn more, see [workload validation in Gatekeeper](https://open-policy-agent
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [aks-component-versions]: ./supported-kubernetes-versions.md
 [aks-versioning-for-addons]: ./integrations.md#add-ons
+[csi-drivers-aks]: ./csi-storage-drivers.md
