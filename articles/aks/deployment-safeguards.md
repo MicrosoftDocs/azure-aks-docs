@@ -40,7 +40,8 @@ The following table lists the policies that become active and the Kubernetes res
 | Deployment safeguard policy | Mutation outcome if available |
 |--------------|--------------|
 | Cannot Edit Individual Nodes | N/A |
-| Kubernetes cluster containers CPU and memory resource limits shouldn't exceed the specified limits | Sets default CPU and memory requests and limits, and enforces minimums. For more information, see [Resource requests mutator](#resource-requests-mutator). |
+| Kubernetes cluster containers CPU and memory resource requests must be defined | Sets default CPU and memory requests and enforces minimums. For more information, see [Resource requests mutator](#resource-requests-mutator). |
+| Kubernetes cluster containers CPU and memory resource limits shouldn't exceed the specified limits | N/A |
 | Must Have Anti Affinity Rules or topologySpreadConstraintsSet | Adds pod anti-affinity rules and topology spread constraints to improve workload distribution. For more information, see [Anti-affinity and topology spread mutator](#anti-affinity-and-topology-spread-mutator). |
 | No AKS Specific Labels | N/A |
 | Kubernetes cluster containers should only use allowed images | N/A |
