@@ -366,6 +366,9 @@ A storage class is used to define how an Azure Blob storage container is created
 is automatically created in the node resource group for use with the storage class to hold the Azure
 Blob storage container. Choose one of the following Azure storage redundancy SKUs for skuName:
 
+> [!NOTE]
+> Modifying any resource under the node resource group in an AKS cluster is an unsupported action and will cause cluster operation failures. For more information, see [Why are two resource groups created with AKS?](./faq.yml)
+
 * **Standard_LRS**: Standard locally redundant storage
 * **Premium_LRS**: Premium locally redundant storage
 * **Standard_ZRS**: Standard zone redundant storage
@@ -416,7 +419,7 @@ A PVC uses the storage class object to dynamically provision an Azure Blob stora
          storage: 5Gi
    ```
 
-1. Create the PVC with the [kubectl create][kubectl-create] command:
+2. Create the PVC with the [kubectl create][kubectl-create] command:
 
    ```bash
    kubectl create -f blob-nfs-pvc.yaml
@@ -1787,6 +1790,9 @@ The reclaim policy on both storage classes ensures that the underlying Azure fil
 # [Dynamic volume](#tab/dynamic-volume-files)
 
 A storage class is used to define how an Azure file share is created. A storage account is automatically created in the [node resource group][node-resource-group] for use with the storage class to hold the Azure files share. Choose one of the following [Azure storage redundancy SKUs][storage-skus] for *skuName*:
+
+> [!NOTE]
+> Modifying any resource under the node resource group in an AKS cluster is an unsupported action and will cause cluster operation failures. For more information, see [Why are two resource groups created with AKS?](./faq.yml)
 
 * **Standard_LRS**: Standard locally redundant storage
 * **Standard_GRS**: Standard geo-redundant storage
