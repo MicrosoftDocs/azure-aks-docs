@@ -221,7 +221,7 @@ Learn about monitoring the Ingress NGINX controller metrics included with the ap
 [rbac-owner]: /azure/role-based-access-control/built-in-roles#owner
 [rbac-classic]: /azure/role-based-access-control/rbac-and-directory-admin-roles#classic-subscription-administrator-roles
 [app-routing-add-on-basic-configuration]: app-routing.md
-[csi-secrets-store-autorotation]: csi-secrets-store-configuration-options.md#manage-auto-rotation
+[csi-secrets-store-autorotation]: csi-secrets-store-configuration-options.md
 [azure-key-vault-overview]: /azure/key-vault/general/overview
 [az-aks-approuting-update]: /cli/azure/aks/approuting#az-aks-approuting-update
 [az-aks-approuting-zone]: /cli/azure/aks/approuting/zone
