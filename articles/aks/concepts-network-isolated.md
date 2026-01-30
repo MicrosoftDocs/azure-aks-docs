@@ -62,7 +62,7 @@ You also need to ensure the egress path for your AKS cluster are controlled and 
 *  `Unmanaged` channel is not supported.
 * Windows node pools are not yet supported.
 * kubenet networking is not supported.
-* [Domain Name Label(DNL)](https://learn.microsoft.com/azure/container-registry/container-registry-get-started-portal?tabs=azure-cli#configure-domain-name-label-dnl-option) enabled BYO Azure Container Registry(ACR)
+* BYO ACR [Domain Name Label(DNL)](https://learn.microsoft.com/azure/container-registry/container-registry-get-started-portal?tabs=azure-cli#configure-domain-name-label-dnl-option) is not supported
 
 > [!Caution]
 > If you are using [Node Public IP][node-public-ip] in network isolated AKS clusters, it will allow outbound traffic with outbound type `none`.
