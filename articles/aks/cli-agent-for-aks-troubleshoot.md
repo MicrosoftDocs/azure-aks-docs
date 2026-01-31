@@ -18,9 +18,6 @@ This article provides guidance on troubleshooting common issues with the agentic
 
 If you run into any issues when you use the agentic CLI for AKS, try the following troubleshooting steps:
 
-- Check that your large language model (LLM) provider is configured correctly. If you used `az aks agent-init` to set your LLM parameters, check your configuration file at `path/to/aksAgent.yaml`. If you use a custom configuration file, ensure that your parameters are set correctly.
-- Check if you're using the right model by using the `--model` parameter (if needed for Azure OpenAI).
-- Confirm cluster connectivity by using the `kubectl cluster-info` command.
 - If you see requests retrying to `/chat/completions` in the responses, you're throttled by the token-per-minute (TPM) limits from the LLM. Increase the TPM limit or [apply for more quota](/azure/ai-foundry/openai/how-to/quota).
 - If outputs vary, it might be because of LLM response variability or intermittent Model Context Protocol (MCP) server connections.
 - Ensure that the deployment name is the same as the model name in the Azure OpenAI deployments.
@@ -43,13 +40,13 @@ Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docke
    - Launch Docker Desktop from your applications
    - Wait for Docker to start (you'll see the Docker icon in your system tray/menu bar)
 
-2. **On Linux:**
+1. **On Linux:**
    ```bash
    sudo systemctl start docker
    sudo systemctl enable docker  # Enable Docker to start on boot
    ```
 
-3. Verify Docker is running:
+1. Verify Docker is running:
    ```bash
    docker info
    ```
@@ -123,7 +120,7 @@ Error: forbidden: User "system:serviceaccount:<namespace>:aks-mcp" cannot get re
    kubectl get role aks-mcp-role -n <YOUR_NAMESPACE>
    kubectl get rolebinding aks-mcp-rolebinding -n <YOUR_NAMESPACE>
    ```
-2. Check the RoleBinding associates the correct service account:
+1. Check the RoleBinding associates the correct service account:
    ```bash
    kubectl describe rolebinding aks-mcp-rolebinding -n <YOUR_NAMESPACE>
    ```
@@ -168,30 +165,7 @@ Error: service account does not have workload identity annotation
   az identity federated-credential list --identity-name <IDENTITY_NAME> --resource-group <RESOURCE_GROUP>
   ```
 
-### Helm and deployment issues
 
-#### Error: Helm deployment failed
-
-```output
-Error: INSTALLATION FAILED: failed to install CRD crds/aks-agent.yaml
-```
-
-**Solution:**
-1. Check Helm permissions:
-   ```bash
-   kubectl auth can-i create pods --namespace <YOUR_NAMESPACE>
-   ```
-2. Verify the namespace exists:
-   ```bash
-   kubectl get namespace <YOUR_NAMESPACE>
-   ```
-3. Clean up and retry:
-   ```azurecli-interactive
-   az aks agent-cleanup --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <YOUR_NAMESPACE>
-   az aks agent-init --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME>
-   ```
-
----
 
 ---
 
@@ -213,34 +187,6 @@ ERROR: The command 'aks agent' is invalid or not supported. Use 'az aks --help' 
    az extension list | grep aks-agent
    ```
 
-### Error: LLM configuration failed
-
-```output
-Error: Failed to set up LLM configuration. Please check your API key and endpoint.
-```
-
-**Solution:**
-1. Verify your LLM provider settings:
-   - **Azure OpenAI**: Check API base URL, API key, and deployment name
-   - **OpenAI**: Verify API key is valid
-2. Ensure the deployment name matches the model name (for Azure OpenAI)
-3. Check network connectivity to the LLM provider
-
-### Error: Namespace not found
-
-```output
-Error: namespace "<YOUR_NAMESPACE>" not found
-```
-
-**Solution:**
-1. Create the namespace:
-   ```bash
-   kubectl create namespace <YOUR_NAMESPACE>
-   ```
-2. Verify the namespace exists:
-   ```bash
-   kubectl get namespace <YOUR_NAMESPACE>
-   ```
 
 
 

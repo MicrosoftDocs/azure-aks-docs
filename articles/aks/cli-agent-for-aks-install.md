@@ -18,11 +18,10 @@ For more information, see the [agentic CLI for AKS overview](./cli-agent-for-aks
 
 ## Deployment modes
 
-The agentic CLI for AKS supports two deployment modes that you can choose during initialization:
+The agentic CLI for AKS supports two deployment modes that you can choose during initialization.
 
-> [!NOTE]
-> These two modes are only available from version "1.0.0b16" of the aks-agent extension
-> 
+These two modes are only available from version "1.0.0b16" of the aks-agent extension
+ 
 
 ### Client mode
 
@@ -39,8 +38,6 @@ The agentic CLI for AKS supports two deployment modes that you can choose during
 - **Requirements**: Requires existing namespace, service account with RBAC permissions, and workload identity setup for Azure resource access
 
 ## Prerequisites
-
-### General requirements
 
 Both deployment modes require the following:
 
@@ -139,7 +136,7 @@ Client mode runs the agent locally using Docker and your existing Azure credenti
 
    If Docker isn't installed, follow the [Docker installation guide](https://docs.docker.com/get-docker/) for your operating system.
 
-2. **Start the Docker daemon** if it's not running:
+1. **Start the Docker daemon** if it's not running:
 
    **On macOS/Windows:**
    - Launch Docker Desktop from your applications
@@ -151,7 +148,7 @@ Client mode runs the agent locally using Docker and your existing Azure credenti
    sudo systemctl enable docker  # Enable Docker to start on boot
    ```
 
-3. Verify Docker is running:
+1. Verify Docker is running:
 
    ```bash
    docker info
@@ -210,8 +207,8 @@ Cluster mode deploys the agent as a pod within your AKS cluster using workload i
 
 ### Prerequisites for cluster mode
 
-> [!IMPORTANT]
-> **Mandatory setup**: Before initializing cluster mode, you **must** create a service account with RBAC permissions. Workload identity setup is optional.
+
+ - **Mandatory setup**: Before initializing cluster mode, you **must** create a service account with RBAC permissions. Workload identity setup is optional.
 
 **Complete the required setup first:**
 - Follow the **mandatory** [Service account creation](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory) guide. This includes:
@@ -221,8 +218,8 @@ Cluster mode deploys the agent as a pod within your AKS cluster using workload i
 **Additional cluster requirements:**
 - **Namespace**: You must have a write access to deploy to the Kubernetes namespace where the agent will be deployed
 
-> [!IMPORTANT]
-> Before proceeding with cluster mode initialization, ensure you have completed the [Service account creation](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory). Workload identity setup is optional but recommended for enhanced security.
+
+-  Before proceeding with cluster mode initialization, ensure you have completed the [Service account creation](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory). Workload identity setup is optional but recommended for enhanced security.
 
 ### Initialize cluster mode
 
@@ -301,7 +298,11 @@ Cluster mode deploys the agent as a pod within your AKS cluster using workload i
 1. Verify the deployment was successful:
 
     ```azurecli-interactive
-    az aks agent --status --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --namespace <YOUR_NAMESPACE>
+   az aks agent \
+    --status \
+    --resource-group <RESOURCE_GROUP> \
+    --name <CLUSTER_NAME> \
+    --namespace <YOUR_NAMESPACE>
     ```
 
     You should see output similar to:
@@ -354,8 +355,8 @@ Additional parameters based on deployment mode:
 **For cluster mode:**
 - `--namespace`: The Kubernetes namespace where the agent is deployed (required for cluster mode)
 
-> [!NOTE]
-> The default mode is `cluster`. You only need to specify `--mode client` when using client mode.
+
+- The default mode is `cluster`. You only need to specify `--mode client` when using client mode.
 
 ### Basic queries
 

@@ -22,7 +22,7 @@ For the main installation guide, see [Install and use the agentic CLI for Azure 
 **For service account creation (mandatory):**
 - Use the Azure CLI version 2.76 or later. To verify your Azure CLI version, use the [`az version`](/cli/azure/reference-index#az-version) command.
 - Ensure that you're signed in to the proper subscription by using the [`az account set`](/cli/azure/account#az-account-set) command.
-- You need sufficient permissions to create and manage Kubernetes service accounts, roles, and role bindings
+- You need sufficient permissions to create and manage Kubernetes service accounts, roles, and role bindings.
 
 **For workload identity setup (optional):**
 - Your AKS cluster must have workload identity enabled. If not enabled, follow the steps in [Enable workload identity](#verify-and-enable-workload-identity).
@@ -64,14 +64,6 @@ export RANDOM_ID="$(openssl rand -hex 3)"
 ## Step 1: Create the Kubernetes service account (Mandatory)
 
 This step is **required** for cluster mode deployment.
-
-### Create or verify the namespace
-
-If you're using a custom namespace (not `kube-system`), create it first:
-
-```bash
-kubectl create namespace "${SERVICE_ACCOUNT_NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
-```
 
 ### Create the service account
 
@@ -129,7 +121,7 @@ kubectl get rolebinding aks-mcp-rolebinding -n "${SERVICE_ACCOUNT_NAMESPACE}"
 The following steps are **optional** but recommended if you want to enable the agentic CLI to access Azure resources securely using workload identity.
 
 ### Verify and enable workload identity
-
+The following sections describe how to check the workload identity status, enable a workload identity, or retrieve the OIDC issuer URL.
 #### Check current workload identity status
 
 Verify if workload identity is enabled on your cluster:
@@ -244,7 +236,7 @@ az identity federated-credential create \
 > It takes a few seconds for the federated identity credential to propagate after it's added. If a token request is made immediately after adding the federated identity credential, the request might fail until the cache is refreshed. To avoid this issue, you can add a slight delay after adding the federated identity credential.
 
 ## Verify the setup
-
+This section explains the commands to verify the service account annotation with the right workload identity
 ### Check the service account annotation
 
 Verify that the service account has the correct workload identity annotation:
@@ -275,8 +267,8 @@ az identity federated-credential list \
 Now that you have completed the mandatory service account setup, you can proceed with the cluster mode installation:
 
 1. Return to the [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-install.md) article
-2. Continue with the [Installation section](./cli-agent-for-aks-install.md#installation), cluster mode tab
-3. When prompted during initialization, use the values you configured:
+1. Continue with the [Installation section](./cli-agent-for-aks-install.md#installation), cluster mode tab
+1. When prompted during initialization, use the values you configured:
    - **Service account name**: `${SERVICE_ACCOUNT_NAME}` (aks-mcp)
    - **Namespace**: `${SERVICE_ACCOUNT_NAMESPACE}`
    - **Managed identity client ID**: Only provide if you completed the optional workload identity setup (`${USER_ASSIGNED_CLIENT_ID}`)
