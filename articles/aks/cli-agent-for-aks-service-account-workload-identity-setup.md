@@ -75,7 +75,7 @@ kubectl create serviceaccount "${SERVICE_ACCOUNT_NAME}" -n "${SERVICE_ACCOUNT_NA
 
 ### Create RBAC permissions
 
-Create the necessary Role and RoleBinding for the service account with read access for aks-mcp troubleshooting:
+Create the necessary Role and RoleBinding for the service account with read access for aks-mcp troubleshooting. Below is an example RoleBinding which grants general read-only access to all Kubernetes resources:
 
 ```bash
 cat <<EOF | kubectl apply -f -
