@@ -25,17 +25,17 @@ These two modes are only available from version "1.0.0b16" of the aks-agent exte
 
 ### Client mode
 
-- **Deployment**: Runs the agent locally using Docker
-- **Authentication**: Uses your local Azure credentials and cluster user credentials
-- **Use case**: Ideal for development, testing, and scenarios where you want to run the agent from your local machine
-- **Requirements**: Requires Docker to be installed locally
+- **Deployment**: Runs the agent locally using Docker.
+- **Authentication**: Uses your local Azure credentials and cluster user credentials.
+- **Use case**: Ideal for development, testing, and scenarios where you want to run the agent from your local machine.
+- **Requirements**: Requires Docker to be installed locally.
 
 ### Cluster mode
 
-- **Deployment**: Deploys the agent as a pod within your AKS cluster using Helm
-- **Authentication**: Uses service account and optional workload identity for secure access to cluster and Azure resources
-- **Use case**: Recommended for production scenarios, shared environments, and when you want the agent to run closer to your cluster resources
-- **Requirements**: Requires existing namespace, service account with RBAC permissions, and workload identity setup for Azure resource access
+- **Deployment**: Deploys the agent as a pod within your AKS cluster using Helm.
+- **Authentication**: Uses service account and optional workload identity for secure access to cluster and Azure resources.
+- **Use case**: Recommended for production scenarios, shared environments, and when you want the agent to run closer to your cluster resources.
+- **Requirements**: Requires existing namespace, service account with RBAC permissions, and workload identity setup for Azure resource access.
 
 ## Prerequisites
 
@@ -87,8 +87,7 @@ Both deployment modes require the following:
     ```
 
 ## Set up your LLM API key
-> [!NOTE]
->  Before proceeding with installation, you need to set up your LLM API key. We recommend that you use newer models such as GPT-5, or Claude Opus MINI for better performance. Choose a model with a high context size of at least 128,000 tokens or higher.
+ Before proceeding with installation, you need to set up your LLM API key. We recommend that you use newer models such as GPT-5, or Claude Opus MINI for better performance. Choose a model with a high context size of at least 128,000 tokens or higher.
 
 ### Azure OpenAI (recommended)
 
