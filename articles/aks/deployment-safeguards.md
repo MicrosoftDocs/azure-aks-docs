@@ -76,10 +76,10 @@ When resources are specified but they're below thresholds, the mutator enforces 
 
 ### Understanding resource units
 
-**CPU units:**
+**CPU units**:
 
-- `m` = millicores (1/1000th of a CPU core)
-- `1000m` = `1` = 1 full CPU core
+- `m` = millicores (`1m` = 1/1,000th of a CPU core)
+- `1000m` = 1 full CPU core
 - `500m` = 0.5 CPU cores (half a core)
 - `100m` = 0.1 CPU cores (10% of a core)
 
