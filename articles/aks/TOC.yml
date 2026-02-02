@@ -1232,6 +1232,8 @@
           href: cli-agent-for-aks-overview.md
         - name: Install and use the agentic CLI for AKS
           href: cli-agent-for-aks-install.md
+        - name: Create a service account and workload identity
+          href: cli-agent-for-aks-service-account-workload-identity-setup.md
         - name: Troubleshoot agentic CLI for AKS issues
           href: cli-agent-for-aks-troubleshoot.md
         - name: Agentic CLI for AKS FAQ
