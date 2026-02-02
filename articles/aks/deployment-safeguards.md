@@ -139,7 +139,7 @@ The resource requests mutator doesn't apply changes in the following scenarios:
 
 ## Anti-affinity and topology spread mutator
 
-When Deployment Safeguards is set to `Enforce` level, the anti-affinity and topology spread mutator automatically adds pod anti-affinity rules and topology spread constraints to improve workload distribution across nodes.
+When Deployment Safeguards is set to the `Enforce` level, the anti-affinity and topology spread mutator automatically adds pod anti-affinity rules and topology spread constraints to improve workload distribution across nodes.
 
 ### When the mutator runs
 
