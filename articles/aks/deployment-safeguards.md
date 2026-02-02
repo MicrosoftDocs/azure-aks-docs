@@ -108,9 +108,9 @@ The mutator applies the following logic for memory resources:
 
 | Scenario | Action |
 |----------|--------|
-| Both memory request and limit are missing | Set both to 2048Mi (default) |
-| Memory request exists but is less than 100Mi | Set request to 100Mi (minimum) |
-| Memory limit exists but is less than 100Mi | Set limit to 100Mi (minimum) |
+| Both memory request and limit are missing | Set both to `2048Mi` (default) |
+| Memory request exists but is less than `100Mi` | Set request to `100Mi` (minimum) |
+| Memory limit exists but is less than `100Mi` | Set limit to `100Mi` (minimum) |
 | Only memory request exists | Leave as-is (no limit added) |
 | Only memory limit exists | Leave as-is (no request added) |
 
