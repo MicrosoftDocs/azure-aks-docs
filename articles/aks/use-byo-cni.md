@@ -29,7 +29,7 @@ Microsoft still provides support for issues that aren't related to CNI.
 When using a bring your own CNI (BYO CNI) plugin with AKS, IP address planning responsibilities are split between AKS and the customer-managed CNI. Unlike AKS-managed CNI plugins, AKS does not allocate or manage pod IP addresses when a BYO CNI is used.
 
 > [!NOTE]
-> The [IP address planning for your Azure Kubernetes Service (AKS) clusters](concepts-metwork-ip-address-planning.md) article focuses on AKS-managed networking plugins. In BYO CNI scenarios, only guidance related to node subnet sizing, upgrade and scaling behavior, and Kubernetes service address ranges is applicable. Pod IP address allocation, routing, and scaling behavior is determined by the selected CNI plugin.
+> The [IP address planning for your Azure Kubernetes Service (AKS) clusters](concepts-network-ip-address-planning.md) article focuses on AKS-managed networking plugins. In BYO CNI scenarios, only guidance related to node subnet sizing, upgrade and scaling behavior, and Kubernetes service address ranges is applicable. Pod IP address allocation, routing, and scaling behavior is determined by the selected CNI plugin.
 
 ### Virtual network and subnet sizing
 
