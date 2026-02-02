@@ -114,7 +114,7 @@ The mutator applies the following logic for memory resources:
 | Only memory request exists | Leave as-is (no limit added) |
 | Only memory limit exists | Leave as-is (no request added) |
 
-### QoS class fix
+### Kubernetes Quality of Service (QoS) class fix
 
 After CPU and memory mutations are applied, if the request value exceeds the limit for the same resource type, the mutator caps the request to match the limit. This fix maintains valid Kubernetes Quality of Service (QoS) class configurations.
 
@@ -122,8 +122,8 @@ After CPU and memory mutations are applied, if the request value exceeds the lim
 
 The resource requests mutator applies changes in the following scenarios:
 
-- **Empty resources**: Containers with no CPU or memory requests or limits receive default values (500m CPU, 2048Mi memory).
-- **Below minimum thresholds**: CPU requests or limits below 100m are increased to 100m. Memory requests or limits below 100Mi are increased to 100Mi.
+- **Empty resources**: Containers with no CPU or memory requests or limits receive default values (`500m` CPU, `2048Mi` memory).
+- **Below minimum thresholds**: CPU requests or limits below `100m` are increased to `100m`. Memory requests or limits below `100Mi` are increased to `100Mi`.
 - **Invalid QoS scenarios**: When requests exceed limits, requests are lowered to match limits.
 - **Partial resource specifications**: Containers with only requests or only limits (but not both) have minimums enforced where specified.
 - **Multiple containers**: All containers in a pod are processed and mutated appropriately.
