@@ -239,6 +239,14 @@ All node configurations including taints, labels, and annotations are automatica
 
 You're charged for both node pools during the upgrade window, so make sure you plan for temporary cost doubling during the transition period.
 
+### What happens during a capacity failure?
+
+In the event of a capacity failure when provisioning the _green_ pool, the upgrade fails and the _blue_ pool remains unaffected. You can retry the upgrade once sufficient capacity is available or choose to roll back.
+
+### What happens during rollback?
+
+If the number of green nodes is less than or equal to the number of blue nodes when rollback is initiated, the green nodes are removed, and the blue nodes are uncordoned and revived to resume normal operation.
+
 ## Related content
 
 To learn more about node pool upgrades in AKS, see the following articles:
