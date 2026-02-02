@@ -83,11 +83,11 @@ When resources are specified but they're below thresholds, the mutator enforces 
 - `500m` = 0.5 CPU cores (half a core)
 - `100m` = 0.1 CPU cores (10% of a core)
 
-**Memory units:**
+**Memory units**:
 
 - `Mi` = Mebibytes (binary: 1 Mi = 1,024 × 1,024 bytes)
 - `Gi` = Gibibytes (binary: 1 Gi = 1,024 Mi)
-- `2048Mi` = `2Gi` = 2 gibibytes
+- `2048Mi` = `2Gi`
 - `100Mi` ≈ 105 MB (decimal)
 
 ### CPU mutation rules
