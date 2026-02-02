@@ -54,7 +54,7 @@ If you want to submit an idea or request for Deployment Safeguards, open an issu
 
 ## Resource requests mutator
 
-When Deployment Safeguards is set to `Enforce` level, the resource requests mutator automatically sets CPU and memory requests and limits for containers that don't have them defined or have values below minimum thresholds.
+When Deployment Safeguards is set to the `Enforce` level, the resource requests mutator automatically sets CPU and memory requests and limits for containers that don't have them defined or have values below minimum thresholds.
 
 ### Default values
 
