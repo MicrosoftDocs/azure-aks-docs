@@ -154,9 +154,9 @@ The mutator runs only when all of the following conditions are met:
 
 **Label identification**: The mutator identifies pods using the following label priority:
 
-1. `app` label (first priority)
-1. `app.kubernetes.io/name` label (second priority)
-1. Fallback: Creates a `default-antiaffinity-applabel=<workload-name>` label
+- `app` label (first priority)
+- `app.kubernetes.io/name` label (second priority)
+- Creates a `default-antiaffinity-applabel=<workload-name>` label (fallback)
 
 **Pod anti-affinity**: Adds a preferred pod anti-affinity rule with weight 100 that prefers to schedule pods with matching labels on different nodes. Uses topology key `kubernetes.io/hostname`.
 
