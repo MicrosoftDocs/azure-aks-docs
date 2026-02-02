@@ -67,7 +67,7 @@ When no resources are specified, the mutator sets the following default values:
 
 ### Minimum enforcement
 
-When resources are specified but below thresholds, the mutator enforces the following minimums:
+When resources are specified but they're below thresholds, the mutator enforces the following minimum values:
 
 | Resource | Minimum value |
 |----------|---------------|
