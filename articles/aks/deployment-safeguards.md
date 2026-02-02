@@ -88,7 +88,7 @@ When resources are specified but they're below thresholds, the mutator enforces 
 - `Mi` = Mebibytes (binary: 1 Mi = 1,024 × 1,024 bytes)
 - `Gi` = Gibibytes (binary: 1 Gi = 1,024 Mi)
 - `2048Mi` = `2Gi`
-- `100Mi` ≈ 105 MB (decimal)
+- `100Mi` ≈ 105 MB
 
 ### CPU mutation rules
 
