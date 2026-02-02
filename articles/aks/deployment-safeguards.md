@@ -96,9 +96,9 @@ The mutator applies the following logic for CPU resources:
 
 | Scenario | Action |
 |----------|--------|
-| Both CPU request and limit are missing | Set both to 500m (default) |
-| CPU request exists but is less than 100m | Set request to 100m (minimum) |
-| CPU limit exists but is less than 100m | Set limit to 100m (minimum) |
+| Both CPU request and limit are missing | Set both to `500m` (default) |
+| CPU request exists but is less than `100m` | Set request to `100m` (minimum) |
+| CPU limit exists but is less than `100m` | Set limit to `100m` (minimum) |
 | Only CPU request exists | Set request equal to limit |
 | Only CPU limit exists | Set request equal to limit |
 
