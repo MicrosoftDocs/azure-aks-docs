@@ -204,7 +204,7 @@ The following table lists error messages for general Deployment Safeguards polic
 | Resource Requests | `container <container_name> has no resource requests` | Add CPU and memory requests to your container. |
 | AntiAffinity Rules | `Deployment with 2 replicas should have either podAntiAffinity or topologySpreadConstraints set to avoid disruptions due to nodes crashing` | Define `podAntiAffinity` or `topologySpreadConstraints` on the workload. |
 | Restricted Labels | `Label kubernetes.azure.com is reserved for AKS use only` | Remove the label from your workload. |
-| Restricted Node Edits | `Tainting or labelling individual nodes is not recommended. Please use Azure CLI to taint/label nodepools instead` | Use the Azure CLI to taint or label node pools instead of individual nodes. |
+| Restricted Node Edits | `Tainting or labeling individual nodes is not recommended. Please use Azure CLI to taint/label node pools instead` | Use the Azure CLI to taint or label node pools instead of individual nodes. |
 | Restricted Taints | `Taint with key CriticalAddonsOnly is reserved for the system pool only` | Don't taint the user node pool with `CriticalAddonsOnly`. |
 
 ### Pod Security Standards error messages
