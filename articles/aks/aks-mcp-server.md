@@ -199,18 +199,55 @@ Supports both Azure Fleet management and Kubernetes ClusterResourcePlacement CRD
 <details>
 <summary>Diagnostic Detectors</summary>
 
-**Tool:** `list_detectors`
+**Tool:** `aks_detector`
 
-- List all available AKS cluster detectors
+Unified tool for executing AKS diagnostic detector operations.
 
-**Tool:** `run_detector`
+**Available Operations:**
 
-- Run a specific AKS diagnostic detector
+- `list`: List all available AKS cluster detectors
+- `run`: Run a specific AKS diagnostic detector
+- `run_by_category`: Run all detectors in a specific category
+
+**Parameters:**
+
+- `operation` (required): Operation to perform (`list`, `run`, or `run_by_category`)
+- `aks_resource_id` (required): AKS cluster resource ID
+- `detector_name` (required for `run` operation): Name of the detector to run
+- `category` (required for `run_by_category` operation): Detector category
+- `start_time` (required for `run` and `run_by_category` operations): Start time in UTC ISO format (within last 30 days)
+- `end_time` (required for `run` and `run_by_category` operations): End time in UTC ISO format (within last 30 days, max 24h from start)
+
+**Available Categories:**
+
+- Best Practices
+- Cluster and Control Plane Availability and Performance
+- Connectivity Issues
+- Create, Upgrade, Delete and Scale
+- Deprecations
+- Identity and Security
+- Node Health
+- Storage
+
+**Example Usage:**
 
 **Tool:** `run_detectors_by_category`
+```json
+{
+  "operation": "list",
+  "aks_resource_id": "/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.ContainerService/managedClusters/xxx"
+}
+```
 
-- Run all detectors in a specific category
-- **Categories**: Best Practices, Cluster and Control Plane Availability and Performance, Connectivity Issues, Create/Upgrade/Delete and Scale, Deprecations, Identity and Security, Node Health, Storage
+```json
+{
+  "operation": "run",
+  "aks_resource_id": "/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.ContainerService/managedClusters/xxx",
+  "detector_name": "node-health-detector",
+  "start_time": "2025-01-15T10:00:00Z",
+  "end_time": "2025-01-15T12:00:00Z"
+}
+```
 
 </details>
 
