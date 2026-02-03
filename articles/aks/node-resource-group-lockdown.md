@@ -43,7 +43,7 @@ az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME --nrg-l
 
 ## Remove node resource group lockdown from a cluster
 
-Remove node resource group lockdown from an existing cluster using the [`az aks update`][az-aks-update] command with the `--nrg-restriction-level` flag set to `Unrestricted`. This configuration allows you to view and modify the resources.
+Remove node resource group lockdown from an existing cluster using the [`az aks update`][az-aks-update] command with the `--nrg-lockdown-restriction-level` flag set to `Unrestricted`. This configuration allows you to view and modify the resources.
 
 ```azurecli-interactive
 az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME --nrg-lockdown-restriction-level Unrestricted
