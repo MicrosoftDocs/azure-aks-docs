@@ -756,7 +756,7 @@ Likely causes:
 - Misconfigured kubeconfig context (local mode)
 
 Resolution:
-- Local mode: Check that you have sufficent permissions to access the cluster. Verify that you are in the right cluster and subscription context.
+- Local mode: Check that you have sufficient permissions to access the cluster. Verify that you are in the right cluster and subscription context.
 - Remote mode: Verify the ClusterRole bindings for the ServiceAccount used by the MCP server
 
 ### Azure API calls fail
