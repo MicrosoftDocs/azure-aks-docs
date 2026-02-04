@@ -20,7 +20,7 @@ In this article, you learn how to access and manage your Azure Kubernetes Servic
 
 ## View Kubernetes resources
 
-1. Select **Kubernetes resources**. The Kubernetes resources list displays the following categories:
+Select **Kubernetes resources**. The Kubernetes resources list displays the following categories:
 
    - **Namespaces** shows information about the namespaces of your cluster.
    - **Workloads** shows information about deployments, pods, replica sets, stateful sets, daemon sets, jobs, and cron jobs deployed to your cluster.
