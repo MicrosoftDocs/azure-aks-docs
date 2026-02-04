@@ -7,10 +7,13 @@ author: davidsmatlak
 ms.topic: how-to
 ms.date: 06/10/2025
 ms.author: davidsmatlak
+ms.service: azure-kubernetes-service
 # Customer intent: As a cloud engineer, I want to deploy and configure NGINX ingress on Azure Kubernetes Service using the application routing add-on, so that I can efficiently manage HTTP/HTTPS traffic to my applications while ensuring secure access and integration with Azure DNS.
 ---
 
 # Managed NGINX ingress with the application routing add-on
+
+[!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
 
 One way to route Hypertext Transfer Protocol (HTTP) and secure (HTTPS) traffic to applications running on an Azure Kubernetes Service (AKS) cluster is to use the [Kubernetes Ingress object][kubernetes-ingress-object-overview]. When you create an Ingress object that uses the application routing add-on NGINX Ingress classes, the add-on creates, configures, and manages one or more Ingress controllers in your AKS cluster.
 
