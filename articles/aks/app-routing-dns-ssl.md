@@ -13,6 +13,8 @@ ms.date: 01/29/2026
 
 # Set up a custom domain name and SSL certificate with the application routing add-on for Azure Kubernetes Service (AKS)
 
+[!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
+
 This article shows you how to configure custom domain names and SSL/TLS certificates for AKS ingress using [Azure Key Vault][azure-key-vault-overview] and [Azure DNS][azure-dns-overview] with the [application routing add-on for AKS](./app-routing.md).
 
 ## Prerequisites
