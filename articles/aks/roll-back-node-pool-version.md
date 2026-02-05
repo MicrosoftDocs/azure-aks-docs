@@ -145,7 +145,7 @@ No, you can't roll back to a Kubernetes version that's no longer supported by AK
 
 ### Do I need to disable autoupgrade before performing a node pool rollback?
 
-Yes, if your cluster has autoupgrade enabled, you must disable it before performing a rollback. Otherwise, the autoupgrade process might automatically upgrade your node pool again after the rollback completes, negating your rollback operation.
+Yes, if your cluster has autoupgrade enabled, you must disable it before performing a rollback. Additionally, if the cluster is included in an [update group in an Azure Kubernetes Fleet Manager autoupgrade profile](/azure/kubernetes-fleet/concepts-update-orchestration), you must remove the cluster from the update group before performing the rollback. Otherwise, the autoupgrade process might automatically upgrade your node pool again after the rollback completes.
 
 ## Related content
 
