@@ -19,7 +19,7 @@ ms.custom: devx-track-azurecli, references_regions
 - Building applications that are portable across multiple cloud services and hosts (for example, Kubernetes vs. a virtual machine)
 
 > [!NOTE]
-> If you plan to install Dapr in a Kubernetes production environment, see the [Dapr guidelines for production usage][kubernetes-production] documentation.
+> If you plan to install Dapr in a Kubernetes production environment, see the [Dapr production guidelines][kubernetes-production].
 
 ## How it works
 
@@ -195,8 +195,8 @@ The same command-line argument is used for installing a specific version of Dapr
 
 ```azurecli
 az k8s-extension create --cluster-type managedClusters \
---cluster-name <myAKSCluster> \
---resource-group <myResourceGroup> \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
 --name dapr \
 --extension-type Microsoft.Dapr \
 --auto-upgrade-minor-version false \

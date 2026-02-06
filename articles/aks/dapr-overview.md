@@ -22,11 +22,11 @@ Dapr is incrementally adoptable. You can use any of the API building blocks as n
 
 ## Capabilities and features
 
-Using the [Dapr extension to provision Dapr on your AKS or Arc-enabled Kubernetes cluster][dapr-create-extension] eliminates the overhead of:
+Using the [Dapr extension][dapr-create-extension] to provision Dapr on your AKS or Arc-enabled Kubernetes cluster eliminates the overhead of:
 - Downloading Dapr tooling
 - Manually installing and managing the Dapr runtime on your AKS cluster
 
-You can [install, deploy, and configure the Dapr extension on your cluster](./dapr.md) using either the Azure CLI or a Bicep template.
+You can install, deploy, and configure the Dapr extension on your cluster by using either the Azure CLI or a Bicep template.
 
 Additionally, the extension offers support for all [native Dapr configuration capabilities][dapr-configuration-options] through simple command-line arguments.
 
@@ -37,9 +37,9 @@ Dapr provides the following set of capabilities to help with your microservice d
 - Reliable, secure, and resilient service-to-service calls through HTTP and gRPC APIs
 - Publish-and-subscribe messaging made easy with support for CloudEvent filtering and *at-least-once* semantics for message delivery
 - Pluggable observability and monitoring through Open Telemetry API collector
-- Independent of language, while also offering language specific software development kits (SDKs)
+- Language independence, while also offering language-specific software development kits (SDKs)
 - Integration with Visual Studio Code through the Dapr extension
-- [Building block APIs for solving distributed application challenges][dapr-blocks]
+- [Building block APIs][dapr-blocks] for solving distributed application challenges
 
 ## Issue handling
 
@@ -56,7 +56,7 @@ The following table breaks down support priority levels for each of these catego
 
 ### Clouds/regions
 
-Global Azure cloud is supported with AKS and Arc support on the following regions:
+Global Azure cloud is supported with AKS and Arc support in the following regions:
 
 | Region | AKS support | Arc for Kubernetes support |
 | ------ | ----------- | -------------------------- |
@@ -132,7 +132,7 @@ The following table lists the capabilities of each offering:
 | **Secret rotation** | New API calls obtain the updated secrets | Polls for secrets and updates the mount at a configurable interval |
 | **Logging and metrics** | The Dapr sidecar generates logs, which can be configured with collectors such as Azure Monitor, emits metrics via Prometheus, and exposes an HTTP endpoint for health checks | Emits driver and Azure Key Vault provider metrics via Prometheus |
 
-For more information on the secret management in Dapr, see the [secrets management overview][dapr-secrets].
+To learn more about secrets management in Dapr, see the [secrets management overview][dapr-secrets].
 
 For more information on the Secrets Store CSI driver and Azure Key Vault provider, see the [Secrets Store CSI driver overview][csi-secrets-store].
 
