@@ -24,23 +24,22 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure portal to cre
 * Read the [conceptual overview of Fleet Manager](./concepts-fleet.md), which provides an explanation of fleets and member clusters referenced in this document.
 * An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * An identity (user or service principal) with the following permissions:
-
-* **Fleet Manager permissions:**
-  * Microsoft.ContainerService/fleets/read
-  * Microsoft.ContainerService/fleets/write
-  * Microsoft.ContainerService/fleets/members/read
-  * Microsoft.ContainerService/fleets/members/write
-  * Microsoft.ContainerService/fleetMemberships/read
-  * Microsoft.ContainerService/fleetMemberships/write
-* **If joining AKS member clusters:**
-  * Microsoft.ContainerService/managedClusters/read
-  * Microsoft.ContainerService/managedClusters/write
-  * Microsoft.ContainerService/managedClusters/listClusterUserCredential/action
-* **If joining Arc-enabled Kubernetes member clusters:**
-  * Microsoft.Kubernetes/connectedClusters/read,
-  * Microsoft.KubernetesConfiguration/extensions/read,
-  * Microsoft.KubernetesConfiguration/extensions/write,
-  * Microsoft.KubernetesConfiguration/extensions/delete,
+    * **Fleet Manager permissions:**
+      * Microsoft.ContainerService/fleets/read
+      * Microsoft.ContainerService/fleets/write
+      * Microsoft.ContainerService/fleets/members/read
+      * Microsoft.ContainerService/fleets/members/write
+      * Microsoft.ContainerService/fleetMemberships/read
+      * Microsoft.ContainerService/fleetMemberships/write
+    * **AKS member clusters:**
+      * Microsoft.ContainerService/managedClusters/read
+      * Microsoft.ContainerService/managedClusters/write
+      * Microsoft.ContainerService/managedClusters/listClusterUserCredential/action
+    * **Arc-enabled Kubernetes member clusters:**
+      * Microsoft.Kubernetes/connectedClusters/read
+      * Microsoft.KubernetesConfiguration/extensions/read
+      * Microsoft.KubernetesConfiguration/extensions/write
+      * Microsoft.KubernetesConfiguration/extensions/delete
 
 * Clusters you wish to join as members to Fleet must use supported versions of their respective platforms: see [AKS cluster version support policy](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy) and [Azure Arc-enabled Kubernetes validation](/azure/azure-arc/kubernetes/validation-program).
 
@@ -55,13 +54,13 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure portal to cre
       * **Subscription**: Select the Azure subscription that you want to use.
       * **Resource group**: Select an existing resource group or select **Create new** to create a new resource group.
     * Under **Fleet details**:
-      * **Name**: Enter a unique name for the Fleet Manager.
+      * **Name**: Enter a name for the Fleet Manager.
       * **Region**: Select the region where you want to create the Fleet Manager.
       * **Hub cluster mode**: Select one of the following options based on features you require:
         * **With hub cluster** multi-cluster Kubernetes resource placement, Managed Fleet Namspaces, DNS load balancing and cluster upgrades. 
         * **Without hub cluster** safe multi-cluster Kubernetes and node image cluster upgrades, cluster observability.
 
-        :::image type="content" source="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png" alt-text="Screenshot of the Create Fleet Manager basics tab in the Azure portal." lightbox="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png":::
+      :::image type="content" source="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png" alt-text="Screenshot of the Create Fleet Manager basics tab in the Azure portal." lightbox="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png":::
 
 1. Select **Next: Member clusters**.
 1. Select **+ Add** to add existing clusters, filtering the cluster list by using the search box.
