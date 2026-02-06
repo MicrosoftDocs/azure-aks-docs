@@ -24,7 +24,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure portal to cre
 * Read the [conceptual overview of Fleet Manager](./concepts-fleet.md), which provides an explanation of fleets and member clusters referenced in this document.
 * An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * An identity (user or service principal) with the following permissions:
-    * **Fleet Manager permissions:**
+    * **Fleet Manager:**
       * Microsoft.ContainerService/fleets/read
       * Microsoft.ContainerService/fleets/write
       * Microsoft.ContainerService/fleets/members/read
