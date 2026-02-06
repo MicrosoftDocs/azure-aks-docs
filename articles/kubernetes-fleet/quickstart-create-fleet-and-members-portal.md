@@ -57,7 +57,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure portal to cre
       * **Name**: Enter a name for the Fleet Manager.
       * **Region**: Select the region where you want to create the Fleet Manager.
       * **Hub cluster mode**: Select one of the following options based on features you require:
-        * **With hub cluster** multi-cluster Kubernetes resource placement, Managed Fleet Namspaces, DNS load balancing and cluster upgrades. 
+        * **With hub cluster** multi-cluster Kubernetes resource placement, Managed Fleet Namespaces, DNS load balancing, and cluster upgrades. 
         * **Without hub cluster** safe multi-cluster Kubernetes and node image cluster upgrades, cluster observability.
 
       :::image type="content" source="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png" alt-text="Screenshot of the Create Fleet Manager basics tab in the Azure portal." lightbox="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png":::
@@ -78,8 +78,8 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure portal to cre
 1. On the **Advanced** tab, configure the following options:
     * Select **Private hub access** to provision a private hub cluster with [API server VNet integration](../aks/api-server-vnet-integration.md):
         * **Virtual network**: Select an existing Azure virtual network or select **Create new** to create a new virtual network.
-        * **Cluster subnet**: Select a subnet on the Azure virtual network on which the hub cluster will reside.
-        * **API server subnet**: Select a subnet on which the hub cluster's API server will be integrated. 
+        * **Cluster subnet**: Select a virtual network subnet for the hub cluster node.
+        * **API server subnet**: Select a virtual network subnet for the hub cluster's API server integration. 
     * Select an existing [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/overview#managed-identity-types) or select **Create new** to create a new user-assigned managed identity to be used by Fleet Manager.
     * Optionally, create one or more [Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md) to provision with the Fleet Manager.
 
