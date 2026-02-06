@@ -141,7 +141,7 @@ This article describes how to manually increase or decrease the number of nodes 
 Unlike `System` node pools that always require running nodes, `User` node pools allow you to scale to 0. To learn more on the differences between system and user node pools, see [System and user node pools](use-system-pools.md).
 
 > [!IMPORTANT]
-> You can't scale a user node pool with the cluster autoscaler enabled to 0 nodes. To scale a user node pool to 0 nodes, you must disable the cluster autoscaler first. For more information, see [Disable the cluster autoscaler on a node pool](./cluster-autoscaler.md#disable-the-cluster-autoscaler-on-a-node-pool).
+> If you want to force a user node pool to scale to 0 nodes, you must disable the cluster autoscaler first. For more information, see [Disable the cluster autoscaler on a node pool](./cluster-autoscaler.md#disable-the-cluster-autoscaler-on-a-node-pool).
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -151,7 +151,7 @@ Unlike `System` node pools that always require running nodes, `User` node pools 
     az aks nodepool scale --name <your node pool name> --cluster-name myAKSCluster --resource-group myResourceGroup  --node-count 0 
     ```
 
-* You can also autoscale `User` node pools to zero nodes, by setting the `--min-count` parameter of the [Cluster Autoscaler](cluster-autoscaler.md) to `0`.
+* You can allow (but not force) autoscaled `User` node pools to be autoscaled to zero nodes, by setting the `--min-count` parameter of the [Cluster Autoscaler](cluster-autoscaler.md) to `0`.
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
@@ -161,7 +161,7 @@ Unlike `System` node pools that always require running nodes, `User` node pools 
     Update-AzAksNodePool -Name <your node pool name> -ClusterName myAKSCluster -ResourceGroupName myResourceGroup -NodeCount 0
     ```
 
-* You can also autoscale `User` node pools to zero nodes, by setting the `-NodeMinCount` parameter of the [Cluster Autoscaler](cluster-autoscaler.md) to `0`.
+* You can allow (but not force) autoscaled `User` node pools to be autoscaled to zero nodes, by setting the `-NodeMinCount` parameter of the [Cluster Autoscaler](cluster-autoscaler.md) to `0`.
 
 ---
 
