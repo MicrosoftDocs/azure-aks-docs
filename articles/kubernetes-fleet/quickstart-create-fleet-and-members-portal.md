@@ -1,7 +1,7 @@
 ---
 title: "Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using the Azure portal"
 description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager and join member clusters using the Azure portal.
-ms.date: 02/06/2026
+ms.date: 02/07/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -58,7 +58,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure portal to cre
       * **Region**: Select the region where you want to create the Fleet Manager.
       * **Hub cluster mode**: Select one of the following options based on features you require:
         * **With hub cluster** multi-cluster Kubernetes resource placement, Managed Fleet Namespaces, DNS load balancing, and cluster upgrades. 
-        * **Without hub cluster** safe multi-cluster Kubernetes and node image cluster upgrades, cluster observability.
+        * **Without hub cluster** safe multi-cluster Kubernetes and node image upgrades, cluster observability.
 
       :::image type="content" source="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png" alt-text="Screenshot of the Create Fleet Manager basics tab in the Azure portal." lightbox="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-basics.png":::
 
@@ -69,8 +69,8 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure portal to cre
 
 1. Select **Add** to add the selected clusters and close the list.
 1. In the member list:
-    * A **Name** is generated for the member cluster to uniquely identify it within Fleet Manager. Modify the generated name if as required.
-    * Enter an **update group** for the member cluster so the cluster can be included in safe cluster updates when the group is included in an [update strategy](./update-create-update-strategy.md).
+    * A **Name** is generated for the member cluster to uniquely identify it within Fleet Manager. Modify the generated name if required.
+    * Enter an **update group** for the member cluster so the cluster can be safely updated when the group is included in an Fleet Manager [update strategy](./update-create-update-strategy.md).
 
      :::image type="content" source="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-add-members-add-update-group-name.png" alt-text="Screenshot of the Create Fleet Manager add member cluster name and update group options in the Azure portal." lightbox="./media/quickstart-create-fleet-and-members-portal/create-fleet-and-members-portal-add-members-add-update-group-name.png":::
 
@@ -88,7 +88,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure portal to cre
 1. Select **Next: Tags** and define any Azure resource tags to apply to the new Fleet Manager.
 1. Select **Review + create** > **Create** to create the Fleet Manager.
 
-It takes a few minutes to create the Fleet resource. When your deployment is complete, you can navigate to your resource by selecting **Go to resource**.
+It takes a few minutes to create the Fleet Manager. When your deployment is complete, you can navigate to your resource by selecting **Go to resource**.
 
 ## Next steps
 
