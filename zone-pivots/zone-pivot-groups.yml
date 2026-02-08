@@ -118,6 +118,8 @@ groups:
     title: GitHub
   - id: google-identity
     title: Google Identity
+  - id: keycloak-self-hosted
+    title: Keycloak (self-hosted)
 - id: aks-ssh-access-type
   title: Choose an SSH access method
   prompt: Choose an SSH access method
