@@ -524,6 +524,12 @@
             href: concepts-network-ingress.md
           - name: Ingress with the Kubernetes Gateway API
             href: managed-gateway-api.md
+          - name: Use Application Gateway for Containers
+            items:
+              - name: Application Gateway for Containers Overview
+                href: /azure/application-gateway/for-containers/overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+              - name: Deploy Application Gateway for Containers Add-on
+                href: /azure/application-gateway/for-containers/quickstart-deploy-application-gateway-for-containers-alb-controller-addon?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: Use application routing add-on
             items:
               - name: Application routing add-on overview
