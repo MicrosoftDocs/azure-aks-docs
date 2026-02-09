@@ -109,8 +109,8 @@ Configure your external identity provider to support OIDC authentication. Select
 
 1. Go to the Keycloak Admin Console.
 2. Create or select a realm.
-3. Create a new client with `OpenID Connect` as client type and enabled `Standard Flow` in authentication flow section.
-4. Configure `Client ID and Secret` as Client Authentication.
+3. Create a new client. In the **Client type** field, select `OpenID Connect`. In the **Authentication flow** section, enable **Standard flow**.
+4. In the **Client authentication** section, select **Client ID and Secret**.
 5. Note your client ID and client secret for later use.
 
 ::: zone-end
