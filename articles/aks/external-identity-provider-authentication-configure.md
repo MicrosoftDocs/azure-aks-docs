@@ -608,7 +608,7 @@ metadata:
   name: external-user-binding
 subjects:
 - kind: User
-  # This matches the username expression in claim mappings for Google
+  # This matches the username expression in the Keycloak claim mappings
   name: aks:jwt:keycloak:your-subject-claim
   apiGroup: rbac.authorization.k8s.io
 roleRef:
