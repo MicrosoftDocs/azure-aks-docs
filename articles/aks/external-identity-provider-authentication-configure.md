@@ -510,7 +510,7 @@ Error from server (Forbidden): nodes is forbidden: User "aks:jwt:keycloak:your-s
 ```
 
 > [!IMPORTANT]
-> The output might list the subject id instead of the subject name. This is a Keycloak behaviour. 
+> The output might list the subject id instead of the subject name. This is a Keycloak behavior. 
 > This can be changed by remapping the attribute `username` to `sub` in the claim. 
 
 ::: zone-end
