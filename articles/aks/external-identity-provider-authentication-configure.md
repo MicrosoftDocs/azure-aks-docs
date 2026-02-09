@@ -103,6 +103,18 @@ Configure your external identity provider to support OIDC authentication. Select
 
 ::: zone-end
 
+::: zone pivot="keycloak-self-hosted"
+
+### Keycloak (self-hosted) Setup
+
+1. Go to the Keycloak Admin Console.
+2. Create or select a realm.
+3. Create a new client. In the **Client type** field, select `OpenID Connect`. In the **Authentication flow** section, enable **Standard flow**.
+4. In the **Client authentication** section, select **Client ID and Secret**.
+5. Note your client ID and client secret for later use.
+
+::: zone-end
+
 ## Create JWT authenticator configuration
 
 Create a JSON configuration file that defines how to validate and process tokens from your identity provider. Select your identity provider for specific configuration examples:
@@ -183,6 +195,49 @@ Create a file named `jwt-config.json` with the following configuration:
         {
             "expression": "!user.username.startsWith('aks:jwt:google:system')",
             "message": "username must not start with 'aks:jwt:google:system'"
+        }
+    ]
+}
+```
+
+::: zone-end
+
+::: zone pivot="keycloak-self-hosted"
+
+### Keycloak (self-hosted) Configuration
+
+Create a file named `jwt-config.json` with the following configuration:
+
+```json
+{
+    "issuer": {
+        "url": "https://<keycloak-fqdn>/realms/<realm-name>",
+        "audiences": [
+            "<client-id>"
+        ]
+    },
+    "claimValidationRules": [
+        {
+            "expression": "has(claims.sub)",
+            "message": "must have sub claim"
+        }
+    ],
+    "claimMappings": {
+        "username": {
+            "expression": "'aks:jwt:keycloak:' + claims.sub"
+        },
+        "groups": {
+            "expression": "has(claims.groups) ? claims.groups.split(',').map(g, 'aks:jwt:keycloak:' + g) : []"
+        }
+    },
+    "userValidationRules": [
+        {
+            "expression": "has(user.username)",
+            "message": "must have username"
+        },
+        {
+            "expression": "!user.username.startsWith('aks:jwt:keycloak:system')",
+            "message": "username must not start with 'aks:jwt:keycloak:system'"
         }
     ]
 }
@@ -363,6 +418,29 @@ users:
 
 ::: zone-end
 
+::: zone pivot="keycloak-self-hosted"
+
+### Method 1: Using kubelogin plugin (Keycloak)
+
+Add a new user context to your kubeconfig file:
+
+```yaml
+users:
+- name: external-user
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      command: kubectl
+      args:
+      - oidc-login
+      - get-token
+      - --oidc-issuer-url=https://<keycloak-fqdn>/realms/<realm-name>
+      - --oidc-client-id=<client-id>
+      - --oidc-client-secret=<your-client-secret>
+```
+
+::: zone-end
+
 ### Method 2: Using static token
 
 If you have a JWT token, you can use it directly:
@@ -396,6 +474,16 @@ kubectl get nodes --user external-user
 
 ::: zone-end
 
+::: zone pivot="keycloak-self-hosted"
+
+Test the authentication by running a kubectl command:
+
+```bash
+kubectl get nodes --user external-user
+```
+
+::: zone-end
+
 ::: zone pivot="github"
 
 Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
@@ -411,6 +499,19 @@ Expected output for first-time setup before Role-Based Access Control (RBAC) con
 ```
 Error from server (Forbidden): nodes is forbidden: User "aks:jwt:google:your-subject" cannot list resource "nodes" in API group "" at the cluster scope
 ```
+
+::: zone-end
+
+::: zone pivot="keycloak-self-hosted"
+
+Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
+```
+Error from server (Forbidden): nodes is forbidden: User "aks:jwt:keycloak:your-subject" cannot list resource "nodes" in API group "" at the cluster scope
+```
+
+> [!IMPORTANT]
+> The output might list the subject ID instead of the subject name. This is a Keycloak behavior. 
+> This can be changed by remapping the attribute `username` to `sub` in the claim. 
 
 ::: zone-end
 
@@ -477,6 +578,38 @@ subjects:
 - kind: User
   # This matches the username expression in claim mappings for Google
   name: aks:jwt:google:your-subject-claim
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: external-user-role
+  apiGroup: rbac.authorization.k8s.io
+```
+
+::: zone-end
+
+::: zone pivot="keycloak-self-hosted"
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: external-user-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "nodes"]
+  verbs: ["get", "list"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: external-user-binding
+subjects:
+- kind: User
+  # This matches the username expression in the Keycloak claim mappings
+  name: aks:jwt:keycloak:your-subject-claim
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
