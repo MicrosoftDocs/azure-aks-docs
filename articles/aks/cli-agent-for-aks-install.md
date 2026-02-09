@@ -212,7 +212,7 @@ Cluster mode deploys the agent as a pod within your AKS cluster using workload i
 **Complete the required setup first:**
 - Follow the **mandatory** [Service account creation](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory) guide. This includes:
   - Creating the Kubernetes service account with RBAC permissions (**required**)
-- **Optional**: Complete the [workload identity setup](./cli-agent-for-aks-service-account-workload-identity-setup.md#workload-identity-setup-optional) for enhanced Azure resource access security
+- **Optional**: Complete the [workload identity setup](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-2-workload-identity-setup-optional) for enhanced Azure resource access security
 
 **Additional cluster requirements:**
 - **Namespace**: You must have a write access to deploy to the Kubernetes namespace where the agent will be deployed

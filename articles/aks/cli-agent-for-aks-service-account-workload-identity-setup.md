@@ -75,36 +75,46 @@ kubectl create serviceaccount "${SERVICE_ACCOUNT_NAME}" -n "${SERVICE_ACCOUNT_NA
 
 ### Create RBAC permissions
 
-Create the necessary Role and RoleBinding for the service account with read access for aks-mcp troubleshooting. Below is an example RoleBinding which grants general read-only access to all Kubernetes resources:
+Create the necessary Role and RoleBinding for the service account with read access for aks-mcp troubleshooting. Here are two examples based on your access requirements:
 
-```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  namespace: ${SERVICE_ACCOUNT_NAMESPACE}
-  name: aks-mcp-role
-rules:
-# Read access to all resources in the namespace for aks-mcp troubleshooting
-- apiGroups: ["*"]
-  resources: ["*"]
-  verbs: ["get", "list", "watch"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: aks-mcp-rolebinding
-  namespace: ${SERVICE_ACCOUNT_NAMESPACE}
-subjects:
-- kind: ServiceAccount
-  name: ${SERVICE_ACCOUNT_NAME}
-  namespace: ${SERVICE_ACCOUNT_NAMESPACE}
-roleRef:
-  kind: Role
-  name: aks-mcp-role
-  apiGroup: rbac.authorization.k8s.io
-EOF
-```
+- **Cluster-wide read access (recommended for cluster administrators)**: Use this ClusterRoleBinding to grant read-only access to all Kubernetes resources except secrets across all namespaces. This option is recommended for cluster-level administrators or DevOps engineers who need to investigate and troubleshoot issues across the entire cluster.
+
+   ```bash
+   cat <<EOF | kubectl apply -f -
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: ClusterRoleBinding
+   metadata:
+     name: aks-mcp-view-rolebinding
+   roleRef:
+     apiGroup: rbac.authorization.k8s.io
+     kind: ClusterRole
+     name: view
+   subjects:
+   - kind: ServiceAccount
+     name: ${SERVICE_ACCOUNT_NAME}
+     namespace: ${SERVICE_ACCOUNT_NAMESPACE}
+   EOF
+   ```
+
+- **Namespace-scoped read access (for limited access scenarios)**: Use RoleBindings to grant read-only access to all Kubernetes resources except secrets in specific namespaces only. This option is suitable for teams or users who should have limited access to specific namespaces rather than the entire cluster. Repeat this RoleBinding for each namespace that requires access.
+
+   ```bash
+   cat <<EOF | kubectl apply -f -
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: RoleBinding
+   metadata:
+     name: aks-mcp-view-rolebinding
+     namespace: ${SERVICE_ACCOUNT_NAMESPACE}
+   roleRef:
+     apiGroup: rbac.authorization.k8s.io
+     kind: ClusterRole
+     name: view
+   subjects:
+   - kind: ServiceAccount
+     name: ${SERVICE_ACCOUNT_NAME}
+     namespace: ${SERVICE_ACCOUNT_NAMESPACE}
+   EOF
+   ```
 
 ### Verify the service account resources
 
@@ -116,7 +126,7 @@ kubectl get role aks-mcp-role -n "${SERVICE_ACCOUNT_NAMESPACE}"
 kubectl get rolebinding aks-mcp-rolebinding -n "${SERVICE_ACCOUNT_NAMESPACE}"
 ```
 
-## Workload identity setup (Optional)
+## Step 2: Workload identity setup (Optional)
 
 The following steps are **optional** but recommended if you want to enable the agentic CLI to access Azure resources securely using workload identity.
 
@@ -199,6 +209,16 @@ export USER_ASSIGNED_CLIENT_ID="$(az identity show \
     --name "${USER_ASSIGNED_IDENTITY_NAME}" \
     --query 'clientId' \
     --output tsv)"
+```
+
+### Assign necessary role to managed identity
+
+Assign the necessary role to the managed identity using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. Here is an example of granting read access of the subscription to the managed identity:
+
+```azurecli-interactive
+az role assignment create --role "Reader" \
+    --assignee $USER_ASSIGNED_CLIENT_ID \
+    --scope /subscriptions/${SUBSCRIPTION}
 ```
 
 ## Step 3: Annotate the service account with workload identity (Optional)
