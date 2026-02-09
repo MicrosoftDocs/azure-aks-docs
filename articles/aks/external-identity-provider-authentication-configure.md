@@ -211,9 +211,9 @@ Create a file named `jwt-config.json` with the following configuration:
 ```json
 {
     "issuer": {
-        "url": "https://<FQDN OF KEYCLOAK INSTANCE>/realms/<NAME OF REALM>",
+        "url": "https://<keycloak-fqdn>/realms/<realm-name>",
         "audiences": [
-            "<NAME OF CLIENT IN KEYCLOAK REALM>"
+            "<client-id>"
         ]
     },
     "claimValidationRules": [
