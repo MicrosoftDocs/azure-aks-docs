@@ -77,7 +77,7 @@ kubectl create serviceaccount "${SERVICE_ACCOUNT_NAME}" -n "${SERVICE_ACCOUNT_NA
 
 Create the necessary Role and RoleBinding for the service account with read access for aks-mcp troubleshooting. Here are two examples based on your access requirements:
 
-1. **Cluster-wide read access (recommended for cluster administrators)**: Use this ClusterRoleBinding to grant read-only access to all Kubernetes resources except secrets across all namespaces. This option is recommended for cluster-level administrators or DevOps engineers who need to investigate and troubleshoot issues across the entire cluster.
+- **Cluster-wide read access (recommended for cluster administrators)**: Use this ClusterRoleBinding to grant read-only access to all Kubernetes resources except secrets across all namespaces. This option is recommended for cluster-level administrators or DevOps engineers who need to investigate and troubleshoot issues across the entire cluster.
 
    ```bash
    cat <<EOF | kubectl apply -f -
@@ -96,7 +96,7 @@ Create the necessary Role and RoleBinding for the service account with read acce
    EOF
    ```
 
-1. **Namespace-scoped read access (for limited access scenarios)**: Use RoleBindings to grant read-only access to all Kubernetes resources except secrets in specific namespaces only. This option is suitable for teams or users who should have limited access to specific namespaces rather than the entire cluster. Repeat this RoleBinding for each namespace that requires access.
+- **Namespace-scoped read access (for limited access scenarios)**: Use RoleBindings to grant read-only access to all Kubernetes resources except secrets in specific namespaces only. This option is suitable for teams or users who should have limited access to specific namespaces rather than the entire cluster. Repeat this RoleBinding for each namespace that requires access.
 
    ```bash
    cat <<EOF | kubectl apply -f -
@@ -126,7 +126,7 @@ kubectl get role aks-mcp-role -n "${SERVICE_ACCOUNT_NAMESPACE}"
 kubectl get rolebinding aks-mcp-rolebinding -n "${SERVICE_ACCOUNT_NAMESPACE}"
 ```
 
-## Workload identity setup (Optional)
+## Step 2: Workload identity setup (Optional)
 
 The following steps are **optional** but recommended if you want to enable the agentic CLI to access Azure resources securely using workload identity.
 
