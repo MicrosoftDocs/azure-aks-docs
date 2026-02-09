@@ -434,9 +434,9 @@ users:
       args:
       - oidc-login
       - get-token
-      - --oidc-issuer-url=https://<FQDN OF KEYCLOAK INSTANCE>/realms/<NAME OF REALM>
-      - --oidc-client-id=<NAME OF CLIENT IN KEYCLOAK REALM>
-      - --oidc-client-secret=<SECRET OF REFERENCED CLIENT IN KEYCLOAK REALM>
+      - --oidc-issuer-url=https://<keycloak-fqdn>/realms/<realm-name>
+      - --oidc-client-id=<client-id>
+      - --oidc-client-secret=<your-client-secret>
 ```
 
 ::: zone-end
@@ -510,7 +510,7 @@ Error from server (Forbidden): nodes is forbidden: User "aks:jwt:keycloak:your-s
 ```
 
 > [!IMPORTANT]
-> The output might list the subject id instead of the subject name. This is a Keycloak behavior. 
+> The output might list the subject ID instead of the subject name. This is a Keycloak behavior. 
 > This can be changed by remapping the attribute `username` to `sub` in the claim. 
 
 ::: zone-end
