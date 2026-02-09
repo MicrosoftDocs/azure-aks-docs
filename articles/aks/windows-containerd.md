@@ -78,3 +78,7 @@ When using Windows Server node pools with `containerd`, keep the following limit
 ## Next steps
 
 For more information about node pools in AKS, see [Manage node pools for a cluster in Azure Kubernetes Service (AKS)](./manage-node-pools.md).
+
+<!-- LINKS -->
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade

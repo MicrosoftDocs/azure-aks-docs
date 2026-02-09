@@ -14,6 +14,8 @@ author: davidsmatlak
 
 # Advanced NGINX ingress controller and ingress configurations with the application routing add-on for Azure Kubernetes Service (AKS)
 
+[!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
+
 This article walks you through two ways to configure ingress controllers and ingress objects with the application routing add-on for Azure Kubernetes Service (AKS):
 
 - [Configuration of the NGINX ingress controller](#control-the-default-nginx-ingress-controller-configuration) such as creating multiple controllers, configuring private load balancers, and setting static IP addresses.
