@@ -15,8 +15,8 @@ ms.custom: devx-track-azurecli
 This article shows you how to migrate from Dapr OSS to the Dapr extension for AKS.
 
 You can configure the Dapr extension to use and manage the Kubernetes resources created by Dapr OSS by either:
-- [Checking for an existing Dapr installation using the Azure CLI](#check-for-an-existing-dapr-installation) (*default method*)
-- [Configuring the existing Dapr installation using `--configuration-settings`](#configure-the-existing-dapr-installation-using---configuration-settings).
+- [Checking for an existing Dapr installation by using the Azure CLI](#check-for-an-existing-dapr-installation) (*default method*)
+- [Configuring the existing Dapr installation by using `--configuration-settings`](#configure-the-existing-dapr-installation-using---configuration-settings)
 
 For more information, see [an overview of the Dapr extension for AKS][dapr-extension-aks].
 

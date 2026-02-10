@@ -75,27 +75,27 @@ For more information, see the [Deploy an AKS cluster][cluster] tutorial.
 
 ### Install Dapr on your AKS cluster
 
-Install the Dapr extension on your AKS cluster. Before you start, make sure you have:
-- [Installed or updated the `k8s-extension`][k8s-ext]. 
-- [Registered the `Microsoft.KubernetesConfiguration` service provider][k8s-sp]
+Install the Dapr extension on your AKS cluster. Before you start, make sure you:
+- [Install or update the `k8s-extension`][k8s-ext]
+- [Register the `Microsoft.KubernetesConfiguration` service provider][k8s-sp]
 
 ```bash
 az k8s-extension create --cluster-type managedClusters --cluster-name myAKSCluster --resource-group <your-resource-group> --name dapr --extension-type Microsoft.Dapr
 ```
 
-After a few minutes, you'll see output showing the Dapr connection to your AKS cluster. Next, initialize Dapr on your cluster.
+After a few minutes, the output shows the Dapr connection to your AKS cluster. Next, initialize Dapr on your cluster.
 
 ```bash
 dapr init -k
 ```
 
-Verify Dapr is installed:
+Verify that Dapr is installed:
 
 ```bash
 kubectl get pods -A
 ```
 
-### Deploy the Redis Actor state store component
+### Deploy the Redis actor state store component
 
 Navigate to the `Deploy` directory in your forked version of the sample:
 
