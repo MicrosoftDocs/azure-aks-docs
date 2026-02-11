@@ -14,14 +14,14 @@ zone_pivot_groups: cluster-namespace-scope
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-Azure Kubernetes Fleet Manager intelligent resource placement can be used to deploy the same resource to multiple clusters across a fleet. Often there is a need to modify the resource configuration to enforce rules around behavior in different environments (dev, test, prod). For this purpose, Fleet Manager provides resource overrides, which are the Fleet Manager deployment-time equivalent of Helm templates and Kustomize patches.
+Azure Kubernetes Fleet Manager intelligent resource placement can be used to deploy the same resource to multiple clusters across a fleet. Often there's a need to modify the resource configuration to enforce rules around behavior in different environments (dev, test, prod). For this purpose, Fleet Manager provides resource overrides, which are the Fleet Manager equivalent of Helm templates and Kustomize patches.
 
 Examples of situations where modifying a resource configuration is useful include:
 
 * I want to the same `ClusterRole` configuration to all clusters, but make it more restrictive for my production clusters.
-* I want to run use the same `Deployment` on all clusters, but use a different container image on my productions clusters.
+* I want to use the same `Deployment` on all clusters, but use a different container image or port on my productions clusters.
 
-This article shows you how to create overrides for resources that are deployed by Fleet Manager resource placement.
+This article shows you how to create overrides for resources deployed by Fleet Manager resource placement.
 
 Azure Kubernetes Fleet Manager supports two scopes for overrides:
 
@@ -68,7 +68,7 @@ A `ClusterResourceOverride` can include one or more `clusterResourceSelector` to
 * `name`: The name of the resource.
 
 > [!NOTE]
-> If you select a namespace in `ClusterResourceSelector`, the override will apply to all resources in the namespace.
+> If you select a namespace in `ClusterResourceSelector`, the override applies to all resources in the namespace.
 
 Using our example `ClusterRole`, let's see how we select it in a `ClusterResourceOverride`.
 
@@ -156,7 +156,7 @@ spec:
 
 :::zone-end
 
-Now we have the resource selected, let's look at how we configure the override using a `policy`.
+Now we have the resource selected. Let's look at how we configure the override using a `policy`.
 
 ## Policy
 
@@ -331,7 +331,7 @@ spec:
 
 ### Reserved Variables in the JSON Patch Override Value
 
-Reserved variables are replaced by value used in the `value` of the JSON patch override rule. Currently supported reserved variables:
+Reserved variables are replaced at placement by the `value` of the JSON patch override rule. Currently supported reserved variables:
 
 * `${MEMBER-CLUSTER-NAME}`: replaced by the name of the `memberCluster`.
 
