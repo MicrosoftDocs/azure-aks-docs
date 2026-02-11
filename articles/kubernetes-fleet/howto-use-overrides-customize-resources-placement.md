@@ -1,5 +1,5 @@
 ---
-title: "Use Resource Overrides to customize resources with Azure Kubernetes Fleet Manager resource placement"
+title: "Use Resource Overrides to customize resources deployed by Azure Kubernetes Fleet Manager resource placement"
 description: This article provides an overview of how to use the resource override APIs to customize resource configurations when using Azure Kubernetes Fleet Manager resource placement.
 ms.topic: how-to
 ms.date: 02/11/2026
@@ -10,11 +10,11 @@ ms.service: azure-kubernetes-fleet-manager
 zone_pivot_groups: cluster-namespace-scope
 ---
 
-# Use Resource Overrides to customize resources with Azure Kubernetes Fleet Manager resource placement
+# Use Resource Overrides to customize resources deployed by Azure Kubernetes Fleet Manager resource placement
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-Azure Kubernetes Fleet Manager intelligent resource placement can be used to deploy the same resource to multiple clusters across a fleet. As the same resource is deployed everywhere, there is often a need to modify the resource configuration based on where on the clusters it is deployed to. 
+Azure Kubernetes Fleet Manager intelligent resource placement can be used to deploy the same resource to multiple clusters across a fleet. Often there is a need to modify the resource configuration to enforce rules around behavior in different environments (dev, test, prod). For this purpose, Fleet Manager provides resource overrides, which are the Fleet Manager deployment-time equivalent of Helm templates and Kustomize patches.
 
 Examples of situations where modifying a resource configuration is useful include:
 
