@@ -62,7 +62,7 @@ The top half of **AKS Node Image** tab shows the latest node image version and t
 
 :::image type="content" source="./media/release-tracker/node-image-status.png" alt-text="Screenshot of the AKS release tracker's node image status table displayed in a web browser.":::
 
-The bottom half of **AKS Node Image** tab shows the node image update order. The table has two views: *By Region* and *By Version*.
+The bottom half of **AKS Node Image** tab shows the node image update order. The table has two views: **By Region** and **By Version**.
 
 :::image type="content" source="./media/release-tracker/node-image-order.png" alt-text="Screenshot of the AKS release tracker's node image order table displayed in a web browser.":::
 
