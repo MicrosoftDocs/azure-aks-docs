@@ -35,6 +35,7 @@ Managed namespaces in Azure Kubernetes Service (AKS) provide a way to logically 
 - When a namespace is a managed namespace, changes to the namespace via the Kubernetes API are blocked.
 :::zone target="docs" pivot="azure-portal"
 - Listing existing namespaces to convert in the portal doesn't work with private clusters. You can add new namespaces.
+- Attempting to get namespace credentials via `az aks namespace get-credentials` on clusters without Azure RBAC enabled will result in a `(BadRequest)` error as Entra authentication is required for namespace level credentials to be successfully passed.
 
 :::zone-end
 
