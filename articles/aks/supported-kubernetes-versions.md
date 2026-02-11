@@ -44,7 +44,7 @@ Always use the latest patch release for your current minor version. For example,
 Check the AKS Kubernetes release calendar for upcoming version releases. To see real-time updates of region release status and version release notes, visit the [AKS release status webpage][aks-release]. To learn more about the release status webpage, see [AKS release tracker][aks-tracker].
 
 > [!NOTE]
-> AKS follows a 12-month support policy for generally available (GA) Kubernetes versions. To learn more about our Kubernetes version support policy, see the [FAQ](./supported-kubernetes-versions.md#faq). Unless an explicit date is provided, the End of Life (EOL) date is the last day of the specified month. For example, "Mar 2026" indicates March 31, 2026.
+> AKS follows a 12-month support policy for generally available (GA) Kubernetes versions. To learn more about our Kubernetes version support policy, see the [FAQ](./supported-kubernetes-versions.md#frequently-asked-questions-faq). Unless an explicit date is provided, the End of Life (EOL) date is the last day of the specified month. For example, "Mar 2026" indicates March 31, 2026.
 
 For the past release history, see [Kubernetes history](https://github.com/kubernetes/kubernetes/releases).
 
@@ -177,7 +177,7 @@ AKS supports three GA minor versions:
 
 AKS might also support preview versions, which are explicitly labeled and subject to [preview terms and conditions][preview-terms].
 
-AKS provides platform support only for one GA minor version of Kubernetes after the regular supported versions. The platform support window of Kubernetes versions on AKS is known as "N-3". For more information, see [platform support policy](#platform-support-policy).
+AKS provides platform support only for one GA minor version of Kubernetes after the regular supported versions. The platform support window of Kubernetes versions on AKS is known as _N-3_. For more information, see [platform support policy](#platform-support-policy).
 
 > [!NOTE]
 > AKS uses safe deployment practices that involve gradual region deployment. This means it might take up to 10 business days for a new release or a new version to be available in all regions.
@@ -198,7 +198,7 @@ AKS might support any number of **patches** based on upstream community release 
 
 Platform support policy is a reduced support plan for certain unsupported Kubernetes versions. During platform support, customers only receive support from Microsoft for AKS/Azure platform related issues. Any issues related to Kubernetes functionality and components aren't supported.
 
-Platform support policy applies to clusters in an _N-3_ version (where _N_ is the latest supported AKS GA minor version), before the cluster drops to _N-4_. For example, Kubernetes v1.26 is considered platform support when v1.29 is the latest GA version. If you're a running an _N-2_ version, the moment it becomes _N-3_, the version also becomes end of official support, and you enter into the platform support policy.
+Platform support policy applies to clusters in an _N-3_ version (where _N_ is the latest supported AKS GA minor version), before the cluster drops to _N-4_. For example, Kubernetes v1.26 is considered platform support when v1.29 is the latest GA version. Let's say you're running an _N-2_ version. The moment that version becomes _N-3_, it also ends its official support, and you enter into the platform support policy.
 
 AKS relies on the releases and patches from [Kubernetes](https://kubernetes.io/releases/), which is an open-source project that only supports a sliding window of three minor versions. AKS can only guarantee [full support](#kubernetes-version-support-policy) while those versions are being serviced upstream. Since there's no more patches being produced upstream, AKS can either leave those versions unpatched or fork. Due to this limitation, platform support doesn't support anything from relying on Kubernetes upstream.
 
@@ -353,7 +353,7 @@ The control plane must be within a window of versions from all node pools. For d
 
 The [version skew policy](https://kubernetes.io/releases/version-skew-policy/) now allows a difference of up to three versions between control plane and agent pools. AKS follows this skew version policy change starting from version 1.28 onwards.
 
-### Can I skip multiple AKS versions during an cluster upgrade?
+### Can I skip multiple AKS versions during a cluster upgrade?
 
 If you upgrade a supported AKS cluster, Kubernetes minor versions can't be skipped. Kubernetes control planes [version skew policy](https://kubernetes.io/releases/version-skew-policy/) doesn't support minor version skipping. For example, upgrades between:
 
@@ -371,7 +371,7 @@ Starting from version 1.28, agent pool versions can be up to three versions olde
 
 You can also upgrade agent pool versions to the control plane minor version. In the previous example, you can upgrade the agent pool version twice: once from _1.23.x_ to _1.25.x_ (when the control plane version is at _1.25.x_) and then from _1.25.x_ to _1.27.x_ (when control plane version is at _1.27.x_). When you upgrade in-place, the same rules applicable to control plane upgrades apply.
 
-If performing an upgrade from an _unsupported version_ the upgrade is done without any guarantee of functionality and is excluded from the service-level agreements and limited warranty. Clusters running _unsupported versions_ have the flexibility of decoupling control plane upgrades with node pool upgrades. However, if your version is out of date, we recommend that you recreate the cluster.
+If you're performing an upgrade from an _unsupported version_, the upgrade occurs without any guarantee of functionality and is excluded from the service-level agreements and limited warranty. Clusters running _unsupported versions_ have the flexibility of decoupling control plane upgrades with node pool upgrades. However, if your version is out of date, we recommend that you recreate the cluster.
 
 ### Can I create a new 1.xx.x cluster during the platform support window?
 
