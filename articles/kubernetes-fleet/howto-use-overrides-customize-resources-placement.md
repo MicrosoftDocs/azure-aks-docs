@@ -1,6 +1,6 @@
 ---
 title: "Use Resource Overrides to customize resources when using Azure Kubernetes Fleet Manager resource placement"
-description: Learn how to use placement staged update runs to deploy Kubernetes resources to member clusters in stages and roll back to previous versions in Azure Kubernetes Fleet Manager.
+description: This article provides an overview of how to use the resource override APIs to customize resource configurations when using Azure Kubernetes Fleet Manager resource placement.
 ms.topic: how-to
 ms.date: 02/11/2026
 author: sjwaight
