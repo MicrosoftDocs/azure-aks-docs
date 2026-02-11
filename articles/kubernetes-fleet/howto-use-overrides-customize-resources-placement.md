@@ -130,8 +130,9 @@ A `ResourceOverride` can include one or more `resourceSelector` to choose which 
 * `group`: The API group of the resource.
 * `version`: The API version of the resource.
 * `kind`: The kind of the resource.
-* `namespace`: The namespace of the resource.
 * `name`: The name of the resource.
+
+The namespace of the resource to override is determined by specifying the `namespace` set in the `metadata` of the `ResourceOverride`.
 
 Using our example `Deployment`, let's see how we select it in a `ResourceOverride`.
 
@@ -150,8 +151,8 @@ spec:
 ```
 
 > [!IMPORTANT]
-> * If you select a namespace in `resourceSelector`, the override applies to all resources in the namespace.
-> * The `ResourceOverride` object needs to be in the same namespace as the resource to override.
+> * If you select a namespace in `resourceSelector` (`kind: Namespace`), the override applies to all resources in the namespace.
+> * The `ResourceOverride` needs to be in the same namespace as the resource to override.
 
 :::zone-end
 
@@ -292,6 +293,125 @@ spec:
             path: /rules/0/verbs/1
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope" 
+
+This example replaces both the container image and port in the `Deployment` with `443` for clusters with the `env: prod` label.
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ResourceOverride
+metadata:
+  name: example-resource-override
+  namespace: test-namespace
+spec:
+  resourceSelectors:
+    -  group: apps
+       kind: Deployment
+       version: v1
+       name: test-nginx
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  env: prod
+        jsonPatchOverrides:
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: "nginx:1.30.0"
+          - op: replace
+            path: /spec/template/spec/containers/0/ports/0/containerPort
+            value: "443"
+```
+
+:::zone-end
+
+### Reserved Variables in the JSON Patch Override Value
+
+Reserved variables are replaced by value used in the `value` of the JSON patch override rule. Currently supported reserved variables:
+
+* `${MEMBER-CLUSTER-NAME}`: replaced by the name of the `memberCluster`.
+
+For example, to create an Azure DNS hostname that contains the name of the cluster, you can use a configuration similar to:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ResourceOverride
+metadata:
+  name: ro-kuard-demo-eastus
+  namespace: kuard-demo
+spec:
+  placement:
+    name: crp-kuard-demo
+  resourceSelectors:
+    -  group: ""
+        kind: Service
+        version: v1
+        name: kuard-svc
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  fleet.azure.com/location: eastus
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/annotations
+            value:
+              {"service.beta.kubernetes.io/azure-dns-label-name":"fleet-${MEMBER-CLUSTER-NAME}-eastus"}
+```
+
+The example `ResourceOverride` object adds a value of `fleet-clustername-eastus` to the specified JSON path on clusters in the `eastus` Azure region.
+
+### Multiple override rules
+
+You can add multiple `overrideRules` to a `policy` field to apply multiple changes to the selected resources. Here's an example for `ResourceOverride`:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ResourceOverride
+metadata:
+  name: ro-1
+  namespace: test
+spec:
+  resourceSelectors:
+    -  group: apps
+       kind: Deployment
+       version: v1
+       name: test-nginx
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  env: prod
+        jsonPatchOverrides:
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: "nginx:1.20.0"
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  env: test
+        jsonPatchOverrides:
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: "nginx:latest"
+```
+
+This example replaces the container image in the `Deployment` object with:
+
+* The `nginx:1.20.0` image for clusters with the `env: prod` label.
+* The `nginx:latest` image for clusters with the `env: test` label.
+
+:::zone target="docs" pivot="cluster-scope" 
+
 ## Use with cluster resource placement
 
 ### [Azure CLI](#tab/azure-cli)
@@ -406,90 +526,9 @@ spec:
 
 :::zone-end
 
-:::zone target="docs" pivot="namespace-scope"  
+:::zone target="docs" pivot="namespace-scope" 
 
-### Reserved Variables in the JSON Patch Override Value
-
-Reserved variables are replaced by value used in the `value` of the JSON patch override rule. Currently supported reserved variables:
-
-* `${MEMBER-CLUSTER-NAME}`: replaced by the name of the `memberCluster`.
-
-For example, to create an Azure DNS hostname that contains the name of the cluster, you can use a configuration similar to:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
-kind: ResourceOverride
-metadata:
-  name: ro-kuard-demo-eastus
-  namespace: kuard-demo
-spec:
-  placement:
-    name: crp-kuard-demo
-  resourceSelectors:
-    -  group: ""
-        kind: Service
-        version: v1
-        name: kuard-svc
-  policy:
-    overrideRules:
-      - clusterSelector:
-          clusterSelectorTerms:
-            - labelSelector:
-                matchLabels:
-                  fleet.azure.com/location: eastus
-        jsonPatchOverrides:
-          - op: add
-            path: /metadata/annotations
-            value:
-              {"service.beta.kubernetes.io/azure-dns-label-name":"fleet-${MEMBER-CLUSTER-NAME}-eastus"}
-```
-
-The example `ResourceOverride` object adds a value of `fleet-clustername-eastus` to the specified JSON path on clusters in the `eastus` Azure region.
-
-### Multiple override rules
-
-You can add multiple `overrideRules` objects to a `policy` field to apply multiple changes to the selected resources. Here's an example:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
-kind: ResourceOverride
-metadata:
-  name: ro-1
-  namespace: test
-spec:
-  resourceSelectors:
-    -  group: apps
-       kind: Deployment
-       version: v1
-       name: test-nginx
-  policy:
-    overrideRules:
-      - clusterSelector:
-          clusterSelectorTerms:
-            - labelSelector:
-                matchLabels:
-                  env: prod
-        jsonPatchOverrides:
-          - op: replace
-            path: /spec/template/spec/containers/0/image
-            value: "nginx:1.20.0"
-      - clusterSelector:
-          clusterSelectorTerms:
-            - labelSelector:
-                matchLabels:
-                  env: test
-        jsonPatchOverrides:
-          - op: replace
-            path: /spec/template/spec/containers/0/image
-            value: "nginx:latest"
-```
-
-This example replaces the container image in the `Deployment` object with:
-
-* The `nginx:1.20.0` image for clusters with the `env: prod` label.
-* The `nginx:latest` image for clusters with the `env: test` label.
-
-## Apply the cluster resource placement
+## Use with resource placement
 
 ### [Azure CLI](#tab/azure-cli)
 
