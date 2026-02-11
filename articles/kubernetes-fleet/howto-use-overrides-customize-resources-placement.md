@@ -58,7 +58,7 @@ rules:
   verbs: ["get", "watch", "list"]
 ```
 
-## Cluster resource selectors
+## Selecting cluster resources
 
 A `ClusterResourceOverride` can include one or more cluster resource selector to specify which resources to override. The `ClusterResourceSelector` supports the following fields.
 
@@ -98,7 +98,32 @@ The `ResourceOverride` API consists of the following components:
 > [!NOTE]
 > `Policy` definitions are the same for both cluster and namespace-scoped resources.
 
-## Resource selectors
+Let's use the following example `Deployment` named `nginx-sample` to demonstrate how `ResourceOverride` works.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-sample
+  namespace: nginx-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+```
+
+## Selecting namespace resources
 
 A `ResourceOverride` object can include one or more resource selectors to specify which resources to override. The `ResourceSelector` object includes the following fields.
 
@@ -114,20 +139,20 @@ apiVersion: placement.kubernetes-fleet.io/v1alpha1
 kind: ResourceOverride
 metadata:
   name: example-resource-override
-  namespace: test-namespace
+  namespace: nginx-demo
 spec:
   resourceSelectors:
     -  group: apps
        kind: Deployment
        version: v1
-       name: test-nginx
+       name: nginx-sample
 ```
 
 > [!IMPORTANT]
 > * If you select a namespace in `ResourceSelector`, the override applies to all resources in the namespace.
 > * The `ResourceOverride` object needs to be in the same namespace as the resource to override.
 
-This example selects a `Deployment` object named `test-nginx` from the `test-namespace` namespace for overriding.
+This example selects a `Deployment` object named `nginx-sample` from the `test-namespace` namespace for overriding.
 
 :::zone-end
 
@@ -176,6 +201,41 @@ You can use the `clusterSelector` field in the `overrideRules` to specify the cl
 > [!IMPORTANT]
 > Only `labelSelector` is supported in the `clusterSelectorTerms` field.
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope" 
+
+To add an override rule to a `ResourceOverride` object, use the `policy` field with the following YAML format:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ResourceOverride
+metadata:
+  name: example-resource-override
+  namespace: test-namespace
+spec:
+  resourceSelectors:
+    -  group: apps
+       kind: Deployment
+       version: v1
+       name: test-nginx
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  env: prod
+        jsonPatchOverrides:
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: "nginx:1.20.0"
+```
+
+This example replaces the container image in the `Deployment` object with the `nginx:1.20.0` image for clusters with the `env: prod` label.
+
+:::zone-end
+
 ### JSON patch overrides
 
 You can use `jsonPatchOverrides` in the `overrideRules` object to specify the changes to apply to the selected resources. The `JsonPatch` object supports the following fields:
@@ -205,6 +265,8 @@ The `jsonPatchOverrides` fields apply a JSON patch on the selected resources by 
 ### Multiple override patches
 
 You can add multiple `jsonPatchOverrides` fields to an `overrideRules` object to apply multiple changes to the selected cluster resources. Here's an example:
+
+:::zone target="docs" pivot="cluster-scope" 
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -360,53 +422,7 @@ rules:
 
 :::zone target="docs" pivot="namespace-scope"  
 
-### Introducing namespace-scoped resource overrides (preview)
 
-The `ResourceOverride` API consists of the following components:
-
-* `resourceSelectors`: Specifies the set of resources selected for overriding.
-* `policy`: Specifies the set of rules to apply to the selected resources.
-
-## Resource selectors
-
-A `ResourceOverride` object can include one or more resource selectors to specify which resources to override. The `ResourceSelector` object includes the following fields.
-
-* `group`: The API group of the resource.
-* `version`: The API version of the resource.
-* `kind`: The kind of the resource.
-* `namespace`: The namespace of the resource.
-
-To add a resource selector to a `ResourceOverride` object, use the `resourceSelectors` field with the following YAML format.
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
-kind: ResourceOverride
-metadata:
-  name: example-resource-override
-  namespace: test-namespace
-spec:
-  resourceSelectors:
-    -  group: apps
-       kind: Deployment
-       version: v1
-       name: test-nginx
-```
-
-> [!IMPORTANT]
-> * If you select a namespace in `ResourceSelector`, the override applies to all resources in the namespace.
-> * The `ResourceOverride` object needs to be in the same namespace as the resource to override.
-
-This example selects a `Deployment` object named `test-nginx` from the `test-namespace` namespace for overriding.
-
-## Policy
-
-A `Policy` object consists of a set of `overrideRules` that specify the changes to apply to the selected resources. Each `overrideRules` object supports the following fields:
-
-* `clusterSelector`: Specifies the set of clusters to which the override rule applies.
-* `jsonPatchOverrides`: Specifies the changes to apply to the selected resources.
-
-> [!NOTE]
-> `Policy` definitions are constructed the same way, regardless of the resource scope (cluster or namespace).
 
 To add an override rule to a `ResourceOverride` object, use the `policy` field with the following YAML format:
 
