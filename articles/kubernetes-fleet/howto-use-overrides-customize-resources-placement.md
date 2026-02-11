@@ -367,7 +367,12 @@ spec:
 
 ### Multiple override rules
 
-You can add multiple `overrideRules` to a `policy` field to apply multiple changes to the selected resources. Here's an example for `ResourceOverride`:
+You can add multiple `overrideRules` to a `policy` field to apply multiple changes to the selected resources. Here's an example for `ResourceOverride`.
+
+This example replaces the container image in the `Deployment` with:
+
+* The `nginx:1.20.0` image for clusters with the `env: prod` label.
+* The `nginx:latest` image for clusters with the `env: test` label.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -402,11 +407,6 @@ spec:
             path: /spec/template/spec/containers/0/image
             value: "nginx:latest"
 ```
-
-This example replaces the container image in the `Deployment` with:
-
-* The `nginx:1.20.0` image for clusters with the `env: prod` label.
-* The `nginx:latest` image for clusters with the `env: test` label.
 
 :::zone target="docs" pivot="cluster-scope" 
 
