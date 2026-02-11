@@ -68,7 +68,7 @@ The bottom half of **AKS Node Image** tab shows the node image update order. The
 
 The **AKS Security Patch** tab shows the [last node image security patch version][auto-upgrade-node-images] for each region and update order.
 
-:::image type="content" source="./media/release-tracker/security-patch.png" alt-text="Screenshot of the AKS release tracker's node image order table displayed in a web browser.":::
+:::image type="content" source="./media/release-tracker/security-patch.png" alt-text="Screenshot of the AKS release tracker's security patch release status table displayed in a web browser.":::
 
 <!-- LINKS - external -->
 [aks-release]: https://github.com/Azure/AKS/releases
