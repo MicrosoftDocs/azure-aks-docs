@@ -2,7 +2,7 @@
 title: "Use Resource Overrides to customize resources deployed by Azure Kubernetes Fleet Manager resource placement"
 description: This article provides an overview of how to use the resource override APIs to customize resource configurations when using Azure Kubernetes Fleet Manager resource placement.
 ms.topic: how-to
-ms.date: 02/11/2026
+ms.date: 02/12/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,15 +10,15 @@ ms.service: azure-kubernetes-fleet-manager
 zone_pivot_groups: cluster-namespace-scope
 ---
 
-# Use Resource Overrides to customize resources deployed by Azure Kubernetes Fleet Manager resource placement (preview)
+# Use Resource Overrides to customize resources deployed by Azure Kubernetes Fleet Manager resource placement
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-Azure Kubernetes Fleet Manager intelligent resource placement can be used to deploy the same resource to multiple clusters across a fleet. Often there's a need to modify the resource configuration to enforce rules around behavior in different environments (dev, test, prod). For this purpose, Fleet Manager provides resource overrides, which are conceptually similar to Helm templates and Kustomize patches.
+Azure Kubernetes Fleet Manager intelligent resource placement can be used to deploy the same resource to multiple clusters across a fleet. Often there's a need to modify the resource configuration to enforce rules around behavior in different environments (dev, test, prod). For this purpose, Fleet Manager provides resource overrides, which provide a capability that is conceptually similar to how Helm templates and Kustomize patches are used.
 
 Examples of situations where modifying a resource configuration is useful include:
 
-* I want to use a `ClusterRole` named `secret-reader` on all clusters, but make its allowed actions more restrictive for my production clusters.
+* I want to use a `ClusterRole` named `secret-reader` on all clusters, but have a smaller set of allowed actions for the role on my production clusters.
 * I want to use the same `Deployment` on all clusters, but use a different container image or port on my productions clusters.
 
 This article shows you how to create overrides for resources deployed by Fleet Manager resource placement.
@@ -29,8 +29,6 @@ Azure Kubernetes Fleet Manager supports two scopes for overrides:
 * **Namespace-scoped**: Use `ResourceOverride` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
 
 You can select the scope most applicable to you from the scope type choices at the top of the article.
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 :::zone target="docs" pivot="cluster-scope"
 
