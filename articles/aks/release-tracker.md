@@ -21,9 +21,9 @@ With AKS release tracker, you can follow specific component updates present in a
 
 AKS release tracker provides a regional breakdown of the following three independent release trains:
 
-- **AKS release**: This release train ships updates, bug fixes, and security patches for features and add-ons. Some of the feature/add-on updates require upgrading the AKS cluster to a minimum required Kubernetes version, details of which are published in [AKS release notes][aks-release]. These releases are automatically applied to the clusters when the release reaches the region in which the cluster is located.
-- **AKS Kubernetes Versions**: This release train updates the [AKS supported Kubernetes minor and patch versions][supported-kubernetes-versions] and [long-term support (LTS) versions][long-term-support] available in each region. You can upgrade to new Kubernetes versions either manually or automatically using [cluster auto-upgrade][auto-upgrade-cluster].
-- **AKS Node Images**: This release train updates the latest node image available for Azure Linux, Ubuntu, and Windows in each region. You can upgrade to the latest node image version either manually or automatically using [auto-upgrade for node images][auto-upgrade-node-images].
+- **AKS releases** ships updates, bug fixes, and security patches for features and add-ons. Some of the feature/add-on updates require upgrading the AKS cluster to a minimum required Kubernetes version. For more information, see the [AKS release notes][aks-release]. These releases are automatically applied to the clusters when the release reaches the region where the cluster is located.
+- **AKS Kubernetes versions** updates the [AKS supported Kubernetes minor and patch versions][supported-kubernetes-versions] and [long-term support (LTS) versions][long-term-support] available in each region. You can upgrade to new Kubernetes versions either manually or automatically using [cluster autoupgrade][auto-upgrade-cluster].
+- **AKS node images** updates the latest node image available for Azure Linux, Ubuntu, and Windows in each region. You can upgrade to the latest node image version either manually or automatically using [autoupgrade for node images][auto-upgrade-node-images].
 
 > [!NOTE]
 > You can use [planned maintenance][planned-maintenance] to control the schedule of AKS-initiated maintenance (AKS release from the list above) and user-initiated maintenance (cluster auto-upgrades and node image auto-upgrades).
