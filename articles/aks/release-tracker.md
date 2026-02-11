@@ -51,11 +51,11 @@ The top half of the tracker shows the regional status on the following:
 - Supported [community versions of Kubernetes in AKS][supported-kubernetes-versions] and [LTS Kubernetes versions in AKS][long-term-support] that are **currently in operation** for each region. 
 - The **Recent Deprecated Version** column shows the latest out-of-support Kubernetes minor version for that region. 
 
-:::image type="content" source="./media/release-tracker/k8s-version-status.png" alt-text="Screenshot of the AKS release tracker's supported Kubernetes version regional status table displayed in a web browser.":::
+:::image type="content" source="./media/release-tracker/kubernetes-version-status.png" alt-text="Screenshot of the AKS release tracker's supported Kubernetes version regional status table displayed in a web browser.":::
 
 The bottom half of the tracker shows the regional release order of all [supported Kubernetes community versions in AKS][supported-kubernetes-versions] and [LTS Kubernetes versions in AKS][long-term-support]. The table has two views: **By Region** and **By Version**.
 
-:::image type="content" source="./media/release-tracker/k8s-version-order.png" alt-text="Screenshot of the AKS release tracker's supported Kubernets version release order table displayed in a web browser.":::
+:::image type="content" source="./media/release-tracker/kubernetes-version-order.png" alt-text="Screenshot of the AKS release tracker's supported Kubernets version release order table displayed in a web browser.":::
 
 ### AKS node image updates
 
