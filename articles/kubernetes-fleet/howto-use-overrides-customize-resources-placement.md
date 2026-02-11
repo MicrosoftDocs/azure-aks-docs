@@ -10,15 +10,15 @@ ms.service: azure-kubernetes-fleet-manager
 zone_pivot_groups: cluster-namespace-scope
 ---
 
-# Use Resource Overrides to customize resources deployed by Azure Kubernetes Fleet Manager resource placement
+# Use Resource Overrides to customize resources deployed by Azure Kubernetes Fleet Manager resource placement (preview)
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-Azure Kubernetes Fleet Manager intelligent resource placement can be used to deploy the same resource to multiple clusters across a fleet. Often there's a need to modify the resource configuration to enforce rules around behavior in different environments (dev, test, prod). For this purpose, Fleet Manager provides resource overrides, which are the Fleet Manager equivalent of Helm templates and Kustomize patches.
+Azure Kubernetes Fleet Manager intelligent resource placement can be used to deploy the same resource to multiple clusters across a fleet. Often there's a need to modify the resource configuration to enforce rules around behavior in different environments (dev, test, prod). For this purpose, Fleet Manager provides resource overrides, which are conceptually similar to Helm templates and Kustomize patches.
 
 Examples of situations where modifying a resource configuration is useful include:
 
-* I want to the same `ClusterRole` configuration to all clusters, but make it more restrictive for my production clusters.
+* I want to use a `ClusterRole` named `secret-reader` on all clusters, but make its allowed actions more restrictive for my production clusters.
 * I want to use the same `Deployment` on all clusters, but use a different container image or port on my productions clusters.
 
 This article shows you how to create overrides for resources deployed by Fleet Manager resource placement.
@@ -26,12 +26,11 @@ This article shows you how to create overrides for resources deployed by Fleet M
 Azure Kubernetes Fleet Manager supports two scopes for overrides:
 
 * **Cluster-scoped**: Use `ClusterResourceOverride` with `ClusterResourcePlacement` for fleet administrators managing infrastructure-level changes.
-* **Namespace-scoped (preview)**: Use `ResourceOverride` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
+* **Namespace-scoped**: Use `ResourceOverride` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
 
 You can select the scope most applicable to you from the scope type choices at the top of the article.
 
-> [!IMPORTANT]
-> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview.
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -137,7 +136,7 @@ The namespace of the resource to override is determined by specifying the `names
 Using our example `Deployment`, let's see how we select it in a `ResourceOverride`.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourceOverride
 metadata:
   name: example-resource-override
@@ -205,7 +204,7 @@ The `jsonPatchOverrides` fields apply a JSON patch on the selected resources by 
 Extending our example, we configure a `policy` to remove the `list` verb from the `ClusterRole` named `secret-reader` on clusters labeled with `env:prod`.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourceOverride
 metadata:
   name: example-cro
@@ -234,7 +233,7 @@ spec:
 Extending our example, we configure a `policy` to replace the container image in the `Deployment` with the `nginx:1.30.0` image for clusters with the `env: prod` label.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourceOverride
 metadata:
   name: example-resource-override
@@ -269,7 +268,7 @@ You can add multiple `jsonPatchOverrides` fields to `overrideRules` to apply mul
 This example removes the verbs "list" and "watch" in our sample `ClusterRole` named `secret-reader` on clusters with the label `env: prod`.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourceOverride
 metadata:
   name: cro-1
@@ -300,7 +299,7 @@ spec:
 This example replaces both the container image and port in the `Deployment` with `443` for clusters with the `env: prod` label.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourceOverride
 metadata:
   name: example-resource-override
@@ -338,7 +337,7 @@ Reserved variables are replaced at placement by the `value` of the JSON patch ov
 For example, to create an Azure DNS hostname that contains the name of the cluster the  example `ResourceOverride` adds a value of `fleet-clustername-eastus` on clusters in the `eastus` Azure region.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourceOverride
 metadata:
   name: ro-kuard-demo-eastus
@@ -375,7 +374,7 @@ This example replaces the container image in the `Deployment` with:
 * The `nginx:latest` image for clusters with the `env: test` label.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourceOverride
 metadata:
   name: ro-1
@@ -651,5 +650,6 @@ spec:
 
 ## Related content
 
+* [Propagate cluster-scoped resources from a Fleet Manager hub cluster to member clusters](./quickstart-resource-propagation.md)
+* [Propagate namespace-scoped resources from a Fleet Manager hub cluster to member clusters](./quickstart-namespace-scoped-resource-propagation.md)
 * [Open-source KubeFleet documentation](https://kubefleet.dev/docs/concepts/override/)
-* [Azure Kubernetes Fleet Manager overview](./overview.md)
