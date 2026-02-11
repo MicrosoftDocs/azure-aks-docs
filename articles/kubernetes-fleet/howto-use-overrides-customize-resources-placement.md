@@ -14,47 +14,63 @@ zone_pivot_groups: cluster-namespace-scope
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-Azure Kubernetes Fleet Manager intelligent resource placement can be used to deploy the same resource to multiple clusters across a fleet. A common challenge arises when there is the need to modify some part of a resource based on where it is deployed. 
+Azure Kubernetes Fleet Manager intelligent resource placement can be used to deploy the same resource to multiple clusters across a fleet. As the same resource is deployed everywhere, there is often a need to modify the resource configuration based on where on the clusters it is deployed to. 
 
-Examples of when an override is useful include:
+Examples of situations where modifying a resource configuration is useful include:
 
-* I want a more restrictive `ClusterRole` configuration for my production clusters.
-* I want to run a different container image for a `Deployment` when it is applied to my productions clusters.
+* I want to the same `ClusterRole` configuration to all clusters, but make it more restrictive for my production clusters.
+* I want to run use the same `Deployment` on all clusters, but use a different container image on my productions clusters.
 
-This article shows you how to create and apply overrides for resources that are deployed by Fleet Manager resource placement.
+This article shows you how to create overrides for resources that are deployed by Fleet Manager resource placement.
 
 Azure Kubernetes Fleet Manager supports two scopes for overrides:
 
-- **Cluster-scoped**: Use `ClusterResourceOverride` with `ClusterResourcePlacement` for fleet administrators managing infrastructure-level changes.
-- **Namespace-scoped (preview)**: Use `ResourceOverride` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
+* **Cluster-scoped**: Use `ClusterResourceOverride` with `ClusterResourcePlacement` for fleet administrators managing infrastructure-level changes.
+* **Namespace-scoped (preview)**: Use `ResourceOverride` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
 
-The examples in this article demonstrate both approaches using tabs. Choose the tab that matches your deployment scope.
+You can select the scope most applicable to you from the scope type choices at the top of the article.
 
 > [!IMPORTANT]
 > `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview.
 
 :::zone target="docs" pivot="cluster-scope"
 
-### Introducing cluster-scoped resource overrides
+## Introducing to cluster-scoped resource overrides
 
-The `ClusterResourceOverride` API consists of the following components:
+A `ClusterResourceOverride` has the following properties:
 
 * `clusterResourceSelectors`: Specifies the set of cluster resources selected for overriding.
 * `policy`: Specifies the set of rules to apply to the selected cluster resources.
 
-### Cluster resource selectors
-
-A `ClusterResourceOverride` object can include one or more cluster resource selectors to specify which resources to override. The `ClusterResourceSelector` object supports the following fields.
-
 > [!NOTE]
-> If you select a namespace in `ClusterResourceSelector`, the override will apply to all resources in the namespace.
+> `Policy` definitions are the same for both cluster and namespace-scoped resources.
+
+Let's use the following example `ClusterRole` named `secret-reader` to demonstrate how `ClusterResourceOverride` work.
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: secret-reader
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "watch", "list"]
+```
+
+## Cluster resource selectors
+
+A `ClusterResourceOverride` can include one or more cluster resource selector to specify which resources to override. The `ClusterResourceSelector` supports the following fields.
 
 * `group`: The API group of the resource.
 * `version`: The API version of the resource.
 * `kind`: The kind of the resource.
 * `name`: The name of the resource.
 
-To add a cluster resource selector to a `ClusterResourceOverride` object, use the `clusterResourceSelectors` field with the following YAML format:
+> [!NOTE]
+> If you select a namespace in `ClusterResourceSelector`, the override will apply to all resources in the namespace.
+
+Using our example `ClusterRole`, let's see how we select it in a `ClusterResourceOverride`.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -68,28 +84,65 @@ spec:
       version: v1
       name: secret-reader
 ```
+:::zone-end
 
-This example selects a `ClusterRole` object named `secret-reader` from the `rbac.authorization.k8s.io/v1` API group for overriding:
+:::zone target="docs" pivot="namespace-scope"  
+
+### Introducing namespace-scoped resource overrides (preview)
+
+The `ResourceOverride` API consists of the following components:
+
+* `resourceSelectors`: Specifies the set of resources selected for overriding.
+* `policy`: Specifies the set of rules to apply to the selected resources.
+
+> [!NOTE]
+> `Policy` definitions are the same for both cluster and namespace-scoped resources.
+
+## Resource selectors
+
+A `ResourceOverride` object can include one or more resource selectors to specify which resources to override. The `ResourceSelector` object includes the following fields.
+
+* `group`: The API group of the resource.
+* `version`: The API version of the resource.
+* `kind`: The kind of the resource.
+* `namespace`: The namespace of the resource.
+
+To add a resource selector to a `ResourceOverride` object, use the `resourceSelectors` field with the following YAML format.
 
 ```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ResourceOverride
 metadata:
-  name: secret-reader
-rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["get", "watch", "list"]
+  name: example-resource-override
+  namespace: test-namespace
+spec:
+  resourceSelectors:
+    -  group: apps
+       kind: Deployment
+       version: v1
+       name: test-nginx
 ```
+
+> [!IMPORTANT]
+> * If you select a namespace in `ResourceSelector`, the override applies to all resources in the namespace.
+> * The `ResourceOverride` object needs to be in the same namespace as the resource to override.
+
+This example selects a `Deployment` object named `test-nginx` from the `test-namespace` namespace for overriding.
+
+:::zone-end
+
+Now we have the resource selected, let's look at how we configure the override using a policy.
 
 ## Policy
 
-A `Policy` object consists of a set of rules, `overrideRules`, that specify the changes to apply to the selected cluster resources. Each `overrideRules` object supports the following fields:
+A `Policy` consists of a set of `overrideRules` that specify the changes to apply to the selected resources. Each `overrideRules` supports the following fields:
 
 * `clusterSelector`: Specifies the set of clusters to which the override rule applies.
 * `jsonPatchOverrides`: Specifies the changes to apply to the selected resources.
 
-To add an override rule to a `ClusterResourceOverride` object, use the `policy` field with the following YAML format:
+:::zone target="docs" pivot="cluster-scope" 
+
+Extending our example, we configure the shown `policy` to remove the `list` verb from the `ClusterRole` named `secret-reader` when clusters are labeled with `env:prod`.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -114,11 +167,9 @@ spec:
             path: /rules/0/verbs/2
 ```
 
-This example removes the verb "list" in the `ClusterRole` object named `secret-reader` on clusters with the label `env: prod`.
-
 ### Cluster selector
 
-You can use the `clusterSelector` field in the `overrideRules` object to specify the clusters to which the override rule applies. The `ClusterSelector` object supports the following field:
+You can use the `clusterSelector` field in the `overrideRules` to specify the clusters to which the rule applies. The `ClusterSelector` object supports the following field:
 
 * `clusterSelectorTerms`: A list of terms that specify the criteria for selecting clusters. Each term includes a `labelSelector` field that defines a set of labels to match.
 
@@ -309,7 +360,7 @@ rules:
 
 :::zone target="docs" pivot="namespace-scope"  
 
-### Introducing namespace-scoped resource overrides
+### Introducing namespace-scoped resource overrides (preview)
 
 The `ResourceOverride` API consists of the following components:
 
@@ -353,6 +404,9 @@ A `Policy` object consists of a set of `overrideRules` that specify the changes 
 
 * `clusterSelector`: Specifies the set of clusters to which the override rule applies.
 * `jsonPatchOverrides`: Specifies the changes to apply to the selected resources.
+
+> [!NOTE]
+> `Policy` definitions are constructed the same way, regardless of the resource scope (cluster or namespace).
 
 To add an override rule to a `ResourceOverride` object, use the `policy` field with the following YAML format:
 
