@@ -1,5 +1,5 @@
 ---
-title: "Use Resource Overrides to customize resources when using Azure Kubernetes Fleet Manager resource placement"
+title: "Use Resource Overrides to customize resources with Azure Kubernetes Fleet Manager resource placement"
 description: This article provides an overview of how to use the resource override APIs to customize resource configurations when using Azure Kubernetes Fleet Manager resource placement.
 ms.topic: how-to
 ms.date: 02/11/2026
@@ -10,15 +10,20 @@ ms.service: azure-kubernetes-fleet-manager
 zone_pivot_groups: cluster-namespace-scope
 ---
 
-# Use Resource Overrides to customize resources when using Azure Kubernetes Fleet Manager resource placement
+# Use Resource Overrides to customize resources with Azure Kubernetes Fleet Manager resource placement
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-Azure Kubernetes Fleet Manager placement staged update runs provide a controlled approach to deploying Kubernetes workloads across multiple member clusters using a stage-by-stage process. To minimize risk, this approach deploys to targeted clusters sequentially, with optional wait times and approval gates between stages.
+Azure Kubernetes Fleet Manager intelligent resource placement can be used to deploy the same resource to multiple clusters across a fleet. A common challenge arises when there is the need to modify some part of a resource based on where it is deployed. 
 
-This article shows you how to create and execute staged update runs to deploy workloads progressively and roll back to previous versions when needed.
+Examples of when an override is useful include:
 
-Azure Kubernetes Fleet Manager supports two scopes for staged updates:
+* I want a more restrictive `ClusterRole` configuration for my production clusters.
+* I want to run a different container image for a `Deployment` when it is applied to my productions clusters.
+
+This article shows you how to create and apply overrides for resources that are deployed by Fleet Manager resource placement.
+
+Azure Kubernetes Fleet Manager supports two scopes for overrides:
 
 - **Cluster-scoped**: Use `ClusterResourceOverride` with `ClusterResourcePlacement` for fleet administrators managing infrastructure-level changes.
 - **Namespace-scoped (preview)**: Use `ResourceOverride` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
@@ -26,9 +31,11 @@ Azure Kubernetes Fleet Manager supports two scopes for staged updates:
 The examples in this article demonstrate both approaches using tabs. Choose the tab that matches your deployment scope.
 
 > [!IMPORTANT]
-> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview. Some features demonstrated in this article, such as `StagedUpdateStrategy`, are also part of the v1beta1 API and aren't available in the v1 API.
+> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview.
 
 :::zone target="docs" pivot="cluster-scope"
+
+### Introducing cluster-scoped resource overrides
 
 The `ClusterResourceOverride` API consists of the following components:
 
@@ -301,6 +308,8 @@ rules:
 :::zone-end
 
 :::zone target="docs" pivot="namespace-scope"  
+
+### Introducing namespace-scoped resource overrides
 
 The `ResourceOverride` API consists of the following components:
 
