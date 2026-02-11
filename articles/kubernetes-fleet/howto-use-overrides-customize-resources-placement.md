@@ -45,7 +45,7 @@ A `ClusterResourceOverride` has the following properties:
 > [!NOTE]
 > `Policy` definitions are the same for both cluster and namespace-scoped resources.
 
-Let's use the following example `ClusterRole` named `secret-reader` to demonstrate how `ClusterResourceOverride` work.
+Let's use the following example `ClusterRole` named `secret-reader` to demonstrate how `ClusterResourceOverride` works.
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -90,7 +90,7 @@ spec:
 
 ### Introducing namespace-scoped resource overrides (preview)
 
-The `ResourceOverride` API consists of the following components:
+A `ResourceOverride` has the following properties:
 
 * `resourceSelectors`: Specifies the set of resources selected for overriding.
 * `policy`: Specifies the set of rules to apply to the selected resources.
@@ -125,14 +125,15 @@ spec:
 
 ## Selecting namespace resources
 
-A `ResourceOverride` object can include one or more resource selectors to specify which resources to override. The `ResourceSelector` object includes the following fields.
+A `ResourceOverride` can include one or more resource selector to specify which resources to override. The `ResourceSelector` supports the following fields.
 
 * `group`: The API group of the resource.
 * `version`: The API version of the resource.
 * `kind`: The kind of the resource.
 * `namespace`: The namespace of the resource.
+* `name`: The name of the resource.
 
-To add a resource selector to a `ResourceOverride` object, use the `resourceSelectors` field with the following YAML format.
+Using our example `Deployment`, let's select a `Deployment` object named `nginx-sample` from the `test-namespace` namespace for overriding.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -151,8 +152,6 @@ spec:
 > [!IMPORTANT]
 > * If you select a namespace in `ResourceSelector`, the override applies to all resources in the namespace.
 > * The `ResourceOverride` object needs to be in the same namespace as the resource to override.
-
-This example selects a `Deployment` object named `nginx-sample` from the `test-namespace` namespace for overriding.
 
 :::zone-end
 
@@ -205,7 +204,7 @@ You can use the `clusterSelector` field in the `overrideRules` to specify the cl
 
 :::zone target="docs" pivot="namespace-scope" 
 
-To add an override rule to a `ResourceOverride` object, use the `policy` field with the following YAML format:
+Extending our example, we configure the shown `policy` to replace the container image in the `Deployment` object with the `nginx:1.30.0` image for clusters with the `env: prod` label.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -229,16 +228,14 @@ spec:
         jsonPatchOverrides:
           - op: replace
             path: /spec/template/spec/containers/0/image
-            value: "nginx:1.20.0"
+            value: "nginx:1.30.0"
 ```
-
-This example replaces the container image in the `Deployment` object with the `nginx:1.20.0` image for clusters with the `env: prod` label.
 
 :::zone-end
 
 ### JSON patch overrides
 
-You can use `jsonPatchOverrides` in the `overrideRules` object to specify the changes to apply to the selected resources. The `JsonPatch` object supports the following fields:
+You can use `jsonPatchOverrides` in `overrideRules` to specify the changes to apply to the selected resources. The `JsonPatch` property supports the following fields:
 
 * `op`: The operation to perform. Supported operations include:
   * `add`: Adds a new value to the specified path.
@@ -268,6 +265,8 @@ You can add multiple `jsonPatchOverrides` fields to an `overrideRules` object to
 
 :::zone target="docs" pivot="cluster-scope" 
 
+This example removes the verbs "list" and "watch" in our sample `ClusterRole` named `secret-reader` on clusters with the label `env: prod`.
+
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
 kind: ClusterResourceOverride
@@ -293,24 +292,11 @@ spec:
             path: /rules/0/verbs/1
 ```
 
-This example removes the verbs "list" and "watch" in the `ClusterRole` object named `secret-reader` on clusters with the label `env: prod`:
-
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: secret-reader
-rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["get", "watch", "list"]
-```
-
-## Apply the cluster resource placement
+## Use with cluster resource placement
 
 ### [Azure CLI](#tab/azure-cli)
 
-1. Create a `ClusterResourcePlacement` resource to specify the placement rules for distributing the cluster resource overrides across the cluster infrastructure. The following code is an example. Be sure to select the appropriate resource.
+1. Create a `ClusterResourcePlacement` to specify the placement rules for distributing the cluster resource overrides across the cluster infrastructure. The following code is an example. Be sure to select the appropriate resource.
 
     ```yaml
     apiVersion: placement.kubernetes-fleet.io/v1
@@ -336,13 +322,13 @@ rules:
 
     This example distributes resources across all clusters labeled with `env: prod`. As the changes are implemented, the corresponding `ClusterResourceOverride` configurations are applied to the designated clusters. The selection of a matching cluster role resource, `secret-reader`, triggers the application of the configurations to the clusters.
 
-2. Apply the `ClusterResourcePlacement` resource by using the `kubectl apply` command:
+2. Apply the `ClusterResourcePlacement` by using the `kubectl apply` command:
 
     ```bash
     kubectl apply -f cluster-resource-placement.yaml
     ```
 
-3. Verify that the `ClusterResourceOverride` object was applied to the selected resources by checking the status of the `ClusterResourcePlacement` resource via the `kubectl describe` command:
+3. Verify that the `ClusterResourceOverride` was applied to the selected resources by checking the status of the `ClusterResourcePlacement` resource via the `kubectl describe` command:
 
     ```bash
     kubectl describe clusterresourceplacement crp
@@ -384,7 +370,7 @@ rules:
 
 1. Select **Create**.
 
-1. Create a `ClusterResourcePlacement` resource to specify the placement rules for distributing the cluster resource overrides across the cluster infrastructure, as shown in the following example. Be sure to select the appropriate resource. Replace the default template with the YAML example, and then select **Add**.
+1. Create a `ClusterResourcePlacement` to specify the placement rules for distributing the cluster resource overrides across the cluster infrastructure, as shown in the following example. Be sure to select the appropriate resource. Replace the default template with the YAML example, and then select **Add**.
 
     :::image type="content" source="./media/cluster-resource-override/crp-create-inline.png" lightbox="./media/cluster-resource-override/crp-create.png" alt-text="Screenshot of the Azure portal page for creating a resource placement, showing the YAML template with placeholder values.":::
 
@@ -421,8 +407,6 @@ rules:
 :::zone-end
 
 :::zone target="docs" pivot="namespace-scope"  
-
-
 
 To add an override rule to a `ResourceOverride` object, use the `policy` field with the following YAML format:
 
