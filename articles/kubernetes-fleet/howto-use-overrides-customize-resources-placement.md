@@ -35,7 +35,7 @@ You can select the scope most applicable to you from the scope type choices at t
 
 :::zone target="docs" pivot="cluster-scope"
 
-## Introducing to cluster-scoped resource overrides
+## Cluster-scoped resource overrides
 
 A `ClusterResourceOverride` has the following properties:
 
@@ -60,7 +60,7 @@ rules:
 
 ## Selecting cluster resources
 
-A `ClusterResourceOverride` can include one or more cluster resource selector to specify which resources to override. The `ClusterResourceSelector` supports the following fields.
+A `ClusterResourceOverride` can include one or more `clusterResourceSelector` to choose which resources to override. Each `clusterResourceSelector` supports the following fields.
 
 * `group`: The API group of the resource.
 * `version`: The API version of the resource.
@@ -88,7 +88,7 @@ spec:
 
 :::zone target="docs" pivot="namespace-scope"  
 
-### Introducing namespace-scoped resource overrides (preview)
+## Namespace-scoped resource overrides (preview)
 
 A `ResourceOverride` has the following properties:
 
@@ -125,7 +125,7 @@ spec:
 
 ## Selecting namespace resources
 
-A `ResourceOverride` can include one or more resource selector to specify which resources to override. The `ResourceSelector` supports the following fields.
+A `ResourceOverride` can include one or more `resourceSelector` to choose which resources to override. Each `resourceSelector` supports the following fields.
 
 * `group`: The API group of the resource.
 * `version`: The API version of the resource.
@@ -133,7 +133,7 @@ A `ResourceOverride` can include one or more resource selector to specify which 
 * `namespace`: The namespace of the resource.
 * `name`: The name of the resource.
 
-Using our example `Deployment`, let's select a `Deployment` object named `nginx-sample` from the `test-namespace` namespace for overriding.
+Using our example `Deployment`, let's see how we select it in a `ResourceOverride`.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -150,23 +150,58 @@ spec:
 ```
 
 > [!IMPORTANT]
-> * If you select a namespace in `ResourceSelector`, the override applies to all resources in the namespace.
+> * If you select a namespace in `resourceSelector`, the override applies to all resources in the namespace.
 > * The `ResourceOverride` object needs to be in the same namespace as the resource to override.
 
 :::zone-end
 
-Now we have the resource selected, let's look at how we configure the override using a policy.
+Now we have the resource selected, let's look at how we configure the override using a `policy`.
 
 ## Policy
 
-A `Policy` consists of a set of `overrideRules` that specify the changes to apply to the selected resources. Each `overrideRules` supports the following fields:
+A `policy` consists of a set of `overrideRules` that specify the changes to apply to the selected resources. Each `overrideRules` supports the following fields:
 
 * `clusterSelector`: Specifies the set of clusters to which the override rule applies.
 * `jsonPatchOverrides`: Specifies the changes to apply to the selected resources.
 
+### Cluster selector
+
+You can use the `clusterSelector` field in the `overrideRules` to specify the clusters to which the rule applies. The `ClusterSelector` object supports the following field:
+
+* `clusterSelectorTerms`: A list of terms that specify the criteria for selecting clusters. Each term includes a `labelSelector` field that defines a set of labels to match.
+
+> [!IMPORTANT]
+> Only `labelSelector` is supported in the `clusterSelectorTerms` field.
+
+### JSON patch overrides
+
+You can use `jsonPatchOverrides` in `overrideRules` to specify the changes to apply to the selected resources. The `JsonPatch` property supports the following fields:
+
+* `op`: The operation to perform. Supported operations include:
+  * `add`: Adds a new value to the specified path.
+  * `remove`: Removes the value at the specified path.
+  * `replace`: Replaces the value at the specified path.
+
+* `path`: The path to the field to modify. Guidance on specifying paths includes:
+  * Must start with a slash (`/`) character.
+  * Can't be empty or contain an empty string.
+  * Can't be a `TypeMeta` field (`/kind` or `/apiVersion`).
+  * Can't be a `Metadata` field (`/metadata/name` or `/metadata/namespace`), except the fields `/metadata/labels` and `/metadata/annotations`.
+  * Can't be any field in the status of the resource.
+
+  Examples of valid paths include:  
+  * `/metadata/labels/new-label`
+  * `/metadata/annotations/new-annotation`
+  * `/spec/template/spec/containers/0/resources/limits/cpu`
+  * `/spec/template/spec/containers/0/resources/requests/memory`
+
+* `value`: The value to add, remove, or replace. If `op` is `remove`, you can't specify `value`.
+
+The `jsonPatchOverrides` fields apply a JSON patch on the selected resources by following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
+
 :::zone target="docs" pivot="cluster-scope" 
 
-Extending our example, we configure the shown `policy` to remove the `list` verb from the `ClusterRole` named `secret-reader` when clusters are labeled with `env:prod`.
+Extending our example, we configure a `policy` to remove the `list` verb from the `ClusterRole` named `secret-reader` on clusters labeled with `env:prod`.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -191,20 +226,11 @@ spec:
             path: /rules/0/verbs/2
 ```
 
-### Cluster selector
-
-You can use the `clusterSelector` field in the `overrideRules` to specify the clusters to which the rule applies. The `ClusterSelector` object supports the following field:
-
-* `clusterSelectorTerms`: A list of terms that specify the criteria for selecting clusters. Each term includes a `labelSelector` field that defines a set of labels to match.
-
-> [!IMPORTANT]
-> Only `labelSelector` is supported in the `clusterSelectorTerms` field.
-
 :::zone-end
 
 :::zone target="docs" pivot="namespace-scope" 
 
-Extending our example, we configure the shown `policy` to replace the container image in the `Deployment` object with the `nginx:1.30.0` image for clusters with the `env: prod` label.
+Extending our example, we configure a `policy` to replace the container image in the `Deployment` with the `nginx:1.30.0` image for clusters with the `env: prod` label.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -232,32 +258,6 @@ spec:
 ```
 
 :::zone-end
-
-### JSON patch overrides
-
-You can use `jsonPatchOverrides` in `overrideRules` to specify the changes to apply to the selected resources. The `JsonPatch` property supports the following fields:
-
-* `op`: The operation to perform. Supported operations include:
-  * `add`: Adds a new value to the specified path.
-  * `remove`: Removes the value at the specified path.
-  * `replace`: Replaces the value at the specified path.
-
-* `path`: The path to the field to modify. Guidance on specifying paths includes:
-  * Must start with a slash (`/`) character.
-  * Can't be empty or contain an empty string.
-  * Can't be a `TypeMeta` field (`/kind` or `/apiVersion`).
-  * Can't be a `Metadata` field (`/metadata/name` or `/metadata/namespace`), except the fields `/metadata/labels` and `/metadata/annotations`.
-  * Can't be any field in the status of the resource.
-
-  Examples of valid paths include:  
-  * `/metadata/labels/new-label`
-  * `/metadata/annotations/new-annotation`
-  * `/spec/template/spec/containers/0/resources/limits/cpu`
-  * `/spec/template/spec/containers/0/resources/requests/memory`
-
-* `value`: The value to add, remove, or replace. If `op` is `remove`, you can't specify `value`.
-
-The `jsonPatchOverrides` fields apply a JSON patch on the selected resources by following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
 
 ### Multiple override patches
 
@@ -408,67 +408,6 @@ spec:
 
 :::zone target="docs" pivot="namespace-scope"  
 
-To add an override rule to a `ResourceOverride` object, use the `policy` field with the following YAML format:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
-kind: ResourceOverride
-metadata:
-  name: example-resource-override
-  namespace: test-namespace
-spec:
-  resourceSelectors:
-    -  group: apps
-       kind: Deployment
-       version: v1
-       name: test-nginx
-  policy:
-    overrideRules:
-      - clusterSelector:
-          clusterSelectorTerms:
-            - labelSelector:
-                matchLabels:
-                  env: prod
-        jsonPatchOverrides:
-          - op: replace
-            path: /spec/template/spec/containers/0/image
-            value: "nginx:1.20.0"
-```
-
-This example replaces the container image in the `Deployment` object with the `nginx:1.20.0` image for clusters with the `env: prod` label.
-
-### Cluster selector
-
-You can use the `clusterSelector` field in the `overrideRules` object to specify the resources to which the override rule applies. The `ClusterSelector` object supports the following field:
-
-* `clusterSelectorTerms`: A list of terms that specify the criteria for selecting clusters. Each term includes a `labelSelector` field that defines a set of labels to match.
-
-### JSON patch overrides
-
-You can use `jsonPatchOverrides` in the `overrideRules` object to specify the changes to apply to the selected resources. The `JsonPatch` object supports the following fields:
-
-* `op`: The operation to perform. Supported operations include:
-  * `add`: Adds a new value to the specified path.
-  * `remove`: Removes the value at the specified path.
-  * `replace`: Replaces the value at the specified path.
-
-* `path`: The path to the field to modify. Guidance on specifying paths includes:
-  * Must start with a slash (`/`) character.
-  * Can't be empty or contain an empty string.
-  * Can't be a `TypeMeta` field (`/kind` or `/apiVersion`).
-  * Can't be a `Metadata` field (`/metadata/name` or `/metadata/namespace`), except the fields `/metadata/labels` and `/metadata/annotations`.
-  * Can't be any field in the status of the resource.
-
-  Examples of valid paths include:
-  * `/metadata/labels/new-label`
-  * `/metadata/annotations/new-annotation`
-  * `/spec/template/spec/containers/0/resources/limits/cpu`
-  * `/spec/template/spec/containers/0/resources/requests/memory`
-
-* `value`: The value to add, remove, or replace. If `op` is `remove`, you can't specify `value`.
-
-The `jsonPatchOverrides` fields apply a JSON patch on the selected resources by following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
-
 ### Reserved Variables in the JSON Patch Override Value
 
 Reserved variables are replaced by value used in the `value` of the JSON patch override rule. Currently supported reserved variables:
@@ -549,7 +488,6 @@ This example replaces the container image in the `Deployment` object with:
 
 * The `nginx:1.20.0` image for clusters with the `env: prod` label.
 * The `nginx:latest` image for clusters with the `env: test` label.
-
 
 ## Apply the cluster resource placement
 
