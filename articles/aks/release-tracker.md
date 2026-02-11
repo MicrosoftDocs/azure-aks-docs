@@ -55,7 +55,7 @@ The top half of the tracker shows the regional status on the following:
 
 The bottom half of the tracker shows the regional release order of all [supported Kubernetes community versions in AKS][supported-kubernetes-versions] and [LTS Kubernetes versions in AKS][long-term-support]. The table has two views: **By Region** and **By Version**.
 
-:::image type="content" source="./media/release-tracker/kubernetes-version-order.png" alt-text="Screenshot of the AKS release tracker's supported Kubernets version release order table displayed in a web browser.":::
+:::image type="content" source="./media/release-tracker/kubernetes-version-order.png" alt-text="Screenshot of the AKS release tracker's supported Kubernetes version release order table displayed in a web browser.":::
 
 ### AKS node image updates
 
