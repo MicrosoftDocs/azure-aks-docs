@@ -26,7 +26,7 @@ AKS release tracker provides a regional breakdown of the following three indepen
 - **AKS node images** updates the latest node image available for Azure Linux, Ubuntu, and Windows in each region. You can upgrade to the latest node image version either manually or automatically using [autoupgrade for node images][auto-upgrade-node-images].
 
 > [!NOTE]
-> You can use [planned maintenance][planned-maintenance] to control the schedule of AKS-initiated maintenance (AKS release from the list above) and user-initiated maintenance (cluster auto-upgrades and node image auto-upgrades).
+> You can use [planned maintenance][planned-maintenance] to control the schedule of AKS-initiated maintenance (AKS release train) and user-initiated maintenance (cluster autoupgrades and node image autoupgrades).
 
 ## Use the release tracker
 
