@@ -167,7 +167,7 @@ A `policy` consists of a set of `overrideRules` that specify the changes to appl
 
 ### Cluster selector
 
-You can use the `clusterSelector` field in the `overrideRules` to specify the clusters to which the rule applies. The `ClusterSelector` object supports the following field:
+You can use the `clusterSelector` field in the `overrideRules` to specify the clusters to which the rule applies. The `clusterSelector` supports the following field:
 
 * `clusterSelectorTerms`: A list of terms that specify the criteria for selecting clusters. Each term includes a `labelSelector` field that defines a set of labels to match.
 
@@ -260,9 +260,9 @@ spec:
 
 :::zone-end
 
-### Multiple override patches
+### Define multiple overrides
 
-You can add multiple `jsonPatchOverrides` fields to an `overrideRules` object to apply multiple changes to the selected cluster resources. Here's an example:
+You can add multiple `jsonPatchOverrides` fields to `overrideRules` to apply multiple changes to a selected cluster resources. Here's an example:
 
 :::zone target="docs" pivot="cluster-scope" 
 
@@ -335,7 +335,7 @@ Reserved variables are replaced by value used in the `value` of the JSON patch o
 
 * `${MEMBER-CLUSTER-NAME}`: replaced by the name of the `memberCluster`.
 
-For example, to create an Azure DNS hostname that contains the name of the cluster, you can use a configuration similar to:
+For example, to create an Azure DNS hostname that contains the name of the cluster the  example `ResourceOverride` adds a value of `fleet-clustername-eastus` on clusters in the `eastus` Azure region.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -364,8 +364,6 @@ spec:
             value:
               {"service.beta.kubernetes.io/azure-dns-label-name":"fleet-${MEMBER-CLUSTER-NAME}-eastus"}
 ```
-
-The example `ResourceOverride` object adds a value of `fleet-clustername-eastus` to the specified JSON path on clusters in the `eastus` Azure region.
 
 ### Multiple override rules
 
@@ -405,7 +403,7 @@ spec:
             value: "nginx:latest"
 ```
 
-This example replaces the container image in the `Deployment` object with:
+This example replaces the container image in the `Deployment` with:
 
 * The `nginx:1.20.0` image for clusters with the `env: prod` label.
 * The `nginx:latest` image for clusters with the `env: test` label.
@@ -567,7 +565,7 @@ This example replaces the container image in the `Deployment` object with:
     kubectl apply -f cluster-resource-placement.yaml
     ```
 
-3. Verify that the `ResourceOverride` object was applied to the selected resources by checking the status of the `ClusterResourcePlacement` resource via the `kubectl describe` command:
+3. Verify that the `ResourceOverride` was applied to the selected resources by checking the status of the `ClusterResourcePlacement` resource via the `kubectl describe` command:
 
     ```bash
     kubectl describe clusterresourceplacement crp-example
