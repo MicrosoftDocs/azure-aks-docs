@@ -7,7 +7,9 @@ ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
 # Customer intent: "As a cloud operations engineer, I want to define a customized rollout strategy for managing resource placements in Fleet Manager, so that I can minimize service interruptions and optimize resource deployment across multiple clusters."
+zone_pivot_groups: cluster-namespace-scope
 ---
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 # Defining a rollout strategy for Azure Kubernetes Fleet Manager resource placement
 
@@ -68,7 +70,7 @@ spec:
 ### ResourcePlacement example
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: rp-example
@@ -159,10 +161,12 @@ Staged updates use different custom resources depending on scope:
 * **StagedUpdateStrategy** - Defines the stages, cluster selection, and progression rules (namespace-scoped)
 * **StagedUpdateRun** - Executes the stagedUpdateStrategy against a specific `ResourcePlacement` and resource snapshot (namespace-scoped)
 
+:::zone target="docs" pivot="cluster-scope"
+
 #### ClusterResourcePlacement with external strategy
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: my-app-placement
@@ -181,7 +185,7 @@ spec:
 #### ClusterStagedUpdateStrategy (cluster-scoped)
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateStrategy
 metadata:
   name: three-stage-strategy
@@ -212,11 +216,14 @@ spec:
         - type: Approval
       maxConcurrency: 1  # Sequential updates (default)
 ```
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
 
 #### ResourcePlacement with external strategy
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v
 kind: ResourcePlacement
 metadata:
   name: my-app-placement
@@ -236,7 +243,7 @@ spec:
 #### StagedUpdateStrategy (namespace-scoped)
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: StagedUpdateStrategy
 metadata:
   name: three-stage-strategy
@@ -268,6 +275,7 @@ spec:
         - type: Approval
       maxConcurrency: 1  # Sequential updates (default)
 ```
+:::zone-end
 
 ### Stage configuration
 
@@ -278,6 +286,8 @@ Each stage in the strategy can specify:
 * **Before-stage tasks** (`beforeStageTasks`) approval requirement (optional - up to 1 task per stage)
 * **After-stage tasks** (`afterStageTasks`) either timed wait or approval requirement (optional - up to 2 tasks per stage, maximum one of each type)
 * **Max concurrency** (`maxConcurrency`) to determine the maximum number of clusters to update concurrently within the stage (optional - can be an absolute number  from 1 to the number of clusters in the stage, or a percentage from 1 to 100, fractional results are rounded down with a minimum of 1) 
+
+:::zone target="docs" pivot="cluster-scope"
 
 #### ClusterStagedUpdateRun (cluster-scoped)
 
@@ -293,6 +303,9 @@ spec:
   state: Run # Optional - Controls the execution state of the update run.
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
 #### StagedUpdateRun (namespace-scoped)
 
 ```yaml
@@ -307,6 +320,8 @@ spec:
   stagedRolloutStrategyName: three-stage-strategy # Required - The name of the update strategy to use.
   state: Run # Optional - Controls the execution state of the update run. 
 ```
+
+:::zone-end
 
 ### Specifying rollout
 
@@ -342,7 +357,7 @@ Once an update run finishes, the update run can't be restarted.
 
 > [!NOTE]
 > Always verify the current state of your update runs before attempting state changes. 
-> Use `kubectl get csur <update-run-name>` or `kubectl get sur <update-run-name> -n <namespace>` to check the current state and status.
+> Use `kubectl get clusterstagedupdaterun <update-run-name>` or `kubectl get stagedupdaterun <update-run-name> -n <namespace>` to check the current state and status.
 
 
 ### Stage progression

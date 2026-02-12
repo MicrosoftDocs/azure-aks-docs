@@ -89,7 +89,7 @@ To deploy the resources, create a `ClusterResourcePlacement`:
 > The `spec.strategy.type` is set to `External` to allow rollout triggered with a `ClusterStagedUpdateRun`.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: example-placement
@@ -246,7 +246,7 @@ spec:
 A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateStrategy
 metadata:
   name: example-strategy
@@ -275,7 +275,7 @@ spec:
 A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our ClusterResourcePlacement (CRP), we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateRun
 metadata:
   name: example-run
@@ -332,7 +332,7 @@ kubectl get clusterstagedupdaterrun example-run -o yaml
 Your output should look similar to the following example:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v
 kind: ClusterStagedUpdateRun
 metadata:
   ...
@@ -476,6 +476,7 @@ cat << EOF > approval.json
 }
 EOF
 ```
+> Note: Be sure the `observedGeneration` matches the generation of the approval object.
 
 Submit a patch request to approve using the JSON file created.
 
@@ -568,7 +569,7 @@ kubectl get clusterstagedupdaterun example-run -o yaml
 Your output should look similar to the following example:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateRun
 metadata:
   ...
@@ -649,7 +650,7 @@ status:
 Suppose the workload admin wants to roll back the ConfigMap change, reverting the value `value2` back to `value1`. Instead of manually updating the ConfigMap from hub, they can create a new `ClusterStagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateRun
 metadata:
   name: example-run-2
@@ -750,7 +751,7 @@ kubectl create configmap test-cm --from-literal=key=value1 -n test-namespace
 Since `ResourcePlacement` is namespace-scoped, first deploy the Namespace to all member clusters using a `ClusterResourcePlacement`, specifying `NamespaceOnly` for the selection scope:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: test-namespace-placement
@@ -784,7 +785,7 @@ To deploy the ConfigMap, create a namespace-scoped `ResourcePlacement`:
 > The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: example-placement
@@ -932,7 +933,7 @@ spec:
 A `StagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: StagedUpdateStrategy
 metadata:
   name: example-strategy
@@ -962,7 +963,7 @@ spec:
 A `StagedUpdateRun` executes the rollout of a `ResourcePlacement` following a `StagedUpdateStrategy`. To trigger the staged update run for our ResourcePlacement (RP), we create a `StagedUpdateRun` specifying the RP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: StagedUpdateRun
 metadata:
   name: example-run
@@ -1044,6 +1045,7 @@ cat << EOF > approval.json
 }
 EOF
 ```
+> NOTE: Be sure the `observedGeneration` is the same as the generation of the approval object.
 
 Submit a patch request to approve using the JSON file created.
 
@@ -1136,7 +1138,7 @@ kubectl get stagedupdaterun example-run -n test-namespace -o yaml
 Your output should look similar to the following example:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: StagedUpdateRun
 metadata:
   ...
@@ -1218,7 +1220,7 @@ status:
 Suppose the workload admin wants to roll back the ConfigMap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new `StagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: StagedUpdateRun
 metadata:
   name: example-run-2
