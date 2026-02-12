@@ -4,7 +4,7 @@ description: Learn about identity bindings on AKS and how they extend Microsoft 
 ms.topic: concept-article
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 12/13/2025
+ms.date: 02/12/2026
 ms.custom: preview
 author: shashankbarsin
 ms.author: shasb
@@ -51,7 +51,7 @@ The following table outlines the minimum package versions and how to enable iden
 | Go | [azidentity][go-azidentity] | **v1.14.0-beta.2** or later | Set `WorkloadIdentityCredentialOptions.EnableAzureTokenProxy` to `true`. |
 | Java | [azure-identity][java-azure-identity] | **v1.19.0-beta.1** or later | Call `enableAzureTokenProxy()` on `WorkloadIdentityCredentialBuilder`. |
 | JavaScript | [@azure/identity][javascript-azure-identity] | **4.14.0-beta.1** or later | Set `enableAzureKubernetesTokenProxy` to `true` in `WorkloadIdentityCredentialOptions`. |
-| Python | [azure-identity][python-azure-identity] | **1.26.0b1** or later | Set `use_token_proxy=True` in `WorkloadIdentityCredential`. |
+| Python | [azure-identity][python-azure-identity] | **1.26.0b2** or later | Set `enable_azure_proxy=True` in `WorkloadIdentityCredential`. |
 
 ## Frequently asked questions (FAQs)
 
