@@ -37,6 +37,8 @@ Both `ClusterResourcePlacement` and `ResourcePlacement` don't require you to def
 
 An explicit rolling update strategy can be used by adding a `strategy` specification to a `ClusterResourcePlacement` or `ResourcePlacement` as shown. You can define parameters, which control how disruptive the Fleet Manager resource placement is.
 
+:::zone target="docs" pivot="cluster-scope"
+
 ### ClusterResourcePlacement example
 
 ```yaml
@@ -67,6 +69,10 @@ spec:
       maxSurge: 50%
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
 ### ResourcePlacement example
 
 ```yaml
@@ -90,6 +96,7 @@ spec:
       maxUnavailable: 1
       maxSurge: 50%
 ```
+:::zone-end
 
 ### Configuration parameters
 
