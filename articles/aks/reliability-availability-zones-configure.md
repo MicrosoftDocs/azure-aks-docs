@@ -58,7 +58,7 @@ az aks nodepool add --resource-group example-rg --cluster-name example-cluster -
 
 AKS automatically balances the number of nodes between zones.
 
-If a zonal outage occurs, nodes within the affected zone might be affected, but nodes in other availability zones remain unaffected.
+If a zone outage occurs, nodes within the affected zone might be affected, but nodes in other availability zones remain unaffected.
 
 To validate node locations, run the following command:
 
@@ -95,7 +95,7 @@ Regional mode is used when the zone assignment isn't set in the deployment templ
 
 In this configuration, the node pool creates regional (not zone-pinned) instances and implicitly places instances throughout the region. There's no guarantee that instances are balanced or spread across zones, or that instances are in the same availability zone.
 
-In the rare case of a full zonal outage, any or all instances within the node pool might be affected.
+In the rare case of a full zone outage, any or all instances within the node pool might be affected.
 
 To validate node locations, run the following command:
 
