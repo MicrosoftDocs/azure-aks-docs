@@ -48,9 +48,9 @@ The following table outlines the minimum package versions and how to enable iden
 | Language | Package | Minimum Version | How to enable |
 | -------- | ------- | --------------- | ------------- |
 | .NET | [Azure.Identity][dotnet-azure-identity] | **v1.18.0-beta.2** or later | `WorkloadIdentityCredential` identity binding mode is disabled by default. Set `WorkloadIdentityCredentialOptions.IsAzureKubernetesTokenProxyEnabled` to `true`. |
-| Go | [azidentity][go-azidentity] | **v1.14.0-beta.2** or later | Set `WorkloadIdentityCredentialOptions.EnableAzureTokenProxy` to `true`. |
+| Go | [azidentity][go-azidentity] | **v1.14.0-beta.3** or later | Set `WorkloadIdentityCredentialOptions.EnableAzureProxy` to `true`. |
 | Java | [azure-identity][java-azure-identity] | **v1.19.0-beta.1** or later | Call `enableAzureTokenProxy()` on `WorkloadIdentityCredentialBuilder`. |
-| JavaScript | [@azure/identity][javascript-azure-identity] | **4.14.0-beta.1** or later | Set `enableAzureKubernetesTokenProxy` to `true` in `WorkloadIdentityCredentialOptions`. |
+| JavaScript | [@azure/identity][javascript-azure-identity] | **4.14.0-beta.2** or later | Set `enableAzureProxy` to `true` in `WorkloadIdentityCredentialOptions`. |
 | Python | [azure-identity][python-azure-identity] | **1.26.0b2** or later | Set `enable_azure_proxy=True` in `WorkloadIdentityCredential`. |
 
 ## Frequently asked questions (FAQs)
