@@ -1,11 +1,11 @@
 ---
-title: Deploy an application with the Dapr cluster extension for Azure Kubernetes Service (AKS) or Arc-enabled Kubernetes
+title: Deploy an App with Dapr Cluster Extension for Kubernetes
 description: Use the Dapr cluster extension for Azure Kubernetes Service (AKS) or Arc-enabled Kubernetes to deploy an application.
 author: greenie-msft
 ms.author: nigreenf
 ms.topic: quickstart
 ms.subservice: dapr-aks
-ms.date: 12/17/2024
+ms.date: 02/11/2026
 ms.custom: template-quickstart, mode-other, devx-track-js, devx-track-python
 # Customer intent: As a cloud developer, I want to deploy a sample application using Dapr on Azure Kubernetes Service or Arc-enabled Kubernetes, so that I can learn how to configure microservices and integrate them with state management effectively.
 ---
@@ -16,9 +16,9 @@ In this quickstart, you use the [Dapr cluster extension][dapr-overview] in an AK
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
-- [Azure CLI][azure-cli-install] or [Azure PowerShell][azure-powershell-install] installed.
-- An AKS Cluster with:
+- An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free).
+- [Azure CLI][azure-cli-install] installed.
+- An AKS cluster with:
   - [Workload identity][workload-identity] enabled
   - [Managed identity][managed-identity] created in the same subscription
   - [A Kubernetes service account][service-account]
@@ -36,24 +36,31 @@ In this quickstart, you use the [Dapr cluster extension][dapr-overview] in an AK
 
 1. Change to the `dapr-aks-extension-quickstart` directory. 
 
+    ```bash
+    cd dapr-aks-extension-quickstart
+    ```
+
 ## Create and configure a Redis store
 
 Open the [Azure portal][azure-portal-cache] to start the Azure Cache for Redis creation flow. 
 
-1. Fill out the recommended information according to [the "Create an open-source Redis cache" quickstart instructions][azure-redis-cache].
+1. Fill out the recommended information according to the [Create an Azure Cache for Redis instance][azure-redis-cache] quickstart.
+
 1. Select **Create** to start the Redis instance deployment.
 
 ### Verify resource information
 
 1. Once the Redis resource is deployed, navigate to its overview page. 
+
 1. Take note of:
     - The hostname, found in the **Essentials** section of the cache overview page. The hostname format looks similar to: `xxxxxx.redis.cache.windows.net`.
-    - The SSL port, found in the cache's **Advanced Settings** blade. The default value is `6380`.
-1. Navigate to the **Authentication** blade and verify Microsoft Entra Authentication is enabled on your resource.
+    - The SSL port, found in the **Settings** > **Advanced settings** section. The default value is `6380`.
+
+1. Navigate to **Settings** > **Authentication**, and verify Microsoft Entra Authentication is enabled on your resource.
 
 ### Add managed identity
 
-1. In the **Authentication** blade, type the name of the [Managed Identity you created as a prerequisite](#prerequisites) in the field under **Enable Microsoft Entra Authentication** checkbox. 
+1. In the **Authentication** section, enter the name of the [managed identity you created as a prerequisite](#prerequisites) in the field under **Enable Microsoft Entra Authentication** checkbox. 
 
    :::image type="content" source="./media/quickstart-dapr/add-redis-user.png" alt-text="Screenshot that shows the field where you can select a managed identity to add as a Redis user.":::
 
@@ -63,12 +70,13 @@ Open the [Azure portal][azure-portal-cache] to start the Azure Cache for Redis c
 
 For this scenario, your Redis cache uses public network access. Be sure to [clean up resources](#clean-up-resources) when you're finished with this quickstart.
 
-1. Navigate to the **Private Endpoint** blade. 
-1. Click **Enable public network access** from the top menu.
+1. Navigate to **Settings** > **Private Endpoint**.
+
+1. Select **Enable public network access** from the menu.
 
 ## Configure the Dapr components
 
-In `redis.yaml`, the component is configured to use Entra ID Authentication using workload identity enabled for AKS cluster. No access keys are required. 
+In the *redis.yaml* file, the component is configured to use Entra ID authentication using workload identity enabled for AKS cluster. No access keys are required. 
 
 ```yml
 - name: useEntraID
@@ -77,7 +85,7 @@ In `redis.yaml`, the component is configured to use Entra ID Authentication usin
   value: true
 ```
 
-1. In your preferred code editor, navigate to the `deploy` directory in the sample and open `redis.yaml`.
+1. In your preferred code editor, navigate to the *deploy* directory in the sample repo and open *redis.yaml*.
 
 1. For `redisHost`, replace the placeholder `<REDIS_HOST>:<REDIS_PORT>` value with the Redis cache hostname and SSL port [you saved earlier from Azure portal](#verify-resource-information). 
 
@@ -88,29 +96,23 @@ In `redis.yaml`, the component is configured to use Entra ID Authentication usin
 
 ### Apply the configuration
 
-1. Apply the `redis.yaml` file using the `kubectl apply` command.
+Apply the *redis.yaml* file using the `kubectl apply` command.
 
-    ```bash
-    kubectl apply -f ./deploy/redis.yaml
-    ```
+```bash
+kubectl apply -f ./deploy/redis.yaml
+```
 
-1. Verify your state store was successfully configured using the `kubectl get components.redis` command.
+**Expected output**
 
-    ```bash
-    kubectl get components.redis -o yaml
-    ```
-
-    **Expected output**
-
-    ```output
-    component.dapr.io/statestore created
-    ```
+```output
+component.dapr.io/statestore created
+```
 
 ## Deploy the Node.js app with the Dapr sidecar
 
 ### Configure the Node.js app
 
-In `node.yaml`, the pod spec has the label added to use workload identity:
+In *node.yaml*, the pod spec has the label added to use workload identity:
 
 ```yaml
 labels:
@@ -118,9 +120,9 @@ labels:
   azure.workload.identity/use: "true"
 ```
 
-1. Navigate to the `deploy` directory and open `node.yaml`.
+1. Navigate to the `deploy` directory and open *node.yaml*.
 
-2. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
+1. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
    - This value should be the same service account you used to create the federated identity credential.
 
 ### Apply the configuration
@@ -150,7 +152,7 @@ labels:
 1. Using `curl`, call the service with your `EXTERNAL-IP`.
 
     ```bash
-    curl $EXTERNAL_IP/ports
+    curl <EXTERNAL-IP>/ports
     ```
 
     **Example output**
@@ -162,13 +164,13 @@ labels:
 1. Submit an order to the application.
 
     ```bash
-    curl --request POST --data "@sample.json" --header Content-Type:application/json $EXTERNAL_IP/neworder
+    curl --request POST --data "@sample.json" --header Content-Type:application/json <EXTERNAL-IP>/neworder
     ```
 
 1. Confirm the order.
 
     ```bash
-    curl $EXTERNAL_IP/order
+    curl <EXTERNAL-IP>/order
     ```
 
     **Expected output**
@@ -181,7 +183,7 @@ labels:
 
 ### Configure the Python app
 
-In `python.yaml`, the pod spec has the label added to use workload identity:
+In *python.yaml*, the pod spec has the label added to use workload identity:
 
 ```yaml
 labels:
@@ -189,9 +191,9 @@ labels:
   azure.workload.identity/use: "true"
 ```
 
-1. Navigate to the `deploy` directory and open `python.yaml`.
+1. Navigate to the `deploy` directory and open *python.yaml*.
 
-2. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
+1. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
    - This value should be the same service account you used to create the federated identity credential.
 
 ### Apply the configuration
@@ -232,37 +234,23 @@ Now that both the Node.js and Python applications are deployed, you can watch me
 1. Using `curl`, call the Node.js app's order endpoint to get the latest order.
 
     ```bash
-    curl $EXTERNAL_IP/order
+    curl <EXTERNAL-IP>/order
     ```
 
     You should see the latest JSON output in the response.
 
 ## Clean up resources
 
-If you no longer plan to use the resources from this quickstart, you can delete all associated resources by removing the resource group.
+If you no longer plan to use the resources from this quickstart, you can remove the resource group, cluster, namespace, and all related resources using the [az group delete][az-group-delete] command.
 
-### [Azure CLI](#tab/azure-cli)
-
-Remove the resource group, cluster, namespace, and all related resources using the [az group delete][az-group-delete] command.
-
-```azurecli-interactive
-az group delete --name MyResourceGroup
+```bash
+az group delete --name <your-resource-group>
 ```
 
-### [Azure PowerShell](#tab/azure-powershell)
-
-Remove the resource group, cluster, namespace, and all related resources using the [Remove-AzResourceGroup][remove-azresourcegroup] command.
-
-```azurepowershell-interactive
-Remove-AzResourceGroup -Name MyResourceGroup
-```
-
----
-
-## Next steps
+## Next step
 
 > [!div class="nextstepaction"]
-> [Learn how to create the Dapr extension][dapr-create-extension]
+> [Install the Dapr extension][dapr-create-extension]
 
 <!-- LINKS -->
 <!-- INTERNAL -->
@@ -273,7 +261,7 @@ Remove-AzResourceGroup -Name MyResourceGroup
 [az-group-delete]: /cli/azure/group#az-group-delete
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
 [dapr-create-extension]: ./dapr.md
-[workload-identity]: ./workload-identity-deploy-cluster.md#deploy-and-configure-microsoft-entra-workload-id-on-an-azure-kubernetes-service-aks-cluster
+[workload-identity]: ./workload-identity-deploy-cluster.md##enable-oidc-issuer-and-microsoft-entra-workload-id-on-an-aks-cluster
 [managed-identity]: ./workload-identity-deploy-cluster.md#create-a-managed-identity
 [service-account]: ./workload-identity-deploy-cluster.md#create-a-kubernetes-service-account
 [federated-identity-cred]: ./workload-identity-deploy-cluster.md#create-the-federated-identity-credential
