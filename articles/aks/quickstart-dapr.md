@@ -1,6 +1,6 @@
 ---
-title: Deploy an App with Dapr Cluster Extension for Kubernetes
-description: Use the Dapr cluster extension for Azure Kubernetes Service (AKS) or Arc-enabled Kubernetes to deploy an application.
+title: Deploy an App with Dapr Extension for Kubernetes
+description: Use the Dapr extension for Azure Kubernetes Service (AKS) or Arc-enabled Kubernetes to deploy an application.
 author: greenie-msft
 ms.author: nigreenf
 ms.topic: quickstart
@@ -10,9 +10,9 @@ ms.custom: template-quickstart, mode-other, devx-track-js, devx-track-python
 # Customer intent: As a cloud developer, I want to deploy a sample application using Dapr on Azure Kubernetes Service or Arc-enabled Kubernetes, so that I can learn how to configure microservices and integrate them with state management effectively.
 ---
 
-# Quickstart: Deploy an application using the Dapr cluster extension for Azure Kubernetes Service (AKS) or Arc-enabled Kubernetes
+# Quickstart: Deploy an application using the Dapr extension for Azure Kubernetes Service (AKS) or Arc-enabled Kubernetes
 
-In this quickstart, you use the [Dapr cluster extension][dapr-overview] in an AKS or Arc-enabled Kubernetes cluster. You deploy [a `hello world` example][hello-world-gh], which consists of a Python application that generates messages and a Node.js application that consumes and persists the messages.
+In this quickstart, you use the [Dapr extension][dapr-overview] in an AKS or Arc-enabled Kubernetes cluster. You deploy [a `hello world` example][hello-world-gh], which consists of a Python application that generates messages and a Node.js application that consumes and persists the messages.
 
 ## Prerequisites
 
@@ -23,7 +23,7 @@ In this quickstart, you use the [Dapr cluster extension][dapr-overview] in an AK
   - [Managed identity][managed-identity] created in the same subscription
   - [A Kubernetes service account][service-account]
   - [Federated identity credential][federated-identity-cred]
-  - [Dapr cluster extension][dapr-overview] installed on the AKS cluster
+  - [Dapr extension][dapr-overview] installed on the AKS cluster
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed locally.
 
 ## Clone the repository
@@ -261,7 +261,7 @@ az group delete --name <your-resource-group>
 [az-group-delete]: /cli/azure/group#az-group-delete
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
 [dapr-create-extension]: ./dapr.md
-[workload-identity]: ./workload-identity-deploy-cluster.md##enable-oidc-issuer-and-microsoft-entra-workload-id-on-an-aks-cluster
+[workload-identity]: ./workload-identity-deploy-cluster.md#enable-oidc-issuer-and-microsoft-entra-workload-id-on-an-aks-cluster
 [managed-identity]: ./workload-identity-deploy-cluster.md#create-a-managed-identity
 [service-account]: ./workload-identity-deploy-cluster.md#create-a-kubernetes-service-account
 [federated-identity-cred]: ./workload-identity-deploy-cluster.md#create-the-federated-identity-credential
