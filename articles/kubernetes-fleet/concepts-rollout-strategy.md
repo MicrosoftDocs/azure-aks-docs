@@ -9,9 +9,10 @@ ms.topic: concept-article
 # Customer intent: "As a cloud operations engineer, I want to define a customized rollout strategy for managing resource placements in Fleet Manager, so that I can minimize service interruptions and optimize resource deployment across multiple clusters."
 zone_pivot_groups: cluster-namespace-scope
 ---
-**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 # Defining a rollout strategy for Azure Kubernetes Fleet Manager resource placement
+
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 During the lifetime of a resource placement (cluster-scoped `ClusterResourcePlacement` or namespace-scoped `ResourcePlacement`), changes might be made which can result in one of the following scenarios:
 
