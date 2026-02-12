@@ -17,18 +17,18 @@ In this quickstart, you use the [Dapr extension][dapr-overview] in an AKS or Arc
 ## Prerequisites
 
 - An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free).
-- [Azure CLI][azure-cli-install] installed.
+- [Azure CLI][azure-cli-install] installed
 - An AKS cluster with:
   - [Workload identity][workload-identity] enabled
   - [Managed identity][managed-identity] created in the same subscription
   - [A Kubernetes service account][service-account]
   - [Federated identity credential][federated-identity-cred]
   - [Dapr extension][dapr-overview] installed on the AKS cluster
-- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed locally.
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed locally
 
 ## Clone the repository
 
-1. Clone the [Dapr quickstarts repository][hello-world-gh] using the `git clone` command.
+1. Clone the [Dapr quickstart repository][hello-world-gh] using the `git clone` command.
 
     ```bash
     git clone https://github.com/Azure-Samples/dapr-aks-extension-quickstart.git
@@ -54,13 +54,13 @@ Open the [Azure portal][azure-portal-cache] to start the Azure Cache for Redis c
 
 1. Take note of:
     - The hostname, found in the **Essentials** section of the cache overview page. The hostname format looks similar to: `xxxxxx.redis.cache.windows.net`.
-    - The SSL port, found in the **Settings** > **Advanced settings** section. The default value is `6380`.
+    - The SSL port, found in **Settings** > **Advanced settings**. The default value is `6380`.
 
 1. Navigate to **Settings** > **Authentication**, and verify Microsoft Entra Authentication is enabled on your resource.
 
 ### Add managed identity
 
-1. In the **Authentication** section, enter the name of the [managed identity you created as a prerequisite](#prerequisites) in the field under **Enable Microsoft Entra Authentication** checkbox. 
+1. In the **Authentication** section, under the **Enable Microsoft Entra Authentication** checkbox, enter the name of the [managed identity you created as a prerequisite](#prerequisites). 
 
    :::image type="content" source="./media/quickstart-dapr/add-redis-user.png" alt-text="Screenshot that shows the field where you can select a managed identity to add as a Redis user.":::
 
@@ -68,7 +68,7 @@ Open the [Azure portal][azure-portal-cache] to start the Azure Cache for Redis c
 
 ### Enable public network access
 
-For this scenario, your Redis cache uses public network access. Be sure to [clean up resources](#clean-up-resources) when you're finished with this quickstart.
+For this scenario, your Redis cache uses public network access. Be sure to [clean up resources](#clean-up-resources) after you finish with this quickstart.
 
 1. Navigate to **Settings** > **Private Endpoint**.
 
@@ -87,11 +87,11 @@ In the *redis.yaml* file, the component is configured to use Entra ID authentica
 
 1. In your preferred code editor, navigate to the *deploy* directory in the sample repo and open *redis.yaml*.
 
-1. For `redisHost`, replace the placeholder `<REDIS_HOST>:<REDIS_PORT>` value with the Redis cache hostname and SSL port [you saved earlier from Azure portal](#verify-resource-information). 
+1. For `redisHost`, replace the placeholder `<REDIS_HOST>:<REDIS_PORT>` value with the Redis cache hostname and SSL port [you saved earlier from the Azure portal](#verify-resource-information). 
 
    ```yml
    - name: redisHost
-   value: <your-cache-name>.redis.cache.windows.net:6380
+     value: <your-cache-name>.redis.cache.windows.net:6380
    ```
 
 ### Apply the configuration
@@ -122,7 +122,7 @@ labels:
 
 1. Navigate to the `deploy` directory and open *node.yaml*.
 
-1. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
+1. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value with [the service account name you created][service-account]. 
    - This value should be the same service account you used to create the federated identity credential.
 
 ### Apply the configuration
@@ -193,7 +193,7 @@ labels:
 
 1. Navigate to the `deploy` directory and open *python.yaml*.
 
-1. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
+1. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value with [the service account name you created][service-account]. 
    - This value should be the same service account you used to create the federated identity credential.
 
 ### Apply the configuration
