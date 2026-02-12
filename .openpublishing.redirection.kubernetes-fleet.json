@@ -29,6 +29,16 @@
       "source_path_from_root": "/articles/kubernetes-fleet/concepts-scheduler-scheduling-framework.md",
       "redirect_url": "/azure/kubernetes-fleet/overview",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/kubernetes-fleet/resource-override.md",
+      "redirect_url": "/azure/kubernetes-fleet/howto-use-overrides-customize-resources-placement",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/kubernetes-fleet/cluster-resource-override.md",
+      "redirect_url": "/azure/kubernetes-fleet/howto-use-overrides-customize-resources-placement",
+      "redirect_document_id": false
     }
   ]
 }
