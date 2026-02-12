@@ -19,7 +19,7 @@ Azure Kubernetes Fleet Manager intelligent resource placement can be used to dep
 Examples of situations where modifying a resource configuration is useful include:
 
 * I want to use a `ClusterRole` named `secret-reader` on all clusters, but have a smaller set of allowed actions for the role on my production clusters.
-* I want to use the same `Deployment` on all clusters, but use a different container image or port on my productions clusters.
+* I want to use the same `Deployment` on all clusters, but use a different container image or port on my production clusters.
 
 This article shows you how to create overrides for resources deployed by Fleet Manager resource placement.
 
@@ -70,7 +70,7 @@ A `ClusterResourceOverride` can include one or more `clusterResourceSelector` to
 Using our example `ClusterRole`, let's see how we select it in a `ClusterResourceOverride`.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1alpha1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourceOverride
 metadata:
   name: example-cro
@@ -259,7 +259,7 @@ spec:
 
 ### Define multiple overrides
 
-You can add multiple `jsonPatchOverrides` fields to `overrideRules` to apply multiple changes to a selected cluster resources. Here's an example:
+You can add multiple `jsonPatchOverrides` fields to `overrideRules` to apply multiple changes to selected cluster resources. Here's an example:
 
 :::zone target="docs" pivot="cluster-scope" 
 
