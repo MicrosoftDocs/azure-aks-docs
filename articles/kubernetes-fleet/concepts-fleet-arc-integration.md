@@ -20,11 +20,13 @@ If you're unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure 
 
 ## Limitations
 
-Fleet Manager with a private hub cluster requires use of Azure Arc Gateway to connect Arc-enabled Kubernetes clusters. 
+Fleet Manager Arc-enabled Kubernetes cluster support is only currently available in Azure public cloud regions.
 
-Azure Arc Gateway is currently in preview and is only available in Azure public cloud regions.
+If you attempt to create a connection in a non-public cloud region, you will receieve an error of type `FeatureNotAvailableInCloud` with the message `The feature 'Arc Member Cluster' is not available in cloud environment.`
 
-You can track the status of Azure Arc Gateway via their [official documentation][azure-arc-gateway].
+Once Azure Arc Gateway is available in Azure non-public cloud regions we will lift this restriction.
+
+You can track the status of Azure Arc Gateway via its [official documentation][azure-arc-gateway].
 
 ## What does the integration solve?
 
