@@ -43,7 +43,7 @@ Migrating to Cilium Network Policy on Azure CNI powered by Cilium provides signi
 
 - **Robust support for Kubernetes-native policies**: Full compliance with Kubernetes NetworkPolicy specifications.
 - **Extended features**: [Layer 7 policy](./how-to-apply-l7-policies.md) and [FQDN filtering](./how-to-apply-fqdn-filtering-policies.md) for advanced traffic control.
-- **eBPF-based dataplane**: Improved performance, scalability, and security compared to IPTables-based implementations. 
+- **eBPF-based dataplane**: Improved performance, scalability, and security compared to iptables-based implementations. 
 
 ## Pre-migration validation 
 
