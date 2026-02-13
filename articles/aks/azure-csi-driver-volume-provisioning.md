@@ -2970,6 +2970,7 @@ The Azure Files CSI driver also supports Windows nodes and containers. To use Wi
 [az-storage-account-create]: /cli/azure/storage/account#az-storage-account-create
 [az-storage-share-create]: /cli/azure/storage/share#az-storage-share-create
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[azure-datalake-storage-account]: /azure/storage/blobs/data-lake-storage-introduction
 [azure-disk-volume]: azure-disk-volume.md
 [azure-files-pvc]: azure-files-dynamic-pv.md
 [azure-files-usage]: /azure/storage/files/understand-performance#choosing-a-performance-tier-based-on-usage-patterns
