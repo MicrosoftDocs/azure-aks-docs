@@ -165,9 +165,7 @@ There are several ways to use ephemeral NVMe data disks in your AKS workloads. T
 
 ### Azure Container Storage (recommended)
 
-
 [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) is a Kubernetes-native storage solution that abstracts and manages local NVMe disks as persistent volumes, with advanced orchestration and data services.
-
 
 You can deploy Azure Container Storage in your AKS cluster and provision volumes using standard Kubernetes PVCs.
 
@@ -178,19 +176,15 @@ Azure Container Storage offers the following advantages:
   - Improved reliability and operational simplicity.
   - Enables high-performance workloads with default volume striping cross all available disks.
 
-
-
 Azure Container Storage is the best option for Kubernetes workloads to orchestrate ephemeral NVMe data disks. It combines the raw performance of NVMe disks with Kubernetes-native management, security, and built-in integration with Azure’s monitoring features and Prometheus. This approach reduces operational complexity, improves reliability, and enables advanced scenarios (such as scaling and failover) that are difficult to achieve with `emptyDir` or `hostPath`.
 
 For more information, see [Azure Container Storage documentation](/azure/storage/container-storage/container-storage-introduction).
 
 ### `emptyDir` Volumes
 
+`[emptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)` is a Kubernetes volume type that uses the node's local storage. By default, it uses the kubelet storage path on the OS disk, but you can configure it to use local NVMe disks for higher throughput and lower latency with temporary data.
 
-`emptyDir` is a Kubernetes volume type that uses the node's local storage. When backed by NVMe disks, `emptyDir` provides high throughput and low latency for temporary data.
-
-
-To use this method, define an `emptyDir` volume in your Pod spec. By default, it uses the fastest available storage (NVMe if present).
+To back `emptyDir` volumes with local NVMe disks, you must configure the kubelet storage path to point to an NVMe mount point during node initialization. This requires custom node bootstrap scripting and careful planning, as the configuration is immutable after node provisioning.
 
 #### Advantages
   - Simple to use and configure.
@@ -198,17 +192,15 @@ To use this method, define an `emptyDir` volume in your Pod spec. By default, it
   - High performance when backed by NVMe.
 
 #### Disadvantages
-  - Data is lost if the Pod is rescheduled to another node.
+  - Data is deleted if the Pod is removed from the node.
   - No data persistence or replication.
   - Limited to single NVMe disk.
 
 ### `hostPath` Volumes
 
-
 `hostPath` mounts a specific directory or disk from the node’s filesystem into the Pod. You can target NVMe mount points directly.
 
-
-To use this method, specify the NVMe disk path (for example, `/mnt` or `/mnt/nvme0n1`) in the Pod spec.
+To use this method, specify the NVMe disk path (for example, `/mnt/nvme0n1`) in the Pod spec.
 
 #### Advantages
 
