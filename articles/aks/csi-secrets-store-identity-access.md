@@ -5,7 +5,7 @@ author: davidsmatlak
 ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
-ms.date: 12/19/2023
+ms.date: 02/02/2026
 ms.custom: devx-track-azurecli
 zone_pivot_groups: csi-secrets-store-identity-access
 # Customer intent: As a Kubernetes administrator, I want to configure the Azure Key Vault Secrets Store CSI Driver with identity-based access methods, so that I can securely manage secrets in my Azure Kubernetes Service (AKS) cluster.
@@ -59,7 +59,7 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
     az account set --subscription $SUBSCRIPTION_ID
     ```
 
-2. Create a managed identity using the [`az identity create`][az-identity-create] command.
+1. Create a managed identity using the [`az identity create`][az-identity-create] command.
 
     > [!NOTE]
     > This step assumes you have an existing AKS cluster with workload identity enabled. If workload identity isn't enabled, see [Enable workload identity on an existing AKS cluster](./workload-identity-deploy-cluster.md#enable-oidc-issuer-and-microsoft-entra-workload-id-on-an-aks-cluster) to enable it.
@@ -71,16 +71,16 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
     export IDENTITY_TENANT=$(az aks show --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --query identity.tenantId -o tsv)
     ```
 
-3. Create a role assignment that grants the workload identity permission to access the key vault secrets, access keys, and certificates using the [`az role assignment create`][az-role-assignment-create] command.
+1. Create a role assignment that grants the workload identity permission to access the key vault secrets, access keys, and certificates using the [`az role assignment create`][az-role-assignment-create] command.
 
     > [!IMPORTANT]
     >
-    > * If your key vault is set with `--enable-rbac-authorization` and you're using `key` or `certificate` type, assign the [`Key Vault Certificate User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role to give permissions.
-    > * If your key vault is set with `--enable-rbac-authorization` and you're using `secret` type, assign the [`Key Vault Secrets User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role.
-    > * If your key vault isn't set with `--enable-rbac-authorization`, you can use the [`az keyvault set-policy`][az-keyvault-set-policy] command with the `--key-permissions get`, `--certificate-permissions get`, or `--secret-permissions get` parameter to create a key vault policy to grant access for keys, certificates, or secrets. For example:
+    > - If your key vault is set with `--enable-rbac-authorization` and you're using `key` or `certificate` type, assign the [`Key Vault Certificate User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role to give permissions.
+    > - If your key vault is set with `--enable-rbac-authorization` and you're using `secret` type, assign the [`Key Vault Secrets User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role.
+    > - If your key vault isn't set with `--enable-rbac-authorization`, you can use the [`az keyvault set-policy`][az-keyvault-set-policy] command with the `--key-permissions get`, `--certificate-permissions get`, or `--secret-permissions get` parameter to create a key vault policy to grant access for keys, certificates, or secrets. For example:
     >
     > ```azurecli-interactive
-    > az keyvault set-policy --name $KEYVAULT_NAME --key-permissions get --object-id $IDENTITY_OBJECT_ID
+    > az keyvault set-policy --name $KEYVAULT_NAME --key-permissions get --object-id <identity-object-id>
     > ```
 
     ```azurecli-interactive
@@ -90,7 +90,7 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
     az role assignment create --role "Key Vault Certificate User" --assignee $USER_ASSIGNED_CLIENT_ID --scope $KEYVAULT_SCOPE
     ```
 
-4. Get the AKS cluster OIDC Issuer URL using the [`az aks show`][az-aks-show] command.
+1. Get the AKS cluster OIDC Issuer URL using the [`az aks show`][az-aks-show] command.
 
     > [!NOTE]
     > This step assumes you have an existing AKS cluster with the OIDC Issuer URL enabled. If the OIDC Issuer URL isn't enabled, see [Update an AKS cluster with OIDC Issuer](./use-oidc-issuer.md#enable-the-oidc-issuer-on-an-existing-aks-cluster) to enable it.
@@ -100,7 +100,7 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
     echo $AKS_OIDC_ISSUER
     ```
 
-5. Establish a federated identity credential between the Microsoft Entra application, service account issuer, and subject. Get the object ID of the Microsoft Entra application using the following commands. Make sure to update the values for `serviceAccountName` and `serviceAccountNamespace` with the Kubernetes service account name and its namespace.
+1. Establish a federated identity credential between the Microsoft Entra application, service account issuer, and subject. Get the object ID of the Microsoft Entra application using the following commands. Make sure to update the values for `serviceAccountName` and `serviceAccountNamespace` with the Kubernetes service account name and its namespace.
 
     ```bash
     export SERVICE_ACCOUNT_NAME="workload-identity-sa"  # sample name; can be changed
@@ -117,7 +117,7 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
     EOF
     ```
 
-6. Create the federated identity credential between the managed identity, service account issuer, and subject using the [`az identity federated-credential create`][az-identity-federated-credential-create] command.
+1. Create the federated identity credential between the managed identity, service account issuer, and subject using the [`az identity federated-credential create`][az-identity-federated-credential-create] command.
 
     ```bash
     export FEDERATED_IDENTITY_NAME="aksfederatedidentity" # can be changed as needed
@@ -125,7 +125,7 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
     az identity federated-credential create --name $FEDERATED_IDENTITY_NAME --identity-name $UAMI --resource-group $RESOURCE_GROUP --issuer ${AKS_OIDC_ISSUER} --subject system:serviceaccount:${SERVICE_ACCOUNT_NAMESPACE}:${SERVICE_ACCOUNT_NAME}
     ```
 
-7. Deploy a `SecretProviderClass` using the `kubectl apply` command and the following YAML script.
+1. Deploy a `SecretProviderClass` using the `kubectl apply` command and the following YAML script.
 
     ```bash
     cat <<EOF | kubectl apply -f -
@@ -161,7 +161,7 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
     > [!NOTE]
     > In order for the `SecretProviderClass` to function properly, make sure to populate your Azure Key Vault with secrets, keys, or certificates before referencing them in the `objects` section.
 
-8. Deploy a sample pod using the `kubectl apply` command and the following YAML script.
+1. Deploy a sample pod using the `kubectl apply` command and the following YAML script.
 
     ```bash
     cat <<EOF | kubectl apply -f -
@@ -227,16 +227,16 @@ In this security model, you can grant access to your cluster's resources to team
     az identity show --resource-group <resource-group> --name <identity-name> --query 'clientId' -o tsv
     ```
 
-2. Create a role assignment that grants the identity permission to access the key vault secrets, access keys, and certificates using the [`az role assignment create`][az-role-assignment-create] command.
+1. Create a role assignment that grants the identity permission to access the key vault secrets, access keys, and certificates using the [`az role assignment create`][az-role-assignment-create] command.
 
     > [!IMPORTANT]
     >
-    > * If your key vault is set with `--enable-rbac-authorization` and you're using `key` or `certificate` type, assign the [`Key Vault Certificate User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role.
-    > * If your key vault is set with `--enable-rbac-authorization` and you're using `secret` type, assign the [`Key Vault Secrets User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role.
-    > * If your key vault isn't set with `--enable-rbac-authorization`, you can use the [`az keyvault set-policy`][az-keyvault-set-policy] command with the `--key-permissions get`, `--certificate-permissions get`, or `--secret-permissions get` parameter to create a key vault policy to grant access for keys, certificates, or secrets. For example:
+    > - If your key vault is set with `--enable-rbac-authorization` and you're using `key` or `certificate` type, assign the [`Key Vault Certificate User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role.
+    > - If your key vault is set with `--enable-rbac-authorization` and you're using `secret` type, assign the [`Key Vault Secrets User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role.
+    > - If your key vault isn't set with `--enable-rbac-authorization`, you can use the [`az keyvault set-policy`][az-keyvault-set-policy] command with the `--key-permissions get`, `--certificate-permissions get`, or `--secret-permissions get` parameter to create a key vault policy to grant access for keys, certificates, or secrets. For example:
     >
     > ```azurecli-interactive
-    > az keyvault set-policy --name $KEYVAULT_NAME --key-permissions get --object-id $IDENTITY_OBJECT_ID
+    > az keyvault set-policy --name $KEYVAULT_NAME --key-permissions get --object-id <identity-object-id>
     > ```
 
     ```azurecli-interactive
@@ -244,10 +244,10 @@ In this security model, you can grant access to your cluster's resources to team
     export KEYVAULT_SCOPE=$(az keyvault show --name <key-vault-name> --query id -o tsv)
 
     # Example command for key vault with Azure RBAC enabled using `key` type
-    az role assignment create --role "Key Vault Certificate User" --assignee $USER_ASSIGNED_CLIENT_ID --scope $KEYVAULT_SCOPE
+    az role assignment create --role "Key Vault Certificate User" --assignee $IDENTITY_OBJECT_ID --scope $KEYVAULT_SCOPE
     ```
 
-3. Create a `SecretProviderClass` using the following YAML. Make sure to use your own values for `userAssignedIdentityID`, `keyvaultName`, `tenantId`, and the objects to retrieve from your key vault.
+1. Create a `SecretProviderClass` using the following YAML. Make sure to use your own values for `userAssignedIdentityID`, `keyvaultName`, `tenantId`, and the objects to retrieve from your key vault.
 
     ```yml
     # This is a SecretProviderClass example using user-assigned identity to access your key vault
@@ -282,13 +282,13 @@ In this security model, you can grant access to your cluster's resources to team
     > [!NOTE]
     > In order for the `SecretProviderClass` to function properly, make sure to populate your Azure Key Vault with secrets, keys, or certificates before referencing them in the `objects` section.
 
-4. Apply the `SecretProviderClass` to your cluster using the `kubectl apply` command.
+1. Apply the `SecretProviderClass` to your cluster using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f secretproviderclass.yaml
     ```
 
-5. Create a pod using the following YAML.
+1. Create a pod using the following YAML.
 
     ```yml
     # This is a sample pod definition for using SecretProviderClass and the user-assigned identity to access your key vault
@@ -316,7 +316,7 @@ In this security model, you can grant access to your cluster's resources to team
               secretProviderClass: "azure-kvname-user-msi"
     ```
 
-6. Apply the pod to your cluster using the `kubectl apply` command.
+1. Apply the pod to your cluster using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f pod.yaml
@@ -336,7 +336,7 @@ After the pod starts, the mounted content at the volume path specified in your d
     kubectl exec busybox-secrets-store-inline-user-msi -- ls /mnt/secrets-store/
     ```
 
-2. Display a secret in the store using the following command. This example command shows the test secret `ExampleSecret`.
+1. Display a secret in the store using the following command. This example command shows the test secret `ExampleSecret`.
 
     ```bash
     kubectl exec busybox-secrets-store-inline-user-msi -- cat /mnt/secrets-store/ExampleSecret

@@ -15,6 +15,8 @@ ms.date: 08/29/2024
 
 Azure Kubernetes Service (AKS) uses certificates for authentication with many of its components. You need to periodically rotate those certificates for security or policy reasons. This article shows you how certificate rotation works in your AKS cluster.
 
+[!INCLUDE [kubelet-serving-cert-retirement](./includes/kubelet-serving-cert-retirement.md)]
+
 ## Prerequisites
 
 - This article requires the Azure CLI version 2.0.77 or later. Check your version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].

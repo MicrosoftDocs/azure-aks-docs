@@ -23,11 +23,7 @@ This article describes how to enable the Artifact Streaming feature on your AKS 
 
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
-> [!IMPORTANT]
-> Artifact Streaming (preview) is a suggested alternative for customers previously using Teleport (preview).
-> [Teleport (preview)](https://github.com/Azure/acr/blob/main/docs/teleport/aks-getting-started.md) on AKS will be retired on 15 July 2025. Please migrate to Artifact Streaming (preview) on AKS or update your node pools to set `--aks-custom-headers EnableACRTeleport=false`. 
-> Azure Container Registry removed the Teleport API, meaning that any nodes with Teleport enabled will pull images from Azure Container Registry like any other AKS node without Teleport. 
-> After 15 July 2025, AKS node pools with Teleport enabled might experience breakage and node provisioning failures. For more information, see [aka.ms/aks/teleport-retirement](https://aka.ms/aks/teleport-retirement).
+[!INCLUDE [teleport retirement](./includes/teleport-retirement.md)]
 
 ## Limitations
 

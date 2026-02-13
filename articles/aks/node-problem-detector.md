@@ -81,10 +81,10 @@ The list of endpoints checked by the EgressBlocked are listed below
 Type | Example | Note
 |---|---|---|
 |MCR | https://mcr.microsoft.com | |
-|Microsoft Entra ID |  https://login.microsoftonline.com" ||
+|Microsoft Entra ID |  https://login.microsoftonline.com ||
 |Resource Manager | https://management.azure.com||
 |Packages |https://packages.microsoft.com||
-|Kube Binary|https://acs-mirror.azureedge.net/acs-mirror/healthz,https://packages.aks.azure.com/acs-mirror/healthz ||
+|Kube Binary|https://acs-mirror.azureedge.net/acs-mirror/healthz <br> https://packages.aks.azure.com/acs-mirror/healthz ||
 
 
 ## Check the node conditions and events

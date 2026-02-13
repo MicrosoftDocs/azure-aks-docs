@@ -12,6 +12,8 @@ ms.date: 07/01/2024
 
 # Use Windows Server Annual Channel for Containers on Azure Kubernetes Service (AKS) (Preview)
 
+[!INCLUDE [windows annual channel retirement](./includes/windows-annual-channel-retirement.md)]
+
 AKS supports [Windows Server Annual Channel for Containers](https://techcommunity.microsoft.com/t5/windows-server-news-and-best/windows-server-annual-channel-for-containers/ba-p/3866248) in public preview. Each channel version is released annually and is supported for *two years*. This channel is beneficial if you require increased innovation cycles and portability.
 
 Windows Server Annual Channel versions are based on the Kubernetes version of your node pool. To upgrade from one Annual Channel version to the next, you can [upgrade to a Kubernetes version][upgrade-aks-cluster] that supports the next Annual Channel version.
@@ -31,11 +33,9 @@ AKS releases support for new releases of Windows Server Annual Channel for Conta
 
 AKS supports Long Term Servicing Channel Releases (LTSC), including Windows Server 2025, Windows Server 2022, and Windows Server 2019. These come from a different release channel than Windows Server Annual Channel for Containers. To view our current recommendations, see the [Windows best practices documentation][windows-best-practices].
 
-> [!NOTE]
-> - [Windows Server 2019 retires on March 1, 2026](https://github.com/Azure/AKS/issues/4091). After that date, AKS will no longer produce new node images or provide security patches. After that date, you will not be able to create new node pools with Windows Server 2019 on any Kubernetes version. All existing node pools with Windows Server 2019 will be unsupported. Windows Server 2019 is not supported in Kubernetes version 1.33 and above. Starting on April 1, 2027, AKS will remove all existing node images for Windows Server 2019, meaning that scaling operations will fail.
-> - [Windows Server 2022 retires on March 15, 2027](https://github.com/Azure/AKS/issues/4168). After that date, AKS will no longer produce new node images or provide security patches. After that date, you will not be able to create new node pools with Windows Server 2022 on any Kubernetes version. All existing node pools with Windows Server 2022 will be unsupported. Windows Server 2022 is not supported in Kubernetes version 1.36 and above. Starting on April 1, 2028, AKS will remove all existing node images for Windows Server 2022, meaning that scaling operations will fail.
->
-> For more information, see [AKS release notes][aks-release-notes]. To stay up to date on the latest Windows Server OS versions and learn more about our roadmap of what's planned for support on AKS, see our [AKS public roadmap](https://github.com/azure/aks/projects/1).
+[!INCLUDE [windows server 2019 retirement](./includes/windows-server-2019-retirement.md)]
+
+[!INCLUDE [windows server 2022 retirement](./includes/windows-server-2022-retirement.md)]
 
 The following table compares Windows Server Annual Channel and Long Term Servicing Channel releases:
 

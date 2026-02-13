@@ -15,22 +15,11 @@ ms.custom:
 
 # Secure traffic between pods with network policies in Azure Kubernetes Service (AKS)
 
-> [!IMPORTANT]
-> Support for Azure Network Policy Manager (NPM) on **Windows** nodes in AKS ends on **September 30, 2026**.
->
-> This change applies only to customers already onboarded to NPM. **Subscriptions that aren't registered with this feature will no longer be able to onboard**. Existing onboarded customers can continue using NPM until the end-of-support date.
->
-> To ensure your setup continues to receive support, security updates, and deployment compatibility, explore alternative options like [Network Security Groups (NSGs)](./concepts-network.md) on the node level or open-source tools like [Project Calico][calico-support].
+[!INCLUDE [azure-network-policy-manager-windows-retirement](./includes/azure-network-policy-manager-windows-retirement.md)]
 
-> [!IMPORTANT]
-> Support for Azure Network Policy Manager (NPM) on **Linux** nodes in AKS ends on **September 30, 2026**.
->
-> To avoid service disruptions, you need to [migrate AKS clusters running Linux nodes from NPM to Cilium Network Policy](./migrate-from-npm-to-cilium-network-policy.md) by the end-of-support date.
+[!INCLUDE [azure-network-policy-manager-linux-retirement](./includes/azure-network-policy-manager-linux-retirement.md)]
 
-> [!IMPORTANT]
-> Support for kubenet networking on AKS clusters ends on **March 31, 2028**.
->
-> To avoid service disruptions, you need to upgrade to [Azure Container Networking Interface (CNI) Overlay](./concepts-network-azure-cni-overlay.md) by the end-of-support date.
+[!INCLUDE [kubenet-retirement](./includes/kubenet-retirement.md)]
 
 Install a network policy engine and create Kubernetes network policies to control the flow of traffic between pods in AKS clusters.
 

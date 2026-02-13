@@ -13,8 +13,7 @@ ms.service: azure-kubernetes-service
 
 In this article, you learn how to upgrade your Basic Load Balancer instances to Standard Load Balancer on Azure Kubernetes Services (AKS). We recommend using Standard Load Balancer for all production instances. It provides many [key differences](/azure/load-balancer/load-balancer-basic-upgrade-guidance#basic-load-balancer-sku-vs-standard-load-balancer-sku) to your infrastructure. For guidance on upgrading from Basic Load Balancer to Standard Load Balancer outside of AKS, see the [official guidance for Basic Load Balancer upgrade][load-balancer-upgrade-guidance].
 
-> [!IMPORTANT]
-> Basic Load Balancer retires on September 30, 2025. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you're currently using Basic Load Balancer, make sure to upgrade to Standard Load Balancer before the retirement date to avoid your cluster being out of support. This article helps guide you through the upgrade process.
+[!INCLUDE [basic load balancer retirement](./includes/basic-load-balancer-retirement.md)]
 
 > [!NOTE]
 > For clusters using both Availability Sets and the Basic Load Balancer, there's a separate `az aks update` command you need to run to perform both migrations at once (Availability Sets to Virtual Machine node pools, and Basic Load Balancer to Standard Load Balancer). For steps on performing this migration, see the [Availability Sets migration][availability-sets] guidance.

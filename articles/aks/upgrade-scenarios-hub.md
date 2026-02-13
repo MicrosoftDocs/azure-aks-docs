@@ -1,7 +1,7 @@
 ---
 title: 'AKS Upgrade Scenarios: Choose Your Path'
 description: Quick decision tree and scenario-based guidance for Azure Kubernetes Service cluster upgrades based on your specific business needs and constraints.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
 ms.date: 07/09/2025
