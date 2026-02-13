@@ -366,6 +366,9 @@ A storage class is used to define how an Azure Blob storage container is created
 is automatically created in the node resource group for use with the storage class to hold the Azure
 Blob storage container. Choose one of the following Azure storage redundancy SKUs for skuName:
 
+> [!NOTE]
+> Modifying any resource under the node resource group in an AKS cluster is an unsupported action and will cause cluster operation failures. For more information, see [Why are two resource groups created with AKS?](./faq.yml)
+
 * **Standard_LRS**: Standard locally redundant storage
 * **Premium_LRS**: Premium locally redundant storage
 * **Standard_ZRS**: Standard zone redundant storage
@@ -416,7 +419,7 @@ A PVC uses the storage class object to dynamically provision an Azure Blob stora
          storage: 5Gi
    ```
 
-1. Create the PVC with the [kubectl create][kubectl-create] command:
+2. Create the PVC with the [kubectl create][kubectl-create] command:
 
    ```bash
    kubectl create -f blob-nfs-pvc.yaml
@@ -1788,6 +1791,9 @@ The reclaim policy on both storage classes ensures that the underlying Azure fil
 
 A storage class is used to define how an Azure file share is created. A storage account is automatically created in the [node resource group][node-resource-group] for use with the storage class to hold the Azure files share. Choose one of the following [Azure storage redundancy SKUs][storage-skus] for *skuName*:
 
+> [!NOTE]
+> Modifying any resource under the node resource group in an AKS cluster is an unsupported action and will cause cluster operation failures. For more information, see [Why are two resource groups created with AKS?](./faq.yml)
+
 * **Standard_LRS**: Standard locally redundant storage
 * **Standard_GRS**: Standard geo-redundant storage
 * **Standard_ZRS**: Standard zone-redundant storage
@@ -2686,10 +2692,10 @@ mountOptions:
    allowVolumeExpansion: true
    parameters:
      protocol: nfs
-    mountOptions:
-     - nconnect=4
-     - noresvport
-     - actimeo=30
+   mountOptions:
+    - nconnect=4
+    - noresvport
+    - actimeo=30
    ```
 
 1. After you edit and save your YAML file, apply the storage class with the [kubectl apply][kubectl-apply] command:
@@ -2964,6 +2970,7 @@ The Azure Files CSI driver also supports Windows nodes and containers. To use Wi
 [az-storage-account-create]: /cli/azure/storage/account#az-storage-account-create
 [az-storage-share-create]: /cli/azure/storage/share#az-storage-share-create
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[azure-datalake-storage-account]: /azure/storage/blobs/data-lake-storage-introduction
 [azure-disk-volume]: azure-disk-volume.md
 [azure-files-pvc]: azure-files-dynamic-pv.md
 [azure-files-usage]: /azure/storage/files/understand-performance#choosing-a-performance-tier-based-on-usage-patterns

@@ -22,7 +22,7 @@ In this article, you deploy the Strimzi Cluster Operator and a highly available 
 The Strimzi Cluster Operator is deployed in its own namespace, `strimzi-operator`, and is configured to watch the `kafka` namespace where the Kafka cluster components are deployed. For high availability, the operator uses:
 
 - **Multiple replicas with leader election**: One replica serves as the active leader managing deployed resources, while others remain on standby. If the leader fails, a standby replica takes over.  
-- **Zonal distribution**: Three replicas (one per availability zone) provide resilience against zonal outages. Pod anti-affinity rules prevent multiple replicas from being scheduled in the same zone.  
+- **Zonal distribution**: Three replicas (one per availability zone) provide resilience against zone outages. Pod anti-affinity rules prevent multiple replicas from being scheduled in the same zone.  
 - **Pod Disruption Budget**: Created automatically by the operator deployment to ensure at least one replica remains available during voluntary disruptions.
 
 This architecture ensures the Strimzi Cluster Operator remains highly available even during infrastructure maintenance or partial outages.
@@ -87,7 +87,7 @@ This architecture ensures the Strimzi Cluster Operator remains highly available 
 
 Strimzi Drain Cleaner ensures smooth Kubernetes node draining by intercepting drain requests for broker pods, which prevents Kafka partition replicas from becoming under-replicated and maintains cluster health and reliability.
 
-For high availability, deploy Drain Cleaner with multiple replicas across availability zones and configure it with pod disruption budgets to ensure it remains functional during zonal outages or cluster upgrades.
+For high availability, deploy Drain Cleaner with multiple replicas across availability zones and configure it with pod disruption budgets to ensure it remains functional during zone outages or cluster upgrades.
 
 A Helm chart is available for the installation of Strimzi Drain Cleaner:
 

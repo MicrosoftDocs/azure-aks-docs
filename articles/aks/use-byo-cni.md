@@ -10,7 +10,7 @@ ms.date: 06/20/2023
 # Customer intent: As an advanced Kubernetes user, I want to deploy an AKS cluster with no preinstalled CNI plugin so that I can use a custom CNI solution that aligns with my on-premises environment.
 ---
 
-# Bring your own CNI plugin with Azure Kubernetes Service (AKS)
+# Bring Your Own (BYO) CNI plugin with Azure Kubernetes Service (AKS)
 
 Kubernetes doesn't provide a network interface system by default. Instead, [network plugins][kubernetes-cni] provide this functionality. Azure Kubernetes Service (AKS) provides several supported Container Network Interface (CNI) plugins. For information on supported plugins, see [Networking concepts for applications in Azure Kubernetes Service][aks-network-concepts].
 
@@ -24,6 +24,50 @@ Microsoft support can't assist with CNI-related issues in clusters that you depl
 
 Microsoft still provides support for issues that aren't related to CNI.
 
+## IP address planning considerations
+
+When using a Bring Your Own CNI (BYO CNI) plugin with AKS, IP address planning responsibilities are split between AKS and the customer-managed CNI. Unlike AKS-managed CNI plugins, AKS doesn't allocate or manage pod IP addresses when a BYO CNI is used.
+
+> [!NOTE]
+> The [IP address planning for your Azure Kubernetes Service (AKS) clusters](concepts-network-ip-address-planning.md) article focuses on AKS-managed networking plugins. In BYO CNI scenarios, only guidance related to node subnet sizing, upgrade and scaling behavior, and Kubernetes service address ranges is applicable. Pod IP address allocation, routing, and scaling behavior are determined by the selected CNI plugin.
+
+### Virtual network and subnet sizing
+
+AKS still requires a virtual network and subnet to host cluster nodes. Subnet sizing should account for:
+
+- The maximum number of nodes per node pool
+- Additional nodes required for upgrade and scale operations, such as surge upgrades
+- Azure resources that allocate IP addresses from subnets in the virtual network, such as internal load balancers
+
+AKS upgrades and scaling operations remain node-based. During these operations, AKS might temporarily provision additional nodes, so the subnet must be large enough to accommodate the maximum node count.
+
+> Pod IP addresses are not allocated from the AKS subnet when using BYO CNI unless explicitly implemented by the CNI plugin.
+
+### Kubernetes service address range
+
+All AKS clusters, including those using BYO CNI, require a Kubernetes service address range (`serviceCIDR`) and a DNS service IP address (`dnsServiceIP`). The following constraints apply:
+
+- The service address range must not overlap with the virtual network or any connected network.
+- The service CIDR must be smaller than /12.
+- The DNS service IP must be within the service CIDR range and must not be the first IP address in the range.
+
+These requirements are independent of the CNI plugin.
+
+### Pod networking and IP management
+
+With BYO CNI, pod IP address management (IPAM), routing, and scaling behavior are determined by the CNI plugin.
+
+AKS doesn't:
+- Allocate pod IP addresses
+- Preassign per-node pod CIDR ranges
+- Enforce pod IP reuse or release behavior
+
+Guidance related to overlay or flat networking models, per-node pod CIDR sizing, or subnet sizing formulas that include pod counts doesn't apply to BYO CNI scenarios.
+
+### Maximum pods per node
+
+AKS enforces a configurable maximum number of pods per node (`maxPods`) at the kubelet level. When using BYO CNI, this setting limits pod scheduling density but doesn't determine IP capacity. You're responsible for ensuring that the selected CNI plugin can support the configured pod density and cluster scale.
+
 ## Prerequisites
 
 * For Azure Resource Manager or Bicep, use at least template version 2022-01-02-preview or 2022-06-01.
@@ -36,7 +80,7 @@ Microsoft still provides support for issues that aren't related to CNI.
 * The subnet assigned to the AKS node pool can't be a [delegated subnet](/azure/virtual-network/subnet-delegation-overview).
 * AKS doesn't apply network security groups (NSGs) to its subnet or modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure that the security rules in the NSGs allow traffic within the node's Classless Inter-Domain Routing (CIDR) range. For more information, see [Network security groups][aks-network-nsg].
 * AKS doesn't create a route table in the managed virtual network.
-* You must specify a Pod CIDR (IP address range for pods). The AKS control plane uses this range for internal traffic routing to pods, even though pod IP assignment will be managed by your custom CNI. If no pod CIDR is provided, control plane to pod communication may fail or be misrouted. You must select a pod CIDR that does not conflict with any other network in your environment and avoids Azure reserved ranges, such as, `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24`. For example, you might use a range such as `10.XX.0.0/16` that is unique to your cluster. This ensures that the control plane can route directly to pod IPs on your nodes, and no IP overlap will occur if you integrate with other networks or clusters.
+* You must specify a Pod CIDR (IP address range for pods). The AKS control plane uses this range for internal traffic routing to pods, even though pod IP assignment will be managed by your custom CNI. If no pod CIDR is provided, control plane to pod communication might fail or be misrouted. You must select a pod CIDR that doesn't conflict with any other network in your environment and avoids Azure reserved ranges, such as, `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24`. For example, you might use a range such as `10.XX.0.0/16` that's unique to your cluster. This ensures that the control plane can route directly to pod IPs on your nodes, and no IP overlap occurs if you integrate with other networks or clusters.
 
 ## Create an AKS cluster with no CNI plugin preinstalled
 

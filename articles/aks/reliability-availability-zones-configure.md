@@ -4,8 +4,8 @@ description: Learn how to configure availability zones in Azure Kubernetes Servi
 ms.service: azure-kubernetes-service
 ms.topic: concept-article
 ms.date: 07/28/2025
-author: danbosscher
-ms.author: dabossch
+author: schaffererin
+ms.author: schaffererin
 # Customer intent: "As a cloud architect, I want to configure Azure Kubernetes Service to utilize availability zones, so that I can enhance the reliability and availability of my applications against datacenter failures."
 ---
 
@@ -58,7 +58,7 @@ az aks nodepool add --resource-group example-rg --cluster-name example-cluster -
 
 AKS automatically balances the number of nodes between zones.
 
-If a zonal outage occurs, nodes within the affected zone might be affected, but nodes in other availability zones remain unaffected.
+If a zone outage occurs, nodes within the affected zone might be affected, but nodes in other availability zones remain unaffected.
 
 To validate node locations, run the following command:
 
@@ -95,7 +95,7 @@ Regional mode is used when the zone assignment isn't set in the deployment templ
 
 In this configuration, the node pool creates regional (not zone-pinned) instances and implicitly places instances throughout the region. There's no guarantee that instances are balanced or spread across zones, or that instances are in the same availability zone.
 
-In the rare case of a full zonal outage, any or all instances within the node pool might be affected.
+In the rare case of a full zone outage, any or all instances within the node pool might be affected.
 
 To validate node locations, run the following command:
 
@@ -212,8 +212,7 @@ spec:
       targetPort: 8080
 ```
 
-> [!IMPORTANT]
-> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you use Basic Load Balancer, make sure to [upgrade](/azure/load-balancer/load-balancer-basic-upgrade-guidance) to Standard Load Balancer before the retirement date.
+[!INCLUDE [basic load balancer retirement](./includes/basic-load-balancer-retirement.md)]
 
 ## Limitations
 

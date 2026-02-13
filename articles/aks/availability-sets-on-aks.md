@@ -8,9 +8,11 @@ author: wdarko1
 # Customer intent: As a Kubernetes administrator, I want to migrate my workloads from Virtual Machine Availability Sets to Virtual Machine Node Pools, so that I can ensure ongoing support and take advantage of enhanced management features before the deprecation deadline.
 ---
 
-#  Migrate from Availability Sets in Azure Kubernetes Service (AKS)
+# Migrate from Availability Sets in Azure Kubernetes Service (AKS)
 
 This article details how Azure Kubernetes Service (AKS) is phasing out support for Virtual Machine Availability Sets (VMAS) in favor of Virtual Machines (VMs).
+
+[!INCLUDE [availability-sets-retirement](./includes/availability-sets-retirement.md)]
 
 > [!NOTE]
 > We recommend using [Virtual Machine Node Pools](virtual-machines-node-pools.md) for AKS-optimized VMs.
@@ -28,10 +30,6 @@ Availability sets are logical groupings of virtual machines (VM) that reduce the
 ### Phase out of Availability Sets
 
 As of 2019, we're no longer adding other features to Availability Sets in AKS. Any features introduced since 2019, such as AKS Backup, aren't supported in Availability Sets.
-
-### Availability Sets retirement date
-
-Availability Sets support will be **fully deprecated by September 30, 2025**. We recommend that you migrate all workloads currently on VMAS to Virtual Machine Node Pools. After September 30th, the feature will no longer be supported. A cluster with Availability Sets after this date is considered out of support.
 
 ## Migrate from Availability Sets to Virtual Machines node pools
 

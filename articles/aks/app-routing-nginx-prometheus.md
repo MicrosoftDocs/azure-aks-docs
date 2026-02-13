@@ -3,7 +3,6 @@ title: Monitor the ingress-nginx controller metrics in the application routing a
 description: Configure Prometheus to scrape the ingress-nginx controller metrics.
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
-ms.custom:
 author: sabbour
 ms.topic: how-to
 ms.date: 09/15/2025
@@ -12,6 +11,8 @@ ms.author: asabbour
 ---
 
 # Monitor the ingress-nginx controller metrics in the application routing add-on with Prometheus and Grafana
+
+[!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
 
 The ingress-nginx controller in the application routing add-on exposes many metrics for requests, the nginx process, and the controller that can be helpful in analyzing the performance and usage of your application.
 

@@ -7,7 +7,7 @@ ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 12/11/2024
+ms.date: 01/29/2026
 ms.custom: references_regions, devx-track-azurecli
 # Customer intent: As a Kubernetes administrator, I want to configure Azure CNI networking for my AKS cluster so that I can effectively manage virtual network subnets and optimize the allocation of IP addresses.
 ---

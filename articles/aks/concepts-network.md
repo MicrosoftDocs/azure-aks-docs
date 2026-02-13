@@ -58,12 +58,7 @@ For more information on networking models in AKS, see [CNI Networking in AKS][ne
 
 AKS clusters are deployed on a virtual network and have outbound dependencies on services outside of that virtual network, which are almost entirely defined with fully qualified domain names (FQDNs). AKS provides several outbound configuration options which allow you to customize the way in which these external resources are accessed.
 
-> [!NOTE]
-> After [31 March 2026](https://azure.microsoft.com/updates?id=default-outbound-access-for-vms-in-azure-will-be-retired-transition-to-a-new-method-of-internet-access), new AKS clusters that use the **AKS-managed virtual network** option will place cluster subnets into [private subnets](/azure/virtual-network/ip-services/default-outbound-access#why-is-disabling-default-outbound-access-recommended) by default (`defaultOutboundAccess = false`).
->
-> This setting **does not impact AKS-managed cluster traffic**, which uses explicitly configured outbound paths. It may affect **unsupported scenarios**, such as deploying other resources (e.g., VMs) into the same subnet.
->
-> **Clusters using BYO VNets are unaffected** by this change. In supported configurations, no action is required.
+[!INCLUDE [vm-default-outbound-access-retirement](includes/vm-default-outbound-access-retirement.md)]
 
 ### Outbound configuration options
 

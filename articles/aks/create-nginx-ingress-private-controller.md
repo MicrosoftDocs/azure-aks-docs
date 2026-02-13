@@ -7,10 +7,13 @@ ms.topic: how-to
 ms.date: 10/08/2024
 author: davidsmatlak
 ms.author: davidsmatlak
+ms.service: azure-kubernetes-service
 # Customer intent: "As a DevOps engineer, I want to configure an NGINX ingress controller with an Azure private DNS zone, so that I can ensure secure and efficient DNS resolution for internal applications running on my Kubernetes cluster."
 ---
 
 # Configure NGINX ingress controller to support Azure private DNS zone with application routing add-on
+
+[!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
 
 This article shows you how to configure an NGINX ingress controller to work with an Azure internal load balancer. It also explains how to configure a private Azure DNS zone to enable DNS resolution for the private endpoints to resolve specific domains.
 

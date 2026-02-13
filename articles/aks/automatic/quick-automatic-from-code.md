@@ -203,7 +203,7 @@ To learn more about AKS Automatic, continue to the introduction.
 [aks-identities]: ../managed-identity-overview.md#summary-of-managed-identities-used-by-aks
 [kubernetes-documentation]: https://kubernetes.io/docs/concepts/workloads/
 [deployment-safeguards]: ../deployment-safeguards.md
-[seccomp-profile]: ../secure-container-access.md#secure-computing-seccomp
+[seccomp-profile]: ../secure-container-access.md#overview-of-default-seccomp-profiles-preview
 [kubernetes-probes]: https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/
 [kubernetes-pod-security-standards]: https://kubernetes.io/docs/concepts/security/pod-security-standards/
 [pod-anti-affinity]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity

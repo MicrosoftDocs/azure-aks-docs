@@ -108,6 +108,8 @@
           href: quickstart-namespace-scoped-resource-propagation.md
         - name: Control cluster order for resource placement 
           href: howto-staged-update-run.md
+        - name: Customize resource configurations using overrides
+          href: howto-use-overrides-customize-resources-placement.md
         - name: Understanding placement status
           href: howto-understand-placement.md
         - name: Intelligent resource placement using cluster properties
@@ -116,10 +118,6 @@
           href: quickstart-envelope-reserved-resources.md
         - name: Use taints and tolerations
           href: use-taints-tolerations.md
-        - name: Customize cluster-scoped resources with overrides
-          href: cluster-resource-override.md
-        - name: Customize namespace-scoped resources with overrides
-          href: resource-override.md
         - name: Use Automated Deployments with resource placement
           href: howto-automated-deployments.md
     - name: Use Managed Fleet Namespaces for multi-cluster multi-tenancy

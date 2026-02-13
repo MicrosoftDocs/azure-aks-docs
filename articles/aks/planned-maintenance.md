@@ -172,7 +172,7 @@ az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-n
 
 1. In the Azure portal, go to your AKS cluster resource.
 1. From the service menu, under **Settings**, select **Upgrades**.
-1. Under **Upgrade** > **Automatic upgrade scheduler**, select **Add schedule**. For newer clusters, this option is labeled **Edit schedule**.
+1. Under **Upgrade** > **Automatic upgrade scheduler**, select **Add schedule**. 
 
     :::image type="content" source="./media/planned-maintenance/add-schedule-portal.png" alt-text="Screenshot that shows the option to add a schedule in the Azure portal.":::
 
@@ -186,7 +186,7 @@ az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-n
 
     :::image type="content" source="./media/planned-maintenance/add-maintenance-schedule-portal.png" alt-text="Screenshot that shows the pane for adding a maintenance schedule in the Azure portal.":::
 
-1. Select **Save** > **Apply**.
+1. Select **Save**.
 
 ### [JSON file](#tab/json-file)
 
@@ -276,13 +276,13 @@ az aks maintenanceconfiguration update --resource-group $RESOURCE_GROUP --cluste
 ### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, navigate to your AKS cluster resource.
-1. From the service menu, under **Settings**, select **Cluster configuration**.
+1. From the service menu, under **Settings**, select **Upgrades**.
 1. Under **Upgrade** > **Automatic upgrade scheduler**, select **Edit schedule**.
 
     :::image type="content" source="./media/planned-maintenance/edit-schedule-portal.png" alt-text="Screenshot that shows the option for editing a schedule in the Azure portal.":::
 
 1. On the **Edit maintenance schedule** pane, update the maintenance window settings as needed.
-1. Select **Save** > **Apply**.
+1. Select **Save**.
 
 ### [JSON file](#tab/json-file)
 
