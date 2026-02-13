@@ -18,7 +18,7 @@ The AKS MCP server connects to Azure using the Azure SDK and provides a set of t
 - Troubleshooting and diagnostics
 - Analyze the health of your cluster
 - Operate (CRUD) AKS resources
-- Retrieve details related to AKS clusters (VNets, Subnets, NSGs, Route Tables, etc.)
+- Retrieve details related to AKS clusters (VNets, Subnets, Network Security Groups (NSGs), Route Tables, etc.)
 - Enabling best practices and recommended features
 - Manage Azure Fleet operations for multi-cluster scenarios
 
@@ -29,16 +29,16 @@ The AKS MCP server is fully open-sourced project, with example templates and Hel
 The AKS MCP server can be used with any compatible AI assistant, including the [agentic CLI for AKS](./cli-agent-for-aks-overview.md) and Microsoft Copilot. Common use cases include:
 
 - Asking AI assistants questions like:
-  - “Why are pods pending in this cluster?”
-  - “What is the network configuration of my AKS cluster?”
-  - “Create a placement to deploy nginx workloads to clusters with app=frontend label.”
+  - "Why are pods pending in this cluster?"
+  - "What is the network configuration of my AKS cluster?"
+  - "Create a placement to deploy nginx workloads to clusters with app=frontend label."
 - Allowing AI tools to:
   - Read cluster state and configuration
-  - Inspect metrics, events and logs
+  - Inspect metrics, events, and logs
   - Correlate signals across Kubernetes and Azure resources
   - Apply changes and enable new features directly on your cluster
 
-All actions performed through the AKS MCP server are constrained by Kubernetes RBAC and (when applicable) Azure RBAC. By default, the AKS MCP server inherits the user's permissions when accessing cluster and Azure resources. To customize the roles and permissions of the AKS MCP server, deploy the remote AKS MCP server mode with built-in RBAC control.
+All actions performed through the AKS MCP server are constrained by Kubernetes Role-Based Access Control (RBAC) and Azure RBAC. By default, the AKS MCP server inherits the user's permissions when accessing cluster and Azure resources. To customize the roles and permissions of the AKS MCP server, deploy the remote AKS MCP server mode with built-in RBAC control.
 
 ## Available tools
 
@@ -46,8 +46,8 @@ The AKS MCP server provides a comprehensive set of tools for interacting with AK
 
 There are three sets of permissions you can enable for the AKS MCP server: read-only (default), read-write, and admin. Some tools require read-write or admin permissions to perform actions like deploying debugging pods or CRUD actions on your cluster. To enable read-write or admin permissions for the AKS-MCP server, add the **access level** parameter to your MCP configuration file:
 
-1. Navigate to your **mcp.json** file, or go to MCP: List Servers -> AKS-MCP -> Show Configuration Details in the **Command Palette** (For VSCode; `Ctrl+Shift+P` on Windows/Linux or `Cmd+Shift+P` on macOS).
-2. In the "args" section of AKS-MCP, add the following parameters: "--access-level", "readwrite" / "admin"
+1. Navigate to your **mcp.json** file, or go to MCP: List Servers -> AKS-MCP -> Show Configuration Details in the **Command Palette** (For VS Code; `Ctrl+Shift+P` on Windows/Linux or `Cmd+Shift+P` on macOS).
+2. In the "args" section of AKS-MCP, add the following parameters: "--access-level," "readwrite" or "admin"
 
 For example:
 ```
@@ -59,7 +59,7 @@ For example:
 ]
 ```
 
-These tools have been designed to provide comprehensive functionality through unified interfaces:
+These tools are designed to provide comprehensive functionality through unified interfaces:
 
 <details>
 <summary>Azure CLI Operations (Unified Tool)</summary>
@@ -69,7 +69,7 @@ These tools have been designed to provide comprehensive functionality through un
 Unified tool for executing Azure CLI commands directly. This tool provides a flexible interface to run any Azure CLI command.
 
 **Parameters:**
-- `cli_command`: The complete Azure CLI command to execute (e.g., `az aks list --resource-group myRG`, `az vm list --subscription <sub-id>`)
+- `cli_command`: The complete Azure CLI command to execute. For example, `az aks list --resource-group myRG` or `az vm list --subscription <sub-id>`.
 - `timeout`: Optional timeout in seconds (default: 120)
 
 **Example Usage:**
@@ -83,14 +83,13 @@ Unified tool for executing Azure CLI commands directly. This tool provides a fle
 - **readonly**: Only read operations are allowed
 - **readwrite/admin**: Both read and write operations are allowed
 
-**Important:** Commands must be simple Azure CLI invocations without shell features like pipes (|), redirects (>, <), command substitution, or semicolons (;).
+> [!NOTE]
+> **Important:** Commands must be simple Azure CLI invocations without shell features like pipes (|), redirects (>, <), command substitution, or semicolons (;).
 
 </details>
 
 <details>
 <summary>Kubernetes Operations (Unified Tool)</summary>
-
-*Note: All Kubernetes tools (kubectl, helm, cilium, hubble) are enabled by default. Use `--enabled-components` to selectively enable specific components.*
 
 ### Unified kubectl Tool
 
@@ -99,7 +98,7 @@ Unified tool for executing Azure CLI commands directly. This tool provides a fle
 Unified tool for executing kubectl commands directly. This tool provides a flexible interface to run any `kubectl` command with full argument support.
 
 **Parameters:**
-- `args`: The kubectl command arguments (e.g., `get pods`, `describe node mynode`, `apply -f deployment.yaml`)
+- `args`: The kubectl command arguments. For example, `get pods`, `describe node mynode`, or `apply -f deployment.yaml`.
 
 **Example Usage:**
 ```json
@@ -173,7 +172,7 @@ Unified tool for Azure monitoring and diagnostics operations for AKS clusters.
 
 **Tool:** `get_aks_vmss_info`
 
-- Get detailed VMSS configuration for node pools in the AKS cluster
+- Get detailed configuration of your Virtual Machine Scale Sets (node pools) in the AKS cluster
 
 </details>
 
@@ -216,14 +215,14 @@ Unified tool for executing AKS diagnostic detector operations.
 - `detector_name` (required for `run` operation): Name of the detector to run
 - `category` (required for `run_by_category` operation): Detector category
 - `start_time` (required for `run` and `run_by_category` operations): Start time in UTC ISO format (within last 30 days)
-- `end_time` (required for `run` and `run_by_category` operations): End time in UTC ISO format (within last 30 days, max 24h from start)
+- `end_time` (required for `run` and `run_by_category` operations): End time in UTC ISO format (within last 30 days, max 24 hours from start)
 
 **Available Categories:**
 
 - Best Practices
 - Cluster and Control Plane Availability and Performance
 - Connectivity Issues
-- Create, Upgrade, Delete and Scale
+- Create, Upgrade, Delete, and Scale
 - Deprecations
 - Identity and Security
 - Node Health
@@ -302,7 +301,7 @@ eBPF.
 
 ## Getting started with the AKS MCP server
 
-The AKS MCP server has two modes: local and remote. In this section, we will cover the use cases and installation processes for both modes.
+The AKS MCP server has two modes: local and remote. In this section, we cover the use cases and installation processes for both modes.
 
 ### Local MCP server
 
@@ -316,7 +315,7 @@ Before installing the AKS MCP server, set up [Azure CLI](/cli/azure/install-azur
 az login
 ```
 
-#### [VS Code with GitHub Copilot (Recommended)](#tab/vscode)
+#### [Visual Studio Code with GitHub Copilot (Recommended)](#tab/vscode)
 
 The easiest way to get started with AKS-MCP is through the **Azure Kubernetes Service Extension for VS Code**. The AKS extension handles binary downloads, updates, and configuration automatically, ensuring you always have the latest version with optimal settings.
 
@@ -335,7 +334,7 @@ Upon successful installation, the server appears in **MCP: List Servers** (via C
 
 **Step 3: Start Using AKS-MCP**
 
-Once started, the MCP server appears in the **Copilot Chat: Configure Tools** dropdown under `MCP Server: AKS MCP`, ready to enhance contextual prompts based on your AKS environment. By default, all AKS-MCP server tools are enabled. You can review the list of available tools and disable any that are not required for your scenario.
+Once started, the MCP server appears in the **Copilot Chat: Configure Tools** dropdown under `MCP Server: AKS MCP`, ready to enhance contextual prompts based on your AKS environment. By default, all AKS-MCP server tools are enabled. You can review the list of available tools and disable any that aren't required for your scenario.
 
 Try a prompt like *"List all my AKS clusters"* to start using tools from the AKS-MCP server.
 
@@ -351,7 +350,7 @@ For direct binary usage without the VS Code extension:
 Choose your platform and download the latest AKS-MCP binary:
 
 | Platform | Architecture | Download Link |
-|----------|-------------|---------------|
+| -------- | ------------ | ------------- |
 | **Windows** | AMD64 | [aks-mcp-windows-amd64.exe](https://github.com/Azure/aks-mcp/releases/latest/download/aks-mcp-windows-amd64.exe) |
 | | ARM64 | [aks-mcp-windows-arm64.exe](https://github.com/Azure/aks-mcp/releases/latest/download/aks-mcp-windows-arm64.exe) |
 | **macOS** | Intel (AMD64) | [aks-mcp-darwin-amd64](https://github.com/Azure/aks-mcp/releases/latest/download/aks-mcp-darwin-amd64) |
@@ -403,7 +402,7 @@ Add to your VS Code User Settings JSON (`Ctrl+,` or `Cmd+,`, then search for "mc
 1. Open GitHub Copilot in VS Code and [switch to Agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode).
 1. Select the **Tools** button to see the list of available tools.
 1. Verify that the AKS-MCP tools appear in the list.
-1. Try a prompt like: *"List all my AKS clusters in subscription xxx"*.
+1. Try a prompt like: *"List all my AKS clusters in subscription xxx."*
 
 > [!TIP]
 > If you don't see the AKS-MCP tools after restarting, check the VS Code output panel for any MCP server connection errors and verify your binary path in `.vscode/mcp.json`.
@@ -426,7 +425,7 @@ You can run the AKS-MCP server using the official Docker image from Docker MCP T
    - **container_user** `[OPTIONAL]`: Username or UID to run the container as (default is `mcp`). Use your host user ID (for example, `1000`) if running Docker Engine on Linux.
 
 > [!NOTE]
-> On Windows, Azure credentials won't work by default. Configure a custom Azure directory with token cache encryption disabled, or use the long-lived servers option to authenticate inside the container.
+> On Windows, Azure credentials don't work by default. Configure a custom Azure directory with token cache encryption disabled, or use the long-lived servers option to authenticate inside the container.
 
 **Option 2: Containerized MCP configuration**
 
@@ -487,7 +486,7 @@ You can also run the server directly from the command line:
 **Command-line options:**
 
 | Option | Description | Default |
-|--------|-------------|---------|
+| ------ | ----------- | ------- |
 | `--access-level` | Access level (`readonly`, `readwrite`, `admin`) | `readonly` |
 | `--enabled-components` | Comma-separated list of enabled components | all |
 | `--allow-namespaces` | Comma-separated list of allowed Kubernetes namespaces | all |
@@ -683,7 +682,7 @@ For in-cluster access, use: `http://aks-mcp.aks-mcp.svc.cluster.local:8000`
 #### Helm configuration reference
 
 | Parameter | Description | Default |
-|-----------|-------------|---------|
+| --------- | ----------- | ------- |
 | `workloadIdentity.enabled` | Enable Azure Workload Identity | `false` |
 | `azure.clientId` | Azure Client ID | `""` |
 | `azure.tenantId` | Azure Tenant ID | `""` |
@@ -781,14 +780,14 @@ kubectl delete secret azure-credentials --namespace aks-mcp
 
 This section lists common setup and runtime issues, their symptoms, and how to resolve them.
 
-### AKS MCP server cannot access the cluster
+### AKS MCP server can't access the cluster
 
 Symptoms:
 - Tools return authorization errors
 - No resources are visible
 
 Likely causes:
-- User or MCP identity does not have sufficient permissions
+- User or MCP identity doesn't have sufficient permissions
 - Incorrect ServiceAccount binding
 - Misconfigured kubeconfig context (local mode)
 
