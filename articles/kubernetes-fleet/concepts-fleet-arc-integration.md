@@ -6,12 +6,12 @@ author: ealianis
 ms.author: sehobbs
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
-# Customer intent: "As a platform administrator managing hybrid and multi-cloud Kubernetes infrastructure, I want to understand how Azure Kubernetes Fleet Manager integrates with Arc-enabled Kubernetes clusters, so that I can centrally manage my entire fleet regardless of where clusters are running."
+# Customer intent: "As a platform administrator managing hybrid and multicloud Kubernetes infrastructure, I want to understand how Azure Kubernetes Fleet Manager integrates with Arc-enabled Kubernetes clusters, so that I can centrally manage my entire fleet regardless of where clusters are running."
 ---
 
 # Azure Kubernetes Fleet Manager with Arc-enabled Kubernetes clusters (preview)
 
-This article provides a conceptual overview of how Azure Kubernetes Fleet Manager integrates with Azure Arc-enabled Kubernetes clusters to enable unified multi-cluster management across hybrid and multi-cloud environments.
+This article provides a conceptual overview of how Azure Kubernetes Fleet Manager integrates with Azure Arc-enabled Kubernetes clusters to enable unified multi-cluster management across hybrid and multicloud environments.
 
 If you're unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure Kubernetes Fleet Manager overview](./overview.md).
 
@@ -26,11 +26,11 @@ The integration between Azure Kubernetes Fleet Manager and Azure Arc-enabled Kub
 
 ## Key benefits and capabilities
 
-Azure Kubernetes Fleet Manager integration with Arc-enabled Kubernetes clusters enables unified, intelligent, policy-driven multi-cluster resource management across hybrid and multi-cloud environments.
+Azure Kubernetes Fleet Manager integration with Arc-enabled Kubernetes clusters enables unified, intelligent, policy-driven multi-cluster resource management across hybrid and multicloud environments.
 
 ### Centralized policy-driven fleet governance
 
-Azure Kubernetes Fleet Manager utilizes a hub-spoke architecture that creates a single control plane for the fleet. It allows fleet administrators to apply uniform cloud native policies on every member cluster, whether they reside in public clouds, private data centers, or edge locations. The hub-spoke architecture greatly simplifies governance across large, geographically distributed fleets spanning hybrid and multi-cloud environments.
+Azure Kubernetes Fleet Manager utilizes a hub-spoke architecture that creates a single control plane for the fleet. It allows fleet administrators to apply uniform cloud native policies on every member cluster, whether they reside in public clouds, private data centers, or edge locations. The hub-spoke architecture greatly simplifies governance across large, geographically distributed fleets spanning hybrid and multicloud environments.
 
 ### Progressive Rollouts with Safeguards
 

@@ -39,7 +39,7 @@ When you add an Arc-enabled Kubernetes cluster to Fleet Manager, the following c
 
 - At least **210 MB** memory and **2%** of one CPU core available.
 - The cluster should reserve **3 pods** for the Azure Kubernetes Fleet Manager Arc extension agents.
-- The **fleet-system** namespace is created for Fleet-related components and shoudn't be directly modified.
+- The **fleet-system** namespace is created for Fleet-related components and shouldn't be directly modified.
 
 ### Private Fleet
 
