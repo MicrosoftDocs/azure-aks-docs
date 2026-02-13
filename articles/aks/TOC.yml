@@ -1097,7 +1097,7 @@
         - name: Deploy data and ML pipelines with Flyte
           href: use-flyte.md
     - name: Agents and MCP servers
-    - items:
+      items:
         - name: Agentic CLI for AKS
           items:
             - name: Overview
