@@ -22,7 +22,7 @@ If you're unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure 
 
 Fleet Manager Arc-enabled Kubernetes cluster support is only currently available in Azure public cloud regions.
 
-If you attempt to create a connection in a non-public cloud region, you will receieve an error of type `FeatureNotAvailableInCloud` with the message `The feature 'Arc Member Cluster' is not available in cloud environment.`
+If you attempt to create a Arc-enabled member cluster in a non-public cloud region, you will receieve an error of type `FeatureNotAvailableInCloud` with the message `The feature 'Arc Member Cluster' is not available in cloud environment`.
 
 Once Azure Arc Gateway is available in Azure non-public cloud regions we will lift this restriction.
 

@@ -27,10 +27,19 @@ The following table outlines which Azure Kubernetes Fleet Manager capabilities a
 | DNS load balancing | ✅ GA| ❌ Unsupported|
 | Managed Namespaces | ✅ Preview  | ✅ Preview  |
 | Managed Namespace RBAC | ✅ Preview  | ❌ Unsupported |
+| Non-public Azure regions | ✅ GA  | ❌ Unsupported |
 
 ## Arc-enabled Kubernetes Clusters important considerations
 
 Depending on your environment and configuration, certain limitations may apply when connecting an Arc-enabled Kubernetes cluster to an Azure Kubernetes Fleet Manager hub. Review the following considerations:
+
+### Cluster resource requirements
+
+When adding an Arc-enabled Kubernetes cluster to Fleet Manager, the following conditions apply:
+- At least **210 MB** memory and **2%** of one CPU core available
+- The cluster should reserve **3 pods** for the Azure Kubernetes Fleet Manager Arc extension agents
+- The namespace **fleet-system** will be created for related components.
+  - Do **not delete or modify** this namespace, it is required for core functionality.
 
 ### Private Fleet
 
@@ -40,19 +49,15 @@ For **Private Fleets**, your Arc-enabled Kubernetes cluster **must** be configur
 
 **TLS-terminating proxies are not supported.**  If using a **passthrough proxy**, your Arc-enabled Kubernetes cluster **must** also be configured to use [Azure Arc Gateway](/azure/azure-arc/servers/arc-gateway).
 
-## Azure Arc Gateway Limitations
+## Non-public region limitation
 
-Azure Arc Gateway is currently in preview and is only available in Azure public cloud regions.
+Fleet Manager Arc-enabled Kubernetes cluster support is only currently available in Azure public cloud regions.
 
-You can track the status of Azure Arc Gateway via their [official documention][azure-arc-gateway].
+If you attempt to create a Arc-enabled member cluster in a non-public cloud region, you will receieve an error of type `FeatureNotAvailableInCloud` with the message `The feature 'Arc Member Cluster' is not available in cloud environment`.
 
-### Cluster resource requirements
+Once Azure Arc Gateway is available in Azure non-public cloud regions we will lift this restriction.
 
-When adding an Arc-enabled Kubernetes cluster to Fleet Manager, the following conditions apply:
-- At least **210 MB** memory and **2%** of one CPU core available
-- The cluster should reserve **3 pods** for the Azure Kubernetes Fleet Manager Arc extension agents
-- The namespace **fleet-system** will be created for related components.
-  - Do **not delete or modify** this namespace, it is required for core functionality.
+You can track the status of Azure Arc Gateway via its [official documentation][azure-arc-gateway].
 
 <!-- LINKS -->
 [azure-arc-gateway]: /azure/azure-arc/kubernetes/arc-gateway-simplify-networking
