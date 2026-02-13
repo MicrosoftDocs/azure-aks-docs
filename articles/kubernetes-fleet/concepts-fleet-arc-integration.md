@@ -13,18 +13,18 @@ ms.topic: concept-article
 
 This article provides a conceptual overview of how Azure Kubernetes Fleet Manager integrates with Azure Arc-enabled Kubernetes clusters to enable unified multi-cluster management across hybrid and multi-cloud environments.
 
-If you are unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure Kubernetes Fleet Manager overview](./overview.md).
+If you're unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure Kubernetes Fleet Manager overview](./overview.md).
 
 > [!IMPORTANT]
 > Azure Kubernetes Fleet Manager's support for Arc-enabled Kubernetes clusters is currently in public preview.
 
 ## Limitations
 
-Fleet Manager with a private hub cluster requires use of Azure Arc Gateway to connect Arc-enabled Kubernetes clsuters. 
+Fleet Manager with a private hub cluster requires use of Azure Arc Gateway to connect Arc-enabled Kubernetes clusters. 
 
 Azure Arc Gateway is currently in preview and is only available in Azure public cloud regions.
 
-You can track the status of Azure Arc Gateway via their [official documention][azure-arc-gateway].
+You can track the status of Azure Arc Gateway via their [official documentation][azure-arc-gateway].
 
 ## What does the integration solve?
 
@@ -46,18 +46,18 @@ Azure Kubernetes Fleet Manager provides a cloud native progressive rollout plans
 
 ### Powerful Multi-Cluster Scheduling
 
-Azure Kubernetes Fleet Manager scheduler evaluates member cluster properties, available capacity, and declarative placement policies to select optimal destinations for workloads. It supports cluster affinity and anti-affinity rules, topology spread constraints to distribute workloads across failure domains, and resource-based placement to ensure sufficient compute, memory, and storage. The scheduler continuously reconciles as fleet conditions change, automatically adapting to cluster additions, removals, or capacity shifts across edge, on-premises, and cloud environments. For more details on the various scheduling capabilities, please see the multi-cluster workload management section.
+Azure Kubernetes Fleet Manager scheduler evaluates member cluster properties, available capacity, and declarative placement policies to select optimal destinations for workloads. It supports cluster affinity and anti-affinity rules, topology spread constraints to distribute workloads across failure domains, and resource-based placement to ensure sufficient compute, memory, and storage. The scheduler continuously reconciles as fleet conditions change, automatically adapting to cluster additions, removals, or capacity shifts across edge, on-premises, and cloud environments. For more details on the various scheduling capabilities see the multi-cluster workload management section.
 
-## Supported capabilities, prerequisites and considerations
+## Supported capabilities, prerequisites, and considerations
 
 Before integrating Arc-enabled Kubernetes clusters with Fleet Manager, review these important considerations
 noted within the [member cluster types documentation](./concepts-member-cluster-types.md).
 
 ## Architecture overview
 
-The Fleet Manager and Arc integration follows the same hub-and-spoke architecture used for AKS clusters:
+The Fleet Manager and Arc integration uses the same hub-and-spoke architecture as AKS clusters:
 
-When you join an Arc-enabled Kubernetes cluster to a Fleet, the Fleet Arc Extension is installed on your Arc-Enabled Kubernetes cluster, deploying the Fleet's member agents onto your underlying cluster. These agents will communicate directly with the Fleet's hub cluster. 
+When you join an Arc-enabled Kubernetes cluster to a Fleet, the Fleet Arc Extension is installed on your Arc-Enabled Kubernetes cluster, deploying the Fleet's member agents onto your underlying cluster. These agents communicate directly with the Fleet's hub cluster. 
 
 **Key components:**
 
