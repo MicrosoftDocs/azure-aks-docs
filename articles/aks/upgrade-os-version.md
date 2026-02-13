@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 09/23/2025
 author: allyford
 ms.author: allyford
+ai-usage: ai-assisted
 ---
 
 # Upgrade operating system (OS) versions in AKS
