@@ -1095,13 +1095,13 @@
         - name: Agentic CLI for AKS
           items:
             - name: Overview
-              href: cli-agent-for-aks-overview.md
+              href: agentic-cli-for-aks-overview.md
             - name: Install and use the agentic CLI for AKS
-              href: cli-agent-for-aks-install.md
+              href: agentic-cli-for-aks-install.md
             - name: Troubleshoot agentic CLI for AKS issues
-              href: cli-agent-for-aks-troubleshoot.md
+              href: agentic-cli-for-aks-troubleshoot.md
             - name: Agentic CLI for AKS FAQ
-              href: cli-agent-for-aks-faq.yml
+              href: agentic-cli-for-aks-faq.yml
         - name: AKS MCP server
           href: aks-model-context-protocol-server.md
         - name: Work with clusters using Copilot
