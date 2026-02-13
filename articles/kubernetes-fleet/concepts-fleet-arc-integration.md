@@ -18,16 +18,6 @@ If you're unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure 
 > [!IMPORTANT]
 > Azure Kubernetes Fleet Manager's support for Arc-enabled Kubernetes clusters is currently in public preview.
 
-## Limitations
-
-Fleet Manager Arc-enabled Kubernetes cluster support is only currently available in Azure public cloud regions.
-
-If you attempt to create an Arc-enabled member cluster in a non-public cloud region, an error of type `FeatureNotAvailableInCloud` with the message `The feature 'Arc Member Cluster' is not available in cloud environment` is returned.
-
-When Azure Arc Gateway is available in Azure non-public cloud regions the restriction will be lifted.
-
-You can track the status of Azure Arc Gateway via its [official documentation][azure-arc-gateway].
-
 ## What does the integration solve?
 
 The integration between Azure Kubernetes Fleet Manager and Azure Arc-enabled Kubernetes clusters extends centralized multi-cluster resource management beyond Azure-native AKS clusters, including many of the most popular Kubernetes distributions running anywhere:
@@ -73,6 +63,16 @@ To begin using Fleet Manager with Arc-enabled Kubernetes clusters:
 1. **Connect clusters to Azure Arc**: Connect your Kubernetes clusters to Azure Arc. For instructions, see [Connect an existing Kubernetes cluster to Azure Arc](/azure/azure-arc/kubernetes/quickstart-connect-cluster).
 2. **Create or upgrade your fleet**: Create (or upgrade) a fleet resource with a hub cluster, then join your Arc-enabled clusters. For instructions, see [Create a fleet and join member clusters](./quickstart-create-fleet-and-members.md).
 3. **Configure workload placement**: Create `ClusterResourcePlacement` resources for your applications. For guidance, see [Kubernetes resource propagation concepts](./concepts-resource-propagation.md).
+
+## Public region limitation
+
+Fleet Manager Arc-enabled Kubernetes cluster support is only currently available in Azure public cloud regions.
+
+If you attempt to create an Arc-enabled member cluster in a non-public cloud region, an error of type `FeatureNotAvailableInCloud` with the message `The feature 'Arc Member Cluster' is not available in cloud environment` is returned.
+
+When Azure Arc Gateway is available in Azure non-public cloud regions the restriction will be lifted.
+
+You can track the status of Azure Arc Gateway via its [official documentation][azure-arc-gateway].
 
 <!-- LINKS -->
 [azure-arc-gateway]: /azure/azure-arc/kubernetes/arc-gateway-simplify-networking
