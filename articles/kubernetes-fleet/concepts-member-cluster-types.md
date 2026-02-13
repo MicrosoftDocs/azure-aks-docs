@@ -16,7 +16,7 @@ Azure Kubernetes Fleet Manager supports two types of member clusters:
 - [Arc-enabled Kubernetes clusters](/azure/azure-arc/kubernetes/overview) (Preview).
 
 > [!IMPORTANT]
-> Azure Kubernetes Fleet Manager's support for Arc-enabled Kubernetes clusters is currently in Preview. [See below for limitations and requirements](#arc-enabled-kubernetes-clusters-important-considerations).
+> Azure Kubernetes Fleet Manager's support for Arc-enabled Kubernetes clusters is currently in Preview.
 
 The following table outlines which Azure Kubernetes Fleet Manager capabilities are supported for each member cluster type.
 
@@ -36,10 +36,11 @@ Depending on your environment and configuration, certain limitations may apply w
 ### Cluster resource requirements
 
 When adding an Arc-enabled Kubernetes cluster to Fleet Manager, the following conditions apply:
-- At least **210 MB** memory and **2%** of one CPU core available
-- The cluster should reserve **3 pods** for the Azure Kubernetes Fleet Manager Arc extension agents
+
+- At least **210 MB** memory and **2%** of one CPU core available.
+- The cluster should reserve **3 pods** for the Azure Kubernetes Fleet Manager Arc extension agents.
 - The namespace **fleet-system** will be created for related components.
-  - Do **not delete or modify** this namespace, it is required for core functionality.
+- Do **not delete or modify** this namespace as it's required for core functionality.
 
 ### Private Fleet
 
@@ -55,7 +56,7 @@ Fleet Manager Arc-enabled Kubernetes cluster support is only currently available
 
 If you attempt to create an Arc-enabled member cluster in a non-public cloud region, an error of type `FeatureNotAvailableInCloud` with the message `The feature 'Arc Member Cluster' is not available in cloud environment` is returned.
 
-Once Azure Arc Gateway is available in Azure non-public cloud regions the restriction will be lifted.
+When Azure Arc Gateway is available in Azure non-public cloud regions the restriction will be lifted.
 
 You can track the status of Azure Arc Gateway via its [official documentation][azure-arc-gateway].
 
