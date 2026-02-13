@@ -21,12 +21,12 @@ Azure Kubernetes Fleet Manager supports two types of member clusters:
 The following table outlines which Azure Kubernetes Fleet Manager capabilities are supported for each member cluster type.
 
 | Capability | AKS cluster | Arc-enabled Kubernetes cluster |
-|-----|----|-----------|
-| Kubernetes and node image updates |✅ GA | ❌ Unsupported|
-| Workload placement |✅ GA| ✅ Preview|
+|------------|-------------|--------------------------------|
+| Kubernetes and node image updates |✅ GA | ❌ Unsupported |
+| Workload placement |✅ GA| ✅ Preview |
 | DNS load balancing | ✅ GA| ❌ Unsupported|
 | Managed Namespaces | ✅ Preview  | ✅ Preview  |
-| Managed Namespace RBAC | ✅ Preview  | ❌ Unsupported  |
+| Managed Namespace RBAC | ✅ Preview  | ❌ Unsupported |
 
 ## Arc-enabled Kubernetes Clusters important considerations
 
@@ -34,7 +34,17 @@ Depending on your environment and configuration, certain limitations may apply w
 
 ### Private Fleet
 
-- For **Private Fleets**, your Arc-enabled Kubernetes cluster **must** be configured to use [Azure Arc Gateway](/azure/azure-arc/servers/arc-gateway).
+For **Private Fleets**, your Arc-enabled Kubernetes cluster **must** be configured to use [Azure Arc Gateway](/azure/azure-arc/servers/arc-gateway).
+
+### Networking
+
+**TLS-terminating proxies are not supported.**  If using a **passthrough proxy**, your Arc-enabled Kubernetes cluster **must** also be configured to use [Azure Arc Gateway](/azure/azure-arc/servers/arc-gateway).
+
+## Azure Arc Gateway Limitations
+
+Azure Arc Gateway is currently in preview and is only available in Azure public cloud regions.
+
+You can track the status of Azure Arc Gateway via their [official documention][azure-arc-gateway].
 
 ### Cluster resource requirements
 
@@ -44,7 +54,5 @@ When adding an Arc-enabled Kubernetes cluster to Fleet Manager, the following co
 - The namespace **fleet-system** will be created for related components.
   - Do **not delete or modify** this namespace, it is required for core functionality.
 
-### Networking
-
-- **TLS-terminating proxies are not supported.**  
-- If using a **passthrough proxy**, your Arc-enabled Kubernetes cluster **must** also be configured to use [Azure Arc Gateway](/azure/azure-arc/servers/arc-gateway).
+<!-- LINKS -->
+[azure-arc-gateway]: /azure/azure-arc/kubernetes/arc-gateway-simplify-networking

@@ -1,7 +1,7 @@
 ---
 title: "Azure Kubernetes Fleet Manager with Arc-enabled Kubernetes clusters"
 description: This article provides a conceptual overview of Azure Kubernetes Fleet Manager integration with Azure Arc-enabled Kubernetes clusters.
-ms.date: 10/16/2025
+ms.date: 02/13/2026
 author: ealianis
 ms.author: sehobbs
 ms.service: azure-kubernetes-fleet-manager
@@ -17,6 +17,14 @@ If you are unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure
 
 > [!IMPORTANT]
 > Azure Kubernetes Fleet Manager's support for Arc-enabled Kubernetes clusters is currently in public preview.
+
+## Limitations
+
+Fleet Manager with a private hub cluster requires use of Azure Arc Gateway to connect Arc-enabled Kubernetes clsuters. 
+
+Azure Arc Gateway is currently in preview and is only available in Azure public cloud regions.
+
+You can track the status of Azure Arc Gateway via their [official documention][azure-arc-gateway].
 
 ## What does the integration solve?
 
@@ -64,3 +72,6 @@ To begin using Fleet Manager with Arc-enabled Kubernetes clusters:
 1. **Connect clusters to Azure Arc**: Connect your Kubernetes clusters to Azure Arc. For instructions, see [Connect an existing Kubernetes cluster to Azure Arc](/azure/azure-arc/kubernetes/quickstart-connect-cluster).
 2. **Create or upgrade your fleet**: Create (or upgrade) a fleet resource with a hub cluster, then join your Arc-enabled clusters. For instructions, see [Create a fleet and join member clusters](./quickstart-create-fleet-and-members.md).
 3. **Configure workload placement**: Create `ClusterResourcePlacement` resources for your applications. For guidance, see [Kubernetes resource propagation concepts](./concepts-resource-propagation.md).
+
+<!-- LINKS -->
+[azure-arc-gateway]: /azure/azure-arc/kubernetes/arc-gateway-simplify-networking
