@@ -12,6 +12,8 @@ ms.date: 07/01/2024
 
 # Use Windows Server Annual Channel for Containers on Azure Kubernetes Service (AKS) (Preview)
 
+[!INCLUDE [windows annual channel retirement](./includes/windows-annual-channel-retirement.md)]
+
 AKS supports [Windows Server Annual Channel for Containers](https://techcommunity.microsoft.com/t5/windows-server-news-and-best/windows-server-annual-channel-for-containers/ba-p/3866248) in public preview. Each channel version is released annually and is supported for *two years*. This channel is beneficial if you require increased innovation cycles and portability.
 
 Windows Server Annual Channel versions are based on the Kubernetes version of your node pool. To upgrade from one Annual Channel version to the next, you can [upgrade to a Kubernetes version][upgrade-aks-cluster] that supports the next Annual Channel version.
