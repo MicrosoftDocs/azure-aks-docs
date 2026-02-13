@@ -22,9 +22,9 @@ If you're unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure 
 
 Fleet Manager Arc-enabled Kubernetes cluster support is only currently available in Azure public cloud regions.
 
-If you attempt to create a Arc-enabled member cluster in a non-public cloud region, you will receieve an error of type `FeatureNotAvailableInCloud` with the message `The feature 'Arc Member Cluster' is not available in cloud environment`.
+If you attempt to create an Arc-enabled member cluster in a non-public cloud region, an error of type `FeatureNotAvailableInCloud` with the message `The feature 'Arc Member Cluster' is not available in cloud environment` is returned.
 
-Once Azure Arc Gateway is available in Azure non-public cloud regions we will lift this restriction.
+Once Azure Arc Gateway is available in Azure non-public cloud regions the restriction will be lifted.
 
 You can track the status of Azure Arc Gateway via its [official documentation][azure-arc-gateway].
 
@@ -40,11 +40,11 @@ Azure Kubernetes Fleet Manager integration with Arc-enabled Kubernetes clusters 
 
 ### Centralized policy-driven fleet governance
 
-Azure Kubernetes Fleet Manager utilizes a hub-spoke architecture that creates a single control plane for the fleet. It allows fleet administrators to apply uniform cloud native policies on every member cluster, whether they reside in public clouds, private data centers, or edge locations. This greatly simplifies governance across large, geographically distributed fleets spanning hybrid and multi-cloud environments.
+Azure Kubernetes Fleet Manager utilizes a hub-spoke architecture that creates a single control plane for the fleet. It allows fleet administrators to apply uniform cloud native policies on every member cluster, whether they reside in public clouds, private data centers, or edge locations. The hub-spoke architecture greatly simplifies governance across large, geographically distributed fleets spanning hybrid and multi-cloud environments.
 
 ### Progressive Rollouts with Safeguards
 
-Azure Kubernetes Fleet Manager provides a cloud native progressive rollout plans sequence updates across the entire fleet with health verification at each step. The application owner can stop a rollout or rollback to any previous versions when they observe failures, limiting blast radius. This keeps multi-cluster application deployments reliable and predictable spanning edge, on-premises, and cloud environments.
+Azure Kubernetes Fleet Manager provides a cloud native progressive rollout plans sequence updates across the entire fleet with health verification at each step. The application owner can stop a rollout or rollback to any previous versions when they observe failures, limiting blast radius. Progressive rollouts keep multi-cluster application deployments reliable and predictable spanning edge, on-premises, and cloud environments.
 
 ### Powerful Multi-Cluster Scheduling
 
@@ -52,20 +52,19 @@ Azure Kubernetes Fleet Manager scheduler evaluates member cluster properties, av
 
 ## Supported capabilities, prerequisites, and considerations
 
-Before integrating Arc-enabled Kubernetes clusters with Fleet Manager, review these important considerations
-noted within the [member cluster types documentation](./concepts-member-cluster-types.md).
+Before integrating Arc-enabled Kubernetes clusters with Fleet Manager, review these important considerations noted within the [member cluster types documentation](./concepts-member-cluster-types.md).
 
 ## Architecture overview
 
-The Fleet Manager and Arc integration uses the same hub-and-spoke architecture as AKS clusters:
+The Fleet Manager and Azure Arc integration uses the same hub-and-spoke architecture as AKS clusters:
 
-When you join an Arc-enabled Kubernetes cluster to a Fleet, the Fleet Arc Extension is installed on your Arc-Enabled Kubernetes cluster, deploying the Fleet's member agents onto your underlying cluster. These agents communicate directly with the Fleet's hub cluster. 
+When you join an Arc-enabled Kubernetes cluster to a Fleet Manager, the Fleet Manager Arc extension is installed on your Arc-Enabled Kubernetes cluster, deploying the Fleet's member agents onto your underlying cluster. These agents communicate directly with the Fleet's hub cluster. 
 
 **Key components:**
 
-- **Hub cluster**: Centralized control plane for managing the entire fleet
+- **Hub cluster**: Centralized control plane for managing the entire fleet.
 - **Fleet extension**: Deployed to Arc-enabled clusters to enable Fleet Manager integration via the Fleet Arc Extension.
-- **Member cluster representation**: Arc-enabled clusters appear as `MemberCluster` resources in the hub
+- **Member cluster representation**: Arc-enabled clusters appear as `MemberCluster` resources in the hub.
 
 ## Getting started 
 
