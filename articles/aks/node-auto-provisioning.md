@@ -4,7 +4,7 @@ description: Learn about node auto-provisioning in AKS, including how it works, 
 ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
-ms.date: 09/29/2025
+ms.date: 2/15/2026
 ms.author: wilsondarko
 author: wdarko1
 # Customer intent: As a cluster operator or developer, I want to automatically provision and manage the optimal VM configuration for my AKS workloads, so that I can efficiently scale my cluster while minimizing resource costs and complexities.
