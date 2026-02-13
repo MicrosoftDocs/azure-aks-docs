@@ -778,7 +778,7 @@ kubectl delete secret azure-credentials --namespace aks-mcp
 
 ## Common issues and troubleshooting
 
-This section lists common setup and runtime issues, their symptoms, and how to resolve them.
+This section outlines common setup and runtime issues, their symptoms, and how to resolve them.
 
 ### AKS MCP server can't access the cluster
 
