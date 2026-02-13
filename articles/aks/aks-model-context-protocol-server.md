@@ -26,7 +26,7 @@ The AKS MCP server is fully open-sourced project, with example templates and Hel
 
 ## When to use the AKS MCP server
 
-The AKS MCP server can be used with any compatible AI assistant, including the [agentic CLI for AKS](./cli-agent-for-aks-overview.md) and Microsoft Copilot. Common use cases include:
+The AKS MCP server can be used with any compatible AI assistant, including the [agentic CLI for AKS](./agentic-cli-for-aks-overview.md) and Microsoft Copilot. Common use cases include:
 
 - Asking AI assistants questions like:
   - "Why are pods pending in this cluster?"
