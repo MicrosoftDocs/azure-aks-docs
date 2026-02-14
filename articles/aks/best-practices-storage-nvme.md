@@ -182,7 +182,7 @@ For more information, see [Azure Container Storage documentation](/azure/storage
 
 ### `emptyDir` Volumes
 
-`[emptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)` is a Kubernetes volume type that uses the node's local storage. By default, it uses the kubelet storage path on the OS disk, but you can configure it to use local NVMe disks for higher throughput and lower latency with temporary data.
+[emptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) is a Kubernetes volume type that uses the node's local storage. By default, it uses the kubelet storage path on the OS disk, but you can configure it to use local NVMe disks for higher throughput and lower latency with temporary data.
 
 To back `emptyDir` volumes with local NVMe disks, you must configure the kubelet storage path to point to an NVMe mount point during node initialization. This requires custom node bootstrap scripting and careful planning, as the configuration is immutable after node provisioning.
 
