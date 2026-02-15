@@ -204,7 +204,7 @@ Create a file named `jwt-config.json` with the following configuration:
 
 ::: zone pivot="keycloak-self-hosted"
 
-### Keycloak (self-hosted) Configuration
+### Keycloak (self-hosted) configuration
 
 Create a file named `jwt-config.json` with the following configuration:
 
