@@ -105,7 +105,7 @@ Configure your external identity provider to support OIDC authentication. Select
 
 ::: zone pivot="keycloak-self-hosted"
 
-### Keycloak (self-hosted) Setup
+### Keycloak (self-hosted) setup
 
 1. Navigate to the Keycloak Admin Console.
 2. Create or select a realm.
