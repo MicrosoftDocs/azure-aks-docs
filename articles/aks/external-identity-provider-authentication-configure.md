@@ -505,7 +505,7 @@ Error from server (Forbidden): nodes is forbidden: User "aks:jwt:google:your-sub
 ::: zone pivot="keycloak-self-hosted"
 
 Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
-```
+```output
 Error from server (Forbidden): nodes is forbidden: User "aks:jwt:keycloak:your-subject" cannot list resource "nodes" in API group "" at the cluster scope
 ```
 
