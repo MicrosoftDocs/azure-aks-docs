@@ -107,9 +107,9 @@ Configure your external identity provider to support OIDC authentication. Select
 
 ### Keycloak (self-hosted) Setup
 
-1. Go to the Keycloak Admin Console.
+1. Navigate to the Keycloak Admin Console.
 2. Create or select a realm.
-3. Create a new client. In the **Client type** field, select `OpenID Connect`. In the **Authentication flow** section, enable **Standard flow**.
+3. Create a new client. For **Client type** field, select **OpenID Connect**. In the **Authentication flow** section, enable **Standard flow**.
 4. In the **Client authentication** section, select **Client ID and Secret**.
 5. Note your client ID and client secret for later use.
 
@@ -476,7 +476,7 @@ kubectl get nodes --user external-user
 
 ::: zone pivot="keycloak-self-hosted"
 
-Test the authentication by running a kubectl command:
+Test the authentication using the `kubectl get nodes` command:
 
 ```bash
 kubectl get nodes --user external-user
