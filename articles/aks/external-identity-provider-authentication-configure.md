@@ -476,7 +476,7 @@ kubectl get nodes --user external-user
 
 ::: zone pivot="keycloak-self-hosted"
 
-Test the authentication by running a kubectl command:
+Test the authentication using the `kubectl get nodes` command:
 
 ```bash
 kubectl get nodes --user external-user
