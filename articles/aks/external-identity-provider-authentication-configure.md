@@ -105,13 +105,13 @@ Configure your external identity provider to support OIDC authentication. Select
 
 ::: zone pivot="keycloak-self-hosted"
 
-### Keycloak (self-hosted) Setup
+### Keycloak (self-hosted) setup
 
-1. Go to the Keycloak Admin Console.
-2. Create or select a realm.
-3. Create a new client. In the **Client type** field, select `OpenID Connect`. In the **Authentication flow** section, enable **Standard flow**.
-4. In the **Client authentication** section, select **Client ID and Secret**.
-5. Note your client ID and client secret for later use.
+1. Navigate to the Keycloak Admin Console.
+1. Create or select a realm.
+1. Create a new client. For **Client type**, select **OpenID Connect**. In the **Authentication flow** section, enable **Standard flow**.
+1. In the **Client authentication** section, select **Client ID and Secret**.
+1. Note your client ID and client secret for later use.
 
 ::: zone-end
 
