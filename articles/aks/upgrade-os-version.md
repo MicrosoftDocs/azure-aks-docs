@@ -152,7 +152,7 @@ You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to up
 
 | OS SKU | Default OS version |
 |--|--|
-| Ubuntu | When you have OS SKU `Ubuntu`, Ubuntu 22.04 is the default OS version if your Kubernetes version is 1.25 to 1.34. Ubuntu 24.04 is the default for Ubuntu in Kubernetes 1.35+. |
+| Ubuntu | When you have OS SKU `Ubuntu`, Ubuntu 22.04 is the default OS version if your Kubernetes version is 1.25 to 1.34. Ubuntu 24.04 is the default for Ubuntu in Kubernetes 1.35 to 1.37. |
 | AzureLinux | When you have OS SKU `AzureLinux`, Azure Linux 2.0 is the default for AzureLinux in Kubernetes 1.26 to 1.31. Azure Linux 3.0 is the default for AzureLinux in Kubernetes 1.32 to 1.36. |
 
 #### Update your OS SKU to Ubuntu on an existing node pool
