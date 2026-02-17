@@ -21,6 +21,30 @@ In this article, we provide a comprehensive guide to plan, execute, and validate
 - Downtime Expectations: Policy enforcement might be temporarily inconsistent during node reimaging.
 - Windows Node Pools: Cilium Network Policy isn't currently supported for Windows nodes in AKS. 
 
+## Identify impacted clusters
+
+To find AKS clusters with Linux node pools using Azure Network Policy Manager (NPM), run the following query in [Azure Resource Graph Explorer](https://portal.azure.com/?feature.customportal=false#blade/HubsExtension/ArgQueryBlade/query/Resources%20%0A%7C%20where%20type%20%3D%3D%20%22microsoft.containerservice%2Fmanagedclusters%22%20%0A%7C%20mv-expand%20agentPool%20%3D%20properties.agentPoolProfiles%20%0A%7C%20where%20agentPool.osType%20!%3D%20%22Windows%22%20%0A%7C%20extend%20netPol%20%3D%20tolower%28tostring%28properties.networkProfile.networkPolicy%29%29%20%0A%7C%20where%20netPol%20%3D%3D%20%22azure%22%20%0A%7C%20summarize%20by%20name%2C%20location%2C%20resourceGroup%2C%20netPol):
+
+```kusto
+Resources
+| where type == "microsoft.containerservice/managedclusters"
+| mv-expand agentPool = properties.agentPoolProfiles
+| where agentPool.osType != "Windows"
+| extend netPol = tolower(tostring(properties.networkProfile.networkPolicy))
+| where netPol == "azure"
+| summarize by name, location, resourceGroup, netPol
+```
+
+This query lists all AKS clusters where `agentPool.osType != "Windows"` and `properties.networkProfile.networkPolicy == "azure"`.
+
+## Key benefits of migrating to Cilium Network Policy
+
+Migrating to Cilium Network Policy on Azure CNI powered by Cilium provides significant improvements:
+
+- **Robust support for Kubernetes-native policies**: Full compliance with Kubernetes NetworkPolicy specifications.
+- **Extended features**: [Layer 7 policy](./how-to-apply-l7-policies.md) and [FQDN filtering](./how-to-apply-fqdn-filtering-policies.md) for advanced traffic control.
+- **eBPF-based dataplane**: Improved performance, scalability, and security compared to iptables-based implementations. 
+
 ## Pre-migration validation 
 
 Before migrating from Network Policy Manager (NPM) to Cilium Network Policy, it's important to assess the compatibility of your existing network policies. While most policies continue to function as expected post-migration, there are specific scenarios where behavior might differ between NPM and Cilium. These differences could require updates to your policies either before or after the migration to ensure consistent enforcement and avoid unintended traffic drops.
