@@ -83,8 +83,8 @@ Unified tool for executing Azure CLI commands directly. This tool provides a fle
 - **readonly**: Only read operations are allowed
 - **readwrite/admin**: Both read and write operations are allowed
 
-> [!NOTE]
-> **Important:** Commands must be simple Azure CLI invocations without shell features like pipes (|), redirects (>, <), command substitution, or semicolons (;).
+> [!IMPORTANT]
+> Commands must be simple Azure CLI invocations without shell features like pipes (|), redirects (>, <), command substitution, or semicolons (;).
 
 </details>
 
