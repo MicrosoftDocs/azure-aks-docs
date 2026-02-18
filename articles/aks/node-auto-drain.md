@@ -15,27 +15,45 @@ Node auto-drain helps you protect your node workloads from disruptions when [sch
 > [!NOTE]
 > Node auto-drain is a best effort service and can't be guaranteed to operate perfectly in all scenarios.
 
-## Monitor node auto-drain using Kubernetes events
+## Scheduled event actions
+
 The following table shows the node events for AKS node auto-drain and describes their associated actions:
 
 | Event | Description |   Action   |
 | --- | --- | --- |
-| Freeze | The underlying virtual machine (VM) is scheduled to pause for a few seconds. CPU and network connectivity may be suspended, but there's no impact on memory or open files.  | No action. |
-| Reboot | The VM is scheduled for reboot. The VM's non-persistent memory is lost. | No action. |
+| Freeze | The underlying virtual machine (VM) is scheduled to pause for a few seconds. CPU and network connectivity might be suspended, but there's no impact on memory or open files. | You can opt in to [Cordon and Drain and Pod Evictions (Preview)](./node-auto-drain-evict-on-freeze.md). |
+| Reboot | The VM is scheduled for reboot. The VM's non-persistent memory is lost. | No action. t most|
 | Redeploy | The VM is scheduled to move to another node. The VM's ephemeral disks are lost. | Cordon and drain. |
 | Preempt | The spot VM is being deleted. The VM's ephemeral disks are lost. | Cordon and drain |
 | Terminate | The VM is scheduled for deletion.| Cordon and drain. |
 
 
 > [!NOTE]
-> The set of events shown in the table and the corresponding actions are the default behavior. The default behavior doesn't require any configuration by the user and can't be disabled.
+> The Redeploy and Preempt actions are the default behavior and don't require configuration. Freeze and Terminate event actions require opt-in configuration. For Freeze events, see [Configure pod eviction for freeze events](./node-auto-drain-evict-on-freeze.md).
+
+## Monitor node auto-drain using Kubernetes events
+
+When node auto-drain processes a scheduled event, AKS emits Kubernetes events for visibility. The following events appear on a node object during auto-drain. For more information, see [Use Kubernetes events for troubleshooting](./events.md).
+
+| Event | Description |
+| --- | --- |
+| `FreezeScheduled` | A freeze event is scheduled on the node, including the event time. |
+| `NodeCordonStart` | The node cordon begins, approximately five minutes before the scheduled event. |
+| `NodeCordonEnd` | The node cordon completes. |
+| `NodeDrainStart` | The drain begins and labeled pods start being evicted. |
+| `NodeDrainEnd` | The drain completes. |
+| `NodeDrainError` | An error occurred during the drain process. Check the event message for details. |
+| `NodeUncordonStart` | After the event finishes, the node uncordon begins. |
+| `NodeUncordonEnd` | The node uncordon completes and the node is schedulable again. |
 
 ## Next steps
 
-Use [availability zones][availability-zones] to increase high availability with your AKS cluster workloads.
+- [Configure pod eviction for freeze events (preview)](./node-auto-drain-evict-on-freeze.md)
+- Use [availability zones][availability-zones] to increase high availability with your AKS cluster workloads.
 
 <!-- LINKS - Internal -->
 [availability-zones]: ./availability-zones.md
 [vm-updates]: /azure/virtual-machines/updates-maintenance-overview
 [scheduled-events]: /azure/virtual-machines/linux/scheduled-events
 [spot-node-pools]: ./spot-node-pool.md
+[events]: ./events.md
