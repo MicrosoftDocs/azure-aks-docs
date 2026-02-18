@@ -2,7 +2,7 @@
 title: Kubernetes on Azure tutorial - Use Azure Container Storage
 description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to deploy Azure Container Storage on an AKS cluster and create volumes.
 ms.topic: tutorial
-ms.date: 02/12/2026
+ms.date: 02/18/2026
 author: khdownie
 ms.author: kendownie
 ms.custom: mvc, devx-track-azurecli
@@ -31,7 +31,7 @@ In previous tutorials, you created a container image, uploaded it to an ACR inst
 
 * Confirm that your target region is supported by reviewing the [Azure Container Storage regional availability][azure-container-storage-availability].
 
-* Install the latest version of the [Azure CLI](/cli/azure/install-azure-cli) (2.77.0 or later), then sign in with `az login`. Don't use Azure Cloud Shell, because `az upgrade` isn't available.
+* Install the latest version of the [Azure CLI](/cli/azure/install-azure-cli) (2.83.0 or later), then sign in with `az login`. Don't use Azure Cloud Shell, because `az upgrade` isn't available.
 
 * Install the Kubernetes command-line client, `kubectl`. You can install it locally by running `az aks install-cli`.
 
@@ -56,11 +56,11 @@ Run the following command to enable Azure Container Storage on an existing AKS c
 az aks update -n myAKSCluster -g myResourceGroup --enable-azure-container-storage ephemeralDisk
 ```
 
-The deployment takes 5-10 minutes. When it completes, the AKS cluster has Azure Container Storage installed and the components for local NVMe storage type deployed.
+The deployment can take up to five minutes. When it completes, the AKS cluster has Azure Container Storage installed and the components for local NVMe storage type deployed. It also creates the default `local` storage class.
 
 ## Connect to the cluster and verify status
 
-After installation, configure `kubectl` to connect to your cluster and verify the nodes are ready.
+If you're not already connected to your cluster from the previous tutorial, run the following commands. If you're already connected, you can skip this section.
 
 1. Download the cluster credentials and configure the Kubernetes CLI to use them. By default, credentials are stored in `~/.kube/config`. Provide a different path by using the `--file` argument if needed.
 
@@ -75,29 +75,6 @@ After installation, configure `kubectl` to connect to your cluster and verify th
     ```
 
 3. Make sure all nodes report a status of `Ready`.
-
-## Create a storage class
-
-Azure Container Storage presents local NVMe as a standard Kubernetes storage class. Follow these steps to create the `local` storage class.
-
-1. Use your favorite text editor to create a YAML manifest file such as `storageclass.yaml`, then paste in the following specification.
-
-    ```yaml
-    apiVersion: storage.k8s.io/v1
-    kind: StorageClass
-    metadata:
-      name: local
-    provisioner: localdisk.csi.acstor.io
-    reclaimPolicy: Delete
-    volumeBindingMode: WaitForFirstConsumer
-    allowVolumeExpansion: true
-    ```
-
-1. Apply the manifest to create the storage class.
-
-    ```azurecli
-    kubectl apply -f storageclass.yaml
-    ```
 
 ## Verify the storage class
 
