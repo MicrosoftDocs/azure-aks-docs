@@ -2,6 +2,8 @@
   href: ./index.yml
 - name: What is AKS?
   href: what-is-aks.md
+- name: Compare AKS with other Azure container options
+  href: compare-container-options-with-aks.md
 - name: Get started with AKS
   items:
     - name: Kubernetes basics

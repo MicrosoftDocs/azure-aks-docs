@@ -2,8 +2,8 @@
 title: Configure LocalDNS in Azure Kubernetes Service (AKS)
 description: Learn how to improve your Domain Name System (DNS) resolution performance and resiliency in AKS using localDNS.
 ms.subservice: aks-networking
-author: vaibhavarora
-ms.author: vaibhavarora
+author: varora24
+ms.author: varora24
 ms.topic: how-to
 ms.date: 01/26/2026
 # Customer intent: As a cluster operator or developer, I want to improve my DNS resolution performance and resiliency for my AKS cluster.
@@ -199,7 +199,7 @@ LocalDNS can be enabled in three possible modes that define the extent of enforc
 
 * `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally on the node.
 
-* `Preferred`: In this mode, AKS validates that your LocalDNS configuration is syntactically correct but **doesn't enable LocalDNS** on the nodes. This validation-only behavior allows you to test your configuration for errors without affecting DNS resolution in your cluster.
+* `Preferred`: In this mode, AKS validates that your LocalDNS configuration is syntactically correct but **doesn't enable LocalDNS** on the nodes. **However, applying this mode still triggers a node reimage operation**, allowing you to test your configuration for errors without affecting DNS resolution in your cluster.
 
 The following table summarizes LocalDNS behavior for each mode and Kubernetes version:
 
