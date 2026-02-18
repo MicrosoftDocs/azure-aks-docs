@@ -199,7 +199,7 @@ LocalDNS can be enabled in three possible modes that define the extent of enforc
 
 * `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally on the node.
 
-* `Preferred`: In this mode, AKS validates that your LocalDNS configuration is syntactically correct but **doesn't enable LocalDNS** on the nodes. This validation-only behavior allows you to test your configuration for errors without affecting DNS resolution in your cluster.
+* `Preferred`: In this mode, AKS validates that your LocalDNS configuration is syntactically correct but **doesn't enable LocalDNS** on the nodes. **However, applying this mode still triggers a node reimage operation**, allowing you to test your configuration for errors without affecting DNS resolution in your cluster.
 
 The following table summarizes LocalDNS behavior for each mode and Kubernetes version:
 
