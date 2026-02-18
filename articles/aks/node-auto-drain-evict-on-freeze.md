@@ -21,7 +21,7 @@ Evict On Freeze has two levels of configuration:
 
 When these configurations are in place, any node that has a `VMEventScheduled` condition with a `Freeze` message is cordoned, and labeled pods are evicted. Eviction respects [Pod Disruption Budgets (PDBs)][pdb-docs], so pods can only be evicted if the PDB allows it.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+> [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ When these configurations are in place, any node that has a `VMEventScheduled` c
 
 ## Enable cordon and drain for freeze events
 
-Enable Evict On Freeze at the cluster level by publishing a `ConfigMap` in the `kube-system` namespace. This `ConfigMap` instructs AKS to watch for freeze events and cordon and drain affected nodes. This step alone doesn't evict specific pods — you must also [label pods for eviction](#step-2-label-pods-for-eviction-during-freeze-events).
+Enable Evict On Freeze at the cluster level by publishing a `ConfigMap` in the `kube-system` namespace. This `ConfigMap` instructs AKS to watch for freeze events and cordon and drain affected nodes. This step alone doesn't evict specific pods. You must also [label pods for eviction](#label-pods-for-eviction-during-freeze-events).
 
 1. Create a file named `remediator-config.yaml` with the following contents:
 
@@ -113,7 +113,7 @@ The following events appear during the Evict On Freeze process:
 | `NodeCordonStart` | The node cordon begins, approximately five minutes before the scheduled event. |
 | `NodeCordonEnd` | The node cordon completes. |
 | `NodeDrainStart` | The drain begins and labeled pods start being evicted. |
-| `NodeDrainEnd` | The drain completes and labeled pods have been evicted. |
+| `NodeDrainEnd` | The drain completes and labeled pods are evicted. |
 | `NodeUncordonStart` | After the freeze event finishes, the node uncordon begins. |
 | `NodeUncordonEnd` | The node uncordon completes and the node is schedulable again. |
 

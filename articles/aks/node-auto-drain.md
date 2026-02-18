@@ -22,7 +22,7 @@ The following table shows the node events for AKS node auto-drain and describes 
 | Event | Description |   Action   |
 | --- | --- | --- |
 | Freeze | The underlying virtual machine (VM) is scheduled to pause for a few seconds. CPU and network connectivity might be suspended, but there's no impact on memory or open files. | You can opt in to [Cordon and Drain and Pod Evictions (Preview)](./node-auto-drain-evict-on-freeze.md). |
-| Reboot | The VM is scheduled for reboot. The VM's non-persistent memory is lost. | No action. t most|
+| Reboot | The VM is scheduled for reboot. The VM's non-persistent memory is lost. | No action. |
 | Redeploy | The VM is scheduled to move to another node. The VM's ephemeral disks are lost. | Cordon and drain. |
 | Preempt | The spot VM is being deleted. The VM's ephemeral disks are lost. | Cordon and drain |
 | Terminate | The VM is scheduled for deletion.| Cordon and drain. |
