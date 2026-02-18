@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli, innovation-engine
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
-ms.date: 04/06/2025
+ms.date: 02/18/2026
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: As a Kubernetes administrator, I want to upgrade node images in my AKS cluster so that I can leverage the latest features and ensure optimal performance and security for my containerized applications.
@@ -23,7 +23,7 @@ This article shows you how to upgrade AKS cluster node images and how to update 
 > [!NOTE]
 > The AKS cluster must use virtual machine scale sets for the nodes.
 >
-> It's not possible to downgrade a node image version (for example *AKSUbuntu-2204 to AKSUbuntu-1804*, or *AKSUbuntu-2204-202308.01.0 to AKSUbuntu-2204-202307.27.0*).
+> It's not possible to downgrade a node image version (for example *AKSUbuntu-2404 to AKSUbuntu-2204*, or *AKSUbuntu-2404-202601.27.0 to AKSUbuntu-2404-202601.13.0*).
 
 
 ## Connect to your AKS cluster
@@ -85,7 +85,8 @@ This article shows you how to upgrade AKS cluster node images and how to update 
     ```azurecli-interactive
     az aks show \
         --resource-group $AKS_RESOURCE_GROUP \
-        --name $AKS_CLUSTER
+        --name $AKS_CLUSTER  \
+        --query "agentPoolProfiles[].{Name:name, NodeImageVersion:nodeImageVersion}"
     ```
 
 ## Upgrade a specific node pool
@@ -115,7 +116,8 @@ This article shows you how to upgrade AKS cluster node images and how to update 
     az aks nodepool show \
         --resource-group $AKS_RESOURCE_GROUP \
         --cluster-name $AKS_CLUSTER \
-        --name $AKS_NODEPOOL
+        --name $AKS_NODEPOOL \
+        --query nodeImageVersion
     ```
 
 ## Upgrade node images with node surge
@@ -148,7 +150,8 @@ To speed up the node image upgrade process, you can upgrade your node images usi
     az aks nodepool show \
         --resource-group $AKS_RESOURCE_GROUP \
         --cluster-name $AKS_CLUSTER \
-        --name $AKS_NODEPOOL
+        --name $AKS_NODEPOOL \
+        --query nodeImageVersion
     ```
 
 ## Next steps
@@ -166,8 +169,9 @@ To speed up the node image upgrade process, you can upgrade your node images usi
 [upgrade-cluster]: upgrade-aks-cluster.md
 [github-schedule]: node-upgrade-github-actions.md
 [use-multiple-node-pools]: create-node-pools.md
-[max-surge]: upgrade-aks-cluster.md#customize-node-surge-upgrade
+[max-surge]: upgrade-aks-node-pools-rolling.md#customize-node-surge
 [auto-upgrade-node-image]: auto-upgrade-node-image.md
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-aks-nodepool-get-upgrades]: /cli/azure/aks/nodepool#az-aks-nodepool-get-upgrades
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
 [az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
