@@ -15,7 +15,7 @@ ai-usage: ai-generated
 
 This article shows you how to create the **required** service account and **optionally** configure workload identity for the agentic CLI for Azure Kubernetes Service (AKS). The service account creation is **mandatory** for cluster mode deployment, while workload identity setup is optional but recommended for enhanced security when accessing Azure resources.
 
-For the main installation guide, see [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-install.md).
+For the main installation guide, see [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./agentic-cli-for-aks-install.md).
 
 ## Prerequisites
 
@@ -286,8 +286,8 @@ az identity federated-credential list \
 
 Now that you have completed the mandatory service account setup, you can proceed with the cluster mode installation:
 
-1. Return to the [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-install.md) article
-1. Continue with the [Installation section](./cli-agent-for-aks-install.md#installation), cluster mode tab
+1. Return to the [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./agentic-cli-for-aks-install.md) article
+1. Continue with the [Installation section](./agentic-cli-for-aks-install.md#installation), cluster mode tab
 1. When prompted during initialization, use the values you configured:
    - **Service account name**: `${SERVICE_ACCOUNT_NAME}` (aks-mcp)
    - **Namespace**: `${SERVICE_ACCOUNT_NAMESPACE}`
@@ -308,6 +308,6 @@ If you encounter authentication issues immediately after setup, wait 1-2 minutes
 
 ## Related content
 
-- [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-install.md)
+- [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./agentic-cli-for-aks-install.md)
 - [Deploy and configure Microsoft Entra Workload ID on an Azure Kubernetes Service (AKS) cluster](/azure/aks/workload-identity-deploy-cluster)
 - [Microsoft Entra Workload ID overview](/azure/aks/workload-identity-overview)

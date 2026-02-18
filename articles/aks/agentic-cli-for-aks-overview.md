@@ -121,6 +121,6 @@ Keep the following security considerations in mind when you use the agentic CLI 
 
 To start using the agentic CLI for AKS or to learn more, refer to the following resources:
 
-- [Install and use the agentic CLI for AKS](./cli-agent-for-aks-install.md)
-- [Agentic CLI for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml)
-- [Troubleshoot the agentic CLI for AKS](./cli-agent-for-aks-troubleshoot.md)
+- [Install and use the agentic CLI for AKS](./agentic-cli-for-aks-install.md)
+- [Agentic CLI for AKS frequently asked questions (FAQ)](./agentic-cli-for-aks-faq.yml)
+- [Troubleshoot the agentic CLI for AKS](./agentic-cli-for-aks-troubleshoot.md)

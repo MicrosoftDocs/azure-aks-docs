@@ -14,7 +14,7 @@ ms.subservice: aks-monitoring
 
 This article shows you how to install, configure, and use the agentic CLI for Azure Kubernetes Service (AKS) to get AI-powered troubleshooting and insights for your AKS clusters. The agentic CLI supports two deployment modes: **client mode** for local execution and **cluster mode** for in-cluster deployment.
 
-For more information, see the [agentic CLI for AKS overview](./cli-agent-for-aks-overview.md).
+For more information, see the [agentic CLI for AKS overview](./agentic-cli-for-aks-overview.md).
 
 ## Deployment modes
 
@@ -210,15 +210,15 @@ Cluster mode deploys the agent as a pod within your AKS cluster using workload i
  - **Mandatory setup**: Before initializing cluster mode, you **must** create a service account with RBAC permissions. Workload identity setup is optional.
 
 **Complete the required setup first:**
-- Follow the **mandatory** [Service account creation](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory) guide. This includes:
+- Follow the **mandatory** [Service account creation](./agentic-cli-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory) guide. This includes:
   - Creating the Kubernetes service account with RBAC permissions (**required**)
-- **Optional**: Complete the [workload identity setup](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-2-workload-identity-setup-optional) for enhanced Azure resource access security
+- **Optional**: Complete the [workload identity setup](./agentic-cli-for-aks-service-account-workload-identity-setup.md#step-2-workload-identity-setup-optional) for enhanced Azure resource access security
 
 **Additional cluster requirements:**
 - **Namespace**: You must have a write access to deploy to the Kubernetes namespace where the agent will be deployed
 
 
--  Before proceeding with cluster mode initialization, ensure you have completed the [Service account creation](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory). Workload identity setup is optional but recommended for enhanced security.
+-  Before proceeding with cluster mode initialization, ensure you have completed the [Service account creation](./agentic-cli-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory). Workload identity setup is optional but recommended for enhanced security.
 
 ### Initialize cluster mode
 
@@ -267,7 +267,7 @@ Cluster mode deploys the agent as a pod within your AKS cluster using workload i
     Please choose the LLM provider (1-5): 1
     ```
 
-1. **Provide service account details** when prompted. Use the service account you created during the [mandatory setup](./cli-agent-for-aks-service-account-workload-identity-setup.md):
+1. **Provide service account details** when prompted. Use the service account you created during the [mandatory setup](./agentic-cli-for-aks-service-account-workload-identity-setup.md):
 
     ```output
     👤 Service Account Configuration
@@ -564,6 +564,6 @@ az extension remove --name aks-agent --debug
 
 ## Related content
 
-- For an overview of the agentic CLI for AKS, see [About the agentic CLI for AKS](./cli-agent-for-aks-overview.md).
-- To troubleshoot any issues with the agentic CLI for AKS, see [Troubleshoot the agentic CLI for AKS](./cli-agent-for-aks-troubleshoot.md).
-- For answers to common questions about the agentic CLI for AKS, see [Agentic CLI for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml).
+- For an overview of the agentic CLI for AKS, see [About the agentic CLI for AKS](./agentic-cli-for-aks-overview.md).
+- To troubleshoot any issues with the agentic CLI for AKS, see [Troubleshoot the agentic CLI for AKS](./agentic-cli-for-aks-troubleshoot.md).
+- For answers to common questions about the agentic CLI for AKS, see [Agentic CLI for AKS frequently asked questions (FAQ)](./agentic-cli-for-aks-faq.yml).
