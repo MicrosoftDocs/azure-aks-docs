@@ -161,10 +161,10 @@ You won't need Azure Container Storage for the rest of this tutorial series, so 
    kubectl delete pod fiopod
    ```
 
-1. Delete the storage pool.
+1. Delete the generic ephemeral volume.
 
    ```azurecli
-   kubectl delete sp -n acstor local
+   kubectl delete pv ephemeralvolume
    ```
 
 1. Delete the extension instance.
