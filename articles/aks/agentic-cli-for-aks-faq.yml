@@ -76,7 +76,7 @@ sections:
           To minimize the effect of these limitations, you can take several proactive steps:
           
           - Ensure that required diagnostic tools, such as Azure Monitor, are properly configured to help the agent access richer telemetry and perform more comprehensive diagnostics.
-          - Extend the capabilities of the agentic CLI by using it with Azure Model Context Protocol (MCP) or AKS MCP servers. For more information, see [Integrate the AKS MCP server with the agentic CLI for AKS](./cli-agent-for-aks-install.md#aks-mcp-server-integration).
+          - Extend the capabilities of the agentic CLI by using it with Azure Model Context Protocol (MCP) or AKS MCP servers. For more information, see [Integrate the AKS MCP server with the agentic CLI for AKS](./agentic-cli-for-aks-install.md#aks-mcp-server-integration).
           - Use the latest-generation reasoning or general-purpose models, such as GPT4o and GPTo3, to ensure the best possible outcomes. The agentic CLI for AKS doesn't come with AI models included.
 
       - question: |
@@ -134,5 +134,5 @@ additionalContent: |
 
   ## Related content
 
-  - For an overview of the agentic CLI for AKS, see [About the agentic CLI for AKS](./cli-agent-for-aks-overview.md).
-  - To help you resolve common issues when you use the agentic CLI for AKS, see the [Agentic CLI for AKS troubleshooting guide](./cli-agent-for-aks-troubleshoot.md).
+  - For an overview of the agentic CLI for AKS, see [About the agentic CLI for AKS](./agentic-cli-for-aks-overview.md).
+  - To help you resolve common issues when you use the agentic CLI for AKS, see the [Agentic CLI for AKS troubleshooting guide](./agentic-cli-for-aks-troubleshoot.md).
