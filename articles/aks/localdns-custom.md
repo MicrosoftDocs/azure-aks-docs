@@ -3,7 +3,7 @@ title: Configure LocalDNS in Azure Kubernetes Service (AKS)
 description: Learn how to improve your Domain Name System (DNS) resolution performance and resiliency in AKS using localDNS.
 ms.subservice: aks-networking
 author: varora24
-ms.author: varora24
+ms.author: vaibhavarora
 ms.topic: how-to
 ms.date: 01/26/2026
 # Customer intent: As a cluster operator or developer, I want to improve my DNS resolution performance and resiliency for my AKS cluster.
