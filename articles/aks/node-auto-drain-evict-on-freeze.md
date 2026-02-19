@@ -129,7 +129,7 @@ Confirm that the cluster-level `ConfigMap` is correctly applied by running the f
 kubectl describe configmap remediator-config -n kube-system
 ```
 
-Compare the output with the configuration described in the [Enable cordon and drain for freeze events](#enable-cordon-and-drain-for-freeze-events) section.
+Compare the output with the configuration described in the [Enabling Evict on Freeze](#enabling-evict-on-freeze) section.
 
 ### Verify pod labels
 

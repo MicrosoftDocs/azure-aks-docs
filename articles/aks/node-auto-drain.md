@@ -21,15 +21,17 @@ The following table shows the node events for AKS node auto-drain and describes 
 
 | Event | Description |   Action   |
 | --- | --- | --- |
-| Freeze | The underlying virtual machine (VM) is scheduled to pause for a few seconds. CPU and network connectivity might be suspended, but there's no impact on memory or open files. | You can opt in to [Cordon and Drain and Pod Evictions (Preview)](./node-auto-drain-evict-on-freeze.md). |
+| Freeze | The underlying virtual machine (VM) is scheduled to pause for a few seconds. CPU and network connectivity might be suspended, but there's no impact on memory or open files. | Opt in to [workload eviction on freeze events (preview)](./node-auto-drain-evict-on-freeze.md). |
 | Reboot | The VM is scheduled for reboot. The VM's non-persistent memory is lost. | No action. |
 | Redeploy | The VM is scheduled to move to another node. The VM's ephemeral disks are lost. | Cordon and drain. |
 | Preempt | The spot VM is being deleted. The VM's ephemeral disks are lost. | Cordon and drain |
-| Terminate | The VM is scheduled for deletion.| Cordon and drain. |
-
+| Terminate | The VM is scheduled for deletion.| Cordon and drain (requires [Virtual Machine Scale Set terminate notifications](../virtual-machine-scale-sets/virtual-machine-scale-sets-terminate-notification.md)). |
 
 > [!NOTE]
-> The Redeploy and Preempt actions are the default behavior and don't require configuration. Freeze and Terminate event actions require opt-in configuration. For Freeze events, see [Configure pod eviction for freeze events](./node-auto-drain-evict-on-freeze.md).
+> Redeploy and Preempt use default behavior and don't require extra configuration.
+> Freeze and Terminate require opt-in configuration:
+> - Freeze: [Configure pod eviction for freeze events](./node-auto-drain-evict-on-freeze.md).
+> - Terminate: Enable [Virtual Machine Scale Set terminate notifications](../virtual-machine-scale-sets/virtual-machine-scale-sets-terminate-notification.md) as a prerequisite for AKS node auto-drain.
 
 ## Monitor node auto-drain using Kubernetes events
 
