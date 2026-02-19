@@ -5,7 +5,7 @@ ms.subservice: aks-networking
 author: varora24
 ms.topic: concept-article
 ms.date: 07/31/2025
-ms.author: varora24
+ms.author: vaibhavarora
 
 # Customer intent: As a cluster operator or developer, I want to understand the defaults for DNS resolution in AKS and how I can use LocalDNS to improve my DNS resolution performance.
 ---
