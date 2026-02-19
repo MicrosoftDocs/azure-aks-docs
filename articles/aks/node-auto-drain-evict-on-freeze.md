@@ -10,7 +10,7 @@ ai-usage: ai-assisted
 # Customer intent: As a cluster operator, I want to evict sensitive pods before freeze events so that I can protect workloads that can't tolerate brief node disruptions.
 ---
 
-# Configure pod eviction for freeze events in AKS (preview)
+# Configure Workloads to Evict on Freeze Events in AKS (preview)
 
 [Node auto-drain](./node-auto-drain.md) helps protect your workloads from disruptions when [scheduled events][scheduled-events] occur on the underlying virtual machines (VMs) in your node pools. By default, freeze events don't trigger a cordon and drain action because they're typically brief pauses. However, some workloads are highly sensitive to any node disruption. With Evict On Freeze, you can configure AKS to automatically cordon and drain nodes before a freeze event takes place.
 
