@@ -29,7 +29,7 @@ When these configurations are in place, any node that has a `VMEventScheduled` c
 - The `kubectl` command-line tool configured to connect to your cluster.
 - Properly configured [Pod Disruption Budgets][pdb-docs] for the workloads you want to evict.
 
-## Enable cordon and drain for freeze events
+## Enabling Evict on Freeze
 
 Enable Evict On Freeze at the cluster level by publishing a `ConfigMap` in the `kube-system` namespace. This `ConfigMap` instructs AKS to watch for freeze events and cordon and drain affected nodes. This step alone doesn't evict specific pods. You must also [label pods for eviction](#label-pods-for-eviction-during-freeze-events).
 
