@@ -1,6 +1,6 @@
 ---
 title: Blue-Green Node Pool Upgrades in Azure Kubernetes Service (AKS) (preview)
-description: Perform zero-downtime upgrades of AKS node pools using a blue-green deployment strategy to ensure workload availability during updates.
+description: Perform upgrades of AKS node pools using a blue-green deployment strategy to ensure workload availability during updates.
 ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.custom: azure-kubernetes-service
@@ -8,7 +8,7 @@ ms.date: 11/06/2024
 author: kaarthis
 ms.author: kaarthis
 ms.reviewer: schaffererin
-# Customer intent: "As a Kubernetes administrator, I want to perform zero-downtime upgrades of my AKS node pools using a blue-green deployment strategy to ensure workload availability during updates."
+# Customer intent: "As a Kubernetes administrator, I want to perform upgrades of my AKS node pools using a blue-green deployment strategy to ensure workload availability during updates."
 ---
 
 # Blue-green node pool upgrades in Azure Kubernetes Service (AKS) (preview)
@@ -30,7 +30,7 @@ Consider blue-green upgrades when:
 - You're upgrading critical production workloads that can't tolerate disruption.
 - You need to test application compatibility with new Kubernetes versions.
 
-If you're currently using a manual blue-green deployment process for node pool upgrades and want to automate this workflow, consider using AKS blue-green node pool upgrades instead. This feature provides built-in automation for the upgrade strategy while maintaining the same zero-downtime benefits. For more information about the manual blue green upgrade process, see [Manual blue-green node pool upgrades](./how-does-upgrade-happen.md#blue-green-node-pool-upgrades-manual).
+If you're currently using a manual blue-green deployment process for node pool upgrades and want to automate this workflow, consider using AKS blue-green node pool upgrades instead. For more information about the manual blue green upgrade process, see [Manual blue-green node pool upgrades](./how-does-upgrade-happen.md#blue-green-node-pool-upgrades-manual).
 
 ## When to use standard rolling upgrades
 
@@ -133,7 +133,7 @@ When creating or upgrading an AKS node pool, you can specify the upgrade strateg
 | Strategy | Description |
 | -------- | ----------- |
 | `Rolling` (default) | Standard rolling upgrade where nodes are updated one by one. |
-| `BlueGreen` | Creates a parallel _green_ pool for zero-downtime upgrades. |
+| `BlueGreen` | Creates a parallel _green_ pool with the new configuration while maintaining the existing _blue_ node pool. |
 
 ## Customize blue-green upgrade properties
 
