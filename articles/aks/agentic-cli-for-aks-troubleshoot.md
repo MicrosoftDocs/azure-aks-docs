@@ -106,7 +106,7 @@ Error: service account "aks-mcp" not found in namespace "default"
    ```bash
    kubectl get serviceaccount aks-mcp -n <YOUR_NAMESPACE>
    ```
-2. If not found, follow the [Service account creation guide](./cli-agent-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory)
+2. If not found, follow the [Service account creation guide](./agentic-cli-for-aks-service-account-workload-identity-setup.md#step-1-create-the-kubernetes-service-account-mandatory)
 
 #### Error: Permission denied errors
 
@@ -138,7 +138,7 @@ Error: workload identity is not enabled on this cluster
    ```azurecli-interactive
    az aks show --resource-group <RESOURCE_GROUP> --name <CLUSTER_NAME> --query "securityProfile.workloadIdentity.enabled"
    ```
-2. If not enabled, follow the [workload identity setup guide](./cli-agent-for-aks-service-account-workload-identity-setup.md#verify-and-enable-workload-identity)
+2. If not enabled, follow the [workload identity setup guide](./agentic-cli-for-aks-service-account-workload-identity-setup.md#verify-and-enable-workload-identity)
 
 #### Error: Annotation missing
 
@@ -196,7 +196,7 @@ For questions or issues, document the commands and outputs and open an issue dir
 
 ## Related content
 
-- For installation instructions, see [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-install.md).
-- For service account and workload identity setup, see [Service account creation and workload identity setup for the Agentic CLI for Azure Kubernetes Service (AKS)](./cli-agent-for-aks-service-account-workload-identity-setup.md).
-- For an overview of the agentic CLI for AKS, see [About the agentic CLI for AKS](./cli-agent-for-aks-overview.md).
-- For answers to common questions about the agentic CLI for AKS, see [Agentic CLI for AKS frequently asked questions (FAQ)](./cli-agent-for-aks-faq.yml).
+- For installation instructions, see [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./agentic-cli-for-aks-install.md).
+- For service account and workload identity setup, see [Service account creation and workload identity setup for the Agentic CLI for Azure Kubernetes Service (AKS)](./agentic-cli-for-aks-service-account-workload-identity-setup.md).
+- For an overview of the agentic CLI for AKS, see [About the agentic CLI for AKS](./agentic-cli-for-aks-overview.md).
+- For answers to common questions about the agentic CLI for AKS, see [Agentic CLI for AKS frequently asked questions (FAQ)](./agentic-cli-for-aks-faq.yml).

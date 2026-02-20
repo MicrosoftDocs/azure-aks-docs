@@ -715,6 +715,31 @@
             "source_path_from_root": "/articles/aks/use-pod-security-policies.md",
             "redirect_url": "/azure/aks/use-psa",
             "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/cli-agent-for-aks-faq.yml",
+            "redirect_url": "/azure/aks/agentic-cli-for-aks-faq",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/cli-agent-for-aks-install.md",
+            "redirect_url": "/azure/aks/agentic-cli-for-aks-install",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/cli-agent-for-aks-overview.md",
+            "redirect_url": "/azure/aks/agentic-cli-for-aks-overview",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/cli-agent-for-aks-service-account-workload-identity-setup.md",
+            "redirect_url": "/azure/aks/agentic-cli-for-aks-service-account-workload-identity-setup",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/cli-agent-for-aks-troubleshoot.md",
+            "redirect_url": "/azure/aks/agentic-cli-for-aks-troubleshoot",
+            "redirect_document_id": true
         }
      ]
 }

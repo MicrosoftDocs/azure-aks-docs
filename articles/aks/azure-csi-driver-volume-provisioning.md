@@ -1372,7 +1372,7 @@ The following table includes parameters you can use to define a custom storage c
 
 |Name | Meaning | Available Value | Mandatory | Default value |
 |--- | --- | --- | :---: | --- |
-|skuName | Azure Disks storage account type (alias: `storageAccountType`)| `Standard_LRS`, `Premium_LRS`, `StandardSSD_LRS`, `PremiumV2_LRS`, `UltraSSD_LRS`, `Premium_ZRS`, `StandardSSD_ZRS` | No | `StandardSSD_LRS`|
+|skuName | Azure Disks storage account type (alias: `storageAccountType`). `PremiumV2_LRS` and `UltraSSD_LRS` support instant access for incremental snapshot restores. See [Learn about volume snapshots](#learn-about-volume-snapshots).| `Standard_LRS`, `Premium_LRS`, `StandardSSD_LRS`, `PremiumV2_LRS`, `UltraSSD_LRS`, `Premium_ZRS`, `StandardSSD_ZRS` | No | `StandardSSD_LRS`|
 |fsType | File System Type | `ext4`, `ext3`, `ext2`, `xfs`, `btrfs` for Linux, `ntfs` for Windows | No | `ext4` for Linux, `ntfs` for Windows|
 |cachingMode | [Azure Data Disk Host Cache Setting][disk-host-cache-setting](PremiumV2_LRS and UltraSSD_LRS only support `None` caching mode) | `None`, `ReadOnly`, `ReadWrite` | No | `ReadOnly`|
 |resourceGroup | Specify the resource group for the Azure Disks | Existing resource group name | No | If empty, driver uses the same resource group name as current AKS cluster|
@@ -1464,6 +1464,9 @@ You can create two types of snapshots:
 
 * **Incremental snapshots**: Capture only the changes since the last snapshot, offering better storage efficiency and cost savings. [Incremental snapshots](/azure/virtual-machines/disks-incremental-snapshots) are the default behavior when the `incremental` parameter is set to `true` in your VolumeSnapshotClass.
 
+> [!NOTE]
+> For disks using Premium SSD v2 (`PremiumV2_LRS`) and Ultra Disk (`UltraSSD_LRS`), incremental snapshots now support instant access restores. Newly created disks from these incremental snapshots can be used immediately with high performance while data is hydrated in the background, improving recovery and cloning workflows.
+
 The following table provides details for these parameters.
 
 | Name | Meaning | Available Value | Mandatory | Default value |
@@ -1548,6 +1551,9 @@ Volume snapshots support the following scenarios:
 ### Create a new PVC based on a volume snapshot
 
 You can create a new PVC based on a volume snapshot.
+
+> [!TIP]
+> When the source snapshot is incremental and the target disk SKU is Premium SSD v2 or Ultra Disk, the restored PVC benefits from instant access behavior, enabling faster pod readiness and initial I/O during hydration. Application consistency still depends on proper quiescing before snapshot.
 
 1. Use the snapshot created in the previous step, and create a [new PVC](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/snapshot/pvc-azuredisk-snapshot-restored.yaml) and a [new pod](https://github.com/kubernetes-sigs/azuredisk-csi-driver/blob/master/deploy/example/snapshot/nginx-pod-restored-snapshot.yaml) to consume it:
 
@@ -2970,6 +2976,7 @@ The Azure Files CSI driver also supports Windows nodes and containers. To use Wi
 [az-storage-account-create]: /cli/azure/storage/account#az-storage-account-create
 [az-storage-share-create]: /cli/azure/storage/share#az-storage-share-create
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[azure-datalake-storage-account]: /azure/storage/blobs/data-lake-storage-introduction
 [azure-disk-volume]: azure-disk-volume.md
 [azure-files-pvc]: azure-files-dynamic-pv.md
 [azure-files-usage]: /azure/storage/files/understand-performance#choosing-a-performance-tier-based-on-usage-patterns
