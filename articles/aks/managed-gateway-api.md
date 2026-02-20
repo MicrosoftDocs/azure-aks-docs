@@ -57,7 +57,8 @@ The following table outlines the supported Kubernetes versions for your AKS clus
 | Gateway API bundle version | Supported Kubernetes versions |
 |----------------------------|-------------------------------|
 | v1.2.1                     | v1.26.0 - v1.33.x             |
-| v1.3.0                     | v1.34.0+                      |
+| v1.3.0                     | v1.34.x                       |
+| v1.4.1                     | v1.35.0+                      |
 
 > [!NOTE]
 > If you upgrade your AKS cluster to a new minor version after installing the Managed Gateway API CRDs, the CRDs automatically upgrade to the new supported Gateway API bundle version for that Kubernetes version. For instance, if you upgrade from AKS `v1.33.0` to `v1.34.0` and previously had the Managed Gateway API installed for bundle version `v1.2.1`, the CRDs automatically upgrade to bundle version `v1.3.0`.
