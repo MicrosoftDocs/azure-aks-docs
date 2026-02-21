@@ -333,7 +333,7 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [akv-outbound]: #azure-key-vault-provider-for-secrets-store-csi-driver
 [istio-addon]: ./istio-deploy-addon.md
 [istio-plugin-ca]: ./istio-plugin-ca.md
-[istio-secure-gateway]: ./istio-secure-gateway.md
+[istio-secure-gateways]: ./istio-secure-gateway.md
 
 <!-- LINKS - external -->
 
