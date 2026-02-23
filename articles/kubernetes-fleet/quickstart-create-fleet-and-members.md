@@ -71,9 +71,9 @@ For more information on Fleet Manager configurations, see the [conceptual overvi
 
     ```bash
     export SUBSCRIPTION_ID=<subscription_id>
-    export GROUP=<your_resource_group_name>
-    export FLEET=<your_fleet_name>
-    export LOCATION=<azure-region-name>
+    export GROUP=<resource_group_name>
+    export FLEET=<fleet_name>
+    export LOCATION=<azure_region_name>
     ```
 
 * Install `kubectl` using the [`az aks install-cli`][az-aks-install-cli] command.
@@ -151,13 +151,13 @@ When you create a Fleet Manager with a private hub cluster the preferred virtual
 
   ```bash
   export SUBSCRIPTION_ID=<subscription_id>
-  export GROUP=<your_resource_group_name>
-  export FLEET=<your_fleet_name>
-  export LOCATION=<azure-region-name>
-  export UAMI-NAME=<user-managed-identity>
-  export VNET-NAME=<virtual-network-name>
-  export VNET-CLUSTER-SUBNET-NAME=<vnet-cluster-subnet-name>
-  export VNET-API-SUBNET-NAME=<vnet-api-subnet-name>
+  export GROUP=<resource_group_name>
+  export FLEET=<fleet_name>
+  export LOCATION=<azure_region_name>
+  export UAMI-NAME=<user_managed_identity>
+  export VNET-NAME=<virtual_network_name>
+  export VNET-CLUSTER-SUBNET-NAME=<vnet_cluster_subnet_name>
+  export VNET-API-SUBNET-NAME=<vnet_api_subnet_name>
   ```
 
 2. Create a user-assigned managed identity to be used to enable private virtual network integration.
