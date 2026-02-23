@@ -3,7 +3,7 @@ title: "Quickstart: Create an Azure Kubernetes Fleet Manager and join member clu
 description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager and join member clusters using Azure CLI.
 author: sjwaight
 ms.author: simonwaight
-ms.date: 12/16/2025
+ms.date: 02/23/2026
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: quickstart
 ms.custom:
@@ -65,7 +65,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create
 
 * Set the following environment variables:
 
-    ```azurecli
+    ```bash
     export SUBSCRIPTION_ID=<subscription_id>
     export GROUP=<your_resource_group_name>
     export FLEET=<your_fleet_name>
@@ -220,7 +220,97 @@ Your output should look similar to the following example output:
 
 #### Private hub cluster
 
-When you create a Fleet Manager with a hub cluster with private access, some extra considerations apply:
+When you create a Fleet Manager with a hub cluster with private access the preferred virtual network integration method is [API server VNet integration](../aks/api-server-vnet-integration.md). 
+
+1. Set the following environment variables.
+
+  ```bash
+  export SUBSCRIPTION_ID=<subscription_id>
+  export GROUP=<your_resource_group_name>
+  export FLEET=<your_fleet_name>
+  export LOCATION=<azure-region-name>
+  export UAMI-NAME=<user-managed-identity>
+  export VNET-NAME=<virtual-network-name>
+  export VNET-CLUSTER-SUBNET-NAME=<vnet-cluster-subnet-name>
+  export VNET-API-SUBNET-NAME=<vnet-api-subnet-name>
+  ```
+
+1. Create a user-assigned managed identity to be used to enable private virtual network integration.
+1. 
+
+Private network integration requires the use of a 
+
+```azurecli-interactive
+az identity create \
+    --resource-group ${GROUP} \
+    --name ${UAMI-NAME}
+```
+
+Retrive the resource identifier for the user assigned managed identity to use later.
+
+```bash
+UAMI_ID=$(az identity show --resource-group ${GROUP} --name ${UAMI-NAME} --query id --output tsv)
+```
+
+1. Create a virtual network. 
+
+```azurecli-interactive
+az network vnet create \
+    --resource-group ${GROUP} \
+    --name ${FLEET} \
+    --address-prefixes 192.168.0.0/16
+```
+
+1. Add a subnet for the hub cluster integration.
+
+```azurecli-interactive
+az network vnet subnet create \
+    --resource-group ${GROUP} \
+    --vnet-name ${FLEET} \
+    --name ${VNET-CLUSTER-SUBNET-NAME} \
+    --address-prefixes 192.168.0.0/23
+```
+
+Retrive the resource identifier for the cluster subnet to use later.
+
+```bash
+CLUSTER_SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-name ${FLEET} -n ${VNET-CLUSTER-SUBNET-NAME} -o tsv --query id)
+```
+
+1.  Add a subnet for the hub cluster's API integration. This subnet requires delegation  to `Microsoft.ContainerService/managedClusters`.
+
+```azurecli-interactive
+az network vnet subnet create \
+    --resource-group ${GROUP} \
+    --vnet-name ${FLEET} \
+    --name ${VNET-API-SUBNET-NAME} \
+    --delegations "Microsoft.ContainerService/managedClusters" \
+    --address-prefixes 192.168.2.0/23
+```
+
+Retrive the resource identifier for the API subnet to use later.
+
+```bash
+API_SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-name ${FLEET} -n ${VNET-API-SUBNET-NAME} -o tsv --query id)
+```
+
+
+1. Finally,  
+
+ az fleet create --resource-group sw-auto-01 \
+--enable-vnet-integration \
+--enable-private-cluster \
+--agent-subnet-id "/subscriptions/d712bfad-d238-486f-8f1b-bf61a831b712/resourceGroups/sw-auto-01/providers/Microsoft.Network/virtualNetworks/vnet/subnets/cluster-subnet" \
+--apiserver-subnet-id "/subscriptions/d712bfad-d238-486f-8f1b-bf61a831b712/resourceGroups/sw-auto-01/providers/Microsoft.Network/virtualNetworks/vnet/subnets/api-subnet" \
+--name "sw-test-flt-private" \
+--enable-managed-identity \
+--assign-identity "/subscriptions/d712bfad-d238-486f-8f1b-bf61a831b712/resourcegroups/sw-auto-01/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uami-fleet-01" \
+--enable-hub
+
+ which requires
+        * **Virtual network**: Select an existing Azure virtual network or select **Create new** to create a new virtual network.
+        * **Cluster subnet**: Select a virtual network subnet for the hub cluster node.
+        * **API server subnet**: Select a virtual network subnet for the hub cluster's API server integration.
 
 * Fleet Manager requires you to provide the subnet on which the hub cluster node VM is placed. You can specify the subnet at creation time by setting `--agent-subnet-id <subnet>`.
 * The address prefix of the virtual network (VNet) whose subnet is passed via `--vnet-subnet-id` must not overlap with the AKS default service range of `10.0.0.0/16`.
