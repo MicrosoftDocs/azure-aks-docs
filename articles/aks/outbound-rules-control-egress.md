@@ -313,7 +313,7 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 
 ### Istio-based service mesh add-on
 
-If you are using the [Istio-based service mesh add-on][istio-addon] and setting up istiod with a [Plugin Certificate Authority (CA)][istio-plugin-ca] or [secure ingress gateways][istio-secure-gateways], Azure Key Vault provider for Secrets Store CSI Driver is required for these features. Outbound network requirements for Azure Key Vault provider for Secrets Store CSI Driver can be found [here][akv-outbound].
+If you are using the [Istio-based service mesh add-on][istio-addon] and setting up Istio with a [plug-in certificate authority (CA)][istio-plugin-ca] or [secure ingress gateways][istio-secure-gateways], Azure Key Vault provider for Secrets Store CSI Driver is required for these features. Outbound network requirements for Azure Key Vault provider for Secrets Store CSI Driver can be found [here][akv-outbound].
 
 ### Application routing add-on
 
