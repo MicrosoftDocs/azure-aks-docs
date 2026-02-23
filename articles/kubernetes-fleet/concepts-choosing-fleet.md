@@ -72,9 +72,9 @@ Now that you understand the different types of Kubernetes fleet resources, see [
 [aks-private-cluster-connect]: /azure/aks/private-clusters?tabs=azure-portal#options-for-connecting-to-the-private-cluster
 [azure-policy-overview]: /azure/governance/policy/overview
 [quickstart-create-fleet]: quickstart-create-fleet-and-members.md
-[create-fleet-without-hub]: quickstart-create-fleet-and-members.md?tabs=without-hub-cluster#create-a-fleet-manager
-[create-public-hub-cluster]: quickstart-create-fleet-and-members.md?tabs=with-hub-cluster#public-hub-cluster
-[create-private-hub-cluster]: quickstart-create-fleet-and-members.md?tabs=with-hub-cluster#private-hub-cluster
+[create-fleet-without-hub]: quickstart-create-fleet-and-members.md#fleet-manager-with-no-hub-cluster
+[create-public-hub-cluster]: quickstart-create-fleet-and-members.md#fleet-manager-with-public-hub-cluster
+[create-private-hub-cluster]: quickstart-create-fleet-and-members.md#fleet-manager-with-private-hub-cluster
 
 <!-- LINKS - external -->
 [fleet-github]: https://kubefleet.dev/
