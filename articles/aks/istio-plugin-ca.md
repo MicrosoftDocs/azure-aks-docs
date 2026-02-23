@@ -1,6 +1,6 @@
 ---
-title: Plug in CA certificates for Istio-based service mesh add-on on Azure Kubernetes Service
-description: Plug in CA certificates for Istio-based service mesh add-on on Azure Kubernetes Service
+title: Plug-in CA certificates for Istio-based service mesh add-on on Azure Kubernetes Service
+description: Plug-in CA certificates for Istio-based service mesh add-on on Azure Kubernetes Service
 ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.service: azure-kubernetes-service
@@ -10,7 +10,7 @@ author: shashankbarsin
 # Customer intent: "As a Kubernetes administrator, I want to configure a custom certificate authority for the Istio service mesh in Azure Kubernetes Service, so that I can enhance security by managing trusted certificates and keys according to my organization's policies."
 ---
 
-# Plug in CA certificates for Istio-based service mesh add-on on Azure Kubernetes Service
+# Plug-in CA certificates for Istio-based service mesh add-on on Azure Kubernetes Service
 
 In the Istio-based service mesh addon for Azure Kubernetes Service, by default the Istio certificate authority (CA) generates a self-signed root certificate and key and uses them to sign the workload certificates. To protect the root CA key, you should use a root CA, which runs on a secure machine offline. You can use the root CA to issue intermediate certificates to the Istio CAs that run in each cluster. An Istio CA can sign workload certificates using the administrator-specified certificate and key, and distribute an administrator-specified root certificate to the workloads as the root of trust. This article addresses how to bring your own certificates and keys for Istio CA in the Istio-based service mesh add-on for Azure Kubernetes Service.
 

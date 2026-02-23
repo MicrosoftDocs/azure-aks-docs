@@ -313,7 +313,7 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 
 ### Istio-based service mesh add-on
 
-In Istio=based service mesh add-on, if you are setting up istiod with a Plugin Certificate Authority (CA) or if you are setting up secure ingress gateway, Azure Key Vault provider for Secrets Store CSI Driver is required for these features. Outbound network requirements for Azure Key Vault provider for Secrets Store CSI Driver can be found [here][akv-outbound].
+If you are using the [Istio-based service mesh add-on][istio-addon] and setting up Istio with a [plug-in certificate authority (CA)][istio-plugin-ca] or [secure ingress gateways][istio-secure-gateways], Azure Key Vault provider for Secrets Store CSI Driver is required for these features. Outbound network requirements for Azure Key Vault provider for Secrets Store CSI Driver can be found [here][akv-outbound].
 
 ### Application routing add-on
 
@@ -331,6 +331,9 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [use-network-policies]: ./use-network-policies.md
 [network-isolated-cluster]: ./concepts-network-isolated.md
 [akv-outbound]: #azure-key-vault-provider-for-secrets-store-csi-driver
+[istio-addon]: ./istio-deploy-addon.md
+[istio-plugin-ca]: ./istio-plugin-ca.md
+[istio-secure-gateways]: ./istio-secure-gateway.md
 
 <!-- LINKS - external -->
 
