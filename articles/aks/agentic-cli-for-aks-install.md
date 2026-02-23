@@ -408,24 +408,6 @@ The `--model` parameter determines which LLM and provider analyzes your cluster.
 - **Azure OpenAI**: Use `azure/<deployment name>` (for example, `azure/gpt-4o`).
 - **Anthropic**: Use `anthropic/claude-sonnet-4`.
 
-### Configuration file
-
-The LLM configuration and deployment mode selection are stored in a config map through the `az aks agent-init` experience. If the `init` command doesn't work, you can still use the configuration file by adding the variables manually. For an example configuration file, see [agentic-cli-for-aks/exampleconfig.yaml](https://github.com/Azure/agentic-cli-for-aks/blob/main/exampleconfig.yaml). You can find the default configuration file path through the `az aks agent --help` command.
-
-The configuration file currently supports the following parameters:
-
-- Model
-- API key
-- Deployment mode (client or cluster)
-- Custom toolsets
-- Azure environment variables
-
-You can also use your configuration file by specifying the `--config-file` parameter with the path to your configuration file when you use the [`az aks agent`](/cli/azure/aks#az-aks-agent) command.
-
-```azurecli-interactive
-az aks agent "Check kubernetes pod resource usage" --config-file exampleconfig.yaml
-```
-
 ### Interactive commands
 
 The `az aks agent` has a set of subcommands that aid the troubleshooting experience. To access them, enter `/` inside the interactive mode experience.
