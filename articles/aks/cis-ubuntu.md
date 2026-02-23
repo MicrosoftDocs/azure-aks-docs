@@ -15,7 +15,7 @@ ai-usage: ai-assisted
 > [!IMPORTANT]
 > This article applies to Ubuntu 24.04 and Ubuntu 22.04 images used by AKS. The recommendation statuses and guidance reflect point-in-time scans and benchmark versions: [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][cis-benchmark-ubuntu] for Ubuntu 24.04, and [CIS Ubuntu 22.04 LTS Benchmark v3.0.0][cis-benchmark-ubuntu] for Ubuntu 22.04. Verify the OS version and benchmark version before applying guidance.
 
-This article covers the security OS configuration applied to Ubuntu image used by AKS. As a secure service, AKS complies with SOC, ISO, PCI DSS, and HIPAA standards. For more information about the AKS security, see [Security concepts for clusters in Azure Kubernetes Service (AKS)][security-concepts-aks-apps-clusters]. To learn more about the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
+This article covers the security OS configuration applied to Ubuntu images used by AKS. As a secure service, AKS complies with SOC, ISO, PCI DSS, and HIPAA standards. For more information about AKS security, see [Security concepts for clusters in Azure Kubernetes Service (AKS)][security-concepts-aks-apps-clusters]. To learn more about the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
 
 ## Recommendations
 
@@ -24,7 +24,7 @@ The table has five sections:
 * **CIS ID:** The associated rule ID with each of the baseline rules.
 * **Recommendation description:** A description of the recommendation issued by the CIS benchmark.
 * **Level:** The severity of the recommended security requirements for a given environment.
-  * *L1, or Level 1* - Recommends essential basic security requirements that can be configured on any system and should cause little or no interruption of service or reduced functionality.
+  * *L1, or Level 1* - Recommends essential basic security requirements that you can configure on any system and should cause little to no interruption of service or reduced functionality.
   * *L2, or Level 2* - Recommends stricter requirements for environments with a higher security posture.
 * **Status:**
     * *Pass* - The recommendation has been applied.
@@ -51,7 +51,7 @@ As a part of the security-optimized operating system:
 > Unrelated to the CIS benchmarks, Azure applies daily patches, including security patches, to AKS virtual machine hosts.
 
 The goal of the secure configuration built into the host OS is to reduce the surface area of attack and optimize for the deployment of containers in a secure manner.
-AKS node images aim to be compliant with the "L1 - Server" profile where possible in a way that doesn't interfere with Kubernetes node operations. L2 compliance status is provided for informational purposes only and the node configuration is not currently compliant.
+AKS node images aim to be compliant with the "L1 - Server" profile where possible in a way that doesn't interfere with Kubernetes node operations. L2 compliance status is provided for informational purposes only and the node configuration isn't currently compliant.
 
 ### Ubuntu LTS 24.04 Benchmark
 
@@ -447,7 +447,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 
 ## Ubuntu LTS 22.04
 
-AKS node images aim to be compliant with the "L1 - Server" profile where possible in a way that doesn't interfere with Kubernetes node operations. L2 compliance status is provided for informational purposes only and the node configuration is not currently compliant.
+AKS node images aim to be compliant with the "L1 - Server" profile where possible in a way that doesn't interfere with Kubernetes node operations. L2 compliance status is provided for informational purposes only and the node configuration isn't currently compliant.
 
 ### Ubuntu LTS 22.04 Benchmark
 
