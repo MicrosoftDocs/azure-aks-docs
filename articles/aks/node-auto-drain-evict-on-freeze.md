@@ -119,7 +119,7 @@ The following events appear during the Evict On Freeze process:
 
 If failures occur at any step, a separate error event is logged. For example, a `NodeDrainError` event appears with details in the event message.
 
-If you see `FreezeScheduled` events but no `NodeCordonStart` events, the cluster-level configuration might not be applied correctly. If you see cordon events but pods aren't being evicted, verify the pod-level labels and the PDB.
+If you see `FreezeScheduled` events but no `NodeCordonStart` events, the cluster-level configuration might not be applied correctly. If you see cordon events but pods aren't being evicted, verify the pod-level labels and that the PDB allowed for eviction at the time of the event.
 
 ### Verify the ConfigMap
 
