@@ -35,28 +35,27 @@ For more information on Fleet Manager configurations, see the [conceptual overvi
 * Read the [conceptual overview of Fleet Manager](./concepts-fleet.md), which provides an explanation of fleets and member clusters referenced in this document.
 * Read the [conceptual overview of fleet types](./concepts-choosing-fleet.md), which provides a comparison of different fleet configuration options.
 * An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
-* An identity (user or service principal) which can be used to [log in to Azure CLI](/cli/azure/authenticate-azure-cli). This identity needs the following permissions for Fleet resources, and if applicable, member cluster resources:
-
-    * **Fleet permissions:**
+* An identity (user or service principal) with the following permissions:
+    * **Fleet Manager:**
       * Microsoft.ContainerService/fleets/read
       * Microsoft.ContainerService/fleets/write
       * Microsoft.ContainerService/fleets/members/read
       * Microsoft.ContainerService/fleets/members/write
       * Microsoft.ContainerService/fleetMemberships/read
       * Microsoft.ContainerService/fleetMemberships/write
-    * **AKS clusters:**
+    * **AKS member clusters:**
       * Microsoft.ContainerService/managedClusters/read
       * Microsoft.ContainerService/managedClusters/write
       * Microsoft.ContainerService/managedClusters/listClusterUserCredential/action
-    * **Arc-enabled Kubernetes clusters:**
+    * **Arc-enabled Kubernetes member clusters:**
       * Microsoft.Kubernetes/connectedClusters/read
-      * Microsoft.KubernetesConfiguration/extensions/read,
-      * Microsoft.KubernetesConfiguration/extensions/write,
-      * Microsoft.KubernetesConfiguration/extensions/delete,
+      * Microsoft.KubernetesConfiguration/extensions/read
+      * Microsoft.KubernetesConfiguration/extensions/write
+      * Microsoft.KubernetesConfiguration/extensions/delete
 
-* Have the Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* Have the Azure CLI version 2.82.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.6.2 or later, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.8.3 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
