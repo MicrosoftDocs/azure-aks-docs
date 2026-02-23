@@ -95,7 +95,7 @@ az group create --name ${GROUP} --location ${LOCATION}
 ```
 :::zone target="docs" pivot="no-hub" 
 
-#### Fleet Manager with no hub cluster
+## Fleet Manager with no hub cluster
 
 If you want to use Fleet Manager only for safe multi-cluster Kubernetes or node image updates, you can create a Fleet Manager without a hub cluster using the [`az fleet create`][az-fleet-create] command.
 
@@ -114,7 +114,7 @@ az fleet create \
 
 :::zone target="docs" pivot="public-hub"
 
-#### Fleet Manager with public hub cluster
+## Fleet Manager with public hub cluster
 
 If you want to use Fleet Manager for intelligent Kubernetes object placement and multi-cluster load balancing as well as Kubernetes and node image update orchestration, then you must create the Fleet Manager with the hub cluster enabled by specifying the `--enable-hub` parameter with the [`az fleet create`][az-fleet-create] command.
 
@@ -144,7 +144,7 @@ Your output should look similar to the following example output:
 
 :::zone target="docs" pivot="private-hub"
 
-#### Fleet Manager with private hub cluster
+## Fleet Manager with private hub cluster
 
 When you create a Fleet Manager with a private hub cluster the preferred virtual network integration method for the hub cluster is [API server VNet integration](../aks/api-server-vnet-integration.md). 
 
