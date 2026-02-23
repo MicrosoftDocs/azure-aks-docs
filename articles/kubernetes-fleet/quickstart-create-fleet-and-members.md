@@ -14,6 +14,7 @@ ms.custom:
   - build-2024
   - build-2025
 ms.devlang: azurecli
+zone_pivot_groups: none-public-private-hub
 # Customer intent: As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using the Azure CLI, so that I can manage and orchestrate multiple Kubernetes clusters for improved scalability and application deployment.
 ---
 
@@ -114,7 +115,7 @@ You can create a Fleet Manager at any time, selecting to later add [supported Ku
 > [!IMPORTANT]
 > You can change from a Fleet Manager without a hub cluster to one with a hub cluster, but not the reverse. For Fleet Managers with a hub cluster, once private or public access is selected it can't be changed.
 
-### [Fleet Manager without hub cluster](#tab/without-hub-cluster)
+:::zone target="docs" pivot="no-hub" 
 
 If you want to use Fleet Manager only for Kubernetes or node image update orchestration, you can create a Fleet resource without the hub cluster using the [`az fleet create`][az-fleet-create] command.
 
@@ -156,7 +157,7 @@ Your output should look similar to the following example output:
 }
 ```
 
-### [Fleet Manager with hub cluster](#tab/with-hub-cluster)
+:::zone-end
 
 If you want to use Fleet Manager for intelligent Kubernetes object placement and multi-cluster load balancing as well as Kubernetes and node image update orchestration, then you must create the Fleet Manager with the hub cluster enabled by specifying the `--enable-hub` parameter with the [`az fleet create`][az-fleet-create] command.
 
@@ -164,6 +165,8 @@ Fleet Manager hub clusters support both public and private modes for network acc
 
 > [!NOTE]
 > By default, Fleet Manager hub clusters are public. Fleet Manager chooses the virtual machine (VM) SKU used for the hub node (at this time, Fleet Manager tries "Standard_D4s_v4", "Standard_D4s_v3", "Standard_D4s_v5", "Standard_Ds3_v2", "Standard_E4as_v4" in order). If none of these options are acceptable or available, you can select a VM SKU by setting `--vm-size <SKU>`.
+
+:::zone target="docs" pivot="public-hub"
 
 #### Public hub cluster
 
@@ -217,6 +220,10 @@ Your output should look similar to the following example output:
   "type": "Microsoft.ContainerService/fleets"
 }
 ```
+
+:::zone-end
+
+:::zone target="docs" pivot="private-hub"
 
 #### Private hub cluster
 
@@ -338,7 +345,7 @@ az fleet create \
     --agent-subnet-id "${SUBNET_ID}"
 ```
 
----
+:::zone-end
 
 ## Join member clusters
 
