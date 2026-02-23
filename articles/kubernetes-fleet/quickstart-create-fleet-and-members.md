@@ -292,8 +292,8 @@ Fleet Manager supports joining existing AKS clusters or Arc-enabled Kubernetes c
     If successful, your output should look similar to the following example output:
 
     ```output
-    ClusterResourceId                                                                                                                                Name          ProvisioningState    ResourceGroup
-    -----------------------------------------------------------------------------------------------------------------------------------------------  ------------  -------------------  ---------------
+    ClusterResourceId                                                                                                          Name          ProvisioningState    ResourceGroup
+    -------------------------------------------------------------------------------------------------------------------------- ------------  -------------------  ---------------
     /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<GROUP>/providers/Microsoft.ContainerService/managedClusters/aks-member-1  aks-member-1  Succeeded            <GROUP>
     /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<GROUP>/providers/Microsoft.ContainerService/managedClusters/aks-member-2  aks-member-2  Succeeded            <GROUP>
     /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<GROUP>/providers/Microsoft.ContainerService/managedClusters/aks-member-3  aks-member-3  Succeeded            <GROUP>
