@@ -225,7 +225,7 @@ API_SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-nam
     --name ${FLEET} \
     --location ${LOCATION}  \
     --enable-hub \
-    --enable-managed-identity
+    --enable-managed-identity \
     --agent-subnet-id ${CLUSTER_SUBNET_ID} \
     --apiserver-subnet-id ${API_SUBNET_ID} \
     --assign-identity ${UAMI_ID}
