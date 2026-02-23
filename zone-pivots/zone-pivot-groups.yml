@@ -63,6 +63,16 @@ groups:
     title: Public hub cluster
   - id: private-hub
     title: Private hub cluster
+- id: none-public-private-hub
+  title: Hub cluster configuration
+  prompt: Select your desired configuration
+  pivots:
+  - id: no-hub
+    title: No hub cluster
+  - id: public-hub
+    title: Public hub cluster
+  - id: private-hub
+    title: Private hub cluster
 - id: cluster-namespace-scope
   title: Fleet resource scope
   prompt: Select your resource scope
