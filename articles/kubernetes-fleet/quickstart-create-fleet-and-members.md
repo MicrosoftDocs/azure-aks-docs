@@ -22,7 +22,11 @@ zone_pivot_groups: none-public-private-hub
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
-Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create a Fleet Manager and join [supported Kubernetes clusters](./concepts-member-cluster-types.md) as members.
+Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create a Fleet Manager and join [supported Kubernetes clusters](./concepts-member-cluster-types.md) as members. 
+
+Fleet Manager supports an optional hub cluster that is used for intelligent Kubernetes resource placement and is required to use [Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md). 
+
+For more information on Fleet Manager configurations, see the [conceptual overview of fleet types](./concepts-choosing-fleet.md).
 
 ## Before you begin
 
@@ -89,16 +93,9 @@ Set the Azure subscription and create a resource group using the [`az group crea
 az account set -s ${SUBSCRIPTION_ID}
 az group create --name ${GROUP} --location ${LOCATION}
 ```
-
-## Create a Fleet Manager
-
-You can create a Fleet Manager at any time, adding [supported Kubernetes clusters](./concepts-member-cluster-types.md) as member clusters at a later time. Fleet Manager supports an optional hub cluster which is used for intelligent Kubernetes object placement and is required to use [Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md). 
-
-For more information on Fleet Manager configurations, see the [conceptual overview of fleet types](./concepts-choosing-fleet.md).
-
 :::zone target="docs" pivot="no-hub" 
 
-#### No hub cluster
+#### Fleet Manager with no hub cluster
 
 If you want to use Fleet Manager only for safe multi-cluster Kubernetes or node image updates, you can create a Fleet Manager without a hub cluster using the [`az fleet create`][az-fleet-create] command.
 
@@ -117,7 +114,7 @@ az fleet create \
 
 :::zone target="docs" pivot="public-hub"
 
-#### Public hub cluster
+#### Fleet Manager with public hub cluster
 
 If you want to use Fleet Manager for intelligent Kubernetes object placement and multi-cluster load balancing as well as Kubernetes and node image update orchestration, then you must create the Fleet Manager with the hub cluster enabled by specifying the `--enable-hub` parameter with the [`az fleet create`][az-fleet-create] command.
 
@@ -130,7 +127,7 @@ To create a public Fleet Manager with a hub cluster, use the `az fleet create` c
 
 
 > [!IMPORTANT]
-> You can't change a hub cluster's type (public or private) once it is configured.
+> You can't change a hub cluster's type (public or private) once it's configured.
 
 ```azurecli-interactive
 az fleet create \
@@ -147,7 +144,7 @@ Your output should look similar to the following example output:
 
 :::zone target="docs" pivot="private-hub"
 
-#### Private hub cluster
+#### Fleet Manager with private hub cluster
 
 When you create a Fleet Manager with a private hub cluster the preferred virtual network integration method for the hub cluster is [API server VNet integration](../aks/api-server-vnet-integration.md). 
 
@@ -172,7 +169,7 @@ az identity create \
     --name ${UAMI-NAME}
 ```
 
-Retrive the resource identifier for the user assigned managed identity to use later.
+Retrieve the resource identifier for the user assigned managed identity to use later.
 
 ```bash
 UAMI_ID=$(az identity show --resource-group ${GROUP} --name ${UAMI-NAME} --query id --output tsv)
@@ -197,7 +194,7 @@ az network vnet subnet create \
     --address-prefixes 192.168.0.0/23
 ```
 
-Retrive the resource identifier for the cluster subnet to use later.
+Retrieve the resource identifier for the cluster subnet to use later.
 
 ```bash
 CLUSTER_SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-name ${FLEET} -n ${VNET-CLUSTER-SUBNET-NAME} -o tsv --query id)
@@ -214,7 +211,7 @@ az network vnet subnet create \
     --address-prefixes 192.168.2.0/23
 ```
 
-Retrive the resource identifier for the API subnet to use later.
+Retrieve the resource identifier for the API subnet to use later.
 
 ```bash
 API_SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-name ${FLEET} -n ${VNET-API-SUBNET-NAME} -o tsv --query id)
