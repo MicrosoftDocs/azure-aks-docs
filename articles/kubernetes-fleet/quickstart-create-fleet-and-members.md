@@ -90,33 +90,17 @@ az account set -s ${SUBSCRIPTION_ID}
 az group create --name ${GROUP} --location ${LOCATION}
 ```
 
-The following output example resembles successful creation of the resource group:
-
-```output
-{
-  "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/fleet-demo",
-  "location": "<LOCATION>",
-  "managedBy": null,
-  "name": "fleet-demo",
-  "properties": {
-    "provisioningState": "Succeeded"
-  },
-  "tags": null,
-  "type": "Microsoft.Resources/resourceGroups"
-}
-```
-
 ## Create a Fleet Manager
 
 You can create a Fleet Manager at any time, adding [supported Kubernetes clusters](./concepts-member-cluster-types.md) as member clusters at a later time. Fleet Manager supports an optional hub cluster which is used for intelligent Kubernetes object placement and is required to use [Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md). 
 
-For more information on Fleet Manager configureations, see the [conceptual overview of fleet types](./concepts-choosing-fleet.md).
+For more information on Fleet Manager configurations, see the [conceptual overview of fleet types](./concepts-choosing-fleet.md).
 
 :::zone target="docs" pivot="no-hub" 
 
 #### No hub cluster
 
-If you want to use Fleet Manager only for Kubernetes or node image update orchestration, you can create a Fleet resource without a hub cluster using the [`az fleet create`][az-fleet-create] command.
+If you want to use Fleet Manager only for safe multi-cluster Kubernetes or node image updates, you can create a Fleet Manager without a hub cluster using the [`az fleet create`][az-fleet-create] command.
 
 > [!IMPORTANT]
 > You can change from a Fleet Manager without a hub cluster to one with a hub cluster, but not the reverse.
@@ -127,36 +111,6 @@ az fleet create \
     --name ${FLEET} \
     --location ${LOCATION} \
     --enable-managed-identity
-```
-
-Your output should look similar to the following example output:
-
-```output
-{
-  "etag": "...",
-  "hubProfile": null,
-  "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/fleet-demo/providers/Microsoft.ContainerService/fleets/fleet-demo",
-  "identity": {
-    "principalId": <system-identity-id>,
-    "tenantId": <entra-tenant-id>,
-    "type": "SystemAssigned",
-    "userAssignedIdentities": null
-  },
-  "location": "<LOCATION>",
-  "name": "fleet-demo",
-  "provisioningState": "Succeeded",
-  "resourceGroup": "fleet-demo",
-  "systemData": {
-    "createdAt": "2023-11-03T17:15:19.610149+00:00",
-    "createdBy": "<user>",
-    "createdByType": "User",
-    "lastModifiedAt": "2023-11-03T17:15:19.610149+00:00",
-    "lastModifiedBy": "<user>",
-    "lastModifiedByType": "User"
-  },
-  "tags": null,
-  "type": "Microsoft.ContainerService/fleets"
-}
 ```
 
 :::zone-end
@@ -178,7 +132,6 @@ To create a public Fleet Manager with a hub cluster, use the `az fleet create` c
 > [!IMPORTANT]
 > You can't change a hub cluster's type (public or private) once it is configured.
 
-
 ```azurecli-interactive
 az fleet create \
     --resource-group ${GROUP} \
@@ -190,51 +143,13 @@ az fleet create \
 
 Your output should look similar to the following example output:
 
-```output
-{
-  "etag": "...",
-  "hubProfile": {
-    "agentProfile": {
-      "subnetId": null,
-      "vmSize": null
-    },
-    "apiServerAccessProfile": {
-      "enablePrivateCluster": false,
-      "enableVnetIntegration": false,
-      "subnetId": null
-    }
-  },
-  "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/fleet-demo/providers/Microsoft.ContainerService/fleets/fleet-demo",
-  "identity": {
-    "principalId": <system-identity-id>,
-    "tenantId": <entra-tenant-id>,
-    "type": "SystemAssigned",
-    "userAssignedIdentities": null
-  },
-  "location": "<LOCATION>",
-  "name": "fleet-demo",
-  "provisioningState": "Succeeded",
-  "resourceGroup": "fleet-demo",
-  "systemData": {
-    "createdAt": "2023-11-03T17:15:19.610149+00:00",
-    "createdBy": "<user>",
-    "createdByType": "User",
-    "lastModifiedAt": "2023-11-03T17:15:19.610149+00:00",
-    "lastModifiedBy": "<user>",
-    "lastModifiedByType": "User"
-  },
-  "tags": null,
-  "type": "Microsoft.ContainerService/fleets"
-}
-```
-
 :::zone-end
 
 :::zone target="docs" pivot="private-hub"
 
 #### Private hub cluster
 
-When you create a Fleet Manager with a hub cluster with private access the preferred virtual network integration method is [API server VNet integration](../aks/api-server-vnet-integration.md). 
+When you create a Fleet Manager with a private hub cluster the preferred virtual network integration method for the hub cluster is [API server VNet integration](../aks/api-server-vnet-integration.md). 
 
 1. Set the following environment variables.
 
@@ -249,10 +164,7 @@ When you create a Fleet Manager with a hub cluster with private access the prefe
   export VNET-API-SUBNET-NAME=<vnet-api-subnet-name>
   ```
 
-1. Create a user-assigned managed identity to be used to enable private virtual network integration.
-1. 
-
-Private network integration requires the use of a 
+2. Create a user-assigned managed identity to be used to enable private virtual network integration.
 
 ```azurecli-interactive
 az identity create \
@@ -266,7 +178,7 @@ Retrive the resource identifier for the user assigned managed identity to use la
 UAMI_ID=$(az identity show --resource-group ${GROUP} --name ${UAMI-NAME} --query id --output tsv)
 ```
 
-1. Create a virtual network. 
+3. If one doesn't already exist, create a virtual network. 
 
 ```azurecli-interactive
 az network vnet create \
@@ -275,7 +187,7 @@ az network vnet create \
     --address-prefixes 192.168.0.0/16
 ```
 
-1. Add a subnet for the hub cluster integration.
+4. Add a subnet for the hub cluster integration.
 
 ```azurecli-interactive
 az network vnet subnet create \
@@ -291,7 +203,7 @@ Retrive the resource identifier for the cluster subnet to use later.
 CLUSTER_SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-name ${FLEET} -n ${VNET-CLUSTER-SUBNET-NAME} -o tsv --query id)
 ```
 
-1.  Add a subnet for the hub cluster's API integration. This subnet requires delegation  to `Microsoft.ContainerService/managedClusters`.
+5. Add a subnet for the hub cluster's API server VNet integration. This subnet requires delegation to `Microsoft.ContainerService/managedClusters`.
 
 ```azurecli-interactive
 az network vnet subnet create \
@@ -308,55 +220,25 @@ Retrive the resource identifier for the API subnet to use later.
 API_SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-name ${FLEET} -n ${VNET-API-SUBNET-NAME} -o tsv --query id)
 ```
 
-
-1. Finally,  
-
- az fleet create --resource-group sw-auto-01 \
---enable-vnet-integration \
---enable-private-cluster \
---agent-subnet-id "/subscriptions/d712bfad-d238-486f-8f1b-bf61a831b712/resourceGroups/sw-auto-01/providers/Microsoft.Network/virtualNetworks/vnet/subnets/cluster-subnet" \
---apiserver-subnet-id "/subscriptions/d712bfad-d238-486f-8f1b-bf61a831b712/resourceGroups/sw-auto-01/providers/Microsoft.Network/virtualNetworks/vnet/subnets/api-subnet" \
---name "sw-test-flt-private" \
---enable-managed-identity \
---assign-identity "/subscriptions/d712bfad-d238-486f-8f1b-bf61a831b712/resourcegroups/sw-auto-01/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uami-fleet-01" \
---enable-hub
-
- which requires
-        * **Virtual network**: Select an existing Azure virtual network or select **Create new** to create a new virtual network.
-        * **Cluster subnet**: Select a virtual network subnet for the hub cluster node.
-        * **API server subnet**: Select a virtual network subnet for the hub cluster's API server integration.
-
-* Fleet Manager requires you to provide the subnet on which the hub cluster node VM is placed. You can specify the subnet at creation time by setting `--agent-subnet-id <subnet>`.
-* The address prefix of the virtual network (VNet) whose subnet is passed via `--vnet-subnet-id` must not overlap with the AKS default service range of `10.0.0.0/16`.
-* When using an AKS private cluster, you have the ability to configure fully qualified domain names (FQDNs) and FQDN subdomains. This functionality doesn't apply to the private access mode type hub cluster.
-
-First, create a virtual network and subnet for your hub cluster's node VMs using the `az network vnet create` and `az network vnet subnet create` commands.
+6. Finally, create the new hub cluster, providing the necessary arguments to enable API VNet integration  
 
 ```azurecli-interactive
-az network vnet create --resource-group ${GROUP} --name vnet --address-prefixes 192.168.0.0/16
-az network vnet subnet create --resource-group ${GROUP} --vnet-name vnet --name subnet --address-prefixes 192.168.0.0/24
-
-SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-name vnet -n subnet -o tsv --query id)
-```
-
-To create a private access mode Kubernetes Fleet resource, use `az fleet create` command with the `--enable-private-cluster` flag and provide the subnet ID obtained in the previous step to the  `--agent-subnet-id <subnet>` argument.
-
-```azurecli-interactive
-az fleet create \
+ az fleet create \
     --resource-group ${GROUP} \
     --name ${FLEET} \
-    --location ${LOCATION} \ 
+    --location ${LOCATION}  \
     --enable-hub \
-    --enable-private-cluster \
-    --enable-managed-identity \
-    --agent-subnet-id "${SUBNET_ID}"
+    --enable-managed-identity
+    --agent-subnet-id ${CLUSTER_SUBNET_ID} \
+    --apiserver-subnet-id ${API_SUBNET_ID} \
+    --assign-identity ${UAMI_ID}
 ```
 
 :::zone-end
 
 ## Join member clusters
 
-Fleet currently supports joining existing AKS clusters or Arc-enabled Kubernetes clusters (Preview) as member clusters.
+Fleet Manager supports joining existing AKS clusters or Arc-enabled Kubernetes clusters (Preview) as member clusters.
 
 1. Set the following environment variables for member clusters:
 
