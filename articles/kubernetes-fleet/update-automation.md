@@ -38,7 +38,7 @@ This article covers how to use auto-upgrade profiles to automatically create and
 >
 > For more information, see [node image upgrades for agent pools created from snapshots](./concepts-update-orchestration.md#node-image-upgrades-for-agent-pools-created-from-snapshots).
 
-:::zone target="docs" pivot="azure-CLI"
+:::zone target="docs" pivot="azure-cli"
 
 ## Create auto-upgrade profiles
 
@@ -55,7 +55,7 @@ Start by completing these steps to ensure your environment is configured correct
     export CLUSTER=<aks-cluster-name>
     ```
 
-* You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-CLI-install].
+* You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
 * You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
 
