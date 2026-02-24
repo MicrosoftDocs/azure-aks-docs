@@ -29,6 +29,30 @@ The Azure Key Vault provider for Secrets Store CSI Driver allows for the integra
 - A container using a `ConfigMap` or `Secret` as a `subPath` volume mount does not receive automated updates when the secret is rotated. This is a Kubernetes limitation. To have the changes take effect, the application needs to reload the changed file by either watching for changes in the file system or by restarting the pod. For more information, see [Secrets Store CSI Driver known limitations](https://secrets-store-csi-driver.sigs.k8s.io/known-limitations.html#secrets-not-rotated-when-using-subpath-volume-mount).
 - The add-on creates a managed identity named `azurekeyvaultsecretsprovider-xxx` in the node resource group and assigns it to the Virtual Machine Scale Sets (VMSS) automatically. You can use this managed identity or your own managed identity to access the key vault. It's not supported to prevent creation of the identity.
 
+## Common configuration errors
+
+When creating a `SecretProviderClass`, YAML formatting errors are a common source of problems. If you see errors like `cannot unmarshal !!map into string` or `cannot unmarshal !!seq into string`, check the following:
+
+- The `objects` field must be a multiline string (note the `|` pipe character), not a YAML object or array:
+
+    ```yaml
+    # Correct - multiline string
+    objects: |
+      array:
+        - |
+          objectName: secret1
+          objectType: secret
+    
+    # Incorrect - YAML object (will fail)
+    objects:
+      array:
+        - objectName: secret1
+          objectType: secret
+    ```
+
+- Each array item inside `objects` must also be a multiline string with the `|` character.
+- Validate your YAML before applying using `kubectl apply --dry-run=client -f secretproviderclass.yaml`.
+
 ## Prerequisites
 
 * If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
@@ -155,6 +179,8 @@ In this article, you learned how to use the Azure Key Vault provider for Secrets
 
 > [!div class="nextstepaction"]
 > [Provide an identity to access the Azure Key Vault provider for Secrets Store CSI Driver in AKS](./csi-secrets-store-identity-access.md)
+
+For troubleshooting common issues, see [Troubleshoot Azure Key Vault and KMS integration with AKS](./troubleshoot-key-vault-kms.md).
 
 <!-- LINKS INTERNAL -->
 [az-aks-create]: /cli/azure/aks#az-aks-create

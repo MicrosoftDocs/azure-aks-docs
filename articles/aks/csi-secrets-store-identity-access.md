@@ -21,6 +21,12 @@ You can use one of the following access methods:
 - Workload ID
 - User-assigned managed identity
 
+> [!NOTE]
+> **CNI Overlay clusters**: When using Azure CNI Overlay networking, you must assign the managed identity at the cluster level, not the node pool level. The kubelet identity in CNI Overlay clusters works differently than in other network configurations. If you see "identity not found" errors when accessing Key Vault from pods in a CNI Overlay cluster, verify that:
+> 1. The identity is assigned to the cluster (not just to individual node pools)
+> 2. You're using the correct client ID in your `SecretProviderClass`
+> 3. The identity has the required Key Vault permissions (Key Vault Secrets User or Key Vault Certificate User role)
+
 ::: zone pivot="access-with-service-connector"
 
 [!INCLUDE [Service Connector tutorial snippet](./includes/service-connector/csi-secrets-store-service-connector.md)]

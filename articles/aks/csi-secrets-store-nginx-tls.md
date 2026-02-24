@@ -57,6 +57,13 @@ You can import the ingress TLS certificate to the cluster using one of the follo
     az keyvault certificate import --vault-name $AKV_NAME --name $CERT_NAME --file $CERT_NAME.pfx
     ```
 
+> [!NOTE]
+> When you retrieve a certificate from Key Vault using `objectType: secret`, the CSI driver returns the certificate in PEM format, not PFX. This is by design - the driver converts PFX certificates to PEM format automatically. If your application requires the original PFX format, you need to either:
+> - Store the certificate separately as a secret in PFX format
+> - Handle the PEM-to-PFX conversion in your application or init container
+>
+> For TLS ingress scenarios, PEM format is typically what NGINX and other ingress controllers expect, so no conversion is needed.
+
 ## Deploy a SecretProviderClass
 
 1. Export a new namespace using the following command.

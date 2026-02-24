@@ -21,6 +21,18 @@ zone_pivot_groups: public-or-private-kv
 >
 > For conceptual information about data encryption options, see [Data encryption at rest concepts for AKS](kms-data-encryption-concepts.md).
 
+## When to use this article vs the new KMS experience
+
+| Scenario | Recommendation |
+|----------|----------------|
+| New cluster (Kubernetes 1.33+) | Use [KMS data encryption](kms-data-encryption.md) with platform-managed or customer-managed keys |
+| New cluster with private Key Vault | Use [KMS data encryption](kms-data-encryption.md) with [trusted services bypass](/azure/key-vault/general/network-security#key-vault-firewall-enabled-trusted-services-only) |
+| Existing cluster using legacy KMS with Konnectivity | Continue using this article; plan migration to VNet Integration |
+| Existing cluster using legacy KMS with VNet Integration | Continue using this article for key rotation; consider new KMS experience for new clusters |
+| Cluster using Konnectivity with private Key Vault | Migrate to VNet Integration (Konnectivity deprecated for this scenario since September 2024) |
+
+To migrate from Konnectivity to VNet Integration for an existing cluster, see [API Server VNet Integration](api-server-vnet-integration.md). After enabling VNet Integration, your KMS configuration continues to work without changes.
+
 This article shows you how to turn on encryption at rest for a public or private key vault using Azure Key Vault and the Key Management Service (KMS) plugin on AKS. You can use the KMS plugin to:
 
 - Use a key in a key vault for etcd encryption.
@@ -45,6 +57,11 @@ For more information on using KMS, see [Using a KMS provider for data encryption
 >
 > You can use `kubectl get pods -n kube-system` to verify the results and show that a `konnectivity-agent` pod is running. If a pod is running, the AKS cluster is using Konnectivity. When you use API Server VNet Integration, you can run the `az aks show --resource-group <resource-group-name> --name <cluster-name>` command to verify that the `enableVnetIntegration` setting is set to `true`.
 
+> [!NOTE]
+> For new clusters or when moving to a private Key Vault configuration, use [API Server VNet Integration][api-server-vnet-integration] instead of Konnectivity. Clusters using Konnectivity with private Key Vault may experience connectivity failures with errors like `missing unix socket /opt/azurekms.socket` or `konnectivity tunnel unavailable`. These errors typically require backend support intervention. VNet Integration provides more reliable connectivity to private endpoints.
+>
+> For new clusters, consider using the [newer KMS data encryption experience](./kms-data-encryption.md), which supports platform-managed keys and automatic key rotation through the [trusted services firewall exception](/azure/key-vault/general/network-security#key-vault-firewall-enabled-trusted-services-only).
+
 ## Limitations
 
 The following limitations apply when you integrate KMS etcd encryption with AKS:
@@ -59,6 +76,16 @@ The following limitations apply when you integrate KMS etcd encryption with AKS:
 - Using the Virtual Machine Scale Sets API to scale the nodes in the cluster down to zero deallocates the nodes. The cluster then goes down and becomes unrecoverable.
 - After you turn off KMS, you can't delete or expire the keys. Such behaviors would cause the API server to stop working.
 - For a private cluster with KMS enabled and virtual network integration that uses a private key vault, the network security group (NSG) must allow TCP port 443 from the API server to the private key vault's private endpoint IP address. This limitation needs to be considered when using other rules in the API subnet NSG or cluster subnet NSG.
+
+  **NSG rule example**: Create an inbound rule with the following properties:
+  - **Priority**: Lower than any deny rules (for example, 100)
+  - **Source**: API server subnet CIDR
+  - **Destination**: Key Vault private endpoint IP address
+  - **Port**: 443
+  - **Protocol**: TCP
+  - **Action**: Allow
+
+  If the NSG blocks this traffic, you may see `kms-plugin` errors in `/var/log/kube-apiserver.log` referencing connection timeouts to the Key Vault endpoint. For more information on Key Vault network configuration, see [Configure network security for Azure Key Vault](/azure/key-vault/general/network-security).
 
 :::zone pivot="public-kv"
 
@@ -220,6 +247,24 @@ After you change the key ID (including changing either the key name or the key v
 >
 > After rotating KMS key version with the new `keyId`, check `securityProfile.azureKeyVaultKms.keyId` in AKS resource json. Ensure the new key version is in use.
 
+### Before you rotate
+
+Before rotating to a new key version, verify both keys will be accessible:
+
+1. List current key versions to identify which ones are enabled:
+
+    ```azurecli-interactive
+    az keyvault key list-versions --vault-name $KEY_VAULT --name $KEY_NAME --query "[].{version:kid, enabled:attributes.enabled}"
+    ```
+
+1. If your previous key version was disabled or expired, re-enable it before proceeding:
+
+    ```azurecli-interactive
+    az keyvault key set-attributes --vault-name $KEY_VAULT --name $KEY_NAME --version <previous-version> --enabled true
+    ```
+
+### Rotate the key
+
 1. Rotate existing keys using the [`az aks update`][az-aks-update] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-id` parameters.
 
     ```azurecli-interactive
@@ -242,6 +287,24 @@ After you change the key ID (including changing either the key name or the key v
     ```output
     The object has been modified; please apply your changes to the latest version and try again.
     ```
+
+### If rotation fails
+
+If the `az aks update` command fails or secrets become inaccessible after rotation:
+
+1. Verify the previous key is still enabled (see "Before you rotate" above).
+
+1. If the key was accidentally deleted, recover it (requires soft-delete on the vault):
+
+    ```azurecli-interactive
+    az keyvault key recover --vault-name $KEY_VAULT --name $KEY_NAME
+    ```
+
+    For more information, see [Azure Key Vault recovery management with soft delete and purge protection](/azure/key-vault/general/key-vault-recovery).
+
+1. After restoring key access, retry the `az aks update` command and the `kubectl get secrets` command.
+
+1. Use the Azure portal's **Diagnose and solve problems** feature to check KMS health. For more information, see [Observability for KMS etcd encryption in AKS](./kms-observability.md).
 
 :::zone-end
 
@@ -385,6 +448,8 @@ After you change the key ID (including changing either the key name or the key v
 >
 > After rotating KMS key version with the new `keyId`, check `securityProfile.azureKeyVaultKms.keyId` in AKS resource json. Ensure the new key version is in use.
 
+Before rotating, verify both keys are accessible using the steps in the [Before you rotate](#before-you-rotate) section in the public key vault guidance.
+
 1. Rotate existing keys in a private key vault using the [`az aks update`][az-aks-update] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-id`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-vault-resource-id` parameters.
 
     ```azurecli-interactive
@@ -408,6 +473,8 @@ After you change the key ID (including changing either the key name or the key v
     ```output
     The object has been modified; please apply your changes to the latest version and try again.
     ```
+
+If the rotation fails or secrets become inaccessible, follow the recovery steps in the [If rotation fails](#if-rotation-fails) section in the public key vault guidance.
 
 :::zone-end
 
@@ -440,6 +507,7 @@ After you change the key ID (including changing either the key name or the key v
 
 For more information on using KMS with AKS, see the following articles:
 
+- [Troubleshoot Azure Key Vault and KMS integration with AKS](./troubleshoot-key-vault-kms.md)
 - [Enable KMS data encryption in AKS](./kms-data-encryption.md) - The new KMS experience with platform-managed keys and automatic key rotation
 - [Data encryption at rest concepts for AKS](./kms-data-encryption-concepts.md)
 - [Update the key vault mode for an Azure Kubernetes Service (AKS) cluster with KMS etcd encryption](./update-kms-key-vault.md)

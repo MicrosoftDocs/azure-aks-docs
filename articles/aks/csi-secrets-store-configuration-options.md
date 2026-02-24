@@ -148,6 +148,9 @@ You might want to create a Kubernetes secret to mirror your mounted secrets cont
 
 ## Set an environment variable to reference Kubernetes secrets
 
+> [!IMPORTANT]
+> Environment variables are **not automatically updated** when secrets rotate. Unlike volume mounts, Kubernetes doesn't refresh environment variables in running containers. You must restart pods to pick up rotated secrets. Consider using a tool such as [Reloader][reloader] to automate pod restarts when secrets change.
+
 > [!NOTE]
 > The example YAML demonstrates access to a secret through env variables and volume/volumeMount. A typical application would use one method or the other. Keep in mind that a secret needs to be mounted by at least one pod in order to become available through env variables.
 
@@ -187,6 +190,20 @@ You might want to create a Kubernetes secret to mirror your mounted secrets cont
 ## Access Azure Key Vault provider and Secrets Store CSI Driver metrics
 
 You can access metrics provided by both the Azure Key Vault provider for Secrets Store CSI Driver and the Secrets Store CSI Driver itself. These metrics can help you monitor the performance and health of your secrets management solution.
+
+## Throttling and performance considerations
+
+Azure Key Vault has [service limits](/azure/key-vault/general/service-limits) that can affect high-volume AKS clusters. To avoid throttling (HTTP 429 errors):
+
+- **Use longer rotation intervals**: The default 2-minute rotation poll can generate many requests across large clusters. Consider increasing `--rotation-poll-interval` to 5 minutes or longer based on your security requirements.
+
+- **Cache secrets in application code**: Rather than fetching secrets on every request, cache them in memory with appropriate TTLs.
+
+- **Distribute secrets across vaults**: For clusters with many nodes or secrets, consider using multiple Key Vault instances to stay within per-vault limits.
+
+- **Monitor with metrics**: Use the `keyvault_request` metric to track request latency and errors. Sustained high latency may indicate throttling.
+
+For detailed throttling guidance and exponential backoff code samples, see [Azure Key Vault throttling guidance](/azure/key-vault/general/overview-throttling).
 
 ### Azure Key Vault provider metrics
 
