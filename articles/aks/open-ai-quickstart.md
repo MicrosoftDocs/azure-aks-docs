@@ -174,7 +174,7 @@ You can either use Azure OpenAI or OpenAI and run your application on AKS.
 
 1. In the Azure portal, create an Azure OpenAI instance.
 1. Navigate to the Azure OpenAI instance you created.
-1. From the **Overview** blade, navigate to the [Azure AI Foundry portal][aoai-studio].
+1. From the **Overview** blade, navigate to the [Microsoft Foundry portal][aoai-studio].
 1. Create a new **Chat** deployment using the **gpt-4o-mini** base model.
 
 For more information on how to create a deployment in Azure OpenAI, see [Get started generating text using Azure OpenAI Service][aoai-get-started].
@@ -248,7 +248,7 @@ Now that the application is deployed, you can deploy the Python-based microservi
    ```
 
 2. Set the environment variable `USE_AZURE_OPENAI` to `"True"`.
-3. Get your Azure OpenAI deployment name from [Azure AI Foundry][aoai-studio] and fill in the `AZURE_OPENAI_DEPLOYMENT_NAME` value.
+3. Get your Azure OpenAI deployment name from [Foundry][aoai-studio] and fill in the `AZURE_OPENAI_DEPLOYMENT_NAME` value.
 4. Get your Azure OpenAI endpoint and Azure OpenAI API key from the Azure portal by selecting **Keys and Endpoint** in the left blade of the resource. Update the `AZURE_OPENAI_ENDPOINT` and `OPENAI_API_KEY` in the YAML accordingly.
 5. Deploy the application using the [`kubectl apply`][kubectl-apply] command and specify the name of your YAML manifest.
 
