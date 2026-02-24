@@ -29,7 +29,16 @@ This article covers how to use auto-upgrade profiles to automatically create and
 
 * To use an update strategy, configure one using the instructions in the [update run how-to article](./update-orchestration.md#create-an-update-run-using-update-strategies). You need the update strategy resource identifier to use with an auto-upgrade profile when using the Azure CLI.
 
-:::zone target="docs" pivot="azure-cli"
+> [!NOTE]
+> If your member clusters have agent pools created from [node pool snapshots](/azure/aks/node-pool-snapshot), the auto-upgrade channel and node image selection affects whether the snapshot reference (`creationData`) is preserved on the agent pool:
+>
+> * **NodeImage channel**: The upgrade removes `creationData` from agent pools, so they no longer has reference to the original snapshot. The node image is upgraded to the version determined by Fleet.
+> * **Stable, Rapid, or TargetKubernetesVersion channels with `Consistent` node image selection**: The upgrade removes `creationData` from agent pools, so they no longer has reference to the original snapshot. The node image is upgraded to the version determined by Fleet.
+> * **Stable, Rapid, or TargetKubernetesVersion channels with `Latest` node image selection**: The agent pool keeps its `creationData` (reference to the snapshot), and its node image stays intact.
+>
+> For more information, see [node image upgrades for agent pools created from snapshots](./concepts-update-orchestration.md#node-image-upgrades-for-agent-pools-created-from-snapshots).
+
+:::zone target="docs" pivot="azure-CLI"
 
 ## Create auto-upgrade profiles
 
@@ -46,7 +55,7 @@ Start by completing these steps to ensure your environment is configured correct
     export CLUSTER=<aks-cluster-name>
     ```
 
-* You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-CLI-install].
 
 * You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
 

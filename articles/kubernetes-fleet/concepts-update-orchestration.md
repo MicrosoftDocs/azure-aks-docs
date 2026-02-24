@@ -47,6 +47,15 @@ The target node image versions are automatically selected for you based on your 
 
 You should choose `Latest` to use fresher image versions and minimize security risks, and choose `Consistent` to improve reliability by using and verifying those images in clusters in earlier stages before using them in later clusters.
 
+## Node image upgrades for agent pools created from snapshots
+
+When a member cluster has agent pools that were [created from a node pool snapshot](/azure/aks/node-pool-snapshot), the Fleet update run's node image selection type determines the outcome of the upgrade.
+
+| Node image selection | Upgrade outcome |
+|----------------------|---------------------------------------------|
+| `Latest`             | Follows standard AKS upgrade behavior. The agent pool keeps its `creationData` (reference to the snapshot), and its node image stays intact. |
+| `Consistent`        | The node image is upgraded to the version determined by Fleet. The upgrade removes `creationData` from the agent pool, so it no longer has reference to the original snapshot. |
+
 ## Planned maintenance
 
 Update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the Azure Kubernetes Service (AKS) cluster level.
