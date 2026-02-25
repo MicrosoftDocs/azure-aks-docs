@@ -233,21 +233,21 @@ CSI storage drivers support the following scenarios:
 :::zone pivot="azure-disks"
 
 > [!div class="nextstepaction"]
-> [Create and use a persistent volume (PV) with Azure Disks in Azure Kubernetes Service (AKS)](add-link)
+> [Create and use a persistent volume (PV) with Azure Disks in Azure Kubernetes Service (AKS)](./provision-volume-azure-disk.md)
 
 :::zone-end
 
 :::zone pivot="azure-files"
 
 > [!div class="nextstepaction"]
-> [Create and use a persistent volume (PV) with Azure Files in Azure Kubernetes Service (AKS)](add-link)
+> [Create and use a persistent volume (PV) with Azure Files in Azure Kubernetes Service (AKS)](./provision-volume-azure-files.md)
 
 :::zone-end
 
 :::zone pivot="azure-blob"
 
 > [!div class="nextstepaction"]
-> [Create and use a persistent volume (PV) with Azure Blob storage in Azure Kubernetes Service (AKS)](add-link)
+> [Create and use a persistent volume (PV) with Azure Blob storage in Azure Kubernetes Service (AKS)](./provision-volume-azure-blob-storage.md)
 
 :::zone-end
 

@@ -100,7 +100,7 @@ The following table includes parameters you can use to define a custom storage c
 
 | Name | Meaning | Available values | Required | Default value |
 | ---- | ------- | ---------------- | -------- | ------------- |
-| `skuName` | Azure Disks storage account type (alias: `storageAccountType`) | `Standard_LRS`, `Premium_LRS`, `StandardSSD_LRS`, `PremiumV2_LRS`, `UltraSSD_LRS`, `Premium_ZRS`, `StandardSSD_ZRS` | No | `StandardSSD_LRS` |
+| `skuName` | Azure Disks storage account type (alias: `storageAccountType`). `PremiumV2_LRS` and `UltraSSD_LRS` support instant access for incremental snapshot restores. | `Standard_LRS`, `Premium_LRS`, `StandardSSD_LRS`, `PremiumV2_LRS`, `UltraSSD_LRS`, `Premium_ZRS`, `StandardSSD_ZRS` | No | `StandardSSD_LRS`|
 | `fsType` | Filesystem type | `ext4`, `ext3`, `ext2`, `xfs`, `btrfs` for Linux <br> `ntfs` for Windows | No | `ext4` for Linux <br> `ntfs` for Windows |
 | `cachingMode` | [Azure Data Disk Host Cache Setting][disk-host-cache-setting] (PremiumV2_LRS and UltraSSD_LRS only support `None` caching mode) | `None`, `ReadOnly`, `ReadWrite` | No | `ReadOnly` |
 | `resourceGroup` | Specify the resource group for the Azure Disks | Existing resource group name | No | If empty, driver uses the same resource group name as current AKS cluster |
