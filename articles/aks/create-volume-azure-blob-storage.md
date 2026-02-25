@@ -10,7 +10,7 @@ ms.author: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to learn how to create and manage persistent volumes using Azure Storage CSI drivers in Azure Kubernetes Service (AKS) so that I can provide scalable and reliable storage solutions for my containerized applications."
 ---
 
-# Create and manage persistent volumes (PVs) with Azure Blog storage in Azure Kubernetes Service (AKS)
+# Create and manage persistent volumes (PVs) with Azure Blob storage in Azure Kubernetes Service (AKS)
 
 If multiple pods need concurrent access to the same storage volume, you can use Azure Blob storage to connect using [blobfuse][blobfuse-overview] or [Network File System (NFS)][nfs-overview].
 
