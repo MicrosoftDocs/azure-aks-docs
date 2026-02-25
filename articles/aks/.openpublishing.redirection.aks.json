@@ -97,17 +97,17 @@
         },
         {
             "source_path_from_root": "/articles/aks/azure-csi-blob-storage-provision.md",
-            "redirect_url": "/azure/aks/provision-volume-azure-blob-storage",
+            "redirect_url": "/azure/aks/create-volume-azure-blob-storage",
             "redirect_document_id": false
         },
         {
             "source_path_from_root": "/articles/aks/azure-csi-disk-storage-provision.md",
-            "redirect_url": "/azure/aks/provision-volume-azure-disk",
+            "redirect_url": "/azure/aks/create-volume-azure-disk",
             "redirect_document_id": false
         },
         {
             "source_path_from_root": "/articles/aks/azure-csi-files-storage-provision.md",
-            "redirect_url": "/azure/aks/provision-volume-azure-files",
+            "redirect_url": "/azure/aks/create-volume-azure-files",
             "redirect_document_id": false
         },
         {

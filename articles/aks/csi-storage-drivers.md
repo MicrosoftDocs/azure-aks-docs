@@ -47,9 +47,9 @@ In addition to in-tree driver features, Azure Disk CSI driver supports the follo
   - `PremiumV2_LRS` only supports `None` caching mode.
 - Zone-redundant storage (ZRS) disk support.
   - `Premium_ZRS`, `StandardSSD_ZRS` disk types are supported. ZRS disk could be scheduled on the zone or nonzone node, without the restriction that disk volume should be colocated in the same zone as a given node. For more information, including which regions are supported, see [Zone-redundant storage for managed disks](/azure/virtual-machines/disks-redundancy).
-- Create [snapshots of persistent volumes](./provision-volume-azure-disk.md#volume-snapshot-class-parameters-for-azure-disks).
-- Create [volume clones](./provision-volume-azure-disk.md#clone-volumes-with-azure-disks).
-- [Resize persistent volumes without downtime](./provision-volume-azure-disk.md#resize-a-persistent-volume-without-downtime-with-azure-disks).
+- Create [snapshots of persistent volumes](./create-volume-azure-disk.md#volume-snapshot-class-parameters-for-azure-disks).
+- Create [volume clones](./create-volume-azure-disk.md#clone-volumes-with-azure-disks).
+- [Resize persistent volumes without downtime](./create-volume-azure-disk.md#resize-a-persistent-volume-without-downtime-with-azure-disks).
 
 > [!NOTE]
 > Depending on the virtual machine (VM) SKU you're using, the Azure Disk CSI driver might have a per-node volume limit. For some powerful VMs (for example, 16 cores), the limit is _64 volumes per node_. To identify the limit per VM SKU, review the **Max data disks** column for each VM SKU offered. For a list of VM SKUs offered and their corresponding detailed capacity limits, see [General purpose virtual machine sizes][general-purpose-machine-sizes].
@@ -233,21 +233,21 @@ CSI storage drivers support the following scenarios:
 :::zone pivot="azure-disks"
 
 > [!div class="nextstepaction"]
-> [Create and use a persistent volume (PV) with Azure Disks in Azure Kubernetes Service (AKS)](./provision-volume-azure-disk.md)
+> [Create and use a persistent volume (PV) with Azure Disks in Azure Kubernetes Service (AKS)](./create-volume-azure-disk.md)
 
 :::zone-end
 
 :::zone pivot="azure-files"
 
 > [!div class="nextstepaction"]
-> [Create and use a persistent volume (PV) with Azure Files in Azure Kubernetes Service (AKS)](./provision-volume-azure-files.md)
+> [Create and use a persistent volume (PV) with Azure Files in Azure Kubernetes Service (AKS)](./create-volume-azure-files.md)
 
 :::zone-end
 
 :::zone pivot="azure-blob"
 
 > [!div class="nextstepaction"]
-> [Create and use a persistent volume (PV) with Azure Blob storage in Azure Kubernetes Service (AKS)](./provision-volume-azure-blob-storage.md)
+> [Create and use a persistent volume (PV) with Azure Blob storage in Azure Kubernetes Service (AKS)](./create-volume-azure-blob-storage.md)
 
 :::zone-end
 

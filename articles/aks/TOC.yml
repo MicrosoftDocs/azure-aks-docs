@@ -983,11 +983,11 @@
         - name: Overview of CSI storage drivers
           href: csi-storage-drivers.md
         - name: Create persistent volumes with Azure Disks CSI driver
-          href: provision-volume-azure-disk.md
+          href: create-volume-azure-disk.md
         - name: Create persistent volumes with Azure Files CSI driver
-          href: provision-volume-azure-files.md
+          href: create-volume-azure-files.md
         - name: Create persistent volumes with Azure Blob storage CSI driver
-          href: provision-volume-azure-blob-storage.md
+          href: create-volume-azure-blob-storage.md
         - name: Migrate from in-tree to CSI driver
           href: csi-migrate-in-tree-volumes.md
     - name: Block storage
