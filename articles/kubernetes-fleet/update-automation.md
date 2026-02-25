@@ -30,11 +30,12 @@ This article covers how to use auto-upgrade profiles to automatically create and
 * To use an update strategy, configure one using the instructions in the [update run how-to article](./update-orchestration.md#create-an-update-run-using-update-strategies). You need the update strategy resource identifier to use with an auto-upgrade profile when using the Azure CLI.
 
 > [!NOTE]
-> If your member clusters have agent pools created from [node pool snapshots](/azure/aks/node-pool-snapshot), the auto-upgrade channel and node image selection affects the outcome of the upgrade:
+> Clusters with agent pools created from [node pool snapshots](/azure/aks/node-pool-snapshot) will be affected as follows based on the auto-upgrade channel and node image option selected.
 >
-> * **NodeImage channel**: The upgrade removes `creationData` from agent pools, so they no longer has reference to the original snapshot. The node image is upgraded to the version determined by Fleet.
-> * **Stable, Rapid, or TargetKubernetesVersion channels with `Consistent` node image selection**: The upgrade removes `creationData` from agent pools, so they no longer has reference to the original snapshot. The node image is upgraded to the version determined by Fleet.
-> * **Stable, Rapid, or TargetKubernetesVersion channels with `Latest` node image selection**: The agent pool keeps its `creationData` (reference to the snapshot), and its node image stays intact.
+> * **NodeImage channel**: The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool.
+> * **Stable**, **Rapid**, or **TargetKubernetesVersion** channels with node image set to
+>   * **Consistent**: The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool.
+>   * **Latest**: The agent pool keeps its reference to the snapshot (creationData), and the node image isn't modified.
 >
 > For more information, see [node image upgrades for agent pools created from snapshots](./concepts-update-orchestration.md#node-image-upgrades-for-agent-pools-created-from-snapshots).
 
