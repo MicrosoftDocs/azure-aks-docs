@@ -22,7 +22,6 @@ You can expand your pod Classless Inter-Domain Routing (CIDR) space on Azure CNI
 | ------------------------ | ---------------------------- | ----------- |
 | Feature flag | `EnableAzureCNIOverlayPodCIDRExpansion` | This feature flag must be registered in your subscription to enable pod CIDR expansion in Azure CNI Overlay AKS clusters. |
 | Azure CLI version | 2.48.0 or later | The Azure CLI version must be 2.48.0 or later to support the pod CIDR expansion feature. |
-| Kubernetes version | 1.33 | Pod CIDR expansion is supported only on AKS clusters running Kubernetes version 1.33. |
 | Node operating system | Linux | Pod CIDR expansion is supported only on Azure CNI Overlay AKS clusters with Linux nodes. |
 | Networking mode | Azure CNI Overlay | Pod CIDR expansion is supported only on AKS clusters that use Azure CNI Overlay networking. |
 | Example original pod CIDR | `10.244.0.0/18` | This is an example of a starting pod CIDR block. |

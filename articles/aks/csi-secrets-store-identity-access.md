@@ -193,6 +193,21 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
               secretProviderClass: "azure-kvname-wi"
     EOF
     ```
+## Validate Key Vault secrets
+
+After the pod starts, the mounted content at the volume path specified in your deployment YAML is available. Use the following commands to validate your secrets and print a test secret.
+
+1. Show secrets held in the secrets store using the following command.
+
+    ```bash
+    kubectl exec busybox-secrets-store-inline-wi -- ls /mnt/secrets-store/
+    ```
+
+1. Display a secret in the store using the following command. This example command shows the test secret `ExampleSecret`.
+
+    ```bash
+    kubectl exec busybox-secrets-store-inline-wi -- cat /mnt/secrets-store/ExampleSecret
+    ```
 
 ::: zone-end
 
@@ -322,9 +337,6 @@ In this security model, you can grant access to your cluster's resources to team
     kubectl apply -f pod.yaml
     ```
 
-::: zone-end
-
-::: zone pivot="access-with-a-microsoft-entra-workload-identity,access-with-a-user-assigned-managed-identity"
 
 ## Validate Key Vault secrets
 
@@ -341,6 +353,10 @@ After the pod starts, the mounted content at the volume path specified in your d
     ```bash
     kubectl exec busybox-secrets-store-inline-user-msi -- cat /mnt/secrets-store/ExampleSecret
     ```
+
+::: zone-end
+
+::: zone pivot="access-with-a-microsoft-entra-workload-identity,access-with-a-user-assigned-managed-identity"
 
 ## Obtain certificates and keys
 

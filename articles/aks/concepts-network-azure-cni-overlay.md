@@ -43,7 +43,7 @@ Like Azure CNI Overlay, kubenet assigns IP addresses to pods from an address spa
 | Network configuration | Simple - no extra configurations required for pod networking | Complex - requires route tables and user-defined routes on the cluster subnet for pod networking |
 | Pod connectivity performance | Performance on par with VMs in a virtual network | Extra hop adds latency |
 | Kubernetes network policies | Azure network policies, Calico, Cilium | Calico |
-| OS platforms supported | Linux, Windows Server 2022, Windows Server 2019 | Linux only |
+| OS platforms supported | Linux, Windows Server 2025 (Preview), Windows Server 2022, Windows Server 2019 | Linux only |
 
 > [!NOTE]
 > If you don't want to assign virtual network IP addresses to pods due to IP shortage, we recommend using Azure CNI Overlay.
