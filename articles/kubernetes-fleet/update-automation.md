@@ -29,7 +29,17 @@ This article covers how to use auto-upgrade profiles to automatically create and
 
 * To use an update strategy, configure one using the instructions in the [update run how-to article](./update-orchestration.md#create-an-update-run-using-update-strategies). You need the update strategy resource identifier to use with an auto-upgrade profile when using the Azure CLI.
 
-:::zone target="docs" pivot="azure-cli"
+> [!NOTE]
+> Clusters with agent pools created from [node pool snapshots](/azure/aks/node-pool-snapshot) will be affected as follows based on the auto-upgrade channel and node image option selected.
+>
+> * **NodeImage channel**: The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool.
+> * **Stable**, **Rapid**, or **TargetKubernetesVersion** channels with node image set to
+>   * **Consistent**: The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool.
+>   * **Latest**: The agent pool keeps its reference to the snapshot (creationData), and the node image isn't modified.
+>
+> For more information, see [node image upgrade for agent pools created from snapshots](./concepts-update-orchestration.md#node-image-upgrade-for-agent-pools-created-from-snapshots).
+
+:::zone target="docs" pivot="azure-CLI"
 
 ## Create auto-upgrade profiles
 
@@ -46,7 +56,7 @@ Start by completing these steps to ensure your environment is configured correct
     export CLUSTER=<aks-cluster-name>
     ```
 
-* You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-CLI-install].
 
 * You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
 
