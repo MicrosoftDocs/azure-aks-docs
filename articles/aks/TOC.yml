@@ -980,10 +980,16 @@
       href: operator-best-practices-storage.md
     - name: CSI storage drivers
       items:
-        - name: CSI storage drivers overview
+        - name: Overview of CSI storage drivers
           href: csi-storage-drivers.md
-        - name: Use the Azure CSI driver and provision volumes
-          href: azure-csi-driver-volume-provisioning.md
+        - name: Create and manage persistent volumes with CSI storage drivers
+          items:
+            - name: Azure Disks CSI driver
+              href: provision-volume-azure-disk.md
+            - name: Azure Files CSI driver
+              href: provision-volume-azure-files.md
+            - name: Azure Blob storage CSI driver
+              href: provision-volume-azure-blob-storage.md
         - name: Migrate from in-tree to CSI driver
           href: csi-migrate-in-tree-volumes.md
     - name: Block storage

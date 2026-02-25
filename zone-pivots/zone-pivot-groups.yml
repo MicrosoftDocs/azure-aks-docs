@@ -296,3 +296,14 @@ groups:
     title: Cluster operator
   - id: developer
     title: Developer
+# Owner: schaffererin
+- id: csi-storage-drivers
+  title: Choose a CSI driver type
+  prompt: Choose a CSI driver type
+  pivots:
+  - id: azure-disks
+    title: Azure Disks
+  - id: azure-files
+    title: Azure Files
+  - id: azure-blob
+    title: Azure Blob
