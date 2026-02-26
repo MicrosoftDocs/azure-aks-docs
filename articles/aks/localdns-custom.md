@@ -345,31 +345,24 @@ A CIDR-based policy or a CNP that permits pod egress to LocalDNS IPs needs to be
 
 # [ACPC <= v1.16 & K8s <= v1.31](#tab/k8s1.31)
 ```yaml
-apiVersion: "cilium.io/v2"
-kind: CiliumNetworkPolicy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
-  name: "allow-azure-dns-egress"
+  name: allow-azure-dns-egress
   namespace: default
 spec:
-  endpointSelector:
-    matchLabels: {} # This selects ALL pods in the namespace
+  podSelector: {}   # Selects ALL pods in the namespace
+  policyTypes:
+    - Egress
   egress:
-    - toCIDR:
-        - 169.254.10.0/24
-      toPorts:
-        - ports:
-            - port: "53"
-              protocol: UDP
-            - port: "53"
-              protocol: TCP
-    - toEntities:
-        - host
-      toPorts:
-        - ports:
-            - port: "53"
-              protocol: UDP
-            - port: "53"
-              protocol: TCP
+    - to:
+        - ipBlock:
+            cidr: 169.254.10.0/24
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
 ```
 
 # [ACPC >= v1.17 & K8s >= v1.32](#tab/k8s1.32)
