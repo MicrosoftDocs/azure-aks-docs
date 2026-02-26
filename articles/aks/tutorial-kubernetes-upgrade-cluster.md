@@ -274,7 +274,7 @@ AKS regularly provides new node images. Linux node images are updated weekly, an
 > When you upgrade your cluster, the following Kubernetes events might occur on the nodes:
 >
 > - **Surge**: Create a surge node.
-> - **Drain**: Evict pods from the node. Each pod has a *five minute timeout* to complete the eviction.
+> - **Drain**: Evict pods from the node. Each pod has a _five-minute timeout_ to complete the eviction.
 > - **Update**: Update of a node has succeeded or failed.
 > - **Delete**: Delete a surge node.
 
