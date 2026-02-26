@@ -336,12 +336,7 @@ For information on the CoreDNS project, see [the CoreDNS upstream project page][
 To learn more about core network concepts, see [Network concepts for applications in AKS][concepts-network].
 
 ## AKS with Both Azure CNI Powered by Cilium (ACPC) and LocalDNS
-For AKS clusters,
-- With ACPC
-- Using Cilium network policies (CNP)
-- Enabled with LocalDNS
-
-A CNP allows pod egress to LocalDNS IPs needs to be permitted to reach host entities.
+For AKS clusters with ACPC and LocalDNS, a Cilium network policy that allows pod egress to LocalDNS IPs needs to be permitted to reach host entities.
 
 - On ACPC <=v1.16 with k8s <=1.31, this can be achieved by a CIDR-based policy.
 - On ACPC >=v1.17 with K8s >=1.32 or higher, a CNP allowing egress to host entities can be used.
