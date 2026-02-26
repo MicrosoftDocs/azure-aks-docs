@@ -327,7 +327,7 @@ This process ensures the AKS Resource Provider is aware of the DNS changes and a
 For AKS clusters with ACPC and LocalDNS, a Cilium network policy that allows pod egress to LocalDNS IPs needs to be present.
 
 - On ACPC <=v1.16 with k8s <=1.31, this can be achieved by a CIDR-based policy.
-- On ACPC >=v1.17 with K8s >=1.32 or higher, a CNP allowing egress to host entities can be used.
+- On ACPC >=v1.17 with K8s >=1.32, a CNP allowing egress to host entities can be used.
 
 ```yaml
 apiVersion: "cilium.io/v2"
