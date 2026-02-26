@@ -178,7 +178,7 @@ Events:
 
 ## Set IOPS and throughput limits
 
-Input/Output Operations Per Second (IOPS) and throughput limits for Azure Premium v2 SSD disk is currently not supported through AKS. To adjust performance, you can use the Azure CLI command [az disk update][az-disk-update] and including the `--disk-iops-read-write` and `--disk-mbps-read-write` parameters.
+Input/Output Operations Per Second (IOPS) and throughput limits for Azure Premium SSD v2 are currently not supported through AKS. To adjust performance, you can use the Azure CLI command [az disk update][az-disk-update] and including the `--disk-iops-read-write` and `--disk-mbps-read-write` parameters.
 
 The following example updates the disk IOPS read/write to **5000** and Mbps to **200**. For `--resource-group`, the value must be the second resource group automatically created to store the AKS worker nodes with the naming convention *MC_resourcegroupname_clustername_location*. For more information, see [Why are two resource groups created with AKS?][aks-two-resource-groups].
 
