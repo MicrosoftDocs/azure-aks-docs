@@ -67,7 +67,7 @@ If you're looking to view or access existing Managed Fleet Namespaces you have a
     az account set --subscription ${SUBSCRIPTION_ID}
     ```
 
-## Create new Managed Fleet Namespace 
+## Create a new Managed Fleet Namespace 
 
 Create a new Managed Fleet Namespace using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command.
 
@@ -95,7 +95,7 @@ Create a new Managed Fleet Namespace using the [`az fleet namespace create`](/cl
 >
 > For example, if an admin applies a `Deny All` policy for ingress/egress, and a user applies an `Allow` policy for a namespace via the Kubernetes API, the `Allow` policy takes priority over the `Deny All` policy, and traffic is allowed to flow for the namespace. This additive behavior is standard for networking policies.
 
-## Assign user or group access
+### Assign user or group access
 
 You can now grant access to a user for the Managed Fleet Namespace across member clusters using one of the [Azure RBAC built-in roles](./concepts-fleet-managed-namespace.md#managed-fleet-namespace-built-in-roles).
 
@@ -110,7 +110,7 @@ az role assignment create \
     --scope "$FLEET_ID/managedNamespaces/my-managed-namespace"
 ```
 
-## Add member clusters
+### Add member clusters
 
 You can control which member clusters to deploy the managed namespace to by specifying the desired list of member cluster names.
 
@@ -126,7 +126,7 @@ az fleet namespace create \
     --member-cluster-names contoso-prd-01-fm contoso-prd-02-fm
 ```
 
-## Remove member clusters
+### Remove member clusters
 
 You can remove member clusters from a Managed Fleet Namespace by excluding them from the list of member clusters you want the namespace on.
 
@@ -142,7 +142,34 @@ az fleet namespace create \
     --member-cluster-names contoso-prd-01-fm
 ```
 
-## View a Managed Fleet Namespace's configuration
+## Configure an existing Managed Fleet Namespace
+
+You can modify networking policies, resource quotas, labels, and annotations on an existing Managed Fleet Namespace by using the [`az fleet namespace create`](/cli/azure/fleet/namespace#az-fleet-namespace-create) command with updated parameter values. The command performs an upsert operation, updating the namespace if it already exists.
+
+> [!IMPORTANT]
+> When updating an existing managed namespace, you must specify all parameters you want to retain, even if you're not changing them. Any parameters you omit are reset to their default values. This includes network policies, resource quotas, labels, annotations, delete policy, adoption policy, and member cluster names.
+
+The following example updates the network policies, resource quotas, labels, and annotations for an existing managed namespace:
+
+```azurecli-interactive
+az fleet namespace create \
+    --resource-group $GROUP \
+    --fleet-name $FLEET \
+    --name my-managed-namespace \
+    --annotations "updated-annotation=new-value" \
+    --labels "team=updatedTeam environment=production" \
+    --cpu-requests 1000m \
+    --cpu-limits 2000m \
+    --memory-requests 1000Mi \
+    --memory-limits 1000Mi \
+    --ingress-policy allowAll \
+    --egress-policy allowAll \
+    --delete-policy keep \
+    --adoption-policy never \
+    --member-cluster-names contoso-prd-01-fm contoso-prd-02-fm
+```
+
+### View a Managed Fleet Namespace's configuration
 
 View a specific Managed Fleet Namespace's details by using the [`az fleet namespace show`](/cli/azure/fleet/namespace#az-fleet-namespace-show) command.
 
@@ -266,7 +293,7 @@ To review the rollout of the Kubernetes namespace across clusters, use [Resource
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-placement-status.png" alt-text="Screenshot of the Azure portal showing the resource placement status of the new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-placement-status.png":::
 
-## Configure existing Managed Fleet Namespace
+## Configure an existing Managed Fleet Namespace
 
 You can locate Managed Fleet Namespace from within Fleet Manager, or via Kubernetes center.
 
