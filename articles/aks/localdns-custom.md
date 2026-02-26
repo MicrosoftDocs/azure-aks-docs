@@ -323,18 +323,6 @@ To ensure AKS nodes pick up the new Vnet DNS server settings:
 
 This process ensures the AKS Resource Provider is aware of the DNS changes and applies them to all nodes in the node pool.
 
-## Next steps
-
-For information on LocalDNS in AKS, see [LocalDNS in Azure Kubernetes Service (conceptual)](./dns-concepts.md).
-
-For comprehensive troubleshooting guidance on DNS issues when using LocalDNS, see [Troubleshoot LocalDNS issues in AKS](/troubleshoot/azure/azure-kubernetes/connectivity/dns/troubleshoot-localdns).
-
-For details on how to customize CoreDNS in AKS, refer to the [CoreDNS customization guide](./coredns-custom.md).
-
-For information on the CoreDNS project, see [the CoreDNS upstream project page][coreDNS].
-
-To learn more about core network concepts, see [Network concepts for applications in AKS][concepts-network].
-
 ## AKS with Both Azure CNI Powered by Cilium (ACPC) and LocalDNS
 For AKS clusters with ACPC and LocalDNS, a Cilium network policy that allows pod egress to LocalDNS IPs needs to be permitted to reach host entities.
 
@@ -368,6 +356,18 @@ spec:
             - port: "53"
               protocol: TCP
 ```
+
+## Next steps
+
+For information on LocalDNS in AKS, see [LocalDNS in Azure Kubernetes Service (conceptual)](./dns-concepts.md).
+
+For comprehensive troubleshooting guidance on DNS issues when using LocalDNS, see [Troubleshoot LocalDNS issues in AKS](/troubleshoot/azure/azure-kubernetes/connectivity/dns/troubleshoot-localdns).
+
+For details on how to customize CoreDNS in AKS, refer to the [CoreDNS customization guide](./coredns-custom.md).
+
+For information on the CoreDNS project, see [the CoreDNS upstream project page][coreDNS].
+
+To learn more about core network concepts, see [Network concepts for applications in AKS][concepts-network].
 
 <!-- LINKS - external -->
 [coreDNS]: https://coredns.io/
