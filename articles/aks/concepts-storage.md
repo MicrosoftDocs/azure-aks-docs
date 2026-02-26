@@ -61,7 +61,7 @@ By default, Azure automatically replicates the operating system disk for a virtu
 By contrast, Ephemeral OS disks are stored only on the host machine, just like a temporary disk. With this configuration, you get lower read/write latency with faster node scaling and cluster upgrades. Therefore, we strongly **recommend using Ephemeral OS disks whenever possible**.
 
 > [!NOTE]
-> When you don't explicitly request [Azure managed disks][azure-managed-disks] for the OS, AKS defaults to ephemeral OS if possible for a given node pool configuration.
+> When you don't explicitly request [Azure Managed Disks][azure-managed-disks] for the OS, AKS defaults to ephemeral OS if possible for a given node pool configuration.
 
 You can find size requirements and recommendations for ephemeral OS disks in the [Azure VM documentation](/azure/virtual-machines/ephemeral-os-disks). Keep the following considerations in mind when using ephemeral OS disks:
 
@@ -110,7 +110,7 @@ To help determine best fit for your workload between Azure Files and Azure NetAp
 Use [Azure Disk][azure-disk-csi] to create a Kubernetes _DataDisk_ resource. Disks types include:
 
 - Premium SSDs (recommended for most workloads)
-- Ultra disks
+- Ultra Disks
 - Standard SSDs
 - Standard HDDs
 
@@ -216,7 +216,7 @@ Unless you specify a storage class for a persistent volume, the default storage 
 >
 > The `default` class will be the same as `managed-csi`.
 >
-> Effective starting with Kubernetes version 1.29, when you deploy Azure Kubernetes Service (AKS) clusters across multiple availability zones, AKS now utilizes zone-redundant storage (ZRS) to create managed disks within built-in storage classes. ZRS ensures synchronous replication of your Azure managed disks across multiple Azure availability zones in your chosen region. This redundancy strategy enhances the resilience of your applications and safeguards your data against datacenter failures.
+> Effective starting with Kubernetes version 1.29, when you deploy Azure Kubernetes Service (AKS) clusters across multiple availability zones, AKS now utilizes zone-redundant storage (ZRS) to create managed disks within built-in storage classes. ZRS ensures synchronous replication of your Azure Managed Disks across multiple Azure availability zones in your chosen region. This redundancy strategy enhances the resilience of your applications and safeguards your data against datacenter failures.
 
 However, it's important to note that zone-redundant storage (ZRS) comes at a higher cost compared to locally redundant storage (LRS). If cost optimization is a priority, you can create a new storage class with the `skuname` parameter set to LRS. You can then use the new storage class in your Persistent Volume Claim (PVC).
 

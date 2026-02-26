@@ -31,7 +31,7 @@ The sequence of steps to complete this move are:
 
 It's important to avoid risk of data corruption, inconsistencies, or data loss while working with persistent volumes. To mitigate these risks during the migration or move process, you must first verify that the disk volume is unattached by performing the following steps.
 
-1. Identify the node resource group hosting the Azure managed disks using the [`az aks show`][az-aks-show] command and add the `--query nodeResourceGroup` parameter.
+1. Identify the node resource group hosting the Azure Managed Disks using the [`az aks show`][az-aks-show] command and add the `--query nodeResourceGroup` parameter.
 
     ```azurecli-interactive
     az aks show --resource-group myResourceGroup --name myAKSCluster --query nodeResourceGroup -o tsv
@@ -78,7 +78,7 @@ To move the persistent volume or volumes to another AKS cluster, follow the step
 
 During this process, you reference:
 
-* The name or resource ID of the source node resource group hosting the Azure managed disks. You can find the name of the node resource group by navigating to the **Disks** dashboard in the Azure portal and noting the associated resource group for your disk.
+* The name or resource ID of the source node resource group hosting the Azure Managed Disks. You can find the name of the node resource group by navigating to the **Disks** dashboard in the Azure portal and noting the associated resource group for your disk.
 * The name or resource ID of the destination resource group to move the managed disks to.
 * The name or resource ID of the managed disks resources.
 
