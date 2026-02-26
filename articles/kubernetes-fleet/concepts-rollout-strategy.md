@@ -231,7 +231,7 @@ spec:
 #### ResourcePlacement with external strategy
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: my-app-placement
@@ -300,7 +300,7 @@ Each stage in the strategy can specify:
 #### ClusterStagedUpdateRun (cluster-scoped)
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateRun
 metadata:
   name: my-app-rollout
@@ -318,7 +318,7 @@ spec:
 #### StagedUpdateRun (namespace-scoped)
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: StagedUpdateRun
 metadata:
   name: my-app-rollout

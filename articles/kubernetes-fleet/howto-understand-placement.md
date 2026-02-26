@@ -11,6 +11,8 @@ ms.custom: concept-article
 
 # How to understand the status of ClusterResourcePlacement and ResourcePlacement
 
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
+
 When you're working with Azure Kubernetes Fleet Manager, understanding the status of your `ClusterResourcePlacement` resources is crucial for monitoring deployment progress and troubleshooting issues. This article provides a comprehensive guide to interpreting the status fields and conditions that Fleet Manager reports for both cluster-scoped and namespace-scoped placements.
 
 ## Prerequisites

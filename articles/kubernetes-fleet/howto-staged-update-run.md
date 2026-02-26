@@ -286,7 +286,7 @@ metadata:
     kubernetes-fleet.io/resource-index: "1"
   name: example-placement-1-snapshot
   ownerReferences:
-  - apiVersion: placement.kubernetes-fleet.io/v1beta1
+  - apiVersion: placement.kubernetes-fleet.io/v1
     blockOwnerDeletion: true
     controller: true
     kind: ClusterResourcePlacement
@@ -379,7 +379,7 @@ kubectl get clusterstagedupdaterrun example-run -o yaml
 Your output should look similar to the following example:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateRun
 metadata:
   ...
@@ -1033,7 +1033,7 @@ metadata:
   name: example-placement-1-snapshot
   namespace: test-namespace
   ownerReferences:
-  - apiVersion: placement.kubernetes-fleet.io/v1beta1
+  - apiVersion: placement.kubernetes-fleet.io/v1
     blockOwnerDeletion: true
     controller: true
     kind: ResourcePlacement
