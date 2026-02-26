@@ -341,31 +341,11 @@ For AKS clusters,
 - Using Cilium network policies (CNP)
 - Enabled with LocalDNS
 
-A CIDR-based policy or a CNP that permits pod egress to LocalDNS IPs needs to be permitted to reach host entities.
+A CNP allows pod egress to LocalDNS IPs needs to be permitted to reach host entities.
 
-# [ACPC <= v1.16 & K8s <= v1.31](#tab/k8s1.31)
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-azure-dns-egress
-  namespace: default
-spec:
-  podSelector: {}   # Selects ALL pods in the namespace
-  policyTypes:
-    - Egress
-  egress:
-    - to:
-        - ipBlock:
-            cidr: 169.254.10.0/24
-      ports:
-        - protocol: UDP
-          port: 53
-        - protocol: TCP
-          port: 53
-```
+- On ACPC <=v1.16 with k8s <=1.31, this can be achieved by a CIDR-based policy.
+- On ACPC >=v1.17 with K8s >=1.32 or higher, a CNP allowing egress to host entities can be used.
 
-# [ACPC >= v1.17 & K8s >= v1.32](#tab/k8s1.32)
 ```yaml
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
