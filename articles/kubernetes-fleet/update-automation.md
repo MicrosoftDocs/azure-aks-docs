@@ -29,6 +29,16 @@ This article covers how to use auto-upgrade profiles to automatically create and
 
 * To use an update strategy, configure one using the instructions in the [update run how-to article](./update-orchestration.md#create-an-update-run-using-update-strategies). You need the update strategy resource identifier to use with an auto-upgrade profile when using the Azure CLI.
 
+> [!NOTE]
+> Clusters with agent pools created from [node pool snapshots](/azure/aks/node-pool-snapshot) will be affected as follows based on the auto-upgrade channel and node image option selected.
+>
+> * **NodeImage channel**: The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool.
+> * **Stable**, **Rapid**, or **TargetKubernetesVersion** channels with node image set to
+>   * **Consistent**: The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool.
+>   * **Latest**: The agent pool keeps its reference to the snapshot (creationData), and the node image isn't modified.
+>
+> For more information, see [understanding node image upgrades and snapshots](./concepts-update-orchestration.md#understanding-node-image-upgrades-and-snapshots).
+
 :::zone target="docs" pivot="azure-cli"
 
 ## Create auto-upgrade profiles

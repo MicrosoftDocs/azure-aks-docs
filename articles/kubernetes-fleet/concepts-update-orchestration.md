@@ -117,6 +117,15 @@ In an auto-upgrade profile you can configure:
 - an `UpdateStrategy` which configures the sequence in which the clusters are upgraded. If a strategy isn't supplied, clusters are updated one by one sequentially.
 - the `NodeImageSelectionType` (Latest, Consistent) to specify how the node image is selected when upgrading the Kubernetes version.
 
+## Understanding node image upgrades and snapshots
+
+When a member cluster has agent pools that were [created from a node pool snapshot](/azure/aks/node-pool-snapshot), the outcome of the node image upgrade depends on the Fleet Manager Update Run node image selection.
+
+| Node image selection | Upgrade outcome |
+|----------------------|---------------------------------------------|
+| `Latest`             | Follows standard AKS upgrade behavior. The agent pool keeps its reference to the snapshot (`creationData`), and the node image isn't modified. |
+| `Consistent`        | The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool. |
+
 ### Stable channel
 
 The Stable channel is always the latest AKS-supported Kubernetes patch release on minor version *N-1*, where *N* is the latest supported minor version.
