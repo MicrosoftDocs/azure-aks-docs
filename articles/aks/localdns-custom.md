@@ -328,7 +328,7 @@ For AKS clusters with ACPC and LocalDNS, a Cilium network policy that allows pod
 
 - On ACPC <=v1.16 with k8s <=1.31, this can be achieved by a CIDR-based policy.
 - On ACPC >=v1.17 with K8s >=1.32, a CNP allowing egress to host entities can be used.
-
+The following CNP can be used to allow the traffic across all versions:
 ```yaml
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
