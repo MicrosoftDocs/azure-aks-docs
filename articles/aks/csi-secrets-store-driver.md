@@ -133,7 +133,7 @@ The Azure Key Vault provider for Secrets Store CSI Driver allows for the integra
     az keyvault create --name <keyvault-name> --resource-group myResourceGroup --location eastus2 --enable-rbac-authorization
 
     ## Update an existing Azure key vault
-    az keyvault update --name <keyvault-name> --resource-group myResourceGroup --location eastus2 --enable-rbac-authorization
+    az keyvault update --name <keyvault-name> --resource-group myResourceGroup --enable-rbac-authorization
     ```
 
 1. Your key vault can store keys, secrets, and certificates. In this example, use the [`az keyvault secret set`][az-keyvault-secret-set] command to set a plain-text secret called `ExampleSecret`.

@@ -227,7 +227,7 @@ The Kubernetes data plane is responsible for managing network traffic between co
 
 AKS recommends and defaults to using ephemeral OS disks. Ephemeral OS disks are created on local VM storage and aren't saved to remote Azure storage like managed OS disks. They have faster reimaging and boot times, enabling faster cluster operations, and they provide lower read/write latency on the OS disk of AKS agent nodes. Ephemeral OS disks work well for stateless workloads, where applications are tolerant of individual VM failures but not of VM deployment time or individual VM reimaging instances. Only certain VM SKUs support ephemeral OS disks, so you need to ensure that your desired SKU generation and size is compatible. For more information, see [Ephemeral OS disks in Azure Kubernetes Service (AKS)](./cluster-configuration.md#use-ephemeral-os-on-new-clusters).
 
-If your workload is unable to use ephemeral OS disks, AKS defaults to using Premium SSD OS disks. If Premium SSD OS disks aren't compatible with your workload, AKS defaults to Standard SSD disks. Currently, the only other available OS disk type is Standard HDD. For more information, see [Storage options in Azure Kubernetes Service (AKS)](./concepts-storage.md).
+If your workload is unable to use ephemeral OS disks, AKS defaults to using Premium SSD OS disks. If Premium SSD OS disks aren't compatible with your workload, AKS defaults to Standard SSDs. Currently, the only other available OS disk type is Standard HDD. For more information, see [Storage options in Azure Kubernetes Service (AKS)](./concepts-storage.md).
 
 The following table provides a breakdown of suggested use cases for OS disks supported in AKS:
 
@@ -235,8 +235,8 @@ The following table provides a breakdown of suggested use cases for OS disks sup
 |--------------|--------------|---------------------|
 | Ephemeral OS disks | * Faster reimaging and boot times.<br/> * Lower read/write latency on OS disk of AKS agent nodes.<br/> * High performance and availability. | * Demanding enterprise workloads, such as SQL Server, Oracle, Dynamics, Exchange Server, MySQL, Cassandra, MongoDB, SAP Business Suite, etc.<br/> * Stateless production workloads that require high availability and low latency. |
 | Premium SSD OS disks | * Consistent performance and low latency.<br/> * High availability. | * Demanding enterprise workloads, such as SQL Server, Oracle, Dynamics, Exchange Server, MySQL, Cassandra, MongoDB, SAP Business Suite, etc.<br/> * Input/output (IO) intensive enterprise workloads. |
-| Standard SSD OS disks | * Consistent performance.<br/> * Better availability and latency compared to Standard HDD disks. | * Web servers.<br/> * Low input/output operations per second (IOPS) application servers.<br/> * Lightly used enterprise applications.<br/> * Dev/test workloads. |
-| Standard HDD disks | * Low cost.<br/> * Exhibits variability in performance and latency. | * Backup storage.<br/> * Mass storage with infrequent access. |
+| Standard SSD OS disks | * Consistent performance.<br/> * Better availability and latency compared to Standard HDDs. | * Web servers.<br/> * Low input/output operations per second (IOPS) application servers.<br/> * Lightly used enterprise applications.<br/> * Dev/test workloads. |
+| Standard HDDs | * Low cost.<br/> * Exhibits variability in performance and latency. | * Backup storage.<br/> * Mass storage with infrequent access. |
 
 #### IOPS and throughput
 
@@ -257,4 +257,3 @@ Ephemeral OS disks can provide dynamic IOPS and throughput for your application,
 ### Pod scheduling
 
 The memory and CPU resources allocated to a VM have a direct impact on the performance of the pods running on the VM. When a pod is created, it's assigned a certain amount of memory and CPU resources, which are used to run the application. If the VM doesn't have enough memory or CPU resources available, it can cause the pods to slow down or even crash. If the VM has too much memory or CPU resources available, it can cause the pods to run inefficiently, wasting resources and increasing costs. We recommend monitoring the total pod requests across your workloads against the total allocatable resources for best scheduling predictability and performance. You can also set the maximum pods per node based on your capacity planning using `--max-pods`.
-

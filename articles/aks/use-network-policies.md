@@ -53,7 +53,7 @@ To enforce the specified policies, Azure NPM uses _IPTables_ for Linux and _Host
 | --------------------- | ------------------- | ---------------------------- | ----------------------------------- | -------------- | ------- |
 | Cilium | Linux | Azure CNI | Supports all policy types | [FQDN](./container-network-security-fqdn-filtering-concepts.md), L3/4, [L7](./container-network-security-l7-policy-concepts.md) | Azure support and engineering team |
 | Azure NPM | Linux, Windows Server 2022 | Azure CNI | Supports all policy types | N/A | Azure support and engineering team |
-| Calico | Linux, Windows Server 2019, Windows Server 2022 | Azure CNI (Linux, Windows Server 2019, Windows Server 2022) and kubenet (Linux) | Supports all policy types | While Calico has many features that AKS doesn't block, AKS doesn't test or support them. For more information, see [Calico Network Policy issue](https://github.com/Azure/AKS/issues/4038). | Azure support and engineering team |
+| Calico | Linux, Windows Server 2019, Windows Server 2022 | Azure CNI (Linux, Windows Server 2019, Windows Server 2022) and kubenet (Linux) | Supports all policy types | While Calico has many features that AKS doesn't block, AKS doesn't test or support them. For more information, see [Calico Guidance](https://docs.tigera.io/calico/latest/getting-started/kubernetes/managed-public-cloud/aks-migrate). | Azure support and engineering team |
 
 ## Azure Network Policy Manager limitations (Linux)
 

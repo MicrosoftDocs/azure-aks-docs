@@ -1,6 +1,6 @@
 ---
-title: Enable Premium SSD v2 Disk support on Azure Kubernetes Service (AKS)
-description: Learn how to enable and configure Premium SSD v2 Disks in an Azure Kubernetes Service (AKS) cluster.
+title: Enable Premium SSD v2 support on Azure Kubernetes Service (AKS)
+description: Learn how to enable and configure Premium SSD v2 disks in an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
 ms.date: 04/25/2023
 author: schaffererin
@@ -23,7 +23,7 @@ Before creating or upgrading an AKS cluster that is able to use Azure Premium SS
 For an existing AKS cluster, you can enable Premium SSD v2 disks by adding a new node pool to your cluster, and then attach the disks following the steps below.
 
 > [!IMPORTANT]
-> Azure Premium SSD v2 disks require node pools deployed in regions that support these disks. For a list of supported regions, see [Premium SSD v2 disk supported regions][premium-v2-regions].
+> Azure Premium SSD v2 disks require node pools deployed in regions that support these disks. For a list of supported regions, see [Premium SSD v2 supported regions][premium-v2-regions].
 
 ### Limitations
 
@@ -69,7 +69,7 @@ storageclass.storage.k8s.io/premium2-disk-sc created
 
 ## Create a persistent volume claim
 
-A persistent volume claim (PVC) is used to automatically provision storage based on a storage class. In this case, a PVC can use the previously created storage class to create an ultra disk.
+A persistent volume claim (PVC) is used to automatically provision storage based on a storage class. In this case, a PVC can use the previously created storage class to create an Ultra Disk.
 
 Create a file named `azure-pv2-disk-pvc.yaml`, and copy in the following manifest. The claim requests a disk named `premium2-disk` that is *1000 GB* in size with *ReadWriteOnce* access. The *premium2-disk-sc* storage class is specified as the storage class.
 

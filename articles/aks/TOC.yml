@@ -804,7 +804,7 @@
           href: secure-container-access.md
     - name: Node security
       items:
-        - name: BYOK for Azure managed disks
+        - name: BYOK for Azure Managed Disks
           href: azure-disk-customer-managed-keys.md
         - name: Enable host-based encryption
           href: enable-host-encryption.md
@@ -996,7 +996,7 @@
             items:
                 - name: Use Azure Premium SSD v2 disks
                   href: use-premium-v2-disks.md
-                - name: Use Azure ultra disks
+                - name: Use Azure Ultra Disks
                   href: use-ultra-disks.md
                 - name: Bring your own keys for disks
                   href: azure-disk-customer-managed-keys.md
