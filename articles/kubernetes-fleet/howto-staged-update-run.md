@@ -1327,9 +1327,9 @@ In this article, you learned how to use staged update runs to orchestrate rollou
 
 To learn more about staged update runs and related concepts, see the following resources:
 
-* [Defining a rollout strategy for cluster resource placement](./concepts-rollout-strategy.md)
-* [How to understand the status of ClusterResourcePlacement](./howto-understand-placement.md)
-* [How to configure monitoring and alerting for update runs](./howto-monitor-update-runs.md)
+* [Defining a rollout strategy for Fleet Manager resource placement](./concepts-rollout-strategy.md)
+* [Understand status fields and conditions for Fleet Manager resource placemen](./howto-understand-placement.md)
+* [View agent logs in Azure Kubernetes Fleet Manager](./view-fleet-agent-logs.md)
 
 <!-- INTERNAL LINKS -->
 [fleet-quickstart]: ./quickstart-create-fleet-and-members.md

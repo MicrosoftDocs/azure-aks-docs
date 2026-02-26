@@ -363,10 +363,17 @@ The following state transitions are supported:
 
 Once an update run finishes, the update run can't be restarted. 
 
+:::zone target="docs" pivot="cluster-scope"
 > [!NOTE]
 > Always verify the current state of your update runs before attempting state changes. 
-> Use `kubectl get clusterstagedupdaterun <update-run-name>` or `kubectl get stagedupdaterun <update-run-name> -n <namespace>` to check the current state and status.
+> Use `kubectl get clusterstagedupdaterun <update-run-name>` to check the current state and status.
+:::zone-end
 
+:::zone target="docs" pivot="namespace-scope"
+> [!NOTE]
+> Always verify the current state of your update runs before attempting state changes. 
+> Use `kubectl get stagedupdaterun <update-run-name> -n <namespace>` to check the current state and status.
+:::zone-end
 
 ### Stage progression
 
