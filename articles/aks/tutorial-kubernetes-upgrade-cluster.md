@@ -5,9 +5,8 @@ ms.topic: tutorial
 ms.date: 06/10/2024
 author: schaffererin
 ms.author: schaffererin
-
+ms.service: azure-kubernetes-service
 ms.custom: mvc, devx-track-azurepowershell
-
 # Customer intent: As a developer or IT pro, I want to learn how to upgrade an Azure Kubernetes Service (AKS) cluster so that I can use the latest version of Kubernetes and features.
 
 ---
@@ -104,8 +103,8 @@ If using Azure PowerShell, this tutorial requires Azure PowerShell version 5.9.0
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. Navigate to your AKS cluster.
-3. From the service menu, under **Settings**, select **Cluster configuration**.
-4. In **Kubernetes version**, select **Upgrade version**. This redirects you to a new page.
+3. From the service menu, under **Settings**, select **Upgrades**.
+4. In **Kubernetes version**, select **Upgrade version**.
 5. In **Kubernetes version**, select the version to check for available upgrades.
 
       :::image type="content" source="media/tutorial-kubernetes-upgrade-cluster/upgrade-kubernetes-version.png" alt-text="Screenshot of the Upgrade version screen.":::
