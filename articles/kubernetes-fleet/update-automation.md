@@ -37,7 +37,7 @@ This article covers how to use auto-upgrade profiles to automatically create and
 >   * **Consistent**: The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool.
 >   * **Latest**: The agent pool keeps its reference to the snapshot (creationData), and the node image isn't modified.
 >
-> For more information, see [node image upgrade for agent pools created from snapshots](./concepts-update-orchestration.md#node-image-upgrade-for-agent-pools-created-from-snapshots).
+> For more information, see [understanding node image upgrades and snapshots](./concepts-update-orchestration.md#understanding-node-image-upgrades-and-snapshots).
 
 :::zone target="docs" pivot="azure-cli"
 
