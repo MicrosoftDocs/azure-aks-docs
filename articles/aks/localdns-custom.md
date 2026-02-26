@@ -340,7 +340,8 @@ For AKS clusters,
 - With ACPC
 - Using Cilium network policies (CNP)
 - Enabled with LocalDNS
-A CIDR policy or a CNP that permits pod egress to LocalDNS IPs needs to be permitted to reach host entities.
+
+A CIDR-based policy or a CNP that permits pod egress to LocalDNS IPs needs to be permitted to reach host entities.
 
 # [ACPC <= v1.16 & K8s <= v1.31](#tab/k8s1.31)
 ```yaml
