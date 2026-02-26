@@ -4,7 +4,7 @@ description: Learn about identity bindings on AKS and how they extend Microsoft 
 ms.topic: concept-article
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 02/20/2026
+ms.date: 02/26/2026
 ms.custom: preview
 author: shashankbarsin
 ms.author: shasb
@@ -47,11 +47,14 @@ The following table outlines the minimum package versions and how to enable iden
 
 | Language | Package | Minimum Version | How to enable |
 | -------- | ------- | --------------- | ------------- |
-| .NET | [Azure.Identity][dotnet-azure-identity] | **v1.18.0-beta.3** or later | `WorkloadIdentityCredential` identity binding mode is disabled by default. Set `WorkloadIdentityCredentialOptions.IsAzureProxyEnabled` to `true`. |
+| .NET | [Azure.Identity][dotnet-azure-identity] | **v1.18.0-beta.3** only | `WorkloadIdentityCredential` identity binding mode is disabled by default. Set `WorkloadIdentityCredentialOptions.IsAzureProxyEnabled` to `true`. |
 | Go | [azidentity][go-azidentity] | **v1.14.0-beta.3** or later | Set `WorkloadIdentityCredentialOptions.EnableAzureProxy` to `true`. |
-| Java | [azure-identity][java-azure-identity] | **v1.19.0-beta.1** or later | Call `enableAzureTokenProxy()` on `WorkloadIdentityCredentialBuilder`. |
+| Java | [azure-identity][java-azure-identity] | **v1.19.0-beta.2** or later | Call `enableAzureProxy()` on `WorkloadIdentityCredentialBuilder`. |
 | JavaScript | [@azure/identity][javascript-azure-identity] | **4.14.0-beta.2** or later | Set `enableAzureProxy` to `true` in `WorkloadIdentityCredentialOptions`. |
 | Python | [azure-identity][python-azure-identity] | **1.26.0b2** or later | Set `enable_azure_proxy=True` in `WorkloadIdentityCredential`. |
+
+> [!NOTE]
+> For .NET, identity bindings support is available exclusively in **Azure.Identity v1.18.0-beta.3**. No earlier or later version currently includes this feature.
 
 ## Frequently asked questions (FAQs)
 
