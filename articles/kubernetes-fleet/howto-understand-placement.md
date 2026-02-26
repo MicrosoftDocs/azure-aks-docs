@@ -11,13 +11,13 @@ ms.custom: concept-article
 
 # How to understand the status of ClusterResourcePlacement and ResourcePlacement
 
-When you are working with Azure Kubernetes Fleet Manager, understanding the status of your `ClusterResourcePlacement` (CRP) resources is crucial for monitoring deployment progress and troubleshooting issues. This article provides a comprehensive guide to interpreting the status fields and conditions that Fleet Manager reports for both cluster-scoped and namespace-scoped placements.
+When you're working with Azure Kubernetes Fleet Manager, understanding the status of your `ClusterResourcePlacement` resources is crucial for monitoring deployment progress and troubleshooting issues. This article provides a comprehensive guide to interpreting the status fields and conditions that Fleet Manager reports for both cluster-scoped and namespace-scoped placements.
 
 ## Prerequisites
 
 * You have a Fleet Manager with a hub cluster and one or more member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters](./quickstart-create-fleet-and-members.md).
 * You have access to the Fleet Manager hub cluster. For more information, see [Access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster](./access-fleet-hub-cluster-kubernetes-api.md).
-* You have deployed at least one ClusterResourcePlacement API object to place your resources into the fleet. If you haven't, see [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
+* You deployed at least one ClusterResourcePlacement API object to place your resources into the fleet. If you haven't, see [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
 
 ## Overview of placement status structure
 
@@ -134,8 +134,8 @@ conditions:
 
 Indicates whether the rollout is started across the selected clusters.
 
-- **True**: Resources have started rolling out to scheduled clusters
-- **False**: Rollout is not started yet
+- **True**: Resources started rolling out to scheduled clusters
+- **False**: Rollout isn't started yet
 - **Unknown**: Rollout decision is pending
 
 ```yaml
@@ -246,10 +246,17 @@ The `observedResourceIndex` field indicates which snapshot of resources is curre
 observedResourceIndex: "1"
 ```
 
-Fleet Manager creates resource snapshots when:
+Fleet Manager creates resource snapshots differently depending on the rollout strategy:
+
+**For `RollingUpdate` strategy (default)**: Resource snapshots are created automatically when:
 
 * The resource selectors change
 * The selected resources are modified
+
+**For `External` strategy**: Resource snapshots aren't created automatically. Instead, they're created when you execute a staged update run with the `resourceSnapshotIndex` field omitted. This means that when you first create a placement with an `External` rollout strategy, no resource snapshots exist until you run the first staged update run.
+
+> [!NOTE]
+> If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available. You can reference these existing snapshots when creating staged update runs.
 
 Each snapshot has a unique index. You can view snapshots using:
 
@@ -352,7 +359,7 @@ Indicates whether the cluster was successfully selected for placement.
 
 #### RolloutStarted
 
-Indicates whether the rollout has started on this specific cluster.
+Indicates whether the rollout started on this specific cluster.
 
 ```yaml
 - type: RolloutStarted
@@ -478,7 +485,7 @@ Each failed placement includes:
 
 ## Understanding drifted placements
 
-Fleet Manager always reports resources that have drifted from their desired state:
+Fleet Manager always reports resources that drifted from their desired state:
 
 ```yaml
 driftedPlacements:

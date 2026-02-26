@@ -306,7 +306,8 @@ metadata:
   name: my-app-rollout
 spec:
   placementName: my-app-placement # Required - ClusterResourcePlacement name the update run is applied to.
-  resourceSnapshotIndex: "0" # Optional - ClusterResourceSnapshot index of the selected resources to be updated across clusters.
+  resourceSnapshotIndex: "0" # Optional - ClusterResourceSnapshot index of the selected resources to be updated across clusters. 
+                             # Omit for a new ClusterResourceSnapshot to be created.
   stagedRolloutStrategyName: three-stage-strategy # Required - The name of the update strategy to use.
   state: Run # Optional - Controls the execution state of the update run.
 ```
@@ -325,6 +326,7 @@ metadata:
 spec:
   placementName: my-app-placement # Required - ResourcePlacement name the update run is applied to.
   resourceSnapshotIndex: "0" # Optional - ResourceSnapshot index of the selected resources to be updated across clusters.
+                             # Omit for a new ClusterResourceSnapshot to be created.
   stagedRolloutStrategyName: three-stage-strategy # Required - The name of the update strategy to use.
   state: Run # Optional - Controls the execution state of the update run. 
 ```
@@ -334,9 +336,14 @@ spec:
 ### Specifying rollout
 
 The `resourceSnapshotIndex` field controls which resource snapshot version to deploy. You have several options:
-- Leave empty (`""`) or omit the field entirely to use the latest resource snapshot
-- Specify the latest resource snapshot index (like the example `"1"`) to explicitly target the newest version
+- Leave empty (`""`) or omit the field entirely to create a new latest resource snapshot
+- Specify an existing latest resource snapshot index (like the example `"1"`) to explicitly target the newest version
 - Specify an older resource snapshot index (for example, `"0"`) to deploy or roll back to a previous version
+
+> [!IMPORTANT]
+> When a placement uses the `External` rollout strategy, resource snapshots aren't created automatically. They're only created when you execute a staged update run with the `resourceSnapshotIndex` field omitted. This means that when you first create a placement with an `External` rollout strategy, no resource snapshots exist until you run the first staged update run.
+>
+> If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available and can be referenced when creating staged update runs.
  
 For more information on resource snapshots, see [Work with resource snapshots](./howto-staged-update-run.md#work-with-resource-snapshots).
 
