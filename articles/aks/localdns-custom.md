@@ -323,7 +323,7 @@ To ensure AKS nodes pick up the new Vnet DNS server settings:
 
 This process ensures the AKS Resource Provider is aware of the DNS changes and applies them to all nodes in the node pool.
 
-## AKS with Both Azure CNI Powered by Cilium (ACPC) and LocalDNS
+### DNS Resolution is blocked when using Azure CNI Powered by Cilium (ACPC) 
 For AKS clusters with ACPC and LocalDNS, a Cilium network policy that allows pod egress to LocalDNS IPs needs to be permitted to reach host entities.
 
 - On ACPC <=v1.16 with k8s <=1.31, this can be achieved by a CIDR-based policy.
