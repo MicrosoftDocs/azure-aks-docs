@@ -379,7 +379,7 @@ To have a storage volume persist for your workload, you can use a StatefulSet. T
     kubectl create -f azure-blobfuse-ss.yaml
     ```
 
---
+---
 
 ## Create a static PV with Azure Blob storage
 

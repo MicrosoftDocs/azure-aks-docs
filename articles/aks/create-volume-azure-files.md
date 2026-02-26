@@ -436,7 +436,7 @@ In AKS, the built-in `managed-csi` storage class already supports expansion, so 
     //a123b4c567de89fghi01jk2.file.core.windows.net/pvc-00aa00aa-bb11-cc22-dd33-44ee44ee44ee  100G  128K  100G   1% /mnt/azurefile
     ```
 
-1. Expand the PVC by increasing the `spec.resources.requests.storage` field using the `kubectl patch` command. In this example, we increase the to 200 GiB:
+1. Expand the PVC by increasing the `spec.resources.requests.storage` field using the `kubectl patch` command. In this example, we increase the file share to 200 GiB:
 
     ```bash
     kubectl patch pvc pvc-azurefile --type merge --patch '{"spec": {"resources": {"requests": {"storage": "200Gi"}}}}'
