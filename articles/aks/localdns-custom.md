@@ -335,6 +335,71 @@ For information on the CoreDNS project, see [the CoreDNS upstream project page][
 
 To learn more about core network concepts, see [Network concepts for applications in AKS][concepts-network].
 
+## AKS with Both Azure CNI Powered by Cilium (ACPC) and LocalDNS
+For AKS clusters,
+- With ACPC
+- Using Cilium network policies (CNP)
+- Enabled with LocalDNS
+A CIDR policy or a CNP that permits pod egress to LocalDNS IPs needs to be permitted to reach host entities.
+
+# [ACPC <= v1.16 & K8s <= v1.31](#tab/k8s1.31)
+```yaml
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-azure-dns-egress"
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels: {} # This selects ALL pods in the namespace
+  egress:
+    - toCIDR:
+        - 169.254.10.0/24
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+    - toEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+```
+
+# [ACPC >= v1.17 & K8s >= v1.32](#tab/k8s1.32)
+```yaml
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-azure-dns-egress"
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels: {} # This selects ALL pods in the namespace
+  egress:
+    - toCIDR:
+        - 169.254.10.0/24
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+    - toEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+```
+
 <!-- LINKS - external -->
 [coreDNS]: https://coredns.io/
 
