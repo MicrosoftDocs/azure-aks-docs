@@ -1074,7 +1074,7 @@ Effective starting with Kubernetes version 1.29, when you deploy Azure Kubernete
 clusters across multiple availability zones, AKS now utilizes zone-redundant storage (ZRS) to create
 managed disks within built-in storage classes.
 
-* ZRS ensures synchronous replication of your Azure managed disks across multiple Azure availability zones in your chosen region. This redundancy strategy enhances the resilience of your applications and safeguards your data against datacenter failures.
+* ZRS ensures synchronous replication of your Azure Managed Disks across multiple Azure availability zones in your chosen region. This redundancy strategy enhances the resilience of your applications and safeguards your data against datacenter failures.
 
 * However, it's important to note that zone-redundant storage (ZRS) comes at a higher cost compared to locally redundant storage (LRS). If cost optimization is a priority, you can create a new storage class with the LRS SKU name parameter and use it in your persistent volume claim.
 
@@ -1082,10 +1082,10 @@ Reducing the size of a PVC isn't supported due to the risk of data loss. You can
 
 The reclaim policy in both storage classes ensures that the underlying Azure Disks are deleted when the respective PV is deleted. The storage classes also configure the PVs to be expandable. You just need to edit the PVC with the new size.
 
-To use these storage classes, create a [PVC](concepts-storage.md#persistent-volume-claims) and respective pod that references and uses them. A PVC is used to automatically provision storage based on a storage class. A PVC can use one of the precreated storage classes or a user-defined storage class to create an Azure-managed disk for the desired SKU and size. When you create a pod definition, the PVC is specified to request the desired storage.
+To use these storage classes, create a [PVC](concepts-storage.md#persistent-volume-claims) and respective pod that references and uses them. A PVC is used to automatically provision storage based on a storage class. A PVC can use one of the precreated storage classes or a user-defined storage class to create an Azure Managed Disk for the desired SKU and size. When you create a pod definition, the PVC is specified to request the desired storage.
 
 > [!NOTE]
-> Persistent volume claims are specified in GiB but Azure managed disks are billed based on the SKU for a specific size. These SKUs range from 32GiB for S4 or P4 disks to 32TiB for S80 or P80 disks (in preview). The throughput and IOPS performance of a Premium managed disk depends on both the SKU and the instance size of the nodes in the AKS cluster. For more information, see [Pricing and performance of managed disks][managed-disk-pricing-performance].
+> Persistent volume claims are specified in GiB but Azure Managed Disks are billed based on the SKU for a specific size. These SKUs range from 32GiB for S4 or P4 disks to 32TiB for S80 or P80 disks (in preview). The throughput and IOPS performance of a Premium managed disk depends on both the SKU and the instance size of the nodes in the AKS cluster. For more information, see [Pricing and performance of managed disks][managed-disk-pricing-performance].
 
 You can see the precreated storage classes using the [`kubectl get sc`][kubectl-get] command. The following example shows the precreated storage classes available within an AKS cluster:
 
@@ -1103,7 +1103,7 @@ managed-csi         disk.csi.azure.com         1h
 
 # [Dynamic volume](#tab/dynamic-volume-disk)
 
-A PVC automatically provisions storage based on a storage class. In this case, a PVC can use one of the precreated storage classes to create a standard or premium Azure managed disk.
+A PVC automatically provisions storage based on a storage class. In this case, a PVC can use one of the precreated storage classes to create a standard or premium Azure Managed Disk.
 
 1. Create a file named `azure-pvc.yaml` and copy in the following manifest. The claim requests a disk named `azure-managed-disk` that's `5 GB` in size with `ReadWriteOnce` access. The *managed-csi* storage class is specified as the storage class.
 
@@ -1378,7 +1378,7 @@ The following table includes parameters you can use to define a custom storage c
 |resourceGroup | Specify the resource group for the Azure Disks | Existing resource group name | No | If empty, driver uses the same resource group name as current AKS cluster|
 |DiskIOPSReadWrite | [UltraSSD disk][ultra-ssd-disks] or [Premium SSD v2][premiumv2_lrs_disks] IOPS Capability (minimum: 2 IOPS/GiB) | 100~160000 | No | `500`|
 |DiskMBpsReadWrite | [UltraSSD disk][ultra-ssd-disks] or [Premium SSD v2][premiumv2_lrs_disks] Throughput Capability(minimum: 0.032/GiB) | 1~2000 | No | `100`|
-|LogicalSectorSize | Logical sector size in bytes for ultra disk. Supported values are 512 ad 4096. 4096 is the default. | `512`, `4096` | No | `4096`|
+|LogicalSectorSize | Logical sector size in bytes for Ultra Disk. Supported values are 512 ad 4096. 4096 is the default. | `512`, `4096` | No | `4096`|
 |tags | Azure Disk [tags][azure-tags] | Tag format: `key1=val1,key2=val2` | No | ""|
 |diskEncryptionSetID | ResourceId of the disk encryption set to use for [enabling encryption at rest][disk-encryption] | format: `/subscriptions/{subs-id}/resourceGroups/{rg-name}/providers/Microsoft.Compute/diskEncryptionSets/{diskEncryptionSet-name}` | No | ""|
 |diskEncryptionType | Encryption type of the disk encryption set. | `EncryptionAtRestWithCustomerKey` (by default), `EncryptionAtRestWithPlatformAndCustomerKeys` | No | ""|
@@ -1395,7 +1395,7 @@ The following parameters are only for **v2**.
 
 |Name | Meaning | Available Value | Mandatory | Default value |
 |--- | --- | --- | :---: | --- |
-| maxShares | The total number of shared disk mounts allowed for the disk. Setting the value to 2 or more enables attachment replicas. | Supported values depend on the disk size. See [Share an Azure managed disk][share-azure-managed-disk] for supported values. | No | 1 |
+| maxShares | The total number of shared disk mounts allowed for the disk. Setting the value to 2 or more enables attachment replicas. | Supported values depend on the disk size. See [Share an Azure Managed Disk][share-azure-managed-disk] for supported values. | No | 1 |
 | maxMountReplicaCount | The number of replicas attachments to maintain. | This value must be in the range `[0..(maxShares - 1)]` | No | If `accessMode` is `ReadWriteMany`, the default is `0`. Otherwise, the default is `maxShares - 1` |
 
 ---
@@ -1735,12 +1735,12 @@ The Azure Disk CSI driver supports Windows nodes and containers. If you want to 
 
 ## On-demand bursting
 
-On-demand disk bursting model allows disk bursts whenever its needs exceed its current capacity. This model generates extra charges anytime the disk bursts. On-demand bursting is only available for premium SSDs larger than 512 GiB. For more information on premium SSDs provisioned IOPS and throughput per disk, see [Premium SSD size][az-premium-ssd]. Alternatively, credit-based bursting is where the disk will burst only if it has burst credits accumulated in its credit bucket. Credit-based bursting doesn't generate extra charges when the disk bursts. Credit-based bursting is only available for premium SSDs 512 GiB and smaller, and standard SSDs 1,024 GiB and smaller. For more information on on-demand bursting, see [On-demand bursting][az-on-demand-bursting].
+On-demand disk bursting model allows disk bursts whenever its needs exceed its current capacity. This model generates extra charges anytime the disk bursts. On-demand bursting is only available for Premium SSDs larger than 512 GiB. For more information on Premium SSDs provisioned IOPS and throughput per disk, see [Premium SSD size][az-premium-ssd]. Alternatively, credit-based bursting is where the disk will burst only if it has burst credits accumulated in its credit bucket. Credit-based bursting doesn't generate extra charges when the disk bursts. Credit-based bursting is only available for Premium SSDs 512 GiB and smaller, and Standard SSDs 1,024 GiB and smaller. For more information on on-demand bursting, see [On-demand bursting][az-on-demand-bursting].
 
 > [!IMPORTANT]
-> The default `managed-csi-premium` storage class has on-demand bursting disabled and uses credit-based bursting. Any premium SSD dynamically created by a persistent volume claim based on the default `managed-csi-premium` storage class also has on-demand bursting disabled.
+> The default `managed-csi-premium` storage class has on-demand bursting disabled and uses credit-based bursting. Any Premium SSD dynamically created by a persistent volume claim based on the default `managed-csi-premium` storage class also has on-demand bursting disabled.
 
-To create a premium SSD persistent volume with [on-demand bursting][az-on-demand-bursting] enabled, you can create a new storage class with the [enableBursting][csi-driver-parameters] parameter set to `true` as shown in the following YAML template. For more information on enabling on-demand bursting, see [On-demand bursting][az-on-demand-bursting]. For more information on building your own storage class with on-demand bursting enabled, see [Create a Burstable Managed CSI Premium Storage Class][create-burstable-storage-class].
+To create a Premium SSD persistent volume with [on-demand bursting][az-on-demand-bursting] enabled, you can create a new storage class with the [enableBursting][csi-driver-parameters] parameter set to `true` as shown in the following YAML template. For more information on enabling on-demand bursting, see [On-demand bursting][az-on-demand-bursting]. For more information on building your own storage class with on-demand bursting enabled, see [Create a Burstable Managed CSI Premium Storage Class][create-burstable-storage-class].
 
 ```yaml
 apiVersion: storage.k8s.io/v1
@@ -2930,7 +2930,7 @@ The Azure Files CSI driver also supports Windows nodes and containers. To use Wi
 * For Azure Files CSI driver parameters, see [CSI driver parameters][CSI driver parameters].
 * For more information about disk-based storage solutions, see [Disk-based solutions in AKS][disk-based-solutions].
 * For more information about storage best practices, see [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
-* For more information about Azure ultra disk, see [Use ultra disks on Azure Kubernetes Service (AKS)][use-ultra-disks].
+* For more information about Azure Ultra Disk, see [Use Ultra Disks on Azure Kubernetes Service (AKS)][use-ultra-disks].
 * For more information about Azure tags, see [Use Azure tags in Azure Kubernetes Service (AKS)][use-tags].
 
 <!-- LINKS - external -->

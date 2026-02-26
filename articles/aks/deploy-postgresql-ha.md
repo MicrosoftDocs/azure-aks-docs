@@ -144,7 +144,7 @@ The following table outlines the key properties set in the YAML deployment manif
 | `probes` | Replaces the legacy `startDelay` configuration. Streaming startup and readiness probes help ensure replicas are healthy before serving traffic. |
 | `smartShutdownTimeout` | Allows long-running transactions to finish gracefully during updates instead of using aggressive stop delays. |
 | `bootstrap` | Specific to the CNPG operator. Initializes with an empty app database. |
-| `storage` | Defines the PersistentVolume settings for the database. With Azure managed disks, the simplified syntax keeps data and WAL on the same 64-GiB volume, which offers better throughput tiers on managed disks. Adjust if you need separate WAL volumes. |
+| `storage` | Defines the PersistentVolume settings for the database. With Azure Managed Disks, the simplified syntax keeps data and WAL on the same 64-GiB volume, which offers better throughput tiers on managed disks. Adjust if you need separate WAL volumes. |
 | `postgresql.synchronous` | Replaces `minSyncReplicas`/`maxSyncReplicas` and lets you specify synchronous replication behavior using the newer schema. |
 | `postgresql.parameters` | Specific to the CNPG operator. Maps settings for `postgresql.conf`, `pg_hba.conf`, and `pg_ident.conf`. The sample emphasizes observability and WAL retention defaults that suit the AKS workload identity scenario but should be tuned per workload. |
 | `serviceAccountTemplate` | Contains the template needed to generate the service accounts and maps the AKS federated identity credential to the UAMI to enable AKS workload identity authentication from the pods hosting the PostgreSQL instances to external Azure resources. |

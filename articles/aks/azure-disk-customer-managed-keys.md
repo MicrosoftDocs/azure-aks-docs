@@ -1,5 +1,5 @@
 ---
-title: Use a customer-managed key to encrypt Azure managed disks in Azure Kubernetes Service (AKS)
+title: Use a customer-managed key to encrypt Azure Managed Disks in Azure Kubernetes Service (AKS)
 description: Bring your own keys (BYOK) to encrypt managed OS and data disks in AKS.
 ms.topic: concept-article
 ms.custom: devx-track-azurecli
@@ -11,7 +11,7 @@ ms.author: schaffererin
 # Customer intent: As a Kubernetes administrator, I want to use customer-managed keys to encrypt managed disks in Azure Kubernetes Service, so that I can enhance the security and control over my data at rest.
 ---
 
-# Bring your own keys (BYOK) with Azure managed disks in Azure Kubernetes Service (AKS)
+# Bring your own keys (BYOK) with Azure Managed Disks in Azure Kubernetes Service (AKS)
 
 Azure encrypts all data in a managed disk at rest. By default, data is encrypted with Microsoft-managed keys. For more control over encryption keys, you can supply customer-managed keys to use for encryption at rest for both the OS and data disks for your AKS clusters.
 
@@ -22,7 +22,7 @@ Learn more about customer-managed keys on [Linux][customer-managed-keys-linux] a
 * You must enable soft delete and purge protection for *Azure Key Vault* when using Key Vault to encrypt managed disks.
 * You need the Azure CLI version 2.11.1 or later.
 * Data disk encryption and customer-managed keys are supported on Kubernetes versions 1.24 and higher.
-* If you choose to rotate (change) your keys periodically, see [Customer-managed keys and encryption of Azure managed disk](/azure/virtual-machines/disk-encryption) for more information.
+* If you choose to rotate (change) your keys periodically, see [Customer-managed keys and encryption of Azure Managed Disk](/azure/virtual-machines/disk-encryption) for more information.
 
 ## Limitations
 
