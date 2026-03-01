@@ -21,7 +21,7 @@ Azure Kubernetes Service (AKS) regularly provides new node images, so it's benef
 This article shows you how to upgrade AKS cluster node images and how to update node pool images without upgrading the Kubernetes version. For information on upgrading the Kubernetes version for your cluster, see [Upgrade an AKS cluster][upgrade-cluster].
 
 > [!NOTE]
-> The AKS cluster must use virtual machine scale sets for the nodes.
+> Clusters using node auto-provisioning (NAP) have node images automatically updated once a new node image is available by default, which can be scheduled with maintenance windows also. For more information visit [NAP node image update documentation](node-auto-provisioning-upgrade-image.md) 
 >
 > It's not possible to downgrade a node image version (for example *AKSUbuntu-2204 to AKSUbuntu-1804*, or *AKSUbuntu-2204-202308.01.0 to AKSUbuntu-2204-202307.27.0*).
 
@@ -168,6 +168,7 @@ To speed up the node image upgrade process, you can upgrade your node images usi
 [use-multiple-node-pools]: create-node-pools.md
 [max-surge]: upgrade-aks-cluster.md#customize-node-surge-upgrade
 [auto-upgrade-node-image]: auto-upgrade-node-image.md
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-aks-nodepool-get-upgrades]: /cli/azure/aks/nodepool#az-aks-nodepool-get-upgrades
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
 [az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
