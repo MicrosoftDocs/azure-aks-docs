@@ -43,6 +43,7 @@ This article provides step-by-step instructions on how to enable and use a syste
 
 ### Limitations
 
+- Once you create a cluster with a managed identity, you can't switch back to using a service principal.
 - Moving or migrating a managed identity-enabled cluster to a different tenant isn't supported.
 - If the cluster has Microsoft Entra pod-managed identity (`aad-pod-identity`) enabled, Node-Managed Identity (NMI) pods modify the iptables of the nodes to intercept calls to the Azure Instance Metadata (IMDS) endpoint. This configuration means any request made to the IMDS endpoint is intercepted by NMI, even if a particular pod doesn't use `aad-pod-identity`.
 
