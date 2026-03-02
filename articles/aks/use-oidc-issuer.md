@@ -23,21 +23,21 @@ This article describes how to create and manage an OpenID Connect (OIDC) provide
 
 **Platform requirements**:
 
-- Azure CLI version 2.42.0+ (`az --version` to check version, [install or upgrade Azure CLI][azure-cli-install] if needed)
-- Minimum Kubernetes version is 1.22+
+- Azure CLI version 2.42.0+ (`az --version` to check version, [install or upgrade Azure CLI][azure-cli-install] if needed).
+- Minimum Kubernetes version is 1.22+.
 
 **Version-specific behavior**:
 
-- OIDC issuer enabled by default (no `--enable-oidc-issuer` flag needed) for Kubernetes version 1.34+
-- Token auto-extension disabled (`--service-account-extend-token-expiration=false`) for Kubernetes version 1.30.0+
-- Manual enablement required if not previously configured for Kubernetes version earlier than 1.34
+- OIDC issuer enabled by default (no `--enable-oidc-issuer` flag needed) only for newly created AKS clusters on Kubernetes version 1.34+. For existing clusters, OIDC isn't enabled by default regardless of Kubernetes version and requires manual enablement.
+- Token auto-extension disabled (`--service-account-extend-token-expiration=false`) for Kubernetes version 1.30.0+.
+- Manual enablement required if not previously configured for Kubernetes version earlier than 1.34.
 
 **Important considerations**:
 
-- You can't disable OIDC issuer once enabled
-- Enabling OIDC issuer on existing clusters requires API server restart (brief downtime)
-- Maximum token lifetime is 24 hours (one day)
-- Projected service account tokens required for Kubernetes 1.30+ clusters
+- You can't disable OIDC issuer once enabled.
+- Enabling OIDC issuer on existing clusters requires API server restart (brief downtime).
+- Maximum token lifetime is 24 hours (one day).
+- Projected service account tokens required for Kubernetes 1.30+ clusters.
 
 ## Create an AKS cluster with the OIDC issuer
 
