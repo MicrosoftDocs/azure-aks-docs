@@ -18,9 +18,7 @@ This article describes how to enable and disable Advanced Container Networking S
 ## Prerequisites
 
 - An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
-- Azure CLI version 2.71.0 or higher. Find your version using the `az --version` command. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-- [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) version `14.0.0b6` or higher.
-- [Register the `AdvancedNetworkingL7PolicyPreview` feature flag](#register-the-advancednetworkingl7policypreview-feature-flag) in your subscription.
+- Azure CLI version 2.79.0 or higher. Find your version using the `az --version` command. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - Clusters that have the Cilium data plane support _Container Network Observability_ and _Container Network Security_ in Kubernetes version 1.29 and later.
 
 ## Set environment variables
