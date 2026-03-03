@@ -5,23 +5,23 @@ author: schaffererin
 ms.author: schaffererin
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 05/19/2025
+ms.date: 03/03/2026
 ms.custom: devx-track-azurecli
 # Customer intent: As a network administrator, I want to connect to a private API server in an AKS cluster from a separate virtual network using Private Link, so that I can securely manage and interact with the cluster without exposing it to the public internet.
 ---
 
 # Connect to an API Server VNet Integration cluster by using Azure Private Link
 
-With API Server VNet Integration, the AKS control plane is reachable through a private IP inside your cluster's virtual network. That works well for workloads running in the same VNet, but it doesn't automatically cover external networks — such as a hub network, a dedicated operations VNet, or a jump-host environment that need to reach the API server without exposing it to the public internet. This article shows you how to bridge that gap by fronting the API server with a Private Link Service, then connecting to it from a separate virtual network through a Private Endpoint.
+With API Server VNet Integration, the AKS control plane is reachable through a private IP inside your cluster's virtual network (VNet). This configuration works well for workloads running in the same VNet, but it doesn't automatically cover external networks, such as a hub network, a dedicated operations VNet, or a jump-host environment that need to reach the API server without exposing it to the public internet. This article shows you how to bridge that gap by fronting the API server with a Private Link Service, then connecting to it from a separate virtual network through a Private Endpoint.
 
 This article applies **only to clusters that are created with [API Server VNet Integration](./api-server-vnet-integration.md)** and uses a bring-your-own VNet (BYO VNet) configuration. It shows you how to:
 
-* Deploy a **private** AKS cluster with API Server VNet Integration using your own VNet.
-* Expose the API server through a **Private Link Service (PLS)** inside the cluster virtual network.
-* Create a **Private Endpoint (PE)** in a different virtual network.
-* Configure **private DNS** so Kubernetes tools resolve the cluster's private FQDN inside the remote network.
+- Deploy a **private** AKS cluster with API Server VNet Integration using your own VNet.
+- Expose the API server through a **Private Link Service (PLS)** inside the cluster virtual network.
+- Create a **Private Endpoint (PE)** in a different virtual network.
+- Configure **private DNS** so Kubernetes tools resolve the cluster's private FQDN inside the remote network.
 
-For private clusters that **do not** use API Server VNet Integration, see [Create a private AKS cluster](./private-clusters.md).
+For private clusters that **don't** use API Server VNet Integration, see [Create a private AKS cluster](./private-clusters.md).
 
 ## Region availability
 
@@ -81,7 +81,7 @@ DNS_LINK="dns-link"
 
 ## Create resource groups
 
-```azurecli
+```azurecli-interactive
 az group create --name $AKS_RG --location $LOCATION
 az group create --name $REMOTE_RG --location $LOCATION
 ```
@@ -93,20 +93,20 @@ With BYO VNet, you create and own the virtual network before the cluster is depl
 Three subnets are required:
 
 | Subnet | Purpose | Notes |
-|---|---|---|
+| ------ | ------- | ----- |
 | `apiserver-subnet` | API server ILB injection | Must be delegated to `Microsoft.ContainerService/managedClusters`; minimum `/28` |
 | `node-subnet` | AKS worker nodes | Standard cluster subnet |
 | `pls-subnet` | Private Link Service | Must have private link service network policies disabled |
 
-```azurecli
-# VNet
+```azurecli-interactive
+# Create the cluster VNet
 az network vnet create \
   --name $AKS_VNET \
   --resource-group $AKS_RG \
   --location $LOCATION \
   --address-prefixes $AKS_VNET_PREFIX
 
-# API server subnet — delegated to AKS so AKS can inject the control-plane ILB
+# Create the API server subnet delegated to AKS so AKS can inject the control-plane ILB
 az network vnet subnet create \
   --name $APISERVER_SUBNET \
   --vnet-name $AKS_VNET \
@@ -114,14 +114,14 @@ az network vnet subnet create \
   --address-prefixes $APISERVER_SUBNET_PREFIX \
   --delegations Microsoft.ContainerService/managedClusters
 
-# Node subnet
+# Create the node subnet
 az network vnet subnet create \
   --name $NODE_SUBNET \
   --vnet-name $AKS_VNET \
   --resource-group $AKS_RG \
   --address-prefixes $NODE_SUBNET_PREFIX
 
-# PLS subnet — network policies must be disabled on Private Link Service subnets
+# Create the PLS subnet (network policies must be disabled on Private Link Service subnets)
 az network vnet subnet create \
   --name $PLS_SUBNET \
   --vnet-name $AKS_VNET \
@@ -134,39 +134,46 @@ az network vnet subnet create \
 
 AKS requires a managed identity with Network Contributor rights on both the API server subnet and the node subnet to manage network resources during cluster operations.
 
-```azurecli
+```azurecli-interactive
+# Create a user-assigned managed identity for the cluster
 az identity create \
   --name $AKS_IDENTITY \
   --resource-group $AKS_RG \
   --location $LOCATION
 
+# Get the identity's resource ID for later use
 IDENTITY_ID=$(az identity show \
   --name $AKS_IDENTITY \
   --resource-group $AKS_RG \
   --query id -o tsv)
 
+# Get the identity's client ID to assign roles on the subnets
 IDENTITY_CLIENT_ID=$(az identity show \
   --name $AKS_IDENTITY \
   --resource-group $AKS_RG \
   --query clientId -o tsv)
 
+# Get the API server subnet ID for role assignment
 APISERVER_SUBNET_ID=$(az network vnet subnet show \
   --name $APISERVER_SUBNET \
   --vnet-name $AKS_VNET \
   --resource-group $AKS_RG \
   --query id -o tsv)
 
+# Get the node subnet ID for role assignment
 NODE_SUBNET_ID=$(az network vnet subnet show \
   --name $NODE_SUBNET \
   --vnet-name $AKS_VNET \
   --resource-group $AKS_RG \
   --query id -o tsv)
 
+# Assign Network Contributor role to the API server subnet
 az role assignment create \
   --scope $APISERVER_SUBNET_ID \
   --role "Network Contributor" \
   --assignee $IDENTITY_CLIENT_ID
 
+# Assign Network Contributor role to the node subnet
 az role assignment create \
   --scope $NODE_SUBNET_ID \
   --role "Network Contributor" \
@@ -177,7 +184,7 @@ az role assignment create \
 
 Pass the pre-created subnets and managed identity to `az aks create`. AKS injects the API server ILB into `apiserver-subnet` and places worker nodes into `node-subnet`.
 
-```azurecli
+```azurecli-interactive
 az aks create \
   --name $AKS_CLUSTER \
   --resource-group $AKS_RG \
@@ -193,17 +200,20 @@ az aks create \
 
 After the cluster finishes provisioning, capture the node resource group and the private FQDN label. You need the node resource group only to locate the `kube-apiserver` internal load balancer — no writes to it are needed.
 
-```bash
+```azurecli-interactive
+# Get the node resource group where AKS deploys the kube-apiserver ILB
 AKS_NODE_RG=$(az aks show \
   --name $AKS_CLUSTER \
   --resource-group $AKS_RG \
   --query nodeResourceGroup -o tsv)
 
+# Get the private FQDN label to construct the DNS record name later
 DNS_RECORD=$(az aks show \
   --name $AKS_CLUSTER \
   --resource-group $AKS_RG \
   --query privateFqdn -o tsv | cut -d'.' -f1,2)
 
+# Get the kube-apiserver ILB frontend IP configuration ID for the Private Link Service
 FRONTEND_IP_CONFIG_ID=$(az network lb show \
   --name kube-apiserver \
   --resource-group $AKS_NODE_RG \
@@ -215,7 +225,8 @@ FRONTEND_IP_CONFIG_ID=$(az network lb show \
 
 Because you own the cluster VNet, you can create the PLS and its subnet directly in `AKS_RG` without interacting with AKS-managed resources. Point the PLS at the `kube-apiserver` internal load balancer frontend that AKS created in the node resource group.
 
-```azurecli
+```azurecli-interactive
+# Create the Private Link Service in the cluster VNet, fronted by the kube-apiserver ILB
 az network private-link-service create \
   --name $PLS_NAME \
   --resource-group $AKS_RG \
@@ -227,26 +238,28 @@ az network private-link-service create \
 
 ## Create a Private Endpoint (PE) in the remote VNet
 
-```azurecli
-# Remote VNet and subnet
+```azurecli-interactive
+# Create the remote VNet
 az network vnet create \
   --name $REMOTE_VNET \
   --resource-group $REMOTE_RG \
   --location $LOCATION \
   --address-prefixes $REMOTE_VNET_PREFIX
 
+# Create the remote subnet
 az network vnet subnet create \
   --name $REMOTE_SUBNET \
   --vnet-name $REMOTE_VNET \
   --resource-group $REMOTE_RG \
   --address-prefixes $REMOTE_SUBNET_PREFIX
 
-# Private Endpoint
+# Get the Private Link Service ID for the Private Endpoint connection
 PLS_ID=$(az network private-link-service show \
   --name $PLS_NAME \
   --resource-group $AKS_RG \
   --query id -o tsv)
 
+# Create the Private Endpoint in the remote VNet, connecting to the PLS in the cluster VNet
 az network private-endpoint create \
   --name $PE_NAME \
   --resource-group $REMOTE_RG \
@@ -259,13 +272,15 @@ az network private-endpoint create \
 
 When the Private Endpoint finishes provisioning, note its network interface (NIC) ID so you can retrieve the allocated private IP address.
 
-```bash
+```azurecli-interactive
+# Get the Private Endpoint NIC ID
 PE_NIC_ID=$(az network private-endpoint show \
   --name $PE_NAME \
   --resource-group $REMOTE_RG \
   --query 'networkInterfaces[0].id' \
   --output tsv)
 
+# Get the Private Endpoint private IP address from the NIC
 PE_IP=$(az network nic show \
   --ids $PE_NIC_ID \
   --query 'ipConfigurations[0].privateIPAddress' \
@@ -274,17 +289,19 @@ PE_IP=$(az network nic show \
 
 ## Configure private DNS
 
-```bash
+```azurecli-interactive
 # Create or reuse the regional DNS zone
 az network private-dns zone create \
   --name $DNS_ZONE \
   --resource-group $REMOTE_RG
 
+# Create an A record in that zone for the API server's private FQDN, pointing to the PE IP address
 az network private-dns record-set a create \
   --name $DNS_RECORD \
   --zone-name $DNS_ZONE \
   --resource-group $REMOTE_RG
 
+# Add the A record pointing to the Private Endpoint IP
 az network private-dns record-set a add-record \
   --record-set-name $DNS_RECORD \
   --zone-name $DNS_ZONE \
@@ -297,6 +314,7 @@ REMOTE_VNET_ID=$(az network vnet show \
   --resource-group $REMOTE_RG \
   --query id -o tsv)
 
+# Link the DNS zone to the remote VNet so the private FQDN resolves inside that network
 az network private-dns link vnet create \
   --name $DNS_LINK \
   --zone-name $DNS_ZONE \
@@ -309,8 +327,11 @@ az network private-dns link vnet create \
 
 If you try to test the connection locally, you might get an error because the DNS zone isn't linked to your local network.
 
-```bash
+```azurecli-interactive
 az aks get-credentials --resource-group $AKS_RG --name $AKS_CLUSTER
+```
+
+```bash
 kubectl get nodes
 ```
 
@@ -325,6 +346,7 @@ az network nsg create \
   --resource-group $REMOTE_RG \
   --location $LOCATION
 
+# Add an NSG rule to allow SSH
 az network nsg rule create \
   --nsg-name "${REMOTE_VNET}-nsg" \
   --resource-group $REMOTE_RG \
@@ -399,11 +421,11 @@ az group delete --name $AKS_RG --yes --no-wait
 az group delete --name $REMOTE_RG --yes --no-wait
 ```
 
-## Next steps
+## Related content
 
-* [API Server VNet Integration](./api-server-vnet-integration.md)
-* [Private Link](/azure/private-link/private-link-overview)
-* [Private Link Service](/azure/private-link/private-link-service-overview)
-* [Private Endpoint](/azure/private-link/private-endpoint-overview)
-* [Private DNS](/azure/dns/private-dns-overview)
-* [Integrate your own DNS solution with Azure Private Link](/azure/private-link/private-endpoint-dns-integration)
+- [API Server VNet Integration](./api-server-vnet-integration.md)
+- [Private Link](/azure/private-link/private-link-overview)
+- [Private Link Service](/azure/private-link/private-link-service-overview)
+- [Private Endpoint](/azure/private-link/private-endpoint-overview)
+- [Private DNS](/azure/dns/private-dns-overview)
+- [Integrate your own DNS solution with Azure Private Link](/azure/private-link/private-endpoint-dns-integration)
