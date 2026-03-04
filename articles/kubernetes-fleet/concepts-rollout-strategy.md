@@ -337,7 +337,7 @@ spec:
 ### Specifying rollout
 
 The `resourceSnapshotIndex` field controls which resource snapshot version to deploy. You have several options:
-- Omit or leave empty (`""`) to use the latest snapshot, creating a new one if it doesn't already exist (shown in the examples above)
+- Omit or leave empty (`""`) to use the latest snapshot, creating a new one if it doesn't already exist (shown in the example)
 - Specify an existing resource snapshot index (for example, `"2"`) to explicitly target that version
 - Specify an older resource snapshot index (for example, `"0"`) to deploy or roll back to a previous version
 
