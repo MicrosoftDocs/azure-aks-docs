@@ -2,7 +2,7 @@
 title: GPU health monitoring in Node Problem Detector (NPD) in Azure Kubernetes Service (AKS) nodes
 description: Learn about how AKS uses Node Problem Detector to expose issues on GPU-enabled nodes.
 ms.topic: how-to
-ms.date: 08/15/2025
+ms.date: 02/27/2026
 author: sachidesai
 ms.author: sachidesai
 ms.service: azure-kubernetes-service
@@ -65,7 +65,7 @@ NPD doesn't take direct action to remediate GPU-enabled node issues. NPD detects
 
 ### On which Azure VM sizes does AKS conduct GPU health monitoring through NPD?
 
-Currently, NPD conducts health checks on GPU nodes provisioned with the `Standard_ND96asr_v4` or `Standard_ND96isr_H100_v5` VM size on AKS. Also on [A10 SKU](/azure/virtual-machines/sizes/gpu-accelerated/nvadsa10v5-series) for GRID Driver License checks.
+NPD conducts health checks on all GPU node pools that use AKS-managed GPU drivers (that is, node pools not created with `--gpu-driver none`). This covers the full range of NVIDIA GPU-enabled VM SKUs across the NC, ND, and NV series supported by AKS.
 
 ### Does NPD monitor the health of multi-instance GPU (MIG) node pools?
 
