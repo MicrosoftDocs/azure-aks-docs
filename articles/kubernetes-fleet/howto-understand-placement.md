@@ -104,6 +104,8 @@ The following sections examine each field in detail.
 
 The `selectedResources` field lists all resources that the placement selects. This field allows you to check if the expected resources are included in the placement. Here's an example:
 
+:::zone target="docs" pivot="cluster-scope"
+
 ```yaml
 selectedResources:
 - kind: Namespace
@@ -132,16 +134,47 @@ selectedResources:
   version: v1
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+```yaml
+selectedResources:
+- kind: ConfigMap
+  name: test-config
+  version: v1
+  envelope:
+    name: example-envelope
+    namespace: test
+    type: ResourceEnvelope
+- kind: Deployment
+  name: web-app
+  group: apps
+  version: v1
+- kind: Service
+  name: web-service
+  version: v1
+- kind: Secret
+  name: app-secrets
+  version: v1
+```
+
+:::zone-end
+
 Each resource entry includes:
 
 * **group**: API group (empty for core resources)
 * **version**: API version (for example, `v1`, `v1beta1`)
 * **kind**: Resource kind
 * **name**: Resource name
+:::zone target="docs" pivot="cluster-scope"
 * **namespace**: Namespace (for namespaced resources)
+:::zone-end
 * **envelope**: If a resource is wrapped in an envelope, the envelope metadata is also provided, which includes:
   * **name**: Name of the envelope
+:::zone target="docs" pivot="cluster-scope"
   * **namespace**: Namespace of the envelope
+:::zone-end
   * **type**: Type of the envelope (for example, `ResourceEnvelope`)
 
 

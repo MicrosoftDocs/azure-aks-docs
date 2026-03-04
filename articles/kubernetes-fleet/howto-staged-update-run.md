@@ -157,7 +157,7 @@ When a placement uses the `External` rollout strategy, resource snapshots aren't
 > If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available. You can reference these existing snapshots when creating staged update runs.
 
 > [!TIP]
-> For more information about resource snapshots and how they work, see [Understanding resource snapshots](./howto-understand-placement.md#understanding-resource-snapshots).
+> For more information about resource snapshots and how they work, see [resource snapshots](./howto-understand-placement.md#resource-snapshots).
 
 ### Check current resource snapshots
 
@@ -901,7 +901,7 @@ When a placement uses the `External` rollout strategy, resource snapshots aren't
 > If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available. You can reference these existing snapshots when creating staged update runs.
 
 > [!TIP]
-> For more information about resource snapshots and how they work, see [Understanding resource snapshots](./howto-understand-placement.md#understanding-resource-snapshots).
+> For more information about resource snapshots and how they work, see [resource snapshots](./howto-understand-placement.md#resource-snapshots).
 
 ### Check current resource snapshots
 
