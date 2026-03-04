@@ -25,9 +25,6 @@ Azure Kubernetes Fleet Manager supports two scopes for staged updates:
 
 The examples in this article demonstrate both approaches using tabs. Choose the tab that matches your deployment scope.
 
-> [!IMPORTANT]
-> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview. Some features demonstrated in this article, such as `StagedUpdateStrategy`, are also part of the v1beta1 API and aren't available in the v1 API.
-
 ## Before you begin
 
 ### Prerequisites
