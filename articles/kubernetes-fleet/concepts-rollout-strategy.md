@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+ai-usage: ai-assisted
 # Customer intent: "As a cloud operations engineer, I want to define a customized rollout strategy for managing resource placements in Fleet Manager, so that I can minimize service interruptions and optimize resource deployment across multiple clusters."
 zone_pivot_groups: cluster-namespace-scope
 ---
@@ -306,8 +307,8 @@ metadata:
   name: my-app-rollout
 spec:
   placementName: my-app-placement # Required - ClusterResourcePlacement name the update run is applied to.
-  resourceSnapshotIndex: "0" # Optional - ClusterResourceSnapshot index of the selected resources to be updated across clusters. 
-                             # Omit for a new ClusterResourceSnapshot to be created.
+  # resourceSnapshotIndex: "0" # Optional - ClusterResourceSnapshot index of the selected resources to be updated across clusters. 
+                               # Omit to use the latest snapshot, creating one if it doesn't already exist.
   stagedRolloutStrategyName: three-stage-strategy # Required - The name of the update strategy to use.
   state: Run # Optional - Controls the execution state of the update run.
 ```
@@ -325,8 +326,8 @@ metadata:
   namespace: my-app
 spec:
   placementName: my-app-placement # Required - ResourcePlacement name the update run is applied to.
-  resourceSnapshotIndex: "0" # Optional - ResourceSnapshot index of the selected resources to be updated across clusters.
-                             # Omit for a new ClusterResourceSnapshot to be created.
+  # resourceSnapshotIndex: "0" # Optional - ResourceSnapshot index of the selected resources to be updated across clusters.
+                               # Omit or leave empty to use the latest snapshot, creating one if it doesn't already exist.
   stagedRolloutStrategyName: three-stage-strategy # Required - The name of the update strategy to use.
   state: Run # Optional - Controls the execution state of the update run. 
 ```
@@ -336,8 +337,8 @@ spec:
 ### Specifying rollout
 
 The `resourceSnapshotIndex` field controls which resource snapshot version to deploy. You have several options:
-- Leave empty (`""`) or omit the field entirely to create a new latest resource snapshot
-- Specify an existing latest resource snapshot index (like the example `"1"`) to explicitly target the newest version
+- Omit or leave empty (`""`) to use the latest snapshot, creating a new one if it doesn't already exist (shown in the examples above)
+- Specify an existing resource snapshot index (for example, `"2"`) to explicitly target that version
 - Specify an older resource snapshot index (for example, `"0"`) to deploy or roll back to a previous version
 
 > [!IMPORTANT]
