@@ -9,7 +9,7 @@ ms.author: wangamanda
 
 - AKS Automatic clusters' system nodepool require deployment in Azure regions that support at least three [availability zones](/azure/reliability/regions-list), ephemeral OS disk, and Azure Linux OS.
 - You can only create AKS Automatic clusters in regions where [API Server VNet Integration](../../api-server-vnet-integration.md) is generally available (GA).
-- create Private AKS Automatic cluster locks the MC_ resource group, preventing VNet links on the default Private DNS zone. For cross‑VNet or custom DNS scenarios, use BYO VNET and BYO Private DNS.[Private cluster](/articles/aks/automatic/quick-automatic-private-custom-network.md)
+- create Private AKS Automatic cluster locks the MC_ resource group, preventing VNet links on the default Private DNS zone. For cross‑VNet or custom DNS scenarios, use BYO VNET and BYO Private DNS. [Private cluster](../../automatic/quick-automatic-private-custom-network.md)
 
 
 > [!IMPORTANT]
