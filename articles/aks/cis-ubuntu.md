@@ -48,7 +48,7 @@ As a part of the security-optimized operating system:
 * Some unnecessary kernel module drivers have been disabled in the OS to reduce the attack surface area.
 
 > [!NOTE]
-> Unrelated to the CIS benchmarks, Azure applies daily patches, including security patches, to AKS virtual machine hosts.
+> Unrelated to the CIS benchmarks, Azure applies [daily patches, including security patches][aks-upgrade-practices], to AKS virtual machine hosts.
 
 The goal of the secure configuration built into the host OS is to reduce the surface area of attack and optimize for the deployment of containers in a secure manner.
 AKS node images aim to be compliant with the "L1 - Server" profile where possible in a way that doesn't interfere with Kubernetes node operations. L2 compliance status is provided for informational purposes only and the node configuration isn't currently compliant.
@@ -324,11 +324,11 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 5.3.3.4.4 | Ensure pam_unix includes use_authtok | L1 | Pass | |
 | 5.4 | **User Accounts and Environment** | | | |
 | 5.4.1 | **Configure shadow password suite parameters** | | | |
-| 5.4.1.1 | Ensure password expiration is configured | L1 | Fail | Operational impact: root user password expiry applies even to a locked password and impacts AKS operations |
+| 5.4.1.1 | Ensure password expiration is configured | L1 | Fail | Operational impact: applying password expiration to the root user prevents nodes from joining the cluster and disrupts AKS addon functionality |
 | 5.4.1.2 | Ensure minimum password days is configured | L2 | Manual | |
 | 5.4.1.3 | Ensure password expiration warning days is configured | L1 | Pass | |
 | 5.4.1.4 | Ensure strong password hashing algorithm is configured | L1 | Pass | |
-| 5.4.1.5 | Ensure inactive password lock is configured | L1 | Fail | Operational impact: root user inactive password lock applies even to a locked password and impacts AKS operations |
+| 5.4.1.5 | Ensure inactive password lock is configured | L1 | Fail | Operational impact: applying inactive password locking to the root user prevents nodes from joining the cluster and disrupts AKS addon functionality |
 | 5.4.1.6 | Ensure all users last password change date is in the past | L1 | Pass | |
 | 5.4.2 | **Configure root and system accounts and environment** | | | |
 | 5.4.2.1 | Ensure root is the only UID 0 account | L1 | Pass | |
@@ -417,7 +417,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 6.3 | **Configure Integrity Checking** | | | |
 | 6.3.1 | Ensure AIDE is installed | L1 | Operational impact | Scanning would impact workloads periodically. |
 | 6.3.2 | Ensure filesystem integrity is regularly checked | L1 | Operational impact | Scanning would impact workloads periodically. |
-| 6.3.3 | Ensure cryptographic mechanisms are used to protect the integrity of audit tools | L2 | Fail | . |
+| 6.3.3 | Ensure cryptographic mechanisms are used to protect the integrity of audit tools | L2 | Fail | |
 | 7 | **System Maintenance** | | | |
 | 7.1 | **System File Permissions** | | | |
 | 7.1.1 | Ensure permissions on /etc/passwd are configured | L1 | Pass | |
@@ -704,11 +704,11 @@ The following are the results from [CIS Ubuntu 22.04 LTS Benchmark v3.0.0][cis-b
 | 5.3.3.4.4 | Ensure pam_unix includes use_authtok | L1 | Pass | |
 | 5.4 | **User Accounts and Environment** | | | |
 | 5.4.1 | **Configure shadow password suite parameters** | | | |
-| 5.4.1.1 | Ensure password expiration is configured | L1 | Fail | Operational impact: root user password expiry applies even to a locked password and impacts AKS operations. |
+| 5.4.1.1 | Ensure password expiration is configured | L1 | Fail | Operational impact: applying password expiration to the root user prevents nodes from joining the cluster and disrupts AKS addon functionality |
 | 5.4.1.2 | Ensure minimum password days is configured | L2 | Manual | |
 | 5.4.1.3 | Ensure password expiration warning days is configured | L1 | Pass | |
 | 5.4.1.4 | Ensure strong password hashing algorithm is configured | L1 | Pass | |
-| 5.4.1.5 | Ensure inactive password lock is configured | L1 | Fail | Operational impact: root user inactive password lock applies even to a locked password and impacts AKS operations. |
+| 5.4.1.5 | Ensure inactive password lock is configured | L1 | Fail | Operational impact: applying inactive password locking to the root user prevents nodes from joining the cluster and disrupts AKS addon functionality |
 | 5.4.1.6 | Ensure all users last password change date is in the past | L1 | Pass | |
 | 5.4.2.1 | Ensure root is the only UID 0 account | L1 | Pass | |
 | 5.4.2.2 | Ensure root is the only GID 0 account | L1 | Pass | |
@@ -823,6 +823,7 @@ For more information about AKS security, see the following articles:
 
 <!-- EXTERNAL LINKS -->
 [cis-benchmark-ubuntu]: https://www.cisecurity.org/benchmark/ubuntu_linux
+[aks-upgrade-practices]: https://learn.microsoft.com/azure/architecture/operator-guides/aks/aks-upgrade-practices
 
 <!-- INTERNAL LINKS -->
 [cis-benchmarks]: /compliance/regulatory/offering-CIS-Benchmark
