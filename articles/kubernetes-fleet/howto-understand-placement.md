@@ -1,5 +1,5 @@
 ---
-title: "How to understand the status of ClusterResourcePlacement and ResourcePlacement"
+title: "Understanding the status for resource placements"
 description: Learn how to read and interpret the status fields of ClusterResourcePlacement and ResourcePlacement custom resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 07/10/2025
@@ -7,21 +7,47 @@ author: zhangryan
 ms.author: zhangryan
 ms.service: azure-kubernetes-fleet-manager
 ms.custom: concept-article
+zone_pivot_groups: cluster-namespace-scope
 ---
 
-# How to understand the status of ClusterResourcePlacement and ResourcePlacement
+# Understanding the status for resource placements
 
-When you are working with Azure Kubernetes Fleet Manager, understanding the status of your `ClusterResourcePlacement` (CRP) resources is crucial for monitoring deployment progress and troubleshooting issues. This article provides a comprehensive guide to interpreting the status fields and conditions that Fleet Manager reports for both cluster-scoped and namespace-scoped placements.
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
+
+:::zone target="docs" pivot="cluster-scope"
+
+When you're working with Azure Kubernetes Fleet Manager, understanding the status of your `ClusterResourcePlacement` resources is crucial for monitoring deployment progress and troubleshooting issues. 
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+When you're working with Azure Kubernetes Fleet Manager, understanding the status of your `ResourcePlacement` resources is crucial for monitoring deployment progress and troubleshooting issues. 
+> [!IMPORTANT]
+> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview.
+
+:::zone-end
 
 ## Prerequisites
 
 * You have a Fleet Manager with a hub cluster and one or more member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters](./quickstart-create-fleet-and-members.md).
 * You have access to the Fleet Manager hub cluster. For more information, see [Access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster](./access-fleet-hub-cluster-kubernetes-api.md).
-* You have deployed at least one ClusterResourcePlacement API object to place your resources into the fleet. If you haven't, see [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
+* You deployed at least one ClusterResourcePlacement API object to place your resources into the fleet. If you haven't, see [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
 
 ## Overview of placement status structure
 
+:::zone target="docs" pivot="cluster-scope"
+
 The `ClusterResourcePlacement` object contains not only the descriptive spec about the placement, but also the status of the placement operation. 
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+The `ResourcePlacement` object contains not only the descriptive spec about the placement, but also the status of the placement operation. 
+
+:::zone-end
+
 The status section provides detailed information about:
 
 * Overall placement status expressed through conditions
@@ -31,15 +57,39 @@ The status section provides detailed information about:
 
 To view the status of a placement, use the following command:
 
+:::zone target="docs" pivot="cluster-scope"
+
 ```bash
 kubectl describe clusterresourceplacement <placement-name>
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+```bash
+kubectl describe resourceplacement <placement-name> -n <namespace-name>
+```
+
+:::zone-end
+
 Or to get the raw YAML output:
+
+:::zone target="docs" pivot="cluster-scope"
 
 ```bash
 kubectl get clusterresourceplacement <placement-name> -o yaml
 ```
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+```bash
+kubectl get resourceplacement <placement-name> -n <namespace-name> -o yaml
+```
+
+:::zone-end
 
 ## Top-level status fields
 
@@ -52,9 +102,11 @@ The status section contains the following top-level fields:
 
 The following sections examine each field in detail.
 
-## Understanding selected resources
+## Selected resources
 
 The `selectedResources` field lists all resources that the placement selects. This field allows you to check if the expected resources are included in the placement. Here's an example:
+
+:::zone target="docs" pivot="cluster-scope"
 
 ```yaml
 selectedResources:
@@ -84,20 +136,51 @@ selectedResources:
   version: v1
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+```yaml
+selectedResources:
+- kind: ConfigMap
+  name: test-config
+  version: v1
+  envelope:
+    name: example-envelope
+    namespace: test
+    type: ResourceEnvelope
+- kind: Deployment
+  name: web-app
+  group: apps
+  version: v1
+- kind: Service
+  name: web-service
+  version: v1
+- kind: Secret
+  name: app-secrets
+  version: v1
+```
+
+:::zone-end
+
 Each resource entry includes:
 
 * **group**: API group (empty for core resources)
 * **version**: API version (for example, `v1`, `v1beta1`)
 * **kind**: Resource kind
 * **name**: Resource name
+:::zone target="docs" pivot="cluster-scope"
 * **namespace**: Namespace (for namespaced resources)
+:::zone-end
 * **envelope**: If a resource is wrapped in an envelope, the envelope metadata is also provided, which includes:
   * **name**: Name of the envelope
+:::zone target="docs" pivot="cluster-scope"
   * **namespace**: Namespace of the envelope
+:::zone-end
   * **type**: Type of the envelope (for example, `ResourceEnvelope`)
 
 
-## Understanding placement conditions
+## Placement conditions
 
 The `conditions` array provides high-level status information about the entire placement. Each condition follows the Kubernetes common definition, which has the following standard fields:
 
@@ -108,17 +191,33 @@ The `conditions` array provides high-level status information about the entire p
 * **lastTransitionTime**: When the condition last changed
 * **observedGeneration**: Generation of the placement when the condition was set
 
+:::zone target="docs" pivot="cluster-scope"
+
 ### ClusterResourcePlacement condition types
 
 The following condition types are available for ClusterResourcePlacement:
 
 #### ClusterResourcePlacementScheduled
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+### ResourcePlacement condition types
+
+The following condition types are available for ResourcePlacement:
+
+#### ResourcePlacementScheduled
+
+:::zone-end
+
 Indicates whether the placement is successfully scheduled to target clusters.
 
 - **True**: All required clusters are selected according to the placement policy
 - **False**: Scheduling failed (for example, insufficient clusters available)
 - **Unknown**: Scheduling decision is pending
+
+:::zone target="docs" pivot="cluster-scope"
 
 ```yaml
 conditions:
@@ -130,13 +229,41 @@ conditions:
   observedGeneration: 5
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+```yaml
+conditions:
+- type: ResourcePlacementScheduled
+  status: "True"
+  reason: SchedulingPolicyFulfilled
+  message: "found all the clusters needed as specified by the scheduling policy"
+  lastTransitionTime: "2023-11-10T08:14:52Z"
+  observedGeneration: 5
+```
+
+:::zone-end
+
+:::zone target="docs" pivot="cluster-scope"
+
 #### ClusterResourcePlacementRolloutStarted
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+#### ResourcePlacementRolloutStarted
+
+:::zone-end
 
 Indicates whether the rollout is started across the selected clusters.
 
-- **True**: Resources have started rolling out to scheduled clusters
-- **False**: Rollout is not started yet
+- **True**: Resources started rolling out to scheduled clusters
+- **False**: Rollout isn't started yet
 - **Unknown**: Rollout decision is pending
+
+:::zone target="docs" pivot="cluster-scope"
 
 ```yaml
 conditions:
@@ -147,14 +274,40 @@ conditions:
   lastTransitionTime: "2023-11-10T08:15:30Z"
   observedGeneration: 5
 ```
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+```yaml
+conditions:
+- type: ResourcePlacementRolloutStarted
+  status: "True"
+  reason: RolloutStarted
+  message: "All 3 cluster(s) start rolling out the latest resource"
+  lastTransitionTime: "2023-11-10T08:15:30Z"
+  observedGeneration: 5
+```
+:::zone-end
+
+:::zone target="docs" pivot="cluster-scope"
 
 #### ClusterResourcePlacementOverridden
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+#### ResourcePlacementOverridden
+
+:::zone-end
 
 Indicates whether resource overrides are successfully applied.
 
 - **True**: All applicable overrides are processed
 - **False**: Some overrides failed to apply
 - **Unknown**: Override processing is pending
+
+:::zone target="docs" pivot="cluster-scope"
 
 ```yaml
 conditions:
@@ -166,13 +319,41 @@ conditions:
   observedGeneration: 5
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+```yaml
+conditions:
+- type: ResourcePlacementOverridden
+  status: "True"
+  reason: NoOverrideSpecified
+  message: "No override rules are configured for the selected resources"
+  lastTransitionTime: "2023-11-10T08:15:45Z"
+  observedGeneration: 5
+```
+
+:::zone-end
+
+:::zone target="docs" pivot="cluster-scope"
+
 #### ClusterResourcePlacementWorkSynchronized
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+#### ResourcePlacementWorkSynchronized
+
+:::zone-end
 
 Indicates whether work objects are created in the hub cluster's per-cluster namespaces.
 
 - **True**: All work objects are synchronized
 - **False**: Work synchronization fails or is incomplete
 - **Unknown**: Work synchronization is pending
+
+:::zone target="docs" pivot="cluster-scope"
 
 ```yaml
 conditions:
@@ -184,13 +365,41 @@ conditions:
   observedGeneration: 5
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+```yaml
+conditions:
+- type: ResourcePlacementWorkSynchronized  
+  status: "True"
+  reason: SynchronizeSucceeded
+  message: "All 2 cluster(s) are synchronized to the latest resources on the hub cluster"
+  lastTransitionTime: "2023-11-10T08:23:43Z"
+  observedGeneration: 5
+```
+
+:::zone-end
+
+:::zone target="docs" pivot="cluster-scope"
+
 #### ClusterResourcePlacementApplied
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+#### ResourcePlacementApplied
+
+:::zone-end
 
 Indicates whether all resources are successfully applied to member clusters.
 
 - **True**: All resources applied successfully to all target clusters
 - **False**: Some resources failed to apply (check `failedPlacements`)
 - **Unknown**: Apply operation is pending
+
+:::zone target="docs" pivot="cluster-scope"
 
 ```yaml
 conditions:
@@ -202,13 +411,41 @@ conditions:
   observedGeneration: 5
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+```yaml
+conditions:
+- type: ResourcePlacementApplied
+  status: "True"
+  reason: ApplySucceeded
+  message: "The selected resources are successfully applied to 3 clusters"
+  lastTransitionTime: "2023-11-10T08:16:15Z"
+  observedGeneration: 5
+```
+
+:::zone-end
+
+:::zone target="docs" pivot="cluster-scope"
+
 #### ClusterResourcePlacementAvailable
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+#### ResourcePlacementAvailable
+
+:::zone-end
 
 Indicates whether the placed resources are all available and ready on member clusters.
 
 - **True**: All resources are available on all target clusters
 - **False**: Some resources aren't yet available
 - **Unknown**: Availability check is pending
+
+:::zone target="docs" pivot="cluster-scope"
 
 ```yaml
 conditions:
@@ -220,13 +457,42 @@ conditions:
   observedGeneration: 5
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+```yaml
+conditions:
+- type: ResourcePlacementAvailable
+  status: "True"
+  reason: ResourceAvailable
+  message: "The selected resources in 3 clusters are available now"
+  lastTransitionTime: "2023-11-10T08:16:30Z"
+  observedGeneration: 5
+```
+
+:::zone-end
+
+
+:::zone target="docs" pivot="cluster-scope"
+
 #### ClusterResourcePlacementDiffReported
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+#### ResourcePlacementDiffReported
+
+:::zone-end
 
 Indicates whether configuration differences are reported (when using ReportDiff strategy).
 
 - **True**: Complete diff report is available
 - **False**: Diff reporting failed or is incomplete
 - **Unknown**: Diff reporting is pending
+
+:::zone target="docs" pivot="cluster-scope"
 
 ```yaml
 conditions:
@@ -238,7 +504,23 @@ conditions:
   observedGeneration: 5
 ```
 
-## Understanding resource snapshots
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+```yaml
+conditions:
+- type: ResourcePlacementDiffReported
+  status: "True"
+  reason: DiffReportComplete
+  message: "Configuration differences are reported for all target clusters"
+  lastTransitionTime: "2023-11-10T08:16:45Z"
+  observedGeneration: 5
+```
+
+:::zone-end
+
+## Resource snapshots
 
 The `observedResourceIndex` field indicates which snapshot of resources is currently being deployed:
 
@@ -246,18 +528,35 @@ The `observedResourceIndex` field indicates which snapshot of resources is curre
 observedResourceIndex: "1"
 ```
 
-Fleet Manager creates resource snapshots when:
+Fleet Manager creates resource snapshots differently depending on the rollout strategy:
+
+**For `RollingUpdate` strategy (default)**: Resource snapshots are created automatically when:
 
 * The resource selectors change
 * The selected resources are modified
 
+**For `External` strategy**: Resource snapshots aren't created automatically. Instead, they're created when you execute a staged update run with the `resourceSnapshotIndex` field omitted. This means that when you first create a placement with an `External` rollout strategy, no resource snapshots exist until you run the first staged update run.
+
+> [!NOTE]
+> If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available. You can reference these existing snapshots when creating staged update runs.
+
 Each snapshot has a unique index. You can view snapshots using:
+
+:::zone target="docs" pivot="cluster-scope"
 
 ```bash
 kubectl get clusterresourcesnapshot --selector=kubernetes-fleet.io/resource-index=1
 ```
+:::zone-end
 
-## Understanding per-cluster placement status
+:::zone target="docs" pivot="namespace-scope"
+
+```bash
+kubectl get resourcesnapshot -n <namespace-name> --selector=kubernetes-fleet.io/resource-index=1
+```
+:::zone-end
+
+## Per-cluster placement status
 
 The `placementStatuses` array contains detailed status for each cluster where resources are placed or attempted to be placed:
 
@@ -352,7 +651,7 @@ Indicates whether the cluster was successfully selected for placement.
 
 #### RolloutStarted
 
-Indicates whether the rollout has started on this specific cluster.
+Indicates whether the rollout started on this specific cluster.
 
 ```yaml
 - type: RolloutStarted
@@ -428,7 +727,7 @@ Indicates whether configuration differences are reported for this cluster.
   observedGeneration: 5
 ```
 
-## Understanding failed placements
+## Failed placements
 
 When resources fail to apply to a cluster, details are recorded in the `failedPlacements` array:
 
@@ -476,9 +775,9 @@ Each failed placement includes:
 * **condition**: The specific failure condition
 * **envelope**: Envelope information (if applicable)
 
-## Understanding drifted placements
+## Drifted placements
 
-Fleet Manager always reports resources that have drifted from their desired state:
+Fleet Manager always reports resources that drifted from their desired state:
 
 ```yaml
 driftedPlacements:
@@ -531,7 +830,7 @@ Each drifted placement includes:
 * **targetClusterObservedGeneration**: Generation of the resource on the member cluster
 * **observedDrifts**: Detailed list of configuration differences
 
-## Understanding diffed placements
+## Diffed placements
 
 When using the ReportDiff apply strategy, Fleet Manager reports configuration differences:
 
@@ -580,18 +879,32 @@ Diffed placements have a similar structure to drifted placements but are used fo
 
 To effectively monitor placement progress, check these key indicators:
 
+:::zone target="docs" pivot="cluster-scope"
+
 1. **Resource placed**: Verify `ClusterResourcePlacementWorkSynchronized` is True
 2. **Overall health**: Look at the `ClusterResourcePlacementApplied` condition
 3. **Per-cluster status**: Review conditions for each target cluster
 4. **Failed placements**: Check for any entries in `failedPlacements` arrays
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+1. **Resource placed**: Verify `ResourcePlacementWorkSynchronized` is True
+2. **Overall health**: Look at the `ResourcePlacementApplied` condition
+3. **Per-cluster status**: Review conditions for each target cluster
+4. **Failed placements**: Check for any entries in `failedPlacements` arrays
+
+:::zone-end
 
 ## Complete status example
+
+:::zone target="docs" pivot="cluster-scope"
 
 Here's a comprehensive example showing the complete status of a ClusterResourcePlacement:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: web-app-placement
@@ -761,6 +1074,175 @@ status:
     driftedPlacements: []
     diffedPlacements: []
 ```
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
+Here's a comprehensive example showing the complete status of a ResourcePlacement:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ResourcePlacement
+metadata:
+  name: web-app-placement
+  namespace: web-app
+  generation: 5
+spec:
+  resourceSelectors:
+  - group: apps
+    kind: Deployment
+    name: web-server
+    version: v1
+  - group: ""
+    kind: Service
+    name: web-service
+    version: v1
+  policy:
+    placementType: PickN
+    numberOfClusters: 2
+    affinity:
+      clusterAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          clusterSelectorTerms:
+          - matchLabels:
+              region: us-west
+status:
+  conditions:
+  - type: ResourcePlacementScheduled
+    status: "True"
+    reason: SchedulingPolicyFulfilled
+    message: "found all the clusters needed as specified by the scheduling policy"
+    lastTransitionTime: "2023-11-10T08:14:52Z"
+    observedGeneration: 5
+  - type: ResourcePlacementRolloutStarted
+    status: "True"
+    reason: RolloutStarted
+    message: "All 2 cluster(s) start rolling out the latest resource"
+    lastTransitionTime: "2023-11-10T08:15:30Z"
+    observedGeneration: 5
+  - type: ResourcePlacementOverridden
+    status: "True"
+    reason: NoOverrideSpecified
+    message: "No override rules are configured for the selected resources"
+    lastTransitionTime: "2023-11-10T08:15:45Z"
+    observedGeneration: 5
+  - type: ResourcePlacementWorkSynchronized
+    status: "True"
+    reason: SynchronizeSucceeded
+    message: "All 2 cluster(s) are synchronized to the latest resources on the hub cluster"
+    lastTransitionTime: "2023-11-10T08:16:00Z"
+    observedGeneration: 5
+  - type: ResourcePlacementApplied
+    status: "True"
+    reason: ApplySucceeded
+    message: "The selected resources are successfully applied to 2 clusters"
+    lastTransitionTime: "2023-11-10T08:16:15Z"
+    observedGeneration: 5
+  - type: ResourcePlacementAvailable
+    status: "True"
+    reason: ResourceAvailable
+    message: "The selected resources in 2 cluster are available now"
+    lastTransitionTime: "2023-11-10T08:16:30Z"
+    observedGeneration: 5
+  observedResourceIndex: "1"
+  selectedResources:
+  - group: apps
+    kind: Deployment
+    name: web-server
+    version: v1
+  - group: ""
+    kind: Service
+    name: web-service
+    version: v1
+  placementStatuses:
+  - clusterName: aks-west-1
+    observedResourceIndex: "1"
+    conditions:
+    - type: ResourceScheduled
+      status: "True"
+      reason: ScheduleSucceeded
+      message: "Successfully scheduled resources for placement in aks-west-1 (affinity score: 0, topology spread score: 0): picked by scheduling policy"
+      lastTransitionTime: "2023-11-10T08:14:52Z"
+      observedGeneration: 5
+    - type: RolloutStarted
+      status: "True"
+      reason: RolloutStarted
+      message: "Detected the new changes on the resources and started the rollout process"
+      lastTransitionTime: "2023-11-10T08:15:30Z"
+      observedGeneration: 5
+    - type: Overridden
+      status: "True"
+      reason: NoOverrideSpecified
+      message: "No override rules are configured for the selected resources"
+      lastTransitionTime: "2023-11-10T08:15:45Z"
+      observedGeneration: 5
+    - type: WorkSynchronized
+      status: "True"
+      reason: AllWorkSynced
+      message: "All of the works are synchronized to the latest"
+      lastTransitionTime: "2023-11-10T08:16:00Z"
+      observedGeneration: 5
+    - type: Applied
+      status: "True"
+      reason: AllWorkHaveBeenApplied
+      message: "All corresponding work objects are applied"
+      lastTransitionTime: "2023-11-10T08:16:15Z"
+      observedGeneration: 5
+    - type: Available
+      status: "True"
+      reason: ResourceAvailable
+      message: "All resources are available on the target cluster"
+      lastTransitionTime: "2023-11-10T08:16:30Z"
+      observedGeneration: 5
+    failedPlacements: []
+    driftedPlacements: []
+    diffedPlacements: []
+  - clusterName: aks-west-2
+    observedResourceIndex: "1"
+    conditions:
+    - type: ResourceScheduled
+      status: "True"
+      reason: ScheduleSucceeded
+      message: "Successfully scheduled resources for placement in aks-west-2 (affinity score: 0, topology spread score: 0): picked by scheduling policy"
+      lastTransitionTime: "2023-11-10T08:14:52Z"
+      observedGeneration: 5
+    - type: RolloutStarted
+      status: "True"
+      reason: RolloutStarted
+      message: "Detected new changes on the resources and started the rollout process"
+      lastTransitionTime: "2023-11-10T08:15:30Z"
+      observedGeneration: 5
+    - type: Overridden
+      status: "True"
+      reason: NoOverrideSpecified
+      message: "No override rules are configured for the selected resources"
+      lastTransitionTime: "2023-11-10T08:15:45Z"
+      observedGeneration: 5
+    - type: WorkSynchronized
+      status: "True"
+      reason: AllWorkSynced
+      message: "All of the works are synchronized to the latest"
+      lastTransitionTime: "2023-11-10T08:16:00Z"
+      observedGeneration: 5
+    - type: Applied
+      status: "True"
+      reason: AllWorkHaveBeenApplied
+      message: "All corresponding work objects are applied"
+      lastTransitionTime: "2023-11-10T08:16:15Z"
+      observedGeneration: 5
+    - type: Available
+      status: "True"
+      reason: ResourceAvailable
+      message: "All resources are available on the target cluster"
+      lastTransitionTime: "2023-11-10T08:16:30Z"
+      observedGeneration: 5
+    failedPlacements: []
+    driftedPlacements: []
+    diffedPlacements: []
+```
+
+:::zone-end
 
 This example shows:
 
