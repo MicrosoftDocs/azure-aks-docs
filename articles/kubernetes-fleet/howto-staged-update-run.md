@@ -1141,7 +1141,8 @@ cat << EOF > approval.json
 }
 EOF
 ```
-> NOTE: Be sure the `observedGeneration` is the same as the generation of the approval object.
+> [!NOTE]
+> Be sure the `observedGeneration` is the same as the generation of the approval object.
 
 Submit a patch request to approve using the JSON file created.
 
