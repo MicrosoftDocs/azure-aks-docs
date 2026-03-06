@@ -27,6 +27,8 @@ Most scenarios can lead to service interruptions as workloads running on member 
 To minimize interruption, Fleet Manager's resource placement APIs allow users to configure a rollout strategy, similar to native Kubernetes deployment, to transition between changes as smoothly as possible.
 
 In this article, we cover the rollout strategy options available for both `ClusterResourcePlacement` and `ResourcePlacement`.
+> [!IMPORTANT]
+> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview.
 
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's resource placement concepts, read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
@@ -78,7 +80,7 @@ spec:
 ### ResourcePlacement example
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourcePlacement
 metadata:
   name: rp-example
@@ -160,15 +162,23 @@ For simpler scenarios where percentage-based rollouts suffice, consider using th
 
 Staged updates use different custom resources depending on scope:
 
+:::zone target="docs" pivot="cluster-scope"
+
 **For cluster-scoped placements:**
 * **ClusterResourcePlacement** - Configured with `strategy.type: External` to indicate external strategy management
 * **ClusterStagedUpdateStrategy** - Defines the stages, cluster selection, and progression rules
 * **ClusterStagedUpdateRun** - Executes the clusterStagedUpdateStrategy against a specific `ClusterResourcePlacement` and cluster resource snapshot
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
 **For namespace-scoped placements:**
 * **ResourcePlacement** - Configured with `strategy.type: External` to indicate external strategy management
 * **StagedUpdateStrategy** - Defines the stages, cluster selection, and progression rules (namespace-scoped)
 * **StagedUpdateRun** - Executes the stagedUpdateStrategy against a specific `ResourcePlacement` and resource snapshot (namespace-scoped)
+
+:::zone-end
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -232,7 +242,7 @@ spec:
 #### ResourcePlacement with external strategy
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourcePlacement
 metadata:
   name: my-app-placement

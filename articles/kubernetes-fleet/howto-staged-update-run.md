@@ -21,7 +21,9 @@ This article shows you how to create and execute staged update runs to deploy wo
 Azure Kubernetes Fleet Manager supports two scopes for staged updates:
 
 - **Cluster-scoped**: Use `ClusterStagedUpdateRun` with `ClusterResourcePlacement` for fleet administrators managing infrastructure-level changes.
-- **Namespace-scoped (preview)**: Use `StagedUpdateRun` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
+- **Namespace-scoped**: Use `StagedUpdateRun` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
+> [!IMPORTANT]
+> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview. Some features demonstrated in this article, such as `ResourceSnapshot`, are also part of the v1beta1 API and aren't available in the v1 API.
 
 The examples in this article demonstrate both approaches using tabs. Choose the tab that matches your deployment scope.
 
@@ -829,7 +831,7 @@ To deploy the ConfigMap, create a namespace-scoped `ResourcePlacement`:
 > The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourcePlacement
 metadata:
   name: example-placement
@@ -1014,7 +1016,7 @@ kubectl get resourcesnapshots example-placement-1-snapshot -n test-namespace -o 
 Your output should look similar to the following example:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourceSnapshot
 metadata:
   annotations:
@@ -1030,7 +1032,7 @@ metadata:
   name: example-placement-1-snapshot
   namespace: test-namespace
   ownerReferences:
-  - apiVersion: placement.kubernetes-fleet.io/v1
+  - apiVersion: placement.kubernetes-fleet.io/v1beta1
     blockOwnerDeletion: true
     controller: true
     kind: ResourcePlacement

@@ -23,6 +23,8 @@ When you're working with Azure Kubernetes Fleet Manager, understanding the statu
 :::zone target="docs" pivot="namespace-scope"
 
 When you're working with Azure Kubernetes Fleet Manager, understanding the status of your `ResourcePlacement` resources is crucial for monitoring deployment progress and troubleshooting issues. 
+> [!IMPORTANT]
+> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview.
 
 :::zone-end
 
@@ -1075,190 +1077,12 @@ status:
 
 :::zone-end
 
-:::zone target="docs" pivot="cluster-scope"
-
-Here's a comprehensive example showing the complete status of a ClusterResourcePlacement:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterResourcePlacement
-metadata:
-  name: web-app-placement
-  generation: 5
-spec:
-  resourceSelectors:
-  - group: ""
-    kind: Namespace
-    name: web-app
-    version: v1
-  - group: apps
-    kind: Deployment
-    name: web-server
-    namespace: web-app
-    version: v1
-  - group: ""
-    kind: Service
-    name: web-service
-    namespace: web-app
-    version: v1
-  policy:
-    placementType: PickN
-    numberOfClusters: 2
-    affinity:
-      clusterAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          clusterSelectorTerms:
-          - matchLabels:
-              region: us-west
-status:
-  conditions:
-  - type: ClusterResourcePlacementScheduled
-    status: "True"
-    reason: SchedulingPolicyFulfilled
-    message: "found all the clusters needed as specified by the scheduling policy"
-    lastTransitionTime: "2023-11-10T08:14:52Z"
-    observedGeneration: 5
-  - type: ClusterResourcePlacementRolloutStarted
-    status: "True"
-    reason: RolloutStarted
-    message: "All 2 cluster(s) start rolling out the latest resource"
-    lastTransitionTime: "2023-11-10T08:15:30Z"
-    observedGeneration: 5
-  - type: ClusterResourcePlacementOverridden
-    status: "True"
-    reason: NoOverrideSpecified
-    message: "No override rules are configured for the selected resources"
-    lastTransitionTime: "2023-11-10T08:15:45Z"
-    observedGeneration: 5
-  - type: ClusterResourcePlacementWorkSynchronized
-    status: "True"
-    reason: SynchronizeSucceeded
-    message: "All 2 cluster(s) are synchronized to the latest resources on the hub cluster"
-    lastTransitionTime: "2023-11-10T08:16:00Z"
-    observedGeneration: 5
-  - type: ClusterResourcePlacementApplied
-    status: "True"
-    reason: ApplySucceeded
-    message: "The selected resources are successfully applied to 2 clusters"
-    lastTransitionTime: "2023-11-10T08:16:15Z"
-    observedGeneration: 5
-  - type: ClusterResourcePlacementAvailable
-    status: "True"
-    reason: ResourceAvailable
-    message: "The selected resources in 2 cluster are available now"
-    lastTransitionTime: "2023-11-10T08:16:30Z"
-    observedGeneration: 5
-  observedResourceIndex: "1"
-  selectedResources:
-  - group: ""
-    kind: Namespace
-    name: web-app
-    version: v1
-  - group: apps
-    kind: Deployment
-    name: web-server
-    namespace: web-app
-    version: v1
-  - group: ""
-    kind: Service
-    name: web-service
-    namespace: web-app
-    version: v1
-  placementStatuses:
-  - clusterName: aks-west-1
-    observedResourceIndex: "1"
-    conditions:
-    - type: ResourceScheduled
-      status: "True"
-      reason: ScheduleSucceeded
-      message: "Successfully scheduled resources for placement in aks-west-1 (affinity score: 0, topology spread score: 0): picked by scheduling policy"
-      lastTransitionTime: "2023-11-10T08:14:52Z"
-      observedGeneration: 5
-    - type: RolloutStarted
-      status: "True"
-      reason: RolloutStarted
-      message: "Detected the new changes on the resources and started the rollout process"
-      lastTransitionTime: "2023-11-10T08:15:30Z"
-      observedGeneration: 5
-    - type: Overridden
-      status: "True"
-      reason: NoOverrideSpecified
-      message: "No override rules are configured for the selected resources"
-      lastTransitionTime: "2023-11-10T08:15:45Z"
-      observedGeneration: 5
-    - type: WorkSynchronized
-      status: "True"
-      reason: AllWorkSynced
-      message: "All of the works are synchronized to the latest"
-      lastTransitionTime: "2023-11-10T08:16:00Z"
-      observedGeneration: 5
-    - type: Applied
-      status: "True"
-      reason: AllWorkHaveBeenApplied
-      message: "All corresponding work objects are applied"
-      lastTransitionTime: "2023-11-10T08:16:15Z"
-      observedGeneration: 5
-    - type: Available
-      status: "True"
-      reason: ResourceAvailable
-      message: "All resources are available on the target cluster"
-      lastTransitionTime: "2023-11-10T08:16:30Z"
-      observedGeneration: 5
-    failedPlacements: []
-    driftedPlacements: []
-    diffedPlacements: []
-  - clusterName: aks-west-2
-    observedResourceIndex: "1"
-    conditions:
-    - type: ResourceScheduled
-      status: "True"
-      reason: ScheduleSucceeded
-      message: "Successfully scheduled resources for placement in aks-west-2 (affinity score: 0, topology spread score: 0): picked by scheduling policy"
-      lastTransitionTime: "2023-11-10T08:14:52Z"
-      observedGeneration: 5
-    - type: RolloutStarted
-      status: "True"
-      reason: RolloutStarted
-      message: "Detected new changes on the resources and started the rollout process"
-      lastTransitionTime: "2023-11-10T08:15:30Z"
-      observedGeneration: 5
-    - type: Overridden
-      status: "True"
-      reason: NoOverrideSpecified
-      message: "No override rules are configured for the selected resources"
-      lastTransitionTime: "2023-11-10T08:15:45Z"
-      observedGeneration: 5
-    - type: WorkSynchronized
-      status: "True"
-      reason: AllWorkSynced
-      message: "All of the works are synchronized to the latest"
-      lastTransitionTime: "2023-11-10T08:16:00Z"
-      observedGeneration: 5
-    - type: Applied
-      status: "True"
-      reason: AllWorkHaveBeenApplied
-      message: "All corresponding work objects are applied"
-      lastTransitionTime: "2023-11-10T08:16:15Z"
-      observedGeneration: 5
-    - type: Available
-      status: "True"
-      reason: ResourceAvailable
-      message: "All resources are available on the target cluster"
-      lastTransitionTime: "2023-11-10T08:16:30Z"
-      observedGeneration: 5
-    failedPlacements: []
-    driftedPlacements: []
-    diffedPlacements: []
-```
-
-:::zone-end
-
 :::zone target="docs" pivot="namespace-scope"
 
 Here's a comprehensive example showing the complete status of a ResourcePlacement:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourcePlacement
 metadata:
   name: web-app-placement
