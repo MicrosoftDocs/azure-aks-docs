@@ -6,10 +6,14 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+ai-usage: ai-assisted
 # Customer intent: "As a cloud operations engineer, I want to define a customized rollout strategy for managing resource placements in Fleet Manager, so that I can minimize service interruptions and optimize resource deployment across multiple clusters."
+zone_pivot_groups: cluster-namespace-scope
 ---
 
 # Defining a rollout strategy for Azure Kubernetes Fleet Manager resource placement
+
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 During the lifetime of a resource placement (cluster-scoped `ClusterResourcePlacement` or namespace-scoped `ResourcePlacement`), changes might be made which can result in one of the following scenarios:
 
@@ -23,6 +27,8 @@ Most scenarios can lead to service interruptions as workloads running on member 
 To minimize interruption, Fleet Manager's resource placement APIs allow users to configure a rollout strategy, similar to native Kubernetes deployment, to transition between changes as smoothly as possible.
 
 In this article, we cover the rollout strategy options available for both `ClusterResourcePlacement` and `ResourcePlacement`.
+> [!IMPORTANT]
+> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview.
 
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's resource placement concepts, read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
@@ -34,6 +40,8 @@ Both `ClusterResourcePlacement` and `ResourcePlacement` don't require you to def
 ## Rolling update strategy
 
 An explicit rolling update strategy can be used by adding a `strategy` specification to a `ClusterResourcePlacement` or `ResourcePlacement` as shown. You can define parameters, which control how disruptive the Fleet Manager resource placement is.
+
+:::zone target="docs" pivot="cluster-scope"
 
 ### ClusterResourcePlacement example
 
@@ -65,6 +73,10 @@ spec:
       maxSurge: 50%
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+
 ### ResourcePlacement example
 
 ```yaml
@@ -88,6 +100,7 @@ spec:
       maxUnavailable: 1
       maxSurge: 50%
 ```
+:::zone-end
 
 ### Configuration parameters
 
@@ -149,20 +162,30 @@ For simpler scenarios where percentage-based rollouts suffice, consider using th
 
 Staged updates use different custom resources depending on scope:
 
+:::zone target="docs" pivot="cluster-scope"
+
 **For cluster-scoped placements:**
 * **ClusterResourcePlacement** - Configured with `strategy.type: External` to indicate external strategy management
 * **ClusterStagedUpdateStrategy** - Defines the stages, cluster selection, and progression rules
 * **ClusterStagedUpdateRun** - Executes the clusterStagedUpdateStrategy against a specific `ClusterResourcePlacement` and cluster resource snapshot
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
 
 **For namespace-scoped placements:**
 * **ResourcePlacement** - Configured with `strategy.type: External` to indicate external strategy management
 * **StagedUpdateStrategy** - Defines the stages, cluster selection, and progression rules (namespace-scoped)
 * **StagedUpdateRun** - Executes the stagedUpdateStrategy against a specific `ResourcePlacement` and resource snapshot (namespace-scoped)
 
+:::zone-end
+
+:::zone target="docs" pivot="cluster-scope"
+
 #### ClusterResourcePlacement with external strategy
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: my-app-placement
@@ -181,7 +204,7 @@ spec:
 #### ClusterStagedUpdateStrategy (cluster-scoped)
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateStrategy
 metadata:
   name: three-stage-strategy
@@ -212,6 +235,9 @@ spec:
         - type: Approval
       maxConcurrency: 1  # Sequential updates (default)
 ```
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
 
 #### ResourcePlacement with external strategy
 
@@ -236,7 +262,7 @@ spec:
 #### StagedUpdateStrategy (namespace-scoped)
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: StagedUpdateStrategy
 metadata:
   name: three-stage-strategy
@@ -268,6 +294,7 @@ spec:
         - type: Approval
       maxConcurrency: 1  # Sequential updates (default)
 ```
+:::zone-end
 
 ### Stage configuration
 
@@ -279,41 +306,55 @@ Each stage in the strategy can specify:
 * **After-stage tasks** (`afterStageTasks`) either timed wait or approval requirement (optional - up to 2 tasks per stage, maximum one of each type)
 * **Max concurrency** (`maxConcurrency`) to determine the maximum number of clusters to update concurrently within the stage (optional - can be an absolute number  from 1 to the number of clusters in the stage, or a percentage from 1 to 100, fractional results are rounded down with a minimum of 1) 
 
+:::zone target="docs" pivot="cluster-scope"
+
 #### ClusterStagedUpdateRun (cluster-scoped)
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateRun
 metadata:
   name: my-app-rollout
 spec:
   placementName: my-app-placement # Required - ClusterResourcePlacement name the update run is applied to.
-  resourceSnapshotIndex: "0" # Optional - ClusterResourceSnapshot index of the selected resources to be updated across clusters.
+  # resourceSnapshotIndex: "0" # Optional - ClusterResourceSnapshot index of the selected resources to be updated across clusters. 
+                               # Omit to use the latest snapshot, creating one if it doesn't already exist.
   stagedRolloutStrategyName: three-stage-strategy # Required - The name of the update strategy to use.
   state: Run # Optional - Controls the execution state of the update run.
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
 #### StagedUpdateRun (namespace-scoped)
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: StagedUpdateRun
 metadata:
   name: my-app-rollout
   namespace: my-app
 spec:
   placementName: my-app-placement # Required - ResourcePlacement name the update run is applied to.
-  resourceSnapshotIndex: "0" # Optional - ResourceSnapshot index of the selected resources to be updated across clusters.
+  # resourceSnapshotIndex: "0" # Optional - ResourceSnapshot index of the selected resources to be updated across clusters.
+                               # Omit or leave empty to use the latest snapshot, creating one if it doesn't already exist.
   stagedRolloutStrategyName: three-stage-strategy # Required - The name of the update strategy to use.
   state: Run # Optional - Controls the execution state of the update run. 
 ```
 
+:::zone-end
+
 ### Specifying rollout
 
 The `resourceSnapshotIndex` field controls which resource snapshot version to deploy. You have several options:
-- Leave empty (`""`) or omit the field entirely to use the latest resource snapshot
-- Specify the latest resource snapshot index (like the example `"1"`) to explicitly target the newest version
+- Omit or leave empty (`""`) to use the latest snapshot, creating a new one if it doesn't already exist (shown in the example)
+- Specify an existing resource snapshot index (for example, `"2"`) to explicitly target that version
 - Specify an older resource snapshot index (for example, `"0"`) to deploy or roll back to a previous version
+
+> [!IMPORTANT]
+> When a placement uses the `External` rollout strategy, resource snapshots aren't created automatically. They're only created when you execute a staged update run with the `resourceSnapshotIndex` field omitted. This means that when you first create a placement with an `External` rollout strategy, no resource snapshots exist until you run the first staged update run.
+>
+> If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available and can be referenced when creating staged update runs.
  
 For more information on resource snapshots, see [Work with resource snapshots](./howto-staged-update-run.md#work-with-resource-snapshots).
 
@@ -340,10 +381,17 @@ The following state transitions are supported:
 
 Once an update run finishes, the update run can't be restarted. 
 
+:::zone target="docs" pivot="cluster-scope"
 > [!NOTE]
 > Always verify the current state of your update runs before attempting state changes. 
-> Use `kubectl get csur <update-run-name>` or `kubectl get sur <update-run-name> -n <namespace>` to check the current state and status.
+> Use `kubectl get clusterstagedupdaterun <update-run-name>` to check the current state and status.
+:::zone-end
 
+:::zone target="docs" pivot="namespace-scope"
+> [!NOTE]
+> Always verify the current state of your update runs before attempting state changes. 
+> Use `kubectl get stagedupdaterun <update-run-name> -n <namespace>` to check the current state and status.
+:::zone-end
 
 ### Stage progression
 
