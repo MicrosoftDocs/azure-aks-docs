@@ -30,14 +30,14 @@ These updates cover security information related to the following AKS components
 **Published Date**: March 5, 2026
 
 ### Description
-This bulletin provides an update regarding [a change](https://github.com/golang/go/commit/eed2208f152d1172993a3193374625683e244100) in [Go 1.25](https://go.dev/doc/go1.25) to reject TLS 1.2 handshake without extended master secret (EMS) when FIPS mode is enabled. Starting [AKS v1.34](https://github.com/Azure/AKS/releases/tag/2026-01-04), kubernetes control plane components are built with Go 1.25 and FIPS‑validated cryptographic modules, which enforce EMS for TLS 1.2 connections on FIPS nodes.
-When FIPS mode is active, TLS 1.2 handshakes that do not include the EMS extension are rejected. This enforcement applies to both TLS clients and servers implemented using the Go standard library. Prior to Go 1.21, Go TLS clients did not send the EMS extension by default for TLS 1.2 connections. As a result, applications built with older Go versions (Go <1.21)  may fail to establish TLS connections to FIPS‑enabled AKS components after upgrading to AKS v1.34. This behavior can affect:
+This bulletin provides an update regarding [a change](https://github.com/golang/go/commit/eed2208f152d1172993a3193374625683e244100) in [Go 1.25](https://go.dev/doc/go1.25) to reject TLS 1.2 handshake without extended master secret (EMS) when FIPS mode is enabled. Starting [AKS v1.34](https://github.com/Azure/AKS/releases/tag/2026-01-04), Kubernetes control plane components are built with Go 1.25 and FIPS‑validated cryptographic modules, which enforce EMS for TLS 1.2 connections on FIPS nodes.
+When FIPS mode is active, TLS 1.2 handshakes that do not include the EMS extension are rejected. This enforcement applies to both TLS clients and servers implemented using the Go standard library. Prior to Go 1.21, Go TLS clients did not send the EMS extension by default for TLS 1.2 connections. As a result, applications built with older Go versions (Go <1.21) might fail to establish TLS connections to FIPS‑enabled AKS components after upgrading to AKS v1.34. This behavior can affect:
 - Client applications communicating with the Kubernetes API server
 - Admission webhooks and other webhook servers registered with the kube‑apiserver
 
 ### References
 
-- [EMS Enforcement for TLS1.2 in Go 1.25](https://github.com/golang/go/commit/eed2208f152d1172993a3193374625683e244100)
+- [EMS Enforcement for TLS 1.2 in Go 1.25](https://github.com/golang/go/commit/eed2208f152d1172993a3193374625683e244100)
 
 ### Affected Components
 
