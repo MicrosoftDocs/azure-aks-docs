@@ -14,7 +14,7 @@ ms.custom: devx-track-azurecli
 
 With API Server VNet Integration, the AKS control plane is reachable through a private IP inside your cluster's virtual network (VNet). This configuration works well for workloads running in the same VNet, but it doesn't automatically cover external networks, such as a hub network, a dedicated operations VNet, or a jump-host environment that need to reach the API server without exposing it to the public internet. This article shows you how to bridge that gap by fronting the API server with a Private Link Service, then connecting to it from a separate virtual network through a Private Endpoint.
 
-This article applies **only to clusters that are created with [API Server VNet Integration](./api-server-vnet-integration.md)** and uses a bring-your-own VNet (BYO VNet) configuration. It shows you how to:
+This article applies only to **private AKS clusters that are created with [API Server VNet Integration](./api-server-vnet-integration.md) and use a bring-your-own VNet (BYO VNet) configuration**. You learn how to:
 
 - Deploy a **private** AKS cluster with API Server VNet Integration using your own VNet.
 - Expose the API server through a **Private Link Service (PLS)** inside the cluster virtual network.
@@ -29,12 +29,9 @@ API Server VNet Integration is currently available in a subset of Azure regions 
 
 ## Prerequisites
 
-| Requirement                 | Minimum                                                                          |
-|-----------------------------|----------------------------------------------------------------------------------|
-| Azure CLI                   | 2.73.0                                                                           |
-| Permissions                 | Contributor + Network Contributor on both subscriptions                          |
-
-If you use custom DNS servers, add Azure's virtual IP **168.63.129.16** as an upstream forwarder.
+- Minimum Azure CLI version 2.73.0. Check your version using the `az --version` command. To install or update the Azure CLI, see [Install Azure CLI](/cli/azure/install-azure-cli).
+- You need Contributor and Network Contributor permissions on both the subscription where the AKS cluster is deployed and the subscription where you create the Private Endpoint (if different). This is required to create and manage the necessary network resources such as subnets, Private Link Service, and Private Endpoint. For more information, see [Azure role-based access control (RBAC) built-in roles](/azure/role-based-access-control/built-in-roles).
+- If you're using custom DNS servers, you need to add Azure's virtual IP, _168.63.129.16_, as an upstream forwarder.
 
 ## Set environment variables
 
