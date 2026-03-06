@@ -21,12 +21,11 @@ This article shows you how to create and execute staged update runs to deploy wo
 Azure Kubernetes Fleet Manager supports two scopes for staged updates:
 
 - **Cluster-scoped**: Use `ClusterStagedUpdateRun` with `ClusterResourcePlacement` for fleet administrators managing infrastructure-level changes.
-- **Namespace-scoped (preview)**: Use `StagedUpdateRun` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
+- **Namespace-scoped**: Use `StagedUpdateRun` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
+> [!IMPORTANT]
+> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview. Some features demonstrated in this article, such as `ResourceSnapshot`, are also part of the v1beta1 API and aren't available in the v1 API.
 
 The examples in this article demonstrate both approaches using tabs. Choose the tab that matches your deployment scope.
-
-> [!IMPORTANT]
-> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview. Some features demonstrated in this article, such as `StagedUpdateStrategy`, are also part of the v1beta1 API and aren't available in the v1 API.
 
 ## Before you begin
 
@@ -89,7 +88,7 @@ To deploy the resources, create a `ClusterResourcePlacement`:
 > The `spec.strategy.type` is set to `External` to allow rollout triggered with a `ClusterStagedUpdateRun`.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: example-placement
@@ -121,17 +120,77 @@ example-placement   1     True        1                                         
 ```
 
 
+## Create a staged update strategy
+
+A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: ClusterStagedUpdateStrategy
+metadata:
+  name: example-strategy
+spec:
+  stages:
+    - name: staging
+      labelSelector:
+        matchLabels:
+          environment: staging
+      afterStageTasks:
+        - type: TimedWait
+          waitTime: 1m
+      maxConcurrency: 1
+    - name: canary
+      labelSelector:
+        matchLabels:
+          environment: canary
+      sortingLabelKey: order
+      beforeStageTasks:
+        - type: Approval
+      maxConcurrency: 50%
+```
+
 ## Work with resource snapshots
 
-Fleet Manager creates resource snapshots when resources change. Each snapshot has a unique index that you can use to reference specific versions of your resources.
+Fleet Manager creates resource snapshots when resources change if the placement has a rollout strategy of `RollingUpdate`. Each snapshot has a unique index that you can use to reference specific versions of your resources.
+
+When a placement uses the `External` rollout strategy, resource snapshots aren't created automatically. Instead, they're created when you execute a staged update run. This means that when you first create a placement with an `External` rollout strategy, no resource snapshots exist until you run the first staged update run.
+
+> [!NOTE]
+> If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available. You can reference these existing snapshots when creating staged update runs.
 
 > [!TIP]
-> For more information about resource snapshots and how they work, see [Understanding resource snapshots](./howto-understand-placement.md#understanding-resource-snapshots).
+> For more information about resource snapshots and how they work, see [resource snapshots](./howto-understand-placement.md#resource-snapshots).
 
 ### Check current resource snapshots
 
+Since the `ClusterResourcePlacement` uses the `External` strategy, no resource snapshots exist yet. Let's verify:
 
-To check current resource snapshots:
+```bash
+kubectl get clusterresourcesnapshots --show-labels
+```
+
+Your output should show no resources:
+
+```output
+No resources found
+```
+
+### Create the first resource snapshot
+
+To create the first resource snapshot, you need to create a `ClusterStagedUpdateRun` with the `resourceSnapshotIndex` field omitted. The update run controller detects that no snapshots exist and creates one automatically.
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: ClusterStagedUpdateRun
+metadata:
+  name: example-initial-run
+spec:
+  placementName: example-placement
+  stagedRolloutStrategyName: example-strategy
+  state: Run
+```
+
+After the update run completes, check the resource snapshots:
 
 ```bash
 kubectl get clusterresourcesnapshots --show-labels
@@ -144,7 +203,7 @@ NAME                           GEN   AGE   LABELS
 example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
 ```
 
-We only have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
+You now have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
 
 ### Create a new resource snapshot
 
@@ -175,7 +234,20 @@ metadata:
   uid: ...
 ```
 
-Now you should see two versions of resource snapshots with index 0 and 1 respectively, the latest being index 1:
+Since the placement uses the `External` strategy, the new resource snapshot isn't created automatically. Create another `ClusterStagedUpdateRun` with the `resourceSnapshotIndex` field omitted to trigger the creation of a new snapshot:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: ClusterStagedUpdateRun
+metadata:
+  name: example-snapshot-run
+spec:
+  placementName: example-placement
+  stagedRolloutStrategyName: example-strategy
+  state: Run
+```
+
+After the update run completes, you should see two versions of resource snapshots with index 0 and 1 respectively, the latest being index 1:
 
 ```bash
 kubectl get clusterresourcesnapshots --show-labels
@@ -213,7 +285,7 @@ metadata:
     kubernetes-fleet.io/resource-index: "1"
   name: example-placement-1-snapshot
   ownerReferences:
-  - apiVersion: placement.kubernetes-fleet.io/v1beta1
+  - apiVersion: placement.kubernetes-fleet.io/v1
     blockOwnerDeletion: true
     controller: true
     kind: ClusterResourcePlacement
@@ -241,41 +313,15 @@ spec:
       namespace: test-namespace
 ```
 
-## Create a staged update strategy
-
-A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ClusterStagedUpdateStrategy
-metadata:
-  name: example-strategy
-spec:
-  stages:
-    - name: staging
-      labelSelector:
-        matchLabels:
-          environment: staging
-      afterStageTasks:
-        - type: TimedWait
-          waitTime: 1m
-      maxConcurrency: 1
-    - name: canary
-      labelSelector:
-        matchLabels:
-          environment: canary
-      sortingLabelKey: order
-      beforeStageTasks:
-        - type: Approval
-      maxConcurrency: 50%
-```
-
 ## Prepare a staged update run to rollout changes
 
 A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our ClusterResourcePlacement (CRP), we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
 
+> [!NOTE]
+> When using the `External` rollout strategy, you can omit the `resourceSnapshotIndex` field if you want to deploy the latest resources. The update run controller creates a new resource snapshot automatically when `resourceSnapshotIndex` is omitted.
+
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateRun
 metadata:
   name: example-run
@@ -332,7 +378,7 @@ kubectl get clusterstagedupdaterrun example-run -o yaml
 Your output should look similar to the following example:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateRun
 metadata:
   ...
@@ -476,6 +522,7 @@ cat << EOF > approval.json
 }
 EOF
 ```
+> Note: Be sure the `observedGeneration` matches the generation of the approval object.
 
 Submit a patch request to approve using the JSON file created.
 
@@ -568,7 +615,7 @@ kubectl get clusterstagedupdaterun example-run -o yaml
 Your output should look similar to the following example:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateRun
 metadata:
   ...
@@ -649,7 +696,7 @@ status:
 Suppose the workload admin wants to roll back the ConfigMap change, reverting the value `value2` back to `value1`. Instead of manually updating the ConfigMap from hub, they can create a new `ClusterStagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterStagedUpdateRun
 metadata:
   name: example-run-2
@@ -750,7 +797,7 @@ kubectl create configmap test-cm --from-literal=key=value1 -n test-namespace
 Since `ResourcePlacement` is namespace-scoped, first deploy the Namespace to all member clusters using a `ClusterResourcePlacement`, specifying `NamespaceOnly` for the selection scope:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: test-namespace-placement
@@ -816,16 +863,79 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1                                           51s
 ```
 
+## Create a staged update strategy
+
+A `StagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: StagedUpdateStrategy
+metadata:
+  name: example-strategy
+  namespace: test-namespace
+spec:
+  stages:
+    - name: staging
+      labelSelector:
+        matchLabels:
+          environment: staging
+      afterStageTasks:
+        - type: TimedWait
+          waitTime: 1m
+      maxConcurrency: 1
+    - name: canary
+      labelSelector:
+        matchLabels:
+          environment: canary
+      sortingLabelKey: order
+      beforeStageTasks:
+        - type: Approval
+      maxConcurrency: 50%
+```
+
 ## Work with resource snapshots
 
-Fleet Manager creates resource snapshots when resources change. Each snapshot has a unique index that you can use to reference specific versions of your resources.
+Fleet Manager creates resource snapshots when resources change if the placement has a rollout strategy of `RollingUpdate`. Each snapshot has a unique index that you can use to reference specific versions of your resources.
+
+When a placement uses the `External` rollout strategy, resource snapshots aren't created automatically. Instead, they're created when you execute a staged update run. This means that when you first create a placement with an `External` rollout strategy, no resource snapshots exist until you run the first staged update run.
+
+> [!NOTE]
+> If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available. You can reference these existing snapshots when creating staged update runs.
 
 > [!TIP]
-> For more information about resource snapshots and how they work, see [Understanding resource snapshots](./howto-understand-placement.md#understanding-resource-snapshots).
+> For more information about resource snapshots and how they work, see [resource snapshots](./howto-understand-placement.md#resource-snapshots).
 
 ### Check current resource snapshots
 
-To check current resource snapshots:
+Since the `ResourcePlacement` uses the `External` strategy, no resource snapshots exist yet. Let's verify:
+
+```bash
+kubectl get resourcesnapshots -n test-namespace --show-labels
+```
+
+Your output should show no resources:
+
+```output
+No resources found in test-namespace namespace.
+```
+
+### Create the first resource snapshot
+
+To create the first resource snapshot, you need to create a `StagedUpdateRun` with the `resourceSnapshotIndex` field omitted. The update run controller detects that no snapshots exist and creates one automatically.
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: StagedUpdateRun
+metadata:
+  name: example-initial-run
+  namespace: test-namespace
+spec:
+  placementName: example-placement
+  stagedRolloutStrategyName: example-strategy
+  state: Run
+```
+
+After the update run completes, check the resource snapshots:
 
 ```bash
 kubectl get resourcesnapshots -n test-namespace --show-labels
@@ -838,7 +948,7 @@ NAME                           GEN   AGE   LABELS
 example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
 ```
 
-We only have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
+You now have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
 
 ### Create a new resource snapshot
 
@@ -869,7 +979,21 @@ metadata:
   uid: ...
 ```
 
-Now you should see two versions of resource snapshots with index 0 and 1 respectively:
+Since the placement uses the `External` strategy, the new resource snapshot isn't created automatically. Create another `StagedUpdateRun` with the `resourceSnapshotIndex` field omitted to trigger the creation of a new snapshot:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: StagedUpdateRun
+metadata:
+  name: example-snapshot-run
+  namespace: test-namespace
+spec:
+  placementName: example-placement
+  stagedRolloutStrategyName: example-strategy
+  state: Run
+```
+
+After the update run completes, you should see two versions of resource snapshots with index 0 and 1 respectively:
 
 ```bash
 kubectl get resourcesnapshots -n test-namespace --show-labels
@@ -892,7 +1016,7 @@ kubectl get resourcesnapshots example-placement-1-snapshot -n test-namespace -o 
 Your output should look similar to the following example:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ResourceSnapshot
 metadata:
   annotations:
@@ -927,42 +1051,15 @@ spec:
       namespace: test-namespace
 ```
 
-## Create a staged update strategy
-
-A `StagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: StagedUpdateStrategy
-metadata:
-  name: example-strategy
-  namespace: test-namespace
-spec:
-  stages:
-    - name: staging
-      labelSelector:
-        matchLabels:
-          environment: staging
-      afterStageTasks:
-        - type: TimedWait
-          waitTime: 1m
-      maxConcurrency: 1
-    - name: canary
-      labelSelector:
-        matchLabels:
-          environment: canary
-      sortingLabelKey: order
-      beforeStageTasks:
-        - type: Approval
-      maxConcurrency: 50%
-```
-
 ## Prepare a staged update run to rollout changes
 
 A `StagedUpdateRun` executes the rollout of a `ResourcePlacement` following a `StagedUpdateStrategy`. To trigger the staged update run for our ResourcePlacement (RP), we create a `StagedUpdateRun` specifying the RP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
 
+> [!NOTE]
+> When using the `External` rollout strategy, you can omit the `resourceSnapshotIndex` field if you want to deploy the latest resources. The update run controller creates a new resource snapshot automatically when `resourceSnapshotIndex` is omitted.
+
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: StagedUpdateRun
 metadata:
   name: example-run
@@ -1044,6 +1141,8 @@ cat << EOF > approval.json
 }
 EOF
 ```
+> [!NOTE]
+> Be sure the `observedGeneration` is the same as the generation of the approval object.
 
 Submit a patch request to approve using the JSON file created.
 
@@ -1136,7 +1235,7 @@ kubectl get stagedupdaterun example-run -n test-namespace -o yaml
 Your output should look similar to the following example:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: StagedUpdateRun
 metadata:
   ...
@@ -1218,7 +1317,7 @@ status:
 Suppose the workload admin wants to roll back the ConfigMap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new `StagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: StagedUpdateRun
 metadata:
   name: example-run-2
@@ -1325,9 +1424,9 @@ In this article, you learned how to use staged update runs to orchestrate rollou
 
 To learn more about staged update runs and related concepts, see the following resources:
 
-* [Defining a rollout strategy for cluster resource placement](./concepts-rollout-strategy.md)
-* [How to understand the status of ClusterResourcePlacement](./howto-understand-placement.md)
-* [How to configure monitoring and alerting for update runs](./howto-monitor-update-runs.md)
+* [Defining a rollout strategy for Fleet Manager resource placement](./concepts-rollout-strategy.md)
+* [Understand status fields and conditions for Fleet Manager resource placemen](./howto-understand-placement.md)
+* [View agent logs in Azure Kubernetes Fleet Manager](./view-fleet-agent-logs.md)
 
 <!-- INTERNAL LINKS -->
 [fleet-quickstart]: ./quickstart-create-fleet-and-members.md
