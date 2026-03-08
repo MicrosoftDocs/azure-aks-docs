@@ -37,7 +37,7 @@ In previous tutorials, you created a container image, uploaded it to an ACR inst
 
 > [!IMPORTANT]
 > This tutorial applies to [Azure Container Storage (version 2.x.x)][azure-container-storage], which supports local NVMe disk and Azure Elastic SAN as backing storage types. This tutorial uses local NVMe and creates a generic ephemeral volume. To use local NVMe, your VM SKU must support local NVMe data disks, such as [storage-optimized](/azure/virtual-machines/sizes/overview#storage-optimized) or [GPU-accelerated](/azure/virtual-machines/sizes/overview#gpu-accelerated) VMs.
-> 
+>
 > If you'd prefer to use Azure Elastic SAN, see [Use Azure Container Storage with Azure Elastic SAN][azure-container-storage-elastic-san].
 
 ## Install the Kubernetes extension
@@ -56,7 +56,7 @@ Run the following command to enable Azure Container Storage on an existing AKS c
 az aks update -n myAKSCluster -g myResourceGroup --enable-azure-container-storage ephemeralDisk
 ```
 
-The deployment can take up to five minutes. When it completes, the AKS cluster has Azure Container Storage installed and the components for local NVMe storage type deployed. It also creates the default `local` storage class.
+The deployment can take up to five minutes. When it completes, the AKS cluster has Azure Container Storage installed and the components for local NVMe storage type deployed. It also creates the default `local-csi` storage class.
 
 ## Connect to the cluster and verify status
 
@@ -81,14 +81,14 @@ If you're not already connected to your cluster from the previous tutorial, run 
 Run the following command to verify that the storage class is created:
 
 ```azurecli
-kubectl get storageclass local
+kubectl get storageclass local-csi
 ```
 
 You should see output similar to:
 
 ```output
-NAME    PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
-local   localdisk.csi.acstor.io    Delete          WaitForFirstConsumer   true                   10s
+NAME        PROVISIONER               RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+local-csi   localdisk.csi.acstor.io   Delete          WaitForFirstConsumer   true                   10s
 ```
 
 ## Deploy a pod with generic ephemeral volume
@@ -121,14 +121,14 @@ Create a pod using [Fio](https://github.com/axboe/fio) (Flexible I/O Tester) for
              spec:
                volumeMode: Filesystem
                accessModes: ["ReadWriteOnce"]
-               storageClassName: local
+               storageClassName: local-csi
                resources:
                  requests:
                    storage: 10Gi
    ```
 
 1. Apply the YAML manifest file to deploy the pod.
-   
+
    ```azurecli
    kubectl apply -f fiopod.yaml
    ```
