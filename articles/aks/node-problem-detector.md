@@ -40,7 +40,7 @@ Node conditions indicate a permanent problem that makes the node unavailable. AK
 |SystemLogMonitor|ReadonlyFilesystem |FilesystemIsReadOnly| General purpose |
 
 > [!NOTE]
-> The `GPU only` node conditions apply to all GPU node pools that use AKS-managed GPU drivers (node pools not created with `--gpu-driver none`). The `GPU only (managed GPU)` conditions apply only to node pools with the [managed GPU experience](./aks-managed-gpu-nodes.md) enabled. GPU health monitoring is supported on standard GPU and [MIG-enabled GPU node pools](./gpu-multi-instance.md).
+> The `GPU only` node conditions apply to all GPU node pools that use AKS-managed GPU drivers (node pools not created with `--gpu-driver none`). The `GPU only (managed GPU)` conditions apply only to node pools with the [fully managed GPU experience](./aks-managed-gpu-nodes.md) enabled. GPU health monitoring is supported on standard GPU and [MIG-enabled GPU node pools](./gpu-multi-instance.md).
 
 ## Events
 
