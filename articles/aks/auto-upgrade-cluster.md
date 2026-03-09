@@ -79,7 +79,7 @@ The following upgrade channels are available:
 
 Set the autoupgrade channel when creating a new cluster using the [`az aks create`][az-aks-create] command and the `auto-upgrade-channel` parameter.
 
-```text
+```azurecli-interactive
 az aks create \
   --resource-group <resource-group-name> \
   --name <cluster-name> \
