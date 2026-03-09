@@ -6,16 +6,14 @@ ms.topic: how-to
 ms.date: 03/04/2026
 ms.author: colinmixon
 author: colinmixon
-# Customer intent: "As a Kubernetes cluster operator, I want to improve node utilization by scheduling more pods on provisioined nodes using one or more configurable bin packing profiles, so that I can effectively manage resource allocation across my AKS clusters."
+# Customer intent: "As a Kubernetes cluster operator, I want to improve node utilization by scheduling more pods on provisioined nodes using one or more configurable bin packing profiles, so that I can effectively manage provisioned resources across my AKS clusters."
 ---
 
 # Bin Pack Nodes with scheduler profiles on Azure Kubernetes Service (AKS) (preview)
 
-In this article, you learn how to bin pack your nodes to improve node utilization by deploying three different scheduler profiles in Azure Kubernetes Service (AKS) using in-tree scheduling plugins. 
+In this article, you learn how to bin pack your nodes to improve node utilization by deploying three different scheduler profiles in Azure Kubernetes Service (AKS) using in-tree scheduling plugins. This documentation will cover three different scheduler profiles while highlighting the best practice recommendation to improve utilization while reducing node hot spots.  
 
-Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes, within the set configuration. Bin packing helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes. This documentation will guide you on three different scheduler profiles while highglithing the best practices recommendation to improve utilization while reducing node hot spots.  
-
-Improving node utilization is critical as data shows that CPU and memory are both over-requested resources. Nearly 50% request far more CPU than they use and 70% underutilize CPU relative to requests. Additionally, as GPU usage increases, utilization of accelerators is also critical given scarcity of resources.
+Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes. Bin packing helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes. Improving node utilization is critical as data shows that CPU and memory are both over-requested resources. Additionally, as GPU usage increases, utilization of accelerators is also critical given scarcity of resources.
 
 ## Limitations
 
