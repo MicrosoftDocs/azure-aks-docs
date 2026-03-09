@@ -1,6 +1,6 @@
 ---
 title: Bin Pack Nodes with Scheduler Profiles on Azure Kubernetes Service (AKS) (preview)
-description: Learn how to set scheduler profiles to reduce idle costs and improve node utilization on Azure Kubernetes Service (AKS).
+description: Learn how to configure scheduler profiles to reduce idle costs and improve node utilization on Azure Kubernetes Service (AKS).
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.date: 03/04/2026
@@ -11,14 +11,11 @@ author: colinmixon
 
 # Bin Pack Nodes with scheduler profiles on Azure Kubernetes Service (AKS) (preview)
 
-In this article, you learn how to bin pack your nodes to improve node utilization by deploying two different scheduler profiles in Azure Kubernetes Service (AKS) using in-tree scheduling plugins. 
+In this article, you learn how to bin pack your nodes to improve node utilization by deploying three different scheduler profiles in Azure Kubernetes Service (AKS) using in-tree scheduling plugins. 
 
-Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes, within the set configuration. This strategy helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes.
+Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes, within the set configuration. Bin packing helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes. Some node bin packing strategies are more aggresive than others, so this documentation will guide you on three different resources while highglithing the best practices recommendation. 
 
-This is critical as CPU and memory are both over-requested resource. Nearly 50% request far more CPU than they use and 70% underutilize CPU relative to requests. Additionally, as GPU usage increases, utilizaiton of accelerators is also critical given scarcity of resources.
-
-This aggressively groups low-CPU-usage workloads together, freeing entire nodes → fewer nodes, higher density, lower cost.
-Memory scoring stays light but protective because memory is more sensitive (OOM affects reliability), so we avoid workloads piling onto a memory-hot node
+Improving node utilization is critical as data shows that CPU and memory are both over-requested resources. Nearly 50% request far more CPU than they use and 70% underutilize CPU relative to requests. Additionally, as GPU usage increases, utilizaiton of accelerators is also critical given scarcity of resources.
 
 ## Limitations
 
@@ -111,7 +108,6 @@ You can enable schedule profile configuration on a new or existing AKS cluster.
     --name="${CLUSTER_NAME}" \
     --enable-upstream-kubescheduler-user-configuration
     ```
-
 ---
 
 ## Verify installation of the scheduler controller
