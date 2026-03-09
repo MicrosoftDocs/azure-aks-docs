@@ -1,13 +1,13 @@
 ---
 title: Azure Kubernetes Fleet Manager Preview API lifecycle
 description: Learn about the Azure Kubernetes Fleet Manager preview API lifecycle.
-ms.date: 05/29/2025
+ms.date: 03/09/2026
 ms.topic: concept-article
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 
-# Customer intent: As a Kubernetes administrator, I want to monitor and update my Azure Kubernetes Fleet Manager API versions, so that I can ensure continued functionality and take advantage of new features without interruption.
+# Customer intent: As a Kubernetes administrator, I want to ensure my Azure Kubernetes Fleet Manager ARM, Bicep and Terraform templates and CLI version is using a supported ARM API, so that I can ensure continued functionality and take advantage of new features without interruption.
 ---
 
 # Azure Kubernetes Fleet Manager Preview API lifecycle
@@ -29,6 +29,7 @@ This article covers Azure Kubernetes Fleet Manager API deprecations. For Azure K
 
 | API version        | Announce Date     | Deprecation Date  |
 |--------------------|-------------------|-------------------|
+| 2025-04-01-preview | TBC               | TBC               |
 | 2024-05-02-preview | TBC               | TBC               |
 | 2024-02-02-preview | TBC               | TBC               |
 
