@@ -13,7 +13,10 @@ author: colinmixon
 
 In this article, you learn how to bin pack your nodes to improve node utilization by deploying two different scheduler profiles in Azure Kubernetes Service (AKS) using in-tree scheduling plugins. 
 
-CPU is the dominant over-requested resource. Nearly 50% request far more CPU than they use and 70% underutilize CPU relative to requests.
+Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes, within the set configuration. This strategy helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes.
+
+This is critical as CPU and memory are both over-requested resource. Nearly 50% request far more CPU than they use and 70% underutilize CPU relative to requests. Additionally, as GPU usage increases, utilizaiton of accelerators is also critical given scarcity of resources.
+
 This aggressively groups low-CPU-usage workloads together, freeing entire nodes → fewer nodes, higher density, lower cost.
 Memory scoring stays light but protective because memory is more sensitive (OOM affects reliability), so we avoid workloads piling onto a memory-hot node
 
@@ -123,9 +126,6 @@ You can enable schedule profile configuration on a new or existing AKS cluster.
     > This command won't succeed if the feature wasn't successfully enabled in the [previous section](#enable-scheduler-profile-configuration-on-an-aks-cluster).
 
 ## Configure node bin-packing with MostAllocated Plugin
-
-Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes, within the set configuration. This strategy helps improve cluster efficiency by minimizing wasted resources and lowering the operational cost of maintaining idle or underutilized nodes.
-
 In this example, the configured scheduler prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. The CRD must be named `upstream`.
 
   - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
@@ -166,27 +166,9 @@ spec:
                     weight: 1
 ```
 
-1. Apply the scheduling configuration manifest using the `kubectl apply` command.
-
-    ```bash
-    kubectl apply -f bin-pack-cpu-scheduler.yaml
-    ```
-
-1. To target this scheduling mechanism for specific workloads, update your pod deployments with the following `schedulerName`:
-
-    ```yaml
-    ...
-    ...
-        spec:
-          schedulerName: node-binpacking-cpu-scheduler
-    ...
-    ...
-    ```
-
-
 ## Configure node bin-packing with RequestedtoCapacity Plugin
 
-.The CRD must be named `upstream`.
+The CRD must be named `upstream`.
 
   - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
   - `scoringStrategy: RequestedToCapacityRatio` tells the scheduler to prefer nodes with high CPU resource usage. This helps achieve **better resource utilization** by placing new pods on nodes that are already "highly used".
@@ -242,24 +224,9 @@ spec:
                       score: 1
 ```
 
-1. Apply the scheduling configuration manifest using the `kubectl apply` command.
-
-    ```bash
-    kubectl apply -f pod-topology-spreader-scheduler.yaml
-    ```
-
-1. To target this scheduling mechanism for specific workloads, update your pod deployments with the following `schedulerName`:
-
-    ```yaml
-    ...
-    ...
-        spec:
-          schedulerName: pod-distribution-scheduler
-    ...
-    ...
-    ```
-
 ## Configure node bin-packing with MostAllocated and ResourceBalancedAllocation Plugins
+
+The CRD must be named `upstream`.
 
 ```yaml
 apiVersion: aks.azure.com/v1alpha1
@@ -305,23 +272,22 @@ spec:
 
 ## Assign a scheduler profile to an entire AKS cluster
 
-1. In your scheduler profile configuration, update the `schedulerName` field as follows:
+1. Apply the scheduling configuration manifest using the `kubectl apply` command.
+
+    ```bash
+    kubectl apply -f pod-topology-spreader-scheduler.yaml
+    ```
+
+2. To target this scheduling mechanism for specific workloads, update your pod deployments with the following `schedulerName`:
 
     ```yaml
     ...
     ...
-        - schedulerName: default_scheduler
+        spec:
+          schedulerName: pod-distribution-scheduler
     ...
     ...
     ```
-
-1. Reapply the manifest using the `kubectl apply` command.
-
-    ```bash
-    kubectl apply -f aks-scheduler-customization.yaml
-    ```
-
-    Now, this configuration will become the **default** scheduling operation for your entire AKS cluster.
 
 
 ## Disable an AKS scheduler profile configuration
@@ -358,7 +324,7 @@ spec:
 
 ## Next steps
 
-To learn more about the AKS scheduler and best practices, see the following resources:
+To learn more about the AKS scheduler, other configruations and best practices, see the following resources:
 
 - [Azure Kubernetes Service (AKS) scheduler best practices](./operator-best-practices-scheduler.md)
 - [Best practices for advanced scheduling policies](./operator-best-practices-advanced-scheduler.md)
