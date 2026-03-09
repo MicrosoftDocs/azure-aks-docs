@@ -17,16 +17,16 @@ Microsoft collaborates with partners to ensure your build, test, deployment, con
 
 The third party partners featured in this article have introduction guides to help you start using their solutions with your applications running on Azure Linux Container Host on AKS.
 
-|          | Partners |
-|----------|----------|
-| **DevOps** | * [Advantech](#advantech) <br> * [Akuity](#akuity) <br> * [Anchore](#anchore) <br> * [Hashicorp](#hashicorp) <br> * [Kong](#kong) <br> * [Kubecost](#kubecost) <br> * [NetApp](#netapp) <br> * [Sysdig](#sysdig) <br> * [VictoriaMetrics](#victoriametrics) |
-| **Networking** | * [Buoyant](#buoyant) <br> * [Isovalent](#isovalent) <br> * [Solo.io](#soloio) <br> * [Tetrate](#tetrate) <br> * [Tigera](#tigera-inc) |
-| **Observability** | * [Buoyant](#buoyant) <br> * [Dynatrace](#dynatrace) <br> * [Elastic](#elastic) <br> * [Isovalent](#isovalent) <br> * [Kubecost](#kubecost) <br> * [New Relic](#new-relic) <br> * [Solo.io](#soloio) <br> * [Tigera](#tigera-inc) <br> * [VictoriaMetrics](#victoriametrics) |
-| **Security** | * [Anchore](#anchore) <br> * [Buoyant](#buoyant) <br> * [CrowdStrike](#crowdstrike) <br> * [Elastic](#elastic) <br> * [Isovalent](#isovalent) <br> * [Kong](#kong) <br> * [Palo Alto Networks](#palo-alto-networks) <br> * [Qualys](#qualys) <br> * [Solo.io](#soloio) <br> * [Sysdig](#sysdig)  <br> * [Tetrate](#tetrate) <br> * [Tigera](#tigera-inc) <br> * [Upwind](#upwind) <br> * [Wiz](#wiz) |
-| **Storage** | * [Catalogic](#catalogic) <br> * [Veeam](#veeam) <br> * [VictoriaMetrics](#victoriametrics) |
-| **Config management** | * [Corent](#corent) <br> * [Sysdig](#sysdig) |
-| **Migration** | * [Catalogic](#catalogic) |
-| **Monitoring** | * [VictoriaMetrics](#victoriametrics) |
+| Category | Partner solutions |
+| -------- | ----------------- |
+| **DevOps** | - [Advantech](#advantech) <br> - [Akuity](#akuity) <br> - [Anchore](#anchore) <br> - [Hashicorp](#hashicorp) <br> - [Kong](#kong) <br> - [Kubecost](#kubecost) <br> - [NetApp](#netapp) <br> - [Sysdig](#sysdig) <br> - [VictoriaMetrics](#victoriametrics) |
+| **Networking** | - [Buoyant](#buoyant) <br> - [Isovalent](#isovalent) <br> - [Solo.io](#soloio) <br> - [Tetrate](#tetrate) <br> - [Tigera](#tigera-inc) |
+| **Observability** | - [Buoyant](#buoyant) <br> - [Dynatrace](#dynatrace) <br> - [Elastic](#elastic) <br> - [Isovalent](#isovalent) <br> - [Kubecost](#kubecost) <br> - [New Relic](#new-relic) <br> - [Solo.io](#soloio) <br> - [Tigera](#tigera-inc) <br> - [VictoriaMetrics](#victoriametrics) |
+| **Security** | - [Anchore](#anchore) <br> - [Buoyant](#buoyant) <br> - [CrowdStrike](#crowdstrike) <br> - [Elastic](#elastic) <br> - [Isovalent](#isovalent) <br> - [Kong](#kong) <br> - [Palo Alto Networks](#palo-alto-networks) <br> - [Qualys](#qualys) <br> - [Solo.io](#soloio) <br> - [Sysdig](#sysdig)  <br> - [Tetrate](#tetrate) <br> - [Tigera](#tigera-inc) <br> - [TrendAI](#trendai) <br> - [Upwind](#upwind) <br> - [Wiz](#wiz) |
+| **Storage** | - [Catalogic](#catalogic) <br> - [Veeam](#veeam) <br> - [VictoriaMetrics](#victoriametrics) |
+| **Config management** | - [Corent](#corent) <br> - [Sysdig](#sysdig) |
+| **Migration** | - [Catalogic](#catalogic) |
+| **Monitoring** | - [VictoriaMetrics](#victoriametrics) |
 
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
@@ -138,12 +138,12 @@ Kong Konnect is the unified cloud-native API lifecycle platform to optimize any 
 
 A unified Konnect control plane empowers businesses to:
 
-* Define a collection of API Data Plane Nodes that share the same configuration.
-* Provide a single control plane to catalog, connect to, and monitor the status of all control planes and instances and manage group configuration.
-* Browse APIs, reference documentation, test endpoints, and create applications using specific APIs through a customizable and unified API portal for developers.
-* Create a single source of truth by cataloging all services with the Service Hub.
-* Access key statistics, monitor vital signs, and spot patterns in real time to see how your APIs and gateways are performing.
-* Deliver a fully Kubernetes-centric operational lifecycle model through the integration of DevOps-ready config-driven API management layer and KIC's unrivaled runtime performance.
+- Define a collection of API Data Plane Nodes that share the same configuration.
+- Provide a single control plane to catalog, connect to, and monitor the status of all control planes and instances and manage group configuration.
+- Browse APIs, reference documentation, test endpoints, and create applications using specific APIs through a customizable and unified API portal for developers.
+- Create a single source of truth by cataloging all services with the Service Hub.
+- Access key statistics, monitor vital signs, and spot patterns in real time to see how your APIs and gateways are performing.
+- Deliver a fully Kubernetes-centric operational lifecycle model through the integration of DevOps-ready config-driven API management layer and KIC's unrivaled runtime performance.
 
 Kong's extensive ecosystem of community and enterprise plugins delivers critical functionality, including authentication, authorization, rate limiting, request enforcement, and caching, without increasing API platform's footprint.
 
@@ -187,9 +187,9 @@ Spot Ocean continuously analyzes how containers use the underlying infrastructur
 
 With Spot Ocean, users gain:
 
-* Automation and multicloud management: Reduce heavy lift infrastructure management efforts and increase operational efficiency
-* Cost Optimization: control and significantly reduce infrastructure cost
-* Availability: optimize uptime by predicting and automatically addressing resource needs and instance interruptions
+- Automation and multicloud management: Reduce heavy lift infrastructure management efforts and increase operational efficiency
+- Cost Optimization: control and significantly reduce infrastructure cost
+- Availability: optimize uptime by predicting and automatically addressing resource needs and instance interruptions
 
 </details>
 
@@ -249,7 +249,7 @@ Isovalent provides enterprise-grade support from their experienced team of exper
 
 </details>
 
-For more information, see [Isovalent Solutions](https://isovalent.com/blog/post/isovalent-azure-linux/) and [Isovalent on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/isovalentinc1662143158090.isovalent-cilium-enterprise?tab=overview).
+For more information, see [Isovalent Solutions](https://isovalent.com/blog/post/isovalent-azure-linux/) and [Isovalent on Azure Marketplace](https://marketplace.microsoft.com/product/isovalentinc1662143158090.isovalent-cilium-enterprise-offer1?tab=Overview).
 
 ### Solo.io
 
@@ -337,7 +337,7 @@ New Relic is the only AI-driven platform to unify and pair telemetry data to pro
 
 </details>
 
-For more information, see [New Relic Solutions](https://newrelic.com/solutions/partners/azure) and [New Relic on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/newrelicinc1635200720692.newrelic_liftr_payg?tab=Overview).
+For more information, see [New Relic Solutions](https://newrelic.com/solutions/partners/azure) and [New Relic on Azure Marketplace](https://marketplace.microsoft.com/product/newrelicinc1635200720692.newrelic_liftr_payg_2025?tab=Overview).
 
 ## Security
 
@@ -413,11 +413,11 @@ Qualys K8s and the Container Security solution provide proactive, preventive, an
 
 It integrates into your DevOps workflows, offering continuous real-time security and compliance throughout the containerized application lifecycle. Key features include:
 
-* **Vulnerability management**: Identifies vulnerabilities in container images, registries, and running containers, prioritizes them, and helps mitigate the most critical vulnerabilities first.
-* **Runtime protection**: eBPF-based runtime security monitors and protects containers in real-time, detecting and responding to malicious activities.
-* **Compliance**: Ensures that Kubernetes configurations and container images adhere to best practices and compliance standards, preventing misconfigurations that might lead to security breaches.
-* **File integrity monitoring**: Monitors changes to critical files within containers to detect and respond to unauthorized modifications.
-* **Secret and malware detection**: Detects secrets and malware on the left side before container images are deployed in runtime, ensuring security from the development phase.
+- **Vulnerability management**: Identifies vulnerabilities in container images, registries, and running containers, prioritizes them, and helps mitigate the most critical vulnerabilities first.
+- **Runtime protection**: eBPF-based runtime security monitors and protects containers in real-time, detecting and responding to malicious activities.
+- **Compliance**: Ensures that Kubernetes configurations and container images adhere to best practices and compliance standards, preventing misconfigurations that might lead to security breaches.
+- **File integrity monitoring**: Monitors changes to critical files within containers to detect and respond to unauthorized modifications.
+- **Secret and malware detection**: Detects secrets and malware on the left side before container images are deployed in runtime, ensuring security from the development phase.
 
 </details>
 
@@ -440,6 +440,24 @@ TID enforces fetching certified versions of Istio and enables only compatible ve
 </details>
 
 For more information, see [Tetrate documentation](https://docs.tetrate.io/) and [Tetrate on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/tetrate1598353087553.tetrateistio?tab=overview).
+
+### TrendAI
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/trendai.png":::
+
+| Solution | Categories |
+|----------|------------|
+| TrendAI | Security |
+
+TrendAI Vision One™ Cloud Security is proactive security for cloud‑native and containerized workloads, helping organizations reduce risk as they run applications on Azure Kubernetes Service.
+
+<details> <summary> See more </summary><br>
+
+It gives teams a single, clear view of risk across container and runtime activity in AKS environments, helping them prioritize what matters most. Instead of adding more dashboards, it brings signals together and turns them into clear, actionable insight. TrendAI Vision One Cloud Security is designed to reduce friction from code to runtime, helping engineering and security teams stay aligned as Kubernetes environments scale and change. This allows organizations to manage risk more confidently while continuing to move quickly.
+
+</details>
+
+For more information, see [TrendAI documentation](https://www.trendmicro.com/en_gb/business/products/hybrid-cloud/cloud-one-container-image-security.html).
 
 ### Upwind
 
