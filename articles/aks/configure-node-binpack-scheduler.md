@@ -28,41 +28,6 @@ Node bin-packing is a scheduling strategy that maximizes resource utilization by
 - [Register the `UserDefinedSchedulerConfigurationPreview` feature flag](#register-the-user-defined-scheduler-configuration-preview-feature-flag) in your Azure subscription.
 - Review the [supported advanced scheduling concepts](./concepts-scheduler-configuration.md) and in-tree scheduling plugins on AKS.
 
-
-### Install the `aks-preview` Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Install the `aks-preview` extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
-
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-1. Update to the latest version of the `aks-preview` extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
-
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the User Defined Scheduler Configuration Preview feature flag
-
-1. Register the `UserDefinedSchedulerConfigurationPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "UserDefinedSchedulerConfigurationPreview"
-    ```
-
-    It takes a few minutes for the status to show _Registered_.
-
-1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace "Microsoft.ContainerService"
-    ```
-
 ## Enable scheduler profile configuration on an AKS cluster
 
 You can enable schedule profile configuration on a new or existing AKS cluster.
