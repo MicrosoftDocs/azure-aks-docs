@@ -11,7 +11,7 @@ author: colinmixon
 
 # Bin Pack Nodes with scheduler profiles on Azure Kubernetes Service (AKS) (preview)
 
-In this article, you learn how to bin pack your nodes to improve node utilization for Azure Kubernetes Service (AKS) clusters using in-tree scheduling plugin, `NodeResourceFit`. The default AKS scheduler operates in a `NodeResourceFit:LestAllocated` mode which prioritizes nodes with lower utilization with scheduling pods. The AKS configurable scheduler profiles allows you to change this default behavior and fine-tune the configuration. This documentation will cover three different scheduler profiles while highlighting the best practice recommendation to improve utilization while reducing node hot spots.  
+In this article, you learn how to bin pack your nodes to improve node utilization for Azure Kubernetes Service (AKS) clusters using in-tree scheduling plugin, `NodeResourceFit`. The default AKS scheduler operates in a `NodeResourceFit:LestAllocated` mode which prioritizes nodes with lower utilization with scheduling pods. The AKS configurable scheduler profiles allow you to change this default behavior and fine-tune the configuration. This documentation will cover three different scheduler profiles while highlighting the best practice recommendation to improve utilization while reducing node hot spots.  
 
 Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes. Bin packing helps minimize wasted resources and can reduce the operational cost of maintaining idle or underutilized nodes. Node bin packing helps achieve **better node utilization** by placing new pods on nodes that are already in use rather than spreading pods across a node pool or autoscaling nodes prematurely. Improving node utilization is critical as data shows that CPU and memory are both over-requested resources. Additionally, as GPU usage increases, utilization of accelerators is also critical given resource scarcity.
 
@@ -139,7 +139,7 @@ spec:
                       score: 0
 ```
 
-## Configure node bin-packing with MostAllocated Plugi
+## Configure node bin-packing with MostAllocated Plugin
 Configuring the scheduler with `MostAllocated` exclusively prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. 
 
   - `NodeResourcesFit` controls how the scheduler evaluates if a node has enough resources to run a pod.
@@ -180,7 +180,7 @@ spec:
 
 ## Configure node bin-packing with MostAllocated and NodeResourcesBalancedAllocation Plugins
 
-This configuration looks to achieve a middle ground between RequestedtoCapacity and MostAllocated by scoreing nodes based on additional resources and their asymetric utilization.  This encourages pod placement on nodes with balanced utilization, increasing overall efficiency while avoiding bottlenecks caused by asymmetric resource pressure (for example, CPU‑bound nodes with abundant unused memory).
+This configuration looks to achieve a middle ground between RequestedtoCapacity and MostAllocated by scoring nodes based on additional resources and their asymmetric utilization.  This encourages pod placement on nodes with balanced utilization, increasing overall efficiency while avoiding bottlenecks caused by asymmetric resource pressure (for example, CPU‑bound nodes with abundant unused memory).
 
   - `NodeResourcesBalancedAllocation` scores nodes based on how balanced resource usage is across multiple resources. Rather than maximizing utilization of a single resource, this plugin prefers nodes where resource consumption is proportional.
   - `Resources` specifies which resources are considered during balance evaluation. With CPU and memory weighted equally, nodes are scored higher when both resources are consumed at similar levels.
@@ -248,7 +248,7 @@ spec:
 
 ## Next steps
 
-To learn more about the AKS scheduler, other configruations and best practices, see the following resources:
+To learn more about the AKS scheduler, other configurations and best practices, see the following resources:
 
 - [Azure Kubernetes Service (AKS) scheduler best practices](./operator-best-practices-scheduler.md)
 - [Best practices for advanced scheduling policies](./operator-best-practices-advanced-scheduler.md)
