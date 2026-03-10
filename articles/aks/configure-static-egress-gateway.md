@@ -84,10 +84,10 @@ spec:
 > [!TIP]
 > If you don't set `publicIpPrefixId`, a public IP prefix will be created for you automatically. When running `kubectl describe StaticGatewayConfiguration <gateway-config-name> -n <namespace>`, you can see the "Egress Ip Prefix" in the status. This is the newly created public IP prefix. You can also use an existing public IP prefix by specifying its resource ID in the `publicIpPrefixId` argument. You need to grant "Network Contributor" role to AKS cluster's identity in this case.
 
-### Static Private IP Support (Preview)
+### Static Private IP Support
 
 > [!IMPORTANT]
-> Static private IP support requires clusters running Kubernetes version 1.34 or later and a subscription with the `Microsoft.ContainerService/StaticEgressGatewayPreview` Azure Feature Exposure Control (AFEC) flag enabled. Follow [Register preview feature](/azure/azure-resource-manager/management/preview-features#register-preview-feature) to request the feature flag before creating the Gateway VirtualMachines node pool.
+> Static private IP support requires clusters running Kubernetes version 1.34 or later.
 
 If you must keep egress traffic on private addresses, enable private IP support on the gateway node pool. Use the same `az aks nodepool add` command and set the node pool to use the VirtualMachines VM set type while disabling public IP provisioning:
 
@@ -99,6 +99,18 @@ az aks nodepool add --cluster-name <cluster-name> \
   --node-count <number-of-nodes> \
   --vm-set-type VirtualMachines \
   --gateway-prefix-size <prefix-size>
+```
+
+Define the gateway configuration by creating a `StaticGatewayConfiguration` custom resource.
+```yaml
+apiVersion: egressgateway.kubernetes.azure.com/v1alpha1
+kind: StaticGatewayConfiguration
+metadata:
+  name: <gateway-config-name>
+  namespace: <namespace>
+spec:
+  gatewayNodepoolName: <nodepool-name>
+  provisionPublicIps: false
 ```
 
 In this configuration, the `provisionPublicIps=false` setting keeps the private IPs allocated to the gateway nodes for the lifetime of the `StaticGatewayConfiguration`. When you run `kubectl describe StaticGatewayConfiguration <gateway-config-name> -n <namespace>`, the `egressIpPrefix` field shows a comma-separated list of those static private IPs. You continue to use the same APIs and manifests for the rest of the workflow, including the `StaticGatewayConfiguration` resource and the pod annotations.
