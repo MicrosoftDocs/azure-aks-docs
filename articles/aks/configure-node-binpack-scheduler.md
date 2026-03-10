@@ -11,9 +11,9 @@ author: colinmixon
 
 # Bin Pack Nodes with scheduler profiles on Azure Kubernetes Service (AKS) (preview)
 
-In this article, you learn how to bin pack your nodes to improve node utilization for Azure Kubernetes Service (AKS) clusters using in-tree scheduling plugin, `NodeResourceFit`. The default AKS scheduler operates in a `NodeResourceFit:LestAllocated` mode, which prioritizes nodes with lower utilization with scheduling pods. The AKS configurable scheduler profiles allow you to change this default behavior and fine-tune the configuration. This documentation covers three different scheduler profiles while highlighting the best practice recommendation to improve utilization while reducing node hot spots.  
+In this article, you learn how to bin pack your nodes to improve node utilization for Azure Kubernetes Service (AKS) clusters using in-tree scheduling plugin, `NodeResourceFit`. The default AKS scheduler operates in a `NodeResourceFit:LestAllocated` mode, which prioritizes nodes with lower utilization with scheduling pods. The AKS configurable scheduler profiles allow you to change this default behavior and fine-tune the configuration to prioritize nodes with higher utilization. This documentation covers three different scheduler profiles while highlighting the best practice recommendation to improve utilization while reducing node hot spots.  
 
-Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes. Bin packing helps minimize wasted resources and can reduce the operational cost of maintaining idle or underutilized nodes. Node bin packing helps achieve **better node utilization** by placing new pods on nodes that are already in use rather than spreading pods across a node pool or autoscaling nodes prematurely. Improving node utilization is critical as data shows that CPU and memory are both over-requested resources. Additionally, as GPU usage increases, utilization of accelerators is also critical given resource scarcity.
+Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes. Bin packing helps minimize wasted resources and can reduce the operational cost of maintaining idle or underutilized nodes. Node bin packing helps achieve **better node utilization** by placing new pods on nodes that are already in use rather than spreading pods across a node pool or autoscaling nodes prematurely. Improving node utilization is critical as data shows that CPU and memory are commonly over-requested resources. Additionally, as GPU adoption grows, efficient utilization of accelerators becomes equally critical due to their relative scarcity and cost.
 
 ## Limitations
 
@@ -85,9 +85,9 @@ You can enable schedule profile configuration on a new or existing AKS cluster.
 
 ## Configure node bin-packing with RequestedtoCapacity Plugin
 
-Of the three profiles, `RequestedToCapacityRatio` provides the most granular user control for defining nodes the score of nodes based on explicity resource utilization. **This scheduling profile has been configured to favor nodes within a utilization band of 50-85%, avoid empty nodes, and severly deprioritize nearly-full nodes at 90% utilization or more, leaving some headroom.** Given this level of detail, `RequestedtoCapacity` is the recommended scoring strategy for node bin‑packing on AKS for production clusters.
+Of the three profiles, `RequestedToCapacityRatio` provides the most granular user control for mapping nodes to an explicit utilization. **For example, this scheduling profile has been configured to favor nodes within a utilization band of 50-85%, avoid empty nodes, and severly deprioritize nearly-full nodes at 90% utilization or more, leaving some headroom.** Given this level of detail, `RequestedtoCapacity` is the recommended scoring strategy for node bin‑packing on AKS for production clusters.
 
-This configuration makes CPU utilization the dominant factor in node selection, packing nodes while still avoiding over saturation for CPU-heavy applications. Lastly, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default. 
+This configuration makes CPU utilization the dominant factor in node selection, packing nodes while still avoiding over saturation for CPU-heavy applications. Lastly, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default.
 
   - `NodeResourcesFit` controls how the scheduler evaluates if a node has enough resources to run a pod.
   - `scoringStrategy: RequestedToCapacityRatio` scores nodes based on the ratio of requested resources to total node capacity after the pod is hypothetically placed.
@@ -140,10 +140,13 @@ spec:
 ```
 
 ## Configure node bin-packing with MostAllocated Plugin
-Configuring the scheduler with `MostAllocated` exclusively prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. 
+
+Configuring the scheduler with `MostAllocated` exclusively prioritizes nodes based on resource usage. The higher the resource utilization, the higher a node is scored, avoiding unused nodes or scaling until necessary. In isolation, this configuration risks saturating nodes beyond desirable limits, causing throttling or additional bottlenecks.
+
+This configuration makes CPU utilization the dominant factor in node selection. To ensure consistent behaviour, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default.
 
   - `NodeResourcesFit` controls how the scheduler evaluates if a node has enough resources to run a pod.
-  - `scoringStrategy: MostAllocated` tells the scheduler to prefer nodes with high resource usage. This strategy promotes dense pod placement and helps achieve **better node utilization** before considering less utilized nodes or scaling.
+  - `scoringStrategy: MostAllocated` scores based on pod requests. `MostAllocated` tells the scheduler to prefer nodes with high resource usage. This strategy promotes dense pod placement and helps achieve **better node utilization**.
   - `Resources` specifies that `CPU` and `Memory` are the primary resources being considered for scoring. With a weight of `8`, nodes with CPU usage are scored 8x higher than memory during the pod scheduling cycle. This increases the likelihood that nodes with high utilization are selected.
 
 ```yaml
@@ -180,7 +183,7 @@ spec:
 
 ## Configure node bin-packing with MostAllocated and NodeResourcesBalancedAllocation Plugins
 
-This configuration looks to achieve a middle ground between RequestedtoCapacity and MostAllocated by scoring nodes based on other resources and their asymmetric utilization. `NodeResourcesBalancedAllocation` encourages pod placement on nodes with balanced utilization, increasing overall efficiency while avoiding bottlenecks caused by asymmetric resource pressure (for example, CPU‑bound nodes with abundant unused memory).
+This configuration looks to add some guardaruils to the simple and efficent strategy `MostAllocated` by scoring nodes based on balanced usage of target resources. `NodeResourcesBalancedAllocation` encourages pod placement on nodes with user-defined proportional utilization, increasing overall efficiency while avoiding bottlenecks caused by asymmetric resource pressure. For example, CPU‑bound nodes with abundant unused memory would be scored lower in favor of nodes with a better balance of CPU and memory utilization.
 
   - `NodeResourcesBalancedAllocation` scores nodes based on how balanced resource usage is across multiple resources. Rather than maximizing utilization of a single resource, this plugin prefers nodes where resource consumption is proportional.
   - `Resources` specifies which resources are considered during balance evaluation. With CPU and memory weighted equally, nodes are scored higher when both resources are consumed at similar levels.
