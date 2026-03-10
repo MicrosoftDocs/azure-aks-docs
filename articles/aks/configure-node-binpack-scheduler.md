@@ -24,7 +24,7 @@ Node bin-packing is a scheduling strategy that maximizes resource utilization by
 
 - The Azure CLI version `2.76.0` or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - Kubernetes version `1.33` or later running on your AKS cluster.
-- The [`aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) version `18.0.0b27` or later.
+- The [`aks-preview` Azure CLI extension][install-the-aks-preview-azure-cli-extension] version `18.0.0b27` or later.
 - Register the [`UserDefinedSchedulerConfigurationPreview` feature flag][register-user-defined-scheduler-configuration-feature-flag] in your Azure subscription.
 
 ## Enable scheduler profile configuration on an AKS cluster
@@ -271,7 +271,8 @@ To learn more about the AKS scheduler, other configurations and best practices, 
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[register-user-defined-scheduler-configuration-feature-flag]: /configure-aks-scheduler?tabs=new-cluster#register-the-user-defined-scheduler-configuration-preview-feature-flag
+[register-user-defined-scheduler-configuration-feature-flag]: /azure/aks/configure-aks-scheduler?tabs=new-cluster#register-the-user-defined-scheduler-configuration-preview-feature-flag
+[install-the-aks-preview-azure-cli-extension]: /azure/aks/configure-aks-scheduler?tabs=new-cluster#install-the-aks-preview-azure-cli-extension
 
 <!-- LINKS - external -->
 [topology-spread-constraints/]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
