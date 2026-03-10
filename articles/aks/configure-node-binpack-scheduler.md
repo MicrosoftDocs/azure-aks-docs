@@ -94,8 +94,6 @@ The configuration below makes CPU utilization the dominant factor in node select
   - `Resources` specifies that `CPU` and `Memory` are the primary resources being considered for scoring. With a weight of `8`, nodes with CPU usage are scored 8x higher than memory during the pod scheduling cycle. This increases the likelihood that nodes with high utilization are selected.
   - `shape:` maps node utilization to the scheduler score. Each point represents a utilization percentage and its corresponding score, with a linear score between points. 
 
-1. Create a file named `bin-packing-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
-
 ```yaml
 apiVersion: aks.azure.com/v1alpha1
 kind: SchedulerConfiguration
@@ -147,8 +145,6 @@ Configuring the scheduler with `MostAllocated` exclusively prioritizes schedulin
   - `NodeResourcesFit` controls how the scheduler evaluates if a node has enough resources to run a pod.
   - `scoringStrategy: MostAllocated` tells the scheduler to prefer nodes with high resource usage. This strategy promotes dense pod placement and helps achieve **better node utilization** before considering less utilized nodes or scaling.
   - `Resources` specifies that `CPU` and `Memory` are the primary resources being considered for scoring. With a weight of `8`, nodes with CPU usage are scored 8x higher than memory during the pod scheduling cycle. This increases the likelihood that nodes with high utilization are selected.
-
-1. Create a file named `binpack-cpu-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
 
 ```yaml
 apiVersion: aks.azure.com/v1alpha1
