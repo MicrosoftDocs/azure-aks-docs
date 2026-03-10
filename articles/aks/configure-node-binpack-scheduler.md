@@ -13,7 +13,7 @@ author: colinmixon
 
 In this article, you learn how to bin pack your nodes to improve node utilization for Azure Kubernetes Service (AKS) clusters using in-tree scheduling plugin, `NodeResourceFit`. The default AKS scheduler operates in a `NodeResourceFit:LestAllocated` mode which prioritizes nodes with lower utilization with scheduling pods. The AKS configurable scheduler profiles allows you to change this default behavior and fine-tune the configuration. This documentation will cover three different scheduler profiles while highlighting the best practice recommendation to improve utilization while reducing node hot spots.  
 
-Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes. Bin packing helps minimize wasted resources and can reduce the operational cost of maintaining idle or underutilized nodes. Improving node utilization is critical as data shows that CPU and memory are both over-requested resources. Additionally, as GPU usage increases, utilization of accelerators is also critical given resource scarcity.
+Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes. Bin packing helps minimize wasted resources and can reduce the operational cost of maintaining idle or underutilized nodes. Node bin packing helps achieve **better node utilization** by placing new pods on nodes that are already in use rather than spreading pods across a node pool or autoscaling nodes prematurely. Improving node utilization is critical as data shows that CPU and memory are both over-requested resources. Additionally, as GPU usage increases, utilization of accelerators is also critical given resource scarcity.
 
 ## Limitations
 
@@ -85,12 +85,12 @@ You can enable schedule profile configuration on a new or existing AKS cluster.
 
 ## Configure node bin-packing with RequestedtoCapacity Plugin
 
-Of the three profiles, `RequestedToCapacityRatio` provides the most granular control of how nodes are scored based on specific resource utilization. For this reason this is the best practice recommendation for node bin backing on AKS. The CRD must be named `upstream`.
+Of the three profiles, `RequestedToCapacityRatio` provides the most granular user control for defining nodes the score of nodes based on explicity resource utilization. For this reason this, this scoring strategy is the recommended approach for node bin‑packing on AKS. The scroing startegy allows the users to define a target utilization curve with specificty. The configuration below biases placement toward dense node packing while still avoiding extreme saturation for CPU-heavy applications. Lastly, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default. The CRD must be named `upstream`.
 
-  - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
-  - `scoringStrategy: RequestedToCapacityRatio` tells the scheduler to prefer nodes with high CPU resource usage. This helps achieve **better resource utilization** by placing new pods on nodes that are already "highly used".
-  - `Resources` specifies that `CPU` is the primary resource being considered for scoring, and with a weight of `8`, nodes with CPU usage are scored 8x higher than memory during the score cycle. This increases the likelihood that nodes with high utilization are selected for a given pod.
-  - `shape:` type applies the default constraints as a list of rules. The scheduler uses the rules in the order they're defined, and they apply to all pods that don’t specify custom topology spread constraints.
+  - `NodeResourcesFit` 
+  - `scoringStrategy: RequestedToCapacityRatio`
+  - `Resources` specifies that `CPU` and `Memory` are the primary resources being considered for scoring. With a weight of `8`, nodes with CPU usage are scored 8x higher than memory during the pod scheduling cycle. This increases the likelihood that nodes with high utilization are selected.
+  - `shape:` 
 
 1. Create a file named `bin-packing-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
 
@@ -145,8 +145,8 @@ spec:
 Configuring the scheduler with `MostAllocated` exclusively prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. The CRD must be named `upstream`.
 
   - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
-  - `scoringStrategy: MostAllocated` tells the scheduler to prefer nodes with high CPU resource usage. This helps achieve **better resource utilization** by placing new pods on nodes that are already "highly used".
-  - `Resources` specifies that `CPU` is the primary resource being considered for scoring, and with a weight of `8`, nodes with higher CPU usage are scored 8x the value of nodes with mmeroy usage during the scoring cycle in the scheduling decision.
+  - `scoringStrategy: MostAllocated` tells the scheduler to prefer nodes with high CPU resource usage. This helps achieve **better node utilization** by placing new pods on nodes that are already in use.
+  - `Resources` specifies that `CPU` and `Memory` are the primary resources being considered for scoring. With a weight of `8`, nodes with CPU usage are scored 8x higher than memory during the pod scheduling cycle. This increases the likelihood that nodes with high utilization are selected.
 
 1. Create a file named `binpack-cpu-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
 
@@ -187,7 +187,7 @@ spec:
 This configuration looks to achieve a middle ground between RequestedtoCapacity and MostAllocated by scoreing nodes based on additional resources and their asymetric utilization. The CRD must be named `upstream`.
 
   - `NodeResourcesBalancedAllocation`
-  - `Resources` specifies that `CPU` is the primary resource being considered for scoring, and with a weight of `8`, nodes with higher CPU usage are scored 8x the value of nodes with mmeroy usage during the scoring cycle in the scheduling decision.
+  - `Resources` specifies that `CPU` and `Memory` are the primary resources being considered for scoring. With equal weights, nodes with CPU usage and Memory usage are scored higher than nodes that have asymetirc usage during the pod scheduling cycle. This increases the likelihood that pods are placed on nodes with increased utilization, but are not creating node hot spots and other other bottlenecks from dependent resources.
 
 ```yaml
 apiVersion: aks.azure.com/v1alpha1
