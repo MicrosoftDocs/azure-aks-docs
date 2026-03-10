@@ -26,7 +26,6 @@ Node bin-packing is a scheduling strategy that maximizes resource utilization by
 - Kubernetes version `1.33` or later running on your AKS cluster.
 - The [`aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) version `18.0.0b27` or later.
 - [Register the `UserDefinedSchedulerConfigurationPreview` feature flag](#register-the-user-defined-scheduler-configuration-preview-feature-flag) in your Azure subscription.
-- Review the [supported advanced scheduling concepts](./concepts-scheduler-configuration.md) and in-tree scheduling plugins on AKS.
 
 ## Enable scheduler profile configuration on an AKS cluster
 
