@@ -229,13 +229,13 @@ spec:
 
 ## Assign a scheduler profile to an entire AKS cluster
 
-1. Apply the scheduling configuration manifest using the `kubectl apply` command.
+1. Create a file named cpu-bin-packing- scheduler.yaml, with the CRD named `upstream` 
+2. Apply the scheduling configuration manifest using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f cpu-bin-packing-scheduler.yaml
     ```
-
-2. To target this scheduling mechanism for specific workloads, update your pod deployments with the following `schedulerName`:
+3. To target this scheduling mechanism for specific workloads, update your pod deployments with the following `schedulerName`:
 
     ```yaml
     ...
@@ -245,39 +245,6 @@ spec:
     ...
     ...
     ```
-
-
-## Disable an AKS scheduler profile configuration
-
-1. To disable the AKS scheduler profile configuration and revert to AKS scheduler default configuration on the cluster, first delete the `schedulerconfiguration` resource using the `kubectl delete` command.
-
-    ```bash
-    kubectl delete schedulerconfiguration upstream || true
-    ```
-
-    > [!NOTE]
-    > Ensure that the previous step is complete and confirm that the `schedulerconfiguration` resource was deleted before proceeding to disable this feature.
-
-1. Disable the feature using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--disable-upstream-kubescheduler-user-configuration` flag.
-
-    ```azurecli-interactive
-    az aks update --subscription="${SUBSCRIPTION_ID}" \
-    --resource-group="${RESOURCE_GROUP}" \
-    --name="${CLUSTER_NAME}" \
-    --disable-upstream-kubescheduler-user-configuration
-    ```
-
-1. Verify the feature is disabled using the [`az aks show`](/cli/azure/aks#az-aks-show) command.
-
-    ```azurecli-interactive
-    az aks show --resource-group="${RESOURCE_GROUP}" \
-    --name="${CLUSTER_NAME}" \
-    --query='properties.schedulerProfile'
-    ```
-
-
-    Your output should indicate that the feature is no longer enabled on your AKS cluster.
-
 
 ## Next steps
 
