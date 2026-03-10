@@ -84,54 +84,13 @@ You can enable schedule profile configuration on a new or existing AKS cluster.
     > [!NOTE]
     > This command won't succeed if the feature wasn't successfully enabled in the [previous section](#enable-scheduler-profile-configuration-on-an-aks-cluster).
 
-## Configure node bin-packing with MostAllocated Plugin
-In this example, the configured scheduler prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. The CRD must be named `upstream`.
-
-  - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
-  - `scoringStrategy: MostAllocated` tells the scheduler to prefer nodes with high CPU resource usage. This helps achieve **better resource utilization** by placing new pods on nodes that are already "highly used".
-  - `Resources` specifies that `CPU` is the primary resource being considered for scoring, and with a weight of `1`, CPU usage is prioritized with a relatively equal level of importance in the scheduling decision.
-
-1. Create a file named `binpack-cpu-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
-
-```yaml
-apiVersion: aks.azure.com/v1alpha1
-kind: SchedulerConfiguration
-metadata:
-  name: upstream
-spec:
-  rawConfig: |
-    apiVersion: kubescheduler.config.k8s.io/v1
-    kind: KubeSchedulerConfiguration
-    profiles:
-      - schedulerName: cpu-binpack-scheduler-mA
-        plugins:
-          multiPoint:
-            enabled:
-              - name: NodeResourcesFit
-            disabled:
-              - name: PodTopologySpread
-        pluginConfig:
-          # NodeResourcesFit configuration
-          - name: NodeResourcesFit
-            args:
-              apiVersion: kubescheduler.config.k8s.io/v1
-              kind: NodeResourcesFitArgs
-              scoringStrategy:
-                type: MostAllocated
-                resources:
-                  - name: cpu
-                    weight: 8
-                  - name: memory
-                    weight: 1
-```
-
 ## Configure node bin-packing with RequestedtoCapacity Plugin
 
-The CRD must be named `upstream`.
+Of the three profiles, `RequestedToCapacityRatio` provides the most granular control of how nodes are scored based on specific resource utilization. For this reason this is the best practice recommendation for node bin backing on AKS. The CRD must be named `upstream`.
 
   - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
   - `scoringStrategy: RequestedToCapacityRatio` tells the scheduler to prefer nodes with high CPU resource usage. This helps achieve **better resource utilization** by placing new pods on nodes that are already "highly used".
-  - `Resources` specifies that `CPU` is the primary resource being considered for scoring, and with a weight of `1`, CPU usage is prioritized with a relatively equal level of importance in the scheduling decision.
+  - `Resources` specifies that `CPU` is the primary resource being considered for scoring, and with a weight of `8`, nodes with CPU usage are scored 8x higher than memory during the score cycle. This increases the likelihood that nodes with high utilization are selected for a given pod.
   - `shape:` type applies the default constraints as a list of rules. The scheduler uses the rules in the order they're defined, and they apply to all pods that don’t specify custom topology spread constraints.
 
 1. Create a file named `bin-packing-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
@@ -183,9 +142,52 @@ spec:
                       score: 1
 ```
 
+## Configure node bin-packing with MostAllocated Plugin
+In this example, the configured scheduler prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. The CRD must be named `upstream`.
+
+  - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
+  - `scoringStrategy: MostAllocated` tells the scheduler to prefer nodes with high CPU resource usage. This helps achieve **better resource utilization** by placing new pods on nodes that are already "highly used".
+  - `Resources` specifies that `CPU` is the primary resource being considered for scoring, and with a weight of `8`, nodes with higher CPU usage are scored 8x the value of nodes with mmeroy usage during the scoring cycle in the scheduling decision.
+
+1. Create a file named `binpack-cpu-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
+
+```yaml
+apiVersion: aks.azure.com/v1alpha1
+kind: SchedulerConfiguration
+metadata:
+  name: upstream
+spec:
+  rawConfig: |
+    apiVersion: kubescheduler.config.k8s.io/v1
+    kind: KubeSchedulerConfiguration
+    profiles:
+      - schedulerName: cpu-binpack-scheduler-mA
+        plugins:
+          multiPoint:
+            enabled:
+              - name: NodeResourcesFit
+            disabled:
+              - name: PodTopologySpread
+        pluginConfig:
+          # NodeResourcesFit configuration
+          - name: NodeResourcesFit
+            args:
+              apiVersion: kubescheduler.config.k8s.io/v1
+              kind: NodeResourcesFitArgs
+              scoringStrategy:
+                type: MostAllocated
+                resources:
+                  - name: cpu
+                    weight: 8
+                  - name: memory
+                    weight: 1
+```
+
 ## Configure node bin-packing with MostAllocated and ResourceBalancedAllocation Plugins
 
-The CRD must be named `upstream`.
+This configuration looks to achieve a middle ground between RequestedtoCapacity and MostAllocated by scoreing nodes based on additional resources and their asymetric utilization. The CRD must be named `upstream`.
+
+  - `NodeResourcesBalancedAllocation` 
 
 ```yaml
 apiVersion: aks.azure.com/v1alpha1
@@ -215,7 +217,7 @@ spec:
                 type: MostAllocated
                 resources:
                   - name: cpu
-                    weight: 4
+                    weight: 8
                   - name: memory
                     weight: 1
           - name: NodeResourcesBalancedAllocation
@@ -234,7 +236,7 @@ spec:
 1. Apply the scheduling configuration manifest using the `kubectl apply` command.
 
     ```bash
-    kubectl apply -f pod-topology-spreader-scheduler.yaml
+    kubectl apply -f cpu-bin-packing-scheduler.yaml
     ```
 
 2. To target this scheduling mechanism for specific workloads, update your pod deployments with the following `schedulerName`:
@@ -243,7 +245,7 @@ spec:
     ...
     ...
         spec:
-          schedulerName: pod-distribution-scheduler
+          schedulerName: binpacking-scheduler
     ...
     ...
     ```
