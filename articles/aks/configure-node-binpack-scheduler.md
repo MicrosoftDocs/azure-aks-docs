@@ -3,7 +3,7 @@ title: Bin Pack Nodes with Scheduler Profiles on Azure Kubernetes Service (AKS) 
 description: Learn how to configure scheduler profiles to reduce idle costs and improve node utilization on Azure Kubernetes Service (AKS).
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 03/04/2026
+ms.date: 03/12/2026
 ms.author: colinmixon
 author: colinmixon
 # Customer intent: "As a Kubernetes cluster operator, I want to improve node utilization by scheduling more pods on provisioined nodes using one or more configurable bin packing profiles, so that I can effectively manage provisioned resources across my AKS clusters."
@@ -141,8 +141,8 @@ spec:
                       score: 1
 ```
 
-## Configure node bin-packing with MostAllocated Plugin
-In this example, the configured scheduler prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. The CRD must be named `upstream`.
+## Configure node bin-packing with MostAllocated Plugi
+Configuring the scheduler with `MostAllocated` exclusively prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. The CRD must be named `upstream`.
 
   - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
   - `scoringStrategy: MostAllocated` tells the scheduler to prefer nodes with high CPU resource usage. This helps achieve **better resource utilization** by placing new pods on nodes that are already "highly used".
@@ -182,11 +182,12 @@ spec:
                     weight: 1
 ```
 
-## Configure node bin-packing with MostAllocated and ResourceBalancedAllocation Plugins
+## Configure node bin-packing with MostAllocated and NodeResourcesBalancedAllocation Plugins
 
 This configuration looks to achieve a middle ground between RequestedtoCapacity and MostAllocated by scoreing nodes based on additional resources and their asymetric utilization. The CRD must be named `upstream`.
 
-  - `NodeResourcesBalancedAllocation` 
+  - `NodeResourcesBalancedAllocation`
+  - `Resources` specifies that `CPU` is the primary resource being considered for scoring, and with a weight of `8`, nodes with higher CPU usage are scored 8x the value of nodes with mmeroy usage during the scoring cycle in the scheduling decision.
 
 ```yaml
 apiVersion: aks.azure.com/v1alpha1
@@ -203,7 +204,7 @@ spec:
           multiPoint:
             enabled:
               - name: NodeResourcesFit
-              - name: ResourceBalancedAllocation
+              - name: NodeResourcesBalancedAllocation
             disabled:
               - name: PodTopologySpread
         pluginConfig:
