@@ -85,7 +85,7 @@ You can enable schedule profile configuration on a new or existing AKS cluster.
 
 ## Configure node bin-packing with RequestedtoCapacity Plugin
 
-Of the three profiles, `RequestedToCapacityRatio` provides the most granular user control for mapping nodes to an explicit utilization. **For example, this scheduling profile has been configured to favor nodes within a utilization band of 50-85%, avoid empty nodes, and severly deprioritize nearly-full nodes at 90% utilization or more, leaving some headroom.** Given this level of detail, `RequestedtoCapacity` is the recommended scoring strategy for node bin‑packing on AKS for production clusters.
+Of the three profiles, `RequestedToCapacityRatio` provides the most granular user control for mapping nodes to an explicit utilization. **For example, this scheduling profile has been configured to favor nodes within a utilization band of 50-85%, avoid empty nodes, and severely deprioritize nearly full nodes at 90% utilization or more, leaving some headroom.** Given this level of detail, `RequestedtoCapacity` is the recommended scoring strategy for node bin‑packing on AKS for production clusters.
 
 This configuration makes CPU utilization the dominant factor in node selection, packing nodes while still avoiding over saturation for CPU-heavy applications. Lastly, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default.
 
@@ -143,7 +143,7 @@ spec:
 
 Configuring the scheduler with `MostAllocated` exclusively prioritizes nodes based on resource usage. The higher the resource utilization, the higher a node is scored, avoiding unused nodes or scaling until necessary. In isolation, this configuration risks saturating nodes beyond desirable limits, causing throttling or additional bottlenecks.
 
-This configuration makes CPU utilization the dominant factor in node selection. To ensure consistent behaviour, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default.
+This configuration makes CPU utilization the dominant factor in node selection. To ensure consistent behavior, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default.
 
   - `NodeResourcesFit` controls how the scheduler evaluates if a node has enough resources to run a pod.
   - `scoringStrategy: MostAllocated` scores based on pod requests. `MostAllocated` tells the scheduler to prefer nodes with high resource usage. This strategy promotes dense pod placement and helps achieve **better node utilization**.
@@ -183,7 +183,7 @@ spec:
 
 ## Configure node bin-packing with MostAllocated and NodeResourcesBalancedAllocation Plugins
 
-This configuration looks to add some guardaruils to the simple and efficent strategy `MostAllocated` by scoring nodes based on balanced usage of target resources. `NodeResourcesBalancedAllocation` encourages pod placement on nodes with user-defined proportional utilization, increasing overall efficiency while avoiding bottlenecks caused by asymmetric resource pressure. For example, CPU‑bound nodes with abundant unused memory would be scored lower in favor of nodes with a better balance of CPU and memory utilization.
+This configuration looks to add some guardrails to the simple and efficient strategy `MostAllocated` by scoring nodes based on balanced usage of target resources. `NodeResourcesBalancedAllocation` encourages pod placement on nodes with user-defined proportional utilization, increasing overall efficiency while avoiding bottlenecks caused by asymmetric resource pressure. For example, CPU‑bound nodes with abundant unused memory would be scored lower in favor of nodes with a better balance of CPU and memory utilization.
 
   - `NodeResourcesBalancedAllocation` scores nodes based on how balanced resource usage is across multiple resources. Rather than maximizing utilization of a single resource, this plugin prefers nodes where resource consumption is proportional.
   - `Resources` specifies which resources are considered during balance evaluation. With CPU and memory weighted equally, nodes are scored higher when both resources are consumed at similar levels.
