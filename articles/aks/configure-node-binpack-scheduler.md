@@ -229,7 +229,7 @@ spec:
 
 ## Assign a scheduler profile to an entire AKS cluster
 
-1. Create a file named cpu-bin-packing- scheduler.yaml, with the CRD named `upstream` 
+1. Create a file named `cpu-bin-packing-scheduler.yaml`, with the CRD named `upstream` 
 2. Apply the scheduling configuration manifest using the `kubectl apply` command.
 
     ```bash
