@@ -142,10 +142,10 @@ spec:
 ```
 
 ## Configure node bin-packing with MostAllocated Plugi
-Configuring the scheduler with `MostAllocated` exclusively prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. The CRD must be named `upstream`.
+Configuring the scheduler with `MostAllocated` exclusively prioritizes scheduling pods on nodes with high CPU usage. Explicitly, this configuration avoids underutilizing nodes that still have free resources and helps to make better use of the resources already allocated to nodes. 
 
-  - `NodeResourcesFit` ensures that the scheduler checks if a node has enough resources to run the pod. 
-  - `scoringStrategy: MostAllocated` tells the scheduler to prefer nodes with high CPU resource usage. This helps achieve **better node utilization** by placing new pods on nodes that are already in use.
+  - `NodeResourcesFit` controls how the scheduler evaluates if a node has enough resources to run a pod.
+  - `scoringStrategy: MostAllocated` tells the scheduler to prefer nodes with high resource usage. This strategy promotes dense pod placement and helps achieve **better node utilization** before considering less utilized nodes or scaling.
   - `Resources` specifies that `CPU` and `Memory` are the primary resources being considered for scoring. With a weight of `8`, nodes with CPU usage are scored 8x higher than memory during the pod scheduling cycle. This increases the likelihood that nodes with high utilization are selected.
 
 1. Create a file named `binpack-cpu-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
@@ -184,10 +184,10 @@ spec:
 
 ## Configure node bin-packing with MostAllocated and NodeResourcesBalancedAllocation Plugins
 
-This configuration looks to achieve a middle ground between RequestedtoCapacity and MostAllocated by scoreing nodes based on additional resources and their asymetric utilization. The CRD must be named `upstream`.
+This configuration looks to achieve a middle ground between RequestedtoCapacity and MostAllocated by scoreing nodes based on additional resources and their asymetric utilization.  This encourages pod placement on nodes with balanced utilization, increasing overall efficiency while avoiding bottlenecks caused by asymmetric resource pressure (for example, CPU‑bound nodes with abundant unused memory).
 
-  - `NodeResourcesBalancedAllocation`
-  - `Resources` specifies that `CPU` and `Memory` are the primary resources being considered for scoring. With equal weights, nodes with CPU usage and Memory usage are scored higher than nodes that have asymetirc usage during the pod scheduling cycle. This increases the likelihood that pods are placed on nodes with increased utilization, but are not creating node hot spots and other other bottlenecks from dependent resources.
+  - `NodeResourcesBalancedAllocation` scores nodes based on how balanced resource usage is across multiple resources. Rather than maximizing utilization of a single resource, this plugin prefers nodes where resource consumption is proportional.
+  - `Resources` specifies which resources are considered during balance evaluation. With CPU and memory weighted equally, nodes are scored higher when both resources are consumed at similar levels.
 
 ```yaml
 apiVersion: aks.azure.com/v1alpha1
