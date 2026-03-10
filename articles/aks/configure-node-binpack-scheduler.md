@@ -87,7 +87,7 @@ You can enable schedule profile configuration on a new or existing AKS cluster.
 
 Of the three profiles, `RequestedToCapacityRatio` provides the most granular user control for defining nodes the score of nodes based on explicity resource utilization. **This scheduling profile has been configured to favor nodes within a utilization band of 50-85%, avoid empty nodes, and severly deprioritize nearly-full nodes at 90% utilization or more, leaving some headroom.** For this reason this, this scoring strategy is the recommended approach for node bin‑packing on AKS for production clusters. The scoring startegy allows the users to define a target utilization curve with greater detail. 
 
-The configuration below makes CPU utilization the dominant factor in node selection, packing nodes while still avoiding over saturation for CPU-heavy applications. Lastly, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default. The CRD must be named `upstream`. 
+The configuration below makes CPU utilization the dominant factor in node selection, packing nodes while still avoiding over saturation for CPU-heavy applications. Lastly, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default. 
 
   - `NodeResourcesFit` controls how the scheduler evaluates if a node has enough resources to run a pod.
   - `scoringStrategy: RequestedToCapacityRatio` scores nodes based on the ratio of requested resources to total node capacity after the pod is hypothetically placed.
