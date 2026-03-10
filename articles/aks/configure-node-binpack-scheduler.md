@@ -85,12 +85,14 @@ You can enable schedule profile configuration on a new or existing AKS cluster.
 
 ## Configure node bin-packing with RequestedtoCapacity Plugin
 
-Of the three profiles, `RequestedToCapacityRatio` provides the most granular user control for defining nodes the score of nodes based on explicity resource utilization. For this reason this, this scoring strategy is the recommended approach for node bin‑packing on AKS. The scroing startegy allows the users to define a target utilization curve with specificty. The configuration below biases placement toward dense node packing while still avoiding extreme saturation for CPU-heavy applications. Lastly, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default. The CRD must be named `upstream`.
+Of the three profiles, `RequestedToCapacityRatio` provides the most granular user control for defining nodes the score of nodes based on explicity resource utilization. **This scheduling profile has been configured to favor nodes within a utilization band of 50-85%, avoid empty nodes, and severly deprioritize nearly-full nodes at 90% utilization or more, leaving some headroom.** For this reason this, this scoring strategy is the recommended approach for node bin‑packing on AKS for production clusters. The scoring startegy allows the users to define a target utilization curve with greater detail. 
 
-  - `NodeResourcesFit` 
-  - `scoringStrategy: RequestedToCapacityRatio`
+The configuration below makes CPU utilization the dominant factor in node selection, packing nodes while still avoiding over saturation for CPU-heavy applications. Lastly, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default. The CRD must be named `upstream`. 
+
+  - `NodeResourcesFit` controls how the scheduler evaluates if a node has enough resources to run a pod.
+  - `scoringStrategy: RequestedToCapacityRatio` scores nodes based on the ratio of requested resources to total node capacity after the pod is hypothetically placed.
   - `Resources` specifies that `CPU` and `Memory` are the primary resources being considered for scoring. With a weight of `8`, nodes with CPU usage are scored 8x higher than memory during the pod scheduling cycle. This increases the likelihood that nodes with high utilization are selected.
-  - `shape:` 
+  - `shape:` maps node utilization to the scheduler score. Each point represents a utilization percentage and its corresponding score, with a linear score between points. 
 
 1. Create a file named `bin-packing-scheduler.yaml`, with the CRD named `upstream`, and paste in the following manifest:
 
@@ -127,18 +129,16 @@ spec:
                   shape:
                     - utilization: 0
                       score: 0
-                    - utilization: 10
-                      score: 8
                     - utilization: 30
                       score: 9
                     - utilization: 50
                       score: 10
-                    - utilization: 80
+                    - utilization: 85
                       score: 10
                     - utilization: 90
                       score: 5
                     - utilization: 100
-                      score: 1
+                      score: 0
 ```
 
 ## Configure node bin-packing with MostAllocated Plugi
