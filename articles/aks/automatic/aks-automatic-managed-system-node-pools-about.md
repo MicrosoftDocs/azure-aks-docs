@@ -61,6 +61,7 @@ The following workload specifications are denied when scheduled on a managed sys
 
 - Workloads tolerating `CriticalAddonsOnly` and other forms of wildcard tolerations.
 - Workloads that specify custom schedulers.
+- Workloads that grants [`nodes/proxy`][upstream-node-proxy-warning] permissions, except for approved system users and groups.
 
 ### Unsupported AKS API operations
 
@@ -74,4 +75,7 @@ The following AKS API operations are **unsupported**:
 ## Next steps
 
 > [!div class="nextstepaction"]  
-> [Create an AKS Automatic cluster with managed system node pools (preview)](./aks-automatic-managed-system-node-pools.md)  
+> [Create an AKS Automatic cluster with managed system node pools (preview)](./aks-automatic-managed-system-node-pools.md)
+
+<!-- LINKS - external -->
+[upstream-node-proxy-warning]:https://kubernetes.io/docs/reference/access-authn-authz/kubelet-authn-authz/#kubelet-authorization:~:text=Warning%3A,executing%20commands%20in%20any%20container%20running%20on%20the%20node.
