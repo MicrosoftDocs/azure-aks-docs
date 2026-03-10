@@ -11,7 +11,7 @@ author: colinmixon
 
 # Bin Pack Nodes with scheduler profiles on Azure Kubernetes Service (AKS) (preview)
 
-In this article, you learn how to bin pack your nodes to improve node utilization for Azure Kubernetes Service (AKS) clusters using in-tree scheduling plugin, `NodeResourceFit`. The default AKS scheduler operates in a `NodeResourceFit:LestAllocated` mode which prioritizes nodes with lower utilization with scheduling pods. The AKS configurable scheduler profiles allow you to change this default behavior and fine-tune the configuration. This documentation will cover three different scheduler profiles while highlighting the best practice recommendation to improve utilization while reducing node hot spots.  
+In this article, you learn how to bin pack your nodes to improve node utilization for Azure Kubernetes Service (AKS) clusters using in-tree scheduling plugin, `NodeResourceFit`. The default AKS scheduler operates in a `NodeResourceFit:LestAllocated` mode, which prioritizes nodes with lower utilization with scheduling pods. The AKS configurable scheduler profiles allow you to change this default behavior and fine-tune the configuration. This documentation covers three different scheduler profiles while highlighting the best practice recommendation to improve utilization while reducing node hot spots.  
 
 Node bin-packing is a scheduling strategy that maximizes resource utilization by increasing pod density on nodes. Bin packing helps minimize wasted resources and can reduce the operational cost of maintaining idle or underutilized nodes. Node bin packing helps achieve **better node utilization** by placing new pods on nodes that are already in use rather than spreading pods across a node pool or autoscaling nodes prematurely. Improving node utilization is critical as data shows that CPU and memory are both over-requested resources. Additionally, as GPU usage increases, utilization of accelerators is also critical given resource scarcity.
 
@@ -85,9 +85,9 @@ You can enable schedule profile configuration on a new or existing AKS cluster.
 
 ## Configure node bin-packing with RequestedtoCapacity Plugin
 
-Of the three profiles, `RequestedToCapacityRatio` provides the most granular user control for defining nodes the score of nodes based on explicity resource utilization. **This scheduling profile has been configured to favor nodes within a utilization band of 50-85%, avoid empty nodes, and severly deprioritize nearly-full nodes at 90% utilization or more, leaving some headroom.** For this reason this, this scoring strategy is the recommended approach for node bin‑packing on AKS for production clusters. The scoring startegy allows the users to define a target utilization curve with greater detail. 
+Of the three profiles, `RequestedToCapacityRatio` provides the most granular user control for defining nodes the score of nodes based on explicity resource utilization. **This scheduling profile has been configured to favor nodes within a utilization band of 50-85%, avoid empty nodes, and severly deprioritize nearly-full nodes at 90% utilization or more, leaving some headroom.** Given this level of detail, `RequestedtoCapacity` is the recommended scoring strategy for node bin‑packing on AKS for production clusters. The scoring startegy allows the users to define a target utilization curve with greater detail. 
 
-The configuration below makes CPU utilization the dominant factor in node selection, packing nodes while still avoiding over saturation for CPU-heavy applications. Lastly, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default. 
+This configuration makes CPU utilization the dominant factor in node selection, packing nodes while still avoiding over saturation for CPU-heavy applications. Lastly, you must disable the `PodTopologySpread` plugin as it can override the weighted score from `NodeResourcesFit` if left enabled by default. 
 
   - `NodeResourcesFit` controls how the scheduler evaluates if a node has enough resources to run a pod.
   - `scoringStrategy: RequestedToCapacityRatio` scores nodes based on the ratio of requested resources to total node capacity after the pod is hypothetically placed.
@@ -180,7 +180,7 @@ spec:
 
 ## Configure node bin-packing with MostAllocated and NodeResourcesBalancedAllocation Plugins
 
-This configuration looks to achieve a middle ground between RequestedtoCapacity and MostAllocated by scoring nodes based on additional resources and their asymmetric utilization.  This encourages pod placement on nodes with balanced utilization, increasing overall efficiency while avoiding bottlenecks caused by asymmetric resource pressure (for example, CPU‑bound nodes with abundant unused memory).
+This configuration looks to achieve a middle ground between RequestedtoCapacity and MostAllocated by scoring nodes based on other resources and their asymmetric utilization. `NodeResourcesBalancedAllocation` encourages pod placement on nodes with balanced utilization, increasing overall efficiency while avoiding bottlenecks caused by asymmetric resource pressure (for example, CPU‑bound nodes with abundant unused memory).
 
   - `NodeResourcesBalancedAllocation` scores nodes based on how balanced resource usage is across multiple resources. Rather than maximizing utilization of a single resource, this plugin prefers nodes where resource consumption is proportional.
   - `Resources` specifies which resources are considered during balance evaluation. With CPU and memory weighted equally, nodes are scored higher when both resources are consumed at similar levels.
