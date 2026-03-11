@@ -709,6 +709,8 @@
             href: concepts-scheduler-configuration.md
           - name: Configure a scheduler profile
             href: configure-aks-scheduler.md
+          - name: Configure node bin packing scheduler profile
+            href: configure-node-binpack-scheduler.md
       - name: Kueue
         items:
           - name: Learn about Kueue for batch scheduling
