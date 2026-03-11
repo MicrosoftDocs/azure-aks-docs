@@ -149,7 +149,7 @@ Three subnets are required:
 
 AKS requires a managed identity with Network Contributor rights on both the API server subnet and the node subnet to manage network resources during cluster operations.
 
-1. Create a user-assignment managed identity for the cluster using the [`az identity create`](/cli/azure/identity/user-assigned#az-identity-create) command.
+1. Create a user-assignment managed identity for the cluster using the [`az identity create`](/cli/azure/identity#az-identity-create) command.
 
     ```azurecli-interactive
     az identity create \
