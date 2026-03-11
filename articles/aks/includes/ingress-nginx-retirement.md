@@ -6,7 +6,7 @@ author: schaffererin
 ms.author: schaffererin
 ---
 
-> [!IMPORTANT]
+> [!CAUTION]
 >
 > The [Kubernetes SIG Network](https://github.com/kubernetes/community/blob/master/sig-network/README.md) and the Security Response Committee [announced the upcoming retirement](https://www.kubernetes.dev/blog/2025/11/12/ingress-nginx-retirement/) of the [Ingress NGINX project](https://github.com/kubernetes/ingress-nginx/), with maintenance ending in **March 2026**. There's no immediate action required today for AKS clusters using the [Application Routing add-on with NGINX](/azure/aks/app-routing). Microsoft will provide official support for critical security patches for Application Routing add-on NGINX Ingress resources through **November 2026**.
 >
