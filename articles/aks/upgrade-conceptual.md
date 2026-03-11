@@ -292,7 +292,6 @@ az aks nodepool delete \
 - **Quota requirements**: Requires 2x the node capacity during upgrade
 - **Planning**: Document your validation criteria and rollback procedures
 
-
 ## Next steps
 
 - [Upgrade an AKS cluster](./upgrade-cluster.md)
