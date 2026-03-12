@@ -55,6 +55,13 @@ Classless Inter-Domain Routing (CIDR) for the pod also can't overlap with any vi
 
 ### [Kubenet](#tab/kubenet)
 
+> [!IMPORTANT]
+> Keep the following information in mind when updating from Kubenet to Azure CNI Overlay:
+>
+> - Clusters with Kubenet networking enabled have an associated route table attached to the VNet to handle routing from the VNet to the cluster. This route table isn't required for Azure CNI Overlay and needs to be detached in order for you to update. To remove the route table, you need a **user-assigned managed identity** on the cluster. System-assigned managed identities aren't supported.
+> - If the cluster uses a customer-provided route table, the routes that were used to direct pod traffic to the correct node are automatically deleted during the migration operation.
+> - If the cluster uses a managed route table (AKS creates the route table in the node resource group), that route table is deleted as part of the migration.
+
 Update an existing Kubenet cluster to use Azure CNI Overlay by using the [`az aks update`][az-aks-update] command.
 
 ```azurecli-interactive
@@ -67,8 +74,6 @@ az aks update \
 ```
 
 If you want to expand the pod CIDR to accommodate a larger cluster during the update, specify the new range by using `--pod-cidr`. The pod CIDR remains the same if you don't use the parameter.
-
-When you update from Kubenet to Azure CNI Overlay, the route table is no longer required for pod routing. If the cluster is using a customer-provided route table, the routes that were being used to direct pod traffic to the correct node are automatically deleted during the migration operation. If the cluster is using a managed route table (AKS creates the route table in the node resource group), that route table is deleted as part of the migration.
 
 ### [Azure CNI Node Subnet](#tab/node-subnet)
 
