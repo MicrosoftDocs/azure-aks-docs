@@ -28,7 +28,7 @@ During a rolling upgrade, AKS creates temporary surge nodes to maintain cluster 
 
 The cluster starts with two nodes running version 1.30, each hosting application pods.
 
-![Diagram that shows initial cluster setup with two nodes running version 1.30, each hosting application pods, and a newly created surge node.](./media/how-upgrade-happens/initial-setup.png)
+![Diagram that shows initial cluster setup with two nodes running version 1.30, each hosting application pods, and a newly created surge node.](./media/upgrade-conceptual/rolling-initial-setup.png)
 
 - **Node 1**: Pod A, Pod B
 - **Node 2**: Pod C, Pod D
@@ -38,7 +38,7 @@ The cluster starts with two nodes running version 1.30, each hosting application
 
 AKS cordons Node 1 to prevent new pod scheduling, then drains existing pods.
 
-![Diagram that shows Node 1 being cordoned and drained, with pods evicted and replaced on other available nodes.](./media/how-upgrade-happens/cordon-node-1.jpg)
+![Diagram that shows Node 1 being cordoned and drained, with pods evicted and replaced on other available nodes.](./media/upgrade-conceptual/rolling-cordon-node-1.png)
 
 - **Pod A** → Evicted and replaced on Surge Node
 - **Pod B** → Evicted and replaced on Node 2
@@ -47,7 +47,7 @@ AKS cordons Node 1 to prevent new pod scheduling, then drains existing pods.
 
 Node 1 is reimaged with Kubernetes version 1.31 while pods continue running on other nodes.
 
-![Diagram that shows Node 1 reimaged to version 1.31 while application pods continue running on Node 2 and the surge node.](./media/how-upgrade-happens/reimage-node-1.png)
+![Diagram that shows Node 1 reimaged to version 1.31 while application pods continue running on Node 2 and the surge node.](./media/upgrade-conceptual/rolling-reimage-node-1.png)
 
 - **Node 1**: Upgraded to v1.31 
 - **Node 2**: Pod B, Pod C, Pod D
@@ -57,7 +57,7 @@ Node 1 is reimaged with Kubernetes version 1.31 while pods continue running on o
 
 AKS repeats the process for Node 2, pods get evicted and the scheduler redistributes them to appropriate available nodes.
 
-![Diagram that shows Node 2 being cordoned and drained, with pods evicted and replaced on upgraded Node 1 and the surge node.](./media/how-upgrade-happens/node-2-cordon-drain.png)
+![Diagram that shows Node 2 being cordoned and drained, with pods evicted and replaced on upgraded Node 1 and the surge node.](./media/upgrade-conceptual/rolling-cordon-node-2.png)
 
 - **Pod C, B** → Evicted and replaced on Node 1
 - **Pod D** → Evicted and replaced on Surge Node
@@ -67,7 +67,7 @@ AKS repeats the process for Node 2, pods get evicted and the scheduler redistrib
 
 After all permanent nodes are upgraded, the surge node is cordoned, drained and deleted.
 
-![Diagram that shows the surge node being drained and deleted, with pods evicted and replaced on the upgraded permanent nodes.](./media/how-upgrade-happens/drain-delete-surge.png)
+![Diagram that shows the surge node being drained and deleted, with pods evicted and replaced on the upgraded permanent nodes.](./media/upgrade-conceptual/rolling-delete-surge.png)
 
 - **Pod A** → Evicted and replaced on Node 1
 - **Pod D** → Evicted and replaced on Node 2
@@ -94,7 +94,7 @@ When a restrictive PDB blocks node draining, AKS can use the `Cordon` undrainabl
 
 The cluster starts with two nodes running version 1.30, with a PDB protecting Pod A from eviction.
 
-![Diagram that shows initial cluster with two nodes, a surge node, and a Pod Disruption Budget protecting Pod A from eviction.](./media/how-upgrade-happens/pod-disruption-budget-initial-setup.png)
+![Diagram that shows initial cluster with two nodes, a surge node, and a Pod Disruption Budget protecting Pod A from eviction.](./media/upgrade-conceptual/pod-disruption-budget-initial.png)
 
 - **Node 1**: Pod A (protected by PDB), Pod B
 - **Node 2**: Pod C, Pod D
@@ -105,7 +105,7 @@ The cluster starts with two nodes running version 1.30, with a PDB protecting Po
 
 AKS cordons Node 1 but cannot drain Pod A due to PDB restrictions.
 
-![Diagram that shows Node 1 cordoned but drain blocked by Pod Disruption Budget, with Pod A stuck and Pod B evicted to surge node.](./media/how-upgrade-happens/pod-disruption-budget-drain-blocked.png)
+![Diagram that shows Node 1 cordoned but drain blocked by Pod Disruption Budget, with Pod A stuck and Pod B evicted to surge node.](./media/upgrade-conceptual/pod-disruption-budget-drain-node-1.png)
 
 - **Node 1**: Cordoned and marked as quarantined (Pod A stuck)
 - **Pod B** → Evicted and replaced on Surge Node 1, while Surge Node 2 temporarily is not used.
@@ -115,7 +115,7 @@ AKS cordons Node 1 but cannot drain Pod A due to PDB restrictions.
 
 With Node 1 quarantined, AKS continues upgrading Node 2.
 
-![Diagram that shows Node 1 remaining quarantined while Node 2 is cordoned and drained successfully, with pods moved to surge node.](./media/how-upgrade-happens/pod-disruption-budget-upgrade-node-2.png)
+![Diagram that shows Node 1 remaining quarantined while Node 2 is cordoned and drained successfully, with pods moved to surge node.](./media/upgrade-conceptual/pod-disruption-budget-node-2-upgrade.png)
 
 - **Node 1**: Remains quarantined (v1.30)
 - **Node 2**: Cordoned and drained successfully
@@ -126,7 +126,7 @@ With Node 1 quarantined, AKS continues upgrading Node 2.
 
 Node 2 is successfully reimaged to Kubernetes version 1.31.
 
-![Diagram that shows Node 2 successfully upgraded to version 1.31 while Node 1 remains quarantined with Pod A.](./media/how-upgrade-happens/pod-disruption-budget-node-2-upgraded.png)
+![Diagram that shows Node 2 successfully upgraded to version 1.31 while Node 1 remains quarantined with Pod A.](./media/upgrade-conceptual/pod-disruption-budget-node-2-reimage.png)
 
 - **Node 1**: Still quarantined (v1.30) with Pod A
 - **Node 2**: Upgraded to v1.31
@@ -137,7 +137,7 @@ Node 2 is successfully reimaged to Kubernetes version 1.31.
 
 Since Node 1 remains quarantined, the surge node 1 becomes the permanent replacement running v1.31 and surge node 2 gets deleted.
 
-![Diagram that shows the surge node becoming a permanent replacement running version 1.31 while Node 1 remains quarantined.](./media/how-upgrade-happens/pod-disruption-budget-surge-replacement.png)
+![Diagram that shows the surge node becoming a permanent replacement running version 1.31 while Node 1 remains quarantined.](./media/upgrade-conceptual/pod-disruption-budget-surge-replace.png)
 
 - **Node 1**: Quarantined (v1.30) - requires manual intervention
 - **Pod C, Pod D** → Evicted from Surge Node 2 and replaced on Node 2.
@@ -185,7 +185,7 @@ This example demonstrates manually upgrading a two-node cluster from Kubernetes 
 
 You begin by manually creating a new node pool with the target Kubernetes version alongside your existing node pool.
 
-![Diagram that shows Blue-Green initial setup with blue node pool running version 1.30 and newly created green node pool running version 1.31.](./media/how-upgrade-happens/blue-green-initial.png)
+![Diagram that shows Blue-Green initial setup with blue node pool running version 1.30 and newly created green node pool running version 1.31.](./media/upgrade-conceptual/blue-green-initial-setup.png)
 
 - **Blue Node Pool (v1.30)**: Pod A, Pod B, Pod C, Pod D (existing)
 - **Green Node Pool (v1.31)**: Empty (manually created by you)
@@ -195,7 +195,6 @@ You begin by manually creating a new node pool with the target Kubernetes versio
 
 You cordon the blue nodes to prevent new pod scheduling while keeping existing pods running.
 
-
 - **Your action**: `kubectl cordon` on each blue node
 - **Blue nodes**: Cordoned, no new pods scheduled
 - **Green nodes**: Ready to receive workloads
@@ -204,9 +203,7 @@ You cordon the blue nodes to prevent new pod scheduling while keeping existing p
 
 You control the migration pace by manually draining nodes one at a time or in batches.
 
-![Diagram that shows blue node being drained with pods evicted and replaced on green node pool.](./media/how-upgrade-happens/blue-green-batch-1.png)
-
-![Diagram that shows second blue node being drained with remaining pods migrated to green node pool.](./media/how-upgrade-happens/blue-green-batch-2.png)
+![Diagram that shows blue node being drained with pods evicted and replaced on green node pool and the second blue node being drained with remaining pods migrated to green node pool.](./media/upgrade-conceptual/blue-green-manual-drain.png)
 
 - **Your action**: `kubectl drain` on selected blue nodes
 - **Pod migration**: Pods automatically reschedule to green nodes
@@ -216,7 +213,7 @@ You control the migration pace by manually draining nodes one at a time or in ba
 
 After migrating workloads, you validate application performance on green nodes.
 
-![Diagram that shows validation phase with all workloads running on green node pool while blue node pool remains available for rollback.](./media/how-upgrade-happens/blue-green-soak.png)
+![Diagram that shows validation phase with all workloads running on green node pool while blue node pool remains available for rollback.](./media/upgrade-conceptual/blue-green-validate.png)
 
 During this phase, you can:
 - **Monitor**: Check application metrics and logs
@@ -229,14 +226,14 @@ Based on your validation, you manually complete the upgrade or roll back.
 
 **Option A - Commit (Success):**
 
-![Diagram that shows successful commit with blue node pool deleted and green node pool becoming the primary node pool.](./media/how-upgrade-happens/blue-green-commit.png)
+![Diagram that shows successful commit with blue node pool deleted and green node pool becoming the primary node pool.](./media/upgrade-conceptual/blue-green-commit-upgrade.png)
 
 - **Your action**: Delete blue node pool using `az aks nodepool delete`
 - **Result**: Green node pool becomes primary
 
 **Option B - Roll back (Issues detected):**
 
-![Diagram that shows rollback with workloads returning to blue node pool and green node pool being deleted.](./media/how-upgrade-happens/blue-green-rollback.png)
+![Diagram that shows rollback with workloads returning to blue node pool and green node pool being deleted.](./media/upgrade-conceptual/blue-green-roll-back.png)
 
 - **Your action**: 
     1. Uncordon blue nodes using `kubectl uncordon`
@@ -294,7 +291,6 @@ az aks nodepool delete \
 - **Manual effort**: Requires active management throughout the process
 - **Quota requirements**: Requires 2x the node capacity during upgrade
 - **Planning**: Document your validation criteria and rollback procedures
-
 
 ## Next steps
 
