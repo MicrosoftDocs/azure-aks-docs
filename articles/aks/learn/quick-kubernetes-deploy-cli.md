@@ -2,7 +2,7 @@
 title: Deploy an Azure Kubernetes Service (AKS) Cluster Using Azure CLI
 description: Learn how to deploy an Azure Kubernetes Service cluster (AKS) with default settings using Azure CLI and deploy a multi-container application.
 ms.topic: quickstart
-ms.date: 03/13/2025
+ms.date: 03/13/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.custom: H1Hack27Feb2017, mvc, devcenter, devx-track-azurecli, mode-api, innovation-engine, linux-related-content, quarterly
