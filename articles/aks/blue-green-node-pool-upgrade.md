@@ -84,7 +84,7 @@ Blue-green upgrades currently don't support the following features:
 - Automated rollback
 - [Virtual machine (VM) pools](./virtual-machines-node-pools.md)
 - [Max unavailable](./upgrade-cluster.md#customize-unavailable-nodes-during-upgrade) setting
-- [Undrainable node behavior](./upgrade-options?tabs=azure-cli#option-2-handle-undrainable-nodes-honor-pdb) and [maxBlockedNodes](./upgrade-options?tabs=azure-cli#example-configuration-with-max-blocked-nodes) setting
+- [Undrainable node behavior](./upgrade-options.md#option-2-handle-undrainable-nodes-honor-pdb) and [maxBlockedNodes](./upgrade-options.md#example-configuration-with-max-blocked-nodes) setting
 
 Keep the following considerations in mind when using blue-green upgrades:
 
