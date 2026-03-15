@@ -61,23 +61,35 @@ For non-Cilium data plane scenarios, Container Network Observability provides me
 
 Generated metrics are outlined in the following table.
 
-> [!NOTE]
-> Due to an identified bug, TCP resets temporarily aren't visible. As a result, the **networkobservability_tcp_flag_counters** metric isn't published at this time. Our team is actively working to resolve the issue.
-
-| Metric name                                    | Description | Extra labels | Linux | Windows |
-|------------------------------------------------|-------------|--------------|-------|---------|
-| **networkobservability_forward_count**         | Total forwarded packet count | `direction` | ✅ | ✅ |
-| **networkobservability_forward_bytes**         | Total forwarded byte count | `direction` | ✅ | ✅ |
-| **networkobservability_drop_count**            | Total dropped packet count | `direction`, `reason` | ✅ | ✅ |
-| **networkobservability_drop_bytes**            | Total dropped byte count | `direction`, `reason` | ✅ | ✅ |
-| **networkobservability_tcp_state**             | TCP currently active socket count by TCP state. | `state` | ✅ | ✅ |
-| **networkobservability_tcp_connection_remote** | TCP currently active socket count by remote IP/port. | `address` (IP), `port` | ✅ | ❌ |
-| **networkobservability_tcp_connection_stats**  | TCP connection statistics. (ex: Delayed ACKs, TCPKeepAlive, TCPSackFailures) | `statistic` | ✅ | ✅ |
-| **networkobservability_tcp_flag_counters**     | TCP packets count by flag. | `flag` | ❌ | ✅ |
-| **networkobservability_ip_connection_stats**   | IP connection statistics. | `statistic` | ✅ | ❌ |
-| **networkobservability_udp_connection_stats**  | UDP connection statistics. | `statistic` | ✅ | ❌ |
-| **networkobservability_udp_active_sockets**    | UDP currently active socket count |  | ✅ | ❌ |
-| **networkobservability_interface_stats**       | Interface statistics. | InterfaceName, `statistic` | ✅ | ✅ |
+| Metric name | Description | Extra labels | Linux | Windows |
+|-------------|-------------|--------------|-------|---------|
+| **networkobservability_conntrack_bytes_rx** | Conntrack RX byte count | | ✅ | ❌ |
+| **networkobservability_conntrack_bytes_tx** | Conntrack TX byte count | | ✅ | ❌ |
+| **networkobservability_conntrack_packets_rx** | Conntrack RX packet count | | ✅ | ❌ |
+| **networkobservability_conntrack_packets_tx** | Conntrack TX packet count | | ✅ | ❌ |
+| **networkobservability_conntrack_total_connections** | Total conntrack connections | | ✅ | ❌ |
+| **networkobservability_dns_request_count** | DNS request count | | ✅ | ❌ |
+| **networkobservability_dns_response_count** | DNS response count | | ✅ | ❌ |
+| **networkobservability_drop_bytes** | Total dropped byte count | `reason`, `direction` | ✅ | ❌ |
+| **networkobservability_drop_count** | Total dropped packet count | `reason`, `direction` | ✅ | ✅ |
+| **networkobservability_forward_bytes** | Total forwarded byte count | `direction` | ✅ | ✅ |
+| **networkobservability_forward_count** | Total forwarded packet count | `direction` | ✅ | ✅ |
+| **networkobservability_infiniband_counter_stats** | InfiniBand counter statistics | `statistic_name`, `device`, `port` | ✅ | ❌ |
+| **networkobservability_infiniband_status_params** | InfiniBand status parameters | `statistic_name`, `interface_name` | ✅ | ❌ |
+| **networkobservability_interface_stats** | Interface statistics (rx/tx packets, drops, etc.) | `interface_name`, `statistic_name` | ✅ | ❌ |
+| **networkobservability_ip_connection_stats** | IP connection statistics | `statistic_name` | ✅ | ❌ |
+| **networkobservability_node_apiserver_handshake_latency** | TCP handshake latency to API server | | ✅ | ❌ |
+| **networkobservability_node_apiserver_latency** | Node to API server latency | | ✅ | ❌ |
+| **networkobservability_node_apiserver_no_response** | No response from API server count | | ✅ | ❌ |
+| **networkobservability_node_connectivity_latency_seconds** | Node-to-node connectivity latency | `source_node_name`, `target_node_name` | ✅ | ✅ |
+| **networkobservability_node_connectivity_status** | Node-to-node connectivity status (ICMP/HTTP) | `source_node_name`, `target_node_name` | ✅ | ✅ |
+| **networkobservability_tcp_connection_remote** | TCP active socket count by remote IP | `address` | ✅ | ❌ |
+| **networkobservability_tcp_connection_stats** | TCP connection statistics (e.g., DelayedACKs, TCPKeepAlive, TCPSackFailures) | `statistic_name` | ✅ | ✅ |
+| **networkobservability_tcp_flag_gauges** | TCP packet counts by flag | `direction`, `flag` | ❌ | ✅ |
+| **networkobservability_tcp_retransmission_count** | TCP retransmission count | | ✅ | ❌ |
+| **networkobservability_tcp_state** | TCP active socket count by state | `state` | ✅ | ❌ |
+| **networkobservability_udp_connection_stats** | UDP connection statistics | `statistic_name` | ✅ | ❌ |
+| **networkobservability_windows_hns_stats** | Windows HNS statistics (packets sent/received) | `direction` | ❌ | ✅ |
 
 ---
 

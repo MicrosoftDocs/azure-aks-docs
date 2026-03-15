@@ -578,26 +578,41 @@ Cilium exposes several metrics that Container Network Observability uses:
 
 #### [Non-Cilium](#tab/non-cilium)
 
-> **OS support and known limitations**: For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems. However, due to an identified bug, TCP resets temporarily aren't visible, so the `networkobservability_tcp_flag_counters` metrics aren't published for Linux nodes. We're actively working to resolve this issue.
+> **OS support and known limitations**: For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
 
 For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
 
-The following table outlines the generated metrics:
+The following table outlines the generated metrics. For the complete and up-to-date list, see [Container network metrics](container-network-observability-metrics.md).
 
-| Metric name                                    | Description | Extra labels | Linux | Windows |
-|------------------------------------------------|-------------|--------------|-------|---------|
-| `networkobservability_forward_count`         | Total forwarded packet count | `direction` | Supported ✅ | Supported ✅ |
-| `networkobservability_forward_bytes`         | Total forwarded byte count | `direction` | Supported ✅ | Supported ✅ |
-| `networkobservability_drop_count`            | Total dropped packet count | `direction`, `reason` | Supported ✅ | Supported ✅ |
-| `networkobservability_drop_bytes`            | Total dropped byte count | `direction`, `reason` | Supported ✅ | Supported ✅ |
-| `networkobservability_tcp_state`             | TCP currently active socket count by TCP state | `state` | Supported ✅ | Supported ✅ |
-| `networkobservability_tcp_connection_remote` | TCP currently active socket count by remote IP/port | `address` (IP), `port` | Supported ✅ | Unsupported ❌ |
-| `networkobservability_tcp_connection_stats`  | TCP connection statistics (example: Delayed ACKs, TCPKeepAlive, TCPSackFailures) | `statistic` | Supported ✅ | Supported ✅ |
-| `networkobservability_tcp_flag_counters`     | TCP packets count by flag | `flag` | Unsupported ❌ | Supported ✅ |
-| `networkobservability_ip_connection_stats`   | IP connection statistics | `statistic` | Supported ✅ | Unsupported ❌ |
-| `networkobservability_udp_connection_stats`  | UDP connection statistics | `statistic` | Supported ✅ | Unsupported ❌ |
-| `networkobservability_udp_active_sockets`    | UDP currently active socket count | N/A | Supported ✅ | Unsupported ❌ |
-| `networkobservability_interface_stats`       | Interface statistics | InterfaceName, `statistic` | Supported ✅ | Supported ✅ |
+| Metric name | Description | Extra labels | Linux | Windows |
+|-------------|-------------|--------------|-------|---------|
+| `networkobservability_conntrack_bytes_rx` | Conntrack RX byte count | | Supported ✅ | Unsupported ❌ |
+| `networkobservability_conntrack_bytes_tx` | Conntrack TX byte count | | Supported ✅ | Unsupported ❌ |
+| `networkobservability_conntrack_packets_rx` | Conntrack RX packet count | | Supported ✅ | Unsupported ❌ |
+| `networkobservability_conntrack_packets_tx` | Conntrack TX packet count | | Supported ✅ | Unsupported ❌ |
+| `networkobservability_conntrack_total_connections` | Total conntrack connections | | Supported ✅ | Unsupported ❌ |
+| `networkobservability_dns_request_count` | DNS request count | | Supported ✅ | Unsupported ❌ |
+| `networkobservability_dns_response_count` | DNS response count | | Supported ✅ | Unsupported ❌ |
+| `networkobservability_drop_bytes` | Total dropped byte count | `reason`, `direction` | Supported ✅ | Unsupported ❌ |
+| `networkobservability_drop_count` | Total dropped packet count | `reason`, `direction` | Supported ✅ | Supported ✅ |
+| `networkobservability_forward_bytes` | Total forwarded byte count | `direction` | Supported ✅ | Supported ✅ |
+| `networkobservability_forward_count` | Total forwarded packet count | `direction` | Supported ✅ | Supported ✅ |
+| `networkobservability_infiniband_counter_stats` | InfiniBand counter statistics | `statistic_name`, `device`, `port` | Supported ✅ | Unsupported ❌ |
+| `networkobservability_infiniband_status_params` | InfiniBand status parameters | `statistic_name`, `interface_name` | Supported ✅ | Unsupported ❌ |
+| `networkobservability_interface_stats` | Interface statistics (rx/tx packets, drops, etc.) | `interface_name`, `statistic_name` | Supported ✅ | Unsupported ❌ |
+| `networkobservability_ip_connection_stats` | IP connection statistics | `statistic_name` | Supported ✅ | Unsupported ❌ |
+| `networkobservability_node_apiserver_handshake_latency` | TCP handshake latency to API server | | Supported ✅ | Unsupported ❌ |
+| `networkobservability_node_apiserver_latency` | Node to API server latency | | Supported ✅ | Unsupported ❌ |
+| `networkobservability_node_apiserver_no_response` | No response from API server count | | Supported ✅ | Unsupported ❌ |
+| `networkobservability_node_connectivity_latency_seconds` | Node-to-node connectivity latency | `source_node_name`, `target_node_name` | Supported ✅ | Supported ✅ |
+| `networkobservability_node_connectivity_status` | Node-to-node connectivity status (ICMP/HTTP) | `source_node_name`, `target_node_name` | Supported ✅ | Supported ✅ |
+| `networkobservability_tcp_connection_remote` | TCP active socket count by remote IP | `address` | Supported ✅ | Unsupported ❌ |
+| `networkobservability_tcp_connection_stats` | TCP connection statistics (e.g., DelayedACKs, TCPKeepAlive, TCPSackFailures) | `statistic_name` | Supported ✅ | Supported ✅ |
+| `networkobservability_tcp_flag_gauges` | TCP packet counts by flag | `direction`, `flag` | Unsupported ❌ | Supported ✅ |
+| `networkobservability_tcp_retransmission_count` | TCP retransmission count | | Supported ✅ | Unsupported ❌ |
+| `networkobservability_tcp_state` | TCP active socket count by state | `state` | Supported ✅ | Unsupported ❌ |
+| `networkobservability_udp_connection_stats` | UDP connection statistics | `statistic_name` | Supported ✅ | Unsupported ❌ |
+| `networkobservability_windows_hns_stats` | Windows HNS statistics (packets sent/received) | `direction` | Unsupported ❌ | Supported ✅ |
 
 ---
 
