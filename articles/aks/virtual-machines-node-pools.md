@@ -60,6 +60,9 @@ The following table highlights how Virtual Machines node pools compare with stan
 - Azure CLI version 2.73.0 or later installed and configured. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][install azure cli]
 - This feature requires kubernetes version 1.27 or greater. To upgrade your kubernetes version, see [Upgrade AKS cluster][upgrade-aks-cluster]
 
+> [!IMPORTANT]
+> **Custom VNet requirement**: If you deploy a Virtual Machines node pool into a custom virtual network, the cluster must use a [user-assigned managed identity][use-managed-identity] with at least [Network Contributor][network-contributor] permissions on the target subnet. Unlike Virtual Machine Scale Set node pools, Virtual Machines node pools rely solely on the cluster identity for subnet join operations and don't use first-party tokens. Clusters that use a system-assigned managed identity fail preflight validation when creating or updating a Virtual Machines node pool on a custom VNet, returning an `InvalidParameter` error. For more information on configuring a user-assigned managed identity for your cluster, see [Use a managed identity in AKS][use-managed-identity].
+
 ## Create an AKS cluster with Virtual Machines node pools
 
 > [!NOTE]
@@ -76,6 +79,88 @@ The following table highlights how Virtual Machines node pools compare with stan
         --vm-set-type "VirtualMachines" \
         --vm-sizes "Standard_D4s_v3" 
         --node-count 2 \
+        --kubernetes-version 1.31.0
+    ```
+
+## Create an AKS cluster with Virtual Machines node pools in a custom VNet
+
+When deploying Virtual Machines node pools into a custom virtual network, you must create a user-assigned managed identity and grant it Network Contributor permissions on the VNet before creating the cluster.
+
+1. Create a virtual network and subnet.
+
+    ```azurecli-interactive
+    az network vnet create \
+        --resource-group myResourceGroup \
+        --name myVnet \
+        --address-prefixes 10.0.0.0/16 \
+        --subnet-name mySubnet \
+        --subnet-prefix 10.0.1.0/24
+    ```
+
+1. Get the subnet resource ID.
+
+    ```azurecli-interactive
+    SUBNET_ID=$(az network vnet subnet show \
+        --resource-group myResourceGroup \
+        --vnet-name myVnet \
+        --name mySubnet \
+        --query id \
+        --output tsv)
+    ```
+
+1. Create a user-assigned managed identity.
+
+    ```azurecli-interactive
+    az identity create \
+        --name myAKSIdentity \
+        --resource-group myResourceGroup
+    ```
+
+1. Get the principal ID and resource ID of the managed identity.
+
+    ```azurecli-interactive
+    IDENTITY_PRINCIPAL_ID=$(az identity show \
+        --name myAKSIdentity \
+        --resource-group myResourceGroup \
+        --query principalId \
+        --output tsv)
+
+    IDENTITY_RESOURCE_ID=$(az identity show \
+        --name myAKSIdentity \
+        --resource-group myResourceGroup \
+        --query id \
+        --output tsv)
+    ```
+
+1. Assign the Network Contributor role to the managed identity on the VNet.
+
+    ```azurecli-interactive
+    VNET_ID=$(az network vnet show \
+        --resource-group myResourceGroup \
+        --name myVnet \
+        --query id \
+        --output tsv)
+
+    az role assignment create \
+        --assignee $IDENTITY_PRINCIPAL_ID \
+        --role "Network Contributor" \
+        --scope $VNET_ID
+    ```
+
+    > [!NOTE]
+    > It can take up to 60 minutes for the permissions granted to your cluster's managed identity to propagate.
+
+1. Create the AKS cluster with Virtual Machines node pools in your custom VNet.
+
+    ```azurecli-interactive
+    az aks create \
+        --resource-group myResourceGroup \
+        --name myAKSCluster \
+        --vm-set-type "VirtualMachines" \
+        --vm-sizes "Standard_D4s_v3" \
+        --node-count 2 \
+        --vnet-subnet-id $SUBNET_ID \
+        --assign-identity $IDENTITY_RESOURCE_ID \
         --kubernetes-version 1.31.0
     ```
 
@@ -219,3 +304,5 @@ In this article, you learned how to use Virtual Machines node pools in AKS. To l
 [upgrade-aks-cluster]: upgrade-aks-cluster.md
 [windows-server-password]: /windows/security/threat-protection/security-policy-settings/password-must-meet-complexity-requirements#reference
 [VMSS orchestrate]: /azure/virtual-machine-scale-sets/virtual-machine-scale-sets-orchestration-modes
+[use-managed-identity]: use-managed-identity.md
+[network-contributor]: /azure/role-based-access-control/built-in-roles#network-contributor
