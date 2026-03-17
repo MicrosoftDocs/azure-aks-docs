@@ -21,7 +21,9 @@ When configured, the VPA automatically sets resource requests and limits on cont
 The Vertical Pod Autoscaler offers the following benefits:
 
 * Analyzes and adjusts processor and memory resources to *right size* your applications. VPA isn't only responsible for scaling up, but also for scaling down based on their resource use over time.
-* A pod with a scaling mode set to *auto* or *recreate* is evicted if it needs to change its resource requests.
+* Can apply resource updates using:
+  * **In-place updates (when supported by the cluster)** to minimize disruption
+  * **Pod eviction and recreation** when in-place updates are not available or applicable
 * You can set CPU and memory constraints for individual containers by specifying a resource policy.
 * Ensures nodes have correct resources for pod scheduling.
 * Offers configurable logging of any adjustments made to processor or memory resources made.
@@ -44,7 +46,9 @@ Consider the following limitations and considerations when using the Vertical Po
 The VPA object consists of three components:
 
 * **Recommender**: The Recommender monitors current and past resource consumption, including metric history, Out of Memory (OOM) events, and VPA deployment specs, and uses the information it gathers to provide recommended values for container CPU and Memory requests/limits.
-* **Updater**: The Updater monitors managed pods to ensure that their resource requests are set correctly. If not, it removes those pods so that their controllers can recreate them with the updated requests.
+* **Updater**: The Updater monitors managed pods to ensure that their resource requests match the latest VPA recommendations. When differences are detected, it applies updates using:
+  * **In-place resource resizing** (when supported by the cluster and workload), minimizing disruption
+  * **Pod eviction and recreation** when in-place updates are not supported or applicable, allowing controllers to recreate pods with updated resource requests
 * **VPA Admission Controller**: The VPA Admission Controller sets the correct resource requests on new pods either created or recreated by their controller based on the Updater's activity.
 
 ### VPA admission controller
@@ -53,25 +57,45 @@ The VPA Admission Controller is a binary that registers itself as a *Mutating Ad
 
 A standalone job, `overlay-vpa-cert-webhook-check`, runs outside of the VPA Admission Controller. The `overlay-vpa-cert-webhook-check` job creates and renews the certificates and registers the VPA Admission Controller as a `MutatingWebhookConfiguration`.
 
-### VPA object operation modes
+## VPA object operation modes
 
-A Vertical Pod Autoscaler resource, most commonly a *deployment*, is inserted for each controller that you want to have automatically computed resource requirements.
+A Vertical Pod Autoscaler (VPA) resource is created for each workload controller (such as a Deployment or StatefulSet) for which you want resource requests to be automatically computed and optionally applied.
 
-There are four modes in which the VPA operates:
-
-* `Auto`: VPA assigns resource requests during pod creation and updates existing pods using the preferred update mechanism. `Auto`, which is equivalent to `Recreate`, is the default mode. Once restart-free, or *in-place*, updates of pod requests are available, it can be used as the preferred update mechanism by the `Auto` mode. With the `Auto` mode, VPA evicts a pod if it needs to change its resource requests. It might cause the pods to be restarted all at once, which can cause application inconsistencies. You can limit restarts and maintain consistency in this situation using a [PodDisruptionBudget][pod-disruption-budget].
-* `Recreate`: VPA assigns resource requests during pod creation and updates existing pods by evicting them when the requested resources differ significantly from the new recommendations (respecting the PodDisruptionBudget, if defined). You should only use this mode if you need to ensure that the pods are restarted whenever the resource request changes. Otherwise, we recommend using  `Auto` mode, which takes advantage of restart-free updates once available.
-* `Initial`: VPA only assigns resource requests during pod creation. It doesn't update existing pods. This mode is useful for testing and understanding the VPA behavior without affecting the running pods.
-* `Off`: VPA doesn't automatically change the resource requirements of the pods. The recommendations are calculated and can be inspected in the VPA object.
-
+VPA supports the following update modes:
+* **Auto**:  
+  VPA assigns resource requests during pod creation and updates existing pods to match the latest recommendations.  
+  This mode is currently equivalent to `Recreate` and updates pods by evicting and recreating them with updated resource requests.  
+  Note: `Auto` mode is deprecated. For clusters that support in-place resource resizing, consider using `InPlaceOrRecreate` to minimize disruption. When using eviction-based updates, configure a PodDisruptionBudget to control disruption.
+* **InPlaceOrRecreate**:  
+  VPA assigns resource requests during pod creation and updates existing pods to match the latest recommendations. Updates are applied using:
+  * **In-place resource resizing** when supported by the Kubernetes version, container runtime, and workload configuration, minimizing disruption
+  * **Pod eviction and recreation** when in-place updates are not possible
+  This mode is recommended for minimizing disruption in clusters that support in-place vertical scaling. When eviction is required, configure a PodDisruptionBudget to control disruption.
+* **Recreate**:  
+  VPA assigns resource requests during pod creation and **always updates existing pods via eviction and recreation**, even if in-place resizing is supported.  
+  This mode is useful when workloads require a full restart to correctly apply new resource settings.
+* **Initial**:  
+  VPA assigns resource requests only during pod creation and does not update running pods.  
+  This mode is useful for validating recommendations on new pods without impacting existing workloads.
+* **Off**:  
+  VPA does not automatically apply resource changes. Recommendations are still calculated and can be inspected in the VPA object.  
+  This mode is recommended for:
+  * initial evaluation of VPA behavior
+  * production environments where manual control over updates is required
 ## Deployment pattern for application development
 
-If you're unfamiliar with VPA, we recommend the following deployment pattern during application development to identify its unique resource utilization characteristics, test VPA to verify it's functioning properly, and test alongside other Kubernetes components to optimize resource utilization of the cluster:
-
-1. Set `UpdateMode = "Off"` in your production cluster and run VPA in recommendation mode so you can test and gain familiarity with VPA. `UpdateMode = "Off"` can avoid introducing a misconfiguration that can cause an outage.
-2. Establish observability first by collecting actual resource utilization telemetry over a given period of time, which helps you understand the behavior and any signs of issues from container and pod resources influenced by the workloads running on them.
-3. Get familiar with the monitoring data to understand the performance characteristics. Based on this insight, set the desired requests/limits accordingly and then in the next deployment or upgrade.
-4. Set `updateMode` value to `Auto`, `Recreate`, or `Initial` depending on your requirements.
+If you're unfamiliar with VPA, we recommend the following deployment pattern to understand your workloads’ resource usage and safely test VPA in a Kubernetes cluster:
+1. **Start with `UpdateMode = "Off"`** in your cluster.  
+   Run VPA in recommendation mode to gather data without affecting running pods. This avoids misconfigurations that could cause service disruptions.
+2. **Collect and analyze telemetry** on CPU and memory usage over a representative period.  
+   Establish observability to understand actual resource utilization patterns and identify any potential issues.
+3. **Validate and set resource requests/limits** based on observed metrics.  
+   Apply recommendations incrementally and monitor application behavior to ensure stability.
+4. **Choose an appropriate update mode** for your workload:
+   * `Initial` – applies resource requests only at pod creation; safe for testing new pods without affecting existing ones.
+   * `Recreate` – updates existing pods via eviction and recreation; use when workloads require a full restart to apply changes.
+   * `InPlaceOrRecreate` – preferred when supported; attempts in-place updates first to minimize disruption, falling back to eviction if necessary.
+> **Tip:** Avoid using the deprecated `Auto` mode; it behaves the same as `Recreate` and is scheduled for removal in future Kubernetes versions.
 
 ## Next steps
 
