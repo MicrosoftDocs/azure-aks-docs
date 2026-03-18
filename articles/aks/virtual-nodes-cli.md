@@ -127,6 +127,16 @@ For more information on managed identities, see [Use managed identities](use-man
         --subnet-name myVirtualNodeSubnet
     ```
 
+## Granting a permission to the managed identity
+
+Grant the *Network Contributor* role on the subnet used by virtual nodes to the managed identity for the virtual node add-on named *aciconnectorlinux-[AKS Name]*.
+    
+```azurecli-interactive
+principalId=`az identity show --resource-group <AKS_InfraRG_NAME> --name aciconnectorlinux-<AKS_Name> --query principalId -o tsv`
+virtualnodesubnetID=`az network vnet subnet show --resource-group <AKS_RG_NAME> --vnet-name <VNET_NAME> --name <SUBNET_NAME> --query id -o tsv`
+az role assignment create --assignee $principalId --role "Network Contributor" --scope $virtualnodesubnetID
+```
+
 ## Connect to the cluster
 
 1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This step downloads credentials and configures the Kubernetes CLI to use them.
