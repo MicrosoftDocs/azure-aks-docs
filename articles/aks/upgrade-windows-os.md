@@ -26,7 +26,7 @@ When a new Windows Server OS version is released, AKS is committed to supporting
 
 - Node pool update to migrate from one Windows Server version to another isn't supported.
 - Different Windows Server versions can't coexist on the same node pool on AKS. You need to create a new node pool to host the new OS version. It's important that you match the permissions and access of the previous node pool to the new one.
-- Windows Server 2025 (preview) is supported starting in Kubernetes version 1.32.
+- Windows Server 2025 is supported starting in Kubernetes version 1.32.
 
 ## Before you begin
 
@@ -37,42 +37,6 @@ When a new Windows Server OS version is released, AKS is committed to supporting
 
 > [!NOTE]
 > To learn how to build a Dockerfile for Windows workloads, see [Dockerfile on Windows](/virtualization/windowscontainers/manage-docker/manage-windows-dockerfile) and [Optimize Windows Dockerfiles](/virtualization/windowscontainers/manage-docker/optimize-windows-dockerfile).
-
-### Install `aks-preview` extension
-
-1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
-
-    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Windows Server 2025 requires a minimum of 18.0.0b5**.
-    
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register `AksWindows2025Preview` feature flag
-
-1. Register the `AksWindows2025Preview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "AksWindows2025Preview"
-    ```
-
-1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
-
-    ```azurecli-interactive
-    az feature show --namespace Microsoft.ContainerService --name AksWindows2025Preview
-    ```
-
-1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Add a new node pool to an existing cluster
 
