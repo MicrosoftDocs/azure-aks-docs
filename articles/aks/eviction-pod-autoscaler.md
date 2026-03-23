@@ -34,7 +34,19 @@ Consider enabling the Eviction Pod Autoscaler when:
 - **PDBs block node drain.** A PDB with `minAvailable` equal to the replica count (or `maxUnavailable: 0`) prevents any pod from being evicted, causing the upgrade to fail with an error like `Cannot evict pod as it would violate the pod's disruption budget`.
 - **Replicas are insufficient for the disruption budget.** The PDB exists and is configured correctly, but the deployment doesn't have enough replicas to absorb even one eviction.
 - **You experience frequent upgrade drain failures** and want automated, proactive resolution rather than manual cleanup.
-- **You want to avoid overprovisioning.** Running extra replicas at all times is costly. The Eviction Pod Autoscaler adds replicas only when needed during drain operations and removes them afterward.
+
+### Identify PDB-related drain failures
+
+Before you enable the Eviction Pod Autoscaler, check whether your cluster is experiencing PDB-related drain failures:
+
+- **Azure Activity Log.** In the Azure portal, open your AKS cluster resource and select **Activity log**. Look for failed upgrade operations with status `Failed` and messages referencing pod disruption budgets or eviction errors.
+- **Kubernetes events.** Run the following command to find recent eviction and drain events:
+
+    ```bash
+    kubectl get events --sort-by='.lastTimestamp' -A | grep -i "disruption\|evict\|drain"
+    ```
+
+    For a full guide on working with Kubernetes events, see [Kubernetes events](events.md).
 
 ### How it compares to other options
 
@@ -43,18 +55,31 @@ Consider enabling the Eviction Pod Autoscaler when:
 | **Force upgrade** | Bypasses PDB protections entirely | Risk of simultaneous pod eviction and service disruption |
 | **Undrainable node behavior** | Cordons and quarantines blocked nodes; upgrade continues on other nodes | Requires manual cleanup of quarantined nodes after upgrade |
 | **Overprovisioning** | Run extra replicas permanently | Ongoing cost for capacity that's only needed during upgrades |
-| **Eviction Pod Autoscaler** (preview) | Temporarily scales up replicas to satisfy PDB, then scales back down | Requires the extension; adds transient capacity only during drain |
+| **Eviction Pod Autoscaler** (preview) | Creates PDBs for unprotected deployments and temporarily scales up replicas to satisfy PDB constraints, then scales back down | Requires the extension; adds transient capacity only during drain |
 
 ## How it works
+
+The Eviction Pod Autoscaler has two complementary behaviors: **automatic PDB creation** (proactive) and **replica scaling during drain** (reactive).
+
+### Automatic PDB creation
+
+When PDB auto-creation is enabled (`controllerConfig.pdb.create=true`), the Eviction Pod Autoscaler continuously watches for deployments that don't have a PDB. When it finds one in an enabled namespace, it creates a PDB with `minAvailable` set to the deployment's current replica count. This protection ensures that pods aren't evicted simultaneously during voluntary disruptions.
+
+Auto-created PDBs are managed by the Eviction Pod Autoscaler throughout their lifecycle. For details on ownership, cleanup, and how to take manual control, see [PDB ownership and cleanup](#pdb-ownership-and-cleanup).
+
+> [!NOTE]
+> The Eviction Pod Autoscaler doesn't depend on KEDA or the Horizontal Pod Autoscaler (HPA). It directly adjusts deployment replica counts during drain operations. If a deployment is also managed by HPA, see [Limitations and considerations](#limitations-and-considerations) for potential interactions.
+
+### Replica scaling during drain
 
 The Eviction Pod Autoscaler monitors your cluster for situations where PDB-protected pods can't be evicted during node drain operations. Here's what happens during a typical upgrade:
 
 1. **AKS cordons a node** as part of the upgrade process, marking it as unschedulable.
-2. **The autoscaler detects the cordon** and checks whether any PDB-protected pods on that node have zero allowed disruptions.
-3. **If the PDB blocks eviction**, the autoscaler temporarily scales up the deployment's replica count. The extra replicas are scheduled on other available nodes.
-4. **The PDB's allowed disruptions rise above zero**, because the total number of healthy pods now exceeds the PDB's `minAvailable` threshold.
-5. **Node drain proceeds normally.** The eviction API can now remove pods from the cordoned node without violating the PDB.
-6. **After eviction signals stop and allowed disruptions rise above zero**, the autoscaler scales the deployment back to its original replica count. The scale-down happens automatically after a cooldown period — no manual intervention is needed.
+1. **The Eviction Pod Autoscaler detects the cordon** and checks whether any PDB-protected pods on that node have zero allowed disruptions.
+1. **If the PDB blocks eviction**, the Eviction Pod Autoscaler temporarily scales up the deployment's replica count. The extra replicas are scheduled on other available nodes.
+1. **The PDB's allowed disruptions rise above zero**, because the total number of healthy pods now exceeds the PDB's `minAvailable` threshold.
+1. **Node drain proceeds normally.** The eviction API can now remove pods from the cordoned node without violating the PDB.
+1. **After eviction signals stop and allowed disruptions rise above zero**, the Eviction Pod Autoscaler scales the deployment back to its original replica count. The scale-down happens automatically after a cooldown period — no manual intervention is needed.
 
 > [!NOTE]
 > The Eviction Pod Autoscaler only acts on *voluntary disruptions* such as upgrade drains and manual cordon/drain operations. It doesn't respond to node failures, pod crashes, or other involuntary disruptions.
@@ -66,6 +91,11 @@ Before you install the Eviction Pod Autoscaler, make sure you have the following
 - An AKS cluster running a [supported Kubernetes version](supported-kubernetes-versions.md).
 - Azure CLI version 2.64.0 or later. Run `az --version` to check. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - The `Microsoft.KubernetesConfiguration` provider registered in your subscription.
+- Your AKS cluster must use a **managed identity** (not a service principal). Cluster extensions don't work with service-principal-based clusters. For more information, see [AKS cluster extensions](cluster-extensions.md).
+
+### Extension permissions
+
+The Eviction Pod Autoscaler extension requires permissions to read and write Deployments, Pod Disruption Budgets, and Events in the namespaces it manages. The extension installs its own service account and RBAC roles during setup. For the full list of roles and permissions, see the [Eviction Autoscaler repository on GitHub](https://github.com/Azure/eviction-autoscaler).
 
 ### Register the configuration provider
 
@@ -208,18 +238,19 @@ When `controllerConfig.pdb.create` is set to `true`, the Eviction Pod Autoscaler
 - The deployment is in an enabled namespace.
 - The deployment isn't excluded via the `eviction-autoscaler.azure.com/pdb-create: "false"` annotation.
 
-Auto-created PDBs set `minAvailable` to match the deployment's current replica count (excluding any surge replicas added by the autoscaler). This means eviction is blocked until the autoscaler scales up the deployment, at which point the extra replicas satisfy the budget and allow drain to proceed.
+Auto-created PDBs set `minAvailable` to match the deployment's current replica count (excluding any surge replicas added by the Eviction Pod Autoscaler). This means eviction is blocked until the Eviction Pod Autoscaler scales up the deployment, at which point the extra replicas satisfy the budget and allow drain to proceed.
 
 ### PDB ownership and cleanup
 
-PDBs created by the autoscaler are marked with an `ownedBy: EvictionAutoScaler` annotation. These controller-owned PDBs are automatically deleted when:
+PDBs created by the Eviction Pod Autoscaler are marked with an `ownedBy: EvictionAutoScaler` annotation. These controller-owned PDBs are automatically deleted when:
 
 - The parent deployment is deleted.
-- The namespace is removed from the autoscaler's scope.
+- The namespace is removed from the Eviction Pod Autoscaler's scope.
+- The extension is [removed from the cluster](#remove-the-extension). PDBs with the `ownedBy: EvictionAutoScaler` annotation are cleaned up through Kubernetes garbage collection.
 
-PDBs that you create manually are never modified or deleted by the autoscaler.
+PDBs that you create manually are never modified or deleted by the Eviction Pod Autoscaler.
 
-To take manual control of a PDB that was created by the autoscaler, remove the ownership annotation:
+To take manual control of a PDB that was created by the Eviction Pod Autoscaler, remove the ownership annotation. After you remove this annotation, the Eviction Pod Autoscaler no longer manages that PDB, and you're responsible for updating or deleting it:
 
 ```bash
 kubectl annotate pdb <pdb-name> -n <namespace> ownedBy-
@@ -229,10 +260,10 @@ kubectl annotate pdb <pdb-name> -n <namespace> ownedBy-
 
 After installing the extension, verify that the Eviction Pod Autoscaler is working correctly.
 
-1. **Check that PDBs were created** for deployments in enabled namespaces:
+1. **Check that PDBs were created** for deployments in enabled namespaces. Filter for PDBs created by the Eviction Pod Autoscaler:
 
     ```bash
-    kubectl get poddisruptionbudgets --all-namespaces
+    kubectl get pdb -A -o custom-columns=NAME:.metadata.name,NAMESPACE:.metadata.namespace,MIN-AVAILABLE:.spec.minAvailable,OWNER:.metadata.annotations.ownedBy | grep EvictionAutoScaler
     ```
 
 2. **Check the eviction autoscaler custom resources**:
@@ -241,12 +272,15 @@ After installing the extension, verify that the Eviction Pod Autoscaler is worki
     kubectl get evictionautoscalers --all-namespaces
     ```
 
-3. **Test with a node cordon** (optional). In a test or staging environment, cordon a node and verify that the autoscaler scales up the deployment and the PDB's allowed disruptions rise above zero:
+3. **Test with a node cordon** (optional). In a test or staging environment, cordon a node and verify that the Eviction Pod Autoscaler scales up the deployment and the PDB's allowed disruptions rise above zero:
 
     ```bash
     # Cordon a node
     NODE=$(kubectl get pods -n <namespace> -l app=<app-label> -o=jsonpath='{.items[0].spec.nodeName}')
     kubectl cordon $NODE
+
+    # Watch for Eviction Pod Autoscaler events
+    kubectl get events -n <namespace> --sort-by='.lastTimestamp'
 
     # Check that the deployment scaled up
     kubectl get pods -n <namespace>
@@ -299,24 +333,26 @@ az k8s-extension delete \
 ```
 
 > [!NOTE]
-> When you remove the extension, PDBs that were created by the autoscaler (marked with the `ownedBy: EvictionAutoScaler` annotation) are cleaned up automatically through Kubernetes garbage collection. PDBs you created manually are unaffected.
+> When you remove the extension, auto-created PDBs (marked with the `ownedBy: EvictionAutoScaler` annotation) are cleaned up automatically. For more details, see [PDB ownership and cleanup](#pdb-ownership-and-cleanup).
 
 ## Limitations and considerations
 
 - The Eviction Pod Autoscaler is currently in **preview** and isn't recommended for production workloads.
 - Configuration updates require deleting and recreating the extension.
-- The autoscaler works with **Deployments**. Support for StatefulSets is experimental.
-- The autoscaler doesn't override or modify existing PDBs. It works alongside them by adjusting replica counts.
-- The temporary replica scale-up requires available capacity in the cluster. If no nodes have room for the extra pods, consider enabling the [cluster autoscaler](cluster-autoscaler.md) so that new nodes can be provisioned.
+- The Eviction Pod Autoscaler works with **Deployments**. Support for StatefulSets is experimental.
+- The Eviction Pod Autoscaler doesn't override or modify existing PDBs. It works alongside them by adjusting replica counts.
+- The Eviction Pod Autoscaler doesn't depend on KEDA or the Horizontal Pod Autoscaler (HPA). If a deployment is also managed by HPA, HPA might scale down replicas that the Eviction Pod Autoscaler added during drain. For best results, consider configuring HPA `minReplicas` to account for disruption scenarios.
+- The temporary replica scale-up requires available capacity in the cluster. If no nodes have room for the extra pods, consider enabling the [cluster autoscaler](cluster-autoscaler.md) or [node auto-provisioning (NAP)](node-auto-provisioning.md) so that new nodes can be provisioned.
 
 ## Troubleshooting
 
 | Symptom | Possible cause | Resolution |
 |---------|---------------|------------|
 | PDBs aren't created for deployments | `controllerConfig.pdb.create` is `false` (default), or the namespace isn't enabled | Set `pdb.create=true` and verify the namespace is in `actionedNamespaces` or has the opt-in annotation. |
-| Upgrade still fails with PDB eviction error | Cluster doesn't have capacity for the extra surge replicas | Enable the [cluster autoscaler](cluster-autoscaler.md) or add nodes so the scaled-up replicas have somewhere to schedule. |
-| Autoscaler doesn't scale up during drain | The deployment's PDB already allows disruptions (`allowedDisruptions > 0`) | The autoscaler only acts when the PDB blocks eviction. If `allowedDisruptions` is already above zero, no scale-up is needed. |
+| Upgrade still fails with PDB eviction error | Cluster doesn't have capacity for the extra surge replicas | Enable the [cluster autoscaler](cluster-autoscaler.md) or [node auto-provisioning (NAP)](node-auto-provisioning.md), or add nodes so the scaled-up replicas have somewhere to schedule. |
+| Autoscaler doesn't scale up during drain | The deployment's PDB already allows disruptions (`allowedDisruptions > 0`) | The Eviction Pod Autoscaler only acts when the PDB blocks eviction. If `allowedDisruptions` is already above zero, no scale-up is needed. |
 | Want to confirm the autoscaler took action | Need to check status | Run `kubectl get evictionautoscalers -n <namespace> -o yaml` and inspect the status fields for scaling events. |
+| Want to see Eviction Pod Autoscaler events | Need to inspect scaling or PDB activity | Run `kubectl get events -n <namespace> --sort-by='.lastTimestamp'` and look for events related to the Eviction Pod Autoscaler. |
 
 ## Related content
 
