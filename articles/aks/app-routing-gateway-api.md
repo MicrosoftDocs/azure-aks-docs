@@ -53,6 +53,7 @@ The application routing add-on Kubernetes Gateway API implementation deploys an 
 
     ```azurecli-interactive
     az feature register --namespace "Microsoft.ContainerService" --name "AppRoutingIstioGatewayAPIPreview"
+    az feature register --namespace "Microsoft.ContainerService" --name "ManagedGatewayAPIPreview"
     ```
 
 ## Enable the application routing Gateway API implementation
@@ -69,7 +70,7 @@ export RESOURCE_GROUP=<resource-group-name>
 Run the following command to enable the application routing Gateway API implementation during cluster creation:
 
 ```azurecli-interactive
-az aks create --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --enable-app-routing-istio
+az aks create --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --enable-app-routing-istio --enable-gateway-api
 ```
 
 ### Enable for an existing cluster
@@ -77,7 +78,7 @@ az aks create --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --enable-app-
 Run the following command to enable the application routing Gateway API implementation for an existing cluster:
 
 ```azurecli-interactive
-az aks update --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --enable-app-routing-istio
+az aks update --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --enable-app-routing-istio --enable-gateway-api
 ```
 
 You should see `istiod` pods in the `aks-istio-system` namespace:
