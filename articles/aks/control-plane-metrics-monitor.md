@@ -1,7 +1,7 @@
 ---
 title: Monitor AKS Control Plane Metrics
-description: Learn how to monitor Azure Kubernetes Service (AKS) control plane metrics (preview) by using Azure Monitor.
-ms.date: 09/06/2024
+description: Learn how to monitor Azure Kubernetes Service (AKS) control plane metrics by using Azure Monitor.
+ms.date: 03/24/2026
 ms.topic: how-to
 author: schaffererin
 ms.author: aritraghosh
@@ -10,7 +10,7 @@ ms.service: azure-kubernetes-service
 # Customer intent: As a Kubernetes administrator, I want to monitor control plane metrics for my Azure Kubernetes Service (AKS) cluster, so that I can ensure operational excellence and maintain the performance and availability of critical control plane components.
 ---
 
-# Monitor Azure Kubernetes Service control plane metrics (preview)
+# Monitor Azure Kubernetes Service control plane metrics
 
 In this article, you learn how to monitor the Azure Kubernetes Service (AKS) control plane by using control plane metrics in Azure Monitor.
 
@@ -24,65 +24,44 @@ To see the full list of supported control plane platform metrics, see the [AKS m
 
 ## Prerequisites and limitations
 
-* The control plane metrics (preview) feature supports only the [managed service for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) in Azure Monitor.
-* [Azure Private Link](/azure/azure-monitor/logs/private-link-security) isn't supported.
+* The control plane metrics feature supports only the [managed service for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) in Azure Monitor.
 * You can customize only the default [`ama-metrics-settings-configmap.yaml`](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration#configmaps) configmap file. No other customization is supported.
 * Your AKS cluster must use [managed identity authentication](use-managed-identity.md).
 
-### Install the aks-preview extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-* Install or update the `aks-preview` Azure CLI extension by using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command:
-
-    ```azurecli
-    # Install the aks-preview extension
-    az extension add --name aks-preview
-    
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-    ```
-
-### Register the AzureMonitorMetricsControlPlanePreview feature flag
-
-1. Register the `AzureMonitorMetricsControlPlanePreview` feature flag by using the [`az feature register`](/cli/azure/feature#az-feature-register) command:
-
-    ```azurecli
-    az feature register --namespace "Microsoft.ContainerService" --name "AzureMonitorMetricsControlPlanePreview"
-    ```
-
-    It takes a few minutes for the status to show as **Registered**.
-
-1. Verify the registration status by using the [`az feature show`](/cli/azure/feature#az-feature-show) command:
-
-    ```azurecli
-    az feature show --namespace "Microsoft.ContainerService" --name "AzureMonitorMetricsControlPlanePreview"
-    ```
-
-1. When the status is **Registered**, refresh the registration of the Microsoft.ContainerService resource provider by using the [`az provider register`](/cli/azure/provider#az-provider-register) command:
-
-    ```azurecli
-    az provider register --namespace "Microsoft.ContainerService"
-    ```
-
 ## Enable control plane metrics on an AKS cluster
 
-Enable control plane metrics by using the managed service for Prometheus add-on when you create a new cluster or update an existing cluster.
+Enable control plane metrics by using the managed service for Prometheus add-on when you create a new cluster or update an existing cluster. Control plane metrics require the Azure Monitor metrics add-on to be enabled on the cluster.
 
 > [!NOTE]
-> Unlike the metrics that are collected from cluster nodes, control plane metrics are collected by a component that isn't part of the `ama-metrics` add-on. Enabling the `AzureMonitorMetricsControlPlanePreview` feature flag and the managed service for Prometheus add-on ensures that control plane metrics are collected. After you enable metrics collection, it can take several minutes for the data to appear in the workspace.
+> Unlike the metrics that are collected from cluster nodes, control plane metrics are collected by a component that isn't part of the `ama-metrics` add-on. Enabling the `--enable-control-plane-metrics` flag and the managed service for Prometheus add-on ensures that control plane metrics are collected. After you enable metrics collection, it can take several minutes for the data to appear in the workspace.
 
 ### New AKS cluster
 
-To learn how to collect managed service for Prometheus metrics from your AKS cluster, see [Enable Prometheus and Grafana for AKS clusters](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana). For an AKS cluster, complete the steps described on the **CLI** tab.
+To enable control plane metrics on a new AKS cluster, first enable the Azure Monitor metrics add-on, and then enable control plane metrics by using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--enable-control-plane-metrics` flag:
+
+```azurecli
+az aks create \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --enable-azure-monitor-metrics \
+  --enable-control-plane-metrics \
+  --workspace-resource-id $WORKSPACE_ID
+```
 
 ### Existing AKS cluster
 
-If your cluster already has the managed service for Prometheus add-on, update the cluster to ensure that it collects control plane metrics by using the [`az aks update`](/cli/azure/aks#az-aks-update) command:
+To enable control plane metrics on an existing AKS cluster that already has the managed service for Prometheus add-on, use the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--enable-control-plane-metrics` flag:
 
 ```azurecli
-az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
+az aks update \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --enable-azure-monitor-metrics \
+  --enable-control-plane-metrics
 ```
+
+> [!NOTE]
+> The `--enable-control-plane-metrics` flag must be used together with `--enable-azure-monitor-metrics`. It can't be used as a standalone flag.
 
 ## Query control plane metrics
 
@@ -234,7 +213,7 @@ After you apply the configuration, it takes several minutes for the metrics from
 
 ## Troubleshoot control plane metrics issues
 
-Make sure that the  `AzureMonitorMetricsControlPlanePreview` feature flag is enabled and that the `ama-metrics` pods are running.
+Make sure that control plane metrics are enabled on the cluster and that the `ama-metrics` pods are running.
 
 > [!NOTE]
 > The [troubleshooting methods](/azure/azure-monitor/containers/prometheus-metrics-troubleshoot) for the managed service for Prometheus don't apply directly in this scenario. The components that scrape the control plane aren't included in the managed service for Prometheus add-on.
@@ -255,19 +234,30 @@ Make sure that the  `AzureMonitorMetricsControlPlanePreview` feature flag is ena
 
 ## Disable control plane metrics on your AKS cluster
 
-You can disable control plane metrics at any time by disabling the managed service for Prometheus add-on and unregistering the `AzureMonitorMetricsControlPlanePreview` feature flag.
+You can disable control plane metrics at any time by using the `--disable-control-plane-metrics` flag.
 
-1. Remove the metrics add-on that scrapes Prometheus metrics by using the [`az aks update`](/cli/azure/aks#az-aks-update) command:
-
-   ```azurecli
-   az aks update --disable-azure-monitor-metrics --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
-   ```
-
-1. To disable scraping control plane metrics on the AKS cluster, unregister the `AzureMonitorMetricsControlPlanePreview` feature flag via the [`az feature unregister`](/cli/azure/feature#az-feature-unregister) command:
+* Disable control plane metrics by using the [`az aks update`](/cli/azure/aks#az-aks-update) command:
 
    ```azurecli
-   az feature unregister "Microsoft.ContainerService" --name "AzureMonitorMetricsControlPlanePreview"
+   az aks update \
+     --resource-group $RESOURCE_GROUP \
+     --name $CLUSTER_NAME \
+     --enable-azure-monitor-metrics \
+     --disable-control-plane-metrics
    ```
+
+> [!NOTE]
+> Disabling control plane metrics doesn't disable the managed service for Prometheus add-on. To also disable the add-on, use the `--disable-azure-monitor-metrics` flag. For more information, see [Disable the managed service for Prometheus add-on](/azure/azure-monitor/containers/kubernetes-monitoring-disable#disable-prometheus-metrics-collection).
+
+## Migrate from preview
+
+If you previously enabled control plane metrics by using the `AzureMonitorMetricsControlPlanePreview` feature flag, your clusters are automatically migrated to use the new `controlPlane.enabled` API property. No action is required, and the metrics collection continues without interruption.
+
+You can unregister the preview feature flag after the migration:
+
+```azurecli
+az feature unregister --namespace "Microsoft.ContainerService" --name "AzureMonitorMetricsControlPlanePreview"
+```
 
 ## Frequently asked questions
 
@@ -278,6 +268,10 @@ No. Currently, you can't scrape control plane metrics by using self-hosted Prome
 ### Why isn't the user agent available in the control plane metrics?
 
 In AKS, [control plane metrics](https://kubernetes.io/docs/reference/instrumentation/metrics/) don't have the user agent. The user agent is available only through the control plane logs that you access in [diagnostic settings](/azure/azure-monitor/essentials/diagnostic-settings).
+
+### Do I need to enable Azure Monitor metrics before enabling control plane metrics?
+
+Yes. The `--enable-control-plane-metrics` flag requires the Azure Monitor metrics add-on to be enabled on the cluster. Use `--enable-azure-monitor-metrics` together with `--enable-control-plane-metrics` when enabling control plane metrics.
 
 ## Related content
 
