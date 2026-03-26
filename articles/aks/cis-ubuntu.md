@@ -823,7 +823,7 @@ For more information about AKS security, see the following articles:
 
 <!-- EXTERNAL LINKS -->
 [cis-benchmark-ubuntu]: https://www.cisecurity.org/benchmark/ubuntu_linux
-[aks-upgrade-practices]: https://learn.microsoft.com/azure/architecture/operator-guides/aks/aks-upgrade-practices
+[aks-upgrade-practices]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
 
 <!-- INTERNAL LINKS -->
 [cis-benchmarks]: /compliance/regulatory/offering-CIS-Benchmark
