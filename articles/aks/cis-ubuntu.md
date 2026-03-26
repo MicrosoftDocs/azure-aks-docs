@@ -13,7 +13,7 @@ ai-usage: ai-assisted
 # Center for Internet Security (CIS) Ubuntu benchmark for AKS node images
 
 > [!IMPORTANT]
-> This article applies to Ubuntu 24.04 and Ubuntu 22.04 images used by AKS. The recommendation statuses and guidance reflect point-in-time scans and benchmark versions: [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][cis-benchmark-ubuntu] for Ubuntu 24.04, and [CIS Ubuntu 22.04 LTS Benchmark v3.0.0][cis-benchmark-ubuntu] for Ubuntu 22.04. Verify the OS version and benchmark version before applying guidance.
+> This article applies to Ubuntu 24.04 and Ubuntu 22.04 images used by AKS. The recommendation statuses and guidance reflect point-in-time scans and benchmark versions: [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][cis-benchmark-ubuntu] for Ubuntu 24.04 and [CIS Ubuntu 22.04 LTS Benchmark v3.0.0][cis-benchmark-ubuntu] for Ubuntu 22.04. Verify the OS version and benchmark version before applying guidance.
 
 This article covers the security OS configuration applied to Ubuntu images used by AKS. As a secure service, AKS complies with SOC, ISO, PCI DSS, and HIPAA standards. For more information about AKS security, see [Security concepts for clusters in Azure Kubernetes Service (AKS)][security-concepts-aks-apps-clusters]. To learn more about the CIS benchmark, see [Center for Internet Security (CIS) Benchmarks][cis-benchmarks]. For more information on the Azure security baselines for Linux, see [Linux security baseline][linux-security-baseline].
 
@@ -21,21 +21,21 @@ This article covers the security OS configuration applied to Ubuntu images used 
 
 The table has five sections:
 
-* **CIS ID:** The associated rule ID with each of the baseline rules.
-* **Recommendation description:** A description of the recommendation issued by the CIS benchmark.
-* **Level:** The severity of the recommended security requirements for a given environment.
-  * *L1, or Level 1* - Recommends essential basic security requirements that you can configure on any system and should cause little to no interruption of service or reduced functionality.
-  * *L2, or Level 2* - Recommends stricter requirements for environments with a higher security posture.
-* **Status:**
-    * *Pass* - The recommendation has been applied.
-    * *Fail* - The recommendation hasn't been applied.
-    * *Manual* - The recommendation can't be scanned automatically. There are instructions in the CIS benchmark to manually review.
-    * *N/A* - The recommendation relates to manifest file permission requirements that aren't relevant to AKS.
-    * *Depends on Environment* - The recommendation is applied in the user's specific environment and is not controlled by AKS.
-    * *Equivalent Control* - The recommendation has been implemented in a different equivalent manner.
-* **Reason:**
-    * *Potential Operation Impact* - The recommendation wasn't applied because it would have a negative effect on the service.
-    * *Covered Elsewhere* - The recommendation is covered by another control in Azure cloud compute.
+- **CIS ID**: The associated rule ID with each of the baseline rules.
+- **Recommendation description**: A description of the recommendation issued by the CIS benchmark.
+- **Level**: The severity of the recommended security requirements for a given environment.
+  - _L1, or Level 1_: Recommends essential basic security requirements that you can configure on any system and should cause little to no interruption of service or reduced functionality.
+  - _L2, or Level 2_: Recommends stricter requirements for environments with a higher security posture.
+- **Status**:
+    - _Pass_: The recommendation has been applied.
+    - _Fail_: The recommendation hasn't been applied.
+    - _Manual_: The recommendation can't be scanned automatically. There are instructions in the CIS benchmark to manually review.
+    - _N/A_: The recommendation relates to manifest file permission requirements that aren't relevant to AKS.
+    - _Depends on Environment_: The recommendation is applied in the user's specific environment and is not controlled by AKS.
+    - _Equivalent Control_: The recommendation has been implemented in a different equivalent manner.
+- **Reason**:
+    - _Potential Operation Impact_: The recommendation wasn't applied because it would have a negative effect on the service.
+    - _Covered Elsewhere_: The recommendation is covered by another control in Azure cloud compute.
 
 ## Ubuntu LTS 24.04
 
@@ -43,12 +43,12 @@ AKS clusters are deployed on host virtual machines, which run an operating syste
 
 As a part of the security-optimized operating system:
 
-* AKS provides a security-optimized host OS by default, but no option to select an alternate operating system.
-* The security-optimized host OS is built and maintained specifically for AKS and **is not** supported outside of the AKS platform.
-* Some unnecessary kernel module drivers have been disabled in the OS to reduce the attack surface area.
+- AKS provides a security-optimized host OS by default, but no option to select an alternate operating system.
+- The security-optimized host OS is built and maintained specifically for AKS and **isn't** supported outside of the AKS platform.
+- Some unnecessary kernel module drivers have been disabled in the OS to reduce the attack surface area.
 
 > [!NOTE]
-> Unrelated to the CIS benchmarks, Azure applies [daily patches, including security patches][aks-upgrade-practices], to AKS virtual machine hosts.
+> Unrelated to the CIS benchmarks, Azure applies [daily patches, including security patches][aks-upgrade-practices] to AKS virtual machine hosts.
 
 The goal of the secure configuration built into the host OS is to reduce the surface area of attack and optimize for the deployment of containers in a secure manner.
 AKS node images aim to be compliant with the "L1 - Server" profile where possible in a way that doesn't interfere with Kubernetes node operations. L2 compliance status is provided for informational purposes only and the node configuration isn't currently compliant.
