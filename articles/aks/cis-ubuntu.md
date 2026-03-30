@@ -783,8 +783,8 @@ The following are the results from [CIS Ubuntu 22.04 LTS Benchmark v3.0.0][cis-b
 | 6.2.4.9 | Ensure audit tools owner is configured | L2 | Pass | |
 | 6.2.4.10 | Ensure audit tools group owner is configured | L2 | Pass | |
 | 6.3 | **Configure Integrity Checking** | | | |
-| 6.3.1 | Ensure AIDE is installed | L1 | Operational impact | Scanning would impact workloads periodically. |
-| 6.3.2 | Ensure filesystem integrity is regularly checked | L1 | Operational impact | Scanning would impact workloads periodically. |
+| 6.3.1 | Ensure AIDE is installed | L1 | Manual | Scanning would impact workloads periodically. |
+| 6.3.2 | Ensure filesystem integrity is regularly checked | L1 | Manual | Scanning would impact workloads periodically. |
 | 6.3.3 | Ensure cryptographic mechanisms are used to protect the integrity of audit tools | L2 | Pass | |
 | 7 | **System Maintenance** | | | |
 | 7.1 | **System File Permissions** | | | |
