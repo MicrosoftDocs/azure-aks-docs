@@ -81,7 +81,7 @@ metadata:
 spec:
   containers:
     - name: my-container
-      image: mcr.microsoft.com/oss/nginx/nginx:1.25
+      image: mcr.microsoft.com/mcr/hello-world:latest
 ```
 
 ### Apply the label to an existing pod
