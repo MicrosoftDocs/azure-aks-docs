@@ -2,7 +2,7 @@
 title: Configure pod eviction for freeze events in Azure Kubernetes Service (AKS) (preview)
 description: Learn how to configure AKS node auto-drain to evict specific pods before freeze events occur on underlying virtual machines.
 ms.topic: how-to
-ms.date: 02/18/2026
+ms.date: 03/30/2026
 author: varora24
 ms.author: vaibhavarora
 ai-usage: ai-assisted
@@ -10,18 +10,18 @@ ai-usage: ai-assisted
 # Customer intent: As a cluster operator, I want to evict sensitive pods before freeze events so that I can protect workloads that can't tolerate brief node disruptions.
 ---
 
-# Configure Workloads to Evict on Freeze Events in AKS (preview)
-
-[Node auto-drain](./node-auto-drain.md) helps protect your workloads from disruptions when [scheduled events][scheduled-events] occur on the underlying virtual machines (VMs) in your node pools. By default, freeze events don't trigger a cordon and drain action because they're typically brief pauses. However, some workloads are highly sensitive to any node disruption. With Evict On Freeze, you can configure AKS to automatically cordon and drain nodes before a freeze event takes place.
-
-Evict On Freeze has two levels of configuration:
-
-- **Cluster-level configuration**: A `ConfigMap` enables AKS to respond to freeze events by cordoning and draining the affected node. This step alone doesn't evict any specific pods.
-- **Pod-level configuration**: A label on individual pods marks them as safe to evict during the drain phase. Only pods with this label are evicted. Unlabeled pods remain on the node and aren't disrupted.
-
-When these configurations are in place, any node that has a `VMEventScheduled` condition with a `Freeze` message is cordoned, and labeled pods are evicted. Eviction respects [Pod Disruption Budgets (PDBs)][pdb-docs], so pods can only be evicted if the PDB allows it.
+# Configure pod eviction for freeze events in Azure Kubernetes Service (AKS) (preview)
 
 > [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+[Node auto-drain](./node-auto-drain.md) helps protect your workloads from disruptions when [scheduled events][scheduled-events] occur on the underlying virtual machines (VMs) in your node pools. By default, freeze events don't trigger cordon and drain because they usually pause a node only briefly. If you have workloads that can't tolerate short disruptions, you can opt in to evict labeled pods before the freeze begins.
+
+Evict on freeze has two levels of configuration:
+
+- **Cluster-level configuration**: A `ConfigMap` tells AKS to cordon the affected node when a freeze event is scheduled. Cordoning prevents new pods from being scheduled on the node but doesn't evict any existing pods by itself.
+- **Pod-level configuration**: A label on individual pods opts them in for eviction. When the node is cordoned, AKS evicts only the pods that carry this label. Unlabeled pods remain on the node and aren't disrupted.
+
+The `ConfigMap` alone only cordons the node, and the label alone has no effect without the `ConfigMap`. When both are in place, any node that receives a `VMEventScheduled` condition with a `Freeze` message is cordoned and labeled pods are evicted. Eviction respects [Pod Disruption Budgets (PDBs)][pdb-docs], so pods can only be evicted if the PDB allows it.
 
 ## Prerequisites
 
@@ -29,9 +29,9 @@ When these configurations are in place, any node that has a `VMEventScheduled` c
 - The `kubectl` command-line tool configured to connect to your cluster.
 - Properly configured [Pod Disruption Budgets][pdb-docs] for the workloads you want to evict.
 
-## Enabling Evict on Freeze
+## Enable node cordoning for freeze events
 
-Enable Evict On Freeze at the cluster level by publishing a `ConfigMap` in the `kube-system` namespace. This `ConfigMap` instructs AKS to watch for freeze events and cordon and drain affected nodes. This step alone doesn't evict specific pods. You must also [label pods for eviction](#label-pods-for-eviction-during-freeze-events).
+Publish a `ConfigMap` in the `kube-system` namespace to tell AKS to cordon nodes when freeze events are scheduled. Cordoning marks the node as unschedulable so no new pods land on it, but doesn't remove any existing pods. To evict specific pods during the freeze, you must also [label them for eviction](#label-pods-for-eviction-during-freeze-events).
 
 1. Create a file named `remediator-config.yaml` with the following contents:
 
@@ -63,13 +63,13 @@ Enable Evict On Freeze at the cluster level by publishing a `ConfigMap` in the `
 
 ## Label pods for eviction during freeze events
 
-After you enable the cluster-level configuration, mark individual pods for eviction by applying the `remediator.kubernetes.azure.com/OnFreeze` label. During the drain phase, only pods with this label are evicted.
+After you enable the cluster-level configuration, mark individual pods for eviction by applying the `remediator.kubernetes.azure.com/onFreeze` label. During the drain phase, only pods with this label are evicted.
 
-You can add the label directly to a pod's deployment manifest or apply it to running pods.
+You can add the label to your workload manifest or apply it to running pods.
 
 ### Add the label in a deployment manifest
 
-Include the label in the `metadata.labels` section of your pod spec:
+For persistent workloads, add the label to the pod template in your deployment manifest so Kubernetes keeps the setting when it recreates the pods:
 
 ```yaml
 apiVersion: v1
@@ -77,7 +77,7 @@ kind: Pod
 metadata:
   name: some-pod-safe-to-evict
   labels:
-    remediator.kubernetes.azure.com/OnFreeze: ""
+    remediator.kubernetes.azure.com/onFreeze: ""
 spec:
   containers:
     - name: my-container
@@ -92,12 +92,14 @@ Use `kubectl label` to add the label to a running pod:
 kubectl label pod <pod-name> remediator.kubernetes.azure.com/OnFreeze=""
 ```
 
-When configured, AKS cordons the node and begins evicting labeled pods approximately five minutes before the scheduled freeze event time.
+This method is useful for quick validation, but the label is removed if Kubernetes recreates the pod.
+
+When both the `ConfigMap` and pod labels are configured, AKS cordons the node and evicts only the labeled pods about five minutes before the scheduled freeze event time. Unlabeled pods continue running on the cordoned node.
 
 > [!IMPORTANT]
 > Ensure your [Pod Disruption Budgets][pdb-docs] are properly configured. If the PDB doesn't allow disruption at the time of the scheduled event, the eviction fails.
 
-## Troubleshoot Evict On Freeze
+## Troubleshoot eviction for freeze events
 
 If you notice freeze events but no cordon or drain events follow, or pods aren't being evicted as expected, use the following steps to investigate.
 
@@ -105,7 +107,7 @@ If you notice freeze events but no cordon or drain events follow, or pods aren't
 
 You can use the Kubernetes event log or [Container Insights][container-insights] to monitor the progression of cordon, drain, and eviction for freeze events. For more information, see [Use Kubernetes events for troubleshooting](./events.md).
 
-The following events appear during the Evict On Freeze process:
+The following events appear during the drain and eviction process:
 
 | Event | Description |
 | --- | --- |
@@ -119,7 +121,7 @@ The following events appear during the Evict On Freeze process:
 
 If failures occur at any step, a separate error event is logged. For example, a `NodeDrainError` event appears with details in the event message.
 
-If you see `FreezeScheduled` events but no `NodeCordonStart` events, the cluster-level configuration might not be applied correctly. If you see cordon events but pods aren't being evicted, verify the pod-level labels and that the PDB allowed for eviction at the time of the event.
+If you see `FreezeScheduled` events but no `NodeCordonStart` events, the cluster-level `ConfigMap` might not be applied correctly. If you see cordon events but labeled pods aren't being evicted, verify that the pods carry the `remediator.kubernetes.azure.com/onFreeze` label and that the PDB allowed eviction at the time of the event.
 
 ### Verify the ConfigMap
 
@@ -129,7 +131,7 @@ Confirm that the cluster-level `ConfigMap` is correctly applied by running the f
 kubectl describe configmap remediator-config -n kube-system
 ```
 
-Compare the output with the configuration described in the [Enabling Evict on Freeze](#enabling-evict-on-freeze) section.
+Compare the output with the configuration described in [Enable node cordoning for freeze events](#enable-node-cordoning-for-freeze-events).
 
 ### Verify pod labels
 
