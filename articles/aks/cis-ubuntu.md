@@ -29,11 +29,11 @@ The table has five sections:
 - **Status**:
     - _Pass_: The recommendation has been applied.
     - _Fail_: The recommendation hasn't been applied.
-    - _Manual_: The recommendation can't be scanned automatically. There are instructions in the CIS benchmark to manually review.
+    - _Manual_: The recommendation can't be scanned automatically. There are instructions in the CIS benchmark to manually review, which is the customer's responsibility.
     - _N/A_: The recommendation relates to manifest file permission requirements that aren't relevant to AKS.
     - _Depends on Environment_: The recommendation is applied in the user's specific environment and is not controlled by AKS.
     - _Equivalent Control_: The recommendation has been implemented in a different equivalent manner.
-- **Reason**:
+- **Reason**: Justification for the recommendation status. Provided for L1 recommendations only.
     - _Potential Operation Impact_: The recommendation wasn't applied because it would have a negative effect on the service.
     - _Covered Elsewhere_: The recommendation is covered by another control in Azure cloud compute.
 
@@ -415,8 +415,8 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 6.2.4.9 | Ensure audit tools owner is configured | L2 | Pass | |
 | 6.2.4.10 | Ensure audit tools group owner is configured | L2 | Pass | |
 | 6.3 | **Configure Integrity Checking** | | | |
-| 6.3.1 | Ensure AIDE is installed | L1 | Operational impact | Scanning would impact workloads periodically. |
-| 6.3.2 | Ensure filesystem integrity is regularly checked | L1 | Operational impact | Scanning would impact workloads periodically. |
+| 6.3.1 | Ensure AIDE is installed | L1 | Manual | Scanning would impact workloads periodically. |
+| 6.3.2 | Ensure filesystem integrity is regularly checked | L1 | Manual | Scanning would impact workloads periodically. |
 | 6.3.3 | Ensure cryptographic mechanisms are used to protect the integrity of audit tools | L2 | Fail | |
 | 7 | **System Maintenance** | | | |
 | 7.1 | **System File Permissions** | | | |
