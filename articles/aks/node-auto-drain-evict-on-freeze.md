@@ -111,11 +111,13 @@ The following events appear during the drain and eviction process:
 
 | Event | Description |
 | --- | --- |
+| `VMEventScheduled` | Marks the start of the scheduled VM event lifecycle for the node. |
 | `FreezeScheduled` | Indicates a freeze event is scheduled, including the scheduled time. |
 | `NodeCordonStart` | The node cordon begins, approximately five minutes before the scheduled event. |
 | `NodeCordonEnd` | The node cordon completes. |
 | `NodeDrainStart` | The drain begins and labeled pods start being evicted. |
 | `NodeDrainEnd` | The drain completes and labeled pods are evicted. |
+| `NoVMEventScheduled` | Marks the end of the scheduled VM event for the node. |
 | `NodeUncordonStart` | After the freeze event finishes, the node uncordon begins. |
 | `NodeUncordonEnd` | The node uncordon completes and the node is schedulable again. |
 
