@@ -58,12 +58,18 @@ You can analyze API server traffic and client behavior through Kube Audit logs. 
 LIST requests can be expensive. When working with lists that might have more than a few thousand small objects or more than a few hundred large objects, you should consider the following guidelines:
 
 * **Consider the number of objects (CRs) you expect to eventually exist** when defining a new resource type (CRD).
-* **The load on etcd and API server primarily relies on the number of objects that exist, not the number of objects that are returned**. Even if you use a field selector to filter the list and retrieve only a small number of results, these guidelines still apply. The only exception is retrieval of a single object by `metadata.name`.
+*  **The load on etcd and API server primarily relies on the size of the response**. Even if you use a field selector to filter the list and retrieve only a small number of results, these guidelines still apply. The only exception is retrieval of a single object by `metadata.name`.
 * **Avoid repeated LIST calls if possible** if your code needs to maintain an updated list of objects in memory. Instead, consider using the Informer classes provided in most Kubernetes libraries. Informers automatically combine LIST and WATCH functionalities to efficiently maintain an in-memory collection.
 * **Consider whether you need strong consistency** if Informers don't meet your needs. Do you need to see the most recent data, up to the exact moment in time you issued the query? If not, set `ResourceVersion=0`. This causes the API server cache to serve your request instead of etcd.
 * **If you can't use Informers or the API server cache, read large lists in chunks**.
-* **Avoid listing more often than needed**. If you can't use Informers, consider how often your application lists the resources. After you read the last object in a large list, don't immediately re-query the same list. You should wait awhile instead.
+* **Avoid listing more often than needed**. If you can't use Informers, consider how often your application lists the resources. After you read the last object in a large list, don't immediately re-query the same list. You should wait a while instead.
+* **Add approporiate exponential backoffs and retry policies** to prevent clients from overwhelming the API server.
 * **Consider the number of running instances of your client application**. There's a big difference between having a single controller listing objects vs. having pods on each node doing the same thing. If you plan to have multiple instances of your client application periodically listing large numbers of objects, your solution won't scale to large clusters.
+* **Keep the overall Etcd size small** and do not use Etcd as a regular database. Some object size reduction techniques are listed below
+    - To reduce pod specification sizes, move environment variables from pod specifications to ConfigMaps
+    - Split large secrets or ConfigMaps into smaller, more manageable pieces
+    - Review and optimize resource specifications in your applications
+    - Reduce revision count
 
 ## Azure API and Platform throttling
 
@@ -105,7 +111,7 @@ As you scale your AKS clusters to larger scale points, keep the following featur
 > During the operation to scale the control plane, you might encounter elevated API server latency or timeouts for up to 15 minutes. If you continue to have problems scaling to the supported limit, open a [support ticket](https://portal.azure.com/#create/Microsoft.Support/Parameters/%7B%0D%0A%09%22subId%22%3A+%22%22%2C%0D%0A%09%22pesId%22%3A+%225a3a423f-8667-9095-1770-0a554a934512%22%2C%0D%0A%09%22supportTopicId%22%3A+%2280ea0df7-5108-8e37-2b0e-9737517f0b96%22%2C%0D%0A%09%22contextInfo%22%3A+%22AksLabelDeprecationMarch22%22%2C%0D%0A%09%22caller%22%3A+%22Microsoft_Azure_ContainerService+%2B+AksLabelDeprecationMarch22%22%2C%0D%0A%09%22severity%22%3A+%223%22%0D%0A%7D).
 
 * [Azure Network Policy Manager (Azure npm)][azure-npm] only supports up to 250 nodes.
-* Some AKS node metrics, including node disk usage, node CPU/memory usage, and network in/out, won't be accessible in [azure monitor platform metrics](/azure/azure-monitor/reference/supported-metrics/microsoft-containerservice-managedclusters-metrics) after the control plane is scaled up. To confirm if your control plane has been scaled up, look for the configmap 'control-plane-scaling-status'
+* Some AKS node metrics, including node disk usage, node CPU/memory usage, and network in/out, won't be accessible in [azure monitor platform metrics](/azure/azure-monitor/reference/supported-metrics/microsoft-containerservice-managedclusters-metrics) after the control plane is scaled up. To confirm if your control plane has been scaled up, look for the configmap 'large-cluster-control-plane-scaling-status'
 ```
 kubectl describe configmap large-cluster-control-plane-scaling-status -n kube-system
 ```

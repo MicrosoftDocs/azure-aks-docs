@@ -3,7 +3,7 @@ title: Fine-tune and deploy an AI model on Azure Kubernetes Service (AKS) with t
 description: Learn how to fine-tune and deploy a language model with the AI toolchain operator add-on on your AKS cluster.
 ms.topic: how-to
 ms.author: schaffererin
-author: sachidesai
+author: schaffererin
 ms.service: azure-kubernetes-service
 ms.date: 01/07/2025
 # Customer intent: "As a data scientist, I want to fine-tune and deploy a language model on a Kubernetes cluster, so that I can enhance its performance and utilize it for inferencing tasks effectively."
@@ -74,10 +74,10 @@ tuning:
          name: phi3mini128kinst
   method: qlora
   input:
-      urls: 
-          - “myDatasetURL”
+      urls:
+          - "myDatasetURL"
   output:
-      image: “$ACR_NAME.azurecr.io/$REPOSITORY:$VERSION”
+      image: "$ACR_NAME.azurecr.io/$REPOSITORY:$VERSION"
       imagePushSecret: myregistrysecret
 ```
 
@@ -132,14 +132,14 @@ resource:
       apps: phi-3-adapter
 inference:
   preset:
-    name: “phi-3-mini-128k-instruct“
+    name: "phi-3-mini-128k-instruct"
   adapters:
     -source:
        name: kubernetes-adapter
        image: $ACR_NAME.azurecr.io/$REPOSITORY:$VERSION
        imagePullSecrets:
              - myregistrysecret
-     strength: “1.0”
+     strength: "1.0"
 ```
 
 > [!NOTE]
@@ -177,7 +177,7 @@ inference:
 1. Check your model inferencing service and retrieve the service IP address using the `kubectl get svc` command.
 
     ```bash
-    export SERVICE_IP=$(kubectl get svc workspace-phi-3-mini-adapter -o jsonpath=’{.spec.clusterIP}’)
+    export SERVICE_IP=$(kubectl get svc workspace-phi-3-mini-adapter -o jsonpath='{.spec.clusterIP}')
     ```
 
 1. Run your fine-tuned Phi-3-mini model with a sample input of your choice using the `kubectl run` command. The following example asks the generative AI model, _"What is AKS?"_:

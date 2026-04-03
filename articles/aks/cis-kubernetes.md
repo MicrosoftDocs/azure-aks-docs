@@ -15,7 +15,7 @@ As a secure service, Azure Kubernetes Service (AKS) complies with SOC, ISO, PCI 
 
 ## Kubernetes CIS benchmark
 
-The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.11.1][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.29.x through AKS 1.32.x. For support timelines, see [supported Kubernetes versions][supported-kubernetes-versions].
+The following are the results from the [CIS Kubernetes Benchmark v1.12.0][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.32.x through AKS 1.34.x. For support timelines, see [supported Kubernetes versions][supported-kubernetes-versions].
 
 > [!NOTE]
 > In addition to the Kubernetes CIS benchmark, there's an [AKS CIS benchmark][cis-benchmark-aks] available as well.
@@ -117,13 +117,12 @@ Recommendations can have one of the following attestation statuses:
 | 1.4.2 | Ensure that the `--bind-address` argument is set to 127.0.0.1 | Automated | L1 | Equivalent Control | Pod's IP is used|
 | 2 | `etcd` | | | | |
 | 2.1 | Ensure that the `--cert-file` and `--key-file` arguments are set as appropriate | Automated | L1 | Pass | |
-| 2.2 | Ensure that the `--cert-file` and `--key-file` arguments are set as appropriate | Automated | L1 | Pass | |
-| 2.3 | Ensure that the `--client-cert-auth` argument is set to true | Automated | L1 | Pass | |
-| 2.4 | Ensure that the `--auto-tls` argument isn't set to true | Automated | L1 | Pass | Parameter is not set, which will set the default value as false (which is compliant) |
-| 2.5 | Ensure that the `--peer-cert-file` and `--peer-key-file` arguments are set as appropriate | Automated | L1 | Pass | |
-| 2.6 | Ensure that the `--peer-client-cert-auth` argument is set to true | Automated | L1 | Pass | |
-| 2.7 | Ensure that the `--peer-auto-tls` argument isn't set to true | Automated | L1 | Pass | Parameter is not set, which will set the default value as false (which is compliant) |
-| 2.8 | Ensure that a unique Certificate Authority is used for `etcd` | Manual | L2 | Pass | `--client-ca-file` for api-server is different from `--trusted-ca-file` for etcd|
+| 2.2 | Ensure that the `--client-cert-auth` argument is set to true | Automated | L1 | Pass | |
+| 2.3 | Ensure that the `--auto-tls` argument isn't set to true | Automated | L1 | Pass | Parameter is not set, which will set the default value as false (which is compliant) |
+| 2.4 | Ensure that the `--peer-cert-file` and `--peer-key-file` arguments are set as appropriate | Automated | L1 | Pass | |
+| 2.5 | Ensure that the `--peer-client-cert-auth` argument is set to true | Automated | L1 | Pass | |
+| 2.6 | Ensure that the `--peer-auto-tls` argument isn't set to true | Automated | L1 | Pass | Parameter is not set, which will set the default value as false (which is compliant) |
+| 2.7 | Ensure that a unique Certificate Authority is used for `etcd` | Manual | L2 | Pass | `--client-ca-file` for api-server is different from `--trusted-ca-file` for etcd|
 | 3 | Control Plane Configuration | | | | |
 | 3.1 | Authentication and Authorization | | | | |
 | 3.1.1 | Client certificate authentication shouldn't be used for users | Manual | L1 | Pass | When you deploy an AKS cluster, local accounts are enabled by default. You can [disable local accounts][disable-local-accounts] to disable client certificates for authentication. |
@@ -155,9 +154,10 @@ Recommendations can have one of the following attestation statuses:
 | 4.2.8 | Ensure that the `--eventRecordQPS` argument is set to a level which ensures appropriate event capture | Manual | L2 | Pass | |
 | 4.2.9 | Ensure that the `--tls-cert-file` and `--tls-private-key-file` arguments are set as appropriate | Manual | L1 | Pass | |
 | 4.2.10 | Ensure that the `--rotate-certificates` argument isn't set to false | Automated | L1 | Pass | |
-| 4.2.11 | Verify that the RotateKubeletServerCertificate argument is set to true | Manual | L1 | Fail | |
+| 4.2.11 | Verify that the RotateKubeletServerCertificate argument is set to true | Manual | L1 | Pass | |
 | 4.2.12 | Ensure that the Kubelet only makes use of Strong Cryptographic Ciphers | Manual | L1 | Pass | |
 | 4.2.13 | Ensure that a limit is set on pod PIDs | Manual | L1 | Pass | |
+| 4.2.14 | Ensure that the Kubelet enforces the use of the `RuntimeDefault` seccomp profile | Manual | L1 | Depends on Environment | AKS defaults to `Unconfined`. [Custom Node Configuration][custom-node-config] can be used to enable `RuntimeDefault` seccomp profile. |
 | 4.3 | kube-proxy | | | | |
 | 4.3.1 | Ensure that the kube-proxy metrics service is bound to localhost | Automated | L1 | Fail | AKS has central Prometheus scraping for kube-proxy and applies alert and auto-remediation when `KubeProxyStale` is detected. The `metrics-bind-address` is set for that purpose. |
 | 5 | Policies | | | | |
@@ -230,3 +230,4 @@ For more information about AKS security, see the following articles:
 [azure-policies]: ./policy-reference.md
 [entra-auth]: ./enable-authentication-microsoft-entra-id.md
 [disable-local-accounts]: ./manage-local-accounts-managed-azure-ad.md
+[custom-node-config]: ./custom-node-configuration.md

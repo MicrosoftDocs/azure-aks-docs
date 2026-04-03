@@ -2,7 +2,7 @@
 title: GPU health monitoring in Node Problem Detector (NPD) in Azure Kubernetes Service (AKS) nodes
 description: Learn about how AKS uses Node Problem Detector to expose issues on GPU-enabled nodes.
 ms.topic: how-to
-ms.date: 08/15/2025
+ms.date: 02/27/2026
 author: sachidesai
 ms.author: sachidesai
 ms.service: azure-kubernetes-service
@@ -53,6 +53,24 @@ NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies
   * Link flapping shouldn't occur under normal operating conditions and might result in degraded inter-node communication for distributed workloads.
   * It can also signal physical layer issues, misconfigured firmware, or driver instability.
 
+* **GPUClockThrottling**: NPD monitors GPU clock throttling conditions that may indicate performance degradation due to thermal, power, or hardware constraints. The check queries `nvidia-smi` for active clock throttle reasons and flags problematic conditions such as:
+  * Hardware slowdown (`HW_SLOWDOWN`)
+  * Software thermal slowdown (`SW_THERMAL_SLOWDOWN`)
+  * Hardware thermal slowdown (`HW_THERMAL_SLOWDOWN`)
+  * Hardware power brake slowdown (`HW_POWER_BRAKE_SLOWDOWN`)
+
+  Normal or expected throttling states such as GPU idle, no throttling, or user-configured software power caps aren't flagged.
+
+  For more information, see [NVIDIA clock throttle reasons](https://docs.nvidia.com/deploy/nvml-api/group__nvmlClocksThrottleReasons.html).
+
+* **UnhealthyNvidiaDevicePlugin**: For GPU node pools using the [AKS managed GPU experience](./aks-managed-gpu-nodes.md), NPD monitors the health of the NVIDIA device plugin systemd service (`nvidia-device-plugin.service`).
+  * The NVIDIA device plugin is responsible for advertising GPU resources to the Kubernetes scheduler. If the service is not active, GPU resources might not be available for scheduling workloads.
+  * This check applies only to node pools with the managed GPU experience enabled.
+
+* **NVIDIA GRID Driver License Check**: For NVIDIA VM SKUs that support GRID driver, this condition verifies license status of the installed GRID driver on [supported NVIDIA VM SKUs](/azure/virtual-machines/sizes/gpu-accelerated/nvadsa10v5-series).
+
+  * Invalid might indicate the installed GRID driver is not licensed.
+
 ## Frequently asked questions
 
 ### Does Node Problem Detector (NPD) automatically remediate GPU node issues?
@@ -61,7 +79,7 @@ NPD doesn't take direct action to remediate GPU-enabled node issues. NPD detects
 
 ### On which Azure VM sizes does AKS conduct GPU health monitoring through NPD?
 
-Currently, NPD conducts health checks on GPU nodes provisioned with the `Standard_ND96asr_v4` or `Standard_ND96isr_H100_v5` VM size on AKS.
+NPD conducts health checks on all GPU node pools that use AKS-managed GPU drivers (that is, node pools not created with `--gpu-driver none`). This covers the full range of NVIDIA GPU-enabled VM SKUs across the NC, ND, and NV series supported by AKS.
 
 ### Does NPD monitor the health of multi-instance GPU (MIG) node pools?
 

@@ -12,6 +12,8 @@ ms.date: 10/27/2023
 
 # Best practices for Windows containers on Azure Kubernetes Service (AKS)
 
+[!INCLUDE [windows annual channel retirement](./includes/windows-annual-channel-retirement.md)]
+
 In AKS, you can create node pools that run Linux or Windows Server as the operating system (OS) on the nodes. Windows Server nodes can run native Windows container applications, such as .NET Framework. The Linux OS and Windows OS have different container support and configuration considerations. For more information, see [Windows container considerations in Kubernetes][windows-vs-linux]. To learn more about how various industries are using Windows containers on AKS, see [Windows AKS customer stories](./windows-aks-customer-stories.md).
 
 This article outlines best practices for running Windows containers on AKS.
@@ -41,7 +43,9 @@ AKS supports two options for the Windows Server operating system: Long Term Serv
 
     AKS uses Windows Server 2019 and Windows Server 2022 as the host OS versions and only supports process isolation. AKS doesn't support container images built by other versions of Windows Server. For more information, see [Windows container version compatibility](/virtualization/windowscontainers/deploy-containers/version-compatibility). Windows Server 2022 is the default OS for Kubernetes version 1.25 and later.
 
-    Windows Server 2022 will retire after Kubernetes version 1.34 reaches its end of support, and will not be supported in Kubernetes version 1.35 and above. Windows Server 2019 will retire after Kubernetes version 1.32 reaches end of support, and will not be supported in Kubernetes version 1.33 and above. For more information, see [AKS release notes][aks-release-notes]. To stay up to date on the latest Windows Server OS versions and learn more about our roadmap of what's planned for support on AKS, see our [AKS public roadmap](https://github.com/azure/aks/projects/1).
+    [!INCLUDE [windows server 2019 retirement](./includes/windows-server-2019-retirement.md)]
+
+    [!INCLUDE [windows server 2022 retirement](./includes/windows-server-2022-retirement.md)]
 
 1. AKS supports [Windows Server Annual Channel for Containers](https://techcommunity.microsoft.com/t5/windows-server-news-and-best/windows-server-annual-channel-for-containers/ba-p/3866248) (preview). This channel is released annually and is supported for two years. This channel is beneficial for customers requiring increased innovation cycles and portability. The portability functionality enables the Windows Server 2022-based container image OS to run on newer versions of Windows Server host OS, such as the new annual channel release.
 
@@ -137,7 +141,7 @@ To learn more about Windows containers on AKS, see the following resources:
 <!-- LINKS - internal -->
 [azure-cni-overlay]: ./azure-cni-overlay.md
 [azure-cni-dynamic-ip-allocation]: ./configure-azure-cni-dynamic-ip-allocation.md
-[azure-cni-choose-network-model]: ./azure-cni-overlay.md#choosing-a-network-model-to-use
+[azure-cni-choose-network-model]: ./concepts-network-azure-cni-overlay.md#choose-a-network-model
 [network-concepts-for-aks-applications]: ./concepts-network.md
 [windows-vs-linux]: ./windows-vs-linux-containers.md
 [azurenpm-vs-calico]: ./use-network-policies.md#differences-between-network-policy-engines-cilium-azure-npm-and-calico

@@ -42,7 +42,6 @@ export PG_SYSTEM_NAMESPACE="cnpg-system"
 export PG_PRIMARY_CLUSTER_NAME="pg-primary-${LOCAL_NAME}-${SUFFIX}"
 export PG_PRIMARY_STORAGE_ACCOUNT_NAME="hacnpgpsa${SUFFIX}"
 export PG_STORAGE_BACKUP_CONTAINER_NAME="backups"
-export ENABLE_AZURE_PVC_UPDATES="true"
 export MY_PUBLIC_CLIENT_IP=$(dig +short myip.opendns.com @resolver3.opendns.com)
 ```
 
@@ -258,7 +257,7 @@ In this section, you deploy an instance of Azure Managed Grafana, an Azure Monit
 
 ## Create the AKS cluster to host the PostgreSQL cluster
 
-In this section, you create a multizone AKS cluster with a system node pool. The AKS cluster hosts the PostgreSQL cluster primary replica and two standby replicas, each aligned to a different availability zone to enable zonal redundancy.
+In this section, you create a multizone AKS cluster with a system node pool. The AKS cluster hosts the PostgreSQL cluster primary replica and two standby replicas, each aligned to a different availability zone to enable zone redundancy.
 
 You also add a user node pool to the AKS cluster to host the PostgreSQL cluster. Using a separate node pool allows for control over the Azure VM SKUs used for PostgreSQL and enables the AKS system pool to optimize performance and costs. You apply a label to the user node pool that you can reference for node selection when deploying the CNPG operator later in this guide. This section might take some time to complete.
 
@@ -360,32 +359,32 @@ export POSTGRES_STORAGE_CLASS="managed-csi-premium"
 
 To use Premium SSD v2, you can create a custom storage class.
 
-1. Define a new CSI driver storage class:
+Define a new CSI driver storage class:
 
-    ```bash
-    cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
-    apiVersion: storage.k8s.io/v1
-    kind: StorageClass
-    metadata:
-      name: premium2-disk-sc
-    parameters:
-      cachingMode: None
-      skuName: PremiumV2_LRS
-      DiskIOPSReadWrite: "3500"
-      DiskMBpsReadWrite: "125"
-    provisioner: disk.csi.azure.com
-    reclaimPolicy: Delete
-    volumeBindingMode: WaitForFirstConsumer
-    allowVolumeExpansion: true
-    EOF
+```bash
+cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: premium2-disk-sc
+parameters:
+  cachingMode: None
+  skuName: PremiumV2_LRS
+  DiskIOPSReadWrite: "3500"
+  DiskMBpsReadWrite: "125"
+provisioner: disk.csi.azure.com
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+EOF
 
-    export POSTGRES_STORAGE_CLASS="premium2-disk-sc"
-    ```
+export POSTGRES_STORAGE_CLASS="premium2-disk-sc"
+```
 
 ### [Local NVMe](#tab/acstor)
 
 > [!IMPORTANT]  
-> Ensure that your cluster is using VM SKUs that support local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms]. The below instructions requires Azure Container Storage v2.0.0 or later.
+> Ensure that your cluster is using VM SKUs that support local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms]. The below instructions require Azure Container Storage v2.0.0 or later.
 
 1. Update AKS cluster to install Azure Container Storage on user node pool.
 
@@ -597,6 +596,10 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
 * Jenny Hayes | Senior Content Developer
 * Carol Smith | Senior Content Developer
 * Erin Schaffer | Content Developer 2
+
+## Acknowledgment
+
+This documentation was jointly developed with EnterpriseDB, the maintainers of the CloudNativePG operator. We thank [Gabriele Bartolini](https://cloudnative-pg.io/authors/gbartolini/) for reviewing earlier drafts of this document and offering technical improvements.  
 
 <!-- LINKS -->
 [az-identity-create]: /cli/azure/identity#az-identity-create

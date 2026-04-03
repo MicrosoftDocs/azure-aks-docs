@@ -13,12 +13,7 @@ ms.date: 12/17/2024
 
 # Customize cluster egress with outbound types in Azure Kubernetes Service (AKS)
 
-> [!NOTE]
-> After [31 March 2026](https://azure.microsoft.com/updates?id=default-outbound-access-for-vms-in-azure-will-be-retired-transition-to-a-new-method-of-internet-access), new AKS clusters that use the **AKS-managed virtual network** option will place cluster subnets into [private subnets](/azure/virtual-network/ip-services/default-outbound-access#why-is-disabling-default-outbound-access-recommended) by default (`defaultOutboundAccess = false`).
->
-> This setting **does not impact AKS-managed cluster traffic**, which uses explicitly configured outbound paths. It may affect **unsupported scenarios**, such as deploying other resources (e.g., VMs) into the same subnet.
->
-> **Clusters using BYO VNets are unaffected** by this change. In supported configurations, no action is required.
+[!INCLUDE [vm-default-outbound-access-retirement](includes/vm-default-outbound-access-retirement.md)]
 
 You can customize egress for an AKS cluster to fit specific scenarios. By default, AKS creates a Standard Load Balancer to be set up and used for egress. However, the default setup may not meet the requirements of all scenarios if public IPs are disallowed or extra hops are required for egress.
 
@@ -57,7 +52,8 @@ For more information, see [using a standard load balancer in AKS](load-balancer-
 If `managedNatGateway` or `userAssignedNatGateway` are selected for `outboundType`, AKS relies on [Azure Networking NAT gateway](/azure/virtual-network/nat-gateway/manage-nat-gateway) for cluster egress.
 
 - Select `managedNatGateway` when using managed virtual networks. AKS provisions a NAT gateway and attach it to the cluster subnet.
-- Select `userAssignedNatGateway` when using bring-your-own virtual networking. This option requires that you have a NAT gateway created before cluster creation.
+- Select `userAssignedNatGateway` when using bring-your-own virtual networking. This option requires that you have a NAT gateway created before cluster creation. Both Standard and StandardV2 NAT Gateways are supported, however StandardV2 is recommended because it's zone-redundant by default and offers higher bandwidth and throughput than Standard. For information see, [StandardV2 NAT Gateway](/azure/nat-gateway/nat-overview#standardv2-nat-gateway).
+
 
 For more information, see [using NAT gateway with AKS](nat-gateway.md).
 

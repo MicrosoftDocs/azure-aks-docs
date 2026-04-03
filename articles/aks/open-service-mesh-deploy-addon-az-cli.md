@@ -4,7 +4,7 @@ description: Use Azure CLI to install the Open Service Mesh (OSM) add-on on an A
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 09/25/2024
-ms.author: pgibson
+ms.author: schaffererin
 author: schaffererin
 # Customer intent: As a Kubernetes administrator, I want to install the Open Service Mesh add-on using Azure CLI, so that I can manage traffic, enforce policies, and collect telemetry for my applications running on an Azure Kubernetes Service cluster.
 ---
@@ -13,8 +13,7 @@ author: schaffererin
 
 This article shows you how to install the Open Service Mesh (OSM) add-on on an Azure Kubernetes Service (AKS) cluster. The OSM add-on installs the OSM mesh on your cluster. The OSM mesh is a service mesh that provides traffic management, policy enforcement, and telemetry collection for your applications. For more information about the OSM mesh, see [Open Service Mesh](https://openservicemesh.io/).
 
-> [!NOTE]
-> With the retirement of [Open Service Mesh (OSM)](https://docs.openservicemesh.io/) by the Cloud Native Computing Foundation (CNCF), we recommend identifying your OSM configurations and migrating them to an equivalent Istio configuration. For information about migrating from OSM to Istio, see [Migration guidance for Open Service Mesh (OSM) configurations to Istio](open-service-mesh-istio-migration-guidance.md).
+[!INCLUDE [open-service-mesh-retirement](./includes/open-service-mesh-retirement.md)]
 
 > [!IMPORTANT]
 > Based on the version of Kubernetes your cluster is running, the OSM add-on installs a different version of OSM.

@@ -35,7 +35,7 @@ A pod security context can also define additional capabilities or permissions fo
 * **allowPrivilegeEscalation** defines if the pod can assume *root* privileges. Design your applications so this setting is always set to *false*.
 * **Linux capabilities** let the pod access underlying node processes. Take care with assigning these capabilities. Assign the least number of privileges needed. For more information, see [Linux capabilities][linux-capabilities].
 * **SELinux labels** is a Linux kernel security module that lets you define access policies for services, processes, and filesystem access. Again, assign the least number of privileges needed. For more information, see [SELinux options in Kubernetes][selinux-labels]
-* **hostUsers: false** the pod runs using a user-namespace, a Linux kernel feature. This significatly improves the host isolation and limits the lateral movement in case of container breakouts. These improvements are significant whether the container is running as root or not. For more information, see [user-namespaces][secure-container-userns].
+* **hostUsers: false** the pod runs using a user-namespace, a Linux kernel feature. This significantly improves the host isolation and limits the lateral movement in case of container breakouts. These improvements are significant whether the container is running as root or not. For more information, see [user-namespaces][secure-container-userns].
 
 The following example pod YAML manifest sets security context settings to define:
 
@@ -112,7 +112,7 @@ This article focused on how to secure your pods. To implement some of these area
 
 [apparmor-seccomp]: operator-best-practices-cluster-security.md#secure-container-access-to-resources
 
-[secure-container-userns]: secure-container-access.md#user-namespaces
+[secure-container-userns]: secure-container-access.md#overview-of-user-namespaces
 
 [microsoft-authentication-library]: /azure/active-directory/develop/msal-overview
 

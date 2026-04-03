@@ -15,7 +15,7 @@ In this article, you learn how to deploy and test highly available GitHub Action
 
 ## GitHub Actions sample workflows
 
-The repository has three sample workloads in the default GitHub workflow folder for you to test the self-hosted ARC runners:
+The repository has three sample workloads in the default [GitHub workflow folder](https://github.com/jorgearteiro/azurefiles-actions-aks/tree/main/.github/workflows) for you to test the self-hosted ARC runners:
 
 * **`dotnet-using-container.yml`**: .NET Build using containers install .NET SDK and restore/build/publish application on the runner itself.
 * **`dotnet-without-container.yml`**: .NET Build without containers use workflow container feature to run a .NET SDK container and build inside the application inside the container. NuGet caching is mounted by default on this container.

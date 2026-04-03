@@ -328,4 +328,4 @@ In order to complete this step, you must create your Fleet Manager with managed 
 
 
 <!-- INTERNAL LINKS -->
-[fleet-crp]: ./concepts-resource-propagation.md
+[fleet-crp]: ./concepts-resource-placement.md

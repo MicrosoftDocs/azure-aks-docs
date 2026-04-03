@@ -3,7 +3,7 @@ title: Troubleshoot the Open Service Mesh (OSM) add-on for Azure Kubernetes Serv
 description: How to troubleshoot the Open Service Mesh (OSM) add-on for Azure Kubernetes Service (AKS).
 ms.topic: troubleshooting
 ms.date: 09/25/2024
-ms.author: pgibson
+ms.author: schaffererin
 author: schaffererin
 # Customer intent: As a Kubernetes operator, I want to troubleshoot the Open Service Mesh (OSM) add-on in my Azure Kubernetes Service (AKS) environment, so that I can ensure its proper configuration and functionality for my applications.
 ---
@@ -12,8 +12,7 @@ author: schaffererin
 
 When you deploy the Open Service Mesh (OSM) add-on for Azure Kubernetes Service (AKS), you may experience problems associated with the service mesh configuration. The article explores common troubleshooting errors and how to resolve them.
 
-> [!NOTE]
-> With the retirement of [Open Service Mesh (OSM)](https://docs.openservicemesh.io/) by the Cloud Native Computing Foundation (CNCF), we recommend identifying your OSM configurations and migrating them to an equivalent Istio configuration. For information about migrating from OSM to Istio, see [Migration guidance for Open Service Mesh (OSM) configurations to Istio](open-service-mesh-istio-migration-guidance.md).
+[!INCLUDE [open-service-mesh-retirement](./includes/open-service-mesh-retirement.md)]
 
 ## Verifying and troubleshooting OSM components
 

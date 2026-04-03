@@ -27,7 +27,7 @@ In this article, you learn how to secure access to Azure OpenAI from Azure Kuber
 
 * You need an Azure account with an active subscription. If you don't have one, [create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * This article builds on [Deploy an application that uses OpenAI on AKS](./open-ai-quickstart.md). You should complete that article before you begin this one.
-* You need a custom domain name enabled on your Azure OpenAI account to use for Microsoft Entra authorization. For more information, see [Custom subdomain names for Azure AI services](/azure/ai-services/cognitive-services-custom-subdomains).
+* You need a custom domain name enabled on your Azure OpenAI account to use for Microsoft Entra authorization. For more information, see [Custom subdomain names for Foundry Tools](/azure/ai-services/cognitive-services-custom-subdomains).
 
 [!INCLUDE [azure-cli-prepare-your-environment.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment.md)]
 

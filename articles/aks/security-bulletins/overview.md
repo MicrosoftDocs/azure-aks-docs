@@ -1,8 +1,8 @@
 ---
 title: Security bulletins for Azure Kubernetes Service (AKS)
 description: This article provides security/vulnerability related updates and troubleshooting guides for Azure Kubernetes Services (AKS).
-ms.date: 10/23/2025
-author: bahe
+ms.date: 03/20/2026
+author: bcho
 ms.author: bahe
 ms.topic: concept-article
 ms.subservice: aks-security
@@ -13,15 +13,135 @@ ms.subservice: aks-security
 
 This page provides up-to-date information on security vulnerabilities affecting Azure Kubernetes Service(AKS) and its components. This information includes details on:
 
-- Critical Security Advisories – High-impact security vulnerabilities, including zero-day vulnerabilities and other critical CVEs requiring immediate attention, along with mitigation guidance.
-- Ongoing Security Investigations – Security issues under review, including CVEs where a patch isn't yet available or further assessment is needed.
-- False Positives & Non-Exploitable CVEs – Cases where a reported CVE doesn't impact AKS due to specific configurations, mitigations, or lack of exploitability.
+- Critical Security Advisories - High-impact security vulnerabilities, including zero-day vulnerabilities and other critical CVEs requiring immediate attention, along with mitigation guidance.
+- Ongoing Security Investigations - Security issues under review, including CVEs where a patch isn't yet available or further assessment is needed.
+- False Positives & Non-Exploitable CVEs - Cases where a reported CVE doesn't impact AKS due to specific configurations, mitigations, or lack of exploitability.
 
 These updates cover security information related to the following AKS components:
 
 - Azure Kubernetes Service (AKS)
 - Azure Kubernetes Service Node Image (AKS Node Image)
 - Azure Kubernetes Service Addons (AKS add-ons)
+
+---
+
+## AKS-2026-0002 gRPC-Go Authorization Bypass via Missing Leading Slash in :path - CVE-2026-33186
+
+**Published Date**: March 20, 2026
+
+### Description
+
+This bulletin provides an update regarding a recently disclosed vulnerability ([CVE-2026-33186](https://nvd.nist.gov/vuln/detail/CVE-2026-33186)) in gRPC-Go (`google.golang.org/grpc`). The gRPC-Go server accepted HTTP/2 requests where the `:path` pseudo-header omitted the mandatory leading slash (for example, `Service/Method` instead of `/Service/Method`). While the server routed these requests to the correct handler, authorization interceptors - including the official `grpc/authz` package - evaluated the raw, non-canonical path string. Consequently, deny rules defined using canonical paths (starting with `/`) failed to match, allowing requests to bypass the policy if a fallback allow rule was present.
+
+AKS is aware of the vulnerability. However, the specific exploit conditions - path-based RBAC interceptors with deny rules and an allow-by-default fallback - are **not present** in AKS managed components. AKS does not use the `grpc/authz` package, and custom interceptors in AKS services use JWT-based authentication that does not rely on path-matching deny rules. Additionally, AKS control plane gRPC services are not directly exposed to untrusted clients. As a defense-in-depth measure, AKS is upgrading all internal gRPC-Go dependencies to v1.79.3 or later.
+
+### References
+
+- [CVE-2026-33186](https://nvd.nist.gov/vuln/detail/CVE-2026-33186)
+- [GHSA-p77j-4mvh-x3m3](https://github.com/advisories/GHSA-p77j-4mvh-x3m3)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- None
+
+**Resolutions**
+
+- AKS does not use path-based gRPC authorization interceptors susceptible to this bypass. AKS clusters are not vulnerable to this issue.
+- Although AKS is not affected, gRPC-Go dependencies across all AKS services will be upgraded to v1.79.3 or later as a preventive measure.
+- **No customer action is required.** Customers running their own gRPC-Go services on AKS should review whether they use path-based authorization interceptors (for example, `grpc/authz`) and upgrade to gRPC-Go v1.79.3 or later if affected.
+
+---
+
+## AKS-2026-0001 TLS 1.2 Handshake Enforcement with Extended Master Secret (EMS) in AKS v1.34
+
+**Published Date**: March 5, 2026
+
+### Description
+This bulletin provides an update regarding [a change](https://github.com/golang/go/commit/eed2208f152d1172993a3193374625683e244100) in [Go 1.25](https://go.dev/doc/go1.25) to reject TLS 1.2 handshake without extended master secret (EMS) when FIPS mode is enabled. Starting [AKS v1.34](https://github.com/Azure/AKS/releases/tag/2026-01-04), Kubernetes control plane components are built with Go 1.25 and FIPS‑validated cryptographic modules, which enforce EMS for TLS 1.2 connections on FIPS nodes.
+When FIPS mode is active, TLS 1.2 handshakes that do not include the EMS extension are rejected. This enforcement applies to both TLS clients and servers implemented using the Go standard library. Prior to Go 1.21, Go TLS clients did not send the EMS extension by default for TLS 1.2 connections. As a result, applications built with older Go versions (Go <1.21) might fail to establish TLS connections to FIPS‑enabled AKS components after upgrading to AKS v1.34. This behavior can affect:
+- Client applications communicating with the Kubernetes API server
+- Admission webhooks and other webhook servers registered with the kube‑apiserver
+
+### References
+
+- [EMS Enforcement for TLS 1.2 in Go 1.25](https://github.com/golang/go/commit/eed2208f152d1172993a3193374625683e244100)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- AKS v1.34 if your applications are built with Go < 1.21
+
+**Resolutions**
+
+- Rebuild applications using Go 1.21 or later
+- Microsoft strongly recommends upgrading to a currently [supported Go version](https://go.dev/doc/devel/release)
+
+---
+
+## AKS-2025-0013  Portworx Half-Blind SSRF in kube-controller-manager
+
+**Published Date**: December 1, 2025
+
+### Description
+This bulletin provides an update regarding a recent vulnerability in the Kubernetes kube-controller-manager when using the in-tree Portworx StorageClass. This issue allows authorized users to leak arbitrary information from unprotected endpoints in the control plane’s host network (including link-local or loopback services). 
+
+The in-tree Portworx StorageClass has been disabled by default starting in Kubernetes v1.31 via the CSIMigrationPortworx feature gate. As a result, currently supported versions ≥ v1.32 are not impacted unless the CSIMigrationPortworx feature gate has been manually disabled.
+
+### References
+
+- [CVE-2025-13281](https://github.com/kubernetes/kubernetes/issues/135525)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- AKS v1.28-akslts
+- AKS v1.29-akslts
+- AKS v1.30-akslts
+
+**Resolutions**
+
+- A security patch has been rolled out for the impacted lts versions.
+- **No action is required**. The patch will be automatically applied to your cluster during your configured or default [maintenance window](../planned-maintenance.md).
+
+---
+
+## AKS-2025-0012 Runc CVEs - CVE-2025-31133, CVE-2025-52565, CVE-2025-52881
+
+**Published Date**: November 7, 2025
+
+### Description
+
+The bulletin provides an update regarding the recent vulnerabilities (CVE-2025-31133, CVE-2025-52565, CVE-2025-52881) disclosed from runc.
+
+### References
+
+- [CVE-2025-31133](https://github.com/advisories/GHSA-9493-h29p-rfm2)
+- [CVE-2025-52565](https://github.com/advisories/GHSA-qw9x-cqr3-wc7r)
+- [CVE-2025-52881](https://github.com/advisories/GHSA-cgrx-mc8f-2prm)
+
+### Affected Components
+
+#### [**AKS Node Image**](#tab/aks-node-image)
+
+**Affected Versions**
+
+- Linux node image versions prior to 202511.07.0
+
+**Resolutions**
+
+- Newer node image versions have been rolled out. Upgrade Linux node image version to
+  - 202511.07.0
+  - or later. You can check the latest node image versions from [AKS release notes][aks-release-notes].
 
 ---
 

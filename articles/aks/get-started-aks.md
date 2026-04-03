@@ -5,10 +5,8 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: get-started
-ms.date: 06/26/2025
-
-#customer intent: As a new user, I want to get started with Azure Kubernetes Service (AKS) so that I can deploy and manage containerized applications.
-
+ms.date: 01/21/2026
+# Customer intent: As a new user, I want to get started with Azure Kubernetes Service (AKS) so that I can deploy and manage containerized applications.
 ---
 
 # Get started with Azure Kubernetes Service (AKS) basics

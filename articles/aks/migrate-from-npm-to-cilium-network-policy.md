@@ -10,7 +10,7 @@ ms.author: josephyostos
 
 # Migrate from Network Policy Manager (NPM) to Cilium Network Policy 
 
-In this article, we provide a comprehensive guide to plan, execute, and validate the migration from Network Policy Manager (NPM) to Cilium Network Policy. The goal is to ensure policy parity, minimize service disruption, and align with Azure CNI’s strategic direction toward eBPF-based networking and enhanced observability.
+In this article, we provide a comprehensive guide to plan, execute, and validate the migration from Network Policy Manager (NPM) to Cilium Network Policy. The goal is to ensure policy parity, minimize service disruption, and align with Azure CNI's strategic direction toward eBPF-based networking and enhanced observability.
 
 > [!IMPORTANT]
 > This guide applies exclusively to AKS clusters running Linux nodes. Cilium Network Policy isn't currently supported for Windows nodes in AKS.  
@@ -21,9 +21,33 @@ In this article, we provide a comprehensive guide to plan, execute, and validate
 - Downtime Expectations: Policy enforcement might be temporarily inconsistent during node reimaging.
 - Windows Node Pools: Cilium Network Policy isn't currently supported for Windows nodes in AKS. 
 
+## Identify impacted clusters
+
+To find AKS clusters with Linux node pools using Azure Network Policy Manager (NPM), run the following query in [Azure Resource Graph Explorer](https://portal.azure.com/?feature.customportal=false#blade/HubsExtension/ArgQueryBlade/query/Resources%20%0A%7C%20where%20type%20%3D%3D%20%22microsoft.containerservice%2Fmanagedclusters%22%20%0A%7C%20mv-expand%20agentPool%20%3D%20properties.agentPoolProfiles%20%0A%7C%20where%20agentPool.osType%20!%3D%20%22Windows%22%20%0A%7C%20extend%20netPol%20%3D%20tolower%28tostring%28properties.networkProfile.networkPolicy%29%29%20%0A%7C%20where%20netPol%20%3D%3D%20%22azure%22%20%0A%7C%20summarize%20by%20name%2C%20location%2C%20resourceGroup%2C%20netPol):
+
+```kusto
+Resources
+| where type == "microsoft.containerservice/managedclusters"
+| mv-expand agentPool = properties.agentPoolProfiles
+| where agentPool.osType != "Windows"
+| extend netPol = tolower(tostring(properties.networkProfile.networkPolicy))
+| where netPol == "azure"
+| summarize by name, location, resourceGroup, netPol
+```
+
+This query lists all AKS clusters where `agentPool.osType != "Windows"` and `properties.networkProfile.networkPolicy == "azure"`.
+
+## Key benefits of migrating to Cilium Network Policy
+
+Migrating to Cilium Network Policy on Azure CNI powered by Cilium provides significant improvements:
+
+- **Robust support for Kubernetes-native policies**: Full compliance with Kubernetes NetworkPolicy specifications.
+- **Extended features**: [Layer 7 policy](./how-to-apply-l7-policies.md) and [FQDN filtering](./how-to-apply-fqdn-filtering-policies.md) for advanced traffic control.
+- **eBPF-based dataplane**: Improved performance, scalability, and security compared to iptables-based implementations. 
+
 ## Pre-migration validation 
 
-Before migrating from Network Policy Manager (NPM) to Cilium Network Policy, it’s important to assess the compatibility of your existing network policies. While most policies continue to function as expected post-migration, there are specific scenarios where behavior might differ between NPM and Cilium. These differences could require updates to your policies either before or after the migration to ensure consistent enforcement and avoid unintended traffic drops.
+Before migrating from Network Policy Manager (NPM) to Cilium Network Policy, it's important to assess the compatibility of your existing network policies. While most policies continue to function as expected post-migration, there are specific scenarios where behavior might differ between NPM and Cilium. These differences could require updates to your policies either before or after the migration to ensure consistent enforcement and avoid unintended traffic drops.
 In this section, we outline known scenarios where policy adjustments might be necessary. We explain why it matters, and provide guidance on what actions—if any—are required to make your policies Cilium-compatible.
 
 ### NetworkPolicy with endPort
@@ -109,8 +133,8 @@ spec:
   endpointSelector: {}  # Applies to all pods in the namespace
   egress:
      - toEntities:
-          - host # host allows traffic from/to the local node’s host network namespace
-          - remote-node # remote-node allows traffic from/to the remote node’s host network namespace
+          - host # host allows traffic from/to the local node's host network namespace
+          - remote-node # remote-node allows traffic from/to the remote node's host network namespace
 ```
 
 ### NetworkPolicy with named Ports
@@ -144,7 +168,7 @@ spec:
 
 ### NetworkPolicy with Egress Policies 
 
-Kubernetes NetworkPolicy on NPM doesn’t block egress traffic from a pod to its own node’s IP, this traffic is implicitly allowed. After you migrate to Cilium, this behavior will change, and traffic to local nodes that was previously allowed will be blocked unless explicitly allowed.
+Kubernetes NetworkPolicy on NPM doesn't block egress traffic from a pod to its own node's IP, this traffic is implicitly allowed. After you migrate to Cilium, this behavior will change, and traffic to local nodes that was previously allowed will be blocked unless explicitly allowed.
 
 For example, the following policy allows egress only to an internal API subnet:
 
@@ -173,7 +197,7 @@ spec:
 
 ### Ingress policy behavior changes
 
-Under Network Policy Manager (NPM), ingress traffic arriving via a LoadBalancer or NodePort service with “externalTrafficPolicy=Cluster” - which is the default setting - isn't subject to ingress policy enforcement. This behavior means that even if a pod has a restrictive ingress policy, traffic from external sources might still reach it via loadbalancer or nodeport services.
+Under Network Policy Manager (NPM), ingress traffic arriving via a LoadBalancer or NodePort service with "externalTrafficPolicy=Cluster" - which is the default setting - isn't subject to ingress policy enforcement. This behavior means that even if a pod has a restrictive ingress policy, traffic from external sources might still reach it via loadbalancer or nodeport services.
 
 In contrast, Cilium enforces ingress policies on all traffic, including traffic routed internally due to externalTrafficPolicy=Cluster. As a result, after migration, traffic that was previously allowed might be dropped if the appropriate ingress rules aren't explicitly defined.
 
@@ -206,7 +230,7 @@ To use Cilium Network Policy, your AKS cluster must be running Azure CNI powered
 > The upgrade process triggers each node pool to be reimaged simultaneously. Upgrading each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image upgrade or [Kubernetes version upgrade](upgrade-cluster.md) where each node in a node pool is reimaged. Cilium will begin enforcing network policies only after all nodes are reimaged.
 
 > [!IMPORTANT]
-> These instructions apply to clusters upgrading from Azure CNI to Azure CNI with the Cilium dataplane. Upgrades from bring-your-own CNIs or changes the IPAM mode aren't covered here. For more information, see [Upgrade Azure CNI documentation](upgrade-azure-cni.md).
+> These instructions apply to clusters upgrading from Azure CNI to Azure CNI with the Cilium dataplane. Upgrades from bring-your-own CNIs or changes the IPAM mode aren't covered here. For more information, see [Upgrade Azure CNI documentation](update-azure-cni.md).
 
 To perform the upgrade, you need Azure CLI version 2.52.0 or later. Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 

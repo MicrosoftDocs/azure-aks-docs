@@ -45,51 +45,6 @@ Learn how to connect to Azure Key Vault with the Secrets Store CSI Driver in an 
    az aks connection list-support-types --output table
    ```
 
-## Create Azure resources
-
-1. Create a resource group using the [`az group create`][az-group-create] command.
-
-    ```azurecli-interactive
-    az group create \
-        --name <resource-group-name> \
-        --location <location>
-    ```
-
-1. Create an AKS cluster using the [`az aks create`][az-aks-create] command. The following example creates a single-node AKS cluster with managed identity enabled.
-
-    ```azurecli-interactive
-    az aks create \
-        --resource-group <resource-group-name> \
-        --name <cluster-name> \
-        --enable-managed-identity \
-        --node-count 1
-    ```
-
-1. Connect to the cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
-
-    ```azurecli-interactive
-    az aks get-credentials \
-        --resource-group <resource-group-name> \
-        --name <cluster-name>
-    ```
-
-1. Create an Azure key vault using the [`az keyvault create`][az-keyvault-create] command.
-
-    ```azurecli-interactive
-    az keyvault create \
-        --resource-group <resource-group-name> \  
-        --name <key-vault-name> \
-        --location <location>
-    ```
-
-1. Create a secret in the key vault using the [`az keyvault secret set`][az-keyvault-secret-set] command.
-
-    ```azurecli-interactive
-    az keyvault secret set \
-        --vault-name <key-vault-name> \
-        --name <secret-name> \
-        --value <secret-value>
-    ```
 
 ## Create a service connection in AKS with Service Connector
 

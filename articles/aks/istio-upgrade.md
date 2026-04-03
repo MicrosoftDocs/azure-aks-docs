@@ -276,6 +276,6 @@ If you have customized [horizontal pod autoscaling (HPA) settings for Istiod or 
 [meshconfig]: ./istio-meshconfig.md
 [meshconfig-canary-upgrade]: ./istio-meshconfig.md#mesh-configuration-and-upgrades
 [upgrade-istio-service-mesh-tsg]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-minor-revision-upgrade
-[istio-scale-hpa]: ./istio-scale.md#horizontal-pod-autoscaling-customization
+[istio-scale-hpa]: ./istio-scale.md#horizontal-pod-autoscaling-hpa-customization
 [istio-deploy-ingress]: ./istio-deploy-ingress.md
 [istio-deploy-egress]: ./istio-deploy-egress.md

@@ -22,7 +22,7 @@ Automated Deployments build on [draft.sh](https://draft.sh). When you create a n
 
 * A GitHub account with the application to deploy.
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
-* Read the conceptual overviews of [Automated Deployments](./concepts-automated-deployments.md) and [resource propagation](./concepts-resource-propagation.md) to understand the concepts and terminology used in this article.
+* Read the conceptual overviews of [Automated Deployments](./concepts-automated-deployments.md) and [resource propagation](./concepts-resource-placement.md) to understand the concepts and terminology used in this article.
 * A Kubernetes Fleet Manager with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 * The user completing the configuration has permissions to the Fleet Manager hub cluster Kubernetes API. For more information, see [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
 * A Kubernetes namespace already deployed on the Fleet Manager hub cluster.

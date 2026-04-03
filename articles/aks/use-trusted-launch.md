@@ -17,8 +17,7 @@ zone_pivot_groups: arm-azure-cli
 
 This article helps you understand this new feature, and how to implement it.
 
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Overview
 
@@ -45,6 +44,7 @@ Trusted Launch is composed of several, coordinated infrastructure technologies t
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
 - To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see [Skip GPU driver installation][skip-gpu-driver-install].
 - Ephemeral OS disks can be created with trusted Launch and all regions are supported. However, not all virtual machines sizes are supported. For more information, see [Trusted Launch ephemeral OS sizes][tusted-launch-ephemeral-os-sizes].
+- [Flatcar Container Linux for AKS][flatcar] doesn't support Trusted Launch on AKS.
 
 ## Create an AKS cluster with Trusted Launch enabled
 
@@ -324,3 +324,5 @@ In this article, you learned how to enable Trusted Launch. Learn more about [Tru
 [CVM]: ./use-cvm.md
 [node-images]: ./node-images.md
 [quick-ARM-deploy]: /azure/aks/learn/quick-kubernetes-deploy-rm-template
+[flatcar]: ./flatcar-container-linux-for-aks.md
+[os-guard]: ./azure/azure-linux/intro-azure-linux-os-guard.md

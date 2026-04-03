@@ -14,7 +14,7 @@ ms.service: azure-kubernetes-service
 
 In this article, you learn how to monitor the Azure Kubernetes Service (AKS) control plane by using control plane metrics in Azure Monitor.
 
-AKS supports a subset of control plane metrics free through [Azure Monitor platform metrics](./monitor-aks.md#monitoring-data). The control plane metrics feature gives you visibility into the availability and performance of critical control plane components like the API server, etcd, the scheduler, the autoscaler, and the controller manager in AKS. The feature is also fully compatible with the managed service for Prometheus and Azure Managed Grafana. You can use these metrics to maximize overall observability and to maintain operational excellence for your AKS cluster.
+AKS supports a subset of control plane metrics free through [Azure Monitor platform metrics](./monitor-aks.md#aks-monitoring-data-metrics-logs-integrations). The control plane metrics feature gives you visibility into the availability and performance of critical control plane components like the API server, etcd, the scheduler, the autoscaler, and the controller manager in AKS. The feature is also fully compatible with the managed service for Prometheus and Azure Managed Grafana. You can use these metrics to maximize overall observability and to maintain operational excellence for your AKS cluster.
 
 ## Control plane platform metrics
 

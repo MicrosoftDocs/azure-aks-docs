@@ -6,7 +6,7 @@ ms.author: karler
 ms.reviewer: edburns
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 12/16/2024
+ms.date: 03/26/2026
 ms.subservice: aks-developer
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-quarkus, devx-track-javaee-quarkus-aks, devx-track-extended-java, devx-track-azurecli
 # external contributor: danieloh30

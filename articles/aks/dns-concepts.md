@@ -2,7 +2,7 @@
 title: DNS in Azure Kubernetes Service (AKS)
 description: Learn how DNS operates in AKS and how to boost performance and reliability with LocalDNS caching.
 ms.subservice: aks-networking
-author: vaibhavarora
+author: varora24
 ms.topic: concept-article
 ms.date: 07/31/2025
 ms.author: vaibhavarora
@@ -23,9 +23,7 @@ This architecture ensures a balance between flexibility and operational safety i
 
 For information on the CoreDNS project, see [the CoreDNS upstream project page][coreDNS].
 
-## LocalDNS in Azure Kubernetes Service (Preview)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+## LocalDNS in Azure Kubernetes Service
 
 > [!NOTE]
 > This document provides an overview of what LocalDNS is and its benefits in AKS. It doesn't include setup instructions. For guidance on enabling and configuring LocalDNS, see the [LocalDNS how-to guide](./localdns-custom.md).

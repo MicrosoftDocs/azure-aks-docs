@@ -4,8 +4,8 @@ description: In this article, we provide guidance for configuring monitoring and
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 09/15/2025
-author: senavar
-ms.author: senavar
+author: carols
+ms.author: carols
 ms.custom: 'stateful-workloads'
 # Customer intent: "As a cloud engineer, I want to configure monitoring and networking for a Kafka cluster on Kubernetes using open-source tools, so that I can ensure reliable performance and client connectivity without the complexity of managing infrastructure."
 ---

@@ -81,6 +81,42 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/azure-blob-csi.md",
+            "redirect_url": "/azure/aks/csi-storage-drivers",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/azure-disk-csi.md",
+            "redirect_url": "/azure/aks/csi-storage-drivers",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/azure-files-csi.md",
+            "redirect_url": "/azure/aks/csi-storage-drivers",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/azure-csi-blob-storage-provision.md",
+            "redirect_url": "/azure/aks/create-volume-azure-blob-storage",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/azure-csi-disk-storage-provision.md",
+            "redirect_url": "/azure/aks/create-volume-azure-disk",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/azure-csi-files-storage-provision.md",
+            "redirect_url": "/azure/aks/create-volume-azure-files",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/azure-csi-driver-volume-provisioning.md",
+            "redirect_url": "/azure/aks/csi-storage-drivers",
+            "redirect_document_id": false
+
+        },
+        {
             "source_path_from_root": "/articles/aks/azure-files.md",
             "redirect_url": "/azure/aks/azure-files-dynamic-pv",
             "redirect_document_id": false
@@ -516,6 +552,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/app-routing-migration.md",
+            "redirect_url": "/azure/aks/app-routing-gateway-api",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/windows-container-cli.md",
             "redirect_url": "/azure/aks/learn/quick-windows-container-deploy-cli",
             "redirect_document_id": false
@@ -528,6 +569,11 @@
         {
             "source_path_from_root": "/articles/aks/windows-node-limitations.md",
             "redirect_url": "/azure/aks/windows-faq",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/use-managed-identity.md",
+            "redirect_url": "/azure/aks/managed-identity-overview",
             "redirect_document_id": false
         },
         {
@@ -588,11 +634,16 @@
         {
             "source_path_from_root": "/articles/aks/configure-kubenet-dual-stack.md",
             "redirect_url": "/azure/aks/configure-dual-stack",
-            "redirect_document_id": false  
+            "redirect_document_id": false
         },
         {
             "source_path_from_root": "/articles/aks/upgrade-aks-ipam-and-dataplane.md",
             "redirect_url": "/azure/aks/upgrade-azure-cni",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/upgrade-azure-cni.md",
+            "redirect_url": "/azure/aks/update-azure-cni",
             "redirect_document_id": false
         },
         {
@@ -631,14 +682,80 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/manage-node-pools.md",
+            "redirect_url": "/azure/aks/create-node-pools",
+            "redirect_document_id": false
+
+        },
+        {
             "source_path_from_root": "/articles/aks/node-autoprovision-aksnodeclass.md",
             "redirect_url": "/azure/aks/node-auto-provisioning-aksnodeclass",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/upgrade-aks-cluster.md",
+            "redirect_url": "/azure/aks/upgrade-aks-control-plane",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/upgrade-cluster.md",
+            "redirect_url": "/azure/aks/upgrade-options",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/node-image-upgrade.md",
+            "redirect_url": "/azure/aks/upgrade-node-image",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/node-updates-kured.md",
+            "redirect_url": "/azure/aks/upgrade-node-image-kured",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/node-upgrade-github-actions.md",
+            "redirect_url": "/azure/aks/upgrade-github-actions",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/upgrade.md",
+            "redirect_url": "/azure/aks/upgrade-cluster-components",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/how-does-upgrade-happen.md",
+            "redirect_url": "/azure/aks/upgrade-conceptual",
             "redirect_document_id": false
         },
         {
             "source_path_from_root": "/articles/aks/use-pod-security-policies.md",
             "redirect_url": "/azure/aks/use-psa",
             "redirect_document_id": false
-        }        
+        },
+        {
+            "source_path_from_root": "/articles/aks/cli-agent-for-aks-faq.yml",
+            "redirect_url": "/azure/aks/agentic-cli-for-aks-faq",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/cli-agent-for-aks-install.md",
+            "redirect_url": "/azure/aks/agentic-cli-for-aks-install",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/cli-agent-for-aks-overview.md",
+            "redirect_url": "/azure/aks/agentic-cli-for-aks-overview",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/cli-agent-for-aks-service-account-workload-identity-setup.md",
+            "redirect_url": "/azure/aks/agentic-cli-for-aks-service-account-workload-identity-setup",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/cli-agent-for-aks-troubleshoot.md",
+            "redirect_url": "/azure/aks/agentic-cli-for-aks-troubleshoot",
+            "redirect_document_id": true
+        }
      ]
 }

@@ -93,7 +93,7 @@ AKS clusters can use [Kubernetes role-based access control (Kubernetes RBAC)][k8
 For information about AKS resource limits and region availability, see [Quotas, virtual machine size restrictions, and region availability in AKS][quotas-skus-regions].
 
 > [!IMPORTANT]
-> This tutorial creates a three-node cluster. To ensure your cluster operates reliably, you should run at least two nodes. A minimum of three nodes is required to use Azure Container Storage. If you get an error message when trying to create the cluster, then you might need to request a quota increase for your Azure subscription or try a different Azure region. Alternatively, you can omit the node VM size parameter to use the default VM size.
+> This tutorial creates a three-node cluster. If you get an error message when trying to create the cluster, then you might need to request a quota increase for your Azure subscription or try a different Azure region. Alternatively, you can use fewer nodes, or omit the node VM size parameter to use the default VM size.
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -252,4 +252,3 @@ In the next tutorial, you learn how to deploy Azure Container Storage on your cl
 [import-azakscredential]: /powershell/module/az.aks/import-azakscredential
 [aks-k8s-rbac]: azure-ad-rbac.md
 [azd-auth-login]: /azure/developer/azure-developer-cli/reference#azd-auth-login
-

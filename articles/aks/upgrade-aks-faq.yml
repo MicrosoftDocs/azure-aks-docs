@@ -85,7 +85,7 @@ sections:
       - question: |
          Does upgrading AKS from the Free SKU to Standard SKU cause downtime? 
         answer: |
-          You shouldn't experience any downtime while updating your cluster tier from Free to Standard. The process is designed to transition smoothly without interrupting running applications. See [Update the tier of an existing AKS cluster](./free-standard-pricing-tiers.md#update-the-tier-of-an-existing-aks-cluster) for more guidance on updating your AKS cluster tier.
+          You shouldn't experience any downtime while updating your cluster tier from Free to Standard. The process is designed to transition smoothly without interrupting running applications. See [Update the tier of an existing AKS cluster](./free-standard-pricing-tiers.md) for more guidance on updating your AKS cluster tier.
 
   - name: Permissions
     questions:

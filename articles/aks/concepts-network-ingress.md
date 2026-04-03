@@ -5,9 +5,14 @@ ms.topic: concept-article
 ms.date: 06/03/2024
 author: schaffererin
 ms.author: schaffererin
+ms.service: azure-kubernetes-service
+ms.subservice: aks-networking
 # Customer intent: As a cloud architect, I want to understand the ingress networking options for Azure Kubernetes Service, so that I can implement effective traffic management and load balancing strategies for my applications.
 ---
+
 # Ingress in Azure Kubernetes Service (AKS)
+
+[!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
 
 Ingress in AKS is a Kubernetes resource that manages external HTTP-like traffic access to [services][services] within a cluster. An AKS ingress may provide services like load balancing, SSL termination, and name-based virtual hosting. For more information about Kubernetes Ingress, see the [Kubernetes Ingress documentation][k8s-ingress].
 

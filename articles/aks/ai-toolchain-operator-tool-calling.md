@@ -2,8 +2,8 @@
 title: Configure Tool Calling with an AI Inference Service using the AI Toolchain Operator on Azure Kubernetes Service (AKS)
 description: Learn how to deploy an AI inference service that supports tool calling in Azure Kubernetes Service (AKS) by using the managed add-on for KAITO.
 ms.topic: how-to
-ms.author: sachidesai
-author: sachidesai
+ms.author: schaffererin
+author: schaffererin
 ms.service: azure-kubernetes-service
 ms.date: 10/1/2025
 # Customer intent: As an AI app developer, I want to integrate tool calling with inference services on Azure Kubernetes Service (AKS), so that my LLM-powered applications can dynamically interact with external APIs and perform real-world tasks at scale in a secure, reliable, and maintainable manner."
@@ -21,7 +21,7 @@ Tool calling enables large language models (LLMs) to interface with external fun
 - "I need to use a calculator."
 - "I should search a database."
 
-It does this by invoking a defined “tool” with parameters it chooses based on the user’s request. Tool calling is useful for:
+It does this by invoking a defined "tool" with parameters it chooses based on the user's request. Tool calling is useful for:
 
 - Chatbots that book, summarize, or calculate.
 - Enterprise LLM applications where hallucination must be minimized.
@@ -29,7 +29,7 @@ It does this by invoking a defined “tool” with parameters it chooses based o
 
 In production environments, AI-enabled applications often demand more than natural language generation; they require the ability to take action based on user intent. Tool calling empowers LLMs to extend beyond text responses by invoking external tools, APIs, or custom logic in real time. This bridges the gap between language understanding and execution, enabling developers to build interactive AI assistants, agents, and automation workflows that are both accurate and useful. Instead of relying on static responses, LLMs can now access live data, trigger services, and complete tasks on behalf of users, both safely and reliably.
 
-When deployed on AKS, tool calling becomes scalable, secure, and production ready. Kubernetes provides the flexibility to orchestrate inference workloads using high-performance runtimes like vLLM, while ensuring observability and governance of tool usage. With this pattern, AKS operators and app developers can more seamlessly update models or tools independently and deploy advanced AI features without compromising reliability. 
+When deployed on AKS, tool calling becomes scalable, secure, and production ready. Kubernetes provides the flexibility to orchestrate inference workloads using high-performance runtimes like vLLM, while ensuring observability and governance of tool usage. With this pattern, AKS operators and app developers can more seamlessly update models or tools independently and deploy advanced AI features without compromising reliability.
 
 As a result, tool calling on AKS is now a foundational pattern for building modern AI apps that are context-aware, action-capable, and enterprise-ready.
 
@@ -98,11 +98,11 @@ To streamline this deployment model, the AI toolchain operator (KAITO) add-on fo
 
 ## Test the named function tool‐calling
 
-In this example, the `workspace‑phi‑4‑mini-toolcall` workspace supports named function tool-calling by default, so we can confirm the LLM accepts a “tool” spec in OpenAI‑style requests and returns a “function call” structure.
+In this example, the `workspace‑phi‑4‑mini-toolcall` workspace supports named function tool-calling by default, so we can confirm the LLM accepts a "tool" spec in OpenAI‑style requests and returns a "function call" structure.
 
 The Python snippet we use in this section is from the [KAITO documentation](https://kaito-project.github.io/kaito/docs/tool-calling/#examples) and uses an OpenAI‑compatible client.
 
-- Confirm the LLM accepts a “tool” spec in OpenAI‑style requests and returns a “function call” structure. This example:
+- Confirm the LLM accepts a "tool" spec in OpenAI‑style requests and returns a "function call" structure. This example:
 
     - Initializes the OpenAI-compatible client to talk to a local inference server. The server is assumed to be running at `http://localhost:8000/v1` and accepts OpenAI-style API calls.
     - Simulates the backend logic for a tool called `get_weather`. (In a real scenario, this would call a weather API.)
@@ -114,15 +114,15 @@ The Python snippet we use in this section is from the [KAITO documentation](http
     ```python
     from openai import OpenAI
     import json
-    
+
     # local server
     client = OpenAI(base_url="http://localhost:8000/v1", api_key="dummy")
-    
+
     def get_weather(location: str, unit: str) -> str:
         return f"Getting the weather for {location} in {unit}..."
-    
+
     tool_functions = {"get_weather": get_weather}
-    
+
     tools = [{
         "type": "function",
         "function": {
@@ -138,14 +138,14 @@ The Python snippet we use in this section is from the [KAITO documentation](http
             }
         }
     }]
-    
+
     response = client.chat.completions.create(
         model="phi‑4‑mini‑instruct",   # or client.models.list().data[0].id
         messages=[{"role": "user", "content": "What's the weather like in San Francisco?"}],
         tools=tools,
         tool_choice="auto"
     )
-    
+
     # Inspect response
     tool_call = response.choices[0].message.tool_calls[0].function
     args = json.loads(tool_call.arguments)
@@ -157,22 +157,22 @@ The Python snippet we use in this section is from the [KAITO documentation](http
     Your output should look similar to the following:
 
     ```output
-    Function called: get_weather  
-    Arguments: {"location": "San Francisco, CA", "unit": "fahrenheit"}  
+    Function called: get_weather
+    Arguments: {"location": "San Francisco, CA", "unit": "fahrenheit"}
     Result: Getting the weather for San Francisco, CA in fahrenheit...
     ```
 
-    The “tool_calls” field comes back, meaning the `Phi-4-mini` LLM decided to invoke the function. Now, a sample tool call has been successfully parsed and executed based on the model’s decision to confirm end-to-end tool calling behavior with the KAITO inference deployment.
+    The "tool_calls" field comes back, meaning the `Phi-4-mini` LLM decided to invoke the function. Now, a sample tool call has been successfully parsed and executed based on the model's decision to confirm end-to-end tool calling behavior with the KAITO inference deployment.
 
 ## Troubleshooting
 
-### Model preset doesn’t support tool calling
+### Model preset doesn't support tool calling
 
 If you pick a model that isn't on the supported list, tool calling might not work. Make sure you [review the KAITO documentation](https://kaito-project.github.io/kaito/docs/tool-calling/), which explicitly lists which presets support tool calling.
 
 ### Misaligned runtime
 
-The KAITO inference must use [vLLM runtime for tool calling](https://kaito-project.github.io/kaito/docs/tool-calling/#supported-inference-runtimes) (HuggingFace Transformers runtime generally doesn’t support tool calling in KAITO).
+The KAITO inference must use [vLLM runtime for tool calling](https://kaito-project.github.io/kaito/docs/tool-calling/#supported-inference-runtimes) (HuggingFace Transformers runtime generally doesn't support tool calling in KAITO).
 
 ### Network / endpoint issues
 

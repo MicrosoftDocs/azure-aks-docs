@@ -34,11 +34,13 @@ Node conditions indicate a permanent problem that makes the node unavailable. AK
 |CustomPluginMonitor|NVLinkStatusInactive|NVLinkStatusInactive| GPU only |
 |CustomPluginMonitor|XIDErrors|XID errors present in kernel log| GPU only |
 |CustomPluginMonitor|IBLinkFlapping|Intermittent InfiniBand device connectivity| GPU only |
+|CustomPluginMonitor|GPUClockThrottling|Problematic GPU clock throttling detected| GPU only |
+|CustomPluginMonitor|UnhealthyNvidiaDevicePlugin|NVIDIA device plugin service is not active| GPU only (managed GPU) |
 |SystemLogMonitor|KernelDeadlock|DockerHung| General purpose |
 |SystemLogMonitor|ReadonlyFilesystem |FilesystemIsReadOnly| General purpose |
 
 > [!NOTE]
-> The `GPU only` node conditions currently apply to AKS node pools with `Standard_ND96asr_v4` or `Standard_ND96isr_H100_v5` VM size, and are supported on standard GPU and [MIG-enabled GPU node pools](./gpu-multi-instance.md).
+> The `GPU only` node conditions apply to all GPU node pools that use AKS-managed GPU drivers (node pools not created with `--gpu-driver none`). The `GPU only (managed GPU)` conditions apply only to node pools with the [fully managed GPU experience](./aks-managed-gpu-nodes.md) enabled. GPU health monitoring is supported on standard GPU and [MIG-enabled GPU node pools](./gpu-multi-instance.md).
 
 ## Events
 
@@ -81,10 +83,10 @@ The list of endpoints checked by the EgressBlocked are listed below
 Type | Example | Note
 |---|---|---|
 |MCR | https://mcr.microsoft.com | |
-|Microsoft Entra ID |  https://login.microsoftonline.com" ||
+|Microsoft Entra ID |  https://login.microsoftonline.com ||
 |Resource Manager | https://management.azure.com||
 |Packages |https://packages.microsoft.com||
-|Kube Binary|https://acs-mirror.azureedge.net/acs-mirror/healthz,https://packages.aks.azure.com/acs-mirror/healthz ||
+|Kube Binary|https://acs-mirror.azureedge.net/acs-mirror/healthz <br> https://packages.aks.azure.com/acs-mirror/healthz ||
 
 
 ## Check the node conditions and events

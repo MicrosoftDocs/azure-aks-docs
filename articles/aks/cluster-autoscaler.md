@@ -162,7 +162,7 @@ The following table lists the available settings for the cluster autoscaler prof
 | `ignore-daemonsets-utilization` | Whether DaemonSet pods will be ignored when calculating resource utilization for scale down. | `false` |
 | `daemonset-eviction-for-empty-nodes` | Whether DaemonSet pods will be gracefully terminated from empty nodes. | `false` |
 | `daemonset-eviction-for-occupied-nodes` | Whether DaemonSet pods will be gracefully terminated from non-empty nodes. | `true` |
-| `scale-down-utilization-threshold` | Node utilization level, defined as sum of requested resources divided by capacity, in which a node can be considered for scale down. | 0.5 |
+| `scale-down-utilization-threshold` | The maximum value between the sum of CPU requests and sum of Memory requests of all pods running on the node divided by node's corresponding allocatable resource, below which a node can be considered for scale down. | 0.5 |
 | `max-graceful-termination-sec` | Maximum number of seconds the cluster autoscaler waits for pod termination when trying to scale down a node. | 600 seconds |
 | `balance-similar-node-groups` | Detects similar node pools and balances the number of nodes between them. | `false` |
 | `expander` | Type of node pool [expander](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#what-are-expanders) uses in scale up. Possible values include `most-pods`, `random`, `least-waste`, and `priority`. | `random` |

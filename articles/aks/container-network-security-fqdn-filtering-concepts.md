@@ -47,6 +47,8 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 
 * Container Network Security features require Azure CNI Powered by Cilium and Kubernetes version 1.29 and above.
 
+* Supported by `CiliumClusterwideNetworkPolicy` (CCNP): FQDN filtering can be applied cluster wide via `CiliumClusterwideNetworkPolicy`.
+
 ## Limitations:
 
 * Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (for example, *.example.com), but you cannot use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`

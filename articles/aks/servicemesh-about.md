@@ -4,7 +4,7 @@ description: Obtain an overview of service meshes, supported scenarios, selectio
 author: phillipgibson
 ms.topic: concept-article
 ms.date: 04/18/2023
-ms.author: pgibson
+ms.author: schaffererin
 # Customer intent: As an application architect, I want to evaluate the capabilities and benefits of implementing a service mesh, so that I can enhance communication, security, and observability within my microservices architecture while managing complexity and resource overhead effectively.
 ---
 

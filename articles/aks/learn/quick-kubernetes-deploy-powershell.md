@@ -53,7 +53,7 @@ The following example creates a resource group named *myResourceGroup* in the *e
     Location          : eastus
     ProvisioningState : Succeeded
     Tags              :
-    ResourceId        : /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myResourceGroup
+    ResourceId        : /subscriptions/a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1/resourceGroups/myResourceGroup
     ```
 
 ## Create AKS cluster

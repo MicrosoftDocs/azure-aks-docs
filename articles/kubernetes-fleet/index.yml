@@ -1,14 +1,14 @@
 ### YamlMime:Landing
 title: Azure Kubernetes Fleet Manager
-summary: Azure Kubernetes Fleet Manager enables at-scale management of multiple Azure Kubernetes Service (AKS) clusters. Fleet Manager provides platform administrators with access to automated safe multi-cluster updates, intelligent Kubernetes resource placement, and a centralized location to access monitoring data for their clusters
+summary: Azure Kubernetes Fleet Manager enables at-scale management of multiple Kubernetes clusters (AKS and Arc-enabled). Fleet Manager provides platform administrators with access to automated safe multi-cluster updates, intelligent Kubernetes resource placement, and a centralized location to access monitoring data for their clusters
 
 metadata:
   title: Azure Kubernetes Fleet Manager
-  description: Azure Kubernetes Fleet Manager enables at-scale management of multiple Azure Kubernetes Service (AKS) clusters. Fleet Manager provides platform administrators with access to automated safe multi-cluster updates, intelligent Kubernetes resource placement, and a centralized location to access monitoring data for their clusters.
+  description: Azure Kubernetes Fleet Manager enables at-scale management of multiple Kubernetes clusters (AKS and Arc-enabled). Fleet Manager provides platform administrators with access to automated safe multi-cluster updates, intelligent Kubernetes resource placement, and a centralized location to access monitoring data for their clusters.
   ms.service: azure-kubernetes-fleet-manager
   ms.author: simonwaight
   ms.topic: landing-page
-  ms.date: 09/15/2025
+  ms.date: 03/18/2026
 landingContent:
   - title: About Azure Kubernetes Fleet Manager
     linkLists:
@@ -20,14 +20,12 @@ landingContent:
         links:
           - text: Fleets and member clusters
             url: concepts-fleet.md
-          - text: Update orchestration across multiple member clusters
+          - text: Safe updates across multiple member clusters
             url: concepts-update-orchestration.md
           - text: Kubernetes resource placement and management
-            url: concepts-resource-propagation.md
-          - text: Fleet Manager Automated Deployments overview
-            url: concepts-automated-deployments.md
-          - text: Multi-cluster DNS load balancing
-            url: concepts-dns-load-balancing.md
+            url: concepts-resource-placement.md
+          - text: Multi-cluster networking overview
+            url: concepts-multi-cluster-networking-overview.md
           - text: Frequently asked questions
             url: faq.md
 
@@ -58,7 +56,7 @@ landingContent:
             url: quickstart-resource-propagation.md
       - linkListType: tutorial
         links:
-          - text: Use cluster properties, resources utilization, and cost with resource placement
+          - text: Use cluster properties, resources, and cost with resource placement
             url: intelligent-resource-placement.md
       - linkListType: tutorial
         links:
@@ -77,17 +75,12 @@ landingContent:
             url: quickstart-create-fleet-and-members.md
       - linkListType: quickstart
         links:
-          - text: Update orchestration across multiple member clusters
+          - text: Safely update Kubernetes and node images
             url: update-orchestration.md
       - linkListType: quickstart
         links:
-          - text: Deploy resources across multiple clusters
+          - text: Deploy Kubernetes resources across multiple clusters
             url: quickstart-resource-propagation.md
-      - linkListType: quickstart
-        links:
-          - text: Set up DNS load balancing across Fleet Manager member clusters
-            url: howto-dns-load-balancing.md
-
 
   - title: API reference
     linkLists:

@@ -1,9 +1,9 @@
 ---
-title: Monitor Inference Metrics via the AI Toolchain Operator 
+title: Monitor Inference Metrics via the AI Toolchain Operator
 description: Learn how to collect and visualize AI inference service metrics in Azure Kubernetes Service (AKS) by using the managed service for Prometheus and Azure Managed Grafana.
 ms.author: schaffererin
+author: schaffererin
 ms.topic: how-to
-author: sachidesai
 ms.service: azure-kubernetes-service
 ms.date: 3/25/2025
 # Customer intent: "As a data engineer, I want to monitor and visualize inference service metrics on AKS, so that I can ensure optimal performance and resource utilization while managing AI workloads."
@@ -67,7 +67,7 @@ Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](h
 1. Add the following label to your KAITO inference service so that a Kubernetes `ServiceMonitor` deployment can detect it:
 
     ```azurecli
-    kubectl label svc workspace-qwen-2-5-coder-7b-instruct App=qwen-2-5-coder 
+    kubectl label svc workspace-qwen-2-5-coder-7b-instruct App=qwen-2-5-coder
     ```
 
 1. Create a `ServiceMonitor` resource to define the inference service endpoints and the required configurations to scrape the vLLM Prometheus metrics. Export these metrics to the managed service for Prometheus by deploying the following `ServiceMonitor` YAML manifest in the `kube-system` namespace:
@@ -113,7 +113,7 @@ Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](h
 
 ## Visualize KAITO inference metrics in Azure Managed Grafana
 
-1. The vLLM project provides a Grafana dashboard configuration named [grafana.json](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) for inference workload monitoring. Navigate to the bottom of this [page](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) and copy the entire contents of the `grafana.json` file. 
+1. The vLLM project provides a Grafana dashboard configuration named [grafana.json](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) for inference workload monitoring. Navigate to the bottom of this [page](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) and copy the entire contents of the `grafana.json` file.
 
 1. Go to the bottom of the [examples page](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) and copy the entire contents of the `grafana.json` file:
 

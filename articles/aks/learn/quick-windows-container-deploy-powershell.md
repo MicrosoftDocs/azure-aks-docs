@@ -84,7 +84,7 @@ An [Azure resource group](/azure/azure-resource-manager/management/overview) is 
     Location          : eastus
     ProvisioningState : Succeeded
     Tags              :
-    ResourceId        : /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myResourceGroup
+    ResourceId        : /subscriptions/a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1/resourceGroups/myResourceGroup
     ```
 
 ## Create an AKS cluster
@@ -135,18 +135,15 @@ To create a Windows node pool, you need to specify a supported `OsType` and `OsS
 
 | `OsType` | `OsSku` | Default | Supported K8s versions | Details |
 |--|--|--|--|--|
-| `windows` | `Windows2025` | Not default. Currently in preview. | 1.32+ | Updated defaults: containerd 2.0, Generation 2 image is used by default. |
-| `windows` | `Windows2022` | Default in K8s 1.25-1.34 | Not available in K8s 1.35+ | Retires in March 2027. Updated defaults: FIPS is enabled by default |
-| `windows` | `Windows2019` | Default in K8s 1.24 and below | Not available in K8s 1.32+ | Retires in March 2026. |
+| `windows` | `Windows2025` | Currently in preview. Not default. | 1.32+ | Updated defaults: containerd 2.0, Generation 2 image is used by default. |
+| `windows` | `Windows2022` | Default in K8s 1.25-1.35 | Not available in K8s 1.36+ | Retires in March 2027. Updated defaults: FIPS is enabled by default. |
+| `windows` | `Windows2019` | Default in K8s 1.24 and below | Not available in K8s 1.33+ | Retires in March 2026. |
 
-Windows Server 2022 is the default operating system for Kubernetes versions 1.25-1.34. Windows Server 2019 is the default OS for earlier versions. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster.
+Windows Server 2022 is the default operating system for Kubernetes versions 1.25-1.35. Windows Server 2019 is the default OS for earlier versions. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster.
 
-> [!NOTE]
->
-> - Windows Server 2022 retires after Kubernetes version 1.34 reaches end of support and won't be supported in Kubernetes version 1.35 and above.
-> - Windows Server 2019 retires after Kubernetes version 1.32 reaches end of support and won't be supported in Kubernetes version 1.33 and above.
->
-> For more information, see [AKS release notes][aks-release-notes]. To stay up to date on the latest Windows Server OS versions and learn more about our roadmap of what's planned for support on AKS, see our [AKS public roadmap](https://github.com/azure/aks/projects/1).
+[!INCLUDE [windows server 2019 retirement](../includes/windows-server-2019-retirement.md)]
+
+[!INCLUDE [windows server 2022 retirement](../includes/windows-server-2022-retirement.md)]
 
 - Add a Windows Server node pool using the [`New-AzAksNodePool`][new-azaksnodepool] cmdlet. The following command creates a new node pool named _npwin_ and adds it to _myAKSCluster_. The command also uses the default subnet in the default virtual network created when running `New-AzAksCluster`:
 

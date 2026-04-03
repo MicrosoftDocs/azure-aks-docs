@@ -26,6 +26,10 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - If you're unfamiliar with the Azure Cloud Shell, review [Overview of Azure Cloud Shell](/azure/cloud-shell/overview).
 - Make sure that the identity you're using to create your cluster has the appropriate minimum permissions. For more details on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
 
+[!INCLUDE [windows server 2019 retirement](../includes/windows-server-2019-retirement.md)]
+
+[!INCLUDE [windows server 2022 retirement](../includes/windows-server-2022-retirement.md)]
+
 ## Create an AKS cluster
 
 1. Sign in to the [Azure portal][azure-portal].
@@ -38,9 +42,9 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
     - Under **Cluster details**:
       - **Cluster preset configuration**: Select **Dev/Test**. For more details on preset configurations, see [Cluster configuration presets in the Azure portal][preset-config].
 
-        > [!NOTE]
-        > You can change the preset configuration when creating your cluster by selecting **Compare presets** and choosing a different option.
-        > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-presets.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-presets.png":::
+          > [!NOTE]
+          > You can change the preset configuration when creating your cluster by selecting **Compare presets** and choosing a different option.
+          > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-presets.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-presets.png":::
 
       - **Kubernetes cluster name**: Enter a cluster name, such as *myAKSCluster*.
       - **Region**: Select a region, such as *East US 2*.
@@ -245,6 +249,7 @@ To learn more about AKS, and to walk through a complete code-to-deployment examp
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 [node-selector]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+[aks-release-notes]: https://github.com/Azure/AKS/releases
 
 <!-- LINKS - internal -->
 [aks-tutorial]: ../tutorial-kubernetes-prepare-app.md

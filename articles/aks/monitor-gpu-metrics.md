@@ -1,159 +1,121 @@
 ---
-title: Monitor GPU metrics in Azure Kubernetes Service (AKS)
-description: Learn how to monitor GPU metrics from NVIDIA DCGM exporter with Azure Managed Prometheus and Managed Grafana on Azure Kubernetes Service (AKS).
-ms.topic: how-to
+title: GPU observability in Azure Kubernetes Service (AKS)
+description: This article provides a conceptual overview of key utilization and performance NVIDIA DCGM GPU metrics on Azure Kubernetes Service (AKS).
+ms.topic: concept-article
 ms.service: azure-kubernetes-service
-ms.date: 03/27/2025
-author: schaffererin
-ms.author: schaffererin
-# Customer intent: "As a Kubernetes administrator, I want to monitor GPU metrics using NVIDIA DCGM Exporter with Managed Prometheus and Grafana, so that I can optimize resource utilization and ensure the performance of GPU-enabled workloads in my AKS cluster."
+ms.date: 11/7/2025
+author: sachidesai
+ms.author: sachidesai
+# Customer intent: "As a Kubernetes administrator, I want to learn about NVIDIA GPU metrics so that I can optimize resource utilization and ensure the performance of GPU-enabled workloads in my AKS cluster."
 ---
 
-# Monitor GPU metrics from NVIDIA DCGM exporter with Azure Managed Prometheus and Managed Grafana on Azure Kubernetes Service (AKS)
+# Learn about NVIDIA GPU metrics to optimize GPU performance and utilization on Azure Kubernetes Service (AKS)
 
-In this article, you learn how to monitor GPU metrics collected by the NVIDIA Data Center GPU Manager (DCGM) exporter in Azure Kubernetes Service (AKS) using Azure Managed Prometheus and Azure Managed Grafana.
+Efficient placement and optimization of GPU workloads often requires visibility into resource utilization and performance. Managed GPU metrics on AKS (preview) provide automated collection and exposure of GPU utilization, memory, and performance data across NVIDIA GPU-enabled node pools. This enables platform administrators to optimize cluster resources and developers to tune and debug workloads with limited manual instrumentation.
+
+In this article, you learn about GPU metrics collected by the NVIDIA Data Center GPU Manager [(DCGM) exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) with [a fully managed GPU-enabled node pool (preview)](./aks-managed-gpu-nodes.md) in Azure Kubernetes Service (AKS).
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Prerequisites
 
-- An AKS cluster with [NVIDIA GPU-enabled node pool(s)](./gpu-cluster.md) and ensure that the [GPUs are schedulable](./gpu-cluster.md#confirm-that-gpus-are-schedulable).
-- A [sample GPU workload](./gpu-cluster.md#run-a-gpu-enabled-workload) deployed to your node pool.
-- [Azure Managed Prometheus and Grafana enabled on your AKS cluster](/azure/azure-monitor/containers/kubernetes-monitoring-enable).
-- [An Azure Container Registry (ACR) integrated with your AKS cluster](./cluster-container-registry-integration.md).
-- [Helm version 3 or above installed on your cluster](https://helm.sh/docs/intro/install/).
+- An AKS cluster with [a fully managed GPU-enabled node pool (preview)](./aks-managed-gpu-nodes.md) and ensure that the [GPUs are schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable).
+- A [sample GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload) deployed to your node pool.
 
-## Install NVIDIA DCGM Exporter
+## Limitations
+- Managed GPU metrics is not currently supported with [Azure Managed Prometheus or Azure Managed Grafana](/azure/azure-monitor/containers/kubernetes-monitoring-enable).
 
-NVIDIA DCGM Exporter collects and exports GPU metrics. It runs as a pod on your AKS cluster and gathers metrics such as utilization, memory usage, temperature, and power consumption. For more information, see the [NVIDIA DCGM Exporter documentation](https://docs.nvidia.com/datacenter/cloud-native/gpu-telemetry/latest/dcgm-exporter.html).
+## Verify that managed GPU components are installed
 
-[!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
+After creating your managed NVIDIA GPU node pool (preview) following [these instructions](./aks-managed-gpu-nodes.md), confirm that the GPU software components were installed with the [az aks nodepool show](/cli/azure/aks/nodepool#az-aks-nodepool-show) command:
 
-### Update default configurations of the NVIDIA DCGM Exporter
+```azurecli-interactive
+az aks nodepool show \
+    --resource-group <resource-group-name> \
+    --cluster-name <cluster-name> \
+    --name <node-pool-name> \
+```
 
-1. Clone the [NVIDIA/dcgm-exporter GitHub repository](https://github.com/NVIDIA/dcgm-exporter).
+Your output should include the following values:
 
-    ```bash
-    git clone https://github.com/NVIDIA/dcgm-exporter.git
-    ```
+  ```output
+  ...
+  ...
+  "gpuInstanceProfile": …
+      "gpuProfile": {
+        "driver": "Install"
+      },
+  ...
+  ...
+  ```
 
-2. Navigate to the new `dcgm-exporter` directory.
+## Understanding GPU metrics
 
-    ```bash
-    cd dcgm-exporter
-    ```
+### GPU Utilization Metrics
 
-3. Open the `service-monitor.yaml` and update the `apiVersion` key to `azmonitoring.coreos.com/v1`. This change allows the NVIDIA DCGM exporter to surface metrics in Azure Managed Prometheus.
+GPU Utilization metrics show the percentage of time the GPU’s cores are actively processing work. High values indicate that the GPU is heavily used, which is generally desirable for workloads like training or data processing. Interpretation of this metric should consider the type of workload: AI training typically keeps utilization high, while inference may have intermittent utilization due to bursty traffic.
 
-    ```yml
-    apiVersion: azmonitoring.coreos.com/v1
-    ...
-    ...
-    ```
+Memory Utilization: Shows the percentage of GPU memory in use. High memory usage without high GPU utilization can indicate memory-bound workloads where the GPU waits on memory transfers. Low memory usage with low utilization may suggest the workload is too small to fully leverage the GPU.
 
-4. Navigate to the `deployment` directory and open the `values.yaml` file. Update the following fields in this YAML manifest:
+SM (Streaming Multiprocessor) Efficiency: Measures the efficiency with which the GPU’s cores are used. A low SM efficiency indicates that cores are idle or underutilized due to workload imbalance or suboptimal kernel design. High efficiency is ideal for compute-heavy applications.
 
-    ```yml
-    ...
-    ...
-    serviceMonitor:
-        apiVersion: "azmonitoring.coreos.com/v1"
-    ...
-    ...
-    nodeSelector:
-        accelerator: "nvidia"
+### Memory Metrics
 
-    tolerations:
-   - key: "sku"
-        operator: "Equal"
-        value: "gpu"
-        effect: "NoSchedule"
-    ...
-    ...
-    ```
+Memory Bandwidth Utilization: Reflects how much of the theoretical memory bandwidth is being consumed. High bandwidth utilization with low compute utilization can indicate a memory-bound workload. Conversely, high utilization in both compute and memory bandwidth suggests a well-balanced workload.
 
-## Push the NVIDIA DCGM exporter Helm chart to your Azure Container Registry
+Memory Errors: Tracks ECC (Error-Correcting Code) errors if enabled. A high number of errors may indicate hardware degradation or thermal issues and should be monitored for reliability.
 
-1. Navigate to the `deployment` folder of the cloned repository, and then package the Helm chart using the `helm package` command.
+### Temperature and Power Metrics
 
-    ```bash
-    helm package .
-    ```
+GPU Temperature: Indicates the operating temperature of the GPU. Sustained high temperatures can trigger thermal throttling, reducing performance. Ideal interpretation of this metric involves observing temperature relative to the GPU’s thermal limits and cooling capacity.
 
-2. Authenticate Helm with your ACR using the `helm registry login` command. Replace `<acr_url>`, `<user_name>`, and `<password>` with your ACR details. For more detailed instructions, see [Authenticate Helm with Azure Container Registry](/azure/container-registry/container-registry-helm-repos#authenticate-with-the-registry).
+Power Usage: Shows instantaneous power draw. Comparing power usage to TDP (Thermal Design Power) helps understand whether the GPU is being pushed to its limits. Sudden drops in power may indicate throttling or underutilization.
 
-    ```bash
-    helm registry login <acr_url> --username <user_name> --password <password>
-    ```
+### Clocks and Frequency Metrics
 
-3. Push the Helm chart to your ACR using the `helm push` command. Replace `<dcgm_exporter_version>` with the version noted in the output of `helm package` command and `<acr_url>` with your ACR URL.
+GPU Clock: The actual operating frequency of the GPU. Combined with utilization, this helps determine if the GPU is throttling or underperforming relative to its potential.
 
-    ```bash
-    helm push dcgm-exporter-<dcgm_exporter_version>.tgz oci://<acr_url>/helm
-    ```
+Memory Clock: Operating frequency of GPU memory. Memory-bound workloads may benefit from higher memory clocks; a mismatch between memory and compute utilization can highlight bottlenecks.
 
-4. Install the Helm chart on your AKS cluster using the `helm install` command, in the **same namespace as your GPU-enabled node pool**. Replace `<acr_url>` with your ACR URL.
+### PCIe and NVLink Metrics
 
-    ```bash
-    helm install dcgm-nvidia oci://<acr_url>/helm/dcgm-exporter -n <gpu_namespace>
-    ```
+PCIe Bandwidth: Measures the throughput over the PCIe bus. Low utilization with heavy workloads may suggest CPU-GPU communication is not a bottleneck. High utilization could point to data transfer limitations impacting performance.
 
-5. Check the installation on your AKS cluster using the `helm list` command.
+NVLink Bandwidth: This metric is similar to PCIe bandwidth but specific to NVLink interconnects, and relevant in multi-GPU systems for cross-GPU communication. High NVLink usage with low SM utilization may indicate synchronization or data transfer delays.
 
-    ```bash
-    helm list -n <gpu_namespace>
-    ```
+### Error and Reliability Metrics
 
-6. Verify the NVIDIA DCGM Exporter is running on your GPU node pool using the `kubectl get pods` and `kubectl get ds` commands.
+Retired Pages and XID Errors: Track GPU memory errors and critical failures. Frequent occurrences signal potential hardware faults and require attention for long-running workloads.
 
-    ```bash
-    kubectl get pods -n <gpu_namespace>
-    kubectl get ds -n <gpu_namespace>
-    ```
+### Interpretation Guidance
 
-## Export GPU Prometheus metrics and configure the NVIDIA Grafana dashboard
+DCGM metrics should always be interpreted contextually with the type of your workload on AKS. A high compute-intensive workload should ideally show high GPU and SM utilization, high memory bandwidth usage, stable temperatures below throttling thresholds, and power draw near but below TDP. 
 
-Once NVIDIA DCGM Exporter is successfully deployed to your GPU node pool, you need to export the default enabled GPU metrics to Azure Managed Prometheus by deploying a Kubernetes `PodMonitor` resource.
+Memory-bound workloads might show high memory utilization and bandwidth but lower compute utilization. Anomalies such as low utilization with high temperature or power consumption often indicate throttling, inefficient scheduling, or system-level bottlenecks.
 
-1. Create a file named `pod-monitor.yaml` and add the following configuration to it:
+Monitoring trends over time rather than single snapshots is critical. Sudden drops in utilization or spikes in errors often reveal underlying issues before they impact production workloads. Comparing metrics across multiple GPUs can also help identify outliers or misbehaving devices in a cluster. Understanding these metrics in combination, rather than isolation, provides the clearest insight into GPU efficiency and workload performance.
 
-    ```yml
-    apiVersion: azmonitoring.coreos.com/v1
-    kind: PodMonitor
-    metadata:
-      name: nvidia-dcgm-exporter
-      labels:
-        app.kubernetes.io/name: nvidia-dcgm-exporter
-    spec:
-      selector:
-        matchLabels:
-          app.kubernetes.io/name: nvidia-dcgm-exporter
-      podMetricsEndpoints:
-      - port: metrics
-        interval: 30s
-      podTargetLabels:
-    ```
+## Common GPU metrics
 
-2. Apply this PodMonitor configuration to your AKS cluster using the `kubectl apply` command **in the `kube-system` namespace**.
+The following NVIDIA DCGM metrics are commonly evaluated for performance of GPU node pools on Kubernetes:
 
-    ```bash
-    kubectl apply -f pod-monitor.yaml -n kube-system
-    ```
-
-3. Verify the PodMonitor was successfully created using the `kubectl get podmonitor` command.
-
-    ```bash
-    kubectl get podmonitor -n kube-system
-    ```
-
-4. In the [Azure portal](https://portal.azure.com), navigate to the **Managed Prometheus** > **Prometheus explorer** section of your Azure Monitor workspace. Select the **Grid** tab and search for an example DCGM GPU metric in the **PromQL** box. For example `DCGM_FI_DEV_SM_CLOCK`:
-
-    :::image type="content" source="./media/monitor-gpu-metrics/dcgm-azure-monitor.png" alt-text="Screenshot of the Metrics section of an Azure Monitor workspace in the Azure portal.":::
-
-5. Import the [dcgm-exporter-dashboard.json](https://github.com/NVIDIA/dcgm-exporter/blob/main/grafana/dcgm-exporter-dashboard.json) into your Managed Grafana instance using the steps in [Create a dashboard in Azure Managed Grafana](/azure/managed-grafana/how-to-create-dashboard). After importing the JSON, the dashboard displaying GPU metrics should be visible in your Grafana instance.
-
-    :::image type="content" source="./media/monitor-gpu-metrics/dcgm-dashboard.png" alt-text="Screenshot of the NVIDIA DCGM Exporter dashboard.":::
+| GPU Metric Name | Meaning	| Typical Range / Indicator	| Usage Tip |
+| -- | -- | -- | -- |
+| `DCGM_FI_DEV_GPU_UTIL`| GPU utilization (% time GPU cores are active)	| 0–100% (higher is better)	| Monitor per-node and per-pod; low values may indicate CPU or I/O bottlenecks |
+| `DCGM_FI_DEV_SM_UTIL` | Streaming Multiprocessor efficiency (% active cores) | 0–100%	| Low values with high memory usage indicate a memory-bound workload |
+| `DCGM_FI_DEV_FB_USED`	| Framebuffer memory used (bytes)	| 0 to total memory	| Use pod GPU memory limits and track per-pod memory usage |
+| `DCGM_FI_DEV_FB_FREE` | Free GPU memory (bytes)	| 0 to total memory	| Useful for scheduling and to avoid OOM errors | 
+| `DCGM_FI_DEV_MEMORY_UTIL` | Memory utilization (%) | 0–100%	| Combine with GPU/SM utilization to determine memory-bound workloads |
+| `DCGM_FI_DEV_MEMORY_CLOCK` | Current memory clock frequency (MHz)	| 0 to max memory clock |	Low values under high memory utilization may indicate throttling |
+| `DCGM_FI_DEV_POWER_USAGE` |	Instantaneous power usage (Watts)	| 0 to TDP | Drops during high utilization may indicate throttling |
+| `DCGM_FI_DEV_TEMPERATURE`	| GPU temperature (°C) | ~30–85°C normal | Alert on sustained high temperatures |
+| `DCGM_FI_DEV_NVLINK_RX`	| NVLink receive bandwidth utilization (%)	| 0–100% |	Multi-GPU synchronization bottleneck if high with low SM utilization |
+| `DCGM_FI_DEV_XID_ERRORS` | GPU critical errors reported by driver	| Typically 0 | Immediate investigation required; can taint node in Kubernetes |
+    
+To learn about the full suite of GPU metrics, visit [NVIDIA DCGM](https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/index.html) Upstream documentation.
 
 ## Next steps
 
 - Track your [GPU node health](./gpu-health-monitoring.md) with Node Problem Detector (NPD)
-- Deploy a [multi-instance GPU (MIG)](./gpu-multi-instance.md) workload on AKS.
-- Explore the [AI toolchain operator add-on (preview)](./ai-toolchain-operator.md) for AI inferencing and fine-tuning.
+- Create [multi-instance GPU](./gpu-multi-instance.md) node pools on AKS
+- Explore the [AI toolchain operator add-on](./ai-toolchain-operator.md) for AI inferencing and fine-tuning

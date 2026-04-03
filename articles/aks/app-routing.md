@@ -7,10 +7,13 @@ author: davidsmatlak
 ms.topic: how-to
 ms.date: 06/10/2025
 ms.author: davidsmatlak
+ms.service: azure-kubernetes-service
 # Customer intent: As a cloud engineer, I want to deploy and configure NGINX ingress on Azure Kubernetes Service using the application routing add-on, so that I can efficiently manage HTTP/HTTPS traffic to my applications while ensuring secure access and integration with Azure DNS.
 ---
 
 # Managed NGINX ingress with the application routing add-on
+
+[!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
 
 One way to route Hypertext Transfer Protocol (HTTP) and secure (HTTPS) traffic to applications running on an Azure Kubernetes Service (AKS) cluster is to use the [Kubernetes Ingress object][kubernetes-ingress-object-overview]. When you create an Ingress object that uses the application routing add-on NGINX Ingress classes, the add-on creates, configures, and manages one or more Ingress controllers in your AKS cluster.
 
@@ -180,6 +183,8 @@ az aks approuting disable --name <ClusterName> --resource-group <ResourceGroupNa
 
 ## Next steps
 
+* Enable the [application routing Gateway API implementation][app-routing-gateway-api] to manage ingress traffic with the Kubernetes Gateway API.
+
 * [Configure custom ingress configurations][custom-ingress-configurations] shows how to create an advanced Ingress configuration and [configure a custom domain using Azure DNS to manage DNS zones and setup a secure ingress][dns-ssl-configuration].
 
 * To integrate with an Azure internal load balancer and configure a private Azure DNS zone to enable DNS resolution for the private endpoints to resolve specific domains, see [Configure internal NGINX ingress controller for Azure private DNS zone][create-nginx-private-controller].
@@ -200,6 +205,7 @@ az aks approuting disable --name <ClusterName> --resource-group <ResourceGroupNa
 [prometheus-in-grafana]: app-routing-nginx-prometheus.md
 [create-nginx-private-controller]: create-nginx-ingress-private-controller.md
 [managed-identity]: use-managed-identity.md
+[app-routing-gateway-api]: app-routing-gateway-api.md
 
 <!-- LINKS - external -->
 [kubernetes-ingress-object-overview]: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -209,3 +215,4 @@ az aks approuting disable --name <ClusterName> --resource-group <ResourceGroupNa
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [ingress-backend]: https://release-v1-2.docs.openservicemesh.io/docs/guides/traffic_management/ingress/#ingressbackend-api
+[aks-nginx-retirement]: https://blog.aks.azure.com/2025/11/13/ingress-nginx-update

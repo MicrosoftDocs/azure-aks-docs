@@ -7,10 +7,13 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 06/05/2023
 ms.custom: template-how-to
+ms.service: azure-kubernetes-service
 # Customer intent: "As a DevOps engineer, I want to configure an NGINX Ingress Controller with TLS on Azure Kubernetes Service, so that I can secure application traffic using certificates stored in Azure Key Vault."
 ---
 
 # Set up Secrets Store CSI Driver to enable NGINX Ingress Controller with TLS
+
+[!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
 
 This article walks you through the process of securing an NGINX Ingress Controller with TLS with an Azure Kubernetes Service (AKS) cluster and an Azure Key Vault (AKV) instance. For more information, see [TLS in Kubernetes][kubernetes-ingress-tls].
 

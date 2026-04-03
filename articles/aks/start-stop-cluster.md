@@ -2,8 +2,8 @@
 title: Stop and start an Azure Kubernetes Service (AKS) cluster
 description: Learn how to stop and start an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
-ms.date: 07/01/2024
-author: palma21
+ms.date: 03/04/2026
+author: colinmixonn
 ms.author: schaffererin
 # Customer intent: As a cloud administrator, I want to stop and start my Kubernetes clusters, so that I can optimize costs during idle periods without losing my configuration.
 ---
@@ -40,6 +40,9 @@ When using the cluster stop/start feature, the following conditions apply:
   - If you're using cluster autoscaler, when you start your cluster, your current node count may not be between the min and max range values you set. The cluster starts with the number of nodes it needs to run its workloads, which isn't impacted by your autoscaler settings. When your cluster performs scaling operations, the min and max values will impact your current node count, and your cluster will eventually enter and remain in that desired range until you stop your cluster.
 
 ## Stop an AKS cluster
+
+> [!CAUTION]
+> If your cluster has a `ValidatingWebhookConfiguration` or `MutatingWebhookConfiguration` whose configuration may apply to cluster-scoped resources AKS manages during stop/start (such as nodes, leases, or clusterroles), the stop operation may be rejected with a `ValidationError`. This includes webhooks with wildcard (`*`) rules on `apiGroups` or `resources`. To resolve, either narrow the webhook rules to only the resources you need (avoid wildcards), scope the webhook to namespaced resources using `scope: Namespaced` and a `namespaceSelector`, set `failurePolicy` to `Ignore`, or remove the webhook before stopping.
 
 ### [Azure CLI](#tab/azure-cli)
 

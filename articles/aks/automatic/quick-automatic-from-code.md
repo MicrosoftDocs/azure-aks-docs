@@ -13,7 +13,7 @@ ms.author: wangamanda
 
 **Applies to:** :heavy_check_mark: AKS Automatic
 
-Use [automated deployments][automated-deployments] to build and deploy an application from a code repository to a new or existing AKS Automatic cluster. Automated deployments simplify the process of setting up a GitHub Action workflow to build and deploy your code. Once connected, every new commit you make kicks off the pipeline. Automated deployments build on [draft.sh](https://draft.sh). When you create a new deployment workflow, you can use an existing Dockerfile, generate a Dockerfile, use existing Kubernetes manifests, or generate Kubernetes manifests. The generated manifests are created with security and resiliency best practices in mind.
+Use [automated deployments][automated-deployments] to build and deploy an application from a code repository to a new or existing AKS Automatic cluster. Automated deployments simplify the process of setting up a GitHub Action workflow to build and deploy your code. Once connected, every new commit you make kicks off the pipeline. Automated deployments build on [draft.sh](https://draft.sh). When you create a new deployment workflow, you can use an existing Dockerfile, generate a Dockerfile, use existing Kubernetes manifests, or generate Kubernetes manifests. The generated manifests are created with security and resiliency best practices in mind. AKS Automatic also includes a [pod readiness SLA][azure-sla] that guarantees 99.9% of pod readiness operations complete within 5 minutes, guaranteeing reliable, self-healing infrastructure for your applications. 
 
 In this quickstart, you learn to:
 
@@ -200,13 +200,14 @@ To learn more about AKS Automatic, continue to the introduction.
 [automated-deployments]: ../automated-deployments.md
 [azure-portal]: https://portal.azure.com
 [portal-kubernetes-services]: https://portal.azure.com/#browse/Microsoft.ContainerService%2FmanagedClusters
-[aks-identities]: ../use-managed-identity.md#summary-of-managed-identities-used-by-aks
+[aks-identities]: ../managed-identity-overview.md#summary-of-managed-identities-used-by-aks
 [kubernetes-documentation]: https://kubernetes.io/docs/concepts/workloads/
 [deployment-safeguards]: ../deployment-safeguards.md
-[seccomp-profile]: ../secure-container-access.md#secure-computing-seccomp
+[seccomp-profile]: ../secure-container-access.md#overview-of-default-seccomp-profiles-preview
 [kubernetes-probes]: https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/
 [kubernetes-pod-security-standards]: https://kubernetes.io/docs/concepts/security/pod-security-standards/
 [pod-anti-affinity]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
 [topology-spread-constraints]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
 [policy-for-kubernetes]: /azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks
 [az-provider-register]: /azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider
+[azure-sla]: https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services

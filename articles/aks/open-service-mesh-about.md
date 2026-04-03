@@ -3,7 +3,7 @@ title: Open Service Mesh in Azure Kubernetes Service (AKS)
 description: Learn about the Open Service Mesh (OSM) add-on in Azure Kubernetes Service (AKS).
 ms.topic: concept-article
 ms.date: 09/25/2024
-ms.author: pgibson
+ms.author: schaffererin
 author: schaffererin
 # Customer intent: As a Kubernetes administrator, I want to enable the Open Service Mesh add-on in my AKS cluster, so that I can enhance service communication security and observability within my microservices architecture.
 ---
@@ -16,8 +16,7 @@ OSM runs an Envoy-based control plane on Kubernetes and can be configured with [
 
 Microsoft started the OSM project, but it's now governed by the [Cloud Native Computing Foundation (CNCF)](https://www.cncf.io/).
 
-> [!NOTE]
-> With the retirement of [Open Service Mesh (OSM)](https://docs.openservicemesh.io/) by the Cloud Native Computing Foundation (CNCF), we recommend identifying your OSM configurations and migrating them to an equivalent Istio configuration. For information about migrating from OSM to Istio, see [Migration guidance for Open Service Mesh (OSM) configurations to Istio](open-service-mesh-istio-migration-guidance.md).
+[!INCLUDE [open-service-mesh-retirement](./includes/open-service-mesh-retirement.md)]
 
 ## Enable the OSM add-on
 

@@ -1,18 +1,18 @@
 ---
-title: Configure the Dapr extension for your Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes project
-description: Learn how to configure the Dapr extension specifically for your Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes project
-author: hhunter-ms
-ms.author: hannahhunter
+title: Configure the Dapr Extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes
+description: Learn how to configure the Dapr extension for your Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes project.
+author: greenie-msft
+ms.author: nigreenf
 ms.topic: how-to
 ms.custom: build-2023, devx-track-azurecli, linux-related-content
-ms.subservice: aks-developer
-ms.date: 12/06/2024
+ms.subservice: dapr-aks
+ms.date: 02/05/2026
 # Customer intent: "As a Kubernetes developer, I want to configure the Dapr extension for Azure Kubernetes Service, so that I can enable high availability, manage mTLS certificates, and customize settings for better service communication and security."
 ---
 
 # Configure the Dapr extension for your Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes project
 
-After [completing the prerequisites for installing the Dapr extension](./dapr.md), you can configure the [Dapr](https://dapr.io/) extension to work best for you and your project using various configuration options, like:
+After completing the [prerequisites for installing the Dapr extension](./dapr.md), you can configure the [Dapr](https://dapr.io) extension to work best for you and your project by using various configuration options, like:
 
 - Rotating expiring certificates
 - Provisioning Dapr with high availability (HA) enabled
@@ -20,23 +20,57 @@ After [completing the prerequisites for installing the Dapr extension](./dapr.md
 - Setting automatic custom resource definition (CRD) updates
 - Configuring the Dapr release namespace
 
-The extension enables you to set Dapr configuration options by using the `--configuration-settings` parameter in the Azure CLI or `configurationSettings` property in a Bicep template.
+The extension allows you to set Dapr configuration options by using the `--configuration-settings` parameter in the Azure CLI or the `configurationSettings` property in a Bicep template.
+
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
+
+## Update configuration settings
 
 > [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+> Some configuration options can't be modified post-creation. Adjustments to these options require deletion and recreation of the extension, applicable to the following settings:
+> * `global.ha.*`
+> * `dapr_placement.*`
+>
+> HA is enabled by default. Disabling it requires deletion and recreation of the extension.
+
+To update your Dapr configuration settings, recreate the extension with the desired state. For example, let's say you previously created and installed the extension by using the following configuration:
+
+```azurecli-interactive
+az k8s-extension create --cluster-type managedClusters \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
+--name dapr \
+--extension-type Microsoft.Dapr \
+--auto-upgrade-minor-version true \  
+--configuration-settings "global.ha.enabled=true" \
+--configuration-settings "dapr_operator.replicaCount=2" 
+```
+
+To update `dapr_operator.replicaCount` from two to three, create the extension again by using the following command:
+
+```azurecli-interactive
+az k8s-extension create --cluster-type managedClusters \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
+--name dapr \
+--extension-type Microsoft.Dapr \
+--auto-upgrade-minor-version true \
+--configuration-settings "global.ha.enabled=true" \
+--configuration-settings "dapr_operator.replicaCount=3"
+```
 
 ## Manage mTLS certificates
 
-The Dapr extension supports in-transit encryption of communication between Dapr instances using the Dapr Sentry service control plane, which is a central Certificate Authority (CA). With the Sentry service, you can encrypt communication using self-signed or user-supplied x.509 certificates. [Learn more about setting up mTLS certificates in the open-source Dapr documentation.](https://docs.dapr.io/operations/security/mtls/#dapr-generated-self-signed-certificates)
+The Dapr extension supports in-transit encryption of communication between Dapr instances by using the Dapr Sentry service control plane, which is a central Certificate Authority (CA). With the Sentry service, you can encrypt communication using self-signed or user-supplied x.509 certificates. To learn more about setting up mTLS certificates, see the [open-source Dapr documentation](https://docs.dapr.io/operations/security/mtls/#dapr-generated-self-signed-certificates).
 
 You can [bring in your own certificates](https://docs.dapr.io/operations/security/mtls/#bringing-your-own-certificates), or let [Dapr automatically create and persist self-signed root and issuer certificates](https://docs.dapr.io/operations/security/mtls/#dapr-generated-self-signed-certificates).
 
 > [!IMPORTANT]
-> If you don't explicitly configure certificates, [Dapr defaults to generating self-signed certificates](#manage-dapr-generated-self-signed-certificates), which are generally valid for 1 year. **Currently, using self-signed certificates generated by Dapr is not recommended.** Best practice is to generate custom certificates and update them manually.
+> If you don't explicitly configure certificates, Dapr [generates self-signed certificates](#manage-dapr-generated-self-signed-certificates), which are valid for one year. **Currently, using self-signed certificates generated by Dapr is not recommended.** Best practice is to generate custom certificates and update them manually.
 
 ### Manage Dapr-generated self-signed certificates
 
-If you haven't provided any custom certificates, Dapr automatically creates and persists self-signed certificates, valid for 1 year. The Dapr extension installs the `dapr-trust-bundle` secret, which contains certificate information under the default `dapr-system` namespace.
+If you don't provide any custom certificates, Dapr automatically creates and persists self-signed certificates, valid for one year. The Dapr extension installs the `dapr-trust-bundle` secret, which contains certificate information under the default `dapr-system` namespace.
  
 #### Check expiry of current Dapr-generated self-signed certificates
 
@@ -67,19 +101,19 @@ notAfter=Dec  6 18:14:20 2025 GMT
 
 #### Generate a new Dapr-generated self-signed certificate 
 
-- **Via the Dapr CLI (recommended)**  
-   Refer to Dapr's [Root and issuer certificate upgrade using CLI](https://docs.dapr.io/operations/security/mtls/#root-and-issuer-certificate-upgrade-using-cli-recommended) guide.
-- **Via `kubectl` commands**
-   Refer to Dapr's [Updating root or issuer certs using Kubectl](https://docs.dapr.io/operations/security/mtls/#updating-root-or-issuer-certs-using-kubectl) guide.
+- **Using the Dapr CLI (recommended)**:  
+   Refer to Dapr's [Root and issuer certificate upgrade using CLI guide](https://docs.dapr.io/operations/security/mtls/#root-and-issuer-certificate-upgrade-using-cli-recommended).
+- **Using `kubectl` commands**:  
+   Refer to Dapr's [Updating root or issuer certs using Kubectl guide](https://docs.dapr.io/operations/security/mtls/#updating-root-or-issuer-certs-using-kubectl).
 
 ### Manage your own user-supplied x.509 certificates
 
 You can also bring your own custom certificates.
 
-- **Generate custom certificates**  
-   Create your own custom certificate; for example, [an Azure Key Vault certificate](/azure/key-vault/certificates/certificate-scenarios).
-- **Update your custom certficate manually**  
-   Follow [the instructions provided in the Dapr open source documentation to update your custom certificates manually](https://docs.dapr.io/operations/security/mtls/#custom-certificates-bring-your-own) using [`kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
+- **Generate custom certificates**:  
+   Create your own custom certificate; for example, an [Azure Key Vault certificate](/azure/key-vault/certificates/certificate-scenarios).
+- **Update your custom certificate manually**:  
+   See the [Dapr open-source documentation to update your custom certificates manually](https://docs.dapr.io/operations/security/mtls/#custom-certificates-bring-your-own) by using [`kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
 
 ## Provision Dapr with high availability (HA) enabled
 
@@ -89,8 +123,8 @@ Provision Dapr with high availability (HA) enabled by setting the `global.ha.ena
 
 ```azurecli
 az k8s-extension create --cluster-type managedClusters \
---cluster-name myAKSCluster \
---resource-group myResourceGroup \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
 --name dapr \
 --extension-type Microsoft.Dapr \
 --auto-upgrade-minor-version true \
@@ -99,7 +133,7 @@ az k8s-extension create --cluster-type managedClusters \
 ```
 
 > [!NOTE]
-> If configuration settings are sensitive and need to be protected (for example, cert-related information), pass the `--configuration-protected-settings` parameter and the value will be protected from being read.
+> If configuration settings are sensitive and need to be protected (for example, cert-related information), pass the `--configuration-protected-settings` parameter to protect the value from being read.
 
 # [Bicep](#tab/bicep)
 
@@ -112,7 +146,7 @@ properties: {
 ```
 
 > [!NOTE]
-> If configuration settings are sensitive and need to be protected (for example, cert-related information), use the `configurationProtectedSettings` property and the value will be protected from being read.
+> If configuration settings are sensitive and need to be protected (for example, cert-related information), use the `configurationProtectedSettings` property to protect the value from being read.
 
 ---
 
@@ -138,14 +172,14 @@ For a list of available options, see [Dapr configuration][dapr-configuration-opt
 
 ## Limit the extension to certain nodes
 
-In some configurations, you may only want to run Dapr on certain nodes. You can limit the extension by passing a `nodeSelector` in the extension configuration. If the desired `nodeSelector` contains `.`, you must escape them from the shell and the extension. For example, the following configuration installs Dapr only to nodes with `topology.kubernetes.io/zone: "us-east-1c"`:
+In some configurations, you might only want to run Dapr on certain nodes. You can limit the extension by passing a `nodeSelector` in the extension configuration. If the desired `nodeSelector` contains `.`, you must escape them from the shell and the extension. For example, the following configuration installs Dapr only to nodes with `topology.kubernetes.io/zone: "us-east-1c"`:
 
 # [Azure CLI](#tab/cli)
 
 ```azurecli
 az k8s-extension create --cluster-type managedClusters \
---cluster-name myAKSCluster \
---resource-group myResourceGroup \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
 --name dapr \
 --extension-type Microsoft.Dapr \
 --auto-upgrade-minor-version true \
@@ -158,15 +192,15 @@ For managing OS and architecture, use the [supported versions](https://github.co
 
 ```azurecli
 az k8s-extension create --cluster-type managedClusters \
---cluster-name myAKSCluster \
---resource-group myResourceGroup \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
 --name dapr \
 --extension-type Microsoft.Dapr \
 --auto-upgrade-minor-version true \
 --configuration-settings "global.ha.enabled=true" \
 --configuration-settings "dapr_operator.replicaCount=2" \
---configuration-settings "global.daprControlPlaneOs=linux” \
---configuration-settings "global.daprControlPlaneArch=amd64”
+--configuration-settings "global.daprControlPlaneOs=linux" \
+--configuration-settings "global.daprControlPlaneArch=amd64"
 ```
 
 # [Bicep](#tab/bicep)
@@ -220,12 +254,11 @@ When installing Dapr, use the storage class you used in the YAML file:
 
 ```azurecli
 az k8s-extension create --cluster-type managedClusters  
---cluster-name XXX  
---resource-group XXX  
---name XXX  
---extension-type Microsoft.Dapr  
---auto-upgrade-minor-version XXX  
---version XXX  
+--cluster-name <your-AKS-cluster>
+--resource-group <your-resource-group>
+--name dapr
+--extension-type Microsoft.Dapr
+--auto-upgrade-minor-version true
 --configuration-settings "dapr_placement.volumeclaims.storageClassName=custom-zone-redundant-storage"
 ```
 
@@ -253,9 +286,9 @@ The Dapr extension gets installed in the `dapr-system` namespace by default. To 
 ```azurecli
 az k8s-extension create \
 --cluster-type managedClusters \
---cluster-name dapr-aks \
---resource-group dapr-rg \
---name my-dapr-ext \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
+--name dapr \
 --extension-type microsoft.dapr \
 --release-train stable \
 --auto-upgrade false \
@@ -280,7 +313,7 @@ properties: {
 
 ---
 
-[Learn how to configure the Dapr release namespace when migrating from Dapr open source to the Dapr extension](./dapr-migration.md).
+Learn how to configure the Dapr release namespace when [migrating from Dapr open source to the Dapr extension](./dapr-migration.md).
 
 ## Show current configuration settings
 
@@ -288,47 +321,27 @@ Use the `az k8s-extension show` command to show the current Dapr configuration s
 
 ```azurecli
 az k8s-extension show --cluster-type managedClusters \
---cluster-name myAKSCluster \
---resource-group myResourceGroup \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
 --name dapr
 ```
 
-## Update configuration settings
+## Set Dapr monitoring log levels
 
-> [!IMPORTANT]
-> Some configuration options cannot be modified post-creation. Adjustments to these options require deletion and recreation of the extension, applicable to the following settings:
-> * `global.ha.*`
-> * `dapr_placement.*`
->
-> HA is enabled by default. Disabling it requires deletion and recreation of the extension.
-
-To update your Dapr configuration settings, recreate the extension with the desired state. For example, let's say you previously created and installed the extension using the following configuration:
+You can configure settings for the Dapr monitoring component with your AKS cluster extension. For example, to update `dapr_monitoring` log levels to *warn* (only notified when receiving a warning or error), set the following `configuration-settings`:
 
 ```azurecli-interactive
 az k8s-extension create --cluster-type managedClusters \
---cluster-name myAKSCluster \
---resource-group myResourceGroup \
---name dapr \
---extension-type Microsoft.Dapr \
---auto-upgrade-minor-version true \  
---configuration-settings "global.ha.enabled=true" \
---configuration-settings "dapr_operator.replicaCount=2" 
-```
-
-To update the `dapr_operator.replicaCount` from two to three, use the following command:
-
-```azurecli-interactive
-az k8s-extension create --cluster-type managedClusters \
---cluster-name myAKSCluster \
---resource-group myResourceGroup \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
 --name dapr \
 --extension-type Microsoft.Dapr \
 --auto-upgrade-minor-version true \
 --configuration-settings "global.ha.enabled=true" \
---configuration-settings "dapr_operator.replicaCount=3"
+--configuration-settings "dapr_monitoring.logLevel=warn"
 ```
 
-## Set the outbound proxy for Dapr extension for Azure Arc on-premises
+## Set the outbound proxy for the Dapr extension for Azure Arc on-premises
 
 If you want to use an outbound proxy with the Dapr extension for AKS, you can do so by:
 
@@ -338,16 +351,16 @@ If you want to use an outbound proxy with the Dapr extension for AKS, you can do
    - `NO_PROXY`
 1. [Installing the proxy certificate in the sidecar](https://docs.dapr.io/operations/configuration/install-certificates/).
 
-## Updating your Dapr installation version
+## Update your Dapr installation version
 
 # [Azure CLI](#tab/cli)
 
-If you are on a specific Dapr version and you don't have `--auto-upgrade-minor-version` available, you can use the following command to upgrade or downgrade Dapr:
+If you're on a specific Dapr version and you don't have `--auto-upgrade-minor-version` available, you can use the following command to upgrade or downgrade Dapr:
 
 ```azurecli
 az k8s-extension update --cluster-type managedClusters \
---cluster-name myAKSCluster \
---resource-group myResourceGroup \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
 --name dapr \
 --version 1.12.0 # Version to upgrade or downgrade to
 ```
@@ -364,13 +377,13 @@ properties: {
 
 --- 
 
-The preceding command updates the Dapr control plane *only.* To update the Dapr sidecars, restart your application deployments:
+The preceding command updates the Dapr control plane *only*. To update the Dapr sidecars, restart your application deployments:
 
 ```bash
-kubectl rollout restart deploy/<DEPLOYMENT-NAME>
+kubectl rollout restart deploy/<deployment-name>
 ```
 
-## Using Azure Linux-based images
+## Use Azure Linux-based images
 
 From Dapr version 1.8.0, you can use Azure Linux images with the Dapr extension. To use them, set the `global.tag` flag:
 
@@ -378,8 +391,8 @@ From Dapr version 1.8.0, you can use Azure Linux images with the Dapr extension.
 
 ```azurecli
 az k8s-extension update --cluster-type managedClusters \
---cluster-name myAKSCluster \
---resource-group myResourceGroup \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
 --name dapr \
 --set global.tag=1.10.0-mariner
 ```
@@ -394,8 +407,8 @@ properties: {
 
 --- 
 
-- [Learn more about using Mariner-based images with Dapr][dapr-mariner].
-- [Learn more about deploying Azure Linux on AKS][aks-azurelinux].
+- Learn more about [using Mariner-based images with Dapr][dapr-mariner].
+- Learn more about [deploying Azure Linux on AKS][aks-azurelinux].
 
 
 ## Disable automatic CRD updates
@@ -406,8 +419,8 @@ From Dapr version 1.9.2, CRDs are automatically upgraded when the extension upgr
 
 ```azurecli
 az k8s-extension update --cluster-type managedClusters \
---cluster-name myAKSCluster \
---resource-group myResourceGroup \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
 --name dapr \
 --configuration-settings "hooks.applyCrds=false"
 ```
@@ -431,13 +444,16 @@ properties: {
 ## Meet network requirements
 
 The Dapr extension requires the following outbound URLs on `https://:443` to function on AKS and Arc for Kubernetes:
-1. `https://mcr.microsoft.com/daprio` URL for pulling Dapr artifacts.
-1. The [outbound URLs required for AKS or Arc for Kubernetes](/azure/azure-arc/kubernetes/network-requirements). 
+- `https://mcr.microsoft.com/daprio` URL for pulling Dapr artifacts
+- The [outbound URLs required for AKS or Arc for Kubernetes](/azure/azure-arc/kubernetes/network-requirements)
 
-## Next Steps
+## Next step
 
-- [Walk through the tutorial for deploying Dapr Workflow via the extension][dapr-workflow]
-- [Migrate from Dapr open source to the Dapr extension][dapr-migration].
+> [!div class="nextstepaction"]
+> [Deploy and run workflows with the Dapr extension][dapr-workflow]
+
+> [!div class="nextstepaction"]
+> [Migrate from Dapr open source to the Dapr extension][dapr-migration]
 
 
 <!-- LINKS INTERNAL -->

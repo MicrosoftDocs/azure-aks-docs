@@ -58,7 +58,7 @@ With *Azure CNI*, each pod receives an IP address in the IP subnet and can commu
 * Unlike Azure CNI clusters, multiple kubenet clusters can't share a subnet.
 * AKS doesn't apply Network Security Groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure the security rules in the NSGs allow traffic between the node and pod CIDR. For more details, see [Network security groups][aks-network-nsg].
 * Features **not supported on kubenet** include:
-  * [Azure network policies](use-network-policies.md#create-an-aks-cluster-and-enable-network-policy)
+  * [Azure network policies](use-network-policies.md)
   * [Windows node pools](./windows-faq.yml)
   * [Virtual nodes add-on](virtual-nodes.md#network-requirements)
 
@@ -298,4 +298,4 @@ This article showed you how to deploy your AKS cluster into your existing virtua
 [custom-route-table]: /azure/virtual-network/manage-route-table
 [network-comparisons]: concepts-network-cni-overview.md
 [Create an AKS cluster with user-assigned managed identity]: configure-kubenet.md#create-an-aks-cluster-with-user-assigned-managed-identity
-[bring-your-own-control-plane-managed-identity]: ../aks/use-managed-identity.md#enable-a-user-assigned-managed-identity
+[bring-your-own-control-plane-managed-identity]: ../aks/use-managed-identity.md#create-a-user-assigned-managed-identity

@@ -21,12 +21,9 @@ Some of the major differences include:
 - **File permissions**: Windows Server uses an access control list based on SIDs rather than a bitmask of permissions and UID+GID.
 - **File paths**: The convention on Windows Server is to use \ instead of /. In pod specs that mount volumes, specify the path correctly for Windows Server containers. For example, rather than a mount point of */mnt/volume* in a Linux container, specify a drive letter and location such as */K/Volume* to mount as the *K:* drive.
 
-> [!NOTE]
->
-> - Windows Server 2022 retires after Kubernetes version 1.34 reaches end of support and won't be supported in Kubernetes version 1.35 and above.
-> - Windows Server 2019 retires after Kubernetes version 1.32 reaches end of support and won't be supported in Kubernetes version 1.33 and above.
->
-> For more information, see [AKS release notes][aks-release-notes]. To stay up to date on the latest Windows Server OS versions and learn more about our roadmap of what's planned for support on AKS, see our [AKS public roadmap](https://github.com/azure/aks/projects/1).
+[!INCLUDE [windows server 2019 retirement](./includes/windows-server-2019-retirement.md)]
+
+[!INCLUDE [windows server 2022 retirement](./includes/windows-server-2022-retirement.md)]
 
 This article covers important considerations to keep in mind when using Windows containers instead of Linux containers in Kubernetes. For an in-depth comparison of Windows and Linux containers, see [Comparison with Linux][comparison-with-linux].
 
@@ -70,4 +67,4 @@ For more information on Windows containers, see the [Windows Server containers F
 [multi-instance-gpu]: gpu-multi-instance.md
 [gen-2-vms]: generation-2-vms.md
 [custom-node-config]: custom-node-configuration.md
-[custom-kubelet-parameters]: custom-node-configuration.md#kubelet-custom-configuration
+[custom-kubelet-parameters]: custom-node-configuration.md#kubelet-configuration

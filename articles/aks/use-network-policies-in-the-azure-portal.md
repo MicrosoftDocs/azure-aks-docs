@@ -7,7 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 10/10/2025
-# Customer intent: As a DevOps engineer, I want to easily implement and manage network policies in Azure Kubernetes Service through the Azure Portal so that I can easily secure pod traffic and understand the impact of existing policies.
+# Customer intent: As a DevOps engineer, I want to easily implement and manage network policies in Azure Kubernetes Service through the Azure portal so that I can easily secure pod traffic and understand the impact of existing policies.
 ---
 
 # Use network policies for Azure Kubernetes Service (AKS) clusters in the Azure portal

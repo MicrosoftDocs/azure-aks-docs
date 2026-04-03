@@ -122,7 +122,7 @@ This block is implemented in the default server block in the CoreFile for the cl
        name: coredns-custom # This is the name of the ConfigMap you can overwrite with your changes
        namespace: kube-system
      data:
-         override-block.server:
+         override-block.server: |
             internal.cloudapp.net:53 {
                 errors
                 cache 30

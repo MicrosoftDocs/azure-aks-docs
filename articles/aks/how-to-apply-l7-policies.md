@@ -11,7 +11,7 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 # Customer intent: As a Kubernetes administrator, I want to configure Layer 7 policies using Advanced Container Networking Services for my AKS cluster, so that I can enhance security and traffic management for my containerized applications.
 ---
 
-# Set up Layer 7(L7) policies with Advanced Container Networking Services (Preview)
+# Set up Layer 7(L7) policies with Advanced Container Networking Services
 
 This article demonstrates how to set up L7 policies with Advanced Container Networking Services in AKS clusters. Continue only after you have reviewed the limitations and considerations listed on the [Layer 7 Policy Overview](./container-network-security-l7-policy-concepts.md) page.
 
@@ -20,36 +20,7 @@ This article demonstrates how to set up L7 policies with Advanced Container Netw
 * An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
- The minimum version of Azure CLI required for the steps in this article is 2.71.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-
-
-### Install the `aks-preview` Azure CLI extension
-
-Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command.
-
- The minimum version of the aks-preview Azure CLI extension is `14.0.0b6`
-
-```azurecli-interactive
-# Install the aks-preview extension
-az extension add --name aks-preview
-# Update the extension to make sure you have the latest version installed
-az extension update --name aks-preview
-```
-
-### Register the `AdvancedNetworkingL7PolicyPreview` feature flag
-
-Register the `AdvancedNetworkingL7PolicyPreview` feature flag using the [`az feature register`](/cli/azure/feature#az-feature-register) command.
-
-```azurecli-interactive 
-az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingL7PolicyPreview"
-```
-Verify successful registration using the [`az feature show`](/cli/azure/feature#az-feature-show) command. It takes a few minutes for the registration to complete.
-
-```azurecli-interactive
-az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingL7PolicyPreview"
-```
-
-Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
+ The minimum version of Azure CLI required for the steps in this article is 2.79.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 ### Enable Advanced Container Networking Services
 
@@ -65,7 +36,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 >
-> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". To disable both features, you can follow the instructions provided in [Disable Container Network Security](./advanced-container-networking-services-overview.md?tabs=cilium#disable-container-network-security).
+> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". To disable both features, you can follow the instructions provided in [Disable Container Network Security](./advanced-container-networking-services-overview.md).
 
 ```azurecli-interactive
 
@@ -97,7 +68,7 @@ The [`az aks update`](/cli/azure/aks#az-aks-update) command with the Advanced Co
 > [!NOTE]
 > Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services. 
 >
-> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". To disable both features, you can follow the instructions provided in [Disable Container Network Security](./advanced-container-networking-services-overview.md?tabs=cilium#disable-container-network-security).
+> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". To disable both features, you can follow the instructions provided in [Disable Container Network Security](./advanced-container-networking-services-overview.md).
 
 ```azurecli-interactive
 az aks update \

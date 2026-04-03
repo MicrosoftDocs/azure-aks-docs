@@ -1,12 +1,12 @@
 ---
-title: Install the Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes
+title: Install Dapr Extension for Azure Kubernetes Service (AKS)
 description: Install and configure Dapr on your Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes clusters using the Dapr cluster extension.
 author: greenie-msft
 ms.author: nigreenf
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 01/16/2025
-ms.subservice: aks-developer
+ms.date: 02/05/2026
+ms.subservice: dapr-aks
 ms.custom: devx-track-azurecli, references_regions
 # Customer intent: As a developer, I want to install the Dapr extension on my Azure Kubernetes Service (AKS) cluster, so that I can efficiently build and manage resilient microservices using Dapr's capabilities for communication and state management.
 ---
@@ -19,7 +19,7 @@ ms.custom: devx-track-azurecli, references_regions
 - Building applications that are portable across multiple cloud services and hosts (for example, Kubernetes vs. a virtual machine)
 
 > [!NOTE]
-> If you plan on installing Dapr in a Kubernetes production environment, see the [Dapr guidelines for production usage][kubernetes-production] documentation page.
+> If you plan to install Dapr in a Kubernetes production environment, see the [Dapr production guidelines][kubernetes-production].
 
 ## How it works
 
@@ -39,10 +39,10 @@ Once Dapr is installed on your cluster, you can begin to develop using the Dapr 
 
 ## Prerequisites 
 
-- An Azure subscription. [Don't have one? Create a free account.](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn)
+- An Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - The latest version of the [Azure CLI][install-cli].
 - An existing [AKS cluster][deploy-cluster] or connected [Arc-enabled Kubernetes cluster][arc-k8s-cluster].
-- [An Azure Kubernetes Service Role-Based Access Control Admin role](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin) 
+- An [Azure Kubernetes Service Role-Based Access Control Admin role](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin).
 
 Select how you'd like to install, deploy, and configure the Dapr extension.
 
@@ -65,7 +65,7 @@ az extension update --name k8s-extension
 
 ### Register the `KubernetesConfiguration` resource provider
 
-If you aren't already using cluster extensions, you may need to register the resource provider with your subscription. You can check the status of the provider registration using the [az provider list][az-provider-list] command, as shown in the following example:
+If you aren't already using cluster extensions, you might need to register the resource provider with your subscription. You can check the status of the provider registration using the [az provider list][az-provider-list] command, as shown in the following example:
 
 ```azurecli-interactive
 az provider list --query "[?contains(namespace,'Microsoft.KubernetesConfiguration')]" -o table
@@ -90,7 +90,7 @@ az provider register --namespace Microsoft.KubernetesConfiguration
 The `ExtensionTypes` feature needs to be registered to your Azure subscription. In the terminal, verify you're in the correct subscription:
 
 ```azurecli
-az account set --subscription <YOUR-AZURE-SUBSCRIPTION-ID>
+az account set --subscription <your-azure-subscription-ID>
 ```
 
 Register the `ExtensionTypes` feature.
@@ -99,7 +99,7 @@ Register the `ExtensionTypes` feature.
 az feature registration create --namespace Microsoft.KubernetesConfiguration --name ExtensionTypes
 ```
 
-Feature registration may take some time. After a few minutes, check the registration status using the following command:
+Feature registration might take some time. After a few minutes, check the registration status using the following command:
 
 ```azurecli
 az feature show --namespace Microsoft.KubernetesConfiguration --name ExtensionTypes
@@ -109,19 +109,20 @@ az feature show --namespace Microsoft.KubernetesConfiguration --name ExtensionTy
 
 When installing the Dapr extension, use the flag value that corresponds to your cluster type:
 
-- **AKS cluster**: `--cluster-type managedClusters`. 
-- **Arc-enabled Kubernetes cluster**: `--cluster-type connectedClusters`.
+- **AKS cluster**: `--cluster-type managedClusters`
+- **Arc-enabled Kubernetes cluster**: `--cluster-type connectedClusters`
 
 > [!NOTE]
-> If you're using Dapr OSS on your AKS cluster and would like to install the Dapr extension for AKS, read more about [how to successfully migrate to the Dapr extension][dapr-migration]. 
+> If you're using Dapr OSS on your AKS cluster and would like to install the Dapr extension for AKS, see [Migrate from Dapr OSS to the Dapr extension][dapr-migration]. 
 
 Create the Dapr extension, which installs Dapr on your AKS or Arc-enabled Kubernetes cluster. 
 
 For example, install the latest version of Dapr via the Dapr extension on your AKS cluster:
+
 ```azurecli
 az k8s-extension create --cluster-type managedClusters \
---cluster-name <myAKSCluster> \
---resource-group <myResourceGroup> \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
 --name dapr \
 --extension-type Microsoft.Dapr \
 --auto-upgrade-minor-version false
@@ -131,7 +132,7 @@ az k8s-extension create --cluster-type managedClusters \
 
 Based on your environment (dev, test, or production), you can keep up-to-date with the latest stable Dapr versions. 
 
-#### Choosing a release train
+#### Choose a release train
 
 When configuring the extension, you can choose to install Dapr from a particular release train. Specify one of the two release train values:
 
@@ -146,56 +147,56 @@ For example:
 --release-train stable
 ```
 
-#### Configuring automatic updates to Dapr control plane
+#### Configure automatic updates to Dapr control plane
 
 > [!WARNING]
-> Auto-upgrade is not suitable for production environments. Only enable automatic updates to the Dapr control plane in dev or test environments. [Learn how to manually upgrade to the latest Dapr version for production environments.](#viewing-the-latest-stable-dapr-versions-available)
+> Auto-upgrade isn't suitable for production environments. Only enable automatic updates to the Dapr control plane in dev or test environments. Learn how to [manually upgrade to the latest Dapr version for production environments](#view-the-latest-stable-dapr-versions-available).
 
-If you install Dapr without specifying a version, `--auto-upgrade-minor-version` *is automatically enabled*, configuring the Dapr control plane to automatically update its minor version on new releases.
+If you install Dapr without specifying a version, `--auto-upgrade-minor-version` *is automatically enabled*, which configures the Dapr control plane to automatically update its minor version on new releases.
 
 You can disable auto-update by specifying the `--auto-upgrade-minor-version` parameter and setting the value to `false`. 
 
-[Dapr versioning is in `MAJOR.MINOR.PATCH` format](https://docs.dapr.io/operations/support/support-versioning/#versioning), which means `1.11.0` to `1.12.0` is a _minor_ version upgrade.
+Dapr versioning is in [`MAJOR.MINOR.PATCH` format](https://docs.dapr.io/operations/support/support-versioning/#versioning), which means `1.11.0` to `1.12.0` is a _minor_ version upgrade.
 
 ```azurecli
 --auto-upgrade-minor-version true
 ```
 
-#### Viewing the latest stable Dapr versions available 
+#### View the latest stable Dapr versions available 
 
 To upgrade to the latest Dapr version in a production environment, you need to manually upgrade. Start by viewing a list of the stable Dapr versions available to your managed AKS cluster. Run the following command:
 
 ```azurecli
-az k8s-extension extension-types list-versions-by-cluster --resource-group <myResourceGroup> --cluster-name <myCluster> --cluster-type managedClusters --extension-type microsoft.dapr --release-train stable
+az k8s-extension extension-types list-versions-by-cluster --resource-group <your-resource-group> --cluster-name <your-AKS-cluster> --cluster-type managedClusters --extension-type microsoft.dapr --release-train stable
 ```
 
 To see the latest stable Dapr version available to your managed AKS cluster, run the following command:
 
 ```azurecli
-az k8s-extension extension-types list-versions-by-cluster --resource-group <myResourceGroup> --cluster-name <myCluster> --cluster-type managedClusters --extension-type microsoft.dapr  --release-train stable --show-latest
+az k8s-extension extension-types list-versions-by-cluster --resource-group <your-resource-group> --cluster-name <your-AKS-cluster> --cluster-type managedClusters --extension-type microsoft.dapr  --release-train stable --show-latest
 ```
 
 To view a list of the stable Dapr versions available _by location_:
-1. [Make sure you've registered the `ExtensionTypes` feature to your Azure subscription.](./dapr.md#register-the-extensiontypes-feature-to-your-azure-subscription)
+1. Make sure you've [registered the `ExtensionTypes` feature to your Azure subscription](./dapr.md#register-the-extensiontypes-feature-to-your-azure-subscription).
 1. Run the following command.
 
 ```azurecli
 az k8s-extension extension-types list-versions-by-location --location westus --extension-type microsoft.dapr
 ```
 
-[Next, manually update Dapr to the latest stable version.](#targeting-a-specific-dapr-version)
+#### Target a specific Dapr version
 
-#### Targeting a specific Dapr version
+Next, manually update Dapr to the latest stable version.
 
 > [!NOTE]
-> Dapr is supported with a rolling window, including only the current and previous versions. It is your operational responsibility to remain up to date with these supported versions. If you have an older version of Dapr, you may have to do intermediate upgrades to get to a supported version.
+> Dapr is supported with a rolling window, including only the current and previous versions. It is your operational responsibility to remain up to date with these supported versions. If you have an older version of Dapr, you might need to do intermediate upgrades to get to a supported version.
 
 The same command-line argument is used for installing a specific version of Dapr or rolling back to a previous version. Set `--auto-upgrade-minor-version` to `false` and `--version` to the version of Dapr you wish to install. If the `version` parameter is omitted, the extension installs the latest version of Dapr. The following example command installs Dapr version `1.14.4-msft.10` on your AKS cluster:
 
 ```azurecli
 az k8s-extension create --cluster-type managedClusters \
---cluster-name <myAKSCluster> \
---resource-group <myResourceGroup> \
+--cluster-name <your-AKS-cluster> \
+--resource-group <your-resource-group> \
 --name dapr \
 --extension-type Microsoft.Dapr \
 --auto-upgrade-minor-version false \
@@ -207,7 +208,7 @@ az k8s-extension create --cluster-type managedClusters \
 
 ### Register the `KubernetesConfiguration` resource provider
 
-If you aren't already using cluster extensions, you may need to register the resource provider with your subscription. You can check the status of the provider registration using the [az provider list][az-provider-list] command, as shown in the following example:
+If you aren't already using cluster extensions, you might need to register the resource provider with your subscription. You can check the status of the provider registration using the [az provider list][az-provider-list] command, as shown in the following example:
 
 ```azurecli-interactive
 az provider list --query "[?contains(namespace,'Microsoft.KubernetesConfiguration')]" -o table
@@ -232,7 +233,7 @@ az provider register --namespace Microsoft.KubernetesConfiguration
 The `ExtensionTypes` feature needs to be registered to your Azure subscription. In the terminal, verify you're in the correct subscription:
 
 ```azurecli
-az account set --subscription <YOUR-AZURE-SUBSCRIPTION-ID>
+az account set --subscription <your-azure-subscription-ID>
 ```
 
 Register the `ExtenstionTypes` feature.
@@ -241,7 +242,7 @@ Register the `ExtenstionTypes` feature.
 az feature registration create --namespace Microsoft.KubernetesConfiguration --name ExtensionTypes
 ```
 
-Feature registration may take some time. After a few minutes, check the registration status using the following command:
+Feature registration might take some time. After a few minutes, check the registration status using the following command:
 
 ```azurecli
 az feature show --namespace Microsoft.KubernetesConfiguration --name ExtensionTypes
@@ -286,8 +287,8 @@ resource daprExtension 'Microsoft.KubernetesConfiguration/extensions@2022-11-01'
 Set the following variables, changing the following values to your actual resource group and cluster names.
 
 ```azurecli-interactive
-MY_RESOURCE_GROUP=<myResourceGroup>
-MY_AKS_CLUSTER=<myAKSCluster>
+MY_RESOURCE_GROUP=<your-resource-group>
+MY_AKS_CLUSTER=<your-AKS-cluster>
 ```
 
 Deploy the Bicep template using the `az deployment group` command. 
@@ -299,16 +300,16 @@ az deployment group create \
   --parameters clusterName=$MY_AKS_CLUSTER
 ```
 
-### Configuring automatic updates to Dapr control plane
+### Configure automatic updates to Dapr control plane
 
 > [!WARNING]
-> You can enable automatic updates to the Dapr control plane only in dev or test environments. Auto-upgrade is not suitable for production environments.
+> You can enable automatic updates to the Dapr control plane only in dev or test environments. Auto-upgrade isn't suitable for production environments.
 
-If you deploy Dapr without specifying a version, `autoUpgradeMinorVersion` *is automatically enabled*, configuring the Dapr control plane to automatically update its minor version on new releases.
+If you deploy Dapr without specifying a version, `autoUpgradeMinorVersion` *is automatically enabled*, which configures the Dapr control plane to automatically update its minor version on new releases.
 
 You can disable auto-update by specifying the `autoUpgradeMinorVersion` parameter and setting the value to `false`. 
 
-[Dapr versioning is in `MAJOR.MINOR.PATCH` format](https://docs.dapr.io/operations/support/support-versioning/#versioning), which means `1.11.0` to `1.12.0` is a _minor_ version upgrade.
+Dapr versioning is in [`MAJOR.MINOR.PATCH` format](https://docs.dapr.io/operations/support/support-versioning/#versioning), which means `1.11.0` to `1.12.0` is a _minor_ version upgrade.
 
 ```bicep
 properties {
@@ -316,10 +317,10 @@ properties {
 }
 ```
 
-### Targeting a specific Dapr version
+### Target a specific Dapr version
 
 > [!NOTE]
-> Dapr is supported with a rolling window, including only the current and previous versions. It is your operational responsibility to remain up to date with these supported versions. If you have an older version of Dapr, you may have to do intermediate upgrades to get to a supported version.
+> Dapr is supported with a rolling window, including only the current and previous versions. It is your operational responsibility to remain up to date with these supported versions. If you have an older version of Dapr, you might need to do intermediate upgrades to get to a supported version.
 
 Set `autoUpgradeMinorVersion` to `false` and `version` to the version of Dapr you wish to install. If the `autoUpgradeMinorVersion` parameter is set to `true`, and `version` parameter is omitted, the extension installs the latest version of Dapr. 
 
@@ -332,7 +333,7 @@ properties: {
 }
 ```
 
-### Choosing a release train
+### Choose a release train
 
 When configuring the extension, you can choose to install Dapr from a particular release train. Specify one of the two release train values:
 
@@ -353,13 +354,13 @@ properties: {
 
 ## Troubleshooting 
 
-### Troubleshooting extension management errors
+### Troubleshoot extension management errors
 
-If the extension fails to create or update, try suggestions and solutions in the [Dapr extension troubleshooting guide](./dapr-troubleshooting.md).
+If the extension fails to create or update, try suggestions and solutions in the [Dapr extension troubleshooting guide](/troubleshoot/azure/azure-kubernetes/extensions/troubleshoot-dapr-extension-installation-errors).
 
-### Troubleshooting Dapr functional errors
+### Troubleshoot Dapr functional errors
 
-Troubleshoot Dapr open source errors unrelated to the extension via the [common Dapr issues and solutions guide][dapr-troubleshooting].
+Troubleshoot Dapr open-source errors unrelated to the extension by viewing the [common Dapr issues and solutions guide][dapr-troubleshooting].
 
 ## Support
 
@@ -374,21 +375,21 @@ You could also start a discussion in the Dapr project Discord:
 
 ## Delete the Dapr extension from your cluster
 
-The process of uninstalling the Dapr extension from AKS does not delete the CRDs created during installation. These CRDs remain in the cluster as residual components, essential for the reconciler during the installation and uninstallation of the extension. 
+The process of uninstalling the Dapr extension from AKS doesn't delete the custom resource definitions (CRDs) created during installation. These CRDs remain in the cluster as residual components, essential for the reconciler during the installation and uninstallation of the extension. 
 
-To clean the cluster of these CRDs, you can manually delete them **after** the Dapr extension has been completely uninstalled from AKS.
+To clean the cluster of these CRDs, you can manually delete them *after* the Dapr extension is completely uninstalled from AKS.
 
-### Uninstalling the extension
+### Uninstall the extension
 
-Delete the extension from your AKS cluster using the following command: 
+Delete the extension from your AKS cluster by using the following command: 
 
 ```azurecli
-az k8s-extension delete --resource-group <myResourceGroup> --cluster-name <myAKSCluster> --cluster-type managedClusters --name dapr
+az k8s-extension delete --resource-group <your-resource-group> --cluster-name <your-AKS-cluster> --cluster-type managedClusters --name dapr
 ```
 
 Or, if using a Bicep template, you can delete the template.
 
-### Listing the CRDs in your cluster
+### List the CRDs in your cluster
 
 To find the CRDs you'd like to remove, run the following command:
 
@@ -396,7 +397,7 @@ To find the CRDs you'd like to remove, run the following command:
 kubectl get crds | findstr dapr.io
 ```
 
-## Next Steps
+## Next step
 
 > [!div class="nextstepaction"]
 > [Configure the Dapr extension for your unique scenario][dapr-settings]

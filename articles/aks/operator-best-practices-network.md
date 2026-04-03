@@ -3,7 +3,7 @@ title: Best practices for network resources in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn the cluster operator best practices for virtual network resources and connectivity in Azure Kubernetes Service (AKS).
 ms.topic: best-practice
-ms.date: 03/18/2024
+ms.date: 11/10/2025
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: As a cluster operator, I want to implement best practices for network connectivity and security in Azure Kubernetes Service, so that I can ensure efficient resource management and safeguard my applications against potential security threats.
@@ -62,7 +62,7 @@ As each node and pod receives its own IP address, plan out the address ranges fo
   * With Azure CNI networking, each running node has default limits to the number of pods.
 * Avoid using IP address ranges that overlap with existing network resources.
   * It's necessary to allow connectivity to on-premises or peered networks in Azure.
-* To handle scale out events or cluster upgrades, you need extra IP addresses available in the assigned subnet.
+* To handle scale-out events or cluster upgrades, you need extra IP addresses available in the assigned subnet.
   * This extra address space is especially important if you use Windows Server containers, as those node pools require an upgrade to apply the latest security patches. For more information on Windows Server nodes, see [Upgrade a node pool in AKS][nodepool-upgrade].
 
 To calculate the IP address required, see [Configure Azure CNI networking in AKS][advanced-networking].
@@ -126,7 +126,7 @@ spec:
 
 ### Ingress controller
 
-An *ingress controller* is a daemon that runs on an AKS node and watches for incoming requests. Traffic is then distributed based on the rules defined in the ingress resource. While the most common ingress controller is based on [NGINX], AKS doesn't restrict you to a specific controller. You can use [Contour][contour], [HAProxy][haproxy], [Traefik][traefik], etc.
+An *ingress controller* is a daemon that runs on an AKS node and watches for incoming requests. Traffic is then distributed based on the rules defined in the ingress resource. While the most common ingress controller is based on [NGINX], AKS doesn't restrict you to a specific controller. You can use [Application Gateway for Containers][app-gateway-for-containers], [Contour][contour], [HAProxy][haproxy], [Traefik][traefik], etc.
 
 Ingress controllers must be scheduled on a Linux node. Indicate that the resource should run on a Linux-based node using a node selector in your YAML manifest or Helm chart deployment. For more information, see [Use node selectors to control where pods are scheduled in AKS][concepts-node-selectors].
 
@@ -146,7 +146,7 @@ For more information about the application routing add-on, see [Managed NGINX in
 
 > **Best practice guidance**
 > 
-> To scan incoming traffic for potential attacks, use a web application firewall (WAF) such as [Barracuda WAF for Azure][barracuda-waf] or Azure Application Gateway. These more advanced network resources can also route traffic beyond just HTTP and HTTPS connections or basic TLS termination.
+> To scan incoming traffic for potential attacks, use a web application firewall (WAF) such as [Barracuda WAF for Azure][barracuda-waf] or [Azure Application Gateway for Containers][app-gateway-for-containers]. These more advanced network resources can also route traffic beyond just HTTP and HTTPS connections or basic TLS termination.
 
 Typically, an ingress controller is a Kubernetes resource in your AKS cluster that distributes traffic to services and applications. The controller runs as a daemon on an AKS node, and consumes some of the node's resources, like CPU, memory, and network bandwidth. In larger environments, you may want to consider the following:
 
@@ -155,11 +155,11 @@ Typically, an ingress controller is a Kubernetes resource in your AKS cluster th
 
 ![A web application firewall (WAF) such as Azure App Gateway can protect and distribute traffic for your AKS cluster](media/operator-best-practices-network/web-application-firewall-app-gateway.png)
 
-For that extra layer of security, a web application firewall (WAF) filters the incoming traffic. With a set of rules, the Open Web Application Security Project (OWASP) watches for attacks like cross-site scripting or cookie poisoning. [Azure Application Gateway][app-gateway] (currently in preview in AKS) is a WAF that integrates with AKS clusters, locking in these security features before the traffic reaches your AKS cluster and applications.
+For that extra layer of security, a web application firewall (WAF) filters the incoming traffic. With a set of rules, the Open Web Application Security Project (OWASP) watches for attacks like cross-site scripting or cookie poisoning. [Azure Application Gateway for Containers][app-gateway-for-containers] is a WAF that integrates with AKS clusters, locking in these security features before the traffic reaches your AKS cluster and applications.
 
 Since other third-party solutions also perform these functions, you can continue to use existing investments or expertise in your preferred product.
 
-Load balancer or ingress resources continually run in your AKS cluster and refine the traffic distribution. App Gateway can be centrally managed as an ingress controller with a resource definition. To get started, [create an Application Gateway Ingress controller][app-gateway-ingress].
+Load balancer or ingress resources continually run in your AKS cluster and refine the traffic distribution. [Azure Application Gateway for Containers][app-gateway-for-containers] can be centrally managed as an ingress controller with a resource definition. To get started, [create an Application Gateway for Containers][app-gateway-for-containers-deploy].
 
 ## Control traffic flow with network policies
 
@@ -214,7 +214,8 @@ This article focused on network connectivity and security. For more information 
 
 <!-- LINKS - External -->
 [cni-networking]: https://github.com/Azure/azure-container-networking/blob/master/docs/cni.md
-[app-gateway-ingress]: https://github.com/Azure/application-gateway-kubernetes-ingress
+[app-gateway-for-containers]: /azure/application-gateway/for-containers/overview
+[app-gateway-for-containers-deploy]: /azure/application-gateway/for-containers/quickstart-deploy-application-gateway-for-containers-alb-controller
 [nginx]: https://www.nginx.com/products/nginx/kubernetes-ingress-controller
 [contour]: https://github.com/heptio/contour
 [haproxy]: https://www.haproxy.org
@@ -226,7 +227,6 @@ This article focused on network connectivity and security. For more information 
 [sp-delegation]: kubernetes-service-principal.md#delegate-access-to-other-azure-resources
 [expressroute]: /azure/expressroute/expressroute-introduction
 [vpn-gateway]: /azure/vpn-gateway/vpn-gateway-about-vpngateways
-[app-gateway]: /azure/application-gateway/overview
 [use-network-policies]: use-network-policies.md
 [advanced-networking]: configure-azure-cni.md
 [concepts-node-selectors]: concepts-clusters-workloads.md#node-selectors

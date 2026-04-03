@@ -148,7 +148,7 @@ If your workload is predictable and exists for an extended period of time, consi
 
 ### Azure Savings Plan
 
-If you have consistent spend, but your use of disparate resources across SKUs and regions makes Azure Reservations infeasible, consider purchasing an [Azure Savings Plan](/azure/cost-management-billing/savings-plan/savings-plan-compute-overview). Like Azure Reservations, Azure Savings Plans operate on a one-year or three-year term and automatically apply to any resources within benefit scope. You commit to spend a fixed hourly amount on compute resources irrespective of SKU or region. ***Best for workloads that utilize different resources and/or different data center regions***.
+If you have consistent spend, but your use of disparate resources across SKUs and regions makes Azure Reservations infeasible, consider purchasing an [Azure Savings Plan](/azure/cost-management-billing/savings-plan/savings-plan-overview). Like Azure Reservations, Azure Savings Plans operate on a one-year or three-year term and automatically apply to any resources within benefit scope. You commit to spend a fixed hourly amount on compute resources irrespective of SKU or region. ***Best for workloads that utilize different resources and/or different data center regions***.
 
 ### Azure Hybrid Benefit
 

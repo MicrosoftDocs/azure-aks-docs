@@ -41,6 +41,7 @@ After enabling the cost analysis add-on and allowing time for data to be collect
 
 * Kubernetes cost views are only available for the *Enterprise Agreement* and *Microsoft Customer Agreement* Microsoft Azure offer types. For more information, see [Supported Microsoft Azure offers](/azure/cost-management-billing/costs/understand-cost-mgt-data#supported-microsoft-azure-offers).
 * Currently, virtual nodes aren't supported.
+* The AKS cost analysis add-on supports about 7,000 containers per cluster, based on the current 4-GB memory limit and subject to change.
 
 ## Enable cost analysis on your AKS cluster
 

@@ -1,154 +1,206 @@
 ---
-title: Migrate your Azure Kubernetes Service (AKS) pod to use workload identity
-description: In this Azure Kubernetes Service (AKS) article, you learn how to configure your Azure Kubernetes Service pod to authenticate with workload identity.
+title: Migrate Azure Kubernetes Service (AKS) Pods to Microsoft Entra Workload ID
+description: Migrate AKS pods from pod-managed identities to Microsoft Entra Workload ID using Azure Identity SDK versions or migration sidecar approaches.
 ms.topic: how-to
 ms.subservice: aks-security
+ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli, innovation-engine
 ms.date: 07/31/2023
 author: davidsmatlak
 ms.author: davidsmatlak
-
 # Customer intent: "As a Kubernetes administrator, I want to migrate my AKS pods from pod-managed identities to workload identity, so that I can enhance security and streamline authentication for my containerized applications."
 ---
 
-# Migrate from pod managed-identity to workload identity
+# Migrate Azure Kubernetes Service (AKS) pods from pod-managed identity to Microsoft Entra Workload ID
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://go.microsoft.com/fwlink/?linkid=2303216)
 
-This article focuses on migrating from a pod-managed identity to Microsoft Entra Workload ID for your Azure Kubernetes Service (AKS) cluster. It also provides guidance depending on the version of the [Azure Identity][azure-identity-supported-versions] client library used by your container-based application.
+Migrate AKS pods from pod-managed identities to [Microsoft Entra Workload ID][workload-identity-overview] (workload identity) using one of three approaches based on your current [Azure Identity SDK][azure-identity-libraries] version: latest SDK parallel deployment, migration sidecar proxy (Linux only), or SDK rewrite.
 
-If you aren't familiar with Microsoft Entra Workload ID, see the following [Overview][workload-identity-overview] article.
+## Prerequisites
 
-## Before you begin
+- Azure CLI version 2.47.0 or later. Run the `az --version` command to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
-The Azure CLI version 2.47.0 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+## Set environment variables
 
-## Migration scenarios
+The following table lists the environment variables used in the commands throughout this article. Make sure to replace the placeholder values with your own values.
 
-This section explains the migration options available depending on what version of the Azure Identity SDK is installed.
+| Environment variable | Description | Example value |
+| -------------------- | ----------- | ------------- |
+| `SUBSCRIPTION_ID` | The ID of the Azure subscription where the AKS cluster and managed identity are created. | `00000000-0000-0000-0000-000000000000` |
+| `RESOURCE_GROUP` | The name of the resource group where the AKS cluster and managed identity are created. | `myResourceGroup` |
+| `LOCATION` | The Azure region where the AKS cluster and managed identity are created. | `eastus` |
+| `CLUSTER_NAME` | The name of the AKS cluster. | `myAKSCluster` |
+| `MANAGED_IDENTITY_NAME` | The name of the user-assigned managed identity. | `myManagedIdentity` |
+| `SERVICE_ACCOUNT_NAME` | The name of the Kubernetes service account to create or associate with the managed identity. | `workload-identity-sa` |
+| `SERVICE_ACCOUNT_NAMESPACE` | The namespace of the Kubernetes service account. | `default` |
+| `FEDERATED_IDENTITY_NAME` | The name of the federated identity credential to create. | `myFederatedIdentity` |
 
-For either scenario, you need to have the federated trust set up before you update your application to use the workload identity. The following are the minimum steps required:
+## Choose a migration path
+
+Select the appropriate migration approach based on your current Azure Identity SDK version:
+
+- **Latest Azure Identity SDK**: If your application already uses the latest version of Azure Identity SDK, you can migrate by deploying Microsoft Entra Workload ID in parallel with existing pod-managed identity.
+- **Older SDK with migration sidecar** - If your application uses an older SDK version and runs on Linux containers, you can use a temporary migration sidecar to proxy Instance Metadata Service (IMDS) transactions while planning your SDK upgrade.
+- **Older SDK rewrite approach**: If your application uses an older SDK version, you can update your application code to use the latest Azure Identity SDK, then migrate to workload identity.
+
+## Prepare for migration
+
+For all migration paths, you need to have the federated trust set up before you update your application to use Microsoft Entra Workload ID. The following are the minimum steps required:
 
 - [Create a managed identity](#create-a-managed-identity) credential.
-- Associate the managed identity with the kubernetes service account already used for the pod-managed identity or [create a new Kubernetes service account](#create-kubernetes-service-account) and then associate it with the managed identity.
-- [Establish a federated trust relationship](#establish-federated-identity-credential-trust) between the managed identity and Microsoft Entra ID.
+- Associate the user-assigned managed identity with the Kubernetes service account already used for the pod-managed identity or [create a new Kubernetes service account](#create-kubernetes-service-account) and then associate it with the managed identity.
+- [Establish a federated trust relationship](#establish-federated-identity-credential-trust) between the managed identity and Microsoft Entra ID using the [OpenID Connect (OIDC)][openid-connect-overview] issuer URL and the service account.
 
-### Migrate from latest version
+## Migrate from latest version of Azure Identity SDK
 
-If your application is already using the latest version of the Azure Identity SDK, perform the following steps to complete the authentication configuration:
+**This migration path applies when** your application already uses the latest version of the Azure Identity SDK and you want to migrate with minimal code changes.
 
-- Deploy workload identity in parallel with pod-managed identity. You can restart your application deployment to begin using the workload identity, where it injects the OIDC annotations into the application automatically.
-- After verifying the application is able to authenticate successfully, you can [remove the pod-managed identity](#remove-pod-managed-identity) annotations from your application and then remove the pod-managed identity add-on.
+**Migration approach**: Deploy Microsoft Entra Workload ID in parallel with pod-managed identity, verify functionality, then remove pod-managed identity.
 
-### Migrate from older version
+**Steps**:
 
-If your application isn't using the latest version of the Azure Identity SDK, you have two options:
+1. Deploy Microsoft Entra Workload ID in parallel with existing pod-managed identity.
+1. Restart your application deployment to begin using Microsoft Entra Workload ID (OIDC annotations are injected automatically).
+1. Verify the application can authenticate successfully using workload identity.
+1. [Remove the pod-managed identity](#remove-pod-managed-identity) annotations from your application.
+1. Remove the pod-managed identity add-on from your cluster.
 
-- You can use a migration sidecar that we provide within your Linux applications, which proxies the IMDS transactions your application makes over to [OpenID Connect][openid-connect-overview] (OIDC). The migration sidecar isn't intended to be a long-term solution, but a way to get up and running quickly on workload identity. Perform the following steps to:
+## Use a migration sidecar (Linux containers only)
 
-    - [Deploy the workload with migration sidecar](#deploy-the-workload-with-migration-sidecar) to proxy the application IMDS transactions.
-    - Verify the authentication transactions are completing successfully.
-    - Schedule the work for the applications to update there SDK's to a supported version.
-    - Once the SDK's are updated to the supported version, you can remove the proxy sidecar and redeploy the application.
+**This migration path applies when** your application uses an older version of the Azure Identity SDK, runs on Linux containers, and you need a temporary solution while planning SDK updates.
 
-   > [!NOTE]
-   > The migration sidecar is **not supported for production use**. This feature is meant to give you time to migrate your application SDK's to a supported version, and not meant or intended to be a long-term solution.
-   > The migration sidecar is only available for Linux containers, due to only providing pod-managed identities with Linux node pools.
+**Migration approach**: Deploy a migration sidecar that proxies IMDS transactions to OIDC, allowing your existing application code to work without immediate changes.
 
-- Rewrite your application to support the latest version of the [Azure Identity][azure-identity-supported-versions] client library. Afterwards, perform the following steps:
+**Important limitations**:
 
-    - Restart your application deployment to begin authenticating using the workload identity.
-    - Once you verify the authentication transactions are completing successfully, you can [remove the pod-managed identity](#remove-pod-managed-identity) annotations from your application and then remove the pod-managed identity add-on.
+- **Linux containers only**. Windows containers aren't supported.
+- **Temporary solution** that's not intended for long-term production use.
+- **Planning required** to schedule SDK updates for long-term support.
+
+**Steps**:
+
+1. [Deploy the workload with migration sidecar](#deploy-the-workload-with-migration-sidecar) to proxy IMDS transactions.
+1. Verify authentication transactions complete successfully.
+1. Schedule application SDK updates to supported Azure Identity versions.
+1. Once SDKs are updated, remove the proxy sidecar and redeploy applications.
+
+## Rewrite application for latest Azure Identity SDK
+
+**This migration path applies when** your application uses an older version of the Azure Identity SDK and you want to update to the latest supported SDK before migrating.
+
+**Migration approach**: Update your application code to use the latest Azure Identity SDK, then migrate to Microsoft Entra Workload ID with the updated code.
+
+**Technical outcomes**:
+
+- Uses current Azure Identity SDK versions (no deprecation timeline).
+- Supports both Linux and Windows containers (unlike sidecar approach).
+- Eliminates proxy components and IMDS translation overhead.
+
+**Steps**:
+
+1. Update your application code to use the latest [Azure Identity SDK][azure-identity-supported-versions].
+2. Test the updated application with pod-managed identity.
+3. Restart your application deployment to begin authenticating using Microsoft Entra Workload ID (OIDC annotations are injected automatically).
+4. Verify authentication transactions complete successfully.
+5. [Remove the pod-managed identity](#remove-pod-managed-identity) annotations and add-on.
+
+## Set an active Azure subscription
+
+- Set a specific Azure subscription as the current active subscription using the [`az account set`][az-account-set] command.
+
+    ```azurecli-interactive
+    az account set --subscription $SUBSCRIPTION_ID
+    ```
 
 ## Create a managed identity
 
-If you don't have a managed identity created and assigned to your pod, perform the following steps to create and grant the necessary permissions to storage, Key Vault, or whatever resources your application needs to authenticate with in Azure.
-
-1. Use the Azure CLI [az account set][az-account-set] command to set a specific subscription to be the current active subscription. Then use the [az identity create][az-identity-create] command to create a managed identity.
+- Create a managed identity using the [`az identity create`][az-identity-create] command.
 
     ```azurecli-interactive
-    az account set --subscription "subscriptionID"
+    az identity create --name $MANAGED_IDENTITY_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --subscription $SUBSCRIPTION_ID
     ```
+
+## Get managed identity client ID
+
+- Get the client ID of the managed identity and save it to an environmental variable using the [`az identity show`][az-identity-show] command.
 
     ```azurecli-interactive
-    az identity create --name "userAssignedIdentityName" --resource-group "resourceGroupName" --location "location" --subscription "subscriptionID"
+    export USER_ASSIGNED_CLIENT_ID="$(az identity show --resource-group $RESOURCE_GROUP --name $MANAGED_IDENTITY_NAME --query 'clientId' -otsv)"
     ```
 
-    ```bash
-    export USER_ASSIGNED_CLIENT_ID="$(az identity show --resource-group "resourceGroupName" --name "userAssignedIdentityName" --query 'clientId' -otsv)"
+## Grant managed identity access to Azure resources
+
+- Grant the managed identity the permissions needed to access the required Azure resources. Follow the steps in [Assign a managed identity access to a resource][assign-rbac-managed-identity] to assign the appropriate role to the managed identity.
+
+## Get OIDC issuer URL
+
+- Get the OIDC issuer URL and save it to an environmental variable using the [`az aks show`][az-aks-show] command.
+
+    ```azurecli-interactive
+    export AKS_OIDC_ISSUER="$(az aks show --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --query "oidcIssuerProfile.issuerUrl" -o tsv)"
     ```
 
-2. Grant the managed identity the permissions required to access the resources in Azure it requires. For information on how to do this, see [Assign a managed identity access to a resource][assign-rbac-managed-identity].
-
-3. To get the OIDC Issuer URL and save it to an environmental variable, run the following command. Replace the default values for the cluster name and the resource group name.
-
-    ```bash
-    export AKS_OIDC_ISSUER="$(az aks show --name myAKSCluster --resource-group myResourceGroup --query "oidcIssuerProfile.issuerUrl" -o tsv)"
-    ```
-
-    The variable should contain the Issuer URL similar to the following example:
+    The variable should contain an issuer URL similar to the following example:
 
     ```output
     https://eastus.oic.prod-aks.azure.com/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000/
     ```
 
-    By default, the Issuer is set to use the base URL `https://{region}.oic.prod-aks.azure.com/{uuid}`, where the value for `{region}` matches the location the AKS cluster is deployed in. The value `{uuid}` represents the OIDC key.
+    By default, the issuer uses the base URL `https://{region}.oic.prod-aks.azure.com/{uuid}`, where the value for `{region}` matches the location the AKS cluster is deployed in. The value `{uuid}` represents the OIDC key.
+
+## Get AKS cluster credentials
+
+- Get the AKS cluster credentials using the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+    ```azurecli-interactive
+    az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
+    ```
 
 ## Create Kubernetes service account
 
-If you don't have a dedicated Kubernetes service account created for this application, perform the following steps to create and then annotate it with the client ID of the managed identity created in the previous step. Use the [az aks get-credentials][az-aks-get-credentials] command and replace the values for the cluster name and the resource group name.
+- Create a Kubernetes service account and annotate it with the managed identity client ID using the `kubectl apply` command. Make sure to replace the placeholder values with your own values.
 
-```azurecli-interactive
-az aks get-credentials --name myAKSCluster --resource-group "${RESOURCE_GROUP}"
-```
+    ```bash
+    cat <<EOF | kubectl apply -f -
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      annotations:
+        azure.workload.identity/client-id: ${USER_ASSIGNED_CLIENT_ID}
+      name: ${SERVICE_ACCOUNT_NAME}
+      namespace: ${SERVICE_ACCOUNT_NAMESPACE}
+    EOF
+    ```
 
-Copy and paste the following multi-line input in the Azure CLI.
+    The following output resembles successful creation of the identity:
 
-```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  annotations:
-    azure.workload.identity/client-id: ${USER_ASSIGNED_CLIENT_ID}
-  name: ${SERVICE_ACCOUNT_NAME}
-  namespace: ${SERVICE_ACCOUNT_NAMESPACE}
-EOF
-```
-
-The following output resembles successful creation of the identity:
-
-```output
-Serviceaccount/workload-identity-sa created
-```
+    ```output
+    Serviceaccount/workload-identity-sa created
+    ```
 
 ## Establish federated identity credential trust
 
-Use the [az identity federated-credential create][az-identity-federated-credential-create] command to create the federated identity credential between the managed identity, the service account issuer, and the subject. Replace the values `resourceGroupName`, `userAssignedIdentityName`, `federatedIdentityName`, `serviceAccountNamespace`, and `serviceAccountName`.
+- Create the federated identity credential between the managed identity, service account issuer, and subject using the [`az identity federated-credential create`][az-identity-federated-credential-create] command.
 
-```azurecli-interactive
-az identity federated-credential create --name federatedIdentityName --identity-name userAssignedIdentityName --resource-group resourceGroupName --issuer ${AKS_OIDC_ISSUER} --subject system:serviceaccount:${SERVICE_ACCOUNT_NAMESPACE}:${SERVICE_ACCOUNT_NAME} --audience api://AzureADTokenExchange
-```
+    ```azurecli-interactive
+    az identity federated-credential create --name $FEDERATED_IDENTITY_NAME --identity-name $MANAGED_IDENTITY_NAME --resource-group $RESOURCE_GROUP --issuer ${AKS_OIDC_ISSUER} --subject system:serviceaccount:${SERVICE_ACCOUNT_NAMESPACE}:${SERVICE_ACCOUNT_NAME} --audience api://AzureADTokenExchange
+    ```
 
-> [!NOTE]
-> It takes a few seconds for the federated identity credential to be propagated after being initially added. If a token request is made immediately after adding the federated identity credential, it might lead to failure for a couple of minutes as the cache is populated in the directory with old data. To avoid this issue, you can add a slight delay after adding the federated identity credential.
+    The federated identity credential takes a few minutes to propagate after being added. If a token request is made immediately after adding the federated identity credential, the token request might fail because the Azure AD directory cache contains outdated information.
 
 ## Deploy the workload with migration sidecar
 
-> [!NOTE]
-> The migration sidecar is **not supported for production use**.  This feature is meant to give you time to migrate your application SDK's to a supported version, and not meant or intended to be a long-term solution.
-> The migration sidecar is only for Linux containers as pod-managed identities was available on Linux node pools only.
+If your application uses user-assigned managed identity and still relies on IMDS to get an access token you can use the migration sidecar to start migrating to Microsoft Entra Workload ID. In long-term applications, you should modify the code to use the latest Azure Identity SDKs that support client assertion.
 
-If your application is using managed identity and still relies on IMDS to get an access token, you can use the workload identity migration sidecar to start migrating to workload identity. This sidecar is a migration solution and in the long-term applications, you should modify their code to use the latest Azure Identity SDKs that support client assertion.
+To update or deploy the workload, add the following [pod annotations][pod-annotations] to your pod specification (only if you want to use the migration sidecar):
 
-To update or deploy the workload, add these pod annotations only if you want to use the migration sidecar. You inject the following [annotation][pod-annotations] values to use the sidecar in your pod specification:
+| Pod annotation | Description | Value |
+| -------------- | ----------- | ----- |
+| `azure.workload.identity/inject-proxy-sidecar` | Indicates whether to inject the proxy sidecar into the pod. | `true` or `false` |
+| `azure.workload.identity/proxy-sidecar-port` | Desired port for the proxy sidecar. | Default value: `8000` |
 
-* `azure.workload.identity/inject-proxy-sidecar` - value is `true` or `false`
-* `azure.workload.identity/proxy-sidecar-port` - value is the desired port for the proxy sidecar. The default value is `8000`.
-
-When a pod with the above annotations is created, the Azure Workload Identity mutating webhook automatically injects the init-container and proxy sidecar to the pod spec.
-
-The webhook that is already running adds the following YAML snippets to the pod deployment. The following is an example of the mutated pod spec:
+When you create a pod with these annotations, the Microsoft Entra Workload ID mutating webhook automatically injects the `init-container` and proxy sidecar to the pod spec. The following YAML shows an example of what the mutating webhook adds to the pod deployment:
 
 ```yml
 apiVersion: v1
@@ -187,40 +239,42 @@ spec:
     - containerPort: 8000
 ```
 
-This configuration applies to any configuration where a pod is being created. After updating or deploying your application, you can verify the pod is in a running state using the [kubectl describe pod][kubectl-describe] command. Replace the value `podName` with the image name of your deployed pod.
+## Verify the workload with migration sidecar
 
-```bash
-kubectl describe pods podName
-```
+1. Verify the pod is in a running state using the [`kubectl describe pod`][kubectl-describe] command. Replace `<pod-name>` with the name of your pod.
 
-To verify that pod is passing IMDS transactions, use the [kubectl logs][kubelet-logs] command. Replace the value `podName` with the image name of your deployed pod:
+    ```bash
+    kubectl describe pods <pod-name>
+    ```
 
-```bash
-kubectl logs podName
-```
+1. Verify the pod is passing IMDS transactions using the [`kubectl logs`][kubelet-logs] command. Replace `<pod-name>` with the name of your pod.
 
-The following log output resembles successful communication through the proxy sidecar. Verify that the logs show a token is successfully acquired and the GET operation is successful.
+    ```bash
+    kubectl logs <pod-name>
+    ```
 
-```output
-I0926 00:29:29.968723       1 proxy.go:97] proxy "msg"="starting the proxy server" "port"=8080 "userAgent"="azure-workload-identity/proxy/v0.13.0-12-gc8527f3 (linux/amd64) c8527f3/2022-09-26-00:19"
-I0926 00:29:29.972496       1 proxy.go:173] proxy "msg"="received readyz request" "method"="GET" "uri"="/readyz"
-I0926 00:29:30.936769       1 proxy.go:107] proxy "msg"="received token request" "method"="GET" "uri"="/metadata/identity/oauth2/token?resource=https://management.core.windows.net/api-version=2018-02-01&client_id=<client_id>"
-I0926 00:29:31.101998       1 proxy.go:129] proxy "msg"="successfully acquired token" "method"="GET" "uri"="/metadata/identity/oauth2/token?resource=https://management.core.windows.net/api-version=2018-02-01&client_id=<client_id>"
-```
+    The following example log output resembles successful communication through the proxy sidecar. Verify the logs show a token is successfully acquired and the `GET` operation is successful.
+
+    ```output
+    I0926 00:29:29.968723       1 proxy.go:97] proxy "msg"="starting the proxy server" "port"=8080 "userAgent"="azure-workload-identity/proxy/v0.13.0-12-gc8527f3 (linux/amd64) c8527f3/2022-09-26-00:19"
+    I0926 00:29:29.972496       1 proxy.go:173] proxy "msg"="received readyz request" "method"="GET" "uri"="/readyz"
+    I0926 00:29:30.936769       1 proxy.go:107] proxy "msg"="received token request" "method"="GET" "uri"="/metadata/identity/oauth2/token?resource=https://management.core.windows.net/api-version=2018-02-01&client_id=<client_id>"
+    I0926 00:29:31.101998       1 proxy.go:129] proxy "msg"="successfully acquired token" "method"="GET" "uri"="/metadata/identity/oauth2/token?resource=https://management.core.windows.net/api-version=2018-02-01&client_id=<client_id>"
+    ```
 
 ## Remove pod-managed identity
 
-After you've completed your testing and the application is successfully able to get a token using the proxy sidecar, you can remove the Microsoft Entra pod-managed identity mapping for the pod from your cluster, and then remove the identity.
+After you complete your testing and the application can successfully get a token using the proxy sidecar, you can remove the identity and pod-managed identity mapping from your AKS cluster
 
-1. Run the [az aks pod-identity delete][az-aks-pod-identity-delete] command to remove the identity from your pod. This should only be done after all pods in the namespace using the pod-managed identity mapping have migrated to use the sidecar.
+- Remove the pod-managed identity binding from your pod using the [`az aks pod-identity delete`][az-aks-pod-identity-delete] command. Replace `<pod-identity-name>` and `<pod-identity-namespace>` with the name and namespace of your pod identity.
 
     ```azurecli-interactive
-    az aks pod-identity delete --name podIdentityName --namespace podIdentityNamespace --resource-group myResourceGroup --cluster-name myAKSCluster
+    az aks pod-identity delete --name <pod-identity-name> --namespace <pod-identity-namespace> --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME
     ```
 
-## Next steps
+## Related content
 
-This article showed you how to set up your pod to authenticate using a workload identity as a migration option. For more information about Microsoft Entra Workload ID, see the following [Overview][workload-identity-overview] article.
+For more information about Microsoft Entra Workload ID, see the [Overview][workload-identity-overview] article.
 
 <!-- INTERNAL LINKS -->
 [pod-annotations]: workload-identity-overview.md#pod-annotations
@@ -230,13 +284,14 @@ This article showed you how to set up your pod to authenticate using a workload 
 [workload-identity-overview]: workload-identity-overview.md
 [az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [az-aks-pod-identity-delete]: /cli/azure/aks/pod-identity#az-aks-pod-identity-delete
-[azure-identity-supported-versions]: workload-identity-overview.md#dependencies
-[azure-identity-libraries]: ../active-directory/develop/reference-v2-libraries.md
+[azure-identity-supported-versions]: workload-identity-overview.md#prerequisites
+[azure-identity-libraries]: /entra/identity-platform/reference-v2-libraries
 [openid-connect-overview]: /azure/active-directory/develop/v2-protocols-oidc
 [install-azure-cli]: /cli/azure/install-azure-cli
 [assign-rbac-managed-identity]: /azure/role-based-access-control/role-assignments-portal-managed-identity
+[az-identity-show]: /cli/azure/identity#az-identity-show
+[az-aks-show]: /cli/azure/aks#az-aks-show
 
 <!-- EXTERNAL LINKS -->
 [kubectl-describe]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe
 [kubelet-logs]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs
-

@@ -77,6 +77,31 @@ To get started with the KEDA add-on in AKS, see [KEDA overview][keda-overview].
 
 NAP takes a predefined list of VM SKUs as the starting point to decide which SKU is best suited for pending workloads. For more precise control, users can define the upper limits of resources used by a node pool and preferences of where workloads should be scheduled if there are multiple node pools.
 
+## Control Plane Scaling and Safeguards
+
+Kubernetes has a multi-dimensional scale envelope with each resource type representing a dimension. Not all resources are alike. For example, watches are commonly set on secrets, which result in list calls to the kube-apiserver that add cost and a disproportionately higher load on the control plane compared to resources without watches.
+
+The control plane manages all the resource scaling in the cluster, so the more you scale the cluster within a given dimension, the less you can scale within other dimensions. For example, running hundreds of thousands of pods in an AKS cluster impacts how much pod churn rate (pod mutations per second) the control plane can support. Refer to **[best practices](/azure/aks/best-practices-performance-scale-large#kubernetes-clients)**.
+
+AKS automatically scales control plane components based on key signals such as the total number of cores in the cluster and CPU or memory pressure on the control plane components.
+
+To verify whether the control plane has scaled up, check the ConfigMap named 'large-cluster-control-plane-scaling-status'
+
+```
+kubectl describe configmap large-cluster-control-plane-scaling-status -n kube-system
+```
+
+### Control Plane Safeguards
+If scaling the API server automatically does not stabilize it under high load scenarios, AKS deploys a managed API server guard. This guard acts as a last-resort mechanism to protect the API server by throttling non-system client requests and preventing the control plane from becoming completely unresponsive. System-critical calls to API server from components such as kubelet will continue to function normally.
+
+To verify whether the managed API server guard has been applied, check for the presence of **"aks-managed-apiserver-guard"** FlowSchema and PriorityLevelConfiguration. 
+
+```bash
+kubectl get flowschemas
+kubectl get prioritylevelconfigurations
+```
+Refer to [API server and Etcd Troubleshooting guide](/troubleshoot/azure/azure-kubernetes/troubleshoot-apiserver-etcd#cause-4-aks-managed-api-server-guard-was-applied) if the **"aks-managed-apiserver-guard"** FlowSchema and PriorityLevelConfiguration have been applied on the cluster for quick mitigation. 
+
 ## Burst to Azure Container Instances (ACI)
 
 To rapidly scale your AKS cluster, you can integrate with Azure Container Instances (ACI). Kubernetes has built-in components to scale the replica and node count. However, if your application needs to rapidly scale, the [horizontal pod autoscaler](#horizontal-pod-autoscaler) might schedule more pods than what the existing compute resources in the node pool can support. If configured, this scenario would then trigger the [cluster autoscaler](#cluster-autoscaler) to deploy more nodes in the node pool, but it might take a few minutes for those nodes to successfully provision and allow the Kubernetes scheduler to run pods on them.

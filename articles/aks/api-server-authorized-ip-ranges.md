@@ -1,320 +1,317 @@
 ---
-title: API server authorized IP ranges in Azure Kubernetes Service (AKS)
-description: Learn how to secure your cluster using an IP address range for access to the API server in Azure Kubernetes Service (AKS)
-ms.topic: concept-article
+title: API Server Authorized IP Ranges in Azure Kubernetes Service (AKS)
+description: Learn how to secure access to the API server in Azure Kubernetes Service (AKS) using authorized IP address ranges to limit access to specific IP addresses and CIDRs.
+ms.topic: how-to
 ms.custom: devx-track-azurecli, devx-track-azurepowershell, copilot-scenario-highlight
 ms.date: 05/19/2024
 ms.author: schaffererin
 author: schaffererin
-
+ms.service: azure-kubernetes-service
+zone_pivot_groups: api-server-authorized-ip-ranges
 # Customer intent: As a cluster operator, I want to increase the security of my cluster by limiting access to the API server to only the IP addresses that I specify.
-
 ---
 
 # Secure access to the API server using authorized IP address ranges in Azure Kubernetes Service (AKS)
 
-This article shows you how to use *API server authorized IP address ranges* feature to limit which IP addresses and CIDRs can access control plane.
+This article shows you how to use API server authorized IP address ranges to limit which IP addresses and CIDRs can access control plane endpoints for your Azure Kubernetes Service (AKS) workloads.
 
-The Kubernetes API server is the core of the Kubernetes control plane and is the central way to interact with and manage your clusters. To improve the security of your clusters and minimize the risk of attacks, we recommend limiting the IP address ranges that can access the API server. To do this, you can use the *API server authorized IP ranges* feature.
+## Prerequisites
 
-## Before you begin
-
-- You need the Azure CLI version 2.0.76 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-- To learn what IP addresses to include when integrating your AKS cluster with Azure DevOps, see the Azure DevOps [Allowed IP addresses and domain URLs][azure-devops-allowed-network-cfg] article.
+- The Azure CLI version 2.0.76 or later installed and configured. Check your version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- To learn what IP addresses to include when integrating your AKS cluster with Azure DevOps, see [Allowed IP addresses and domain URLs][azure-devops-allowed-network-cfg].
 
 > [!TIP]
-> From the Azure portal, you can use Microsoft Copilot in Azure to make changes to the IP addresses that can access your cluster. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#enable-ip-address-authorization).
+> From the Azure portal, you can use Azure Copilot to make changes to the IP addresses that can access your cluster. For more information, see [Work with AKS clusters efficiently using Azure Copilot](/azure/copilot/work-aks-clusters#enable-ip-address-authorization).
 
-### Limitations
+## Limitations and considerations
 
-The *API server authorized IP ranges* feature has the following limitations:
-
-- The *API server authorized IP ranges* feature was moved out of preview in October 2019. For clusters created after the feature was moved out of preview, this feature is only supported on the *Standard* SKU load balancer. Any existing clusters on the *Basic* SKU load balancer with the *API server authorized IP ranges* feature enabled will continue to work as is. However, these clusters cannot be migrated to a *Standard* SKU load balancer. Existing clusters will continue to work if the Kubernetes version and control plane are upgraded.
-- The *API server authorized IP ranges* feature isn't supported on private clusters.
-- When using this feature with clusters that use [Node Public IP](use-node-public-ips.md), the node pools using Node Public IP must use public IP prefixes. The public IP prefixes must be added as authorized ranges.
+- This feature is only supported on the Standard SKU load balancer for clusters created after October 2019. Any existing clusters on the Basic SKU load balancer with the feature enabled should continue to work properly if the Kubernetes version and control plane are upgraded. However, you can't migrate these clusters to the Standard SKU load balancer.
+- You can't use this feature with [private clusters](./private-clusters.md).
+- When using this feature with clusters that use [Node public IPs](use-node-public-ips.md), the node pools using the Node public IPs must use public IP prefixes. You must add the public IP prefixes as authorized ranges.
+- You can specify up to 200 authorized IP ranges. To go beyond this limit, consider using [API Server VNet Integration][api-server-vnet-integration], which supports up to 2,000 authorized IP ranges.
 
 ## Overview of API server authorized IP ranges
 
 The Kubernetes API server exposes underlying Kubernetes APIs and provides the interaction for management tools like `kubectl` and the Kubernetes dashboard. AKS provides a single-tenant cluster control plane with a dedicated API server. The API server is assigned a public IP address by default. You can control access using Kubernetes role-based access control (Kubernetes RBAC) or Azure RBAC.
 
-To secure access to the otherwise publicly accessible AKS control plane / API server, you can enable and use authorized IP ranges. These authorized IP ranges only allow defined IP address ranges to communicate with the API server. Any requests made to the API server from an IP address that isn't part of these authorized IP ranges is blocked.
+To secure access to the otherwise publicly accessible AKS control plane / API server, you can enable and use authorized IP ranges. These authorized IP ranges only allow defined IP address ranges to communicate with the API server. Any requests made to the API server from an IP address that isn't part of these authorized IP ranges is blocked. The rules can take up to two minutes to propagate. Allow up to that time when testing the connection.
+
+## Recommended IP ranges to allow
+
+We recommend including the following IP address ranges in your API server authorized IP ranges configuration:
+
+- The cluster egress IP address (firewall, NAT gateway, or other address, depending on your [outbound type][egress-outboundtype]).
+- Any range that represents networks that you'll administer the cluster from.
 
 ## Create an AKS cluster with API server authorized IP ranges enabled
 
-> [!IMPORTANT]
-> By default, your cluster uses the [Standard SKU load balancer][standard-sku-lb] which you can use to configure the outbound gateway. When you enable API server authorized IP ranges during cluster creation, the public IP for your cluster is allowed by default in addition to the ranges you specify. If you specify *""* or no value for *`--api-server-authorized-ip-ranges`*, API server authorized IP ranges is disabled. Note that if you're using PowerShell, use *`--api-server-authorized-ip-ranges=""`* (with equals signs) to avoid any parsing issues.
-
 > [!NOTE]
-> You should add these ranges to an allow list:
+> When you enable API server authorized IP ranges during cluster creation, both the API server public IP and the outbound public IP of the [Standard SKU load balancer][standard-sku-lb] are automatically allowed by default, in addition to any ranges you specify.
 >
-> - The cluster egress IP address (firewall, NAT gateway, or other address, depending on your [outbound type][egress-outboundtype]).
-> - Any range that represents networks that you'll administer the cluster from.
+> **Special case - `0.0.0.0/32`**: This is a special value that tells AKS to allow only the outbound public IP of the Standard SKU load balancer to access the API server. The `0.0.0.0/32` value acts as a placeholder that:
 >
-> The upper limit for the number of IP ranges you can specify is 200.
->
-> The rules can take up to two minutes to propagate. Please allow up to that time when testing the connection.
+> - Disables the default behavior of allowing extra client IP ranges.
+> - Restricts API server access to only the cluster's own outbound IP.
+> - Is useful for scenarios where you want the cluster to self-manage but block external access.
 
-### [Azure CLI](#tab/azure-cli)
+When creating a cluster with API server authorized IP ranges enabled, you provide a list of authorized public IP address ranges. When you specify a CIDR range, you must use the network address (first IP address in the range). For example, if you want to allow the range `137.117.106.88` to `137.117.106.95`, you must specify `137.117.106.88/29`.
 
-When creating a cluster with API server authorized IP ranges enabled, you use the `--api-server-authorized-ip-ranges` parameter to provide a list of authorized public IP address ranges. When you specify a CIDR range, start with the first IP address in the range. For example, *137.117.106.90/29* is a valid range, but make sure you specify the first IP address in the range, such as *137.117.106.88/29*.
+:::zone pivot="azure-cli"
 
-- Create an AKS cluster with API server authorized IP ranges enabled using the [`az aks create`][az-aks-create] command with the `--api-server-authorized-ip-ranges` parameter. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup* with API server authorized IP ranges enabled. The IP address ranges allowed are *73.140.245.0/24*:
+- Create an AKS cluster with API server authorized IP ranges enabled using the [`az aks create`][az-aks-create] command with the `--api-server-authorized-ip-ranges` parameter. The following example creates a cluster named _myAKSCluster_ in the resource group named _myResourceGroup_ and allows the IP address range `73.140.245.0/24` to access the API server:
 
     ```azurecli-interactive
     az aks create --resource-group myResourceGroup --name myAKSCluster --vm-set-type VirtualMachineScaleSets --load-balancer-sku standard --api-server-authorized-ip-ranges 73.140.245.0/24 --generate-ssh-keys
     ```
 
-### [Azure PowerShell](#tab/azure-powershell)
+:::zone-end
 
-When creating a cluster with API server authorized IP ranges enabled, you use the `-ApiServerAccessAuthorizedIpRange` parameter to provide a list of authorized public IP address ranges. When you specify a CIDR range, start with the first IP address in the range. For example, *137.117.106.90/29* is a valid range, but make sure you specify the first IP address in the range, such as *137.117.106.88/29*.
+:::zone pivot="azure-powershell"
 
-- Create an AKS cluster with API server authorized IP ranges enabled using the [`New-AzAksCluster`][new-azakscluster] cmdlet with the `-ApiServerAccessAuthorizedIpRange` parameter. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup* with API server authorized IP ranges enabled. The IP address ranges allowed are *73.140.245.0/24*:
+- Create an AKS cluster with API server authorized IP ranges enabled using the [`New-AzAksCluster`][new-azakscluster] cmdlet with the `-ApiServerAccessAuthorizedIpRange` parameter. The following example creates a cluster named _myAKSCluster_ in the resource group named _myResourceGroup_ and allows the IP address range `73.140.245.0/24` to access the API server:
 
     ```azurepowershell-interactive
     New-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster -NodeVmSetType VirtualMachineScaleSets -LoadBalancerSku Standard -ApiServerAccessAuthorizedIpRange '73.140.245.0/24' -GenerateSshKey
     ```
 
-### [Azure portal](#tab/azure-portal)
+:::zone-end
 
-When creating a cluster with API server authorized IP ranges enabled, you specify a list of authorized public IP address ranges. When you specify a CIDR range, start with the first IP address in the range. For example, *137.117.106.90/29* is a valid range, but make sure you specify the first IP address in the range, such as *137.117.106.88/29*.
+:::zone pivot="azure-portal"
 
 1. From the [Azure portal home page](https://portal.azure.com/#home), select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
-2. Configure the cluster settings as needed.
-3. In the **Networking** section under **Public access**, select **Set authorized IP ranges**.
-4. For **Specify IP ranges**, enter the IP address ranges you want to authorize to access the API server.
-5. Configure the rest of the cluster settings as needed.
-6. When you're ready, select **Review + create** > **Create** to create the cluster.
+1. Configure the cluster settings as needed.
+1. In the **Networking** section under **Public access**, select **Set authorized IP ranges**.
+1. For **Specify IP ranges**, enter the IP address ranges you want to authorize to access the API server.
+1. Configure the rest of the cluster settings as needed.
+1. When you're ready, select **Review + create** > **Create** to create the cluster.
 
----
+:::zone-end
+
+:::zone pivot="azure-cli"
 
 ## Specify outbound IPs for a Standard SKU load balancer
 
 When creating a cluster with API server authorized IP ranges enabled, you can also specify the outbound IP addresses or prefixes for the cluster using the `--load-balancer-outbound-ips` or `--load-balancer-outbound-ip-prefixes` parameters. All IPs provided in the parameters are allowed along with the IPs in the `--api-server-authorized-ip-ranges` parameter.
 
-- Create an AKS cluster with API server authorized IP ranges enabled and specify the outbound IP addresses for the Standard SKU load balancer using the `--load-balancer-outbound-ips` parameter. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup* with API server authorized IP ranges enabled and the outbound IP addresses `<public-ip-id-1>` and `<public-ip-id-2>`:
+- Create an AKS cluster with API server authorized IP ranges enabled and specify the outbound IP addresses for the Standard SKU load balancer using the `--load-balancer-outbound-ips` parameter. The following example creates a cluster named _myAKSCluster_ in the resource group named _myResourceGroup_, allows the IP address range `73.140.245.0/24` to access the API server, and specifies two outbound IP addresses for the Standard SKU load balancer. Make sure to replace the placeholders `<public-ip-id-1>` and `<public-ip-id-2>` with the actual resource IDs of your public IP addresses.
 
     ```azurecli-interactive
     az aks create --resource-group myResourceGroup --name myAKSCluster --vm-set-type VirtualMachineScaleSets --load-balancer-sku standard --api-server-authorized-ip-ranges 73.140.245.0/24 --load-balancer-outbound-ips <public-ip-id-1>,<public-ip-id-2> --generate-ssh-keys
     ```
 
+:::zone-end
+
 ## Allow only the outbound public IP of the Standard SKU load balancer
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
-When you enable API server authorized IP ranges during cluster creation, the outbound public IP for the Standard SKU load balancer for your cluster is also allowed by default in addition to the ranges you specify. To allow only the outbound public IP of the Standard SKU load balancer, you use *0.0.0.0/32* when specifying the `--api-server-authorized-ip-ranges` parameter.
-
-- Create an AKS cluster with API server authorized IP ranges enabled and allow only the outbound public IP of the Standard SKU load balancer using the `--api-server-authorized-ip-ranges` parameter. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup* with API server authorized IP ranges enabled and allows only the outbound public IP of the Standard SKU load balancer:
+- Create an AKS cluster with API server authorized IP ranges enabled and allow only the outbound public IP of the Standard SKU load balancer using the `--api-server-authorized-ip-ranges` parameter. The following example creates a cluster named _myAKSCluster_ in the resource group named _myResourceGroup_ with API server authorized IP ranges enabled and allows only the outbound public IP of the Standard SKU load balancer:
 
     ```azurecli-interactive
     az aks create --resource-group myResourceGroup --name myAKSCluster --vm-set-type VirtualMachineScaleSets --load-balancer-sku standard --api-server-authorized-ip-ranges 0.0.0.0/32 --generate-ssh-keys
     ```
 
-### [Azure PowerShell](#tab/azure-powershell)
+:::zone-end
 
-When you enable API server authorized IP ranges during cluster creation, the outbound public IP for the Standard SKU load balancer for your cluster is also allowed by default in addition to the ranges you specify. To allow only the outbound public IP of the Standard SKU load balancer, you use *0.0.0.0/32* when specifying the `-ApiServerAccessAuthorizedIpRange` parameter.
+:::zone pivot="azure-powershell"
 
-- Create an AKS cluster with API server authorized IP ranges enabled and allow only the outbound public IP of the Standard SKU load balancer using the `-ApiServerAccessAuthorizedIpRange` parameter. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup* with API server authorized IP ranges enabled and allows only the outbound public IP of the Standard SKU load balancer:
+- Create an AKS cluster with API server authorized IP ranges enabled and allow only the outbound public IP of the Standard SKU load balancer using the `-ApiServerAccessAuthorizedIpRange` parameter. The following example creates a cluster named _myAKSCluster_ in the resource group named _myResourceGroup_ with API server authorized IP ranges enabled and allows only the outbound public IP of the Standard SKU load balancer:
 
     ```azurepowershell-interactive
     New-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster -NodeVmSetType VirtualMachineScaleSets -LoadBalancerSku Standard -ApiServerAccessAuthorizedIpRange '0.0.0.0/32' -GenerateSshKey
     ```
 
-### [Azure portal](#tab/azure-portal)
+:::zone-end
 
-When you enable API server authorized IP ranges during cluster creation, the outbound public IP for the Standard SKU load balancer for your cluster is also allowed by default in addition to the ranges you specify. To allow only the outbound public IP of the Standard SKU load balancer, you use *0.0.0.0/32* when specifying the IP ranges.
+:::zone pivot="azure-portal"
 
 1. From the [Azure portal home page](https://portal.azure.com/#home), select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
-2. Configure the cluster settings as needed.
-3. In the **Networking** section under **Public access**, select **Set authorized IP ranges**.
-4. For **Specify IP ranges**, enter *0.0.0.0/32*. This allows only the outbound public IP of the Standard SKU load balancer.
-5. Configure the rest of the cluster settings as needed.
-6. When you're ready, select **Review + create** > **Create** to create the cluster.
+1. Configure the cluster settings as needed.
+1. In the **Networking** section under **Public access**, select **Set authorized IP ranges**.
+1. For **Specify IP ranges**, enter `0.0.0.0/32`. This setting allows only the outbound public IP of the Standard SKU load balancer.
+1. Configure the rest of the cluster settings as needed.
+1. When you're ready, select **Review + create** > **Create** to create the cluster.
 
----
+:::zone-end
 
-## Update an existing cluster's API server authorized IP ranges
+## Update the API server authorized IP ranges on an existing cluster
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
-- Update an existing cluster's API server authorized IP ranges using the [`az aks update`][az-aks-update] command with the `--api-server-authorized-ip-ranges` parameter. The following example updates API server authorized IP ranges on the cluster named *myAKSCluster* in the resource group named *myResourceGroup*. The IP address range to authorize is *73.140.245.0/24*:
+- Update an existing cluster's API server authorized IP ranges using the [`az aks update`][az-aks-update] command with the `--api-server-authorized-ip-ranges` parameter. The following example updates API server authorized IP ranges on the cluster named _myAKSCluster_ in the resource group named _myResourceGroup_ and updates the IP address range to `73.140.245.0/24`:
 
     ```azurecli-interactive
     az aks update --resource-group myResourceGroup --name myAKSCluster --api-server-authorized-ip-ranges 73.140.245.0/24
     ```
 
-- To allow multiple IP address ranges, you can list several IP addresses, separated by commas.
-  
+## Allow multiple IP address ranges
+
+To allow multiple IP address ranges, you can list several IP addresses, separated by commas.
+
+- Update an existing cluster's API server authorized IP ranges to allow multiple IP address ranges using the [`az aks update`][az-aks-update] command with the `--api-server-authorized-ip-ranges` parameter. The following example updates API server authorized IP ranges on the cluster named _myAKSCluster_ in the resource group named _myResourceGroup_ and allows multiple IP address ranges:
+
     ```azurecli-interactive
     az aks update --resource-group myResourceGroup --name myAKSCluster --api-server-authorized-ip-ranges 73.140.245.0/24,193.168.1.0/24,194.168.1.0/24
     ```
-  
-    You can also use *0.0.0.0/32* when specifying the `--api-server-authorized-ip-ranges` parameter to allow only the public IP of the Standard SKU load balancer.
 
-### [Azure PowerShell](#tab/azure-powershell)
+:::zone-end
 
-- Update an existing cluster's API server authorized IP ranges using the [`Set-AzAksCluster`][set-azakscluster] cmdlet with the `-ApiServerAccessAuthorizedIpRange` parameter. The following example updates API server authorized IP ranges on the cluster named *myAKSCluster* in the resource group named *myResourceGroup*. The IP address range to authorize is *73.140.245.0/24*:
+:::zone pivot="azure-powershell"
+
+- Update an existing cluster's API server authorized IP ranges using the [`Set-AzAksCluster`][set-azakscluster] cmdlet with the `-ApiServerAccessAuthorizedIpRange` parameter. The following example updates API server authorized IP ranges on the cluster named _myAKSCluster_ in the resource group named _myResourceGroup_ and updates the IP address range to `73.140.245.0/24`:
 
     ```azurepowershell-interactive
     Set-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster -ApiServerAccessAuthorizedIpRange '73.140.245.0/24'
     ```
 
-    You can also use *0.0.0.0/32* when specifying the `-ApiServerAccessAuthorizedIpRange` parameter to allow only the public IP of the Standard SKU load balancer.
+:::zone-end
 
-### [Azure portal](#tab/azure-portal)
+:::zone pivot="azure-portal"
 
 1. Navigate to the Azure portal and select the AKS cluster you want to update.
-2. In the service menu, under **Settings**, select **Networking**.
-3. Under **Resource settings**, select **Manage**.
-4. On the **Authorized IP ranges** page, update the **Authorized IP ranges** as needed.
-5. When you're done, select **Save**.
+1. From the service menu, under **Settings**, select **Networking**.
+1. Under **Resource settings**, select **Manage**.
+1. On the **Authorized IP ranges** page, update the **Authorized IP ranges** as needed.
+1. When you're done, select **Save**.
 
----
+:::zone-end
 
-## Disable authorized IP ranges
+## Disable API server authorized IP ranges on an existing cluster
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
-- Disable authorized IP ranges using the [`az aks update`][az-aks-update] command and specify an empty range `""` for the `--api-server-authorized-ip-ranges` parameter.
+- Disable API server authorized IP ranges using the [`az aks update`][az-aks-update] command and specify an empty range `""` for the `--api-server-authorized-ip-ranges` parameter.
 
     ```azurecli-interactive
     az aks update --resource-group myResourceGroup --name myAKSCluster --api-server-authorized-ip-ranges ""
     ```
 
-### [Azure PowerShell](#tab/azure-powershell)
+:::zone-end
 
-- Disable authorized IP ranges using the [`Set-AzAksCluster`][set-azakscluster] cmdlet and specify an empty range `''` for the `-ApiServerAccessAuthorizedIpRange` parameter.
+:::zone pivot="azure-powershell"
+
+- Disable API server authorized IP ranges using the [`Set-AzAksCluster`][set-azakscluster] cmdlet and specify an empty range `''` for the `-ApiServerAccessAuthorizedIpRange` parameter.
 
     ```azurepowershell-interactive
     Set-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster -ApiServerAccessAuthorizedIpRange ''
     ```
 
-### [Azure portal](#tab/azure-portal)
+:::zone-end
+
+:::zone pivot="azure-portal"
 
 1. Navigate to the Azure portal and select the AKS cluster you want to update.
-2. In the service menu, under **Settings**, select **Networking**.
-3. Under **Resource settings**, select **Manage**.
-4. On the **Authorized IP ranges** page, deselect the **Set authorized IP ranges** checkbox.
-5. Select **Save**.
+1. From the service menu, under **Settings**, select **Networking**.
+1. Under **Resource settings**, select **Manage**.
+1. On the **Authorized IP ranges** page, deselect the **Set authorized IP ranges** checkbox.
+1. Select **Save**.
 
----
+:::zone-end
 
-## Find existing authorized IP ranges
+## Find existing API server authorized IP ranges
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
-- Find existing authorized IP ranges using the [`az aks show`][az-aks-show] command with the `--query` parameter set to `apiServerAccessProfile.authorizedIpRanges`.
+- Find existing API server authorized IP ranges using the [`az aks show`][az-aks-show] command with the `--query` parameter set to `apiServerAccessProfile.authorizedIpRanges`.
 
     ```azurecli-interactive
     az aks show --resource-group myResourceGroup --name myAKSCluster --query apiServerAccessProfile.authorizedIpRanges
     ```
 
-### [Azure PowerShell](#tab/azure-powershell)
+    Example output:
 
-- Find existing authorized IP ranges using the [`Get-AzAksCluster`][get-azakscluster] cmdlet.
+    ```output
+    [
+      "73.140.245.0/24"
+    ]
+    ```
+
+:::zone-end
+
+:::zone pivot="azure-powershell"
+
+- Find existing API server authorized IP ranges using the [`Get-AzAksCluster`][get-azakscluster] cmdlet.
 
     ```azurepowershell-interactive
     Get-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster | Select-Object -ExpandProperty ApiServerAccessProfile
     ```
 
-### [Azure portal](#tab/azure-portal)
+    Example output:
+
+    ```output
+    AuthorizedIPRanges: {73.140.245.0/24}
+    ...
+    ```
+
+:::zone-end
+
+:::zone pivot="azure-portal"
 
 1. Navigate to the Azure portal and select your AKS cluster.
-2. In the service menu, under **Settings**, select **Networking**. The existing authorized IP ranges are listed under **Resource settings**.
+1. From the service menu, under **Settings**, select **Networking**. The existing API server authorized IP ranges are listed under **Resource settings**.
 
----
+    :::image type="content" source="./media/api-server-authorized-ip-ranges/azure-portal-existing-ranges.png" alt-text="Screenshot of the API server authorized IP ranges in the Azure portal.":::
 
-## How to find my IP to include in `--api-server-authorized-ip-ranges`?
+:::zone-end
+
+## Access the API server from your development machine, tooling, or automation
 
 You must add your development machines, tooling, or automation IP addresses to the AKS cluster list of approved IP ranges to access the API server from there.
 
-Another option is to configure a jumpbox with the necessary tooling inside a separate subnet in the firewall's virtual network. This assumes your environment has a firewall with the respective network, and you've added the firewall IPs to authorized ranges. Similarly, if you've forced tunneling from the AKS subnet to the firewall subnet, having the jumpbox in the cluster subnet is also okay.
+Another option is to configure a jumpbox with the necessary tooling inside a separate subnet in the firewall's virtual network. This option assumes your environment has a firewall with the respective network and that you added the firewall IPs to authorized ranges. Similarly, if you forced tunneling from the AKS subnet to the firewall subnet, having the jumpbox in the cluster subnet also works.
 
-1. Retrieve your IP address using the following command:
+> [!NOTE]
+> The following example adds another IP address to the approved ranges. It still includes the existing IP address. If you don't include your existing IP address, this command replaces it with the new one instead of adding it to the authorized ranges.
+
+:::zone pivot="azure-cli"
+
+1. Retrieve your IP address and set it to an environment variable using the following command:
 
     ```bash
     # Retrieve your IP address
     CURRENT_IP=$(dig +short "myip.opendns.com" "@resolver1.opendns.com")
     ```
 
-2. Add your IP address to the approved list using Azure CLI or Azure PowerShell:
+1. Add your IP address to the approved list using the [`az aks update`][az-aks-update] command with the `--api-server-authorized-ip-ranges` parameter. The following example adds your current IP address to the existing API server authorized IP ranges on the cluster named _myAKSCluster_ in the resource group named _myResourceGroup_:
 
-    ```bash
-    # Add to AKS approved list using Azure CLI
-    az aks update --resource-group $RG --name $AKSNAME --api-server-authorized-ip-ranges $CURRENT_IP/24,73.140.245.0/24
-    
-    # Add to AKS approved list using Azure PowerShell
-    Set-AzAksCluster -ResourceGroupName $RG -Name $AKSNAME -ApiServerAccessAuthorizedIpRange '$CURRENT_IP/24,73.140.245.0/24'
+    ```azurecli-interactive
+    az aks update --resource-group myResourceGroup --name myAKSCluster --api-server-authorized-ip-ranges $CURRENT_IP/24,73.140.245.0/24
     ```
 
-> [!NOTE]
-> The above example adds another IP address to the approved ranges. Note that it still includes the IP address from [Update a cluster's API server authorized IP ranges](#update-an-existing-clusters-api-server-authorized-ip-ranges). If you don't include your existing IP address, this command will replace it with the new one instead of adding it to the authorized ranges. To disable authorized IP ranges, use `az aks update` and specify an empty range "".
+:::zone-end
 
-Another option is to use the following command on Windows systems to get the public IPv4 address, or you can follow the steps in [Find your IP address](https://support.microsoft.com/help/4026518/windows-10-find-your-ip-address).
+:::zone pivot="azure-powershell"
+
+1. Retrieve your IP address and set it to an environment variable using the following command:
+
+    ```bash
+    # Retrieve your IP address
+    CURRENT_IP=$(dig +short "myip.opendns.com" "@resolver1.opendns.com")
+    ```
+
+1. Add your IP address to the approved list using the [`Set-AzAksCluster`][set-azakscluster] cmdlet with the `-ApiServerAccessAuthorizedIpRange` parameter. The following example adds your current IP address to the existing API server authorized IP ranges on the cluster named _myAKSCluster_ in the resource group named _myResourceGroup_:
+
+    ```azurepowershell-interactive
+    Set-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster -ApiServerAccessAuthorizedIpRange '$CURRENT_IP/24,73.140.245.0/24'
+    ```
+
+:::zone-end
+
+Another option is to use the following command on Windows systems to get the public IPv4 address:
 
 ```azurepowershell-interactive
 Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
 ```
 
-You can also find this address by searching on *what is my IP address* in an internet browser.
+You can also follow the steps in [Find your IP address](https://support.microsoft.com/help/4026518/windows-10-find-your-ip-address) or search on _what is my IP address?_ in an internet browser.
 
-## Use Service Tags for API Server authorized IP ranges - (Preview)
+## Related content
 
-Service tags are a convenient way to specify a group of IP addresses corresponding to a Kubernetes Service. You can use service tags to specify the IP addresses of Kubernetes services **and** specific IP addresses in the authorized IP ranges for the API server by separating them with a comma.
+To learn more about security in AKS, see the following articles:
 
-### Limitations
-
-- This feature is not compatible with [API Server VNet Integration][api-server-vnet-integration].
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-### Install the Azure CLI preview extension
-
-1. Install the Azure CLI preview extension using the [az extension add][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update the extension to make sure you have the latest version using the [az extension update][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the Service Tag Authorized IP feature flag
-
-1. Register the EnableServiceTagAuthorizedIPPreview feature flag using the [az feature register][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "EnableServiceTagAuthorizedIPPreview"
-    ```
-
-    It takes a few minutes for the registration to complete.
-
-2. Verify the registration using the [az feature show][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "EnableServiceTagAuthorizedIPPreview"
-    ```
-
-### Create an AKS cluster with Service Tag authorized IP ranges
-
-Create a cluster with Service Tag authorized IP ranges using the `--api-server-authorized-ip-ranges` parameter with the service tag `AzureCloud` to allow all Azure services to access the API server and specify an additional IP address.
-
-> [!NOTE]
-> Only one service tag is allowed in the `--api-server-authorized-ip-ranges` parameter. You **cannot** specify multiple service tags.
-
-```azurecli-interactive
-az aks create --resource-group myResourceGroup \
-  --name myAKSCluster \
-  --api-server-authorized-ip-ranges AzureCloud,20.20.20.20
-```
-
-You should be able to curl the API server from an Azure VM or Azure service that is part of the `AzureCloud` service tag.
-
-## Next steps
-
-In this article, you enabled API server authorized IP ranges. This approach is one part of how you can securely run an AKS cluster. For more information, see [Security concepts for applications and clusters in AKS][concepts-security] and [Best practices for cluster security and upgrades in AKS][operator-best-practices-cluster-security].
+- [Use service tags for API server authorized IP ranges in AKS][api-server-service-tags]
+- [Security concepts for applications and clusters in AKS][concepts-security]
+- [Best practices for cluster security and upgrades in AKS][operator-best-practices-cluster-security].
 
 <!-- LINKS - internal -->
 [api-server-vnet-integration]: api-server-vnet-integration.md
@@ -325,11 +322,9 @@ In this article, you enabled API server authorized IP ranges. This approach is o
 [egress-outboundtype]: egress-outboundtype.md
 [install-azure-cli]: /cli/azure/install-azure-cli
 [operator-best-practices-cluster-security]: operator-best-practices-cluster-security.md
-[route-tables]: ../virtual-network/manage-route-table.yml
 [standard-sku-lb]: load-balancer-standard.md
 [azure-devops-allowed-network-cfg]: /azure/devops/organizations/security/allow-list-ip-url
 [new-azakscluster]: /powershell/module/az.aks/new-azakscluster
 [set-azakscluster]: /powershell/module/az.aks/set-azakscluster
 [get-azakscluster]: /powershell/module/az.aks/get-azakscluster
-[az-feature-register]: /cli/azure/feature#az-feature-register
-[az-feature-show]: /cli/azure/feature#az-feature-show
+[api-server-service-tags]: api-server-service-tags.md

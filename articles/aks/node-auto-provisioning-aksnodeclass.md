@@ -14,8 +14,7 @@ ms.service: azure-kubernetes-service
 
 This article explains how to configure `AKSNodeClass` resources to define Azure-specific settings for node auto-provisioning (NAP) in Azure Kubernetes Service (AKS) using Karpenter. `AKSNodeClass` allows you to customize various aspects of the nodes that Karpenter provisions, such as the virtual machine (VM) image, operating system (OS) disk size, maximum pods per node, and kubelet configurations.
 
-> [!IMPORTANT]
-> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, node images will be removed, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
+[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Overview of AKSNodeClass resources
 
@@ -27,7 +26,7 @@ The `imageFamily` field dictates the default VM image and bootstrapping logic fo
 
 ### Supported image families
 
-- **`Ubuntu2204`**: Ubuntu 22.04 Long Term Support (LTS) is the default Linux distribution for AKS nodes.
+- **`Ubuntu`**: Ubuntu 22.04 Long Term Support (LTS) is the default Linux distribution for AKS nodes.
 - **`AzureLinux`**: Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more information, see the [Azure Linux documentation](/azure/aks/use-azure-linux)
 
 #### Example image family configuration
@@ -37,6 +36,19 @@ The following example configures the `AKSNodeClass` to use the `AzureLinux` imag
 ```yaml
 spec:
   imageFamily: AzureLinux
+```
+#### FIPS compliant node image configuration
+You can enable Federal Information Process Standard (FIPS) compliant node images also. For more in FIPS in AKS, visit our [FIPS documentation](./enable-fips-nodes.md)
+
+The `fipsMode` field is set by default to Disabled, and can be set to the following options:
+- FIPS - select FIPS-compliant node images
+- Disabled - do not use FIPS-compliant node images
+
+The following example configures the 'AKSNodeClass' to select FIPS-compliant node images by setting `fipsMode` to `FIPS`:
+
+```yaml
+spec:
+  fipsMode: FIPS
 ```
 
 ## Virtual network (VNet) subnet configuration
@@ -104,7 +116,7 @@ spec:
   template:
     spec:
       requirements:
-        - key: karpenter.azure.com/sku-storage-ephemeral-os-maxsize
+        - key: karpenter.azure.com/sku-storage-ephemeralos-maxsize
           operator: Gt
           values: ["128"]  # Require ephemeral disk larger than 128 GB
       nodeClassRef:
@@ -145,6 +157,62 @@ The default behavior for `maxPods` depends on the network plugin configuration. 
 spec:
   maxPods: 50  # Allow up to 50 pods per node
 ```
+
+## LocalDNS configuration
+
+LocalDNS deploys a node level DNS proxy that resolves DNS queries closer to workloads, reducing query latency and improving resiliency during transient DNS disruptions. For more information, see the [LocalDNS documentation](./localdns-custom.md). By default, LocalDNS is set to Disabled and can be configured to the following options:
+
+- `Disabled` (default) - Disables the LocalDNS feature. DNS queries aren't resolved locally on the node.
+- `Preferred` - AKS manages LocalDNS enablement based on the Kubernetes version of the node pool. The configuration is always validated and included, but LocalDNS isn't enabled unless the correct Kubernetes version is used.
+- `Required` - LocalDNS is enforced on the node pool if all prerequisites are satisfied. If the requirements aren't met, the deployment fails.
+
+### Example LocalDNS configuration
+
+You can customize LocalDNS configurations such as `vnetDNSOverrides` and `kubeDNSOverrides`. For more details on the supported plugins, see [Customize LocalDNS](./localdns-custom.md).
+
+```yaml
+spec:
+  LocalDNS:
+    mode: Required
+    vnetDNSOverrides:
+      - zone: "."
+        cacheDuration: "30s"
+        forwardDestination: VnetDNS
+        forwardPolicy: Random
+        maxConcurrent: 80
+        protocol: ForceTCP
+        queryLogging: Log
+        serveStale: Immediate
+        serveStaleDuration: "100s"
+      - zone: "cluster.local"
+        cacheDuration: "40s"
+        forwardDestination: VnetDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 70
+        protocol: PreferUDP
+        queryLogging: Error
+        serveStale: Disable
+        serveStaleDuration: "30s"
+    kubeDNSOverrides:
+      - zone: "."
+        cacheDuration: "30s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: RoundRobin
+        maxConcurrent: 100
+        protocol: PreferUDP
+        queryLogging: Log
+        serveStale: Immediate
+        serveStaleDuration: "60s"
+      - zone: "cluster.local"
+        cacheDuration: "10s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 50
+        protocol: PreferUDP
+        queryLogging: Error
+        serveStale: Disable
+        serveStaleDuration: "30s"
+``` 
 
 ## Kubelet configuration
 
@@ -261,9 +329,21 @@ metadata:
   name: comprehensive-example
 spec:
   # Image family configuration
-  # Default: Ubuntu2204
-  # Valid values: Ubuntu2204, AzureLinux
-  imageFamily: Ubuntu2204
+  # Default: Ubuntu
+  # Valid values: Ubuntu, AzureLinux
+  imageFamily: Ubuntu
+
+  # FIPS compliant mode - allows support for FIPS-compliant node images
+  # Default: Disabled
+  # Valid values: FIPS, Disabled
+  fipsMode: Disabled
+
+  # LocalDNS mode - allows use of LocalDNS feature
+  # Default: Disabled
+  # Valid values: Preferred, Required, Disabled
+  LocalDNS:
+    mode: Disabled
+    # additional details on vnetDNSOverrides and kubeDNSOverrides can be added here
 
   # Virtual network subnet configuration (optional)
   # If not specified, uses the default --vnet-subnet-id from Karpenter installation

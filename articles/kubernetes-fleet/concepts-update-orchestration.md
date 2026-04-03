@@ -1,7 +1,7 @@
 ---
 title: "Update Kubernetes and node images across multiple member clusters"
 description: This article describes the concept of update orchestration across multiple clusters.
-ms.date: 09/10/2025
+ms.date: 03/24/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -24,10 +24,12 @@ The following image visualizes an upgrade run containing two update stages, each
 :::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="A diagram showing an upgrade run containing two update stages, each containing two update groups with two member clusters." lightbox="./media/conceptual-update-orchestration.png":::
 
 * **Update run**: An update run represents an update being applied to a collection of AKS clusters, consisting of the update goal and sequence. The update goal describes the desired updates (for example, upgrading to Kubernetes version 1.28.3). The update sequence describes the exact order to apply the update to multiple member clusters, expressed using stages and groups. If unspecified, all the member clusters are updated one by one sequentially. An update run can be stopped and started.
-* **Update stage**: Update runs are divided into stages, which are applied sequentially. For example, a first update stage might update test environment member clusters, and a second update stage would then later update production environment member clusters. A wait time can be specified to delay between the application of subsequent update stages.
-* **Update group**: Each update stage contains one or more update groups, which are used to select the member clusters to be updated. Update groups are also used to order the application of updates to member clusters. Within an update stage, updates are applied to all the different update groups in parallel; within an update group, member clusters update sequentially. Each member cluster of the fleet can only be a part of one update group.
-* **Approval gates (preview)**: Can be configured before or after each stage or group. Approvals pause the update run, allowing either you or automations that you've set up to check that it's OK to proceed. After you or your automation grants approval, the update run will continue.
 * **Update strategy**: An update strategy describes the update sequence with stages and groups and allows you to reuse an update run configuration instead of defining the sequence repeatedly in each run. An update strategy doesn't include desired Kubernetes or node image versions.
+* **Maximum Concurrency (preview)**: 
+Control how many clusters can upgrade concurrently within an update stage or update group. For more information, see [Maximum concurrency](#maximum-concurrency-preview).
+* **Update stage**: Update runs that use an update strategy are divided into stages, which are applied sequentially. For example, a first update stage might update test environment member clusters, and a second update stage would then later update production environment member clusters. A wait time can be specified to delay between the application of subsequent update stages.
+* **Update group**: Each update stage contains one or more update groups, which are used to select the member clusters to be updated. Update groups are also used to order the application of updates to member clusters. Within an update stage, updates are applied to all the different update groups in parallel; within an update group, member clusters update sequentially by default. You can change this default behavior by configuring [Maximum concurrency](#maximum-concurrency-preview) at the stage or group level to control how many clusters upgrade concurrently. Each member cluster of the fleet can only be a part of one update group.
+* **Approval gates (preview)**: Can be configured before or after each stage or group. Approvals pause the update run, allowing either you or automations that you've set up to check that it's OK to proceed. After you or your automation grants approval, the update run will continue.
 
 > [!NOTE]
 > The maximum number of Update Groups in each Update Stage is **50**.
@@ -117,6 +119,22 @@ In an auto-upgrade profile you can configure:
 - an `UpdateStrategy` which configures the sequence in which the clusters are upgraded. If a strategy isn't supplied, clusters are updated one by one sequentially.
 - the `NodeImageSelectionType` (Latest, Consistent) to specify how the node image is selected when upgrading the Kubernetes version.
 
+> [!NOTE]
+> When you create an auto-upgrade profile, it may be some time (days or weeks) before a new Kubernetes or node image release from AKS causes auto-upgrade to create and execute an update run. 
+>
+> You can generate an update run from an auto-upgrade profile at any time using the [`az fleet autoupgradeprofile generate-update-run`][az-fleet-updaterun-generate] command. The resulting update run is based on the current AKS-published Kubernetes or node image version. 
+> 
+> For more information on creating an on-demand update run from an auto-upgrade profile, see [generate an update run from an auto-upgrade profile](./update-orchestration.md#generate-an-update-run-from-an-auto-upgrade-profile).
+
+## Understanding node image upgrades and snapshots
+
+When a member cluster has agent pools that were [created from a node pool snapshot](/azure/aks/node-pool-snapshot), the outcome of the node image upgrade depends on the Fleet Manager Update Run node image selection.
+
+| Node image selection | Upgrade outcome |
+|----------------------|---------------------------------------------|
+| `Latest`             | Follows standard AKS upgrade behavior. The agent pool keeps its reference to the snapshot (`creationData`), and the node image isn't modified. |
+| `Consistent`         | The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool. |
+
 ### Stable channel
 
 The Stable channel is always the latest AKS-supported Kubernetes patch release on minor version *N-1*, where *N* is the latest supported minor version.
@@ -157,6 +175,70 @@ Examples:
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
+## Maximum concurrency (preview)
+
+`Maximum concurrency` is an optional setting on your update strategy that controls how many member clusters can upgrade concurrently. You can set `Maximum concurrency` at two levels:
+
+- **Stage level**: Defines the maximum number of clusters that can upgrade at the same time across all groups in a stage. Acts as a global ceiling for the stage.
+- **Group level**: Defines the maximum number of clusters that can upgrade concurrently within a specific group.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
+> [!NOTE]
+> The upper limits of `MaxConcurrency` values are:
+> * **Stage level**: Can't exceed the system limit of **10**.
+> * **Group level**: Can't exceed the stage-level `MaxConcurrency` value, and can't exceed the number of clusters in the group.
+> * If a configured value exceeds these limits, the operation is rejected.
+>
+> When no `MaxConcurrency` is specified, the system defaults to `stage.maxConcurrency = 10` and `group.maxConcurrency = 1`. 
+> 
+> Existing update strategies and update runs created before this feature was available automatically receive these defaults the next time the resource is updated.
+
+`Maximum concurrency` accepts two value forms:
+
+- **Fixed integer**: For example, `"3"` limits concurrency to exactly three clusters.
+- **Percentage**: For example, `"25%"` limits concurrency to a percentage of clusters. For stage-level settings, the percentage is calculated from all clusters in the stage. For group-level settings, the percentage is calculated from the clusters in that group. Percentages are calculated at runtime, rounded down, and enforced with a minimum resolved value of 1.
+
+### Concurrency control suggestions
+If you want to upgrade with safety (less speed, but less likely to end with multiple broken clusters): set maximum concurrency to a smaller value.
+If you want to upgrade with speed (more speed, but more likely end with multiple broken clusters): set maximum concurrency to a larger value.
+
+### How stage and group limits interact
+
+The stage-level Maximum concurrency always acts as the overall ceiling. Even if individual groups allow higher concurrency, the stage limit takes precedence. Group-level concurrency might be lower than configured due to the stage-level limit, group size, or member-specific conditions.
+
+#### Example 1: Fixed limits
+
+| Setting | Value |
+|---|---|
+| `stage.maxConcurrency` | `"4"` |
+| `groupA.maxConcurrency` | `"2"` |
+| `groupB.maxConcurrency` | `"2"` |
+
+Result: Up to four clusters total, with a maximum of two per group.
+
+#### Example 2: Stage limit throttles groups
+
+| Setting | Value |
+|---|---|
+| `stage.maxConcurrency` | `"2"` |
+| `groupA.maxConcurrency` | `"5"` |
+| `groupB.maxConcurrency` | `"5"` |
+
+Result: Only two clusters total upgrade at the same time because the stage limit takes precedence.
+
+#### Example 3: Percentage-based rollout
+
+A stage has 20 clusters across two groups: Group A (8 clusters) and Group B (12 clusters).
+
+| Setting | Value | Resolves to |
+|---|---|---|
+| `stage.maxConcurrency` | `"25%"` | 5 |
+| `groupA.maxConcurrency` | `"50%"` | 4 |
+| `groupB.maxConcurrency` | `"25%"` | 3 |
+
+Result: Up to five concurrent upgrades total, distributed across groups according to their individual limits.
+
 ### Minor version skipping behavior
 
 Auto-upgrade doesn't move clusters between minor Kubernetes versions when there's more than one minor Kubernetes version difference (for example: 1.28 to 1.30). Where administrators have a diverse set of Kubernetes versions it's recommended to first use one or more [update run](#understanding-update-runs) to bring member clusters into a set of consistently versioned releases so that configured `Stable` or `Rapid` channel updates ensure consistency is maintained in future.
@@ -191,3 +273,4 @@ Auto-upgrade doesn't move clusters between minor Kubernetes versions when there'
 <!-- INTERNAL LINKS -->
 [supported-kubernetes-versions]: /azure/aks/supported-kubernetes-versions
 [aks-maintenance-windows]: /azure/aks/planned-maintenance
+[az-fleet-updaterun-generate]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-generate-update-run

@@ -131,7 +131,7 @@ Connectivity and network policy enforcement issues often stem from misconfigured
 
 When a packet drop occurs, eBPF programs capture the event and generate metadata about the packet, including the drop reason and its location. This data is processed by a user space program, which parses the information and converts it into Prometheus metrics. These metrics offer critical insights into the root causes of packet drops, enabling administrators to identify and resolve issues such as network policy misconfigurations effectively.
 
-In addition to policy enforcement issues, network connectivity problems can cause packet drops due to factors like TCP errors or retransmissions. Administrators can debug these issues by analyzing TCP retransmission tables and error logs, which help identify degraded network links or bottlenecks. By leveraging these detailed metrics and debugging tools, teams can ensure smooth network operations, reduce downtime, and maintain optimal application performance.
+In addition to policy enforcement issues, network connectivity problems can cause packet drops due to factors like TCP errors or retransmissions. Administrators can debug these issues by analyzing TCP retransmission tables and error logs, which help identify degraded network links or bottlenecks. By using these detailed metrics and debugging tools, teams can ensure smooth network operations, reduce downtime, and maintain optimal application performance.
 
 > Let's say you have a microservices-based application where the frontend pod can't communicate with a backend pod due to an overly restrictive network policy blocking ingress traffic.
 
@@ -405,7 +405,7 @@ While Advanced Container Networking Services (ACNS) is a paid offering that prov
 
 **Retina OSS** is the open-source observability platform available at [retina.sh](https://retina.sh/) and [GitHub](https://github.com/microsoft/retina). It provides:
 
-- **eBPF-based network observability**: Leverages eBPF technologies to collect insights with minimal overhead
+- **eBPF-based network observability**: Uses eBPF technologies to collect insights with minimal overhead
 - **Deep traffic analysis with Kubernetes context**: Comprehensive capture and analysis of network traffic flows with full Kubernetes integration
 - **Advanced metrics collection**: Layer 4 metrics, DNS metrics, and distributed packet capture capabilities
 - **Plugin-based extensibility**: Customize and extend functionality through a plugin architecture
@@ -424,7 +424,7 @@ While Advanced Container Networking Services (ACNS) is a paid offering that prov
 |----------|---------|------|------------|------------|-----------|
 | **Advanced Container Networking Services (ACNS)** | Microsoft enterprise support | Paid Azure service | Fully managed by Microsoft | One-click Azure integration | **Managed enterprise observability**: Pod-level network flows, pod-level metrics, DNS metrics, persistent stored logs, Layer 7 traffic analysis, network security policy enforcement, compliance reporting, advanced Grafana dashboards, AI-powered insights |
 | **Network Observability (Azure Monitor)** | Microsoft support as part of Azure Monitor | Included with Azure Monitor managed Prometheus (Azure Monitor costs apply) | Fully managed by Microsoft | Automatic when Azure Monitor managed Prometheus is enabled | **Node network monitoring**: Cluster and node-level network metrics only, no pod-level visibility, no stored logs, no DNS analysis - suitable for basic infrastructure monitoring and users who want minimal network observability without additional configuration |
-| **Retina OSS** | Community support | Free and open-source | Self-managed | Manual setup via Helm/manifests on any Kubernetes cluster | **Unmanaged advanced observability**: Real-time packet captures, custom metrics collection, eBPF-based deep network analysis, Hubble integration, multi-cloud deployments, custom observability pipelines, advanced debugging with tcpdump/Wireshark integration, and development/testing environments |
+| **Retina OSS** | Community support | Free and open-source | Self-managed | Manual setup via Helm/manifests on any Kubernetes cluster | **Unmanaged advanced observability**: Real-time packet captures, custom metrics collection, eBPF-based deep network analysis, Hubble integration, multicloud deployments, custom observability pipelines, advanced debugging with tcpdump/Wireshark integration, and development/testing environments |
 
 ## Learn More
 
@@ -433,7 +433,7 @@ To get started with network observability in AKS:
 ### Advanced Container Networking Services (ACNS)
 - **Set up Container Network Logs**: Learn how to configure [Container Network Logs for comprehensive network observability](./how-to-configure-container-network-logs.md)
 - **Explore Advanced Container Networking Services**: For more information about the complete platform, see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md)
-- **Configure monitoring**: Set up [Azure Managed Grafana integration](./how-to-configure-container-network-logs.md#visualization-by-using-azure-managed-grafana) for advanced visualizations
+- **Configure monitoring**: Set up [Azure Managed Grafana integration](./how-to-configure-container-network-logs.md#visualization-in-grafana-dashboards) for advanced visualizations
 - **Learn about network security**: Explore [Container Network Security features](./advanced-container-networking-services-overview.md#container-network-security) for policy enforcement and threat detection
 
 ### Network Observability (Azure Monitor)
