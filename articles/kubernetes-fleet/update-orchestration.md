@@ -126,6 +126,9 @@ Also, `--node-image-selection` flag supports the following values:
 - **Latest**: Updates every AKS cluster in the update run to the latest image available for that cluster in its region.
 - **Consistent**: As it's possible for an update run to have AKS clusters across multiple regions where the latest available node images can be different (check [release tracker](/azure/aks/release-tracker) for more information). The update run picks the **latest common** image across all these regions to achieve consistency.
 
+> [!IMPORTANT]
+> Node image versions are only valid for 90 days from their original publish date. If the target node image version selected by an update run exceeds the 90-day window by the time a member cluster is upgraded, the upgrade for that member cluster can fail.
+
 **Starting an update run**:
 
 To start update runs, run the following command:

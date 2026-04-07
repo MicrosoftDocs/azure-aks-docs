@@ -49,6 +49,9 @@ The target node image versions are automatically selected for you based on your 
 
 You should choose `Latest` to use fresher image versions and minimize security risks, and choose `Consistent` to improve reliability by using and verifying those images in clusters in earlier stages before using them in later clusters.
 
+> [!IMPORTANT]
+> Node image versions are only valid for 90 days from their original publish date. If the target node image version selected by an update run exceeds the 90-day window by the time a member cluster is upgraded, the upgrade for that member cluster can fail.
+
 ## Planned maintenance
 
 Update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the Azure Kubernetes Service (AKS) cluster level.
