@@ -376,6 +376,8 @@
         href: blue-green-node-pool-upgrade.md
       - name: Roll back node pool versions
         href: roll-back-node-pool-version.md
+    - name: PDB Manager (preview)
+      href: eviction-pod-autoscaler.md
   - name: Automate upgrades
     items:
     - name: Automatically upgrade an AKS cluster
@@ -404,55 +406,6 @@
     href: upgrade-aks-faq.yml
 - name: Manage and optimize clusters
   items:
-<<<<<<< Updated upstream
-=======
-    - name: Upgrade
-      items:
-        - name: Maintain and upgrade cluster components
-          href: upgrade.md
-        - name: Upgrade options and recommendations
-          href: upgrade-cluster.md
-        - name: How AKS cluster upgrades work
-          href: how-does-upgrade-happen.md
-        - name: AKS component versioning
-          href: aks-component-versioning.md
-        - name: Upgrade scenarios hub
-          href: upgrade-scenarios-hub.md
-        - name: Perform manual upgrades
-          items:
-            - name: Upgrade an AKS cluster
-              href: upgrade-aks-cluster.md
-            - name: Production upgrade strategies
-              href: aks-production-upgrade-strategies.md
-            - name: Stateful workload upgrade patterns
-              href: stateful-workload-upgrades.md
-            - name: Eviction Pod Autoscaler (preview)
-              href: eviction-pod-autoscaler.md
-            - name: Orchestrate upgrade across multiple clusters
-              href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-            - name: Upgrade node OS images
-              href: node-image-upgrade.md
-            - name: Customize node surge upgrade
-              href: upgrade-aks-cluster.md#customize-node-surge-upgrade
-            - name: Process node OS updates
-              href: node-updates-kured.md
-            - name: Upgrade OS version
-              href: upgrade-os-version.md
-        - name: Configure automatic upgrades
-          items:
-            - name: Automatically upgrade an AKS cluster
-              href: auto-upgrade-cluster.md
-            - name: Use Planned Maintenance to schedule and control upgrades
-              href: planned-maintenance.md
-            - name: Automatically upgrade AKS cluster node OS images
-              href: auto-upgrade-node-os-image.md
-            - name: Upgrade node OS images automatically with GitHub Actions
-              href: node-upgrade-github-actions.md
-            - name: Stop cluster upgrades automatically on API breaking changes
-              href: stop-cluster-upgrade-api-breaking-changes.md
-        - name: Upgrade FAQ
-          href: upgrade-aks-faq.yml
->>>>>>> Stashed changes
     - name: Add-ons, extensions, and integrations
       items:
         - name: Overview of add-ons, extensions, and integrations
