@@ -35,21 +35,6 @@ The following table shows the node events for AKS node auto-drain and describes 
 > - Freeze: [Configure pod eviction for freeze events](./node-auto-drain-evict-on-freeze.md).
 > - Terminate: Enable [Virtual Machine Scale Set terminate notifications](../virtual-machine-scale-sets/virtual-machine-scale-sets-terminate-notification.md) as a prerequisite for AKS node auto-drain.
 
-## Monitor node auto-drain with Kubernetes events
-
-When node auto-drain processes a scheduled event, AKS emits Kubernetes events for visibility. The following events appear on a node object during auto-drain. For more information, see [Use Kubernetes events for troubleshooting](./events.md).
-
-| Event | Description |
-| --- | --- |
-| `FreezeScheduled` | A freeze event is scheduled on the node, including the event time. |
-| `NodeCordonStart` | The node cordon begins, approximately five minutes before the scheduled event. |
-| `NodeCordonEnd` | The node cordon completes. |
-| `NodeDrainStart` | The drain begins and labeled pods start being evicted. |
-| `NodeDrainEnd` | The drain completes. |
-| `NodeDrainError` | An error occurred during the drain process. Check the event message for details. |
-| `NodeUncordonStart` | After the event finishes, the node uncordon begins. |
-| `NodeUncordonEnd` | The node uncordon completes and the node is schedulable again. |
-
 ## Next steps
 
 - [Configure pod eviction for freeze events (preview)](./node-auto-drain-evict-on-freeze.md)
