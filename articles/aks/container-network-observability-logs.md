@@ -145,6 +145,24 @@ The Hubble UI provides a graphical view of service-to-service communication. It'
 * **Fast troubleshooting.** Filter flows interactively through the Hubble CLI, or view service maps visually in the Hubble UI.
 * **Low overhead.** No persistent storage required, so there's no ongoing cost for ad-hoc investigations.
 
+## Recommendations and best practices for stored logs
+
+Follow this adoption pattern to effectively implement container network logs in your environment:
+
+1. **Start in non-production.** Enable flow logs in a non-production cluster first to validate configurations and understand traffic patterns without production risk.
+
+1. **Configure targeted filters.** Define `includeFilters` to capture relevant traffic based on your monitoring goals. Narrow filters (specific namespace or service pairs) achieve better compression and cost efficiency.
+
+1. **Validate aggregation efficiency.** Analyze the keys-to-flows ratio with your filter settings to confirm that aggregation is reducing data volume effectively. Adjust filters if you're capturing too much low-signal traffic.
+
+1. **Build observability dashboards.** Set up Azure Monitor dashboards for your key use cases (service communication patterns, error rates, DNS failures). Use both the built-in dashboards and custom Log Analytics queries.
+
+1. **Refine filters based on data.** Monitor actual data volume and visibility coverage. Adjust `includeFilters` to focus on high-value traffic and avoid noisy data that inflates costs without adding insight.
+
+1. **Roll out to production.** Deploy to production with your optimized filter configuration and established dashboards.
+
+1. **Monitor and iterate.** Track compression efficiency and flow patterns over time. Refine filters periodically as workloads and traffic patterns evolve.
+
 ## Limitations
 
 **Data plane and feature requirements:**

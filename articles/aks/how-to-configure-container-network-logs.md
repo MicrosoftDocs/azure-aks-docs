@@ -926,6 +926,8 @@ az group delete --name $RESOURCE_GROUP
 * When Log Analytics isn't configured for log storage, container network logs are limited to a maximum of 50 MB of storage. When this limit is reached, new entries overwrite older logs on the host node. For long-term retention and analysis, it's recommended to configure Azure Monitor or an external logging solution.
 * Switching the Log Analytics workspace after enabling Container Network Logs may cause logs to stop flowing to the new workspace. This happens because the existing Azure Monitor data collection configuration is not automatically updated. To prevent this issue, configure the desired workspace when first enabling Container Network Logs, or manually update the associated data collection rule when changing workspaces, see [Configure data collection in Container insights](/azure/azure-monitor/containers/kubernetes-data-collection-configure#send-to-multiple-workspaces-and-tables).
 
+* Flow log aggregation doesn't preserve individual flow timestamps, per-pod IP addresses, or high-cardinality fields like HTTP URLs and DNS query names. Use on-demand logs for per-flow investigation.
+
 ## Related content
 
 * [What are container network logs?](container-network-observability-logs.md)

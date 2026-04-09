@@ -35,7 +35,7 @@ The result: actionable network observability on any supported data plane, with o
 
 * **Targeted observability (Cilium clusters).** On Cilium clusters, source-level filtering lets you define the namespaces, pod labels, or metric types you care about and collect only those. No post-collection trimming required.
 
-* **Cost efficiency (Cilium clusters).** Filtering at the source eliminates irrelevant metric streams before they reach your Prometheus backend, which reduces storage and query costs while keeping dashboards focused.
+* **Lower metrics ingestion costs (Cilium clusters).** Because filtering happens at the source on each node, unwanted metric time series are never scraped, transmitted, or ingested into your Prometheus backend. You pay only for the metrics you actually need. In large clusters where unfiltered collection can produce thousands of time series per node, source-level filtering can significantly reduce Azure Managed Prometheus ingestion and storage costs.
 
 ## How it works
 
@@ -45,7 +45,7 @@ Container network metrics are collected through a straightforward pipeline:
 1. **Filter (Cilium clusters only).** On Cilium clusters, source-level filtering can optionally narrow collection by namespace, pod label, or metric type so only relevant data is retained. You can combine filtering dimensions. For example, collect only DNS and drop metrics for pods in your `production` namespace that carry a specific service label. On non-Cilium clusters, all supported metrics are collected by default.
 1. **Store and visualize.** Metrics are stored in Prometheus format. Visualize them in Azure Managed Grafana (fully managed) or your own self-managed Prometheus and Grafana infrastructure.
 
-On Cilium clusters where filtering is enabled, your Prometheus backend ingests only the metrics you've chosen, which reduces storage costs, speeds up queries, and keeps dashboards focused.
+On Cilium clusters where filtering is enabled, unwanted metrics are dropped at the source before they're ever scraped or transmitted. Your Prometheus backend ingests only the metrics you've chosen, which directly reduces ingestion and storage costs while keeping queries fast and dashboards focused.
 
 To configure filtering, see [Configure container network metrics filtering](./how-to-configure-container-network-metrics-filtering.md).
 
@@ -57,7 +57,7 @@ Container network metrics are designed for teams that need focused, actionable n
 * **Monitoring multi-tenant clusters.** Track network health per namespace so each team has visibility into its own traffic patterns. On Cilium clusters, scoped filtering keeps collection limited to tenant-specific namespaces.
 * **Capacity planning.** Track forwarded and dropped byte counts per node to identify saturated links or imbalanced workload placement.
 * **DNS health monitoring.** Surface DNS query failures and slow resolution times to catch issues before they cascade into application errors.
-* **Reducing observability costs at scale.** In large clusters, metrics can generate thousands of time series per node. On Cilium clusters, filtering at the source keeps ingestion volumes predictable and costs manageable.
+* **Reducing observability costs at scale.** In large clusters, unfiltered metrics can generate thousands of time series per node, all of which get ingested into your Prometheus backend. On Cilium clusters, source-level filtering eliminates unwanted time series before they leave the node, so you never pay to ingest, store, or query data you don't need. This makes observability costs predictable and directly proportional to the workloads you choose to monitor.
 
 ## Metrics reference
 
