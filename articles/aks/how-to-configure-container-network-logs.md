@@ -467,8 +467,8 @@ Look for the dashboards under **Azure Monitor** > **Insights** > **Containers** 
 
 | Dashboard | Path | Table tier | Grafana ID |
 | --- | --- | --- | --- |
-| **Flow Logs - Basic Tier** | **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs - Basic Tier** | Basic | [23155](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs/) |
-| **Flow Logs - Analytics Tier** | **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs - Analytics Tier** | Analytics (default) | [23156](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic/) |
+| **Flow Logs - Basic Tier** | **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs - Basic Tier** | Basic | 23155 |
+| **Flow Logs - Analytics Tier** | **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs - Analytics Tier** | Analytics (default) | 23156 |
 
 Both dashboards show which AKS workloads communicate with each other, including requests, responses, drops, and errors. Use the one that matches the tier configured for your `ContainerNetworkLogs` table.
 
