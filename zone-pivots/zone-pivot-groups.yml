@@ -307,3 +307,12 @@ groups:
     title: Azure Files
   - id: azure-blob
     title: Azure Blob
+# Owner: schaffererin
+- id: agentic-cli-deployment-mode
+  title: Select a deployment mode
+  prompt: Select a deployment mode
+  pivots:
+  - id: client-mode
+    title: Client mode
+  - id: cluster-mode
+    title: Cluster mode

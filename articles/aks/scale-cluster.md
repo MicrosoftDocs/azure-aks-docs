@@ -1,6 +1,6 @@
 ---
-title: Manually scale nodes in an Azure Kubernetes Service (AKS) cluster
-description: Learn how to manually scale the number of nodes in an Azure Kubernetes Service (AKS) cluster.
+title: Manually Scale Nodes in an Azure Kubernetes Service (AKS) Cluster
+description: Manually scale the node count in your Azure Kubernetes Service (AKS) cluster with Azure CLI or PowerShell to match demand and optimize capacity.
 ms.topic: how-to
 ms.date: 01/22/2024
 author: schaffererin
@@ -17,27 +17,27 @@ This article describes how to manually increase or decrease the number of nodes 
 
 ## Before you begin
 
-* Review the [AKS service quotas and limits][service-quotas] to verify your cluster can scale to your desired number of nodes.
+- Review the [AKS service quotas and limits][service-quotas] to verify your cluster can scale to your desired number of nodes.
 
-* The name of a node pool may only contain lowercase alphanumeric characters and must begin with a lowercase letter.
+- The name of a node pool may only contain lowercase alphanumeric characters and must begin with a lowercase letter.
 
-   * For Linux node pools, the length must be between 1-11 characters.
-   * For Windows node pools, the length must be between 1-6 characters.
+   - For Linux node pools, the length must be between 1-11 characters.
+   - For Windows node pools, the length must be between 1-6 characters.
 
 ## Scale the cluster nodes
 
 > [!IMPORTANT]
-> Removing nodes from a node pool using the kubectl command isn't supported. Doing so can create scaling issues with your AKS cluster.
+> Removing nodes from a node pool using the `kubectl` command isn't supported. Doing so can create scaling issues with your AKS cluster.
 
 ### [Azure CLI](#tab/azure-cli)
 
-1. Get the *name* of your node pool using the [`az aks show`][az-aks-show] command. The following example gets the node pool name for the cluster named *myAKSCluster* in the *myResourceGroup* resource group:
+1. Get the _name_ of your node pool using the [`az aks show`][az-aks-show] command. The following example gets the node pool name for the cluster named _myAKSCluster_ in the _myResourceGroup_ resource group:
 
     ```azurecli-interactive
     az aks show --resource-group myResourceGroup --name myAKSCluster --query agentPoolProfiles
     ```
 
-    The following example output shows that the *name* is *nodepool1*:
+    The following example output shows that the _name_ is _nodepool1_:
 
     ```output
     [
@@ -52,13 +52,13 @@ This article describes how to manually increase or decrease the number of nodes 
     ]
     ```
 
-2. Scale the cluster nodes using the [`az aks scale`][az-aks-scale] command. The following example scales a cluster named *myAKSCluster* to a single node. Provide your own `--nodepool-name` from the previous command, such as *nodepool1*:
+1. Scale the cluster nodes using the [`az aks scale`][az-aks-scale] command. The following example scales a cluster named _myAKSCluster_ to a single node. Provide your own `--nodepool-name` from the previous command, such as _nodepool1_:
 
     ```azurecli-interactive
     az aks scale --resource-group myResourceGroup --name myAKSCluster --node-count 1 --nodepool-name <your node pool name>
     ```
 
-    The following example output shows the cluster successfully scaled to one node, as shown in the *agentPoolProfiles* section:
+    The following example output shows the cluster successfully scaled to one node, as shown in the _agentPoolProfiles_ section:
 
     ```json
     {
@@ -81,14 +81,14 @@ This article describes how to manually increase or decrease the number of nodes 
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-1. Get the *name* of your node pool using the [`Get-AzAksCluster`][get-azakscluster] command. The following example gets the node pool name for the cluster named *myAKSCluster* in the *myResourceGroup* resource group:
+1. Get the _name_ of your node pool using the [`Get-AzAksCluster`][get-azakscluster] command. The following example gets the node pool name for the cluster named _myAKSCluster_ in the _myResourceGroup_ resource group:
 
     ```azurepowershell-interactive
     Get-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster |
      Select-Object -ExpandProperty AgentPoolProfiles
     ```
 
-    The following example output shows that the *name* is *nodepool1*:
+    The following example output shows that the _name_ is _nodepool1_:
 
     ```output
     Name                   : nodepool1
@@ -108,13 +108,13 @@ This article describes how to manually increase or decrease the number of nodes 
     ...
     ```
 
-2. Scale the cluster nodes using the [Set-AzAksCluster][set-azakscluster] command. The following example scales a cluster named *myAKSCluster* to a single node. Provide your own `-NodeName` from the previous command, such as *nodepool1*:
+1. Scale the cluster nodes using the [Set-AzAksCluster][set-azakscluster] command. The following example scales a cluster named _myAKSCluster_ to a single node. Provide your own `-NodeName` from the previous command, such as _nodepool1_:
 
     ```azurepowershell-interactive
     Set-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster -NodeCount 1 -NodeName <your node pool name>
     ```
 
-    The following example output shows the cluster successfully scaled to one node, as shown in the *AgentPoolProfiles* property:
+    The following example output shows the cluster successfully scaled to one node, as shown in the _AgentPoolProfiles_ property:
 
     ```output
     Name                   : nodepool1
@@ -141,27 +141,27 @@ This article describes how to manually increase or decrease the number of nodes 
 Unlike `System` node pools that always require running nodes, `User` node pools allow you to scale to 0. To learn more on the differences between system and user node pools, see [System and user node pools](use-system-pools.md).
 
 > [!IMPORTANT]
-> You can't scale a user node pool with the cluster autoscaler enabled to 0 nodes. To scale a user node pool to 0 nodes, you must disable the cluster autoscaler first. For more information, see [Disable the cluster autoscaler on a node pool](./cluster-autoscaler.md#disable-the-cluster-autoscaler-on-a-node-pool).
+> If you want to force a `User` node pool to scale to 0 nodes, you must disable the cluster autoscaler. For more information, see [Disable the cluster autoscaler on a node pool](./cluster-autoscaler.md#disable-the-cluster-autoscaler-on-a-node-pool).
 
 ### [Azure CLI](#tab/azure-cli)
 
-* To scale a user pool to 0, you can use the [az aks nodepool scale][az-aks-nodepool-scale] in alternative to the above `az aks scale` command, and set `0` as your node count.
+- To scale a user pool to 0, you can use the [az aks nodepool scale][az-aks-nodepool-scale] in alternative to the above `az aks scale` command, and set `0` as your node count.
 
     ```azurecli-interactive
-    az aks nodepool scale --name <your node pool name> --cluster-name myAKSCluster --resource-group myResourceGroup  --node-count 0 
+    az aks nodepool scale --name <your node pool name> --cluster-name myAKSCluster --resource-group myResourceGroup  --node-count 0
     ```
 
-* You can also autoscale `User` node pools to zero nodes, by setting the `--min-count` parameter of the [Cluster Autoscaler](cluster-autoscaler.md) to `0`.
+- You can allow, but not force, autoscaling to zero nodes on autoscaled `User` node pools by setting the `--min-count` parameter of the [Cluster Autoscaler](cluster-autoscaler.md) to `0`.
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-* To scale a user pool to 0, you can use the [Update-AzAksNodePool][update-azaksnodepool] in alternative to the above `Set-AzAksCluster` command, and set `0` as your node count.
+- To scale a user pool to 0, you can use the [Update-AzAksNodePool][update-azaksnodepool] in alternative to the above `Set-AzAksCluster` command, and set `0` as your node count.
 
     ```azurepowershell-interactive
     Update-AzAksNodePool -Name <your node pool name> -ClusterName myAKSCluster -ResourceGroupName myResourceGroup -NodeCount 0
     ```
 
-* You can also autoscale `User` node pools to zero nodes, by setting the `-NodeMinCount` parameter of the [Cluster Autoscaler](cluster-autoscaler.md) to `0`.
+- You can allow, but not force, autoscaling to zero nodes on autoscaled `User` node pools by setting the `-NodeMinCount` parameter of the [Cluster Autoscaler](cluster-autoscaler.md) to `0`.
 
 ---
 
@@ -181,4 +181,3 @@ In this article, you manually scaled an AKS cluster to increase or decrease the 
 [az-aks-nodepool-scale]: /cli/azure/aks/nodepool#az-aks-nodepool-scale
 [update-azaksnodepool]: /powershell/module/az.aks/update-azaksnodepool
 [service-quotas]: ./quotas-skus-regions.md#service-quotas-and-limits
-

@@ -194,6 +194,6 @@ Placement disruption budgets **do not protect against involuntary disruption**. 
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md)
 
 <!-- LINKS - external -->
-[learn-conceptual-crp]: ./concepts-resource-propagation.md
+[learn-conceptual-crp]: ./concepts-resource-placement.md
 [fleet-taints]: ./use-taints-tolerations.md
 [placement-status]: ./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters

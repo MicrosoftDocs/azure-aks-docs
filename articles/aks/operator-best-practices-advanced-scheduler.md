@@ -217,7 +217,7 @@ For more information, see [Affinity and anti-affinity][k8s-affinity].
 
 One final approach for the Kubernetes scheduler to logically isolate workloads is using inter-pod affinity or anti-affinity. These settings define that pods either *shouldn't* or *should* be scheduled on a node that has an existing matching pod. By default, the Kubernetes scheduler tries to schedule multiple pods in a replica set across nodes. You can define more specific rules around this behavior.
 
-For example, you have a web application that also uses an Azure Cache for Redis.
+For example, you have a web application that also uses an Azure Managed Redis resource.
 
 * You use pod anti-affinity rules to request that the Kubernetes scheduler distributes replicas across nodes.
 * You use affinity rules to ensure each web app component is scheduled on the same host as a corresponding cache.
@@ -231,7 +231,7 @@ The distribution of pods across nodes looks like the following example:
 
 Inter-pod affinity and anti-affinity provide a more complex deployment than node selectors or node affinity. With the deployment, you logically isolate resources and control how Kubernetes schedules pods on nodes.
 
-For a complete example of this web application with Azure Cache for Redis example, see [Co-locate pods on the same node][k8s-pod-affinity].
+For a complete example of this web application with Azure Managed Redis, see [Co-locate pods on the same node][k8s-pod-affinity].
 
 ## Next steps
 

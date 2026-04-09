@@ -118,8 +118,8 @@ If your cluster is limited by product tier or regional capacity, upgrades might 
 
 #### Recommendations to prevent or resolve
 
-* Use `maxUnavailable` to upgrade by using existing nodes instead of surging new ones. For more information, see [Customize unavailable nodes during upgrade](./upgrade-aks-cluster.md#customize-unavailable-nodes-during-upgrade).
-* Lower `maxSurge` to reduce extra capacity needs. For more information, see [Customize node surge upgrade](./upgrade-aks-cluster.md#customize-node-surge-upgrade).
+* Use `maxUnavailable` to upgrade by using existing nodes instead of surging new ones. For more information, see [Customize unavailable nodes during upgrade](./upgrade-aks-node-pools-rolling.md#customize-unavailable-nodes).
+* Lower `maxSurge` to reduce extra capacity needs. For more information, see [Customize node surge upgrade](./upgrade-aks-node-pools-rolling.md#customize-node-surge).
 * For security-only updates, use security patch reimages that don't require surge nodes. For more information, see [Apply security and kernel updates to Linux nodes in Azure Kubernetes Service](./node-updates-kured.md).
 
 ### Scenario 2: Node drain failures and PDBs

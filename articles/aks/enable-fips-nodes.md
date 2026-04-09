@@ -13,7 +13,9 @@ ms.custom: template-how-to, linux-related-content
 
 The Federal Information Processing Standard (FIPS) 140-2 is a US government standard that defines minimum security requirements for cryptographic modules in information technology products and systems. Azure Kubernetes Service (AKS) allows you to create Linux and Windows node pools with FIPS 140-2 enabled. Deployments running on FIPS-enabled node pools can use those cryptographic modules to provide increased security and help meet security controls as part of FedRAMP compliance. For more information on FIPS 140-2, see [Federal Information Processing Standard (FIPS) 140][fips].
 
-[!INCLUDE [ubuntu 22.04 retirement](./includes/ubuntu-22-04-retirement.md)]
+[!INCLUDE [Ubuntu 20.04 retirement](./includes/ubuntu-20-04-retirement.md)]
+
+[!INCLUDE [Ubuntu 22.04 retirement](./includes/ubuntu-22-04-retirement.md)]
 
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 

@@ -75,7 +75,7 @@ Recommendations can have one of the following attestation statuses:
 | 1.1.21 | Ensure that the Kubernetes PKI key file permissions are set to 600 | Manual | L1 | N/A |N/A because AKS is a managed solution |
 | 1.2 | API Server | | | | |
 | 1.2.1 | Ensure that the `--anonymous-auth` argument is set to false | Manual | L1 | Pass | |
-| 1.2.2 | Ensure that the `--token-auth-file` parameter isn't set | Automated | L1 | Fail | Auto-rotated by AKS, currently parameter is set |
+| 1.2.2 | Ensure that the `--token-auth-file` parameter isn't set | Automated | L1 | Fail | Managed by AKS. The parameter is set and auto-rotated, and isn't customer configurable. |
 | 1.2.3 | Ensure that `--DenyServiceExternalIPs` isn't set |Manual | L1 | Fail | Customers can use Azure Policy for Kubernetes to deny services with External IP. |
 | 1.2.4 | Ensure that the `--kubelet-client-certificate` and `--kubelet-client-key` arguments are set as appropriate | Automated | L1 | Pass | |
 | 1.2.5 | Ensure that the `--kubelet-certificate-authority` argument is set as appropriate | Automated | L1 | Fail | Kubelet serving certificate uses self-signed certificate |

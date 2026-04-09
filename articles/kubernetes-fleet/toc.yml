@@ -28,7 +28,7 @@
           href: concepts-lifecycle.md
         - name: Member cluster types
           href: concepts-member-cluster-types.md
-        - name: Use Azure RBAC to control access
+        - name: Azure RBAC and Fleet Manager
           href: concepts-rbac.md
         - name: Preview API lifecycle
           href: concepts-preview-api-lifecycle.md
@@ -36,37 +36,35 @@
           href: concepts-fleet-kubernetes-version-support.md
         - name: Fleet and Arc integration
           href: concepts-fleet-arc-integration.md
-    - name: Multi-cluster Kubernetes and node images upgrades
+    - name: Safe multi-cluster upgrades
       href: concepts-update-orchestration.md
-    - name: Multi-cluster multi-tenancy with Managed Fleet Namespaces
+    - name: Multi-tenancy with Managed Fleet Namespaces
       href: concepts-fleet-managed-namespace.md    
-    - name: Multi-cluster workload management
+    - name: Multi-cluster resource management
       items:
-        - name: Multi-cluster workload management overview
-          href: concepts-multi-cluster-workload-management.md
-        - name: Managing workloads using cluster resource placement
-          items:
-          - name: Introduction to ClusterResourcePlacement
-            href: concepts-resource-propagation.md
-          - name: Introduction to ResourcePlacement
-            href: concepts-namespace-scoped-resource-propagation.md
-          - name: Defining a placement rollout strategy
-            href: concepts-rollout-strategy.md       
-          - name: Controlling eviction and disruption
-            href: concepts-eviction-disruption.md
-          - name: Placement strategy and resource snapshots
-            href: concepts-placement-snapshots.md
-          - name: Taking over existing workloads
-            href: concepts-placement-takeover.md
-          - name: Detecting and managing workload drift
-            href: concepts-placement-drift.md 
+        - name: Introduction to resource placement
+          href: concepts-resource-placement.md
+        - name: Controlling placement rollout order
+          href: concepts-rollout-strategy.md       
+        - name: Placement rollouts and resource snapshots
+          href: concepts-placement-snapshots.md
+        - name: Taking over existing resources
+          href: concepts-placement-takeover.md
+        - name: Detecting and managing resource drift
+          href: concepts-placement-drift.md 
+        - name: Controlling eviction and disruption
+          href: concepts-eviction-disruption.md
         - name: Automated deployments overview
           href: concepts-automated-deployments.md 
     - name: Multi-cluster networking 
       items:
-        - name: DNS-based load balancing across multiple clusters
+        - name: Multi-cluster networking overview
+          href: concepts-multi-cluster-networking-overview.md
+        - name: Cross-cluster networking for Fleet Manager
+          href: concepts-cross-cluster-networking.md
+        - name: Public endpoint DNS-based load balancing
           href: concepts-dns-load-balancing.md
-        - name: Layer 4 load balancing across multiple clusters
+        - name: Multi-cluster Services with layer 4 load balancing
           href: concepts-l4-load-balancing.md
 - name: How-to guides
   items:
@@ -108,8 +106,6 @@
           href: quickstart-namespace-scoped-resource-propagation.md
         - name: Control cluster order for resource placement 
           href: howto-staged-update-run.md
-        - name: Customize resource configurations using overrides
-          href: howto-use-overrides-customize-resources-placement.md
         - name: Understanding placement status
           href: howto-understand-placement.md
         - name: Intelligent resource placement using cluster properties
@@ -118,6 +114,10 @@
           href: quickstart-envelope-reserved-resources.md
         - name: Use taints and tolerations
           href: use-taints-tolerations.md
+        - name: Customize cluster-scoped resources with overrides
+          href: cluster-resource-override.md
+        - name: Customize namespace-scoped resources with overrides
+          href: resource-override.md
         - name: Use Automated Deployments with resource placement
           href: howto-automated-deployments.md
     - name: Use Managed Fleet Namespaces for multi-cluster multi-tenancy
@@ -126,11 +126,11 @@
           href: howto-managed-namespaces.md
         - name: View and access Managed Fleet Namespaces
           href: howto-managed-namespaces-access.md
-    - name: Load balance multi-cluster services
+    - name: Configure and operate multi-cluster networking
       items:
-        - name: Use DNS-based load balancing across multiple clusters
+        - name: Resilient public DNS load balancing
           href: howto-dns-load-balancing.md
-        - name: Multi-cluster Layer 4 Load Balancing
+        - name: Multi-cluster Services with layer 4 load balancing
           href: l4-load-balancing.md
 - name: Resources
   items:

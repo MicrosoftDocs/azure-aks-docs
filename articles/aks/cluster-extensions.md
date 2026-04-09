@@ -42,6 +42,16 @@ For more information about the commands, see [`az aks`](/cli/azure/aks).
 
 Minor and major upgrades of core extensions occur alongside AKS minor and major version updates to avoid introducing breaking changes and provide better reliability.
 
+### Addon to core extension migration
+
+[Azure Monitor](/azure/azure-monitor/containers/kubernetes-monitoring-overview) services, including [Container Insights](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=cli), [Managed Prometheus](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=cli), and [Application Insights](/azure/azure-monitor/containers/kubernetes-codeless?tabs=portal) are transitioning to a cluster extension based backend model. This change updates AKS monitoring [add-ons](/azure/aks/integrations) to an extension‑based management model, with no change to functionality or user experience.
+
+- This backend migration is non‑disruptive and does not change user experience or require customer action.
+
+- There is no impact to workloads, data collection, or monitoring functionality.
+
+- Azure CLI, Azure Portal, and all client experiences will continue to work as expected.
+
 ### Standard extensions
 
 For information about the other cluster extensions, see the table in [Currently available extensions](cluster-extensions.md#currently-available-extensions) and the [Kubernetes apps](deploy-marketplace.md) deployed via Azure Marketplace are of the Standard Extension type.

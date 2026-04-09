@@ -44,7 +44,7 @@ You can configure your AKS clusters with API Server VNet Integration in managed 
 
 ### Deploy a public cluster
 
-* Deploy a public AKS cluster with API Server VNet integration for managed VNet using the [`az aks create`][az-aks-create] command with the `--enable-api-server-vnet-integration` flag.
+* Deploy a public AKS cluster with API Server VNet integration for managed VNet using the [`az aks create`][az-aks-create] command with the `--enable-apiserver-vnet-integration` flag.
 
     ```azurecli-interactive
     az aks create --name <cluster-name> \
@@ -57,7 +57,7 @@ You can configure your AKS clusters with API Server VNet Integration in managed 
 
 ### Deploy a private cluster
 
-* Deploy a private AKS cluster with API Server VNet integration for managed VNet using the [`az aks create`][az-aks-create] command with the `--enable-api-server-vnet-integration` and `--enable-private-cluster` flags.
+* Deploy a private AKS cluster with API Server VNet integration for managed VNet using the [`az aks create`][az-aks-create] command with the `--enable-apiserver-vnet-integration` and `--enable-private-cluster` flags.
 
     ```azurecli-interactive
     az aks create --name <cluster-name> \
@@ -142,7 +142,7 @@ az group create --location <location> --name <resource-group>
 
 ### Deploy a public cluster
 
-* Deploy a public AKS cluster with API Server VNet integration using the [`az aks create`][az-aks-create] command with the `--enable-api-server-vnet-integration` flag.
+* Deploy a public AKS cluster with API Server VNet integration using the [`az aks create`][az-aks-create] command with the `--enable-apiserver-vnet-integration` flag.
 
     ```azurecli-interactive
     az aks create --name <cluster-name> \
@@ -158,7 +158,7 @@ az group create --location <location> --name <resource-group>
 
 ### Deploy a private cluster
 
-* Deploy a private AKS cluster with API Server VNet integration using the [`az aks create`][az-aks-create] command with the `--enable-api-server-vnet-integration` and `--enable-private-cluster` flags.
+* Deploy a private AKS cluster with API Server VNet integration using the [`az aks create`][az-aks-create] command with the `--enable-apiserver-vnet-integration` and `--enable-private-cluster` flags.
 
     ```azurecli-interactive
     az aks create --name <cluster-name> \
@@ -244,7 +244,7 @@ You can expose the API server endpoint of a private cluster with API Server VNet
 
 ### Create an API Server VNet Integration Private cluster
 
-* Create a private AKS cluster with API Server VNet Integration using the [`az aks create`][az-aks-create] command with the `--enable-api-server-vnet-integration` and `--enable-private-cluster` flags.
+* Create a private AKS cluster with API Server VNet Integration using the [`az aks create`][az-aks-create] command with the `--enable-apiserver-vnet-integration` and `--enable-private-cluster` flags.
 
     ```azurecli-interactive
     az aks create --name <cluster-name> \

@@ -20,7 +20,7 @@ This article provides a conceptual overview of Azure Kubernetes Fleet Manager's 
 
 When deployed on target member clusters, Managed Fleet Namespaces allow platform administrators to apply resource quotas, network policies, labels, annotations, and control access to namespace resources on each cluster. Managed Fleet Namespaces extend the capability of [Managed Kubernetes Namespace](../aks/concepts-managed-namespaces.md), which provide a way to logically isolate workloads within a single AKS cluster. 
 
-Managed Fleet Namespaces use a generated, read-only, Fleet Manager [Cluster Resource Placement](concepts-resource-propagation.md) (CRP) to propagate the centrally defined namespace to selected member clusters. 
+Managed Fleet Namespaces use a generated, read-only, Fleet Manager [Cluster Resource Placement](concepts-resource-placement.md) (CRP) to propagate the centrally defined namespace to selected member clusters. 
 
 When creating a Fleet Managed Namespace, you can also control: 
 

@@ -528,7 +528,7 @@
         items:
           - name: Overview
             href: concepts-network-ingress.md
-          - name: Ingress with the Kubernetes Gateway API
+          - name: Ingress with the Kubernetes Gateway API (preview)
             href: managed-gateway-api.md
           - name: Use Application Gateway for Containers
             items:
@@ -540,6 +540,10 @@
             items:
               - name: Application routing add-on overview
                 href: app-routing.md
+              - name: Kubernetes Gateway API with application routing (preview)
+                href: app-routing-gateway-api.md
+              - name: Secure application routing Gateway API ingress traffic
+                href: app-routing-gateway-api-tls.md
               - name: Advanced application routing add-on configurations (NGINX)
                 href: app-routing-nginx-configuration.md
               - name: Custom domain name and SSL certificate configuration
@@ -548,8 +552,6 @@
                 href: create-nginx-ingress-private-controller.md
               - name: Monitor using Prometheus and Grafana
                 href: app-routing-nginx-prometheus.md
-              - name: Migrate from HTTP application routing to the application routing add-on
-                href: app-routing-migration.md
               - name: Use Application Gateway Ingress Controller add-on
                 href: /azure/application-gateway/tutorial-ingress-controller-add-on-existing?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
       - name: Egress
@@ -675,6 +677,12 @@
                     href: container-network-security-wireguard-encryption-concepts.md
                   - name: Set up WireGuard encryption
                     href: how-to-apply-wireguard.md
+              - name: Cilium mTLS encryption
+                items:
+                  - name: Overview
+                    href: container-network-security-cilium-mutual-tls-concepts.md
+                  - name: Set up Cilium mTLS encryption
+                    href: container-network-security-cilium-mutual-tls-how-to.md              
               - name: FQDN-based filtering
                 items:
                   - name: Overview
@@ -762,8 +770,12 @@
           items:
             - name: Overview
               href: managed-identity-overview.md
-            - name: Enable a managed identity on your cluster
-              href: use-managed-identity.md
+            - name: Use a system-assigned managed identity
+              href: system-assigned-managed-identity.md
+            - name: Use a user-assigned managed identity
+              href: user-assigned-managed-identity.md
+            - name: Use a pre-created kubelet managed identity
+              href: pre-created-kubelet-managed-identity.md
         - name: Create a service principal
           href: kubernetes-service-principal.md
         - name: Enable access to AKS clusters using Trusted Access
@@ -806,7 +818,7 @@
           href: secure-container-access.md
     - name: Node security
       items:
-        - name: BYOK for Azure Managed Disks
+        - name: BYOK for Azure managed disks
           href: azure-disk-customer-managed-keys.md
         - name: Enable host-based encryption
           href: enable-host-encryption.md
@@ -852,7 +864,7 @@
           href: update-credentials.md
         - name: Limit access to cluster configuration file
           href: control-kubeconfig-access.md
-        - name: External identity providers (preview)
+        - name: External identity providers
           items:
             - name: External identity provider authentication overview
               href: external-identity-provider-authentication-overview.md
@@ -1114,12 +1126,14 @@
           items:
             - name: Overview
               href: agentic-cli-for-aks-overview.md
-            - name: Install and use the agentic CLI for AKS
+            - name: Install the agentic CLI for AKS
               href: agentic-cli-for-aks-install.md
-            - name: Troubleshoot agentic CLI for AKS issues
+            - name: Troubleshooting
               href: agentic-cli-for-aks-troubleshoot.md
-            - name: Agentic CLI for AKS FAQ
+            - name: FAQ
               href: agentic-cli-for-aks-faq.yml
+            - name: Service account and workload identity setup
+              href: agentic-cli-for-aks-service-account-workload-identity-setup.md
         - name: AKS MCP server
           href: aks-model-context-protocol-server.md
         - name: Work with clusters using Copilot
@@ -1216,6 +1230,8 @@
               href: node-auto-provisioning.md
             - name: Enable or disable NAP
               href: use-node-auto-provisioning.md
+            - name: Migrate from Cluster Autoscaler to NAP
+              href: migrate-from-autoscaler-to-node-auto-provisioning.md
             - name: Use NAP in a custom VNet
               href: node-auto-provisioning-custom-vnet.md
             - name: Update NAP node images
@@ -1256,6 +1272,8 @@
       href: best-practices-monitoring-proactive.md
     - name: Configure AKS diagnostics
       href: aks-diagnostics.md
+    - name: Cluster Health Monitor checker (preview)
+      href: cluster-health-monitor.md
     - name: Enable monitoring for AKS clusters
       href: /azure/azure-monitor/containers/kubernetes-monitoring-enable?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Monitor Kubernetes object events

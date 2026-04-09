@@ -66,7 +66,7 @@ Microsoft provides technical support for the following examples:
   - Network performance and latency.
   - Microsoft-managed [network policies](use-network-policies.md#differences-between-network-policy-engines-cilium-azure-npm-and-calico) components and functionalities.
 
-Any cluster actions taken by Microsoft/AKS are made with your consent under a built-in Kubernetes role `aks-service` and built-in role binding `aks-service-rolebinding`. This role enables AKS to troubleshoot and diagnose cluster issues, but can't modify permissions nor create roles or role bindings, or other high privilege actions. Role access is only enabled under active support tickets with just-in-time (JIT) access.
+Any cluster actions taken by Microsoft/AKS are made with your consent under a built-in Kubernetes role `aks-service` and built-in role binding `aks-service-rolebinding`, which binds the role to the `aks-support` Microsoft Support service identity. This role enables AKS to troubleshoot and diagnose cluster issues, but can't modify permissions nor create roles or role bindings, or other high privilege actions. Role access is only enabled under active support tickets with just-in-time (JIT) access.
 
 ### Unsupported scenarios
 

@@ -798,7 +798,7 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
     }
     ```
 
-For more information, see Azure Linux with OS Guard for AKS][os-guard].
+For more information, see [Azure Linux with OS Guard for AKS][os-guard].
 
 #### [Modify JSON to create multiple Flatcar Container Linux for AKS (preview) node pools](#tab/flatcar-arm)
 

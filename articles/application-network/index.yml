@@ -1,0 +1,65 @@
+### YamlMime:Landing
+
+title: Azure Kubernetes Application Network (Preview)
+summary: Azure Kubernetes Application Network provides a fully-managed service network solution for your AKS workloads. Learn more with these overviews and tutorials. # < 160 chars
+
+metadata:
+  title: Azure Kubernetes Application Network documentation
+  description: Azure Kubernetes Application Network provides a fully-managed service network solution for your AKS workloads. Learn more with these overviews and tutorials.
+  ms.service: azure-kubernetes-app-net
+  ms.topic: landing-page
+  author: kochhars
+  ms.author: kochhars
+  ms.date: 03/02/2026
+# linkListType: architecture | concept | deploy | download | get-started | how-to-guide | learn | overview | quickstart | reference | sample | tutorial | video | whats-new
+
+landingContent:
+# Cards and links should be based on top customer tasks or top subjects
+# Start card title with a verb 
+  # Card (optional)
+  - title: Get started
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: What is Azure Kubernetes Application Network?
+            url: overview.md
+          - text: Security overview
+            url: security.md
+      - linkListType: architecture
+        links:
+          - text: Architecture overview
+            url: architecture.md
+      - linkListType: how-to-guide
+        links:
+          - text: Create an Azure Kubernetes Application Network
+            url: get-started.md
+          - text: Explore traffic management use cases
+            url: traffic-management-use-cases.md
+
+  # Card (optional)
+  - title: Versions and upgrades
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: Supported versions
+            url: supported-versions.md
+      - linkListType: how-to-guide
+        links:
+          - text: Manage upgrades
+            url: upgrades.md
+          - text: Use planned maintenance to schedule upgrades
+            url: planned-maintenance.md
+  
+  # Card (optional)
+  - title: Observability
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: Azure Kubernetes Application Network observability overview
+            url: observability.md
+      - linkListType: how-to-guide
+        links:
+          - text: Configure Azure Kubernetes Application Network logs
+            url: logs.md
+          - text: Get data plane metrics for Azure Kubernetes Application Network
+            url: metrics.md

@@ -225,7 +225,7 @@ spec:
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 
 <!-- LINKS - external -->
-[learn-conceptual-crp]: ./concepts-resource-propagation.md
+[learn-conceptual-crp]: ./concepts-resource-placement.md
 [learn-conceptual-rp]: ./concepts-namespace-scoped-resource-propagation.md
 [fleet-hub-cluster]: ./access-fleet-hub-cluster-kubernetes-api.md
 [crp-staged-rollouts]: ./concepts-rollout-strategy.md#staged-update-strategy-preview

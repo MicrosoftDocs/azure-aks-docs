@@ -25,7 +25,7 @@ The [Yelb][yelb] sample web application consists of a front-end component called
 
 The `yelb-ui` serves JavaScript code to the browser. This code is compiled from an [Angular][angular] application. The `yelb-ui` component might also include an `nginx` proxy depending on the deployment model. The `yelb-appserver` is a [Sinatra](https://sinatrarb.com/) application that interacts with a cache server (`redis-server`) and a Postgres back-end database (`yelb-db`). [Redis Cache][redis-cache] stores the number of page views, while [PostgreSQL][postgresql] persists the votes. Both services are deployed on [Kubernetes][kubernetes] without using any managed service for storing data on AWS or Azure.
 
-The original Yelb application is self-contained and doesn't rely on external services, so you can migrate it from AWS to Azure without any code changes. On Azure, you can use [Azure Cache for Redis][azure-redis] and [Azure Database for PostgreSQL][azure-postgresql] as replacements for the Redis Cache and PostgreSQL services deployed on [AKS][aks].
+The original Yelb application is self-contained and doesn't rely on external services, so you can migrate it from AWS to Azure without any code changes. On Azure, you can use [Azure Managed Redis][azure-redis] and [Azure Database for PostgreSQL][azure-postgresql] as replacements for the Redis Cache and PostgreSQL services deployed on [AKS][aks].
 
 The sample Yelb application allows users to vote on a set of alternatives (restaurants) and dynamically updates pie charts based on the number of votes received. The application also keeps track of the number of page views and displays the hostname of the `yelb-appserver` instance serving the API request upon a vote or a page refresh. This feature enables you to demo the application independently or collaboratively.
 
@@ -48,7 +48,7 @@ To recreate the AWS workload in Azure with minimal changes, use an Azure equival
 | Secrets vault | [AWS Key Management Service (KMS)][aws-kms] | [Azure Key Vault][azure-kv] |
 | Container registry | [Amazon Elastic Container Registry (ECR)][aws-ecr] | [Azure Container Registry (ACR)][azure-cr] |
 | Domain Name System (DNS) | [Amazon Route 53][aws-route53] | [Azure DNS][azure-dns] |
-| Caching | [Amazon ElastiCache][aws-cache] | [Azure Cache for Redis][azure-redis] |
+| Caching | [Amazon ElastiCache][aws-cache] | [Azure Managed Redis][azure-redis] |
 | NoSQL | [Amazon DynamoDB][aws-dynamodb] | [Azure Database for PostgreSQL][azure-postgresql] |
 
 For a comprehensive comparison between Azure and AWS services, see [AWS to Azure services comparison][aws-to-azure].
@@ -221,7 +221,7 @@ Other contributors:
 [azure-cr]: /azure/container-registry/container-registry-intro
 [azure-lb]: /azure/load-balancer/load-balancer-overview
 [azure-dns]: /azure/dns/dns-overview
-[azure-redis]: /azure/azure-cache-for-redis/cache-overview
+[azure-redis]: /azure/redis/overview
 [azure-postgresql]: /azure/postgresql/flexible-server/service-overview
 [agic]: /azure/application-gateway/ingress-controller-overview
 [aws-to-azure]: /azure/architecture/aws-professional/services

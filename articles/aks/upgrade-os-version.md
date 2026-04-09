@@ -13,6 +13,8 @@ ai-usage: ai-assisted
 
 This article describes OS versions available for Azure Kubernetes Service (AKS) nodes, and best practices for testing and upgrading your OS version.
 
+[!INCLUDE [ubuntu 20.04 retirement](./includes/ubuntu-20-04-retirement.md)]
+
 [!INCLUDE [ubuntu 22.04 retirement](./includes/ubuntu-22-04-retirement.md)]
 
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]

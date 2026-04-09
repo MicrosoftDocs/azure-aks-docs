@@ -4,18 +4,18 @@ description: Learn how to create and manage persistent volumes using Azure Files
 ms.topic: how-to
 ms.subservice: aks-storage
 ms.service: azure-kubernetes-service
-ms.date: 01/08/2025
+ms.date: 03/31/2026
 author: schaffererin
 ms.author: schaffererin
-# Customer intent: "As a Kubernetes administrator, I want to learn how to create and manage persistent volumes using Azure Storage CSI drivers in Azure Kubernetes Service (AKS) so that I can provide scalable and reliable storage solutions for my containerized applications."
+# Customer intent: "As a Kubernetes administrator, I want to learn how to create and manage persistent volumes using Azure Files CSI drivers in Azure Kubernetes Service (AKS) so that I can provide scalable and reliable storage solutions for my containerized applications."
 ---
 
 # Create and manage persistent volumes (PVs) with Azure Files in Azure Kubernetes Service (AKS)
 
-If multiple pods need concurrent access to the same storage volume, you can use Azure Files to connect using the [Server Message Block (SMB)][smb-overview] or [NFS protocol][nfs-overview]. This article shows you how to dynamically and statically create an Azure Files share for use by multiple pods in an Azure Kubernetes Service (AKS) cluster using Azure Files.
+If multiple pods need concurrent access to the same storage volume, you can use Azure Files to connect using the [Server Message Block (SMB)][smb-overview] or [NFS protocol][nfs-overview]. This article shows you how to dynamically and statically create an Azure file share for use by multiple pods in an Azure Kubernetes Service (AKS) cluster.
 
 > [!NOTE]
-> The Azure File CSI driver only permits the mounting of SMB file shares using key-based (NTLM v2) authentication, and therefore doesn't support the maximum security profile of Azure File share settings. On the other hand, mounting NFS file shares doesn't require key-based authentication.
+> The Azure File CSI driver only permits the mounting of SMB file shares using key-based (NTLM v2) authentication, and therefore doesn't support the maximum security profile of Azure File share settings. Mounting NFS file shares doesn't require key-based authentication.
 
 > [!NOTE]
 > We recommend FIO when running benchmarking tests. For more information, see [benchmarking tools and tests](/azure/storage/files/nfs-performance#benchmarking-tools-and-tests).
@@ -25,29 +25,36 @@ If multiple pods need concurrent access to the same storage volume, you can use 
 - Azure CLI version 2.0.59 or later installed and configured. Find the version using the `az --version` command. To install or upgrade, see [Install Azure CLI][install-azure-cli].
 - The [Azure Files CSI driver](./csi-storage-drivers.md) enabled on your AKS cluster.
 - An Azure [storage account][azure-storage-account].
-- When choosing between Standard and Premium file shares, it's important you understand the provisioning model and requirements of the expected usage pattern you plan to run on Azure Files. For more information, see [Choosing an Azure Files performance tier based on usage patterns][azure-files-usage].
+- When choosing between SSD (Premium) and HDD (Standard) file shares, it's important you understand the provisioning model and requirements of the expected usage pattern you plan to run on Azure Files. Azure Files has three billing models: [provisioned v2](/azure/storage/files/understanding-billing#provisioned-v2-model) (recommended), [pay-as-you-go](/azure/storage/files/understanding-billing#pay-as-you-go-model), and the legacy [provisioned v1](/azure/storage/files/understanding-billing#provisioned-v1-model). For more information, see [Choosing an Azure Files performance tier based on usage patterns][azure-files-usage].
 
 ## Use built-in storage classes to create dynamic PVs with Azure Files
 
 Storage classes define how a unit of storage is dynamically created with a persistent volume. A storage account is automatically created in the [node resource group][node-resource-group] for use with the storage class to hold the Azure Files file share. When you use CSI drivers on AKS, there are two extra built-in `StorageClasses` that use the Azure Files CSI storage drivers (the other CSI storage classes are created with the cluster alongside the in-tree default storage classes):
 
-- `azurefile-csi`: Uses Azure Standard Storage to create an Azure file share.
-- `azurefile-csi-premium`: Uses Azure Premium Storage to create an Azure file share.
+- `azurefile-csi`: Creates an Azure file share on HDD storage.
+- `azurefile-csi-premium`: Creates an Azure file share on SSD storage.
 
-The reclaim policy on both storage classes ensures that the underlying Azure Files file share is deleted when the respective PV is deleted. The storage classes also configure the file shares to be expandable, you just need to edit the [persistent volume claim][persistent-volume-claim-overview] (PVC) with the new size.
+The reclaim policy on both storage classes ensures that the underlying Azure file share is deleted when the respective PV is deleted. The storage classes also configure the file shares to be expandable, you just need to edit the [persistent volume claim][persistent-volume-claim-overview] (PVC) with the new size.
 
 You can select one of the following [Azure storage redundancy SKUs][storage-skus] for the `skuname` parameter in the storage class definition:
 
-- **Standard_LRS**: Standard locally redundant storage
-- **Standard_GRS**: Standard geo-redundant storage
-- **Standard_ZRS**: Standard zone-redundant storage
-- **Standard_RAGRS**: Standard read-access geo-redundant storage
-- **Standard_RAGZRS**: Standard read-access geo-zone-redundant storage
-- **Premium_LRS**: Premium locally redundant storage
-- **Premium_ZRS**: Premium zone-redundant storage
+- **PremiumV2_LRS** (recommended): SSD provisioned v2, locally redundant storage
+- **PremiumV2_ZRS** (recommended): SSD provisioned v2, zone-redundant storage
+- **Premium_LRS**: SSD provisioned v1 (legacy), locally redundant storage
+- **Premium_ZRS**: SSD provisioned v1 (legacy), zone-redundant storage
+- **StandardV2_LRS**: HDD provisioned v2, locally redundant storage
+- **StandardV2_ZRS**: HDD provisioned v2, zone-redundant storage
+- **StandardV2_GRS**: HDD provisioned v2, geo-redundant storage
+- **StandardV2_GZRS**: HDD provisioned v2, geo-zone-redundant storage
+- **Standard_LRS**: HDD pay-as-you-go, locally redundant storage
+- **Standard_GRS**: HDD pay-as-you-go, geo-redundant storage
+- **Standard_ZRS**: HDD pay-as-you-go, zone-redundant storage
+
+> [!IMPORTANT]
+> To use the provisioned v2 billing model for Azure Files, you must use the Azure Files CSI driver [version 1.35.0](https://github.com/kubernetes-sigs/azurefile-csi-driver/releases/tag/v1.35.0) or later.
 
 > [!NOTE]
-> Azure Files supports Azure Premium file shares. The minimum file share capacity is 100 GiB. We recommend using Azure Premium file shares instead of Standard file shares because Premium file shares offer higher performance, low-latency disk support for I/O-intensive workloads.
+> For new deployments, we recommend SSD provisioned v2 (`PremiumV2_LRS` or `PremiumV2_ZRS`) for most workloads. SSD file shares offer higher performance and low-latency disk support for I/O-intensive workloads. The minimum file share capacity for Premium accounts is 100 GiB.
 
 ## Create custom storage classes for dynamic PVs with Azure Files
 
@@ -65,15 +72,18 @@ The default storage classes are suitable for most scenarios. In some cases, you 
     volumeBindingMode: Immediate
     allowVolumeExpansion: true
     mountOptions:
-      - dir_mode=0640
-      - file_mode=0640
-      - uid=0
-      - gid=0
+      # Canonical permissions: 0755/uid=1000/gid=1000 for least privilege.
+      # Use 0777/uid=0/gid=0 only if app requires root or broad write access.
+      - dir_mode=0755
+      - file_mode=0755
+      - uid=1000
+      - gid=1000
       - mfsymlinks
-      - cache=strict # https://linux.die.net/man/8/mount.cifs
+      - cache=strict
+      - actimeo=30
       - nosharesock
     parameters:
-      skuName: Standard_LRS
+      skuName: PremiumV2_LRS  # SSD provisioned v2 (recommended). Alternatives: Premium_LRS (SSD v1), StandardV2_LRS (HDD v2), Standard_LRS (HDD pay-as-you-go)
     ```
 
 1. Create the storage class using the [`kubectl apply`][kubectl-apply] command:
@@ -114,9 +124,9 @@ The following table includes parameters you can use to define a custom storage c
 | `skuName` | Azure Files storage account type (alias: `storageAccountType`) | `Standard_LRS`, `Standard_ZRS`, `Standard_GRS`, `Standard_RAGRS`, `Standard_RAGZRS`,`Premium_LRS`, `Premium_ZRS`, `StandardV2_LRS`, `StandardV2_ZRS`, `StandardV2_GRS`, `StandardV2_GZRS`, `PremiumV2_LRS`, `PremiumV2_ZRS` | No | `Standard_LRS` <br> Minimum file share size for Premium account type is 100 GB. <br> ZRS account type is supported in limited regions. <br> NFS file share only supports Premium account type. <br> Standard V2 SKU names are for [Azure Files provisioned v2 model](/azure/storage/files/understanding-billing#provisioned-v2-model). |
 | `storageAccount` | Specify an Azure storage account name. | storageAccountName | No | When a specific storage account name is not provided, the driver will look for a suitable storage account that matches the account settings within the same resource group. If it fails to find a matching storage account, it will create a new one. However, if a storage account name is specified, the storage account must already exist. |
 | `storageEndpointSuffix` | Specify Azure storage endpoint suffix. | `core.windows.net`, `core.chinacloudapi.cn`, etc. | No | If empty, driver uses default storage endpoint suffix according to cloud environment. For example, `core.windows.net`. |
+| `subscriptionID` | Specify Azure subscription ID where Azure file share is created. | Azure subscription ID | No | If not empty, `resourceGroup` must be provided. |
 | `tags` | [Tags][tag-resources] are created in new storage account. | Tag format: 'foo=aaa,bar=bbb' | No | "" |
 | --- | **The following parameters are only for SMB protocol** | --- | --- | --- |
-| `subscriptionID` | Specify Azure subscription ID where Azure file share is created. | Azure subscription ID | No | If not empty, `resourceGroup` must be provided. |
 | `storeAccountKey` | Specify whether to store account key to Kubernetes secret. | `true` or `false` <br> `false` means driver uses kubelet identity to get account key. | No | `true` |
 | `secretName` | Specify secret name to store account key. | | No | |
 | `secretNamespace` | Specify the namespace of secret to store account key. <br><br> **Note**: <br> If `secretNamespace` isn't specified, the secret is created in the same namespace as the pod. | `default`,`kube-system`, etc. | No | PVC namespace, for example `csi.storage.k8s.io/pvc/namespace` |
@@ -124,11 +134,11 @@ The following table includes parameters you can use to define a custom storage c
 | --- | **The following parameters are only for NFS protocol** | --- | --- | --- |
 | `mountPermissions` | Mounted folder permissions. The default is `0777`. If set to `0`, driver doesn't perform `chmod` after mount | `0777` | No | |
 | `rootSquashType` | Specify root squashing behavior on the share. The default is `NoRootSquash` | `AllSquash`, `NoRootSquash`, `RootSquash` | No | |
-| --- | **The following parameters are only for VNet setting (for example: NFS, private endpoint)** | --- | --- | --- |
+| --- | **The following parameters are only for virtual network setting (for example: NFS, private endpoint)** | --- | --- | --- |
 | `fsGroupChangePolicy` | Indicates how the driver changes volume's ownership. Pod `securityContext.fsGroupChangePolicy` is ignored. | `OnRootMismatch` (default), `Always`, `None` | No | `OnRootMismatch` |
 | `subnetName` | Subnet name | Existing subnet name of the agent node. | No | If empty, driver uses the `subnetName` value in Azure cloud config file. |
 | `vnetName` | Virtual network name | Existing virtual network name. | No | If empty, driver will update all the subnets under the cluster virtual network. |
-| `vnetResourceGroup` | Specify VNet resource group where virtual network is defined. | Existing resource group name. | No | If empty, driver uses the `vnetResourceGroup` value in Azure cloud config file. |
+| `vnetResourceGroup` | Specify virtual network resource group where virtual network is defined. | Existing resource group name. | No | If empty, driver uses the `vnetResourceGroup` value in Azure cloud config file. |
 
 > [!NOTE]
 > If the storage account is created by the driver, then you only need to specify `networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the private endpoint and private DNS zone (named `privatelink.file.core.windows.net`) together with the account. If you bring your own storage account, then you need to [create the private endpoint][storage-account-private-endpoint] for the storage account. If you're using Azure Files storage in a network isolated cluster, you must create a custom storage class with "networkEndpointType: privateEndpoint". You can use the following example manifest as a reference:
@@ -137,17 +147,21 @@ The following table includes parameters you can use to define a custom storage c
 > apiVersion: storage.k8s.io/v1
 > kind: StorageClass
 > metadata:
->   name: azurefile-csi
+>   name: azurefile-csi-private-custom
 > provisioner: file.csi.azure.com
 > allowVolumeExpansion: true
 > parameters:
->   skuName: Premium_LRS  # available values: Premium_LRS, Premium_ZRS, Standard_LRS, Standard_GRS, Standard_ZRS, Standard_RAGRS, Standard_RAGZRS
+>   skuName: PremiumV2_LRS  # SSD provisioned v2 (recommended). Alternatives: Premium_LRS, Premium_ZRS, StandardV2_LRS, Standard_LRS
 >   networkEndpointType: privateEndpoint
 > reclaimPolicy: Delete
 > volumeBindingMode: Immediate
 > mountOptions:
->   - dir_mode=0777  # modify this permission if you want to enhance the security
->   - file_mode=0777
+>   # Canonical permissions: 0755/uid=1000/gid=1000 for least privilege.
+>   # Use 0777/uid=0/gid=0 only if app requires root or broad write access.
+>   - dir_mode=0755
+>   - file_mode=0755
+>   - uid=1000
+>   - gid=1000
 >   - mfsymlinks
 >   - cache=strict  # https://linux.die.net/man/8/mount.cifs
 >   - nosharesock  # reduce probability of reconnect race
@@ -281,19 +295,21 @@ kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
   name: my-azurefile
-provisioner: file.csi.azure.com # replace with "kubernetes.io/azure-file" if aks version is less than 1.21
+provisioner: file.csi.azure.com
 allowVolumeExpansion: true
 mountOptions:
-  - dir_mode=0777
-  - file_mode=0777
-  - uid=0
-  - gid=0
+  # Canonical permissions: 0755/uid=1000/gid=1000 for least privilege.
+  # Use 0777/uid=0/gid=0 only if app requires root or broad write access.
+  - dir_mode=0755
+  - file_mode=0755
+  - uid=1000
+  - gid=1000
   - mfsymlinks
   - cache=strict
   - actimeo=30
   - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
 parameters:
-  skuName: Premium_LRS
+  skuName: PremiumV2_LRS  # SSD provisioned v2 (recommended). Alternatives: Premium_LRS (SSD v1), StandardV2_LRS (HDD v2), Standard_LRS (HDD pay-as-you-go)
 ```
 
 ### Recommended mount options for SMB shares
@@ -304,16 +320,20 @@ Recommended mount options for SMB shares are provided in the following storage c
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-    name: azurefile-csi
+    name: azurefile-csi-premiumv2-custom
 provisioner: file.csi.azure.com
 allowVolumeExpansion: true
 parameters:
-    skuName: Premium_LRS  # available values: Premium_LRS, Premium_ZRS, Standard_LRS, Standard_GRS, Standard_ZRS, Standard_RAGRS, Standard_RAGZRS
+    skuName: PremiumV2_LRS  # SSD provisioned v2 (recommended). Alternatives: Premium_LRS, Premium_ZRS, StandardV2_LRS, Standard_LRS, Standard_ZRS
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 mountOptions:
-    - dir_mode=0777  # modify this permission if you want to enhance the security
-    - file_mode=0777 # modify this permission if you want to enhance the security
+    # Canonical permissions: 0755/uid=1000/gid=1000 for least privilege.
+    # Use 0777/uid=0/gid=0 only if app requires root or broad write access.
+    - dir_mode=0755
+    - file_mode=0755
+    - uid=1000
+    - gid=1000
     - mfsymlinks    # support symbolic links
     - cache=strict  # https://linux.die.net/man/8/mount.cifs
     - nosharesock  # reduces probability of reconnect race
@@ -321,7 +341,7 @@ mountOptions:
     - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
 ```
 
-If you're using premium (SSD) file shares and your workload is metadata heavy, enroll to use the [metadata caching](/azure/storage/files/smb-performance?tabs=portal#metadata-caching-for-ssd-file-shares) feature to improve performance.
+If you're using premium (SSD) file shares with the SMB protocol and your workload is metadata heavy, enroll to use the [metadata caching](/azure/storage/files/smb-performance?tabs=portal#metadata-caching-for-ssd-file-shares) feature to improve performance.
 
 For more information, see [Improve performance for SMB Azure file shares](/azure/storage/files/smb-performance).
 
@@ -333,11 +353,11 @@ Recommended mount options for NFS shares are provided in the following storage c
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-    name: azurefile-csi-nfs
+    name: azurefile-csi-premiumv2-custom
 provisioner: file.csi.azure.com
 parameters:
     protocol: nfs
-    skuName: Premium_LRS     # available values: Premium_LRS, Premium_ZRS
+    skuName: PremiumV2_LRS     # SSD provisioned v2 (recommended). Alternatives: Premium_LRS, Premium_ZRS, PremiumV2_ZRS
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 allowVolumeExpansion: true
@@ -415,7 +435,7 @@ The Azure Files CSI driver supports creating [snapshots of persistent volumes](h
 ## Resize a persistent volume with Azure Files
 
 > [!NOTE]
-> Shrinking persistent volumes is currently not supported. Trying to patch an existing PVC with a smaller size than the current one leads to the following error message:
+> Shrinking persistent volumes isn't currently supported. Trying to patch an existing PVC with a smaller size than the current one leads to the following error message:
 >
 > `The persistentVolumeClaim "pvc-azurefile" is invalid: spec.resources.requests.storage: Forbidden: field can not be less than previous value.`
 
@@ -488,24 +508,29 @@ If your Azure Files resources are protected with a private endpoint, you must cr
     apiVersion: storage.k8s.io/v1
     kind: StorageClass
     metadata:
-      name: private-azurefile-csi
+      name: azurefile-csi-private-custom
     provisioner: file.csi.azure.com
     allowVolumeExpansion: true
     parameters:
+      skuName: PremiumV2_LRS  # SSD provisioned v2 (recommended). Alternatives: Premium_LRS, StandardV2_LRS
       resourceGroup: <resourceGroup>
       storageAccount: <storageAccountName>
       server: <storageAccountName>.file.core.windows.net
+      networkEndpointType: privateEndpoint
     reclaimPolicy: Delete
     volumeBindingMode: Immediate
     mountOptions:
-      - dir_mode=0777
-      - file_mode=0777
-      - uid=0
-      - gid=0
+      # Canonical permissions: 0755/uid=1000/gid=1000 for least privilege.
+      # Use 0777/uid=0/gid=0 only if app requires root or broad write access.
+      - dir_mode=0755
+      - file_mode=0755
+      - uid=1000
+      - gid=1000
       - mfsymlinks
       - cache=strict  # https://linux.die.net/man/8/mount.cifs
       - nosharesock  # reduce probability of reconnect race
       - actimeo=30  # reduce latency for metadata-heavy workload
+      - nobrl
     ```
 
 1. Create the storage class using the `kubectl apply` command:
@@ -582,6 +607,7 @@ This option is optimized for random access workloads with in-place data updates 
 
 ### Prerequisites for using NFS shares with Azure Files
 
+- NFS requires SSD file shares (such as `PremiumV2_LRS`, `PremiumV2_ZRS`, `Premium_LRS`, or `Premium_ZRS`) and a virtual network-enabled storage account.
 - Your AKS cluster _control plane_ identity (that is, your AKS cluster name) is added to the [Contributor](/azure/role-based-access-control/built-in-roles#contributor) role on the VNet and NetworkSecurityGroup.
 - Your AKS cluster's service principal or managed service identity (MSI) must be added to the Contributor role to the storage account.
 
@@ -602,11 +628,12 @@ The following example manifest configures the `mountOptions` section in a storag
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: azurefile-csi-nfs
+  name: azurefile-csi-premiumv2-custom
 provisioner: file.csi.azure.com
 allowVolumeExpansion: true
 parameters:
   protocol: nfs
+  skuName: PremiumV2_LRS  # SSD provisioned v2 (recommended). Alternatives: Premium_LRS, Premium_ZRS, PremiumV2_ZRS
 mountOptions:
   - nconnect=4
   - noresvport
@@ -628,11 +655,12 @@ For a list of supported `mountOptions`, see [NFS mount options][nfs-file-share-m
     apiVersion: storage.k8s.io/v1
     kind: StorageClass
     metadata:
-      name: azurefile-csi-nfs
+      name: azurefile-csi-premiumv2-custom
     provisioner: file.csi.azure.com
     allowVolumeExpansion: true
     parameters:
       protocol: nfs
+      skuName: PremiumV2_LRS  # SSD provisioned v2 (recommended). Alternatives: Premium_LRS, Premium_ZRS, PremiumV2_ZRS
     mountOptions:
       - nconnect=4
       - noresvport
@@ -692,7 +720,7 @@ For a list of supported `mountOptions`, see [NFS mount options][nfs-file-share-m
         - metadata:
             name: persistent-storage
           spec:
-            storageClassName: azurefile-csi-nfs
+            storageClassName: azurefile-csi-premiumv2-custom
             accessModes: ["ReadWriteMany"]
             resources:
               requests:
@@ -732,11 +760,11 @@ For a list of supported `mountOptions`, see [NFS mount options][nfs-file-share-m
 ### Encryption in Transit (EiT) for NFS file shares (preview)
 
 > [!NOTE]
-> The EiT feature is now available in preview starting with AKS version 1.33. Please note that Ubuntu 20.04, Azure Linux, arm64 and Windows nodes aren't currently supported.
+> The EiT feature is now available in preview starting with AKS version 1.33. Ubuntu 20.04, Azure Linux, arm64 and Windows nodes aren't currently supported.
 >
-> The feature is supported for the following [Linux distributions](/azure/storage/files/encryption-in-transit-for-nfs-shares#overview) in these [supported regions](/azure/storage/files/encryption-in-transit-for-nfs-shares#supported-regions).
+> The feature is supported in all Azure regions that [support SSD Azure file shares](/azure/storage/files/redundancy-premium-file-shares).
 
-[Encryption in Transit (EiT)](/azure/storage/files/encryption-in-transit-for-nfs-shares) ensures that all read and writes to the NFS file shares within the VNET are encrypted, providing an extra layer of security.
+[Encryption in Transit (EiT)](/azure/storage/files/encryption-in-transit-for-nfs-shares) ensures that all read and writes to the NFS file shares within the virtual network are encrypted, providing an extra layer of security.
 
 By setting `encryptInTransit: "true"` in the storage class parameters, you can enable data encryption in transit for NFS Azure file shares. For example:
 
@@ -744,11 +772,12 @@ By setting `encryptInTransit: "true"` in the storage class parameters, you can e
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: azurefile-csi-nfs
+  name: azurefile-csi-premiumv2-custom
 provisioner: file.csi.azure.com
 allowVolumeExpansion: true
 parameters:
   protocol: nfs
+  skuName: PremiumV2_LRS  # SSD provisioned v2 (recommended). Alternatives: Premium_LRS, Premium_ZRS, PremiumV2_ZRS
   encryptInTransit: "true"
 mountOptions:
   - nconnect=4
@@ -768,7 +797,7 @@ Azure Files now supports managed identity based authentication for SMB access. T
 - Ensure the [user-assigned Kubelet identity](use-managed-identity.md#create-a-kubelet-managed-identity) has the `Storage File Data SMB MI Admin` role on the storage account.
   - If you use your own storage account, you need to assign `Storage File Data SMB MI Admin` role to the user-assigned Kubelet identity on that storage account.
   - If the storage account is created by the CSI driver, grant `Storage File Data SMB MI Admin` role to the resource group where the storage account resides.
-  - If you just leverage the default built-in user-assigned Kubelet identity, it already has the required `Storage File Data SMB MI Admin` role on the managed node resource group.
+
 
 ### Enable managed identity for dynamic PVs with Azure Files
 
@@ -792,10 +821,12 @@ reclaimPolicy: Delete
 volumeBindingMode: Immediate
 allowVolumeExpansion: true
 mountOptions:
-    - dir_mode=0777  # modify this permission if you want to enhance the security
-    - file_mode=0777
-    - uid=0
-    - gid=0
+    # Canonical permissions: 0755/uid=1000/gid=1000 for least privilege.
+    # Use 0777/uid=0/gid=0 only if app requires root or broad write access.
+    - dir_mode=0755
+    - file_mode=0755
+    - uid=1000
+    - gid=1000
     - mfsymlinks
     - cache=strict  # https://linux.die.net/man/8/mount.cifs
     - nosharesock  # reduce probability of reconnect race
@@ -805,7 +836,13 @@ mountOptions:
 
 ### Enable managed identity for static PVs with Azure Files
 
-To enable managed identity for static volumes, you need to create a PV with `mountWithManagedIdentity`: `"true"` and mount the PV to your application pod.
+To use managed identity with statically provisioned Azure Files persistent volumes, ensure the following configuration:
+
+1. Enable the SMBOauth on the storage account by running:
+   ```bash
+   az storage account update --name <account-name> --resource-group <resource-group-name> --enable-smb-oauth true
+   ```
+1. Create a PV with `mountWithManagedIdentity`: `"true"` and mount the PV to your application pod.
 
 The following example manifest configures a PV to use managed identity to access Azure Files:
 
@@ -822,10 +859,12 @@ spec:
     persistentVolumeReclaimPolicy: Retain
     storageClassName: azurefile-csi
     mountOptions:
-    - dir_mode=0777  # modify this permission if you want to enhance the security
-    - file_mode=0777
-    - uid=0
-    - gid=0
+    # Canonical permissions: 0755/uid=1000/gid=1000 for least privilege.
+    # Use 0777/uid=0/gid=0 only if app requires root or broad write access.
+    - dir_mode=0755
+    - file_mode=0755
+    - uid=1000
+    - gid=1000
     - mfsymlinks
     - cache=strict  # https://linux.die.net/man/8/mount.cifs
     - nosharesock  # reduce probability of reconnect race
@@ -842,6 +881,161 @@ spec:
         mountWithManagedIdentity: "true"
         # optional, clientID of the managed identity, kubelet identity would be used by default if it's empty
         clientID: "xxxxx-xxxx-xxx-xxx-xxxxxxx"
+```
+
+## Use workload identity to access Azure Files storage (preview)
+
+Azure Files now supports workload identity-based authentication for SMB access. Workload identity enables pod-level, least-privilege access to Azure Files without tying application identity to the node lifecycle.
+
+> [!NOTE]
+> Workload identity support for Azure Files in AKS is available in preview starting with AKS version 1.35.0 on Linux nodes.
+
+### Prerequisites for using workload identity to access Azure Files storage
+Before using workload identity to access Azure Files from AKS, complete the following prerequisites.
+
+#### 1. Create a cluster with oidc-issuer enabled and get the AKS cluster credential
+Create a new AKS cluster with the OIDC issuer enabled, or verify that it's already enabled. Follow the official [documentation](use-oidc-issuer.md#create-an-aks-cluster-with-the-oidc-issuer) for creating a new AKS cluster with the `--enable-oidc-issuer` parameter and retrieve the cluster credentials. And set the following environment variables:
+```bash
+export RESOURCE_GROUP=<your resource group name>
+export CLUSTER_NAME=<your cluster name>
+export REGION=<your region>
+```
+
+#### 2. Prepare the storage account
+Create a new storage account and file share, or use an existing one. Refer to the Azure Files [documentation](/azure/storage/files/storage-how-to-use-files-portal) for detailed instructions. Set the following environment variables:
+```bash
+export STORAGE_RESOURCE_GROUP=<your storage account resource group>
+export ACCOUNT=<your storage account name>
+export SHARE=<your fileshare name> # optional
+```
+
+#### 3. Create or reuse a managed identity and grant required permissions
+
+Create a user‑assigned managed identity, or reuse an existing one (for example, a [managed identity](managed-identity-overview.md) associated with the AKS node resource group). And retrieve the required identity and resource details:
+```bash
+export UAMI=<your managed identity name>
+az identity create --name $UAMI --resource-group $RESOURCE_GROUP
+
+export USER_ASSIGNED_CLIENT_ID="$(az identity show -g $RESOURCE_GROUP --name $UAMI --query 'clientId' -o tsv)"
+export IDENTITY_TENANT=$(az aks show --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --query identity.tenantId -o tsv)
+export ACCOUNT_SCOPE=$(az storage account show --name $ACCOUNT --query id -o tsv)
+```
+
+Grant the `Storage File Data SMB MI Admin` role to the managed identity. This role enables Azure Files mounting using workload identity tokens only, without relying on storage account keys.
+```bash
+az role assignment create --role "Storage File Data SMB MI Admin" --assignee $USER_ASSIGNED_CLIENT_ID --scope $ACCOUNT_SCOPE
+```
+
+#### 4. Create a Kubernetes ServiceAccount
+Create a Kubernetes ServiceAccount that your workload will use.
+```bash
+export SERVICE_ACCOUNT_NAME=<your sa name>
+export SERVICE_ACCOUNT_NAMESPACE=<your sa namespace>
+
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ${SERVICE_ACCOUNT_NAME}
+  namespace: ${SERVICE_ACCOUNT_NAMESPACE}
+EOF
+```
+
+#### 5. Create the federated identity credential
+Create the federated identity credential between the managed identity, service account issuer, and subject using the `az identity federated-credential create` command.
+```bash
+export FEDERATED_IDENTITY_NAME=<your federated identity name>
+export AKS_OIDC_ISSUER="$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query "oidcIssuerProfile.issuerUrl" -o tsv)"
+
+az identity federated-credential create --name $FEDERATED_IDENTITY_NAME \
+--identity-name $UAMI \
+--resource-group $RESOURCE_GROUP \
+--issuer $AKS_OIDC_ISSUER \
+--subject system:serviceaccount:${SERVICE_ACCOUNT_NAMESPACE}:${SERVICE_ACCOUNT_NAME}
+```
+
+After completing these steps, workloads running with the specified ServiceAccount can authenticate to Azure Files using Microsoft Entra workload identity, without using storage account keys or node‑level managed identities.
+
+### Enable workload identity for dynamic PVs with Azure Files
+To use workload identity with dynamically provisioned Azure Files persistent volumes, ensure the following configuration:
+1. Grant permissions to the CSI driver control plane identity
+   - Assign the `Storage Account Contributor` role to the identity used by the CSI driver control plane for the target storage account.
+   - If the storage account is created dynamically by the CSI driver, grant `Storage Account Contributor` role to the node resource group.
+   - By default, AKS cluster control plane identity is already assigned the `Storage Account Contributor` role on the node resource group for the storage account creation.
+
+1. Create a new storage class with `mountWithWorkloadIdentityToken`: `"true"` and deploy your stateful set using this storage class.
+
+The following example manifest configures a storage class to use workload identity to access Azure Files:
+
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azurefile-csi-wi
+provisioner: file.csi.azure.com
+parameters:
+  resourceGroup: EXISTING_RESOURCE_GROUP_NAME   # optional, node resource group by default if it's not provided
+  storageAccount: EXISTING_STORAGE_ACCOUNT_NAME # optional, a new account will be created if it's not provided
+  mountWithWorkloadIdentityToken: "true"
+    # optional, clientID of the managed identity, kubelet identity would be used by default if it's not provided
+  clientID: "xxxxx-xxxx-xxx-xxx-xxxxxxx"
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+mountOptions:
+  - dir_mode=0777  # modify this permission if you want to enhance the security
+  - file_mode=0777
+  - mfsymlinks
+  - cache=strict  # https://linux.die.net/man/8/mount.cifs
+  - nosharesock  # reduce probability of reconnect race
+  - actimeo=30  # reduce latency for metadata-heavy workload
+  - nobrl  # disable sending byte range lock requests to the server
+```
+
+### Enable workload identity for static PVs with Azure Files
+To use workload identity with statically provisioned Azure Files persistent volumes, ensure the following configuration:
+
+1. Enable the SMBOauth on the storage account by running:
+   ```bash
+   az storage account update --name <account-name> --resource-group <resource-group-name> --enable-smb-oauth true
+   ```
+1. Create a PV with `mountWithWorkloadIdentityToken`: `"true"` specified and mount the PV to your application pod.
+
+The following example manifest configures a PV to use workload identity to access Azure Files:
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-azurefile
+spec:
+  capacity:
+  storage: 100Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azurefile-csi
+  mountOptions:
+  - dir_mode=0777  # modify this permission if you want to enhance the security
+  - file_mode=0777
+  - uid=0
+  - gid=0
+  - mfsymlinks
+  - cache=strict  # https://linux.die.net/man/8/mount.cifs
+  - nosharesock  # reduce probability of reconnect race
+  - actimeo=30  # reduce latency for metadata-heavy workload
+  - nobrl  # disable sending byte range lock requests to the server
+  csi:
+  driver: file.csi.azure.com
+  # make sure volumeHandle is unique for every identical share in the cluster
+  volumeHandle: "{resource-group-name}#{account-name}#{file-share-name}"
+  volumeAttributes:
+    resourceGroup: EXISTING_RESOURCE_GROUP_NAME   # optional, node resource group by default if it's not provided
+    storageAccount: EXISTING_STORAGE_ACCOUNT_NAME # optional, a new account will be created if it's not provided
+    shareName: EXISTING_FILE_SHARE_NAME
+    mountWithWorkloadIdentityToken: "true"
+    # optional, clientID of the managed identity, kubelet identity would be used by default if it's empty
+    clientID: "xxxxx-xxxx-xxx-xxx-xxxxxxx"
 ```
 
 ## Create a static PV with Azure Files
@@ -959,13 +1153,16 @@ Kubernetes needs credentials to access the file share created in the previous st
           name: azure-secret
           namespace: default
       mountOptions:
-        - dir_mode=0777
-        - file_mode=0777
-        - uid=0
-        - gid=0
+        # Canonical permissions: 0755/uid=1000/gid=1000 for least privilege.
+        # Use 0777/uid=0/gid=0 only if app requires root or broad write access.
+        - dir_mode=0755
+        - file_mode=0755
+        - uid=1000
+        - gid=1000
         - mfsymlinks
         - cache=strict
         - nosharesock
+        - actimeo=30
         - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
     ```
 
@@ -1066,7 +1263,7 @@ To mount the Azure Files file share into your pod, you configure the volume in t
             volumeAttributes:
               secretName: azure-secret  # required
               shareName: aksshare  # required
-              mountOptions: 'dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock,nobrl'  # optional
+              mountOptions: 'dir_mode=0755,file_mode=0755,uid=1000,gid=1000,cache=strict,actimeo=30,nosharesock,nobrl'  # optional
     ```
 
 1. Create the pod using the [`kubectl apply`][kubectl-apply] command.

@@ -3,7 +3,7 @@ title: Customize the Node Configuration for Azure Kubernetes Service (AKS) Node 
 description: Learn how to customize the configuration on Azure Kubernetes Service (AKS) cluster nodes and node pools.
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 04/24/2023
+ms.date: 02/25/2026
 ms.author: schaffererin
 author: schaffererin
 ms.subservice: aks-nodes
@@ -132,6 +132,9 @@ After you apply custom node configuration, you can confirm the settings were app
 
 ## Supported custom configuration parameters
 
+> [!IMPORTANT]
+> When enabling unsafe sysctls, you assume responsibility for node stability and workload behavior. Unsafe sysctls can potentially cause node instability or security vulnerabilities if misconfigured. Ensure you understand the implications of enabling specific unsafe sysctls and monitor your cluster's health closely after making changes.
+
 ### Linux kubelet custom configuration
 
 | Parameter | Allowed values/interval | Default | Description |
@@ -230,6 +233,17 @@ The following table lists the kernel settings that you can customize per node po
 | `swapFileSizeMB` | 1 MB - Size of the [temporary disk](/azure/virtual-machines/managed-disks-overview#temporary-disk) (/dev/sdb) | None | None | None | SwapFileSizeMB specifies the size in MB of a swap file to create on the agent nodes from this node pool. |
 | `transparentHugePageEnabled` | `always`, `madvise`, `never` | `always` | `always` | `madvise` | [Transparent Hugepages](https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html#admin-guide-transhuge) is a Linux kernel feature intended to improve performance by making more efficient use of your processor's memory-mapping hardware. When enabled the kernel attempts to allocate `hugepages` whenever possible and any Linux process receives 2-MB pages if the `mmap` region is 2 MB naturally aligned. In certain cases when `hugepages` are enabled system wide, applications might end up allocating more memory resources. An application might `mmap` a large region but only touch 1 byte of it, in that case a 2-MB page might be allocated instead of a 4k page for no good reason. This scenario is why it's possible to disable `hugepages` system-wide or to only have them inside `MADV_HUGEPAGE madvise` regions. |
 | `transparentHugePageDefrag` | `always`, `defer`, `defer+madvise`, `madvise`, `never` | `madvise` | `madvise` | `madvise` | This value controls whether the kernel should make aggressive use of memory compaction to make more `hugepages` available. |
+
+## Considerations for custom node configurations
+
+Keep the following considerations in mind when customizing your node configuration:
+
+- Custom node configurations are reapplied during node image upgrades.
+- Custom node configurations are preserved during scale-out operations.
+- AKS doesn't perform pre-flight validation of the custom node configuration parameters or values. Ensure that the custom node configuration parameters and values you specify are supported and valid to avoid potential issues with your cluster nodes.
+- Default values for custom node configuration parameters often change with new operating system versions. When applying custom node configurations, review the default values for the parameters you're configuring to ensure that your custom settings are appropriate for the OS version of your cluster nodes.
+- We recommmend limiting the number of people who have permissions to modify the custom node configuration to prevent unintended consequences on cluster stability and performance. Consider using [Azure Role-Based Access Control (RBAC)](./manage-azure-rbac.md) to restrict access to cluster configuration settings.
+- We recommend separating node pools with custom configurations from those without custom configurations to prevent unintended consequences on workloads that might be sensitive to certain configuration changes. For example, if you have a critical workload that requires specific kubelet settings, consider isolating that workload to a dedicated node pool with the necessary custom kubelet configuration.
 
 ## Related content
 

@@ -248,8 +248,9 @@ This configuration requires bring-your-own networking (via [Kubenet][byo-vnet-ku
     ```
 
    > [!Important]
-   > A single NAT gateway resource can't be used across multiple availability zones. To ensure zone-resiliency, it is recommended to deploy a NAT gateway resource to each availability zone and assign to subnets containing AKS clusters in each zone. For more information on this deployment model, see [NAT gateway for each zone](/azure/nat-gateway/nat-availability-zones#zonal-nat-gateway-resource-for-each-zone-in-a-region-to-create-zone-resiliency).
-   > If no zone is configured for NAT gateway, the default zone placement is "no zone", in which Azure places NAT gateway into a zone for you.
+   > To ensure zone-redundancy, it's recommended to deploy a StandardV2 NAT gateway resource, which spans across multiple availability zones in a region. This ensures continued outbound connectivity even if a single zone fails. For more details on StandardV2 NAT gateway and its benefits, see [StandardV2 NAT Gateway](/azure/nat-gateway/nat-overview#standardv2-nat-gateway). 
+   > By comparison, a Standard NAT gateway resource provides resiliency only within the availability zone in which it's deployed.
+
 
 5. Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command.
 

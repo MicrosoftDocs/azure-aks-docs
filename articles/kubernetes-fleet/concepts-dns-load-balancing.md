@@ -217,4 +217,4 @@ If you wish to stop traffic routing but retain the Azure Traffic Manager and its
 [traffic-manager-overview]: /azure/traffic-manager/traffic-manager-overview
 [traffic-manager-weighted]: /azure/traffic-manager/traffic-manager-routing-methods#weighted-traffic-routing-method
 [traffic-manager-health-check]: /azure/traffic-manager/traffic-manager-monitoring#configure-endpoint-monitoring
-[concept-crp]: ./concepts-resource-propagation.md
+[concept-crp]: ./concepts-resource-placement.md

@@ -13,6 +13,8 @@ ms.author: schaffererin
 
 This article describes the node images available for Azure Kubernetes Service (AKS) nodes.
 
+[!INCLUDE [Ubuntu 20.04 retirement](./includes/ubuntu-20-04-retirement.md)]
+
 [!INCLUDE [Ubuntu 22.04 retirement](./includes/ubuntu-22-04-retirement.md)]
 
 [!INCLUDE [Azure Linux 2.0 retirement](./includes/azure-linux-retirement.md)]

@@ -552,6 +552,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/app-routing-migration.md",
+            "redirect_url": "/azure/aks/app-routing-gateway-api",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/windows-container-cli.md",
             "redirect_url": "/azure/aks/learn/quick-windows-container-deploy-cli",
             "redirect_document_id": false
@@ -564,6 +569,11 @@
         {
             "source_path_from_root": "/articles/aks/windows-node-limitations.md",
             "redirect_url": "/azure/aks/windows-faq",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/use-managed-identity.md",
+            "redirect_url": "/azure/aks/managed-identity-overview",
             "redirect_document_id": false
         },
         {

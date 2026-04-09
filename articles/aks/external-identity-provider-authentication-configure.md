@@ -1,9 +1,10 @@
 ---
-title: Configure external identity providers with AKS structured authentication (preview)
+title: Configure External Identity Providers with AKS Structured Authentication (Preview)
 description: Learn how to configure external identity providers for Azure Kubernetes Service (AKS) using structured authentication and JWT authenticators.
 author: shashankbarsin
 ms.author: shasb
 ms.topic: how-to
+ms.service: azure-kubernetes-service
 ms.subservice: aks-security
 ms.custom: preview, devx-track-azurecli
 ms.date: 11/04/2025
@@ -13,506 +14,539 @@ zone_pivot_groups: external-idp-authn-type
 
 # Configure external identity providers with AKS structured authentication (preview)
 
-This article shows you how to configure external identity providers for Azure Kubernetes Service (AKS) control plane authentication using structured authentication. You learn how to create JSON Web Token (JWT) authenticators, configure claim validation and mapping, and test the authentication flow.
+This article shows you how to configure GitHub and Google Identity external identity providers for Azure Kubernetes Service (AKS) control plane authentication using structured authentication. You learn how to create JSON Web Token (JWT) authenticators, configure claim validation and mapping, and test the authentication flow.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Prerequisites
 
-- Read [conceptual overview][structured-auth-overview] for authentication to AKS using external identity provider.
+- Read the [conceptual overview][structured-auth-overview] for authentication to AKS using external identity provider.
+
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
-- This article requires version 2.77.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
+
+- This article requires version 2.77.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there. To install or update the Azure CLI on your local machine, see [Install the Azure CLI](/cli/azure/install-azure-cli).
 - You need to install the `aks-preview` Azure CLI extension version 18.0.0b41 or later to use structured authentication features.
-  - If you don't already have the `aks-preview` extension, install it using the [`az extension add`][az-extension-add] command:
+
+  - If you don't already have the `aks-preview` extension, install it using the [`az extension add`][az-extension-add] command.
+
     ```azurecli-interactive
     az extension add --name aks-preview
     ```
-  - If you already have the `aks-preview` extension, update it to make sure you have the latest version using the [`az extension update`][az-extension-update] command:
+
+  - If you already have the `aks-preview` extension, update it to make sure you have the latest version using the [`az extension update`][az-extension-update] command.
+
     ```azurecli-interactive
     az extension update --name aks-preview
     ```
-  - Verify you have the required version:
+
+  - Verify you have the required version of the `aks-preview` extension using the [`az extension show`][az-extension-show] command.
+
     ```azurecli-interactive
     az extension show --name aks-preview --query version
     ```
-- An AKS cluster running Kubernetes version 1.30 or later. To create an AKS cluster, see [Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Azure CLI][aks-quickstart-cli].
-- `kubectl` command-line tool to interact with your Kubernetes cluster. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [az aks install-cli][az-aks-install-cli] command.
+
+- An AKS cluster running Kubernetes version 1.30 or later. To create an AKS cluster, see [Deploy an Azure Kubernetes Service (AKS) cluster using Azure CLI][aks-quickstart-cli].
+- `kubectl` command-line tool to interact with your Kubernetes cluster. `kubectl` is already installed if you use Azure Cloud Shell. You can install `kubectl` locally using the [`az aks install-cli`][az-aks-install-cli] command.
+
     ```azurecli-interactive
     az aks install-cli
     ```
+
 - An external identity provider that supports OpenID Connect (OIDC).
 - Network connectivity from cluster nodes to your identity provider.
-- If you plan to use the `kubelogin` plugin, install it using these [setup instructions][kubelogin-oidc]
+- If you plan to use the `kubelogin` plugin, install it by following the instructions in the [kubelogin setup guide][kubelogin-oidc].
 
-### Set environment variables
+## Set environment variables
 
-Set the following environment variables for your resource group and cluster name:
+- Set the following environment variables for your resource group and cluster name:
 
-```bash
-export RESOURCE_GROUP="<your-resource-group-name>"
-export CLUSTER_NAME="<your-cluster-name>"
-```
+    ```bash
+    export RESOURCE_GROUP="<your-resource-group-name>"
+    export CLUSTER_NAME="<your-cluster-name>"
+    ```
 
-### Register the preview feature
+## Register the `JWTAuthenticatorPreview` feature
 
-If you're using a subscription without the feature registered, register the `JWTAuthenticatorPreview` feature:
+1. Register the `JWTAuthenticatorPreview` feature using the [`az feature register`][az-feature-register] command.
 
-```azurecli-interactive
-az feature register --name JWTAuthenticatorPreview --namespace Microsoft.ContainerService
-```
+    ```azurecli-interactive
+    az feature register --name JWTAuthenticatorPreview --namespace Microsoft.ContainerService
+    ```
 
-Check the registration status:
+1. Check the registration status of the feature using the [`az feature show`][az-feature-show] command.
 
-```azurecli-interactive
-az feature show --name JWTAuthenticatorPreview --namespace Microsoft.ContainerService
-```
+    ```azurecli-interactive
+    az feature show --name JWTAuthenticatorPreview --namespace Microsoft.ContainerService
+    ```
 
-When the status shows `Registered`, refresh the resource provider registration:
+1. When the status shows `Registered`, refresh the resource provider registration for `Microsoft.ContainerService` using the [`az provider register`][az-provider-register] command.
 
-```azurecli-interactive
-az provider register --namespace Microsoft.ContainerService
-```
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
 
-## Set up your identity provider
+:::zone pivot="github"
 
-Configure your external identity provider to support OIDC authentication. Select your identity provider for specific setup instructions:
-
-::: zone pivot="github"
-
-### GitHub Actions OIDC Setup
+## Set up GitHub Actions OIDC authentication
 
 1. Ensure your GitHub Actions workflows have the necessary permissions.
-2. Configure the `id-token: write` permission in your workflow files:
+1. Configure the `id-token: write` permission in your workflow files. For example:
+
    ```yaml
    permissions:
      id-token: write
      contents: read
    ```
-3. Set up appropriate repository and organization settings for OIDC token access. Configure [repository OIDC settings](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure) and organization security policies for token usage.
 
-::: zone-end
+1. Set up appropriate repository and organization settings for OIDC token access. Configure [repository OIDC settings](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure) and organization security policies for token usage.
 
-::: zone pivot="google-identity"
+:::zone-end
 
-### Google OAuth 2.0 Setup
+:::zone pivot="google-identity"
 
-1. Go to the [Google Cloud Console][google-cloud-console].
-2. [Create or select a project][google-workspace-create-project].
-3. [Create OAuth 2.0 credentials][google-oauth2-protocol].
-4. Note your client ID and client secret for later use.
+## Set up Google Identity OAuth 2.0 authentication
 
-::: zone-end
+1. Navigate to the [Google Cloud Console][google-cloud-console].
+1. [Create or select a project][google-workspace-create-project].
+1. [Create OAuth 2.0 credentials][google-oauth2-protocol].
+1. Note your client ID and client secret for later use.
 
-## Create JWT authenticator configuration
-
-Create a JSON configuration file that defines how to validate and process tokens from your identity provider. Select your identity provider for specific configuration examples:
+:::zone-end
 
 ::: zone pivot="github"
 
-### GitHub Configuration
+## Create JWT authenticator configuration for GitHub Actions OIDC
 
-For GitHub Actions OIDC, create a file named `jwt-config.json` with the following configuration:
+- Create a file named `jwt-config.json` with the following configuration:
 
-```json
-{
-  "issuer": {
-      "url": "https://token.actions.githubusercontent.com",
-      "audiences": [
-          "my-api"
-      ]
-  },
-  "claimValidationRules": [
-      {
-          "expression": "has(claims.sub)",
-          "message": "must have sub claim"
-      }
-  ],
-  "claimMappings": {
-      "username": {
-          "expression": "'aks:jwt:github:' + claims.sub"
-      }
-  },
-  "userValidationRules": [
-      {
-          "expression": "has(user.username)",
-          "message": "must have username"
+    ```json
+    {
+      "issuer": {
+          "url": "https://token.actions.githubusercontent.com",
+          "audiences": [
+              "my-api"
+          ]
       },
-      {
-          "expression": "!user.username.startsWith('aks:jwt:github:system')",
-          "message": "username must not start with 'aks:jwt:github:system'"
-      }
-  ]
-}
-```
+      "claimValidationRules": [
+          {
+              "expression": "has(claims.sub)",
+              "message": "must have sub claim"
+          }
+      ],
+      "claimMappings": {
+          "username": {
+              "expression": "'aks:jwt:github:' + claims.sub"
+          }
+      },
+      "userValidationRules": [
+          {
+              "expression": "has(user.username)",
+              "message": "must have username"
+          },
+          {
+              "expression": "!user.username.startsWith('aks:jwt:github:system')",
+              "message": "username must not start with 'aks:jwt:github:system'"
+          }
+      ]
+    }
+    ```
 
-::: zone-end
+:::zone-end
 
-::: zone pivot="google-identity"
+:::zone pivot="google-identity"
 
-### Google OAuth 2.0 Configuration
+## Create JWT authenticator configuration for Google Identity
 
-Create a file named `jwt-config.json` with the following configuration:
+- Create a file named `jwt-config.json` with the following configuration:
 
-```json
-{
-    "issuer": {
-        "url": "https://accounts.google.com",
-        "audiences": [
-            "your-client-id.apps.googleusercontent.com"
+    ```json
+    {
+        "issuer": {
+            "url": "https://accounts.google.com",
+            "audiences": [
+                "your-client-id.apps.googleusercontent.com"
+            ]
+        },
+        "claimValidationRules": [
+            {
+                "expression": "has(claims.sub)",
+                "message": "must have sub claim"
+            }
+        ],
+        "claimMappings": {
+            "username": {
+                "expression": "'aks:jwt:google:' + claims.sub"
+            },
+            "groups": {
+                "expression": "has(claims.groups) ? claims.groups.split(',').map(g, 'aks:jwt:' + g) : []"
+            }
+        },
+        "userValidationRules": [
+            {
+                "expression": "has(user.username)",
+                "message": "must have username"
+            },
+            {
+                "expression": "!user.username.startsWith('aks:jwt:google:system')",
+                "message": "username must not start with 'aks:jwt:google:system'"
+            }
         ]
-    },
-    "claimValidationRules": [
-        {
-            "expression": "has(claims.sub)",
-            "message": "must have sub claim"
-        }
-    ],
-    "claimMappings": {
-        "username": {
-            "expression": "'aks:jwt:google:' + claims.sub"
-        },
-        "groups": {
-            "expression": "has(claims.groups) ? claims.groups.split(',').map(g, 'aks:jwt:' + g) : []"
-        }
-    },
-    "userValidationRules": [
-        {
-            "expression": "has(user.username)",
-            "message": "must have username"
-        },
-        {
-            "expression": "!user.username.startsWith('aks:jwt:google:system')",
-            "message": "username must not start with 'aks:jwt:google:system'"
-        }
-    ]
-}
-```
+    }
+    ```
 
-::: zone-end
+:::zone-end
 
-### Configuration elements
+## JWT authenticator configuration elements
 
-- **issuer**: The OIDC issuer configuration.
-    - **url**: The OIDC issuer URL that must match the `iss` claim in JWTs.
-    - **audiences**: List of audiences that JWTs must be issued for (checked against `aud` claim).
-    - **certificateAuthority**: Optional base64-encoded root certificate bundle for Transport Layer Security (TLS) verification.
-- **claimValidationRules**: Array of validation rules using CEL expressions to validate JWT claims.
-    - **expression**: CEL expression that must evaluate to true.
-    - **message**: Error message displayed when validation fails.
-- **claimMappings**: Defines how JWT claims map to Kubernetes user information.
-    - **username**: CEL expression defining how to construct the username from claims.
-    - **groups**: CEL expression defining how to construct group memberships from claims.
-    - **uid**: Optional CEL expression for user identifier.
-    - **extra**: Optional map of more user attributes.
-- **userValidationRules**: Array of validation rules applied to the final user information.
-    - **expression**: CEL expression that must evaluate to true for the mapped user.
-    - **message**: Error message displayed when user validation fails.
+The JWT authenticator configuration includes the following key elements: `issuer`, `claimValidationRules`, `claimMappings`, and `userValidationRules`. Each element serves a specific purpose in defining how AKS validates and processes JWT tokens from the external identity provider.
 
-> [!IMPORTANT]
-> All username and group mappings must include the `aks:jwt:` prefix to prevent conflicts with other authentication methods.
+### Issuer configuration
+
+The following table describes the key elements of the `issuer` configuration:
+
+| Issuer configuration element | Description |
+| ---------------------------- | ----------- |
+| `url` | The OIDC issuer URL that must match the `iss` claim in JWTs. |
+| `audiences` | List of audiences that JWTs must be issued for (checked against `aud` claim). |
+| `certificateAuthority` | Optional base64-encoded root certificate bundle for Transport Layer Security (TLS) verification when connecting to the issuer URL. |
+
+### Claim validation rules configuration
+
+The following table describes the key elements of the `claimValidationRules` configuration:
+
+| Claim validation rule element | Description |
+| ----------------------------- | ----------- |
+| `expression` | CEL expression that defines the validation logic to apply to JWT claims. The expression must evaluate to true for the token to be accepted. |
+| `message` | Error message returned when the validation rule fails. |
+
+### Claim mappings configuration
+
+The following table describes the key elements of the `claimMappings` configuration:
+
+| Claim mappings element | Description |
+| ---------------------- | ----------- |
+| `username` | CEL expression that defines how to construct the Kubernetes username from JWT claims. **Must include the `aks:jwt:` prefix to prevent conflicts with other authentication methods**. |
+| `groups` | CEL expression that defines how to construct Kubernetes group memberships from JWT claims. **Must include the `aks:jwt:` prefix to prevent conflicts with other authentication methods**. |
+| `uid` | Optional CEL expression that defines a unique identifier for the user. |
+| `extra` | Optional map of additional user attributes defined by CEL expressions. |
+
+### User validation rules configuration
+
+The following table describes the key elements of the `userValidationRules` configuration:
+
+| User validation rule element | Description |
+| ---------------------------- | ----------- |
+| `expression` | CEL expression that defines additional validation logic to apply to the final mapped user information. The expression must evaluate to true for the user to be accepted. |
+| `message` | Error message returned when the user validation rule fails. |
 
 ## Create the JWT authenticator
 
-Add the JWT authenticator to your AKS cluster:
+- Add the JWT authenticator to your AKS cluster using the [`az aks jwtauthenticator add`][az-aks-jwtauthenticator-add] command.
 
-```azurecli-interactive
-az aks jwtauthenticator add \
-    --resource-group $RESOURCE_GROUP \
-    --cluster-name $CLUSTER_NAME \
-    --name external-auth \
-    --config-file jwt-config.json
-```
+    ```azurecli-interactive
+    az aks jwtauthenticator add \
+        --resource-group $RESOURCE_GROUP \
+        --cluster-name $CLUSTER_NAME \
+        --name external-auth \
+        --config-file jwt-config.json
+    ```
 
-### Verify the authenticator
+## Manage JWT authenticators
 
-List all JWT authenticators on your cluster:
+### List all JWT authenticators
 
-```azurecli-interactive
-az aks jwtauthenticator list \
-    --resource-group $RESOURCE_GROUP \
-    --cluster-name $CLUSTER_NAME
-```
+- List all JWT authenticators on your cluster using the [`az aks jwtauthenticator list`][az-aks-jwtauthenticator-list] command.
 
-Get details of a specific authenticator:
+    ```azurecli-interactive
+    az aks jwtauthenticator list \
+        --resource-group $RESOURCE_GROUP \
+        --cluster-name $CLUSTER_NAME
+    ```
 
-```azurecli-interactive
-az aks jwtauthenticator show \
-    --resource-group $RESOURCE_GROUP \
-    --cluster-name $CLUSTER_NAME \
-    --name external-auth
-```
+### Get details for a specific JWT authenticator
 
-## Set up client for authentication
+- Get details for a specific JWT authenticator using the [`az aks jwtauthenticator show`][az-aks-jwtauthenticator-show] command.
 
-Configure your client to authenticate with your external identity provider. Select your identity provider for specific configuration:
+    ```azurecli-interactive
+    az aks jwtauthenticator show \
+        --resource-group $RESOURCE_GROUP \
+        --cluster-name $CLUSTER_NAME \
+        --name external-auth
+    ```
 
-::: zone pivot="github"
+:::zone pivot="github"
 
-### GitHub Actions Workflow Authentication
+## Set up GitHub Actions OIDC for authentication
 
-For GitHub Actions OIDC, create a workflow that obtains an OIDC token and uses it to authenticate with your AKS cluster. Here's an example workflow that gets all pods running on the cluster:
+1. Create environment variables for and set the following required repository secrets in your GitHub repository:
 
-```yaml
-name: AKS Access with GitHub OIDC
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
+   - `AKS_SERVER_URL`: Your AKS cluster's API server URL.
+   - `AKS_CA_DATA`: Base64-encoded certificate authority data for your AKS cluster.
 
-permissions:
-  id-token: write
-  contents: read
+1. Create a workflow that obtains an OIDC token and uses it to authenticate with your AKS cluster. The following example workflow gets all pods running on the cluster:
 
-jobs:
-  aks-access:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    > [!NOTE]
+    > The audience value `my-api` should match the audience configured in your [JWT authenticator configuration](#create-jwt-authenticator-configuration-for-github-actions-oidc).
 
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
+    ```yaml
+    name: AKS Access with GitHub OIDC
+    on:
+      workflow_dispatch:
+      push:
+        branches: [main]
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    jobs:
+      aks-access:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+    
+          - name: Install kubectl
+            uses: azure/setup-kubectl@v3
+            with:
+              version: 'latest'
+    
+          - name: Get GitHub OIDC token
+            id: get_token
+            run: |
+              TOKEN=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+                "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=my-api" | \
+                jq -r '.value')
+              echo "::add-mask::$TOKEN"
+              echo "oidc_token=$TOKEN" >> $GITHUB_OUTPUT
+    
+          - name: Create kubeconfig with OIDC token
+            run: |
+              cat <<EOF > kubeconfig
+              apiVersion: v1
+              kind: Config
+              clusters:
+              - cluster:
+                  certificate-authority-data: ${{ secrets.AKS_CA_DATA }}
+                  server: ${{ secrets.AKS_SERVER_URL }}
+                name: aks-cluster
+              contexts:
+              - context:
+                  cluster: aks-cluster
+                  user: github-oidc-user
+                name: aks-context
+              current-context: aks-context
+              users:
+              - name: github-oidc-user
+                user:
+                  token: ${{ steps.get_token.outputs.oidc_token }}
+              EOF
+    
+          - name: List all pods in the cluster
+            run: |
+              export KUBECONFIG=./kubeconfig
+              kubectl get pods --all-namespaces
+    ```
 
-      - name: Get GitHub OIDC token
-        id: get_token
-        run: |
-          TOKEN=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=my-api" | \
-            jq -r '.value')
-          echo "::add-mask::$TOKEN"
-          echo "oidc_token=$TOKEN" >> $GITHUB_OUTPUT
+## Get cluster information for JWT authenticator configuration
 
-      - name: Create kubeconfig with OIDC token
-        run: |
-          cat <<EOF > kubeconfig
-          apiVersion: v1
-          kind: Config
-          clusters:
-          - cluster:
-              certificate-authority-data: ${{ secrets.AKS_CA_DATA }}
-              server: ${{ secrets.AKS_SERVER_URL }}
-            name: aks-cluster
-          contexts:
-          - context:
-              cluster: aks-cluster
-              user: github-oidc-user
-            name: aks-context
-          current-context: aks-context
-          users:
-          - name: github-oidc-user
-            user:
-              token: ${{ steps.get_token.outputs.oidc_token }}
-          EOF
+1. Get the API server URL for your cluster using the [`az aks show`][az-aks-show] command.
 
-      - name: List all pods in the cluster
-        run: |
-          export KUBECONFIG=./kubeconfig
-          kubectl get pods --all-namespaces
-```
+    ```bash
+    az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query "fqdn" -o tsv | \
+      awk '{print "https://" $0 ":443"}'
+    ```
 
-#### Required repository secrets and variables
+1. Get the base64-encoded certificate authority data for your cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
-Set up these secrets in your GitHub repository:
+    ```bash
+    # Get CA data (base64 encoded)
+    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --file - --format exec | \
+      grep certificate-authority-data | awk '{print $2}'
+    ```
 
-**Secrets:**
-- `AKS_SERVER_URL`: Your AKS cluster's API server URL.
-- `AKS_CA_DATA`: Base64-encoded certificate authority data for your AKS cluster.
+:::zone-end
 
+:::zone pivot="google-identity"
 
-> [!NOTE]
-> The audience value `my-api` should match the audience configured in your JWT authenticator configuration.
+## Set up Google Identity OAuth 2.0 for authentication
 
-#### Getting AKS cluster information
+You can set up Google Identity authentication using either the `kubelogin` plugin or by directly using a static token.
 
-To get the required cluster information, run:
+### [Use kubelogin plugin](#tab/use-kubelogin-plugin)
 
-```bash
-# Get cluster info
-az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query "fqdn" -o tsv | \
-  awk '{print "https://" $0 ":443"}'
+- Add a new user context to your kubeconfig file. For example:
 
-# Get CA data (base64 encoded)
-az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --file - --format exec | \
-  grep certificate-authority-data | awk '{print $2}'
-```
+    ```yaml
+    users:
+    - name: external-user
+      user:
+        exec:
+          apiVersion: client.authentication.k8s.io/v1beta1
+          command: kubectl
+          args:
+          - oidc-login
+          - get-token
+          - --oidc-issuer-url=https://accounts.google.com
+          - --oidc-client-id=your-client-id.apps.googleusercontent.com
+          - --oidc-client-secret=your-client-secret
+    ```
 
-::: zone-end
+### [Use static token](#tab/use-static-token)
 
-::: zone pivot="google-identity"
+- If you have a JWT token, you can use it directly. For example:
 
-### Method 1: Using kubelogin plugin (Google)
+    ```yaml
+    users:
+    - name: external-user
+      user:
+        token: eyJhbGciOiJSUzI1NiIs...
+    ```
 
-Add a new user context to your kubeconfig file:
+---
 
-```yaml
-users:
-- name: external-user
-  user:
-    exec:
-      apiVersion: client.authentication.k8s.io/v1beta1
-      command: kubectl
-      args:
-      - oidc-login
-      - get-token
-      - --oidc-issuer-url=https://accounts.google.com
-      - --oidc-client-id=your-client-id.apps.googleusercontent.com
-      - --oidc-client-secret=your-client-secret
-```
+:::zone-end
 
-::: zone-end
+## Test authentication
 
-### Method 2: Using static token
+:::zone pivot="github"
 
-If you have a JWT token, you can use it directly:
+1. Trigger the workflow either by **pushing to the main branch** or **manually triggering it from the Actions tab** in your repository.
+1. Monitor the workflow execution in the Actions tab to verify authentication is working.
 
-```yaml
-users:
-- name: external-user
-  user:
-    token: eyJhbGciOiJSUzI1NiIs...
-```
+    Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
 
-### Test authentication
+    ```output
+    Error from server (Forbidden): nodes is forbidden: User "aks:jwt:github:your-sub" cannot list resource "nodes" in API group "" at the cluster scope
+    ```
 
-::: zone pivot="github"
+    This error indicates successful authentication but lack of authorization.
 
-You can trigger the workflow by:
-- Pushing to the main branch
-- Manually triggering it from the Actions tab in your repository
+:::zone-end
 
-Monitor the workflow execution in the Actions tab to verify authentication is working.
+:::zone pivot="google-identity"
 
-::: zone-end
+- Test the authentication using the `kubectl get nodes` command with the `--user` flag to specify the user context you created for Google Identity authentication. For example:
 
-::: zone pivot="google-identity"
+    ```bash
+    kubectl get nodes --user external-user
+    ```
 
-Test the authentication by running a kubectl command:
+    Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
 
-```bash
-kubectl get nodes --user external-user
-```
+    ```output
+    Error from server (Forbidden): nodes is forbidden: User "aks:jwt:google:your-subject" cannot list resource "nodes" in API group "" at the cluster scope
+    ```
 
-::: zone-end
+    This error indicates successful authentication but lack of authorization.
 
-::: zone pivot="github"
-
-Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
-```
-Error from server (Forbidden): nodes is forbidden: User "aks:jwt:github:your-sub" cannot list resource "nodes" in API group "" at the cluster scope
-```
-
-::: zone-end
-
-::: zone pivot="google-identity"
-
-Expected output for first-time setup before Role-Based Access Control (RBAC) configuration:
-```
-Error from server (Forbidden): nodes is forbidden: User "aks:jwt:google:your-subject" cannot list resource "nodes" in API group "" at the cluster scope
-```
-
-::: zone-end
-
-This error indicates successful authentication but lack of authorization.
+:::zone-end
 
 ## Configure Kubernetes Role-Based Access Control (RBAC)
 
-Create appropriate RBAC bindings for your external users. Use the cluster admin credentials to apply these configurations. Select your identity provider for provider-specific examples:
+Create appropriate RBAC bindings for your external users, and use the cluster admin credentials to apply these configurations.
 
-### Create a sample role and binding
+:::zone pivot="github"
 
-::: zone pivot="github"
+1. Create a file named `rbac-config.yaml` to configure RBAC bindings for external users. For example:
 
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: external-user-role
-rules:
-- apiGroups: [""]
-  resources: ["pods", "services", "nodes"]
-  verbs: ["get", "list"]
-- apiGroups: ["apps"]
-  resources: ["deployments", "replicasets"]
-  verbs: ["get", "list"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: external-user-binding
-subjects:
-- kind: User
-  # This matches the username expression in claim mappings for GitHub; example of GitHub subject is "repo:<organization-name>/<repository-name>:ref:refs/heads/main"
-  name: aks:jwt:github:your-github-sub
-  apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: ClusterRole
-  name: external-user-role
-  apiGroup: rbac.authorization.k8s.io
-```
+    ```yaml
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: external-user-role
+    rules:
+    - apiGroups: [""]
+      resources: ["pods", "services", "nodes"]
+      verbs: ["get", "list"]
+    - apiGroups: ["apps"]
+      resources: ["deployments", "replicasets"]
+      verbs: ["get", "list"]
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: external-user-binding
+    subjects:
+    - kind: User
+      # This matches the username expression in claim mappings for GitHub; example of GitHub subject is "repo:<organization-name>/<repository-name>:ref:refs/heads/main"
+      name: aks:jwt:github:your-github-sub
+      apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: ClusterRole
+      name: external-user-role
+      apiGroup: rbac.authorization.k8s.io
+    ```
 
-::: zone-end
+1. Apply the RBAC configuration using the `kubectl apply` command:
 
-::: zone pivot="google-identity"
+    ```bash
+    kubectl apply -f rbac-config.yaml
+    ```
 
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: external-user-role
-rules:
-- apiGroups: [""]
-  resources: ["pods", "services", "nodes"]
-  verbs: ["get", "list"]
-- apiGroups: ["apps"]
-  resources: ["deployments", "replicasets"]
-  verbs: ["get", "list"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: external-user-binding
-subjects:
-- kind: User
-  # This matches the username expression in claim mappings for Google
-  name: aks:jwt:google:your-subject-claim
-  apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: ClusterRole
-  name: external-user-role
-  apiGroup: rbac.authorization.k8s.io
-```
+:::zone-end
 
-::: zone-end
+:::zone pivot="google-identity"
 
-Apply the RBAC configuration:
+1. Create a file named `rbac-config.yaml` to configure RBAC bindings for external users. For example:
 
-```bash
-kubectl apply -f rbac-config.yaml
-```
+    ```yaml
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: external-user-role
+    rules:
+    - apiGroups: [""]
+      resources: ["pods", "services", "nodes"]
+      verbs: ["get", "list"]
+    - apiGroups: ["apps"]
+      resources: ["deployments", "replicasets"]
+      verbs: ["get", "list"]
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: external-user-binding
+    subjects:
+    - kind: User
+      # This matches the username expression in claim mappings for Google
+      name: aks:jwt:google:your-subject-claim
+      apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: ClusterRole
+      name: external-user-role
+      apiGroup: rbac.authorization.k8s.io
+    ```
 
-### Verify access
+1. Apply the RBAC configuration using the `kubectl apply` command:
 
-Test that the external user can now access resources:
+    ```bash
+    kubectl apply -f rbac-config.yaml
+    ```
 
-```bash
-kubectl get nodes --user external-user
-kubectl get pods --user external-user
-```
+:::zone-end
 
-### Remove JWT authenticator
+## Verify access with RBAC
 
-Delete an authenticator when no longer needed:
+- Verify the external user can now access resources according to the RBAC permissions you configured using the `kubectl get nodes` and `kubectl get pods` commands with the `--user` flag. For example:
 
-```azurecli-interactive
-az aks jwtauthenticator delete \
-    --resource-group $RESOURCE_GROUP \
-    --cluster-name $CLUSTER_NAME \
-    --name external-auth
-```
+    ```bash
+    kubectl get nodes --user external-user
+    kubectl get pods --user external-user
+    ```
 
-## Next steps
+## Remove JWT authenticator
+
+- When you no longer need the JWT authenticator, remove it from your AKS cluster using the [`az aks jwtauthenticator delete`][az-aks-jwtauthenticator-delete] command.
+
+    ```azurecli-interactive
+    az aks jwtauthenticator delete \
+        --resource-group $RESOURCE_GROUP \
+        --cluster-name $CLUSTER_NAME \
+        --name external-auth
+    ```
+
+## Related content
 
 - [Set up resource logs to monitor AKS API server logs][monitor-resource-logs]
 
@@ -520,14 +554,11 @@ az aks jwtauthenticator delete \
 [google-cloud-console]: https://console.cloud.google.com/
 [google-workspace-create-project]: https://developers.google.com/workspace/guides/create-project
 [google-oauth2-protocol]: https://developers.google.com/identity/protocols/oauth2/
-[jwt-ms]: https://jwt.ms
 [kubelogin-oidc]: https://github.com/int128/kubelogin?tab=readme-ov-file#setup
 
 <!-- LINKS - internal -->
 [aks-quickstart-cli]: learn/quick-kubernetes-deploy-cli.md
 [structured-auth-overview]: external-identity-provider-authentication-overview.md
-[workload-identity-cross-tenant]: workload-identity-cross-tenant.md
-[manage-azure-rbac]: manage-azure-rbac.md
 [monitor-resource-logs]: monitor-aks-reference.md#resource-logs
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update

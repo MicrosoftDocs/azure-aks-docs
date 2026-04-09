@@ -1,5 +1,5 @@
 ---
-title: Overview of managed identities in Azure Kubernetes Service (AKS)
+title: Overview of Managed Identities in Azure Kubernetes Service (AKS)
 description: This article provides an overview of managed identities in Azure Kubernetes Service (AKS), including system-assigned, user-assigned, and pre-created kubelet managed identities. It also explains how they work, role assignments, and AKS-specific managed identity features.
 author: davidsmatlak
 ms.author: davidsmatlak
@@ -15,9 +15,9 @@ ms.date: 06/07/2024
 
 # Overview of managed identities in Azure Kubernetes Service (AKS)
 
-This article provides an overview of system-assigned and user-assigned managed identities in AKS, including how they work, role assignments, and AKS-specific managed identity features.
+This article provides an overview of system-assigned and user-assigned managed identities in AKS, including how they work, role assignments, and AKS-specific managed identity features.]
 
-To enable a managed identity on a new or existing AKS cluster, see [Use a managed identity in Azure Kubernetes Service (AKS)](use-managed-identity.md). For more information about managed identities in Azure, see the [Managed identities for Azure resources documentation](/entra/identity/managed-identities-azure-resources/).
+For more information about managed identities in Azure, see the [Managed identities for Azure resources documentation](/entra/identity/managed-identities-azure-resources/).
 
 > [!NOTE]
 > The system-assigned and user-assigned identity types differ from a [workload identity][workload-identity-overview], which is intended for use by an application running on a pod.
@@ -44,7 +44,7 @@ The Azure platform manages both system-assigned and user-assigned managed identi
 The following table summarizes the key characteristics of a system-assigned managed identity in AKS:
 
 | Creation | Lifecycle | Sharing across resources | Common use cases |
-|----------|-----------|--------------------------|------------------|
+| -------- | --------- | ------------------------ | ---------------- |
 | Created as part of an Azure resource, such as an AKS cluster | Tied to the lifecycle of the parent resource, so it gets deleted when the parent resource is deleted | Can only be associated with a single resource | • Workloads contained within a single Azure resource <br> • Workloads that require independent identities |
 
 ### User-assigned managed identity
@@ -52,7 +52,7 @@ The following table summarizes the key characteristics of a system-assigned mana
 The following table summarizes the key characteristics of a user-assigned managed identity in AKS:
 
 | Creation | Lifecycle | Sharing across resources | Common use cases |
-|----------|-----------|--------------------------|------------------|
+| -------- | --------- | ------------------------ | ---------------- |
 | Created as a standalone Azure resource, and must exist prior to cluster creation | Independent of the lifecycle of any specific resource, so it requires manual deletion if no longer needed | Can be shared across multiple resources | • Workloads that run on multiple resources and can share a single identity <br> • Workloads that require preauthorization to a secure resource as part of a provisioning process <br> • Workloads where resources are recycled frequently but need consistent permissions |
 
 ### Pre-created kubelet managed identity
@@ -78,8 +78,8 @@ When the control plane uses a system-assigned managed identity, the identity is 
 AKS uses several managed identities for built-in services and add-ons. The following table summarizes the managed identities used by AKS, their use cases, default permissions, and whether you can bring your own identity:
 
 | Identity | Name | Use case | Default permissions | Bring your own identity |
-|----------|------|----------|---------------------|-------------------------|
-| Control plane | AKS cluster name | Used by AKS control plane components to manage cluster resources including ingress load balancers and AKS-managed public IPs, Cluster Autoscaler, Azure Disk, File, Blob CSI drivers | Contributor role for Node resource group | Supported |
+| -------- | ---- | -------- | ------------------- | ----------------------- |
+| Control plane | AKS cluster name | Used by AKS control plane components to manage cluster resources including ingress load balancers and AKS-managed public IPs, Cluster Autoscaler, Azure Disk, File, Blob CSI drivers | Contributor role for node resource group | Supported |
 | Kubelet | AKS cluster name-agentpool | Authentication with Azure Container Registry (ACR) | N/A for Kubernetes version 1.15 and later | Supported |
 | Add-on | AzureNPM | No identity required | N/A | Unsupported |
 | Add-on | AzureCNI network monitoring | No identity required | N/A | Unsupported |
@@ -93,11 +93,15 @@ AKS uses several managed identities for built-in services and add-ons. The follo
 | Add-on | Cost analysis | Used to gather cost allocation data | N/A | Supported |
 | Workload identity | Microsoft Entra Workload ID | Enables applications to access cloud resources securely with Microsoft Entra Workload ID | N/A | Unsupported |
 
-## Next step: Enable managed identities in AKS
+## Next step
 
-To learn how to enable managed identities on a new or existing AKS cluster, see [Use a managed identity in Azure Kubernetes Service (AKS)](use-managed-identity.md).
+Enable your desired managed identity type on a new or existing AKS cluster using the following guides:
+
+- [Use a system-assigned managed identity in AKS](./system-assigned-managed-identity.md)
+- [Use a user-assigned managed identity in AKS](./user-assigned-managed-identity.md)
+- [Use a pre-created kubelet managed identity in AKS](./pre-created-kubelet-managed-identity.md)
 
 <!-- LINKS -->
 [workload-identity-overview]: workload-identity-overview.md
 [managed-identity-operator]: /azure/role-based-access-control/built-in-roles#managed-identity-operator
-[bring-your-own-control-plane-managed-identity]: use-managed-identity.md#create-a-user-assigned-managed-identity
+[bring-your-own-control-plane-managed-identity]: user-assigned-managed-identity.md

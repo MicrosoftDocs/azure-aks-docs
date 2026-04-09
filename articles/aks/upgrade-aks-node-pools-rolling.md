@@ -232,3 +232,4 @@ The following table outlines recommended node pool upgrade settings for producti
 
 <!-- LINKS - external -->
 [kubernetes-drain]: https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/
+[azure-cli-install]: /cli/azure/install-azure-cli

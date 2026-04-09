@@ -1,93 +1,77 @@
 ---
-title: Use external identity providers with AKS structured authentication (Preview)
-description: Learn about structured authentication for Azure Kubernetes Service (AKS) and how to configure external identity providers for control plane access.
+title: Use External Identity Providers with AKS Structured Authentication (Preview)
+description: Learn how to use external identity providers for Azure Kubernetes Service (AKS) control plane authentication using structured authentication, enabling integration with your organization's existing identity infrastructure.
 author: shashankbarsin
 ms.author: shasb
 ms.topic: overview
+ms.service: azure-kubernetes-service
 ms.subservice: aks-security
 ms.custom: preview
 ms.date: 01/26/2026
 # Customer intent: As a platform engineer, I want to understand how to use external identity providers for AKS control plane authentication using structured authentication, so that I can integrate with my organization's existing identity infrastructure.
 ---
 
-# Use external identity providers with AKS structured authentication (Preview)
+# Use external identity providers with AKS structured authentication (preview)
 
-Azure Kubernetes Service (AKS) supports structured authentication, which allows you to configure external identity providers for authenticating users to the Kubernetes API server. This feature is based on the upstream Kubernetes structured authentication configuration and enables organizations to integrate AKS with their existing identity infrastructure beyond Microsoft Entra ID.
+Azure Kubernetes Service (AKS) supports structured authentication, which allows you to configure external identity providers for authenticating users to the Kubernetes API server. This feature is based on the upstream [Kubernetes structured authentication configuration][k8s-structured-auth]. AKS implements this functionality through JSON Web Token (JWT) authenticators that validate tokens from external identity providers according to your configuration. With structured authentication, organizations can integrate AKS with their existing identity infrastructure beyond Microsoft Entra ID.
 
-Structured authentication extends AKS beyond traditional Microsoft Entra ID integration by supporting industry-standard OpenID Connect (OIDC) identity providers. This feature allows you to:
-
-- Authenticate users with external identity providers like Google, GitHub, or any OIDC-compliant provider
-
-- Maintain centralized identity management across your organization
-
-- Implement custom claim validation and user mapping rules
-
-- Support multiple identity providers simultaneously on a single cluster
-
-The feature is based on the [Kubernetes structured authentication configuration][k8s-structured-auth], which moved to beta in Kubernetes 1.30. AKS implements this functionality through JSON Web Token (JWT) authenticators that validate tokens from external identity providers according to your configuration.
+This article provides an overview of how to use external identity providers with AKS structured authentication, including key concepts, security considerations, and next steps for configuration.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-## How external identity providers work
+## Benefits of external identity provider authentication
 
-When a user attempts to access the Kubernetes API server:
+Structured authentication extends AKS beyond traditional Microsoft Entra ID integration by supporting industry-standard OpenID Connect (OIDC) identity providers. This feature allows you to:
+
+- Authenticate users with external identity providers like Google, GitHub, or any OIDC-compliant provider.
+- Maintain centralized identity management across your organization.
+- Implement custom claim validation and user mapping rules.
+- Support multiple identity providers simultaneously on a single cluster.
+
+## External identity provider authentication flow
+
+When a user attempts to access the Kubernetes API server using structured authentication with an external identity provider, the authentication and authorization flow is as follows:
 
 - **Authentication**: The following steps validate the user's identity:
+  - **Token presentation**: The user presents a JWT token from their configured identity provider.
+  - **Token validation**: The API server validates the token's signature, issuer, audience, and expiration.
+  - **Claim processing**: Custom claim validation rules are applied to ensure the token meets your requirements.
+  - **User mapping**: Claims are mapped to Kubernetes user identity (username, groups, and extra attributes).
+- **Authorization**: Standard Kubernetes Role-Based Access Control (RBAC) determines what actions the authenticated user can perform.
 
-  - **Token presentation**: The user presents a JWT token from their configured identity provider
+:::image type="content" source="media/external-identity-provider-authentication/external-identity-provider-authentication-overview.png" alt-text="Conceptual diagram showing how external identity provider-based authentication works with AKS clusters." lightbox="media/external-identity-provider-authentication/external-identity-provider-authentication-overview.png":::
 
-  - **Token validation**: The API server validates the token's signature, issuer, audience, and expiration
+## Supported identity providers
 
-  - **Claim processing**: Custom claim validation rules are applied to ensure the token meets your requirements
+While AKS structured authentication allows any OIDC-compliant identity provider, common providers include:
 
-  - **User mapping**: Claims are mapped to Kubernetes user identity (username, groups, and extra attributes)
-
-- **Authorization**: Standard Kubernetes Role-Based Access Control (RBAC) determines what actions the authenticated user can perform
-
-:::image type="content" source="media/external-identity-provider-authentication/conceptual-diagram.png" alt-text="Conceptual diagram showing how external identity provider-based authentication works with AKS clusters." lightbox="media/external-identity-provider-authentication/conceptual-diagram.png":::
-
-## Identity providers
-
-While AKS structured authentication allows any OIDC-compliant identity provider, common examples include:
-
-- **GitHub**: Authenticate using GitHub identities or GitHub Actions
-
-- **Google OAuth 2.0**: Use Google accounts for authentication
-
-- **Generic OIDC providers**: Any provider implementing OIDC standards
-
-- **Custom identity solutions**: Organization-specific OIDC implementations
+- **GitHub**: Authenticate using GitHub identities or GitHub Actions.
+- **Google OAuth 2.0**: Use Google accounts for authentication.
+- **Generic OIDC providers**: Any provider implementing OIDC standards.
+- **Custom identity solutions**: Organization-specific OIDC implementations.
 
 > [!NOTE]
 > Microsoft Entra ID isn't supported as an external identity provider through structured authentication. Use the existing [AKS-managed Microsoft Entra integration][aks-managed-entra-id] for Microsoft Entra ID authentication.
 
-### Identity provider requirements
+### Requirements for external identity providers
 
-External identity providers must:
+External identity providers must meet the following requirements to work with AKS structured authentication:
 
-- Support OIDC standards
+- Support OIDC standards.
+- Provide publicly accessible OIDC discovery endpoints.
+- Issue JWT tokens with appropriate claims.
+- Be accessible from AKS cluster nodes for token validation.
 
-- Provide publicly accessible OIDC discovery endpoints
+## JWT authenticators for AKS structured authentication
 
-- Issue JWT tokens with appropriate claims
-
-- Be accessible from AKS cluster nodes for token validation
-
-## Key concepts
-
-### JWT authenticators
-
-A JWT authenticator is a configuration object that defines how AKS validates and processes tokens from an external identity provider. For example, AKS expects an ID token (JWT) whose `aud` (audience) claim matches the audience value you configure for the authenticator, such as `"my-api"` or an OAuth client ID. Each JWT authenticator includes:
+A JWT authenticator is a configuration object that defines how AKS validates and processes tokens from an external identity provider. For example, AKS expects an ID token (JWT) whose `aud` (audience) claim matches the audience value you configure for the authenticator, such as `"my-api"`, or an OAuth client ID. Each JWT authenticator includes the following components:
 
 - **Issuer configuration**: Specifies the OIDC issuer URL and the expected audience values for tokens.
-
 - **Claim validation rules**: Uses CEL (Common Expression Language) expressions to enforce custom validation logic on token claims.
-
 - **Claim mappings**: Defines how JWT claims are mapped to Kubernetes user attributes such as username, groups, and extra fields.
-
 - **User validation rules**: Applies extra validation logic after claim mapping to further restrict or allow access.
 
-### CEL expressions
+## CEL expressions for claim validation and mapping
 
 Structured authentication uses [CEL][k8s-cel] expressions for flexible claim validation and mapping. CEL provides a secure sandbox environment for evaluating custom logic against JWT claims.
 
@@ -109,39 +93,32 @@ claims.groups.split(',').map(g, 'aks:jwt:' + g)
 
 ## Security best practices
 
+Keep the following security best practices in mind when using external identity providers with AKS structured authentication:
+
 - **Use strong claim validation**: Implement comprehensive validation rules to ensure only authorized tokens are accepted.
-
 - **Limit token scope**: Configure your identity provider to issue tokens with minimal necessary claims.
-
 - **Regular rotation**: Rotate client secrets and certificates regularly.
-
 - **Monitor access**: Enable [resource logs][monitor-resource-logs] and turn on `kube-apiserver` logs to inspect any potential issues with the configured JWT authenticators and track authentication events.
-
 - **Test configurations**: Validate your JWT authenticator configuration in a nonproduction environment first.
 
 ## Security considerations
 
-**Prefix requirements** - All usernames and groups mapped through structured authentication must be prefixed with `aks:jwt:` to prevent conflicts with other authentication methods and system accounts.
+Keep the following security considerations in mind when using external identity providers with AKS structured authentication:
 
-**Network access** - Identity provider endpoints must be accessible from:
+- **Prefix requirements**: All usernames and groups mapped through structured authentication must be prefixed with `aks:jwt:` to prevent conflicts with other authentication methods and system accounts.
+- **Network access**: Identity provider endpoints must be accessible from:
+  - AKS cluster nodes for token validation.
+  - Client systems for token acquisition.
+  - Any network paths involved in the authentication flow.
+- **Validation layers**: Structured authentication provides multiple validation layers:
+  - **Token signature validation** ensures token authenticity.
+  - **Standard claim validation** verifies issuer, audience, and expiration.
+  - **Custom claim validation** applies your organization's specific requirements.
+  - **User validation** final checks after claim mapping.
 
-- AKS cluster nodes for token validation
+## Related content
 
-- Client systems for token acquisition
-
-- Any network paths involved in the authentication flow
-
-**Validation layers** - Structured authentication provides multiple validation layers:
-
-- **Token signature validation**: Ensures token authenticity
-
-- **Standard claim validation**: Verifies issuer, audience, and expiration
-
-- **Custom claim validation**: Applies your organization's specific requirements
-
-- **User validation**: Final checks after claim mapping
-
-## Next steps
+For more information about structured authentication and related features, see the following resources:
 
 - [Configure structured authentication for AKS][configure-structured-auth]
 - [Kubernetes structured authentication configuration][k8s-structured-auth]

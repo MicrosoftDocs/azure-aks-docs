@@ -2,7 +2,7 @@
 title: "Define reuseable update strategies for multi-clusters updates using Azure Kubernetes Fleet Manager"
 description: See how you can define staged update strategies that can be reused across multiple update runs and auto-upgrade profiles in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 06/16/2025
+ms.date: 03/18/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -151,34 +151,46 @@ An update strategy consists of one or more stages, where a stage can contain one
 
 For this scenario, we create stages and groups to match the details used for the Azure portal process.  
 
-1. Create a JSON file to define the stages and groups for the update run. Stages run sequentially in the order they appear in the JSON file. Groups run in parallel within each stage, so ordering isn't important. The following example file (*example-stages.json*) represents the strategy shown on the Azure portal instructions:
+1. Create a JSON file to define the stages and groups for the update run. Stages run sequentially in the order they appear in the JSON file. Groups run in parallel within each stage, so ordering isn't important. The following example file (*example-stages.json*) defines a strategy with two stages and includes optional `maxConcurrency` settings:
 
     ```json
     {
         "stages": [
             {
                 "name": "stage-1",
+                "maxConcurrency": "7",
                 "groups": [
                     {
-                        "name": "group-1"
+                        "name": "group-1",
+                        "maxConcurrency": "3"
                     },
                     {
-                        "name": "group-2"
+                        "name": "group-2",
+                        "maxConcurrency": "50%"
                     }
                 ],
                 "afterStageWaitInSeconds": 300
             },
             {
                 "name": "stage-2",
+                "maxConcurrency": "100%",
                 "groups": [
                     {
-                        "name": "group-3"
+                        "name": "group-3",
+                        "maxConcurrency": "2"
                     }
                 ]
             }
         ]
     }
     ```
+
+    > [!NOTE]
+    > The `maxConcurrency` field is optional and controls how many clusters can upgrade concurrently at the stage or group level. Use a larger value to upgrade clusters faster across your fleet, or a smaller value for a more controlled rollout that limits the blast radius if issues arise.
+    >
+    > In this example, `stage-1` sets `maxConcurrency` to `"7"`, which allows up to `"7"` clusters in this stage to upgrade concurrently. Within `stage-1`, `group-1` limits concurrency to `"3"` clusters, which means up to `"3"` in this group can upgrade concurrently. `group-2` allows up to `"50%"` of its clusters to upgrade concurrently (for example, if the group contains 4 clusters, up to 2 can upgrade at the same time).
+    >
+    > Values can be a fixed integer (for example, `"3"`) or a percentage (for example, `"100%"`). If omitted, the system applies default values. For details on how these values are resolved and their upper limits, see [Maximum concurrency (preview)](./concepts-update-orchestration.md#maximum-concurrency-preview).
 
 1. Create a new update strategy using the [`az fleet updatestrategy create`][az-fleet-updatestrategy-create] command with the `--stages` flag set to the name of your JSON file.
 

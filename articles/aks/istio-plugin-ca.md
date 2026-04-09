@@ -22,7 +22,7 @@ This article addresses how you can configure the Istio certificate authority wit
 
 ### Verify Azure CLI version
 
-The add-on requires Azure CLI version 2.57.0 or later installed. You can run `az --version` to verify version. To install or upgrade, see [Install Azure CLI][azure-cli-install].
+The add-on requires Azure CLI version 2.57.0 or later installed. You can run `az --version` to verify version. To install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 ### Set up Azure Key Vault
 

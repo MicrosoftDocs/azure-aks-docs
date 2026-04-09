@@ -124,7 +124,7 @@ To protect pods running on AKS, consider [Microsoft Defender for Containers][mic
 
 ## Secure container access to resources
 
-In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access. Built-in Linux security features such as *AppArmor* and *seccomp* are recommended as [best practices][security-best-practices] to [secure container access to resources][secure-container-access].
+In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access. Built-in Linux security features such as *AppArmor* and *seccomp* are recommended as [best practices][security-best-practices] to [secure container access to resources][security-container-access].
 
 ## Kubernetes Secrets
 

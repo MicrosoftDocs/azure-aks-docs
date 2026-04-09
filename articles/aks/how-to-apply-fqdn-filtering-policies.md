@@ -279,3 +279,6 @@ If you don't plan on using this application, delete the other resources you crea
 In this how-to article, you learned how to install and enable security features with Advanced Container Networking Services for your AKS cluster.
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
+
+<!-- LINKS -->
+[kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply

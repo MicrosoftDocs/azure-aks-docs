@@ -331,4 +331,5 @@ For more information about using Helm, see the [Helm documentation][helm-documen
 [helm-install]: https://helm.sh/docs/intro/install/
 [sp-delete]: kubernetes-service-principal.md#considerations-when-using-a-service-principal
 [acr-helm]: /azure/container-registry/container-registry-helm-repos
+[new-azresourcegroup]: /powershell/module/az.resources/new-azresourcegroup
 

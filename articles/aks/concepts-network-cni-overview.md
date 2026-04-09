@@ -106,6 +106,7 @@ When you're planning your network configuration for AKS, keep these requirements
   - `Microsoft.Network/virtualNetworks/subnets/read` (needed only if you're defining your own subnets and CIDRs)
 - The subnet assigned to the AKS node pool can't be a [delegated subnet][delegated-subnet].
 - AKS doesn't apply network security groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure that the security rules in the NSGs allow traffic within the node CIDR range. For more information, see [Azure network security groups overview][aks-network-nsg].
+- Container Network Service (CNS) is a node local service within Azure Kubernetes Service CNI networking which allocates, tracks and programs networking for pods. This component sends telemetry (metrics and logs) by default out of the cluster to a Microsoft managed application insights endpoint to enable faster troubleshooting of any pod networking IP address assignment issues.
 
 ## Related content
 

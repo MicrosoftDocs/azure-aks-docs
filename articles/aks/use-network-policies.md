@@ -3,7 +3,7 @@ title: Secure Pod Traffic with Network Policies in Azure Kubernetes Service (AKS
 description: Learn how to implement network policies in AKS to control and secure pod traffic by restricting communication according to the principle of least privilege.
 author: schaffererin
 ms.author: schaffererin
-ms.date: 06/10/2025
+ms.date: 03/30/2026
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.custom:
@@ -31,7 +31,7 @@ Install a network policy engine and create Kubernetes network policies to contro
 
 By default, all pods in an AKS cluster can send and receive traffic without limitations. To improve security, you can define rules that control the flow of traffic.
 
-Network policy is a Kubernetes specification that defines access policies for communication between pods. When you use network policies, you define an ordered set of rules to send and receive traffic. You apply the rules to a collection of pods that match one or more label selectors. 
+Network policy is a Kubernetes specification that defines access policies for communication between pods. When you use network policies, you define an ordered set of rules to send and receive traffic. You apply the rules to a collection of pods that match one or more label selectors.
 
 You define the network policy rules as YAML manifests, and you can include them in wider manifests that also create a deployment or service.
 
@@ -101,6 +101,12 @@ Instead of using a system-assigned identity, you can also use a user-assigned id
     export LOCATION=eastus
     ```
 
+1. Create the resource group using the [`az group create`][az-group-create] command.
+
+    ```azurecli-interactive
+    az group create --resource-group $RESOURCE_GROUP --location $LOCATION
+    ```
+
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] and specify `azure` for the `network-plugin` and `network-policy`.
 
     ```azurecli-interactive
@@ -158,11 +164,11 @@ Instead of using a system-assigned identity, you can also use a user-assigned id
 
 ### Create administrator credentials for Windows Server containers
 
-- Create a username to use as administrator credentials for your Windows Server containers on your cluster. The following command prompts you for a username. Set it to `WINDOWS_USERNAME`.
+Create a username to use as administrator credentials for your Windows Server containers on your cluster. The following command prompts you for a username. Set it to `WINDOWS_USERNAME`.
 
-    ```bash
-    echo "Please enter the username to use as administrator credentials for Windows Server containers on your cluster: " && read WINDOWS_USERNAME
-    ```
+```bash
+echo "Please enter the username to use as administrator credentials for Windows Server containers on your cluster: " && read WINDOWS_USERNAME
+```
 
 ### Create the AKS cluster
 
@@ -211,14 +217,14 @@ If you plan on adding Windows node pools to your cluster, include the `windows-a
 > - In kubenet clusters with Calico enabled, Calico is used as both a CNI and network policy engine.
 > - In Azure CNI clusters, Calico is used only for network policy enforcement, not as a CNI. This can cause a short delay between when the pod starts and when Calico allows outbound traffic from the pod.
 
-- Update an existing cluster to install Azure NPM or Calico using the [`az aks update`][az-aks-update] command and specifying `azure` or `calico` for the `--network-policy` parameter. The following example command shows how to install either Azure NPM:
+Update an existing cluster to install Azure NPM or Calico using the [`az aks update`][az-aks-update] command and specifying `azure` or `calico` for the `--network-policy` parameter. The following example command shows how to install either Azure NPM:
 
-    ```azurecli-interactive
-    az aks update
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --network-policy azure
-    ```
+```azurecli-interactive
+az aks update
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --network-policy azure
+```
 
 ## Upgrade an existing cluster with Azure NPM or Calico to Cilium
 
@@ -226,11 +232,11 @@ To upgrade an existing cluster to Azure CNI Powered by Cilium, see [Upgrade an e
 
 ## Connect to the AKS cluster
 
-- Configure `kubectl` to connect to your cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+Configure `kubectl` to connect to your cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
-    ```azurecli-interactive
-    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
-    ```
+```azurecli-interactive
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
+```
 
 ## Verify network policy setup
 
@@ -335,24 +341,58 @@ AKS only supports Calico for standard Kubernetes network policies and doesn't te
 > - The uninstall process **doesn't remove** Custom Resource Definitions (CRDs) and Custom Resources (CRs) used by Calico. These CRDs and CRs all have names ending with either _projectcalico.org_ or _tigera.io_. You can manually remove these CRDs and associated CRs _after_ successfully uninstalling Calico.
 > - The upgrade doesn't remove any network policy resources in the cluster, but the policies are no longer enforced after the uninstall process.
 
-- Remove Azure Network Policy Manager or Calico from an existing cluster using the [`az aks update`][az-aks-update] command and specifying `none` for the `--network-policy` parameter.
+Remove Azure Network Policy Manager or Calico from an existing cluster using the [`az aks update`][az-aks-update] command and specifying `none` for the `--network-policy` parameter.
 
-    ```azurecli-interactive
-    az aks update
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --network-policy none
-    ```
+```azurecli-interactive
+az aks update
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --network-policy none
+```
+
+## Change cluster network policy
+
+The following steps show how to change a cluster's existing network policy to Calico. The procedure requires that the network policy is changed to `none` and then changed to `calico`.
+
+The commands use variables specified earlier in this article [Create an AKS cluster with Azure Network Policy Manager (Linux)](#create-an-aks-cluster-with-azure-network-policy-manager-linux). Otherwise, replace `$RESOURCE_GROUP` and `$CLUSTER_NAME` with your cluster's resource group and name.
+
+1. Run the following command to show the cluster's existing network policy.
+
+   ```azurecli-interactive
+   az aks show \
+     --resource-group $RESOURCE_GROUP \
+     --name $CLUSTER_NAME \
+     --query "networkProfile" \
+     --output table
+   ```
+
+1. Run the following command to set the network policy to `none`.
+
+   ```azurecli-interactive
+   az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --network-policy none
+   ```
+
+1. Run the following command to set the network policy to `calico`.
+
+   ```azurecli-interactive
+   az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --network-policy calico
+   ```
 
 ## Clean up resources
 
 In this article, you created a namespace and two pods and applied a network policy. If you no longer need these resources, you can delete them.
 
-- Delete the resources using the [`kubectl delete`][kubectl-delete] command.
+Delete the resources using the [`kubectl delete`][kubectl-delete] command.
 
-    ```bash
-    kubectl delete namespace demo
-    ```
+```bash
+kubectl delete namespace demo
+```
+
+If you followed this article's steps to create an AKS cluster, use the [`az group delete`][az-group-delete] command to delete the AKS resource group and it's related resource group with a name that begins with `MC_`.
+
+```azurecli-interactive
+az group delete --resource-group $RESOURCE_GROUP --no-wait --yes
+```
 
 ## Related content
 
@@ -380,3 +420,5 @@ In this article, you created a namespace and two pods and applied a network poli
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
+[az-group-create]: /cli/azure/group#az-group-create
+[az-group-delete]: /cli/azure/group#az-group-delete

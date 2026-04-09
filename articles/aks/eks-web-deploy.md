@@ -566,7 +566,7 @@ Other contributors:
 [kubernetes-ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [aks]: ./what-is-aks.md
 [azure-ddos]: /azure/ddos-protection/ddos-protection-overview
-[azure-fw]: /en-us/azure/firewall/overview
+[azure-fw]: /azure/firewall/overview
 [azure-ddos-ag]: /azure/application-gateway/tutorial-protect-application-gateway-ddos
 [azure-fw-ag-1]: /azure/architecture/example-scenario/gateway/application-gateway-before-azure-firewall
 [azure-fw-ag-2]: /azure/architecture/example-scenario/gateway/firewall-application-gateway
