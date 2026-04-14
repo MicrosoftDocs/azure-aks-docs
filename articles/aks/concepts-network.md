@@ -92,6 +92,12 @@ When using a custom virtual network with AKS clusters, if you have added Network
 
 These requirements apply to both AKS Standard and AKS Automatic clusters when using custom virtual networks.
 
+## DNS resolution
+
+DNS resolution is essential for service discovery and communication in AKS. By default, AKS uses [CoreDNS](./coredns-custom.md) to provide internal name resolution for pods and services.
+
+For improved DNS performance and reliability, AKS offers [LocalDNS](./dns-concepts.md), which deploys a DNS proxy on each node. LocalDNS resolves queries locally, reducing latency and eliminating `conntrack` table pressure from DNS traffic. It also supports serving cached responses during upstream DNS outages, improving workload resilience. LocalDNS is particularly beneficial in large clusters or environments with high DNS query volumes. For configuration details, see [Configure LocalDNS](./localdns-custom.md).
+
 ## Network policies
 
 By default, all pods in an AKS cluster can send and receive traffic without limitations. For improved security, define rules that control the flow of traffic, like:

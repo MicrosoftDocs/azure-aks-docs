@@ -606,6 +606,14 @@ AKS provides multiple auto-upgrade channels for node OS image upgrades. You can 
 
 The Standard tier for Azure Kubernetes Service (AKS) provides a financially backed 99.9% uptime [service-level agreement (SLA)](https://www.azure.cn/support/sla/kubernetes-service/) for your production workloads. The standard tier also provides greater cluster reliability and resources, support for up to 5,000 nodes in a cluster, and Uptime SLA enabled by default. For more information, see [Pricing tiers for AKS cluster management](./free-standard-pricing-tiers.md).
 
+### LocalDNS for DNS reliability
+
+> **Best practice guidance**
+>
+> Enable [LocalDNS](./localdns-custom.md) on your node pools to improve DNS resolution reliability and maintain service connectivity during transient DNS outages.
+
+[LocalDNS](./dns-concepts.md) deploys a DNS proxy on each AKS node, providing low-latency, resilient DNS resolution. By resolving queries locally, LocalDNS reduces your dependence on centralized CoreDNS pods and avoids `conntrack` table exhaustion, which is a common cause of dropped DNS queries in high-throughput environments. LocalDNS also supports serving stale cached responses for a configurable duration when upstream DNS is unavailable, helping maintain pod connectivity during disruptions. For configuration instructions and best practices, see [Configure LocalDNS in AKS](./localdns-custom.md).
+
 ### Azure CNI for dynamic IP allocation
 
 > **Best practice guidance**

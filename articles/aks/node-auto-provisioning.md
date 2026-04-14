@@ -22,6 +22,9 @@ Node auto-provisioning (NAP) simplifies this process by automatically provisioni
 
 NAP automatically deploys, configures, and manages Karpenter on your AKS clusters and is based on the open-source [Karpenter](https://karpenter.sh) and [AKS Karpenter provider][aks-karpenter-provider] projects.
 
+> [!TIP]
+> On [AKS Automatic](./intro-aks-automatic.md) clusters, NAP is preconfigured and backed by a [pod readiness SLA](https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services) that guarantees 99.9% of qualifying pod readiness operations complete within 5 minutes. This means your workloads start running on the right-sized nodes promptly, without manual VM selection or capacity planning.
+
 ## How does node auto-provisioning work?
 
 Node auto-provisioning provisions, scales, and manages VMs (nodes) in a cluster in response to pending pod pressure.

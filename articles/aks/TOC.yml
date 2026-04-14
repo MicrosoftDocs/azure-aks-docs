@@ -126,6 +126,8 @@
           href: extended-zones.md
         - name: Deploy a cluster with a fully managed resource group
           href: node-resource-group-lockdown.md
+        - name: Deploy a production-ready cluster using Terraform with an Azure Verified Module (AVM)
+          href: deploy-cluster-terraform-verified-module.md
         - name: Configure private clusters
           items:
             - name: Create a private cluster

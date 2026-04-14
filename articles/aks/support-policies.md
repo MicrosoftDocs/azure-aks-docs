@@ -1,11 +1,11 @@
 ---
-title: Support policies for Azure Kubernetes Service (AKS)
+title: Support Policies for Azure Kubernetes Service (AKS)
 description: Learn about Azure Kubernetes Service (AKS) support policies, shared responsibility, and features that are in preview (or alpha or beta).
 ms.topic: concept-article
 ms.date: 01/29/2026
 author: davidsmatlak
 ms.author: davidsmatlak
-
+ms.service: azure-kubernetes-service
 # Customer intent: As a cluster operator or developer, I want to understand what AKS components I need to manage, what components are managed by Microsoft (including security patches), and networking and preview features.
 ---
 
@@ -20,9 +20,9 @@ This article describes technical support policies and limitations for Azure Kube
 
 ## Managed features in AKS
 
-Base infrastructure as a service (IaaS) cloud components, like compute or networking components, allow you access to low-level controls and customization options. By contrast, AKS provides a turnkey Kubernetes deployment that gives you a common set of configurations and capabilities you need for your cluster. As an AKS user, you have limited customization and deployment options. In exchange, you don't need to worry about or manage Kubernetes clusters directly.
+AKS is a mix of Infrastructure as a Service (IaaS) and Platform as a Service (PaaS). Base IaaS cloud components, like compute or networking components, allow you access to low-level controls and customization options. By contrast, AKS provides a turnkey Kubernetes deployment that gives you a common set of configurations and capabilities you need for your cluster. As an AKS user, you have limited customization and deployment options. In exchange, you don't need to worry about or manage Kubernetes clusters directly.
 
-With AKS, you get a fully managed *control plane*. The control plane contains all of the components and services you need to operate and deliver Kubernetes clusters to end users. Microsoft maintains and operates all Kubernetes components.
+With AKS, you get a fully managed _control plane_. The control plane contains all of the components and services you need to operate and deliver Kubernetes clusters to end users. Microsoft maintains and operates all Kubernetes components.
 
 Microsoft manages and monitors the following components through the control plane:
 
@@ -32,7 +32,7 @@ Microsoft manages and monitors the following components through the control plan
 - Kubernetes proxy or networking, except when [BYOCNI](use-byo-cni.md) is used.
 - Any other [add-ons][add-ons] or system component running in the kube-system namespace.
 
-AKS isn't a Platform-as-a-Service (PaaS) solution. Some components, like agent nodes, have _shared responsibility_, where you must help maintain the AKS cluster. User input is required, for example, to apply an agent node operating system (OS) security patch.
+Some components, like agent nodes, have _shared responsibility_, where you must help maintain the AKS cluster. User input is required, for example, to apply an agent node operating system (OS) security patch.
 
 The services are _managed_ in the sense that Microsoft and the AKS team deploys, operates, and is responsible for service availability and functionality. Customers can't alter these managed components. Microsoft limits customization to ensure a consistent and scalable user experience.
 
@@ -185,7 +185,6 @@ When the root cause of a technical support issue is due to one or more upstream 
   - The issue, including links to upstream bugs.
   - The workaround and details about an upgrade or another persistence of the solution.
   - Rough timelines for the issue's inclusion, based on the upstream release cadence.
-
 
 <!-- INTERNAL LINKS -->
 [add-ons]: integrations.md#add-ons

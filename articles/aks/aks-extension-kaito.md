@@ -1,10 +1,10 @@
 ---
 title: Deploy and test inference models with the AI toolchain operator (KAITO) in Visual Studio Code
 description: Learn how to deploy and test an inference model with the AI toolchain operator (KAITO) in Visual Studio Code.
-author: qpetraroia
+author: davidsmatlak
 ms.topic: how-to
 ms.date: 12/04/2024
-ms.author: qpetraroia
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
 # Customer intent: "As a data scientist, I want to deploy and test inference models using an AI toolchain operator in a Kubernetes environment, so that I can efficiently validate model performance and manage resources during the development process."
 ---

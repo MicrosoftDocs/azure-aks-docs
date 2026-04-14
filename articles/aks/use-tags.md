@@ -22,7 +22,7 @@ Review the following information before you begin:
 
 * Tags set on an AKS cluster apply to all resources related to the cluster, but not the node pools. This operation overwrites the values of existing keys.
 * Tags set on a node pool apply only to resources related to that node pool. This operation overwrites the values of existing keys. Resources outside that node pool, including resources for the rest of the cluster and other node pools, are unaffected.
-* Public IPs, files, and disks can have tags set by Kubernetes through a Kubernetes manifest. Tags set in this way maintain the Kubernetes values, even if you update them later using a different method. When you remove public IPs, files, or disks through Kubernetes, any tags set by Kubernetes are removed. The tags on those resources that Kubernetes doesn't track remain unaffected.
+* Public IPs, files, and disks can have tags set by Kubernetes through a Kubernetes manifest. For disks and files created through a `StorageClass`, the `tags` parameter is applied to the underlying Azure resource when AKS provisions the volume. Updating the `StorageClass` later affects only newly provisioned volumes. When you remove public IPs, files, or disks through Kubernetes, any tags set by Kubernetes are removed. The tags on those resources that Kubernetes doesn't track remain unaffected.
 
 ### Prerequisites
 
@@ -34,6 +34,8 @@ Review the following information before you begin:
 * Azure tags have keys that are case-insensitive for operations, such as when you're retrieving a tag by searching the key. In this case, a tag with the specified key is updated or retrieved regardless of casing. Tag values are case-sensitive.
 * In AKS, if multiple tags are set with identical keys but different casing, the tags are used in alphabetical order. For example, `{"Key1": "val1", "kEy1": "val2", "key1": "val3"}` results in `Key1` and `val1` being set.
 * For shared resources, tags can't determine the split in resource usage on their own.
+* For disks and files that back a Kubernetes persistent volume, the `PersistentVolume` spec is immutable after creation. Editing or patching an existing `PersistentVolume` to change tags or other volume attributes fails.
+* Updating tags directly on the underlying Azure resource doesn't synchronize those tag values back to the Kubernetes `PersistentVolume` YAML or metadata.
 
 ## Azure tags and AKS clusters
 
@@ -215,6 +217,8 @@ When you create or update a node pool with the `--tags` parameter, the tags you 
 > Setting tags on files, disks, and public IPs using Kubernetes updates the set of tags. For example, if your disk has the tags *dept=IT* and *costcenter=5555*, and you use Kubernetes to set the tags *team=beta* and *costcenter=3333*, the new list of tags would be *dept=IT*, *team=beta*, and *costcenter=3333*.
 >
 > Any updates you make to tags through Kubernetes retain the value set through Kubernetes. For example, if your disk has tags *dept=IT* and *costcenter=5555* set by Kubernetes, and you use the portal to set the tags *team=beta* and *costcenter=3333*, the new list of tags would be *dept=IT*, *team=beta*, and *costcenter=5555*. If you then remove the disk through Kubernetes, the disk would have the tag *team=beta*.
+>
+> For disks and files that back a persistent volume, the `tags` value in a `StorageClass` is a provisioning-time setting. After the volume is created, the `PersistentVolume` spec is immutable, so editing or patching the PV to change tags or other volume attributes fails. Changes you make directly to the underlying Azure resource don't synchronize back to the PV YAML or metadata.
 
 You can apply Azure tags to public IPs, disks, and files using a Kubernetes manifest.
 
@@ -242,6 +246,30 @@ You can apply Azure tags to public IPs, disks, and files using a Kubernetes mani
     ...
     ```
 
+### Update tags for existing persistent volumes
+
+To update tags for an existing disk-backed or file-backed persistent volume, update the tags on the underlying Azure resource instead of editing the `PersistentVolume`. This operation doesn't interrupt existing mounts, pods, or data access.
+
+- For Azure Disk-backed persistent volumes, update the managed disk directly. For example:
+
+    ```azurecli-interactive
+    az disk update \
+        --name myManagedDisk \
+        --resource-group MC_myResourceGroup_myAKSCluster_eastus \
+        --set tags.abc=ABC123
+    ```
+
+- For Azure Files-backed persistent volumes, update the storage account directly. For example:
+
+    ```azurecli-interactive
+    az storage account update \
+        --name mystorageaccount \
+        --resource-group MC_myResourceGroup_myAKSCluster_eastus \
+        --set tags.abc=ABC123
+    ```
+
+Changes to a `StorageClass` affect only newly provisioned volumes and don't update existing persistent volumes.
+
 ## Next steps
 
 Learn more about [using labels in an AKS cluster][use-labels-aks].
@@ -254,4 +282,3 @@ Learn more about [using labels in an AKS cluster][use-labels-aks].
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [az-aks-update]: /cli/azure/aks#az-aks-update
-

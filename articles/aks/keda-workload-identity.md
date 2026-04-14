@@ -2,8 +2,8 @@
 title: Securely scale your applications using the Kubernetes Event-driven Autoscaling (KEDA) add-on and workload identity
 description: Learn how to securely scale your applications using the KEDA add-on and workload identity on Azure Kubernetes Service (AKS).
 ms.service: azure-kubernetes-service
-author: qpetraroia
-ms.author: qpetraroia
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.date: 07/08/2024
 ms.custom: template-how-to

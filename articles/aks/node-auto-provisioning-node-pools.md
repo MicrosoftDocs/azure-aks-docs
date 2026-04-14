@@ -259,6 +259,38 @@ spec:
   weight: 10
 ```
 
+### Static node pools
+
+Static node pools allow you to create a fixed number of nodes using the `replicas` field. With static node pools, the number of nodes will always be at least at the value in the `replicas` field, regardless of pending pod pressure. You can also set the maximum number of nodes this node pool can scale up to by setting `nodes` in the `limits` field.
+
+```yaml
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: static-node-pool
+spec:
+  replicas: 5
+  template:
+    spec:
+      requirements:
+      - key: karpenter.azure.com/sku-name
+        operator: In
+        values:
+          - Standard_D4s_v3
+          - Standard_F8s_v2
+      - key: topology.kubernetes.io/zone
+        operator: In
+         values:
+           - eastus-1
+           - eastus-2
+           - eastus-3
+  limits:
+    nodes: 10  # Maximum number of nodes this node pool can scale up to
+```
+
+> [!Note]
+> When using the `limits` field with static node pools, only the `nodes:` field can be adjustable. Resources can not be set. 
+
 ## Next steps
 
 For more information on node auto-provisioning in AKS, see the following articles:

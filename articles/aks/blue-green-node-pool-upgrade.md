@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.custom: azure-kubernetes-service
 ms.date: 11/06/2024
-author: swgriffith
-ms.author: swgriffith
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.reviewer: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to perform upgrades of my AKS node pools using a blue-green deployment strategy to ensure workload availability during updates."
 ---
@@ -90,7 +90,7 @@ Keep the following considerations in mind when using blue-green upgrades:
 
 | Resource requirements | Complexity considerations | Time factors |
 | --------------------- | ------------------------- | ------------ |
-| • Requires double the node capacity during the upgrade process, leading to increased infrastructure costs. <br> • You need extra compute quota in your Azure subscription to accommodate the temporary doubling of nodes. <br> • You might encounter regional capacity limits during peak usage periods. | • Requires careful planning for stateful workloads to ensure data consistency during migration. <br> • Requires extra monitoring for both the blue and green node pools during the transition period. | • Longer overall upgrade duration compared to in-place upgrades. <br> • Validation period adds time before final cutover. |
+| * Requires double the node capacity during the upgrade process, leading to increased infrastructure costs. <br> * You need extra compute quota in your Azure subscription to accommodate the temporary doubling of nodes. <br> * You might encounter regional capacity limits during peak usage periods. | * Requires careful planning for stateful workloads to ensure data consistency during migration. <br> * Requires extra monitoring for both the blue and green node pools during the transition period. | * Longer overall upgrade duration compared to in-place upgrades. <br> * Validation period adds time before final cutover. |
 
 ## Blue-green upgrade workflow
 

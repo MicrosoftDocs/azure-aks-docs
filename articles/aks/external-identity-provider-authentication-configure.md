@@ -208,7 +208,6 @@ The following table describes the key elements of the `issuer` configuration:
 | ---------------------------- | ----------- |
 | `url` | The OIDC issuer URL that must match the `iss` claim in JWTs. |
 | `audiences` | List of audiences that JWTs must be issued for (checked against `aud` claim). |
-| `certificateAuthority` | Optional base64-encoded root certificate bundle for Transport Layer Security (TLS) verification when connecting to the issuer URL. |
 
 ### Claim validation rules configuration
 

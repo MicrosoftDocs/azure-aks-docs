@@ -1,7 +1,7 @@
 ---
 title: "Cross-cluster networking for Azure Kubernetes Fleet Manager"
 description: This article provides a conceptual overview of Cross-cluster networking for Azure Kubernetes Fleet Manager. 
-ms.date: 03/23/2026
+ms.date: 04/14/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -21,13 +21,13 @@ In this article, we introduce key concepts for cross-cluster networking for Azur
 
 ## Prerequisites and limitations
 
+* A cross-cluster network can have up to 255 member clusters.
 * Fleet Manager member clusters can only participate in a single cross-cluster network at any time.
-* Clusters must have [Advanced Container Networking Services (ACNS)][aks-acns-enabled] with Cilium enabled.
+* Clusters must run Kubernetes v1.32 or above and have [Advanced Container Networking Services (ACNS)][aks-acns-enabled] with Cilium enabled.
 * Clusters must be connected to a [single flat network][flat-network] (virtual network or multiple peered networks).
 * Overlay networking with tunnels is not supported.
 * Self-managed Cilium multi-cluster can't be deployed at the same time.
-* A cross-cluster network can have up to 255 member clusters.
-* ACNS sets the Cilium version deployed and enabled features enabled. These can't currently be directly modified. 
+* ACNS sets the Cilium version and enabled features. These can't currently be directly modified.
 
 ## Foundational concepts
 

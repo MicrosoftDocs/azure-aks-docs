@@ -53,6 +53,9 @@ The following list describes some common use cases for AKS:
 * **[Data streaming with AKS](/azure/architecture/solution-ideas/articles/data-streaming-scenario)**: Ingest and process real-time data streams with millions of data points collected via sensors, and perform fast analyses and computations to develop insights into complex scenarios.
 * **[Using Windows containers on AKS](./windows-aks-customer-stories.md)**: Run Windows Server containers on AKS to modernize your Windows applications and infrastructure.
 
+> [!TIP]
+> If you want a fully managed experience with production-ready defaults, built-in security, and a pod readiness SLA that guarantees 99.9% of qualifying pods are ready within 5 minutes during scale-ups, consider [AKS Automatic](./intro-aks-automatic.md).
+
 ## Features of AKS
 
 The following table lists some of the key features of AKS:

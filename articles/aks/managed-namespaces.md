@@ -4,8 +4,8 @@ description: Step-by-step guide on using managed namespaces in Azure Kubernetes 
 ms.topic: how-to
 ms.date: 11/18/2025
 ms.service: azure-kubernetes-service
-ms.author: jackjiang
-author: jakjang
+ms.author: davidsmatlak
+author: davidsmatlak
 zone_pivot_groups: bicep-azure-cli-portal
 ---
 

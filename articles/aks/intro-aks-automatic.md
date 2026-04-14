@@ -16,6 +16,8 @@ ms.author: asabbour
 Azure Kubernetes Service (AKS) Automatic offers an experience that makes the most common tasks on Kubernetes fast and frictionless, while preserving the flexibility, extensibility, and consistency of Kubernetes. Azure takes care of your cluster setup, including node management, scaling, security, and preconfigured settings that follow AKS well-architected recommendations. Automatic clusters dynamically allocate compute resources based on your specific workload requirements and are tuned for running production applications.
 
 - **Production ready by default**: Clusters are preconfigured for optimal production use, suitable for most applications. They offer fully managed node pools that automatically allocate and scale resources based on your workload needs. Pods are bin packed efficiently, to maximize resource utilization.
+
+- **Guaranteed pod readiness**: AKS Automatic includes a [pod readiness SLA][azure-sla] that guarantees 99.9% of qualifying pod readiness operations complete within 5 minutes. This means your workloads start running promptly during scaling events and node provisioning, giving you confidence in your application's responsiveness without manual tuning.
   
 - **Built-in best practices and safeguards**: AKS Automatic clusters have a hardened default configuration, with many cluster, application, and networking security settings enabled by default. AKS automatically patches your nodes and cluster components while adhering to any planned maintenance schedules.
 
@@ -48,7 +50,7 @@ Node management is automatically handled without the need for manual node pool c
 |--------|---------------|--------------|
 | Node management | **Preconfigured**: AKS Automatic manages the node pools using [Node Autoprovisioning][node-autoprovisioning]. | **Default**: You create and manage system and user node pools <br> **Optional**: AKS Standard manages user node pools using [Node Autoprovisioning][node-autoprovisioning]. |
 | Scaling | **Preconfigured**: AKS Automatic creates nodes based on workload requests using [Node Autoprovisioning][node-autoprovisioning]. <br> [Horizontal Pod Autoscaler (HPA)][aks-hpa], [Kubernetes Event Driven Autoscaling (KEDA)][keda], and [Vertical Pod Autoscaler (VPA)][vpa] are enabled on the cluster. | **Default:** Manual scaling of node pools. <br> **Optional**: <br> * [Cluster autoscaler][cluster-autoscaler] <br> * [Node Autoprovisioning][node-autoprovisioning] <br> * [Kubernetes Event Driven Autoscaling (KEDA)][keda] <br> * [Vertical Pod Autoscaler (VPA)][vpa] |
-| Cluster tier and Service Level Agreement (SLA) | **Preconfigured**: Standard tier cluster with up to 5,000 nodes, a [cluster uptime SLA][uptime-sla], and a [pod readiness SLA][azure-sla] that guarantees 99.9% of pod readiness operations complete within 5 minutes. |  **Default**: Free tier cluster with 10 nodes but can support up to 1,000 nodes. <br/> **Optional**: <br> * Standard tier cluster with up to 5,000 nodes and a [cluster uptime SLA][uptime-sla]. <br> * Premium tier cluster with up to 5,000 nodes, [cluster uptime SLA][uptime-sla], and [long term support][long-term-support]. |
+| Cluster tier and Service Level Agreement (SLA) | **Preconfigured**: Standard tier cluster with up to 5,000 nodes, a [cluster uptime SLA][uptime-sla], and a [pod readiness SLA][azure-sla] that guarantees 99.9% of qualifying pod readiness operations complete within 5 minutes. |  **Default**: Free tier cluster with 10 nodes but can support up to 1,000 nodes. <br/> **Optional**: <br> * Standard tier cluster with up to 5,000 nodes and a [cluster uptime SLA][uptime-sla]. <br> * Premium tier cluster with up to 5,000 nodes, [cluster uptime SLA][uptime-sla], and [long term support][long-term-support]. |
 | Node operating system | **Preconfigured**: [Azure Linux][azure-linux] | **Default**: Ubuntu <br> **Optional**: <br> * [Azure Linux][azure-linux] <br> * [Windows Server][windows-server] |
 | Node resource group | **Preconfigured**: Fully managed node resource group to prevent accidental or intentional changes to cluster resources. | **Default**: Unrestricted <br/> **Optional**: [Read only][nrg-lockdown]  with node resource group lockdown (preview) |
 | Node auto-repair | **Preconfigured**: Continuously monitors the health state of worker nodes and performs [automatic node repair][node-auto-repair] if they become unhealthy. |  **Preconfigured**: Continuously monitors the health state of worker nodes and performs [automatic node repair][node-auto-repair] if they become unhealthy.  |
@@ -79,6 +81,18 @@ AKS Automatic clusters use [managed Virtual Network powered by Azure CNI Overlay
 | Ingress | **Preconfigured**: [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS and Azure Key Vault. <br/> **Optional**: <br> * [Istio-based service mesh add-on for AKS][istio-deploy-ingress] ingress gateway <br> * Bring your own ingress or gateway. | **Optional**: <br> * [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS and Azure Key Vault. <br> * [Istio-based service mesh add-on for AKS][istio-deploy-ingress] ingress gateway <br> * Bring your own ingress or gateway. |
 | Egress | **Preconfigured**: [AKS managed NAT gateway][managed-nat-gateway] for a scalable outbound connection flows when used with managed virtual network <br> **Optional (with custom virtual network)**: <br> * [Azure Load Balancer][egress-load-balancer] <br> * [User-assigned NAT gateway][managed-nat-gateway] <br> * [User-defined routing (UDR)][udr] | **Default**: [Azure Load Balancer][egress-load-balancer] <br> **Optional**: <br> * [User-assigned NAT gateway][managed-nat-gateway] <br> * [AKS managed NAT gateway][userassigned-nat-gateway] <br> * [User-defined routing (UDR)][udr] |
 | Service mesh | **Optional**: <br> * [Azure Service Mesh (Istio)][istio-mesh] <br> * Bring your own service mesh. | **Optional**: <br> * [Azure Service Mesh (Istio)][istio-mesh] <br> * Bring your own service mesh. |
+
+### Pod Readiness SLA
+
+AKS Automatic includes a [pod readiness SLA][azure-sla], a financially backed guarantee that 99.9% of qualifying pod readiness operations complete within 5 minutes. This SLA covers pod scheduling and node provisioning when needed.
+
+The pod readiness SLA benefits workloads that depend on predictable scaling behavior, such as:
+
+- **Web and API workloads** that need to scale out quickly during traffic spikes without degrading response times.
+- **Event-driven processing** where new consumer pods must be ready promptly to avoid message backlog.
+- **CI/CD and batch jobs** that require consistent pod startup times for reliable pipeline execution.
+
+This guarantee is exclusive to AKS Automatic and is backed by the [Microsoft Online Services SLA][azure-sla]. You don't need to configure anything to enable it and it comes included with every AKS Automatic cluster.
 
 ## Next steps
 

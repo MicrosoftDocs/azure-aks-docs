@@ -316,3 +316,16 @@ groups:
     title: Client mode
   - id: cluster-mode
     title: Cluster mode
+# Owner: schaffererin
+- id: cli-portal-terraform-json
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: azure-portal
+    title: Azure portal
+  - id: terraform
+    title: Terraform
+  - id: json-file
+    title: JSON file

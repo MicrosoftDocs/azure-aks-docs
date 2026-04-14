@@ -4,8 +4,8 @@ description: Learn how to spin up Kata pods to enforce compute isolation across 
 ms.topic: how-to
 ms.date: 11/18/2025
 ms.service: azure-kubernetes-service
-ms.author: jackjiang
-author: jakjang
+ms.author: davidsmatlak
+author: davidsmatlak
 ---
 
 # Overview of Pod Sandboxing in Azure Kubernetes Service (AKS)

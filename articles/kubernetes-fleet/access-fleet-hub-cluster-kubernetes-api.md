@@ -33,7 +33,7 @@ If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created w
 
 If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created with a private hub cluster, you can use it to centrally control scenarios like Kubernetes resource propagation. In this article, you learn how to access the Kubernetes API for a private Kubernetes Fleet hub cluster securely using Azure Bastion's native client tunneling feature.
 
-Using Azure Bastion protects your private hub cluster from exposing endpoints to the outside world, while still providing secure access. For more information, see [What is Azure Bastion?](https://docs.azure.cn/bastion/bastion-overview).
+Using Azure Bastion protects your private hub cluster from exposing endpoints to the outside world, while still providing secure access. For more information, see [What is Azure Bastion?](/azure/bastion/bastion-overview).
 
 
 ## Before you begin
@@ -41,7 +41,7 @@ Using Azure Bastion protects your private hub cluster from exposing endpoints to
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 * You need a Kubernetes Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 * You need a virtual network with the Bastion host already installed.
-  * Ensure that you have set up an Azure Bastion host for the virtual network in which the Fleet Manager is located. To set up an Azure Bastion host, see [Quickstart: Deploy Bastion with default settings](https://docs.azure.cn/bastion/quickstart-host-portal).
+  * Ensure that you have set up an Azure Bastion host for the virtual network in which the Fleet Manager is located. To set up an Azure Bastion host, see [Quickstart: Deploy Bastion with default settings](/azure/bastion/quickstart-host-portal).
   * The Bastion must be Standard or Premium SKU and have native client support enabled under configuration settings.
 * The identity (user or service principal) that you're using needs to have:
   * Microsoft.ContainerService/fleets/listCredentials/action permissions on the Kubernetes Fleet resource.

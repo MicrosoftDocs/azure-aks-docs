@@ -140,6 +140,18 @@ The following table includes parameters you can use to define a custom storage c
 | `vnetName` | Virtual network name | Existing virtual network name. | No | If empty, driver will update all the subnets under the cluster virtual network. |
 | `vnetResourceGroup` | Specify virtual network resource group where virtual network is defined. | Existing resource group name. | No | If empty, driver uses the `vnetResourceGroup` value in Azure cloud config file. |
 
+> [!IMPORTANT]
+> The `tags` storage class parameter is applied to the storage account when the Azure Files CSI driver provisions the volume. After the persistent volume is created, the `PersistentVolume` spec is immutable, so editing or patching the PV to change tags or other volume attributes fails. Updating the storage class later affects only newly provisioned volumes.
+>
+> To update tags on an existing volume, change them on the underlying storage account in Azure. If your storage class uses an existing storage account, update tags on that account. This operation doesn't interrupt existing mounts, pods, or data access, and updated Azure tags aren't synchronized back to the Kubernetes PV YAML or metadata. For example:
+>
+> ```azurecli-interactive
+> az storage account update \
+>     --name mystorageaccount \
+>     --resource-group MC_myResourceGroup_myAKSCluster_eastus \
+>     --set tags.abc=ABC123
+> ```
+
 > [!NOTE]
 > If the storage account is created by the driver, then you only need to specify `networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the private endpoint and private DNS zone (named `privatelink.file.core.windows.net`) together with the account. If you bring your own storage account, then you need to [create the private endpoint][storage-account-private-endpoint] for the storage account. If you're using Azure Files storage in a network isolated cluster, you must create a custom storage class with "networkEndpointType: privateEndpoint". You can use the following example manifest as a reference:
 >

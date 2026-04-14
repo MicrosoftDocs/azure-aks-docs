@@ -163,6 +163,15 @@ The output for a successful cluster update to use a user-assigned managed identi
     },
 ...
 ```
+After you update the cluster to use a user-assigned managed identity instead of a service principal, the control plane and pods use the user-assigned managed identity for authorization when accessing other services in Azure. Kubelet continues using a service principal until you also upgrade your node pool. A node pool upgrade causes downtime for your AKS cluster as the nodes in the node pools are cordoned, drained, and reimaged. You can use the command on your nodes to update to a user-assigned managed identity.
+
+```azurecli-interactive
+az aks nodepool upgrade \
+  --resource-group <resource-group-name> \
+  --cluster-name <aks-cluster-name> \
+  --name <node-pool-name> \
+  --node-image-only
+```
 
 > [!NOTE]
 > Migrating a managed identity for the control plane from system-assigned to user-assigned doesn't result in any downtime for control plane and agent pools. Control plane components continue to the old system-assigned identity for up to several hours until the next token refresh.

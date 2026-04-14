@@ -120,6 +120,18 @@ The following table includes parameters you can use to define a custom storage c
 | `maxShares` | The total number of shared disk mounts allowed for the disk. Setting the value to 2 or more enables attachment replicas. | Supported values depend on the disk size. See [Share an Azure managed disk][share-azure-managed-disk] for supported values. | No | 1 |
 | `maxMountReplicaCount` | The number of replicas attachments to maintain. | This value must be in the range `[0..(maxShares - 1)]` | No | If `accessMode` is `ReadWriteMany`, the default is `0`. Otherwise, the default is `maxShares - 1` |
 
+> [!IMPORTANT]
+> The `tags` storage class parameter is applied to the managed disk when the Azure Disk CSI driver provisions the volume. After the persistent volume is created, the `PersistentVolume` spec is immutable, so editing or patching the PV to change tags or other volume attributes fails. Updating the storage class later affects only newly provisioned volumes.
+>
+> To update tags on an existing volume, change them on the underlying managed disk in Azure. This operation doesn't interrupt existing mounts, pods, or data access, and updated Azure tags aren't synchronized back to the Kubernetes PV YAML or metadata. For example:
+>
+> ```azurecli-interactive
+> az disk update \
+>     --name myManagedDisk \
+>     --resource-group MC_myResourceGroup_myAKSCluster_eastus \
+>     --set tags.abc=ABC123
+> ```
+
 ## Create a PVC with Azure Disks
 
 A PVC automatically provisions storage based on a storage class. In this case, a PVC can use one of the precreated storage classes to create a Standard or Premium Azure managed disk.

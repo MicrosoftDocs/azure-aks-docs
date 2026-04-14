@@ -14,7 +14,7 @@ zone_pivot_groups: bicep-azure-cli-portal
 
 **Applies to**: :heavy_check_mark: AKS Automatic
 
-[Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic] is a managed Kubernetes experience that automates AKS cluster setup and operations and embeds best practice configurations. In this quickstart, you learn how to:
+[Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic] is a managed Kubernetes experience that automates AKS cluster setup and operations and embeds best practice configurations. AKS Automatic also includes a [pod readiness SLA][azure-sla] that guarantees 99.9% of qualifying pod readiness operations complete within 5 minutes, guaranteeing reliable, self-healing infrastructure for your applications. In this quickstart, you learn how to:
 
 - Deploy an AKS Automatic cluster.
 - Run a sample multi-container application with a group of microservices and web front ends simulating a retail scenario.

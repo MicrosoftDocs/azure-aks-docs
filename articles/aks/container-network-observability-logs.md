@@ -48,7 +48,59 @@ If the Azure Monitoring add-on is enabled, Container Insights agents collect the
 
 For more information about throttling and Container Insights, see the [Container Insights documentation](https://aka.ms/ContainerNetworkLogsDoc_CI).
 
-### Flow log aggregation
+### Key capabilities of stored logs mode
+
+* **Customizable filters.** Define [`ContainerNetworkLog`](./how-to-configure-container-network-logs.md#containernetworklog-crd-template) custom resources to filter by namespace, pod, service, port, protocol, verdict, or traffic direction. Only matching traffic is logged, so you get precise control over what's collected and what it costs.
+
+* **Flow log aggregation.** Similar flows are automatically grouped into summarized records every 30 seconds, cutting data volume while preserving operational signals like service communication patterns, error rates, and security verdicts. Paired with targeted filters, aggregation lets you maintain broad visibility without excessive ingestion costs. For more information, see [Flow log aggregation](#flow-log-aggregation).
+
+* **Log storage options.** Two storage options are available:
+
+  * **Unmanaged storage (host-local):** Logs are stored on host nodes at `/var/log/acns/hubble`. Files auto-rotate at 50 MB, and older logs are overwritten. This option works for real-time monitoring but doesn't support long-term retention. You can also integrate partner logging services like an OpenTelemetry collector for additional log management.
+
+  * **Managed storage (recommended):** Configure Azure Monitor to collect and store logs in a Log Analytics workspace. This provides secure, compliant storage with anomaly detection, historical analysis, and alerting through the managed service for Prometheus.
+
+    The `ContainerNetworkLogs` table uses the **Analytics** tier by default. You can switch to the **Basic** tier for lower ingestion and retention costs while maintaining a similar observability experience. Each tier has a dedicated Azure portal dashboard optimized for its query capabilities. For more information about table plans, see [Log Analytics table plans](/azure/azure-monitor/logs/data-platform-logs#table-plans).
+
+* **Visualization in the Azure portal.** Query and analyze logs directly in Log Analytics, or use the built-in Azure portal dashboards. A dedicated dashboard is available for each table tier, so you get the same observability experience regardless of which tier you choose. For details, see [Visualize logs in the Azure portal](#visualize-logs-in-the-azure-portal).
+
+## Visualize logs in the Azure portal
+
+You can visualize, query, and analyze flow logs in the Azure portal in the Log Analytics workspace for your cluster.
+
+:::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Screenshot of container network logs in a Log Analytics workspace." lightbox="./media/advanced-container-networking-services/azure-log-analytics.png":::
+
+Container network logs include built-in Azure portal dashboards for visualizing flow data. A separate dashboard is available for each Log Analytics table tier:
+
+| Dashboard | Path | Table tier |
+| --- | --- | --- |
+| **Flow Logs - Basic Tier** (ID: 23155) | **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs - Basic Tier** | Basic |
+| **Flow Logs - Analytics Tier** (ID: 23156) | **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs - Analytics Tier** | Analytics (default) |
+
+Both dashboards show which AKS workloads are communicating with each other, including network requests, responses, drops, and errors. Use the dashboard that matches the table tier configured for your `ContainerNetworkLogs` table.
+
+> [!TIP]
+> The `ContainerNetworkLogs` table defaults to the Analytics tier. If you want to reduce costs, you can switch to the Basic tier and use the corresponding Basic Tier dashboard without losing observability coverage. For more information, see [Log Analytics table plans](/azure/azure-monitor/logs/data-platform-logs#table-plans).
+
+The Azure portal dashboards have the following major components:
+
+* *Network health overview.* The top section shows summary metrics (total flow logs, unique requests, dropped requests, and forwarded requests) so you can quickly spot anomalies. Statistics are broken down by protocol: DNS dropped requests, HTTP 2xx responses, Layer 4 request and response rates, and drop counts. A service dependency graph shows which services communicate with each other, making it easier to identify bottlenecks and unexpected traffic paths.
+
+  :::image type="content" source="./media/advanced-container-networking-services/flow-log-stats.png" alt-text="Screenshot of flow logs stats and a service dependency graph." lightbox="./media/advanced-container-networking-services/flow-log-stats.png":::
+
+* *Flow logs and error logs.* The dashboard separates flow logs from error logs into distinct views, so you can focus on errors without sifting through normal traffic. Use the built-in filters to narrow results by protocol, namespace, or verdict. For example, to troubleshoot DNS resolution failures, filter error logs by the DNS protocol.
+
+  :::image type="content" source="./media/advanced-container-networking-services/flow-log-snapshot.png" alt-text="Screenshot of flow logs and error logs." lightbox="./media/advanced-container-networking-services/flow-log-snapshot.png":::
+
+  Each log entry includes labels, timestamps, and source/destination details to help you pinpoint specific events during an investigation.
+
+  :::image type="content" source="./media/advanced-container-networking-services/flow-log-filters.png" alt-text="Screenshot of available filters in the Azure portal dashboards." lightbox="./media/advanced-container-networking-services/flow-log-filters.png":::
+
+* *Top namespaces, workloads, and DNS errors.* This section surfaces the most active namespaces, highest-traffic workloads, port usage, and most frequent DNS errors. Use it to identify which workloads generate the most traffic, spot dropped requests, and compare protocol distribution (for example, TCP versus UDP). Unusual patterns here, such as unexpected spikes or unfamiliar destinations, can indicate misconfigurations or security concerns.
+
+  :::image type="content" source="./media/advanced-container-networking-services/top-namespaces.png" alt-text="Screenshot of top namespaces and pod metrics." lightbox="./media/advanced-container-networking-services/top-namespaces.png":::
+
+## Flow log aggregation
 
 Network flows add up fast. A cluster with 200 microservices can generate hundreds of thousands of flow records every 30 seconds. Storing all that raw data gets expensive.
 
@@ -109,60 +161,6 @@ Key points:
 
 > [!NOTE]
 > Actual storage reduction varies based on your filter configuration, workload diversity, and traffic patterns.
-
-### Key capabilities of stored logs mode
-
-* **Customizable filters.** Define [`ContainerNetworkLog`](./how-to-configure-container-network-logs.md#containernetworklog-crd-template) custom resources to filter by namespace, pod, service, port, protocol, verdict, or traffic direction. Only matching traffic is logged, so you get precise control over what's collected and what it costs.
-
-* **Flow log aggregation.** Similar flows are automatically grouped into summarized records every 30 seconds, cutting data volume while preserving operational signals like service communication patterns, error rates, and security verdicts. Paired with targeted filters, aggregation lets you maintain broad visibility without excessive ingestion costs. For more information, see [Flow log aggregation](#flow-log-aggregation).
-
-* **Log storage options.** Two storage options are available:
-
-  * **Unmanaged storage (host-local):** Logs are stored on host nodes at `/var/log/acns/hubble`. Files auto-rotate at 50 MB, and older logs are overwritten. This option works for real-time monitoring but doesn't support long-term retention. You can also integrate partner logging services like an OpenTelemetry collector for additional log management.
-
-  * **Managed storage (recommended):** Configure Azure Monitor to collect and store logs in a Log Analytics workspace. This provides secure, compliant storage with anomaly detection, historical analysis, and alerting through the managed service for Prometheus.
-
-    The `ContainerNetworkLogs` table uses the **Analytics** tier by default. You can switch to the **Basic** tier for lower ingestion and retention costs while maintaining a similar observability experience. Each tier has a dedicated Azure portal dashboard optimized for its query capabilities. For more information about table plans, see [Log Analytics table plans](/azure/azure-monitor/logs/data-platform-logs#table-plans).
-
-* **Visualization in the Azure portal.** Query and analyze logs directly in Log Analytics, or use the built-in Azure portal dashboards. A dedicated dashboard is available for each table tier, so you get the same observability experience regardless of which tier you choose. For details, see [Logs visualization in the Azure portal](#logs-visualization-in-the-azure-portal).
-
-### Logs visualization in the Azure portal
-
-You can visualize, query, and analyze flow logs in the Azure portal in the Log Analytics workspace for your cluster.
-
-:::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Screenshot of container network logs in a Log Analytics workspace." lightbox="./media/advanced-container-networking-services/azure-log-analytics.png":::
-
-### Flow logs dashboards
-
-Container network logs include built-in Azure portal dashboards for visualizing flow data. A separate dashboard is available for each Log Analytics table tier:
-
-| Dashboard | Path | Table tier |
-| --- | --- | --- |
-| **Flow Logs - Basic Tier** (ID: 23155) | **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs - Basic Tier** | Basic |
-| **Flow Logs - Analytics Tier** (ID: 23156) | **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs - Analytics Tier** | Analytics (default) |
-
-Both dashboards show which AKS workloads are communicating with each other, including network requests, responses, drops, and errors. Use the dashboard that matches the table tier configured for your `ContainerNetworkLogs` table.
-
-> [!TIP]
-> The `ContainerNetworkLogs` table defaults to the Analytics tier. If you want to reduce costs, you can switch to the Basic tier and use the corresponding Basic Tier dashboard without losing observability coverage. For more information, see [Log Analytics table plans](/azure/azure-monitor/logs/data-platform-logs#table-plans).
-
-The Azure portal dashboards have the following major components:
-
-* *Network health overview.* The top section shows summary metrics (total flow logs, unique requests, dropped requests, and forwarded requests) so you can quickly spot anomalies. Statistics are broken down by protocol: DNS dropped requests, HTTP 2xx responses, Layer 4 request and response rates, and drop counts. A service dependency graph shows which services communicate with each other, making it easier to identify bottlenecks and unexpected traffic paths.
-
-  :::image type="content" source="./media/advanced-container-networking-services/flow-log-stats.png" alt-text="Screenshot of flow logs stats and a service dependency graph." lightbox="./media/advanced-container-networking-services/flow-log-stats.png":::
-
-* *Flow logs and error logs.* The dashboard separates flow logs from error logs into distinct views, so you can focus on errors without sifting through normal traffic. Use the built-in filters to narrow results by protocol, namespace, or verdict. For example, to troubleshoot DNS resolution failures, filter error logs by the DNS protocol.
-
-  :::image type="content" source="./media/advanced-container-networking-services/flow-log-snapshot.png" alt-text="Screenshot of flow logs and error logs." lightbox="./media/advanced-container-networking-services/flow-log-snapshot.png":::
-
-  Each log entry includes labels, timestamps, and source/destination details to help you pinpoint specific events during an investigation.
-
-  :::image type="content" source="./media/advanced-container-networking-services/flow-log-filters.png" alt-text="Screenshot of available filters in the Azure portal dashboards." lightbox="./media/advanced-container-networking-services/flow-log-filters.png":::
-
-* *Top namespaces, workloads, and DNS errors.* This section surfaces the most active namespaces, highest-traffic workloads, port usage, and most frequent DNS errors. Use it to identify which workloads generate the most traffic, spot dropped requests, and compare protocol distribution (for example, TCP versus UDP). Unusual patterns here, such as unexpected spikes or unfamiliar destinations, can indicate misconfigurations or security concerns.
-
-  :::image type="content" source="./media/advanced-container-networking-services/top-namespaces.png" alt-text="Screenshot of top namespaces and pod metrics." lightbox="./media/advanced-container-networking-services/top-namespaces.png":::
 
 ## On-demand logs
 

@@ -6,8 +6,8 @@ ms.subservice: aks-upgrade
 ms.custom: azure-kubernetes-service
 ms.date: 11/06/2024
 ai-usage: ai-assisted
-author: swgriffith
-ms.author: swgriffith
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.reviewer: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to know how to roll back node pool versions in AKS so that I can recover from upgrade issues and maintain cluster stability."
 ---
@@ -63,7 +63,7 @@ Keep the following considerations in mind when using node pool rollback:
 
 | Security implications | Operational considerations |
 | --------------------- | ------------------------- |
-| • **Vulnerability exposure**: Rolling back removes security patches and updates from the newer version. Therefore, we recommend using rollback only temporarily while resolving issues, then re-upgrading as soon as possible. | • **Service disruption**: Rollback process might cause temporary workload interruptions. <br> • **Resource availability**: Ensure sufficient capacity for the rollback operation. <br> • **Testing requirements**: Plan to fix underlying issues before attempting upgrades again. |
+| * **Vulnerability exposure**: Rolling back removes security patches and updates from the newer version. Therefore, we recommend using rollback only temporarily while resolving issues, then re-upgrading as soon as possible. | * **Service disruption**: Rollback process might cause temporary workload interruptions. <br> * **Resource availability**: Ensure sufficient capacity for the rollback operation. <br> * **Testing requirements**: Plan to fix underlying issues before attempting upgrades again. |
 
 ## Why use rollback
 

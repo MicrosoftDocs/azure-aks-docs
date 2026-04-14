@@ -2,7 +2,7 @@
 title: Create a managed or user-assigned NAT gateway for your Azure Kubernetes Service (AKS) cluster
 description: Learn how to create an AKS cluster with managed NAT integration and user-assigned NAT gateway.
 ms.topic: how-to
-ms.date: 06/03/2024
+ms.date: 04/15/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.custom: devx-track-azurecli
@@ -10,7 +10,15 @@ ms.custom: devx-track-azurecli
 
 # Create a managed or user-assigned NAT gateway for your Azure Kubernetes Service (AKS) cluster
 
-While you can route egress traffic through an Azure Load Balancer, there are limitations on the number of outbound flows of traffic you can have. Azure NAT Gateway allows up to 64,512 outbound UDP and TCP traffic flows per IP address with a maximum of 16 IP addresses.
+While you can route egress traffic through an Azure Load Balancer, there are limitations on the number of outbound flows of traffic you can have. Azure NAT Gateway allows up to 64,512 outbound UDP and TCP traffic flows per IP address with a maximum of 16 IP addresses. There are three outbound types that support NAT gateway - `managedNATGatewayV2` (Preview), `managedNATGateway`, and `userAssignedNATGateway`. 
+
+In a managed NAT gateway model, AKS manages the NAT gateway to provide outbound connectivity for your cluster nodes. AKS supports two managed NAT gateway options: the newer `managedNATGatewayV2` and the original `managedNATGateway`. `managedNATgatewayV2` uses StandardV2 NAT gateway which is **zone-redundant by default**, providing continued outbound connectivity even if one availability zone goes down. Unlike Standard NAT gateway, you don't need to specify a zone -zone redundancy is built in automatically. StandardV2 NAT gateway also supports IPv6, higher throughput, and flow logs. For more details, see [StandardV2 NAT gateway SKU](/azure/nat-gateway/nat-overview#standardv2-nat-gateway).
+
+> [!IMPORTANT]
+> The `managedNATGatewayV2` outbound type is currently in PREVIEW.
+> See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
+
+`userAssignedNATGateway` is a customer managed NAT gateway resource that you configure independently of AKS and is needed when using bring-your-own virtual networking.
 
 This article shows you how to create an Azure Kubernetes Service (AKS) cluster with a managed NAT gateway and a user-assigned NAT gateway for egress traffic. It also shows you how to disable OutboundNAT on Windows.
 
@@ -23,148 +31,128 @@ This article shows you how to create an Azure Kubernetes Service (AKS) cluster w
 > [!IMPORTANT]
 > In non-private clusters, API server cluster traffic is routed and processed through the clusters outbound type. To prevent API server traffic from being processed as public traffic, consider using a [private cluster][private-cluster], or check out the [API Server VNet Integration][api-server-vnet-integration] feature.
 
-## Create an AKS cluster with a managed NAT gateway
+## <a name="create-an-aks-cluster-with-a-managed-nat-gateway"></a>Create an AKS cluster with a `managedNATgatewayV2`
 
-* Create an AKS cluster with a new managed NAT gateway using the [`az aks create`][az-aks-create] command with the `--outbound-type managedNATGateway`, `--nat-gateway-managed-outbound-ip-count`, and `--nat-gateway-idle-timeout` parameters. If you want the NAT gateway to operate out of a specific availability zone, specify the zone using `--zones`.
+* Create an AKS cluster with a managed StandardV2 NAT gateway using the [`az aks create`][az-aks-create] command with the `--outbound-type managedNATGateway`, `--nat-gateway-outbound-ips`, `--nat-gateway-outbound-ip-prefixes`, `--nat-gateway-managed-outbound-ip-count`, `--nat-gateway-managed-outbound-ipv6-count`, and `--nat-gateway-idle-timeout` parameters.
+* When configuring outbound IPs for a `managedNATgatewayV2`, you must use **one of the following approaches** — you cannot use both Azure-managed and customer-defined outbound IPs:
+    - **Azure-managed IPs** — Use `--nat-gateway-managed-ip-outbound-count` and/or `--nat-gateway-managed-outbound-ipv6-count` to have Azure automatically allocate and manage the outbound public IPs on your behalf.
+    - **Customer-defined IPs** — Use `--nat-gateway-outbound-ips` and/or `--nat-gateway-outbound-ip-prefixes` to bring your own pre-provisioned public IP addresses or prefixes, giving you full control over the specific addresses used for outbound traffic. StandardV2 NAT Gateway requires the use of new StandardV2 Public IPs. Existing Standard SKU Public IPs don't work with StandardV2 NAT Gateway.
+
+The following table describes each outbound IP parameter and when to use it:
+
+| Parameter | Input | IP Version | Who manages the public IPs |
+|---|---|---|---|
+| `--nat-gateway-managed-outbound-ip-count` | Value in the range of [1, 16]. Desired number of outbound IPv4s for NAT gateway outbound connection. | IPv4 | Azure |
+| `--nat-gateway-managed-outbound-ipv6-count` | Value in the range of [1, 16]. Desired number of outbound IPv6s for NAT gateway outbound connection. | IPv6 | Azure |
+| `--nat-gateway-outbound-ips` | Comma-separated public IP resource IDs for NAT gateway outbound connection. | IPv4 or IPv6 | Customer |
+| `--nat-gateway-outbound-ip-prefixes` | Comma-separated public IP prefix resource IDs for NAT gateway outbound connection. | IPv4 or IPv6 | Customer |
+
+`managedNATGatewayV2` outbound type is currently in Preview, to use this outbound type, the following steps are needed to install the `aks-preview` Azure CLI extension and register the `ManagedNATGatewayV2Preview` feature flag.
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+1. Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command.
+
+    The minimum version of the aks-preview Azure CLI extension is `20.0.0b1`.
+    ```azurecli-interactive
+    # Install the aks-preview extension
+    az extension add --name aks-preview
+    # Update the extension to make sure you have the latest version installed
+    az extension update --name aks-preview
+    ```
+
+2. Register the `ManagedNATGatewayV2Preview` feature flag
+
+    Register the `ManagedNATGatewayV2Preview` feature flag using the [`az feature register`](/cli/azure/feature#az-feature-register) command.
+    
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "ManagedNATGatewayV2Preview"
+    ```
+    
+    Verify successful registration using the [`az feature show`](/cli/azure/feature#az-feature-show) command. It takes a few minutes for the registration to complete.
+    
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "ManagedNATGatewayV2Preview"
+    ```
+    
+    Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
+    
+    
+    The following commands create the required resource group, the public IP and public IP prefix resources to attach to the NAT gateway, and the AKS cluster with a managed StandardV2 NAT gateway.
+
+1. Create a resource group using the [`az group create`][az-group-create] command.
+   
+    ```azurecli-interactive
+    export RANDOM_SUFFIX=$(openssl rand -hex 3)
+    export MY_RG="myResourceGroup$RANDOM_SUFFIX"
+    export MY_AKS="myNatV2Cluster$RANDOM_SUFFIX"
+    export MY_IP="myNatOutboundIP$RANDOM_SUFFIX"
+    export MY_IP_PREFIX="myNatOutboundIPPrefix$RANDOM_SUFFIX"
+    az group create --name $MY_RG --location "eastus2"
+    ```
+2. Create a zone redundant IPv4 public IP address and public IP prefix using the [`az network public-ip create`][az-network-public-ip-create] command. Store `$MY_IP` and `$MY_IP_PREFIX` to use as outbound IPs for the managed StandardV2 NAT gateway.
+
+    ```azurecli-interactive
+    export MY_IP_ID=$(az network public-ip create \
+        --resource-group $MY_RG \
+        --name $MY_IP \
+        --location eastus2 \
+        --sku StandardV2 \
+        --allocation-method Static \
+        --version IPv4 \
+        --zone 1 2 3 \
+        --query id \
+        --output tsv)
+    
+    export MY_IP_PREFIX_ID=$(az network public-ip prefix create \
+        --resource-group $MY_RG \
+        --name $MY_IP_PREFIX \
+        --location eastus2 \
+        --length 31 \
+        --sku StandardV2 \
+        --version IPv4 \
+        --zone 1 2 3 \
+        --query id \
+        --output tsv)
+    ```
+3. Create the AKS cluster and reference the public IP address (`$MY_IP_ID`) and public IP prefix (`$MY_IP_PREFIX_ID`).
+    ```azurecli-interactive
+    az aks create \
+        --resource-group $MY_RG \
+        --name $MY_AKS \
+        --node-count 3 \
+        --outbound-type managedNATGatewayV2 \
+        --nat-gateway-outbound-ips $MY_IP_ID \
+        --nat-gateway-outbound-ip-prefixes $MY_IP_PREFIX_ID \
+        --nat-gateway-idle-timeout 4 \
+        --generate-ssh-keys
+    ```
+    
+Update the outbound IPs, outbound IP prefixes, managed outbound IP count, or idle timeout using the `az aks update` command with the `--nat-gateway-outbound-ips`, `--nat-gateway-outbound-ip-prefixes`, `--nat-gateway-managed-outbound-count`, `--nat-gateway-managed-outbound-ipv6-count`, or `--nat-gateway-idle-timeout` parameter. A `managedNATGatewayV2` can't be updated to switch between customer-defined and managed outbound IP addresses after creation. The outbound IP configuration is determined when the StandardV2 NAT Gateway is initially created and remains immutable.
+
+
+## Create an AKS cluster with a `managedNATgateway`
+
+* Create an AKS cluster with a managed Standard NAT gateway using the `az aks create` command with `--outbound-type managedNATGateway`. `--nat-gateway-managed-outbound-ip-count`, and `--nat-gateway-idle-timeout` parameters. If you want the NAT gateway to operate out of specific availability zone, specify the zone using `--zones`.
+
+* A managed NAT gateway resource can't be used across multiple availability zones. For zone-redundant outbound connectivity, consider using #create-an-aks-cluster-with-a-managed-nat-gateway-v2.
 * If no zone is specified when creating a managed NAT gateway, then NAT gateway is deployed to "no zone" by default. When NAT gateway is placed in **no zone**, Azure places the resource in a zone for you. For more information on non-zonal deployment model, see [non-zonal NAT gateway](/azure/nat-gateway/nat-availability-zones#non-zonal).
-* A managed NAT gateway resource can't be used across multiple availability zones.
+  
+## <a name="create-an-aks-cluster-with-a-user-assigned-nat-gateway"></a>Create an AKS cluster with a `userAssignedNatGateway`
 
-The following commands first create the required resource group, then the AKS cluster with a managed NAT gateway.
-
-```azurecli-interactive
-export RANDOM_SUFFIX=$(openssl rand -hex 3)
-export MY_RG="myResourceGroup$RANDOM_SUFFIX"
-export MY_AKS="myNatCluster$RANDOM_SUFFIX"
-az group create --name $MY_RG --location "eastus2"
-```
-
-Results:
-
-```output
-{
-  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroupxxx",
-  "location": "eastus2",
-  "managedBy": null,
-  "name": "myResourceGroupxxx",
-  "properties": {
-    "provisioningState": "Succeeded"
-  },
-  "tags": null,
-  "type": "Microsoft.Resources/resourceGroups"
-}
-```
-
-```azurecli-interactive
-az aks create \
-    --resource-group $MY_RG \
-    --name $MY_AKS \
-    --node-count 3 \
-    --outbound-type managedNATGateway \
-    --nat-gateway-managed-outbound-ip-count 2 \
-    --nat-gateway-idle-timeout 4 \
-    --generate-ssh-keys
-```
-
-Results:
-
-<!-- expected_similarity=0.3 -->
-
-```output
-{
-  "aadProfile": null,
-  "agentPoolProfiles": [
-    {
-      ...
-      "name": "nodepool1",
-      ...
-      "provisioningState": "Succeeded",
-      ...
-    }
-  ],
-  "dnsPrefix": "myNatClusterxxx-dns-xxx",
-  "fqdn": "myNatClusterxxx-dns-xxx.xxxxx.xxxxxx.cloudapp.azure.com",
-  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myResourceGroupxxx/providers/Microsoft.ContainerService/managedClusters/myNatClusterxxx",
-  "name": "myNatClusterxxx",
-  ...
-  "resourceGroup": "myResourceGroupxxx",
-  ...
-  "provisioningState": "Succeeded",
-  ...
-  "type": "Microsoft.ContainerService/ManagedClusters"
-}
-```
-
-* Update the outbound IP address or idle timeout using the [`az aks update`][az-aks-update] command with the `--nat-gateway-managed-outbound-ip-count` or `--nat-gateway-idle-timeout` parameter.
-
-The following example updates the NAT gateway managed outbound IP count for the AKS cluster to 5.
-
-```azurecli-interactive
-az aks update \
-    --resource-group $MY_RG \
-    --name $MY_AKS \
-    --nat-gateway-managed-outbound-ip-count 5
-```
-
-Results: 
-
-<!-- expected_similarity=0.3 -->
-
-```output
-{
-  "aadProfile": null,
-  "agentPoolProfiles": [
-    {
-      ...
-      "name": "nodepool1",
-      ...
-      "provisioningState": "Succeeded",
-      ...
-    }
-  ],
-  "dnsPrefix": "myNatClusterxxx-dns-xxx",
-  "fqdn": "myNatClusterxxx-dns-xxx.xxxxx.xxxxxx.cloudapp.azure.com",
-  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myResourceGroupxxx/providers/Microsoft.ContainerService/managedClusters/myNatClusterxxx",
-  "name": "myNatClusterxxx",
-  ...
-  "resourceGroup": "myResourceGroupxxx",
-  ...
-  "provisioningState": "Succeeded",
-  ...
-  "type": "Microsoft.ContainerService/ManagedClusters"
-}
-```
-
-## Create an AKS cluster with a user-assigned NAT gateway
-
-This configuration requires bring-your-own networking (via [Kubenet][byo-vnet-kubenet] or [Azure CNI][byo-vnet-azure-cni]) and that the NAT gateway is preconfigured on the subnet. The following commands create the required resources for this scenario.
+This configuration requires bring-your-own networking (via [Azure CNI][byo-vnet-azure-cni]) and that the NAT gateway is preconfigured on the subnet. Both Standard and StandardV2 NAT gateways are supported for this `outbound-type`. The following commands create the required resources to deploy a StandardV2 NAT gateway resource for your AKS cluster.
 
 1. Create a resource group using the [`az group create`][az-group-create] command.
 
-    ```shell
+    ```azurecli-interactive
     export RANDOM_SUFFIX=$(openssl rand -hex 3)
     export MY_RG="myResourceGroup$RANDOM_SUFFIX"
     az group create --name $MY_RG --location southcentralus
     ```
 
-    Results:
-
-    ```output
-    {
-      "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroupxxx",
-      "location": "southcentralus",
-      "managedBy": null,
-      "name": "myResourceGroupxxx",
-      "properties": {
-        "provisioningState": "Succeeded"
-      },
-      "tags": null,
-      "type": "Microsoft.Resources/resourceGroups"
-    }
-    ```
-
 2. Create a managed identity for network permissions and store the ID to `$IDENTITY_ID` for later use.
 
-    ```shell
+    ```azurecli-interactive
     export IDENTITY_NAME="myNatClusterId$RANDOM_SUFFIX"
     export IDENTITY_ID=$(az identity create \
         --resource-group $MY_RG \
@@ -180,71 +168,31 @@ This configuration requires bring-your-own networking (via [Kubenet][byo-vnet-ku
     /xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroupxxx/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myNatClusterIdxxx
     ```
 
-3. Create a public IP for the NAT gateway using the [`az network public-ip create`][az-network-public-ip-create] command.
+3. Create a StandardV2 public IP for the NAT gateway using the [`az network public-ip create`][az-network-public-ip-create] command. A StandardV2 NAT gateway requires a StandardV2 public IP address.
 
-    ```shell
+    ```azurecli-interactive
     export PIP_NAME="myNatGatewayPip$RANDOM_SUFFIX"
     az network public-ip create \
         --resource-group $MY_RG \
         --name $PIP_NAME \
         --location southcentralus \
-        --sku standard
+        --allocation-method Static \
+        --version IPv4 \
+        --zone 1 2 3 \
+        --sku standard-v2
     ```
 
-    Results:
+4. Create the StandardV2 NAT gateway using the [`az network nat gateway create`][az-network-nat-gateway-create] command.
 
-    ```output
-    {
-      "publicIp": {
-        "ddosSettings": null,
-        "dnsSettings": null,
-        "etag": "W/\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"",
-        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroupxxx/providers/Microsoft.Network/publicIPAddresses/myNatGatewayPipxxx",
-        "ipAddress": null,
-        "ipTags": [],
-        "location": "southcentralus",
-        "name": "myNatGatewayPipxxx",
-        ...
-        "provisioningState": "Succeeded",
-        ...
-        "sku": {
-          "name": "Standard",
-          "tier": "Regional"
-        },
-        "type": "Microsoft.Network/publicIPAddresses",
-        ...
-      }
-    }
-    ```
-
-4. Create the NAT gateway using the [`az network nat gateway create`][az-network-nat-gateway-create] command.
-
-    ```shell
+    ```azurecli-interactive
     export NATGATEWAY_NAME="myNatGateway$RANDOM_SUFFIX"
     az network nat gateway create \
         --resource-group $MY_RG \
         --name $NATGATEWAY_NAME \
         --location southcentralus \
-        --public-ip-addresses $PIP_NAME
-    ```
-
-    Results:
-
-    ```output
-    {
-      "etag": "W/\"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"",
-      "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroupxxx/providers/Microsoft.Network/natGateways/myNatGatewayxxx",
-      "location": "southcentralus",
-      "name": "myNatGatewayxxx",
-      "provisioningState": "Succeeded",
-      "publicIpAddresses": [
-        {
-          "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroupxxx/providers/Microsoft.Network/publicIPAddresses/myNatGatewayPipxxx"
-        }
-      ],
-      ...
-      "type": "Microsoft.Network/natGateways"
-    }
+        --public-ip-addresses $PIP_NAME \
+        --sku StandardV2
+        --idle-timeout 4
     ```
 
    > [!Important]
@@ -254,7 +202,7 @@ This configuration requires bring-your-own networking (via [Kubenet][byo-vnet-ku
 
 5. Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command.
 
-    ```shell
+    ```azurecli-interactive
     export VNET_NAME="myVnet$RANDOM_SUFFIX"
     az network vnet create \
         --resource-group $MY_RG \
@@ -263,31 +211,9 @@ This configuration requires bring-your-own networking (via [Kubenet][byo-vnet-ku
         --address-prefixes 172.16.0.0/20 
     ```
 
-    Results:
-
-    ```output
-    {
-      "newVNet": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "172.16.0.0/20"
-          ]
-        },
-        ...
-        "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroupxxx/providers/Microsoft.Network/virtualNetworks/myVnetxxx",
-        "location": "southcentralus",
-        "name": "myVnetxxx",
-        "provisioningState": "Succeeded",
-        ...
-        "type": "Microsoft.Network/virtualNetworks",
-        ...
-      }
-    }
-    ```
-
 6. Create a subnet in the virtual network using the NAT gateway and store the ID to `$SUBNET_ID` for later use.
 
-    ```shell
+    ```azurecli-interactive
     export SUBNET_NAME="myNatCluster$RANDOM_SUFFIX"
     export SUBNET_ID=$(az network vnet subnet create \
         --resource-group $MY_RG \
@@ -299,15 +225,10 @@ This configuration requires bring-your-own networking (via [Kubenet][byo-vnet-ku
         --output tsv)
     ```
 
-    Results:
-
-    ```output
-    /xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroupxxx/providers/Microsoft.Network/virtualNetworks/myVnetxxx/subnets/myNatClusterxxx
-    ```
-
+   
 7. Create an AKS cluster using the subnet with the NAT gateway and the managed identity using the [`az aks create`][az-aks-create] command.
 
-    ```shell
+    ```azurecli-interactive
     export AKS_NAME="myNatCluster$RANDOM_SUFFIX"
     az aks create \
         --resource-group $MY_RG \
@@ -318,33 +239,6 @@ This configuration requires bring-your-own networking (via [Kubenet][byo-vnet-ku
         --outbound-type userAssignedNATGateway \
         --assign-identity $IDENTITY_ID \
         --generate-ssh-keys
-    ```
-
-    Results:
-
-    ```output
-    {
-      "aadProfile": null,
-      "agentPoolProfiles": [
-        {
-          ...
-          "name": "nodepool1",
-          ...
-          "provisioningState": "Succeeded",
-          ...
-        }
-      ],
-      "dnsPrefix": "myNatClusterxxx-dns-xxx",
-      "fqdn": "myNatClusterxxx-dns-xxx.xxxxx.xxxxxx.cloudapp.azure.com",
-      "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myResourceGroupxxx/providers/Microsoft.ContainerService/managedClusters/myNatClusterxxx",
-      "name": "myNatClusterxxx",
-      ...
-      "resourceGroup": "myResourceGroupxxx",
-      ...
-      "provisioningState": "Succeeded",
-      ...
-      "type": "Microsoft.ContainerService/ManagedClusters"
-    }
     ```
 
 ## Disable OutboundNAT for Windows
