@@ -474,7 +474,7 @@ Both dashboards show which AKS workloads communicate with each other, including 
 
 :::image type="content" source="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png" alt-text="Screenshot of Grafana dashboards in Azure Monitor." lightbox="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png":::
 
-For more about the dashboard components, see the [container network logs overview](container-network-observability-logs.md#flow-logs-dashboards).
+For more about the dashboard components, see the [container network logs overview](container-network-observability-logs.md#visualize-logs-in-the-azure-portal).
 
 > [!TIP]
 > The `ContainerNetworkLogs` table defaults to the **Analytics** tier. If you want to reduce ingestion and retention costs, you can switch to the **Basic** tier and use the corresponding dashboard. For more information, see [Log Analytics table plans](/azure/azure-monitor/logs/data-platform-logs#table-plans).
