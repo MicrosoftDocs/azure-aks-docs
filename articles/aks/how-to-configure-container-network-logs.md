@@ -890,7 +890,7 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
 * **ACNS not enabled.** Running `--enable-container-network-logs` without ACNS produces:
 
-    `Flow logs requires '--enable-acns', advanced networking to be enabled, and the monitoring addon to be enabled.`
+    `Flow logs requires '--enable-acns', advanced networking to be enabled. 
 
 * **Kubernetes version too old.** Running `--enable-container-network-logs` on a cluster older than 1.33.0 produces:
 

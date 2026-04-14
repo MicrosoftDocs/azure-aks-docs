@@ -50,18 +50,62 @@ For more information about throttling and Container Insights, see the [Container
 
 ### Flow log aggregation
 
-In production clusters, network flows add up fast. A cluster with 200 microservices can generate hundreds of thousands of flow records every 30 seconds. Storing all that raw data gets expensive.
+Network flows add up fast. A cluster with 200 microservices can generate hundreds of thousands of flow records every 30 seconds. Storing all that raw data gets expensive.
 
-Flow log aggregation tackles this by grouping similar flows into summarized records. During each 30-second window, flows that share the same characteristics (source and destination workloads, namespaces, ports, protocol, and verdict) are combined into a single record with a count of how many flows it represents.
+For example, say `client-1` and `client-2` both talk to a `server` pod over TCP. Over a 30-second window, raw flow records on the node look like this:
 
-This preserves the signals you need (which services communicate, how often, what errors occur, whether traffic was allowed or blocked) while cutting data volume significantly. Unlike sampling, which randomly discards flows and can miss rare security events, aggregation retains 100% of the pattern information.
+| Source | Source port | Destination | Destination port | Protocol | Flag |
+|---|---|---|---|---|---|
+| client-1 | 12345 | server | 80 | TCP | SYN |
+| server | 80 | client-1 | 12345 | TCP | SYN-ACK |
+| client-1 | 12345 | server | 80 | TCP | ACK |
+| client-1 | 12345 | server | 80 | TCP | PSH |
+| server | 80 | client-1 | 12345 | TCP | ACK |
+| client-2 | 23456 | server | 80 | TCP | SYN |
+| server | 80 | client-2 | 23456 | TCP | SYN-ACK |
+| client-2 | 23456 | server | 80 | TCP | ACK |
+| client-2 | 23456 | server | 80 | TCP | PSH |
+| server | 80 | client-2 | 23456 | TCP | ACK |
+
+With aggregation, those 10 records become two:
+
+| Source | Source port | Destination | Destination port | Protocol | Flows sent | Flows received |
+|---|---|---|---|---|---|---|
+| client-1 | 12345 | server | 80 | TCP | 4 | 6 |
+| client-2 | 23456 | server | 80 | TCP | 4 | 6 |
+
+Flow log aggregation tackles this by grouping similar flows into summarized records. During each 30-second window, flows that share the same aggregation key fields are combined into a single record with a count of how many flows it represents.
+
+The following fields make up the aggregation key:
+
+| Field | Description |
+|---|---|
+| `verdict` | FORWARDED, DROPPED, or ERROR |
+| `is_reply` | Whether the flow is a request (false) or response (true) |
+| `drop_reason_desc` | Reason packets were dropped |
+| `source.namespace` | Source pod namespace |
+| `destination.namespace` | Destination pod namespace |
+| `source.workloads` | Source workload (Deployment, StatefulSet, or DaemonSet) |
+| `destination.workloads` | Destination workload (Deployment, StatefulSet, or DaemonSet) |
+| `source.identity` | Source security identity (always present as a fallback) |
+| `destination.identity` | Destination security identity (always present as a fallback) |
+| `l4.TCP.destination_port` | TCP destination port |
+| `l4.UDP.destination_port` | UDP destination port |
+| `l7.http.code` | HTTP response code (200, 404, 500, etc.) |
+| `l7.dns.rcode` | DNS response code (NOERROR, NXDOMAIN, etc.) |
+| `IP.ipVersion` | IPv4 or IPv6 |
+| `IP.encrypted` | Whether the flow is encrypted (WireGuard/IPsec) |
+| `source.cluster_name` | Source cluster name |
+| `destination.cluster_name` | Destination cluster name |
+
+Flows that match on all these fields within a 30-second window are merged into one record. This preserves the signals you need (which services communicate, how often, what errors occur, whether traffic was allowed or blocked) while cutting data volume significantly. Unlike sampling, which randomly discards flows and can miss rare security events, aggregation retains 100% of the pattern information.
 
 Key points:
 
-* Aggregation parameters are preset and managed by ACNS. No configuration or tuning is required.
+* Aggregation is enabled and configured by default. This reduces log storage and ingestion costs without any manual tuning.
 * You control which traffic is captured through `includeFilters` in the `ContainerNetworkLog` CRD.
 * Narrower filters (specific namespace or service pairs) typically achieve better compression because the captured flows are more similar.
-* Individual flow timestamps, pod IP addresses, and high-cardinality fields (HTTP URLs, DNS query names) aren't preserved in aggregated records. Use on-demand logs for detailed per-flow investigation when needed.
+* Aggregated logs skip high-cardinality and per-flow attributes (for example, individual timestamps, pod IPs, HTTP URLs, DNS query names) to minimize ingestion volume and storage cost. They're designed for high-level issue detection. Use on-demand logs for fine-grained flow analysis and investigation.
 
 > [!NOTE]
 > Actual storage reduction varies based on your filter configuration, workload diversity, and traffic patterns.
@@ -145,23 +189,13 @@ The Hubble UI provides a graphical view of service-to-service communication. It'
 * **Fast troubleshooting.** Filter flows interactively through the Hubble CLI, or view service maps visually in the Hubble UI.
 * **Low overhead.** No persistent storage required, so there's no ongoing cost for ad-hoc investigations.
 
-## Recommendations and best practices for stored logs
+## Recommendations for stored logs
 
-Follow this adoption pattern to effectively implement container network logs in your environment:
+1. **Start with broad filters, then narrow down.** When you first enable flow logs, use wide filters to capture traffic across your key namespaces. Run the configuration for a few days and review the collected data in Log Analytics. Look at data volume, cost, and whether the captured flows match what you actually need. Then tighten your `includeFilters` to focus on high-value traffic and cut out the noise.
 
-1. **Start in non-production.** Enable flow logs in a non-production cluster first to validate configurations and understand traffic patterns without production risk.
+1. **Use the pre-built dashboards first.** The built-in Azure portal dashboards cover common use cases like service communication patterns, error rates, and DNS failures. Start there. Add custom panels or Log Analytics queries only if you need visibility the pre-built dashboards don't provide.
 
-1. **Configure targeted filters.** Define `includeFilters` to capture relevant traffic based on your monitoring goals. Narrow filters (specific namespace or service pairs) achieve better compression and cost efficiency.
-
-1. **Validate aggregation efficiency.** Analyze the keys-to-flows ratio with your filter settings to confirm that aggregation is reducing data volume effectively. Adjust filters if you're capturing too much low-signal traffic.
-
-1. **Build observability dashboards.** Set up Azure Monitor dashboards for your key use cases (service communication patterns, error rates, DNS failures). Use both the built-in dashboards and custom Log Analytics queries.
-
-1. **Refine filters based on data.** Monitor actual data volume and visibility coverage. Adjust `includeFilters` to focus on high-value traffic and avoid noisy data that inflates costs without adding insight.
-
-1. **Roll out to production.** Deploy to production with your optimized filter configuration and established dashboards.
-
-1. **Monitor and iterate.** Track compression efficiency and flow patterns over time. Refine filters periodically as workloads and traffic patterns evolve.
+1. **Review periodically.** As workloads and traffic patterns change, your filters may need updating. Check data volume and flow coverage periodically to make sure you're still capturing the right traffic at a reasonable cost.
 
 ## Limitations
 
