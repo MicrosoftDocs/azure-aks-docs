@@ -13,12 +13,14 @@ ms.subservice: aks-nodes
 
 # Manage system node pools in Azure Kubernetes Service (AKS)
 
-In Azure Kubernetes Service (AKS), nodes of the same configuration are grouped together into *node pools*. Node pools contain the underlying VMs that run your applications. System node pools and user node pools are two different node pool modes for your AKS clusters. System node pools serve the primary purpose of hosting critical system pods such as `CoreDNS` and `metrics-server`. User node pools serve the primary purpose of hosting your application pods. However, application pods can be scheduled on system node pools if you wish to only have one pool in your AKS cluster. Every AKS cluster must contain at least one system node pool with at least two nodes.
+In Azure Kubernetes Service (AKS), nodes of the same configuration are grouped together into _node pools_. Node pools contain the underlying virtual machines (VM) that run your applications. System node pools and user node pools are two different node pool modes for your AKS clusters. This article explains how to manage system node pools in AKS. For information about how to use multiple node pools, see [create node pools][create-node-pools].
 
-> [!Important]
-> If you run a single system node pool for your AKS cluster in a production environment, we recommend you use at least three nodes for the node pool.
+- **System node pools**: The primary purpose is to host critical system pods like `CoreDNS` and `metrics-server`. System node pools shouldn't be used to run your application. System node pools use Ubuntu Linux or Azure Linux.
+- **User node pools**: The primary purpose is to host your application pods and isolate applications from the system node pool. This isolation prevents an application from causing instability with your cluster's system node pool. User node pools can use Ubuntu Linux, Azure Linux, or Windows.
 
-This article explains how to manage system node pools in AKS. For information about how to use multiple node pools, see [use multiple node pools][use-multiple-node-pools].
+A production AKS cluster with a single system node pool must contain at least two nodes. The recommendation for a production AKS cluster with a single system node pool is to have at least three nodes for improved fault tolerance and availability zones. For example, the [az aks create][az-aks-create] command's default node count is three and creates a new cluster with a single Linux system node pool and three Linux nodes.
+
+It's possible, but not recommended, to schedule application pods on a system node pool if you only have one node pool in your AKS cluster. A better solution is to create a user node pool for your application.
 
 ## Before you begin
 

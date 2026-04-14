@@ -6,7 +6,7 @@ ms.custom: build-2024, devx-track-azurecli, devx-track-bicep, ignite-2024
 ms.date: 10/10/2025
 author: wangyira
 ms.author: wangamanda
-zone_pivot_groups: bicep-azure-cli-portal
+zone_pivot_groups: azure-cli-bicep-portal-terraform
 # Customer intent: As a DevOps engineer, I want to create and manage an Azure Kubernetes Service (AKS) Automatic cluster, so that I can efficiently deploy and operate containerized applications with best practice configurations automatically.
 ---
 
@@ -29,6 +29,11 @@ zone_pivot_groups: bicep-azure-cli-portal
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 - Azure CLI version 2.77.0 or later. Find your version using the `az --version` command. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli). If you're using Azure Cloud Shell, the latest version is already installed there.
+
+:::zone-end
+
+:::zone target="docs" pivot="azure-cli,terraform"
+
 - If you have multiple Azure subscriptions, select the appropriate subscription ID to bill resources to using the [`az account set`](/cli/azure/account#az-account-set) command.
 
 :::zone-end
@@ -39,11 +44,49 @@ zone_pivot_groups: bicep-azure-cli-portal
 
 :::zone-end
 
+:::zone target="docs" pivot="terraform"
+
+- Azure CLI version 2.77.0 or later. Find your version using the `az --version` command. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+- [kubectl](https://kubernetes.io/releases/download/) installed. You can install it locally using the [`az aks install-cli`][az-aks-install-cli] command.
+- Terraform installed locally. For installation instructions, see [Install Terraform](https://developer.hashicorp.com/terraform/install).
+
+:::zone-end
+
 [!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
-:::zone target="docs" pivot="azure-cli,bicep"
+:::zone target="docs" pivot="terraform"
+
+## Create the Terraform configuration file
+
+Terraform configuration files define the infrastructure that Terraform creates and manages.
+
+Create a file named `main.tf` and add the following code to define the Terraform version and specify the Azure provider:
+
+```Terraform
+terraform {
+ required_version = ">= 1.5.0"
+ required_providers {
+   azurerm = {
+     source  = "hashicorp/azurerm"
+     version = "~> 4.0"
+   }
+   azapi = {
+     source  = "Azure/azapi"
+     version = "~> 2.0"
+   }
+ }
+}
+provider "azurerm" {
+ features {}
+}
+provider "azapi" {}
+```
+
+:::zone-end
 
 ## Create a resource group
+
+:::zone target="docs" pivot="azure-cli,bicep"
 
 An [Azure resource group][azure-resource-group] is a logical group in which Azure resources are deployed and managed.
 
@@ -70,9 +113,22 @@ The following sample output resembles successful creation of the resource group:
 
 :::zone-end
 
-:::zone target="docs" pivot="azure-cli"
+:::zone target="docs" pivot="terraform"
+
+Add the following code to `main.tf` to create an Azure resource group. Feel free to change the name and location of the resource group as needed.
+
+```Terraform
+resource "azurerm_resource_group" "aks" {
+ name     = "myResourceGroup"
+ location = "East US"
+}
+```
+
+:::zone-end
 
 ## Create an AKS Automatic cluster
+
+:::zone target="docs" pivot="azure-cli"
 
 Create an AKS Automatic cluster using the [`az aks create`][az-aks-create] command with the `--sku` parameter set to `automatic`. The following example creates a cluster named _myAKSAutomaticCluster_ with Managed Prometheus and the Container Insights integration enabled:
 
@@ -88,8 +144,6 @@ After a few minutes, the command completes and returns JSON-formatted informatio
 :::zone-end
 
 :::zone target="docs" pivot="azure-portal"
-
-## Create Automatic Kubernetes cluster
 
 1. To create an AKS Automatic cluster, search for and select **Kubernetes services**. This takes you to the **Kubernetes center (preview)** page.
 1. On the **Kubernetes center (preview)** page, select **Create** > **Automatic Kubernetes cluster**.
@@ -112,6 +166,39 @@ After a few minutes, the command completes and returns JSON-formatted informatio
 1. Get started with configuring your first application from GitHub and set up an automated deployment pipeline.
 
     :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/automatic-overview.png" alt-text="The screenshot of the Get Started Tab on Overview Blade after creating an AKS Automatic cluster in the Azure portal.":::
+
+:::zone-end
+
+:::zone target="docs" pivot="terraform"
+
+Add the following code to `main.tf` to create an AKS Automatic cluster. This configuration also enables a system-assigned managed identity, defines a system node pool, and allows Azure to manage networking and other infrastructure defaults.
+
+```Terraform
+resource "azapi_resource" "aks_automatic" {
+ type      = "Microsoft.ContainerService/managedClusters@2025-03-01"
+ name      = "myAKSAutomaticCluster"
+ parent_id = azurerm_resource_group.aks.id
+ location  = azurerm_resource_group.aks.location
+ identity {
+   type = "SystemAssigned"
+ }
+ body = {
+   sku = {
+     name = "Automatic"
+   }
+   properties = {
+     dnsPrefix = "aksautomatic"
+     agentPoolProfiles = [
+       {
+         name  = "systempool"
+         mode  = "System"
+         count = 1
+       }
+     ]
+   }
+ }
+}
+```
 
 :::zone-end
 
@@ -165,6 +252,34 @@ For more information about the resource defined in the Bicep file, see the [**Mi
     ```
 
     It takes a few minutes to create the AKS cluster. Wait for the cluster to be successfully deployed before you move on to the next step.
+
+:::zone-end
+
+:::zone target="docs" pivot="terraform"
+
+## Initialize Terraform
+
+Initialize Terraform in the directory containing your `main.tf` file using the [`terraform init`](https://www.terraform.io/docs/commands/init.html) command. This command downloads the Azure provider required to manage Azure resources with Terraform.
+
+```console
+terraform init
+```
+
+## Create a Terraform execution plan
+
+Create a Terraform execution plan using the [`terraform plan`](https://www.terraform.io/docs/commands/plan.html) command. This command shows you the resources that Terraform will create or modify in your Azure subscription.
+
+```console
+terraform plan
+```
+
+## Apply the Terraform configuration
+
+After reviewing and confirming the execution plan, apply the Terraform configuration using the [`terraform apply`](https://www.terraform.io/docs/commands/apply.html) command. This command creates or modifies the resources defined in your `main.tf` file in your Azure subscription.
+
+```console
+terraform apply
+```
 
 :::zone-end
 
