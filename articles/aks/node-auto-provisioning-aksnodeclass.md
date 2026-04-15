@@ -296,7 +296,7 @@ For more on custom Linux OS configuration settings, see our [custom node configu
 
 ### Swap file configuration
 
-The following settings allow you to swag the file configuration:
+The following settings allow you to swap the file configuration:
 
 ```yaml
 spec:
