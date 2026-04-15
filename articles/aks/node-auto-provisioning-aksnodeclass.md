@@ -289,7 +289,7 @@ spec:
 
 The `LinuxOSConfig` section allows you to configure various kubelet parameters that affect node behavior. These parameters are typical custom OS arguments, so the NAP simply passes them through to the kubelet on the node.
 
-For more on custom Linux OS configuration settings, see our [custom node configuration documentation](./azure/aks/custom-node-configuration#linux-custom-os-configuration-settings).
+For more on custom Linux OS configuration settings, see our [custom node configuration documentation](./custom-node-configuration.md#linux-custom-os-configuration-settings).
 
 > [!IMPORTANT]
 > **Configure Linux OS settings carefully**, and test any changes in nonproduction environments first.
