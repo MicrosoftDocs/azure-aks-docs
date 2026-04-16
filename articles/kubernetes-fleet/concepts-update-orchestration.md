@@ -179,7 +179,7 @@ Examples:
 
 ## Member selection with label selectors (preview)
 
-`memberSelector` is an optional field on update stages and update groups that enables Kubernetes-style label selectors for selecting fleet members. This field provides a flexible alternative to the name-based group matching, enabling multi-dimensional member selection.
+`memberSelector` is an optional field on update stages and update groups that enables Kubernetes-style label selectors for selecting fleet members. This field provides a flexible alternative to the name-based group matching, enabling multi-dimensional member selection. For example, different labels on fleet members can be used for different strategies as opposed to being restricted to just one group field.
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
