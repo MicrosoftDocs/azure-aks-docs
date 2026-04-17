@@ -1,31 +1,33 @@
 ---
-title: Deploy an application using AKS desktop (preview)
-description: This article guides you through deploying an application using AKS desktop, enabling you to manage your containerized workloads with an intuitive, application-centric interface.
+title: Deploy an application using AKS desktop
+description: Learn how to deploy a containerized application to AKS using AKS desktop without writing Kubernetes manifests.
 ms.service: azure-kubernetes-service
 ms.subservice: aks-developer
 ms.editor: schaffererin
-author: qpetraroia
+author: danielsollondon
 ms.topic: how-to
-ms.date: 11/19/2025
-ms.author: alalve
+ms.date: 04/16/2026
+ms.author: danis
 # Customer intent: As a developer, I want to deploy an application to Azure Kubernetes Service using AKS desktop, so that I can quickly deploy and manage my containerized applications without writing detailed Kubernetes manifests.
 ---
 
-# Deploy an application using AKS desktop (preview)
+# Deploy an application using AKS desktop
 
-**Applies to**: :heavy_check_mark: [AKS Automatic clusters](intro-aks-automatic.md)
-
-Deploy applications to Azure Kubernetes Service (AKS) using AKS desktop, an application-focused experience that simplifies Kubernetes management. This guide walks you through the steps to deploy your first application using AKS desktop.
+Deploying applications to Kubernetes typically requires writing and maintaining YAML manifests for every resource. [AKS desktop](aks-desktop-overview.md) removes this complexity by providing an application-centric experience in Visual Studio Code — deploy containerized apps to Azure Kubernetes Service (AKS) in minutes, without authoring Kubernetes configuration files. This guide covers signing in, adding a cluster, creating a project, deploying an application, and viewing metrics.
 
 ## Prerequisites
 
 - You need an Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account](https://azure.microsoft.com/free).
-- You must have an AKS cluster available through the Azure portal or an Azure Container Registry with your application image that you want to deploy.
-- The [Azure CLI](/cli/azure/install-azure-cli?view=azure-cli-latest&preserve-view=true) must be installed on your device.
+- You must have an AKS cluster available through the Azure portal or an [Azure Container Registry (ACR)](/azure/container-registry/container-registry-intro) with your application image that you want to deploy.
+- Azure CLI version 2.64.0 or later must be installed. Check your version using the [`az --version`](/cli/azure/reference-index#az-version) command. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - The `aks-preview` Azure CLI extension. Install it using the `az extension add --name aks-preview` command.
 - You must have an [AKS Automatic cluster](intro-aks-automatic.md).
 - You must install [AKS desktop](https://github.com/Azure/aks-desktop/releases). AKS desktop supports the following operating systems: Windows, Linux, and Mac.
 - Your cluster must be Microsoft Entra ID authenticated. To ensure your cluster is Microsoft Entra ID authenticated, use an [AKS Automatic cluster](intro-aks-automatic.md).
+- The appropriate RBAC roles must be assigned for your team. See [Set up permissions and RBAC for AKS desktop](aks-desktop-permissions.md).
+
+
+
 
 ## Sign in to your account
 
@@ -39,7 +41,7 @@ Once signed in, you have the ability to add clusters that you have access to int
 ## Add a cluster to AKS desktop
 
 > [!NOTE]
-> We recommend using an AKS Automatic cluster with AKS desktop. While AKS Standard SKU work in AKS desktop, you might not see the full benefits of the Project view. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
+> AKS Automatic is the recommended cluster type for use with AKS desktop. While AKS Standard SKU works in AKS desktop, you might not see the full benefits of the Project view. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
 
 When you sign in, you can add clusters into AKS desktop from your Azure subscription or by uploading a kubeconfig file. If you have a single Azure subscription, AKS desktop auto populates your subscription once you sign in.
 
@@ -49,7 +51,7 @@ When you sign in, you can add clusters into AKS desktop from your Azure subscrip
 1. Enter the name of your Azure subscription if you have more than one. (Alternatively, select the arrow to open the drop-down list, then select your Azure subscription.)
 1. Select your cluster, then select **Register Cluster**.
 
-   ![A video demonstrating how to add a cluster to the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-add-cluster.gif)
+   ![A video demonstrating how to add a cluster to the AKS desktop app.](./media/aks-desktop-app/aks-desktop-app-add-cluster.gif)
 
 ### [Upload a kubeconfig file](#tab/kubeconfig-file)
 
@@ -68,7 +70,7 @@ When you sign in, you can add clusters into AKS desktop from your Azure subscrip
 1. Enter the name of your Azure subscription if you have more than one. (Alternatively, select the arrow to open the drop-down list, then select your Azure subscription.)
 1. Select your cluster, then select **Register Cluster**.
 
-   ![A video demonstrating how to add additional clusters to the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-add-additional-clusters.gif)
+   ![A video demonstrating how to add additional clusters to the AKS desktop app.](./media/aks-desktop-app/aks-desktop-app-add-additional-clusters.gif)
 
 ## Remove a cluster from AKS desktop
 
@@ -78,7 +80,7 @@ To delete a cluster from AKS desktop and your kubeconfig, follow these steps:
 1. Under **Actions**, select the three dots, and then select **Delete**.
 1. The **Delete Cluster** window appears asking if you want to remove the specified cluster. Select **Delete**.
 
-   ![A video demonstrating how to remove a cluster from the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-remove-cluster.gif)
+   ![A video demonstrating how to remove a cluster from the AKS desktop app.](./media/aks-desktop-app/aks-desktop-app-remove-cluster.gif)
 
 ## Create a new Project in AKS desktop
 
@@ -86,7 +88,7 @@ When you create a Project on a cluster, any user with access to the associated n
 
 There are three methods you can choose from to deploy your application using AKS desktop: **AKS managed Project**, **YAML Project**, and **New Project**.
 
-### [Create an AKS managed Project](#tab/aks-managed-project)
+### [Create an AKS managed project](#tab/aks-managed-project)
 
 > [!IMPORTANT]
 > Make sure you register the namespace preview feature for first time use. Under **Feature Flag Required**, select **Register ManagedNamespacePreview Feature**.
@@ -99,9 +101,9 @@ There are three methods you can choose from to deploy your application using AKS
 1. Under **Review**, verify the settings for your Project, and then select **Create Project**.
 1. Add your application name, and then select **Create Application**.
 
-    ![A video demonstrating how to create a new AKS-managed Project in the AKS desktop app.](media/aks-desktop-app/aks-desktop-app-create-new-project-aks-managed.gif)
+    ![A video demonstrating how to create a new AKS-managed Project in the AKS desktop app.](./media/aks-desktop-app/aks-desktop-app-create-new-project-aks-managed.gif)
 
-### [Create YAML Project](#tab/yaml-project)
+### [Create a YAML project](#tab/yaml-project)
 
 1. Provide a Project name.
 1. Select a cluster to add to your Project.
@@ -110,7 +112,7 @@ There are three methods you can choose from to deploy your application using AKS
    - Select a `.yaml` or `.yml` file to load. You can also drag and drop your file into AKS desktop. Then select **Create**.
    - Select **Load from URL**, paste your YAML URL, select **Load**, and then select **Create**.
 
-### [Create a New Project](#tab/new-project)
+### [Create a new project](#tab/new-project)
 
 1. Provide a Project name.
 1. Select a cluster to add to your Project. You can add more once a cluster is selected.
@@ -134,7 +136,7 @@ There are three methods you can choose from to deploy your application using AKS
 > [!TIP]
 > When you deploy an application to AKS Desktop for the first time, metrics might take 5–10 minutes to appear as data begins flowing into managed Prometheus. After this initial delay, metrics should load within seconds. If metrics don't appear, try refreshing AKS Desktop.
 
-We recommend you always create a new Project when deploying a new application. Once you create your first Project, AKS desktop places you directly into the newly created Project. Within your Project, select **Deploy Application**. There are two sources you can choose from to deploy your app: **Container Image** and **Kubernetes YAML**.
+Always create a new Project when deploying a new application. Once you create your first Project, AKS desktop places you directly into the newly created Project. Within your Project, select **Deploy Application**. There are two sources you can choose from to deploy your app: **Container Image** and **Kubernetes YAML**.
 
 ### [Container Image deployment](#tab/container-image)
 
@@ -153,7 +155,7 @@ We recommend you always create a new Project when deploying a new application. O
 1. Under **Advanced**, choose which settings you'd like to apply to your app, and then select **Next**.
 1. Review your app deployment configuration. Select **Deploy**, and then select **Close**.
 
-### [Kubernetes YAML deployoment](#tab/kubernetes-yaml)
+### [Kubernetes YAML deployment](#tab/kubernetes-yaml)
 
 1. Select **Upload files** to upload one or more `.yaml` or `.yml` files, and then select **Next**. (Alternatively, you can paste the contents within your YAML files into the text editor, and then select **Next**.)
 1. Review the resources to deploy, select **Deploy**, and then select **Close**.
@@ -170,6 +172,14 @@ Use the following steps to view cluster data and metrics in AKS desktop:
 1. Under the **Name** tab, select the cluster you want to view.
 1. In the left pane, choose the specific setting to view detailed cluster data and metrics.
 
+## Next steps
+
+- [Troubleshoot an application using Insights (preview)](aks-desktop-deploy-troubleshooting.md)
+- [Use the AI troubleshooting assistant (preview)](aks-desktop-deploy-ai-assistant.md)
+
 ## Related content
 
-For more information about add-ons, extensions, and features available in AKS, see [Add-ons, extensions, and other integrations with Azure Kubernetes Service (AKS)](./integrations.md).
+- [Set up permissions and RBAC for AKS desktop](aks-desktop-permissions.md)
+- [AKS desktop overview](aks-desktop-overview.md)
+- [Report issues or provide feedback for AKS desktop](https://github.com/Azure/aks-desktop/issues)
+

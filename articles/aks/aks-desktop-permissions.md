@@ -1,22 +1,33 @@
 ---
-title: Set up permissions and role-based access control (RBAC) in AKS desktop (preview)
-description: Learn how to set up permissions and role-based access control (RBAC) for AKS desktop in Azure Kubernetes Service (AKS) based on your role as a cluster operator or developer.
+title: Set up permissions and role-based access control (RBAC) in AKS desktop
+description: Learn how to configure RBAC permissions for AKS desktop based on your role as a cluster operator or developer.
 ms.subservice: aks-developer
 ms.service: azure-kubernetes-service
 ms.editor: schaffererin
-author: qpetraroia
+author: danielsollondon
 ms.topic: how-to
-ms.date: 11/19/2025
-ms.author: alalve
+ms.date: 04/16/2026
+ms.author: danis
 zone_pivot_groups: aks-desktop
-# Customer intent: As a cluster operator or developer, I want to understand the setup requirements and permissions for AKS desktop, so that I can configure my environment based on my role.
+# Customer intent: As a cluster operator or developer, I want to understand the setup requirements and permissions for AKS desktop, so that I can provide an environment for developers or allow them to self serve deploying and managing applications on an AKS cluster. As a dev lead, developer, kubernetes operator, devops engineer, I want to share application to Azure Kubernetes Service using AKS desktop, so that I can quickly deploy and manage my containerized applications without writing detailed Kubernetes manifests.
 ---
 
-# Set up permissions in AKS desktop (preview)
+# Set up permissions and role-based access control (RBAC) in AKS desktop
+![Diagram showing AKS desktop RBAC role assignments for cluster operator and developer roles](./media/aks-desktop-app/aks-desktop-role-based-security.png)
 
-**Applies to**: :heavy_check_mark: [AKS Automatic clusters](intro-aks-automatic.md)
+[AKS desktop (preview)](aks-desktop-overview.md) is a Visual Studio Code extension that lets you deploy and manage applications on an AKS cluster without writing Kubernetes manifests. Managing team access across projects requires configuring the correct Azure RBAC roles for each team member. AKS desktop maps these roles to Azure built-in roles, giving you a straightforward way to control who can create projects, deploy applications, and monitor workloads.
 
-AKS desktop uses Azure role-based access control (RBAC) to manage user permissions for accessing and managing resources within AKS desktop. Depending on your role as a cluster operator or developer, you have different responsibilities and required permissions to work with AKS desktop effectively. This article guides you through the setup process based on your role: cluster operator or developer.
+
+Depending on your role as a cluster operator or developer, you can provide an environment (project) for developers to deploy, migrate, or manage applications, or allow them to self-serve deploying and managing applications on a dedicated AKS cluster. Alternatively, you may want to grant more developers access to manage, observe, and troubleshoot applications. 
+
+
+By default, when you create a Project in AKS desktop you can share this with other people in your organization and it will set the permissions for you, however you may need to maintain permissions over time or automate them or define an operating model by setting the appropriate permissions.
+
+
+This article describes how to manage RBAC permissions to enable team members to work with AKS desktop.
+
+> [!NOTE]
+> AKS desktop doesn't currently provide a UI option to modify Project permissions after creation. To update permissions or grant access to additional users after a Project is created, use the Azure portal or Azure CLI as described in this article.
 
 > [!NOTE]
 > When you create Projects in AKS desktop, [AKS managed namespaces](concepts-managed-namespaces.md) are created in the same resource group as your cluster.
@@ -28,8 +39,8 @@ AKS desktop uses Azure role-based access control (RBAC) to manage user permissio
 - The `aks-preview` Azure CLI extension. Install it using the `az extension add --name aks-preview` command.
 - A basic understanding of Azure role-based access control (RBAC), see [What is Azure RBAC?](/azure/role-based-access-control/overview) and [Azure built-in roles](/azure/role-based-access-control/built-in-roles).
 - An Azure resource group that contains your AKS cluster and any AKS managed Projects created through AKS desktop.
-- An AKS Automatic cluster, which is the Kubernetes cluster where your applications run from.
-- An Azure Container Registry (ACR) to your container images for deployment.
+- An [AKS Standard cluster](./aks-desktop-install-cluster-setup.md) that meets AKS desktop requirements or [AKS Automatic cluster](intro-aks-automatic.md), which is the Kubernetes cluster where your applications run.
+- An [Azure Container Registry (ACR)](/azure/container-registry/container-registry-intro) to store your container images for deployment.
 
 :::zone pivot="cluster-operator"
 
@@ -65,9 +76,6 @@ To create the infrastructure resources, you need permissions to create resources
 
 ## Integrate ACR with your AKS cluster
 
-> [!NOTE]
-> We recommend using an AKS Automatic cluster with AKS desktop. While AKS Standard SKU work in AKS desktop, you might not see the full benefits of the Project view. AKS Automatic includes built-in metrics, observability, and other tools that enable AKS desktop to surface important insights for users.
-
 - Attach your Azure container registry with your AKS cluster using the [`az aks update`](/cli/azure/aks#az-aks-update) command.
 
     ```azurecli-interactive
@@ -82,7 +90,7 @@ To create the infrastructure resources, you need permissions to create resources
 As a cluster operator, you have two options for how developers work with Projects in AKS desktop:
 
 - **Self-service model**: Developers create and manage their own Projects. This approach gives developers full autonomy but requires granting them the **Azure Kubernetes Service Namespace Contributor** role. When developers create their own Projects, they automatically receive **Owner** role on the managed namespace and can immediately start deploying applications.
-- **Managed model**: You create Projects for developers and grant them access. This approach provides more control over Project creation but requires you to assign three roles per developer.
+- **Managed model**: You create Projects for developers and grant them access, currently this can be done by the UI during project creation. This approach provides more control over Project creation but if you need to assign more team members to the project post creation you will need to assign them the permissions below.
 
 ## [Self-service model: Allow developers to create their own Projects](#tab/self-service)
 
@@ -123,7 +131,7 @@ All three roles are required for developers to successfully access and work with
 - Assign **Azure Kubernetes Service Namespace User** role for the specific Project/namespace using the [`az role assignment create`][az-role-assignment-create] command. Make sure to replace the placeholder with the appropriate user or service principal ID.
 
     ```azurecli-interactive
-    export $NAMESPACE_NAME=<namespace-or-project-name>
+    export NAMESPACE_NAME=<namespace-or-project-name>
     
     az role assignment create \
         --role "Azure Kubernetes Service Namespace User" \
@@ -260,7 +268,7 @@ Currently, AKS desktop doesn't provide a UI option to modify Project permissions
 - Assign **Azure Kubernetes Service Namespace User** role for the specific Project/namespace using the [`az role assignment create`][az-role-assignment-create] command. Make sure to replace the placeholder with the appropriate user or service principal ID.
 
     ```azurecli-interactive
-    export $NAMESPACE_NAME=<namespace-or-project-name>
+    export NAMESPACE_NAME=<namespace-or-project-name>
     
     az role assignment create \
         --role "Azure Kubernetes Service Namespace User" \
@@ -301,11 +309,15 @@ To grant permissions to view metrics, follow the steps in the [View application 
 
 :::zone-end
 
-## Related content
+## Next steps
 
-- Learn how to [Deploy an application with AKS desktop (preview)](aks-desktop-app.md)
+- Learn how to [Deploy an application with AKS desktop](aks-desktop-app.md)
 - Learn more about [Managed namespaces in AKS](concepts-managed-namespaces.md)
+- Learn more about [AKS desktop overview](aks-desktop-overview.md)
+- [Troubleshoot an application using Insights (preview)](aks-desktop-deploy-troubleshooting.md)
+- [Use the AI troubleshooting assistant (preview)](aks-desktop-deploy-ai-assistant.md)
 
 <!--- LINKS --->
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+
