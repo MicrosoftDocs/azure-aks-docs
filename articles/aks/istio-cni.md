@@ -49,10 +49,20 @@ export RESOURCE_GROUP=<resource-group-name>
 
 ## Enable Istio CNI
 
-Use the following command to enable Istio CNI on your AKS cluster:
+### Enable Istio CNI on a new mesh installation
+
+You can enable Istio CNI when enabling the service mesh add-on by specifying the `--proxy-redirection-mechanism` parameter:
 
 ```azurecli-interactive
-az aks mesh enable-istio-cni --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
+az aks mesh enable --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --proxy-redirection-mechanism CNIChaining
+```
+
+### Enable Istio CNI on an existing mesh installation
+
+If you already have the Istio service mesh add-on enabled, you can switch to Istio CNI using the following command:
+
+```azurecli-interactive
+az aks mesh proxy-redirection-mechanism --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --mechanism CNIChaining
 ```
 
 ## Verify Istio CNI is enabled
@@ -145,7 +155,7 @@ Init Containers:
 To disable Istio CNI and return to using traditional init containers, use the following command:
 
 ```azurecli-interactive
-az aks mesh disable-istio-cni --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
+az aks mesh proxy-redirection-mechanism --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --mechanism InitContainers
 ```
 
 After disabling Istio CNI:
