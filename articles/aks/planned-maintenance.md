@@ -459,7 +459,7 @@ If a newer version of the node image becomes available during the maintenance wi
 
 ### Can Azure utilize the AKS planned maintenance window for Azure platform‑level maintenance impacting the underlying VMSS that hosts the AKS node pools?
 
-No. The AKS planned maintenance window is specifically intended to schedule and control AKS cluster and node image upgrades in Azure Kubernetes Service. It does not apply to Azure platform‑level maintenance on the underlying VMSS hosting the AKS node pools, they operate independently with no direct dependency between them.
+No. The AKS planned maintenance window is specifically intended to schedule and control AKS cluster and node image upgrades in Azure Kubernetes Service. It does not apply to Azure platform‑level maintenance on the underlying VMSS hosting the AKS node pools. They operate independently with no direct dependency between them.
 
 Azure periodically performs platform updates to enhance the reliability, performance, and security of the underlying host infrastructure for virtual machines. These updates may include patching software components, upgrading networking infrastructure, or decommissioning hardware. Platform maintenance can be either rebootless or require a reboot. 
 For maintenance events that require a reboot, customers are notified in advance through Maintenance Notifications, which include a `self‑service phase` that typically last up to four weeks.
