@@ -457,7 +457,7 @@ We don't recommend using the same maintenance configuration for multiple cluster
 
 If a newer version of the node image becomes available during the maintenance window, AKS performs a second upgrade to ensure that your node pools are running the latest version. This behavior is normal and doesn't indicate an issue.
 
-### Can Azure utilize the AKS planned maintenance window for Azure platform‑level maintenance impacting the underlying VMSS that hosts the AKS node pools?
+### Can Azure use the AKS planned maintenance window for platform maintenance on the underlying VMSS?
 
 No. The AKS planned maintenance window is specifically intended to schedule and control AKS cluster and node image upgrades in Azure Kubernetes Service. It does not apply to Azure platform‑level maintenance on the underlying VMSS hosting the AKS node pools. They operate independently with no direct dependency between them.
 
