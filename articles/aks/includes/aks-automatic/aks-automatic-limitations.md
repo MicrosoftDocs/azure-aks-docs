@@ -1,15 +1,15 @@
 ---
 ms.service: azure-kubernetes-service
 ms.topic: include
-ms.date: 10/10/2025
+ms.date: 04/13/2026
 author: wangyira
 ms.author: wangamanda
 ---
 ## Limitations
 
 - AKS Automatic clusters' system nodepool require deployment in Azure regions that support at least three [availability zones](/azure/reliability/regions-list), ephemeral OS disk, and Azure Linux OS.
-- You can only create AKS Automatic clusters in regions where [API Server VNet Integration](../../api-server-vnet-integration.md) is generally available (GA).
-- AKS Automatic cluster has [node resource group lockdown](/articles/aks/node-resource-group-lockdown.md) preconfigured, which does not allow changes to the MC_ resource group, preventing VNet links on the default Private DNS zone. For cross‑VNet or custom DNS scenarios, use BYO VNET and BYO Private DNS by following [Create a private Azure Kubernetes Service (AKS) Automatic cluster in a custom virtual network](../../automatic/quick-automatic-private-custom-network.md).
+- AKS Automatic is available in the following regions: `australiaeast`, `austriaeast`, `belgiumcentral`, `brazilsouth`, `canadacentral`, `centralindia`, `centralus`, `chilecentral`, `denmarkeast`, `eastasia`, `eastus`, `eastus2`, `francecentral`, `germanywestcentral`, `indonesiacentral`, `israelcentral`, `italynorth`, `japaneast`, `japanwest`, `koreacentral`, `malaysiawest`, `mexicocentral`, `newzealandnorth`, `northcentralus`, `northeurope`, `norwayeast`, `polandcentral`, `southafricanorth`, `southcentralus`, `southeastasia`, `spaincentral`, `swedencentral`, `switzerlandnorth`, `uaenorth`, `uksouth`, `westeurope`, `westus`, `westus2`, `westus3`.
+- AKS Automatic cluster has [node resource group lockdown](../../node-resource-group-lockdown.md) preconfigured, which does not allow changes to the MC_ resource group, preventing virtual network links on the default Private DNS zone. For cross‑VNet or custom DNS scenarios, use custom network and private DNS by following [Create a private Azure Kubernetes Service (AKS) Automatic cluster in a custom virtual network](../../automatic/quick-automatic-private-custom-network.md).
 
 
 

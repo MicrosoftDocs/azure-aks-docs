@@ -18,16 +18,17 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 
 This article shows you how to enable eBPF Host Routing with Advanced Container Networking Services (ACNS) on Azure Kubernetes Service (AKS) clusters.
 
-## Prerequisites
+## Requirements and parameters
 
-- An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
-[!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+| Requirement or parameter | Supported versions or values | Description |
+| ------------------------ | ---------------------------- | ----------- |
+| Feature flag | `AdvancedNetworkingPerformancePreview` | This feature flag must be registered in your subscription to enable eBPF Host Routing in Azure CNI powered by Cilium AKS clusters. |
+| Azure CLI version | 2.71.0 or later | The Azure CLI version must be 2.71.0 or later to support eBPF Host Routing. |
+| Kubernetes version | 1.33 or later | The Kubernetes version must be 1.33 or later to support eBPF Host Routing. |
+| Node operating system | Azure Linux 3.0 or Ubuntu 24.04 | eBPF Host Routing is supported only on Azure CNI powered by Cilium clusters with Azure Linux 3.0 or Ubuntu 24.04. |
+| Dataplane | Azure CNI powered by Cilium | eBPF Host Routing is supported only on AKS clusters that use Azure CNI powered by Cilium. |
 
-- The minimum version of Azure CLI required for the steps in this article is 2.71.0. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-
-- eBPF Host Routing is only supported with Azure CNI powered by Cilium. See [Configure Azure CNI Powered by Cilium](/azure/aks/azure-cni-powered-by-cilium) for more information on managed Cilium clusters.
-
-- Review the [Limitations](./container-network-performance-ebpf-host-routing.md#limitations) section for node requirements and compatibility with existing iptable rules.
+Review the [Limitations](./container-network-performance-ebpf-host-routing.md#limitations) section for node requirements and compatibility with existing iptable rules.
 
 ### Install the `aks-preview` Azure CLI extension
 
@@ -69,12 +70,6 @@ The `az aks create` command with the Advanced Container Networking Services flag
 * **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
 * **Container Network Performance:** Improves latency and throughput for pod network traffic. To learn more visit [Container Network Performance](./advanced-container-networking-services-overview.md#container-network-performance)
-
-> [!NOTE]
-> Clusters with the Cilium data plane support Container Network Performance with eBPF Host Routing starting with Kubernetes version 1.33.
-
-> [!WARNING]
-> The only compatible OS versions are Ubuntu 24.04 or Azure Linux 3.0.
 
 Create an Azure resource group for the cluster using the [`az group create`](/cli/azure/group#az-group-create) command.
 

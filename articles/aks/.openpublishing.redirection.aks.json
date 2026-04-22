@@ -756,6 +756,21 @@
             "source_path_from_root": "/articles/aks/cli-agent-for-aks-troubleshoot.md",
             "redirect_url": "/azure/aks/agentic-cli-for-aks-troubleshoot",
             "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/container-network-insight-agent-overview.md",
+            "redirect_url": "/azure/aks/container-network-insights-agent-overview",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/how-to-configure-container-network-insight-agent.md",
+            "redirect_url": "/azure/aks/how-to-configure-container-network-insights-agent",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/troubleshoot-container-network-insight-agent.md",
+            "redirect_url": "/azure/aks/troubleshoot-container-network-insights-agent",
+            "redirect_document_id": true
         }
      ]
 }

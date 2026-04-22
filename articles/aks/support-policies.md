@@ -115,7 +115,7 @@ If an agent node isn't operational, AKS might restart individual components or t
 
 ### Customer responsibilities for AKS agent nodes
 
-Microsoft provides patches and new images for your image nodes weekly. To keep your agent node OS and runtime components up to date, you should apply these patches and updates regularly either manually or automatically. For more information, see:
+Microsoft provides patches and new images for your image nodes weekly. To keep your agent node OS and runtime components up to date, you should apply these patches and updates regularly either manually or automatically. Microsoft does not support node images that are older than 90 days. For more information, see:
 
 - [Manually upgrade AKS node images](./node-image-upgrade.md).
 - [Automatically upgrade AKS node images](./auto-upgrade-node-os-image.md).

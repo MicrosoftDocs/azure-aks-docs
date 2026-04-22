@@ -14,13 +14,10 @@ ms.date: 08/16/2024
 
 You can expand your pod Classless Inter-Domain Routing (CIDR) space on Azure CNI Overlay clusters in Azure Kubernetes Service with Linux nodes only. The operation uses the [`az aks update`](/cli/azure/aks#az_aks_update) command and allows expansions without the need to re-create your AKS cluster.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
 ## Requirements and parameters
 
 | Requirement or parameter | Supported versions or values | Description |
 | ------------------------ | ---------------------------- | ----------- |
-| Feature flag | `EnableAzureCNIOverlayPodCIDRExpansion` | This feature flag must be registered in your subscription to enable pod CIDR expansion in Azure CNI Overlay AKS clusters. |
 | Azure CLI version | 2.48.0 or later | The Azure CLI version must be 2.48.0 or later to support the pod CIDR expansion feature. |
 | Node operating system | Linux | Pod CIDR expansion is supported only on Azure CNI Overlay AKS clusters with Linux nodes. |
 | Networking mode | Azure CNI Overlay | Pod CIDR expansion is supported only on AKS clusters that use Azure CNI Overlay networking. |
@@ -40,26 +37,6 @@ You can expand your pod Classless Inter-Domain Routing (CIDR) space on Azure CNI
 
 - You need an Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/) before you begin.
 - Ensure that you meet the requirements listed in the [Requirements and parameters](#requirements-and-parameters) section.
-
-## Register the `EnableAzureCNIOverlayPodCIDRExpansion` feature flag
-
-1. Register the `EnableAzureCNIOverlayPodCIDRExpansion` feature flag by using the [`az feature register`](/cli/azure/feature#az_feature_register) command:
-
-    ```azurecli-interactive
-    az feature register --namespace Microsoft.ContainerService --name EnableAzureCNIOverlayPodCIDRExpansion
-    ```
-
-1. Verify successful registration by using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for the registration to finish.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "EnableAzureCNIOverlayPodCIDRExpansion"
-    ```
-
-1. After the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`](/cli/azure/provider#az_provider_register) command:
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Update an Azure CNI Overlay AKS cluster to expand the pod CIDR space
 

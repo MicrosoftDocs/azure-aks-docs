@@ -3,9 +3,9 @@ title: Introduction to Azure Kubernetes Service (AKS) Automatic
 description: Simplify deployment and management of container-based applications in Azure by learning about the features and benefits of Azure Kubernetes Service Automatic.
 ms.topic: overview
 ms.custom: build-2024, biannual
-ms.date: 08/28/2025
-author: sabbour
-ms.author: asabbour
+ms.date: 04/13/2026
+author: wangyira
+ms.author: wangamanda
 #Customer intent: As a cluster administrator or developer, I want to simplify AKS cluster management and deployment by using preconfigured settings, built-in best practices, and automated features for production-ready applications.
 ---
 
@@ -44,17 +44,18 @@ Application deployment can be streamlined using [automated deployments][automate
 
 ### Node management, scaling, and cluster operations
 
-Node management is automatically handled without the need for manual node pool creation. Scaling is seamless, with nodes created based on workload requests. Additionally, features for workload scaling like Horizontal Pod Autoscaler (HPA), [Kubernetes Event Driven Autoscaling (KEDA)][keda], and [Vertical Pod Autoscaler (VPA)][vpa] are enabled. Clusters are configured for automatic node repair, automatic cluster upgrades, and detection of deprecated Kubernetes standard API usage. You can also set a planned maintenance schedule for upgrades if needed.
+Node management is automatically handled without the need for manual user node pool creation, [system node pools and components are managed][managed-system-node-pool] by AKS. Scaling is seamless, with nodes created based on workload requests. Additionally, features for workload scaling like Horizontal Pod Autoscaler (HPA), [Kubernetes Event Driven Autoscaling (KEDA)][keda], and [Vertical Pod Autoscaler (VPA)][vpa] are enabled. The [pod readiness SLA][azure-sla] that guarantees 99.9% of pod readiness operations complete within 5 minutes. Clusters are configured for automatic node repair, automatic cluster upgrades, and detection of deprecated Kubernetes standard API usage. You can also set a planned maintenance schedule for upgrades if needed.
 
 | Option | AKS Automatic | AKS Standard |
 |--------|---------------|--------------|
-| Node management | **Preconfigured**: AKS Automatic manages the node pools using [Node Autoprovisioning][node-autoprovisioning]. | **Default**: You create and manage system and user node pools <br> **Optional**: AKS Standard manages user node pools using [Node Autoprovisioning][node-autoprovisioning]. |
+| Node management | **Preconfigured**: AKS Automatic manages the node pools using [Node Autoprovisioning][node-autoprovisioning]. <br> **Optional**: [AKS Automatic with managed system node pools][managed-system-node-pool] creates, scales, upgrades the system nodes and system components on your behalf and host them in the AKS subscriptions. | **Default**: You create and manage system and user node pools <br> **Optional**: AKS Standard manages user node pools using [Node Autoprovisioning][node-autoprovisioning]. |
 | Scaling | **Preconfigured**: AKS Automatic creates nodes based on workload requests using [Node Autoprovisioning][node-autoprovisioning]. <br> [Horizontal Pod Autoscaler (HPA)][aks-hpa], [Kubernetes Event Driven Autoscaling (KEDA)][keda], and [Vertical Pod Autoscaler (VPA)][vpa] are enabled on the cluster. | **Default:** Manual scaling of node pools. <br> **Optional**: <br> * [Cluster autoscaler][cluster-autoscaler] <br> * [Node Autoprovisioning][node-autoprovisioning] <br> * [Kubernetes Event Driven Autoscaling (KEDA)][keda] <br> * [Vertical Pod Autoscaler (VPA)][vpa] |
 | Cluster tier and Service Level Agreement (SLA) | **Preconfigured**: Standard tier cluster with up to 5,000 nodes, a [cluster uptime SLA][uptime-sla], and a [pod readiness SLA][azure-sla] that guarantees 99.9% of qualifying pod readiness operations complete within 5 minutes. |  **Default**: Free tier cluster with 10 nodes but can support up to 1,000 nodes. <br/> **Optional**: <br> * Standard tier cluster with up to 5,000 nodes and a [cluster uptime SLA][uptime-sla]. <br> * Premium tier cluster with up to 5,000 nodes, [cluster uptime SLA][uptime-sla], and [long term support][long-term-support]. |
-| Node operating system | **Preconfigured**: [Azure Linux][azure-linux] | **Default**: Ubuntu <br> **Optional**: <br> * [Azure Linux][azure-linux] <br> * [Windows Server][windows-server] |
-| Node resource group | **Preconfigured**: Fully managed node resource group to prevent accidental or intentional changes to cluster resources. | **Default**: Unrestricted <br/> **Optional**: [Read only][nrg-lockdown]  with node resource group lockdown (preview) |
+| Node operating system | **Preconfigured for system node pool**: [Azure Linux][azure-linux] <br> **Optional for user nodes**: <br> * [Azure Linux][azure-linux] <br> * Ubuntu | **Default**: Ubuntu <br> **Optional**: <br> * [Azure Linux][azure-linux] <br> * [Windows Server][windows-server] |
+| Node resource group | **Preconfigured**: [Fully managed node resource group][nrg-lockdown] to prevent accidental or intentional changes to cluster resources. | **Default**: Unrestricted <br/> **Optional**: [Read only][nrg-lockdown]  with node resource group lockdown |
 | Node auto-repair | **Preconfigured**: Continuously monitors the health state of worker nodes and performs [automatic node repair][node-auto-repair] if they become unhealthy. |  **Preconfigured**: Continuously monitors the health state of worker nodes and performs [automatic node repair][node-auto-repair] if they become unhealthy.  |
-| Cluster upgrades | **Preconfigured**: Clusters are [automatically upgraded][cluster-upgrades]. |  **Default**: Manual upgrade. <br> **Optional**: Automatic upgrade using a selectable [upgrade channel][cluster-upgrade-channels].  |
+| Cluster upgrades | **Preconfigured**: Clusters are [automatically upgraded using the stable channel][cluster-upgrade-channels] to minor version N-1, where N is the latest supported minor version. |  **Default**: Manual upgrade. <br> **Optional**: Automatic upgrade using a selectable [upgrade channel][cluster-upgrade-channels].  |
+| Node OS image upgrades | **Preconfigured**: Clusters are [automatically upgraded using the NodeImage channel][nodeos-updates] with security fixes and bug fixes. | **Default**: Manual upgrade. <br> **Optional**: Automatic upgrade using a selectable [node OS upgrade channel][nodeos-updates]|
 | Kubernetes API breaking change detection | **Preconfigured**: Cluster upgrades are stopped on detection of [deprecated Kubernetes standard API usage][stop-cluster-upgrade-api-breaking-changes]. |  **Preconfigured**: Cluster upgrades are stopped on detection of [deprecated Kubernetes standard API usage][stop-cluster-upgrade-api-breaking-changes].  |
 | Planned maintenance windows | **Default**: Set [planned maintenance schedule][planned-maintenance] configuration to control upgrades. |  **Optional**: Set [planned maintenance schedule][planned-maintenance] configuration to control upgrades.  |
 
@@ -68,7 +69,7 @@ Cluster authentication and authorization use [Azure Role-based Access Control (R
 | Cluster security | **Preconfigured**: [API server virtual network integration][api-server-vnet-integration] enables network communication between the API server and the cluster nodes over a private network without requiring a private link or tunnel. | **Optional**: [API server virtual network integration][api-server-vnet-integration] enables network communication between the API server and the cluster nodes over a private network without requiring a private link or tunnel.|
 | Application security | **Preconfigured**: <br> * [Workload identity with Microsoft Entra Workload ID][workload-identity] <br> * [OpenID Connect (OIDC) cluster issuer][oidc-issuer] <br/> **Optional**:<br> * [Advanced Container Networking Services](container-network-security-wireguard-encryption-concepts.md) container network security for pod traffic with Wireguard node encryption| **Optional**: <br> * [Workload identity with Microsoft Entra Workload ID][workload-identity] <br> * [OpenID Connect (OIDC) cluster issuer][oidc-issuer] <br/> **Optional**:<br> * [Advanced Container Networking Services ](container-network-security-wireguard-encryption-concepts.md) container network security for pod traffic with Wireguard node encryption|
 | Image security | **Preconfigured**: [Image cleaner][image-cleaner] to remove unused images with vulnerabilities. | **Optional**: [Image cleaner][image-cleaner] to remove unused images with vulnerabilities. |
-| Policy enforcement | **Preconfigured**: [Deployment safeguards][deployment-safeguards] that enforce Kubernetes best practices in your AKS cluster through Azure Policy controls. <br/> **Optional**:<br> * [Advanced Container Networking Services](how-to-apply-l7-policies.md) container network security for Cilium DNS and L7 policies. | **Optional**: [Deployment safeguards][deployment-safeguards] enforce Kubernetes best practices in your AKS cluster through Azure Policy controls. <br/> **Optional**:<br> * [Advanced Container Networking Services ](how-to-apply-l7-policies.md) container network security for Cilium DNS and L7 policies |
+| Policy enforcement | **Preconfigured**: [Deployment safeguards][deployment-safeguards] that enforce Kubernetes best practices in your AKS cluster through Azure Policy controls in enforcement mode, which cannot be turned off. <br/> **Optional**:<br> * [Advanced Container Networking Services](how-to-apply-l7-policies.md) container network security for Cilium DNS and L7 policies. | **Optional**: [Deployment safeguards][deployment-safeguards] enforce Kubernetes best practices in your AKS cluster through Azure Policy controls in enforcement mode or warning mode. <br/> **Optional**:<br> * [Advanced Container Networking Services ](how-to-apply-l7-policies.md) container network security for Cilium DNS and L7 policies |
 | Managed namespaces | **Optional**: Use [Managed namespaces](./managed-namespaces.md) to create preconfigured namespaces where you can define network policies for ingress/egress, resource quotas for memory/CPU, and set-up labels/annotations. | **Optional**: Use [Managed namespaces](./managed-namespaces.md) to create preconfigured namespaces where you can define network policies for ingress/egress, resource quotas for memory/CPU, and set-up labels/annotations. |
 
 ### Networking
@@ -113,6 +114,7 @@ To learn more about AKS Automatic, follow the quickstart to create a cluster.
 [node-auto-repair]: node-auto-repair.md
 [cluster-upgrades]: auto-upgrade-cluster.md
 [cluster-upgrade-channels]: auto-upgrade-cluster.md#cluster-autoupgrade-channels
+[nodeos-updates]: auto-upgrade-node-os-image.md#available-node-os-upgrade-channels
 [stop-cluster-upgrade-api-breaking-changes]: stop-cluster-upgrade-api-breaking-changes.md
 [planned-maintenance]: planned-maintenance.md
 [azure-rbac-for-k8s-auth]: manage-azure-rbac.md
@@ -145,3 +147,5 @@ To learn more about AKS Automatic, follow the quickstart to create a cluster.
 [automatic-custom-network]: ./automatic/quick-automatic-custom-network.md
 [automatic-private-custom-network]: ./automatic/quick-automatic-private-custom-network.md
 [azure-sla]: https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services
+[managed-system-node-pool]: ./automatic/aks-automatic-managed-system-node-pools-about.md#key-features-and-benefits
+[nrg-lockdown]: node-resource-group-lockdown.md

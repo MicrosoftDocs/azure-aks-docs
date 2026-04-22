@@ -634,6 +634,29 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
     updated-per-gateway
     ```
 
+## Enable access logs for the Gateway pods
+
+`Telemetry` CRDs are installed automatically with the Istio add-on. You can use the `Telemetry API` to configure access logging for `Gateway` pods.
+
+Create the resource in the `aks-istio-system` namespace to enable access logs for all `Gateway` pods in the mesh, or in a specific namespace to enable access logs only for `Gateway` pods in that namespace.
+
+The following example shows a `Telemetry` resource that enables `Gateway` access logging:
+
+```yaml
+apiVersion: telemetry.istio.io/v1
+kind: Telemetry
+metadata:
+  name: mesh-default
+  namespace: aks-istio-system
+spec:
+  accessLogging:
+  - providers:
+    - name: envoy
+```
+
+  > [!NOTE]
+  >  The above manifest enables access logging across the entire mesh, both for `Gateway` pods as well as sidecar proxies injected by Istio. Use selectors to target specific pods. Refer to the [Istio add-on documentation][istio-telemetry] for more details on how to configure access logging with the `Telemetry API`.
+
 ## Clean up resources
 
 If you no longer need the resources created in this article, you can delete them to avoid incurring any charges.
@@ -665,6 +688,7 @@ If you no longer need the resources created in this article, you can delete them
 
 <!---LINKS--->
 [app-routing-gateway-api]: app-routing-gateway-api.md
+[istio-telemetry]: istio-telemetry.md
 [aks-csi-driver]: ./csi-secrets-store-driver.md
 [azure-internal-lb]: ./internal-lb.md
 [istio-deploy-addon]: istio-deploy-addon.md

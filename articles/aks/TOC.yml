@@ -1136,6 +1136,14 @@
               href: agentic-cli-for-aks-faq.yml
             - name: Service account and workload identity setup
               href: agentic-cli-for-aks-service-account-workload-identity-setup.md
+        - name: Container Network Insights Agent
+          items:
+            - name: Overview
+              href: container-network-insights-agent-overview.md
+            - name: Install and use the Container Network Insights Agent
+              href: how-to-configure-container-network-insights-agent.md
+            - name: Troubleshoot Container Network Insights Agent issues
+              href: troubleshoot-container-network-insights-agent.md
         - name: AKS MCP server
           href: aks-model-context-protocol-server.md
         - name: Work with clusters using Copilot

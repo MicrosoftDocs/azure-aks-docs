@@ -199,6 +199,10 @@ az aks create \
     | eBPF Host Routing | ❌ | ✔️ |
 
 
+- **Can the Cilium ConfigMap be modified?**
+
+    Only [label exclusion](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels) is supported for Azure CNI Powered by Cilium. This ConfigMap exists in the `kube-system` namespace as `cilium-config`. Addition of labels persists across cluster restarts, upgrades, and reconciliation. Changes to other values in the ConfigMap are not supported.
+
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
 
     A limitation of Azure CNI Powered by Cilium is that a `NetworkPolicy` `ipBlock` can't select pod or node IPs.

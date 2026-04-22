@@ -2,7 +2,8 @@
 title: Concepts - IP address planning in Azure Kubernetes Service (AKS)
 description: Learn about IP address planning in Azure Kubernetes Service (AKS).
 ms.topic: concept-article
-ms.date: 05/28/2024
+ms.date: 04/16/2026
+ai-usage: ai-assisted
 author: schaffererin
 ms.author: schaffererin
 
@@ -48,7 +49,7 @@ The IP address plan for an AKS cluster consists of a virtual network, at least o
 | -------------- | -------------- | ----------------- |
 | Azure Virtual Network | Max size /8. 65,536 configured IP address limit. See [Azure CNI Pod Subnet Static Block Allocation][pod-subnet-static-block-allocation] for more details | Overlapping address spaces within your network can cause issues. |
 | Subnet | Must be large enough to accommodate nodes, pods, and all Kubernetes and Azure resources in your cluster. For instance, if you deploy an internal Azure Load Balancer, its front-end IPs are allocated from the cluster subnet, not public IPs. | Subnet size should also account for upgrade operations and future scaling needs. <p/> Use the following equation to calculate the minimum subnet size, including an extra node for upgrade operations: `(number of nodes + max surge nodes) + ((number of nodes + max surge nodes) * maximum pods per node that you configure)` <p/> Example for a 50-node cluster: `(51) + (51 * 30 (default)) = 1,581` (/21 or larger) <p/> Example for a 50-node cluster, preparing to scale up an extra 10 nodes with the default max surge of 1 node: `(61) + (61 * 30 (default)) = 1,891` (/21 or larger) <p/> If you don't specify a maximum number of pods per node when you create your cluster, the maximum number of pods per node is set to 30. The minimum number of IP addresses required is based on that value. If you calculate your minimum IP address requirements on a different maximum value, see [Maximum pods per node](#maximum-pods-per-node) to set this value when you deploy your cluster. |
-| Kubernetes Service Address Range | Any network element on or connected to this virtual network must not use this range. | The service address CIDR must be smaller than /12. You can reuse this range across different AKS clusters. |
+| Kubernetes Service Address Range | Any network element on or connected to this virtual network must not use this range. | The service address CIDR must be smaller than /12. You can reuse this range across different AKS clusters. Starting with Kubernetes 1.33, you can [extend the service IP range](https://kubernetes.io/docs/tasks/network/extend-service-ip-ranges/) after cluster creation using the `ServiceCIDR` resource. |
 | Kubernetes DNS Service IP Address | IP address within the Kubernetes service address range used by cluster service discovery. | Don't use the first IP address in your address range. The first address in your subnet range is used for the _kubernetes.default.svc.cluster.local_ address. |
 
 ## Maximum pods per node

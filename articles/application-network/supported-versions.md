@@ -12,9 +12,9 @@ ms.date: 03/05/2026
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-Azure Kubernetes Application Network releases minor versions roughly once a quarter. Minor version releases include new features, improvements and component updates. Each minor version has a specific Istio minor version built in, though consecutive Application Network versions might share the same Istio version. Patch releases include fixes for bugs and security vulnerabilities.
+Azure Kubernetes Application Network releases minor versions roughly once a quarter. Minor version releases include new features, improvements, and component updates. Each minor version has a specific Istio minor version built in, though consecutive Application Network versions might share the same Istio version. Patch releases include fixes for bugs and security vulnerabilities.
 
-This article lists available Application Network versions along with their compatible AKS versions.
+This article lists available Application Network versions along with their compatible Azure Kubernetes Service (AKS) versions.
 
 ## Supported Application Network versions and compatible AKS versions
 
@@ -22,10 +22,13 @@ The following table outlines available Azure Kubernetes Application Network vers
 
 | Application Network version | Istio version | End of life          | Compatible AKS versions                   |
 |-----------------------------|---------------|----------------------|-------------------------------------------|
-| 1.1                         | 1.26          | March 2026           | 1.29, 1.30, 1.31, 1.32, 1.33, 1.34        |
-| 1.2                         | 1.27          | ~May 2026 (expected) | 1.29, 1.30, 1.31, 1.32, 1.33, 1.34, 1.35  |
+| 1.1                         | 1.26          | April 2026           | 1.30, 1.31, 1.32, 1.33, 1.34        |
+| 1.2                         | 1.27          | ~May 2026 (expected) | 1.30, 1.31, 1.32, 1.33, 1.34, 1.35  |
 | 1.3                         | 1.28          | ~Aug 2026 (expected) | 1.30, 1.31, 1.32, 1.33, 1.34, 1.35        |
 | 1.4                         | 1.29          | ~Sep 2026 (expected) | 1.31, 1.32, 1.33, 1.34, 1.35              |
+
+> [!IMPORTANT]
+> Application Network doesn't manage upgrades of your AKS cluster. To remain in support, select a compatible version during onboarding and upgrade it regularly to maintain compatibility with Application Network. Refer to the [AKS Kubernetes release calendar][aks-release-calendar] for AKS version end-of-life dates.
 
 ## List available versions in your region
 
@@ -43,3 +46,4 @@ For more information about Application Network version selection or keeping your
 
 <!--- LINKS --->
 [az-appnet-list-versions]: /cli/azure/appnet#az-appnet-list-versions
+[aks-release-calendar]: ../aks/supported-kubernetes-versions.md#aks-kubernetes-release-calendar

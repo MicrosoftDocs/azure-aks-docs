@@ -3,8 +3,8 @@ title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using an AR
 description: Learn how to quickly deploy a Kubernetes cluster using an Azure Resource Manager template and deploy an application in Azure Kubernetes Service (AKS).
 ms.topic: quickstart
 ms.date: 01/12/2024
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ms.custom: mvc, subject-armqs, mode-arm, devx-track-arm-template, devx-track-azurecli
 

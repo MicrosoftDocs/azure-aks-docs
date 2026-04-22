@@ -5,7 +5,7 @@ author: davidsmatlak
 ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 05/19/2023
+ms.date: 04/15/2026
 ms.custom: references_regions, devx-track-azurecli
 # Customer intent: As a cloud architect, I want to configure an Azure Kubernetes Service cluster with API Server VNet Integration, so that I can ensure secure, private communication between the API server and cluster nodes without requiring external links or tunnels.
 ---
@@ -25,9 +25,12 @@ API Server VNet Integration is supported for public or private clusters. You can
 - You must have Azure CLI version 2.73.0 or later installed. You can check your version using the `az --version` command.
 
 ## Limitations
-* API Server VNet Integration does not support [Virtual Network Encryption](/azure/virtual-network/virtual-network-encryption-overview). Clusters deployed on **v3 or earlier AKS node SKUs** (which do not support VNet Encryption) are allowed but traffic will not be encrypted. Clusters deployed on **v4 or later AKS node SKUs** (which support VNet Encryption) are blocked because encrypted VNets are incompatible with API Server VNet Integration. See [AKS supported VM SKUs](quotas-skus-regions.md#supported-vm-sizes) for details.
+
+- API Server VNet Integration does not support [Virtual Network Encryption](/azure/virtual-network/virtual-network-encryption-overview). Clusters deployed on **v3 or earlier AKS node SKUs** (which do not support VNet Encryption) are allowed but traffic will not be encrypted. Clusters deployed on **v4 or later AKS node SKUs** (which support VNet Encryption) are blocked because encrypted VNets are incompatible with API Server VNet Integration. See [AKS supported VM SKUs](quotas-skus-regions.md#supported-vm-sizes) for details.
+- To use dual-stack networking your cluster needs Kubernetes version 1.26.3 or later, network plugin `azure` and network plugin mode `overlay`. For more information, see [Azure CNI cluster with dual-stack networking](azure-cni-overlay.md).
 
 ## Availability
+
 - API Server VNet Integration is available in all GA public cloud regions except qatarcentral.
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
