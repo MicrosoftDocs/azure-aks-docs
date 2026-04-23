@@ -74,7 +74,7 @@ az aks create \
     --enable-acns \
     --enable-managed-identity \
     --generate-ssh-keys \
-    --kubernetes-version 1.32
+    --kubernetes-version 1.33
 ```
 
 ### Get cluster credentials
