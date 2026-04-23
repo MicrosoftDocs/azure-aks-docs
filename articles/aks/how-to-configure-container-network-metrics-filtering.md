@@ -10,7 +10,7 @@ ms.date: 10/30/2025
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Configure container network metrics filtering for Azure Kubernetes Service (AKS) (Preview)
+# Configure container network metrics filtering for Azure Kubernetes Service (AKS)
 
 This article shows you how to configure container network metrics filtering  for Azure Kubernetes Service (AKS) with Cilium to optimize data collection, reduce storage costs, and focus on the metrics most relevant to your monitoring needs.
 
@@ -43,27 +43,6 @@ Install or update the Azure CLI preview extension by using the [`az extension ad
 az extension add --name aks-preview
 # Update the extension to make sure you have the latest version installed
 az extension update --name aks-preview
-```
-
-
-### Register the AdvancedNetworkingDynamicMetricsPreview feature flag
-
-1. First, register the AdvancedNetworkingDynamicMetricsPreview feature flag by using the [`az feature register`](/cli/azure/feature#az_feature_register) command:
-
-```azurecli
-az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingDynamicMetricsPreview"
-```
-
-2. Verify successful registration by using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for registration to complete.
-
-```azurecli
-az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingDynamicMetricsPreview"
-```
-
-3. When the feature shows **Registered**, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
-
-```azurecli
-az provider register --namespace Microsoft.ContainerService
 ```
 
 ### Create a new AKS cluster with Cilium
