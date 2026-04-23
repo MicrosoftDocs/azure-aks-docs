@@ -15,6 +15,9 @@ ms.author: schaffererin
 
 The NVIDIA GPU Operator automates the management and deployment of all NVIDIA software components needed to provision GPU including driver installation, the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file), the NVIDIA container runtime, and more. Since the NVIDIA GPU Operator handles these components, it's not necessary to separately install the NVIDIA device plugin on your AKS cluster. This also means that the automatic GPU driver installation should be skipped in order to use the NVIDIA GPU Operator on AKS.
 
+> [!TIP]
+> If you don't need the full control of the NVIDIA GPU Operator, [AKS-managed GPU node pools (preview)](./aks-managed-gpu-nodes.md) install and maintain the NVIDIA driver, Kubernetes device plugin, and DCGM metrics exporter for you.
+
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
 ## Before you begin
@@ -54,6 +57,7 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 
 ## Next steps
 
+- Compare with [AKS-managed GPU node pools (preview)](./aks-managed-gpu-nodes.md), which install and maintain the NVIDIA driver, device plugin, and DCGM metrics exporter for you.
 - [Monitor NVIDIA GPU metrics](monitor-gpu-metrics.md) using Azure Managed Prometheus and Azure Managed Grafana.
 - Learn more about [Ray clusters on AKS](ray-overview.md).
 

@@ -63,9 +63,9 @@ NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies
 
   For more information, see [NVIDIA clock throttle reasons](https://docs.nvidia.com/deploy/nvml-api/group__nvmlClocksThrottleReasons.html).
 
-* **UnhealthyNvidiaDevicePlugin**: For GPU node pools using the [AKS managed GPU experience](./aks-managed-gpu-nodes.md), NPD monitors the health of the NVIDIA device plugin systemd service (`nvidia-device-plugin.service`).
+* **UnhealthyNvidiaDevicePlugin**: For [AKS-managed GPU node pools](./aks-managed-gpu-nodes.md), NPD monitors the health of the NVIDIA device plugin systemd service (`nvidia-device-plugin.service`).
   * The NVIDIA device plugin is responsible for advertising GPU resources to the Kubernetes scheduler. If the service is not active, GPU resources might not be available for scheduling workloads.
-  * This check applies only to node pools with the managed GPU experience enabled.
+  * This check applies only to AKS-managed GPU node pools.
 
 * **NVIDIA GRID Driver License Check**: For NVIDIA VM SKUs that support GRID driver, this condition verifies license status of the installed GRID driver on [supported NVIDIA VM SKUs](/azure/virtual-machines/sizes/gpu-accelerated/nvadsa10v5-series).
 
