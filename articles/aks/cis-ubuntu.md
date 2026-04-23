@@ -108,8 +108,8 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1.1.2.7.4 | Ensure noexec option set on /var/log/audit partition | L1 | Pass | |
 | 1.2 | **Package Management** | | | |
 | 1.2.1 | **Configure Package Repositories** | | | |
-| 1.2.1.1 | Ensure GPG keys are configured | L1 | Manual | Pass |
-| 1.2.1.2 | Ensure package manager repositories are configured | L1 | Manual | Pass |
+| 1.2.1.1 | Ensure GPG keys are configured | L1 | Manual | |
+| 1.2.1.2 | Ensure package manager repositories are configured | L1 | Manual |  |
 | 1.2.2 | **Configure Package Updates** | | | |
 | 1.2.2.1 | Ensure updates, patches, and additional security software are installed | L1 | Depends on Environment | [Node OS Upgrade channels][auto-upgrade-node] can be used to automate updates and patches. |
 | 1.3 | **Mandatory Access Control** | | | |
@@ -168,7 +168,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 2.1.19 | Ensure xinetd services aren't in use | L1 | Pass | |
 | 2.1.20 | Ensure X window server services aren't in use | L2 | Pass | |
 | 2.1.21 | Ensure mail transfer agent is configured for local-only mode | L1 | Pass | |
-| 2.1.22 | Ensure only approved services are listening on a network interface | L1 | Manual | Pass |
+| 2.1.22 | Ensure only approved services are listening on a network interface | L1 | Manual |  |
 | 2.2 | **Configure Client Services** | | | |
 | 2.2.1 | Ensure NIS Client isn't installed | L1 | Pass | |
 | 2.2.2 | Ensure rsh client isn't installed | L1 | Pass | |
@@ -204,10 +204,10 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 3.1.2 | Ensure wireless interfaces are disabled | L1 | Pass | |
 | 3.1.3 | Ensure bluetooth services aren't in use | L1 | Pass | |
 | 3.2 | **Configure Network Kernel Modules** | | | |
-| 3.2.1 | Ensure dccp kernel module isn't available | L2 | Fail | |
-| 3.2.2 | Ensure tipc kernel module isn't available | L2 | Fail | |
-| 3.2.3 | Ensure rds kernel module isn't available | L2 | Fail | |
-| 3.2.4 | Ensure sctp kernel module isn't available | L2 | Fail | |
+| 3.2.1 | Ensure dccp kernel module isn't available | L2 | Fail | Operational impact: this module is kept available for compatibility with user workloads.|
+| 3.2.2 | Ensure tipc kernel module isn't available | L2 | Fail | Operational impact: this module is kept available for compatibility with user workloads.|
+| 3.2.3 | Ensure rds kernel module isn't available | L2 | Fail |Operational impact: this module is kept available for compatibility with user workloads. |
+| 3.2.4 | Ensure sctp kernel module isn't available | L2 | Fail | Operational impact: this module is kept available for compatibility with user workloads.|
 | 3.3 | **Configure Network Kernel Parameters** | | | |
 | 3.3.1 | Ensure ip forwarding is disabled | L1 | Fail | Operational impact: this is required for container networking to function. |
 | 3.3.2 | Ensure packet redirect sending is disabled | L1 | Pass | |
