@@ -2,7 +2,7 @@
 title: Deploy an Azure Kubernetes Service (AKS) Cluster Using Azure CLI
 description: Learn how to deploy an Azure Kubernetes Service cluster (AKS) with default settings using Azure CLI and deploy a multi-container application.
 ms.topic: quickstart
-ms.date: 03/13/2026
+ms.date: 04/22/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.custom: H1Hack27Feb2017, mvc, devcenter, devx-track-azurecli, mode-api, innovation-engine, linux-related-content, quarterly
@@ -18,7 +18,7 @@ Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you qui
 - Deploy a sample multi-container application with a group of microservices and web front ends that simulate a retail scenario.
 
 > [!NOTE]
-> This article includes steps to deploy a cluster with default settings for evaluation purposes only. Before you deploy a production-ready cluster, we recommend that you familiarize yourself with our [baseline reference architecture][baseline-reference-architecture] to consider how it aligns with your business requirements.
+> This article includes steps to deploy a cluster for evaluation purposes only. Before you deploy a production-ready cluster, we recommend that you familiarize yourself with our [baseline reference architecture][baseline-reference-architecture] to consider how it aligns with your business requirements.
 
 If you only want to deploy an Azure Kubernetes Service cluster, select **Deploy to Azure** to open your browser in the Azure portal and select **Run all steps**.
 
@@ -57,13 +57,14 @@ az provider register --namespace Microsoft.ContainerService
 Define the following environment variables for use throughout this quickstart.
 
 ```bash
-export RANDOM_ID="$(openssl rand -hex 3)"
-export MY_RESOURCE_GROUP_NAME="myAKSResourceGroup$RANDOM_ID"
-export REGION="westus"
-export MY_AKS_CLUSTER_NAME="myAKSCluster$RANDOM_ID"
+export RANDOM_STRING=$(printf '%05d%05d' "$RANDOM" "$RANDOM")
+export RESOURCE_GROUP="myAKSResourceGroup$RANDOM_STRING"
+export CLUSTER_NAME="myAKSCluster$RANDOM_STRING"
+export USER_NP='userpool1'
+export LOCATION="westus"
 ```
 
-The `RANDOM_ID` variable is a six-character alphanumeric value appended to the resource group and cluster name so that the names are unique. Use the `echo` command to view variable values like `echo $RANDOM_ID`.
+The `RANDOM_STRING` variable stores a random 10-digit string. The `RESOURCE_GROUP` and `CLUSTER_NAME` variable values are concatenated with the `RANDOM_STRING` value to create unique names. The `USER_NP` stores a name for a user mode node pool. The `LOCATION` variable has the value _westus2_. You can use these variable values or create your own. Use the `echo` command to view variable values like `echo $RANDOM_STRING`.
 
 ## Create a resource group
 
@@ -72,17 +73,17 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
 Create a resource group using the [az group create][az-group-create] command.
 
 ```azurecli-interactive
-az group create --name $MY_RESOURCE_GROUP_NAME --location $REGION
+az group create --name $RESOURCE_GROUP --location $LOCATION
 ```
 
 The result looks like the following example.
 <!-- expected_similarity=0.3 -->
 ```output
 {
-  "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myAKSResourceGroup<randomIDValue>",
+  "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myAKSResourceGroup<randomStringValue>",
   "location": "westus",
   "managedBy": null,
-  "name": "myAKSResourceGroup<randomIDValue>",
+  "name": "myAKSResourceGroup<randomStringValue>",
   "properties": {
     "provisioningState": "Succeeded"
   },
@@ -97,13 +98,56 @@ Create an AKS cluster using the [az aks create][az-aks-create] command. The foll
 
 ```azurecli-interactive
 az aks create \
-  --resource-group $MY_RESOURCE_GROUP_NAME \
-  --name $MY_AKS_CLUSTER_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
   --node-count 1 \
   --generate-ssh-keys
 ```
 
 When you create a new cluster, AKS automatically creates a second resource group to store the AKS resources. For more information, see [Why are two resource groups created with AKS?](../faq.yml)
+
+The cluster in this example specifies a node count of one to save time and resources. In a production environment, the recommendation is a node count of threee or more nodes. The `az aks create` defaults to three nodes if you don't specify a node count.
+
+## Add a user mode node pool
+
+Applications should run on user mode node pools instead of the default system mode node pool. User node pools provide better isolation and flexibility for application workloads. Add a user node pool to your cluster using the [az aks nodepool add][az-aks-nodepool-add] command.
+
+```azurecli-interactive
+az aks nodepool add \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-name $CLUSTER_NAME \
+  --name $USER_NP \
+  --node-count 1 \
+  --mode User
+```
+
+Like the cluster, we specified one node, but the default is three nodes if you don't specify a node count.
+
+After the user node pool is created, you can verify that your cluster has a system node pool and a user node pool using the [az aks nodepool list][az-aks-nodepool-list] command.
+
+```azurecli-interactive
+az aks nodepool list \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-name $CLUSTER_NAME \
+  --query "[].{Count:count, Mode:mode, NodePool:name, ResourceGroup:resourceGroup}"
+```
+
+```output
+[
+  {
+    "Count": 1,
+    "Mode": "System",
+    "NodePool": "nodepool1",
+    "ResourceGroup": "myAKSResourceGroup1234554321"
+  },
+  {
+    "Count": 1,
+    "Mode": "User",
+    "NodePool": "userpool1",
+    "ResourceGroup": "myAKSResourceGroup1234554321"
+  }
+]
+```
 
 ## Connect to the cluster
 
@@ -112,7 +156,7 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
 1. Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
     ```azurecli-interactive
-    az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_AKS_CLUSTER_NAME
+    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
     ```
 
 1. Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
@@ -122,9 +166,12 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
     ```
 
     ```output
-    NAME                                STATUS   ROLES    AGE   VERSION
-    aks-nodepool1-17154432-vmss000000   Ready    <none>   44m   v1.33.7
+    NAME                                STATUS   ROLES    AGE     VERSION
+    aks-nodepool1-123456789-vmss000000   Ready    <none>   15m     v1.34.4
+    aks-userpool1-123456789-vmss000000   Ready    <none>   5m36s   v1.34.4
     ```
+
+    There are two nodes, `nodepool1` is ths system node pool created with the cluster and `userpool1` is the user node pool added to the cluster.
 
 ## Deploy the application
 
@@ -159,7 +206,8 @@ To deploy the application, you use a manifest file to create all the objects req
             app: rabbitmq
         spec:
           nodeSelector:
-            "kubernetes.io/os": linux
+            kubernetes.io/os: linux
+            kubernetes.azure.com/mode: user
           containers:
           - name: rabbitmq
             image: mcr.microsoft.com/mirror/docker/library/rabbitmq:3.10-management-alpine
@@ -231,7 +279,8 @@ To deploy the application, you use a manifest file to create all the objects req
             app: order-service
         spec:
           nodeSelector:
-            "kubernetes.io/os": linux
+            kubernetes.io/os: linux
+            kubernetes.azure.com/mode: user
           containers:
           - name: order-service
             image: ghcr.io/azure-samples/aks-store-demo/order-service:latest
@@ -318,7 +367,8 @@ To deploy the application, you use a manifest file to create all the objects req
             app: product-service
         spec:
           nodeSelector:
-            "kubernetes.io/os": linux
+            kubernetes.io/os: linux
+            kubernetes.azure.com/mode: user
           containers:
           - name: product-service
             image: ghcr.io/azure-samples/aks-store-demo/product-service:latest
@@ -377,7 +427,8 @@ To deploy the application, you use a manifest file to create all the objects req
             app: store-front
         spec:
           nodeSelector:
-            "kubernetes.io/os": linux
+            kubernetes.io/os: linux
+            kubernetes.azure.com/mode: user
           containers:
           - name: store-front
             image: ghcr.io/azure-samples/aks-store-demo/store-front:latest
@@ -441,6 +492,14 @@ To deploy the application, you use a manifest file to create all the objects req
     kubectl apply -f aks-store-quickstart.yaml
     ```
 
+1. Run the following command to verify the application is deployed on a user node pool.
+
+   ```bash
+   kubectl get pods -o wide
+   ```
+
+   The output will show that rabbitmq, order-service, product-service, and store-front pods are running on a node in the user node pool.
+
 ## Test the application
 
 You can validate that the application is running by visiting the public IP address or the application URL.
@@ -471,10 +530,10 @@ The output shows the application's public IP address in the `<applicationIPAddre
 service IP Address: <applicationIPAddress>
 ```
 
-Run the following command to send a request to the application URL.
+Run the following command to send a request to the application URL. Replace `<applicationIPAddress>` with the service IP Address.
 
 ```bash
-curl $IP_ADDRESS
+curl <applicationIPAddress>
 ```
 
 The command returns HTML output that shows the application responds to the request.
@@ -505,7 +564,7 @@ To view the application website, open a browser and enter the service IP address
 If you don't plan on doing the [AKS tutorial][aks-tutorial], clean up unnecessary resources to avoid Azure billing charges. You can remove the resource group, container service, and all related resources using the [az group delete][az-group-delete] command.
 
 ```azurecli-interactive
-az group delete --name $MY_RESOURCE_GROUP_NAME
+az group delete --name $RESOURCE_GROUP --no-wait --yes
 ```
 
 The AKS cluster was created with a system-assigned managed identity, which is the default identity option used in this quickstart. The platform manages this identity so you don't need to manually remove it.
@@ -533,5 +592,7 @@ To learn more about AKS and do a complete code-to-deployment example, continue t
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-group-create]: /cli/azure/group#az-group-create
 [az-group-delete]: /cli/azure/group#az-group-delete
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-list]: /cli/azure/aks/nodepool#az-aks-nodepool-list
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json

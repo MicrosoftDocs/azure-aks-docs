@@ -517,7 +517,7 @@ Migration from in-tree to CSI is supported by creating a static volume:
 - Protect your newly migrated CSI Driver based PVs by [backing them up using Azure Backup for AKS](/azure/backup/azure-kubernetes-service-cluster-backup).
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
-[aks-rbac-cluster-admin-role]: manage-azure-rbac.md#create-role-assignments-for-cluster-access
+[aks-rbac-cluster-admin-role]: entra-id-authorization.md#create-role-assignments-for-cluster-access
 [azure-resource-locks]: /azure/azure-resource-manager/management/lock-resources
 [csi-driver-overview]: csi-storage-drivers.md
 [aks-storage-backups-best-practices]: operator-best-practices-storage.md

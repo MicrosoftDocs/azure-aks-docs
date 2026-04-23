@@ -236,8 +236,6 @@
           href: scale-down-mode.md
         - name: Connect securely to cluster nodes
           href: node-access.md
-        - name: Manage SSH access to nodes
-          href: manage-ssh-node-access.md
         - name: Deploy trusted launch on AKS
           href: use-trusted-launch.md
         - name: Use eTags for Concurrency Control
@@ -308,6 +306,8 @@
           href: windows-containerd.md
         - name: Use HostProcess containers
           href: use-windows-hpc.md
+        - name: Use Group Managed Service Accounts
+          href: use-group-managed-service-accounts.md
         - name: Use Windows Annual Channel for Containers
           href: windows-annual-channel.md
         - name: Upgrade Windows OS version
@@ -729,48 +729,51 @@
             href: deploy-batch-jobs-with-kueue.md
 - name: Security
   items:
-    - name: Security concepts
+    - name: Security overview
       href: concepts-security.md
-    - name: Security vulnerability management
-      href: concepts-vulnerability-management.md
-    - name: Security Baseline
+    - name: Security baseline
       href: /security/benchmark/azure/baselines/aks-security-baseline?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: Confidential Containers security policy
-      href: /azure/confidential-computing/confidential-containers-aks-security-policy?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: Security controls by Azure Policy
-      displayName: regulatory, compliance, standards, domains
-      href: ./security-controls-policy.md
-    - name: Container security
+    - name: Identity and access
       items:
-        - name: Defender for Containers overview
-          href: /azure/defender-for-cloud/defender-for-containers-introduction?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Enable Defender for Containers
-          href: /azure/defender-for-cloud/defender-for-containers-enable?pivots=defender-for-container-aks&toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Confidential Containers overview
-          href: confidential-containers-overview.md
-        - name: Deploy Confidential Containers with default policy
-          href: deploy-confidential-containers-default-policy.md
-    - name: Image security
-      items:
-        - name: Container image management best practices
-          href: operator-best-practices-container-image-management.md
-        - name: Validate signed images with Image Integrity
-          href: image-integrity.md
-        - name: Remove vulnerable images with ImageCleaner
-          href: image-cleaner.md
-        - name: Scan images in your CI/CD Workflow
-          href: /azure/defender-for-cloud/defender-for-container-registries-cicd?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Scan images in ACR registries
-          href: /azure/defender-for-cloud/defender-for-containers-introduction?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: Cluster security
-      items:
-        - name: Cluster security best practices
-          href: operator-best-practices-cluster-security.md
-        - name: Azure kubelogin
-          href: kubelogin-authentication.md
-        - name: Managed identities
+        - name: Access and identity overview
+          href: concepts-identity.md
+        - name: Manage access to the AKS resource
           items:
-            - name: Overview
+            - name: AKS service permissions reference
+              href: aks-service-permissions.md
+            - name: Control access to kubeconfig
+              href: control-kubeconfig-access.md
+        - name: Cluster authentication
+          items:
+            - name: Cluster authentication concepts
+              href: concepts-cluster-authentication.md
+            - name: Microsoft Entra ID authentication to cluster control plane
+              href: entra-id-control-plane-authentication.md
+            - name: Authenticate with kubelogin
+              href: kubelogin-authentication.md
+            - name: Conditional Access for cluster and node access
+              href: access-control-managed-azure-ad.md
+            - name: Privileged Identity Management for cluster and node access
+              href: privileged-identity-management.md
+            - name: Disable local cluster admin accounts
+              href: local-accounts.md
+            - name: External identity provider authentication to cluster (overview)
+              href: external-identity-provider-authentication-overview.md
+            - name: Set up external identity provider authentication to cluster
+              href: external-identity-provider-authentication-configure.md
+            - name: Manage SSH access to nodes
+              href: manage-ssh-node-access.md
+        - name: Cluster authorization
+          items:
+            - name: Cluster authorization concepts
+              href: concepts-cluster-authorization.md
+            - name: Use Microsoft Entra ID authorization for the Kubernetes API
+              href: entra-id-authorization.md
+            - name: Use Kubernetes RBAC with Microsoft Entra integration
+              href: kubernetes-rbac-entra-id.md
+        - name: Cluster identity (managed identities and service principals)
+          items:
+            - name: Managed identities overview
               href: managed-identity-overview.md
             - name: Use a system-assigned managed identity
               href: system-assigned-managed-identity.md
@@ -778,123 +781,98 @@
               href: user-assigned-managed-identity.md
             - name: Use a pre-created kubelet managed identity
               href: pre-created-kubelet-managed-identity.md
-        - name: Create a service principal
-          href: kubernetes-service-principal.md
-        - name: Enable access to AKS clusters using Trusted Access
-          href: trusted-access-feature.md
-        - name: Limit access to cluster configuration file
-          href: control-kubeconfig-access.md
-        - name: Define API server authorized IP ranges
-          href: api-server-authorized-ip-ranges.md
-        - name: Use service tags for API server authorized IP ranges
-          href: api-server-service-tags.md
-        - name: Manage cluster certificates and rotation
-          href: certificate-rotation.md
-        - name: Use custom certificate authorities
-          href: custom-certificate-authority.md
-        - name: Use Azure Policy
-          href: use-azure-policy.md
-        - name: Control deployments with Azure Policy
-          href: /azure/governance/policy/concepts/policy-for-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Enforce best practices with deployment safeguards
-          href: deployment-safeguards.md
-        - name: Create an OIDC Issuer for your cluster
-          href: use-oidc-issuer.md
-        - name: KMS etcd encryption
-          items:
-            - name: Overview of KMS etcd encryption
-              href: kms-data-encryption-concepts.md
-            - name: Use KMS platform-managed keys or customer-managed keys
-              href: kms-data-encryption.md
-            - name: Use KMS etcd encryption (legacy)
-              href: use-kms-etcd-encryption.md
-            - name: Update key vault mode
-              href: update-kms-key-vault.md
-            - name: Migrate to KMS v2
-              href: use-kms-v2.md
-            - name: Observability for KMS etcd encryption
-              href: kms-observability.md
-            - name: Migrate to KMS with platform-managed or customer-managed keys
-              href: migrate-key-management-service-platform-managed-key-customer-managed-key.md
-        - name: Secure container access to resources
-          href: secure-container-access.md
-    - name: Node security
-      items:
-        - name: BYOK for Azure managed disks
-          href: azure-disk-customer-managed-keys.md
-        - name: Enable host-based encryption
-          href: enable-host-encryption.md
-        - name: Enable FIPS
-          href: enable-fips-nodes.md
-        - name: Use Confidential Virtual Machines
-          href: use-cvm.md
-        - name: Use Dedicated Hosts with AKS
-          href: use-azure-dedicated-hosts.md
-        - name: Restrict access to IMDS
-          href: imds-restriction.md
-    - name: Authentication and authorization
-      items:
-        - name: Access and identity concepts
-          href: concepts-identity.md
-        - name: Authentication and authorization best practices
-          href: operator-best-practices-identity.md
-        - name: Use managed identities
-          href: use-managed-identity.md
-        - name: Create service principal
-          href: kubernetes-service-principal.md
-        - name: Enable Microsoft Entra integration
-          items:
-            - name: AKS-managed Microsoft Entra ID
-              items:
-                - name: Enable AKS-managed Microsoft Entra integration
-                  href: enable-authentication-microsoft-entra-id.md
-                - name: Manage local accounts
-                  href: manage-local-accounts-managed-azure-ad.md
-                - name: Cluster and node access control with Conditional Access
-                  href: access-control-managed-azure-ad.md
-                - name: Cluster and node access control with Privileged Identity Management
-                  href: privileged-identity-management.md
-            - name: Microsoft Entra integration (legacy)
-              href: azure-ad-integration-cli.md
-            - name: Enable GMSA integration
-              href: use-group-managed-service-accounts.md
-        - name: Use Azure RBAC for Kubernetes authorization
-          href: manage-azure-rbac.md
-        - name: Use Kubernetes RBAC with Microsoft Entra integration
-          href: azure-ad-rbac.md
-        - name: Update cluster credentials
-          href: update-credentials.md
-        - name: Limit access to cluster configuration file
-          href: control-kubeconfig-access.md
-        - name: External identity providers
-          items:
-            - name: External identity provider authentication overview
-              href: external-identity-provider-authentication-overview.md
-            - name: Configure external identity providers
-              href: external-identity-provider-authentication-configure.md
-        - name: Control deployments with Azure Policy
-          href: /azure/governance/policy/concepts/policy-for-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: Application security
-      items:
-        - name: Create an OIDC Issuer for your cluster
-          href: use-oidc-issuer.md
-        - name: Workload identity
+            - name: Service principal as cluster identity
+              href: kubernetes-service-principal.md
+            - name: Rotate cluster credentials
+              href: update-credentials.md
+        - name: Workload identity (pod to Azure)
           items:
             - name: Workload identity overview
               href: workload-identity-overview.md
+            - name: Create an OIDC Issuer for your cluster
+              href: use-oidc-issuer.md
             - name: Deploy and configure workload identity for a cluster
               href: workload-identity-deploy-cluster.md
             - name: Configure cross-tenant workload identity
               href: workload-identity-cross-tenant.md
-            - name: Migrate your app from pod identity to workload identity
-              href: workload-identity-migrate-from-pod-identity.md
-            - name: Identity bindings overview
+            - name: Identity Bindings for scalable workload identity (overview)
               href: identity-bindings-concepts.md
-            - name: Set up identity bindings
+            - name: Set up identity bindings for scalable workload identity
               href: identity-bindings.md
-        - name: Microsoft Entra pod identity
-          href: use-azure-ad-pod-identity.md
-        - name: Pod Sandboxing
+            - name: Migrate from pod identity to workload identity
+              href: workload-identity-migrate-from-pod-identity.md
+            - name: Microsoft Entra pod identity (legacy)
+              href: use-azure-ad-pod-identity.md
+    - name: Cluster hardening
+      items:
+        - name: Cluster security best practices
+          href: operator-best-practices-cluster-security.md
+        - name: Control plane access
+          items:
+            - name: Define API server authorized IP ranges
+              href: api-server-authorized-ip-ranges.md
+            - name: Use service tags for API server authorized IP ranges
+              href: api-server-service-tags.md
+            - name: Trusted Access for Azure services
+              href: trusted-access-feature.md
+        - name: Certificates
+          items:
+            - name: Manage cluster certificates and rotation
+              href: certificate-rotation.md
+            - name: Custom certificate authorities on nodes
+              href: custom-certificate-authority.md
+        - name: Encryption at rest (KMS etcd)
+          items:
+            - name: KMS encryption at rest of K8s API resources (overview)
+              href: kms-data-encryption-concepts.md
+            - name: Configure KMS encryption at rest of K8s API resources
+              href: kms-data-encryption.md
+            - name: Update key vault mode for legacy KMS
+              href: update-kms-key-vault.md
+            - name: Migrate to KMS v2 (legacy)
+              href: use-kms-v2.md
+            - name: Migrate to KMS with platform-managed or customer-managed keys
+              href: migrate-key-management-service-platform-managed-key-customer-managed-key.md
+            - name: KMS observability (legacy)
+              href: kms-observability.md
+            - name: Use KMS etcd encryption (legacy)
+              href: use-kms-etcd-encryption.md
+        - name: Node hardening
+          items:
+            - name: Encrypt Azure managed disks using customer-managed keys
+              href: azure-disk-customer-managed-keys.md
+            - name: Host-based encryption
+              href: enable-host-encryption.md
+            - name: FIPS-compliant node pools
+              href: enable-fips-nodes.md
+            - name: Azure Dedicated Hosts for AKS nodes
+              href: use-azure-dedicated-hosts.md
+            - name: Restrict access to IMDS
+              href: imds-restriction.md
+        - name: Policy and governance
+          items:
+            - name: Enforce compliance with Azure Policy
+              href: use-azure-policy.md
+            - name: Azure Policy for Kubernetes (concepts)
+              href: /azure/governance/policy/concepts/policy-for-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+            - name: Enforce best practices with deployment safeguards
+              href: deployment-safeguards.md
+            - name: Security controls by Azure Policy
+              displayName: regulatory, compliance, standards, domains
+              href: ./security-controls-policy.md
+    - name: Workload hardening
+      items:
+        - name: Pod security
+          items:
+            - name: Pod security best practices
+              href: developer-best-practices-pod-security.md
+            - name: Pod Security Admission
+              href: use-psa.md
+            - name: Pod security policies (legacy)
+              href: use-pod-security-policies.md
+            - name: Container privilege hardening (Linux)
+              href: secure-container-access.md
+        - name: Pod sandboxing
           items:
             - name: Pod Sandboxing overview
               href: concepts-pod-sandboxing.md
@@ -910,29 +888,63 @@
               href: network-policy-best-practices.md
             - name: Use network policies in the Azure portal
               href: use-network-policies-in-the-azure-portal.md
-        - name: Pod security policies
-          href: use-pod-security-policies.md
-        - name: Pod Security Admission
-          href: use-psa.md
-        - name: Pod security best practices
-          href: developer-best-practices-pod-security.md
-        - name: Resource management best practices
-          href: developer-best-practices-resource-management.md
-        - name: Secrets Store CSI Driver
+        - name: Secrets management
           items:
-            - name: Configure TLS for NGINX Ingress controller
+            - name: Serve NGINX TLS certs from Key Vault
               href: csi-secrets-store-nginx-tls.md
-            - name: Azure Key Vault provider with Secrets Store CSI Driver
-              items:
-                - name: 1 - Configure Secrets Store CSI Driver
-                  href: csi-secrets-store-driver.md
-                - name: 2 - Provide Azure Key Vault access
-                  href: csi-secrets-store-identity-access.md
-                - name: 3 - Apply extra configurations or perform troubleshooting
-                  href: csi-secrets-store-configuration-options.md
-        - name: Security Bulletins
+            - name: Configure the Azure Key Vault provider for Secrets Store CSI Driver
+              href: csi-secrets-store-driver.md
+            - name: Provide access to Azure Key Vault from Secrets Store CSI Driver
+              href: csi-secrets-store-identity-access.md
+            - name: Configure and troubleshoot the Azure Key Vault provider for Secrets Store CSI Driver
+              href: csi-secrets-store-configuration-options.md
+    - name: Confidential workloads
+      items:
+        - name: Confidential VM nodes
+          href: use-cvm.md
+        - name: Confidential containers
+          items:
+            - name: Confidential Containers (preview)
+              href: confidential-containers-overview.md
+            - name: Deploy with default policy
+              href: deploy-confidential-containers-default-policy.md
+            - name: Confidential Containers security policy
+              href: /azure/confidential-computing/confidential-containers-aks-security-policy?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Vulnerability management
+      items:
+        - name: Vulnerability management overview
+          href: concepts-vulnerability-management.md
+        - name: Subscribe to AKS security bulletins
           href: security-bulletins/overview.md
-    - name: Compliance
+        - name: Container image management best practices
+          href: operator-best-practices-container-image-management.md
+        - name: Remove vulnerable images with Image Cleaner
+          href: image-cleaner.md
+        - name: Build and registry time scanning
+          items:
+            - name: Scan images in your CI/CD workflow
+              href: /azure/defender-for-cloud/defender-cli-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+            - name: Scan container images for vulnerabilities
+              href: /azure/defender-for-cloud/agentless-vulnerability-assessment-azure?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Cluster-side scanning and enforcement
+          items:
+            - name: Scan AKS nodes for vulnerabilities
+              href: /azure/defender-for-cloud/kubernetes-nodes-va?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+            - name: Gate workload deployment on vulnerability metadata
+              href: /azure/defender-for-cloud/runtime-gated-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Supply chain security
+      items:
+        - name: Verify signed container images at deploy time
+          href: image-integrity.md
+    - name: Threat detection and response
+      items:
+        - name: Container threat protection overview
+          href: /azure/defender-for-cloud/defender-for-containers-introduction?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Runtime alerts for Kubernetes clusters
+          href: /azure/defender-for-cloud/alerts-containers?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Detect binary drift in running containers
+          href: /azure/defender-for-cloud/binary-drift-detection?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Compliance and benchmarks
       items:
         - name: Center for Internet Security (CIS) benchmarks
           items:
@@ -1434,6 +1446,8 @@
           href: concepts-sustainable-software-engineering.md
 - name: Develop and run applications
   items:
+    - name: Resource management best practices
+      href: developer-best-practices-resource-management.md
     - name: Install existing applications with Helm
       href: kubernetes-helm.md
     - name: Use Bridge to Kubernetes with Visual Studio Code

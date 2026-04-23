@@ -1,6 +1,11 @@
 {
   "redirections": [
     {
+      "source_path": "articles/aks/manage-azure-rbac.md",
+      "redirect_url": "/azure/aks/manage-entra-id-authorization",
+      "redirect_document_id": false
+    },
+    {
       "source_path": "articles/aks/azure-ad-integration-cli.md",
       "redirect_url": "/previous-versions/azure/aks/azure-ad-integration-cli",
       "redirect_document_id": false

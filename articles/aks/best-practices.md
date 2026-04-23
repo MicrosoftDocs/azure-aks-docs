@@ -33,7 +33,8 @@ An important practice that you should include as part of your application develo
     * Includes using resource quotas and pod disruption budgets.
 * [Best practices for advanced scheduler features](operator-best-practices-advanced-scheduler.md)
     * Includes using taints and tolerations, node selectors and affinity, and inter-pod affinity and anti-affinity.
-* [Best practices for authentication and authorization](operator-best-practices-identity.md)
+* [Cluster authentication concepts](concepts-cluster-authentication.md)
+* [Cluster authorization concepts](concepts-cluster-authorization.md)
     * Includes integration with Microsoft Entra ID, using Kubernetes role-based access control (Kubernetes RBAC), using Azure RBAC, and pod identities.
 
 ### Security

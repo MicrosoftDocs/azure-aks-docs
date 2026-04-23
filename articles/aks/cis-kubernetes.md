@@ -228,6 +228,6 @@ For more information about AKS security, see the following articles:
 [oidc]: ./use-oidc-issuer.md
 [kscr]: ./certificate-rotation.md
 [azure-policies]: ./policy-reference.md
-[entra-auth]: ./enable-authentication-microsoft-entra-id.md
-[disable-local-accounts]: ./manage-local-accounts-managed-azure-ad.md
+[entra-auth]: ./entra-id-control-plane-authentication.md
+[disable-local-accounts]: ./local-accounts.md
 [custom-node-config]: ./custom-node-configuration.md

@@ -411,8 +411,8 @@ To learn more about AKS Automatic, continue to the introduction.
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [what-is-aks-automatic]: ../intro-aks-automatic.md
 [Azure-Policy-RBAC-permissions]: /azure/governance/policy/overview#azure-rbac-permissions-in-azure-policy
-[aks-entra-rbac]: /azure/aks/manage-azure-rbac
-[aks-entra-rbac-builtin-roles]: /azure/aks/manage-azure-rbac#create-role-assignments-for-users-to-access-the-cluster
+[aks-entra-rbac]: ../entra-id-authorization.md
+[aks-entra-rbac-builtin-roles]: ../entra-id-authorization.md#create-role-assignments-for-cluster-access
 [availability-zones]: /azure/reliability/availability-zones-region-support
 [az-network-vnet-create]: /cli/azure/network/vnet#az-network-vnet-create
 [az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-create

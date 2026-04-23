@@ -1,7 +1,7 @@
 ---
 title: "Introducing Azure Kubernetes Fleet Manager intelligent resource placement"
 description: This article describes the concepts of Azure Kubernetes Fleet Manager intelligent resource placement
-ms.date: 04/07/2026
+ms.date: 04/23/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -534,7 +534,8 @@ The following properties are available for use as part of placement policies.
 | resources.kubernetes-fleet.io/available-memory       | Available memory resource units of cluster.   |
 | kubernetes.azure.com/per-cpu-core-cost               | The per-CPU core cost of the cluster.         |
 | kubernetes.azure.com/per-gb-memory-cost              | The per-GiB memory cost of the cluster.       | 
-| kubernetes.azure.com/vm-sizes/{vm-sku-name}/capacity | The available number of nodes of type [vm-sku-name][vm-sku-name] in the cluster*.<br/>Example VM SKU name: NV16as_v4.<br/>* In preview via v1beta1 API. |
+| kubernetes.azure.com/vm-sizes/{vm-sku-name}/count    | The available number of **existing nodes** of type [vm-sku-name][vm-sku-name] in the cluster*.<br/>Example VM SKU name: NV16as_v4.<br/>* In preview via v1beta1 API. |
+| kubernetes.azure.com/vm-sizes/{vm-sku-name}/capacity | The number of **potential new nodes** of type [vm-sku-name][vm-sku-name] in the cluster's Azure region*.<br/>Example VM SKU name: NV16as_v4.<br/>* In preview via v1beta1 API. |
 
 
 * CPU and memory properties are represented as [Kubernetes resource units](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes).

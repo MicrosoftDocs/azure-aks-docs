@@ -317,6 +317,6 @@ To learn more about AKS Automatic, see the [Introduction to Azure Kubernetes Ser
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [what-is-aks-automatic]: ../intro-aks-automatic.md
-[aks-entra-rbac]: /azure/aks/manage-azure-rbac
-[aks-entra-rbac-builtin-roles]: /azure/aks/manage-azure-rbac#create-role-assignments-for-users-to-access-the-cluster
+[aks-entra-rbac]: ../entra-id-authorization.md
+[aks-entra-rbac-builtin-roles]: ../entra-id-authorization.md#create-role-assignments-for-cluster-access
 [policy-for-kubernetes]: /azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks

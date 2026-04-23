@@ -64,7 +64,7 @@ Implement MFA for all administrative access to your AKS clusters:
 
 - **Enable Microsoft Entra ID integration**: Configure AKS clusters to use Azure AD for authentication and authorization. For detailed instructions, see [Use Azure AD in AKS](/azure/aks/managed-aad).
 - **Configure Conditional Access policies**: Create policies that require MFA for all administrative roles accessing AKS resources. See [Common Conditional Access policies](/azure/active-directory/conditional-access/concept-conditional-access-policies).
-- **Implement Azure RBAC**: Use Azure role-based access control to manage access to AKS resources with built-in roles like "Azure Kubernetes Service Cluster Admin Role" and "Azure Kubernetes Service RBAC Cluster Admin". For more information, see [Use Azure RBAC for Kubernetes Authorization](/azure/aks/manage-azure-rbac).
+- **Implement Azure RBAC**: Use Azure role-based access control to manage access to AKS resources with built-in roles like "Azure Kubernetes Service Cluster Admin Role" and "Azure Kubernetes Service RBAC Cluster Admin". For more information, see [Use Microsoft Entra ID authorization for the Kubernetes API](./entra-id-authorization.md).
 - **Monitor administrative access**: Use Azure Monitor and Azure AD logs to track all administrative access to AKS clusters.
 
 **Implementation steps:**
@@ -295,7 +295,7 @@ For more information about implementing MFA in AKS environments, see:
 
 - [Use Azure AD in AKS](/azure/aks/managed-aad)
 - [Azure AD Conditional Access](/azure/active-directory/conditional-access/)
-- [Azure RBAC for Kubernetes Authorization](/azure/aks/manage-azure-rbac)
+- [Microsoft Entra ID authorization for the Kubernetes API](./entra-id-authorization.md)
 - [Workload identity for AKS](/azure/aks/workload-identity-overview)
 - [Azure AD Identity Protection](/azure/active-directory/identity-protection/)
 
