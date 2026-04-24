@@ -1,8 +1,8 @@
 ---
 title: Use kubelogin to authenticate in Azure Kubernetes Service (AKS)
 description: Learn how to use the kubelogin plugin for all Microsoft Entra authentication methods in Azure Kubernetes Service (AKS).
-author: davidsmatlak
-ms.author: davidsmatlak
+author: shashankbarsin
+ms.author: shasb
 ms.topic: how-to
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
@@ -36,7 +36,7 @@ This article provides an overview and examples of how to use kubelogin for all s
 
 :::zone pivot="azure-cli"
 
-- The Azure CLI authentication method works only with AKS managed Microsoft Entra.
+- The Azure CLI authentication method works only with Microsoft Entra.
 
 :::zone-end
 
@@ -59,7 +59,7 @@ The authentication methods that kubelogin implements are Microsoft Entra OAuth 2
 Device code is the default authentication method for the `convert-kubeconfig` subcommand. This authentication method prompts the device code for the user to sign in from a browser session.
 
 > [!NOTE]
-> Before the kubelogin and exec plugins were introduced, the Azure authentication method in kubectl supported only the device code flow. It used an earlier version of a library that produces a token that has the `audience` claim with an `spn:` prefix. It isn't compatible with [AKS managed Microsoft Entra][aks-managed-microsoft-entra-id], which uses an [on-behalf-of (OBO)][oauth-on-behalf-of] flow. When you run the `convert-kubeconfig` subcommand, kubelogin removes the `spn:` prefix from the audience claim.
+> Before the kubelogin and exec plugins were introduced, the Azure authentication method in kubectl supported only the device code flow. It used an earlier version of a library that produces a token that has the `audience` claim with an `spn:` prefix. It isn't compatible with [Microsoft Entra][aks-managed-microsoft-entra-id], which uses an [on-behalf-of (OBO)][oauth-on-behalf-of] flow. When you run the `convert-kubeconfig` subcommand, kubelogin removes the `spn:` prefix from the audience claim.
 
 ### Parameters for device code authentication
 
@@ -346,7 +346,7 @@ The AKS Microsoft Entra client application ID (client-id) that kubelogin uses to
 
 ## Related content
 
-- Learn how to integrate AKS with Microsoft Entra in the [AKS managed Microsoft Entra integration][aks-managed-microsoft-entra-integration-guide] how-to article.
+- Learn how to integrate AKS with Microsoft Entra in the [Microsoft Entra integration][aks-managed-microsoft-entra-integration-guide] how-to article.
 - To get started with managed identities in AKS, see [Use a managed identity in AKS][use-a-managed-identity-in-aks].
 - To get started with workload identities in AKS, see [Use a workload identity in AKS][use-a-workload-identity-in-aks].
 

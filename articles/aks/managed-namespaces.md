@@ -287,7 +287,7 @@ This article focused on using the managed namespaces feature to logically isolat
 <!--- Internal Links --->
 [quick-automatic-managed-network]: automatic/quick-automatic-managed-network.md
 [deployment-safeguards]: deployment-safeguards.md
-[azure-rbac-k8s]: manage-azure-rbac.md
+[azure-rbac-k8s]: entra-id-authorization.md
 [install-azure-cli]: /cli/azure/install-azure-cli
 [aks-network-policy-options]: use-network-policies.md#network-policy-options-in-aks
 [aks-managed-namespaces-overview]: concepts-managed-namespaces.md

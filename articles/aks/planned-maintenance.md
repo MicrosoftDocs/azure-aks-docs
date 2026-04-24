@@ -656,9 +656,11 @@ Also, ensure that your cluster is started when the planned maintenance window st
 
 ### Why was one of my agent pools upgraded outside the maintenance window?
 
-If an agent pool isn't upgraded (for example, because pod disruption budgets prevented it), it might be upgraded later, outside the maintenance window. This scenario is referred to as a _catch-up upgrade_. It avoids letting agent pools be upgraded with a different version from the AKS control plane.
+AKS starts upgrade-related operations only during the configured maintenance window. If an operation begins before the window closes, it can continue running until completion, even if this extends beyond the window end time.
 
-Another reason why an agent pool could be upgraded unexpectedly is when there's no defined maintenance configuration or if it was deleted. In that case, a cluster with auto-upgrade _but without a maintenance configuration_ is upgraded at random times (_fallback schedule_), which might be an undesired timeframe.
+When the window closes, AKS does not start any new upgrade operations. Any remaining upgrade work is deferred until a future eligible window.
+
+Example: If the maintenance window is 08:00-12:00 and a cluster or node pool upgrade that started before 12:00 is still in progress at 12:15, AKS lets that in-flight work finish. However, AKS does not initiate new upgrade work after 12:00.
 
 ### Are there any best practices for the maintenance configurations?
 

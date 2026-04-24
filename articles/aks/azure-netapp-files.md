@@ -123,9 +123,9 @@ Trident supports many features with Azure NetApp Files. For more information, se
 [kubectl-describe]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe
 [kubectl-exec]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec
 [kubernetes-csi-driver]: https://kubernetes-csi.github.io/docs/
-[trident-install-guide]: https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html
-[trident-helm-chart]: https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-operator.html
-[tridentctl]: https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-tridentctl.html
+[trident-install-guide]: https://docs.netapp.com/us-en/trident/trident-get-started/quickstart.html
+[trident-helm-chart]: https://docs.netapp.com/us-en/trident/trident-install/kubernetes-deploy-operator.html
+[tridentctl]: https://docs.netapp.com/us-en/trident/trident-install/kubernetes-deploy-tridentctl.html
 [trident-backend-install-guide]: https://docs.netapp.com/us-en/trident/trident-use/backends.html
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 [expand-trident-volumes]: https://docs.netapp.com/us-en/trident/trident-use/vol-expansion.html

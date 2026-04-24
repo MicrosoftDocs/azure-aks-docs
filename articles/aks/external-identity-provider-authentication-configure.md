@@ -561,4 +561,14 @@ Create appropriate RBAC bindings for your external users, and use the cluster ad
 [monitor-resource-logs]: monitor-aks-reference.md#resource-logs
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
+[az-extension-show]: /cli/azure/extension#az-extension-show
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-aks-jwtauthenticator-add]: /cli/azure/aks/jwtauthenticator#az-aks-jwtauthenticator-add
+[az-aks-jwtauthenticator-delete]: /cli/azure/aks/jwtauthenticator#az-aks-jwtauthenticator-delete
+[az-aks-jwtauthenticator-list]: /cli/azure/aks/jwtauthenticator#az-aks-jwtauthenticator-list
+[az-aks-jwtauthenticator-show]: /cli/azure/aks/jwtauthenticator#az-aks-jwtauthenticator-show
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register

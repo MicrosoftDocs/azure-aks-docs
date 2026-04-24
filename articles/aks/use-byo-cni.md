@@ -6,7 +6,8 @@ author: davidsmatlak
 ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 06/20/2023
+ms.date: 04/16/2026
+ai-usage: ai-assisted
 # Customer intent: As an advanced Kubernetes user, I want to deploy an AKS cluster with no preinstalled CNI plugin so that I can use a custom CNI solution that aligns with my on-premises environment.
 ---
 
@@ -52,6 +53,9 @@ All AKS clusters, including those using BYO CNI, require a Kubernetes service ad
 - The DNS service IP must be within the service CIDR range and must not be the first IP address in the range.
 
 These requirements are independent of the CNI plugin.
+
+> [!NOTE]
+> Starting with Kubernetes 1.33, you can extend the service IP range after cluster creation using the `ServiceCIDR` Kubernetes resource. For more information, see [Extend Service IP Ranges](https://kubernetes.io/docs/tasks/network/extend-service-ip-ranges/) in the Kubernetes documentation.
 
 ### Pod networking and IP management
 

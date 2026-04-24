@@ -3,8 +3,8 @@ title: Use Microsoft Entra ID and Kubernetes RBAC for clusters
 titleSuffix: Azure Kubernetes Service
 description: Learn how to use Microsoft Entra group membership to restrict access to cluster resources using Kubernetes role-based access control (Kubernetes RBAC) in Azure Kubernetes Service (AKS).
 ms.topic: how-to
-ms.author: schaffererin
-author: schaffererin
+ms.author: shasb
+author: shashankbarsin
 ms.subservice: aks-integration
 ms.custom: devx-track-azurecli, annual
 ms.date: 01/26/2025
@@ -481,7 +481,7 @@ az ad group delete --group opssre
 
 * For more information about how to secure Kubernetes clusters, see [Access and identity options for AKS][rbac-authorization].
 
-* For best practices on identity and resource control, see [Best practices for authentication and authorization in AKS][operator-best-practices-identity].
+* For best practices on identity and resource control, see [Authentication and authorization concepts in AKS][operator-best-practices-identity].
 
 <!-- LINKS - external -->
 [kubectl-create]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#create
@@ -500,6 +500,6 @@ az ad group delete --group opssre
 [az-ad-group-member-add]: /cli/azure/ad/group/member#az-ad-group-member-add
 [az-ad-group-show]: /cli/azure/ad/group#az-ad-group-show
 [rbac-authorization]: concepts-identity.md#kubernetes-rbac
-[operator-best-practices-identity]: operator-best-practices-identity.md
+[operator-best-practices-identity]: concepts-cluster-authentication.md
 [terraform-on-azure]: /azure/developer/terraform/overview
 [enable-azure-ad-integration-existing-cluster]: managed-azure-ad.md#use-an-existing-cluster

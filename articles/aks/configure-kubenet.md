@@ -7,7 +7,8 @@ ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
-ms.date: 05/22/2024
+ms.date: 04/16/2026
+ai-usage: ai-assisted
 # Customer intent: As a cloud architect, I want to configure kubenet networking for my AKS cluster within an existing virtual network, so that I can optimize IP address management and support my application demands efficiently.
 ---
 
@@ -25,7 +26,7 @@ This article shows you how to use kubenet networking to create and use a virtual
 
 * The virtual network for the AKS cluster must allow outbound internet connectivity.
 * Don't create more than one AKS cluster in the same subnet.
-* AKS clusters can't use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for the Kubernetes service address range, pod address range, or cluster virtual network address range. The range can't be updated after you create your cluster.
+* AKS clusters can't use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for the Kubernetes service address range, pod address range, or cluster virtual network address range. On clusters running Kubernetes versions earlier than 1.33, these ranges can't be updated after you create your cluster. Starting with Kubernetes 1.33, you can extend the service IP range after cluster creation using the [`ServiceCIDR`](https://kubernetes.io/docs/tasks/network/extend-service-ip-ranges/) Kubernetes resource.
 * The cluster identity used by the AKS cluster must at least have the [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) role on the subnet within your virtual network. CLI helps set the role assignment automatically. If you're using an ARM template or other clients, you need to manually set the role assignment. You must also have the appropriate permissions, such as the subscription owner, to create a cluster identity and assign it permissions. If you want to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, you need the following permissions:
   * `Microsoft.Network/virtualNetworks/subnets/join/action`
   * `Microsoft.Network/virtualNetworks/subnets/read`

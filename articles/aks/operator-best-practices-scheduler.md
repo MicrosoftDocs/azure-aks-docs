@@ -147,5 +147,5 @@ This article focused on basic Kubernetes scheduler features. For more informatio
 [resource-limits]: developer-best-practices-resource-management.md#define-pod-resource-requests-and-limits
 [aks-best-practices-cluster-isolation]: operator-best-practices-cluster-isolation.md
 [aks-best-practices-advanced-scheduler]: operator-best-practices-advanced-scheduler.md
-[aks-best-practices-identity]: operator-best-practices-identity.md
+[aks-best-practices-identity]: concepts-cluster-authentication.md
 [k8s-node-selector]: concepts-clusters-workloads.md#node-selectors

@@ -6,6 +6,36 @@
             "redirect_document_id": true
         },
         {
+            "source_path_from_root": "/articles/aks/enable-authentication-microsoft-entra-id.md",
+            "redirect_url": "/azure/aks/entra-id-control-plane-authentication",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/manage-local-accounts-managed-azure-ad.md",
+            "redirect_url": "/azure/aks/local-accounts",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/azure-ad-rbac.md",
+            "redirect_url": "/azure/aks/kubernetes-rbac-entra-id",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/operator-best-practices-identity.md",
+            "redirect_url": "/azure/aks/concepts-cluster-authentication",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/concepts-kubernetes-api-authorization.md",
+            "redirect_url": "/azure/aks/concepts-cluster-authorization",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/concepts-authentication-authorization.md",
+            "redirect_url": "/azure/aks/concepts-cluster-authorization",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/acs-aks-migration.md",
             "redirect_url": "/azure/aks/aks-migration",
             "redirect_document_id": false
@@ -42,7 +72,12 @@
         },
         {
             "source_path_from_root": "/articles/aks/azure-ad-integration.md",
-            "redirect_url": "/azure/aks/azure-ad-integration-cli",
+            "redirect_url": "/azure/aks/entra-id-control-plane-authentication",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/manage-entra-id-authorization.md",
+            "redirect_url": "/azure/aks/entra-id-authorization",
             "redirect_document_id": false
         },
         {
@@ -323,7 +358,7 @@
         },
         {
             "source_path_from_root": "/articles/aks/managed-azure-ad.md",
-            "redirect_url": "/azure/aks/enable-authentication-microsoft-entra-id",
+            "redirect_url": "/azure/aks/entra-id-control-plane-authentication",
             "redirect_document_id": false
         },
         {

@@ -329,3 +329,29 @@ groups:
     title: Terraform
   - id: json-file
     title: JSON file
+# Owner: allyford
+- id: azure-cli-arm-bicep-terraform-portal
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: arm
+    title: ARM template
+  - id: bicep
+    title: Bicep
+  - id: terraform
+    title: Terraform
+  - id: azure-portal
+    title: Azure portal
+# Owner: davidsmatlak
+- id: cli-powershell-terraform
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: azure-powershell
+    title: Azure PowerShell
+  - id: terraform
+    title: Terraform
