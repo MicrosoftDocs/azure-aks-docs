@@ -20,14 +20,14 @@ With Virtual Machines node pools, AKS directly manages the provisioning and boot
 
 ### How it works
 
-A node pool consists of a set of virtual machines (VM), where different virtual machine sizes are designated to support different types of workloads. These virtual machine sizes, referred to as SKUs, are categorized into different families that are optimized for specific purposes. For more information, see [VM SKUs][vm-SKU]. With Virtual Machine node pools, you can perform multi-SKU manual scaling, or single SKU autoscaling. 
+A node pool consists of a set of virtual machines (VM), where different virtual machine sizes are designated to support different types of workloads. These virtual machine sizes, referred to as SKUs, are categorized into different families that are optimized for specific purposes. For more information, see [VM SKUs documentation][vm-SKU]. With Virtual Machine node pools, you can perform multi-SKU manual scaling and even multi-SKU autoscaling. 
 
 To enable scaling of multiple virtual machine sizes, the Virtual Machines node pool type uses a `ScaleProfile` that contains configurations indicating how the node pool can scale, specifically the desired list of virtual machine size and the count of each size. A `ManualScaleProfile` is a scale profile that specifies one desired virtual machine size and the total count of that type in the node pool. Only one virtual machine size is allowed in a `ManualScaleProfile`. You need to create a separate `ManualScaleProfile` for each virtual machine size in your node pool. When creating a new Virtual Machines node pool, you add an initial manual scale profile for a virtual machine size using the `vm-size` field and including a `node-count`. You can also add more manual scale profiles following the instructions for [adding manual scale profiles][add-a-manual-scale-profile-to-a-node-pool].
 
-Virtual Machine node pools also allows `Auto` mode, which means the node pool can use [cluster autoscaler][cluster-autoscaler]. Any Virtual Machine node pools in `Auto` mode can only use one Virtual Machine size at a time. 
+Virtual Machine node pools also allows `Auto` mode, which means the node pool can use [cluster autoscaler][cluster-autoscaler]. Any Virtual Machine node pools in `Auto` mode can use up to five same-family VM SKUs, and will autoscale these different VM SKUs in the same node pool. Each `AutoScaleProfile` can have it's own minimum and maximum node count in the node pool.
 
 > [!NOTE]
-> When creating a new Virtual Machines node pool, you can have multiple scale profiles, and you need at least one manual scale profile in your node pool. When enabling cluster autoscaler with Virtual Machine node pools, you must remove all but one scale profile that the node pool uses for scaling action. 
+> When creating a new Virtual Machines node pool, you can have multiple scale profiles, and you need at least one manual or auto scale profile in your node pool.
 
 ### Advantages
 
@@ -45,14 +45,14 @@ The following table highlights how Virtual Machines node pools compare with stan
 
 | Node pool type | Capabilities |
 | ----------------- | ------------- |
-| Virtual Machines node pool | You can add, remove, or update nodes in a node pool. Virtual machine types can be any virtual machine of the same family type (for example, D-series, A-Series, etc.). Virtual Machine node pools also allow for multi-SKU manual scaling. |
+| Virtual Machines node pool | You can add, remove, or update nodes in a node pool. Virtual machine types can be any virtual machine of the same family type (for example, D-series, A-Series, etc.). Virtual Machine node pools also allow for multi-SKU manual and auto scaling. |
 | Virtual Machine Scale Set based node pool | You can add or remove nodes of the same size and type in a node pool. If you add a new virtual machine size to the cluster, you need to create a new node pool. |
 
 #### Which compute scaling experience should I choose on AKS? 
 Depending on your workload needs, there are multiple compute scaling experiences to consider. See the use cases for each:
-- [Node auto provisioning](node-autoprovision.md): best for multi SKU autoscaling
-= Virtual Machine node pools: best for multi-SKU manual scaling, and supports single SKU autoscaling. 
-- [Virtual Machine scale sets][VMSS orchestrate]: supports single SKU manual scaling and single SKU autoscaling. 
+- [Node auto provisioning](node-autoprovision.md): best for multi SKU autoscaling, and more intelligent, flexible VM SKU selection (including multiple SKU families). 
+= Virtual Machine node pools: best for multi-SKU manual scaling, and supports multi SKU autoscaling. Requires specific SKU selection of up to 5 sizes per nodepool
+- [Virtual Machine scale sets][VMSS orchestrate]: supports single SKU manual scaling and single SKU autoscaling. Requires specific SKU selection of up to 1 size per nodepool
 
 
 
@@ -62,7 +62,6 @@ Depending on your workload needs, there are multiple compute scaling experiences
 - [Node pool snapshot][node pool snapshot] isn't supported.
 - All VM sizes selected in a node pool need to be from a similar virtual machine family. For example, you can't mix an N-Series virtual machine type with a D-Series virtual machine type in the same node pool.
 - Virtual Machines node pools allow up to five different virtual machine sizes per node pool.
-- When using [cluster autoscaler][cluster-autoscaler], only one scale profile is allowed. To enable cluster autoscaler in a virtual machine node pool with multiple scale profiles, remove all but one scale profile. 
 
 ## Prerequisites
 
