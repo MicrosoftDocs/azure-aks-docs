@@ -1,5 +1,5 @@
 ---
-title: Outbound network and FQDN rules for Azure Kubernetes Service (AKS) clusters
+title: Outbound Network and FQDN Rules for Azure Kubernetes Service (AKS) Clusters
 description: Learn what ports and addresses are required to control egress traffic in Azure Kubernetes Service (AKS)
 ms.subservice: aks-networking
 ms.custom: build-2024, quarterly
@@ -7,7 +7,7 @@ ms.topic: how-to
 ms.author: davidsmatlak
 ms.date: 06/10/2025
 author: davidsmatlak
-
+ms.service: azure-kubernetes-service
 # Customer intent: "As a Kubernetes cluster operator, I want to understand the outbound network and FQDN rules necessary to control egress traffic, so that I can enhance security and ensure proper functionality within my Azure Kubernetes Service deployment."
 ---
 
@@ -101,7 +101,7 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 | **`login.chinacloudapi.cn`**                   | **`HTTPS:443`** | Required for Microsoft Entra authentication. |
 | **`packages.microsoft.com`**                   | **`HTTPS:443`** | This address is the Microsoft packages repository used for cached *apt-get* operations.  Example packages include Moby, PowerShell, and Azure CLI. |
 | **`*.azk8s.cn`**                               | **`HTTPS:443`** | This address is for the repository required to download and install required binaries like kubenet and Azure CNI. |
-| **`mcr.azure.cn`**, **`*.data.mcr.azure.cn`**   | **`HTTPS:443`** | Required to access images Microsoft Container Registry (MCR) in China Cloud (Mooncake). This registry serves as a cache for mcr.microsoft.com with improved reliability and performance. |
+| **`mcr.azure.cn`**, **`*.data.mcr.azure.cn`**   | **`HTTPS:443`** | Required to access images in Microsoft Container Registry (MCR) in China Cloud (Mooncake). This registry serves as a cache for mcr.microsoft.com with improved reliability and performance. |
 
 
 ### Azure US Government required network rules
@@ -150,8 +150,8 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 | Destination FQDN                                                           | Port      | Use      |
 |----------------------------------------------------------------------------|-----------|----------|
-| **`onegetcdn.azureedge.net, go.microsoft.com`**                            | **`HTTPS:443`** | To install windows-related binaries |
-| **`*.mp.microsoft.com, www.msftconnecttest.com, ctldl.windowsupdate.com`** | **`HTTP:80`**   | To install windows-related binaries |
+| **`onegetcdn.azureedge.net, go.microsoft.com`**                            | **`HTTPS:443`** | To install Windows-related binaries |
+| **`*.mp.microsoft.com, www.msftconnecttest.com, ctldl.windowsupdate.com`** | **`HTTP:80`**   | To install Windows-related binaries |
 
 If you choose to block/not allow these FQDNs, the nodes will only receive OS updates when you do a [node image upgrade](node-image-upgrade.md) or [cluster upgrade](upgrade-cluster.md). Keep in mind that Node Image Upgrades also come with updated packages including security fixes.
 
@@ -188,8 +188,8 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 
 | FQDN                                          | Port      | Use      |
 |-----------------------------------------------|-----------|----------|
-| **`vault.azure.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server.|
-| **`*.vault.usgovcloudapi.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server in Azure Government.|
+| **`vault.azure.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure Key Vault server.|
+| **`*.vault.usgovcloudapi.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure Key Vault server in Azure Government.|
 
 ### Azure Monitor - Managed Prometheus, Container Insights, and Azure Monitor Application Insights Autoinstrumentation
 
@@ -279,7 +279,7 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 | FQDN                                                       | Port      | Use      |
 |------------------------------------------------------------|-----------|----------|
 | **`management.azure.com`** <br/> **`management.usgovcloudapi.net`** (Azure Government) <br/> **`management.chinacloudapi.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required for Kubernetes operations against the Azure API. |
-| **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Microsoft Entra ID authentication. |
+| **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Microsoft Entra authentication. |
 
 ## Cluster extensions
 
@@ -296,7 +296,7 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 | **`arcmktplaceprod.westeurope.data.azurecr.io`** | **`HTTPS:443`** | This address is for the West Europe regional data endpoint and is required to pull container images for installing marketplace extensions on AKS cluster.|
 | **`arcmktplaceprod.eastus.data.azurecr.io`** | **`HTTPS:443`** | This address is for the East US regional data endpoint and is required to pull container images for installing marketplace extensions on AKS cluster.|
 |**`*.ingestion.msftcloudes.com, *.microsoftmetrics.com`**|**`HTTPS:443`**|This address is used to send agents metrics data to Azure.|
-|**`marketplaceapi.microsoft.com`**|**`HTTPS: 443`**|This address is used to send custom meter-based usage to the commerce metering API.|
+|**`marketplaceapi.microsoft.com`**|**`HTTPS:443`**|This address is used to send custom meter-based usage to the commerce metering API.|
 
 
 #### Azure US Government required FQDN / application rules
