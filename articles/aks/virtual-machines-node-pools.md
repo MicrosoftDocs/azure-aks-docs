@@ -282,16 +282,37 @@ az aks nodepool manual-scale delete \
     --current-vm-sizes "Standard_D8s_v3"
 ```
 
-## Cluster autoscaler with Virtual Machines Node Pools
+## Cluster autoscaler with Virtual Machines Node Pools (preview)
 Virtual Machines node pools support [cluster autoscaler][cluster-autoscaler]. This can be enabled using the flag `--enable-cluster-autoscaler` during cluster creation, while adding a new node pool, or in updating an existing manual node pool. 
 
-When using cluster autoscaler with Virtual Machine node pools, 
+When using cluster autoscaler with Virtual Machine node pools, the behavior is as follows:
 - Scale up: autoscaler responds to pending pod pressure, and can scale up the node count of a node pool with multiple VM sizes in that node pool. 
 - Scale down: a specific node is chosen by autoscaler based on the utilization of node. you can configure `scale-down-utilization-threshold`to adjust when cluster autoscaling triggers a scaling action. See [cluster autoscaler documentation][cluster-autoscaler] for more information on configuring autoscaling. 
 
 ### Limitations
 - This feature is only available in public cloud.
 - GPU Nodes are not currently supported.
+
+### Install the aks-preview extension
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+- Install or update the `aks-preview` Azure CLI extension by using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command:
+
+```azurecli-interactive
+    # Install the aks-preview extension
+    az extension add --name aks-preview
+    
+    # Update the aks-preview extension
+    az extension update --name aks-preview
+```
+
+### Register feature flag
+Register the preview feature flag `VMsAgentAutoscalePreview` using the `az feature register` command:
+
+```azurecli-interactive
+    az feature register --namespace Microsoft.ContainerService --name VMsAgentPoolAutoscalePreview
+```
 
 ### Create an AKS cluster with Virtual Machines node pools and cluster-autoscaler enabled
 - Create an AKS cluster with Virtual Machines node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"` and with the flag `--enable-cluster-autoscaler`.
