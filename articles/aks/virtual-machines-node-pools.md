@@ -3,7 +3,7 @@ title: Use Virtual Machines Node Pools in Azure Kubernetes Services (AKS)
 description: Learn how to add multiple Virtual Machine types of a similar family to a Virtual Machines node pool in an AKS cluster.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 03/18/2026
+ms.date: 04/28/2026
 ms.author: wilsondarko
 author: wdarko1
 
@@ -283,40 +283,16 @@ az aks nodepool manual-scale delete \
     --current-vm-sizes "Standard_D8s_v3"
 ```
 
-## Cluster autoscaler with Virtual Machines Node Pools (preview)
-Virtual Machines node pools support [cluster autoscaler][cluster-autoscaler]. This can be enabled using the flag `--enable-cluster-autoscaler` during cluster creation, while adding a new node pool, or in updating an existing manual node pool.
+## Cluster autoscaler with Virtual Machines Node Pools
+Virtual Machines node pools support [cluster autoscaler][cluster-autoscaler]. This can be enabled using the flag `--enable-cluster-autoscaler` during cluster creation, while adding a new node pool, or in updating an existing manual node pool. 
 
 When using cluster autoscaler with Virtual Machine node pools, 
-- Scale up: autoscaler responds to pending pod pressure, and scale up the node count of a node pool with the same type of single SKU in that node pool. 
+- Scale up: autoscaler responds to pending pod pressure, and can scale up the node count of a node pool with multiple VM sizes in that node pool. 
 - Scale down: a specific node is chosen by autoscaler based on the utilization of node. you can configure `scale-down-utilization-threshold`to adjust when cluster autoscaling triggers a scaling action. See [cluster autoscaler documentation][cluster-autoscaler] for more information on configuring autoscaling. 
 
 ### Limitations
 - This feature is only available in public cloud.
 - GPU Nodes are not currently supported.
-
-### Requirements
-- To enable cluster autoscaler with Virtual Machine node pools, the node pool must only use one VM size. All other manual scale profiles must be deleted before enabling cluster autoscaler.
-
-### Install the aks-preview extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-- Install or update the `aks-preview` Azure CLI extension by using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command:
-
-```azurecli-interactive
-    # Install the aks-preview extension
-    az extension add --name aks-preview
-    
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-```
-
-### Register feature flag
-Register the preview feature flag `VMsAgentAutoscalePreview` using the `az feature register` command:
-
-```azurecli-interactive
-    az feature register --namespace Microsoft.ContainerService --name VMsAgentPoolAutoscalePreview
-```
 
 ### Create an AKS cluster with Virtual Machines node pools and cluster-autoscaler enabled
 - Create an AKS cluster with Virtual Machines node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"` and with the flag `--enable-cluster-autoscaler`.
@@ -328,7 +304,8 @@ az aks create \
     --resource-group myResourceGroup \
     --name myAKSCluster \
     --vm-set-type "VirtualMachines" \
-    --node-vm-size "Standard_D4s_v3" 
+    --node-vm-size "Standard_D4s_v3"
+    --enable-cluster-autoscaler \
     --min-count 2 \
     --max-count 5 \
     --kubernetes-version 1.32.5
@@ -364,26 +341,13 @@ az aks nodepool update \
     --name myvmpool \
     --update-cluster-autoscaler \
     --node-vm-size "Standard_D4s_v3" \
-    --min-count 2 \
-    --max-count 5
+    --min-count 3 \
+    --max-count 7
 ```
 
-### Update a Virtual Machines node pool from manual mode to cluster autoscaler enabled
+### Switch a Virtual Machines node pool scale profiles from manual scale to autoscale mode 
 
->[!Note]
-> Updating a manual mode Virtual Machines node pool to auto is only allowed when the node pool only has one manual scale profile.
-
-If your Virtual Machine node pool has multiple manual scale profiles, you must remove all manual scale profiles except for the selected size you want for autoscaling purposes. See the following example that deletes the manual scale profile in node pool "myvmpool" for VM size `Standard_D8s_v3`:
-
-```azurecli-interactive
-az aks nodepool manual-scale delete \
-    --resource-group myResourceGroup \
-    --cluster-name myAKSCluster \
-    --name myvmpool \
-    --current-vm-sizes "Standard_D8s_v3"
-```
-
-The following example updates Virtual Machines node pool *myvmpool* in the cluster named *myAKSCluster* from `Manual` mode to `Auto` mode:
+The following example updates Virtual Machines node pool *myvmpool* in the cluster named *myAKSCluster*, converting all manual scale profiles to autoscale profiles with the same minimum and maximum node count:
 
 ```azurecli-interactive
 az aks nodepool update \
@@ -397,7 +361,7 @@ az aks nodepool update \
 
  ### Disable cluster autoscaler in Virtual Machines node pool
 
-You can disable [cluster autoscaler][cluster-autoscaler], or change the cluster from `Auto` mode to `Manual` mode.
+You can disable [cluster autoscaler][cluster-autoscaler], or switch all the scale profiles in a virtual machine node pool from `Auto` mode to `Manual` mode.
 
 The following example updates VIrtual Machines node pool *myvmpool* in the cluster named *myAKSCluster* from `Manual` mode to `Auto` mode:
 
