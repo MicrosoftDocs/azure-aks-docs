@@ -51,7 +51,7 @@ Together, they produce three install profiles:
 | --- | --- | --- |
 | **Full managed stack** | `--enable-managed-gpu=true` (or neither flag) | All four components above: driver, device plugin, DCGM metrics exporter, and GPU health monitoring in NPD. |
 | **Driver only** (default) | `--enable-managed-gpu=false` | NVIDIA GPU driver only. You install and manage the device plugin, metrics exporter, and health monitoring yourself (for example, with the [NVIDIA GPU Operator](./nvidia-gpu-operator.md)). |
-| **None (BYO)** | `--enable-managed-gpu=false --gpu-driver None` | Nothing. AKS doesn't install any of the four components. You own the full stack. See [Bring your own GPU driver](#bring-your-own-gpu-driver). |
+| **None (BYO)** | `--enable-managed-gpu=false --gpu-driver None` | Nothing. AKS doesn't install any of the four components. You own the full stack. See [Bring your own GPU driver](#alternative-install-profiles). |
 
 ### Defaults and overrides
 
