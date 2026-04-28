@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 04/28/2026
 ms.author: sachidesai
+author: sdesai345
 ai-usage: ai-assisted
 ---
 
