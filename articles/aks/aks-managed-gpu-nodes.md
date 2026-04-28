@@ -4,7 +4,7 @@ description: Learn how to provision a fully managed GPU node pool on your new or
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
-ms.date: 4/22/2026
+ms.date: 4/27/2026
 author: sachidesai
 ms.author: sachidesai
 ms.service: azure-kubernetes-service
@@ -14,13 +14,13 @@ ai-usage: ai-assisted
 
 # Create a fully managed GPU node pool on Azure Kubernetes Service (AKS) (preview)
 
-Running GPU workloads on Azure Kubernetes Service (AKS) traditionally requires you to install and maintain the NVIDIA GPU driver, Kubernetes device plugin, and a GPU metrics exporter on every GPU node. These components enable GPU scheduling, container-level GPU access, and telemetry, but installing them manually or through the [NVIDIA GPU Operator](./nvidia-gpu-operator.md) adds operational overhead.
+Running NVIDIA GPU workloads on Azure Kubernetes Service (AKS) traditionally requires you to install and maintain the NVIDIA GPU driver, Kubernetes device plugin, and a GPU metrics exporter on each GPU node. These components enable GPU scheduling, container-level GPU access, and telemetry, but installing them manually or through the [NVIDIA GPU Operator](./nvidia-gpu-operator.md) adds operational overhead.
 
 With fully managed GPU nodes (preview), AKS installs and maintains the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) for you. GPU node pool creation becomes a single step, and GPU capacity behaves like any other AKS node pool.
 
 You configure a managed GPU node pool through two fields under `gpuProfile.nvidia`:
 
-- `managementMode` (`Managed` or `Unmanaged`) controls whether AKS installs the full managed GPU stack (driver, device plugin, and DCGM metrics exporter) or the driver only. The default is `Managed`.
+- `managementMode` (`Managed` or `Unmanaged`) controls whether AKS installs the full managed GPU stack (driver, device plugin, and DCGM metrics exporter) or the driver only. The default is `Unmanaged`.
 - `migStrategy` (`None`, `Single`, or `Mixed`) sets the Multi-Instance GPU (MIG) strategy for supported GPU SKUs such as A100 and H100. The default is `None`.
 
 In this article, you provision a managed GPU node pool, optionally enable MIG, verify the stack, and run a sample GPU workload.
@@ -36,7 +36,7 @@ A managed GPU node pool can include the following components on every node:
 | **NVIDIA GPU driver** | Kernel modules and user-space libraries that let the OS and containers talk to the GPU hardware. | Driver version selection, installation at node provisioning, and reinstallation after node image upgrades. |
 | **NVIDIA Kubernetes device plugin** | DaemonSet-equivalent that advertises GPU resources (`nvidia.com/gpu`, `nvidia.com/mig-*`) to the kubelet so pods can request them. | Deployment, configuration (including MIG strategy), and lifecycle on each GPU node. |
 | **NVIDIA DCGM and DCGM metrics exporter** | [Data Center GPU Manager](https://github.com/NVIDIA/dcgm-exporter/tree/main) collects GPU health and utilization data and exposes Prometheus metrics (for example, `DCGM_FI_DEV_GPU_UTIL`, `DCGM_FI_DEV_GPU_TEMP`) on port `19400`. | Installation, service enablement, and the `kubernetes.azure.com/dcgm-exporter=enabled` node label used to scrape metrics. |
-| **GPU health rules** | NPD rules that surface GPU-specific node conditions such as `UnhealthyNvidiaDevicePlugin` and `UnhealthyNvidiaDCGMServices`. | NPD rule deployment and condition reporting on GPU nodes. |
+| **GPU health signals** | NPD signals that surface GPU-specific node conditions such as `UnhealthyNvidiaDevicePlugin` and `UnhealthyNvidiaDCGMServices`. | NPD monitoring and condition reporting on GPU nodes. |
 
 ### Install profiles
 
@@ -49,13 +49,13 @@ Together, they produce three install profiles:
 
 | Install profile | CLI flags | What AKS installs and manages |
 | --- | --- | --- |
-| **Full managed stack** (default) | `--enable-managed-gpu=true` (or neither flag) | All four components above: driver, device plugin, DCGM metrics exporter, and GPU health rules. |
-| **Driver only** | `--enable-managed-gpu=false` | NVIDIA GPU driver only. You install and manage the device plugin, metrics exporter, and health monitoring yourself (for example, with the [NVIDIA GPU Operator](./nvidia-gpu-operator.md)). |
-| **Nothing (BYO)** | `--enable-managed-gpu=false --gpu-driver None` | Nothing. AKS doesn't install any of the four components. You own the full stack. See [Bring your own GPU driver](#bring-your-own-gpu-driver). |
+| **Full managed stack** | `--enable-managed-gpu=true` (or neither flag) | All four components above: driver, device plugin, DCGM metrics exporter, and GPU health monitoring in NPD. |
+| **Driver only** (default) | `--enable-managed-gpu=false` | NVIDIA GPU driver only. You install and manage the device plugin, metrics exporter, and health monitoring yourself (for example, with the [NVIDIA GPU Operator](./nvidia-gpu-operator.md)). |
+| **None (BYO)** | `--enable-managed-gpu=false --gpu-driver None` | Nothing. AKS doesn't install any of the four components. You own the full stack. See [Bring your own GPU driver](#bring-your-own-gpu-driver). |
 
 ### Defaults and overrides
 
-- **Defaults**: If you don't pass `--enable-managed-gpu` or `--gpu-driver`, AKS applies the **Full managed stack** profile.
+- **Defaults**: If you don't pass `--enable-managed-gpu` or `--gpu-driver`, AKS applies the **Driver only** profile on the node pool created with an **NVIDIA** GPU-enabled VM size.
 - **Override**: `managementMode: Managed` requires the driver, so `--gpu-driver None` is ignored when `--enable-managed-gpu=true` and the driver is still installed. To skip the driver, set both `--enable-managed-gpu=false` and `--gpu-driver None`.
 - **Immutability**: `managementMode`, `migStrategy`, and `driver` are all fixed at creation time. To change profile, create a new node pool.
 
@@ -149,8 +149,6 @@ To use the default Ubuntu operating system (OS) SKU, you create the node pool wi
 
 To use Azure Linux, you specify the OS SKU by setting `--os-sku` to `AzureLinux` during node pool creation. The `os-type` is set to `Linux` by default.
 
-> [!NOTE]
-> Azure Linux V3 (the default for Kubernetes 1.33 and later) has limited GPU VM size support. Use a supported size such as `Standard_NC6s_v3`.
 
 1. Add a node pool to your cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--os-sku` flag set to `AzureLinux` and `--enable-managed-gpu=true`.
 
@@ -320,7 +318,7 @@ az aks nodepool scale \
 
 ## Alternative install profiles
 
-If the default **Full managed stack** profile isn't the right fit, AKS supports two alternative profiles on GPU node pools.
+If the **Full managed stack** profile isn't the right fit, AKS supports two alternative profiles on GPU node pools.
 
 ### [Driver only (preview)](#tab/driver-only)
 
@@ -359,7 +357,7 @@ az aks nodepool add \
     --gpu-driver None
 ```
 
-In this configuration, AKS installs nothing: no driver, no device plugin, and no metrics exporter. Microsoft **doesn't support or manage** NVIDIA drivers or any other GPU components on these nodes. For more information, see [Skip GPU driver installation](./use-nvidia-gpu.md#skip-gpu-driver-installation).
+In this configuration, AKS installs no GPU software components: no driver, no device plugin, and no metrics exporter. Microsoft **doesn't support or manage** NVIDIA drivers or any other GPU components on these nodes. For more information, see [Skip GPU driver installation](./use-nvidia-gpu.md#skip-gpu-driver-installation).
 
 ---
 
