@@ -924,6 +924,10 @@
       items:
         - name: Vulnerability management overview
           href: concepts-vulnerability-management.md
+        - name: AKS Vulnerability Data API overview
+          href: concepts-security-vulnerability-data-api.md
+        - name: Use the AKS Vulnerability Data API
+          href: security-vulnerability-api-reference.md
         - name: Subscribe to AKS security bulletins
           href: security-bulletins/overview.md
         - name: Container image management best practices
