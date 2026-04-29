@@ -41,22 +41,37 @@ In this article, you learn how to:
 
 1. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
 
-    
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
 
 ### Set environment variables
 
 Set the following environment variables to use with commands in this article:
 
+    ```azurecli-interactive
+	export RESOURCE_GOUP=<resource-group-name>
+	export CLUSTER_NAME=<cluster-name>
+	export LOCATION=<location>
+	```
+
 ### Get the credentials for your cluster
 
 Get the credentials for your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
+    ```azurecli-interactive
+    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
     ```
 
 ## List supported VM SKUs on an AKS cluster
 
 List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-aks-list-vm-skus] command.
 
+```azurecli-interactive
+LOCATION=eastus
+
+az aks list-vm-skus \
+	--location $LOCATION \
 	--query "[].name" \
 	--output table
 ```
@@ -77,9 +92,12 @@ By default, this command only returns VM SKUs available to your current Azure su
 
 ## Filter by Azure VM size name
 
-
 List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-aks-list-vm-skus] command with the `--size` parameter to apply a case-insensitive partial match against the SKU name. The following example sets `--size` to _d4ds_:
 
+```azurecli-interactive
+az aks list-vm-skus \
+	--location $LOCATION \
+	--size d4ds \
 	--query "[].name" \
 	--output table
 ```
@@ -175,10 +193,28 @@ Example output:
 
 The exact set of returned properties might vary by Azure CLI or API version.
 
-## Use a returned SKU for AKS cluster creation
+## Use a returned SKU for AKS cluster or node pool creation
 
-After you identify a suitable Azure VM SKU in your target region, specify the name with the `--node-vm-size` parameter when creating your AKS cluster or node pool. The following examples set the VM size to Standard_D4ds_v5:
+After you identify a suitable Azure VM SKU in your target region, specify the name with the `--node-vm-size` parameter when creating your AKS cluster or node pool. The following examples set the VM size to `Standard_D4ds_v5`:
 
+```azurecli-interactive
+RESOURCE_GROUP=myResourceGroup
+CLUSTER_NAME=myAKSCluster
+VM_SIZE=Standard_D4ds_v5
+
+az aks create \
+	--resource-group $RESOURCE_GROUP \
+	--name $CLUSTER_NAME \
+	--node-count 3 \
+	--node-vm-size $VM_SIZE \
+	--generate-ssh-keys
+
+az aks nodepool add \
+	--resource-group $RESOURCE_GROUP \
+	--name $CLUSTER_NAME \
+	--node-count 1 \
+	--node-vm-size $VM_SIZE \
+```
 
 ## Troubleshooting
 
@@ -197,3 +233,6 @@ After you identify a suitable Azure VM SKU in your target region, specify the na
 [quotas-skus-regions]: ./quotas-skus-regions.md
 [azure-vm-sizes]: /azure/virtual-machines/sizes
 [aks-quickstart-cli]: learn/quick-kubernetes-deploy-cli.md
+[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
