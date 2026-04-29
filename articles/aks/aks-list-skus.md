@@ -1,17 +1,18 @@
 ---
-title: List available VM SKUs for Azure Kubernetes Service (AKS) clusters
+title: List Available VM SKUs for Azure Kubernetes Service (AKS) Clusters (Preview)
 description: Learn how to view VM SKUs that are available for AKS node pool creation in a specific Azure region.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 04/29/2026
 ms.author: sachidesai
 author: sdesai345
+ms.reviewer: schaffererin
 ai-usage: ai-assisted
 ---
 
-# List available VM SKUs for Azure Kubernetes Service (AKS) clusters
+# List available virtual machine (VM) SKUs for Azure Kubernetes Service (AKS) clusters
 
-When you create an Azure Kubernetes Service (AKS) cluste or add a new node pool, you need to choose a VM SKU that is available in your target Azure region and supported by AKS. You can use the [`az aks list-vm-skus`][az-aks-list-vm-skus] command to quickly view SKUs for AKS in a specific region.
+When you create an Azure Kubernetes Service (AKS) cluster or add a new node pool, you need to choose a VM SKU that's available in your target Azure region and supported by AKS. You can use the [`az aks list-vm-skus`][az-aks-list-vm-skus] command to quickly view SKUs for AKS in a specific region.
 
 In this article, you learn how to:
 
@@ -38,33 +39,29 @@ In this article, you learn how to:
     az extension add --name aks-preview
     ```
 
-2. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
+1. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
+
+    
+
+### Set environment variables
+
+Set the following environment variables to use with commands in this article:
 
 ### Get the credentials for your cluster
 
-- Get the credentials for your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
+Get the credentials for your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
-    ```azurecli-interactive
-    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
     ```
 
-## List supported VM SKUs on an AKS cluster (preview)
+## List supported VM SKUs on an AKS cluster
 
-Set an Azure region, then run `az aks list-vm-skus`:
+List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-aks-list-vm-skus] command.
 
-```azurecli-interactive
-LOCATION=eastus
-
-az aks list-vm-skus \
-	--location $LOCATION \
 	--query "[].name" \
 	--output table
 ```
 
-Expected output is similar to the following example:
+Example output:
 
 ```output
 Result
@@ -80,17 +77,14 @@ By default, this command only returns VM SKUs available to your current Azure su
 
 ## Filter by Azure VM size name
 
-Use `--size` to apply a case-insensitive partial match against SKU name:
 
-```azurecli-interactive
-az aks list-vm-skus \
-	--location $LOCATION \
-	--size d4ds \
+List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-aks-list-vm-skus] command with the `--size` parameter to apply a case-insensitive partial match against the SKU name. The following example sets `--size` to _d4ds_:
+
 	--query "[].name" \
 	--output table
 ```
 
-Expected output is similar to the following example:
+Example output:
 
 ```output
 Result
@@ -101,7 +95,7 @@ Standard_D4ds_v6
 
 ## Show only zone-capable Azure VM SKUs
 
-Specify `--zone` to return only SKUs that support availability zones in the selected region:
+List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-aks-list-vm-skus] command with the `--zone` parameter to return only SKUs that support availability zones in the selected region.
 
 ```azurecli-interactive
 az aks list-vm-skus \
