@@ -105,7 +105,7 @@ az aks list-vm-skus \
 	--output table
 ```
 
-Expected output is similar to the following example:
+Example output:
 
 ```output
 Name                Zones
@@ -116,7 +116,7 @@ Standard_E8ds_v5    [1, 2, 3]
 
 ## Include all SKUs in the Azure region
 
-Use `--all` to include SKUs that might not currently be available to your subscription:
+List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-aks-list-vm-skus] command with the `--all` parameter to include SKUs that might not currently be available to your subscription.
 
 ```azurecli-interactive
 az aks list-vm-skus \
@@ -131,7 +131,7 @@ az aks list-vm-skus \
 
 ## View full details in JSON
 
-Use JSON output if you want to inspect all returned properties of the supported Azure VM SKUs:
+List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-aks-list-vm-skus] command with the `--output` parameter set to _jsonc_ to return a JSON output with all returned properties of the supported Azure VM SKUs.
 
 ```azurecli-interactive
 az aks list-vm-skus \
@@ -140,7 +140,7 @@ az aks list-vm-skus \
 	--output jsonc
 ```
 
-Expected output is similar to this example:
+Example output:
 
 ```json
 [
@@ -173,37 +173,19 @@ Expected output is similar to this example:
 ]
 ```
 
-The exact set of returned properties may vary by Azure CLI or API version.
+The exact set of returned properties might vary by Azure CLI or API version.
 
 ## Use a returned SKU for AKS cluster creation
 
-After you identify a suitable Azure VM SKU in your target region, specify the name with `--node-vm-size` when creating your AKS cluster or node pool:
+After you identify a suitable Azure VM SKU in your target region, specify the name with the `--node-vm-size` parameter when creating your AKS cluster or node pool. The following examples set the VM size to Standard_D4ds_v5:
 
-```azurecli-interactive
-RESOURCE_GROUP=myResourceGroup
-CLUSTER_NAME=myAKSCluster
-VM_SIZE=Standard_D4ds_v5
-
-az aks create \
-	--resource-group $RESOURCE_GROUP \
-	--name $CLUSTER_NAME \
-	--node-count 3 \
-	--node-vm-size $VM_SIZE \
-	--generate-ssh-keys
-
-az aks nodepool add \
-	--resource-group $RESOURCE_GROUP \
-	--name $CLUSTER_NAME \
-	--node-count 1 \
-	--node-vm-size $VM_SIZE \
-```
 
 ## Troubleshooting
 
 - If no suitable Azure VM SKU appears, verify regional availability and quota by reviewing [Quotas, virtual machine size restrictions, and region availability in Azure Kubernetes Service (AKS)][quotas-skus-regions].
 - If AKS cluster or node pool creation fails with allocation or capacity errors, rerun `az aks list-vm-skus` and select another SKU family or region.
 
-## Next steps
+## Related content
 
 - Learn more about AKS limits and regional availability in [Quotas, virtual machine size restrictions, and region availability in Azure Kubernetes Service (AKS)][quotas-skus-regions].
 - Compare Azure VM options in [Sizes for virtual machines in Azure][azure-vm-sizes].
