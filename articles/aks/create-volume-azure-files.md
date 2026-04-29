@@ -1054,9 +1054,9 @@ metadata:
   name: pv-azurefile
 spec:
   capacity:
-  storage: 100Gi
+    storage: 100Gi
   accessModes:
-  - ReadWriteMany
+    - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: azurefile-csi
   mountOptions:
@@ -1070,16 +1070,16 @@ spec:
   - actimeo=30  # reduce latency for metadata-heavy workload
   - nobrl  # disable sending byte range lock requests to the server
   csi:
-  driver: file.csi.azure.com
-  # make sure volumeHandle is unique for every identical share in the cluster
-  volumeHandle: "{resource-group-name}#{account-name}#{file-share-name}"
-  volumeAttributes:
-    resourceGroup: EXISTING_RESOURCE_GROUP_NAME   # optional, node resource group by default if it's not provided
-    storageAccount: EXISTING_STORAGE_ACCOUNT_NAME # optional, a new account will be created if it's not provided
-    shareName: EXISTING_FILE_SHARE_NAME
-    mountWithWorkloadIdentityToken: "true"
-    # optional, clientID of the managed identity, kubelet identity would be used by default if it's empty
-    clientID: "xxxxx-xxxx-xxx-xxx-xxxxxxx"
+    driver: file.csi.azure.com
+    # make sure volumeHandle is unique for every identical share in the cluster
+    volumeHandle: "{resource-group-name}#{account-name}#{file-share-name}"
+    volumeAttributes:
+      resourceGroup: EXISTING_RESOURCE_GROUP_NAME   # optional, node resource group by default if it's not provided
+      storageAccount: EXISTING_STORAGE_ACCOUNT_NAME # optional, a new account will be created if it's not provided
+      shareName: EXISTING_FILE_SHARE_NAME
+      mountWithWorkloadIdentityToken: "true"
+      # optional, clientID of the managed identity, kubelet identity would be used by default if it's empty
+      clientID: "xxxxx-xxxx-xxx-xxx-xxxxxxx"
 ```
 
 ## Create a static PV with Azure Files
