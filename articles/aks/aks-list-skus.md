@@ -1,9 +1,9 @@
 ---
 title: List available VM SKUs for Azure Kubernetes Service (AKS) clusters
-description: Learn how to use the az aks list-vm-skus command to list VM SKUs that are available for AKS in a specific Azure region.
+description: Learn how to view VM SKUs that are available for AKS node pool creation in a specific Azure region.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 04/28/2026
+ms.date: 04/29/2026
 ms.author: sachidesai
 author: sdesai345
 ai-usage: ai-assisted
@@ -11,12 +11,12 @@ ai-usage: ai-assisted
 
 # List available VM SKUs for Azure Kubernetes Service (AKS) clusters
 
-When you add a new node pool to an Azure Kubernetes Service (AKS) cluster, you need to choose a VM SKU that is available in your target Azure region and supported by AKS. You can use the [`az aks list-vm-skus`][az-aks-list-vm-skus] command to quickly view SKUs for AKS in a specific region.
+When you create an Azure Kubernetes Service (AKS) cluste or add a new node pool, you need to choose a VM SKU that is available in your target Azure region and supported by AKS. You can use the [`az aks list-vm-skus`][az-aks-list-vm-skus] command to quickly view SKUs for AKS in a specific region.
 
 In this article, you learn how to:
 
 - List VM SKUs for AKS in a specific region.
-- Filter SKUs by partial size name.
+- Filter SKUs by exact or partial Azure VM size name.
 - List only SKUs that support availability zones.
 - Include all regional SKUs, including SKUs not currently available to your subscription.
 
@@ -24,9 +24,7 @@ In this article, you learn how to:
 
 ## Prerequisites
 
-- An Azure account with an active subscription. If you don't have one, create an account at <https://azure.microsoft.com/free/>.
-- Azure CLI installed and updated to minimum version `2.86.0`. If you need to install or update, see [Install Azure CLI][install-azure-cli].
-- This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
+- Azure CLI installed and updated to minimum version `2.85.0`. If you need to install or update, see [Install Azure CLI][install-azure-cli].
 - [Install and upgrade to latest version of the `aks-preview` extension](#install-the-aks-preview-cli-extension).
 
 > [!TIP]
@@ -43,14 +41,6 @@ In this article, you learn how to:
 2. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
     ```azurecli-interactive
     az extension update --name aks-preview
-    ```
-
-### Register the `ListVMSKUPreview` feature flag in your subscription
-
-- Register the `ListVMSKUPreview` feature flag in your subscription using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace Microsoft.ContainerService --name ListVMSKUPreview
     ```
 
 ### Get the credentials for your cluster
@@ -86,9 +76,9 @@ Standard_E4ds_v5
 Standard_E8ds_v5
 ```
 
-By default, the command only returns SKUs available to your current subscription.
+By default, this command only returns VM SKUs available to your current Azure subscription.
 
-## Filter by VM size name
+## Filter by Azure VM size name
 
 Use `--size` to apply a case-insensitive partial match against SKU name:
 
@@ -109,9 +99,9 @@ Standard_D4ds_v5
 Standard_D4ds_v6
 ```
 
-## Show only zone-capable SKUs
+## Show only zone-capable Azure VM SKUs
 
-Use `--zone` to return only SKUs that support availability zones in the selected region:
+Specify `--zone` to return only SKUs that support availability zones in the selected region:
 
 ```azurecli-interactive
 az aks list-vm-skus \
@@ -130,14 +120,14 @@ Standard_D4ds_v5    [1, 2, 3]
 Standard_E8ds_v5    [1, 2, 3]
 ```
 
-## Include all SKUs in the region
+## Include all SKUs in the Azure region
 
-Use `--show-all` to include SKUs that might not currently be available to your subscription:
+Use `--all` to include SKUs that might not currently be available to your subscription:
 
 ```azurecli-interactive
 az aks list-vm-skus \
 	--location $LOCATION \
-	--show-all \
+	--all \
 	--query "[].name" \
 	--output table
 ```
@@ -147,7 +137,7 @@ az aks list-vm-skus \
 
 ## View full details in JSON
 
-Use JSON output if you want to inspect all returned properties:
+Use JSON output if you want to inspect all returned properties of the supported Azure VM SKUs:
 
 ```azurecli-interactive
 az aks list-vm-skus \
@@ -189,11 +179,11 @@ Expected output is similar to this example:
 ]
 ```
 
-The exact set of returned properties can vary by CLI/API version.
+The exact set of returned properties may vary by Azure CLI or API version.
 
 ## Use a returned SKU for AKS cluster creation
 
-After you identify a suitable SKU, use it with `--node-vm-size` when creating your cluster:
+After you identify a suitable Azure VM SKU in your target region, specify the name with `--node-vm-size` when creating your AKS cluster or node pool:
 
 ```azurecli-interactive
 RESOURCE_GROUP=myResourceGroup
@@ -206,12 +196,18 @@ az aks create \
 	--node-count 3 \
 	--node-vm-size $VM_SIZE \
 	--generate-ssh-keys
+
+az aks nodepool add \
+	--resource-group $RESOURCE_GROUP \
+	--name $CLUSTER_NAME \
+	--node-count 1 \
+	--node-vm-size $VM_SIZE \
 ```
 
 ## Troubleshooting
 
-- If no suitable SKU appears, verify regional availability and quota by reviewing [Quotas, virtual machine size restrictions, and region availability in Azure Kubernetes Service (AKS)][quotas-skus-regions].
-- If node pool creation fails with allocation or capacity errors, rerun `az aks list-vm-skus` and select another SKU family or region.
+- If no suitable Azure VM SKU appears, verify regional availability and quota by reviewing [Quotas, virtual machine size restrictions, and region availability in Azure Kubernetes Service (AKS)][quotas-skus-regions].
+- If AKS cluster or node pool creation fails with allocation or capacity errors, rerun `az aks list-vm-skus` and select another SKU family or region.
 
 ## Next steps
 
