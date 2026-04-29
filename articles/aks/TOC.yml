@@ -1186,6 +1186,8 @@
           href: use-amd-gpus.md
         - name: GPU best practices
           href: best-practices-gpu.md
+        - name: GPU node partitioning strategies
+          href: concepts-gpu-partitioning.md
         - name: Multi-instance GPU node pool
           href: gpu-multi-instance.md
         - name: Monitor GPU metrics
