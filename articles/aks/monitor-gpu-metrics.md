@@ -1,9 +1,9 @@
 ---
 title: GPU observability in Azure Kubernetes Service (AKS)
-description: This article provides a conceptual overview of key utilization and performance NVIDIA DCGM GPU metrics on Azure Kubernetes Service (AKS).
-ms.topic: concept-article
+description: This article shows how to monitor key utilization and performance NVIDIA DCGM GPU metrics on Azure Kubernetes Service (AKS).
+ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 11/7/2025
+ms.date: 5/1/2026
 author: sachidesai
 ms.author: sachidesai
 # Customer intent: "As a Kubernetes administrator, I want to learn about NVIDIA GPU metrics so that I can optimize resource utilization and ensure the performance of GPU-enabled workloads in my AKS cluster."
@@ -19,11 +19,9 @@ In this article, you learn about GPU metrics collected by the NVIDIA Data Center
 
 ## Prerequisites
 
-- An AKS cluster with [a fully managed GPU-enabled node pool (preview)](./aks-managed-gpu-nodes.md) and ensure that the [GPUs are schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable).
+- An AKS cluster with [a fully managed GPU-enabled node pool (preview)](./aks-managed-gpu-nodes.md) and ensure that the GPUs are schedulable.
 - A [sample GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload) deployed to your node pool.
-
-## Limitations
-- Managed GPU metrics is not currently supported with [Azure Managed Prometheus or Azure Managed Grafana](/azure/azure-monitor/containers/kubernetes-monitoring-enable).
+- [Azure Managed Prometheus](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=cli#enable-with-cli) enabled on your AKS cluster.
 
 ## Verify that managed GPU components are installed
 
@@ -39,21 +37,82 @@ az aks nodepool show \
 Your output should include the following values:
 
   ```output
-  ...
-  ...
-  "gpuInstanceProfile": …
-      "gpuProfile": {
-        "driver": "Install"
-      },
+    ...
+    "gpuProfile": {
+        "driver": "Install",
+        "driverType": "",
+        "nvidia": {
+            "managementMode": "Managed",
+            ...
+            ...
+        }
+    },
   ...
   ...
   ```
+
+## Customize scraping of GPU metrics in Azure Managed Prometheus
+
+Create and apply a ConfigMap that enables a scraping profile for NVIDIA GPU metrics from `dcgm-exporter` in the Azure Monitor agent in the `kube-system` namespace, similar to the following:
+
+```bash
+cat <<EOF | kubectl create -f -
+kind: ConfigMap
+apiVersion: v1
+data:
+  schema-version:
+    v1
+  config-version:
+    ver1
+  default-scrape-settings-enabled: |-
+    dcgmexporter = true
+metadata:
+  name: ama-metrics-settings-configmap
+  namespace: kube-system
+EOF
+```
+
+> [!NOTE]
+> After this ConfigMap is applied once on the AKS cluster, all existing and new NVIDIA GPU node pools added to the cluster are scraped automatically.
+
+### Disable automatic scraping of GPU metrics in Azure Managed Prometheus
+
+The scraping of NVIDIA DCGM metrics by the Azure Monitor managed Prometheus (AMA) agent can be disabled directly by editing in this ConfigMap, without impact to your GPU workloads.
+
+Run the following command:
+
+```bash
+kubectl edit configmap ama-metrics-settings-configmap -n kube-system
+```
+
+Update the `dcgmexporter` setting from `true` to `false`:
+
+```bash
+...
+...
+default-scrape-settings-enabled: |-
+  dcgmexporter = false
+...
+...
+```
+
+Now, NVIDIA DCGM metrics will stop appearing in Azure Monitor and Metrics Explorer.
+
+## Monitor GPU metrics in Azure Portal
+
+1. Once you've created an [Azure Monitor workspace for the AKS cluster](./monitor-aks.md), navigate in the [Azure Portal](https://portal.azure.com) to **Azure Monitor** > **Dashboards with Grafana** section of your Azure Monitor workspace.
+
+2. Using the search bar, filter for the `Kubernetes | NVIDIA GPU DCGM Exporter` Grafana dashboard with the `Azure-managed` tag.
+
+3. Select this dashboard and confirm that the selected `Cluster` and `Prometheus Datasource` align with your GPU-enabled node pool(s). Now, you can view the real-time GPU metrics populated by default, as shown below:
+
+  :::image type="content" source="./media/monitor-gpu-metrics/GPU_metrics_AMG.png" alt-text="Screenshot of the AKS-managed GPU metrics dashboard":::
 
 ## Understanding GPU metrics
 
 ### GPU Utilization Metrics
 
-GPU Utilization metrics show the percentage of time the GPU’s cores are actively processing work. High values indicate that the GPU is heavily used, which is generally desirable for workloads like training or data processing. Interpretation of this metric should consider the type of workload: AI training typically keeps utilization high, while inference may have intermittent utilization due to bursty traffic.
+GPU utilization metrics show the percentage of time the GPU’s cores are actively processing work. High values indicate that the GPU is heavily used, which is generally desirable for workloads like training or data processing. Interpretation of this metric should consider the type of workload: AI training typically keeps utilization high, while inference may have intermittent utilization due to bursty traffic.
 
 Memory Utilization: Shows the percentage of GPU memory in use. High memory usage without high GPU utilization can indicate memory-bound workloads where the GPU waits on memory transfers. Low memory usage with low utilization may suggest the workload is too small to fully leverage the GPU.
 
@@ -63,7 +122,7 @@ SM (Streaming Multiprocessor) Efficiency: Measures the efficiency with which the
 
 Memory Bandwidth Utilization: Reflects how much of the theoretical memory bandwidth is being consumed. High bandwidth utilization with low compute utilization can indicate a memory-bound workload. Conversely, high utilization in both compute and memory bandwidth suggests a well-balanced workload.
 
-Memory Errors: Tracks ECC (Error-Correcting Code) errors if enabled. A high number of errors may indicate hardware degradation or thermal issues and should be monitored for reliability.
+Memory Errors: Tracks error-correcting code (ECC) errors if enabled. A high number of errors may indicate hardware degradation or thermal issues and should be monitored for reliability.
 
 ### Temperature and Power Metrics
 
@@ -89,11 +148,11 @@ Retired Pages and XID Errors: Track GPU memory errors and critical failures. Fre
 
 ### Interpretation Guidance
 
-DCGM metrics should always be interpreted contextually with the type of your workload on AKS. A high compute-intensive workload should ideally show high GPU and SM utilization, high memory bandwidth usage, stable temperatures below throttling thresholds, and power draw near but below TDP. 
+DCGM metrics should be interpreted contextually with the type of your workload on AKS. A high compute-intensive workload should ideally show high GPU and SM utilization, high memory bandwidth usage, stable temperatures below throttling thresholds, and power draw near but below TDP. 
 
 Memory-bound workloads might show high memory utilization and bandwidth but lower compute utilization. Anomalies such as low utilization with high temperature or power consumption often indicate throttling, inefficient scheduling, or system-level bottlenecks.
 
-Monitoring trends over time rather than single snapshots is critical. Sudden drops in utilization or spikes in errors often reveal underlying issues before they impact production workloads. Comparing metrics across multiple GPUs can also help identify outliers or misbehaving devices in a cluster. Understanding these metrics in combination, rather than isolation, provides the clearest insight into GPU efficiency and workload performance.
+Monitoring trends over time rather than single snapshots is critical. Sudden drops in utilization or spikes in errors often reveal underlying issues before they impact production workloads. Comparing metrics across multiple GPUs can also help identify outliers or misbehaving devices in a node pool. Understanding these metrics in combination, rather than isolation, provides the clearest insight into GPU efficiency and workload performance.
 
 ## Common GPU metrics
 
@@ -116,6 +175,6 @@ To learn about the full suite of GPU metrics, visit [NVIDIA DCGM](https://docs.n
 
 ## Next steps
 
+- Learn about [GPU observability best practices](./best-practices-gpu-observability.md) on AKS
 - Track your [GPU node health](./gpu-health-monitoring.md) with Node Problem Detector (NPD)
-- Create [multi-instance GPU](./gpu-multi-instance.md) node pools on AKS
-- Explore the [AI toolchain operator add-on](./ai-toolchain-operator.md) for AI inferencing and fine-tuning
+- Create [multi-instance GPU](./gpu-multi-instance.md) node pools on your AKS cluster
