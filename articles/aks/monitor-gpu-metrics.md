@@ -106,7 +106,7 @@ Now, NVIDIA DCGM metrics will stop appearing in Azure Monitor and Metrics Explor
 
 3. Select this dashboard and confirm that the selected `Cluster` and `Prometheus Datasource` align with your GPU-enabled node pool(s). Now, you can view the real-time GPU metrics populated by default, as shown below:
 
-  :::image type="content" source="./media/monitor-gpu-metrics/gpu_metrics_amg.png" alt-text="Screenshot of the AKS-managed GPU metrics dashboard":::
+  :::image type="content" source="./media/monitor-gpu-metrics/gpu-metrics-portal.png" alt-text="Screenshot of the AKS-managed GPU metrics dashboard":::
 
 ## Understanding GPU metrics
 
