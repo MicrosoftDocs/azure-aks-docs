@@ -32,33 +32,46 @@ Use stored logs when you need persistent records for compliance, trend analysis,
 
 ## Stored logs
 
-Stored logs mode provides continuous log collection in your AKS cluster. By default, log collection is disabled.
+Stored logs mode is enabled automatically whenever Advanced Container Networking Services is enabled on a cluster. The capability is in place, but no logs are generated until you tell ACNS what to capture.
 
-To start collecting logs, define [`ContainerNetworkLog`](./how-to-configure-container-network-logs.md#containernetworklog-crd-template) custom resources that specify which traffic to monitor: by namespace, pod, service, protocol, or verdict. Collection stays active until you disable it.
+To start collecting logs, define [`ContainerNetworkLog`](./how-to-configure-container-network-logs.md#containernetworklog-crd-template) custom resources that specify which traffic to monitor: by namespace, pod, service, protocol, or verdict. Once a CRD is applied, the Cilium agent begins generating flows that match its filters and writes them to each node. Collection stays active until you remove the CRDs or disable ACNS.
 
-Because you control exactly which traffic is logged, you can focus on the flows that matter and avoid collecting unnecessary data. Combined with [flow log aggregation](#flow-log-aggregation), this approach keeps storage costs predictable and analysis focused.
+Because you control exactly which traffic is logged through CRD filters, you can focus on the flows that matter and avoid collecting unnecessary data. Combined with [flow log aggregation](#flow-log-aggregation), this approach keeps storage costs predictable and analysis focused.
 
 ### How stored logs mode works
 
-Advanced Container Networking Services uses eBPF technology with Cilium to capture network flows on each node. The Cilium agent collects traffic that matches the criteria in your custom resources and stores the logs in JSON format on the host.
+Advanced Container Networking Services uses eBPF technology with Cilium to capture network flows on each node. Once ACNS is enabled and a `ContainerNetworkLog` custom resource is applied, the Cilium agent collects traffic that matches the filter and writes logs in JSON format to `/var/log/acns/hubble/events.log` on each host. Log generation runs entirely inside the cluster and doesn't depend on Azure Monitor.
 
-If the Azure Monitoring add-on is enabled, Container Insights agents collect the logs from the host, apply throttling limits, and send them to a Log Analytics workspace.
+For production use, we recommend enabling the Azure Monitor add-on. When enabled, Container Insights agents collect host-local logs, apply throttling limits, and send them to a Log Analytics workspace, where you get long-term retention, KQL queries, and the built-in Azure portal and Grafana dashboards. This is the most integrated path and the one most customers should choose.
+
+If your team has an existing observability pipeline, you can instead forward the same host-local logs to any OpenTelemetry-compatible collector or logging service — either alongside Azure Monitor or in place of it.
 
 :::image type="content" source="./media/advanced-container-networking-services/how-container-network-logs-works.png" alt-text="Diagram of how container network logs work." lightbox="./media/advanced-container-networking-services/how-container-network-logs-works.png":::
 
 For more information about throttling and Container Insights, see the [Container Insights documentation](https://aka.ms/ContainerNetworkLogsDoc_CI).
 
-### Key capabilities of stored logs mode
+## Using container network logs with or without Azure Monitor
+
+You can consume container network logs in two ways. The right choice depends on whether you want an integrated Azure-native experience or you already have an observability pipeline you want to keep using.
+
+| Path | What you get | When to choose it |
+|---|---|---|
+| **Azure Monitor add-on (recommended)** | Container Insights collects host-local logs into a Log Analytics workspace. You get long-term retention, KQL, the built-in Azure portal dashboards, and managed Grafana dashboards out of the box. | You want the most integrated, production-ready experience on AKS with minimal setup. |
+| **Host-local files with your own pipeline** | ACNS writes JSON logs to `/var/log/acns/hubble/events.log` on each node. You forward them to any OpenTelemetry-compatible collector or logging service — alongside Azure Monitor or in place of it. | You already have a centralized observability platform and want network logs to land there. |
+
+For most customers, we recommend enabling Azure Monitor. It's the fastest way to get retention, query, and dashboard capabilities without building your own pipeline.
+
+## Key capabilities of stored logs mode
 
 * **Customizable filters.** Define [`ContainerNetworkLog`](./how-to-configure-container-network-logs.md#containernetworklog-crd-template) custom resources to filter by namespace, pod, service, port, protocol, verdict, or traffic direction. Only matching traffic is logged, so you get precise control over what's collected and what it costs.
 
 * **Flow log aggregation.** Similar flows are automatically grouped into summarized records every 30 seconds, cutting data volume while preserving operational signals like service communication patterns, error rates, and security verdicts. Paired with targeted filters, aggregation lets you maintain broad visibility without excessive ingestion costs. For more information, see [Flow log aggregation](#flow-log-aggregation).
 
-* **Log storage options.** Two storage options are available:
+* **Log storage options.** ACNS always writes logs locally on each node. From there, you can choose how to consume them:
 
-  * **Unmanaged storage (host-local):** Logs are stored on host nodes at `/var/log/acns/hubble`. Files auto-rotate at 50 MB, and older logs are overwritten. This option works for real-time monitoring but doesn't support long-term retention. You can also integrate partner logging services like an OpenTelemetry collector for additional log management.
+  * **Host-local files (always on):** Logs are stored on host nodes at `/var/log/acns/hubble`. Files auto-rotate at 50 MB, and older logs are overwritten. Use this directly for short-term, real-time monitoring, or forward the files to any OpenTelemetry-compatible collector or logging service for additional log management.
 
-  * **Managed storage (recommended):** Configure Azure Monitor to collect and store logs in a Log Analytics workspace. This provides secure, compliant storage with anomaly detection, historical analysis, and alerting through the managed service for Prometheus.
+  * **Azure Monitor (recommended):** Enable the Azure Monitor add-on to collect and store logs in a Log Analytics workspace. You get secure, compliant storage with long-term retention, KQL queries, anomaly detection, historical analysis, and alerting through the managed service for Prometheus. Log generation still runs through the Cilium agent and the `ContainerNetworkLog` CRD; Azure Monitor adds the consumption layer on top.
 
     The `ContainerNetworkLogs` table uses the **Analytics** tier by default. You can switch to the **Basic** tier for lower ingestion and retention costs while maintaining a similar observability experience. Each tier has a dedicated Azure portal dashboard optimized for its query capabilities. For more information about table plans, see [Log Analytics table plans](/azure/azure-monitor/logs/data-platform-logs#table-plans). To learn how to set the table plan, see [Set the table plan](/azure/azure-monitor/logs/logs-table-plans#set-the-table-plan).
 
@@ -209,7 +222,7 @@ The Hubble UI provides a graphical view of service-to-service communication. It'
 
 **Storage and platform:**
 
-* When Log Analytics isn't configured, container network logs are limited to 50 MB of storage on the host. When this limit is reached, new entries overwrite older logs.
+* The host-local file at `/var/log/acns/hubble/` is capped at 50 MB per node and auto-rotates. If you need long-term retention, enable Azure Monitor (recommended) or forward the file to your own logging service.
 * The Auxiliary logs table plan isn't supported.
 
 ## Pricing
