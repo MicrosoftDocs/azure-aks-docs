@@ -19,7 +19,7 @@ Platform admins managing large number of clusters often have problems with stagi
 
 Update runs consist of stages, groups, and strategies and can be applied manually for one-time updates, or automatically, for ongoing regular updates using auto-upgrade profiles. All update runs (manual or automated) honor member cluster maintenance windows.
 
-This guide covers how to configure and manually execute update runs. 
+This guide covers how to configure and manually execute update runs.
 
 ## Prerequisites
 
@@ -79,6 +79,8 @@ Update run supports two options for the cluster upgrade sequence:
     * **Latest image**: Updates every AKS cluster in the update run to the latest image available for that cluster in its region.
     * **Consistent image**: As it's possible for an update run to have AKS clusters across multiple regions where the latest available node images can be different (check [release tracker](/azure/aks/release-tracker) for more information). The update run picks the **latest common** image across all these regions to achieve consistency.
 
+    [!INCLUDE [node image versions note](./includes/node-image-versions.md)]
+
     :::image type="content" source="./media/update-orchestration/upgrade-scope.png" alt-text="Screenshot of the Azure portal pane for creating update runs. The upgrade scope section is shown." lightbox="./media/update-orchestration/upgrade-scope.png":::
 
 1. Select **Create** to create the update run.
@@ -117,8 +119,8 @@ Update run supports two options for the cluster upgrade sequence:
      --name run-1
     ```
 
-When creating an update run, you have the ability to control the scope of the update run. The `--upgrade-type` flag supports the following values: 
-- `ControlPlaneOnly` only upgrades the Kubernetes version for the control plane of the cluster. 
+When creating an update run, you have the ability to control the scope of the update run. The `--upgrade-type` flag supports the following values:
+- `ControlPlaneOnly` only upgrades the Kubernetes version for the control plane of the cluster.
 - `Full` upgrades Kubernetes version for control plane and node pools along with the node images.
 - `NodeImageOnly` only upgrades the node images.
 
@@ -126,8 +128,7 @@ Also, `--node-image-selection` flag supports the following values:
 - **Latest**: Updates every AKS cluster in the update run to the latest image available for that cluster in its region.
 - **Consistent**: As it's possible for an update run to have AKS clusters across multiple regions where the latest available node images can be different (check [release tracker](/azure/aks/release-tracker) for more information). The update run picks the **latest common** image across all these regions to achieve consistency.
 
-> [!IMPORTANT]
-> Node image versions are only valid for 90 days from their original publish date. If the target node image version selected by an update run exceeds the 90-day window by the time a member cluster is upgraded, the upgrade for that member cluster can fail.
+[!INCLUDE [node image versions note](./includes/node-image-versions.md)]
 
 **Starting an update run**:
 
@@ -273,7 +274,7 @@ You can create an update strategy using one of the following methods:
 
     :::image type="content" source="./media/update-orchestration/update-strategy-creation-from-run-inline.png" alt-text="A screenshot of the Azure portal showing update run stages being saved as an update strategy." lightbox="./media/update-orchestration/update-strategy-creation-from-run-lightbox.png":::
 
-### Manage an update run 
+### Manage an update run
 
 The following sections explain how to manage an update run using the Azure portal and Azure CLI.
 
@@ -329,24 +330,24 @@ The following sections explain how to manage an update run using the Azure porta
 
 ## Automate update runs using auto-upgrade profiles
 
-Auto-upgrade profiles are used to automatically execute update runs across member clusters when new Kubernetes or node image versions are made available. 
+Auto-upgrade profiles are used to automatically execute update runs across member clusters when new Kubernetes or node image versions are made available.
 
 For more information on configuring auto-upgrade profiles, see [automate upgrades of Kubernetes and node images using Azure Kubernetes Fleet Manager](./update-automation.md).
 
-## Generate an update run from an auto-upgrade profile 
+## Generate an update run from an auto-upgrade profile
 
-When you create an auto-upgrade profile, your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it may be some time before a new version release triggers auto-upgrade to create and execute an update run.
+When you create an auto-upgrade profile, your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it might be some time before a new version release triggers auto-upgrade to create and execute an update run.
 
-Auto-upgrade allows you to generate a new update run at any time using the [`az fleet autoupgradeprofile generate-update-run`][az-fleet-updaterun-generate] command. The resulting update run is based on the current AKS-published Kubernetes or node image version. 
+Auto-upgrade allows you to generate a new update run at any time using the [`az fleet autoupgradeprofile generate-update-run`][az-fleet-updaterun-generate] command. The resulting update run is based on the current AKS-published Kubernetes or node image version.
 
 ```azurecli-interactive
-az fleet autoupgradeprofile generate-update-run \ 
-    --resource-group $GROUP \ 
-    --fleet-name $FLEET \ 
+az fleet autoupgradeprofile generate-update-run \
+    --resource-group $GROUP \
+    --fleet-name $FLEET \
     --name $AUTOUPGRADEPROFILE
 ```
 
-The generated update run is not automatically started, allowing you to review it. If you are satisfied with the generated update run, you can start and manage it by following the steps in [manage an update run](#manage-an-update-run).
+The generated update run isn't automatically started, allowing you to review it. If you're satisfied with the generated update run, you can start and manage it by following the steps in [manage an update run](#manage-an-update-run).
 
 ## Next steps
 
