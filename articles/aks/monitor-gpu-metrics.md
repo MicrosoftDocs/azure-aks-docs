@@ -77,7 +77,7 @@ EOF
 
 ### Disable automatic scraping of GPU metrics in Azure Managed Prometheus
 
-The scraping of NVIDIA DCGM metrics by the Azure Monitor managed Prometheus (AMA) agent can be disabled directly by editing in this ConfigMap, without impact to your GPU workloads.
+To disable scraping of NVIDIA DCGM metrics by the Azure Monitor managed Prometheus (AMA) agent, edit the same ConfigMap. Your GPU workloads aren't affected.
 
 Run the following command:
 
@@ -96,15 +96,15 @@ default-scrape-settings-enabled: |-
 ...
 ```
 
-Now, NVIDIA DCGM metrics will stop appearing in Azure Monitor and Metrics Explorer.
+NVIDIA DCGM metrics no longer appear in Azure Monitor or Metrics Explorer.
 
-## Monitor GPU metrics in Azure Portal
+## Monitor GPU metrics in the Azure portal
 
-1. Once you've created an [Azure Monitor workspace for the AKS cluster](./monitor-aks.md), navigate in the [Azure Portal](https://portal.azure.com) to **Azure Monitor** > **Dashboards with Grafana** section of your Azure Monitor workspace.
+1. After you create an [Azure Monitor workspace for the AKS cluster](./monitor-aks.md), go to the [Azure portal](https://portal.azure.com) and open **Azure Monitor** > **Dashboards with Grafana** in your Azure Monitor workspace.
 
 2. Using the search bar, filter for the `Kubernetes | NVIDIA GPU DCGM Exporter` Grafana dashboard with the `Azure-managed` tag.
 
-3. Select this dashboard and confirm that the selected `Cluster` and `Prometheus Datasource` align with your GPU-enabled node pool(s). Now, you can view the real-time GPU metrics populated by default, as shown below:
+3. Select this dashboard and confirm that the selected `Cluster` and `Prometheus Datasource` match your GPU-enabled node pools. You can now view the real-time GPU metrics, as shown in the following image:
 
   :::image type="content" source="./media/monitor-gpu-metrics/gpu-metrics-portal.png" alt-text="Screenshot of the AKS-managed GPU metrics dashboard":::
 
