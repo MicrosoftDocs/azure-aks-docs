@@ -55,14 +55,6 @@ Set the following environment variables to use with commands in this article:
 	export LOCATION=<location>
 	```
 
-### Get the credentials for your cluster
-
-Get the credentials for your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
-
-    ```azurecli-interactive
-    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
-    ```
-
 ## List supported VM SKUs on an AKS cluster
 
 List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-aks-list-vm-skus] command.
@@ -233,6 +225,5 @@ az aks nodepool add \
 [quotas-skus-regions]: ./quotas-skus-regions.md
 [azure-vm-sizes]: /azure/virtual-machines/sizes
 [aks-quickstart-cli]: learn/quick-kubernetes-deploy-cli.md
-[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
