@@ -1,24 +1,32 @@
 ---
-title: GPU node partitioning strategies in Azure Kubernetes Service (AKS)
+title: GPU Node Partitioning Strategies in Azure Kubernetes Service (AKS)
 description: Learn about scaling in Azure Kubernetes Service (AKS), including AKS managed multi-instance GPU (MIG) or time-slicing and multi-processing service (MPS) with self-managed NVIDIA GPU Operator
 ms.topic: concept-article
-ms.date: 5/1/2026
+ms.date: 05/01/2026
 author: sachidesai
 ms.author: sachidesai
+ms.reviewer: schaffererin
+ms.service: azure-kubernetes-service
 # Customer intent: As an AKS cluster admin, I want to understand the different NVIDIA GPU node partitioning strategies available in AKS so that I can select the most cost effective and optimized method for isolating and sharing NVIDIA GPU resources in my production and experimental workloads.
 ---
 
-# GPU Node Partitioning Strategies in Azure Kubernetes Service (AKS)
+# GPU node partitioning strategies in Azure Kubernetes Service (AKS)
 
-Azure Kubernetes Service (AKS) supports NVIDIA GPU-enabled node pools to run compute-intensive workloads, including AI/ML  training, real-time inferencing, and large-scale data analytics. Traditionally, GPUs are allocated in a one-to-one model, where a single Kubernetes pod consumes an entire GPU device within an Azure virtual machine (VM). While this model provides simplicity and strong isolation, it can lead to underutilization in scenarios where workloads do not fully consume available GPU resources in the cluster.
+Azure Kubernetes Service (AKS) supports NVIDIA GPU-enabled node pools to run compute-intensive workloads, including AI/ML training, real-time inferencing, and large-scale data analytics. Traditionally, GPUs are allocated in a one-to-one model, where a single Kubernetes pod consumes an entire GPU device within an Azure virtual machine (VM). While this model provides simplicity and strong isolation, it can lead to underutilization in scenarios where workloads do not fully consume available GPU resources in the cluster.
 
-To improve utilization and support concurrent workloads, AKS supports several GPU partitioning strategies. These approaches enable multiple workloads to share a single physical GPU by dividing it into smaller logical units or by expanding access at the software or GPU driver level. The three primary strategies available in AKS environments are Multi-Instance GPU (MIG), time-slicing, and Multi-Process Service (MPS). Each approach differs in terms of isolation, performance predictability, operational complexity, and level of AKS platform management.
+To improve utilization and support concurrent workloads, AKS supports several GPU partitioning strategies. These approaches enable multiple workloads to share a single physical GPU by dividing it into smaller logical units or by expanding access at the software or GPU driver level.
 
-| Strategy | Managed or Allowed on AKS | GPU Sharing Type | Recommended For |
+In this article, you learn about the three primary GPU node partitioning strategies in AKS: **Multi-Instance GPU (MIG)**, **time-slicing**, and **Multi-Process Service (MPS)**.
+
+## Overview of GPU node partitioning strategies in AKS
+
+The three primary strategies available in AKS environments are Multi-Instance GPU (MIG), time-slicing, and Multi-Process Service (MPS). Each approach differs in terms of isolation, performance predictability, operational complexity, and level of AKS platform management.
+
+| Strategy | Managed or allowed on AKS | GPU sharing type | Recommended for |
 | -------- | ---------------- | ---------------- | --------------- |
 | Multi-Instance GPU (MIG)  | Managed | Hardware partitioning  | Production workloads   |
 | Time-slicing (via NVIDIA GPU Operator) | User-managed, AKS allowed | Software scheduling  | Experimentation with variable GPU loads |
-| Multi-process service (MPS, NVIDIA GPU Operator) | User-managed, AKS allowed | CUDA-level process multiplexing | Low-latency, high-throughput workloads  |
+| Multi-Process Service (MPS, NVIDIA GPU Operator) | User-managed, AKS allowed | CUDA-level process multiplexing | Low-latency, high-throughput workloads  |
 
 ## Multi-Instance GPU (MIG) on AKS
 
