@@ -38,38 +38,38 @@ This approach offers several advantages for enterprise deployments. It provides 
 
 However, MIG also introduces certain constraints: partitioning configurations are static at the node pool level, meaning that changes require node reprovisioning. Flexibility is limited to predefined MIG profiles supported by the underlying GPU hardware.
 
-## Time-Slicing with NVIDIA GPU Operator (User-Managed)
+## Time-slicing with NVIDIA GPU Operator (User-managed)
 
 [Time-slicing](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/25.3.3/gpu-sharing.html) is a software-based GPU sharing mechanism that allows multiple Kubernetes pods to share a single GPU by interleaving execution over time. This approach is implemented through the NVIDIA GPU Operator, which manages GPU drivers, the Kubernetes device plugin, and container runtime configuration.
 
 In AKS, time-slicing is supported but not managed. Cluster operators are responsible for deploying and configuring the NVIDIA GPU Operator, typically via Helm, and enabling time-slicing through device plugin settings. Once configured, multiple pods can request access to the same GPU resource, and their workloads are scheduled in a time-shared manner.
 
-Time-slicing offers flexibility and broad compatibility, as it does not depend on specific GPU hardware features and can be used with most NVIDIA GPUs supported by CUDA. It is particularly useful for development, testing, or workloads with bursty or variable GPU utilization patterns.
+Time-slicing offers flexibility and broad compatibility, as it doesn't depend on specific GPU hardware features and can be used with most NVIDIA GPUs supported by CUDA. It's useful for development, testing, or workloads with bursty or variable GPU utilization patterns.
 
-Despite its flexibility, time-slicing does not provide hardware-level isolation. All workloads share the same GPU memory and compute resources, which can result in contention and unpredictable performance. Because configuration and lifecycle management are user-driven, operators must also handle driver updates, compatibility, and tuning - hence, time-slicing is generally not recommended for production workloads that require strict service-level agreements (SLAs).
+Despite its flexibility, time-slicing doesn't provide hardware-level isolation. All workloads share the same GPU memory and compute resources, which can result in contention and unpredictable performance. Because configuration and lifecycle management are user-driven, operators must also handle driver updates, compatibility, and tuning. Therefore, time-slicing generally isn't recommended for production workloads that require strict service-level agreements (SLAs).
 
-## Multi-Process Service (MPS) with NVIDIA GPU Operator (User-Managed)
+## Multi-Process Service (MPS) with NVIDIA GPU Operator (User-managed)
 
 [NVIDIA Multi-Process Service (MPS)](https://docs.nvidia.com/deploy/mps/introduction.html) is a driver-level capability that enables multiple CUDA applications to execute concurrently on a single GPU. Unlike time-slicing, which alternates execution between workloads, MPS allows kernels from different processes to run simultaneously, improving overall GPU utilization and reducing latency for compatible workloads.
 
 Within AKS, MPS is supported through user-managed deployments of the NVIDIA GPU Operator. Operators must configure the GPU driver environment to enable MPS and manage the lifecycle of the MPS control daemon. Workloads that connect to the same MPS server can share the GPU and benefit from concurrent kernel execution.
 
-MPS is particularly well suited for high-throughput and low-latency scenarios, such as batch jobs or tightly coupled parallel workloads. It provides fine-grained control over GPU sharing and can significantly improve utilization when workloads are designed to take advantage of concurrent execution.
+MPS is useful for high-throughput and low-latency scenarios, such as batch jobs or tightly coupled parallel workloads. It provides fine-grained control over GPU sharing and can significantly improve utilization when workloads are designed to take advantage of concurrent execution.
 
-However, MPS introduces additional operational complexity. Configuration is manual, and troubleshooting can be more involved compared to other approaches. Similar to time-slicing, MPS does not provide strong isolation, as all processes share GPU memory and compute resources.
+However, MPS introduces additional operational complexity. Configuration is manual, and troubleshooting can be more involved compared to other approaches. Similar to time-slicing, MPS doesn't provide strong isolation, as all processes share GPU memory and compute resources.
 
-## Selecting an Optimal GPU Partitioning Strategy
+## How to choose a GPU partitioning strategy
 
 Choosing the appropriate GPU partitioning strategy in AKS depends on workload requirements, operational preferences, and performance expectations. MIG is the recommended approach for production environments that require strong isolation and predictable performance. As an AKS node pool feature, MIG simplifies operations and reduces administrative overhead.
 
-Time-slicing is well suited for non-production environments or workloads with fluctuating GPU demand, where maximizing utilization is more important than consistency. It provides a hardware-agnostic solution but requires careful management and does not guarantee performance isolation.
+Time-slicing is useful for non-production environments or workloads with fluctuating GPU demand, where maximizing utilization is more important than consistency. It provides a hardware-agnostic solution but requires careful management and does not guarantee performance isolation.
 
 MPS is ideal for specialized workloads that benefit from concurrent GPU execution and low latency. It offers the highest potential utilization efficiency but comes with increased complexity and minimal isolation, making it most appropriate for advanced users with CUDA-aware applications.
 
-In practice, organizations may adopt different strategies across environments, using MIG for production clusters while leveraging time-slicing or MPS in development or experimental scenarios. Careful evaluation of GPU workload characteristics and operational constraints is essential to selecting the most effective long-term partitioning approach.
+In practice, organizations can adopt different strategies across environments, using MIG for production clusters while leveraging time-slicing or MPS in development or experimental scenarios. Careful evaluation of GPU workload characteristics and operational constraints is essential to selecting the most effective long-term partitioning approach.
 
-## Next steps
+## Related content
 
-* Get started with [multi-instance GPU node pools](./gpu-multi-instance.md) on AKS.
-* Learn about best practices for [GPU-enabled node](./best-practices-gpu.md) lifeycle management.
-* Optimize GPU node utilization and performance by configuring [node binpacking](./configure-node-binpack-scheduler.md) in your cluster.
+- Get started with [multi-instance GPU node pools](./gpu-multi-instance.md) on AKS.
+- Learn about best practices for [GPU-enabled node lifecycle management](./best-practices-gpu.md).
+- Optimize GPU node utilization and performance by configuring [node binpacking](./configure-node-binpack-scheduler.md) in your cluster.
