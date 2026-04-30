@@ -3,7 +3,7 @@ title: List Available VM SKUs for Azure Kubernetes Service (AKS) Clusters (Previ
 description: Learn how to view VM SKUs that are available for AKS node pool creation in a specific Azure region.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 04/29/2026
+ms.date: 04/30/2026
 ms.author: sachidesai
 author: sdesai345
 ms.reviewer: schaffererin
@@ -39,7 +39,7 @@ In this article, you learn how to:
     az extension add --name aks-preview
     ```
 
-1. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
+2. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
 
     ```azurecli-interactive
     az extension update --name aks-preview
@@ -49,11 +49,11 @@ In this article, you learn how to:
 
 Set the following environment variables to use with commands in this article:
 
-    ```azurecli-interactive
-	export RESOURCE_GOUP=<resource-group-name>
-	export CLUSTER_NAME=<cluster-name>
-	export LOCATION=<location>
-	```
+```azurecli-interactive
+export RESOURCE_GOUP=<resource-group-name>
+export CLUSTER_NAME=<cluster-name>
+export LOCATION=<location>
+```
 
 ## List supported VM SKUs on an AKS cluster
 
@@ -225,5 +225,6 @@ az aks nodepool add \
 [quotas-skus-regions]: ./quotas-skus-regions.md
 [azure-vm-sizes]: /azure/virtual-machines/sizes
 [aks-quickstart-cli]: learn/quick-kubernetes-deploy-cli.md
+[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
