@@ -35,14 +35,13 @@ This avoids the manual create/cordon/drain/delete workflow described in the rest
 
 ### How the resize rollout works
 
-The resize rollout uses the same rolling upgrade engine as a [node image upgrade][upgrade-node-image] and a [Kubernetes version upgrade][upgrade-aks-node-pools-rolling], so it honors all of the upgrade-related settings already configured on the node pool. In particular, the resize respects:
+The resize rollout uses the same rolling upgrade engine as a [node image upgrade][upgrade-node-image] and a [Kubernetes version upgrade][upgrade-aks-node-pools-rolling], so it honors the following upgrade-related settings already configured on the node pool. In particular, the resize respects:
 
 * [**Max surge** (`--max-surge`)][max-surge]: Controls how many extra nodes with the target VM size are added during the rollout. A higher value resizes the pool faster but consumes more compute and IP quota; a lower value is slower but less disruptive. The AKS default is `1`, and `33%` is recommended for production node pools.
-* [**Max unavailable** (`--max-unavailable`)][max-unavailable]: Controls how many existing nodes can be unavailable at the same time during the rollout. `--max-surge` and `--max-unavailable` are mutually exclusive — you must set `--max-surge` to `0` to use `--max-unavailable`.
 * [**Node drain timeout** (`--drain-timeout`)][drain-timeout]: How long AKS waits for pod eviction on each old node before forcefully deleting it. The default is 30 minutes. Combine this with appropriate [PodDisruptionBudgets][pod-disruption-budget] so workloads can drain safely.
 * [**Node soak duration** (`--node-soak-duration`)][node-soak-duration]: How long AKS waits after a new node becomes Ready before moving on to the next batch. Useful for letting workloads stabilize on the new VM size before continuing the rollout.
 
-Because resize reuses the upgrade pipeline, the same prerequisites apply: ensure your subscription has enough vCPU and IP quota for the surge nodes of the target VM size, and that your PodDisruptionBudgets allow at least one replica to be evicted at a time. For end-to-end recommendations, see [Best practices for AKS node pool upgrades][aks-production-upgrade-strategies].
+Because resize reuses the upgrade pipeline, the same prerequisites apply: ensure your subscription has enough target VM size replacement capacity and available subnet IPs for surge nodes, and that your PodDisruptionBudgets allow at least one replica to be evicted at a time, otherwise resize can be blocked during drain. For end-to-end recommendations, see [Best practices for AKS node pool upgrades][aks-production-upgrade-strategies].
 
 ### Prerequisites
 
@@ -72,6 +71,9 @@ The AKS resource provider validates the resize request and blocks incompatible V
 * Combining the resize with a **Kubernetes version upgrade** or a **node count change** in the same operation.
 
 If your target VM size requires any of the changes above, use the manual cordon-and-drain workflow described in the following sections instead.
+
+> [!NOTE]
+> In-place resize requires surge capacity to provision new nodes with the target VM size before draining the old ones. If the node pool is configured with `--max-surge 0` (that is, `--max-unavailable` is in effect), the resize request is rejected with a `400 Bad Request`. To proceed, set `--max-surge` to at least `1` using [`az aks nodepool update`][az-aks-nodepool-update], rerun the resize, and optionally restore your original `--max-surge` and `--max-unavailable` values after the resize completes.
 
 ## Create a new node pool with the desired SKU
 
