@@ -265,7 +265,7 @@ The first query from a new user might take longer if all agents in the pre-warme
 
 ### Extension availability
 
-When deployed as an AKS extension (`microsoft.containernetworkingagent`), Container Network Insights Agent is available in: **centralus**, **eastus**, **eastus2**, **uksouth**, **westus2**.
+The `microsoft.containernetworkingagent` AKS extension is available in all Azure public regions where AKS is supported. It isn't available in Azure Government, Microsoft Azure operated by 21Vianet, or other sovereign clouds.
 
 ## Pricing
 
