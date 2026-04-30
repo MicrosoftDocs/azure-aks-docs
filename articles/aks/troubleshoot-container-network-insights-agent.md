@@ -18,7 +18,7 @@ For deployment instructions, see [Deploy and use Container Network Insights Agen
 
 **Symptom:** The `az k8s-extension create` command fails, or the extension provisioning state shows `Failed`.
 
-**Cause:** Unsupported region, missing cluster features, or insufficient permissions.
+**Cause:** Sovereign cloud region (the extension is supported only in Azure public regions), missing cluster features, or insufficient permissions.
 
 **Resolution:**
 
@@ -33,7 +33,7 @@ For deployment instructions, see [Deploy and use Container Network Insights Agen
        --query "{state:provisioningState, statuses:statuses}" -o json
    ```
 
-1. Verify your cluster is in a supported region: `centralus`, `eastus`, `eastus2`, `uksouth`, `westus2`.
+1. Verify your cluster is in an Azure public region. The extension is available in all Azure public regions where AKS is supported, but isn't available in Azure Government, Microsoft Azure operated by 21Vianet, or other sovereign clouds.
 
 1. Verify your cluster has [workload identity](/azure/aks/workload-identity-overview) and [OIDC issuer](/azure/aks/use-oidc-issuer) enabled:
 
