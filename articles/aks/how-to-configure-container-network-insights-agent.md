@@ -25,7 +25,7 @@ Container Network Insights Agent operates with read-only access to your cluster.
 
 Container Network Insights Agent deploys as an AKS extension (`microsoft.containernetworkingagent`). It integrates with the Azure resource management plane, and is managed through the `az k8s-extension` CLI commands.
 
-**Supported regions:** centralus, eastus, eastus2, uksouth, westus2.
+**Supported regions:** all Azure public regions where AKS is available. The extension isn't available in Azure Government, Microsoft Azure operated by 21Vianet, or other sovereign clouds.
 
 ## Prerequisites
 
@@ -54,7 +54,7 @@ Before you begin, ensure you have the following tools, permissions, and informat
 |-----------|-------------|
 | Azure Subscription ID | Your target subscription. |
 | Resource group name | Existing or to be created during deployment. |
-| Azure region | A supported region: centralus, eastus, eastus2, uksouth, westus2. |
+| Azure region | Any Azure public region where AKS is available. |
 | AKS cluster name | Create a new cluster or use an existing one. |
 | `SERVICE_MANAGEMENT_REFERENCE` | Service management reference (for example, a Service Tree ID) required by some tenants for App Registration setup (Step 7). |
 
@@ -95,7 +95,7 @@ Define the core configuration variables and create an Azure resource group to or
 
 ```azurecli-interactive
 export SUBSCRIPTION_ID="<your-subscription-id>"
-export LOCATION="<your-region>"  # Supported regions: centralus, eastus, eastus2, uksouth, westus2
+export LOCATION="<your-region>"  # Any Azure public region where AKS is available
 export RESOURCE_GROUP="<your-resource-group>"
 export CLUSTER_NAME="<your-aks-cluster-name>"
 export OPENAI_SERVICE_NAME="<your-openai-service-name>"
