@@ -47,12 +47,6 @@ This article shows you how to update the key vault mode from public to private o
     The object has been modified; please apply your changes to the latest version and try again.
     ```
 
-1. Update the key vault from public to private using the [`az keyvault update`][azure-keyvault-update] command with the `--public-network-access` parameter set to `Disabled`.
-
-   ```azurecli-interactive
-   az keyvault update --name $KEY_VAULT --resource-group $RESOURCE_GROUP --public-network-access Disabled
-   ```
-
 1. Turn on KMS with the updated private key vault using the [`az aks update`][az-aks-update] command with the `--azure-keyvault-kms-key-vault-network-access` parameter set to `Private`.
 
    ```azurecli-interactive
@@ -63,6 +57,12 @@ This article shows you how to update the key vault mode from public to private o
         --azure-keyvault-kms-key-id $KEY_ID \
         --azure-keyvault-kms-key-vault-network-access "Private" \
         --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID
+   ```
+
+1. Update the key vault from public to private using the [`az keyvault update`][azure-keyvault-update] command with the `--public-network-access` parameter set to `Disabled`.
+
+   ```azurecli-interactive
+   az keyvault update --name $KEY_VAULT --resource-group $RESOURCE_GROUP --public-network-access Disabled
    ```
 
 ### [Update from a private to a public key vault](#tab/private-to-public)
