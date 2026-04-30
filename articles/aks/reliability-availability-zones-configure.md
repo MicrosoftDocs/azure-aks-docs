@@ -40,6 +40,15 @@ Keep the following limitations and considerations in mind when using availabilit
 
 - Review [Quotas, virtual machine size restrictions, and region availability in AKS][aks-vm-sizes].
 - Most Azure regions support availability zones. For more information, see the [List of Azure regions][zones].
+- Not all VM SKUs are accepted by AKS when you create node pools in a specified location. Node pool creation fails if the selected VM SKU doesn't support the requested availability zones in that region. Check availability by using `az aks list-vm-skus`.
+  
+  ```azurecli-interactive
+  az aks list-vm-skus \
+    --location eastus \
+    --size Standard_D8ps_v5 \
+    --all \
+    --output table
+  ```
 - You _can't change_ the number of availability zones after you create a node pool. To change the number of availability zones, you must create a new node pool with the desired number of zones and migrate your workloads to the new node pool.
 
 ## AKS cluster components

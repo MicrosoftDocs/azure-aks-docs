@@ -110,7 +110,7 @@ Azure CNI Powered by Cilium is the recommended and supported long‑term network
 If you plan to migrate to Azure CNI Overlay and Azure CNI Powered by Cilium, you must:
 1. Update the IPAM mode to Azure CNI Overlay first.
 2. Update the data plane to Azure CNI Powered by Cilium as a separate operation.
-- When enabling Cilium on a cluster that uses another network policy engine (Azure Network Policy Manager or Calico), the existing engine is uninstalled and replaced by Cilium. This may impact network policy behavior.For more information, see [Migrate from Network Policy Manager (NPM) to Cilium Network Policy] (./migrate-from-npm-to-cilium-network-policy.md)
+- When enabling Cilium on a cluster that uses another network policy engine (Azure Network Policy Manager or Calico), the existing engine is uninstalled and replaced by Cilium. This may impact network policy behavior.For more information, see [Migrate from Network Policy Manager (NPM) to Cilium Network Policy](./migrate-from-npm-to-cilium-network-policy.md)
 - Updating the data plane to Azure CNI Powered by Cilium isn’t supported on clusters with Windows node pools.
 - Clusters with node auto-provisioning (NAP) enabled can’t be updated to Azure CNI Powered by Cilium.As a workaround, disable NAP before the update, then re‑enable it after the update completes.
 
