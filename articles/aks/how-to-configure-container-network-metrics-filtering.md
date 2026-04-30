@@ -22,7 +22,7 @@ Configure container network metrics filtering enables dynamic management of Hubb
 
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-* The minimum version of the Azure CLI required to complete the steps in this article is **2.73.0**. To find your version, run `az --version` in the Azure CLI. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+* The minimum version of the Azure CLI required to complete the steps in this article is **2.85.0**. To find your version, run `az --version` in the Azure CLI. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 * An AKS cluster with Cilium data plane and [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) enabled.
 
@@ -30,7 +30,7 @@ Configure container network metrics filtering enables dynamic management of Hubb
 
 * Container network metrics filtering works specifically with Cilium data planes.
 
-* The minimum version of the `aks-preview` Azure CLI extension to complete the steps in this article is `18.0.0b2`.
+* The minimum version of the `aks-preview` Azure CLI extension to complete the steps in this article is `20.0.0b4`.
 
 
 

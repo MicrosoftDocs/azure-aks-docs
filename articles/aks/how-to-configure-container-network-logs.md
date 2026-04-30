@@ -22,9 +22,9 @@ For an overview of what container network logs capture and when to use each mode
 
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-* Azure CLI version 2.75.0 or later. Run `az --version` to check. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+* Azure CLI version 2.85.0 or later. Run `az --version` to check. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-* The `aks-preview` Azure CLI extension version `19.0.07` or later:
+* The `aks-preview` Azure CLI extension version `20.0.0b4` or later:
 
     ```azurecli
     # Install the aks-preview extension
