@@ -1,13 +1,12 @@
 ---
-title: Customize cluster egress with outbound types in Azure Kubernetes Service (AKS)
+title: Customize Cluster Egress with Outbound Types in Azure Kubernetes Service (AKS)
 description: Learn how to define a custom egress route in Azure Kubernetes Service (AKS).
 author: davidsmatlak
 ms.subservice: aks-networking
-ms.custom:
+ms.service: azure-kubernetes-service
 ms.author: davidsmatlak
 ms.topic: how-to
 ms.date: 04/09/2026
-
 # Customer intent: As a cluster operator, I want to configure custom egress paths for my AKS cluster using user-defined routing, so that I can ensure my egress traffic meets specific security and routing requirements without relying on default load balancer setups.
 ---
 
@@ -43,7 +42,7 @@ If `loadBalancer` is set, AKS automatically completes the following configuratio
 - The public IP address is assigned to the load balancer resource.
 - Backend pools for the load balancer are set up for agent nodes in the cluster.
 
-![Diagram shows ingress I P and egress I P, where the ingress I P directs traffic to a load balancer, which directs traffic to and from an internal cluster and other traffic to the egress I P, which directs traffic to the Internet, M C R, Azure required services, and the A K S Control Plane.](media/egress-outboundtype/outboundtype-lb.png)
+![Diagram shows ingress IP and egress IP, where the ingress IP directs traffic to a load balancer, which directs traffic to and from an internal cluster and other traffic to the egress IP, which directs traffic to the Internet, MCR, Azure required services, and the AKS Control Plane.](media/egress-outboundtype/outboundtype-lb.png)
 
 For more information, see [using a standard load balancer in AKS](load-balancer-standard.md).
 
@@ -51,13 +50,13 @@ For more information, see [using a standard load balancer in AKS](load-balancer-
 
 If `managedNATGatewayV2` (Preview), `managedNATGateway` or `userAssignedNATGateway` are selected for `outboundType`, AKS relies on [Azure Networking NAT gateway](/azure/virtual-network/nat-gateway/manage-nat-gateway) for cluster egress.
 
-- Select `managedNatGatewayV2` or `managedNatGateway` when using managed virtual networks. AKS provisions a StandardV2 NAT gateway with `managedNATGatewayV2` and a Standard NAT gateway with `managedNATGateway` and attaches it to the cluster subnet. StandardV2 NAT gateway is recommended because it's zone-redundant by default and offers higher bandwidth and throughput. For information see, [StandardV2 NAT Gateway](/azure/nat-gateway/nat-overview#standardv2-nat-gateway).
+- Select `managedNATGatewayV2` or `managedNATGateway` when using managed virtual networks. AKS provisions a StandardV2 NAT gateway with `managedNATGatewayV2` and a Standard NAT gateway with `managedNATGateway` and attaches it to the cluster subnet. StandardV2 NAT gateway is recommended because it's zone-redundant by default and offers higher bandwidth and throughput. For information see, [StandardV2 NAT Gateway](/azure/nat-gateway/nat-overview#standardv2-nat-gateway).
 - Select `userAssignedNATGateway` when using bring-your-own virtual networking. This option requires that you have a NAT gateway created before cluster creation. Both Standard and StandardV2 NAT Gateways are supported.
 
 > [!IMPORTANT]
 > The `managedNATGatewayV2` outbound type is currently in PREVIEW.
 > See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
-> 
+
 For more information, see [using NAT gateway with AKS](nat-gateway.md).
 
 ### <a id="outbound-type-of-userdefinedrouting"></a>Outbound type: User-Defined Routes
@@ -98,12 +97,9 @@ The `block` option provides another level of network isolation but requires care
 
 Changing the outbound type after cluster creation deploys or removes resources as required to put the cluster into the new egress configuration.
 
-The following tables show the supported migration paths between outbound types for managed and BYO virtual networks.
+The following tables show the supported migration paths between outbound types for managed and BYO virtual networks. Each row shows whether the outbound type can be migrated to the types listed across the top. "Supported" means migration is possible, while "Not Supported" or "N/A" means it isn't.
 
-### Supported Migration Paths for Managed VNet
-
-Each row shows whether the outbound type can be migrated to the types listed across the top. "Supported" means migration is possible, while "Not Supported" or "N/A" means it isn't. When using a managed virtual network, migration is only supported between managed outbound types - `loadBalancer`, `managedNATGatewayV2`, and `managedNATGateway`. When using a custom/BYO virtual network, migration is only supported between user-defined outbound types - `loadBalancer`, `userAssignedNATGateway` and `userDefinedRouting`.
-
+### Supported migration paths for managed VNet
 
 | From\|To                 | `loadBalancer` | `managedNATGatewayV2` | `managedNATGateway` | `none`        | `block`       |
 |--------------------------|----------------|---------------------|-----------------------|---------------|---------------|
@@ -113,7 +109,7 @@ Each row shows whether the outbound type can be migrated to the types listed acr
 | `none`                   | Supported      | Supported           | Supported             | N/A           | Supported     |
 | `block`                  | Supported      | Supported           | Supported             | Supported     | N/A           |
 
-### Supported Migration Paths for BYO VNet
+### Supported migration paths for BYO VNet
 
 | From\|To                 | `loadBalancer` | `userAssignedNATGateway` | `userDefinedRouting` | `none`        | `block`       |
 |--------------------------|----------------|--------------------------|----------------------|---------------|---------------|
@@ -134,45 +130,46 @@ Each row shows whether the outbound type can be migrated to the types listed acr
 > [!NOTE]
 > You must use a version >= 2.56 of Azure CLI to migrate outbound type. Use `az upgrade` to update to the latest version of Azure CLI.
 
-* Update the outbound configuration of your cluster using the [`az aks update`][az-aks-update] command.
+Update the outbound configuration of your cluster using the [`az aks update`][az-aks-update] command.
 
-### <a id="update-cluster-from-loadbalancer-to-managednatgateway"></a>Update cluster from `loadbalancer` to `managedNATGatewayV2`
+### <a id="update-cluster-from-loadbalancer-to-managednatgateway"></a>Update cluster from `loadBalancer` to `managedNATGatewayV2`
 
 ```azurecli-interactive
 az aks update --resource-group <resourceGroup> --name <clusterName> --outbound-type managedNATGatewayV2 --nat-gateway-managed-outbound-ipv6-count <number of managed outbound ipv6>
 ```
+
 > [!IMPORTANT]
 > The `managedNATGatewayV2` outbound type is currently in PREVIEW.
-> See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability. For more information on to register, see [using NAT gateway with AKS](nat-gateway.md).
-> 
-### Update cluster from `managedNATGateway` to `loadbalancer`
+> See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability. For more information, see [using NAT gateway with AKS](nat-gateway.md).
+
+### Update cluster from `managedNATGateway` to `loadBalancer`
 
 ```azurecli-interactive
 az aks update --resource-group <resourceGroup> --name <clusterName> \
 --outbound-type loadBalancer \
-<--load-balancer-managed-outbound-ip-count <number of managed outbound ip>| --load-balancer-outbound-ips <outbound ip ids> | --load-balancer-outbound-ip-prefixes <outbound ip prefix ids> >
+< --load-balancer-managed-outbound-ip-count <number of managed outbound ip> | --load-balancer-outbound-ips <outbound ip ids> | --load-balancer-outbound-ip-prefixes <outbound ip prefix ids> >
 ```
 
 > [!WARNING]
 > Don't reuse an IP address that is already in use in prior outbound configurations.
 
-### Update cluster from managedNATGateway to userDefinedRouting
+### Update cluster from `managedNATGateway` to `userDefinedRouting`
 
-- Add route `0.0.0.0/0` default route table. Please see [Customize cluster egress with a user-defined routing table in Azure Kubernetes Service (AKS)](egress-udr.md)
+Add route `0.0.0.0/0` default route table. Please see [Customize cluster egress with a user-defined routing table in Azure Kubernetes Service (AKS)](egress-udr.md)
 
 ```azurecli-interactive
 az aks update --resource-group <resourceGroup> --name <clusterName> --outbound-type userDefinedRouting
 ```
 
-### Update cluster from loadbalancer to userAssignedNATGateway in BYO vnet scenario
+### Update cluster from `loadBalancer` to `userAssignedNATGateway` in BYO VNet scenario
 
-- Associate NAT gateway with subnet where the workload is associated with. Refer to [Create a managed or user-assigned NAT gateway](nat-gateway.md)
+Associate NAT gateway with subnet where the workload is associated with. Refer to [Create a managed or user-assigned NAT gateway](nat-gateway.md)
 
 ```azurecli-interactive
 az aks update --resource-group <resourceGroup> --name <clusterName> --outbound-type userAssignedNATGateway
 ```
 
-## Next steps
+## Related content
 
 - [Configure standard load balancing in an AKS cluster](load-balancer-standard.md)
 - [Configure NAT gateway in an AKS cluster](nat-gateway.md)

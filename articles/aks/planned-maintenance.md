@@ -656,9 +656,11 @@ Also, ensure that your cluster is started when the planned maintenance window st
 
 ### Why was one of my agent pools upgraded outside the maintenance window?
 
-If an agent pool isn't upgraded (for example, because pod disruption budgets prevented it), it might be upgraded later, outside the maintenance window. This scenario is referred to as a _catch-up upgrade_. It avoids letting agent pools be upgraded with a different version from the AKS control plane.
+AKS starts upgrade-related operations only during the configured maintenance window. If an operation begins before the window closes, it can continue running until completion, even if this extends beyond the window end time.
 
-Another reason why an agent pool could be upgraded unexpectedly is when there's no defined maintenance configuration or if it was deleted. In that case, a cluster with auto-upgrade _but without a maintenance configuration_ is upgraded at random times (_fallback schedule_), which might be an undesired timeframe.
+When the window closes, AKS does not start any new upgrade operations. Any remaining upgrade work is deferred until a future eligible window.
+
+Example: If the maintenance window is 08:00-12:00 and a cluster or node pool upgrade that started before 12:00 is still in progress at 12:15, AKS lets that in-flight work finish. However, AKS does not initiate new upgrade work after 12:00.
 
 ### Are there any best practices for the maintenance configurations?
 
@@ -675,6 +677,15 @@ We don't recommend using the same maintenance configuration for multiple cluster
 ### Why did my node pools get upgraded twice during the same maintenance window?
 
 If a newer version of the node image becomes available during the maintenance window, AKS performs a second upgrade to ensure that your node pools are running the latest version. This behavior is normal and doesn't indicate an issue.
+
+### Can Azure use the AKS planned maintenance window for platform maintenance on the underlying VMSS?
+
+No. The AKS planned maintenance window is specifically intended to schedule and control AKS cluster and node image upgrades in Azure Kubernetes Service. It does not apply to Azure platform‑level maintenance on the underlying VMSS hosting the AKS node pools. They operate independently with no direct dependency between them.
+
+Azure periodically performs platform updates to enhance the reliability, performance, and security of the underlying host infrastructure for virtual machines. These updates might include patching software components, upgrading networking infrastructure, or decommissioning hardware. Platform maintenance can be either rebootless or require a reboot. 
+For maintenance events that require a reboot, customers are notified in advance through Maintenance Notifications, which include a `self‑service phase` that typically lasts up to four weeks.
+
+
 
 ## Related content
 

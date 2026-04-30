@@ -56,11 +56,16 @@ Layer 7 policy enables application-layer traffic control, allowing you to define
 
 For more information, see the [Layer 7 policy overview](./container-network-security-l7-policy-concepts.md).
 
-### WireGuard Encryption (preview)
+### WireGuard Encryption
 
 WireGuard Encryption leverages the WireGuard protocol to provide secure, encrypted communication between Cilium-managed endpoints within your AKS cluster. This feature ensures that data transmitted over the network is protected from eavesdropping and tampering, enhancing the overall security of your containerized applications.
 
 For more information, see the [WireGuard encryption overview](./container-network-security-wireguard-encryption-concepts.md).
+
+### Cilium mTLS Encryption
+Cilium mTLS encryption provides transparent, mutual TLS (mTLS) encryption and authentication for pod-to-pod traffic in Kubernetes without requiring application changes or introducing any extra networking stack.
+
+For more information, see the [Cilium mTLS encryption overview](./container-network-security-cilium-mutual-tls-concepts.md).
 
 ## Container Network Performance
 
