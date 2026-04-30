@@ -86,7 +86,7 @@ Set these up once with [Set up Container Network Observability](./container-netw
 
 Open the **DNS (Cluster)** dashboard. Look for sudden changes in request volume, response volume, or *Requests Missing Response %*. The summary panels surface the most common queries, the most common response codes, and the nodes generating the most errors.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/dns-clusters-snapshot-combined.png" alt-text="Snapshot of the DNS Cluster dashboard summarizing requests, responses, top errors, and noisy nodes." lightbox="./media/advanced-container-networking-services/acns-dashboard/dns-clusters-snapshot-combined.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/dns-clusters-snapshot-combined.png" alt-text="Screenshot of the DNS Cluster dashboard summarizing requests, responses, top errors, and noisy nodes." lightbox="./media/advanced-container-networking-services/acns-dashboard/dns-clusters-snapshot-combined.png":::
 
 **What to look for:** A sustained increase in error responses, a drop in successful responses, or a single node dominating the error count. Note the timestamp of the anomaly.
 
@@ -94,7 +94,7 @@ Open the **DNS (Cluster)** dashboard. Look for sudden changes in request volume,
 
 Scroll down on the same dashboard to the panel that ranks pods by DNS errors across all namespaces. The top entries are your starting suspects.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dns-errors-in-all-namespaces.png" alt-text="Panel showing the top pods generating DNS errors across all namespaces." lightbox="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dns-errors-in-all-namespaces.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dns-errors-in-all-namespaces.png" alt-text="Screenshot of the panel showing the top pods generating DNS errors across all namespaces." lightbox="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dns-errors-in-all-namespaces.png":::
 
 **Decision point.**
 * If errors are concentrated in **CoreDNS pods**, jump to the **DNS (Workload)** dashboard with `kube-system / coredns` selected — CoreDNS itself or its upstream resolver is the issue.
@@ -106,20 +106,20 @@ Open the **DNS (Workload)** dashboard for the workload you identified.
 
 * **DNS Requests / DNS Responses panels.** A high *Requests Missing Response %* points at upstream timeouts or query overload.
 
-  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/workload-dns-requests-and-responses.png" alt-text="Workload-level DNS request and response trends with a visible spike around the incident time." lightbox="./media/advanced-container-networking-services/acns-dashboard/workload-dns-requests-and-responses.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/workload-dns-requests-and-responses.png" alt-text="Screenshot of workload-level DNS request and response trends with a visible spike around the incident time." lightbox="./media/advanced-container-networking-services/acns-dashboard/workload-dns-requests-and-responses.png":::
 
 * **DNS Errors by type.** Match the spike to a code:
   * `NXDOMAIN` — wrong or stale domain name in app config.
   * `SERVFAIL` — upstream resolver problem.
   * *Query Refused* — FQDN policy or DNS configuration mismatch.
 
-  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/types-of-dns-error-responses.png" alt-text="DNS errors broken down by type, showing a spike in query-refused errors." lightbox="./media/advanced-container-networking-services/acns-dashboard/types-of-dns-error-responses.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/types-of-dns-error-responses.png" alt-text="Screenshot of DNS errors broken down by type, showing a spike in query-refused errors." lightbox="./media/advanced-container-networking-services/acns-dashboard/types-of-dns-error-responses.png":::
 
 * **DNS Response IPs Returned.** Confirms successful resolution rate. A drop usually means CoreDNS can't reach upstream; a sudden surge can indicate a query storm.
 
 * **DNS Response Table.** Use this to spot patterns like "*A* records fail but *AAAA* records succeed," which usually points at a stack misconfigured for IPv4-only environments.
 
-  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/dns-response-table.png" alt-text="DNS response table broken down by query type and return code." lightbox="./media/advanced-container-networking-services/acns-dashboard/dns-response-table.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/dns-response-table.png" alt-text="Screenshot of the DNS response table broken down by query type and return code." lightbox="./media/advanced-container-networking-services/acns-dashboard/dns-response-table.png":::
 
 ### Step 4: Confirm with stored logs
 
@@ -153,7 +153,7 @@ Replace `<start-time>` and `<end-time>` with timestamps in the format `2026-04-3
 
 You can also visualize the same flows in the Azure portal under **AKS cluster** > **Insights** > **Networking** > **Flow Logs**.
 
-:::image type="content" source="./media/advanced-container-networking-services/dns-flow-log-snapshot.png" alt-text="Flow log dashboard view filtered to DNS errors." lightbox="./media/advanced-container-networking-services/dns-flow-log-snapshot.png":::
+:::image type="content" source="./media/advanced-container-networking-services/dns-flow-log-snapshot.png" alt-text="Screenshot of the flow log dashboard view filtered to DNS errors." lightbox="./media/advanced-container-networking-services/dns-flow-log-snapshot.png":::
 
 ### Step 5: Reproduce live if the issue is intermittent
 
@@ -163,7 +163,7 @@ If the spike already passed and you can't capture it in stored logs, use the [Hu
 hubble observe --namespace <ns> --port 53 --type l7 --follow
 ```
 
-:::image type="content" source="./media/advanced-container-networking-services/hubble-cli-snapshot.png" alt-text="Hubble CLI streaming live DNS flows." lightbox="./media/advanced-container-networking-services/hubble-cli-snapshot.png":::
+:::image type="content" source="./media/advanced-container-networking-services/hubble-cli-snapshot.png" alt-text="Screenshot of the Hubble CLI streaming live DNS flows." lightbox="./media/advanced-container-networking-services/hubble-cli-snapshot.png":::
 
 ### Step 6: Validate the fix
 
@@ -184,7 +184,7 @@ After updating the FQDN policy, fixing the application config, or scaling CoreDN
 
 Open **Pod Flows (Namespace)**. The heatmaps surface namespaces and pods with the highest outgoing and incoming drop rates.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/pod-flow-snapshot.png" alt-text="Pod Flows (Namespace) dashboard summarizing namespaces with the highest drop rates." lightbox="./media/advanced-container-networking-services/acns-dashboard/pod-flow-snapshot.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/pod-flow-snapshot.png" alt-text="Screenshot of the Pod Flows (Namespace) dashboard summarizing namespaces with the highest drop rates." lightbox="./media/advanced-container-networking-services/acns-dashboard/pod-flow-snapshot.png":::
 
 Brighter cells indicate higher drop rates. Note the namespace and time window.
 
@@ -194,22 +194,22 @@ Open **Drops (Workload)** and select the workload you identified.
 
 * **Workload Snapshot** shows max/min outgoing drops in packets/sec. Use it to gauge severity.
 
-  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/workload-snapshot-with-metrics.png" alt-text="Workload Snapshot panel showing max and min outgoing drop rates." lightbox="./media/advanced-container-networking-services/acns-dashboard/workload-snapshot-with-metrics.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/workload-snapshot-with-metrics.png" alt-text="Screenshot of the Workload Snapshot panel showing max and min outgoing drop rates." lightbox="./media/advanced-container-networking-services/acns-dashboard/workload-snapshot-with-metrics.png":::
 
 * **Dropped Traffic by Reason** is the most important panel. The reason tells you what to fix:
   * **Policy denied** — a NetworkPolicy or CiliumNetworkPolicy is blocking the traffic.
   * **CT: Map insertion failed** — connection tracking table is full; scale node or reduce connection churn.
   * **Unsupported L3 protocol / Invalid packet** — application or proxy is sending malformed traffic.
 
-  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/dropped-traffic-by-reason.png" alt-text="Dropped traffic broken down by reason, with policy-denied as the dominant cause." lightbox="./media/advanced-container-networking-services/acns-dashboard/dropped-traffic-by-reason.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/dropped-traffic-by-reason.png" alt-text="Screenshot of dropped traffic broken down by reason, with policy-denied as the dominant cause." lightbox="./media/advanced-container-networking-services/acns-dashboard/dropped-traffic-by-reason.png":::
 
 * **Heatmap of incoming/outgoing drops.** Identifies which specific pod pairs are losing traffic.
 
-  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-drop-packets-at-destination-pod.png" alt-text="Heatmap of incoming drops at top destination pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-drop-packets-at-destination-pod.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-drop-packets-at-destination-pod.png" alt-text="Screenshot of a heatmap of incoming drops at top destination pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-drop-packets-at-destination-pod.png":::
 
 * **Stacked Total Drops by Source Pod.** Rank-orders the offenders so you know which replica to look at first.
 
-  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png" alt-text="Stacked total of outgoing drops grouped by source pod." lightbox="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png" alt-text="Screenshot of the stacked total of outgoing drops grouped by source pod." lightbox="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png":::
 
 ### Step 3: Confirm the dropped flows in stored logs
 
@@ -242,7 +242,7 @@ ContainerNetworkLogs
 
 The **Flow Logs** dashboard in the Azure portal shows the same data visually, including a service dependency graph that highlights blocked paths.
 
-:::image type="content" source="./media/advanced-container-networking-services/flow-log-snapshot.png" alt-text="Flow logs and error logs dashboard with a clear separation between forwarded and dropped flows." lightbox="./media/advanced-container-networking-services/flow-log-snapshot.png":::
+:::image type="content" source="./media/advanced-container-networking-services/flow-log-snapshot.png" alt-text="Screenshot of the flow logs and error logs dashboard with a clear separation between forwarded and dropped flows." lightbox="./media/advanced-container-networking-services/flow-log-snapshot.png":::
 
 ### Step 4: Cross-check with policies
 
@@ -274,17 +274,17 @@ After adjusting the policy, the `Dropped Traffic by Reason` chart should fall fl
 
 Open **Pod Flows (Workload)**. The **Workload Snapshot** summarizes outgoing/incoming traffic and drops.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/workload-snapshot-for-pod-traffic.png" alt-text="Workload snapshot showing total outgoing and incoming traffic for a workload." lightbox="./media/advanced-container-networking-services/acns-dashboard/workload-snapshot-for-pod-traffic.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/workload-snapshot-for-pod-traffic.png" alt-text="Screenshot of the workload snapshot showing total outgoing and incoming traffic for a workload." lightbox="./media/advanced-container-networking-services/acns-dashboard/workload-snapshot-for-pod-traffic.png":::
 
 The traffic-by-trace-type panel shows the shape of traffic over time. A wide gap between outgoing and incoming volume often points at a downstream bottleneck.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/outgoing-traffic-by-trace-type.png" alt-text="Outgoing traffic broken down by trace type over time." lightbox="./media/advanced-container-networking-services/acns-dashboard/outgoing-traffic-by-trace-type.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/outgoing-traffic-by-trace-type.png" alt-text="Screenshot of outgoing traffic broken down by trace type over time." lightbox="./media/advanced-container-networking-services/acns-dashboard/outgoing-traffic-by-trace-type.png":::
 
 ### Step 2: Spot hot pods with heatmaps
 
 The pod-level heatmaps make imbalance obvious. If one pod (for example, `default/tcp-client-0`) appears in both the outgoing and incoming heatmaps with much darker cells than its replicas, traffic is concentrated there.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-and-incoming-traffic.png" alt-text="Side-by-side heatmaps of outgoing and incoming traffic showing one pod handling most of the traffic." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-and-incoming-traffic.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-and-incoming-traffic.png" alt-text="Screenshot of side-by-side heatmaps of outgoing and incoming traffic showing one pod handling most of the traffic." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-and-incoming-traffic.png":::
 
 **Common causes:**
 * Service `sessionAffinity: ClientIP` pinning clients to one pod.
@@ -295,15 +295,15 @@ The pod-level heatmaps make imbalance obvious. If one pod (for example, `default
 
 Open the **TCP reset metrics** panels.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/tcp-reset-metrics.png" alt-text="TCP reset metrics summary panels." lightbox="./media/advanced-container-networking-services/acns-dashboard/tcp-reset-metrics.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/tcp-reset-metrics.png" alt-text="Screenshot of TCP reset metrics summary panels." lightbox="./media/advanced-container-networking-services/acns-dashboard/tcp-reset-metrics.png":::
 
 * **Heatmap of Outgoing TCP RST by Source Pod.** A hot source pod that also generates RSTs is overloaded — the application is closing connections aggressively.
 
-  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-tcp-reset-source-pods.png" alt-text="Heatmap of outgoing TCP resets concentrated in one source pod." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-tcp-reset-source-pods.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-tcp-reset-source-pods.png" alt-text="Screenshot of a heatmap of outgoing TCP resets concentrated in one source pod." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-tcp-reset-source-pods.png":::
 
 * **Heatmap of Incoming TCP RST by Destination Pod.** A pod receiving RSTs from many sources usually means it can't accept new connections fast enough (backlog full, listener slow).
 
-  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-incoming-tcp-reset-destination.png" alt-text="Heatmap of incoming TCP resets at top destination pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-incoming-tcp-reset-destination.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-incoming-tcp-reset-destination.png" alt-text="Screenshot of a heatmap of incoming TCP resets at top destination pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-incoming-tcp-reset-destination.png":::
 
 * **Stacked Total RST by Source/Destination.** Trends over time tell you whether resets are an incident or a new steady state.
 
@@ -335,7 +335,7 @@ Use this when you need a fleet view: capacity planning, on-call dashboards, or a
 
 Open **Kubernetes / Networking / Clusters**.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/fleet-view.png" alt-text="Fleet view of the Clusters dashboard with bytes and packets forwarded across all nodes." lightbox="./media/advanced-container-networking-services/acns-dashboard/fleet-view.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/fleet-view.png" alt-text="Screenshot of the fleet view of the Clusters dashboard with bytes and packets forwarded across all nodes." lightbox="./media/advanced-container-networking-services/acns-dashboard/fleet-view.png":::
 
 **Signals to watch and what they mean:**
 
@@ -347,11 +347,11 @@ Open **Kubernetes / Networking / Clusters**.
 | **Bytes / Packets Dropped by Node** | Single node dominating | Node-local hardware, misconfig, or noisy neighbor |
 | **TCP connection state distribution** | Excess `SYN_SENT` or `TIME_WAIT` | Connectivity failures or socket churn from short-lived connections |
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/bytes-and-packets-dropped-by-cluster.png" alt-text="Cluster-level bytes and packets dropped over time." lightbox="./media/advanced-container-networking-services/acns-dashboard/bytes-and-packets-dropped-by-cluster.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/bytes-and-packets-dropped-by-cluster.png" alt-text="Screenshot of cluster-level bytes and packets dropped over time." lightbox="./media/advanced-container-networking-services/acns-dashboard/bytes-and-packets-dropped-by-cluster.png":::
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/bytes-dropped-by-reason.png" alt-text="Bytes dropped grouped by drop reason." lightbox="./media/advanced-container-networking-services/acns-dashboard/bytes-dropped-by-reason.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/bytes-dropped-by-reason.png" alt-text="Screenshot of bytes dropped grouped by drop reason." lightbox="./media/advanced-container-networking-services/acns-dashboard/bytes-dropped-by-reason.png":::
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/distribution-of-tcp-connections-by-state.png" alt-text="Distribution of TCP connection states across the cluster." lightbox="./media/advanced-container-networking-services/acns-dashboard/distribution-of-tcp-connections-by-state.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/distribution-of-tcp-connections-by-state.png" alt-text="Screenshot of the distribution of TCP connection states across the cluster." lightbox="./media/advanced-container-networking-services/acns-dashboard/distribution-of-tcp-connections-by-state.png":::
 
 When something on this dashboard looks wrong, jump to the matching playbook (Playbook 1 for DNS, Playbook 2 for drops, Playbook 3 for hot pods).
 
@@ -370,27 +370,27 @@ When something on this dashboard looks wrong, jump to the matching playbook (Pla
 
 Use **Kubernetes / Networking / L7 (Workload)** for a single service or **L7 (Namespace)** for a whole tenant.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/l7-traffic-grafana.png" alt-text="L7 traffic dashboard summarizing forwarded and dropped HTTP, gRPC, and Kafka flows." lightbox="./media/advanced-container-networking-services/acns-dashboard/l7-traffic-grafana.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/l7-traffic-grafana.png" alt-text="Screenshot of the L7 traffic dashboard summarizing forwarded and dropped HTTP, gRPC, and Kafka flows." lightbox="./media/advanced-container-networking-services/acns-dashboard/l7-traffic-grafana.png":::
 
 ### Step 2: Separate dropped vs forwarded HTTP traffic
 
 The verdict panel splits HTTP traffic into forwarded and dropped flows. A spike in *dropped* HTTP usually means a CiliumNetworkPolicy is denying the request at L7 (for example, blocking a path or method).
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/outgoing-http-traffic-by-verdict.png" alt-text="Outgoing HTTP traffic split by verdict." lightbox="./media/advanced-container-networking-services/acns-dashboard/outgoing-http-traffic-by-verdict.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/outgoing-http-traffic-by-verdict.png" alt-text="Screenshot of outgoing HTTP traffic split by verdict." lightbox="./media/advanced-container-networking-services/acns-dashboard/outgoing-http-traffic-by-verdict.png":::
 
 ### Step 3: Track status codes over time
 
 The status-code panel tells you whether errors are client-side or server-side. A surge in 4xx points to bad input, expired tokens, or denied paths. A surge in 5xx points at backend failures.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/outgoing-http-requests-method-and-count.png" alt-text="Outgoing HTTP requests by method and status code over time." lightbox="./media/advanced-container-networking-services/acns-dashboard/outgoing-http-requests-method-and-count.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/outgoing-http-requests-method-and-count.png" alt-text="Screenshot of outgoing HTTP requests by method and status code over time." lightbox="./media/advanced-container-networking-services/acns-dashboard/outgoing-http-requests-method-and-count.png":::
 
 ### Step 4: Find the offending pods
 
 The 4xx heatmap shows which source pods are generating the most failed requests. A single pod glowing brightly usually means a stuck client retry loop or a misconfigured replica.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-http-requests-return-4xx-error.png" alt-text="Heatmap of HTTP requests returning 4xx errors, grouped by source pod." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-http-requests-return-4xx-error.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-http-requests-return-4xx-error.png" alt-text="Screenshot of a heatmap of HTTP requests returning 4xx errors, grouped by source pod." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-http-requests-return-4xx-error.png":::
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/http-requests-for-top-source-pods.png" alt-text="Top source pods by HTTP request volume alongside dropped-request heatmap." lightbox="./media/advanced-container-networking-services/acns-dashboard/http-requests-for-top-source-pods.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/http-requests-for-top-source-pods.png" alt-text="Screenshot of top source pods by HTTP request volume alongside a dropped-request heatmap." lightbox="./media/advanced-container-networking-services/acns-dashboard/http-requests-for-top-source-pods.png":::
 
 ### Step 5: Confirm with KQL
 
@@ -458,9 +458,9 @@ Use this section as a quick reference once you know the playbooks.
 * **Cost control:** flow log aggregation collapses similar flows over a 30-second window, preserving patterns while cutting volume. Combine with narrow `includeFilters` for the best results.
 * **Visualization:** use the **Flow Logs - Analytics Tier** or **Flow Logs - Basic Tier** dashboards under **Azure** > **Insights** > **Containers** > **Networking**.
 
-  :::image type="content" source="./media/advanced-container-networking-services/flow-log-stats.png" alt-text="Flow log statistics summary panel and service dependency graph." lightbox="./media/advanced-container-networking-services/flow-log-stats.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/flow-log-stats.png" alt-text="Screenshot of the flow log statistics summary panel and service dependency graph." lightbox="./media/advanced-container-networking-services/flow-log-stats.png":::
 
-  :::image type="content" source="./media/advanced-container-networking-services/flow-log-filters.png" alt-text="Flow log filters panel for narrowing by protocol, namespace, or verdict." lightbox="./media/advanced-container-networking-services/flow-log-filters.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/flow-log-filters.png" alt-text="Screenshot of the flow log filters panel for narrowing by protocol, namespace, or verdict." lightbox="./media/advanced-container-networking-services/flow-log-filters.png":::
 
 ### Container network logs (on-demand)
 
@@ -469,7 +469,7 @@ Use this section as a quick reference once you know the playbooks.
 * **Tools:** Hubble CLI for terminal filtering; Hubble UI for visual service-to-service maps.
 * **No persistent storage**, no extra cost, no setup beyond enabling ACNS.
 
-  :::image type="content" source="./media/advanced-container-networking-services/hubble-ui-snapshot.png" alt-text="Hubble UI showing service-to-service flow visualization." lightbox="./media/advanced-container-networking-services/hubble-ui-snapshot.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/hubble-ui-snapshot.png" alt-text="Screenshot of the Hubble UI showing service-to-service flow visualization." lightbox="./media/advanced-container-networking-services/hubble-ui-snapshot.png":::
 
 ### Metrics filtering (Cilium clusters)
 
@@ -500,10 +500,7 @@ For full CRD examples, see [Configure container network metrics filtering](./how
 * **Trying to use stored logs for live incidents that already passed.** If logs weren't enabled before the incident or fell outside the captured filter, switch to on-demand Hubble flows for the next occurrence.
 * **L7 dashboards empty on a Cilium cluster.** L7 metrics require both `--acns-advanced-networkpolicies L7` on the cluster *and* a `CiliumNetworkPolicy` with L7 rules. CCNP doesn't support L7 rules. See [Apply L7 policies](./how-to-apply-l7-policies.md).
 * **DNS metrics empty on Cilium.** DNS visibility requires a `CiliumNetworkPolicy` with a `dns` rule (typically alongside `toFQDNs`). FQDN/DNS proxy is **not compatible with node-local DNS or AKS Local DNS** — running either disables DNS proxying and the resulting metrics. See [FQDN filtering limitations](./container-network-security-fqdn-filtering-concepts.md#limitations).
-* **`matchPattern: "*"` blocks all DNS.** A bare wildcard isn't supported. Use a leading-wildcard pattern such as `*.example.com` or `app*.example.com`. Alpine-based images may need multiple search-domain wildcards (`*.example.com.*.*`, etc.) due to musl libc behavior — see [the Alpine workaround](./container-network-security-fqdn-filtering-concepts.md#limitations).
-* **Kubernetes service names in `toFQDNs`.** Service names aren't supported as FQDN match targets — use the external domain name your pods actually resolve.
-* **Mixing data planes in expectations.** Container Network Logs (stored and on-demand), log filtering, flow log aggregation, pod-level metrics, source-level metrics filtering, and L7 flow logs are all **Cilium-only**. On non-Cilium clusters, none of these are available — plan your dashboards and KQL playbooks accordingly.
-* **Comparing pod IPs across aggregated records.** Aggregated stored logs intentionally drop high-cardinality fields like per-pod IPs and HTTP URLs. Use on-demand logs when you need that detail.
+* **`matchPattern: "*"` blocks all DNS.** A bare wildcard isn't supported. Use a leading-wildcard pattern such as `*.example.com` or `app*.example.com`. See [Configure FQDN policies](./how-to-apply-fqdn-filtering-policies.md#configure-an-fqdn-policy).
 
 ## Network Observability included with Azure Monitoring
 
