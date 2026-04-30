@@ -18,21 +18,23 @@ This article provides best practices for monitoring and interpreting GPU signals
 
 ## Understand GPU utilization versus saturation
 
-GPU utilization, measured by the NVIDIA DCGM metric `GPU_UTIL`, may be incorrectly used as a direct efficiency score. `GPU_UTIL` only indicates how often kernels are active, so it does not determine whether the workload is compute-efficient. In practice, teams can receive more accurate guidance by correlating utilization signals instead of evaluating them independently. For example, compare `GPU_UTIL` with `SM_ACTIVE`, and then compare `SM_ACTIVE` with `DRAM_ACTIVE` to identify whether your bottleneck is compute, memory, or launch/synchronization overhead. For example, high `GPU_UTIL` with low `SM_ACTIVE` often indicates launch overhead, synchronization stalls, or memory contention, while high `SM_ACTIVE` with low `DRAM_ACTIVE` is more consistent with compute-bound behavior. By contrast, higher `DRAM_ACTIVE` with lower `SM_ACTIVE` usually points to memory-bound execution. 
+Don't treat the NVIDIA DCGM metric `GPU_UTIL` as a direct efficiency score. `GPU_UTIL` only indicates how often kernels are active, so it doesn't tell you whether the workload is compute-efficient. You get more accurate guidance by correlating utilization signals instead of reading them independently. Compare `GPU_UTIL` with `SM_ACTIVE`, and then compare `SM_ACTIVE` with `DRAM_ACTIVE` to identify whether your bottleneck is compute, memory, or launch and synchronization overhead.
 
-This correlation-first approach helps cluster administrators to avoid scaling out when the root issue may be kernel efficiency or memory access patterns. For detailed metric semantics, see the [NVIDIA DCGM user guide](https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/index.html).
+High `GPU_UTIL` with low `SM_ACTIVE` often points to launch overhead, synchronization stalls, or memory contention. High `SM_ACTIVE` with low `DRAM_ACTIVE` is more consistent with compute-bound behavior. Higher `DRAM_ACTIVE` with lower `SM_ACTIVE` usually points to memory-bound execution.
+
+This correlation-first approach helps you avoid scaling out when the root issue might be kernel efficiency or memory access patterns. For detailed metric semantics, see the [NVIDIA DCGM user guide](https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/index.html).
 
 ## Use memory pressure as a primary scheduling signal
 
-For GPU workload placement, prioritize memory pressure over raw utilization. Kubernetes schedules GPUs as integer resources, while DCGM reveals true memory consumption, which is often the stronger long-term scheduling signal. For example, track sustained `FB_USED` / `FB_TOTAL` over time and interpret this metric as a trend rather than a snapshot. If memory stays consistently below 50% while GPUs are exclusively allocated, you likely have an opportunity to improve bin-packing efficiency by evaluating [multi-instance GPU (MIG)](./gpu-multi-instance.md) or alternative GPU node partitioning strategies. If memory repeatedly approaches out-of-memory thresholds, treat that pattern as an early indicator of instability even before Kubernetes reports pressure. In production clusters, near-out-of-memory (OOM) patterns commonly predict pod disruption and node instability earlier than standard scheduler-visible signals.
+If memory repeatedly approaches out-of-memory thresholds, treat that pattern as an early indicator of instability. Kubernetes has no native GPU-memory pressure signal, so VRAM exhaustion typically surfaces only as container OOM kills and pod disruption, often well after DCGM telemetry shows the trend.
 
 ## Automate node lifecycle actions from GPU health signals
 
-Use Node Problem Detector (NPD) GPU health telemetry as an early signal of hardware degradation, especially XID errors and ECC error growth. These indicators are most effective when you connect them to automation instead of manual response. Define thresholds that taint and cordon affected nodes and drain GPU workloads gracefully, rather than performing one-off repairs. This practice is especially important for long-lived AKS GPU pools where host aging can vary across nodes. For error interpretation and node conditions, see [GPU health monitoring with AKS NPD](./gpu-health-monitoring.md) and [NVIDIA XID Errors](https://docs.nvidia.com/deploy/xid-errors/index.html).
+This practice is especially important for long-lived AKS GPU node pools where host aging can vary across nodes.
 
 ## Align observability signals with scaling decisions
 
-Use GPU telemetry as an input to scaling policy, not just queue depth. For horizontal scaling, add nodes only when you observe sustained saturation across multiple nodes, such as persistently high `SM_ACTIVE` and sustained high memory usage (`FB_USED` / `FB_TOTAL`). For vertical scaling, evaluate a different Azure GPU-enabled VM SKU when power or thermal constraints cap throughput, for example when `POWER_USAGE` remains near limit while `SM_ACTIVE` remains flat despite demand. This approach avoids the common anti-pattern of over-scaling based only on pending pods or queue length.
+For vertical scaling, create a new node pool on a different Azure GPU-enabled VM SKU and migrate workloads when power or thermal constraints cap throughput, for example when `DCGM_FI_DEV_POWER_USAGE` stays near limit while `DCGM_FI_PROF_SM_ACTIVE` remains flat despite demand.
 
 ## Separate MIG and non-MIG observability policies
 
