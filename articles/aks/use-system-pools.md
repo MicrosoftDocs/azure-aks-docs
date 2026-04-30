@@ -2,11 +2,12 @@
 title: Use system node pools in Azure Kubernetes Service (AKS)
 description: Learn how to create and manage system node pools in Azure Kubernetes Service (AKS)
 ms.topic: how-to
-ms.date: 04/20/2026
+ms.date: 04/30/2026
 author: schaffererin
 ms.author: schaffererin
 ms.custom: fasttrack-edit, devx-track-azurecli, devx-track-azurepowershell, biannual
 ms.subservice: aks-nodes
+zone_pivot_groups: cli-powershell-terraform
 
 # Customer intent: As a Kubernetes administrator, I want to create and manage system node pools in an Azure Kubernetes Service (AKS) cluster, so that I can ensure critical system pods are properly isolated and efficiently scheduled, thereby maintaining the reliability of my applications.
 ---
@@ -24,15 +25,34 @@ It's possible, but not recommended, to schedule application pods on a system nod
 
 ## Before you begin
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
 You need the Azure CLI version 2.3.1 or later installed and configured. To find the version, run the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
-### [Azure PowerShell](#tab/azure-powershell)
+:::zone-end
+
+:::zone pivot="azure-powershell"
 
 You need the Azure PowerShell version 7.5.0 or later installed and configured. To find the version, run the `Get-InstalledModule -Name Az` command. If you need to install or upgrade, see [Install Azure PowerShell][install-azure-powershell].
 
----
+:::zone-end
+
+:::zone pivot="terraform"
+
+Before you begin, make sure you have the following prerequisites:
+
+- An active Azure subscription.
+- Terraform installed locally.
+- Azure CLI installed and signed in.
+- Permissions to create and manage AKS resources.
+
+Set your subscription:
+
+```bash
+az account set --subscription <subscription-id>
+```
+
+:::zone-end
 
 ## Limitations
 
@@ -55,7 +75,7 @@ System node pools have the following restrictions:
 - System pools `osType` must be Linux.
 - User node pools `osType` can be Linux or Windows.
 - System pools must contain at least two nodes but the recommendation is three nodes. User node pools can contain zero or more nodes.
-- System node pools require a VM SKU of at least 4 vCPUs and 4GB memory.
+- System node pools require a VM SKU of at least 4 vCPUs and 4 GB of memory.
 - [B series VMs][b-series-vm] aren't supported for system node pools.
 - A minimum of three nodes of 8 vCPUs or two nodes of at least 16 vCPUs is recommended (for example, Standard_DS4_v2), especially for large clusters (Multiple CoreDNS Pod replicas, 3-4+ add-ons, etc.).
 - Spot node pools require user node pools.
@@ -74,7 +94,7 @@ You can do the following operations with node pools:
 
 ## Create a new AKS cluster with a system node pool
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
 When you create a new AKS cluster, the initial node pool defaults to a mode of type `System`. When you create new node pools with [`az aks nodepool add`][az-aks-nodepool-add], those node pools are user node pools unless you explicitly specify the mode parameter.
 
@@ -100,10 +120,11 @@ Use the [`az aks create`][az-aks-create] command to create an AKS cluster. The f
 az aks create --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --node-count 2 --generate-ssh-keys
 ```
 
-### [Azure PowerShell](#tab/azure-powershell)
+:::zone-end
+
+:::zone pivot="azure-powershell"
 
 When you create a new AKS cluster, the initial node pool defaults to a mode of type `system`. When you create new node pools with `New-AzAksNodePool`, those node pools are user node pools. A node pool's mode can be [updated at any time][update-node-pool-mode].
-
 
 Create variables for the resource group, cluster name, and location for commands used in this article. This article specifies values or you can use your own values.
 
@@ -127,11 +148,76 @@ Use the [New-AzAksCluster][new-azakscluster] cmdlet to create an AKS cluster. Th
 New-AzAksCluster -ResourceGroupName $ResourceGroup -Name $ClusterName -NodeCount 2 -GenerateSshKey
 ```
 
----
+:::zone-end
+
+:::zone pivot="terraform"
+
+Use the following Terraform configuration to create an AKS cluster with a system node pool.
+
+### Create the Terraform configuration file
+
+Create a file named `main.tf`, and add the following shared configuration:
+
+```terraform
+terraform {
+ required_version = ">= 1.0"
+ required_providers {
+   azurerm = {
+     source  = "hashicorp/azurerm"
+     version = "~> 4.0"
+   }
+ }
+}
+provider "azurerm" {
+ features {}
+}
+```
+
+### Create a resource group
+
+Add the following resource group configuration:
+```terraform
+resource "azurerm_resource_group" "rg" {
+ name     = "aks-system-pool-rg"
+ location = "East US"
+}
+```
+A resource group is used to organize and manage Azure resources.
+
+### Create a new AKS cluster
+
+Add the following configuration to create an AKS cluster. The initial node pool is created as a system node pool and is required for cluster operation.
+
+```terraform
+resource "azurerm_kubernetes_cluster" "aks" {
+ name                = "aks-system-pool-cluster"
+ location            = azurerm_resource_group.rg.location
+ resource_group_name = azurerm_resource_group.rg.name
+ dns_prefix          = "akssystempool"
+ default_node_pool {
+   name                = "systemnp"
+   vm_size             = "Standard_D4s_v5"
+   node_count          = 2
+   min_count           = 2
+   max_count           = 3
+   max_pods            = 30
+   enable_auto_scaling = true
+ }
+ identity {
+   type = "SystemAssigned"
+ }
+ network_profile {
+   network_plugin    = "azure"
+   load_balancer_sku = "standard"
+ }
+}
+```
+
+:::zone-end
 
 ## Add a dedicated system node pool to an existing AKS cluster
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
 You can add one or more system node pools to existing AKS clusters. The recommendation is to schedule your application pods on user node pools, and dedicate system node pools to only critical system pods. This separation prevents rogue application pods from accidentally deleting system pods. Enforce this behavior with the `CriticalAddonsOnly=true:NoSchedule` [taint][aks-taints] for your system node pools.
 
@@ -147,7 +233,9 @@ az aks nodepool add \
   --mode System
 ```
 
-### [Azure PowerShell](#tab/azure-powershell)
+:::zone-end
+
+:::zone pivot="azure-powershell"
 
 You can add one or more system node pools to existing AKS clusters. The recommendation is to schedule your application pods on user node pools, and dedicate system node pools to only critical system pods. Adding more system node pools prevents rogue application pods from accidentally deleting system pods. Enforce the behavior with the `CriticalAddonsOnly=true:NoSchedule` [taint][aks-taints] for your system node pools.
 
@@ -166,13 +254,178 @@ $systempoolparams = @{
 New-AzAksNodePool @systempoolparams
 ```
 
----
+:::zone-end
+
+:::zone pivot="terraform"
+
+Add a second node pool configured as a system node pool to isolate critical system workloads.
+
+```terraform
+resource "azurerm_kubernetes_cluster_node_pool" "system_pool" {
+ name                  = "systempool"
+ kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
+ vm_size               = "Standard_D4s_v5"
+ node_count            = 3
+ mode                  = "System"
+ max_pods              = 30
+ node_taints = [
+   "CriticalAddonsOnly=true:NoSchedule"
+ ]
+}
+```
+
+This configuration applies the `CriticalAddonsOnly=true:NoSchedule` taint so that application workloads aren't scheduled on the dedicated system node pool.
+
+### Add a user node pool
+
+To separate application workloads from system components, add a user node pool.
+
+```terraform
+resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
+ name                  = "userpool"
+ kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
+ vm_size               = "Standard_D4s_v5"
+ node_count            = 2
+ mode                  = "User"
+ max_pods              = 30
+ enable_auto_scaling = true
+ min_count           = 2
+ max_count           = 4
+}
+```
+
+User node pools provide a dedicated environment for application pods.
+
+### Final check before deployment
+
+Your `main.tf` should include:
+
+- Terraform and provider configuration
+- Resource group
+- AKS cluster with the default system node pool
+- Dedicated system node pool
+- Optional user node pool, if needed
+
+A completed configuration looks similar to the following example:
+
+```terraform
+terraform {
+ required_version = ">= 1.0"
+ required_providers {
+   azurerm = {
+     source  = "hashicorp/azurerm"
+     version = "~> 4.0"
+   }
+ }
+}
+provider "azurerm" {
+ features {}
+}
+resource "azurerm_resource_group" "rg" {
+ name     = "aks-system-pool-rg"
+ location = "East US"
+}
+resource "azurerm_kubernetes_cluster" "aks" {
+ name                = "aks-system-pool-cluster"
+ location            = azurerm_resource_group.rg.location
+ resource_group_name = azurerm_resource_group.rg.name
+ dns_prefix          = "akssystempool"
+ default_node_pool {
+   name                = "systemnp"
+   vm_size             = "Standard_D4s_v5"
+   node_count          = 2
+   min_count           = 2
+   max_count           = 3
+   max_pods            = 30
+   enable_auto_scaling = true
+ }
+ identity {
+   type = "SystemAssigned"
+ }
+ network_profile {
+   network_plugin    = "azure"
+   load_balancer_sku = "standard"
+ }
+}
+resource "azurerm_kubernetes_cluster_node_pool" "system_pool" {
+ name                  = "systempool"
+ kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
+ vm_size               = "Standard_D4s_v5"
+ node_count            = 3
+ mode                  = "System"
+ max_pods              = 30
+ node_taints = [
+   "CriticalAddonsOnly=true:NoSchedule"
+ ]
+}
+resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
+ name                  = "userpool"
+ kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
+ vm_size               = "Standard_D4s_v5"
+ node_count            = 2
+ mode                  = "User"
+ max_pods              = 30
+ enable_auto_scaling = true
+ min_count           = 2
+ max_count           = 4
+}
+```
+
+### Validate the configuration
+
+Run the following commands to format, initialize, and validate the configuration:
+
+```bash
+terraform fmt
+terraform init
+terraform validate
+```
+
+### Review the execution plan
+
+Run the following command to review the execution plan before deployment:
+
+```bash
+terraform plan
+```
+
+### Apply the configuration
+
+Run the following command to create the AKS cluster and node pools:
+
+```bash
+terraform apply
+```
+
+### Verify the deployment
+
+Check the dedicated system node pool configuration:
+
+```bash
+az aks nodepool show \
+ --resource-group aks-system-pool-rg \
+ --cluster-name aks-system-pool-cluster \
+ --name systempool
+```
+
+Review the output and confirm the node pool is configured with `mode` set to `System`.
+Connect to the cluster and list the nodes:
+
+```bash
+az aks get-credentials \
+ --resource-group aks-system-pool-rg \
+ --name aks-system-pool-cluster
+
+kubectl get nodes
+```
+
+:::zone-end
 
 ## Show details for your node pool
 
-You can check the details of your node pool with the following command.
+:::zone pivot="azure-cli"
 
-### [Azure CLI](#tab/azure-cli)
+You can check the details of your node pool with the following command.
 
 ```azurecli-interactive
 az aks nodepool show \
@@ -196,7 +449,11 @@ A mode of type **System** is defined for system node pools, and a mode of type *
 }
 ```
 
-### [Azure PowerShell](#tab/azure-powershell)
+:::zone-end
+
+:::zone pivot="azure-powershell"
+
+You can check the details of your node pool with the following command.
 
 ```azurepowershell-interactive
 Get-AzAksNodePool -ResourceGroupName $ResourceGroup -ClusterName $ClusterName -Name $NewSystemNP |
@@ -211,11 +468,19 @@ Count Mode   Name       NodeTaints
     3 System systempool {CriticalAddonsOnly=true:NoSchedule}
 ```
 
----
+:::zone-end
+
+:::zone pivot="terraform"
+
+This step was included in the previous section's [Verify the deployment](#verify-the-deployment) step.
+
+A mode of type **System** is defined for system node pools, and a mode of type **User** is defined for user node pools. For a system pool, verify the `nodeTaints` property is set to `CriticalAddonsOnly=true:NoSchedule`, which prevents application pods from being scheduled on this node pool.
+
+:::zone-end
 
 ## Update existing cluster system and user node pools
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
 > [!NOTE]
 > An API version of `2020-03-01` or greater must be used to set a system node pool mode. Clusters created on API versions older than `2020-03-01` contain only user node pools as a result. To receive system node pool functionality and benefits on older clusters, update the mode of existing node pools with the following commands on the latest Azure CLI version.
@@ -271,19 +536,9 @@ az aks nodepool show \
 User
 ```
 
-Run this command to change a user node pool to a system node pool.
+:::zone-end
 
-```azurecli-interactive
-az aks nodepool update \
-  --resource-group $RESOURCE_GROUP \
-  --cluster-name $CLUSTER_NAME \
-  --name $NEW_NODE_POOL \
-  --mode System
-```
-
-Run the previous command to verify that the mode changed.
-
-### [Azure PowerShell](#tab/azure-powershell)
+:::zone pivot="azure-powershell"
 
 > [!NOTE]
 > An API version of `2020-03-01` or greater must be used to set a system node pool mode. Clusters created on API versions older than `2020-03-01` contain only user node pools as a result. To receive system node pool functionality and benefits on older clusters, update the mode of existing node pools with the following commands on the latest Azure PowerShell version.
@@ -343,30 +598,47 @@ Mode
 User
 ```
 
-Run this command to change a user node pool to a system node pool.
+:::zone-end
 
-```azurepowershell-interactive
-$updatesystempoolparams = @{
-  ResourceGroupName = $ResourceGroup
-  ClusterName = $ClusterName
-  Name = $NewNodePool
-  Mode = 'System'
+:::zone pivot="terraform"
+
+To change the mode of an existing node pool, update the `mode` value in the Terraform configuration and reapply the deployment.
+
+For example, the following configuration changes the `user_pool` node pool to a system node pool:
+
+```terraform
+resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
+ name                  = "userpool"
+ kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
+ vm_size               = "Standard_D4s_v5"
+ node_count            = 2
+ mode                  = "System"
+ max_pods              = 30
+ enable_auto_scaling = true
+ min_count           = 2
+ max_count           = 4
 }
-Update-AzAksNodePool @updatesystempoolparams
 ```
 
-Run the previous command to verify that the mode changed.
+After updating the configuration, run:
 
----
+```bash
+terraform plan
+terraform apply
+```
+
+To change the dedicated system node pool to a user node pool, update the `mode` value for `system_pool` to `User` and reapply the configuration.
+
+:::zone-end
 
 ## Delete a system node pool
 
-> [!Note]
+:::zone pivot="azure-cli"
+
+> [!NOTE]
 > To use system node pools on AKS clusters before API version `2020-03-01`, add a new system node pool, then delete the original default node pool.
 
 You must have at least two system node pools on your AKS cluster before you can delete one of them.
-
-### [Azure CLI](#tab/azure-cli)
 
 ```azurecli-interactive
 az aks nodepool delete \
@@ -377,6 +649,7 @@ az aks nodepool delete \
 
 After you delete the system node pool, you should have the original system node pool that was created with the cluster and the system node pool you created in the section [add a dedicated system node pool to an existing AKS cluster](#add-a-dedicated-system-node-pool-to-an-existing-aks-cluster).
 
+
 ```azurecli-interactive
 az aks nodepool list \
   --resource-group $RESOURCE_GROUP \
@@ -384,8 +657,14 @@ az aks nodepool list \
   --query "[].{Name:name, Mode:mode}" --output table
 ```
 
+:::zone-end
 
-### [Azure PowerShell](#tab/azure-powershell)
+:::zone pivot="azure-powershell"
+
+> [!NOTE]
+> To use system node pools on AKS clusters before API version `2020-03-01`, add a new system node pool, then delete the original default node pool.
+
+You must have at least two system node pools on your AKS cluster before you can delete one of them.
 
 The following command prompts you for confirmation to delete the node pool. Type `Y` to confirm.
 
@@ -399,13 +678,26 @@ After you delete the system node pool, you should have the original system node 
 Get-AzAksNodePool -ResourceGroupName $ResourceGroup -ClusterName $ClusterName
 ```
 
----
+:::zone-end
+
+:::zone pivot="terraform"
+
+A cluster must always contain at least one system node pool. If the cluster has more than one system node pool, you can remove one by deleting its resource block from the Terraform configuration and applying the change.
+
+For example, remove the `system_pool` resource block and then run:
+
+```bash
+terraform plan
+terraform apply
+```
+
+:::zone-end
 
 ## Clean up resources
 
-When you delete the AKS cluster's resource group, all the cluster resources and it's related node resource group (`MC_`) are deleted.
+When you delete the AKS cluster's resource group, all the cluster resources and the related node resource group (`MC_`) are deleted.
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
 To delete the cluster, use the [az group delete][az-group-delete] command to delete the AKS resource group:
 
@@ -413,7 +705,9 @@ To delete the cluster, use the [az group delete][az-group-delete] command to del
 az group delete --name $RESOURCE_GROUP --yes --no-wait
 ```
 
-### [Azure PowerShell](#tab/azure-powershell)
+:::zone-end
+
+:::zone pivot="azure-powershell"
 
 To delete the cluster, use the [Remove-AzResourceGroup][remove-azresourcegroup] command to delete the AKS resource group:
 
@@ -421,11 +715,22 @@ To delete the cluster, use the [Remove-AzResourceGroup][remove-azresourcegroup] 
 Remove-AzResourceGroup -Name $ResourceGroup -Force
 ```
 
----
+:::zone-end
+
+:::zone pivot="terraform"
+
+When you're finished, remove the resources:
+
+```bash
+terraform destroy
+```
+
+:::zone-end
 
 ## Next steps
 
 In this article, you learned how to create and manage system node pools in an AKS cluster. For information about how to start and stop AKS node pools, see [start and stop AKS node pools][start-stop-nodepools].
+
 
 <!-- EXTERNAL LINKS -->
 [kubernetes-drain]: https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/
