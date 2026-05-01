@@ -54,7 +54,7 @@ This bulletin provides an update on a local privilege escalation (LPE) vulnerabi
 
 - **An attacker with code execution in any pod (even non-root) can escalate to root on the node**
 - No special pod privileges, capabilities, or host access are required
-- The exploit has been [confirmed working on AKS nodes](#issuecomment-4359550164) from a non-root pod (UID 1000)
+- The exploit has been [confirmed working on AKS nodes](https://github.com/Azure/AKS/issues/5753#issuecomment-435955016) from a non-root pod (UID 1000)
 
 | OS | Kernel | Module auto-loads? | Exploitable? |
 |----|--------|--------------------|-------------|
