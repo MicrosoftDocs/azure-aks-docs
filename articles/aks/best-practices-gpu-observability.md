@@ -38,7 +38,7 @@ For vertical scaling, create a new node pool on a different Azure GPU-enabled VM
 
 ## Separate MIG and non-MIG observability policies
 
-Interpretation changes when MIG is enabled because metric scope changes. In MIG mode, DCGM reports per-instance telemetry, while non-MIG mode reports at the full physical GPU level. If your AKS environment mixes MIG and non-MIG node pools, maintain separate dashboards, thresholds, and alert policies, since direct comparisons are misleading unless you normalize by available SM and memory fractions.
+When MIG is enabled, the scope of each metric shifts, so interpret the signals differently.
 
 ## Publish cost-aware GPU efficiency metrics
 
