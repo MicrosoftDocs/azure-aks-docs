@@ -24,7 +24,7 @@ These updates cover security information related to the following AKS components
 - Azure Kubernetes Service Addons (AKS add-ons)
 
 ---
-## AKS-2026-0003 # AKS Advisory & Mitigation Guide for CVE-2026-31431 (Copy Fail) 
+## AKS-2026-0003 AKS Advisory & Mitigation Guide for CVE-2026-31431 (Copy Fail)
 
 **Published Date**: May 1, 2026
 
@@ -75,7 +75,8 @@ This mitigation is being applied to:
 
 Monitor the hotfix rollout status in [AKS Advisory](https://github.com/Azure/AKS/issues/5753)
 
-> **⚠️ Important**: Existing nodes created **before** the hotfix VHD is available are **NOT protected** and remain exploitable. We strongly recommend applying the self-service mitigation decsribed in [AKS Advisory](https://github.com/Azure/AKS/issues/5753)
+> ![IMPORTANT]
+> Existing nodes created **before** the hotfix VHD is available are **NOT protected** and remain exploitable. We strongly recommend applying the self-service mitigation described in [AKS Advisory](https://github.com/Azure/AKS/issues/5753).
 
 ---
 
