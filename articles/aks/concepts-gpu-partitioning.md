@@ -16,7 +16,7 @@ Azure Kubernetes Service (AKS) supports NVIDIA GPU-enabled node pools to run com
 
 To improve utilization and support concurrent workloads, AKS supports several GPU partitioning strategies. These approaches enable multiple workloads to share a single physical GPU by dividing it into smaller logical units or by expanding access at the software or GPU driver level.
 
-In this article, you learn about the three primary GPU node partitioning strategies in AKS: **Multi-Instance GPU (MIG)**, **time-slicing**, and **Multi-Process Service (MPS)**.
+In this article, you learn about the three primary node partitioning strategies for NVIDIA GPUs in AKS: **Multi-Instance GPU (MIG)**, **time-slicing**, and **Multi-Process Service (MPS)**.
 
 ## Overview of GPU node partitioning strategies in AKS
 
