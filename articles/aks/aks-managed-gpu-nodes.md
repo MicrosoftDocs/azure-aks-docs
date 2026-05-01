@@ -66,12 +66,6 @@ Together, they produce three install profiles:
 - **Override**: `managementMode: Managed` requires the driver, so `--gpu-driver None` is ignored when `--enable-managed-gpu=true` and the driver is still installed. To skip the driver, set both `--enable-managed-gpu=false` and `--gpu-driver None`.
 - **Immutability**: `managementMode`, `migStrategy`, and `driver` are all fixed at creation time. To change profile, create a new node pool.
 
-## Before you begin
-
-- This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-- You need the Azure CLI version 2.72.2 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-- Get the credentials for your AKS cluster with [`az aks get-credentials`][az-aks-get-credentials] before running the `kubectl` examples in this article.
-
 ### Install the `aks-preview` CLI extension
 
 1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command. Version 19.0.0b29 or later is required.
