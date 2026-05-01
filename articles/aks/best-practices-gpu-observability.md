@@ -18,9 +18,12 @@ This article provides best practices for monitoring and interpreting GPU signals
 
 ## Understand GPU utilization versus saturation
 
-Don't treat the NVIDIA DCGM metric `GPU_UTIL` as a direct efficiency score. `GPU_UTIL` only indicates how often kernels are active, so it doesn't tell you whether the workload is compute-efficient. You get more accurate guidance by correlating utilization signals instead of reading them independently. Compare `GPU_UTIL` with `SM_ACTIVE`, and then compare `SM_ACTIVE` with `DRAM_ACTIVE` to identify whether your bottleneck is compute, memory, or launch and synchronization overhead.
+Don't treat the NVIDIA DCGM metric `DCGM_FI_DEV_GPU_UTIL` as a direct efficiency score. `DCGM_FI_DEV_GPU_UTIL` only indicates how often kernels are active, so it doesn't tell you whether the workload is compute-efficient. You get more accurate guidance by correlating utilization signals instead of reading them independently. Compare `DCGM_FI_DEV_GPU_UTIL` with `DCGM_FI_PROF_SM_ACTIVE`, and then compare `DCGM_FI_PROF_SM_ACTIVE` with `DCGM_FI_PROF_DRAM_ACTIVE` to identify whether your bottleneck is compute, memory, or launch and synchronization overhead.
 
-High `GPU_UTIL` with low `SM_ACTIVE` often points to launch overhead, synchronization stalls, or memory contention. High `SM_ACTIVE` with low `DRAM_ACTIVE` is more consistent with compute-bound behavior. Higher `DRAM_ACTIVE` with lower `SM_ACTIVE` usually points to memory-bound execution.
+High `DCGM_FI_DEV_GPU_UTIL` with low `DCGM_FI_PROF_SM_ACTIVE` often points to launch overhead, synchronization stalls, or memory contention. High `DCGM_FI_PROF_SM_ACTIVE` with low `DCGM_FI_PROF_DRAM_ACTIVE` is more consistent with compute-bound behavior. Higher `DCGM_FI_PROF_DRAM_ACTIVE` with lower `DCGM_FI_PROF_SM_ACTIVE` usually points to memory-bound execution.
+
+> [!NOTE]
+> `DCGM_FI_PROF_SM_ACTIVE` and `DCGM_FI_PROF_DRAM_ACTIVE` are DCGM profiling fields and may not appear by default for all NVIDIA GPU architecture types offered in Azure Virtual Machine (VM) sizes. 
 
 This correlation-first approach helps you avoid scaling out when the root issue might be kernel efficiency or memory access patterns. For detailed metric semantics, see the [NVIDIA DCGM user guide](https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/index.html).
 
