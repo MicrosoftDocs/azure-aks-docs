@@ -150,7 +150,7 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 2.1.1 | Ensure autofs services aren't in use | L1 | Pass | |
 | 2.1.2 | Ensure avahi daemon services aren't in use | L1 | Pass | |
 | 2.1.3 | Ensure dhcp server services aren't in use | L1 | Pass | |
-| 2.1.4 | Ensure dns server services aren't in use | L1 | Pass | |
+| 2.1.4 | Ensure DNS server services aren't in use | L1 | Pass | |
 | 2.1.5 | Ensure dnsmasq services aren't in use | L1 | Pass | |
 | 2.1.6 | Ensure ftp server services aren't in use | L1 | Pass | |
 | 2.1.7 | Ensure ldap server services aren't in use | L1 | Pass | |
@@ -549,7 +549,7 @@ The following are the results from [CIS Ubuntu 22.04 LTS Benchmark v3.0.0][cis-b
 | 2.1.1 | Ensure autofs services aren't in use | L1 | Pass | |
 | 2.1.2 | Ensure avahi daemon services aren't in use | L1 | Pass | |
 | 2.1.3 | Ensure dhcp server services aren't in use | L1 | Pass | |
-| 2.1.4 | Ensure dns server services aren't in use | L1 | Pass | |
+| 2.1.4 | Ensure DNS server services aren't in use | L1 | Pass | |
 | 2.1.5 | Ensure dnsmasq services aren't in use | L1 | Pass | |
 | 2.1.6 | Ensure ftp server services aren't in use | L1 | Pass | |
 | 2.1.7 | Ensure ldap server services aren't in use | L1 | Pass | |
