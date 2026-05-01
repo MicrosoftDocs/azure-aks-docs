@@ -45,6 +45,7 @@ The Azure Monitor Container Insights add-on previously included `nodes/proxy` in
 - [Kubernetes Remote Code Execution Via Nodes/Proxy GET Permission](https://grahamhelton.com/blog/nodes-proxy-rce)
 - [KEP-2862: Fine-Grained Kubelet API Authorization](https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/2862-fine-grained-kubelet-authz/README.md)
 - [Kubelet authentication/authorization](https://kubernetes.io/docs/reference/access-authn-authz/kubelet-authn-authz/#fine-grained-authorization)
+- [Azure/AKS#5752: Azure Monitor Container Insights add-on removes use of nodes/proxy permission](https://github.com/Azure/AKS/issues/5752)
 
 ### Affected Components
 
