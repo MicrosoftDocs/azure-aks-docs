@@ -228,6 +228,8 @@
       items:
         - name: Node images
           href: node-images.md
+        - name: List available VM SKUs for cluster nodes
+          href: aks-list-skus.md
         - name: Custom node configuration
           href: custom-node-configuration.md
         - name: Abort long running operations
