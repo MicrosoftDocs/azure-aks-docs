@@ -21,6 +21,9 @@ In this article, you learn how to:
 - List only SKUs that support availability zones.
 - Include all regional SKUs, including SKUs not currently available to your subscription.
 
+> [!NOTE]
+> This feature lists options of SKUs that are supported in AKS in the specified Azure region and does not consider your current quota or real-time available capacity. Visit the [Azure quota documentation](/azure/quotas/view-quotas) to learn more about managing quota requests.
+
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Prerequisites
