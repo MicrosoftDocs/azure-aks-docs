@@ -1,6 +1,6 @@
 ---
 title: GPU Node Partitioning Strategies in Azure Kubernetes Service (AKS)
-description: Learn about scaling in Azure Kubernetes Service (AKS), including AKS managed multi-instance GPU (MIG) or time-slicing and multi-processing service (MPS) with self-managed NVIDIA GPU Operator
+description: Learn about GPU partitioning in Azure Kubernetes Service (AKS), including AKS managed multi-instance GPU (MIG) or time-slicing and multi-processing service (MPS) with self-managed NVIDIA GPU Operator.
 ms.topic: concept-article
 ms.date: 05/01/2026
 author: sachidesai
