@@ -50,7 +50,6 @@ See **Resolutions** for the exact commands.
 - [CVE-2026-31431](https://github.com/advisories/GHSA-2274-3hgr-wxv6)
 - [AKS Advisory & Mitigation Guide (Azure/AKS#5753)](https://github.com/Azure/AKS/issues/5753)
 - [Canonical advisory](https://ubuntu.com/blog/copy-fail-vulnerability-fixes-available)
-- [Ubuntu CVE tracker](https://ubuntu.com/security/CVE-2026-31431)
 
 ### Affected Components
 
