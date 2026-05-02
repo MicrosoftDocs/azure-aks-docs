@@ -38,7 +38,7 @@ Although `algif_aead` isn't loaded by default on AKS Linux nodes, the kernel's m
 
 Affected Linux node images include Ubuntu 20.04 FIPS, Ubuntu 22.04, Ubuntu 24.04, and Azure Linux 3.0. Azure Linux 2.0 (Mariner) and Windows node images aren't affected.
 
-AKS deployed a mitigation that blocks the module from autoloading by adding a `modprobe` rule (`install algif_aead /bin/false`). As of May 1, 2026, the mitigation is globally deployed for node image versions `202604.13.0` and `202604.24.0`. The hotfix doesn't patch existing nodes in place. The action you take depends on the node image version your nodes currently run:
+AKS deployed a mitigation that blocks the module from autoloading by adding a `modprobe` rule (`install algif_aead /bin/false`). As of May 1, 2026, the mitigation is deployed for node image versions `202604.13.0` and `202604.24.0`. The hotfix doesn't patch existing nodes in place. The action you take depends on the node image version your nodes currently run:
 
 - **Nodes running a node image older than `202604.24.0`**: A node image upgrade to the latest version applies the mitigation.
 - **Nodes already running `202604.24.0`**: A node image upgrade isn't available because no newer image exists. To protect existing nodes immediately, apply the self-service mitigation DaemonSet documented in the [AKS advisory](https://github.com/Azure/AKS/issues/5753).
