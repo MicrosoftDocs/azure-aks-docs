@@ -1,11 +1,12 @@
 ---
 title: Security bulletins for Azure Kubernetes Service (AKS)
 description: This article provides security/vulnerability related updates and troubleshooting guides for Azure Kubernetes Services (AKS).
-ms.date: 03/20/2026
+ms.date: 05/01/2026
 author: bcho
 ms.author: bahe
 ms.topic: concept-article
 ms.subservice: aks-security
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes administrator, I want to access updated security bulletins for Azure Kubernetes Service, so that I can address vulnerabilities and ensure the security of my clusters and applications."
 ---
 
@@ -25,15 +26,59 @@ These updates cover security information related to the following AKS components
 
 ---
 
+## AKS-2026-0003 Linux kernel `algif_aead` local privilege escalation (Copy Fail) - CVE-2026-31431
+
+**Published Date**: May 1, 2026
+
+### Description
+
+This bulletin provides an update regarding a recently disclosed local privilege escalation (LPE) vulnerability in the Linux kernel's `algif_aead` module ([CVE-2026-31431](https://github.com/advisories/GHSA-2274-3hgr-wxv6)), referred to as "Copy Fail." The vulnerability has a Common Vulnerability Scoring System (CVSS) 3.1 score of 7.8 (HIGH).
+
+Although `algif_aead` isn't loaded by default on AKS Linux nodes, the kernel's module autoloading mechanism (`request_module`) loads it on demand when any process - including an unprivileged container - creates an `AF_ALG` socket of type Authenticated Encryption with Associated Data (AEAD). As a result, an attacker with code execution in any pod (even a nonroot pod with no special capabilities or host access) might escalate to root on the underlying node.
+
+Affected Linux node images include Ubuntu 20.04 FIPS, Ubuntu 22.04, Ubuntu 24.04, and Azure Linux 3.0. Azure Linux 2.0 (Mariner) and Windows node images aren't affected.
+
+AKS deployed a mitigation that blocks the module from autoloading by adding a `modprobe` rule (`install algif_aead /bin/false`). As of May 1, 2026, the mitigation is deployed for node image versions `202604.13.0` and `202604.24.0`. The hotfix doesn't patch existing nodes in place. The action you take depends on the node image version your nodes currently run:
+
+- **Nodes running a node image older than `202604.24.0`**: A node image upgrade to the latest version applies the mitigation.
+- **Nodes already running `202604.24.0`**: A node image upgrade isn't available because no newer image exists. To protect existing nodes immediately, apply the self-service mitigation DaemonSet documented in the [AKS advisory](https://github.com/Azure/AKS/issues/5753).
+
+See **Resolutions** for the exact commands.
+
+### References
+
+- [CVE-2026-31431](https://github.com/advisories/GHSA-2274-3hgr-wxv6)
+- [AKS Advisory & Mitigation Guide (Azure/AKS#5753)](https://github.com/Azure/AKS/issues/5753)
+- [Canonical advisory](https://ubuntu.com/blog/copy-fail-vulnerability-fixes-available)
+
+### Affected Components
+
+#### [**AKS Node Image**](#tab/aks-node-image)
+
+**Affected Versions**
+
+- AKS Linux nodes (Ubuntu 20.04 FIPS, Ubuntu 22.04, Ubuntu 24.04, and Azure Linux 3.0) that were created before the hotfix global deployment on May 1, 2026, and that haven't been reimaged since.
+- Azure Linux 2.0 (Mariner) and Windows node images aren't affected.
+
+**Resolutions**
+
+- New nodes and any node that goes through a node image upgrade automatically receive the mitigation. Node image versions `202604.13.0` and `202604.24.0` are globally deployed as of May 1, 2026.
+- For existing nodes that were created before May 1, 2026, do one of the following:
+  - If a newer node image is available, [upgrade the node image][node-image-upgrade] to pick up the mitigation: `az aks nodepool upgrade --resource-group <rg> --cluster-name <cluster> --name <nodepool> --node-image-only`.
+  - If the node pool is already on the latest node image (`202604.24.0`), apply the mitigation DaemonSet from the [AKS advisory](https://github.com/Azure/AKS/issues/5753) for immediate, non-disruptive protection.
+- After all nodes in a pool run a patched node image, you can remove the mitigation DaemonSet.
+
+---
+
 ## AKS-2026-0002 gRPC-Go Authorization Bypass via Missing Leading Slash in :path - CVE-2026-33186
 
 **Published Date**: March 20, 2026
 
 ### Description
 
-This bulletin provides an update regarding a recently disclosed vulnerability ([CVE-2026-33186](https://nvd.nist.gov/vuln/detail/CVE-2026-33186)) in gRPC-Go (`google.golang.org/grpc`). The gRPC-Go server accepted HTTP/2 requests where the `:path` pseudo-header omitted the mandatory leading slash (for example, `Service/Method` instead of `/Service/Method`). While the server routed these requests to the correct handler, authorization interceptors - including the official `grpc/authz` package - evaluated the raw, non-canonical path string. Consequently, deny rules defined using canonical paths (starting with `/`) failed to match, allowing requests to bypass the policy if a fallback allow rule was present.
+This bulletin provides an update regarding a recently disclosed vulnerability ([CVE-2026-33186](https://nvd.nist.gov/vuln/detail/CVE-2026-33186)) in gRPC-Go (`google.golang.org/grpc`). The gRPC-Go server accepted HTTP/2 requests where the `:path` pseudo-header omitted the mandatory leading slash (for example, `Service/Method` instead of `/Service/Method`). While the server routed these requests to the correct handler, authorization interceptors - including the official `grpc/authz` package - evaluated the raw, noncanonical path string. As a result, deny rules defined using canonical paths (starting with `/`) failed to match, allowing requests to bypass the policy if a fallback allow rule was present.
 
-AKS is aware of the vulnerability. However, the specific exploit conditions - path-based RBAC interceptors with deny rules and an allow-by-default fallback - are **not present** in AKS managed components. AKS does not use the `grpc/authz` package, and custom interceptors in AKS services use JWT-based authentication that does not rely on path-matching deny rules. Additionally, AKS control plane gRPC services are not directly exposed to untrusted clients. As a defense-in-depth measure, AKS is upgrading all internal gRPC-Go dependencies to v1.79.3 or later.
+AKS is aware of the vulnerability. However, the specific exploit conditions - path-based role-based access control (RBAC) interceptors with deny rules and an allow-by-default fallback - are **not present** in AKS managed components. AKS doesn't use the `grpc/authz` package, and custom interceptors in AKS services use JWT-based authentication that doesn't rely on path-matching deny rules. AKS control plane gRPC services also aren't directly exposed to untrusted clients. As a defense-in-depth measure, AKS is upgrading all internal gRPC-Go dependencies to v1.79.3 or later.
 
 ### References
 
@@ -50,8 +95,8 @@ AKS is aware of the vulnerability. However, the specific exploit conditions - pa
 
 **Resolutions**
 
-- AKS does not use path-based gRPC authorization interceptors susceptible to this bypass. AKS clusters are not vulnerable to this issue.
-- Although AKS is not affected, gRPC-Go dependencies across all AKS services will be upgraded to v1.79.3 or later as a preventive measure.
+- AKS doesn't use path-based gRPC authorization interceptors susceptible to this bypass. AKS clusters aren't vulnerable to this issue.
+- Although AKS isn't affected, gRPC-Go dependencies across all AKS services are being upgraded to v1.79.3 or later as a preventive measure.
 - **No customer action is required.** Customers running their own gRPC-Go services on AKS should review whether they use path-based authorization interceptors (for example, `grpc/authz`) and upgrade to gRPC-Go v1.79.3 or later if affected.
 
 ---
@@ -62,7 +107,7 @@ AKS is aware of the vulnerability. However, the specific exploit conditions - pa
 
 ### Description
 This bulletin provides an update regarding [a change](https://github.com/golang/go/commit/eed2208f152d1172993a3193374625683e244100) in [Go 1.25](https://go.dev/doc/go1.25) to reject TLS 1.2 handshake without extended master secret (EMS) when FIPS mode is enabled. Starting [AKS v1.34](https://github.com/Azure/AKS/releases/tag/2026-01-04), Kubernetes control plane components are built with Go 1.25 and FIPS‑validated cryptographic modules, which enforce EMS for TLS 1.2 connections on FIPS nodes.
-When FIPS mode is active, TLS 1.2 handshakes that do not include the EMS extension are rejected. This enforcement applies to both TLS clients and servers implemented using the Go standard library. Prior to Go 1.21, Go TLS clients did not send the EMS extension by default for TLS 1.2 connections. As a result, applications built with older Go versions (Go <1.21) might fail to establish TLS connections to FIPS‑enabled AKS components after upgrading to AKS v1.34. This behavior can affect:
+When FIPS mode is active, TLS 1.2 handshakes that don't include the EMS extension are rejected. This enforcement applies to both TLS clients and servers implemented using the Go standard library. Before Go 1.21, Go TLS clients didn't send the EMS extension by default for TLS 1.2 connections. As a result, applications built with older Go versions (Go <1.21) might fail to establish TLS connections to FIPS‑enabled AKS components after upgrading to AKS v1.34. This behavior can affect:
 - Client applications communicating with the Kubernetes API server
 - Admission webhooks and other webhook servers registered with the kube‑apiserver
 
@@ -92,7 +137,7 @@ When FIPS mode is active, TLS 1.2 handshakes that do not include the EMS extensi
 ### Description
 This bulletin provides an update regarding a recent vulnerability in the Kubernetes kube-controller-manager when using the in-tree Portworx StorageClass. This issue allows authorized users to leak arbitrary information from unprotected endpoints in the control plane’s host network (including link-local or loopback services). 
 
-The in-tree Portworx StorageClass has been disabled by default starting in Kubernetes v1.31 via the CSIMigrationPortworx feature gate. As a result, currently supported versions ≥ v1.32 are not impacted unless the CSIMigrationPortworx feature gate has been manually disabled.
+The in-tree Portworx StorageClass is disabled by default starting in Kubernetes v1.31 via the CSIMigrationPortworx feature gate. As a result, currently supported versions ≥ v1.32 aren't impacted unless the CSIMigrationPortworx feature gate is manually disabled.
 
 ### References
 
@@ -110,8 +155,8 @@ The in-tree Portworx StorageClass has been disabled by default starting in Kuber
 
 **Resolutions**
 
-- A security patch has been rolled out for the impacted lts versions.
-- **No action is required**. The patch will be automatically applied to your cluster during your configured or default [maintenance window](../planned-maintenance.md).
+- A security patch is rolled out for the impacted lts versions.
+- **No action is required**. The patch is automatically applied to your cluster during your configured or default [maintenance window](../planned-maintenance.md).
 
 ---
 
@@ -135,11 +180,11 @@ The bulletin provides an update regarding the recent vulnerabilities (CVE-2025-3
 
 **Affected Versions**
 
-- Linux node image versions prior to 202511.07.0
+- Linux node image versions before 202511.07.0
 
 **Resolutions**
 
-- Newer node image versions have been rolled out. Upgrade Linux node image version to
+- Newer node image versions are available. Upgrade Linux node image version to
   - 202511.07.0
   - or later. You can check the latest node image versions from [AKS release notes][aks-release-notes].
 
@@ -150,7 +195,7 @@ The bulletin provides an update regarding the recent vulnerabilities (CVE-2025-3
 **Published Date**: October 1, 2025
 
 ### Description
-This bulletin provides an update on Node Package Manager (NPM) packages being compromised. There has been a series of recent NPM supply chain attacks resulting in packages being used to perform malicious activity such as delivering malware or stealing credentials.
+This bulletin provides an update on Node Package Manager (NPM) packages being compromised. A recent series of NPM supply chain attacks resulted in packages being used to perform malicious activity such as delivering malware or stealing credentials.
 The vulnerability **does not** impact Azure Kubernetes Service (AKS), as Node.js is **not used** in any AKS core or managed components.
 
 ### References
@@ -168,7 +213,7 @@ The vulnerability **does not** impact Azure Kubernetes Service (AKS), as Node.js
 
 **Resolutions**
 
-- AKS does not use Node.js in any core or managed components and is not affected by these attacks. **No customer action is required.** 
+- These attacks don't affect AKS, because AKS doesn't use Node.js in any core or managed components. **No customer action is required.** 
 
 ---
 
@@ -177,8 +222,8 @@ The vulnerability **does not** impact Azure Kubernetes Service (AKS), as Node.js
 **Published Date**: August 15, 2025
 
 ### Description
-A security issue has been identified in the Kubernetes NodeRestriction admission controller that could allow node users to delete their own node object by patching it with an OwnerReference to a cluster-scoped resource. If the referenced resource or the node object is deleted, Kubernetes garbage collection may remove the node object.
-This issue arises because node users are authorized to perform create and patch operations, but not delete. A compromised node could exploit this to recreate its node object with modified taints or labels, potentially influencing pod scheduling and gaining control over workloads
+A security issue exists in the Kubernetes NodeRestriction admission controller that could allow node users to delete their own node object by patching it with an OwnerReference to a cluster-scoped resource. If the referenced resource or the node object is deleted, Kubernetes garbage collection may remove the node object.
+This issue arises because node users are authorized to perform create and patch operations, but not delete. A compromised node could exploit this issue to recreate its node object with modified taints or labels, potentially influencing pod scheduling and gaining control over workloads
 
 ### References
 
@@ -194,8 +239,8 @@ This issue arises because node users are authorized to perform create and patch 
 
 **Resolutions**
 
-- A security patch has been rolled out in 20250720 and 20250808 release. You can check the release status from [AKS release tracker][aks-release-tracker].
-- **No action is required**. The patch will be automatically applied to your cluster during your configured or default [maintenance window](../planned-maintenance.md).
+- A security patch is rolled out in 20250720 and 20250808 release. You can check the release status from [AKS release tracker][aks-release-tracker].
+- **No action is required**. The patch is automatically applied to your cluster during your configured or default [maintenance window](../planned-maintenance.md).
 
 ---
 ## AKS-2025-009 Important Security Update for Calico Users
@@ -203,9 +248,9 @@ This issue arises because node users are authorized to perform create and patch 
 **Published Date**: July 21, 2025
 
 ### Description
-This bulletin provides an update on the security patching model for Calico in Azure Kubernetes Service (AKS). AKS-managed Calico and Tigera Operator are now fully aligned with upstream [Calico releases](https://github.com/projectcalico/calico/releases) and [Tigera Operator releases](https://github.com/tigera/operator/releases). This means that AKS will no longer independently patch Calico and Tigera operator images but will instead mirror upstream builds directly. 
+This bulletin provides an update on the security patching model for Calico in Azure Kubernetes Service (AKS). AKS-managed Calico and Tigera Operator are now fully aligned with upstream [Calico releases](https://github.com/projectcalico/calico/releases) and [Tigera Operator releases](https://github.com/tigera/operator/releases). This alignment means that AKS no longer independently patches Calico and Tigera operator images and instead mirrors upstream builds directly. 
 
-As a result, CVEs affecting Calico and Tigera Operator will remain unpatched in AKS until a fix is available upstream. This change ensures consistency with upstream behavior and improves transparency in patch timelines.
+As a result, CVEs affecting Calico and Tigera Operator remain unpatched in AKS until a fix is available upstream. This change ensures consistency with upstream behavior and improves transparency in patch timelines.
 
 ### References
 - [Calico Release](https://github.com/projectcalico/calico/releases)
@@ -220,7 +265,7 @@ As a result, CVEs affecting Calico and Tigera Operator will remain unpatched in 
 
 **Resolutions**
 - No immediate action is required. Customers are encouraged to monitor upstream Calico releases and the [AKS CVE Status Tracker](https://releases.aks.azure.com/webpage/index.html) for updates.
-- If this creates an unreasonable security burden, you may [remove calico](/azure/aks/use-network-policies#uninstall-azure-network-policy-manager-or-calico) by setting network-policy to none.  
+- If this change creates an unreasonable security burden, you may [remove calico](/azure/aks/use-network-policies#uninstall-azure-network-policy-manager-or-calico) by setting network-policy to none.  
 
 ---
 
@@ -230,7 +275,7 @@ As a result, CVEs affecting Calico and Tigera Operator will remain unpatched in 
 
 ### Description
 
-A security issue has been identified in Kubernetes related to the DynamicResourceAllocation feature. When enabled, this feature may allow users with pod creation privileges to escalate privileges or access unauthorized resources on the node.
+A security issue exists in Kubernetes related to the DynamicResourceAllocation feature. When enabled, this feature may allow users with pod creation privileges to escalate privileges or access unauthorized resources on the node.
 
 This vulnerability only affects clusters where the DynamicResourceAllocation feature is explicitly enabled.
 
@@ -248,11 +293,11 @@ This vulnerability only affects clusters where the DynamicResourceAllocation fea
 
 **Resolutions**
 
-- AKS does not support or enable the `DynamicResourceAllocation` feature in any supported version. AKS clusters are not vulnerable to this issue.
-- Although AKS is not affected, the upstream fix will be included in the following AKS cluster versions:
-  - AKS 1.32.6
-  - AKS 1.33.2
-- No customer action is required unless you are preparing for future use of this feature. Customers are encouraged to upgrade to the fixed versions once available.
+- AKS doesn't support or enable the `DynamicResourceAllocation` feature in any supported version. AKS clusters aren't vulnerable to this issue.
+- Although AKS isn't affected, the upstream fix is included in the following AKS cluster versions:
+  - AKS 1.32.6
+  - AKS 1.33.2
+- No customer action is required unless you're preparing for future use of this feature. Customers are encouraged to upgrade to the fixed versions once available.
 
 
 ---
@@ -263,7 +308,7 @@ This vulnerability only affects clusters where the DynamicResourceAllocation fea
 
 ### Description
 Several security vulnerabilities affecting the Kubernetes nginx ingress controller were disclosed on March 24, 2025: CVE-2025-1098 (High), CVE-2025-1974 (Critical), CVE-2025-1097 (High), CVE-2025-24514 (High), and CVE-2025-24513 (Medium).
-The CVEs impact ingress-nginx. (If you don't have ingress-nginx installed on your cluster, you aren't affected.)
+The CVEs impact ingress-nginx. (If ingress-nginx isn't installed on your cluster, you aren't affected.)
 You can check for ingress-nginx by running `kubectl get pods --all-namespaces --selector app.kubernetes.io/name=ingress-nginx` .
 
 ### References
@@ -298,7 +343,7 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 **Published Date**: March 13, 2025
  
 ### Description
-A security vulnerability was discovered in Kubernetes that could allow a user with create pod permission to exploit gitRepo volumes to access local git repositories belonging to other pods on the same node. This CVE only affects Kubernetes clusters that utilize the in-tree gitRepo volume to clone git repositories from other pods within the same node. Since the in-tree gitRepo volume feature has been deprecated and will not receive security updates from Kubernetes upstream, any cluster still using this feature remains vulnerable.
+A security vulnerability was discovered in Kubernetes that could allow a user with create pod permission to exploit gitRepo volumes to access local git repositories belonging to other pods on the same node. This CVE only affects Kubernetes clusters that utilize the in-tree gitRepo volume to clone git repositories from other pods within the same node. Because the in-tree gitRepo volume feature is deprecated and doesn't receive security updates from Kubernetes upstream, any cluster still using this feature remains vulnerable.
  
 ### References
  
@@ -316,9 +361,9 @@ A security vulnerability was discovered in Kubernetes that could allow a user wi
  
 **Resolutions**
  
-- Since the in-tree gitRepo volume feature has been deprecated, there is no fix available for the CVE.
+- Because the in-tree gitRepo volume feature is deprecated, there's no fix available for the CVE.
  
-- To ensure only allowed volume types are allowed, assign Azure built-in policy definition- [Kubernetes cluster pods should only use allowed volume types](https://portal.azure.com/#view/Microsoft_Azure_Policy/PolicyDetail.ReactView/id/%2Fproviders%2FMicrosoft.Authorization%2FpolicyDefinitions%2F16697877-1118-4fb1-9b65-9898ec2509ec/version/5.2.0/scopes/%5B%22%22%5D) in enforce mode to your AKS clusters that blocks deployments with gitRepo volume usage. You may view the allowed volume types [here](https://github.com/Azure/azure-policy/blob/8c4af2801d999ef960fe9a10a1f04375954c10a7/built-in-policies/policySetDefinitions/Kubernetes/PSPRestrictedStandard.json#L191). For detailed steps on how to enable Azure Policy on your AKS cluster, please review [Secure your Azure Kubernetes Service (AKS) clusters with Azure Policy](../use-azure-policy.md).
+- To ensure only allowed volume types are allowed, assign Azure built-in policy definition- [Kubernetes cluster pods should only use allowed volume types](https://portal.azure.com/#view/Microsoft_Azure_Policy/PolicyDetail.ReactView/id/%2Fproviders%2FMicrosoft.Authorization%2FpolicyDefinitions%2F16697877-1118-4fb1-9b65-9898ec2509ec/version/5.2.0/scopes/%5B%22%22%5D) in enforce mode to your AKS clusters that blocks deployments with gitRepo volume usage. You may view the allowed volume types [here](https://github.com/Azure/azure-policy/blob/8c4af2801d999ef960fe9a10a1f04375954c10a7/built-in-policies/policySetDefinitions/Kubernetes/PSPRestrictedStandard.json#L191). For detailed steps on how to enable Azure Policy on your AKS cluster, review [Secure your Azure Kubernetes Service (AKS) clusters with Azure Policy](../use-azure-policy.md).
 ---
 
 ## AKS-2025-005 Important Security Update for Calico v3.26 Users
@@ -327,7 +372,7 @@ A security vulnerability was discovered in Kubernetes that could allow a user wi
 
 ### Description
 
-Multiple security issues exist in Calico version 3.26, which is now end of life and no longer receives security fixes. If you're using Calico version 3.26 on AKS Cluster version 1.29.x or earlier, you'll no longer receive security patches for Calico.
+Multiple security issues exist in Calico version 3.26, which is now end of life and no longer receives security fixes. If you're using Calico version 3.26 on AKS Cluster version 1.29.x or earlier, you no longer receive security patches for Calico.
 
 ### References
 
