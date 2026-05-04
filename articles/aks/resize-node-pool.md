@@ -45,7 +45,7 @@ Because resize reuses the upgrade pipeline, the same prerequisites apply: ensure
 
 ### Prerequisites
 
-* AKS API version `2026-01-preview` or later.
+* AKS API version `2026-01-02-preview` or later.
 * The latest version of the [aks-preview Azure CLI extension][aks-preview-extension].
 
 ### Resize the node pool
@@ -73,7 +73,16 @@ The AKS resource provider validates the resize request and blocks incompatible V
 If your target VM size requires any of the changes above, use the manual cordon-and-drain workflow described in the following sections instead.
 
 > [!NOTE]
-> In-place resize requires surge capacity to provision new nodes with the target VM size before draining the old ones. If the node pool is configured with `--max-surge 0` (that is, `--max-unavailable` is in effect), the resize request is rejected with a `400 Bad Request`. To proceed, set `--max-surge` to at least `1` using [`az aks nodepool update`][az-aks-nodepool-update], rerun the resize, and optionally restore your original `--max-surge` and `--max-unavailable` values after the resize completes.
+> In-place resize requires surge capacity to provision new nodes with the target VM size before draining the old ones. If the node pool is configured with `--max-surge 0` (that is, `--max-unavailable` is in effect), the resize request is rejected with a `400 Bad Request`. To proceed, set `--max-surge` to at least `1` using
+>```azurecli-interactive
+> az aks nodepool update \
+>     --resource-group MyResourceGroup \
+>     --cluster-name MyManagedCluster \
+>     --name nodepool1 \
+>     --node-vm-size Standard_D4s_v3 \
+>     --max-surge 33%
+>```
+> and optionally restore your original `--max-surge` and `--max-unavailable` values after the resize completes.
 
 ## Create a new node pool with the desired SKU
 
