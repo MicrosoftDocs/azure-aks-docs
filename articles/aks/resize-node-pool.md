@@ -73,7 +73,7 @@ The AKS resource provider validates the resize request and blocks incompatible V
 If your target VM size requires any of the changes above, use the manual cordon-and-drain workflow described in the following sections instead.
 
 > [!NOTE]
-> In-place resize requires surge capacity to provision new nodes with the target VM size before draining the old ones. If the node pool is configured with `--max-surge 0` (that is, `--max-unavailable` is in effect), the resize request is rejected with a `400 Bad Request`. To proceed, set `--max-surge` to at least `1` using
+> In-place resize requires surge capacity to provision new nodes with the target VM size before draining the old ones. If the node pool is configured with `--max-surge 0` (that is, `--max-unavailable` is in effect), the resize request is rejected with a `400 Bad Request`. To proceed, set `--max-surge` to at least `1` when resize using
 >```azurecli-interactive
 > az aks nodepool update \
 >     --resource-group MyResourceGroup \
