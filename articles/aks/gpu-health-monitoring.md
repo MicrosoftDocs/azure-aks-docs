@@ -16,7 +16,7 @@ This article describes how Azure Kubernetes Service (AKS) uses Node Problem Dete
 
 ## About GPU health monitoring in NPD
 
-AKS supports GPU health monitoring through [Node Problem Detector (NPD)](./node-problem-detector.md), enabling automatic detection and reporting of issues that affect GPU-enabled node pools on an AKS cluster. GPU health monitoring helps Kubernetes operators keep GPU nodes healthy and performant by surfacing hardware faults, communication failures, and system-level errors. NPD sets GPU-related node conditions and enable platform engineering teams to take action before issues impact application performance or availability.
+AKS supports GPU health monitoring through [Node Problem Detector (NPD)](./node-problem-detector.md), enabling automatic detection and reporting of issues that affect GPU-enabled node pools on an AKS cluster. GPU health monitoring helps Kubernetes operators keep GPU nodes healthy and performant by surfacing hardware faults, communication failures, and system-level errors. NPD sets GPU-related node conditions and enables platform engineering teams to take action before issues impact application performance or availability.
 
 These health signals are vital for ensuring optimal performance and reliability across a range of GPU workloads, including:
 
