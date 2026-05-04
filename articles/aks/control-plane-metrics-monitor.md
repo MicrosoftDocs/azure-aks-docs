@@ -247,10 +247,12 @@ Make sure that the  `AzureMonitorMetricsControlPlanePreview` feature flag is ena
 > [!NOTE]
 > The [troubleshooting methods](/azure/azure-monitor/containers/prometheus-metrics-troubleshoot) for the managed service for Prometheus don't apply directly in this scenario. The components that scrape the control plane aren't included in the managed service for Prometheus add-on.
 
-* **Configmap file formatting**: Make sure that you use the correct formatting in the configmap file. Verify that the fields `default-targets-metrics-keep-list`, `minimal-ingestion-profile`, and `default-scrape-settings-enabled` and other fields are correctly populated with their intended values.
+* **Configmap file formatting**: Make sure that you use the correct formatting in the configmap file. Verify that the fields `controlplane-metrics.default-targets-metrics-keep-list`, `controlplane-metrics.minimal-ingestion-profile`, and `controlplane-metrics.default-targets-scrape-enabled` and other fields are correctly populated with their intended values.
 * **Isolate the control plane from the data plane**: Start by setting some of the [node-related metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default) to `true`, and then verify that the metrics are forwarded to the workspace. Completing these steps helps you determine whether an issue is specific to scraping control plane metrics.
 * **A change in the number of events ingested**: After you apply the changes, you can open the metrics explorer in the Azure portal. Go to the Azure Monitor overview pane for the cluster or go to the **Monitoring** section of the selected cluster. Check for an increase or a decrease in the number of events ingested per minute. This information can help you determine whether a specific metric is missing or if all metrics are missing.
 * **A specific metric isn't exposed**: In some scenarios, a metric is documented, but it isn't exposed from the target and isn't forwarded to the Azure Monitor workspace. In this case, it's necessary to verify that other metrics are  forwarded to the workspace.
+* **Schema v2 change**: The configuration for targets in v2 schema of the configap is now separately under cluster-metrics and controlplane-metrics allowing separate control of ingestion volume for cluster-level targets and control plane targets. If you are migrating from v1, replace the configurations to the corresponding sections within cluster-metrics and controlplane-metrics, also note that the key name from 'default-scrape-settings-enabled' is changed to 'default-targets-scrape-enabled'
+
 
   > [!NOTE]
   > If you want to collect the `apiserver_request_duration_seconds` metric or another bucket metric, you must set the entire series in the histogram family:
