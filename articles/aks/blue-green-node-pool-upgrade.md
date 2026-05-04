@@ -231,7 +231,7 @@ az aks nodepool rollback \
 
 No, the `maxUnavailable` setting isn't applicable to blue-green upgrades. _Green_ pools are created by duplicating the entire _blue_ pool, ensuring all nodes remain available during the upgrade process.
 
-### Can blue-green upgrades be used for node pool updates beyond Kubernetes and node image version upgrades?
+### Can blue-green upgrades be used for node pool updates beyond Kubernetes and node image version?
 
 No, the blue-green upgrade strategy is specific to Kubernetes and node image version upgrades at this time. Other changes, such as certificate rotation or kubelet and OS configuration changes cannot be executed via blue-green upgrade strategy. 
 
