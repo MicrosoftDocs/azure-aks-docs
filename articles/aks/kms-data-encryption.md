@@ -146,7 +146,7 @@ For enhanced security, you can use a private key vault that has public network a
 > [!NOTE]
 > This section illustrates creating a key vault with public network access initially, then enabling the firewall with trusted services bypass. This approach is for illustrative purposes only. In production environments, you should create and manage your key vault as private from the start. For guidance on managing private key vaults, see [Azure Key Vault network security][keyvault-network-security].
 
-1. Create a key vault with Azure RBAC enabled.
+1. Create a key vault with Azure RBAC enabled. Ensure `encrypt` and `decrypt` key operations are enabled.
 
     ```azurecli-interactive
     export KEY_VAULT_NAME="<your-key-vault-name>"
@@ -298,7 +298,7 @@ With customer-managed keys, you create and manage your own Azure Key Vault and e
 
 ### Create a key vault and key
 
-1. Create a key vault with Azure RBAC enabled.
+1. Create a key vault with Azure RBAC enabled. Ensure `encrypt` and `decrypt` key operations are enabled.
 
     ```azurecli-interactive
     export KEY_VAULT_NAME="<your-key-vault-name>"
