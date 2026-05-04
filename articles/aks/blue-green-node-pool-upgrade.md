@@ -13,7 +13,7 @@ ms.reviewer: schaffererin
 
 # Blue-green node pool upgrades in Azure Kubernetes Service (AKS) (preview)
 
-Blue-green upgrades enable you to upgrade your AKS node pools side by side by creating a parallel _green_ node pool with the new configuration while maintaining the existing _blue_ node pool. This strategy allows you to test and validate the new configuration before switching traffic, with the ability to quickly roll back if issues arise.
+Blue-green upgrades enable you to upgrade your AKS node pools side by side by creating a parallel _green_ node pool with the new configuration (Kubernetes and node image version) while maintaining the existing _blue_ node pool. This strategy allows you to test and validate the new configuration before switching traffic, with the ability to quickly roll back if issues arise.
 
 This article explains when to use blue-green upgrades, how the process works, configuration options, and considerations for using this upgrade strategy.
 
@@ -82,6 +82,7 @@ Blue-green upgrades currently support the following features:
 Blue-green upgrades currently don't support the following features:
 
 - Automated rollback
+- Using blue green strategy for updates outside of Kubernetes and node image version updates (ex. certificate rotation, kubelet/os configuration updates, etc)
 - [Virtual machine (VM) pools](./virtual-machines-node-pools.md)
 - [Max unavailable](./upgrade-cluster.md#customize-unavailable-nodes-during-upgrade) setting
 - [Undrainable node behavior](./upgrade-options.md#option-2-handle-undrainable-nodes-honor-pdb) and [maxBlockedNodes](./upgrade-options.md#example-configuration-with-max-blocked-nodes) setting
@@ -229,6 +230,10 @@ az aks nodepool rollback \
 ### Do blue-green upgrades support the `maxUnavailable` setting?
 
 No, the `maxUnavailable` setting isn't applicable to blue-green upgrades. _Green_ pools are created by duplicating the entire _blue_ pool, ensuring all nodes remain available during the upgrade process.
+
+### Can blue-green upgrades be used for node pool updates beyond Kubernetes and node image version upgrades?
+
+No, the blue-green upgrade strategy is specific to Kubernetes and node image version upgrades at this time. Other changes, such as certificate rotation or kubelet and OS configuration changes cannot be executed via blue-green upgrade strategy. 
 
 ### Which Kubernetes versions are compatible with blue-green upgrades?
 
