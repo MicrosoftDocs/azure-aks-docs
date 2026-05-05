@@ -70,10 +70,6 @@ In this article, you learn how to use capacity reservation groups with node pool
         --assign-identity $IDENTITY_ID         
     ```
 
-## Limitations for using capacity reservation groups with AKS node pools
-
-You can't update an existing node pool with a capacity reservation group. Instead, you need to create a new node pool with the `--crg-id` flag to associate it with the capacity reservation group. You can also associate an existing capacity reservation group with a system node pool during cluster creation.
-
 ## Get the ID of an existing capacity reservation group
 
 - Get the ID of an existing capacity reservation group using the [`az capacity reservation group show`][az-crg-show] command and set it to an environment variable.
@@ -82,12 +78,20 @@ You can't update an existing node pool with a capacity reservation group. Instea
     CRG_ID=$(az capacity reservation group show --capacity-reservation-group <crg-name> --resource-group <resource-group-name> --query id -o tsv)
     ```
 
-## Associate an existing capacity reservation group with a node pool
+## Associate an existing capacity reservation group with a new node pool
 
-- Associate an existing capacity reservation group with a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--crg-id` flag. The following example assumes you have a CRG named "myCRG".
+- Associate an existing capacity reservation group with a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--crg-id` flag. The following example assumes you have a CRG named "myCRG".
 
     ```azurecli-interactive
     az aks nodepool add --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --crg-id $CRG_ID
+    ```
+
+## Associate an existing capacity reservation group with an existing node pool
+
+- Associate an existing capacity reservation group with an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--crg-id` flag.
+
+    ```azurecli-interactive
+    az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --crg-id $CRG_ID
     ```
 
 ## Associate an existing capacity reservation group with a system node pool
@@ -115,6 +119,7 @@ To learn more about managing node pools in AKS, see [Manage node pools in Azure 
 [capacity-reservation-groups]:/azure/virtual-machines/capacity-reservation-associate-virtual-machine-scale-set
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [az-identity-create]: /cli/azure/identity#az-identity-create
 [az-identity-show]: /cli/azure/identity#az-identity-show
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
