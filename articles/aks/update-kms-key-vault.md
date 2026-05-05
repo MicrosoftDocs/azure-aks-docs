@@ -106,7 +106,7 @@ This article shows you how to update the key vault mode from public to private o
         --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID
    ```
 
---
+---
 
 ## Next steps
 
