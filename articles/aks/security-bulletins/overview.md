@@ -25,31 +25,23 @@ These updates cover security information related to the following AKS components
 - Azure Kubernetes Service Addons (AKS add-ons)
 
 ---
-
-## AKS-2026-0003 Linux kernel `algif_aead` local privilege escalation (Copy Fail) - CVE-2026-31431
+## AKS-2026-0003 AKS Advisory & Mitigation Guide for CVE-2026-31431 (Copy Fail)
 
 **Published Date**: May 1, 2026
 
 ### Description
 
-This bulletin provides an update regarding a recently disclosed local privilege escalation (LPE) vulnerability in the Linux kernel's `algif_aead` module ([CVE-2026-31431](https://github.com/advisories/GHSA-2274-3hgr-wxv6)), referred to as "Copy Fail." The vulnerability has a Common Vulnerability Scoring System (CVSS) 3.1 score of 7.8 (HIGH).
+This bulletin provides an update on a local privilege escalation (LPE) vulnerability that was publicly disclosed on April 29, 2026 affecting the Linux kernel's `algif_aead` module. This vulnerability has been assigned **CVE-2026-31431** and is referred to as **"Copy Fail"**.
 
-Although `algif_aead` isn't loaded by default on AKS Linux nodes, the kernel's module autoloading mechanism (`request_module`) loads it on demand when any process - including an unprivileged container - creates an `AF_ALG` socket of type Authenticated Encryption with Associated Data (AEAD). As a result, an attacker with code execution in any pod (even a nonroot pod with no special capabilities or host access) might escalate to root on the underlying node.
-
-Affected Linux node images include Ubuntu 20.04 FIPS, Ubuntu 22.04, Ubuntu 24.04, and Azure Linux 3.0. Azure Linux 2.0 (Mariner) and Windows node images aren't affected.
-
-AKS deployed a mitigation that blocks the module from autoloading by adding a `modprobe` rule (`install algif_aead /bin/false`). As of May 1, 2026, the mitigation is deployed for node image versions `202604.13.0` and `202604.24.0`. The hotfix doesn't patch existing nodes in place. The action you take depends on the node image version your nodes currently run:
-
-- **Nodes running a node image older than `202604.24.0`**: A node image upgrade to the latest version applies the mitigation.
-- **Nodes already running `202604.24.0`**: A node image upgrade isn't available because no newer image exists. To protect existing nodes immediately, apply the self-service mitigation DaemonSet documented in the [AKS advisory](https://github.com/Azure/AKS/issues/5753).
-
-See **Resolutions** for the exact commands.
+- **CVSS Score**: 7.8 HIGH (`CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H`)
+- **Attack Vector**: Local — requires code execution on the node (e.g., from a container)
+- **Affected Component**: `algif_aead` kernel module (hardware-accelerated cryptographic functions)
+- **Canonical Advisory**: https://ubuntu.com/blog/copy-fail-vulnerability-fixes-available
 
 ### References
 
-- [CVE-2026-31431](https://github.com/advisories/GHSA-2274-3hgr-wxv6)
-- [AKS Advisory & Mitigation Guide (Azure/AKS#5753)](https://github.com/Azure/AKS/issues/5753)
-- [Canonical advisory](https://ubuntu.com/blog/copy-fail-vulnerability-fixes-available)
+- [CVE-2026-31431](https://nvd.nist.gov/vuln/detail/CVE-2026-31431)
+- [AKS Advisory](https://github.com/Azure/AKS/issues/5753)
 
 ### Affected Components
 
@@ -57,20 +49,40 @@ See **Resolutions** for the exact commands.
 
 **Affected Versions**
 
-- AKS Linux nodes (Ubuntu 20.04 FIPS, Ubuntu 22.04, Ubuntu 24.04, and Azure Linux 3.0) that were created before the hotfix global deployment on May 1, 2026, and that haven't been reimaged since.
-- Azure Linux 2.0 (Mariner) and Windows node images aren't affected.
+- All current AKS Linux nodes are exploitable
+  
+- Although `algif_aead` is **not loaded by default** on AKS nodes, the Linux kernel's module auto-loading mechanism (`request_module`) will **automatically load it on demand** when any process — **including unprivileged containers** — creates an AF_ALG socket with AEAD type. This means:
+
+- **An attacker with code execution in any pod (even non-root) can escalate to root on the node**
+- No special pod privileges, capabilities, or host access are required
+- The exploit has been [confirmed working on AKS nodes](https://github.com/Azure/AKS/issues/5753#issuecomment-435955016) from a non-root pod (UID 1000)
+
+| OS | Kernel | Module auto-loads? | Exploitable? |
+|----|--------|--------------------|-------------|
+| Ubuntu 20.04 FIPS | 5.4.0-1160-azure-fips | ✅ Yes | ⚠️ **Yes** |
+| Ubuntu 22.04 | 5.15.0-1102-azure | ✅ Yes | ⚠️ **Yes** |
+| Ubuntu 24.04 | 6.8.0-1052-azure | ✅ Yes | ⚠️ **Yes** |
+| AzureLinux 3.0 | 6.6.130.1-3.azl3 | ✅ Yes | ⚠️ **Yes** |
+
+- **AzureLinux 2.0 (Mariner)** and **Windows** nodes are **not affected**.
 
 **Resolutions**
 
-- New nodes and any node that goes through a node image upgrade automatically receive the mitigation. Node image versions `202604.13.0` and `202604.24.0` are globally deployed as of May 1, 2026.
-- For existing nodes that were created before May 1, 2026, do one of the following:
-  - If a newer node image is available, [upgrade the node image][node-image-upgrade] to pick up the mitigation: `az aks nodepool upgrade --resource-group <rg> --cluster-name <cluster> --name <nodepool> --node-image-only`.
-  - If the node pool is already on the latest node image (`202604.24.0`), apply the mitigation DaemonSet from the [AKS advisory](https://github.com/Azure/AKS/issues/5753) for immediate, non-disruptive protection.
-- After all nodes in a pool run a patched node image, you can remove the mitigation DaemonSet.
+The AKS team is deploying a mitigation that **blocks the module from auto-loading** via `modprobe` configuration (`install algif_aead /bin/false`). This prevents the kernel from loading the vulnerable module even when triggered by an application.
+
+This mitigation is being applied to:
+- ✅ **New VHDs** (baked into VHD image builds for `v20260413` and `v20260424`)
+- ✅ **New nodes** created from patched VHDs will be protected automatically
+
+Monitor the hotfix rollout status in [AKS Advisory](https://github.com/Azure/AKS/issues/5753)
+
+> ![IMPORTANT]
+> Existing nodes created **before** the hotfix VHD is available are **NOT protected** and remain exploitable. We strongly recommend applying the self-service mitigation described in [AKS Advisory](https://github.com/Azure/AKS/issues/5753).
 
 ---
 
-## AKS-2026-0002 gRPC-Go Authorization Bypass via Missing Leading Slash in :path - CVE-2026-33186
+
+## AKS-2026-0002 gRPC-Go Authorization Bypass via Missing Leading Slash in :path 
 
 **Published Date**: March 20, 2026
 
