@@ -4,7 +4,7 @@ description: Enable Istio CNI for enhanced security in Istio-based service mesh 
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.service: azure-kubernetes-service
-ms.date: 08/21/2025
+ms.date: 05/06/2026
 ms.author: gerobayopaz
 author: german1608
 # Customer intent: As a Kubernetes administrator, I want to enable Istio CNI for my Azure Kubernetes Service cluster with Istio service mesh add-on, so that I can improve security by removing privileged network capabilities from application workloads.
@@ -30,7 +30,6 @@ When Istio CNI is enabled, application pods use a minimal `istio-validation` ini
 > Istio CNI is **not** a replacement for [Azure CNI](concepts-network-cni-overview.md) and will not interfere with your normal AKS networking. It is a separate plugin designed to handle Istio’s traffic redirection setup at the node level, improving security by removing the need for privileged init containers in application pods.
 
 ## Before you begin
-
 
 * Install the Azure CLI version 2.86.0 or later. You can run `az --version` to verify the version. To install or upgrade, see [Install Azure CLI][azure-cli-install].
 * You need an AKS cluster with the Istio-based service mesh add-on enabled. If you don't have this setup, see [Deploy Istio-based service mesh add-on for Azure Kubernetes Service][istio-deploy-addon].
@@ -64,6 +63,9 @@ If you already have the Istio service mesh add-on enabled, you can switch to Ist
 ```azurecli-interactive
 az aks mesh proxy-redirection-mechanism --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --mechanism CNIChaining
 ```
+
+> [!NOTE]
+> Existing pods won't automatically switch to the `istio-validation` init container. Restart your deployments after enabling Istio CNI so that pods pick up the change (for example, `kubectl rollout restart deployment/<name>`).
 
 ## Verify Istio CNI is enabled
 
