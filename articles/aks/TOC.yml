@@ -827,6 +827,8 @@
               href: api-server-service-tags.md
             - name: Trusted Access for Azure services
               href: trusted-access-feature.md
+            - name: FIPS-compliant AKS Cluster
+              href: enable-fips-cluster.md
         - name: Certificates
           items:
             - name: Manage cluster certificates and rotation
