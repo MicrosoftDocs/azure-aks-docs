@@ -4,7 +4,7 @@ description: Learn how to monitor Azure Kubernetes Service (AKS) control plane m
 ms.date: 09/06/2024
 ms.topic: how-to
 author: schaffererin
-ms.author: aritraghosh
+ms.author: sunasing
 ms.subservice: aks-monitoring
 ms.service: azure-kubernetes-service
 # Customer intent: As a Kubernetes administrator, I want to monitor control plane metrics for my Azure Kubernetes Service (AKS) cluster, so that I can ensure operational excellence and maintain the performance and availability of critical control plane components.
