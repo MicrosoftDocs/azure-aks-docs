@@ -4,7 +4,7 @@ description: Learn how to monitor Azure Kubernetes Service (AKS) control plane m
 ms.date: 09/06/2024
 ms.topic: how-to
 author: schaffererin
-ms.author: aritraghosh
+ms.author: sunasing
 ms.subservice: aks-monitoring
 ms.service: azure-kubernetes-service
 # Customer intent: As a Kubernetes administrator, I want to monitor control plane metrics for my Azure Kubernetes Service (AKS) cluster, so that I can ensure operational excellence and maintain the performance and availability of critical control plane components.
@@ -115,15 +115,23 @@ AKS includes a preconfigured set of metrics to collect and store for each compon
 Default targets include the following values:
 
 ```yaml
-controlplane-apiserver = true
-controlplane-cluster-autoscaler = false
-controlplace-node-auto-provisioning = false
-controlplane-kube-scheduler = false
-controlplane-kube-controller-manager = false
-controlplane-etcd = true
+controlplane-metrics: |-
+    default-targets-scrape-enabled: |-
+      apiserver = true
+      cluster-autoscaler = false
+      node-auto-provisioning = false
+      kube-scheduler = false
+      kube-controller-manager = false
+      etcd = true
 ```
 
 All configmap files should be applied to the `kube-system` namespace for any cluster.
+
+> [!NOTE]
+> Schema v2 change: The configuration for targets is now separately under cluster-metrics and controlplane-metrics allowing separate control of ingestion volume for cluster-level targets and control plane targets. If you are migrating from v1, replace the configurations to the corresponding sections within cluster-metrics and controlplane-metrics, also note the following:
+> - Modify the key name from 'default-scrape-settings-enabled' to 'default-targets-scrape-enabled'
+> - For targets within controlplane-metrics section, drop the "controlplane-" prefix
+> - Modify minimalingestionprofile = true in the keep-list to minimal-ingestion-profile: |- / enabled = true as its own section
 
 ### Customize an ingestion profile
 
@@ -131,7 +139,7 @@ You can customize an ingestion file for collected metrics. For more information,
 
 #### Ingest only minimal metrics from default targets
 
-* Set `default-targets-metrics-keep-list.minimalIngestionProfile` to `true`, so it ingests only the minimal set of metrics for each of the default targets: `controlplane-apiserver` and `controlplane-etcd`.
+* Set `controlplane-metrics.minimal-ingestion-profile` to `true`, so it ingests only the minimal set of metrics for each of the default targets: `controlplane-apiserver` and `controlplane-etcd`.
 
 #### Ingest all metrics from all targets
 
@@ -139,18 +147,18 @@ You can customize an ingestion file for collected metrics. For more information,
 
 1. Rename the configmap file `configmap-controlplane.yaml`.
 
-1. Set `minimalingestionprofile` to `false`.
+1. Set `controlplane-metrics.minimal-ingestion-profile` to `false`.
 
-1. Under `default-scrape-settings-enabled`, verify that the targets you want to scrape are set to `true`.
+1. Under `controlplane-metrics.default-targets-scrape-enabled`, verify that the targets you want to scrape are set to `true`.
 
    The targets you can set are:
 
-   * `controlplane-apiserver`
-   * `controlplane-cluster-autoscaler`
-   * `controlplace-node-auto-provisioning`
-   * `controlplane-kube-scheduler`
-   * `controlplane-kube-controller-manager`
-   * `controlplane-etcd`
+   * `apiserver`
+   * `cluster-autoscaler`
+   * `node-auto-provisioning`
+   * `kube-scheduler`
+   * `kube-controller-manager`
+   * `etcd`
 
 1. Apply the configmap file by using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command:
 
@@ -162,31 +170,31 @@ After you apply the configuration, it takes several minutes for the metrics from
 
 #### Ingest more than minimal metrics
 
-Using the `minimalingestionprofile` setting helps reduce the ingestion volume of metrics. If set to `true`, only default recording rules, default alerts, and metrics that appear in the default dashboards are collected.
+Using the `controlplane-metrics.minimal-ingestion-profile` setting helps reduce the ingestion volume of metrics. If set to `true`, only default recording rules, default alerts, and metrics that appear in the default dashboards are collected.
 
 1. Download the [`ama-metrics-settings-configmap.yaml`](https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) configmap file.
 
 1. Rename the configmap file `configmap-controlplane.yaml`.
 
-1. Set `minimalingestionprofile` to `true`.
+1. Set `controlplane-metrics.minimal-ingestion-profile` to `true`.
 
-1. Under `default-scrape-settings-enabled`, verify that the targets you want to scrape are set to `true`.
+1. Under `controlplane-metrics.default-targets-scrape-enabled`, verify that the targets you want to scrape are set to `true`.
 
    The targets you can set are:
 
-   * `controlplane-apiserver`
-   * `controlplane-cluster-autoscaler`
-   * `controlplane-node-auto-provisioning`
-   * `controlplane-kube-scheduler`
-   * `controlplane-kube-controller-manager`
-   * `controlplane-etcd`
+   * `apiserver`
+   * `cluster-autoscaler`
+   * `node-auto-provisioning`
+   * `kube-scheduler`
+   * `kube-controller-manager`
+   * `etcd`
 
-1. Under `default-targets-metrics-keep-list`, specify the list of metrics for the `true` targets.
+1. Under `controlplane-metrics.default-targets-metrics-keep-list`, specify the list of metrics for the `true` targets.
 
    For example:
 
    ```yaml
-   controlplane-apiserver= "apiserver_admission_webhook_admission_duration_seconds|apiserver_longrunning_requests"
+   apiserver= "apiserver_admission_webhook_admission_duration_seconds|apiserver_longrunning_requests"
    ```
 
 1. Apply the configmap file by using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command:
@@ -203,25 +211,25 @@ After you apply the configuration, it takes several minutes for the metrics from
 
 1. Rename the configmap file `configmap-controlplane.yaml`.
 
-1. Set `minimalingestionprofile` to `false`.
+1. Set `controlplane-metrics.minimal-ingestion-profile` to `false`.
 
-1. Under `default-scrape-settings-enabled`, verify that the targets that you want to scrape are set to `true`.
+1. Under `controlplane-metrics.default-targets-scrape-enabled`, verify that the targets that you want to scrape are set to `true`.
 
    The targets you can set are:
 
-   * `controlplane-apiserver`
-   * `controlplane-cluster-autoscaler`
-   * `controlplane-node-auto-provisioning`
-   * `controlplane-kube-scheduler`
-   * `controlplane-kube-controller-manager`
-   * `controlplane-etcd`
+   * `apiserver`
+   * `cluster-autoscaler`
+   * `node-auto-provisioning`
+   * `kube-scheduler`
+   * `kube-controller-manager`
+   * `etcd`
 
-1. Under `default-targets-metrics-keep-list`, specify the list of metrics for the `true` targets.
+1. Under `controlplane-metrics.default-targets-metrics-keep-list`, specify the list of metrics for the `true` targets.
 
    For example:
 
    ```yaml
-   controlplane-apiserver= "apiserver_admission_webhook_admission_duration_seconds|apiserver_longrunning_requests"
+   apiserver= "apiserver_admission_webhook_admission_duration_seconds|apiserver_longrunning_requests"
    ```
 
 1. Apply the configmap file:
@@ -239,16 +247,18 @@ Make sure that the  `AzureMonitorMetricsControlPlanePreview` feature flag is ena
 > [!NOTE]
 > The [troubleshooting methods](/azure/azure-monitor/containers/prometheus-metrics-troubleshoot) for the managed service for Prometheus don't apply directly in this scenario. The components that scrape the control plane aren't included in the managed service for Prometheus add-on.
 
-* **Configmap file formatting**: Make sure that you use the correct formatting in the configmap file. Verify that the fields `default-targets-metrics-keep-list`, `minimal-ingestion-profile`, and `default-scrape-settings-enabled` and other fields are correctly populated with their intended values.
+* **Configmap file formatting**: Make sure that you use the correct formatting in the configmap file. Verify that the fields `controlplane-metrics.default-targets-metrics-keep-list`, `controlplane-metrics.minimal-ingestion-profile`, and `controlplane-metrics.default-targets-scrape-enabled` and other fields are correctly populated with their intended values.
 * **Isolate the control plane from the data plane**: Start by setting some of the [node-related metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default) to `true`, and then verify that the metrics are forwarded to the workspace. Completing these steps helps you determine whether an issue is specific to scraping control plane metrics.
 * **A change in the number of events ingested**: After you apply the changes, you can open the metrics explorer in the Azure portal. Go to the Azure Monitor overview pane for the cluster or go to the **Monitoring** section of the selected cluster. Check for an increase or a decrease in the number of events ingested per minute. This information can help you determine whether a specific metric is missing or if all metrics are missing.
 * **A specific metric isn't exposed**: In some scenarios, a metric is documented, but it isn't exposed from the target and isn't forwarded to the Azure Monitor workspace. In this case, it's necessary to verify that other metrics are  forwarded to the workspace.
+* **Schema v2 change**: The configuration for targets in v2 schema of the configap is now separately under cluster-metrics and controlplane-metrics allowing separate control of ingestion volume for cluster-level targets and control plane targets. If you are migrating from v1, replace the configurations to the corresponding sections within cluster-metrics and controlplane-metrics, also note that the key name from 'default-scrape-settings-enabled' is changed to 'default-targets-scrape-enabled'
+
 
   > [!NOTE]
   > If you want to collect the `apiserver_request_duration_seconds` metric or another bucket metric, you must set the entire series in the histogram family:
   >
   > ```yaml
-  > controlplane-apiserver = "apiserver_request_duration_seconds_bucket|apiserver_request_duration_seconds_sum|apiserver_request_duration_seconds_count"
+  > apiserver = "apiserver_request_duration_seconds_bucket|apiserver_request_duration_seconds_sum|apiserver_request_duration_seconds_count"
   > ```
 
 * **No access to the Azure Monitor workspace**: When you enable the add-on, you might specify an existing workspace that you can't access. In that scenario, it appears that metrics aren't collected and forwarded. Make sure that you create a new workspace to use to collect metrics when you enable the add-on or when you create the cluster.
