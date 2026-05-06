@@ -1,7 +1,7 @@
 ---
 title: "Update Kubernetes and node images across multiple member clusters"
 description: This article describes the concept of update orchestration across multiple clusters.
-ms.date: 04/30/2026
+ms.date: 05/06/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -27,8 +27,8 @@ The following image visualizes an upgrade run containing two update stages, each
 * **Update strategy**: An update strategy describes the update sequence with stages and groups and allows you to reuse an update run configuration instead of defining the sequence repeatedly in each run. An update strategy doesn't include desired Kubernetes or node image versions.
 * **Maximum Concurrency (preview)**:
 Control how many clusters can upgrade concurrently within an update stage or update group. For more information, see [Maximum concurrency](#maximum-concurrency-preview).
-* **Update stage**: Update runs that use an update strategy are divided into stages, which are applied sequentially. For example, a first update stage might update test environment member clusters, and a second update stage would then later update production environment member clusters. A wait time can be specified to delay between the application of subsequent update stages.
-* **Update group**: Each update stage contains one or more update groups, which are used to select the member clusters to be updated. Update groups are also used to order the application of updates to member clusters. Within an update stage, updates are applied to all the different update groups in parallel; within an update group, member clusters update sequentially by default. You can change this default behavior by configuring [Maximum concurrency](#maximum-concurrency-preview) at the stage or group level to control how many clusters upgrade concurrently. Each member cluster of the fleet can only be a part of one update group.
+* **Update stage**: Update runs that use an update strategy are divided into stages, which are applied sequentially. For example, a first update stage might update test environment member clusters, and a second update stage would then later update production environment member clusters. A wait time can be specified to delay between the application of subsequent update stages. Stages can select members directly using a [Member selector](#member-selection-with-label-selectors-preview) label selector, or they can contain one or more update groups for finer-grained control.
+* **Update group**: Each update stage contains one or more update groups, which are used to select the member clusters to be updated. Members can be assigned to groups using either name-based matching (where a fleet member's update group matches the group name) or label-based matching using a [Member selector](#member-selection-with-label-selectors-preview). Update groups are also used to order the application of updates to member clusters. Within an update stage, updates are applied to all the different update groups in parallel; within an update group, member clusters update sequentially by default. You can change this default behavior by configuring [Maximum concurrency](#maximum-concurrency-preview) at the stage or group level to control how many clusters upgrade concurrently. Each member cluster of the fleet can only be a part of one update group.
 * **Approval gates (preview)**: Can be configured before or after each stage or group. Approvals pause the update run, allowing either you or automations that you've set up to check that it's OK to proceed. After you or your automation grants approval, the update run will continue.
 
 > [!NOTE]
@@ -176,6 +176,37 @@ Examples:
 * You create an auto-upgrade profile with TargetKubernetesVersion channel, specify a target Kubernetes version of "1.29" and enable LongTermSupport (LTS) in the auto-upgrade profile. The latest community supported minor version is "1.33". A new patch version 1.29.5 is published. Update run is automatically created with the target of 1.29.5. If the generated update run includes clusters without LTS enabled, it fails.
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
+## Member selection with label selectors (preview)
+
+`memberSelector` is an optional field on update stages and update groups that enables Kubernetes-style label selectors for selecting fleet members. This field provides a flexible alternative to the name-based group matching, enabling multi-dimensional member selection.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
+`memberSelector` uses a string-based label selector parsed using standard Kubernetes label selector syntax. Supported operators are: `=`, `==`, `!=`, `in`, `notin`, `exists`, and `!exists`.
+
+### Stage-level member selection
+
+When `memberSelector` is set on a stage **without groups**, all matching members form one implicit group. This field provides a simple way to select members for a stage without defining explicit groups. The stage's `maxConcurrency` controls how many clusters upgrade concurrently.
+
+For example, a stage with `"memberSelector": { "byLabel": "env=staging" }` selects all members with the label `env=staging` and upgrades them as a single group.
+
+### Group-level member selection
+
+When `memberSelector` is set on a group, it overrides name-based matching. The group's `name` field becomes a display identifier used for status reporting, logging, and gate targets. This field enables parallel subsets with different concurrency limits under a shared stage ceiling.
+
+For example, two groups in the same stage can use `"memberSelector": { "byLabel": "tier=frontend" }` and `"memberSelector": { "byLabel": "tier=backend" }` respectively, each with their own `maxConcurrency` setting.
+
+### Stage-level pre-filtering with groups
+
+When both `memberSelector` and `groups` are set on a stage, the stage-level selector acts as a **pre-filter**. Only members matching the stage selector are candidates for group-level matching. This field is useful for scoping a stage to a subset of members before further partitioning by groups.
+
+For example, a stage with `"memberSelector": { "byLabel": "env=prod" }` and a group with `"memberSelector": { "byLabel": "tier=frontend" }` selects only members with **both** `env=prod` and `tier=frontend`.
+
+> [!NOTE]
+> At least one of `memberSelector` or `groups` must be set on a stage. `memberSelector` is fully opt-in—existing name-based strategies continue to work without changes. You can mix both approaches in the same strategy.
+
+For instructions on configuring `memberSelector`, see [Select members using label selectors](./update-create-update-strategy.md#select-members-using-label-selectors-preview).
 
 ## Maximum concurrency (preview)
 

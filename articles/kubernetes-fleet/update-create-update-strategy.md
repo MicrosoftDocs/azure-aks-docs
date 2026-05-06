@@ -2,7 +2,7 @@
 title: "Define reuseable update strategies for multi-clusters updates using Azure Kubernetes Fleet Manager"
 description: See how you can define staged update strategies that can be reused across multiple update runs and auto-upgrade profiles in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 03/18/2026
+ms.date: 05/06/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -49,6 +49,9 @@ This article covers how to define update strategies using groups and stages.
 ## Assign clusters to update groups
 
 Clusters can be used in update strategies once they are added to an update group which can be assigned to update stages. Within an update stage, updates are applied to each update group in parallel. Within an update group, member clusters update sequentially.
+
+> [!TIP]
+> As an alternative to assigning clusters to named update groups, you can use `memberSelector` on stages and groups to select members by their labels. For more information, see [Select members using label selectors](#select-members-using-label-selectors-preview).
 
 You can assign a member cluster to a specific update group in one of two ways:
 
@@ -112,7 +115,7 @@ az fleet member update \
  --resource-group $GROUP \
  --fleet-name $FLEET \
  --name member1 \
- --update-group group-1a
+ --update-group group-1
 ```
 
 ---
@@ -200,6 +203,80 @@ For this scenario, we create stages and groups to match the details used for the
      --fleet-name $FLEET \
      --name $STRATEGY \
      --stages example-stages.json
+    ```
+
+---
+
+## Select members using label selectors (preview)
+
+Instead of assigning clusters to update groups, you can use `memberSelector` to select members by their labels. For conceptual details on how `memberSelector` works at the stage and group levels, see [Member selection with label selectors](./concepts-update-orchestration.md#member-selection-with-label-selectors-preview).
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
+### [Azure CLI](#tab/cli)
+
+1. Set labels on your fleet members using the [`az fleet member update`][az-fleet-member-update] command:
+
+    ```azurecli-interactive
+    az fleet member update \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name member1 \
+     --labels "env=staging tier=frontend"
+
+    az fleet member update \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name member2 \
+     --labels "env=production tier=backend"
+
+    az fleet member update \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name member3 \
+     --labels "env=production tier=backend"
+    ```
+
+2. Create a JSON file (*example-label-strategy.json*) that uses `memberSelector` to select members by label. This example uses a stage-level selector for staging and group-level selectors for production:
+
+    ```json
+    {
+        "stages": [
+            {
+                "name": "staging",
+                "memberSelector": { "byLabel": "env=staging" },
+                "maxConcurrency": "1",
+                "afterStageWaitInSeconds": 600
+            },
+            {
+                "name": "production",
+                "memberSelector": { "byLabel": "env=production" },
+                "maxConcurrency": "6",
+                "groups": [
+                    {
+                        "name": "frontend",
+                        "memberSelector": { "byLabel": "tier=frontend" },
+                        "maxConcurrency": "3"
+                    },
+                    {
+                        "name": "backend",
+                        "memberSelector": { "byLabel": "tier=backend" },
+                        "maxConcurrency": "3"
+                    }
+                ]
+            }
+        ]
+    }
+    ```
+
+3. Create the update strategy using the [`az fleet updatestrategy create`][az-fleet-updatestrategy-create] command:
+
+    ```azurecli-interactive
+    az fleet updatestrategy create \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name $STRATEGY \
+     --stages example-label-strategy.json
     ```
 
 ---
