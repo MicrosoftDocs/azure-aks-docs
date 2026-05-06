@@ -32,7 +32,7 @@ When Istio CNI is enabled, application pods use a minimal `istio-validation` ini
 ## Before you begin
 
 
-* Install the Azure CLI version (2.77.0) (TODO: GERMAN TO ADJUST THIS VERSION ONCE IT RELEASES) or later. You can run `az --version` to verify the version. To install or upgrade, see [Install Azure CLI][azure-cli-install].
+* Install the Azure CLI version 2.86.0 or later. You can run `az --version` to verify the version. To install or upgrade, see [Install Azure CLI][azure-cli-install].
 * You need an AKS cluster with the Istio-based service mesh add-on enabled. If you don't have this setup, see [Deploy Istio-based service mesh add-on for Azure Kubernetes Service][istio-deploy-addon].
 * Ensure your Istio service mesh is using revision `asm-1-25` or later. You can check the current revision with:
 
