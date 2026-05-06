@@ -48,7 +48,7 @@ LTS Premium-tier billing for a cluster begins only after the cluster's Kubernete
 > Opting in early lets you lock in your LTS support plan and patch channel configuration ahead of community end-of-life, with no additional Premium-tier LTS charges until the LTS support window begins.
 
 > [!NOTE]
-> We strongly recommend enabling the patch auto-upgrade channel to ensure your cluster always receives the latest supported patches. LTS only supports the last two patch versions for each minor version. Clusters not on the latest patches might lose support.
+> We strongly recommend enabling the patch auto-upgrade channel to ensure your cluster always receives the latest supported patches. LTS only supports the last two patch versions for each minor version. Clusters not on the latest supported two patch versions might lose support.
 
 ### Billing example
 
