@@ -13,7 +13,7 @@ ms.reviewer: schaffererin
 
 # Blue-green node pool upgrades in Azure Kubernetes Service (AKS) (preview)
 
-Blue-green upgrades enable you to upgrade your AKS node pools side by side by creating a parallel _green_ node pool with the new configuration (Kubernetes and node image version) while maintaining the existing _blue_ node pool. This strategy allows you to test and validate the new configuration before switching traffic, with the ability to quickly roll back if issues arise.
+Blue-green upgrades enable you to upgrade your AKS node pools by adding new _green_ nodes with the updated configuration (Kubernetes and node image version) to the existing node pool, while the original _blue_ nodes continue running. This strategy allows you to test and validate the new configuration before committing to the new version, with the ability to quickly roll back if issues arise.
 
 This article explains when to use blue-green upgrades, how the process works, configuration options, and considerations for using this upgrade strategy.
 
@@ -91,7 +91,7 @@ Keep the following considerations in mind when using blue-green upgrades:
 
 | Resource requirements | Complexity considerations | Time factors |
 | --------------------- | ------------------------- | ------------ |
-| * Requires double the node capacity during the upgrade process, leading to increased infrastructure costs. <br> * You need extra compute quota in your Azure subscription to accommodate the temporary doubling of nodes. <br> * You might encounter regional capacity limits during peak usage periods. | * Requires careful planning for stateful workloads to ensure data consistency during migration. <br> * Requires extra monitoring for both the blue and green node pools during the transition period. | * Longer overall upgrade duration compared to in-place upgrades. <br> * Validation period adds time before final cutover. |
+| * Requires double the node capacity during the upgrade process, leading to increased infrastructure costs. <br> * You need extra compute quota in your Azure subscription to accommodate the temporary doubling of nodes. <br> * You might encounter regional capacity limits during peak usage periods. | * Requires careful planning for stateful workloads to ensure data consistency during migration. <br> * Requires extra monitoring for both the blue and green nodes during the transition period. | * Longer overall upgrade duration compared to in-place upgrades. <br> * Validation period adds time before final cutover. |
 
 ## Blue-green upgrade workflow
 
@@ -106,11 +106,11 @@ The following diagram illustrates the upgrade and commit workflow:
 The upgrade and commit process is as follows:
 
 1. **Cordon _blue_ nodes**: Existing _blue_ nodes are marked as unschedulable.
-1. **Create _green_ pool**: New _green_ node pool is provisioned with updated configuration.
-1. **Parallel operation**: Both _blue_ and _green_ pools run simultaneously.
+1. **Add _green_ nodes**: New _green_ nodes with the updated configuration are added to the existing node pool.
+1. **Parallel operation**: Both _blue_ and _green_ nodes run simultaneously within the same node pool.
 1. **Gradual migration**: Workloads are progressively drained from _blue_ nodes and rescheduled to _green_ nodes in batches.
-1. **Validate _green_ pool**: Monitor and test workloads on the new pool during migration.
-1. **Complete transition**: After final validation period, the _blue_ pool is deleted and _green_ becomes primary.
+1. **Validate _green_ nodes**: Monitor and test workloads on the new nodes during migration.
+1. **Complete transition**: After the final validation period, the _blue_ nodes are deleted and _green_ nodes become primary.
 
 ### Upgrade and roll back scenario
 
@@ -121,11 +121,11 @@ The following diagram illustrates the upgrade and roll back workflow:
 The upgrade and roll back process is as follows:
 
 1. **Cordon _blue_ nodes**: Existing _blue_ nodes are marked as unschedulable.
-1. **Create _green_ pool**: New _green_ node pool is provisioned with updated configuration.
-1. **Parallel operation**: Both _blue_ and _green_ pools run simultaneously.
-1. **Detect issues**: Identify problems during validation on _green_ pool.
-1. **Execute rollback**: Uncordon _blue_ nodes, drain _green_ pool, and migrate workloads back to _blue_ nodes.
-1. **Restore state**: _Green_ pool is deleted and system returns to original configuration.
+1. **Add _green_ nodes**: New _green_ nodes with the updated configuration are added to the existing node pool.
+1. **Parallel operation**: Both _blue_ and _green_ nodes run simultaneously within the same node pool.
+1. **Detect issues**: Identify problems during validation on _green_ nodes.
+1. **Execute rollback**: Uncordon _blue_ nodes, drain _green_ nodes, and migrate workloads back to _blue_ nodes.
+1. **Restore state**: _Green_ nodes are deleted and the node pool returns to its original configuration.
 
 ## Choose your upgrade strategy
 
@@ -134,7 +134,7 @@ When creating or upgrading an AKS node pool, you can specify the upgrade strateg
 | Strategy | Description |
 | -------- | ----------- |
 | `Rolling` (default) | Standard rolling upgrade where nodes are updated one by one. |
-| `BlueGreen` | Creates a parallel _green_ pool with the new configuration while maintaining the existing _blue_ node pool. |
+| `BlueGreen` | Adds new _green_ nodes with the updated configuration to the existing node pool while keeping the original _blue_ nodes running. |
 
 ## Customize blue-green upgrade properties
 
@@ -229,7 +229,7 @@ az aks nodepool rollback \
 
 ### Do blue-green upgrades support the `maxUnavailable` setting?
 
-No, the `maxUnavailable` setting isn't applicable to blue-green upgrades. _Green_ pools are created by duplicating the entire _blue_ pool, ensuring all nodes remain available during the upgrade process.
+No, the `maxUnavailable` setting isn't applicable to blue-green upgrades. New _green_ nodes are added to the existing node pool alongside the existing _blue_ nodes, ensuring all original nodes remain available during the upgrade process.
 
 ### Can blue-green upgrades be used for node pool updates beyond Kubernetes and node image version?
 
@@ -257,11 +257,11 @@ All node configurations including taints, labels, and annotations are automatica
 
 ### What's the cost impact of blue-green upgrades?
 
-You're charged for both node pools during the upgrade window, so make sure you plan for temporary cost doubling during the transition period.
+You're charged for both the original _blue_ nodes and the new _green_ nodes during the upgrade window, so make sure you plan for temporary cost doubling during the transition period.
 
 ### What happens during a capacity failure?
 
-In the event of a capacity failure when provisioning the _green_ pool, the upgrade fails and the _blue_ pool remains unaffected. You can retry the upgrade once sufficient capacity is available or choose to roll back.
+In the event of a capacity failure when adding the _green_ nodes, the upgrade fails and the _blue_ nodes remain unaffected. You can retry the upgrade once sufficient capacity is available or choose to roll back.
 
 ### What happens during rollback?
 

@@ -162,7 +162,7 @@
                   href: istio-deploy-addon.md
                 - name: Native sidecar mode
                   href: istio-native-sidecar.md
-                - name: Istio CNI (Preview)
+                - name: Istio CNI
                   href: istio-cni.md
                 - name: Mesh configuration
                   href: istio-meshconfig.md
