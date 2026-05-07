@@ -4,17 +4,15 @@ description: Enable Istio CNI for enhanced security in Istio-based service mesh 
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.service: azure-kubernetes-service
-ms.date: 08/21/2025
+ms.date: 05/06/2026
 ms.author: gerobayopaz
 author: german1608
 # Customer intent: As a Kubernetes administrator, I want to enable Istio CNI for my Azure Kubernetes Service cluster with Istio service mesh add-on, so that I can improve security by removing privileged network capabilities from application workloads.
 ---
 
-# Enable Istio CNI for Istio-based service mesh add-on for Azure Kubernetes Service (Preview)
+# Enable Istio CNI for Istio-based service mesh add-on for Azure Kubernetes Service
 
 This article shows you how to enable Istio CNI for the Istio-based service mesh add-on on Azure Kubernetes Service (AKS). Istio CNI improves security by eliminating the need for privileged network capabilities in application workloads within the service mesh.
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Overview
 
@@ -33,53 +31,13 @@ When Istio CNI is enabled, application pods use a minimal `istio-validation` ini
 
 ## Before you begin
 
-* Install the Azure CLI version 2.77.0 or later. You can run `az --version` to verify the version. To install or upgrade, see [Install Azure CLI][azure-cli-install].
-* Install the `aks-preview` Azure CLI extension version 19.0.0b5 or later:
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-    If you already have the `aks-preview` extension, update it to the latest version:
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-* Register the `IstioCNIPreview` feature flag on your Azure subscription:
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "IstioCNIPreview"
-    ```
-
-    Use the following command to check the registration status:
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "IstioCNIPreview"
-    ```
-
-    It takes a few minutes for the feature to register. Verify the registration state shows `Registered`:
-
-    ```json
-    {
-      "id": "/subscriptions/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Features/providers/Microsoft.ContainerService/features/IstioCNIPreview",
-      "name": "Microsoft.ContainerService/IstioCNIPreview",
-      "properties": {
-        "state": "Registered"
-      },
-      "type": "Microsoft.Features/providers/features"
-    }
-    ```
-
+* Install the Azure CLI version 2.86.0 or later. You can run `az --version` to verify the version. To install or upgrade, see [Install Azure CLI][azure-cli-install].
 * You need an AKS cluster with the Istio-based service mesh add-on enabled. If you don't have this setup, see [Deploy Istio-based service mesh add-on for Azure Kubernetes Service][istio-deploy-addon].
 * Ensure your Istio service mesh is using revision `asm-1-25` or later. You can check the current revision with:
 
     ```azurecli-interactive
     az aks show --resource-group <resource-group-name> --name <cluster-name> --query 'serviceMeshProfile.istio.revisions'
     ```
-
-> [!NOTE]
-> Istio CNI is not compatible with Ubuntu 20.04 node pools. Ensure your cluster uses Ubuntu 22.04 or Azure Linux node pools.
 
 ### Set environment variables
 
@@ -90,11 +48,24 @@ export RESOURCE_GROUP=<resource-group-name>
 
 ## Enable Istio CNI
 
-Use the following command to enable Istio CNI on your AKS cluster:
+### Enable Istio CNI on a new mesh installation
+
+You can enable Istio CNI when enabling the service mesh add-on by specifying the `--proxy-redirection-mechanism` parameter:
 
 ```azurecli-interactive
-az aks mesh enable-istio-cni --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
+az aks mesh enable --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --proxy-redirection-mechanism CNIChaining
 ```
+
+### Enable Istio CNI on an existing mesh installation
+
+If you already have the Istio service mesh add-on enabled, you can switch to Istio CNI using the following command:
+
+```azurecli-interactive
+az aks mesh proxy-redirection-mechanism --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --mechanism CNIChaining
+```
+
+> [!NOTE]
+> Existing pods won't automatically switch to the `istio-validation` init container. Restart your deployments after enabling Istio CNI so that pods pick up the change (for example, `kubectl rollout restart deployment/<name>`).
 
 ## Verify Istio CNI is enabled
 
@@ -189,7 +160,7 @@ initContainers:
 To disable Istio CNI and return to using traditional init containers, use the following command:
 
 ```azurecli-interactive
-az aks mesh disable-istio-cni --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
+az aks mesh proxy-redirection-mechanism --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --mechanism InitContainers
 ```
 
 After disabling Istio CNI:
