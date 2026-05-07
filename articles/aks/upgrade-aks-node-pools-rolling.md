@@ -52,7 +52,9 @@ AKS accepts both integer values and a percentage value for max surge. For exampl
 | Integer | `5` | Five extra nodes to surge |
 | Percentage | `50%` | Surge value of half the current node count in the pool |
 
-Max surge percent values can be a minimum of `1%` and a maximum of `100%`. A percent value is rounded up to the nearest node count. If the max surge value is higher than the required number of nodes to be upgraded, the number of nodes to be upgraded is used for the max surge value.
+Max surge percent values can be a minimum of `1%` and a maximum of `100%`. A percent value is rounded up to the nearest node count. If the max surge value is higher than the required number of nodes to be upgraded, the number of nodes to be upgraded is used for the max surge value. 
+
+In the event that scaling to the MaxSurge value isn't possible due to quota or capacity limitations, AKS will attempt a surge of 1 automatically by default as a backup.
 
 #### Set max surge value
 
@@ -78,12 +80,11 @@ az aks nodepool update \
 
 > [!IMPORTANT]
 >
-> - You must set max surge to `0` in order to set a max unavailable value. The two values can't both be active at the same time.
 > - Max unavailable doesn't create surge nodes during the upgrade process. Instead, AKS cordons _n_ nodes (the max unavailable value) at a time and evicts the pods to other nodes in the agent pool. This might cause workload disruptions if the pods can't be scheduled.
 > - Max unavailable might cause more failures due to unsatisfied Pod Disruption Budgets (PDBs) since there are fewer resources for pods to be scheduled on. For more information, see [Troubleshooting for Pod Disruption Budgets][pdb-troubleshooting].
 > - You can't set max unavailable on system node pools.
 
-AKS can also configure upgrades to not use a surge node and upgrade the nodes in place. The max unavailable value determines how many nodes can be simultaneously cordoned and drained from the existing node pool nodes.
+AKS can also configure upgrades to not use a surge node and upgrade the nodes in place. The max unavailable value determines how many nodes can be simultaneously cordoned and drained from the existing node pool nodes. Using max unavailable for an in-place upgrade is recommended when obtaining additional quota or capacity is not possible for the upgrade surge.
 
 AKS accepts both integer values and a percentage value for max unavailable. For example:
 
@@ -123,6 +124,14 @@ az aks nodepool upgrade \
     --max-surge 0 \
     --max-unavailable 5
 ```
+
+### Capacity Based Surge (preview)
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+Set both MaxUnavailable and MaxSurge values to surge based on available capacity. With both  configurations enabled, the MaxSurge value will be attempted first. If MaxSurge value is not available due to quota or capacity, a surge of 1 node will be attempted. If a surge of 1 is not available, MaxUnavailable configuration will be attempted for an in-place upgrade. 
+
+The aks-preview Azure CLI extension is required to use Capacity Based Surge. MaxSurge and MaxUnavailable can be used together for a Capacity Based Surge or individually.
 
 ### Customize node drain timeout
 
