@@ -1,7 +1,7 @@
 ---
 title: "Update Kubernetes and node images across multiple member clusters"
 description: This article describes the concept of update orchestration across multiple clusters.
-ms.date: 04/30/2026
+ms.date: 05/06/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -27,8 +27,8 @@ The following image visualizes an upgrade run containing two update stages, each
 * **Update strategy**: An update strategy describes the update sequence with stages and groups and allows you to reuse an update run configuration instead of defining the sequence repeatedly in each run. An update strategy doesn't include desired Kubernetes or node image versions.
 * **Maximum Concurrency (preview)**:
 Control how many clusters can upgrade concurrently within an update stage or update group. For more information, see [Maximum concurrency](#maximum-concurrency-preview).
-* **Update stage**: Update runs that use an update strategy are divided into stages, which are applied sequentially. For example, a first update stage might update test environment member clusters, and a second update stage would then later update production environment member clusters. A wait time can be specified to delay between the application of subsequent update stages.
-* **Update group**: Each update stage contains one or more update groups, which are used to select the member clusters to be updated. Update groups are also used to order the application of updates to member clusters. Within an update stage, updates are applied to all the different update groups in parallel; within an update group, member clusters update sequentially by default. You can change this default behavior by configuring [Maximum concurrency](#maximum-concurrency-preview) at the stage or group level to control how many clusters upgrade concurrently. Each member cluster of the fleet can only be a part of one update group.
+* **Update stage**: Update runs that use an update strategy are divided into stages, which are applied sequentially. For example, a first update stage might update test environment member clusters, and a second update stage would then later update production environment member clusters. A wait time can be specified to delay between the application of subsequent update stages. Stages can select members directly using [member labels](#group-clusters-using-member-labels-preview), or they can contain one or more update groups for finer-grained control.
+* **Update group**: Each update stage contains one or more update groups, which are used to select the member clusters to be updated. Members can be assigned to groups using either name-based matching (where a fleet member's update group matches the group name) or label-based matching using [member labels](#group-clusters-using-member-labels-preview). Update groups are also used to order the application of updates to member clusters. Within an update stage, updates are applied to all the different update groups in parallel; within an update group, member clusters update sequentially by default. You can change this default behavior by configuring [Maximum concurrency](#maximum-concurrency-preview) at the stage or group level to control how many clusters upgrade concurrently. Each member cluster of the fleet can only be a part of one update group.
 * **Approval gates (preview)**: Can be configured before or after each stage or group. Approvals pause the update run, allowing either you or automations that you've set up to check that it's OK to proceed. After you or your automation grants approval, the update run will continue.
 
 > [!NOTE]
@@ -176,6 +176,24 @@ Examples:
 * You create an auto-upgrade profile with TargetKubernetesVersion channel, specify a target Kubernetes version of "1.29" and enable LongTermSupport (LTS) in the auto-upgrade profile. The latest community supported minor version is "1.33". A new patch version 1.29.5 is published. Update run is automatically created with the target of 1.29.5. If the generated update run includes clusters without LTS enabled, it fails.
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
+## Group clusters using member labels (preview)
+
+Member labels can be used to group clusters and configure your update sequence with Kubernetes-style label selectors. This way, you can assign multiple labels to fleet members and use them for different strategies instead of being restricted to a single update group per member. You can group clusters in your strategy with their member labels by configuring `memberSelector` on your strategy at two levels:
+
+- **Stage level**: Selects members for the entire stage. When no groups are defined, all matching members form a single implicit group. When groups are also defined, the stage-level selector acts as a pre-filter before group-level matching is applied.
+- **Group level**: Selects members for a specific group within a stage, enabling parallel subsets with different concurrency limits.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
+`memberSelector` uses a string-based label selector parsed using standard Kubernetes label selector syntax. Supported operators are: `=`, `==`, `!=`, `in`, `notin`, `exists`, and `!exists`.
+
+> [!NOTE]
+> We recommend using member labels instead of update groups for grouping clusters in update strategies. With member labels, you can easily manage large fleets with dynamic membership and complex grouping needs. 
+>
+> Existing group name based strategies will continue to work without changes. 
+
+For instructions on assigning member labels and using `memberSelector` in a strategy, see [Create an update strategy using member selectors](./update-create-update-strategy.md#create-an-update-strategy-using-member-selectors-preview).
 
 ## Maximum concurrency (preview)
 
