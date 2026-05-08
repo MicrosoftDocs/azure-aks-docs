@@ -97,10 +97,7 @@ You can set this up on a new cluster or enable it on an existing one.
 
 # [Azure CLI](#tab/cli)
 
-Choose the path that matches your situation:
-
-- **[New cluster](#new-cluster)**: Create and configure a cluster from scratch.
-- **[Existing cluster](#existing-cluster)**: Enable stored logs on a cluster you already have.
+Follow the [end-to-end setup](#end-to-end-setup) below. The same three steps work for both new and existing clusters.
 
 # [ARM Template](#tab/arm)
 
@@ -112,16 +109,32 @@ For Bicep deployments, see the [Azure Monitor Bicep deployment guide](/azure/azu
 
 ---
 
-## New cluster
+## End-to-end setup
 
-### Step 1: Create a cluster with ACNS enabled
+Follow these steps in order. Steps 1 and 2 are required. Step 3 is optional and only needed if you want logs forwarded to Azure Monitor.
+
+| Step | What you do | Required? |
+|------|-------------|-----------|
+| 1 | Make sure your cluster has ACNS enabled (new or existing) | Yes |
+| 2 | Apply a `ContainerNetworkLog` CRD to start log collection | Yes |
+| 3 | Forward logs to Azure Monitor for persistent storage | Optional |
+
+Set your environment variables once and reuse them throughout:
 
 ```azurecli
 # Replace placeholders with your own values
 export CLUSTER_NAME="<aks-cluster-name>"
 export RESOURCE_GROUP="<aks-resource-group>"
 export LOCATION="<location>"
+```
 
+### Step 1: Make sure ACNS is enabled on your cluster
+
+Use the option that matches your situation.
+
+#### Option A: Create a new cluster with ACNS
+
+```azurecli
 # Create the resource group if it doesn't already exist
 az group create --name $RESOURCE_GROUP --location $LOCATION
 
@@ -137,9 +150,12 @@ az aks create \
   --generate-ssh-keys \
   --enable-acns \
   --acns-advanced-networkpolicies L7
-
-# Optional: add --node-vm-size Standard_D4ads_v5 if the default VM size is not available in your subscription
 ```
+
+> [!TIP]
+> If the default VM size isn't available in your subscription, add `--node-vm-size Standard_D4ads_v5`.
+>
+> If you already know you want logs forwarded to Azure Monitor, you can do everything in one command. See [Shortcut: Create a cluster with Log Analytics from the start](#shortcut-create-a-cluster-with-log-analytics-from-the-start).
 
 Get your cluster credentials so you can run `kubectl` commands:
 
@@ -147,132 +163,110 @@ Get your cluster credentials so you can run `kubectl` commands:
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 ```
 
-### Step 2: Define what to log with a ContainerNetworkLog custom resource
+#### Option B: Use an existing cluster
 
-Stored logs mode doesn't collect anything until you define at least one `ContainerNetworkLog` custom resource. This resource specifies which traffic to capture: by namespace, pod, service, protocol, or verdict.
-
-When a custom resource is applied, matching flows are written to `/var/log/acns/hubble/events.log` on each host node.
-
-See the full [ContainerNetworkLog CRD template](#containernetworklog-crd-template) below for all available fields, or jump straight to applying one:
+If your cluster already has ACNS enabled, you can skip ahead to Step 2. Otherwise, get your credentials so you can run `kubectl` commands:
 
 ```azurecli
-kubectl apply -f <crd.yaml>
-```
-
-> [!TIP]
-> For a practical example, see the [sample CRD in the AKS Labs documentation](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#enable-flow-logs-for-the-pets-namespace).
-
-Logs on host nodes are temporary. Files auto-rotate at 50 MB, and older entries are overwritten. For persistent storage, configure Azure Monitor (next step). You can also integrate a partner logging service like an OpenTelemetry collector.
-
-### Read or forward logs without Azure Monitor
-
-Azure Monitor integration is optional. After Step 2, every node has flow records at `/var/log/acns/hubble/events.log` in JSON format. You can read these files directly on the node, or forward them to a SIEM or observability backend using any OpenTelemetry-compatible collector or logging service.
-
-This path can be used instead of Azure Monitor, or alongside it.
-
-### Step 3 (optional): Forward logs to Azure Monitor for persistent storage
-
-After Steps 1 and 2, ACNS is already generating flow logs on each node. This step is only needed if you want logs forwarded to a Log Analytics workspace for long-term retention, KQL queries, and the built-in Azure portal and Grafana dashboards. Skip this step if you plan to consume host-local logs directly or forward them through your own OpenTelemetry collector or logging service.
-
-```azurecli
-az aks update --enable-acns \
-  --enable-container-network-logs \
-  -g $RESOURCE_GROUP \
-  -n $CLUSTER_NAME
-```
-
-To send logs to a specific workspace, add the `--azure-monitor-workspace-resource-id` flag:
-
-```azurecli
-az aks update --enable-acns \
-  --enable-container-network-logs \
-  --azure-monitor-workspace-resource-id $AZURE_MONITOR_ID \
-  -g $RESOURCE_GROUP \
-  -n $CLUSTER_NAME
-```
-
-> [!NOTE]
-> Flow logs are written to the host when the `ContainerNetworkLog` custom resource is applied. If you enable Log Analytics integration later, the Azure Monitor Agent begins collecting from that point forward. Logs older than two minutes aren't ingested.
-
-### Alternative: Create a cluster with Log Analytics from the start
-
-If you want logs sent to a Log Analytics workspace from the beginning, include `--enable-container-network-logs` in the create command:
-
-```azurecli
-az aks create \
-  --resource-group $RESOURCE_GROUP \
-  --name $CLUSTER_NAME \
-  --location $LOCATION \
-  --pod-cidr 192.168.0.0/16 \
-  --network-plugin azure \
-  --network-plugin-mode overlay \
-  --network-dataplane cilium \
-  --generate-ssh-keys \
-  --enable-acns \
-  --enable-container-network-logs \
-  --acns-advanced-networkpolicies L7
-```
-
-To send logs to a specific workspace, add the `--azure-monitor-workspace-resource-id` flag:
-
-```azurecli
-az aks create \
-  --resource-group $RESOURCE_GROUP \
-  --name $CLUSTER_NAME \
-  --location $LOCATION \
-  --pod-cidr 192.168.0.0/16 \
-  --network-plugin azure \
-  --network-plugin-mode overlay \
-  --network-dataplane cilium \
-  --generate-ssh-keys \
-  --enable-acns \
-  --enable-container-network-logs \
-  --azure-monitor-workspace-resource-id $AZURE_MONITOR_ID \
-  --acns-advanced-networkpolicies L7
-```
-
-With this approach, you still need to apply a `ContainerNetworkLog` CRD (Step 2) to define which traffic to capture. Log Analytics integration is ready, so matched flows are collected and sent to your workspace automatically.
-
-## Existing cluster
-
-> [!NOTE]
-> If your cluster already has ACNS enabled, you can start collecting flow logs on the host node right away by applying a `ContainerNetworkLog` CRD. To also send logs to a Log Analytics workspace, follow the steps below.
-
-```azurecli
-# Replace placeholders with your own values
-export CLUSTER_NAME="<aks-cluster-name>"
-export RESOURCE_GROUP="<aks-resource-group>"
-```
-
-### Step 1: Enable container network logs
-
-```azurecli
-az aks update --enable-acns \
-  --enable-container-network-logs \
-  -g $RESOURCE_GROUP \
-  -n $CLUSTER_NAME
-```
-
-To send logs to a specific Log Analytics workspace, add the `--azure-monitor-workspace-resource-id` flag:
-
-```azurecli
-az aks update --enable-acns \
-  --enable-container-network-logs \
-  --azure-monitor-workspace-resource-id $AZURE_MONITOR_ID \
-  -g $RESOURCE_GROUP \
-  -n $CLUSTER_NAME
+az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 ```
 
 ### Step 2: Apply a ContainerNetworkLog CRD to start log collection
 
-See the [CRD template](#containernetworklog-crd-template) for the full spec.
+Stored logs mode doesn't collect anything until you apply at least one `ContainerNetworkLog` custom resource. This resource specifies which traffic to capture: by namespace, pod, service, protocol, or verdict.
+
+Once a CRD is applied, matching flows are written to `/var/log/acns/hubble/events.log` on each node.
 
 ```azurecli
 kubectl apply -f <crd.yaml>
 ```
 
+See the full [ContainerNetworkLog CRD template](#containernetworklog-crd-template) below for all available fields.
+
 > [!TIP]
 > For a practical example, see the [sample CRD in the AKS Labs documentation](https://azure-samples.github.io/aks-labs/docs/networking/acns-lab/#enable-flow-logs-for-the-pets-namespace).
+
+> [!NOTE]
+> Logs on host nodes are temporary. Files auto-rotate at 50 MB, and older entries are overwritten. For persistent storage, complete Step 3. You can also forward logs to a SIEM or observability backend using any OpenTelemetry-compatible collector or logging service, instead of or alongside Azure Monitor.
+
+At this point, every node has flow records at `/var/log/acns/hubble/events.log` in JSON format. If that's all you need, you're done.
+
+### Step 3 (optional): Forward logs to Azure Monitor for persistent storage
+
+Complete this step if you want logs forwarded to a Log Analytics workspace for long-term retention, KQL queries, and the built-in Azure portal and Grafana dashboards. Skip it if you plan to consume host-local logs directly or forward them through your own OpenTelemetry collector or logging service.
+
+**3a. Enable the Azure Monitor add-on (Log Analytics):**
+
+```azurecli
+# To use the default Log Analytics workspace
+az aks enable-addons -a monitoring -g $RESOURCE_GROUP -n $CLUSTER_NAME
+
+# To use an existing Log Analytics workspace
+az aks enable-addons -a monitoring -g $RESOURCE_GROUP -n $CLUSTER_NAME --workspace-resource-id <workspace-resource-id>
+```
+
+**3b. Enable the container network logs flag:**
+
+```azurecli
+az aks update --enable-acns \
+  --enable-container-network-logs \
+  -g $RESOURCE_GROUP \
+  -n $CLUSTER_NAME
+```
+
+To send logs to a specific Azure Monitor workspace, add the `--azure-monitor-workspace-resource-id` flag:
+
+```azurecli
+az aks update --enable-acns \
+  --enable-container-network-logs \
+  --azure-monitor-workspace-resource-id $AZURE_MONITOR_ID \
+  -g $RESOURCE_GROUP \
+  -n $CLUSTER_NAME
+```
+
+> [!NOTE]
+> Flow logs are written to the host when the `ContainerNetworkLog` CRD is applied. If you enable Log Analytics integration later, the Azure Monitor Agent begins collecting from that point forward. Logs older than two minutes aren't ingested.
+
+### Shortcut: Create a cluster with Log Analytics from the start
+
+If you're creating a new cluster and already know you want logs sent to a Log Analytics workspace, you can combine Step 1 and Step 3 into a single create command:
+
+```azurecli
+az aks create \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --location $LOCATION \
+  --pod-cidr 192.168.0.0/16 \
+  --network-plugin azure \
+  --network-plugin-mode overlay \
+  --network-dataplane cilium \
+  --generate-ssh-keys \
+  --enable-acns \
+  --enable-addons monitoring \
+  --enable-container-network-logs \
+  --acns-advanced-networkpolicies L7
+```
+
+To send logs to a specific workspace, add the `--azure-monitor-workspace-resource-id` flag:
+
+```azurecli
+az aks create \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --location $LOCATION \
+  --pod-cidr 192.168.0.0/16 \
+  --network-plugin azure \
+  --network-plugin-mode overlay \
+  --network-dataplane cilium \
+  --generate-ssh-keys \
+  --enable-acns \
+  --enable-addons monitoring \
+  --enable-container-network-logs \
+  --azure-monitor-workspace-resource-id $AZURE_MONITOR_ID \
+  --acns-advanced-networkpolicies L7
+```
+
+You still need to complete Step 2 (apply a `ContainerNetworkLog` CRD) to define which traffic to capture. Log Analytics integration is already in place, so matched flows are collected and sent to your workspace automatically.
 
 ## ContainerNetworkLog CRD template
 
@@ -325,6 +319,7 @@ spec:
         - forwarded
         - dropped
 ```
+Just create a YAML file with the above template, customize the filters as needed, and apply it with `kubectl apply -f <crd.yaml>`.
 
 ### CRD field reference
 
