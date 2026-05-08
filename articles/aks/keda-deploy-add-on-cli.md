@@ -157,6 +157,43 @@ spec:
   # Redacted due to length
 ```
 
+## Vertically scale the keda-operator if you are experiencing OOMKill Errors
+
+If the keda-operator pods are experiencing OOMKill errors, you can use the [Vertical Pod Autoscaler (VPA)](vertical-pod-autoscaler) to automatically adjust CPU and memory limits.
+
+1. Enable VPA on your AKS cluster using the [`az aks update`][az-aks-update] command.
+
+    ```azurecli-interactive
+    az aks update \
+        --resource-group myResourceGroup \
+        --name myAKSCluster \
+        --enable-vpa
+    ```
+
+1. Create a file named `keda-operator-vpa.yaml` with the following VPA configuration to target the keda-operator deployment.
+
+    ```yaml
+    apiVersion: autoscaling.k8s.io/v1
+    kind: VerticalPodAutoscaler
+    metadata:
+      name: keda-operator-vpa
+    spec:
+      targetRef:
+        apiVersion: "apps/v1"
+        kind: Deployment
+        name: keda-operator
+      updatePolicy:
+        updateMode: "InPlaceOrRecreate"
+    ```
+
+1. Apply the VPA configuration to your cluster using the `kubectl apply` command.
+
+    ```azurecli-interactive
+    kubectl apply -f keda-operator-vpa.yaml
+    ```
+
+    The VPA automatically adjusts the CPU and memory requests and limits for the keda-operator pods based on observed usage.
+
 ## Disable the KEDA add-on on your AKS cluster
 
 - Disable the KEDA add-on on your cluster using the [`az aks update`][az-aks-update] command with the `--disable-keda` flag.
