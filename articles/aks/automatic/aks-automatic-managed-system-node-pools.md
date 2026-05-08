@@ -64,7 +64,7 @@ With managed system node pools on AKS Automatic clusters, AKS manages the [syste
 
 AKS Automatic clusters with managed system node pools are currently available in the following regions:
 
-- `australiacentral`, `australiaeast`, `australiasoutheast`, `brazilsouth`, `canadacentral`, `centralindia`, `centralus`, `chilecentral`, `eastasia`, `francecentral`, `germanywestcentral`, `italynorth`, `japanwest`, `koreasouth`, `mexicocentral`, `newzealandnorth`, `northeurope`, `polandcentral`, `southcentralus`, `southeastasia`, `southindia`, `spaincentral`, `swedencentral`, `switzerlandnorth`, `uksouth`, `westcentralus`, `westeurope`, `westus2`, `westus3`
+- `australiaeast`, `brazilsouth`, `canadacentral`, `centralindia`, `centralus`, `chilecentral`, `eastasia`, `francecentral`, `germanywestcentral`, `italynorth`, `japanwest`, `mexicocentral`, `newzealandnorth`, `northeurope`, `polandcentral`, `southcentralus`, `southeastasia`, `spaincentral`, `swedencentral`, `switzerlandnorth`, `uksouth`, `westeurope`, `westus2`, `westus3`
 
 ## Create an AKS Automatic cluster with managed system node pools
 
