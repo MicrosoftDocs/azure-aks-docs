@@ -25,13 +25,7 @@ Microsoft-supported security patches for the Ingress-Nginx-based application rou
 
 ## How the migration works
 
-The Ingress-Nginx add-on and the Gateway API implementation each get their own Azure Load Balancer frontend IP. Clients keep hitting the Ingress-Nginx IP until the hostname they resolve points somewhere else, so the migration centers on three controls:
-
-| Risk | Mitigation |
-|---|---|
-| Clients keep hitting the old Ingress-Nginx IP because they cached the DNS record. | Lower the DNS TTL **before** you create the new data plane and wait for the previous TTL window to drain. |
-| Long-lived connections (gRPC streams, WebSockets) stay pinned to Ingress-Nginx. | Leave Ingress-Nginx running for a grace period after the DNS flip so existing clients finish and reconnect to the new IP. |
-| HTTPS breaks during cutover. | Provision TLS on the `Gateway` and verify HTTPS end-to-end *before* changing DNS. |
+The Ingress-Nginx add-on and the Gateway API implementation each get their own Azure Load Balancer frontend IP. Clients keep hitting the Ingress-Nginx IP until the hostname they resolve points somewhere else.
 
 There's no in-place flag that converts Ingress-Nginx to Gateway API. The strategy is to run both data planes in parallel, validate the new path, then move clients to the new IP. If an upstream system (Azure Front Door origin, Traffic Manager endpoint, firewall allowlist) pins the existing Ingress-Nginx IP, update that upstream configuration to the new Gateway IP rather than trying to reassign the existing IP — AKS-managed public IPs are deleted when their owning Service is removed even if you mark them `Static`, so an in-place IP swap can't be performed safely.
 
