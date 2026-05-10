@@ -44,24 +44,19 @@ The following table outlines the components managed by AKS in managed system nod
 
 Other add-ons and extensions run on an `aks-system-surge` node, with scaling handled by [node auto-provisioning (NAP)](../node-auto-provisioning.md). `DaemonSets` run on both managed system node pools and nodes in your subscription, including the `aks-system-surge` nodes.
 
-## Managed system node pool restrictions
+## Security restrictions for managed system node pools
 
-Since AKS manages the system node pool on your behalf, AKS applies multiple layers of security restrictions through built-in policies, baseline pod security standards, and admission time policies. These controls help protect your cluster infrastructure, prevent unauthorized access to critical resources, and enforce security best practices. Understanding these restrictions helps you design applications that work within managed system node pool security boundaries while maintaining high security standards.
+Since AKS manages the system node pool on your behalf, AKS applies multiple layers of security restrictions to help protect managed system components and preserve the boundary between customer workloads and AKS-managed infrastructure.
 
-### Restrictions that prevent changing system resources on the managed system node pool
-
-The following operations are denied for objects and pods running on the managed system node pool:
-
-- All create, update, and delete operations.
-- All pod `attach`, `exec`, and `port-forward` operations.
-
-### Restrictions that prevent running workloads on the managed system node pool
-
-The following workload specifications are denied when scheduled on a managed system node pool:
-
-- Workloads tolerating `CriticalAddonsOnly` and other forms of wildcard tolerations.
-- Workloads that specify custom schedulers.
-- Workloads that grants [`nodes/proxy`][upstream-node-proxy-warning] permissions, except for approved system users and groups.
+| Restriction | What AKS prevents | Why it matters |
+|-------------|-------------------|----------------|
+| Managed system resource changes | Creating, updating, or deleting resources in AKS-managed system namespaces. | Helps protect AKS-managed components from customer-initiated changes. |
+| Interactive access to system pods | Using pod `exec`, `attach`, or `port-forward` against AKS-managed system pods. | Helps prevent direct access to system workloads running on managed system node pools. |
+| Managed system node changes | Modifying managed system nodes or labeling regular nodes as managed system nodes. | Helps maintain the boundary between customer-managed nodes and AKS-managed system nodes. |
+| Workload placement on managed system nodes | Scheduling workloads with reserved tolerations, broad wildcard tolerations, hosted VM tolerations, or custom schedulers. | Helps prevent customer workloads from running on reserved system capacity. |
+| Privileged cluster access paths | Granting access to sensitive node proxy permissions or binding users to selected privileged cluster roles. | Reduces paths that could bypass normal controls or escalate access to cluster resources. |
+| Protected identity impersonation | Impersonating protected AKS, Kubernetes, or system service account identities. | Helps prevent callers from assuming identities used by trusted system components. |
+| AKS-managed security control changes | Modifying AKS-managed security policies and admission controls. | Helps prevent weakening or disabling the controls that protect managed system node pools. |
 
 ### Unsupported AKS API operations
 
@@ -76,6 +71,3 @@ The following AKS API operations are **unsupported**:
 
 > [!div class="nextstepaction"]  
 > [Create an AKS Automatic cluster with managed system node pools (preview)](./aks-automatic-managed-system-node-pools.md)
-
-<!-- LINKS - external -->
-[upstream-node-proxy-warning]:https://kubernetes.io/docs/reference/access-authn-authz/kubelet-authn-authz/#kubelet-authorization:~:text=Warning%3A,executing%20commands%20in%20any%20container%20running%20on%20the%20node.
