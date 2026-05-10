@@ -46,15 +46,15 @@ Other add-ons and extensions run on an `aks-system-surge` node, with scaling han
 
 ## Security restrictions for managed system node pools
 
-Since AKS manages the system node pool on your behalf, AKS applies multiple layers of security restrictions to help protect managed system components and preserve the boundary between customer workloads and AKS-managed infrastructure.
+Since AKS manages the system node pool on your behalf, AKS applies multiple layers of security restrictions through built-in policies, baseline pod security standards, and admission time policies. These restrictions help protect managed system components and preserve the boundary between customer workloads and AKS-managed infrastructure.
 
 | Restriction | What AKS prevents | Why it matters |
 |-------------|-------------------|----------------|
 | Managed system resource changes | Creating, updating, or deleting resources in AKS-managed system namespaces. | Helps protect AKS-managed components from customer-initiated changes. |
 | Interactive access to system pods | Using pod `exec`, `attach`, or `port-forward` against AKS-managed system pods. | Helps prevent direct access to system workloads running on managed system node pools. |
 | Managed system node changes | Modifying managed system nodes or labeling regular nodes as managed system nodes. | Helps maintain the boundary between customer-managed nodes and AKS-managed system nodes. |
-| Workload placement on managed system nodes | Scheduling workloads with reserved tolerations, broad wildcard tolerations, hosted VM tolerations, or custom schedulers. | Helps prevent customer workloads from running on reserved system capacity. |
-| Privileged cluster access paths | Granting access to sensitive node proxy permissions or binding users to selected privileged cluster roles. | Reduces paths that could bypass normal controls or escalate access to cluster resources. |
+| Workload placement on managed system nodes | Scheduling workloads with reserved tolerations, broad wildcard tolerations, or custom schedulers. | Helps prevent customer workloads from running on reserved system capacity. |
+| Privileged cluster access paths | Granting access to sensitive node proxy permissions. | Reduces paths that could bypass normal controls or escalate access to cluster resources. |
 | Protected identity impersonation | Impersonating protected AKS, Kubernetes, or system service account identities. | Helps prevent callers from assuming identities used by trusted system components. |
 | AKS-managed security control changes | Modifying AKS-managed security policies and admission controls. | Helps prevent weakening or disabling the controls that protect managed system node pools. |
 
