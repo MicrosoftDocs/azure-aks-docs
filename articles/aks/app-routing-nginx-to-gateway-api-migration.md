@@ -15,13 +15,13 @@ ms.author: kingoliver
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 
-This article describes how to migrate workloads from the [application routing add-on with Ingress-Nginx][app-routing-nginx] to the [application routing Gateway API implementation][app-routing-gateway-api]. The two data planes can run side-by-side on the same AKS cluster, which lets you perform a zero-downtime cutover by shifting client traffic with DNS instead of an in-place swap.
+This article describes how to migrate workloads from the [application routing add-on with Ingress-Nginx][app-routing-nginx] to the [application routing Gateway API implementation][app-routing-gateway-api], which serves traffic through the Kubernetes [Gateway API](https://gateway-api.sigs.k8s.io/). The two data planes can run side-by-side on the same AKS cluster, which lets you perform a zero-downtime cutover by shifting client traffic with DNS instead of an in-place swap.
 
 ## Why migrate
 
 [!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
 
-Microsoft-supported security patches for the Ingress-Nginx-based application routing add-on end in November 2026. The supported successor on AKS is the application routing Gateway API implementation, which deploys an Istio control plane and serves Kubernetes Gateway API resources through the `approuting-istio` `GatewayClass`.
+Microsoft-supported security patches for the Ingress-Nginx-based application routing add-on end in November 2026. The supported successor on AKS is the application routing Gateway API implementation, which deploys a lightweight, sidecar-less Istio control plane that only reconciles Gateway API resources belonging to the `approuting-istio` `GatewayClass`.
 
 ## How the migration works
 
@@ -81,7 +81,7 @@ INGRESS_NGINX_IP=$(kubectl get svc -n app-routing-system nginx -o jsonpath='{.st
 ## Step 2: Lower the DNS TTL
 
 > [!NOTE]
-> Only required if you plan to cut over with the [DNS flip](#step-7-cut-over) path in step 7. Skip this step if you're using the public IP takeover path — DNS doesn't change in that case.
+> Skip this step if your clients reach the cluster by IP rather than DNS — the cutover in step 7 is a DNS change, so a low TTL is only relevant when DNS is in the path.
 
 For each hostname that resolves to `INGRESS_NGINX_IP`, lower the record TTL to 60 seconds (or the smallest value your provider allows). Wait for the previous TTL window to fully expire before you continue. If the previous TTL was one hour, wait at least one hour. Skipping this step means cached resolvers continue sending clients to Ingress-Nginx after you delete the `Ingress`.
 
@@ -105,7 +105,7 @@ kubectl get gatewayclass approuting-istio
 
 For each `Ingress`, create a matching `Gateway` and `HTTPRoute`. For per-field translation guidance — including how to convert path matches, redirects, rewrites, and header manipulation — follow the [Kubernetes Gateway API migration guide](https://gateway-api.sigs.k8s.io/guides/getting-started/migrating-from-ingress/). To bulk-translate existing manifests instead of writing them by hand, consider [`ingress2gateway`](https://github.com/kubernetes-sigs/ingress2gateway), a Kubernetes SIG Network tool that reads `Ingress` resources (including `ingress-nginx` annotations) and emits equivalent Gateway API resources — treat its output as a starting point and review before applying.
 
-The example below converts an Ingress-Nginx `Ingress` for host `httpbin.example.com` with path prefix `/get` and backend `httpbin:8000`.
+The example below converts an Ingress-Nginx `Ingress` for host `httpbin.contoso.com` with path prefix `/get` and backend `httpbin:8000`.
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -131,7 +131,7 @@ metadata:
 spec:
   parentRefs:
   - name: httpbin-gateway
-  hostnames: ["httpbin.example.com"]
+  hostnames: ["httpbin.contoso.com"]
   rules:
   - matches:
     - path:
@@ -164,13 +164,13 @@ Probe both data planes by pinning DNS resolution with `curl --resolve`. Both sho
 ```bash
 # New Gateway path
 curl -sS -o /dev/null -w '%{http_code}\n' \
-  --resolve "httpbin.example.com:443:${GW_IP}" \
-  https://httpbin.example.com/get
+  --resolve "httpbin.contoso.com:443:${GW_IP}" \
+  https://httpbin.contoso.com/get
 
 # Old Ingress-Nginx path (should still work)
 curl -sS -o /dev/null -w '%{http_code}\n' \
-  --resolve "httpbin.example.com:443:${INGRESS_NGINX_IP}" \
-  https://httpbin.example.com/get
+  --resolve "httpbin.contoso.com:443:${INGRESS_NGINX_IP}" \
+  https://httpbin.contoso.com/get
 ```
 
 At minimum, exercise the following against `GW_IP` (using `--resolve` or a `Host` header) before you flip DNS:
