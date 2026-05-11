@@ -41,17 +41,17 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 
 **Enhanced security compliance**: FQDN filtering supports a Zero Trust security model. Network traffic is restricted to trusted domains only mitigating risks from unauthorized access.
 
-**Resilient Policy enforcement**: The ACNS Security Agent that is implemented with FQDN filtering ensures that DNS resolution continues seamlessly even if the Cilium agent goes down and policies continue to remain enforced. This implementation critically ensures that security and stability are maintained in dynamic and distributed environments.
+**Resilient Policy enforcement**: The ACNS Security Agent that is implemented with FQDN filtering ensures that DNS resolution continues seamlessly even if the Cilium agent goes down and policies remains enforced. This implementation critically ensures that security and stability are maintained in dynamic and distributed environments.
 
 ## Considerations:
 
 * Container Network Security features require Azure CNI Powered by Cilium and Kubernetes version 1.29 and above.
 
-* Supported by `CiliumClusterwideNetworkPolicy` (CCNP): FQDN filtering can be applied cluster wide via `CiliumClusterwideNetworkPolicy`.
+* Supported by `CiliumClusterwideNetworkPolicy` (CCNP). FQDN filtering can be applied cluster wide via `CiliumClusterwideNetworkPolicy`.
 
 ## Limitations:
 
-* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (for example, *.example.com), but you cannot use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
+* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (for example, *.example.com), but you can't use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
 - Supported Pattern:
 
     `*.example.com` - This allows traffic to all subdomains under example.com.
@@ -60,14 +60,13 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 
 - Unsupported Pattern
     
-    `*` This attempts to match any domain name, which isn't supported.
+    `*` This wildcard attempts to match any domain name, which isn't supported.
 
-* FQDN filtering is currently not supported with node-local DNS.
 * Kubernetes service names aren't supported.
 * Other L7 policies aren't supported.
 * FQDN pods may exhibit performance degradation when handling more than 1,000 requests per second.
-* If Advanced Container Networking Services(ACNS) security is disabled, FQDN and L7 policies (HTTP(s), Kafka and gRPC) will be blocked.
-* Alpine-based container images may encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
+* If Advanced Container Networking Services(ACNS) security is disabled, FQDN and L7 policies (HTTP(s), Kafka, and gRPC) are blocked.
+* Alpine-based container images may encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this restriction, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
 
 ```yml
 rules:
@@ -88,7 +87,7 @@ rules:
 
 ## Next steps
 
-* Learn how to apply [fqdn filtering policies](how-to-apply-fqdn-filtering-policies.md) on AKS.
+* Learn how to apply [FQDN filtering policies](how-to-apply-fqdn-filtering-policies.md) on AKS.
 
 * Explore how the open source community builds [Cilium Network Policies](https://docs.cilium.io/en/latest/security/policy/).
 

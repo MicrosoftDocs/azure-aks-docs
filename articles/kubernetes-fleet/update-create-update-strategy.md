@@ -2,7 +2,7 @@
 title: "Define reuseable update strategies for multi-clusters updates using Azure Kubernetes Fleet Manager"
 description: See how you can define staged update strategies that can be reused across multiple update runs and auto-upgrade profiles in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 03/18/2026
+ms.date: 05/06/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -46,22 +46,117 @@ This article covers how to define update strategies using groups and stages.
   az extension update --name fleet
   ```
 
-## Assign clusters to update groups
+## Select clusters for your strategy
 
-Clusters can be used in update strategies once they are added to an update group which can be assigned to update stages. Within an update stage, updates are applied to each update group in parallel. Within an update group, member clusters update sequentially.
+There are two ways to select which clusters are included in each stage and group of your update strategy to control update sequence:
 
-You can assign a member cluster to a specific update group in one of two ways:
+- **[Member labels](#create-an-update-strategy-using-member-selectors-preview) (recommended)**: Assign labels to each fleet member and use `memberSelector` to select members by those labels. Each member can have multiple labels.
+- **[Update groups](#create-an-update-strategy-using-update-groups)**: Assign an update group to each fleet member, then define groups in your strategy that match those group names. Each member can only belong to one group.
 
-* [Assign to group when adding member cluster to the fleet](#assign-to-group-when-adding-member-cluster-to-the-fleet).
-* [Assign an existing fleet member to an update group](#assign-an-existing-fleet-member-to-an-update-group).
+## Create an update strategy using member selectors (preview)
+
+Member labels are the recommended approach for selecting clusters in your update strategies because they provide more flexibility. For conceptual details, see [Group clusters using member labels](./concepts-update-orchestration.md#group-clusters-using-member-labels-preview).
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
+### Apply labels on member clusters
+#### Apply labels when adding member cluster to the fleet
+
+Apply labels on your fleet members using the [`az fleet member create`][az-fleet-member-create] command. The following example applies two labels to the member cluster: `env=staging` and `tier=frontend`:
+
+```azurecli-interactive
+az fleet member create \
+    --resource-group $GROUP \
+    --fleet-name $FLEET \
+    --name member1 \
+    --member-cluster-id $CLUSTERID \
+    --labels "env=staging tier=frontend"
+```
+
+#### Apply labels to an existing fleet member
+
+Apply labels on your fleet members using the [`az fleet member update`][az-fleet-member-update] command
+
+```azurecli-interactive
+az fleet member update \
+ --resource-group $GROUP \
+ --fleet-name $FLEET \
+ --name member1 \
+ --labels "env=staging tier=frontend"
+```
+
+### Create an update strategy
+
+An update strategy consists of one or more stages, where a stage can contain one or more update groups.
+
+1. Create a JSON file to define the stages and groups for the update run. Stages run sequentially in the order they appear in the JSON file. Groups run in parallel within each stage. The following example file (*example-labels-strategy.json*) defines a strategy with two stages using `memberSelector` to select clusters by their labels and includes optional `maxConcurrency` settings:
+
+    - The `staging` stage uses a stage-level `memberSelector` to select all clusters with the label `env=staging` and create one implicit group. 
+    - The `production` stage uses a stage-level `memberSelector` to prefilter all clusters with the label `env=production`, then defines two groups, each with its own `memberSelector` to select clusters by the `tier` label. 
+
+    When `memberSelector` is set on a group, the group's `name` field is used only as a display identifier for status reporting and logging and no longer used for update group based selection of fleet members.
+
+    ```json
+    {
+        "stages": [
+            {
+                "name": "staging",
+                "memberSelector": { "byLabel": "env=staging" },
+                "maxConcurrency": "1",
+                "afterStageWaitInSeconds": 600
+            },
+            {
+                "name": "production",
+                "memberSelector": { "byLabel": "env=production" },
+                "maxConcurrency": "4",
+                "groups": [
+                    {
+                        "name": "frontend",
+                        "memberSelector": { "byLabel": "tier=frontend" },
+                        "maxConcurrency": "3"
+                    },
+                    {
+                        "name": "backend",
+                        "memberSelector": { "byLabel": "tier=backend" },
+                        "maxConcurrency": "3"
+                    }
+                ]
+            }
+        ]
+    }
+    ```
+
+> [!NOTE]
+> The `maxConcurrency` field is optional and controls how many clusters can upgrade concurrently at the stage or group level. Use a larger value to upgrade clusters faster across your fleet, or a smaller value for a more controlled rollout that limits the blast radius if issues arise.
+>
+> When a stage uses `memberSelector` without groups (like `staging`), all matching members form a single implicit group and the stage's `maxConcurrency` controls concurrency directly. When groups are defined (like `production`), the stage-level `maxConcurrency` acts as an overall ceiling across all groups.
+>
+> In this example, the `staging` stage sets `maxConcurrency` to `"1"`, so staging clusters upgrade one at a time. The `production` stage allows up to `"4"` clusters concurrently, with the `frontend` and `backend` groups each limited to `"3"`.
+>
+> Values can be a fixed integer (for example, `"3"`) or a percentage (for example, `"50%"`). If omitted, the system applies default values. For details on how these values are resolved and their upper limits, see [Maximum concurrency (preview)](./concepts-update-orchestration.md#maximum-concurrency-preview).
+
+2. Create a new update strategy using the [`az fleet updatestrategy create`][az-fleet-updatestrategy-create] command with the `--stages` flag set to the name of your JSON file.
+
+    ```azurecli-interactive
+    az fleet updatestrategy create \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name $STRATEGY \
+     --stages example-labels-strategy.json
+    ```
+
+## Create an update strategy using update groups
+
+Clusters can also be selected in update strategies by assigning them to a single update group. You can define an update strategy that assigns these update groups to stages. Within an update stage, updates are applied to each update group in parallel. Within an update group, member clusters update sequentially.
 
 > [!NOTE]
 > A fleet member can only be a part of one update group, but an update group can have multiple fleet members assigned to it.
 > An update group itself isn't a separate resource type. Update groups are only strings representing references from the fleet members. So, if all fleet members with references to a common update group are deleted, that specific update group ceases to exist as well.
 
-### Assign to group when adding member cluster to the fleet
+### Assign clusters to update groups
+#### Assign to group when adding member cluster to the fleet
 
-#### [Azure portal](#tab/azure-portal)
+##### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Member clusters** > **Add**.
@@ -74,7 +169,7 @@ You can assign a member cluster to a specific update group in one of two ways:
 
     :::image type="content" source="./media/create-update-strategy/add-members-assign-group-inline.png" alt-text="Screenshot of the Azure portal page for Azure Kubernetes Fleet Manager review and add step for member clusters." lightbox="./media/create-update-strategy/add-members-assign-group.png":::
 
-#### [Azure CLI](#tab/cli)
+##### [Azure CLI](#tab/cli)
 
 Assign a member cluster to an update group when adding the member cluster to the fleet using the [`az fleet member create`][az-fleet-member-create] command with the `--update-group` parameter set to the name of the update group.
 
@@ -89,9 +184,9 @@ az fleet member create \
 
 ---
 
-### Assign an existing fleet member to an update group
+#### Assign an existing fleet member to an update group
 
-#### [Azure portal](#tab/azure-portal)
+##### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Member clusters**.
@@ -103,7 +198,7 @@ az fleet member create \
 
     :::image type="content" source="./media/create-update-strategy/group-name-inline.png" alt-text="Screenshot of the Azure portal page for member clusters that shows the form for updating a member cluster's group." lightbox="./media/create-update-strategy/group-name.png":::
 
-#### [Azure CLI](#tab/cli)
+##### [Azure CLI](#tab/cli)
 
 Assign an existing fleet member to an update group using the [`az fleet member update`][az-fleet-member-update] command with the `--update-group` flag set to the name of the update group.
 
@@ -112,16 +207,16 @@ az fleet member update \
  --resource-group $GROUP \
  --fleet-name $FLEET \
  --name member1 \
- --update-group group-1a
+ --update-group group-1
 ```
 
 ---
 
-## Create an update strategy
+### Create an update strategy
 
 An update strategy consists of one or more stages, where a stage can contain one or more update groups.
 
-### [Azure portal](#tab/azure-portal)
+#### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Multi-cluster update** > **Strategies**, then **Create**.
@@ -138,7 +233,7 @@ An update strategy consists of one or more stages, where a stage can contain one
 
     :::image type="content" source="./media/create-update-strategy/create-stage-basics-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage." lightbox="./media/create-update-strategy/create-stage-basics.png":::
 
-1. Assign one or more **Update Group** to the stage, and then select **Create**. 
+1. Assign one or more **Update Groups** to the stage, and then select **Create**. 
 
     > [!NOTE]
     > The maximum number of Update Groups in each Update Stage is **50**.
@@ -146,8 +241,7 @@ An update strategy consists of one or more stages, where a stage can contain one
     :::image type="content" source="./media/create-update-strategy/create-stage-choose-groups-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage, selecting update groups to include." lightbox="./media/create-update-strategy/create-stage-choose-groups.png":::
 
 
-
-### [Azure CLI](#tab/cli)
+#### [Azure CLI](#tab/cli)
 
 For this scenario, we create stages and groups to match the details used for the Azure portal process.  
 

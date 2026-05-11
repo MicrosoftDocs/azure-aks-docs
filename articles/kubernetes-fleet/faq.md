@@ -181,6 +181,18 @@ Yes. The after stage wait begins at the same time as the approval. Both must be 
 
 Yes. You can edit the existing strategy to include approvals. However, existing update runs that were created using the strategy aren't updated.
 
+### How can I control the order of cluster updates in an update run?
+
+Member labels and update groups are two different ways to select which clusters are included in each stage and group of your update strategy. Each member cluster can be assigned to one update group but can have multiple labels. Member labels (using `memberSelector`) offer more flexibility and support complex selection scenarios, so they are the recommended way to select fleet members for update strategies. For more information, see [Group clusters using member labels](./concepts-update-orchestration.md#group-clusters-using-member-labels-preview).
+
+### Do I need to specify groups if I set a member selector at the stage level?
+
+No. When you set `memberSelector` on a stage without defining any groups, all matching clusters automatically form a single implicit group. The stage's `maxConcurrency` controls how many clusters upgrade concurrently. You only need to define groups within a stage if you want to partition the matching members into parallel subsets with different concurrency settings.
+
+### What happens to update groups if I set a member selector at the group level?
+
+If you set a `memberSelector` at the group level, the group's `name` field is used only as a display identifier for status reporting and logging. The `memberSelector` takes precedence over the update group name when selecting clusters for the group.
+
 ## Cluster resource placement FAQs
 
 ### Can I select resources inside a namespace for propagation?

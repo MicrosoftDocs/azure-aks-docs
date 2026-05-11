@@ -113,9 +113,9 @@ Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](h
 
 ## Visualize KAITO inference metrics in Azure Managed Grafana
 
-1. The vLLM project provides a Grafana dashboard configuration named [grafana.json](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) for inference workload monitoring. Navigate to the bottom of this [page](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) and copy the entire contents of the `grafana.json` file.
+1. The vLLM project provides a Grafana dashboard configuration named [grafana.json](https://docs.vllm.ai/en/stable/examples/observability/prometheus_grafana/#example-materials) for inference workload monitoring. Navigate to the bottom of this [page](https://docs.vllm.ai/en/stable/examples/observability/prometheus_grafana/#example-materials) and copy the entire contents of the `grafana.json` file.
 
-1. Go to the bottom of the [examples page](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) and copy the entire contents of the `grafana.json` file:
+1. Go to the bottom of the [examples page](https://docs.vllm.ai/en/stable/examples/observability/prometheus_grafana/#example-materials) and copy the entire contents of the `grafana.json` file:
 
     :::image type="content" source="./media/ai-toolchain-operator/vllm-grafana-config.png" alt-text="Screenshot of vLLM Grafana dashboard configuration." lightbox="./media/ai-toolchain-operator/vllm-grafana-config.png":::
 

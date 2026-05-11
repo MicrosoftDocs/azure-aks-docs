@@ -53,7 +53,7 @@ Since AKS manages the system node pool on your behalf, AKS applies multiple laye
 The following operations are denied for objects and pods running on the managed system node pool:
 
 - All create, update, and delete operations.
-- All pod `exec` and `attach` operations.
+- All pod `attach`, `exec`, and `port-forward` operations.
 
 ### Restrictions that prevent running workloads on the managed system node pool
 

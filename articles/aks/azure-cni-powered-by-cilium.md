@@ -55,7 +55,44 @@ Cilium enforces [network policies to allow or deny traffic between pods](./opera
 
 ## Local Redirect Policy (LRP)
 
-LRP starts to be supported from Kubernetes v1.29 and up, Cilium v1.14 and up. For LRP to work with Advanced Container Networking Services (ACNS) - FQDN Filtering, the Cilium Network Policy egress labels need to match with node-local DNS cache pod labels.
+LRP is supported from Kubernetes v1.29 and above. For LRP to work with Advanced Container Networking Services (ACNS) - FQDN Filtering, the Cilium Network Policy egress labels need to match with node-local DNS cache pod labels.
+
+```yaml
+apiVersion: cilium.io/v2
+kind: CiliumLocalRedirectPolicy
+metadata:
+  name: dns-to-nodelocal
+  namespace: kube-system
+spec:
+  redirectFrontend:
+    addressMatcher:
+      ip: 10.96.0.10   # kube-dns ClusterIP (example)
+      toPorts:
+      - ports:
+        - port: "53"
+          protocol: UDP
+        - port: "53"
+          protocol: TCP
+  redirectBackend:
+    localEndpointSelector:
+      matchLabels:
+        k8s-app: node-local-dns
+    toPorts:
+    - ports:
+      - port: "53"
+        protocol: UDP
+      - port: "53"
+        protocol: TCP
+```
+
+The Cilium Network Policy should match the DNS label:
+
+```yaml
+...
+- matchLabels:
+    io.kubernetes.pod.namespace: kube-system
+    k8s-app: node-local-dns
+```
 
 ## Limitations
 
@@ -66,7 +103,6 @@ Azure CNI powered by Cilium currently has the following limitations:
 - For Cilium versions 1.16 or earlier, multiple Kubernetes services can't use the same host port with different protocols (for example, TCP or UDP) ([Cilium issue #14287](https://github.com/cilium/cilium/issues/14287)).
 - Network policies aren't applied to pods using host networking (`spec.hostNetwork: true`) because these pods use the host identity instead of having individual identities.
 - Cilium Endpoint Slices are supported in Kubernetes version 1.32 and above. Cilium Endpoint Slices don't support configuration of how Cilium Endpoints are grouped. Priority namespace through `cilium.io/ces-namespace` isn't supported.
-- L7 policy isn't supported by `CiliumClusterwideNetworkPolicy` (CCNP).
 - Cilium uses Cilium identities as unique identity for provisioning endpoints, so high-churning workloads such as Spark jobs generate high count of Cilium identities. To avoid workloads hitting Cilium identity limits (65535), excluding Spark job's labels like `!spark-app-name` and `!spark-app-selector` in the Cilium configmap can significantly reduce Cilium identity generation. For more details on Cilium identity exclusion rules, check [the official Cilium label documentation](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels).
 - AKS Local DNS isn't compatible with Advanced Container Networking Services (ACNS) - FQDN Filtering.
 
@@ -77,9 +113,6 @@ To gain capabilities such as observability into your network traffic and securit
 ## Prerequisites
 
 - Azure CLI version 2.48.1 or later. Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-- If you're using ARM templates or the REST API, the AKS API version must be `2022-09-02-preview` or later.
-
-Previous AKS API versions (`2022-09-02preview` to `2023-01-02preview`) used the field [`networkProfile.ebpfDataplane=cilium`](https://github.com/Azure/azure-rest-api-specs/blob/06dbe269f7d9c709cc225c92358b38c3c2b74d60/specification/containerservice/resource-manager/Microsoft.ContainerService/aks/preview/2022-09-02-preview/managedClusters.json#L6939-L6955). AKS API versions since `2023-02-02preview` use the field [`networkProfile.networkDataplane=cilium`](https://github.com/Azure/azure-rest-api-specs/blob/06dbe269f7d9c709cc225c92358b38c3c2b74d60/specification/containerservice/resource-manager/Microsoft.ContainerService/aks/preview/2023-02-02-preview/managedClusters.json#L7152-L7173) to enable Azure CNI Powered by Cilium.
 
 ## Create a new AKS Cluster with Azure CNI Powered by Cilium
 
@@ -191,11 +224,14 @@ az aks create \
     | ----------------- | -------- | ------- |
     | Cilium Endpoint Slices | ✔️ | ✔️ |
     | K8s Network Policies | ✔️ | ✔️ |
+    | Local Redirect Policy | ✔️ | ✔️ |
     | Cilium L3/L4 Network Policies | ✔️ | ✔️ |
     | Cilium Clusterwide Network Policy | ✔️ | ✔️ |
     | FQDN Filtering | ❌ | ✔️ |
     | L7 Network Policies (HTTP/gRPC/Kafka) | ❌ | ✔️ |
     | Container Network Observability (Metrics and Flow logs) | ❌ | ✔️ |
+    | Wireguard | ❌ | ✔️ |
+    | mTLS Encryption | ❌ | ✔️ |
     | eBPF Host Routing | ❌ | ✔️ |
 
 
