@@ -1,8 +1,7 @@
 ---
 title: Security bulletins for Azure Kubernetes Service (AKS)
 description: This article provides security/vulnerability related updates and troubleshooting guides for Azure Kubernetes Services (AKS).
-ms.date: 04/30/2026
-ms.date: 05/01/2026
+ms.date: 05/11/2026
 author: bcho
 ms.author: bahe
 ms.topic: concept-article
@@ -26,11 +25,11 @@ These updates cover security information related to the following AKS components
 - Azure Kubernetes Service Addons (AKS add-ons)
 
 ---
-## AKS-2026-0003 AKS Advisory & Mitigation Guide for CVE-2026-31431 (Copy Fail)
+
 
 ## AKS-2026-0003 Azure Monitor Container Insights add-on uses nodes/proxy permission in Kubernetes versions < 1.33
 
-**Published Date**: April 30, 2026
+**Published Date**: May 11, 2026
 
 ### Description
 
@@ -64,7 +63,8 @@ A [public disclosure](https://grahamhelton.com/blog/nodes-proxy-rce) on January 
 
 ---
 
-## AKS-2026-0002 gRPC-Go Authorization Bypass via Missing Leading Slash in :path - CVE-2026-33186
+## AKS-2026-0003 AKS Advisory & Mitigation Guide for CVE-2026-31431 (Copy Fail)
+
 **Published Date**: May 1, 2026
 
 ### Description
