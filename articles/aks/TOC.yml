@@ -16,6 +16,8 @@
       href: advanced-aks-concepts.md
     - name: Compare AKS Standard and AKS Automatic
       href: intro-aks-automatic.md
+    - name: AKS Automatic with managed system node pools overview
+      href: automatic/aks-automatic-managed-system-node-pools-about.md
     - name: Deploy a multi-container application to AKS
       items:
         - name: 1 - Prepare application for AKS
@@ -73,12 +75,6 @@
               href: learn/quick-kubernetes-deploy-terraform.md
         - name: Create a Linux-based AKS Automatic cluster
           items:
-            - name: Use managed system node pools
-              items:
-                - name: Overview
-                  href: automatic/aks-automatic-managed-system-node-pools-about.md
-                - name: Create an AKS Automatic cluster with managed system node pools
-                  href: automatic/aks-automatic-managed-system-node-pools.md
             - name: From a code repository
               href: automatic/quick-automatic-from-code.md
             - name: Inside a managed virtual network
@@ -698,7 +694,7 @@
                   - name: Overview
                     href: container-network-security-cilium-mutual-tls-concepts.md
                   - name: Set up Cilium mTLS encryption
-                    href: container-network-security-cilium-mutual-tls-how-to.md              
+                    href: container-network-security-cilium-mutual-tls-how-to.md
               - name: FQDN-based filtering
                 items:
                   - name: Overview

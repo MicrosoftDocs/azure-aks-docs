@@ -806,6 +806,11 @@
             "source_path_from_root": "/articles/aks/troubleshoot-container-network-insight-agent.md",
             "redirect_url": "/azure/aks/troubleshoot-container-network-insights-agent",
             "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/automatic/aks-automatic-managed-system-node-pools.md",
+            "redirect_url": "/azure/aks/automatic/quick-automatic-managed-network",
+            "redirect_document_id": true
         }
      ]
 }

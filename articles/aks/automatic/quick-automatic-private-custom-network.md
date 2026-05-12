@@ -2,7 +2,7 @@
 title: 'Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cluster in a custom virtual network'
 description: Learn how to quickly deploy a private Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic in a custom virtual network.
 ms.topic: quickstart
-ms.date: 10/10/2025
+ms.date: 05/22/2026
 author: wangyira
 ms.author: wangamanda
 zone_pivot_groups: bicep-azure-cli
@@ -13,7 +13,7 @@ zone_pivot_groups: bicep-azure-cli
 
 **Applies to:** :heavy_check_mark: AKS Automatic
 
-[Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. AKS Automatic also includes a [pod readiness SLA][azure-sla] that guarantees 99.9% of qualifying pod readiness operations complete within 5 minutes, guaranteeing reliable, self-healing infrastructure for your applications. This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts]. 
+[Azure Kubernetes Service (AKS) Automatic][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. AKS Automatic also includes a [pod readiness SLA][azure-sla] that guarantees 99.9% of qualifying pod readiness operations complete within 5 minutes, guaranteeing reliable, self-healing infrastructure for your applications. This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
 
 In this quickstart, you learn to:
 
@@ -29,7 +29,7 @@ In this quickstart, you learn to:
 
 :::zone pivot="azure-cli"
 
-- This article requires version 2.77.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- Azure CLI version 2.86.0 or later. To find the version, run `az --version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/get-started-with-azure-cli).
 
 :::zone-end
 
@@ -39,13 +39,15 @@ In this quickstart, you learn to:
 - A virtual network with a dedicated API server subnet of at least `*/28` size that is delegated to `Microsoft.ContainerService/managedClusters`.
   - If there's a Network Security Group (NSG) attached to subnets, ensure that the [rules permit the following traffic](#network-security-group-rules) between the nodes and the API server, the Azure Load Balancer and the API server, and pod to pod communication.
   - If there's an Azure Firewall or other outbound restriction method or appliance, ensure the [required outbound network rules and FQDNs][outbound-rules-control-egress] are allowed.
-- AKS Automatic will [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should pre-register the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. See [Azure resource providers and types][az-provider-register] for more information.
+- AKS Automatic will [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should preregister the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. For more information, see [Azure resource providers and types][az-provider-register].
+
+[!INCLUDE [Kubernetes gateway](../includes/aks-automatic/aks-automatic-kubernetes-gateway.md)]
 
 [!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
 ## Define variables
 
-Define the following variables that will be used in the subsequent steps.
+Define the following variables that are used in the subsequent steps.
 
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/define-vars.sh" interactive="cloudshell-bash":::
 
@@ -81,7 +83,7 @@ Create a virtual network using the [`az network vnet create`][az-network-vnet-cr
 When using a custom virtual network with AKS Automatic, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
 
 > [!WARNING]
-> An AKS cluster reserves at least 9 IPs in the subnet address space. Running out of IP addresses may prevent API server scaling and cause an API server outage.
+> An AKS cluster reserves at least nine (9) IPs in the subnet address space. Running out of IP addresses might prevent API server scaling and cause an API server outage.
 
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/create-vnet.sh" interactive="cloudshell-bash":::### Network security group rules
 
@@ -108,7 +110,7 @@ Create a managed identity using the [`az identity create`][az-identity-create] c
 To create a private AKS Automatic cluster, use the [az aks create][az-aks-create] command. Note the use of the `--enable-private-cluster` flag.
 
 > [!NOTE]
-> You can refer to the [private cluster][private-cluster] documentation for configuring additional options like disabling the cluster's public FQDN and configuring the private DNS zone.
+> You can refer to the [private cluster][private-cluster] documentation for configuring other options like disabling the cluster's public FQDN and configuring the private DNS zone.
 
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/create-aks.sh" highlight="5,6,7,9" interactive="cloudshell-bash":::
 
@@ -123,7 +125,7 @@ When an AKS Automatic cluster is created as a private cluster, the API server en
 * Use an [Express Route or VPN][express-route-or-VPN] connection.
 * Use a [private endpoint][private-endpoint-service] connection.
 
-Creating a virtual machine in the same virtual network as the AKS cluster is the easiest option. ExpressRoute and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
+Creating a virtual machine in the same virtual network as the AKS cluster is the easiest option. ExpressRoute and VPNs add costs and require other networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. For more information, see [Options for connecting to the private cluster][connect-private-cluster].
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
 
@@ -141,13 +143,13 @@ Verify the connection to your cluster using the [kubectl get][kubectl-get] comma
 kubectl get nodes
 ```
 
-The following sample output shows how you're asked to log in.
+The following sample output shows how you're asked to sign in.
 
 ```output
 To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code AAAAAAAAA to authenticate.
 ```
 
-After you log in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
+After you sign in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
 
 ```output
 NAME                                STATUS   ROLES   AGE     VERSION
@@ -224,7 +226,7 @@ az deployment group create --resource-group <resource-group> --template-file rol
 This Bicep file defines the AKS Automatic cluster.
 
 > [!NOTE]
-> You can refer to the [private cluster][private-cluster] documentation for configuring additional options like disabling the clusters public FQDN and configuring the private DNS zone.
+> You can refer to the [private cluster][private-cluster] documentation for configuring other options like disabling the clusters public FQDN and configuring the private DNS zone.
 
 :::code language="bicep" source="~/aks-samples/automatic/custom-network/private/bicep/aks.bicep" highlight="29,33,34,36,37,38,40,41,42,43,44,45":::
 
@@ -251,7 +253,7 @@ When an AKS Automatic cluster is created as a private cluster, the API server en
 * Use an [Express Route or VPN][express-route-or-VPN] connection.
 * Use a [private endpoint][private-endpoint-service] connection.
 
-Creating a virtual machine in the same virtual network as the AKS cluster is the easiest option. Express Route and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
+Creating a virtual machine in the same virtual network as the AKS cluster is the easiest option. Express Route and VPNs add costs and require more networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. For more information, see [Options for connecting to the private cluster][connect-private-cluster].
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
 
@@ -270,13 +272,13 @@ Verify the connection to your cluster using the [kubectl get][kubectl-get] comma
 kubectl get nodes
 ```
 
-The following sample output shows how you're asked to log in.
+The following sample output shows how you're asked to sign in.
 
 ```output
 To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code AAAAAAAAA to authenticate.
 ```
 
-After you log in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
+After you sign in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
 
 ```output
 NAME                                STATUS   ROLES   AGE     VERSION
@@ -333,7 +335,7 @@ To deploy the application, you use a manifest file to create all the objects req
 
 When the application runs, a Kubernetes service exposes the application front end to the internet. This process can take a few minutes to complete.
 
-1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command. Make sure all pods are `Running` before proceeding. If this is the first workload you deploy, it may take a few minutes for [node auto provisioning][node-auto-provisioning] to create a node pool to run the pods.
+1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command. Make sure all pods are `Running` before proceeding. If this is the first workload you deploy, it might take a few minutes for [node auto provisioning][node-auto-provisioning] to create a node pool to run the pods.
 
     ```bash
     kubectl get pods -n aks-store-demo
