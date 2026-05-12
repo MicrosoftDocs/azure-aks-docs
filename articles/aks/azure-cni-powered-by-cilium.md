@@ -104,7 +104,6 @@ Azure CNI powered by Cilium currently has the following limitations:
 - Network policies aren't applied to pods using host networking (`spec.hostNetwork: true`) because these pods use the host identity instead of having individual identities.
 - Cilium Endpoint Slices are supported in Kubernetes version 1.32 and above. Cilium Endpoint Slices don't support configuration of how Cilium Endpoints are grouped. Priority namespace through `cilium.io/ces-namespace` isn't supported.
 - Cilium uses Cilium identities as unique identity for provisioning endpoints, so high-churning workloads such as Spark jobs generate high count of Cilium identities. To avoid workloads hitting Cilium identity limits (65535), excluding Spark job's labels like `!spark-app-name` and `!spark-app-selector` in the Cilium configmap can significantly reduce Cilium identity generation. For more details on Cilium identity exclusion rules, check [the official Cilium label documentation](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels).
-- AKS Local DNS isn't compatible with Advanced Container Networking Services (ACNS) - FQDN Filtering.
 
 ## Considerations
 
@@ -291,6 +290,40 @@ az aks create \
 
     No, AKS clusters created with network data plane as Cilium don't use `kube-proxy`.
     If the AKS clusters are on [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md) and are upgraded to AKS clusters running Azure CNI powered by Cilium, new nodes workloads are created without `kube-proxy`. Older workloads are also migrated to run without `kube-proxy` as a part of this upgrade process.
+
+- **Is AKS Local DNS supported with Azure CNI Powered by Cilium?**
+
+    Yes, network policies must explicitly allow pod egress to the LocalDNS IP address.
+
+    This Cilium Network Policy shows how to allow pod egress to LocalDNS IP though host entities and CIDR:
+ 
+    ```yaml
+    apiVersion: "cilium.io/v2"
+    kind: CiliumNetworkPolicy
+    metadata:
+      name: "allow-azure-dns-egress"
+      namespace: default
+    spec:
+      endpointSelector:
+        matchLabels: {} # This selects ALL pods in the namespace
+      egress:
+        - toCIDR:
+            - 169.254.10.0/24
+          toPorts:
+            - ports:
+                - port: "53"
+                  protocol: UDP
+                - port: "53"
+                  protocol: TCP
+        - toEntities:
+            - host
+          toPorts:
+            - ports:
+                - port: "53"
+                  protocol: UDP
+                - port: "53"
+                  protocol: TCP
+    ```
 
 ## Dual-stack networking with Azure CNI Powered by Cilium
 

@@ -35,9 +35,7 @@ This article shows you how to set up Advanced Container Networking Services with
     
     `*` This attempt to match any domain name, which isn't supported.
 
-* FQDN filtering is currently not supported with node-local DNS.
 * Kubernetes service names aren't supported.
-* Other L7 policies aren't supported.
 * FQDN pods might exhibit performance degradation when handling more than 1,000 requests per second.
 * If Advanced Container Networking Services(ACNS) security is disabled, FQDN and L7 policies (HTTP, HTTPS, Kafka, and gRPC) will be blocked.
 * Alpine-based container images might encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
