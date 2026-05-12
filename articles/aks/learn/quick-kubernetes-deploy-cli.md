@@ -106,7 +106,7 @@ az aks create \
 
 When you create a new cluster, AKS automatically creates a second resource group to store the AKS resources. For more information, see [Why are two resource groups created with AKS?](../faq.yml)
 
-The cluster in this example specifies a node count of one to save time and resources. In a production environment, the recommendation is a node count of threee or more nodes. The `az aks create` defaults to three nodes if you don't specify a node count.
+The cluster in this example specifies a node count of one to save time and resources. In a production environment, the recommendation is a node count of three or more nodes. The `az aks create` defaults to three nodes if you don't specify a node count.
 
 ## Add a user mode node pool
 
@@ -171,7 +171,7 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
     aks-userpool1-123456789-vmss000000   Ready    <none>   5m36s   v1.34.4
     ```
 
-    There are two nodes, `nodepool1` is ths system node pool created with the cluster and `userpool1` is the user node pool added to the cluster.
+    There are two nodes, `nodepool1` is the system node pool created with the cluster and `userpool1` is the user node pool added to the cluster.
 
 ## Deploy the application
 
@@ -498,7 +498,7 @@ To deploy the application, you use a manifest file to create all the objects req
    kubectl get pods -o wide
    ```
 
-   The output will show that rabbitmq, order-service, product-service, and store-front pods are running on a node in the user node pool.
+   The output shows that rabbitmq, order-service, product-service, and store-front pods are running on a node in the user node pool.
 
 ## Test the application
 
