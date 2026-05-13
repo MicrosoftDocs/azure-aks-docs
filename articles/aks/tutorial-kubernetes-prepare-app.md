@@ -240,7 +240,7 @@ Stop and remove the container instances and resources using the [`docker compose
 docker compose down
 ```
 
-### [Azure Developer CLI](#tab/azure-azd)
+## Azure Developer CLI commands
 
 When you use `azd`, there are no manual container image dependencies. `azd` handles the provisioning, deployment, and clean up of your applications and clusters with the `azd up` and `azd down` commands, similar to Docker.
 
@@ -264,7 +264,7 @@ infra:
 
 ## Next steps
 
-### [Azure CLI](#tab/azure-cli)
+### Azure CLI
 
 In this tutorial, you created a sample application, created container images for the application, and then tested the application. You learned how to:
 
@@ -279,7 +279,7 @@ In the next tutorial, you learn how to store container images in an ACR.
 > [!div class="nextstepaction"]
 > [Push images to Azure Container Registry][aks-tutorial-prepare-acr]
 
-### [Azure Developer CLI](#tab/azure-azd)
+### Azure Developer CLI
 
 In this tutorial, you cloned a sample application using `azd`. You learned how to:
 
