@@ -59,7 +59,7 @@ Many of the components that Pod Sandboxing is based on are open source. That inc
 - Once you're ready, [deploy Pod Sandboxing on AKS][deploy-pod-sandboxing].
 
 <!--- External Links --->
-[create-azure-subscription]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F
+[create-azure-subscription]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [kata-containers]: https://katacontainers.io/
 [cloud-hypervisor]: https://github.com/cloud-hypervisor/cloud-hypervisor
 [azure-linux]: https://github.com/microsoft/azurelinux

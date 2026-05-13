@@ -32,7 +32,7 @@ For more information on using KMS, see [Using a KMS provider for data encryption
 
 ## Prerequisites
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure CLI version 2.39.0 or later. Find your version using the `az --version` command. If you need to install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
 > [!WARNING]

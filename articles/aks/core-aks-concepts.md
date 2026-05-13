@@ -20,14 +20,14 @@ Kubernetes is an open-source container orchestration platform for automating the
 
 ## What is AKS?
 
-AKS is a managed Kubernetes service that simplifies deploying, managing, and scaling containerized applications that use Kubernetes. For more information, see [What is Azure Kubernetes Service (AKS)?][aks-overview].
+AKS is a managed Kubernetes service that simplifies deploying, managing, and scaling containerized applications that use Kubernetes. For more information, see [What is Azure Kubernetes Service (AKS)?][aks-overview]
 
 ## Cluster components
 
 An AKS cluster is divided into two main components:
 
-* **Control plane**: The control plane provides the core Kubernetes services and orchestration of application workloads.
-* **Nodes**: Nodes are the underlying virtual machines (VMs) that run your applications.
+- **Control plane**: The control plane provides the core Kubernetes services and orchestration of application workloads.
+- **Nodes**: Nodes are the underlying virtual machines (VMs) that run your applications.
 
 ![Screenshot that shows Kubernetes control plane and node components.](media/concepts-clusters-workloads/control-plane-and-nodes.png)
 
@@ -66,9 +66,9 @@ Configure the following settings for nodes.
 
 ### VM size and image
 
-The *Azure VM size* for your nodes defines CPUs, memory, size, and the storage type available, such as a high-performance solid-state drive or a regular hard-disk drive. The VM size you choose depends on the workload requirements and the number of pods that you plan to run on each node. As of May 2025, the default VM SKU and size will be dynamically selected by AKS based on available capacity and quota if the parameter is left blank during deployment. For more information, see [Supported VM sizes in Azure Kubernetes Service (AKS)][aks-vm-sizes].
+The _Azure VM size_ for your nodes defines CPUs, memory, size, and the storage type available, such as a high-performance solid-state drive or a regular hard-disk drive. The VM size you choose depends on the workload requirements and the number of pods that you plan to run on each node. Starting May 2025, the default VM SKU and size is dynamically selected by AKS based on available capacity and quota if the parameter is left blank during deployment. For more information, see [Supported VM sizes in Azure Kubernetes Service (AKS)][aks-vm-sizes].
 
-In AKS, the *VM image* for your cluster's nodes is based on Ubuntu Linux, [Azure Linux](use-azure-linux.md), or Windows Server 2022. When you create an AKS cluster or scale out the number of nodes, the Azure platform automatically creates and configures the requested number of VMs. Agent nodes are billed as standard VMs. Any VM size discounts, including [Azure reservations][reservation-discounts], are automatically applied.
+In AKS, the _VM image_ for your cluster's nodes is based on Ubuntu Linux, [Azure Linux](use-azure-linux.md), or Windows Server 2022. When you create an AKS cluster or scale out the number of nodes, the Azure platform automatically creates and configures the requested number of VMs. Agent nodes are billed as standard VMs. Any VM size discounts, including [Azure reservations][reservation-discounts], are automatically applied.
 
 ### OS disks
 
@@ -80,7 +80,7 @@ AKS uses node resources to help the nodes function as part of the cluster. This 
 
 ### OS
 
-AKS supports two linux distros: Ubuntu and Azure Linux. Ubuntu is the default Linux distro on AKS. Windows node pools are also supported on AKS with the [Long Term Servicing Channel (LTSC)][servicing-channels-comparison] as the default channel on AKS. For more information on default OS versions, see documentation on [node images][node-images].
+AKS supports two Linux distros: Ubuntu and Azure Linux. Ubuntu is the default Linux distro on AKS. Windows node pools are also supported on AKS with the [Long Term Servicing Channel (LTSC)][servicing-channels-comparison] as the default channel on AKS. For more information on default OS versions, see documentation on [node images][node-images].
 
 ### Container runtime
 
@@ -88,31 +88,31 @@ A container runtime is software that executes containers and manages container i
 
 ## Pods
 
-A *pod* is a group of one or more containers that share the same network and storage resources and a specification for how to run the containers. Pods typically have a 1:1 mapping with a container, but you can run multiple containers in a pod.
+A _pod_ is a group of one or more containers that share the same network and storage resources and a specification for how to run the containers. Pods typically have a 1:1 mapping with a container, but you can run multiple containers in a pod.
 
 ## Node pools
 
-In AKS, nodes of the same configuration are grouped together into *node pools*. These node pools contain the underlying virtual machine scale sets and virtual machines (VMs) that run your applications.
+In AKS, nodes of the same configuration are grouped together into _node pools_. These node pools contain the underlying virtual machine scale sets and virtual machines (VMs) that run your applications.
 
-When you create an AKS cluster, you define the initial number of nodes and their size (version), which creates a [system node pool][use-system-pool]. System node pools serve the primary purpose of hosting critical system pods, such as CoreDNS and `konnectivity`.
+When you create an AKS cluster, you define the initial number of nodes and their size and version, which creates a [_system node pool_][use-system-pool]. System node pools serve the primary purpose of hosting critical system pods, such as CoreDNS (`coredns`) and konnectivity (`konnectivity-agent`).
 
-To support applications that have different compute or storage demands, you can create *user node pools*. User node pools serve the primary purpose of hosting your application pods.
+To support applications that have different compute or storage demands, you can create _user node pools_. User node pools serve the primary purpose of hosting your application pods.
 
 For more information, see [Create node pools in AKS][create-node-pools] and [Manage node pools in AKS][manage-node-pools].
 
 ## Node resource group
 
-When you create an AKS cluster in an Azure resource group, the AKS resource provider automatically creates a second resource group called the *node resource group*. This resource group contains all the infrastructure resources associated with the cluster, including VMs, virtual machine scale sets, and storage.
+When you create an AKS cluster in an Azure resource group, the AKS resource provider automatically creates a second resource group called the _node resource group_. This resource group contains all the infrastructure resources associated with the cluster, including VMs, virtual machine scale sets, and storage.
 
 For more information, see the following resources:
 
-* [Why are two resource groups created with AKS?][node-resource-group]
-* [Can I provide my own name for the AKS node resource group?][custom-nrg]
-* [Can I modify tags and other properties of the resources in the AKS node resource group?][modify-nrg-resources]
+- [Why are two resource groups created with AKS?][node-resource-group]
+- [Can I provide my own name for the AKS node resource group?][custom-nrg]
+- [Can I modify tags and other properties of the resources in the AKS node resource group?][modify-nrg-resources]
 
 ## Namespaces
 
-Kubernetes resources, such as pods and deployments, are logically grouped into *namespaces* to divide an AKS cluster and create, view, or manage access to resources.
+Kubernetes resources, such as pods and deployments, are logically grouped into _namespaces_ to divide an AKS cluster and create, view, or manage access to resources.
 
 The following namespaces are created by default in an AKS cluster:
 
@@ -121,7 +121,7 @@ The following namespaces are created by default in an AKS cluster:
 | `default` | The [default][kubernetes-namespaces] namespace allows you to start using cluster resources without creating a new namespace. |
 | `kube-node-lease` | The [kube-node-lease][kubernetes-namespaces] namespace enables nodes to communicate their availability to the control plane. |
 | `kube-public` | The [kube-public][kubernetes-namespaces] namespace isn't typically used, but you can use it so that resources are visible across the whole cluster by any user. |
-| `kube-system` | The [kube-system][kubernetes-namespaces] namespace is used by Kubernetes to manage cluster resources, such as `coredns`, `konnectivity-agent`, and `metrics-server`. It is not recommended to deploy your own applications to this namespace. For rare cases where deploying your own applications to this namespace is necessary, see the [FAQ](faq.yml#can-admission-controller-webhooks-affect-kube-system-and-internal-aks-namespaces-) to learn how. |
+| `kube-system` | The [kube-system][kubernetes-namespaces] namespace is used by Kubernetes to manage cluster resources, such as `coredns`, `konnectivity-agent`, and `metrics-server`. We don't recommend deploying your own applications to this namespace. For rare cases where deploying your own applications to this namespace is necessary, see the [FAQ](faq.yml#can-admission-controller-webhooks-affect-kube-system-and-internal-aks-namespaces-). |
 
 ![Screenshot that shows Kubernetes namespaces to logically divide resources and applications.](media/concepts-clusters-workloads/namespaces.png)
 
@@ -145,13 +145,13 @@ For more information, see [Supported Kubernetes versions in AKS][supported-kuber
 
 For information on more core concepts for AKS, see the following resources:
 
-* [AKS access and identity][access-identity]
-* [AKS security][security]
-* [AKS networking][networking]
-* [AKS storage][storage]
-* [AKS scaling][scaling]
-* [AKS monitoring][monitoring]
-* [AKS backup and recovery][backup-recovery]
+- [AKS access and identity][access-identity]
+- [AKS security][security]
+- [AKS networking][networking]
+- [AKS storage][storage]
+- [AKS scaling][scaling]
+- [AKS monitoring][monitoring]
+- [AKS backup and recovery][backup-recovery]
 
 <!---LINKS--->
 [kube-apiserver]: https://kubernetes.io/docs/concepts/overview/components/#kube-apiserver

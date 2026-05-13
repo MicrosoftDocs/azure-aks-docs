@@ -1,20 +1,20 @@
 ---
-title: Enable Microsoft Entra ID authentication for the AKS control plane
+title: Enable Microsoft Entra ID Authentication for the Azure Kubernetes Service (AKS) Control Plane
 description: Learn how to enable Microsoft Entra ID authentication for the Kubernetes API server (control plane) on an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
+ms.service: azure-kubernetes-service
 ms.subservice: aks-security
 ms.date: 04/19/2026
 ms.custom: devx-track-azurecli
 author: shashankbarsin
 ms.author: shasb
 ai-usage: ai-assisted
-
 # Customer intent: As an Azure Kubernetes Service (AKS) administrator, I want to enable Microsoft Entra ID authentication for my AKS cluster's Kubernetes API server so that cluster users sign in with their organizational identities.
 ---
 
 # Enable Microsoft Entra ID authentication for the AKS control plane
 
-The Microsoft Entra integration simplifies the Microsoft Entra integration process. Previously, you were required to create a client and server app, and the Microsoft Entra tenant had to assign [Directory Readers][directory-readers-rbac-role] role permissions. Now, the Azure Kubernetes Service (AKS) resource provider manages the client and server apps for you.
+The Microsoft Entra integration simplifies the process of enabling Entra-based authentication for AKS. Previously, you were required to create a client and server app, and the Microsoft Entra tenant had to assign [Directory Readers][directory-readers-rbac-role] role permissions. Now, the Azure Kubernetes Service (AKS) resource provider manages the client and server apps for you.
 
 Cluster administrators can configure Kubernetes role-based access control (Kubernetes RBAC) based on a user's identity or directory group membership.
 
@@ -29,7 +29,7 @@ Microsoft Entra integration can't be disabled after it's enabled on a cluster.
 To install the AKS addon, verify you have the following items:
 
 - You have Azure CLI version 2.29.0 or later installed and configured. To find the version, run the `az --version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-- You need `kubectl` with a minimum version of [1.18.1](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.18.md#v1181) or [`kubelogin`][kubelogin]. With the Azure CLI and the Azure PowerShell module, these two commands are included and automatically managed. Meaning, they're upgraded by default and running [`az aks install-cli`](/cli/azure/aks#az-aks-install-cli) isn't required or recommended. If you're using an automated pipeline, you need to manage upgrades for the correct or latest version. The difference between the minor versions of Kubernetes and `kubectl` shouldn't be more than *one* version. Otherwise, authentication issues occur on the wrong version.
+- You need `kubectl` with a minimum version of [1.18.1](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.18.md#v1181) or [`kubelogin`][kubelogin]. With the Azure CLI and the Azure PowerShell module, `kubectl` and `kubelogin` are included and automatically managed. Meaning, they're upgraded by default and running [`az aks install-cli`](/cli/azure/aks#az-aks-install-cli) isn't required or recommended. If you're using an automated pipeline, you need to manage upgrades for the correct or latest version. The difference between the minor versions of Kubernetes and `kubectl` shouldn't be more than *one* version. Otherwise, authentication issues occur on the wrong version.
 - This configuration requires you have a Microsoft Entra group for your cluster. This group is registered as an admin group on the cluster to grant admin permissions. If you don't have an existing Microsoft Entra group, you can create one using the [`az ad group create`](/cli/azure/ad/group#az-ad-group-create) command.
 
 ## Enable the integration on your AKS cluster
@@ -64,7 +64,7 @@ export LOCATION="centralus"
       --generate-ssh-keys
     ```
 
-    A successful creation of an Microsoft Entra ID cluster has the following section in the response body.
+    A successful creation of a Microsoft Entra ID cluster has the following section in the response body.
 
     ```output
     "AADProfile": {
@@ -92,7 +92,7 @@ az aks update \
   --aad-tenant-id $AAD_TENANT_ID
 ```
 
-A successful activation of an Microsoft Entra ID cluster has the following section in the response body:
+A successful activation of a Microsoft Entra ID cluster has the following section in the response body:
 
 ```output
 "AADProfile": {
@@ -124,7 +124,7 @@ az aks update \
   --aad-tenant-id $AAD_TENANT_ID
 ```
 
-A successful migration of an Microsoft Entra ID cluster has the following section in the response body:
+A successful migration of a Microsoft Entra ID cluster has the following section in the response body:
 
 ```output
 "AADProfile": {

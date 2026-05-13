@@ -35,7 +35,7 @@ You can expand your pod Classless Inter-Domain Routing (CIDR) space on Azure CNI
 
 ## Prerequisites
 
-- You need an Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/) before you begin.
+- You need an Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 - Ensure that you meet the requirements listed in the [Requirements and parameters](#requirements-and-parameters) section.
 
 ## Update an Azure CNI Overlay AKS cluster to expand the pod CIDR space

@@ -18,7 +18,7 @@ Pod Security Admission is a built-in policy solution for single cluster implemen
 
 ## Before you begin
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - [Azure CLI installed](/cli/azure/install-azure-cli).
 - An existing AKS cluster running Kubernetes version 1.23 or higher.
 

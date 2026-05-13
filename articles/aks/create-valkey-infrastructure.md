@@ -300,7 +300,7 @@ _Microsoft maintains this article. The following contributors originally wrote i
 
 <!-- Internal links -->
 [valkey-solution-overview]: ./valkey-overview.md
-[azure-free-account]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F
+[azure-free-account]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-group-create]: /cli/azure/group#az-group-create
 [az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create

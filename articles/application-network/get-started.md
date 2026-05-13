@@ -16,7 +16,7 @@ This article helps you get started with Azure Kubernetes Application Network for
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/).
+- An Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure CLI version 2.84.0 or later. Check your version using the `az --version` command. To install or update, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - If using an existing AKS cluster, make sure [AKS-managed Microsoft Entra integration](/azure/aks/entra-id-control-plane-authentication) and [OIDC issuer](/azure/aks/use-oidc-issuer) are enabled. These features are required for Azure Kubernetes Application Network connectivity and security.
 - Verify support for your existing Kubernetes cluster using the [support policy](./supported-versions.md).

@@ -21,7 +21,7 @@ Using Azure Dedicated Hosts for nodes with your AKS cluster has the following be
 
 ## Before you begin
 
-* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * Before you start, ensure that your version of the Azure CLI is 2.39.0 or later. If it's an earlier version, [install the latest version](/cli/azure/install-azure-cli).
 
 ## Limitations

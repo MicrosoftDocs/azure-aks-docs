@@ -5,6 +5,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.date: 03/30/2026
 ms.service: azure-kubernetes-service
+ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom:
   - devx-track-azurecli
@@ -19,7 +20,7 @@ ms.custom:
 
 [!INCLUDE [azure-network-policy-manager-linux-retirement](./includes/azure-network-policy-manager-linux-retirement.md)]
 
-### Identify impacted clusters
+## Identify impacted clusters
 
 To find AKS clusters with Linux node pools using Azure Network Policy Manager (NPM), run the [Azure Resource Graph query](https://portal.azure.com/?feature.customportal=false#blade/HubsExtension/ArgQueryBlade/query/Resources%20%0A%7C%20where%20type%20%3D%3D%20%22microsoft.containerservice%2Fmanagedclusters%22%20%0A%7C%20mv-expand%20agentPool%20%3D%20properties.agentPoolProfiles%20%0A%7C%20where%20agentPool.osType%20!%3D%20%22Windows%22%20%0A%7C%20extend%20netPol%20%3D%20tolower%28tostring%28properties.networkProfile.networkPolicy%29%29%20%0A%7C%20where%20netPol%20%3D%3D%20%22azure%22%20%0A%7C%20summarize%20by%20name%2C%20location%2C%20resourceGroup%2C%20netPol) that lists all AKS clusters where `agentPool.osType != "Windows"` and `properties.networkProfile.networkPolicy == "azure"`.
 
@@ -43,7 +44,7 @@ Azure provides three network policy engines for enforcing network policies:
 - **Azure Network Policy Manager (NPM)**
 - **Calico** (an open-source network and network security solution founded by [Tigera][tigera])
 
-We recommend using Cilium, which provides robust support for Kubernetes-native policies, extended features such as [Layer 7 policy](./container-network-security-l7-policy-concepts.md) and [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md), and an eBPF-based dataplane that offers better performance, scalability, and security compared to iptables-based solutions.
+We recommend using Cilium, which provides robust support for Kubernetes-native policies, extended features such as [Layer 7 policy](./container-network-security-l7-policy-concepts.md) and [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md), and an eBPF-based dataplane that offers better performance, scalability, and security compared to _IPTables_-based solutions.
 
 To enforce the specified policies, Azure NPM uses _IPTables_ for Linux and _Host Network Service (HNS) ACLPolicies_ for Windows. Policies are translated into sets of allowed and disallowed IP pairs. These pairs are then programmed as `IPTable` or `HNS ACLPolicy` filter rules.
 
@@ -220,7 +221,7 @@ If you plan on adding Windows node pools to your cluster, include the `windows-a
 Update an existing cluster to install Azure NPM or Calico using the [`az aks update`][az-aks-update] command and specifying `azure` or `calico` for the `--network-policy` parameter. The following example command shows how to install either Azure NPM:
 
 ```azurecli-interactive
-az aks update
+az aks update \
   --resource-group $RESOURCE_GROUP \
   --name $CLUSTER_NAME \
   --network-policy azure
@@ -248,7 +249,7 @@ To begin verification of network policy, you create a sample application and set
     kubectl create namespace demo
     ```
 
-1. Create a pod named `server` to server on TCP port 80 using the `kubectl run` command.
+1. Create a pod named `server` to serve on TCP port 80 using the `kubectl run` command.
 
     ```bash
     kubectl run server -n demo --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 --labels="app=server" --port=80 --command -- /agnhost serve-hostname --tcp --http=false --port "80"
@@ -306,7 +307,7 @@ To begin verification of network policy, you create a sample application and set
 1. Apply the network policy manifest using the [`kubectl apply`][kubectl-apply] command.
 
     ```bash
-    kubectl apply –f demo-policy.yaml
+    kubectl apply -f demo-policy.yaml
     ```
 
 1. In the client shell, verify connectivity with the server using the following `/agnhost` command:
@@ -344,7 +345,7 @@ AKS only supports Calico for standard Kubernetes network policies and doesn't te
 Remove Azure Network Policy Manager or Calico from an existing cluster using the [`az aks update`][az-aks-update] command and specifying `none` for the `--network-policy` parameter.
 
 ```azurecli-interactive
-az aks update
+az aks update \
   --resource-group $RESOURCE_GROUP \
   --name $CLUSTER_NAME \
   --network-policy none
@@ -388,7 +389,7 @@ Delete the resources using the [`kubectl delete`][kubectl-delete] command.
 kubectl delete namespace demo
 ```
 
-If you followed this article's steps to create an AKS cluster, use the [`az group delete`][az-group-delete] command to delete the AKS resource group and it's related resource group with a name that begins with `MC_`.
+If you followed this article's steps to create an AKS cluster, use the [`az group delete`][az-group-delete] command to delete the AKS resource group and its related resource group with a name that begins with `MC_`.
 
 ```azurecli-interactive
 az group delete --resource-group $RESOURCE_GROUP --no-wait --yes
