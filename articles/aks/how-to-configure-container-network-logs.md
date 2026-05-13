@@ -998,7 +998,7 @@ az group delete --name $RESOURCE_GROUP
 **Layer 7 and DNS visibility**
 
 * Layer 7 flow records are populated only when L7 policy support is enabled on the cluster and a `CiliumNetworkPolicy` with L7 rules covers the traffic. For details, see [Configure a Layer 7 policy](./how-to-apply-l7-policies.md).
-* DNS records are populated only when a Cilium FQDN policy (`rules.dns` plus `toFQDNs`) covers the traffic. FQDN-based policies are incompatible with node-local DNS, including AKS Local DNS. For details, see [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
+* DNS records are populated only when a Cilium FQDN policy (`rules.dns` plus `toFQDNs`) covers the traffic.
 
 **Host-local storage**
 
