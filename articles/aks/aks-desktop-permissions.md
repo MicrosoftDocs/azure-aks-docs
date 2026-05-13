@@ -30,7 +30,7 @@ This article describes how to manage RBAC permissions to enable team members to 
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure CLI version 2.64.0 or later installed and configured. Check your version using the [`az --version`](/cli/azure/reference-index#az-version) command. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - The `aks-preview` Azure CLI extension. Install it using the `az extension add --name aks-preview` command.
 - A basic understanding of Azure role-based access control (RBAC), see [What is Azure RBAC?](/azure/role-based-access-control/overview) and [Azure built-in roles](/azure/role-based-access-control/built-in-roles).

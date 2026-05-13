@@ -87,7 +87,7 @@ Other contributors:
 [azure-ag]: /azure/application-gateway/for-containers/overview
 [azure-waf]: /azure/web-application-firewall/overview
 [aks]: ./what-is-aks.md
-[azure-free]: https://azure.microsoft.com/free/
+[azure-free]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [azure-built-in-roles]: /azure/role-based-access-control/built-in-roles
 [azure-cli]: /cli/azure/install-azure-cli
 [aks-preview]: /azure/aks/draft#install-the-aks-preview-azure-cli-extension

@@ -18,7 +18,7 @@ Using Azure Kubernetes Service (AKS) with availability zones physically distribu
 
 ## Prerequisites
 
-- An active Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/) before you begin.
+- An active Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 - Set your subscription context using the [`az account set`][az-account-set] command. For example:
 
     ```azurecli-interactive

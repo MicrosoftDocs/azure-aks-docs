@@ -64,7 +64,7 @@ Before you begin, ensure you have the following tools, permissions, and informat
 
 ### Cluster requirements
 
-- An active Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/) before you begin.
+- An active Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 - An AKS cluster with [workload identity](/azure/aks/workload-identity-overview) and [OIDC issuer](/azure/aks/use-oidc-issuer) enabled, running a [supported Kubernetes version](/azure/aks/supported-kubernetes-versions). You create a new cluster in [Step 2](#step-2-create-an-aks-cluster) if needed.
 - (Recommended) [Azure CNI powered by Cilium](/azure/aks/azure-cni-powered-by-cilium) with [Advanced Container Networking Services (ACNS)](/azure/aks/advanced-container-networking-services-overview) enabled, for full diagnostic capabilities including Hubble flow analysis and Cilium policy diagnostics.
 - Minimum node size: `Standard_D4_v3` or equivalent (three nodes recommended).

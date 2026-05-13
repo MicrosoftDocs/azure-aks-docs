@@ -66,7 +66,7 @@ Depending on your workload needs, there are multiple compute scaling experiences
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure CLI version 2.73.0 or later installed and configured. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][install azure cli]
 - This feature requires kubernetes version 1.27 or greater. To upgrade your kubernetes version, see [Upgrade AKS cluster][upgrade-aks-cluster]
 

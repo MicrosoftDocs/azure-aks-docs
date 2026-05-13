@@ -23,7 +23,7 @@ This article shows you how to deploy the Kubernetes Event-driven Autoscaling (KE
 > For more information on how to securely scale your applications with workload identity, please read our [tutorial][keda-workload-identity]. To view KEDA's breaking change/deprecation policy, please read their [official documentation][keda-support-policy].
 ## Before you begin
 
-- You need an Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- You need an Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - You need the [Azure CLI installed](/cli/azure/install-azure-cli).
 - This article assumes you have an existing Azure resource group. If you don't have an existing resource group, you can create one using the [`az group create`][az-group-create] command.
 - Ensure you have firewall rules configured to allow access to the Kubernetes API server. For more information, see [Outbound network and FQDN rules for Azure Kubernetes Service (AKS) clusters][aks-firewall-requirements].

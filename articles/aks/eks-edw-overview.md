@@ -73,7 +73,7 @@ code .
 <!-- LINKS -->
 [competing-consumers]: /azure/architecture/patterns/competing-consumers
 [edw-aws-eks]: https://aws.amazon.com/blogs/containers/scalable-and-cost-effective-event-driven-workloads-with-keda-and-karpenter-on-amazon-eks/
-[azure-free]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F
+[azure-free]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [azure-built-in-roles]: /azure/role-based-access-control/built-in-roles
 [install-cli]: /cli/azure/install-azure-cli
 [aks-preview]: ./draft.md#install-the-aks-preview-azure-cli-extension

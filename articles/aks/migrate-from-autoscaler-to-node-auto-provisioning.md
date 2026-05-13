@@ -62,7 +62,7 @@ The following table maps cluster autoscaler profile settings to node auto-provis
 
 | Prerequisite                         | Notes                                                                                                        |
 |--------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| **Azure Subscription**               | If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).  |
+| **Azure Subscription**               | If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).  |
 | **Azure CLI**| `2.76.0` or later. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][azure cli].|                      
 
 ### Limitations

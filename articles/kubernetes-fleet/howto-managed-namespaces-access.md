@@ -19,7 +19,7 @@ This article is intended for users of a managed namespace who need to discover a
 
 ## Before you begin 
 
-* You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * You need an existing Managed Fleet Namespace. If you don't have one, see [create and configure Managed Fleet Namespaces](./howto-managed-namespaces.md).
 * Understand the Managed Fleet Namespace concept by [reading the overview](./concepts-fleet-managed-namespace.md).
 
