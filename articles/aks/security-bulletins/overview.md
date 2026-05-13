@@ -27,7 +27,7 @@ These updates cover security information related to the following AKS components
 ---
 
 
-## AKS-2026-0003 Azure Monitor Container Insights add-on uses nodes/proxy permission in Kubernetes versions < 1.33
+## AKS-2026-0004 Azure Monitor Container Insights add-on uses nodes/proxy permission in Kubernetes versions < 1.33
 
 **Published Date**: May 11, 2026
 
