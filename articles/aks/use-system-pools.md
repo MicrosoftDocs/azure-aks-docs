@@ -1,5 +1,5 @@
 ---
-title: Use system node pools in Azure Kubernetes Service (AKS)
+title: Use System Node Pools in Azure Kubernetes Service (AKS)
 description: Learn how to create and manage system node pools in Azure Kubernetes Service (AKS)
 ms.topic: how-to
 ms.date: 04/30/2026
@@ -7,8 +7,8 @@ author: schaffererin
 ms.author: schaffererin
 ms.custom: fasttrack-edit, devx-track-azurecli, devx-track-azurepowershell, biannual
 ms.subservice: aks-nodes
+ms.service: azure-kubernetes-service
 zone_pivot_groups: cli-powershell-terraform
-
 # Customer intent: As a Kubernetes administrator, I want to create and manage system node pools in an Azure Kubernetes Service (AKS) cluster, so that I can ensure critical system pods are properly isolated and efficiently scheduled, thereby maintaining the reliability of my applications.
 ---
 
@@ -19,7 +19,7 @@ In Azure Kubernetes Service (AKS), nodes of the same configuration are grouped t
 - **System node pools**: The primary purpose is to host critical system pods like `CoreDNS` and `metrics-server`. System node pools shouldn't be used to run your application. System node pools use Ubuntu Linux or Azure Linux.
 - **User node pools**: The primary purpose is to host your application pods and isolate applications from the system node pool. This isolation prevents an application from causing instability with your cluster's system node pool. User node pools can use Ubuntu Linux, Azure Linux, or Windows.
 
-A production AKS cluster with a single system node pool must contain at least two nodes. The recommendation for a production AKS cluster with a single system node pool is to have at least three nodes for improved fault tolerance and availability zones. For example, the [az aks create][az-aks-create] command's default node count is three and creates a new cluster with a single Linux system node pool and three Linux nodes.
+A production AKS cluster with a single system node pool must contain at least two nodes. The recommendation for a production AKS cluster with a single system node pool is to have at least three nodes for improved fault tolerance and availability zones. For example, the [`az aks create`][az-aks-create] command's default node count is three and creates a new cluster with a single Linux system node pool and three Linux nodes.
 
 It's possible, but not recommended, to schedule application pods on a system node pool if you only have one node pool in your AKS cluster. A better solution is to create a user node pool for your application.
 
@@ -27,7 +27,7 @@ It's possible, but not recommended, to schedule application pods on a system nod
 
 :::zone pivot="azure-cli"
 
-You need the Azure CLI version 2.3.1 or later installed and configured. To find the version, run the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+You need the Azure CLI version 2.31 or later installed and configured. To find the version, run the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 :::zone-end
 
