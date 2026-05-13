@@ -1,5 +1,5 @@
 ---
-title: Upgrade the Azure Kubernetes Service (AKS) cluster control plane
+title: Upgrade the Azure Kubernetes Service (AKS) Cluster Control Plane
 description: Learn how to upgrade the control plane of an Azure Kubernetes Service (AKS) cluster to get the latest Kubernetes version features and security updates.
 ms.topic: how-to
 ms.subservice: aks-upgrade
@@ -19,7 +19,7 @@ Azure Kubernetes Service (AKS) clusters consist of two main components: the **co
 - If you're using the Azure CLI, this article requires Azure CLI version 2.34.1 or later. Use the `az --version` command to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 - If you're using Azure PowerShell, this article requires Azure PowerShell version 5.9.0 or later. Use the `Get-InstalledModule -Name Az` cmdlet to find the version. If you need to install or upgrade, see [Install Azure PowerShell][azure-powershell-install].
 - Performing upgrade operations requires the `Microsoft.ContainerService/managedClusters/agentPools/write` RBAC role. For more on Azure RBAC roles, see the [Azure resource provider operations][azure-rp-operations].
-- Starting with Kubernetes version 1.30 and 1.27 LTS versions, beta APIs are disabled by default when you upgrade to them.
+- Beta APIs are disabled by default when you upgrade to Kubernetes version 1.30 and 1.27 LTS versions.
 
 > [!WARNING]
 > Ensure you have sufficient compute quota before upgrading. If quota is low, the upgrade might fail. For more information, see [increase quotas](/azure/azure-portal/supportability/regional-quota-requests).
@@ -69,7 +69,7 @@ default  <resource-group-name>  1.28.9           1.29.2, 1.29.4
 Check for available Kubernetes releases for your AKS cluster using the [`Get-AzAksVersion`][get-azaksversion] cmdlet.
 
 ```azurepowershell-interactive
-Get-AzAksVersion -Location <your-region> | Where-Object OrchestratorVersion
+Get-AzAksVersion -Location <your-region> | Where-Object { $_.OrchestratorVersion }
 ```
 
 ### [Azure portal](#tab/azure-portal)
@@ -126,7 +126,7 @@ The Azure portal highlights deprecated APIs between your current version and ava
     Set-AzAksCluster -ResourceGroupName <resource-group-name> -Name <cluster-name> -KubernetesVersion 1.29.4 -ControlPlaneOnly
     ```
 
-1. Confirm the upgrade was successful using the [`Get-AzAksCluster`][get-azakcluster] cmdlet.
+1. Confirm the upgrade was successful using the [`Get-AzAksCluster`][get-azakscluster] cmdlet.
 
     ```azurepowershell-interactive
     Get-AzAksCluster -ResourceGroupName <resource-group-name> -Name <cluster-name> |
