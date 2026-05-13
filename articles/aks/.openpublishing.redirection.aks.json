@@ -6,6 +6,11 @@
             "redirect_document_id": true
         },
         {
+            "source_path_from_root": "/articles/aks/eviction-pod-autoscaler.md",
+            "redirect_url": "/azure/aks/automatic-pdb-management",
+            "redirect_document_id": true
+        },
+        {
             "source_path_from_root": "/articles/aks/acs-aks-migration.md",
             "redirect_url": "/azure/aks/aks-migration",
             "redirect_document_id": false

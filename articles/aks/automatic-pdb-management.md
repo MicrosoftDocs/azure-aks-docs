@@ -1,6 +1,6 @@
 ---
-title: Resolve PDB drain failures during AKS upgrades with PDB Manager (preview)
-description: Learn how to use the PDB Manager (preview) to automatically manage Pod Disruption Budgets and unblock node drain operations during AKS cluster upgrades.
+title: Automatic Pod Disruption Budget management during AKS upgrades (preview)
+description: Learn how to use automatic Pod Disruption Budget management (preview) to manage Pod Disruption Budgets and unblock node drain operations during AKS cluster upgrades.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
@@ -12,13 +12,13 @@ ai-usage: ai-assisted
 
 ---
 
-# Resolve PDB drain failures during AKS upgrades with PDB Manager (preview)
+# Automatic Pod Disruption Budget management during AKS upgrades (preview)
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 During [AKS cluster upgrades](upgrade-conceptual.md), nodes are drained by evicting pods so they can be reimaged or replaced. [Pod Disruption Budgets (PDBs)](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets) protect application availability during this process by limiting how many pods can be unavailable at once. However, PDBs can also [block eviction entirely](upgrade-conceptual.md#upgrade-behavior-with-restrictive-pod-disruption-budget) when they're misconfigured or when deployments don't have enough replicas to satisfy the budget. Deployments without any PDB at all have the opposite problem: nothing protects their pods from being evicted simultaneously, which risks downtime during upgrades.
 
-The PDB Manager is an AKS extension, based on the [Eviction Autoscaler](https://github.com/Azure/eviction-autoscaler) open-source project, that automates PDB management during upgrades. It:
+Automatic PDB management is an AKS extension, based on the [open-source project](https://github.com/Azure/eviction-autoscaler), that automates PDB management during upgrades. It:
 
 - **Creates PDBs automatically** for deployments that don't have one, so your workloads are protected during voluntary disruptions.
 - **Temporarily scales up replicas** when a PDB blocks pod eviction on a cordoned node, so the disruption budget is satisfied and the drain can proceed.
@@ -26,9 +26,9 @@ The PDB Manager is an AKS extension, based on the [Eviction Autoscaler](https://
 
 The result is that upgrades complete reliably without you having to force-bypass PDB protections or manually resolve quarantined nodes. For background on how AKS upgrades drain nodes and how PDBs affect that process, see [How AKS cluster upgrades work](upgrade-conceptual.md).
 
-## When to use the PDB Manager
+## When to use automatic PDB management
 
-Consider enabling the PDB Manager when:
+Consider enabling automatic PDB management when:
 
 - **Deployments lack PDBs.** Pods are evicted without availability guarantees during upgrades, leading to potential downtime.
 - **PDBs block node drain.** A PDB with `minAvailable` equal to the replica count (or `maxUnavailable: 0`) prevents any pod from being evicted, causing the upgrade to fail with an error like `Cannot evict pod as it would violate the pod's disruption budget`.
@@ -37,7 +37,7 @@ Consider enabling the PDB Manager when:
 
 ### Identify PDB-related drain failures
 
-Before you enable the PDB Manager, check whether your cluster is experiencing PDB-related drain failures:
+Before you enable automatic PDB management, check whether your cluster is experiencing PDB-related drain failures:
 
 - **Azure Activity Log.** In the Azure portal, open your AKS cluster resource and select **Activity log**. Look for failed upgrade operations with status `Failed` and messages referencing pod disruption budgets or eviction errors.
 - **Kubernetes events.** Run the following command to find recent eviction and drain events:
@@ -54,48 +54,69 @@ Before you enable the PDB Manager, check whether your cluster is experiencing PD
 |----------|----------|-----------|
 | **Force upgrade** | Bypasses PDB protections entirely | Risk of simultaneous pod eviction and service disruption |
 | **Undrainable node behavior** | Cordons and quarantines blocked nodes; upgrade continues on other nodes | Requires manual cleanup of quarantined nodes after upgrade |
-| **Overprovisioning** | Run extra replicas permanently | Ongoing cost for capacity that's only needed during upgrades |
-| **PDB Manager** (preview) | Creates PDBs for unprotected deployments and temporarily scales up replicas to satisfy PDB constraints, then scales back down | Requires the extension; adds transient capacity only during drain |
+| **Overprovisioning** | Permanently run extra deployment replicas (more pods than the workload needs) so a PDB always has headroom to allow eviction | Ongoing cost for application pod capacity that's only needed during upgrades |
+| **Automatic PDB management** (preview) | Creates PDBs for unprotected deployments and temporarily scales up replicas to satisfy PDB constraints, then scales back down | Requires the extension; adds transient capacity only during drain |
 
 ## How it works
 
-The PDB Manager has two complementary behaviors: **automatic PDB creation** (proactive) and **replica scaling during drain** (reactive).
+Automatic PDB management has two complementary behaviors: **automatic PDB creation** (proactive) and **replica scaling during drain** (reactive).
 
 ### Automatic PDB creation
 
-When PDB auto-creation is enabled (`controllerConfig.pdb.create=true`), the PDB Manager continuously watches for deployments that don't have a PDB. When it finds one in an enabled namespace, it creates a PDB with `minAvailable` set to the deployment's current replica count. The PDB Manager continuously reconciles auto-created PDBs, so if the deployment's replica count changes (for example, through a manual update or an external scaler), the PDB's `minAvailable` value is updated to match. This protection ensures that pods aren't evicted simultaneously during voluntary disruptions.
+When PDB auto-creation is enabled (`controllerConfig.pdb.create=true`), the extension continuously watches for deployments that don't have a PDB. When it finds one in an enabled namespace, it creates a PDB with `minAvailable` set to the deployment's current replica count. The extension continuously reconciles auto-created PDBs, so if the deployment's replica count changes (for example, through a manual update or an external scaler), the PDB's `minAvailable` value is updated to match. This protection ensures that pods aren't evicted simultaneously during voluntary disruptions.
 
-Auto-created PDBs are managed by the PDB Manager throughout their lifecycle. For details on ownership, cleanup, and how to take manual control, see [PDB ownership and cleanup](#pdb-ownership-and-cleanup).
+Auto-created PDBs are managed by the extension throughout their lifecycle. For details on ownership, cleanup, and how to take manual control, see [PDB ownership and cleanup](#pdb-ownership-and-cleanup).
 
 > [!NOTE]
-> The PDB Manager doesn't depend on KEDA or the Horizontal Pod Autoscaler (HPA). It directly adjusts deployment replica counts during drain operations. If a deployment is also managed by HPA, see [Limitations and considerations](#limitations-and-considerations) for potential interactions.
+> Automatic PDB management coordinates safely with HPA and KEDA when each deployment is managed by only one autoscaler. For details on how the extension interacts with each, including an unsupported configuration, see [Coordination with autoscalers (HPA and KEDA)](#coordination-with-autoscalers-hpa-and-keda).
 
 ### Replica scaling during drain
 
-The PDB Manager monitors your cluster for situations where PDB-protected pods can't be evicted during node drain operations. Here's what happens during a typical upgrade:
+The extension monitors your cluster for situations where PDB-protected pods can't be evicted during node drain operations. Here's what happens during a typical upgrade:
 
 1. **AKS cordons a node** as part of the upgrade process, marking it as unschedulable.
-1. **The PDB Manager detects the cordon** and checks whether any PDB-protected pods on that node have zero allowed disruptions.
-1. **If the PDB blocks eviction**, the PDB Manager temporarily scales up the deployment's replica count. The extra replicas are scheduled on other available nodes.
+1. **The extension detects the cordon** and checks whether any PDB-protected pods on that node have zero allowed disruptions.
+1. **If the PDB blocks eviction**, the extension temporarily scales up the deployment's replica count. The extra replicas are scheduled on other available nodes.
 1. **The PDB's allowed disruptions rise above zero**, because the total number of healthy pods now exceeds the PDB's `minAvailable` threshold.
 1. **Node drain proceeds normally.** The eviction API can now remove pods from the cordoned node without violating the PDB.
-1. **After eviction signals stop and allowed disruptions rise above zero**, the PDB Manager scales the deployment back to its original replica count. The scale-down happens automatically after a cooldown period — no manual intervention is needed.
+1. **After eviction signals stop and allowed disruptions rise above zero**, the extension scales the deployment back to its original replica count. The scale-down happens automatically after a cooldown period — no manual intervention is needed.
 
 > [!NOTE]
-> The PDB Manager only acts on *voluntary disruptions* such as upgrade drains and manual cordon/drain operations. It doesn't respond to node failures, pod crashes, or other involuntary disruptions.
+> Automatic PDB management only acts on *voluntary disruptions* such as upgrade drains and manual cordon/drain operations. It doesn't respond to node failures, pod crashes, or other involuntary disruptions.
+
+### Coordination with autoscalers (HPA and KEDA)
+
+Deployments are often managed by an autoscaler. To avoid race conditions where the autoscaler scales the deployment back down before evictions finish, the extension adjusts the autoscaler's *minimum* (not just the replica count) and reverts the change when the drain is complete.
+
+| Configuration | How the extension surges | How the extension reverts | Notes |
+|---------------|--------------------------|---------------------------|-------|
+| **Deployment only** | Increases the deployment's `replicas` directly. | Restores the original replica count after the cooldown. | Default behavior when no autoscaler is attached. |
+| **Deployment + HPA** | Raises the HPA's `minReplicas` floor and adds a replica immediately, so the HPA doesn't scale back down mid-drain and doesn't wait for its metrics cycle. | Restores the original `minReplicas`; the HPA handles scale-down naturally. | Safe coordination with a single HPA. |
+| **Deployment + KEDA** | Raises the `minReplicaCount` on the `ScaledObject` and adds a replica immediately, because KEDA has an extra latency hop (KEDA syncs to its HPA, then the HPA syncs to the deployment). | Restores the original `minReplicaCount`; KEDA and its HPA handle scale-down. | Safe coordination with a single KEDA `ScaledObject`. |
+| **Deployment + KEDA + a separate HPA** | Not supported. KEDA already creates its own HPA, so a second HPA produces conflicting writes to the same deployment. | The extension marks itself `Degraded` on the `EvictionAutoScaler` status and doesn't surge, because it can't safely coordinate two autoscalers writing to the same target. | Inspect the `EvictionAutoScaler` resource status and remove the extra HPA to fix. |
+
+To check the extension's view of a deployment, including any `Degraded` status from an unsupported autoscaler configuration:
+
+```bash
+kubectl get evictionautoscalers -A -o yaml
+```
 
 ## Prerequisites
 
-Before you install the PDB Manager, make sure you have the following:
+Before you install the automatic PDB management extension, make sure you have the following:
 
 - An AKS cluster running a [supported Kubernetes version](supported-kubernetes-versions.md).
+- Workloads that use **Deployments**. StatefulSets aren't supported, and using automatic PDB management with StatefulSets isn't recommended.
 - Azure CLI version 2.64.0 or later. Run `az --version` to check. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - The `Microsoft.KubernetesConfiguration` provider registered in your subscription.
 - Your AKS cluster must use a **managed identity** (not a service principal). Cluster extensions don't work with service-principal-based clusters. For more information, see [AKS cluster extensions](cluster-extensions.md).
 
+> [!NOTE]
+> Automatic PDB management acts only on Pod Disruption Budgets and deployment replica counts. It's orthogonal to node-pool upgrade settings such as `max-surge`, node drain timeout, node soak time, and the upgrade strategy (rolling versus blue-green). Any node-pool configuration that works for your cluster continues to work with this extension enabled.
+
 ### Extension permissions
 
-The PDB Manager extension requires permissions to read and write Deployments, Pod Disruption Budgets, and Events in the namespaces it manages. The extension installs its own service account and RBAC roles during setup. For the full list of roles and permissions, see the [Eviction Autoscaler repository on GitHub](https://github.com/Azure/eviction-autoscaler).
+The automatic PDB management extension requires permissions to read and write Deployments, Pod Disruption Budgets, and Events in the namespaces it manages. The extension installs its own service account and RBAC roles during setup. For the full list of roles and permissions, see the [project repository on GitHub](https://github.com/Azure/eviction-autoscaler).
 
 ### Register the configuration provider
 
@@ -111,13 +132,13 @@ az feature show --namespace Microsoft.KubernetesConfiguration --name Extensions
 az provider register -n Microsoft.KubernetesConfiguration
 ```
 
-## Install the PDB Manager
+## Install automatic PDB management
 
-The PDB Manager is installed as an extension on your AKS cluster. Choose an installation option based on your needs.
+Automatic PDB management is installed as an extension on your AKS cluster. Choose an installation option based on your needs.
 
 ### Basic installation
 
-Install the extension with default settings. In this mode, the autoscaler watches for PDB-blocked evictions in the `kube-system` namespace but doesn't automatically create PDBs for unprotected deployments. The `kube-system` namespace is included by default because AKS-managed system components also use PDBs that can block node drains during upgrades:
+Install the extension with default settings. In this mode, the extension watches for PDB-blocked evictions in the `kube-system` namespace but doesn't automatically create PDBs for unprotected deployments. The `kube-system` namespace is included by default because AKS-managed system components also use PDBs that can block node drains during upgrades:
 
 ```azurecli-interactive
 az k8s-extension create \
@@ -132,7 +153,7 @@ az k8s-extension create \
 
 ### Install with automatic PDB creation for specific namespaces
 
-Enable automatic PDB creation and specify which namespaces the autoscaler should protect. This is the **recommended** configuration for most clusters:
+Enable automatic PDB creation and specify which namespaces the extension should protect. This is the **recommended** configuration for most clusters:
 
 ```azurecli-interactive
 az k8s-extension create \
@@ -164,12 +185,12 @@ az k8s-extension create \
 
 ## Configuration options
 
-The following settings control how the PDB Manager behaves:
+The following settings control how automatic PDB management behaves:
 
 | Setting | Description | Default |
 |---------|-------------|---------|
 | `controllerConfig.pdb.create` | Automatically create PDBs for deployments that don't have one. | `false` |
-| `controllerConfig.namespaces.enabledByDefault` | Enable the autoscaler in all namespaces, including namespaces that already exist and any namespaces created later. | `false` |
+| `controllerConfig.namespaces.enabledByDefault` | Enable automatic PDB management in all namespaces, including namespaces that already exist and any namespaces created later. | `false` |
 | `controllerConfig.namespaces.actionedNamespaces` | Comma-separated list of namespaces to enable when `enabledByDefault` is `false`. There's no hard limit on the number of namespaces, but the Kubernetes API object size limit (~1 MiB per object) applies. | `{kube-system}` |
 
 ### Common configuration patterns
@@ -183,7 +204,7 @@ The following settings control how the PDB Manager behaves:
 
 ## Namespace control
 
-The PDB Manager operates in one of two modes depending on the `enabledByDefault` setting.
+The extension operates in one of two modes depending on the `enabledByDefault` setting.
 
 ### Opt-in mode (default)
 
@@ -213,7 +234,7 @@ metadata:
 
 ### Exclude specific deployments
 
-To prevent the autoscaler from creating a PDB for a specific deployment, add the following annotation to the deployment:
+To prevent the extension from creating a PDB for a specific deployment, add the following annotation to the deployment:
 
 ```yaml
 apiVersion: apps/v1
@@ -229,25 +250,25 @@ metadata:
 
 ## Automatic PDB creation
 
-When `controllerConfig.pdb.create` is set to `true`, the PDB Manager creates PDBs for deployments that meet all of the following criteria:
+When `controllerConfig.pdb.create` is set to `true`, the extension creates PDBs for deployments that meet all of the following criteria:
 
 - The deployment doesn't already have a matching PDB.
 - The deployment is in an enabled namespace.
 - The deployment isn't excluded via the `eviction-autoscaler.azure.com/pdb-create: "false"` annotation.
 
-Auto-created PDBs set `minAvailable` to match the deployment's current replica count (excluding any surge replicas added by the PDB Manager). This means eviction is blocked until the PDB Manager scales up the deployment, at which point the extra replicas satisfy the budget and allow drain to proceed.
+Auto-created PDBs set `minAvailable` to match the deployment's current replica count (excluding any surge replicas added by the extension). This means eviction is blocked until the extension scales up the deployment, at which point the extra replicas satisfy the budget and allow drain to proceed.
 
 ### PDB ownership and cleanup
 
-PDBs created by the PDB Manager are marked with an `ownedBy: EvictionAutoScaler` annotation. These controller-owned PDBs are automatically deleted when:
+PDBs created by the extension are marked with an `ownedBy: EvictionAutoScaler` annotation. These controller-owned PDBs are automatically deleted when:
 
 - The parent deployment is deleted.
-- The namespace is removed from the PDB Manager's scope.
+- The namespace is removed from the extension's scope.
 - The extension is [removed from the cluster](#remove-the-extension). PDBs with the `ownedBy: EvictionAutoScaler` annotation are cleaned up through Kubernetes garbage collection.
 
-PDBs that you create manually are never modified or deleted by the PDB Manager.
+PDBs that you create manually are never modified or deleted by the extension.
 
-To take manual control of a PDB that was created by the PDB Manager, remove the ownership annotation. After you remove this annotation, the PDB Manager no longer manages that PDB, and you're responsible for updating or deleting it:
+To take manual control of a PDB that was created by the extension, remove the ownership annotation. After you remove this annotation, the extension no longer manages that PDB, and you're responsible for updating or deleting it:
 
 ```bash
 kubectl annotate pdb <pdb-name> -n <namespace> ownedBy-
@@ -255,28 +276,28 @@ kubectl annotate pdb <pdb-name> -n <namespace> ownedBy-
 
 ## Verify the installation
 
-After installing the extension, verify that the PDB Manager is working correctly.
+After installing the extension, verify that automatic PDB management is working correctly.
 
-1. **Check that PDBs were created** for deployments in enabled namespaces. Filter for PDBs created by the PDB Manager:
+1. **Check that PDBs were created** for deployments in enabled namespaces. Filter for PDBs created by the extension:
 
     ```bash
     kubectl get pdb -A -o custom-columns=NAME:.metadata.name,NAMESPACE:.metadata.namespace,MIN-AVAILABLE:.spec.minAvailable,OWNER:.metadata.annotations.ownedBy | grep EvictionAutoScaler
     ```
 
-2. **Check the eviction autoscaler custom resources**:
+2. **Check the automatic PDB management custom resources**:
 
     ```bash
     kubectl get evictionautoscalers --all-namespaces
     ```
 
-3. **Test with a node cordon** (optional). In a test or staging environment, cordon a node and verify that the PDB Manager scales up the deployment and the PDB's allowed disruptions rise above zero:
+3. **Test with a node cordon** (optional). In a test or staging environment, cordon a node and verify that the extension scales up the deployment and the PDB's allowed disruptions rise above zero:
 
     ```bash
     # Cordon a node
     NODE=$(kubectl get pods -n <namespace> -l app=<app-label> -o=jsonpath='{.items[0].spec.nodeName}')
     kubectl cordon $NODE
 
-    # Watch for PDB Manager events
+    # Watch for automatic PDB management events
     kubectl get events -n <namespace> --sort-by='.lastTimestamp'
 
     # Check that the deployment scaled up
@@ -318,7 +339,7 @@ az k8s-extension create \
 
 ### Remove the extension
 
-To uninstall the PDB Manager:
+To uninstall automatic PDB management:
 
 ```azurecli-interactive
 az k8s-extension delete \
@@ -334,11 +355,12 @@ az k8s-extension delete \
 
 ## Limitations and considerations
 
-- The PDB Manager is currently in **preview** and isn't recommended for production workloads.
+- Automatic PDB management is currently in **preview** and isn't recommended for production workloads.
 - Configuration updates require deleting and recreating the extension.
-- The PDB Manager works with **Deployments**. Support for StatefulSets is experimental.
-- The PDB Manager doesn't override or modify existing PDBs. It works alongside them by adjusting replica counts.
-- The PDB Manager doesn't depend on KEDA or the Horizontal Pod Autoscaler (HPA). If a deployment is also managed by HPA, HPA might scale down replicas that the PDB Manager added during drain. For best results, consider configuring HPA `minReplicas` to account for disruption scenarios.
+- Automatic PDB management works with **Deployments** only. **StatefulSets aren't supported**, and using this extension with StatefulSets isn't recommended.
+- Automatic PDB management doesn't override or modify existing PDBs. It works alongside them by adjusting replica counts.
+- Automatic PDB management coordinates with a single autoscaler per deployment (HPA *or* KEDA). A deployment managed by KEDA *and* a separate HPA is unsupported; the extension marks itself `Degraded` and skips surging. See [Coordination with autoscalers (HPA and KEDA)](#coordination-with-autoscalers-hpa-and-keda).
+- Automatic PDB management is independent of node-pool upgrade settings. Settings such as `max-surge`, node drain timeout, node soak time, and upgrade strategy (rolling versus blue-green) don't need to be changed for this extension to work, and the extension doesn't change how those settings behave.
 - The temporary replica scale-up requires available capacity in the cluster. If no nodes have room for the extra pods, consider enabling the [cluster autoscaler](cluster-autoscaler.md) or [node auto-provisioning (NAP)](node-auto-provisioning.md) so that new nodes can be provisioned.
 
 ## Troubleshooting
@@ -347,9 +369,9 @@ az k8s-extension delete \
 |---------|---------------|------------|
 | PDBs aren't created for deployments | `controllerConfig.pdb.create` is `false` (default), or the namespace isn't enabled | Set `pdb.create=true` and verify the namespace is in `actionedNamespaces` or has the opt-in annotation. |
 | Upgrade still fails with PDB eviction error | Cluster doesn't have capacity for the extra surge replicas | Enable the [cluster autoscaler](cluster-autoscaler.md) or [node auto-provisioning (NAP)](node-auto-provisioning.md), or add nodes so the scaled-up replicas have somewhere to schedule. |
-| Autoscaler doesn't scale up during drain | The deployment's PDB already allows disruptions (`allowedDisruptions > 0`) | The PDB Manager only acts when the PDB blocks eviction. If `allowedDisruptions` is already above zero, no scale-up is needed. |
-| Want to confirm the autoscaler took action | Need to check status | Run `kubectl get evictionautoscalers -n <namespace> -o yaml` and inspect the status fields for scaling events. |
-| Want to see PDB Manager events | Need to inspect scaling or PDB activity | Run `kubectl get events -n <namespace> --sort-by='.lastTimestamp'` and look for events related to the PDB Manager. |
+| Extension doesn't scale up during drain | The deployment's PDB already allows disruptions (`allowedDisruptions > 0`) | Automatic PDB management only acts when the PDB blocks eviction. If `allowedDisruptions` is already above zero, no scale-up is needed. |
+| Want to confirm automatic PDB management took action | Need to check status | Run `kubectl get evictionautoscalers -n <namespace> -o yaml` and inspect the status fields for scaling events. |
+| Want to see automatic PDB management events | Need to inspect scaling or PDB activity | Run `kubectl get events -n <namespace> --sort-by='.lastTimestamp'` and look for events related to automatic PDB management. |
 
 ## Related content
 
@@ -357,4 +379,4 @@ az k8s-extension delete \
 - [How AKS cluster upgrades work](upgrade-conceptual.md) — explains the step-by-step rolling upgrade process and what happens when a PDB blocks node drain.
 - [Pod Disruption Budgets best practices](best-practices-app-cluster-reliability.md#pod-disruption-budgets-pdbs) — guidance on configuring PDBs for high availability.
 - [Kubernetes documentation: Pod Disruption Budgets](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets) — upstream PDB reference.
-- [Eviction Autoscaler on GitHub](https://github.com/Azure/eviction-autoscaler) — source code and detailed technical reference.
+- [Automatic PDB management project on GitHub](https://github.com/Azure/eviction-autoscaler) — source code and detailed technical reference.

@@ -376,8 +376,8 @@
         href: blue-green-node-pool-upgrade.md
       - name: Roll back node pool versions
         href: roll-back-node-pool-version.md
-    - name: PDB Manager (preview)
-      href: eviction-pod-autoscaler.md
+    - name: Automatic PDB management (preview)
+      href: automatic-pdb-management.md
   - name: Automate upgrades
     items:
     - name: Automatically upgrade an AKS cluster

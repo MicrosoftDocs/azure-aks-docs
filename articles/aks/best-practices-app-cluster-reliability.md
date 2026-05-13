@@ -141,7 +141,7 @@ spec:
 
 For more information, see [Plan for availability using PDBs](./operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets) and [Specifying a Disruption Budget for your Application](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
 
-To automate PDB creation for unprotected deployments and prevent PDB-related drain failures during upgrades, see [Eviction Pod Autoscaler for AKS (preview)](eviction-pod-autoscaler.md).
+To automate PDB creation for unprotected deployments and prevent PDB-related drain failures during upgrades, see [Automatic PDB management for AKS (preview)](automatic-pdb-management.md).
 
 ### Graceful termination for pods
 
