@@ -17,7 +17,7 @@ This article shows you how to sign in, add a cluster, create a [Project](aks-des
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have an Azure subscription, you can create a free [Azure account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - An existing [AKS Automatic cluster](intro-aks-automatic.md) with Microsoft Entra authentication. The cluster needs to be available through the Azure portal or an [Azure Container Registry (ACR)](/azure/container-registry/container-registry-intro) with your application image that you want to deploy.
 - Azure CLI version 2.64.0 or later. Check your version using the [`az --version`](/cli/azure/reference-index#az-version) command. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - The `aks-preview` Azure CLI extension. Install it using the `az extension add --name aks-preview` command.

@@ -281,7 +281,7 @@ az aks namespace get-credentials --name <namespace-name> --resource-group <rg-na
 This article focused on using the managed namespaces feature to logically isolate teams and applications. You can further explore other guardrails and best practices to apply via [deployment safeguards][deployment-safeguards].
 
 <!--- External Links --->
-[create-azure-subscription]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F
+[create-azure-subscription]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [azure-portal]: https://portal.azure.com
 
 <!--- Internal Links --->
