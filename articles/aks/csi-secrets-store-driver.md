@@ -1,14 +1,14 @@
 ---
-title: Use the Azure Key Vault provider for Secrets Store CSI Driver for Azure Kubernetes Service (AKS) secrets
+title: Use the Azure Key Vault Provider for Secrets Store CSI Driver for Azure Kubernetes Service (AKS) Secrets
 description: Learn how to use the Azure Key Vault provider for Secrets Store CSI Driver to integrate secrets stores with Azure Kubernetes Service (AKS).
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
+ms.service: azure-kubernetes-service
 ms.date: 05/05/2026
 ms.custom: template-how-to, devx-track-azurecli, biannual
 zone_pivot_groups: cli-terraform-csi-driver
-
 # Customer intent: As a Kubernetes administrator, I want to integrate Azure Key Vault with my AKS cluster using the Secrets Store CSI Driver, so that I can securely manage and access secrets, keys, and certificates within my applications.
 ---
 
@@ -274,7 +274,7 @@ Use the following steps to verify the managed identity was created and assigned 
 
     The `resourceId` property shows the resource group and the identity's name `azurekeyvaultsecretsprovider-myakscluster`.
 
-1. Verify the manged identity is assigned to node resource group's Virtual Machine Scale Set.
+1. Verify the managed identity is assigned to node resource group's Virtual Machine Scale Set.
 
     ```azurecli-interactive
     NODE_RG=$(az aks show \
@@ -308,7 +308,7 @@ Use the following steps to verify the managed identity was created and assigned 
     kubectl get pods -n kube-system -l 'app in (secrets-store-csi-driver,secrets-store-provider-azure)' -o wide
     ```
 
-    The `o wide` flag includes the node that each pod is running on in the output.
+    The `-o wide` flag includes the node that each pod is running on in the output.
 
     Your output should look similar to the following example output:
 
@@ -419,7 +419,7 @@ For more information about key vault permission models and Azure RBAC, see [Prov
       --value MyAKSExampleSecret${RANDOM_STRING}
     ```
 
-1. Verify the secret was added to the key vault using the [`az keyvault secret show`][az-keyvault-secret-set] command.
+1. Verify the secret was added to the key vault using the [`az keyvault secret show`][az-keyvault-secret-show] command.
 
     ```azurecli-interactive
     az keyvault secret show --vault-name $KEYVAULT_NAME --name ExampleSecret
@@ -479,7 +479,7 @@ Update your _main.tf_ file to create a new key vault with Azure role-based acces
     terraform apply
     ```
 
-1.  Verify ExampleSecret was added to the key vault using the [`az keyvault secret show`][az-keyvault-secret-set] command. Replace `<keyvault-name>` with the name of the key vault you created in your Terraform configuration.
+1. Verify ExampleSecret was added to the key vault using the [`az keyvault secret show`][az-keyvault-secret-show] command. Replace `<keyvault-name>` with the name of the key vault you created in your Terraform configuration.
 
     ```azurecli-interactive
     az keyvault secret show \
@@ -584,15 +584,13 @@ In this article, you learned how to use the Azure Key Vault provider for Secrets
 > [!div class="nextstepaction"]
 > [Provide an identity to access the Azure Key Vault provider for Secrets Store CSI Driver in AKS](./csi-secrets-store-identity-access.md)
 
-
-
 <!-- LINKS INTERNAL -->
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
 [az-aks-show]: /cli/azure/aks#az-aks-show
-[az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create.md
-[az-keyvault-update]: /cli/azure/keyvault#az-keyvault-update.md
+[az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create
+[az-keyvault-update]: /cli/azure/keyvault#az-keyvault-update
 [az-keyvault-secret-set]: /cli/azure/keyvault#az-keyvault-secret-set
 [az-keyvault-show]: /cli/azure/keyvault#az-keyvault-show
 [az-group-create]: /cli/azure/group#az-group-create
