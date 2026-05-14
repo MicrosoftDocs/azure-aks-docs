@@ -89,7 +89,7 @@ spec:
 Use `kubectl label` to add the label to a running pod:
 
 ```bash
-kubectl label pod <pod-name> remediator.kubernetes.azure.com/OnFreeze=""
+kubectl label pod <pod-name> remediator.kubernetes.azure.com/onFreeze=""
 ```
 
 This method is useful for quick validation, but the label is removed if Kubernetes recreates the pod.
