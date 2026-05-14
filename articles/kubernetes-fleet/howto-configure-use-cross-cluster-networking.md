@@ -31,7 +31,7 @@ This article provides instructions on how to configure a cross-cluster networkin
 * Clusters must be connected to a [single flat network][flat-network] (virtual network or multiple peered networks).
 * Overlay networking with tunnels isn't supported.
 * Self-managed Cilium multi-cluster can't be deployed at the same time.
-* ACNS sets the Cilium version and enabled features. These can't currently be directly modified.
+* ACNS sets the Cilium version and enabled features which are read-only and can't be modified by users.
 
 ## Before you begin
 
@@ -53,7 +53,7 @@ export NETWORK_PROFILE_NAME=fccnp-demo-01
 
 ## Label the member clusters
 
-Label both member clusters so they are included in the cross-cluster network when it's created.
+Label both member clusters so they're configured to be included in the cross-cluster network.
 
 ```azurecli-interactive
 az fleet member update \
@@ -87,9 +87,7 @@ While a network profile is created as an Azure Resource, no Cilium multi-cluster
 
 ## Validate the selected clusters
 
-Before creating the cross-cluster network you can validate which clusters will be included.
-
-Supply the `whatif` parameter to the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
+Validate which clusters will be included in the cross-cluster network by supplying the `whatif` parameter to the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
 
 ```azurecli-interactive
 az fleet clustermeshprofile apply
@@ -100,7 +98,7 @@ az fleet clustermeshprofile apply
     --output table
 ```
 
-As we are creating a new cross-cluster network, the results show that two clusters will join the network.
+As we're creating a new cross-cluster network, both clusters have an Add action listed.
 
 ```output
 ClusterResourceId    	            ETag        Name  		       Action   MeshMembershipState
@@ -126,7 +124,7 @@ The apply operation runs to completion and can't be interrupted.
 
 ## Test load balancing and service discovery
 
-Once the cross-cluster network is created successfully, you can test load balancing out by following the [official Cilium multi-cluster example][cilium-example], or using the steps shown next. The steps in this document provide additional guidance on working with AKS clusters and Fleet Manager.
+Once the cross-cluster network is created successfully, you can test load balancing out by following the [official Cilium multi-cluster example][cilium-example], or using the steps shown next. The steps in this document provide extra guidance on working with AKS clusters and Fleet Manager.
 
 * Obtain the Kubernetes access credentials for both member clusters using [`az aks get-credentials`][az-aks-get-credentials], setting `context` appropriately.
 
@@ -151,7 +149,7 @@ Once the cross-cluster network is created successfully, you can test load balanc
     kubectl --context=cluster2 apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/global-service-example.yaml
     ```
 
-* Run the following command multiple times on each cluster. You will see the serving cluster change, demonstrating where the request is being served from.
+* Run the following command multiple times on each cluster. Observe the serving cluster changes, demonstrating the request is being served by multiple clusters despite calling the service on only one.
 
     ```bash
     kubectl --context=cluster1 exec -ti deployment/x-wing -- curl rebel-base
@@ -175,7 +173,7 @@ Once the cross-cluster network is created successfully, you can test load balanc
     kubectl --context=cluster1 exec -ti deployment/x-wing -- curl rebel-base
     ```
 
-    On cluster 1 we still receive responses from both clusters.
+    On cluster 1, we still receive responses from both clusters.
     
     ```output
     {"Galaxy": "Alderaan", "Cluster": "Cluster-1"}
@@ -187,7 +185,7 @@ Once the cross-cluster network is created successfully, you can test load balanc
     kubectl --context=cluster2 exec -ti deployment/x-wing -- curl rebel-base
     ```
     
-    On cluster 2 we now only see local responses and the service on cluster1 is no longer shared.
+    On cluster 2, we only see local responses and the service on cluster 1 is no longer shared.
     
     ```output
     {"Galaxy": "Alderaan", "Cluster": "Cluster-2"}
@@ -197,13 +195,13 @@ Once the cross-cluster network is created successfully, you can test load balanc
 
 ## Updating a cross-cluster network
 
-The process of adding or removing clusters is the same as shown above, but can be summarized as:
+The process of adding or removing clusters has been demonstrated in this guide, but can be summarized as:
 
-1. Modify labels on the Fleet Manager one or more member cluster.
-1. Review changes by using the `whatif` parameter with the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
-1. If happy, apply the change be re-running the command and omitting `whatif`.
+1. Modify labels on the Fleet Manager member clusters to be added or removed.
+1. Review cross-cluster networking changes by using the `whatif` parameter with the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
+1. Once satisified with the changes, apply them by running the same command, omitting the `whatif` parameter.
 
-Step 2 is optional, but recommended, especially for larger cross-cluster networks where any change can take some time to complete.
+Reviewing the changes is optional, but recommended, especially for larger cross-cluster networks where any change can take some time to complete.
 
 ## Next steps
 
