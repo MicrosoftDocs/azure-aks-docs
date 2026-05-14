@@ -292,6 +292,7 @@ When using cluster autoscaler with Virtual Machine node pools, the behavior is a
 ### Limitations
 - This feature is only available in public cloud.
 - GPU Nodes are not currently supported.
+- AKS preview extension version 20.0.0b8 or later.
 
 ### Install the aks-preview extension
 
