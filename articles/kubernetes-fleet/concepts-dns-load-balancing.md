@@ -1,7 +1,7 @@
 ---
 title: "Multi-cluster DNS-based load balancing with Azure Kubernetes Fleet Manager"
 description: Understand how Fleet Manager supports DNS-based load balancing for placed workloads.
-ms.date: 05/05/2025
+ms.date: 05/14/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,6 +10,8 @@ ms.topic: concept-article
 ---
 
 # Multi-cluster DNS-based load balancing with Azure Kubernetes Fleet Manager (preview)
+
+**Applies to**: :heavy_check_mark: Fleet Manager with hub cluster
 
 Azure Kubernetes Fleet Manager can be used to create and manage DNS-based multi-cluster load balancing for public-facing workloads deployed across member clusters.
 
