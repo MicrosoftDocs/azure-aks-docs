@@ -1,5 +1,5 @@
 ---
-title: Long-term support for Azure Kubernetes Service (AKS) versions
+title: Long-Term Support for Azure Kubernetes Service (AKS) Versions
 description: Learn about Azure Kubernetes Service (AKS) long-term support for Kubernetes
 author: kaarthis
 ms.author: kaarthis
@@ -25,7 +25,7 @@ After approximately one year, a given Kubernetes minor version exits *community 
 
 AKS offers one year of *community support* and one year of *long-term support* to backport security fixes from the upstream community. The upstream LTS working group contributes to the community, extending the support window. LTS provides more time to plan and test upgrades over two years from the Kubernetes version's general availability (GA).
 
-|   | Community support  |Long-term support   |
+|   | Community support  | Long-term support   |
 |---|---|---|
 | **When to use** | When you can keep up with upstream Kubernetes releases | When you need control over when to migrate from one version to another  |
 | **Supported versions** | Three most recent GA minor versions | All supported Kubernetes versions from 1.27 onward are eligible for Long-Term Support (LTS). |
@@ -61,7 +61,7 @@ Consider an AKS cluster running Kubernetes 1.35, whose community support window 
 
 * Create a new cluster with LTS enabled using the [`az aks create`][az-aks-create] command.
 
-    The following command creates a new AKS cluster with LTS enabled using Kubernetes version 1.27 as an example. To review available Kubernetes releases, see the [AKS release tracker](release-tracker.md).
+    The following command creates a new AKS cluster with LTS enabled using Kubernetes version 1.27 as an example. To review available Kubernetes releases, see the [AKS release tracker](https://releases.aks.azure.com/webpage/index.html).
 
     ```azurecli-interactive
     az aks create \
@@ -89,11 +89,11 @@ Consider an AKS cluster running Kubernetes 1.35, whose community support window 
 
 The upstream Kubernetes community supports a two-minor-version upgrade path. The process migrates the objects in your Kubernetes cluster as part of the upgrade process, and provides a tested and accredited migration path.
 
-If you want to carry out an in-place migration, the AKS service migrates your control plane from the previous LTS version to the latest, and then migrate your data plane. To carry out an in-place upgrade to the latest LTS version, you need to specify an LTS enabled Kubernetes version as the upgrade target.
+If you want to carry out an in-place migration, the AKS service migrates your control plane from the previous LTS version to the latest and then migrates your data plane. To carry out an in-place upgrade to the latest LTS version, you need to specify an LTS enabled Kubernetes version as the upgrade target.
 
 * Migrate to the latest LTS version using the [`az aks upgrade`][az-aks-upgrade] command.
   
-    The following command uses Kubernetes version 1.32.2 as an example version. To review available Kubernetes releases, see the [AKS release tracker](release-tracker.md).
+    The following command uses Kubernetes version 1.32.2 as an example version. To review available Kubernetes releases, see the [AKS release tracker](https://releases.aks.azure.com/webpage/index.html).
 
     ```azurecli-interactive
     az aks upgrade --resource-group <resource-group-name> --name <cluster-name> --kubernetes-version 1.32.2
@@ -109,15 +109,15 @@ If you want to carry out an in-place migration, the AKS service migrates your co
 
 There are approximately two years between one LTS version and the next. In lieu of upstream support for migrating more than two minor versions, there's a high likelihood your application depends on Kubernetes APIs that are deprecated. We recommend you thoroughly test your application on the target LTS Kubernetes version and carry out a blue/green deployment from one version to another.
 
-1. Disable LTS on an existing cluster using the [`az aks update`][az-aks-update] command.
+1. Disable LTS on an existing cluster using the [`az aks update`][az-aks-update] command. The following example command moves the cluster to the free tier and selects the KubernetesOfficial support plan.
 
     ```azurecli-interactive
-    az aks update --resource-group <resource-group-name> --name <cluster-name> --tier [free|standard] --k8s-support-plan KubernetesOfficial
+    az aks update --resource-group <resource-group-name> --name <cluster-name> --tier free --k8s-support-plan KubernetesOfficial
     ```
 
-2. Upgrade the cluster to a later supported version using the [`az aks upgrade`][az-aks-upgrade] command.
+1. Upgrade the cluster to a later supported version using the [`az aks upgrade`][az-aks-upgrade] command.
 
-    The following command uses Kubernetes version 1.28.3 as an example version. To review available Kubernetes releases, see the [AKS release tracker](release-tracker.md).
+    The following command uses Kubernetes version 1.28.3 as an example version. To review available Kubernetes releases, see the [AKS release tracker](https://releases.aks.azure.com/webpage/index.html).
 
     ```azurecli-interactive
     az aks upgrade --resource-group <resource-group-name> --name <cluster-name> --kubernetes-version 1.28.3
@@ -173,7 +173,7 @@ Yes, AKS ensures that all supported Kubernetes versions are eligible for Long-Te
 
 ### What is the pricing model for LTS?
 
-LTS is offered on the Premium tier. Premium-tier LTS billing for a cluster begins when its Kubernetes minor version exits community support and the cluster enters the LTS support window. Clusters that opt into LTS while still within community support aren't billed at the LTS Premium rate during the community support period. For current rates, see [Premium tier pricing](https://azure.microsoft.com/pricing/details/kubernetes-service/).
+LTS is offered on the Premium tier. Premium tier LTS billing for a cluster begins when its Kubernetes minor version exits community support and the cluster enters the LTS support window. Clusters that opt into LTS while still within community support aren't billed at the LTS Premium rate during the community support period. For current rates, see [Premium tier pricing](https://azure.microsoft.com/pricing/details/kubernetes-service/).
 
 ### When does LTS billing start if I opt in during community support?
 

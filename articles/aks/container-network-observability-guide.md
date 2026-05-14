@@ -499,7 +499,7 @@ For full CRD examples, see [Configure container network metrics filtering](./how
 * **Forgetting the `ContainerNetworkLog` CRD.** Enabling Container Network Logs in the cluster doesn't collect anything until you apply at least one CRD that selects traffic.
 * **Trying to use stored logs for live incidents that already passed.** If logs weren't enabled before the incident or fell outside the captured filter, switch to on-demand Hubble flows for the next occurrence.
 * **L7 dashboards empty on a Cilium cluster.** L7 metrics require both `--acns-advanced-networkpolicies L7` on the cluster *and* a `CiliumNetworkPolicy` with L7 rules. CCNP doesn't support L7 rules. See [Apply L7 policies](./how-to-apply-l7-policies.md).
-* **DNS metrics empty on Cilium.** DNS visibility requires a `CiliumNetworkPolicy` with a `dns` rule (typically alongside `toFQDNs`). FQDN/DNS proxy is **not compatible with node-local DNS or AKS Local DNS** — running either disables DNS proxying and the resulting metrics. See [FQDN filtering limitations](./container-network-security-fqdn-filtering-concepts.md#limitations).
+* **DNS metrics empty on Cilium.** DNS visibility requires a `CiliumNetworkPolicy` with a `dns` rule (typically alongside `toFQDNs`).
 * **`matchPattern: "*"` blocks all DNS.** A bare wildcard isn't supported. Use a leading-wildcard pattern such as `*.example.com` or `app*.example.com`. See [Apply FQDN filtering policies](./how-to-apply-fqdn-filtering-policies.md).
 
 ## Network Observability included with Azure Monitoring
