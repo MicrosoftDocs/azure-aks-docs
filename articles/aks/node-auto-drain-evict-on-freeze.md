@@ -143,7 +143,7 @@ Confirm that the pods you want evicted have the correct label by running the fol
 kubectl get pods --show-labels -o wide
 ```
 
-Verify that the `remediator.kubernetes.azure.com/OnFreeze` label appears on the expected pods and that the pods are running on the target nodes. Pods without this label aren't evicted during the drain phase.
+Verify that the `remediator.kubernetes.azure.com/onFreeze` label appears on the expected pods and that the pods are running on the target nodes. Pods without this label aren't evicted during the drain phase.
 
 ### Verify Pod Disruption Budgets
 
