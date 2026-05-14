@@ -18,7 +18,7 @@ In this article, you learn how to replicate an Amazon Web Services (AWS) Elastic
 
 This workload is an implementation of the [competing consumers][competing-consumers] pattern using a producer/consumer app that facilitates efficient data processing by separating data production from data consumption. You use KEDA to scale pods running consumer processing and Karpenter to autoscale Kubernetes nodes.
 
-For a more detailed understanding of the AWS workload, see [Scalable and Cost-Effective Event-Driven Workloads with KEDA and Karpenter on Amazon EKS][edw-aws-eks].
+If you plan to migrate an AWS workload to Azure, see [Migrate compute from Amazon Web Services to Azure](/azure/migration/migrate-compute-from-aws), which includes some specific [example migration scenarios](/azure/migration/migrate-compute-from-aws#migration-scenarios) that might align to your use case. For a more detailed understanding of the AWS workload, see [Scalable and Cost-Effective Event-Driven Workloads with KEDA and Karpenter on Amazon EKS][edw-aws-eks].
 
 ## Deployment process
 
