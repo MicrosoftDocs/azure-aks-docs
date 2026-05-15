@@ -87,4 +87,4 @@ To get started using ACL for AKS, see the following resources:
 
 - [Deploy an ACL cluster using the Azure CLI](./learn/quick-azure-container-linux-deploy-cli.md)
 - [Deploy an ACL cluster using an ARM template](./learn/quick-azure-container-linux-deploy-arm.md)
-- [Tutorial: Add an ACL node pool to an existing cluster](create-node-pools.md#add-an-azure-container-linux-acl-for-aks-node-pool)
+- [Add an ACL node pool to an existing cluster](create-node-pools.md#add-a-second-node-pool-using-the-azure-cli)
