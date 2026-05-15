@@ -803,6 +803,11 @@
             "redirect_document_id": true
         },
         {
+            "source_path_from_root": "/articles/aks/azure-linux-aks-partner-solutions.md",
+            "redirect_url": "/azure/aks/use-azure-linux",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/troubleshoot-container-network-insight-agent.md",
             "redirect_url": "/azure/aks/troubleshoot-container-network-insights-agent",
             "redirect_document_id": true

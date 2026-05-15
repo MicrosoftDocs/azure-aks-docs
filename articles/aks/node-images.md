@@ -98,6 +98,7 @@ The Azure Linux node images are fully validated by AKS and built from source, us
 | **Azure Linux with containerd, FIPS, and Arm64** | This is a variant of the default node image for customers that enable [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md) and use a VM size that supports [Arm64](./use-arm64-vms.md). These images support Generation 2 only. | Can't be combined with Trusted Launch or Pod Sandboxing. |
 | **Azure Linux with containerd and Trusted Launch** | This is a variant of the default node image for customers that enable [Trusted Launch](./use-trusted-launch.md). These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or Pod Sandboxing. |
 | **Azure Linux with containerd and Pod Sandboxing** | This is a variant of the default node image for customers that enable [Pod Sandboxing](./use-pod-sandboxing.md). These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or Trusted Launch. |
+
 ### Azure Linux with OS Guard for AKS (preview) node images
 
 The Azure Linux with OS Guard for AKS node images are fully validated by AKS and built from source, using a native AKS image. Versioning for Azure Linux with OS Guard node images follow the AKS date-based format (for example: 202509.23.0). You can check the node images in the release notes and by running the [`az aks nodepool list`][az-aks-nodepool-list] command to view the `nodeImageVersion`. For more information, see [Azure Linux with OS Guard for AKS][os-guard].
@@ -114,6 +115,15 @@ The Flatcar Container Linux for AKS node images are fully validated by AKS and s
 |--|--|--|
 | **Flatcar Container Linux with containerd and Gen 2** | This is the standard node image for Flatcar Container Linux for AKS node pools using a VM size. If you use a VM size that supports Gen 1 only, you won't be able to use Flatcar OS.| N/A |
 | **Flatcar Container Linux with containerd and Arm64** | This is a variant of the default node image for customers that use a VM size that supports [Arm64](./use-arm64-vms.md). These images support Generation 2 only. | N/A |
+
+### Azure Container Linux (ACL) node images
+
+ACL node images are fully validated by AKS and built from Azure Linux packages with Flatcar tooling and image composition principles. For more information, see [Azure Container Linux (ACL) for AKS](./azure-container-linux-overview.md).
+
+| Node image | Use case |
+| ---------- | -------- |
+| **ACL with containerd and Gen 2, Trusted Launch, and AMD64** | Standard node image for ACL node pools that use Trusted Launch on an AMD64 VM size. Supports Generation 2 only. |
+| **ACL with containerd and Gen 2, Trusted Launch, and ARM64** | Variant for customers that enable Trusted Launch on an ARM64 VM size. Supports Generation 2 only. |
 
 ## Available Windows Server node images
 
