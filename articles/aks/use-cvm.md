@@ -19,18 +19,18 @@ In this article, you learn how to create AKS node pools using Confidential VM si
 
 ## AKS supported confidential VM sizes
 
-Azure offers a choice of [Trusted Execution Environment (TEE)][TEE] options from both AMD and Intel. These TEEs allow you to create Confidential VM environments with excellent price-to-performance ratios, all without requiring any code changes.
-- AMD-based Confidential VMs, use AMD SEV-SNP technology, which is introduced with third Gen AMD EPYC™ processors. 
-- Intel-based Confidential VMs use Intel TDX, with fourth Gen Intel® Xeon® processors. 
+AKS supports AMD-based Confidential VMs, which use AMD SEV-SNP technology introduced with third Gen AMD EPYC™ processors. These VMs provide a hardware-based [Trusted Execution Environment (TEE)][TEE] with excellent price-to-performance ratios, all without requiring any code changes.
 
-Both technologies have different implementations. However both provide similar protections from the cloud infrastructure stack. For more information, see [CVM VM sizes][CVM-sizes].
+> [!NOTE]
+> Intel TDX-based Confidential VMs aren't currently supported on AKS.
+
+For more information, see [CVM VM sizes][CVM-sizes].
 
 ## Security Features 
 
 CVMs offer the following security enhancements as compared to other virtual machine (VM) sizes:
 - Robust hardware-based isolation between virtual machines, hypervisor, and host management code.
 - Customizable attestation policies to ensure the host's compliance before deployment.
-- Cloud-based Confidential OS disk encryption before the first boot.
 - VM encryption keys that the platform or the customer (optionally) owns and manages.
 - Secure key release with cryptographic binding between the platform's successful attestation and the VM's encryption keys.
 - Dedicated virtual Trusted Platform Module (TPM) instance for attestation and protection of keys and secrets in the virtual machine.
