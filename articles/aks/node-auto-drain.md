@@ -33,7 +33,7 @@ The following table shows the node events for AKS node auto-drain and describes 
 > Freeze and Terminate require opt-in configuration:
 >
 > - Freeze: [Configure pod eviction for freeze events](./node-auto-drain-evict-on-freeze.md).
-> - Terminate: Enable [Virtual Machine Scale Set terminate notifications](../virtual-machine-scale-sets/virtual-machine-scale-sets-terminate-notification.md) as a prerequisite for AKS node auto-drain.
+> - Terminate: Enable [Virtual Machine Scale Set terminate notifications](/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-terminate-notification.md) as a prerequisite for AKS node auto-drain.
 
 ## Next steps
 
