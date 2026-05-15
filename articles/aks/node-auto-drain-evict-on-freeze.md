@@ -12,7 +12,7 @@ ai-usage: ai-assisted
 
 # Configure pod eviction for freeze events in Azure Kubernetes Service (AKS) (preview)
 
-> [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 [Node auto-drain](./node-auto-drain.md) helps protect your workloads from disruptions when [scheduled events][scheduled-events] occur on the underlying virtual machines (VMs) in your node pools. By default, freeze events don't trigger cordon and drain because they usually pause a node only briefly. If you have workloads that can't tolerate short disruptions, you can opt in to evict labeled pods before the freeze begins.
 
