@@ -39,15 +39,15 @@ The following key features distinguish ACL as a hardened, container-optimized OS
 - **NVIDIA GPU node support**: ACL supports NVIDIA GPU-enabled node pools on AMD64 architectures, allowing you to run high-performance computing (HPC) and AI/ML workloads on AKS with a hardened, container-optimized OS. ACL doesn't support ARM64 architectures for GPU-enabled node pools.
 - **AMD64 and ARM64 architecture support**: ACL is available for both AMD64 and ARM64 architectures on AKS.
 - **Sovereign Supply Chain Security**: ACL inherits Azure Linux’s secure build pipelines and signed Unified Kernel Images (UKIs).
-- **[Node auto-provisioning](node-autoprovision)**: ACL supports node auto-provisioning (NAP).
+- **[Node auto-provisioning](node-auto-provisioning.md)**: ACL supports node auto-provisioning (NAP).
 
 ## Unsupported features
 
 ACL currently doesn't support the following features:
 
-- The `SecurityPatch` and `Unmanaged` [node OS upgrade channels](auto-upgrade-node-os-image).
-- [Generation 1 VMs](aks-virtual-machine-sizes): You can't use VM sizes that only support Generation 1 with ACL.
-- [Pod Sandboxing](use-pod-sandboxing).
+- The `SecurityPatch` and `Unmanaged` [node OS upgrade channels](auto-upgrade-node-os-image.md).
+- [Generation 1 VMs](aks-virtual-machine-sizes.md): You can't use VM sizes that only support Generation 1 with ACL.
+- [Pod Sandboxing](use-pod-sandboxing.md).
 - A non-Trusted Launch variant. ACL requires Trusted Launch.
 
 If your existing cluster uses any of the unsupported features, you might not be able to add an ACL node pool to that cluster.
@@ -58,7 +58,7 @@ Azure Linux publishes a [feature roadmap](https://github.com/orgs/microsoft/proj
 
 ## OS migrations and upgrades with ACL
 
-AKS supports migrating existing node pools to ACL using in-place OS SKU migration or by creating new ACL node pools. For detailed migration steps, considerations, and rollback instructions, see [Migrate existing nodes to ACL](./3.%20tutorials/3.%20migrating-to-acl.md).
+AKS supports migrating existing node pools to ACL using in-place OS SKU migration or by creating new ACL node pools. For detailed migration steps, considerations, and rollback instructions, see [Migrate existing nodes to ACL](./migrate-nodes-azure-container-linux.md).
 
 ## ACL for AKS versioning
 
@@ -85,7 +85,6 @@ Example output:
 
 To get started using ACL for AKS, see the following resources:
 
-- [Deploy an ACL cluster using the Azure CLI](./2.%20deploying-acl/1.%20deploy-acl-cli.md)
-- [Deploy an ACL cluster using an ARM template](./2.%20deploying-acl/2.%20deploy-acl-arm.md)
-- [Tutorial: Create an ACL cluster](./3.%20tutorials/1.%20create-acl-cluster.md)
-- [Tutorial: Add an ACL node pool to an existing cluster](./3.%20tutorials/2.%20add-acl-node-pool.md)
+- [Deploy an ACL cluster using the Azure CLI](./learn/quick-azure-container-linux-deploy-cli.md)
+- [Deploy an ACL cluster using an ARM template](./learn/quick-azure-container-linux-deploy-arm.md)
+- [Tutorial: Add an ACL node pool to an existing cluster](create-node-pools.md#add-an-azure-container-linux-acl-for-aks-node-pool)

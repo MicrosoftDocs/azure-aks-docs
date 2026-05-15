@@ -366,7 +366,7 @@ az aks nodepool add \
 
 It takes a few minutes to create the node pool.
 
-For more information, see [Azure Container Linux (ACL) for AKS](flatcar-container-linux-for-aks).
+For more information, see [Azure Container Linux (ACL) for AKS](azure-container-linux-overview.md).
 
 #### [Add an Azure Linux with OS Guard for AKS (preview) node pool](#tab/os-guard)
 
@@ -634,7 +634,7 @@ Create a `Microsoft.ContainerService/managedClusters` resource by adding [this J
     }
     ```
 
-For more information, see [Azure Container Linux (ACL) for AKS](flatcar-container-linux-for-aks).
+For more information, see [Azure Container Linux (ACL) for AKS](azure-container-linux-overview.md).
 
 ### [Create a single Azure Linux with OS Guard for AKS (preview) node pool](#tab/os-guard-arm)
 
@@ -819,7 +819,7 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
       }
     ```
 
-For more information, see [Azure Container Linux (ACL) for AKS](flatcar-container-linux-for-aks).
+For more information, see [Azure Container Linux (ACL) for AKS](azure-container-linux-overview.md).
 
 #### [Create multiple Azure Linux with OS Guard for AKS (preview) node pools](#tab/os-guard-arm)
 
