@@ -116,6 +116,8 @@ The following events appear during the drain and eviction process:
 | `NodeCordonStart` | The node cordon begins, approximately five minutes before the scheduled event. |
 | `NodeCordonEnd` | The node cordon completes. |
 | `NodeDrainStart` | The drain begins and labeled pods start being evicted. |
+| `Evicted` | A pod event that shows the specific pod that was evicted. |
+| `FailedToEvict` | A pod event that indicates a pod failed to evict for any reason. |
 | `NodeDrainEnd` | The drain completes when labeled pods are evicted. |
 | `NoVMEventScheduled` | When no scheduled events are found for the node. |
 | `NodeUncordonStart` | After the freeze event finishes, the node uncordon begins. |
