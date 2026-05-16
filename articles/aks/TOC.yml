@@ -250,6 +250,8 @@
           href: node-auto-repair.md
         - name: Node auto-drain
           href: node-auto-drain.md
+        - name: Configure pod eviction for freeze events
+          href: node-auto-drain-evict-on-freeze.md
         - name: Node Problem Detector (NPD)
           href: node-problem-detector.md
     - name: Node pools
