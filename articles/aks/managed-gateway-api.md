@@ -10,7 +10,7 @@ ms.date: 03/31/2026
 # Customer intent: "As a Kubernetes administrator, I want to install the Kubernetes Gateway API Custom Resource Definitions (CRDs) to create Kubernetes Gateway API resources on my cluster."
 ---
 
-# Install Managed Gateway API CRDs on Azure Kubernetes Service (AKS) (preview)
+# Install Managed Gateway API CRDs on Azure Kubernetes Service (AKS)
 
 The [Kubernetes Gateway API][kubernetes-gateway-api] is a specification for traffic management on Kubernetes clusters. The specification enhances [Ingress API][kubernetes-ingress-api], which lacks a unified and provider-agnostic approach for advanced traffic routing.
 
@@ -31,27 +31,9 @@ The Managed Gateway API Installation for Azure Kubernetes Service (AKS) installs
 - The [`aks-preview` extension installed and updated to version `19.0.0b4` or later](#install-or-update-the-aks-preview-extension).
 - The [`ManagedGatewayAPIPreview` feature flag registered to your subscription](#register-the-managed-gateway-api-preview-feature-flag).
 
-### Install or update the `aks-preview` extension
+### Update Azure CLI version
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-- Install the `aks-preview` extension or update to the latest version of the extension using the [`az extension add`][az-extension-add] and [`az extension update`][az-extension-update] commands. if you're using Azure CLI. You must use `aks-preview` version `19.0.0b4` and later.
-
-    ```azurecli-interactive
-    # Install the aks-preview extension
-    az extension add --name aks-preview
-    
-    # Update the aks-preview extension to the latest version
-    az extension update --name aks-preview
-    ```
-
-### Register the Managed Gateway API preview feature flag
-
-- Register the `ManagedGatewayAPIPreview` feature flag using the [`az feature register`](/cli/azure/feature#az-feature-register) command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "ManagedGatewayAPIPreview"
-    ```
+You must use `azure-cli` version `2.86.0` or higher. Run `az --version` to find your `azure-cli` version, and run `az upgrade` to upgrade.
 
 ## Supported Kubernetes versions for Gateway API bundle versions
 
