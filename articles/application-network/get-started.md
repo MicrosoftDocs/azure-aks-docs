@@ -98,10 +98,10 @@ If you have an existing cluster that already meets these requirements, you can s
     az group create --name $AKS_RG --location $LOCATION 
     ```
 
-1. Create an AKS cluster with AKS-managed Microsoft Entra integration, OIDC issuer, and the managed Kubernetes Gateway API add-on enabled using the [`az aks create`][az-aks-create] command with the `--enable-oidc-issuer`, `--enable-aad`, and `--enable-managed-gateway-api` flags. Do **not** enable the Istio service mesh add-on (`--enable-azure-service-mesh`) on this cluster.
+1. Create an AKS cluster with AKS-managed Microsoft Entra integration, OIDC issuer, and the managed Kubernetes Gateway API add-on enabled using the [`az aks create`][az-aks-create] command with the `--enable-oidc-issuer`, `--enable-aad`, and `--enable-gateway-api` flags. Do **not** enable the Istio service mesh add-on (`--enable-azure-service-mesh`) on this cluster.
 
     ```azurecli-interactive
-    az aks create --name $CLUSTER_NAME --resource-group $AKS_RG --enable-oidc-issuer --enable-aad --enable-managed-gateway-api
+    az aks create --name $CLUSTER_NAME --resource-group $AKS_RG --enable-oidc-issuer --enable-aad --enable-gateway-api
     ```
 
 ## Create an Azure Kubernetes Application Network resource
