@@ -20,10 +20,10 @@ This article helps you get started with Azure Kubernetes Application Network for
 - Azure CLI version 2.84.0 or later. Check your version using the `az --version` command. To install or update, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - For both existing and new AKS clusters, make sure they meet the following requirements. These requirements are validated when you join the cluster as a member:
 
-    1. The [Istio-based service mesh add-on](/azure/aks/istio-about) (`ServiceMeshProfile`) is **not** enabled. A cluster that already has the Istio add-on enabled can't join an Azure Kubernetes Application Network.
+    1. [Istio-based service mesh add-on](/azure/aks/istio-about) (`ServiceMeshProfile`) is **not** enabled. A cluster that already has the Istio add-on enabled can't join an Azure Kubernetes Application Network.
     1. [AKS-managed Microsoft Entra integration](/azure/aks/entra-id-control-plane-authentication) is enabled.
     1. [OIDC issuer](/azure/aks/use-oidc-issuer) is enabled.
-    1. The [managed Kubernetes Gateway API add-on](/azure/aks/managed-gateway-api) is enabled.
+    1. [Managed Kubernetes Gateway API installation](/azure/aks/managed-gateway-api) is enabled.
 - Verify support for your existing Kubernetes cluster using the [support policy](./supported-versions.md).
 
 ## Set environment variables
@@ -85,10 +85,10 @@ This article helps you get started with Azure Kubernetes Application Network for
 
 If you don't have an existing AKS cluster to connect to Azure Kubernetes Application Network, you need to create one. Azure Kubernetes Application Network requires AKS clusters that meet the following requirements:
 
-- The [Istio-based service mesh add-on](/azure/aks/istio-about) (`ServiceMeshProfile`) is **not** enabled.
-- [AKS-managed Microsoft Entra integration](/azure/aks/entra-id-control-plane-authentication) is enabled.
-- [OIDC issuer](/azure/aks/use-oidc-issuer) is enabled.
-- The [managed Kubernetes Gateway API add-on](/azure/aks/managed-gateway-api) is enabled.
+1. [Istio-based service mesh add-on](/azure/aks/istio-about) (`ServiceMeshProfile`) is **not** enabled.
+1. [AKS-managed Microsoft Entra integration](/azure/aks/entra-id-control-plane-authentication) is enabled.
+1. [OIDC issuer](/azure/aks/use-oidc-issuer) is enabled.
+1. [Managed Kubernetes Gateway API installation](/azure/aks/managed-gateway-api) is enabled.
 
 If you have an existing cluster that already meets these requirements, you can skip this step.
 
