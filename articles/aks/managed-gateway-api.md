@@ -1,12 +1,12 @@
 ---
-title: Azure Kubernetes Service (AKS) Managed Gateway API Installation (preview)
+title: Azure Kubernetes Service (AKS) Managed Gateway API Installation
 description: Learn how to install the Kubernetes Gateway API Custom Resource Definitions (CRDs) on your Azure Kubernetes Service (AKS) cluster using the Managed Gateway API installation.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 author: nshankar
 ms.author: nshankar
 ms.reviewer: schaffererin
-ms.date: 03/31/2026
+ms.date: 05/18/2026
 # Customer intent: "As a Kubernetes administrator, I want to install the Kubernetes Gateway API Custom Resource Definitions (CRDs) to create Kubernetes Gateway API resources on my cluster."
 ---
 
@@ -27,9 +27,6 @@ The Managed Gateway API Installation for Azure Kubernetes Service (AKS) installs
   - The Gateway API bundle version must be compatible with your cluster's Kubernetes version. For more information, see the [Supported Kubernetes versions for Gateway API bundle versions](#supported-kubernetes-versions-for-gateway-api-bundle-versions) section.
 
 - Optionally, you could deploy an AKS add-on or extension that implements the Gateway API, such as the [Istio add-on][istio-gateway-api]. If you use the Istio add-on, you must be on minor revision `asm-1-26` or later to ensure compatibility with the Managed Gateway API installation. To deploy the Istio add-on, see [Deploy Istio-based service mesh add-on for Azure Kubernetes Service (AKS)][istio-deploy].
-
-- The [`aks-preview` extension installed and updated to version `19.0.0b4` or later](#install-or-update-the-aks-preview-extension).
-- The [`ManagedGatewayAPIPreview` feature flag registered to your subscription](#register-the-managed-gateway-api-preview-feature-flag).
 
 ### Update Azure CLI version
 

@@ -1,11 +1,11 @@
 ---
-title: Azure Kubernetes Service (AKS) application routing add-on with the Kubernetes Gateway API (preview)
+title: Azure Kubernetes Service (AKS) application routing add-on with the Kubernetes Gateway API
 description: Use the application routing add-on to manage ingress traffic on Azure Kubernetes Service (AKS) using the Kubernetes Gateway API.
 ms.subservice: aks-networking
 ms.custom: devx-track-azurecli, biannual
 author: nshankar
 ms.topic: how-to
-ms.date: 11/18/2025
+ms.date: 05/18/2026
 ms.author: nshankar
 # Customer intent: As a cloud engineer, I want to deploy and configure ingress on Azure Kubernetes Service with the Kubernetes Gateway API using the application routing add-on, so that I can efficiently manage HTTP/HTTPS traffic to my applications.
 ---
