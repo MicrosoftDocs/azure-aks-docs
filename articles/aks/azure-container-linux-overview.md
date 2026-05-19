@@ -13,7 +13,7 @@ ms.date: 04/28/2026
 
 In this article, we provide an overview of Azure Container Linux (ACL), an immutable, container-optimized operating system (OS) for Azure Kubernetes Service (AKS). ACL is derived from the Flatcar Container Linux project, building on Flatcar's proven, container-first immutable design while layering in Azure Linux packages, servicing, and platform integration. This allows ACL to stay closely aligned with upstream Flatcar innovation while meeting Azure's production, security, and compliance requirements. To learn more about Flatcar Container Linux, see the [Flatcar documentation](https://www.flatcar.org/).
 
-ACL is generally available (GA) as an OS option on AKS starting AKS v1.34. You can deploy ACL node pools in a new AKS cluster or add ACL node pools to your existing clusters.
+ACL is generally available (GA) as an OS option on AKS starting AKS v1.34. You can deploy ACL node pools in a new AKS cluster, add ACL node pools to your existing clusters, and migrate existing Linux node pools to ACL.
 
 > [!NOTE]
 > ACL is the GA release of Flatcar Container Linux for AKS, which entered public preview in November 2025. OS Guard (preview) features, such as code integrity with Integrity Policy Enforcement (IPE), will be incorporated into ACL in a future release, after which OS Guard (preview) will be retired. If you need OS Guard features today, we recommend continuing to use OS Guard and migrating to ACL once those features become available.
@@ -34,23 +34,14 @@ Using ACL as the OS for your AKS node pools provides several benefits that enhan
 The following key features distinguish ACL as a hardened, container-optimized OS for AKS:
 
 - **Immutability** The '/usr' directory is mounted as a read-only volume protected by dm-verity. At runtime, the kernel validates a signed root hash to detect and block tampering
-- **Mandatory access control with SELinux**: ACL includes SELinux to enforce mandatory access control policies that restrict which processes can access sensitive system resources. Note that _SELinux is operating in enforcing mode by default. SELinux policies might evolve over time_. If you need to switch to permissive mode for troubleshooting, see [Toggle SELinux to permissive mode]().
+- **Mandatory access control with SELinux**: ACL includes SELinux to enforce mandatory access control policies that restrict which processes can access sensitive system resources. Note that _SELinux is operating in enforcing mode by default. SELinux policies might evolve over time_.
 - **Trusted Launch and Secure Boot**: ACL requires [Trusted Launch](/azure/virtual-machines/trusted-launch) with Secure Boot and vTPM, to ensure the integrity of the boot chain before the OS loads. This is achieved using a Unified Kernel Image (UKI), which bundles the kernel, initramfs, and kernel command line into a single signed artifact. During boot, the UKI is measured and recorded in the vTPM, ensuring integrity from the earliest stage.
 - **NVIDIA GPU node support**: ACL supports NVIDIA GPU-enabled node pools on AMD64 architectures, allowing you to run high-performance computing (HPC) and AI/ML workloads on AKS with a hardened, container-optimized OS. ACL doesn't support ARM64 architectures for GPU-enabled node pools.
 - **AMD64 and ARM64 architecture support**: ACL is available for both AMD64 and ARM64 architectures on AKS.
 - **Sovereign Supply Chain Security**: ACL inherits Azure Linux’s secure build pipelines and signed Unified Kernel Images (UKIs).
 - **[Node auto-provisioning](node-auto-provisioning.md)**: ACL supports node auto-provisioning (NAP).
 
-## Unsupported features
-
-ACL currently doesn't support the following features:
-
-- The `SecurityPatch` and `Unmanaged` [node OS upgrade channels](auto-upgrade-node-os-image.md).
-- [Generation 1 VMs](aks-virtual-machine-sizes.md): You can't use VM sizes that only support Generation 1 with ACL.
-- [Pod Sandboxing](use-pod-sandboxing.md).
-- A non-Trusted Launch variant. ACL requires Trusted Launch.
-
-If your existing cluster uses any of the unsupported features, you might not be able to add an ACL node pool to that cluster.
+[!INCLUDES [azure container linux limitations](./includes/azure-container-linux-limitations.md)]
 
 ## Feature roadmap
 
@@ -62,9 +53,9 @@ AKS supports migrating existing node pools to ACL using in-place OS SKU migratio
 
 ## ACL for AKS versioning
 
-ACL for AKS releases weekly AKS node images. Versioning follows the AKS date-based format (for example: 202506.13.0). ACL currently only supports full node image updates.
+ACL for AKS releases weekly AKS node images. Versioning follows the AKS date-based format (for example: 202506.13.0). ACL currently only supports full node image updates. For more information, see [Azure Container Linux (ACL) node images](./node-images.md#azure-container-linux-acl-node-images).
 
-You can check available node images in the release notes and view the `nodeImageVersion` for a running cluster using the [`az aks nodepool list`](/en-us/cli/azure/aks/nodepool#az-aks-nodepool-list) command. For example:
+You can check available node images in the release notes and view the `nodeImageVersion` for a running cluster using the [`az aks nodepool list`](/cli/azure/aks/nodepool#az-aks-nodepool-list) command. For example:
 
 ```azurecli-interactive
 az aks nodepool list --resource-group <resource-group-name> --cluster-name <aks-cluster-name> --query '[].{name: name, nodeImageVersion: nodeImageVersion}'
@@ -88,3 +79,4 @@ To get started using ACL for AKS, see the following resources:
 - [Deploy an ACL cluster using the Azure CLI](./learn/quick-azure-container-linux-deploy-cli.md)
 - [Deploy an ACL cluster using an ARM template](./learn/quick-azure-container-linux-deploy-arm.md)
 - [Add an ACL node pool to an existing cluster](create-node-pools.md#add-a-second-node-pool-using-the-azure-cli)
+- [Migrate existing nodes to ACL](./migrate-nodes-azure-container-linux.md)

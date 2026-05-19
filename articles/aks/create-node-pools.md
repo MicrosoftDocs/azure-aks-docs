@@ -25,13 +25,13 @@ This article shows you how to create one or more node pools in an AKS cluster.
 
 :::zone pivot="azure-cli"
 
-- You need Azure CLI version 2.86.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/en-us/cli/azure/install-azure-cli).
+- You need Azure CLI version 2.86.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 :::zone-end
 
 :::zone pivot="arm"
 
-- To deploy an ARM template, you need write access on the resources you're deploying and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to deploy a virtual machine (VM), you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](/en-us/azure/role-based-access-control/built-in-roles).
+- To deploy an ARM template, you need write access on the resources you're deploying and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to deploy a virtual machine (VM), you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](/azure/role-based-access-control/built-in-roles).
 - Review the following requirements for each parameter:
   - `osType`: The operating system type. The default is Linux.
   - `osSKU`: Specifies the OS SKU used by the agent pool.
@@ -46,7 +46,7 @@ The following limitations apply when you create AKS clusters that support multip
 
 - You can delete the system node pool if you have another system node pool to take its place in the AKS cluster. Otherwise, you can't delete the system node pool.
 - System pools must contain at least two nodes, and user node pools may contain zero or more nodes.
-- **If you create a cluster with a single node pool, the OS type must be `Linux`**. The OS SKU can be any Linux variation such as `Ubuntu`, `AzureContainerLinux` or `AzureLinux`. You can't create a cluster with a single Windows node pool. If you want to run Windows containers, you must add a Windows node pool to the cluster after creating it with a Linux system node pool.
+- **If you create a cluster with a single node pool, the OS type must be `Linux`**. The OS SKU can be any Linux variation such as `Ubuntu`, `AzureContainerLinux`, or `AzureLinux`. You can't create a cluster with a single Windows node pool. If you want to run Windows containers, you must add a Windows node pool to the cluster after creating it with a Linux system node pool.
 - The AKS cluster must use the Standard SKU load balancer to use multiple node pools. This feature isn't supported with Basic SKU load balancers.
 - The AKS cluster must use Virtual Machine Scale Sets for the nodes.
 - The name of a node pool can only contain lowercase alphanumeric characters and must begin with a lowercase letter.
@@ -149,7 +149,7 @@ If you want only one node pool in your AKS cluster, you can schedule application
 
 ### [Single Azure Container Linux (ACL) for AKS node pool](#tab/acl)
 
-1. Create a cluster with a single ACL node pool using the [`az aks create`](/en-us/cli/azure/aks#az-aks-create) command. The `--os-sku AzureContainerLinux` parameter configures the node pool to use ACL as the node OS. This step specifies two nodes in the single node pool.
+1. Create a cluster with a single ACL node pool using the [`az aks create`](/cli/azure/aks#az-aks-create) command. The `--os-sku AzureContainerLinux` parameter configures the node pool to use ACL as the node OS. This step specifies two nodes in the single node pool.
 
     ```azurecli-interactive
     az aks create \
@@ -164,7 +164,7 @@ If you want only one node pool in your AKS cluster, you can schedule application
 
     It takes a few minutes to create the cluster.
 
-1. When the cluster is ready, get the cluster credentials using the [`az aks get-credentials`](/en-us/cli/azure/aks#az-aks-get-credentials) command.
+1. When the cluster is ready, get the cluster credentials using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.
 
     ```azurecli-interactive
     az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME
@@ -351,7 +351,7 @@ It takes a few minutes to create the node pool.
 
 #### [Add an Azure Container Linux (ACL) for AKS node pool](#tab/acl)
 
-Add a new node pool using the [`az aks nodepool add`](/en-us/cli/azure/aks/nodepool#az-aks-nodepool-add) command. The `--os-sku AzureContainerLinux` parameter configures the node pool to use ACL as the node OS. The following example creates a `Linux` node pool that runs _three_ nodes.
+Add a new node pool using the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command. The `--os-sku AzureContainerLinux` parameter configures the node pool to use ACL as the node OS. The following example creates a `Linux` node pool that runs _three_ nodes.
 
 ```azurecli-interactive
 az aks nodepool add \

@@ -7,7 +7,7 @@ ms.author: schaffererin
 ---
 
 > [!IMPORTANT]
-> If you're using **Azure Container Linux (ACL)** node images, make sure you review the following considerations and limitations:
+> If you're using **Azure Container Linux (ACL)** on AKS, make sure you review the following considerations and limitations:
 >
 > - ACL is generally available starting AKS v1.34.
 > - ACL requires [Trusted Launch](/azure/aks/use-trusted-launch) with Secure Boot and vTPM. Non-Trusted Launch variants aren't available.
@@ -17,4 +17,4 @@ ms.author: schaffererin
 > - [Pod Sandboxing](/azure/aks/use-pod-sandboxing) isn't supported.
 > - [Confidential Virtual Machines (CVMs)](/azure/aks/confidential-containers-overview) aren't supported.
 > - [Generation 1 VMs](/azure/aks/aks-virtual-machine-sizes#vm-support-on-aks) aren't supported.
-> - FIPS-enabled nodes aren't supported yet.
+> - FIPS-enabled nodes aren't supported.

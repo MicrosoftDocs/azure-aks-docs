@@ -23,7 +23,9 @@ In this quickstart, you learn how to:
 > [!NOTE]
 > This article includes steps to deploy a cluster with default settings for evaluation purposes only. Before you deploy a production-ready cluster, we recommend that you familiarize yourself with our [baseline reference architecture](/azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&amp;bc=/azure/aks/breadcrumb/toc.json) to consider how it aligns with your business requirements.
 
-## Before you begin
+[!INCLUDES [azure container linux limitations](../includes/azure-container-linux-limitations.md)]
+
+## Prerequisites
 
 - This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)](../core-aks-concepts.md).
 - If you don't have an Azure account, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
@@ -47,7 +49,7 @@ You might need to register the required resource providers, such as `Microsoft.C
 
 ### Check registration status
 
-Check the registration status using the [`az provider show`](/en-us/cli/azure/provider#az-provider-show) command.
+Check the registration status using the [`az provider show`](/cli/azure/provider#az-provider-show) command.
 
 ```azurecli-interactive
 az provider show --namespace Microsoft.ContainerService --query registrationState
@@ -55,7 +57,7 @@ az provider show --namespace Microsoft.ContainerService --query registrationStat
 
 ### Register the resource provider
 
-If necessary, register the `Microsoft.ContainerService` resource provider using the [`az provider register`](/en-us/cli/azure/provider#az-provider-register) command.
+If necessary, register the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
 
 ```azurecli-interactive
 az provider register --namespace Microsoft.ContainerService
@@ -101,7 +103,7 @@ Example output:
 
 ## Create an AKS cluster
 
-Create an AKS cluster using the [`az aks create`](/cli/azure/aks#az-aks-create) command. The `--os-sku AzureContainerLinux` parameter configures the node pool to use ACL as the node OS. The following example creates a cluster with one node and enables a system-assigned managed identity:
+Create an AKS cluster using the [`az aks create`](/cli/azure/aks#az-aks-create) command. The `--os-sku AzureContainerLinux` parameter configures the system node pool to use ACL as the node OS. The following example creates a cluster with one node and enables a system-assigned managed identity:
 
 ```azurecli-interactive
 az aks create \

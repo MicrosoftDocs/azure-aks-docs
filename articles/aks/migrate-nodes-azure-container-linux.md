@@ -15,30 +15,28 @@ In this article, you learn how to migrate your existing AKS node pools to Azure 
 - **In-place OS SKU migration**: Change the OS SKU of your existing node pools to ACL, which reimages the nodes automatically.
 - **Remove existing node pools and add new ACL node pools**: Create new ACL node pools, move your workloads, and remove the old node pools.
 
-## Considerations and limitations
+[!INCLUDES [azure container linux limitations](./includes/azure-container-linux-limitations.md)]
 
-### INCLUDE COMPONENT: ACL Limitations
-
-If your existing cluster uses any of the unsupported features, you might not be able to migrate to or add an ACL node pool to that cluster.
+## In-place OS SKU migration limitations
 
 In addition to the general ACL limitations, the following apply specifically to in-place OS SKU migration:
 
 - The OS SKU migration feature isn't available through PowerShell or the Azure portal.
 - The OS SKU migration feature doesn't support renaming existing node pools.
-- An Ubuntu OS SKU with `UseGPUDedicatedVHD` enabled can't perform an OS SKU migration.
+- Node pools with `UseGPUDedicatedVHD` enabled can't perform an OS SKU migration.
 - Windows OS SKU migration isn't supported.
 
 ## Prerequisites
 
 - An existing AKS cluster with at least one Linux node pool.
-- Azure CLI version 2.86.0 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/en-us/cli/azure/install-azure-cli).
+- Azure CLI version 2.86.0 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - We recommend that you verify your workloads run successfully on ACL by [deploying an ACL cluster](./learn/quick-azure-container-linux-deploy-cli.md) in a development or staging environment before migrating production clusters.
 - Ensure the migration feature is working for you in test/dev before using the process on a production cluster.
 - Ensure that your pods have enough [Pod Disruption Budget (PDB)](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/) to allow AKS to move pods between VMs during the migration.
 
 ## Add ACL node pools and remove existing node pools
 
-1. Add a new ACL node pool using the [`az aks nodepool add`](/en-us/cli/azure/aks/nodepool#az-aks-nodepool-add) command. Use `--mode System` so the new pool can serve as the system agent pool, which allows you to delete the original node pool in the next step.
+1. Add a new ACL node pool using the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command. Use `--mode System` so the new pool can serve as the system agent pool, which allows you to delete the original node pool in the next step.
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -62,7 +60,7 @@ In addition to the general ACL limitations, the following apply specifically to 
     }
     ```
 
-1. Remove your existing node pool using the [`az aks nodepool delete`](/en-us/cli/azure/aks/nodepool#az-aks-nodepool-delete) command.
+1. Remove your existing node pool using the [`az aks nodepool delete`](/cli/azure/aks/nodepool#az-aks-nodepool-delete) command.
 
     ```azurecli-interactive
     az aks nodepool delete \
@@ -80,7 +78,7 @@ You can migrate your existing Linux node pools to ACL by changing the OS SKU of 
 > [!IMPORTANT]
 > ACL requires Trusted Launch. You must include `--enable-secure-boot` and `--enable-vtpm` when migrating to the `AzureContainerLinux` OS SKU. Your node pool's virtual machine (VM) size must also support Trusted Launch. If your current VM size doesn't support it, you need to resize or recreate the node pool with a supported VM size before migrating.
 
-Migrate the OS SKU of your node pool to ACL using the [`az aks nodepool update`](/en-us/cli/azure/aks/nodepool#az-aks-nodepool-update) command. This command triggers a reimage of your node pool, updating the OS SKU to `AzureContainerLinux`. The OS SKU change triggers an immediate upgrade operation, which takes several minutes to complete.
+Migrate the OS SKU of your node pool to ACL using the [`az aks nodepool update`](/cli/azure/aks/nodepool#az-aks-nodepool-update) command. This command triggers a reimage of your node pool, updating the OS SKU to `AzureContainerLinux`. The OS SKU change triggers an immediate upgrade operation, which takes several minutes to complete.
 
 ```azurecli-interactive
 az aks nodepool update \
@@ -132,7 +130,7 @@ Once the migration is complete on your test clusters, we recommend monitoring th
     kubectl get nodes --show-labels
     ```
 
-1. Check the node image version using the [`az aks nodepool list`](/en-us/cli/azure/aks/nodepool#az-aks-nodepool-list) command.
+1. Check the node image version using the [`az aks nodepool list`](/cli/azure/aks/nodepool#az-aks-nodepool-list) command.
 
     ```azurecli-interactive
     az aks nodepool list \
@@ -157,7 +155,7 @@ Once the migration is complete on your test clusters, we recommend monitoring th
 
 If you experience issues during the OS SKU migration, you can roll back to your previous OS SKU. To do this, change the OS SKU field back to your previous value and resubmit the deployment, which triggers another upgrade operation and reimages the node pool to its previous OS SKU.
 
-Roll back to your previous OS SKU using the [`az aks nodepool update`](/en-us/cli/azure/aks/nodepool#az-aks-nodepool-update) command. This example rolls back from ACL to Azure Linux:
+Roll back to your previous OS SKU using the [`az aks nodepool update`](/cli/azure/aks/nodepool#az-aks-nodepool-update) command. This example rolls back from ACL to Azure Linux:
 
 ```azurecli-interactive
 az aks nodepool update \

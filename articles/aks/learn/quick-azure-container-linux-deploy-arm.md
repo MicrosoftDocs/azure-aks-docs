@@ -23,6 +23,8 @@ In this quickstart, you learn how to:
 > [!NOTE]
 > To get started with quickly provisioning an AKS cluster, this article includes steps to deploy a cluster with default settings for evaluation purposes only. Before deploying a production-ready cluster, we recommend that you familiarize yourself with our [baseline reference architecture](/azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&amp;bc=/azure/aks/breadcrumb/toc.json) to consider how it aligns with your business requirements.
 
+[!INCLUDES [azure container linux limitations](../includes/azure-container-linux-limitations.md)]
+
 ## Prerequisites
 
 - This article assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)](../core-aks-concepts.md).
@@ -38,7 +40,7 @@ You might need to register the required resource providers, such as `Microsoft.C
 
 ### Check registration status
 
-Check the registration status using the [`az provider show`](/en-us/cli/azure/provider#az-provider-show) command.
+Check the registration status using the [`az provider show`](/cli/azure/provider#az-provider-show) command.
 
 ```azurecli-interactive
 az provider show --namespace Microsoft.ContainerService --query registrationState
@@ -46,7 +48,7 @@ az provider show --namespace Microsoft.ContainerService --query registrationStat
 
 ### Register the resource provider
 
-If necessary, register the `Microsoft.ContainerService` resource provider using the [`az provider register`](/en-us/cli/azure/provider#az-provider-register) command.
+If necessary, register the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
 
 ```azurecli-interactive
 az provider register --namespace Microsoft.ContainerService
@@ -56,10 +58,10 @@ az provider register --namespace Microsoft.ContainerService
 
 To create an AKS cluster using an ARM template, you provide an SSH public key. If you need this resource, follow the steps in this section. Otherwise, skip to the [Review the template](#review-the-template) section.
 
-To access AKS nodes, you connect using an SSH key pair (public and private), which you generate using the `ssh-keygen` command. By default, these files are created in the _~/.ssh_ directory. Running the `ssh-keygen` command overwrites any SSH key pair with the same name already existing in the given location. For more information about creating SSH keys, see [Create and manage SSH keys for authentication in Azure](/en-us/azure/virtual-machines/linux/create-ssh-keys-detailed).
+To access AKS nodes, you connect using an SSH key pair (public and private), which you generate using the `ssh-keygen` command. By default, these files are created in the _~/.ssh_ directory. Running the `ssh-keygen` command overwrites any SSH key pair with the same name already existing in the given location. For more information about creating SSH keys, see [Create and manage SSH keys for authentication in Azure](/azure/virtual-machines/linux/create-ssh-keys-detailed).
 
 1. Navigate to [https://shell.azure.com](https://shell.azure.com) to open Cloud Shell in your browser.
-1. Create a resource group using the [`az group create`](/en-us/cli/azure/group#az-group-create) command. The following example creates a resource group named _myResourceGroup_ in the _East US_ region:
+1. Create a resource group using the [`az group create`](/cli/azure/group#az-group-create) command. The following example creates a resource group named _myResourceGroup_ in the _East US_ region:
 
     ```azurecli-interactive
     az group create \
@@ -67,7 +69,7 @@ To access AKS nodes, you connect using an SSH key pair (public and private), whi
       --location eastus
     ```
 
-1. Create an SSH key pair using the [`az sshkey create`](/en-us/cli/azure/sshkey#az-sshkey-create) command or the `ssh-keygen` command.
+1. Create an SSH key pair using the [`az sshkey create`](/cli/azure/sshkey#az-sshkey-create) command or the `ssh-keygen` command.
 
     ```azurecli-interactive
     az sshkey create --name mySSHKey --resource-group myResourceGroup
@@ -79,7 +81,7 @@ To access AKS nodes, you connect using an SSH key pair (public and private), whi
     ssh-keygen -t rsa -b 4096
     ```
 
-1. To deploy the template, you must provide the public key from the SSH pair. Retrieve the public key using the [`az sshkey show`](/en-us/cli/azure/sshkey#az-sshkey-show) command.
+1. To deploy the template, you must provide the public key from the SSH pair. Retrieve the public key using the [`az sshkey show`](/cli/azure/sshkey#az-sshkey-show) command.
 
     ```azurecli-interactive
     az sshkey show --name mySSHKey --resource-group myResourceGroup --query publicKey
@@ -203,7 +205,7 @@ The following deployment uses an ARM template from [Azure Quickstart Templates](
 }
 ```
 
-The resource type defined in the ARM template is [**Microsoft.ContainerService/managedClusters**](/en-us/azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-arm-template).
+The resource type defined in the ARM template is [**Microsoft.ContainerService/managedClusters**](/azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-arm-template).
 
 For more AKS samples, see the [AKS quickstart templates](https://azure.microsoft.com/resources/templates/?term=Azure+Kubernetes+Service) site.
 
@@ -235,9 +237,9 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
 
 ### [Azure CLI](#tab/azure-cli)
 
-To install and run `kubectl` locally, use the [`az aks install-cli`](/en-us/cli/azure/aks#az_aks_install_cli) command.
+To install and run `kubectl` locally, use the [`az aks install-cli`](/cli/azure/aks#az_aks_install_cli) command.
 
-1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`](/en-us/cli/azure/aks#az_aks_get_credentials) command. This command downloads credentials and configures the Kubernetes CLI to use them.
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
     ```azurecli-interactive
     az aks get-credentials \
@@ -262,9 +264,9 @@ To install and run `kubectl` locally, use the [`az aks install-cli`](/en-us/cli/
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-To install `kubectl` locally, use the [`Install-AzAksCliTool`](/en-us/powershell/module/az.aks/install-azaksclitool) cmdlet.
+To install `kubectl` locally, use the [`Install-AzAksCliTool`](/powershell/module/az.aks/install-azaksclitool) cmdlet.
 
-1. Configure `kubectl` to connect to your Kubernetes cluster using the [`Import-AzAksCredential`](/en-us/powershell/module/az.aks/import-azakscredential) cmdlet. This command downloads credentials and configures the Kubernetes CLI to use them.
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`Import-AzAksCredential`](/powershell/module/az.aks/import-azakscredential) cmdlet. This command downloads credentials and configures the Kubernetes CLI to use them.
 
     ```azurepowershell-interactive
     Import-AzAksCredential -ResourceGroupName myResourceGroup -Name myAKSCluster
@@ -595,7 +597,7 @@ If you don't plan on going through the [AKS tutorial](../tutorial-kubernetes-pre
 
 ### [Azure CLI](#tab/azure-cli)
 
-Remove the resource group, container service, and all related resources using the [`az group delete`](/en-us/cli/azure/group#az_group_delete) command.
+Remove the resource group, container service, and all related resources using the [`az group delete`](/cli/azure/group#az_group_delete) command.
 
 ```azurecli-interactive
 az group delete --name myResourceGroup --yes --no-wait
@@ -603,7 +605,7 @@ az group delete --name myResourceGroup --yes --no-wait
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-Remove the resource group, container service, and all related resources using the [`Remove-AzResourceGroup`](/en-us/powershell/module/az.resources/remove-azresourcegroup) cmdlet.
+Remove the resource group, container service, and all related resources using the [`Remove-AzResourceGroup`](/powershell/module/az.resources/remove-azresourcegroup) cmdlet.
 
 ```azurepowershell-interactive
 Remove-AzResourceGroup -Name myResourceGroup -Force
