@@ -53,7 +53,7 @@ In this article, you learn how to:
 Set the following environment variables to use with commands in this article:
 
 ```azurecli-interactive
-export RESOURCE_GOUP=<resource-group-name>
+export RESOURCE_GROUP=<resource-group-name>
 export CLUSTER_NAME=<cluster-name>
 export LOCATION=<location>
 ```
