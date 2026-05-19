@@ -114,7 +114,7 @@ List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-ak
 az aks list-vm-skus \
 	--location $LOCATION \
 	--zone \
-	--query "[].{name:name,zones:locationInfo[0].zones}" \
+	--query "[].{name:name,zones:join(', ', locationInfo[0].zones)}" \
 	--output table
 ```
 
