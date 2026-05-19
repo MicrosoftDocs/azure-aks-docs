@@ -3,14 +3,14 @@ title: List Available VM SKUs for Azure Kubernetes Service (AKS) Clusters (Previ
 description: Learn how to view VM SKUs that are available for AKS node pool creation in a specific Azure region.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 04/30/2026
+ms.date: 05/19/2026
 ms.author: sachidesai
 author: sdesai345
 ms.reviewer: schaffererin
 ai-usage: ai-assisted
 ---
 
-# List available virtual machine (VM) SKUs for Azure Kubernetes Service (AKS) clusters
+# List available virtual machine (VM) SKUs for Azure Kubernetes Service (AKS) clusters (Preview)
 
 When you create an Azure Kubernetes Service (AKS) cluster or add a new node pool, you need to choose a VM SKU that's available in your target Azure region and supported by AKS. You can use the [`az aks list-vm-skus`][az-aks-list-vm-skus] command to quickly view SKUs for AKS in a specific region.
 
@@ -53,7 +53,7 @@ In this article, you learn how to:
 Set the following environment variables to use with commands in this article:
 
 ```azurecli-interactive
-export RESOURCE_GOUP=<resource-group-name>
+export RESOURCE_GROUP=<resource-group-name>
 export CLUSTER_NAME=<cluster-name>
 export LOCATION=<location>
 ```
@@ -114,7 +114,7 @@ List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-ak
 az aks list-vm-skus \
 	--location $LOCATION \
 	--zone \
-	--query "[].{name:name,zones:locationInfo[0].zones}" \
+	--query "[].{name:name,zones:join(', ', locationInfo[0].zones)}" \
 	--output table
 ```
 
