@@ -18,7 +18,12 @@ This article helps you get started with Azure Kubernetes Application Network for
 
 - An Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure CLI version 2.84.0 or later. Check your version using the `az --version` command. To install or update, see [Install Azure CLI](/cli/azure/install-azure-cli).
-- If using an existing AKS cluster, make sure [AKS-managed Microsoft Entra integration](/azure/aks/entra-id-control-plane-authentication) and [OIDC issuer](/azure/aks/use-oidc-issuer) are enabled. These features are required for Azure Kubernetes Application Network connectivity and security.
+- For both existing and new AKS clusters, make sure they meet the following requirements. These requirements are validated when you join the cluster as a member:
+
+    - [Istio-based service mesh add-on](/azure/aks/istio-about) (`ServiceMeshProfile`) is **not** enabled. A cluster that already has the Istio add-on enabled can't join an Azure Kubernetes Application Network.
+    - [AKS-managed Microsoft Entra integration](/azure/aks/entra-id-control-plane-authentication) is enabled.
+    - [OIDC issuer](/azure/aks/use-oidc-issuer) is enabled.
+    - [Managed Kubernetes Gateway API installation](/azure/aks/managed-gateway-api) is enabled.
 - Verify support for your existing Kubernetes cluster using the [support policy](./supported-versions.md).
 
 ## Set environment variables
@@ -78,7 +83,14 @@ This article helps you get started with Azure Kubernetes Application Network for
 > [!NOTE]
 > Member clusters **don't** need to be in separate resource groups. They can be in the same resource group as the Azure Kubernetes Application Network resource. However, all member clusters must be in the same tenant.
 
-If you don't have an existing AKS cluster to connect to Azure Kubernetes Application Network, you need to create one. Azure Kubernetes Application Network requires AKS clusters with AKS-managed Microsoft Entra integration and OIDC issuer enabled. If you have an existing cluster, you can skip this step.
+If you don't have an existing AKS cluster to connect to Azure Kubernetes Application Network, you need to create one. Azure Kubernetes Application Network requires AKS clusters that meet the following requirements:
+
+- [Istio-based service mesh add-on](/azure/aks/istio-about) (`ServiceMeshProfile`) is **not** enabled.
+- [AKS-managed Microsoft Entra integration](/azure/aks/entra-id-control-plane-authentication) is enabled.
+- [OIDC issuer](/azure/aks/use-oidc-issuer) is enabled.
+- [Managed Kubernetes Gateway API installation](/azure/aks/managed-gateway-api) is enabled.
+
+If you have an existing cluster that already meets these requirements, you can skip this step.
 
 1. Create a resource group for your AKS cluster using the [`az group create`][az-group-create] command.
 
@@ -86,10 +98,10 @@ If you don't have an existing AKS cluster to connect to Azure Kubernetes Applica
     az group create --name $AKS_RG --location $LOCATION 
     ```
 
-1. Create an AKS cluster with AKS-managed Microsoft Entra integration and OIDC issuer enabled using the [`az aks create`][az-aks-create] command with the `--enable-oidc-issuer` and `--enable-aad` flags.
+1. Create an AKS cluster with AKS-managed Microsoft Entra integration, OIDC issuer, and the managed Kubernetes Gateway API add-on enabled using the [`az aks create`][az-aks-create] command with the `--enable-oidc-issuer`, `--enable-aad`, and `--enable-gateway-api` flags. Do **not** enable the Istio service mesh add-on (`--enable-azure-service-mesh`) on this cluster.
 
     ```azurecli-interactive
-    az aks create --name $CLUSTER_NAME --resource-group $AKS_RG --enable-oidc-issuer --enable-aad
+    az aks create --name $CLUSTER_NAME --resource-group $AKS_RG --enable-oidc-issuer --enable-aad --enable-gateway-api
     ```
 
 ## Create an Azure Kubernetes Application Network resource
