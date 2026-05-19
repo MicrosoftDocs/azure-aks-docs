@@ -23,7 +23,7 @@ In this quickstart, you learn how to:
 > [!NOTE]
 > To get started with quickly provisioning an AKS cluster, this article includes steps to deploy a cluster with default settings for evaluation purposes only. Before deploying a production-ready cluster, we recommend that you familiarize yourself with our [baseline reference architecture](/azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&amp;bc=/azure/aks/breadcrumb/toc.json) to consider how it aligns with your business requirements.
 
-[!INCLUDES [azure container linux limitations](../includes/azure-container-linux-limitations.md)]
+[!INCLUDE [azure container linux limitations](../includes/azure-container-linux-limitations.md)]
 
 ## Prerequisites
 
@@ -179,7 +179,7 @@ The following deployment uses an ARM template from [Azure Quickstart Templates](
             "count": "[parameters('agentCount')]",
             "vmSize": "[parameters('agentVMSize')]",
             "osType": "Linux",
-            "osSKU": "AzureContainerLinux" 
+            "osSKU": "AzureContainerLinux",
             "mode": "System"
           }
         ],
@@ -538,7 +538,7 @@ To deploy the application, you use a manifest file to create all the objects req
 
     If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
-2. Deploy the application using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command and specify the name of your YAML manifest.
+1. Deploy the application using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command and specify the name of your YAML manifest.
 
     ```bash
     kubectl apply -f aks-store-quickstart.yaml

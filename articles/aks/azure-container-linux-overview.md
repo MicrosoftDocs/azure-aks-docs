@@ -1,5 +1,5 @@
 ---
-title: Azure Container Linux (ACL) for Azure Kubernetes Service (AKS) Overview
+title: Azure Container Linux (ACL) for AKS Overview
 description: Learn about Azure Container Linux (ACL), an immutable, container-optimized operating system for Azure Kubernetes Service (AKS) that builds on Flatcar Container Linux while integrating Azure Linux packages and platform features.
 author: schaffererin
 ms.author: schaffererin
@@ -33,7 +33,7 @@ Using ACL as the OS for your AKS node pools provides several benefits that enhan
 
 The following key features distinguish ACL as a hardened, container-optimized OS for AKS:
 
-- **Immutability** The '/usr' directory is mounted as a read-only volume protected by dm-verity. At runtime, the kernel validates a signed root hash to detect and block tampering
+- **Immutability**: The '/usr' directory is mounted as a read-only volume protected by dm-verity. At runtime, the kernel validates a signed root hash to detect and block tampering
 - **Mandatory access control with SELinux**: ACL includes SELinux to enforce mandatory access control policies that restrict which processes can access sensitive system resources. Note that _SELinux is operating in enforcing mode by default. SELinux policies might evolve over time_.
 - **Trusted Launch and Secure Boot**: ACL requires [Trusted Launch](/azure/virtual-machines/trusted-launch) with Secure Boot and vTPM, to ensure the integrity of the boot chain before the OS loads. This is achieved using a Unified Kernel Image (UKI), which bundles the kernel, initramfs, and kernel command line into a single signed artifact. During boot, the UKI is measured and recorded in the vTPM, ensuring integrity from the earliest stage.
 - **NVIDIA GPU node support**: ACL supports NVIDIA GPU-enabled node pools on AMD64 architectures, allowing you to run high-performance computing (HPC) and AI/ML workloads on AKS with a hardened, container-optimized OS. ACL doesn't support ARM64 architectures for GPU-enabled node pools.
@@ -41,11 +41,11 @@ The following key features distinguish ACL as a hardened, container-optimized OS
 - **Sovereign Supply Chain Security**: ACL inherits Azure Linux’s secure build pipelines and signed Unified Kernel Images (UKIs).
 - **[Node auto-provisioning](node-auto-provisioning.md)**: ACL supports node auto-provisioning (NAP).
 
-[!INCLUDES [azure container linux limitations](./includes/azure-container-linux-limitations.md)]
+[!INCLUDE [azure container linux limitations](./includes/azure-container-linux-limitations.md)]
 
 ## Feature roadmap
 
-Azure Linux publishes a [feature roadmap](https://github.com/orgs/microsoft/projects/970/views/2) that contains features that are in development and available for general availability (GA) and public preview.
+For more information, see the [Azure Linux Feature Roadmap](https://github.com/orgs/microsoft/projects/970/views/2).
 
 ## OS migrations and upgrades with ACL
 

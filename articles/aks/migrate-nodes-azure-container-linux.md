@@ -1,6 +1,6 @@
 ---
 title: Migrate Existing Nodes to Azure Container Linux (ACL) for Azure Kubernetes Service (AKS)
-description: In this Azure Linux tutorial, you learn how to migrate nodes to Azure Container Linux (ACL) for AKS.
+description: In this Azure Linux article, you learn how to migrate nodes to Azure Container Linux (ACL) for AKS.
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -15,7 +15,7 @@ In this article, you learn how to migrate your existing AKS node pools to Azure 
 - **In-place OS SKU migration**: Change the OS SKU of your existing node pools to ACL, which reimages the nodes automatically.
 - **Remove existing node pools and add new ACL node pools**: Create new ACL node pools, move your workloads, and remove the old node pools.
 
-[!INCLUDES [azure container linux limitations](./includes/azure-container-linux-limitations.md)]
+[!INCLUDE [azure container linux limitations](./includes/azure-container-linux-limitations.md)]
 
 ## In-place OS SKU migration limitations
 
