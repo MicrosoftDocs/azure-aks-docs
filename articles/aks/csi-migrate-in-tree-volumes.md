@@ -2,9 +2,10 @@
 title: Migrate from in-tree storage class to CSI drivers on Azure Kubernetes Service (AKS)
 description: Learn how to migrate from in-tree persistent volume to the Container Storage Interface (CSI) driver in an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
-ms.date: 04/12/2025
+ms.date: 05/19/2026
 author: davidsmatlak
 ms.author: davidsmatlak
+ai-usage: ai-assisted
 ms.subservice: aks-storage
 # Customer intent: As a Kubernetes administrator, I want to migrate my existing Persistent Volumes from in-tree storage classes to CSI drivers in an Azure Kubernetes Service cluster, so that I can leverage improved storage management and ensure a seamless transition without data loss.
 ---
@@ -89,6 +90,9 @@ The following are important considerations to evaluate:
 
     This step is helpful if you have a large number of PVs that need to be migrated, and you want to migrate a few at a time. Running this command enables you to identify which PVCs were created in a given time frame. When you run the *CreatePV.sh* script, two of the parameters are start time and end time that enable you to only migrate the PVCs during that period of time.
 
+    > [!NOTE]
+    > If the target CSI StorageClass defines a `cachingmode` parameter, include the same value in the static PV `volumeAttributes`. If you don't include this value, the Azure Disk CSI driver uses the default caching mode, which is `ReadOnly`.
+
 3. Create a file named **CreatePV.sh** and copy in the following code. The script does the following:
 
     * Creates a new PersistentVolume with name `existing-pv-csi` for all PersistentVolumes in namespaces for storage class `storageClassName`.
@@ -123,6 +127,11 @@ The following are important considerations to evaluate:
               if [[ $STORAGECLASS == $EXISTING_STORAGE_CLASS ]]; then
                 STORAGE_SIZE="$(kubectl get pv $PV -n $NAMESPACE -o jsonpath='{.spec.capacity.storage}')"
                 SKU_NAME="$(kubectl get storageClass $STORAGE_CLASS_NEW -o jsonpath='{.parameters.skuname}')"
+                CACHING_MODE="$(kubectl get storageClass $STORAGE_CLASS_NEW -o jsonpath='{.parameters.cachingmode}')"
+                CACHING_MODE_ATTRIBUTE=""
+                if [[ -n $CACHING_MODE ]]; then
+                  CACHING_MODE_ATTRIBUTE="              cachingmode: $CACHING_MODE"
+                fi
                 DISK_URI="$(kubectl get pv $PV -n $NAMESPACE -o jsonpath='{.spec.azureDisk.diskURI}')"
                 PERSISTENT_VOLUME_RECLAIM_POLICY="$(kubectl get pv $PV -n $NAMESPACE -o jsonpath='{.spec.persistentVolumeReclaimPolicy}')"
     
@@ -150,6 +159,7 @@ The following are important considerations to evaluate:
               csi.storage.k8s.io/pvc/name: $PVC-csi
               csi.storage.k8s.io/pvc/namespace: $NAMESPACE
               requestedsizegib: "$STORAGE_SIZE"
+    $CACHING_MODE_ATTRIBUTE
               skuname: $SKU_NAME
             volumeHandle: $DISK_URI
           persistentVolumeReclaimPolicy: $PERSISTENT_VOLUME_RECLAIM_POLICY
