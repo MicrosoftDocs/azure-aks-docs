@@ -21,7 +21,7 @@ For more information on how storage works in Kubernetes or AKS, you can visit th
 
     The Azure portal will automatically install any managed CSI drivers required during the deployment of your desired storage type. To confirm which CSI drivers are already installed on your cluster, go to the Azure portal and navigate to your AKS cluster resource. From the service menu, select **Storage**. On the **Drivers** tab, you can enable new drivers and/or verify existing driver installations. For example:
 
-    :::image type="content" source="media/use-storage-in-the-azure-portal/csi-driver-configuration-in-portal.png" alt-text="A screenshot of Azure portal Drivers tab showing CSI drivers enabled.":::
+    :::image type="content" source="media/use-storage-in-the-azure-portal/driver-configuration-in-portal.png" alt-text="A screenshot of Azure portal Drivers tab showing CSI drivers enabled.":::
 
 ## Create storage
 
@@ -81,7 +81,7 @@ spec:
   volumes:
    - name: volume
      persistentVolumeClaim:
-       claimName: //YOUR PVC NAME HERE//
+       claimName: <pvc-name> # replace this with your PVC name
 ```
 
 To access and/or manage Kubernetes workload resources, navigate to **Kubernetes resources** > **Workloads**.
@@ -94,7 +94,7 @@ You can also manage your existing storage resources (PVCs, PVs and storage class
 
 To expand a PVC, select it in the PVC grid and choose **Expand** in the toolbar menu. This will open a context pane that allows you to enter a new size, provided that your PVC's underlying storage class supports volume expansion.
 
-:::image type="content" source="media/use-storage-in-the-azure-portal/expand-PVC.png" alt-text="A screenshot showing the UX to expand a PVC via Portal.":::
+:::image type="content" source="media/use-storage-in-the-azure-portal/expand-persistent-volume-claim.png" alt-text="A screenshot showing the UX to expand a PVC via Portal.":::
 
 ## Frequently asked questions (FAQ)
 
