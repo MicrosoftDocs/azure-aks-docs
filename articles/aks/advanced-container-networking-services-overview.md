@@ -83,7 +83,7 @@ For more information, see the [eBPF Host Routing overview](./container-network-p
 
 Cross-cluster networking enables direct pod-to-pod communication across multiple AKS clusters, providing seamless east-west connectivity, multi-cluster observability, and consistent security enforcement. It uses a managed offering of Cilium Cluster Mesh through Azure Kubernetes Fleet Manager to create a flat pod network across clusters without overlays or gateways.
 
-For more information, see the [Cross-cluster networking for Azure Kubernetes Fleet Manager overview](./cross-cluster-networking-fleet.md).
+For more information, see the [Cross-cluster networking use cases for Azure Kubernetes Fleet Manager](./cross-cluster-networking-fleet-use-cases.md).
 
 ## Related content
 

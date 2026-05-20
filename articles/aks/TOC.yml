@@ -724,7 +724,7 @@
           - name: Cross-cluster networking 
             items:
               - name: Use cases (Preview)
-                href: cross-cluster-networking-fleet-usecases.md
+                href: cross-cluster-networking-fleet-use-cases.md
       - name: Improve network fault tolerance using TCP keep-alive
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
 - name: Scheduling
