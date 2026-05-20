@@ -58,31 +58,31 @@ The example YAML manifest shown below creates a pod that runs an NGINX image and
 
 Navigate back to the **Storage** menu and select **+ Create** > **Apply a YAML**. There, you can paste in the following YAML manifest. Ensure that the `claimName` matches the name of your existing PVC.
 
-    ```yaml
-    kind: Pod
-    apiVersion: v1
-    metadata:
-      name: mypod
-    spec:
-      containers:
-        - name: mypod
-          image: mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine
-          resources:
-            requests:
-              cpu: 100m
-              memory: 128Mi
-            limits:
-              cpu: 250m
-              memory: 256Mi
-          volumeMounts:
-            - mountPath: /mnt/azure
-              name: volume
-              readOnly: false
-      volumes:
-       - name: volume
-         persistentVolumeClaim:
-           claimName: //YOUR PVC NAME HERE//
-    ```
+```yaml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: mypod
+      image: mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+      volumeMounts:
+        - mountPath: /mnt/azure
+          name: volume
+          readOnly: false
+  volumes:
+   - name: volume
+     persistentVolumeClaim:
+       claimName: //YOUR PVC NAME HERE//
+```
 
 To access and/or manage Kubernetes workload resources, navigate to **Kubernetes resources** > **Workloads**.
 
@@ -104,5 +104,5 @@ Currently, the Portal only explicitly supports storage creation via dynamic prov
 
 ## Related content
 
-- [Storage options for applications in Azure Kubernetes Service (AKS)]((./concepts-storage.md))
-- [Best practices for storage and backups in Azure Kubernetes Service (AKS)]((./operator-best-practices-storage.md))
+- [Storage options for applications in Azure Kubernetes Service (AKS)](./concepts-storage.md)
+- [Best practices for storage and backups in Azure Kubernetes Service (AKS)](./operator-best-practices-storage.md)
