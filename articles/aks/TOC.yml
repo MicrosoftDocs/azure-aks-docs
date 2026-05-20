@@ -1022,7 +1022,7 @@
       href: concepts-storage.md
     - name: Best practices for storage and backups
       href: operator-best-practices-storage.md
-    - name: Use storage in the Azure-portal
+    - name: Use storage in the Azure portal
       href: use-storage-in-the-azure-portal.md
     - name: CSI storage drivers
       items:
