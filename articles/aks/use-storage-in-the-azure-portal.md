@@ -19,9 +19,9 @@ For more information on how storage works in Kubernetes or AKS, you can visit th
 
 * A running AKS cluster. If you don't have one, see [Create an AKS cluster](/azure/aks/learn/quick-kubernetes-deploy-portal?tabs=azure-cli).
 
-    The Azure portal will automatically install any managed CSI drivers required during the deployment of your desired storage type. To confirm which CSI drivers are already installed on your cluster, go to the Azure portal and navigate to your AKS cluster resource. From the service menu, select **Storage**. On the **Drivers** tab, you can enable new drivers and/or verify existing driver installations. For example:
+    The Azure portal will automatically install any managed CSI drivers required during the deployment of your desired storage type. To confirm which CSI drivers are already installed on your cluster, go to the Azure portal and navigate to your AKS cluster resource. From the service menu, select **Storage**. On the **Drivers** tab, you can also manually enable new drivers and/or verify existing driver installations. For example:
 
-    :::image type="content" source="media/use-storage-in-the-azure-portal/driver-configuration-in-portal.png" alt-text="A screenshot of Azure portal Drivers tab showing CSI drivers enabled.":::
+    :::image type="content" source="media/storage-portal/driver-configuration-in-portal.png" alt-text="A screenshot of Azure portal Drivers tab showing CSI drivers enabled.":::
 
 ## Create storage
 
@@ -36,7 +36,7 @@ To dynamically provision storage using Kubernetes resources, you must create a P
 Based on your workload or hardware requirements, select a storage type (Azure Blob, Azure File, or Azure Disk) which corresponds to the managed CSI driver that will provision your storage resource. These CSI drivers come with built-in storage classes that define properties such as SKU, protocol (when applicable), volume binding mode, and reclaim policy. You can choose to reference one of these to proceed, or select **Create new** If you need to define your own custom set of properties.
 
 You can view details of any newly created or built-in storage class by selecting it in the dropdown. For example:
-:::image type="content" source="media/use-storage-in-the-azure-portal/storage-class-overview.png" alt-text="A screenshot showing an overview of Azure File built-in storage class.":::
+:::image type="content" source="media/storage-portal/storage-class-overview.png" alt-text="A screenshot showing an overview of Azure File built-in storage class.":::
 
 ### Create a PVC
 
@@ -90,11 +90,11 @@ To access and/or manage Kubernetes workload resources, navigate to **Kubernetes 
 
 You can also manage your existing storage resources (PVCs, PVs and storage classes) from the **Storage** menu. You can also view recent storage-related Kubernetes events and warnings, as well as the cluster's total provisioned storage capacity in `Gi`. For example:
 
-:::image type="content" source="media/use-storage-in-the-azure-portal/storage-manage-overview.png" alt-text="A screenshot showing the AKS Portal Storage menu.":::
+:::image type="content" source="media/storage-portal/storage-manage-overview.png" alt-text="A screenshot showing the AKS Portal Storage menu.":::
 
 To expand a PVC, select it in the PVC grid and choose **Expand** in the toolbar menu. This will open a context pane that allows you to enter a new size, provided that your PVC's underlying storage class supports volume expansion.
 
-:::image type="content" source="media/use-storage-in-the-azure-portal/expand-persistent-volume-claim.png" alt-text="A screenshot showing the UX to expand a PVC via Portal.":::
+:::image type="content" source="media/storage-portal/expand-persistent-volume-claim.png" alt-text="A screenshot showing the UX to expand a PVC via Portal.":::
 
 ## Frequently asked questions (FAQ)
 
