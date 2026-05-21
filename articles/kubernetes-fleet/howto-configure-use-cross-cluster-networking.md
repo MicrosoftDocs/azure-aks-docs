@@ -135,24 +135,31 @@ Once the cross-cluster network is created successfully, you can test load balanc
         --context cluster1
     ```
 
-* On `mbr-aks-member-1` apply the `Deployment` and `Service` resources required, ensuring to use the `cluster1.yaml` manifest.
+* On `mbr-aks-member-1` create a dedicated namespace and annotate it so Services within it are eligible to be shared across the cross-cluster network. Then apply the `Deployment` and `Service` resources required, ensuring to use the `cluster1.yaml` manifest.
 
     ```bash
-    kubectl --context=cluster1 apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/cluster1.yaml
-    kubectl --context=cluster1 apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/global-service-example.yaml
+    kubectl --context=cluster1 create namespace rebel-base-demo
+    kubectl --context=cluster1 annotate namespace rebel-base-demo clustermesh.cilium.io/global="true" --overwrite
+    kubectl --context=cluster1 -n rebel-base-demo apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/cluster1.yaml
+    kubectl --context=cluster1 -n rebel-base-demo apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/global-service-example.yaml
     ```
+
+    > [!NOTE]
+    > Fleet Manager's managed Cilium multi-cluster installation sets `clustermesh-default-global-namespace: false`, which departs from the upstream Cilium default. The `clustermesh.cilium.io/global="true"` annotation on the Namespace is required to opt in to cross-cluster service sharing. Without it, the per-Service `service.cilium.io/global` annotation has no effect.
 
 * On `mbr-aks-member-2` apply the equivalent, but this time use the `cluster2.yaml` manifest.
 
     ```bash
-    kubectl --context=cluster2 apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/cluster2.yaml
-    kubectl --context=cluster2 apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/global-service-example.yaml
+    kubectl --context=cluster2 create namespace rebel-base-demo
+    kubectl --context=cluster2 annotate namespace rebel-base-demo clustermesh.cilium.io/global="true" --overwrite
+    kubectl --context=cluster2 -n rebel-base-demo apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/cluster2.yaml
+    kubectl --context=cluster2 -n rebel-base-demo apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/global-service-example.yaml
     ```
 
 * Run the following command multiple times on each cluster. Observe the serving cluster changes, demonstrating the request is being served by multiple clusters despite calling the service on only one.
 
     ```bash
-    kubectl --context=cluster1 exec -ti deployment/x-wing -- curl rebel-base
+    kubectl --context=cluster1 -n rebel-base-demo exec -ti deployment/x-wing -- curl rebel-base
     ```
     
     ```output
@@ -161,16 +168,19 @@ Once the cross-cluster network is created successfully, you can test load balanc
     {"Galaxy": "Alderaan", "Cluster": "Cluster-2"}
     ```
 
-* Remove the share annotation of the service from  `mbr-aks-member-1` (cluster 1).
+* Remove the global annotation from the `rebel-base` Service on `mbr-aks-member-1` (cluster 1) so it's no longer shared across the cross-cluster network.
 
     ```bash
-    kubectl --context=cluster1 annotate service rebel-base service.cilium.io/shared="false" --overwrite
+    kubectl --context=cluster1 -n rebel-base-demo annotate service rebel-base service.cilium.io/global- --overwrite
     ```
+
+    > [!NOTE]
+    > In upstream Cilium, the `service.cilium.io/shared` annotation can also be used to toggle sharing of an already-global Service. In Fleet Manager's managed deployment, you control sharing through the Namespace-level `clustermesh.cilium.io/global` annotation and the per-Service `service.cilium.io/global` annotation as shown here.
 
 * Let's validate `mbr-aks-member-1` (cluster 1) can still use the service, and `mbr-aks-member-2` (cluster 2) can't.
 
     ```bash
-    kubectl --context=cluster1 exec -ti deployment/x-wing -- curl rebel-base
+    kubectl --context=cluster1 -n rebel-base-demo exec -ti deployment/x-wing -- curl rebel-base
     ```
 
     On cluster 1, we still receive responses from both clusters.
@@ -182,7 +192,7 @@ Once the cross-cluster network is created successfully, you can test load balanc
     ```
         
     ```bash
-    kubectl --context=cluster2 exec -ti deployment/x-wing -- curl rebel-base
+    kubectl --context=cluster2 -n rebel-base-demo exec -ti deployment/x-wing -- curl rebel-base
     ```
     
     On cluster 2, we only see local responses and the service on cluster 1 is no longer shared.
