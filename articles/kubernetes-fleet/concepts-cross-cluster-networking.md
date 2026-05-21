@@ -1,7 +1,7 @@
 ---
 title: "Cross-cluster networking for Azure Kubernetes Fleet Manager"
 description: This article provides a conceptual overview of Cross-cluster networking for Azure Kubernetes Fleet Manager. 
-ms.date: 04/14/2026
+ms.date: 05/14/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,6 +10,8 @@ ms.topic: concept-article
 ---
 
 # Cross-cluster networking for Azure Kubernetes Fleet Manager (preview)
+
+**Applies to**: :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 Azure Kubernetes Fleet Manager provides a dedicated cross-cluster networking solution that extends the Kubernetes datapath across multiple clusters. Using cross-cluster networking enables any connected cluster to communicate directly with endpoints on any other connected cluster with full network‑policy enforcement. Using cross-cluster networking allowing clusters to publish services such that any connected cluster can call them as if they were local.
 
@@ -68,10 +70,11 @@ This approach means you can use Fleet Manager's [Update Runs and Strategies][fle
 ## Next steps
 
 * [Track availability of this preview][track-preview].
-
+* [How to: Configure and use Fleet Manager Cross Cluster Connectivity (preview)][howto-configure-cross-cluster]
 
 <!-- INTERNAL LINKS -->
 [aks-acns-enabled]: ../aks/use-advanced-container-networking-services.md?pivots=cilium
+[howto-configure-cross-cluster]: ./howto-configure-use-cross-cluster-networking.md
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [fleet-update-runs]: ./concepts-update-orchestration.md
 [flat-network]: ../aks/concepts-network-cni-overview.md#flat-networks

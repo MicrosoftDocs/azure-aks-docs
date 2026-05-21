@@ -2,7 +2,7 @@
 title: "How to set up multi-cluster DNS load balancing across Azure Kubernetes Fleet Manager member clusters"
 description: Learn how to use Azure Kubernetes Fleet Manager to set up multi-cluster Layer 4 and 7 load balancing for workloads deployed on multiple member clusters.
 ms.topic: how-to
-ms.date: 04/28/2025
+ms.date: 05/14/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,6 +10,8 @@ ms.service: azure-kubernetes-fleet-manager
 ---
 
 # Set up DNS load balancing across Azure Kubernetes Fleet Manager member clusters (preview)
+
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 Azure Kubernetes Fleet Manager DNS load balancing can help increase availability and spread load across a workload deployed across multiple member clusters. As this capability is delivered via DNS, it can be used to provide layer 4 and 7 load balancing as required.
 
@@ -25,7 +27,7 @@ Follow the steps in this document to set up DNS-based load balancing for multi-c
 
 * A Kubernetes Fleet Manager with a hub cluster and managed identity. If you don't have one, see [Create an Azure Kubernetes Fleet Manager and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 
-* Two member clusters `aks-member-1` and `aks-member-2` onto which you deploy the same workload using Fleet Manager's [cluster resource placement (CRP)](./intelligent-resource-placement.md).
+* Two member clusters `aks-member-1` and `aks-member-2` on to which you deploy the same workload using Fleet Manager's [resource placement](./intelligent-resource-placement.md) capability.
 
 * The user completing the configuration has permissions to perform Azure role assignments and to access the Fleet Manager hub cluster Kubernetes API. For more information, see [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
 
@@ -101,7 +103,7 @@ In order to complete this step, you must create your Fleet Manager with managed 
 >
 > * The steps in this how-to guide refer to a sample application for demonstration purposes only. You can substitute this workload for any of your own existing Deployment and Service objects.
 >
-> * These steps deploy the sample workload from the Fleet Manager hub cluster to member clusters using Fleet Manager's cluster resource placement (CRP). Alternatively, you can choose to deploy these Kubernetes configurations to each member cluster separately, one at a time.
+> * These steps deploy the sample workload from the Fleet Manager hub cluster to member clusters using Fleet Manager resource placement. Alternatively, you can choose to deploy these Kubernetes configurations to each member cluster separately, one at a time.
 
 1. Create a namespace on the Fleet Manager hub cluster.
 
@@ -186,7 +188,7 @@ In order to complete this step, you must create your Fleet Manager with managed 
 1. Each service needs a unique DNS label so that it can be exposed via Azure Traffic Manager. Use a Fleet Manager cluster resource placement `ResourceOverride` to modify the service definition per member cluster to create a unique name based on the Azure region and cluster name. You need to create an override per cluster selector (in our example, per Azure region).
 
      ```yml
-    apiVersion: placement.kubernetes-fleet.io/v1alpha1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ResourceOverride
     metadata:
       name: ro-kuard-demo-eastus
@@ -326,6 +328,10 @@ In order to complete this step, you must create your Fleet Manager with managed 
 
 :::image type="content" source="./media/howto-dns-load-balancing/fleet-dns-load-balance-kuard-sample.png" alt-text="A screenshot of a web page displaying details from the Kuard demo application." lightbox="./media/howto-dns-load-balancing/fleet-dns-load-balance-kuard-sample.png":::
 
+## Next steps
+
+* [Overview of Fleet Manager multi-cluster networking](./concepts-multi-cluster-networking-overview.md).
+* [Fleet Manager Frequently Asked Questions (FAQs)](./faq.md).
 
 <!-- INTERNAL LINKS -->
 [fleet-crp]: ./concepts-resource-placement.md
