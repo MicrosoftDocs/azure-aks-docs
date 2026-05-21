@@ -48,7 +48,7 @@ After you create or select a storage class, you can create a PVC that references
     - Name
     - Namespace
     - Access mode
-    - Storage size (Gi)
+    - Storage size (`Gi`)
 
 1. Select **Create**.
 
@@ -64,6 +64,33 @@ The example YAML manifest in step 2 creates a pod that runs an NGINX image and m
 1. Navigate back to the **Storage** menu and select **+ Create** > **Apply a YAML**. 
 1. Paste in the following YAML manifest, and replace the `claimName` placeholder value (`<pvc-name>`) with the name of your existing PVC:
 
+    ```yaml
+    kind: Pod
+    apiVersion: v1
+    metadata:
+      name: mypod
+    spec:
+      containers:
+        - name: mypod
+          image: mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /mnt/azure
+              name: volume
+              readOnly: false
+      volumes:
+       - name: volume
+         persistentVolumeClaim:
+           claimName: <pvc-name> # replace this with your PVC name
+    ```
+
+1. To access and/or manage Kubernetes workload resources, navigate to **Kubernetes resources** > **Workloads**.
     
 
 ## Manage storage resources

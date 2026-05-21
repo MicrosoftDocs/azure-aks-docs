@@ -107,6 +107,7 @@ AKS performs pre-upgrade validations to ensure cluster health:
 * **Quota:** Confirms enough quota for surge nodes.
 * **Subnet:** Verifies sufficient IP addresses.
 * **Certificates/service principals:** Detects expired credentials.
+* **Managed Resource Lock Check:** Checks for resource locks applied to the managed cluster resource group.
 
 These checks help to minimize upgrade failures and provide early visibility into issues.
 
