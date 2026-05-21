@@ -17,7 +17,7 @@ As platform teams scale from one Kubernetes cluster to many, networking quickly 
 
 ## Seamless service‑to‑service across clusters (east–west)
 
-Azure Kubernetes Fleet Manager delivers capabilities that extends the Kubernetes datapath across clusters, meaning endpoints can talk directly with full network‑policy enforcement and the option to configure global services. 
+Azure Kubernetes Fleet Manager delivers capabilities that extend the Kubernetes datapath across clusters, meaning endpoints can talk directly with full network‑policy enforcement and the option to configure global services. 
 
 Multiple cross-cluster networks can be defined in Fleet Manager, providing administrators with the flexibility to control which member clusters can publish and access global services integrated with standard Kubernetes Services and CoreDNS.
 
