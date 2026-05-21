@@ -8,7 +8,7 @@ metadata:
   ms.service: azure-kubernetes-fleet-manager
   ms.author: simonwaight
   ms.topic: landing-page
-  ms.date: 03/18/2026
+  ms.date: 05/14/2026
 landingContent:
   - title: About Azure Kubernetes Fleet Manager
     linkLists:
@@ -81,6 +81,11 @@ landingContent:
         links:
           - text: Deploy Kubernetes resources across multiple clusters
             url: quickstart-resource-propagation.md
+      - linkListType: quickstart
+        links:
+          - text: Set up cross-cluster networking
+            url: howto-configure-use-cross-cluster-networking.md
+
 
   - title: API reference
     linkLists:
