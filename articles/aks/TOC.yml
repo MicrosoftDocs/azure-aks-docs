@@ -711,7 +711,7 @@
                     href: container-network-security-l7-policy-concepts.md
                   - name: Set up Layer 7 policies
                     href: how-to-apply-l7-policies.md
-      - name: Performance
+      - name: Performance and connectivity
         items:
           - name: Container Network Performance
             items:
@@ -719,6 +719,10 @@
                 href: container-network-performance-ebpf-host-routing.md
               - name: Set up eBPF Host routing
                 href: how-to-enable-ebpf-host-routing.md
+          - name: Cross-cluster networking
+            items:
+              - name: Use cases (Preview)
+                href: cross-cluster-networking-fleet-use-cases.md
       - name: Improve network fault tolerance using TCP keep-alive
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
 - name: Scheduling
