@@ -72,4 +72,4 @@ In practice, organizations can adopt different strategies across environments, u
 
 - Get started with [multi-instance GPU node pools](./gpu-multi-instance.md) on AKS.
 - Learn about best practices for [GPU-enabled node lifecycle management](./best-practices-gpu.md).
-- Optimize GPU node utilization and performance by configuring [node binpacking](./configure-node-binpack-scheduler.md) in your cluster.
+- Optimize GPU node utilization and performance by configuring [node bin packing](./configure-node-binpack-scheduler.md) in your cluster.
