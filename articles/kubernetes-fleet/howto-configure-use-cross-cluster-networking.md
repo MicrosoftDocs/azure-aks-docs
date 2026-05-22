@@ -90,7 +90,7 @@ While a network profile is created as an Azure Resource, no Cilium multi-cluster
 Validate which clusters will be included in the cross-cluster network by supplying the `whatif` parameter to the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
 
 ```azurecli-interactive
-az fleet clustermeshprofile apply
+az fleet clustermeshprofile apply \
     --what-if \
     --fleet-name ${FLEET} \
     --resource-group ${GROUP} \
@@ -112,7 +112,7 @@ ClusterResourceId    	            ETag        Name  		       Action   MeshMember
 You can now apply the cross-cluster networking changes by omitting the `what-if` parameter from the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
 
 ```azurecli-interactive
-az fleet clustermeshprofile apply
+az fleet clustermeshprofile apply \
     --fleet-name ${FLEET} \
     --resource-group ${GROUP} \
     --name ${NETWORK_PROFILE_NAME} 
@@ -123,7 +123,7 @@ The cross-cluster network creation starts and Cilium multi-cluster configuration
 The apply operation runs to completion and can't be interrupted. While it's running, you can monitor the network status of each member:
 
 ```azurecli-interactive
-az fleet clustermeshprofile list-members
+az fleet clustermeshprofile list-members \
     --fleet-name ${FLEET} \
     --resource-group ${GROUP} \
     --name ${NETWORK_PROFILE_NAME} \
@@ -141,7 +141,7 @@ mbr-aks-member-2  Connecting
 You can also monitor the status of the overall operation:
 
 ```azurecli-interactive
-az fleet clustermeshprofile show
+az fleet clustermeshprofile show \
     --fleet-name ${FLEET} \
     --resource-group ${GROUP} \
     --name ${NETWORK_PROFILE_NAME} \
@@ -155,12 +155,12 @@ Once the members' states are showing as `Connected`, the cross-cluster network h
 
 You can confirm the successful connection using standard dataplane tools such as the Cilium CLI. First, obtain the Kubernetes access credentials for both member clusters using [`az aks get-credentials`][az-aks-get-credentials], setting `context` appropriately.
 
-    ```azurecli-interactive
-    az aks get-credentials \
-        --resource-group $RESOURCE_GROUP \
-        --name $AKS_CLUSTER_1 \
-        --context cluster1
-    ```
+```azurecli-interactive
+az aks get-credentials \
+    --resource-group $RESOURCE_GROUP \
+    --name $AKS_CLUSTER_1 \
+    --context cluster1
+```
 
 Then, use the Cilium CLI's status command to see that all member clusters are connected:
 
@@ -181,8 +181,8 @@ cilium clustermesh status --context cluster1
 
 Once the cross-cluster network is created successfully, you can test load balancing out by following the [official Cilium multi-cluster example][cilium-example], or using the steps shown next. The steps in this document provide extra guidance on working with AKS clusters and Fleet Manager.
 
-    > [!NOTE]
-    > Fleet Manager's managed Cilium multi-cluster installation sets `clustermesh-default-global-namespace: false`, which differs from the upstream Cilium default. A `clustermesh.cilium.io/global="true"` annotation must be set on the Namespace to opt in to cross-cluster service sharing. Without it, the per-Service `service.cilium.io/global` annotation has no effect.
+> [!NOTE]
+> Fleet Manager's managed Cilium multi-cluster installation sets `clustermesh-default-global-namespace: false`, which differs from the upstream Cilium default. A `clustermesh.cilium.io/global="true"` annotation must be set on the Namespace to opt in to cross-cluster service sharing. Without it, the per-Service `service.cilium.io/global` annotation has no effect.
 
 * On `mbr-aks-member-1` create a dedicated namespace and annotate it so Services within it are eligible to be shared across the cross-cluster network. Then apply the `Deployment` and `Service` resources using the `cluster1.yaml` manifest.
 
