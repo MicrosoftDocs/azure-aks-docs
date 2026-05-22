@@ -168,34 +168,34 @@ Once the cross-cluster network is created successfully, you can test load balanc
     {"Galaxy": "Alderaan", "Cluster": "Cluster-2"}
     ```
 
-* Remove the global annotation from the `rebel-base` Service on `mbr-aks-member-1` (cluster 1) so it's no longer shared across the cross-cluster network.
+* Set the `clustermesh.cilium.io/global` annotation on the `rebel-base-demo` Namespace on `mbr-aks-member-1` (cluster 1) to `"false"` so Services in that Namespace are no longer shared across the cross-cluster network from cluster 1.
 
     ```bash
-    kubectl --context=cluster1 -n rebel-base-demo annotate service rebel-base service.cilium.io/global-
+    kubectl --context=cluster1 annotate namespace rebel-base-demo clustermesh.cilium.io/global="false" --overwrite
     ```
 
     > [!NOTE]
-    > In upstream Cilium, the `service.cilium.io/shared` annotation can also be used to toggle sharing of an already-global Service. In Fleet Manager's managed deployment, you control sharing through the Namespace-level `clustermesh.cilium.io/global` annotation and the per-Service `service.cilium.io/global` annotation as shown here.
+    > In upstream Cilium, the `service.cilium.io/shared` annotation can also be used to toggle sharing of an already-global Service. In Fleet Manager's managed deployment, you control sharing through the Namespace-level `clustermesh.cilium.io/global` annotation and the per-Service `service.cilium.io/global` annotation.
 
-* Let's validate `mbr-aks-member-1` (cluster 1) can still use the service, and `mbr-aks-member-2` (cluster 2) can't.
+* Let's validate that neither cluster can reach the `rebel-base` Service on cluster 1 across the cross-cluster network.
 
     ```bash
     kubectl --context=cluster1 -n rebel-base-demo exec -ti deployment/x-wing -- curl rebel-base
     ```
 
-    On cluster 1, we still receive responses from both clusters.
-    
+    On cluster 1, we only see local responses because the Namespace is no longer global and remote endpoints aren't imported.
+
     ```output
     {"Galaxy": "Alderaan", "Cluster": "Cluster-1"}
     {"Galaxy": "Alderaan", "Cluster": "Cluster-1"}
-    {"Galaxy": "Alderaan", "Cluster": "Cluster-2"}
+    {"Galaxy": "Alderaan", "Cluster": "Cluster-1"}
     ```
-        
+
     ```bash
     kubectl --context=cluster2 -n rebel-base-demo exec -ti deployment/x-wing -- curl rebel-base
     ```
-    
-    On cluster 2, we only see local responses and the service on cluster 1 is no longer shared.
+
+    On cluster 2, we only see local responses because the Service on cluster 1 is no longer shared.
     
     ```output
     {"Galaxy": "Alderaan", "Cluster": "Cluster-2"}
