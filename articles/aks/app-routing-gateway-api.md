@@ -39,7 +39,7 @@ The application routing add-on Kubernetes Gateway API implementation deploys an 
 
 * The application routing Gateway API implementation uses the same [resource customization allow list][istio-gateway-resource-customization] as the Istio add-on for validating ConfigMap customizations for `Gateway` resources. Customizations not on the allow list are blocked via add-on managed webhooks.
 * [Azure DNS and TLS certificate management][app-routing-dns-tls] via the application routing add-on is currently not supported for the Kubernetes Gateway API. You can follow the steps in the [application routing Gateway API implementation secure ingress guide][app-routing-gateway-api-tls] to configure a `Gateway` to perform TLS termination.
-* Configuring HTTPS ingress access to HTTPS services – i.e Server Name Indication (SNI) Passthrough – via the `TLSRoute` resource is currently unsupported.
+* Configuring HTTPS ingress access to HTTPS services – i.e Server Name Indication (SNI) Passthrough – via the `TLSRoute` resource is not currently supported. Support for the `TLSRoute` resource will be available once AKS adds support for Istio 1.30, at which point your application routing Istio control plane will be automatically upgraded to that version.
 * Egress traffic management via the application routing Gateway API implementation is unsupported.
 
 ## Prerequisites
