@@ -2,7 +2,7 @@
 title: Create a multi-instance GPU node pool in Azure Kubernetes Service (AKS)
 description: Learn how to create a multi-instance GPU node pool in Azure Kubernetes Service (AKS).
 ms.topic: how-to
-ms.date: 08/30/2023
+ms.date: 05/22/2026
 ms.author: sachidesai
 author: schaffererin
 ms.subservice: aks-nodes
@@ -21,7 +21,7 @@ This article walks you through how to create a multi-instance GPU node pool usin
 * Azure CLI version 2.2.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * The Kubernetes command-line client, [kubectl](https://kubernetes.io/docs/reference/kubectl/), installed and configured. If you use Azure Cloud Shell, `kubectl` is already installed. If you want to install it locally, you can use the [`az aks install-cli`][az-aks-install-cli] command.
 * Helm v3 installed and configured. For more information, see [Installing Helm](https://helm.sh/docs/intro/install/).
-* Multi-instance GPU is currently supported on the `Standard_NC40ads_H100_v5`, `Standard_ND96isr_H100_v5`, and A100 GPU VM sizes on AKS.
+* Multi-instance GPU is currently supported on NVIDIA A100, H100, and H200 series GPU VM sizes on AKS.
 
 ## GPU instance profiles
 
@@ -267,9 +267,9 @@ If you don't see multi-instance GPU capability after creating the node pool, con
 
 To learn more about GPUs on Azure Kubernetes Service, see:
 
-* [Create a Linux GPU-enabled node pool on AKS](./gpu-cluster.md).
-* [Create a Windows GPU-enabled node pool on AKS](./use-windows-gpu.md)
-* [Learn about use cases for GPU workloads on AKS](/azure/architecture/reference-architectures/containers/aks-gpu/gpu-aks)
+* [Create a managed GPU node pool on AKS](./aks-managed-gpu-nodes.md).
+* [Compare different NVIDIA GPU partitioning strategies](./concepts-gpu-partitioning.md) available on your AKS nodes.
+* [Learn about use cases for GPU workloads on AKS](/azure/architecture/reference-architectures/containers/aks-gpu/gpu-aks).
 
 <!-- LINKS - internal -->
 [az-group-create]: /cli/azure/group#az-group-create

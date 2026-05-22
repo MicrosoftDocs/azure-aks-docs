@@ -2,7 +2,7 @@
 title: GPU Node Partitioning Strategies in Azure Kubernetes Service (AKS)
 description: Learn about GPU partitioning in Azure Kubernetes Service (AKS), including AKS managed multi-instance GPU (MIG) or time-slicing and multi-processing service (MPS) with self-managed NVIDIA GPU Operator.
 ms.topic: concept-article
-ms.date: 05/01/2026
+ms.date: 05/22/2026
 author: sachidesai
 ms.author: sachidesai
 ms.reviewer: schaffererin
@@ -14,23 +14,23 @@ ms.service: azure-kubernetes-service
 
 Azure Kubernetes Service (AKS) supports NVIDIA GPU-enabled node pools to run compute-intensive workloads, including AI/ML training, real-time inferencing, and large-scale data analytics. Traditionally, GPUs are allocated in a one-to-one model, where a single Kubernetes pod consumes an entire GPU device within an Azure virtual machine (VM). While this model provides simplicity and strong isolation, it can lead to underutilization in scenarios where workloads do not fully consume available GPU resources in the cluster.
 
-To improve utilization and support concurrent workloads, AKS supports several GPU partitioning strategies. These approaches enable multiple workloads to share a single physical GPU by dividing it into smaller logical units or by expanding access at the software or GPU driver level.
+To improve utilization and support concurrent workloads, customers can integrate different GPU partitioning strategies on their node pool(s). These approaches enable multiple workloads to share a single physical GPU by dividing it into smaller logical units or by expanding access at the software or GPU driver level.
 
-In this article, you learn about the three primary node partitioning strategies for NVIDIA GPUs in AKS: **Multi-Instance GPU (MIG)**, **time-slicing**, and **Multi-Process Service (MPS)**.
+In this article, you learn about the three primary node partitioning strategies for NVIDIA GPUs in AKS: [**Multi-Instance GPU (MIG)**](https://docs.nvidia.com/datacenter/tesla/mig-user-guide/latest/introduction.html), [**time-slicing**](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/25.3.3/gpu-sharing.html), and [**Multi-Process Service (MPS)**](https://docs.nvidia.com/deploy/mps/latest/index.html).
 
 ## Overview of GPU node partitioning strategies in AKS
 
-The three primary strategies available in AKS environments are Multi-Instance GPU (MIG), time-slicing, and Multi-Process Service (MPS). Each approach differs in terms of isolation, performance predictability, operational complexity, and level of AKS platform management.
+The three primary strategies available in AKS environments are Multi-Instance GPU (MIG), time-slicing, and Multi-Process Service (MPS). Each approach differs in terms of AKS platform management, type of isolation, and deployment use cases.
 
 | Strategy | Managed or allowed on AKS | GPU sharing type | Recommended for |
 | -------- | ---------------- | ---------------- | --------------- |
-| Multi-Instance GPU (MIG)  | Managed | Hardware partitioning  | Production workloads   |
+| Multi-Instance GPU (MIG) | Managed (or user-managed via GPU Operator) | Hardware partitioning  | Production workloads   |
 | Time-slicing (via NVIDIA GPU Operator) | User-managed, AKS allowed | Software scheduling  | Experimentation with variable GPU loads |
-| Multi-Process Service (MPS, NVIDIA GPU Operator) | User-managed, AKS allowed | CUDA-level process multiplexing | Low-latency, high-throughput workloads  |
+| Multi-Process Service (MPS, NVIDIA GPU Operator) | User-managed, AKS allowed | CUDA-level process multiplexing | Low-latency, high-throughput workloads |
 
-## Multi-Instance GPU (MIG) on AKS
+## Managed Multi-Instance GPU (MIG) on AKS
 
-Multi-Instance GPU (MIG) is a hardware-based partitioning capability available on select NVIDIA GPU architectures, such as A100 and H100 series. MIG enables a single physical GPU to be divided into multiple isolated instances, each with dedicated compute cores, memory, and cache. This ensures strong workload isolation and predictable performance characteristics, making MIG suitable for production environments.
+Multi-Instance GPU (MIG) is a hardware-based partitioning capability available on select NVIDIA GPU architectures, such as A100, H100, and H200 series. MIG enables a single physical GPU to be divided into multiple isolated instances, each with dedicated compute cores, memory, and cache. This ensures strong workload isolation and predictable performance characteristics, making MIG suitable for production environments.
 
 In AKS, MIG is a managed capability. When a [MIG-enabled node pool](./gpu-multi-instance.md) is provisioned, Azure configures the GPU hardware, installs and maintains the required driver stack, and integrates MIG instances with Kubernetes through the NVIDIA device plugin. Each MIG slice is exposed to the Kubernetes scheduler as a discrete allocatable resource, allowing pods to request GPU capacity in a granular and deterministic manner.
 
@@ -42,7 +42,7 @@ However, MIG also introduces certain constraints: partitioning configurations ar
 
 [Time-slicing](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/25.3.3/gpu-sharing.html) is a software-based GPU sharing mechanism that allows multiple Kubernetes pods to share a single GPU by interleaving execution over time. This approach is implemented through the NVIDIA GPU Operator, which manages GPU drivers, the Kubernetes device plugin, and container runtime configuration.
 
-In AKS, time-slicing is supported but not managed. Cluster operators are responsible for deploying and configuring the NVIDIA GPU Operator, typically via Helm, and enabling time-slicing through device plugin settings. Once configured, multiple pods can request access to the same GPU resource, and their workloads are scheduled in a time-shared manner.
+Time-slicing can be configured on AKS node pools but *not managed* by the platform. Cluster operators are responsible for deploying and configuring the NVIDIA GPU Operator, typically via Helm, and enabling time-slicing through device plugin settings. Once configured, multiple pods can request access to the same GPU resource, and their workloads are scheduled in a time-shared manner.
 
 Time-slicing offers flexibility and broad compatibility, as it doesn't depend on specific GPU hardware features and can be used with most NVIDIA GPUs supported by CUDA. It's useful for development, testing, or workloads with bursty or variable GPU utilization patterns.
 
@@ -50,13 +50,13 @@ Despite its flexibility, time-slicing doesn't provide hardware-level isolation. 
 
 ## Multi-Process Service (MPS) with NVIDIA GPU Operator (User-managed)
 
-[NVIDIA Multi-Process Service (MPS)](https://docs.nvidia.com/deploy/mps/introduction.html) is a driver-level capability that enables multiple CUDA applications to execute concurrently on a single GPU. Unlike time-slicing, which alternates execution between workloads, MPS allows kernels from different processes to run simultaneously, improving overall GPU utilization and reducing latency for compatible workloads.
+[NVIDIA Multi-Process Service (MPS)](https://docs.nvidia.com/deploy/mps/latest/index.html) is a driver-level capability that enables multiple CUDA applications to execute concurrently on a single GPU. Unlike time-slicing, which alternates execution between workloads, MPS allows kernels from different processes to run simultaneously, improving overall GPU utilization and reducing latency for compatible workloads.
 
-Within AKS, MPS is supported through user-managed deployments of the NVIDIA GPU Operator. Operators must configure the GPU driver environment to enable MPS and manage the lifecycle of the MPS control daemon. Workloads that connect to the same MPS server can share the GPU and benefit from concurrent kernel execution.
+In AKS, MPS can be configured via *user-managed* deployment of the NVIDIA GPU Operator. Operators must configure the GPU driver environment to enable MPS and manage the lifecycle of the MPS control daemon. Workloads that connect to the same MPS server can share the GPU and benefit from concurrent kernel execution.
 
 MPS is useful for high-throughput and low-latency scenarios, such as batch jobs or tightly coupled parallel workloads. It provides fine-grained control over GPU sharing and can significantly improve utilization when workloads are designed to take advantage of concurrent execution.
 
-However, MPS introduces additional operational complexity. Configuration is manual, and troubleshooting can be more involved compared to other approaches. Similar to time-slicing, MPS doesn't provide strong isolation, as all processes share GPU memory and compute resources.
+However, MPS introduces additional operational complexity. Configuration is manual, and troubleshooting can be more involved compared to other approaches. Similar to time-slicing, MPS doesn't provide strong isolation, as all processes share GPU memory and compute resources. Therefore, MPS generally isn't recommended for production workloads that require strict service-level agreements (SLAs).
 
 ## How to choose a GPU partitioning strategy
 
