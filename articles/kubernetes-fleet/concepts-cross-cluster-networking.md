@@ -51,9 +51,9 @@ Kubernetes [Services][kube-services] on any cross-cluster networking member can 
 Deploying a Service with these annotations to multiple cross-cluster networking member clusters transparently load balances requests across those clusters.
 
 > [!NOTE]
-> Fleet Manager's managed Cilium multi-cluster installation sets `clustermesh-default-global-namespace: false`, which departs from the upstream Cilium default. As a result, sharing services across clusters is opt-in per Namespace via the `clustermesh.cilium.io/global` annotation, preventing accidental cross-cluster exposure. This setting also improves scalability by limiting the amount of state (CiliumEndpoints, CiliumIdentities, and Services) synchronized across clusters to only those resources in Namespaces explicitly opted in. The per-Service `service.cilium.io/shared` annotation, which can be used in upstream Cilium to toggle sharing, has no effect on its own in this managed deployment because the Namespace opt-in is required first.
+> Fleet Manager's managed Cilium multi-cluster installation sets `clustermesh-default-global-namespace: false`, which differs from the Cilium default. This setting improves scalability by limiting the amount of state (CiliumEndpoints, CiliumIdentities, and Services) synchronized across clusters to only those resources in Namespaces with the `clustermesh.cilium.io/global` annotation set to a value of `true`. As a result, explicit opt-in is required per Namespace by setting that annotation.
 
-You can temporarily remove a Service from a load balanced global service by removing the `service.cilium.io/global` annotation (or setting it to `false`) on that Service. To stop sharing every Service in a Namespace from a given cluster, remove the `clustermesh.cilium.io/global` annotation on the Namespace (or set it to `false`) on that cluster. These approaches are useful if you don't wish to completely remove the Service or cluster.
+You can temporarily remove a Service from a load balanced global service by removing the `service.cilium.io/global` annotation (or setting it to `false`) on that Service. To stop sharing every Service in a Namespace from a given cluster, remove the `clustermesh.cilium.io/global` annotation on the Namespace (or set it to `false`) on that cluster.
 
 ## Debugging and troubleshooting
 

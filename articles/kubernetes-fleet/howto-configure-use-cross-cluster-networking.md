@@ -171,7 +171,7 @@ Once the cross-cluster network is created successfully, you can test load balanc
 * Remove the global annotation from the `rebel-base` Service on `mbr-aks-member-1` (cluster 1) so it's no longer shared across the cross-cluster network.
 
     ```bash
-    kubectl --context=cluster1 -n rebel-base-demo annotate service rebel-base service.cilium.io/global- --overwrite
+    kubectl --context=cluster1 -n rebel-base-demo annotate service rebel-base service.cilium.io/global-
     ```
 
     > [!NOTE]
