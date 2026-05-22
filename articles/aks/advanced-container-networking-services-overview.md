@@ -77,6 +77,14 @@ eBPF Host Routing uses extended Berkeley Packet Filter (eBPF) technology to opti
 
 For more information, see the [eBPF Host Routing overview](./container-network-performance-ebpf-host-routing.md).
 
+## Container Network Connectivity
+
+## Cross Cluster Networking (Preview)
+
+Cross-cluster networking enables direct pod-to-pod communication across multiple AKS clusters, providing seamless east-west connectivity, multi-cluster observability, and consistent security enforcement. It uses a managed offering of Cilium Cluster Mesh through Azure Kubernetes Fleet Manager to create a flat pod network across clusters without overlays or gateways.
+
+For more information, see the [Cross-cluster networking use cases for Azure Kubernetes Fleet Manager](./cross-cluster-networking-fleet-use-cases.md).
+
 ## Related content
 
 - [Set up Advanced Container Networking Services on your Azure Kubernetes Service (AKS) cluster](./use-advanced-container-networking-services.md)

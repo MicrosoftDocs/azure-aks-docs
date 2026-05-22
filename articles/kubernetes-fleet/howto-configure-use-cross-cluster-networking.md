@@ -83,14 +83,14 @@ az fleet clustermeshprofile create \
     --member-label-selector "mesh=${NETWORK_NAME}"
 ```
 
-While a network profile is created as an Azure Resource, no Cilium multi-cluster configuration is applied on clusters.
+While a network profile is created as an Azure Resource, no Cilium multi-cluster configuration is yet applied on clusters. The following steps still need to be performed to apply and connect the cross-cluster network.
 
 ## Validate the selected clusters
 
 Validate which clusters will be included in the cross-cluster network by supplying the `whatif` parameter to the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
 
 ```azurecli-interactive
-az fleet clustermeshprofile apply
+az fleet clustermeshprofile apply \
     --what-if \
     --fleet-name ${FLEET} \
     --resource-group ${GROUP} \
@@ -107,12 +107,12 @@ ClusterResourceId    	            ETag        Name  		       Action   MeshMember
 /subscription/…/…/mbr-aks-member-2  "a400f86e"  mbr-aks-member-2   Add       -
 ```
 
-## Create cross-cluster network
+## Connect the cross-cluster network
 
 You can now apply the cross-cluster networking changes by omitting the `what-if` parameter from the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
 
 ```azurecli-interactive
-az fleet clustermeshprofile apply
+az fleet clustermeshprofile apply \
     --fleet-name ${FLEET} \
     --resource-group ${GROUP} \
     --name ${NETWORK_PROFILE_NAME} 
@@ -120,39 +120,92 @@ az fleet clustermeshprofile apply
 
 The cross-cluster network creation starts and Cilium multi-cluster configuration is applied to selected member clusters. The creation process is asynchronous, with the process duration determined by the number of clusters being updated.
 
-The apply operation runs to completion and can't be interrupted.
+The apply operation runs to completion and can't be interrupted. While it's running, you can monitor the network status of each member:
+
+```azurecli-interactive
+az fleet clustermeshprofile list-members \
+    --fleet-name ${FLEET} \
+    --resource-group ${GROUP} \
+    --name ${NETWORK_PROFILE_NAME} \
+    --query "[].{name: name, state: meshProperties.status.state}" \
+    -o table
+```
+
+```output
+Name              State
+----------------  ----------
+mbr-aks-member-1  Connecting
+mbr-aks-member-2  Connecting
+```
+
+You can also monitor the status of the overall operation:
+
+```azurecli-interactive
+az fleet clustermeshprofile show \
+    --fleet-name ${FLEET} \
+    --resource-group ${GROUP} \
+    --name ${NETWORK_PROFILE_NAME} \
+    --query "properties.status.state" \
+    -o tsv
+```
+
+## Confirm cross-cluster network connection via the dataplane
+
+Once the members' states are showing as `Connected`, the cross-cluster network is established.
+
+You can confirm the successful connection using standard dataplane tools such as the Cilium CLI. First, obtain the Kubernetes access credentials for both member clusters using [`az aks get-credentials`][az-aks-get-credentials], setting `context` appropriately.
+
+```azurecli-interactive
+az aks get-credentials \
+    --resource-group $RESOURCE_GROUP \
+    --name $AKS_CLUSTER_1 \
+    --context cluster1
+```
+
+Then, use the Cilium CLI's status command to see that all member clusters are connected:
+
+```bash
+cilium clustermesh status --context cluster1
+```
+
+```output
+✅ Cluster access information is available:
+  - 10.168.0.89:2379
+✅ Service "clustermesh-apiserver" of type "LoadBalancer" found
+✅ All 2 nodes are connected to all clusters [min:1 / avg:1.0 / max:1]
+🔌 Cluster Connections:
+- mbr-aks-member-2: 2/2 configured, 2/2 connected
+```
 
 ## Test load balancing and service discovery
 
 Once the cross-cluster network is created successfully, you can test load balancing out by following the [official Cilium multi-cluster example][cilium-example], or using the steps shown next. The steps in this document provide extra guidance on working with AKS clusters and Fleet Manager.
 
-* Obtain the Kubernetes access credentials for both member clusters using [`az aks get-credentials`][az-aks-get-credentials], setting `context` appropriately.
+> [!NOTE]
+> Fleet Manager's managed Cilium multi-cluster installation sets `clustermesh-default-global-namespace: false`, which differs from the upstream Cilium default. A `clustermesh.cilium.io/global="true"` annotation must be set on the Namespace to opt in to cross-cluster service sharing. Without it, the per-Service `service.cilium.io/global` annotation has no effect.
 
-    ```azurecli-interactive
-    az aks get-credentials \
-        --resource-group $RESOURCE_GROUP \
-        --name $AKS_CLUSTER_1 \
-        --context cluster1
-    ```
-
-* On `mbr-aks-member-1` apply the `Deployment` and `Service` resources required, ensuring to use the `cluster1.yaml` manifest.
+* On `mbr-aks-member-1` create a dedicated namespace and annotate it so Services within it are eligible to be shared across the cross-cluster network. Then apply the `Deployment` and `Service` resources using the `cluster1.yaml` manifest.
 
     ```bash
-    kubectl --context=cluster1 apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/cluster1.yaml
-    kubectl --context=cluster1 apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/global-service-example.yaml
+    kubectl --context=cluster1 create namespace rebel-base-demo
+    kubectl --context=cluster1 annotate namespace rebel-base-demo clustermesh.cilium.io/global="true" --overwrite
+    kubectl --context=cluster1 -n rebel-base-demo apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/cluster1.yaml
+    kubectl --context=cluster1 -n rebel-base-demo apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/global-service-example.yaml
     ```
 
 * On `mbr-aks-member-2` apply the equivalent, but this time use the `cluster2.yaml` manifest.
 
     ```bash
-    kubectl --context=cluster2 apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/cluster2.yaml
-    kubectl --context=cluster2 apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/global-service-example.yaml
+    kubectl --context=cluster2 create namespace rebel-base-demo
+    kubectl --context=cluster2 annotate namespace rebel-base-demo clustermesh.cilium.io/global="true" --overwrite
+    kubectl --context=cluster2 -n rebel-base-demo apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/cluster2.yaml
+    kubectl --context=cluster2 -n rebel-base-demo apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/global-service-example.yaml
     ```
 
 * Run the following command multiple times on each cluster. Observe the serving cluster changes, demonstrating the request is being served by multiple clusters despite calling the service on only one.
 
     ```bash
-    kubectl --context=cluster1 exec -ti deployment/x-wing -- curl rebel-base
+    kubectl --context=cluster1 -n rebel-base-demo exec -ti deployment/x-wing -- curl rebel-base
     ```
     
     ```output
@@ -161,31 +214,31 @@ Once the cross-cluster network is created successfully, you can test load balanc
     {"Galaxy": "Alderaan", "Cluster": "Cluster-2"}
     ```
 
-* Remove the share annotation of the service from  `mbr-aks-member-1` (cluster 1).
+* Set the `clustermesh.cilium.io/global` annotation on the `rebel-base-demo` Namespace on `mbr-aks-member-1` (cluster 1) to `"false"` so Services in that Namespace are no longer shared across the cross-cluster network from cluster 1.
 
     ```bash
-    kubectl --context=cluster1 annotate service rebel-base service.cilium.io/shared="false" --overwrite
+    kubectl --context=cluster1 annotate namespace rebel-base-demo clustermesh.cilium.io/global="false" --overwrite
     ```
 
-* Let's validate `mbr-aks-member-1` (cluster 1) can still use the service, and `mbr-aks-member-2` (cluster 2) can't.
+* Let's validate `mbr-aks-member-1` (cluster 1) can reach the `rebel-base` Service on cluster 1, and `mbr-aks-member-2` (cluster 2) can't.
 
     ```bash
-    kubectl --context=cluster1 exec -ti deployment/x-wing -- curl rebel-base
+    kubectl --context=cluster1 -n rebel-base-demo exec -ti deployment/x-wing -- curl rebel-base
     ```
 
-    On cluster 1, we still receive responses from both clusters.
-    
+    On cluster 1, we only see local responses because the Namespace is no longer global and remote endpoints aren't imported.
+
     ```output
     {"Galaxy": "Alderaan", "Cluster": "Cluster-1"}
     {"Galaxy": "Alderaan", "Cluster": "Cluster-1"}
-    {"Galaxy": "Alderaan", "Cluster": "Cluster-2"}
+    {"Galaxy": "Alderaan", "Cluster": "Cluster-1"}
     ```
-        
+
     ```bash
-    kubectl --context=cluster2 exec -ti deployment/x-wing -- curl rebel-base
+    kubectl --context=cluster2 -n rebel-base-demo exec -ti deployment/x-wing -- curl rebel-base
     ```
-    
-    On cluster 2, we only see local responses and the service on cluster 1 is no longer shared.
+
+    On cluster 2, we only see local responses because the Service on cluster 1 is no longer shared.
     
     ```output
     {"Galaxy": "Alderaan", "Cluster": "Cluster-2"}
@@ -195,11 +248,11 @@ Once the cross-cluster network is created successfully, you can test load balanc
 
 ## Updating a cross-cluster network
 
-The process of adding or removing clusters has been demonstrated in this guide, but can be summarized as:
+The process of adding or removing clusters is demonstrated in this guide, but can be summarized as:
 
 1. Modify labels on the Fleet Manager member clusters to be added or removed.
 1. Review cross-cluster networking changes by using the `whatif` parameter with the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
-1. Once satisified with the changes, apply them by running the same command, omitting the `whatif` parameter.
+1. Once satisfied with the changes, apply them by running the same command, omitting the `whatif` parameter.
 
 Reviewing the changes is optional, but recommended, especially for larger cross-cluster networks where any change can take some time to complete.
 
