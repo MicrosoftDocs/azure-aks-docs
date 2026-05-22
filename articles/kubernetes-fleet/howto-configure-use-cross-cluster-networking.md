@@ -83,7 +83,7 @@ az fleet clustermeshprofile create \
     --member-label-selector "mesh=${NETWORK_NAME}"
 ```
 
-While a network profile is created as an Azure Resource, no Cilium multi-cluster configuration is applied on clusters.
+While a network profile is created as an Azure Resource, no Cilium multi-cluster configuration is yet applied on clusters. The following steps still need to be performed to apply and connect the cross-cluster network.
 
 ## Validate the selected clusters
 
@@ -107,7 +107,7 @@ ClusterResourceId    	            ETag        Name  		       Action   MeshMember
 /subscription/…/…/mbr-aks-member-2  "a400f86e"  mbr-aks-member-2   Add       -
 ```
 
-## Create cross-cluster network
+## Connect the cross-cluster network
 
 You can now apply the cross-cluster networking changes by omitting the `what-if` parameter from the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
 
@@ -120,13 +120,40 @@ az fleet clustermeshprofile apply
 
 The cross-cluster network creation starts and Cilium multi-cluster configuration is applied to selected member clusters. The creation process is asynchronous, with the process duration determined by the number of clusters being updated.
 
-The apply operation runs to completion and can't be interrupted.
+The apply operation runs to completion and can't be interrupted. While it's running, you can monitor the network status of each member:
 
-## Test load balancing and service discovery
+```azurecli-interactive
+az fleet clustermeshprofile list-members
+    --fleet-name ${FLEET} \
+    --resource-group ${GROUP} \
+    --name ${NETWORK_PROFILE_NAME} \
+    --query "[].{name: name, state: meshProperties.status.state}" \
+    -o table
+```
 
-Once the cross-cluster network is created successfully, you can test load balancing out by following the [official Cilium multi-cluster example][cilium-example], or using the steps shown next. The steps in this document provide extra guidance on working with AKS clusters and Fleet Manager.
+```output
+Name              State
+----------------  ----------
+mbr-aks-member-1  Connecting
+mbr-aks-member-2  Connecting
+```
 
-* Obtain the Kubernetes access credentials for both member clusters using [`az aks get-credentials`][az-aks-get-credentials], setting `context` appropriately.
+You can also monitor the status of the overall operation:
+
+```azurecli-interactive
+az fleet clustermeshprofile show
+    --fleet-name ${FLEET} \
+    --resource-group ${GROUP} \
+    --name ${NETWORK_PROFILE_NAME} \
+    --query "properties.status.state" \
+    -o tsv
+```
+
+## Confirm cross-cluster network connection via the dataplane
+
+Once the members' states are showing as `Connected`, the cross-cluster network has been established.
+
+You can confirm the successful connection using standard dataplane tools such as the Cilium CLI. First, obtain the Kubernetes access credentials for both member clusters using [`az aks get-credentials`][az-aks-get-credentials], setting `context` appropriately.
 
     ```azurecli-interactive
     az aks get-credentials \
@@ -135,7 +162,29 @@ Once the cross-cluster network is created successfully, you can test load balanc
         --context cluster1
     ```
 
-* On `mbr-aks-member-1` create a dedicated namespace and annotate it so Services within it are eligible to be shared across the cross-cluster network. Then apply the `Deployment` and `Service` resources required, ensuring to use the `cluster1.yaml` manifest.
+Then, use the Cilium CLI's status command to see that all member clusters are connected:
+
+```bash
+cilium clustermesh status --context cluster1
+```
+
+```output
+✅ Cluster access information is available:
+  - 10.168.0.89:2379
+✅ Service "clustermesh-apiserver" of type "LoadBalancer" found
+✅ All 2 nodes are connected to all clusters [min:1 / avg:1.0 / max:1]
+🔌 Cluster Connections:
+- mbr-aks-member-2: 2/2 configured, 2/2 connected
+```
+
+## Test load balancing and service discovery
+
+Once the cross-cluster network is created successfully, you can test load balancing out by following the [official Cilium multi-cluster example][cilium-example], or using the steps shown next. The steps in this document provide extra guidance on working with AKS clusters and Fleet Manager.
+
+    > [!NOTE]
+    > Fleet Manager's managed Cilium multi-cluster installation sets `clustermesh-default-global-namespace: false`, which differs from the upstream Cilium default. A `clustermesh.cilium.io/global="true"` annotation must be set on the Namespace to opt in to cross-cluster service sharing. Without it, the per-Service `service.cilium.io/global` annotation has no effect.
+
+* On `mbr-aks-member-1` create a dedicated namespace and annotate it so Services within it are eligible to be shared across the cross-cluster network. Then apply the `Deployment` and `Service` resources using the `cluster1.yaml` manifest.
 
     ```bash
     kubectl --context=cluster1 create namespace rebel-base-demo
@@ -143,9 +192,6 @@ Once the cross-cluster network is created successfully, you can test load balanc
     kubectl --context=cluster1 -n rebel-base-demo apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/cluster1.yaml
     kubectl --context=cluster1 -n rebel-base-demo apply -f https://raw.githubusercontent.com/cilium/cilium/refs/heads/main/examples/kubernetes/clustermesh/global-service-example.yaml
     ```
-
-    > [!NOTE]
-    > Fleet Manager's managed Cilium multi-cluster installation sets `clustermesh-default-global-namespace: false`, which departs from the upstream Cilium default. The `clustermesh.cilium.io/global="true"` annotation on the Namespace is required to opt in to cross-cluster service sharing. Without it, the per-Service `service.cilium.io/global` annotation has no effect.
 
 * On `mbr-aks-member-2` apply the equivalent, but this time use the `cluster2.yaml` manifest.
 
@@ -174,10 +220,7 @@ Once the cross-cluster network is created successfully, you can test load balanc
     kubectl --context=cluster1 annotate namespace rebel-base-demo clustermesh.cilium.io/global="false" --overwrite
     ```
 
-    > [!NOTE]
-    > In upstream Cilium, the `service.cilium.io/shared` annotation can also be used to toggle sharing of an already-global Service. In Fleet Manager's managed deployment, you control sharing through the Namespace-level `clustermesh.cilium.io/global` annotation and the per-Service `service.cilium.io/global` annotation.
-
-* Let's validate that neither cluster can reach the `rebel-base` Service on cluster 1 across the cross-cluster network.
+* Let's validate `mbr-aks-member-1` (cluster 1) can reach the `rebel-base` Service on cluster 1, and `mbr-aks-member-2` (cluster 2) can't.
 
     ```bash
     kubectl --context=cluster1 -n rebel-base-demo exec -ti deployment/x-wing -- curl rebel-base
