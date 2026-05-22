@@ -1200,7 +1200,7 @@
           href: use-amd-gpus.md
         - name: GPU best practices
           href: best-practices-gpu.md
-MaM        - name: GPU node partitioning strategies
+        - name: GPU node partitioning strategies
           href: concepts-gpu-partitioning.md
         - name: Multi-instance GPU node pool
           href: gpu-multi-instance.md

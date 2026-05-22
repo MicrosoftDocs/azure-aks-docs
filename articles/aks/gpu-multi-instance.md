@@ -271,9 +271,8 @@ If you don't see multi-instance GPU capability after creating the node pool, con
 To learn more about GPUs on Azure Kubernetes Service, see:
 
 * [AKS-managed GPU node pools (preview)](./aks-managed-gpu-nodes.md) for a fully managed MIG experience with driver, device plugin, and DCGM metrics exporter included.
-* [Create a Linux GPU-enabled node pool on AKS](./gpu-cluster.md).
-* [Create a Windows GPU-enabled node pool on AKS](./use-windows-gpu.md)
-* [Learn about use cases for GPU workloads on AKS](/azure/architecture/reference-architectures/containers/aks-gpu/gpu-aks)
+* [Compare different NVIDIA GPU partitioning strategies](./concepts-gpu-partitioning.md) available on your AKS nodes.
+* [Learn about use cases for GPU workloads on AKS](/azure/architecture/reference-architectures/containers/aks-gpu/gpu-aks).
 
 <!-- LINKS - internal -->
 [az-group-create]: /cli/azure/group#az-group-create
