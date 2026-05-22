@@ -15,6 +15,9 @@ Certain NVIDIA GPUs can be divided in up to seven independent instances. Each in
 
 This article walks you through how to create a multi-instance GPU node pool using a MIG-compatible VM size in an Azure Kubernetes Service (AKS) cluster.
 
+> [!TIP]
+> For a fully managed MIG experience where AKS installs and maintains the NVIDIA driver, device plugin, and DCGM metrics exporter, see [Create a managed Multi-Instance GPU (MIG) node pool (preview)](./aks-managed-gpu-nodes.md#create-a-managed-multi-instance-gpu-mig-node-pool-preview).
+
 ## Prerequisites and limitations
 
 * An Azure account with an active subscription. If you don't have one, you can [create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
@@ -104,7 +107,7 @@ You can use either the Azure CLI or an HTTP request to the ARM API to create the
 Before you install the NVIDIA plugins, you need to specify which multi-instance GPU (MIG) strategy to use for GPU partitioning: *Single strategy* or *Mixed strategy*. The two strategies don't affect how you execute CPU workloads, but how GPU resources are displayed.
 
 * **Single strategy**: The single strategy treats every GPU instance as a GPU. If you use this strategy, the GPU resources are displayed as `nvidia.com/gpu: 1`.
-* **Mixed strategy**: The mixed strategy exposes the GPU instances and the GPU instance profile. If you use this strategy, the GPU resource are displayed as `nvidia.com/mig1g.5gb: 1`.
+* **Mixed strategy**: The mixed strategy exposes the GPU instances and the GPU instance profile. If you use this strategy, the GPU resources are displayed as `nvidia.com/mig1g.5gb: 1`.
 
 ## Install the NVIDIA device plugin and GPU feature discovery (GFD) components
 
@@ -267,9 +270,10 @@ If you don't see multi-instance GPU capability after creating the node pool, con
 
 To learn more about GPUs on Azure Kubernetes Service, see:
 
-* [Create a managed GPU node pool on AKS](./aks-managed-gpu-nodes.md).
-* [Compare different NVIDIA GPU partitioning strategies](./concepts-gpu-partitioning.md) available on your AKS nodes.
-* [Learn about use cases for GPU workloads on AKS](/azure/architecture/reference-architectures/containers/aks-gpu/gpu-aks).
+* [AKS-managed GPU node pools (preview)](./aks-managed-gpu-nodes.md) for a fully managed MIG experience with driver, device plugin, and DCGM metrics exporter included.
+* [Create a Linux GPU-enabled node pool on AKS](./gpu-cluster.md).
+* [Create a Windows GPU-enabled node pool on AKS](./use-windows-gpu.md)
+* [Learn about use cases for GPU workloads on AKS](/azure/architecture/reference-architectures/containers/aks-gpu/gpu-aks)
 
 <!-- LINKS - internal -->
 [az-group-create]: /cli/azure/group#az-group-create

@@ -1,14 +1,13 @@
 ---
-title: Kubernetes on Azure tutorial - Prepare an application for Azure Kubernetes Service (AKS)
+title: Kubernetes on Azure tutorial - Prepare an Application for Azure Kubernetes Service (AKS)
 description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to prepare and build a multi-container app with Docker Compose that you can then deploy to AKS.
 ms.topic: tutorial
 ms.date: 09/06/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: mvc, devx-track-extended-azdevcli
-
+ms.service: azure-kubernetes-service
 # Customer intent: As a developer, I want to learn how to build a container-based application so that I can deploy the app to Azure Kubernetes Service.
-
 ---
 
 # Tutorial - Prepare an application for Azure Kubernetes Service (AKS)
@@ -47,7 +46,7 @@ The [sample application][sample-application] used in this tutorial is a basic st
 - **Store front**: Web application for customers to view products and place orders.
 - **Product service**: Shows product information.
 - **Order service**: Places orders.
-- **Rabbit MQ**: Message queue for an order queue.
+- **RabbitMQ**: Message queue for an order queue.
 
 ### [Git](#tab/azure-cli)
 
@@ -183,11 +182,7 @@ networks:
 
 ## Create container images and run application
 
-### [Docker](#tab/azure-cli)
-
 You can use [Docker Compose][docker-compose] to automate building container images and the deployment of multi-container applications.
-
-### Docker
 
 1. Create the container image, download the RabbitMQ image, and start the application using the `docker compose` command:
 
@@ -239,13 +234,13 @@ On this page, you can view products, add them to your cart, and then place an or
 
 Since you validated the application's functionality, you can stop and remove the running containers. **Do not delete the container images** because you use them in the next tutorial.
 
-Stop and remove the container instances and resources using the [`docker-compose down`][docker-compose-down] command.
+Stop and remove the container instances and resources using the [`docker compose down`][docker-compose-down] command.
 
 ```console
 docker compose down
 ```
 
-### [Azure Developer CLI](#tab/azure-azd)
+## Azure Developer CLI commands
 
 When you use `azd`, there are no manual container image dependencies. `azd` handles the provisioning, deployment, and clean up of your applications and clusters with the `azd up` and `azd down` commands, similar to Docker.
 
@@ -269,7 +264,7 @@ infra:
 
 ## Next steps
 
-### [Azure CLI](#tab/azure-cli)
+### Azure CLI
 
 In this tutorial, you created a sample application, created container images for the application, and then tested the application. You learned how to:
 
@@ -284,7 +279,7 @@ In the next tutorial, you learn how to store container images in an ACR.
 > [!div class="nextstepaction"]
 > [Push images to Azure Container Registry][aks-tutorial-prepare-acr]
 
-### [Azure Developer CLI](#tab/azure-azd)
+### Azure Developer CLI
 
 In this tutorial, you cloned a sample application using `azd`. You learned how to:
 

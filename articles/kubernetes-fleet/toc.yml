@@ -128,6 +128,8 @@
           href: howto-managed-namespaces-access.md
     - name: Configure and operate multi-cluster networking
       items:
+        - name: Cross-cluster networking for global services
+          href: howto-configure-use-cross-cluster-networking.md
         - name: Resilient public DNS load balancing
           href: howto-dns-load-balancing.md
         - name: Multi-cluster Services with layer 4 load balancing

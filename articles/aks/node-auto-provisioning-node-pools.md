@@ -97,36 +97,34 @@ The following sections outline various configuration options for `NodePools` in 
 
 Kubernetes defines [well-known labels](https://kubernetes.io/docs/reference/labels-annotations-taints/) that Azure implements. You can define these labels in the `spec.requirements` section of the `NodePool` API. NAP also supports Azure-specific labels for more advanced scheduling.
 
-**`karpenter.azure.com` SKU selectors**
+The following table lists the labels you can use in the `spec.requirements` section of your `NodePool` API to define VM characteristics for your nodes:
 
-The following table lists the `karpenter.azure.com` SKU selectors you can use in the `spec.requirements` section of your `NodePool` API to define VM characteristics for your nodes:
+| Selector                                              | Description                                                   | Example                         |
+| ----------------------------------------------------- | ------------------------------------------------------------- | ------------------------------- |
+| `karpenter.sh/capacity-type`                          | VM allocation type (Spot / On-demand)                         | Spot                            |
+| `karpenter.azure.com/sku-family`                      | VM SKU family                                                 | D, F, L, etc.                   |
+| `karpenter.azure.com/sku-series`                      | VM SKU series                                                 | Dpls_v6                         |
+| `karpenter.azure.com/sku-name`                        | Explicit SKU name                                             | Standard_A1_v2                  |
+| `karpenter.azure.com/sku-version`                     | SKU version (without "v", can use 1)                          | 1, 2                            |
+| `karpenter.azure.com/sku-cpu`                         | Number of CPUs in VM                                          | 16                              |
+| `karpenter.azure.com/sku-memory`                      | Memory in VM in MiB                                           | 131072                          |
+| `karpenter.azure.com/sku-gpu-name`                    | GPU name                                                      | A100                            |
+| `karpenter.azure.com/sku-gpu-manufacturer`            | GPU manufacturer                                              | nvidia                          |
+| `karpenter.azure.com/sku-gpu-count`                   | GPU count per VM                                              | 2                               |
+| `karpenter.azure.com/sku-networking-accelerated`      | Whether the VM has accelerated networking                     | [true, false]                   |
+| `karpenter.azure.com/sku-storage-premium-capable`     | Whether the VM supports Premium IO storage                    | [true, false]                   |
+| `karpenter.azure.com/sku-storage-ephemeralos-maxsize` | Size limit for the Ephemeral operating system (OS) disk in Gb | 92                              |
+| `kubernetes.azure.com/sku-cpu`                        | Number of CPUs in VM                                          | 16                              |
+| `kubernetes.azure.com/sku-memory`                     | Memory in VM in MiB                                           | 131072                          |
+| `kubernetes.azure.com/cluster`                        | AKS cluster name                                              | my-cluster                      |
+| `kubernetes.azure.com/mode`                           | Node pool mode                                                | [system, user]                  |
+| `kubernetes.azure.com/priority`                       | Priority                                                      | [spot, regular]                 |
+| `kubernetes.azure.com/os-sku`                         | Operating system SKU                                          | [Ubuntu, AzureLinux]            |
+| `kubernetes.azure.com/fips_enabled`                   | Whether FIPS is enabled                                       | true                            |
+| `topology.kubernetes.io/zone`                         | Availability zone(s)                                          | [uksouth-1,uksouth-2,uksouth-3] |
+| `kubernetes.io/os`                                    | Operating system                                              | linux                           |
+| `kubernetes.io/arch`                                  | CPU architecture (AMD64 or ARM64)                             | [amd64, arm64]                  |
 
-| Selector                                              | Description                                                   | Example        |
-| ----------------------------------------------------- | ------------------------------------------------------------- | -------------- |
-| `karpenter.azure.com/sku-family`                      | VM SKU family                                                 | D, F, L, etc.  |
-| `karpenter.azure.com/sku-name`                        | Explicit SKU name                                             | Standard_A1_v2 |
-| `karpenter.azure.com/sku-version`                     | SKU version (without "v", can use 1)                          | 1, 2           |
-| `karpenter.sh/capacity-type`                          | VM allocation type (Spot / On-demand)                         | Spot           |
-| `karpenter.azure.com/sku-cpu`                         | Number of CPUs in VM                                          | 16             |
-| `karpenter.azure.com/sku-memory`                      | Memory in VM in MiB                                           | 131072         |
-| `kubernetes.azure.com/sku-cpu`                        | Number of CPUs in VM                                          | 16             |
-| `kubernetes.azure.com/sku-memory`                     | Memory in VM in MiB                                           | 131072         |
-| `karpenter.azure.com/sku-gpu-name`                    | GPU name                                                      | A100           |
-| `karpenter.azure.com/sku-gpu-manufacturer`            | GPU manufacturer                                              | nvidia         |
-| `karpenter.azure.com/sku-gpu-count`                   | GPU count per VM                                              | 2              |
-| `karpenter.azure.com/sku-networking-accelerated`      | Whether the VM has accelerated networking                     | [true, false]  |
-| `karpenter.azure.com/sku-storage-premium-capable`     | Whether the VM supports Premium IO storage                    | [true, false]  |
-| `karpenter.azure.com/sku-storage-ephemeralos-maxsize` | Size limit for the Ephemeral operating system (OS) disk in Gb | 92             |
-
-**`kubernetes.io` well-known labels**
-
-The following table lists the `kubernetes.io` well-known labels you can use in the `spec.requirements` section of your `NodePool` API to define node characteristics for your nodes:
-
-| Label                         | Description                       | Example                         |
-| ----------------------------- | --------------------------------- | ------------------------------- |
-| `topology.kubernetes.io/zone` | Availability zone(s)              | [uksouth-1,uksouth-2,uksouth-3] |
-| `kubernetes.io/os`            | Operating system                  | linux                           |
-| `kubernetes.io/arch`          | CPU architecture (AMD64 or ARM64) | [amd64, arm64]                  |
 
 #### SKU family examples
 

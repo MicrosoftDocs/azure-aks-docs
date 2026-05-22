@@ -1,7 +1,7 @@
 ---
 title: "Cross-cluster networking for Azure Kubernetes Fleet Manager"
 description: This article provides a conceptual overview of Cross-cluster networking for Azure Kubernetes Fleet Manager. 
-ms.date: 04/14/2026
+ms.date: 05/14/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,6 +10,8 @@ ms.topic: concept-article
 ---
 
 # Cross-cluster networking for Azure Kubernetes Fleet Manager (preview)
+
+**Applies to**: :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 Azure Kubernetes Fleet Manager provides a dedicated cross-cluster networking solution that extends the Kubernetes datapath across multiple clusters. Using cross-cluster networking enables any connected cluster to communicate directly with endpoints on any other connected cluster with full network‑policy enforcement. Using cross-cluster networking allowing clusters to publish services such that any connected cluster can call them as if they were local.
 
@@ -41,9 +43,17 @@ For traffic flow control, Cilium network policies ([CiliumNetworkPolicy][cilium-
 
 ## Defining global services
 
-Kubernetes [Services][kube-services] on any cross-cluster networking member can be made globally available on the cross-cluster network by adding an annotation of `service.cilium.io/global` with the value set to `true`. Deploying the Service with this annotation to multiple cross-cluster networking member clusters transparently load balances requests across those clusters.
+Kubernetes [Services][kube-services] on any cross-cluster networking member can be made globally available on the cross-cluster network when **both** of the following conditions are met:
 
-You can temporarily remove a cluster from a load balanced global service by adding an annotation of `service.cilium.io/shared` with a value of `false`. Using the approach is useful if you don't wish to completely remove the Service or cluster.   
+* The Namespace containing the Service has the annotation `clustermesh.cilium.io/global` with a value of `true`.
+* The Service has the annotation `service.cilium.io/global` with a value of `true`.
+
+Deploying a Service with these annotations to multiple cross-cluster networking member clusters transparently load balances requests across those clusters.
+
+> [!NOTE]
+> Fleet Manager's managed Cilium multi-cluster installation sets `clustermesh-default-global-namespace: false`, which differs from the Cilium default. This setting improves scalability by limiting the amount of state (CiliumEndpoints, CiliumIdentities, and Services) synchronized across clusters to only those resources in Namespaces with the `clustermesh.cilium.io/global` annotation set to a value of `true`. As a result, explicit opt-in is required per Namespace by setting that annotation.
+
+You can temporarily remove a Service from a load balanced global service by removing the `service.cilium.io/global` annotation (or setting it to `false`) on that Service. To stop sharing every Service in a Namespace from a given cluster, remove the `clustermesh.cilium.io/global` annotation on the Namespace (or set it to `false`) on that cluster.
 
 ## Debugging and troubleshooting
 
@@ -68,10 +78,11 @@ This approach means you can use Fleet Manager's [Update Runs and Strategies][fle
 ## Next steps
 
 * [Track availability of this preview][track-preview].
-
+* [How to: Configure and use Fleet Manager Cross Cluster Connectivity (preview)][howto-configure-cross-cluster]
 
 <!-- INTERNAL LINKS -->
 [aks-acns-enabled]: ../aks/use-advanced-container-networking-services.md?pivots=cilium
+[howto-configure-cross-cluster]: ./howto-configure-use-cross-cluster-networking.md
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [fleet-update-runs]: ./concepts-update-orchestration.md
 [flat-network]: ../aks/concepts-network-cni-overview.md#flat-networks

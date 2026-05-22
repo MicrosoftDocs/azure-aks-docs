@@ -162,7 +162,7 @@
                   href: istio-deploy-addon.md
                 - name: Native sidecar mode
                   href: istio-native-sidecar.md
-                - name: Istio CNI (Preview)
+                - name: Istio CNI
                   href: istio-cni.md
                 - name: Mesh configuration
                   href: istio-meshconfig.md
@@ -228,6 +228,8 @@
       items:
         - name: Node images
           href: node-images.md
+        - name: List available VM SKUs for cluster nodes
+          href: aks-list-skus.md
         - name: Custom node configuration
           href: custom-node-configuration.md
         - name: Abort long running operations
@@ -248,6 +250,8 @@
           href: node-auto-repair.md
         - name: Node auto-drain
           href: node-auto-drain.md
+        - name: Configure pod eviction for freeze events
+          href: node-auto-drain-evict-on-freeze.md
         - name: Node Problem Detector (NPD)
           href: node-problem-detector.md
     - name: Node pools
@@ -707,7 +711,7 @@
                     href: container-network-security-l7-policy-concepts.md
                   - name: Set up Layer 7 policies
                     href: how-to-apply-l7-policies.md
-      - name: Performance
+      - name: Performance and connectivity
         items:
           - name: Container Network Performance
             items:
@@ -715,6 +719,10 @@
                 href: container-network-performance-ebpf-host-routing.md
               - name: Set up eBPF Host routing
                 href: how-to-enable-ebpf-host-routing.md
+          - name: Cross-cluster networking
+            items:
+              - name: Use cases (Preview)
+                href: cross-cluster-networking-fleet-use-cases.md
       - name: Improve network fault tolerance using TCP keep-alive
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
 - name: Scheduling
@@ -924,6 +932,10 @@
       items:
         - name: Vulnerability management overview
           href: concepts-vulnerability-management.md
+        - name: AKS Vulnerability Data API overview
+          href: concepts-security-vulnerability-data-api.md
+        - name: Use the AKS Vulnerability Data API
+          href: security-vulnerability-api-reference.md
         - name: Subscribe to AKS security bulletins
           href: security-bulletins/overview.md
         - name: Container image management best practices
@@ -1016,6 +1028,8 @@
       href: concepts-storage.md
     - name: Best practices for storage and backups
       href: operator-best-practices-storage.md
+    - name: Create and manage storage in the Azure portal
+      href: use-storage-in-the-azure-portal.md
     - name: CSI storage drivers
       items:
         - name: Overview of CSI storage drivers
@@ -1192,6 +1206,8 @@ MaM        - name: GPU node partitioning strategies
           href: gpu-multi-instance.md
         - name: Monitor GPU metrics
           href: monitor-gpu-metrics.md
+        - name: GPU observability best practices
+          href: best-practices-gpu-observability.md
         - name: Autoscale GPU workloads with KEDA
           href: autoscale-gpu-workloads-with-keda.md
         - name: Set up NVIDIA GPU Operator

@@ -1,13 +1,14 @@
 ---
-title: Use the Azure Key Vault provider for Secrets Store CSI Driver for Azure Kubernetes Service (AKS) secrets
+title: Use the Azure Key Vault Provider for Secrets Store CSI Driver for Azure Kubernetes Service (AKS) Secrets
 description: Learn how to use the Azure Key Vault provider for Secrets Store CSI Driver to integrate secrets stores with Azure Kubernetes Service (AKS).
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
-ms.date: 04/03/2026
+ms.service: azure-kubernetes-service
+ms.date: 05/05/2026
 ms.custom: template-how-to, devx-track-azurecli, biannual
-
+zone_pivot_groups: cli-terraform-csi-driver
 # Customer intent: As a Kubernetes administrator, I want to integrate Azure Key Vault with my AKS cluster using the Secrets Store CSI Driver, so that I can securely manage and access secrets, keys, and certificates within my applications.
 ---
 
@@ -32,8 +33,27 @@ The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI)
 
 ## Prerequisites
 
+:::zone pivot="azure-cli-create, azure-cli-update"
+
 - If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 - Check that your version of the Azure CLI is 2.30.0 or later. If it's an earlier version, [install the latest version](/cli/azure/install-azure-cli).
+
+:::zone-end
+
+
+:::zone pivot="terraform-create, terraform-update"
+
+- If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
+- Terraform that's version 1.6 or later.
+- Azure CLI installed and logged in. [install the latest version](/cli/azure/install-azure-cli).
+- Permissions to create AKS and Key Vault resources.
+- Set your Azure subscription in the Azure CLI with the following command. Replace `<subscriptionId>` with your subscription ID.
+
+  ```azurecli-interactive
+  az account set --subscription <subscriptionId>
+  ```
+
+:::zone-end
 
 ### Network
 
@@ -46,9 +66,10 @@ The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI)
 - This article uses the [Key Vault Secrets Officer][key-vault-secrets-officer] role to give your account permission to create a secret in the key vault.
 - In the article to [provide Azure Key Vault access](csi-secrets-store-identity-access.md), the identity used with the `SecretProviderClass` needs [Key Vault Certificate User][key-vault-certificate-user] to access `key` or `certificate` [object types][keyvault-object-types] and [Key Vault Secrets User][key-vault-secrets-user] to access `secret` [object type][keyvault-object-types].
 
-## Create or update an AKS cluster
 
-# [Create AKS cluster](#tab/create-aks-cluster)
+:::zone pivot="azure-cli-create"
+
+## Create an AKS cluster
 
 Create an AKS cluster with Azure Key Vault provider for Secrets Store CSI Driver support.
 
@@ -85,7 +106,73 @@ Create an AKS cluster with Azure Key Vault provider for Secrets Store CSI Driver
     > [!TIP]
     > If you want to use Microsoft Entra Workload ID, the `az aks create` command must include the `--enable-oidc-issuer` and `--enable-workload-identity` parameters.
 
-# [Update AKS cluster](#tab/update-aks-cluster)
+:::zone-end
+
+
+:::zone pivot="terraform-create"
+
+## Create an AKS cluster
+
+Create a _main.tf_ file with the following configuration to create an AKS cluster with Azure Key Vault provider for Secrets Store CSI Driver support.
+
+1. Create the Terraform configuration.
+
+    ```terraform
+    terraform {
+     required_version = ">= 1.6.0"
+     required_providers {
+       azurerm = {
+         source  = "hashicorp/azurerm"
+         version = "~> 4.0"
+       }
+     }
+    }
+    provider "azurerm" {
+     features {}
+    }
+    data "azurerm_client_config" "current" {}
+    resource "azurerm_resource_group" "rg" {
+     name     = "aks-rg"
+     location = "East US"
+    }
+    ```
+
+1. Create the AKS cluster.
+
+    ```terraform
+    resource "azurerm_kubernetes_cluster" "aks" {
+     name                = "aks-cluster"
+     location            = azurerm_resource_group.rg.location
+     resource_group_name = azurerm_resource_group.rg.name
+     dns_prefix          = "akscsi"
+     default_node_pool {
+       name       = "system"
+       node_count = 1
+       vm_size    = "Standard_DS2_v2"
+     }
+     identity {
+       type = "SystemAssigned"
+     }
+     key_vault_secrets_provider {
+       secret_rotation_enabled = false
+     }
+    }
+    ```
+
+1. Deploy the configuration. Form a Bash session, run the following commands to deploy the resources:
+
+    ```bash
+    terraform init
+    terraform validate
+    terraform plan
+    terraform apply
+    ```
+
+:::zone-end
+
+:::zone pivot="azure-cli-update"
+
+## Update an existing AKS cluster
 
 Update an existing AKS cluster with Azure Key Vault provider for Secrets Store CSI Driver support.
 
@@ -114,16 +201,58 @@ Update an existing AKS cluster with Azure Key Vault provider for Secrets Store C
 
     After you enable the Azure Key Vault secret provider, AKS creates a managed identity named  `azurekeyvaultsecretsprovider-xxxx` that you can use to authenticate to your key vault. The managed identity is stored in the node resource group (`MC_`) and is automatically assigned to the Virtual Machine Scale Set. You can use this managed identity or your own managed identity to access the key vault. It's not supported to prevent creation of the identity.
 
----
+:::zone-end
 
-## Verify the managed identity
+
+:::zone pivot="terraform-update"
+
+## Update an existing AKS cluster
+
+Create a _main.tf_ file with the following configuration to update an existing AKS cluster with Azure Key Vault provider for Secrets Store CSI Driver support.
+
+1. Update and existing AKS cluster.
+
+    ```terraform
+    resource "azurerm_kubernetes_cluster" "aks" {
+     name                = "<existing-cluster>"
+     resource_group_name = "<resource-group>"
+     key_vault_secrets_provider {
+       secret_rotation_enabled = false
+     }
+    }
+    ```
+
+1. Deploy the configuration. Form a Bash session, run the following commands to deploy the configuration:
+
+    ```bash
+    Run the following commands to apply the updates:
+
+    terraform init
+    terraform validate
+    terraform plan
+    terraform apply
+    ```
+
+:::zone-end
+
+
+:::zone pivot="azure-cli-create, azure-cli-update, terraform-create, terraform-update"
+
+### Verify the managed identity and key vault provider installation
+
+If you used Terraform to create a new cluster or update an existing cluster, you need to replace the variables like `$CLUSTER_NAME` in the following commands with the values you used in your Terraform configuration.
+
+#### Verify the managed identity
 
 Use the following steps to verify the managed identity was created and assigned to the cluster's Virtual Machine Scale Set.
 
 1. Verify the managed identity was created and assigned to the cluster using the [`az aks show`][az-aks-show] command.
 
     ```azurecli-interactive
-    az aks show --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --query addonProfiles
+    az aks show \
+      --name $CLUSTER_NAME \
+      --resource-group $RESOURCE_GROUP \
+      --query addonProfiles
     ```
 
     ```output
@@ -145,7 +274,7 @@ Use the following steps to verify the managed identity was created and assigned 
 
     The `resourceId` property shows the resource group and the identity's name `azurekeyvaultsecretsprovider-myakscluster`.
 
-1. Verify the manged identity is assigned to node resource group's Virtual Machine Scale Set.
+1. Verify the managed identity is assigned to node resource group's Virtual Machine Scale Set.
 
     ```azurecli-interactive
     NODE_RG=$(az aks show \
@@ -163,7 +292,7 @@ Use the following steps to verify the managed identity was created and assigned 
     The output shows the Virtual Machines Scale sets `Microsoft.Compute/virtualMachineScaleSets` resource ID and the `userAssignedIdentities` property with a resource ID for `azurekeyvaultsecretsprovider-myakscluster` that confirms the identity is assigned to the Virtual Machine Scale Set.
 
 
-## Verify the Azure Key Vault provider for Secrets Store CSI Driver installation
+#### Verify the Azure Key Vault provider for Secrets Store CSI Driver installation
 
 1. Get the AKS cluster credentials using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
@@ -179,7 +308,7 @@ Use the following steps to verify the managed identity was created and assigned 
     kubectl get pods -n kube-system -l 'app in (secrets-store-csi-driver,secrets-store-provider-azure)' -o wide
     ```
 
-    The `o wide` flag includes the node that each pod is running on in the output.
+    The `-o wide` flag includes the node that each pod is running on in the output.
 
     Your output should look similar to the following example output:
 
@@ -193,41 +322,50 @@ Use the following steps to verify the managed identity was created and assigned 
     aks-secrets-store-provider-azure-f5qlm   1/1     Running   0          4m25s  aks-nodepool1-12345678-vmss000002
     ```
 
-## Create or use an existing Azure Key Vault
+:::zone-end
 
-Create or update a key vault with Azure role-based access control (Azure RBAC) enabled using the [`az keyvault create`][az-keyvault-create] command or the [`az keyvault update`][az-keyvault-update] command with the `--enable-rbac-authorization` flag.
+:::zone pivot="azure-cli-create"
 
-Azure RBAC is enabled by default when you create a new key vault even if you don't include the `--enable-rbac-authorization` parameter. The parameter is needed when you update an existing key vault that has Azure RBAC disabled.
+## Create new key vault
+
+Run the [`az keyvault create`][az-keyvault-create] command to create a new key vault with Azure RBAC enabled.
+
+```azurecli-interactive
+az keyvault create \
+  --name $KEYVAULT_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --location $LOCATION \
+  --enable-rbac-authorization
+```
+
+Azure RBAC is enabled by default when you create a new key vault even if you don't include the `--enable-rbac-authorization` parameter.
+
+For more information about key vault permission models and Azure RBAC, see [Provide access to Key Vault keys, certificates, and secrets with an Azure role-based access control](/azure/key-vault/general/rbac-guide).
+
+:::zone-end
+
+
+:::zone pivot="azure-cli-update"
+
+## Update existing key vault
+
+Run the [`az keyvault update`][az-keyvault-update] command to update an existing key vault with Azure role-based access control (Azure RBAC). The `--enable-rbac-authorization` parameter is needed to enable Azure RBAC when you update an existing key vault that has Azure RBAC disabled.
+
+```azurecli-interactive
+az keyvault update \
+  --name $KEYVAULT_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --enable-rbac-authorization
+```
 
 For more information about key vault permission models and Azure RBAC, see [Provide access to Key Vault keys, certificates, and secrets with an Azure role-based access control](/azure/key-vault/general/rbac-guide)
 
+:::zone-end
 
-1. Enable Azure RBAC authorization for a new key vault or update an existing key vault.
 
-    # [Create new key vault](#tab/create-new-key-vault)
+:::zone pivot="azure-cli-create, azure-cli-update"
 
-    Run the [`az keyvault create`][az-keyvault-create] command to create a new key vault with Azure RBAC enabled.
-
-    ```azurecli-interactive
-    az keyvault create \
-      --name $KEYVAULT_NAME \
-      --resource-group $RESOURCE_GROUP \
-      --location $LOCATION \
-      --enable-rbac-authorization
-    ```
-
-    # [Update existing key vault](#tab/update-existing-key-vault)
-
-    If you have an existing key vault, run the [`az keyvault update`][az-keyvault-update] command to update the key vault and enable Azure RBAC.
-
-    ```azurecli-interactive
-    az keyvault update \
-      --name $KEYVAULT_NAME \
-      --resource-group $RESOURCE_GROUP \
-      --enable-rbac-authorization
-    ```
-
-    ---
+### Add role assignment and secret to key vault
 
 1. Run the [`az keyvault show`][az-keyvault-show] command to verify the key vault has Azure RBAC enabled.
 
@@ -281,15 +419,122 @@ For more information about key vault permission models and Azure RBAC, see [Prov
       --value MyAKSExampleSecret${RANDOM_STRING}
     ```
 
-1. Verify the secret was added to the key vault using the [`az keyvault secret show`][az-keyvault-secret-set] command.
+1. Verify the secret was added to the key vault using the [`az keyvault secret show`][az-keyvault-secret-show] command.
 
     ```azurecli-interactive
     az keyvault secret show --vault-name $KEYVAULT_NAME --name ExampleSecret
     ```
 
+:::zone-end
+
+:::zone pivot="terraform-create"
+
+## Create new key vault
+
+Update your _main.tf_ file to create a new key vault with Azure role-based access control (Azure RBAC) enabled.
+
+1. Create a new key vault with Azure RBAC enabled.
+
+    ```terraform
+    data "azurerm_client_config" "current" {}
+    resource "random_string" "suffix" {
+     length  = 5
+     special = false
+     upper   = false
+    }
+    resource "azurerm_key_vault" "kv" {
+     name                = "akskv${random_string.suffix.result}"
+     location            = azurerm_resource_group.rg.location
+     resource_group_name = azurerm_resource_group.rg.name
+     tenant_id           = data.azurerm_client_config.current.tenant_id
+     sku_name            = "standard"
+     enable_rbac_authorization = true
+    }
+    ```
+
+1. Assign Key Vault Secrets Officer role.
+
+    ```terraform
+    resource "azurerm_role_assignment" "kv_role" {
+     scope                = azurerm_key_vault.kv.id
+     role_definition_name = "Key Vault Secrets Officer"
+     principal_id         = data.azurerm_client_config.current.object_id
+    }
+    ```
+
+1. Create ExampleSecret in the key vault.
+
+    ```terraform
+    resource "azurerm_key_vault_secret" "example" {
+     name         = "ExampleSecret"
+     value        = "MyAKSExampleSecret"
+     key_vault_id = azurerm_key_vault.kv.id
+    }
+    ```
+
+1. Deploy the configuration. Form a Bash session, run the following commands to deploy the updated configuration:
+
+    ```bash
+    terraform plan
+    terraform apply
+    ```
+
+1. Verify ExampleSecret was added to the key vault using the [`az keyvault secret show`][az-keyvault-secret-show] command. Replace `<keyvault-name>` with the name of the key vault you created in your Terraform configuration.
+
+    ```azurecli-interactive
+    az keyvault secret show \
+     --vault-name <keyvault-name> \
+     --name ExampleSecret
+    ```
+
+:::zone-end
+
+
+:::zone pivot="terraform-update"
+
+## Update existing key vault
+
+Update your _main.tf_ file to update an existing key vault with Azure role-based access control (Azure RBAC) enabled.
+
+1. Update existing key vault to enable Azure RBAC.
+
+    ```terraform
+    resource "azurerm_key_vault" "kv" {
+     name                = "<existing-kv>"
+     resource_group_name = "<resource-group>"
+     enable_rbac_authorization = true
+    }
+    ```
+
+1. Assign role and add secret.
+
+    ```terraform
+    resource "azurerm_role_assignment" "kv_role" {
+     scope                = azurerm_key_vault.kv.id
+     role_definition_name = "Key Vault Secrets Officer"
+     principal_id         = data.azurerm_client_config.current.object_id
+    }
+    resource "azurerm_key_vault_secret" "example" {
+     name         = "ExampleSecret"
+     value        = "MyAKSExampleSecret"
+     key_vault_id = azurerm_key_vault.kv.id
+    }
+    ```
+
+1. Deploy the configuration. Form a Bash session, run the following commands to deploy the updated configuration:
+
+    ```bash
+    terraform plan
+    terraform apply
+    ```
+
+:::zone-end
+
 ## Clean up resources
 
 If you're going to the next article and need these resources, ignore the following steps. Otherwise, if you're finished and don't plan to continue to the next article, you should delete the resources created in this article to avoid unnecessary costs.
+
+:::zone pivot="azure-cli-create, azure-cli-update"
 
 1.  Remove your cluster's credentials from your local _.kube/config_ file.
 
@@ -303,6 +548,34 @@ If you're going to the next article and need these resources, ignore the followi
     ```azurecli-interactive
     az group delete --name $RESOURCE_GROUP --yes --no-wait
     ```
+:::zone-end
+
+
+:::zone pivot="terraform-create, terraform-update"
+
+The `terraform destroy` command removes all resources defined in the current Terraform configuration and state file. Only run this command from the working directory used for this article.
+
+> [!WARNING]
+> If you're working with existing or production resources, review the execution plan carefully before you run:
+>
+> `terraform plan -destroy`
+>
+> Avoid running `terraform destroy` against shared or imported infrastructure unless you're certain it's safe to remove. For more information, see the Terraform documentation for the [terraform destroy][terraform destroy] command.
+
+1.  Remove your cluster's credentials from your local _.kube/config_ file.
+
+    ```bash
+    KUBE_CONTEXT=$(kubectl config current-context)
+    kubectl config delete-context $KUBE_CONTEXT
+    ```
+
+1. Run the following command to remove the resources created in this article:
+
+    ```bash
+    terraform destroy
+    ```
+
+:::zone-end
 
 ## Next steps
 
@@ -311,15 +584,13 @@ In this article, you learned how to use the Azure Key Vault provider for Secrets
 > [!div class="nextstepaction"]
 > [Provide an identity to access the Azure Key Vault provider for Secrets Store CSI Driver in AKS](./csi-secrets-store-identity-access.md)
 
-
-
 <!-- LINKS INTERNAL -->
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
 [az-aks-show]: /cli/azure/aks#az-aks-show
-[az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create.md
-[az-keyvault-update]: /cli/azure/keyvault#az-keyvault-update.md
+[az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create
+[az-keyvault-update]: /cli/azure/keyvault#az-keyvault-update
 [az-keyvault-secret-set]: /cli/azure/keyvault#az-keyvault-secret-set
 [az-keyvault-show]: /cli/azure/keyvault#az-keyvault-show
 [az-group-create]: /cli/azure/group#az-group-create
@@ -334,3 +605,4 @@ In this article, you learned how to use the Azure Key Vault provider for Secrets
 
 <!-- LINKS EXTERNAL -->
 [kube-csi]: https://kubernetes-csi.github.io/docs/
+[terraform destroy]: https://developer.hashicorp.com/terraform/cli/commands/destroy

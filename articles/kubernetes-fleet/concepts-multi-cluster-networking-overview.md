@@ -1,7 +1,7 @@
 ---
 title: "Azure Kubernetes Fleet Manager multi-cluster networking concepts"
 description: This article provides a conceptual overview of Azure Kubernetes Fleet Manager multi-cluster networking. 
-ms.date: 03/18/2026
+ms.date: 05/14/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -17,7 +17,7 @@ As platform teams scale from one Kubernetes cluster to many, networking quickly 
 
 ## Seamless service‑to‑service across clusters (east–west)
 
-Azure Kubernetes Fleet Manager delivers capabilities that extends the Kubernetes datapath across clusters, meaning endpoints can talk directly with full network‑policy enforcement and the option to configure global services. 
+Azure Kubernetes Fleet Manager delivers capabilities that extend the Kubernetes datapath across clusters, meaning endpoints can talk directly with full network‑policy enforcement and the option to configure global services. 
 
 Multiple cross-cluster networks can be defined in Fleet Manager, providing administrators with the flexibility to control which member clusters can publish and access global services integrated with standard Kubernetes Services and CoreDNS.
 
@@ -40,4 +40,4 @@ For more information, see [overview of layer 4 load balancing](./concepts-l4-loa
 ## Next steps
 
 * [How to: Set up DNS load balancing across Azure Kubernetes Fleet Manager member clusters (preview)](./howto-dns-load-balancing.md).
-* [Set up multi-cluster layer 4 load balancing across Azure Kubernetes Fleet Manager member clusters (preview)](./l4-load-balancing.md).
+* [How to: Set up multi-cluster layer 4 load balancing across Azure Kubernetes Fleet Manager member clusters (preview)](./l4-load-balancing.md).

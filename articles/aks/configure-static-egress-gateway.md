@@ -101,6 +101,9 @@ az aks nodepool add --cluster-name <cluster-name> \
   --gateway-prefix-size <prefix-size>
 ```
 
+> [!TIP]
+> You can optionally specify `--vnet-subnet-id` when creating the gateway node pool so that the gateway nodes' private IPs are allocated from a custom subnet. This allows the static private IPs used for egress to be allocated from a separate subnet, which can help with network isolation and IP address planning.
+
 Define the gateway configuration by creating a `StaticGatewayConfiguration` custom resource.
 ```yaml
 apiVersion: egressgateway.kubernetes.azure.com/v1alpha1

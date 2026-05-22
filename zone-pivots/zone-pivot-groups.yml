@@ -355,3 +355,16 @@ groups:
     title: Azure PowerShell
   - id: terraform
     title: Terraform
+# Owner: davidsmatlak
+- id: cli-terraform-csi-driver
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli-create
+    title: Create cluster and key vault with Azure CLI
+  - id: azure-cli-update
+    title: Update cluster and key vault with Azure CLI
+  - id: terraform-create
+    title: Create cluster and key vault with Terraform
+  - id: terraform-update
+    title: Update cluster and key vault with Terraform

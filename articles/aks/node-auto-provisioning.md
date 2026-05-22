@@ -49,7 +49,7 @@ We recommend setting a Kubernetes [auto-upgrade][auto-upgrade] channel, which au
 
 To use node auto-provisioning in AKS, you need the following prerequisites:
 
-- An Azure subscription. If you don't have one, you can create a [free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have one, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure CLI version `2.76.0` or later. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][azure cli].
 
 ## Limitations and unsupported features

@@ -17,6 +17,9 @@ Graphical processing units (GPUs) are often used for compute-intensive workloads
 
 This article helps you provision nodes with schedulable GPUs on new and existing AKS clusters.
 
+> [!TIP]
+> For a fully managed experience where AKS installs and maintains the NVIDIA driver, device plugin, and DCGM metrics exporter for you, see [AKS-managed GPU node pools (preview)](./aks-managed-gpu-nodes.md).
+
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Supported GPU-enabled VMs
@@ -400,6 +403,7 @@ kubectl delete jobs samples-tf-mnist-demo
 
 ## Next steps
 
+* Try [AKS-managed GPU node pools (preview)](./aks-managed-gpu-nodes.md) to let AKS install and maintain the NVIDIA driver, device plugin, and DCGM metrics exporter.
 * To run Apache Spark jobs, see [Run Apache Spark jobs on AKS][aks-spark].
 * For more information on features of the Kubernetes scheduler, see [Best practices for advanced scheduler features in AKS][advanced-scheduler-aks].
 * For more information on Azure Kubernetes Service and Azure Machine Learning, see:

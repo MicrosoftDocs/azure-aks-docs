@@ -146,7 +146,7 @@ Each component entry includes:
 [semver]: https://semver.org/
 [vhd-notes]: https://github.com/Azure/AKS/tree/master/vhd-notes
 [aks-release-notes]: https://github.com/azure/aks/releases
-[create-azure-subscription]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F
+[create-azure-subscription]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 
 <!-- LINKS - Internal -->
 [aks-release-tracker]: release-tracker.md

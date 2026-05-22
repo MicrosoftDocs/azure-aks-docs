@@ -32,7 +32,7 @@ For more information on using KMS, see [Using a KMS provider for data encryption
 
 ## Prerequisites
 
-- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free).
+- An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure CLI version 2.39.0 or later. Find your version using the `az --version` command. If you need to install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
 > [!WARNING]
@@ -85,7 +85,7 @@ The following sections describe how to turn on KMS for a public key vault. You c
     az role assignment create --role "Key Vault Crypto Officer" --assignee-object-id $(az ad signed-in-user show --query id -o tsv) --assignee-principal-type "User" --scope $KEY_VAULT_RESOURCE_ID
     ```
 
-1. Create a key using the [`az keyvault key create`][azure-keyvault-key-create] command.
+1. Create a key using the [`az keyvault key create`][azure-keyvault-key-create] command. Ensure `encrypt` and `decrypt` key operations are enabled.
 
     ```azurecli-interactive
     az keyvault key create --name $KEY_NAME --vault-name $KEY_VAULT
@@ -106,7 +106,7 @@ The following sections describe how to turn on KMS for a public key vault. You c
     az keyvault create --name $KEY_VAULT --resource-group $RESOURCE_GROUP
     ```
 
-1. Create a key using the [`az keyvault key create`][azure-keyvault-key-create] command.
+1. Create a key using the [`az keyvault key create`][azure-keyvault-key-create] command. Ensure `encrypt` and `decrypt` key operations are enabled.
 
     ```azurecli-interactive
     az keyvault key create --name $KEY_NAME --vault-name $KEY_VAULT
@@ -265,7 +265,7 @@ If you turn on KMS for a private key vault, AKS automatically creates a private 
     az keyvault create --name $KEY_VAULT --resource-group $RESOURCE_GROUP --public-network-access Disabled
     ```
 
-1. Create a key using the [`az keyvault key create`][azure-keyvault-key-create] command.
+1. Create a key using the [`az keyvault key create`][azure-keyvault-key-create] command. Ensure `encrypt` and `decrypt` key operations are enabled.
 
     ```azurecli-interactive
     az keyvault key create --name $KEY_NAME --vault-name $KEY_VAULT
