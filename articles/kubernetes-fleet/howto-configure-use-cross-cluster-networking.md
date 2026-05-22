@@ -151,7 +151,7 @@ az fleet clustermeshprofile show \
 
 ## Confirm cross-cluster network connection via the dataplane
 
-Once the members' states are showing as `Connected`, the cross-cluster network has been established.
+Once the members' states are showing as `Connected`, the cross-cluster network is established.
 
 You can confirm the successful connection using standard dataplane tools such as the Cilium CLI. First, obtain the Kubernetes access credentials for both member clusters using [`az aks get-credentials`][az-aks-get-credentials], setting `context` appropriately.
 
@@ -248,11 +248,11 @@ Once the cross-cluster network is created successfully, you can test load balanc
 
 ## Updating a cross-cluster network
 
-The process of adding or removing clusters has been demonstrated in this guide, but can be summarized as:
+The process of adding or removing clusters is demonstrated in this guide, but can be summarized as:
 
 1. Modify labels on the Fleet Manager member clusters to be added or removed.
 1. Review cross-cluster networking changes by using the `whatif` parameter with the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
-1. Once satisified with the changes, apply them by running the same command, omitting the `whatif` parameter.
+1. Once satisfied with the changes, apply them by running the same command, omitting the `whatif` parameter.
 
 Reviewing the changes is optional, but recommended, especially for larger cross-cluster networks where any change can take some time to complete.
 
