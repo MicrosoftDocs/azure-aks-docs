@@ -9,7 +9,7 @@ ms.topic: concept-article
 ms.date: 04/26/2026
 ---
 
-# Cross-cluster networking use cases for Azure Kubernetes Fleet Manager (Preview)
+# Cross-cluster networking use cases for Azure Kubernetes Fleet Manager (preview)
 
 Cross-cluster networking for Azure Kubernetes Fleet Manager (Fleet) is a managed offering built on [Cilium Cluster Mesh](https://cilium.io/use-cases/cluster-mesh/) that allows you to establish direct pod-to-pod communication across multiple Azure Kubernetes Service (AKS) clusters. By creating a cross-cluster network, you can enable seamless east-west connectivity without the need for gateways, while also gaining multi-cluster observability and consistent security enforcement.
 
@@ -48,7 +48,7 @@ The failure scenario covered in this use case isn't primarily the complete unava
 
 ### Use case: Shared services
 
-While the initial trend of Kubernetes-based platforms was to build large, multi-tenant clusters, it's becoming increasingly common to build individual clusters per tenant or to build clusters for different categories of services, such as different levels of security sensitivity.
+While the initial trend of Kubernetes-based platforms was to build large, multitenant clusters, it's becoming increasingly common to build individual clusters per tenant or to build clusters for different categories of services, such as different levels of security sensitivity.
 
 However, some services such as secrets management, logging, monitoring, or DNS are often still shared between all clusters. Centralizing these services in a shared "service" cluster avoids the operational overhead of maintaining them in each tenant cluster.
 
