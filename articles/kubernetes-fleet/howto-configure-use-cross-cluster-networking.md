@@ -252,7 +252,7 @@ Once the cross-cluster network is created successfully, you can test load balanc
 The process of adding or removing clusters is demonstrated in this guide, but can be summarized as:
 
 1. Modify labels on the Fleet Manager member clusters to be added or removed.
-1. Review cross-cluster networking changes by using the `whatif` parameter with the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/clustermeshprofile#az-fleet-clustermeshprofile-apply) command.
+1. Review cross-cluster networking changes by using the `what-if` parameter with the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/clustermeshprofile#az-fleet-clustermeshprofile-apply) command.
 1. Once satisfied with the changes, apply them by running the same command, omitting the `what-if` parameter.
 
 Reviewing the changes is optional, but recommended, especially for larger cross-cluster networks where any change can take some time to complete.
