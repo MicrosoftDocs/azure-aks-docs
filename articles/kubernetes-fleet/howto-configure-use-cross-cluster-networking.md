@@ -37,7 +37,7 @@ This article provides instructions on how to configure a cross-cluster networkin
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
-Create two member AKS clusters `mbr-aks-member-1` and `mbr-aks-member-2` with [Advanced Container Networking Services (ACNS)][aks-acns-enabled] enabled.
+Install the [Cilium CLI][cilium-cli-install] so you can verify the cross-cluster network on the dataplane in a later step.
 
 Set the following environment variables:
 
@@ -49,6 +49,12 @@ export MEMBER_CLUSTER_2=mbr-aks-member-2
 export NETWORK_NAME=demo-network
 export NETWORK_PROFILE_NAME=fccnp-demo-01
 ```
+
+## Create AKS clusters
+
+Create two member AKS clusters (`mbr-aks-member-1` and `mbr-aks-member-2`) on a flat network. The recommended way to do this is using [Azure CNI with dynamic IP allocation][azure-cni-dynamic-ip-allocation], which ensures that the AKS cluster identity is automatically granted the network permissions required to assign an external IP address to the Cilium clustermesh-apiserver load balancer when you [connect the cross-cluster network](#connect-the-cross-cluster-network). If you need to manually create role assignments to allow this, see [Troubleshooting](#troubleshooting) for more details.
+
+After the clusters are created, join them to a Fleet. See [Create an Azure Kubernetes Fleet Manager resource and join member clusters][fleet-quickstart].
 
 ## Label the member clusters
 
@@ -286,6 +292,9 @@ Reviewing the changes is optional, but recommended, especially for larger cross-
 [aks-acns-enabled]: ../aks/use-advanced-container-networking-services.md?pivots=cilium
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [flat-network]: ../aks/concepts-network-cni-overview.md#flat-networks
+[azure-cni-dynamic-ip-allocation]: ../aks/configure-azure-cni-dynamic-ip-allocation.md#configure-pod-subnet---dynamic-ip-allocation-and-enhanced-subnet-support---azure-cli
+[fleet-quickstart]: ./quickstart-create-fleet-and-members.md
 
 <!-- EXTERNAL LINKS -->
 [cilium-example]: https://docs.cilium.io/en/stable/network/clustermesh/services/#deploying-a-simple-example-service
+[cilium-cli-install]: https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/#install-the-cilium-cli
