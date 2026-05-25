@@ -1,7 +1,7 @@
 ---
 title: "Quickstart: Create an Azure Kubernetes Fleet Manager and Join Member Clusters using the Azure portal"
 description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager and join member clusters using the Azure portal.
-ms.date: 02/07/2026
+ms.date: 05/25/2026
 author: sjwaight
 ms.author: simonwaight
 ms.reviewer: schaffererin
@@ -42,6 +42,8 @@ Get started with Azure Kubernetes Fleet Manager using the Azure portal to create
     - Microsoft.KubernetesConfiguration/extensions/read
     - Microsoft.KubernetesConfiguration/extensions/write
     - Microsoft.KubernetesConfiguration/extensions/delete
+  - **Azure resource group**:
+    - [Azure RBAC Contributor](/azure/role-based-access-control/built-in-roles/privileged#contributor)
 
 - Clusters you wish to join as members to Fleet must use supported versions of their respective platforms. For more information, see [AKS cluster version support policy](/azure/aks/supported-kubernetes-versions#kubernetes-version-support-policy) and [Azure Arc-enabled Kubernetes validation](/azure/azure-arc/kubernetes/validation-program).
 
