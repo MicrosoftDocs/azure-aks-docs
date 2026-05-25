@@ -283,6 +283,38 @@ The process of adding or removing clusters is demonstrated in this guide, but ca
 
 Reviewing the changes is optional, but recommended, especially for larger cross-cluster networks where any change can take some time to complete.
 
+## Clean up resources
+
+> [!NOTE]
+> In order to prevent accidental outages from a disconnected cross-cluster network, deletion of members that are part of a cross-cluster network is blocked. These members must be removed from the cross-cluster network before they can be deleted.
+
+To clean up resources, first remove the members from the cross-cluster network:
+
+1. Change the cross-cluster network profile's member selector to a value that no member cluster has, then apply the change so all members are disconnected from the cross-cluster network.
+
+    ```azurecli-interactive
+    az fleet clustermeshprofile create --fleet-name ${FLEET} --resource-group ${GROUP} --name ${NETWORK_PROFILE_NAME} --member-selector "mesh=none"
+    az fleet clustermeshprofile apply --fleet-name ${FLEET} --resource-group ${GROUP} --name ${NETWORK_PROFILE_NAME}
+    ```
+
+    Confirm the profile reports no members before continuing.
+
+    ```azurecli-interactive
+    az fleet clustermeshprofile list-members --fleet-name ${FLEET} --resource-group ${GROUP} --name ${NETWORK_PROFILE_NAME}
+    ```
+
+    ```output
+    []
+    ```
+
+1. Delete the cross-cluster network profile.
+
+    ```azurecli-interactive
+    az fleet clustermeshprofile delete --fleet-name ${FLEET} --resource-group ${GROUP} --name ${NETWORK_PROFILE_NAME} --yes
+    ```
+
+1. Delete the member clusters from the fleet (or delete the fleet entirely with `az fleet delete`) and, when no longer needed, delete the AKS clusters and resource group.
+
 ## Next steps
 
 * [Overview of Fleet Manager multi-cluster networking](./concepts-multi-cluster-networking-overview.md).
