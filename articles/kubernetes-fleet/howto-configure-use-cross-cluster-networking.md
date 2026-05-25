@@ -46,7 +46,6 @@ export GROUP=<resource-group>
 export FLEET=<fleet-name>
 export MEMBER_CLUSTER_1=mbr-aks-member-1
 export MEMBER_CLUSTER_2=mbr-aks-member-2
-export TRAFFIC_MANAGER_GROUP=rg-flt-tm-demo
 export NETWORK_NAME=demo-network
 export NETWORK_PROFILE_NAME=fccnp-demo-01
 ```
@@ -73,7 +72,7 @@ az fleet member update \
 
 ## Create a cross-cluster network profile
 
-Create a cross-cluster network profile using the [`az fleet clustermeshprofile create`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
+Create a cross-cluster network profile using the [`az fleet clustermeshprofile create`](/cli/azure/fleet/clustermeshprofile#az-fleet-clustermeshprofile-create) command.
 
 ```azurecli-interactive
 az fleet clustermeshprofile create \
@@ -87,7 +86,7 @@ While a network profile is created as an Azure Resource, no Cilium multi-cluster
 
 ## Validate the selected clusters
 
-Validate which clusters will be included in the cross-cluster network by supplying the `whatif` parameter to the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
+Validate which clusters will be included in the cross-cluster network by supplying the `what-if` parameter to the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/clustermeshprofile#az-fleet-clustermeshprofile-apply) command.
 
 ```azurecli-interactive
 az fleet clustermeshprofile apply \
@@ -109,7 +108,7 @@ ClusterResourceId    	            ETag        Name  		       Action   MeshMember
 
 ## Connect the cross-cluster network
 
-You can now apply the cross-cluster networking changes by omitting the `what-if` parameter from the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
+You can now apply the cross-cluster networking changes by omitting the `what-if` parameter from the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/clustermeshprofile#az-fleet-clustermeshprofile-apply) command.
 
 ```azurecli-interactive
 az fleet clustermeshprofile apply \
@@ -234,6 +233,8 @@ Once the cross-cluster network is created successfully, you can test load balanc
     {"Galaxy": "Alderaan", "Cluster": "Cluster-1"}
     ```
 
+    Repeat the command on cluster 2.
+
     ```bash
     kubectl --context=cluster2 -n rebel-base-demo exec -ti deployment/x-wing -- curl rebel-base
     ```
@@ -251,8 +252,8 @@ Once the cross-cluster network is created successfully, you can test load balanc
 The process of adding or removing clusters is demonstrated in this guide, but can be summarized as:
 
 1. Modify labels on the Fleet Manager member clusters to be added or removed.
-1. Review cross-cluster networking changes by using the `whatif` parameter with the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/namespace#az-fleet-namespace-list) command.
-1. Once satisfied with the changes, apply them by running the same command, omitting the `whatif` parameter.
+1. Review cross-cluster networking changes by using the `what-if` parameter with the [`az fleet clustermeshprofile apply`](/cli/azure/fleet/clustermeshprofile#az-fleet-clustermeshprofile-apply) command.
+1. Once satisfied with the changes, apply them by running the same command, omitting the `what-if` parameter.
 
 Reviewing the changes is optional, but recommended, especially for larger cross-cluster networks where any change can take some time to complete.
 
