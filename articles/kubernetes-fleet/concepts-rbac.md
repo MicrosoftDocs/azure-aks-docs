@@ -1,16 +1,17 @@
 ---
 title: "Grant access to Azure Kubernetes Fleet Manager resources with Azure role-based access control"
 description: This article provides an overview of the Azure role-based access control roles that can be used to access Azure Kubernetes Fleet Manager resources.
-ms.date: 04/08/2026
+ms.date: 05/25/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.custom: build-2024, devx-track-azurecli
 ms.topic: concept-article
 # Customer intent: "As a cloud administrator, I want to understand how to use Azure RBAC roles with Azure Kubernetes Fleet Manager, so that I can manage access to ARM and Kubernetes resources within my organization's cloud infrastructure."
 ---
 
 # Using Azure RBAC with Azure Kubernetes Fleet Manager
+
+**Applies to**: :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 This article provides an overview of the Azure RBAC roles that you can use with Azure Kubernetes Fleet Manager.
 
@@ -19,6 +20,9 @@ This article provides an overview of the Azure RBAC roles that you can use with 
 ## Azure Resource Manager
 
 These roles grant access to Azure Resource Manager (ARM) Fleet resources and subresources, and are applicable to Fleet Managers with and without a hub cluster.
+
+> [!NOTE]
+> When using the Azure portal to perform actions such as adding member clusters, ensure the user has Contributor permissions to the resource group in which the Fleet Manager is deployed.
 
 |Role name|Description|Usage|
 |---------|-----------|-----|
@@ -36,7 +40,7 @@ When a cluster joins a fleet as a member cluster, users gain any permissions on 
 If a role is applied at a managed namespace scope and that managed namespace is deleted, the role assignment is also deleted. If the managed namespace is recreated, the role assignment isn't automatically recreated and must be manually recreated.
 
 > [!NOTE]
-> These RBAC roles aren't currently supported for Arc-enabled member clusters in a Fleet. Additionally, access control for specific Kubernetes Custom Resources (CRs) isn't supported for these Azure RBAC roles.
+> These RBAC roles aren't currently supported for Arc-enabled member clusters. Additionally, access control for specific Kubernetes Custom Resources (CRs) isn't supported for these Azure RBAC roles.
 
 ### Fleet Manager hub cluster
 
