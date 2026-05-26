@@ -38,7 +38,7 @@ There's no in-place flag that swaps the Ingress-Nginx load balancer IP for the G
 
 ## Prerequisites
 
-* Azure CLI 2.54 or later.
+* Azure CLI 2.86.0 or later.
 
 * If the cluster has the [Istio service mesh add-on][istio-addon] enabled, disable it and remove the leftover `networking.istio.io` CRDs and the `istio` `GatewayClass` before you start. The application routing Gateway API control plane will fail to start while those CRDs are present. See [Limitations][app-routing-gateway-api-limitations] for the cleanup command.
 
