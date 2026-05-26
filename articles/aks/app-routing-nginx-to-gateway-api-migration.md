@@ -1,34 +1,34 @@
 ---
 title: Migrate from application routing Ingress-Nginx to the application routing Gateway API implementation on AKS
-description: Step-by-step guide to migrate ingress traffic from the application routing add-on with Ingress-Nginx to the application routing Gateway API (Istio) implementation on Azure Kubernetes Service with zero downtime.
+description: Step-by-step guide to migrate ingress traffic from the application routing add-on with ingress-nginx to the application routing Gateway API (Istio) implementation on Azure Kubernetes Service with zero downtime.
 ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 author: kingoliver
 ms.topic: how-to
 ms.date: 05/05/2026
 ms.author: kingoliver
-# Customer intent: As a cloud engineer, I want to migrate my AKS workloads from the Ingress-Nginx-based application routing add-on to the Gateway API implementation so that I'm on a supported ingress before the November 2026 Ingress-Nginx deadline without dropping client traffic.
+# Customer intent: As a cloud engineer, I want to migrate my AKS workloads from the ingress-nginx-based application routing add-on to the Gateway API implementation so that I'm on a supported ingress before the November 2026 ingress-nginx deadline without dropping client traffic.
 ---
 
 # Migrate from application routing Ingress-Nginx to the application routing Gateway API implementation
 
-This article describes how to migrate workloads from the [application routing add-on with Ingress-Nginx][app-routing-nginx] to the [application routing Gateway API implementation][app-routing-gateway-api], which serves traffic through the Kubernetes [Gateway API](https://gateway-api.sigs.k8s.io/). The two data planes can run side-by-side on the same AKS cluster, which lets you perform a zero-downtime cutover by shifting client traffic with DNS instead of an in-place swap.
+This article describes how to migrate workloads from the [application routing add-on with ingress-nginx][app-routing-nginx] to the [application routing Gateway API implementation][app-routing-gateway-api], which serves traffic through the Kubernetes [Gateway API](https://gateway-api.sigs.k8s.io/). The two data planes can run side-by-side on the same AKS cluster, which lets you perform a zero-downtime cutover by shifting client traffic with DNS instead of an in-place swap.
 
 ## Why migrate
 
 [!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
 
-Microsoft-supported security patches for the Ingress-Nginx-based application routing add-on end in November 2026. The supported successor on AKS is the application routing Gateway API implementation, which deploys a lightweight, Istio control plane that only reconciles Gateway API resources belonging to the `approuting-istio` `GatewayClass`, with no support for Istio CRDs or data-plane sidecar injection.
+Microsoft-supported security patches for the ingress-nginx-based application routing add-on end in November 2026. The supported successor on AKS is the application routing Gateway API implementation, which deploys a lightweight, Istio control plane that only reconciles Gateway API resources belonging to the `approuting-istio` `GatewayClass`, with no support for Istio CRDs or data-plane sidecar injection.
 
 ## How the migration works
 
-The Ingress-Nginx add-on and the Gateway API implementation deployments/services each get their own Azure Load Balancer frontend IP. Clients keep hitting the Ingress-Nginx IP until the hostname they resolve points to the Gateway API proxy.
+The ingress-nginx add-on and the Gateway API implementation deployments/services each get their own Azure Load Balancer frontend IP. Clients keep hitting the ingress-nginx IP until the hostname they resolve points to the Gateway API proxy.
 
-There's no in-place flag that swaps the Ingress-Nginx load balancer IP for the Gateway API one. The strategy is to run both data planes in parallel, validate the new path, then move clients to the new IP. If an upstream system (Azure Front Door origin, Traffic Manager endpoint, firewall allowlist) pins the existing Ingress-Nginx IP, update that upstream configuration to the new Gateway IP rather than trying to reassign the existing IP — AKS-managed public IPs are deleted when their owning Service is removed even if you mark them `Static`, so an in-place IP swap can't be performed safely.
+There's no in-place flag that swaps the ingress-nginx load balancer IP for the Gateway API one. The strategy is to run both data planes in parallel, validate the new path, then move clients to the new IP. If an upstream system (Azure Front Door origin, Traffic Manager endpoint, firewall allowlist) pins the existing ingress-nginx IP, update that upstream configuration to the new Gateway IP rather than trying to reassign the existing IP — AKS-managed public IPs are deleted when their owning Service is removed even if you mark them `Static`, so an in-place IP swap can't be performed safely.
 
 ## Key differences
 
-| | Ingress-Nginx add-on | Gateway API (Istio) implementation |
+| | ingress-nginx add-on | Gateway API (Istio) implementation |
 |---|---|---|
 | API | `networking.k8s.io/v1` `Ingress` | `gateway.networking.k8s.io/v1` `Gateway` and `HTTPRoute` |
 | Az CLI Enable flag | `--enable-app-routing` | `--enable-app-routing-istio` (use with `--enable-gateway-api`; the Managed Gateway API add-on is required for support) |
@@ -51,13 +51,13 @@ export CLUSTER=<cluster-name>
 
 ## Step 1: Inventory current ingress
 
-List every `Ingress` that uses the Ingress-Nginx class and the hostnames pointing at the Ingress-Nginx load balancer IP. Include any upstream references such as Azure Front Door origins, Traffic Manager endpoints, and firewall allowlists.
+List every `Ingress` that uses the ingress-nginx class and the hostnames pointing at the ingress-nginx load balancer IP. Include any upstream references such as Azure Front Door origins, Traffic Manager endpoints, and firewall allowlists.
 
 ```bash
 kubectl get ingress -A -o jsonpath='{range .items[?(@.spec.ingressClassName=="webapprouting.kubernetes.azure.com")]}{.metadata.namespace}/{.metadata.name}{"\n"}{end}'
 ```
 
-Capture the current Ingress-Nginx IP for later validation:
+Capture the current ingress-nginx IP for later validation:
 
 ```bash
 INGRESS_NGINX_IP=$(kubectl get svc -n app-routing-system nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -68,11 +68,11 @@ INGRESS_NGINX_IP=$(kubectl get svc -n app-routing-system nginx -o jsonpath='{.st
 > [!NOTE]
 > Skip this step if your clients reach the cluster by IP rather than DNS — the cutover in step 7 is a DNS change, so a low TTL is only relevant when DNS is in the path.
 
-For each hostname that resolves to `INGRESS_NGINX_IP`, lower the record TTL to 60 seconds (or the smallest value your provider allows). Wait for the previous TTL window to fully expire before you continue. If the previous TTL was one hour, wait at least one hour. Skipping this step means cached resolvers continue sending clients to Ingress-Nginx after you delete the `Ingress`.
+For each hostname that resolves to `INGRESS_NGINX_IP`, lower the record TTL to 60 seconds (or the smallest value your provider allows). Wait for the previous TTL window to fully expire before you continue. If the previous TTL was one hour, wait at least one hour. Skipping this step means cached resolvers continue sending clients to ingress-nginx after you delete the `Ingress`.
 
 ## Step 3: Enable the Gateway API implementation
 
-Enable the Managed Gateway API CRDs and the application routing Gateway API implementation. Ingress-Nginx will continue serving traffic.
+Enable the Managed Gateway API CRDs and the application routing Gateway API implementation. ingress-nginx will continue serving traffic.
 
 ```azurecli-interactive
 az aks update --resource-group $RG --name $CLUSTER --enable-gateway-api
@@ -90,7 +90,7 @@ kubectl get gatewayclass approuting-istio
 
 For each `Ingress`, create a matching `Gateway` and `HTTPRoute`. For per-field translation guidance — including how to convert path matches, redirects, rewrites, and header manipulation — follow the [Kubernetes Gateway API migration guide](https://gateway-api.sigs.k8s.io/guides/getting-started/migrating-from-ingress/). To bulk-translate existing manifests instead of writing them by hand, consider [`ingress2gateway`](https://github.com/kubernetes-sigs/ingress2gateway), a Kubernetes SIG Network tool that reads `Ingress` resources (including `ingress-nginx` annotations) and emits equivalent Gateway API resources — treat its output as a starting point and review before applying.
 
-The example below converts an Ingress-Nginx `Ingress` for host `httpbin.contoso.com` with path prefix `/get` and backend `httpbin:8000`. For reference, the source `Ingress`:
+The example below converts an ingress-nginx `Ingress` for host `httpbin.contoso.com` with path prefix `/get` and backend `httpbin:8000`. For reference, the source `Ingress`:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -175,7 +175,7 @@ curl -sS -o /dev/null -w '%{http_code}\n' \
   --resolve "httpbin.contoso.com:443:${GW_IP}" \
   https://httpbin.contoso.com/get
 
-# Old Ingress-Nginx path (should still work)
+# Old ingress-nginx path (should still work)
 curl -sS -o /dev/null -w '%{http_code}\n' \
   --resolve "httpbin.contoso.com:443:${INGRESS_NGINX_IP}" \
   https://httpbin.contoso.com/get
@@ -189,20 +189,20 @@ At minimum, verify the following against `GW_IP` (using `--resolve` or a `Host` 
 * **Sustained load** for at least several minutes from a probe loop, watching for intermittent 5xx responses, latency regressions, or `Gateway`/`HTTPRoute` status conditions flapping.
 * **Upstream integrations** in a non-production configuration where possible — for example, point a staging Front Door origin or Traffic Manager endpoint at `GW_IP` and verify health probes pass.
 
-Only proceed to step 7 once every check above passes consistently. If anything fails, fix it on the Gateway side while Ingress-Nginx is still serving real clients — you have unlimited rollback room until DNS changes.
+Only proceed to step 7 once every check above passes consistently. If anything fails, fix it on the Gateway side while ingress-nginx is still serving real clients — you have unlimited rollback room until DNS changes.
 
 ## Step 7: Cut over
 
 1. Update the DNS A record for the hostname to point to `GW_IP`. Because you already lowered the TTL in step 2, drain happens within minutes.
-1. If any upstream system pins the Ingress-Nginx IP — for example, an Azure Front Door origin, a Traffic Manager endpoint, or a customer firewall allowlist — update it to `GW_IP` at the same time. Don't try to reassign the existing IP to the Gateway: the Ingress-Nginx Service's public IP is created and managed by the cluster's cloud provider, and it's deleted when the Service is removed even if you've set it to `Static`.
-1. Watch traffic drop on Ingress-Nginx. Scrape the `ingress-nginx` request-rate metrics (see [Monitor the ingress-nginx controller metrics with Prometheus][app-routing-nginx-prometheus]) until requests reach zero.
+1. If any upstream system pins the ingress-nginx IP — for example, an Azure Front Door origin, a Traffic Manager endpoint, or a customer firewall allowlist — update it to `GW_IP` at the same time. Don't try to reassign the existing IP to the Gateway: the ingress-nginx Service's public IP is created and managed by the cluster's cloud provider, and it's deleted when the Service is removed even if you've set it to `Static`.
+1. Watch traffic drop on ingress-nginx. Scrape the `ingress-nginx` request-rate metrics (see [Monitor the ingress-nginx controller metrics with Prometheus][app-routing-nginx-prometheus]) until requests reach zero.
 1. Keep the DNS TTL low for a few hours of observation, then raise it back to your normal value.
 
 ## Step 8: Clean up
 
 After traffic is stable on the Gateway API path, stop the add-on from reconciling a default `NginxIngressController` on the cluster, then delete every existing `NginxIngressController` custom resource. Disabling the add-on in step 7 stops the controller from reconciling new resources, but the `nginx` Deployment and Service it created earlier remain on the cluster until you remove the owning `NginxIngressController`.
 
-Update the cluster so the application routing add-on no longer manages a default Ingress-Nginx controller:
+Update the cluster so the application routing add-on no longer manages a default ingress-nginx controller:
 
 ```azurecli-interactive
 az aks approuting update --resource-group $RG --name $CLUSTER --nginx None
@@ -218,7 +218,7 @@ Raise the DNS TTL back to its normal value once you have verified steady state.
 
 ## Roll back
 
-Both data planes can coexist, so rollback is symmetric at any point *before* you disable the Ingress-Nginx add-on. To roll back:
+Both data planes can coexist, so rollback is symmetric at any point *before* you disable the ingress-nginx add-on. To roll back:
 
 1. Recreate the `Ingress` resource.
 1. Flip DNS back to `INGRESS_NGINX_IP` and wait for the TTL window to drain.
@@ -228,7 +228,7 @@ Both data planes can coexist, so rollback is symmetric at any point *before* you
     az aks update --resource-group $RG --name $CLUSTER --disable-app-routing-istio
     ```
 
-After you run `kubectl delete nginxingresscontrollers.approuting.kubernetes.azure.com`, the Ingress-Nginx controller is gone. Rolling back from that point requires re-enabling the add-on Default `NginxIngressController` and recreating the `Ingress`. Validate the chosen path before you disable Ingress-Nginx.
+After you run `kubectl delete nginxingresscontrollers.approuting.kubernetes.azure.com`, the ingress-nginx controller is gone. Rolling back from that point requires re-enabling the add-on Default `NginxIngressController` and recreating the `Ingress`. Validate the chosen path before you disable ingress-nginx.
 
 ## Next steps
 
