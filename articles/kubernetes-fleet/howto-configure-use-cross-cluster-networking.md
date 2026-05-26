@@ -52,7 +52,7 @@ export NETWORK_PROFILE_NAME=fccnp-demo-01
 
 ## Create AKS clusters
 
-Create two member AKS clusters (`mbr-aks-member-1` and `mbr-aks-member-2`) on a flat network. The recommended way to do this is using [Azure CNI with dynamic IP allocation][azure-cni-dynamic-ip-allocation], which ensures that the AKS cluster identity is automatically granted the network permissions required to assign an external IP address to the Cilium clustermesh-apiserver load balancer when you [connect the cross-cluster network](#connect-the-cross-cluster-network). If you need to manually create role assignments to allow this, see [Troubleshooting](#troubleshooting) for more details.
+Create two member AKS clusters (`mbr-aks-member-1` and `mbr-aks-member-2`) on a flat network. See [Azure CNI with dynamic IP allocation][azure-cni-dynamic-ip-allocation] for a recommended approach to achieve this setup.
 
 After the clusters are created, join them to a Fleet. See [Create an Azure Kubernetes Fleet Manager resource and join member clusters][fleet-quickstart].
 
@@ -314,6 +314,66 @@ To clean up resources, first remove the members from the cross-cluster network:
     ```
 
 1. Delete the member clusters from the fleet (or delete the fleet entirely with `az fleet delete`) and, when no longer needed, delete the AKS clusters and resource group.
+
+## Troubleshooting
+
+### Members fail to move to `Connected` and the `clustermesh-apiserver` LoadBalancer Service has no external IP
+
+Check the `clustermesh-apiserver` Service on each affected member cluster:
+
+```bash
+kubectl --context=<cluster-context> -n kube-system get svc clustermesh-apiserver
+```
+
+If `EXTERNAL-IP` is shown as `<pending>`, as in the example output below, the Service has not been assigned an internal load balancer IP:
+
+```output
+NAME                    TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+clustermesh-apiserver   LoadBalancer   10.0.221.162   <pending>     2379:31640/TCP   31s
+```
+
+Inspect the Service events to identify the underlying cause:
+
+```bash
+kubectl --context=<cluster-context> -n kube-system describe svc clustermesh-apiserver
+```
+
+A common cause is an `AuthorizationFailed` (HTTP 403) error, indicating that the AKS cluster identity does not have permission to read or modify the subnet that backs the cluster:
+
+```output
+Events:
+  Type     Reason                  Age   From                Message
+  ----     ------                  ----  ----                -------
+  Normal   EnsuringLoadBalancer    6s    service-controller  Ensuring load balancer
+  Warning  SyncLoadBalancerFailed  6s    service-controller  Error syncing load balancer: failed to ensure load balancer: ...
+                                                             RESPONSE 403: 403 Forbidden
+                                                             ERROR CODE: AuthorizationFailed
+                                                             {
+                                                               "error": {
+                                                                 "code": "AuthorizationFailed",
+                                                                 "message": "The client '...' with object id '...' does not have authorization to perform action 'Microsoft.Network/virtualNetworks/subnets/read' over scope '/subscriptions/.../virtualNetworks/<vnet>/subnets/<subnet>' or the scope is invalid..."
+                                                               }
+                                                             }
+```
+
+Without this permission, the AKS load balancer controller can't assign an internal IP to the `clustermesh-apiserver` Service, and the cross-cluster network can't complete the connection.
+
+The AKS cluster identity normally receives a **Network Contributor** role assignment on the VNet or subnet when the cluster is created, but in some configurations this assignment isn't created. To resolve the issue, manually grant the AKS cluster identity the **Network Contributor** role on the VNet for every affected member cluster, then force a reconcile on the cluster using the `az aks update` command so the new role takes effect.
+
+```azurecli-interactive
+AKS_IDENTITY=$(az aks show --resource-group ${GROUP} --name ${MEMBER_CLUSTER_1} --query "identity.principalId" -o tsv)
+VNET_ID=$(az network vnet show --resource-group ${GROUP} --name <vnet-name> --query id -o tsv)
+
+az role assignment create \
+    --assignee-object-id ${AKS_IDENTITY} \
+    --assignee-principal-type ServicePrincipal \
+    --role "Network Contributor" \
+    --scope ${VNET_ID}
+
+az aks update --resource-group ${GROUP} --name ${MEMBER_CLUSTER_1}
+```
+
+Once the cluster is updated with the role assignment, run `az fleet clustermeshprofile apply` again.
 
 ## Next steps
 
