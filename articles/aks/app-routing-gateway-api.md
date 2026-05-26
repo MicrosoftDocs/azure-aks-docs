@@ -1,18 +1,16 @@
 ---
-title: Azure Kubernetes Service (AKS) application routing add-on with the Kubernetes Gateway API (preview)
+title: Azure Kubernetes Service (AKS) application routing add-on with the Kubernetes Gateway API
 description: Use the application routing add-on to manage ingress traffic on Azure Kubernetes Service (AKS) using the Kubernetes Gateway API.
 ms.subservice: aks-networking
 ms.custom: devx-track-azurecli, biannual
 author: nshankar
 ms.topic: how-to
-ms.date: 11/18/2025
+ms.date: 05/18/2026
 ms.author: nshankar
 # Customer intent: As a cloud engineer, I want to deploy and configure ingress on Azure Kubernetes Service with the Kubernetes Gateway API using the application routing add-on, so that I can efficiently manage HTTP/HTTPS traffic to my applications.
 ---
 
-# Configure ingress with the Kubernetes Gateway API via the application routing add-on (preview)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+# Configure ingress with the Kubernetes Gateway API via the application routing add-on
 
 [!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
 
@@ -44,26 +42,15 @@ The application routing add-on Kubernetes Gateway API implementation deploys an 
 
 ## Prerequisites
 
-* Install the `aks-preview` extension or update to the latest version of the extension using the [`az extension add`][az-extension-add] and [`az extension update`][az-extension-update] commands. if you're using Azure CLI. You must use `aks-preview` version `19.0.0b24` and later.
+### Update Azure CLI version
 
-    ```azurecli-interactive
-    # Install the aks-preview extension
-    az extension add --name aks-preview
-    
-    # Update the aks-preview extension to the latest version
-    az extension update --name aks-preview
-    ```
-* Enable the [Managed Gateway API installation][managed-gateway-api]. Use of self-managed Gateway API CRDs with the application routing add-on is unsupported.
+You must use `azure-cli` version `2.86.0` or higher. Run `az --version` to find your `azure-cli` version, and run `az upgrade` to upgrade.
 
-* Register the App Routing Gateway API preview feature flag
+### Enable Managed Gateway API CRDs
 
-- Register the `AppRoutingIstioGatewayAPIPreview` feature flag using the [`az feature register`](/cli/azure/feature#az-feature-register) command.
+Enable the [Managed Gateway API installation][managed-gateway-api]. Use of self-managed Gateway API CRDs with the application routing add-on is unsupported.
 
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "AppRoutingIstioGatewayAPIPreview"
-    ```
-
-## Enable the application routing Gateway API implementation
+### Enable the application routing Gateway API implementation
 
 Set environment variables
 
