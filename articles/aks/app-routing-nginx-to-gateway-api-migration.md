@@ -10,10 +10,7 @@ ms.author: kingoliver
 # Customer intent: As a cloud engineer, I want to migrate my AKS workloads from the Ingress-Nginx-based application routing add-on to the Gateway API implementation so that I'm on a supported ingress before the November 2026 Ingress-Nginx deadline without dropping client traffic.
 ---
 
-# Migrate from application routing Ingress-Nginx to the application routing Gateway API implementation (preview)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
+# Migrate from application routing Ingress-Nginx to the application routing Gateway API implementation
 
 This article describes how to migrate workloads from the [application routing add-on with Ingress-Nginx][app-routing-nginx] to the [application routing Gateway API implementation][app-routing-gateway-api], which serves traffic through the Kubernetes [Gateway API](https://gateway-api.sigs.k8s.io/). The two data planes can run side-by-side on the same AKS cluster, which lets you perform a zero-downtime cutover by shifting client traffic with DNS instead of an in-place swap.
 
@@ -41,19 +38,7 @@ There's no in-place flag that swaps the Ingress-Nginx load balancer IP for the G
 
 ## Prerequisites
 
-* Azure CLI 2.54 or later, and the `aks-preview` extension at version `19.0.0b24` or later.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    az extension update --name aks-preview
-    ```
-
-* Register the `AppRoutingIstioGatewayAPIPreview` feature flag once per subscription.
-
-    ```azurecli-interactive
-    az feature register --namespace Microsoft.ContainerService --name AppRoutingIstioGatewayAPIPreview
-    az feature show --namespace Microsoft.ContainerService --name AppRoutingIstioGatewayAPIPreview --query properties.state -o tsv
-    ```
+* Azure CLI 2.54 or later.
 
 * If the cluster has the [Istio service mesh add-on][istio-addon] enabled, disable it and remove the leftover `networking.istio.io` CRDs and the `istio` `GatewayClass` before you start. The application routing Gateway API control plane will fail to start while those CRDs are present. See [Limitations][app-routing-gateway-api-limitations] for the cleanup command.
 
