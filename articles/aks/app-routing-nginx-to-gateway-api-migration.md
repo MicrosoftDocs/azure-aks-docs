@@ -24,7 +24,7 @@ Microsoft-supported security patches for the ingress-nginx-based application rou
 
 The ingress-nginx add-on and the Gateway API implementation deployments/services each get their own Azure Load Balancer frontend IP. Clients keep hitting the ingress-nginx IP until the hostname they resolve points to the Gateway API proxy.
 
-There's no in-place flag that swaps the ingress-nginx load balancer IP for the Gateway API one. The strategy is to run both data planes in parallel, validate the new path, then move clients to the new IP. If an upstream system (Azure Front Door origin, Traffic Manager endpoint, firewall allowlist) pins the existing ingress-nginx IP, update that upstream configuration to the new Gateway IP rather than trying to reassign the existing IP — AKS-managed public IPs are deleted when their owning Service is removed even if you mark them `Static`, so an in-place IP swap can't be performed safely.
+There's no in-place flag that swaps the ingress-nginx load balancer IP for the Gateway API one. The strategy is to run both data planes in parallel, validate the new path, then move clients to the new IP. If an upstream system (Azure Front Door origin, Traffic Manager endpoint, firewall allow list) pins the existing ingress-nginx IP, update that upstream configuration to the new Gateway IP rather than trying to reassign the existing IP—AKS deletes its managed public IPs when their owning Service is removed even if you mark them `Static`, so you can't perform an in-place IP swap safely.
 
 ## Key differences
 
@@ -40,7 +40,7 @@ There's no in-place flag that swaps the ingress-nginx load balancer IP for the G
 
 * Azure CLI 2.86.0 or later.
 
-* If the cluster has the [Istio service mesh add-on][istio-addon] enabled, disable it and remove the leftover `networking.istio.io` CRDs and the `istio` `GatewayClass` before you start. The application routing Gateway API control plane will fail to start while those CRDs are present. See [Limitations][app-routing-gateway-api-limitations] for the cleanup command.
+* If the cluster has the [Istio service mesh add-on][istio-addon] enabled, disable it and remove the leftover `networking.istio.io` CRDs and the `istio` `GatewayClass` before you start. The application routing Gateway API control plane fails to start while those CRDs are present. See [Limitations][app-routing-gateway-api-limitations] for the cleanup command.
 
 Set environment variables that the rest of this article uses:
 
@@ -51,7 +51,7 @@ export CLUSTER=<cluster-name>
 
 ## Step 1: Inventory current ingress
 
-List every `Ingress` that uses the ingress-nginx class and the hostnames pointing at the ingress-nginx load balancer IP. Include any upstream references such as Azure Front Door origins, Traffic Manager endpoints, and firewall allowlists.
+List every `Ingress` that uses the ingress-nginx class and the hostnames pointing at the ingress-nginx load balancer IP. Include any upstream references such as Azure Front Door origins, Traffic Manager endpoints, and firewall allow lists.
 
 ```bash
 kubectl get ingress -A -o jsonpath='{range .items[?(@.spec.ingressClassName=="webapprouting.kubernetes.azure.com")]}{.metadata.namespace}/{.metadata.name}{"\n"}{end}'
@@ -66,13 +66,13 @@ INGRESS_NGINX_IP=$(kubectl get svc -n app-routing-system nginx -o jsonpath='{.st
 ## Step 2: Lower the DNS TTL
 
 > [!NOTE]
-> Skip this step if your clients reach the cluster by IP rather than DNS — the cutover in step 7 is a DNS change, so a low TTL is only relevant when DNS is in the path.
+> Skip this step if your clients reach the cluster by IP rather than DNS—the cutover in step 7 is a DNS change, so a low TTL is only relevant when DNS is in the path.
 
 For each hostname that resolves to `INGRESS_NGINX_IP`, lower the record TTL to 60 seconds (or the smallest value your provider allows). Wait for the previous TTL window to fully expire before you continue. If the previous TTL was one hour, wait at least one hour. Skipping this step means cached resolvers continue sending clients to ingress-nginx after you delete the `Ingress`.
 
 ## Step 3: Enable the Gateway API implementation
 
-Enable the Managed Gateway API CRDs and the application routing Gateway API implementation. ingress-nginx will continue serving traffic.
+Enable the Managed Gateway API CRDs and the application routing Gateway API implementation. Ingress-nginx continues serving traffic.
 
 ```azurecli-interactive
 az aks update --resource-group $RG --name $CLUSTER --enable-gateway-api
@@ -88,9 +88,9 @@ kubectl get gatewayclass approuting-istio
 
 ## Step 4: Translate each Ingress to Gateway and HTTPRoute
 
-For each `Ingress`, create a matching `Gateway` and `HTTPRoute`. For per-field translation guidance — including how to convert path matches, redirects, rewrites, and header manipulation — follow the [Kubernetes Gateway API migration guide](https://gateway-api.sigs.k8s.io/guides/getting-started/migrating-from-ingress/). To bulk-translate existing manifests instead of writing them by hand, consider [`ingress2gateway`](https://github.com/kubernetes-sigs/ingress2gateway), a Kubernetes SIG Network tool that reads `Ingress` resources (including `ingress-nginx` annotations) and emits equivalent Gateway API resources — treat its output as a starting point and review before applying.
+For each `Ingress`, create a matching `Gateway` and `HTTPRoute`. For per-field translation guidance—including how to convert path matches, redirects, rewrites, and header manipulation—follow the [Kubernetes Gateway API migration guide](https://gateway-api.sigs.k8s.io/guides/getting-started/migrating-from-ingress/). To bulk-translate existing manifests instead of writing them by hand, consider [`ingress2gateway`](https://github.com/kubernetes-sigs/ingress2gateway), a Kubernetes SIG Network tool that reads `Ingress` resources (including `ingress-nginx` annotations) and emits equivalent Gateway API resources—treat its output as a starting point and review before applying.
 
-The example below converts an ingress-nginx `Ingress` for host `httpbin.contoso.com` with path prefix `/get` and backend `httpbin:8000`. For reference, the source `Ingress`:
+The following example converts an ingress-nginx `Ingress` for host `httpbin.contoso.com` with path prefix `/get` and backend `httpbin:8000`. For reference, the source `Ingress`:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -160,14 +160,14 @@ GW_IP=$(kubectl get gateway -n demo httpbin-gateway -o jsonpath='{.status.addres
 
 ## Step 5: Provision TLS on the Gateway
 
-If the original `Ingress` terminated HTTPS, configure TLS on the new `Gateway` *before* you change DNS. Follow [Secure application routing Gateway API ingress traffic][app-routing-gateway-api-tls] to sync the certificate from Azure Key Vault by using the Secrets Store CSI driver, then add a TLS listener that references the resulting Kubernetes `Secret` through `certificateRefs`. A native Azure Key Vault integration for the application routing Gateway API implementation is in development; until it ships, the Secrets Store CSI driver workflow above is the supported path.
+If the original `Ingress` terminated HTTPS, configure TLS on the new `Gateway` *before* you change DNS. Follow [Secure application routing Gateway API ingress traffic][app-routing-gateway-api-tls] to sync the certificate from Azure Key Vault by using the Secrets Store CSI driver, then add a TLS listener that references the resulting Kubernetes `Secret` through `certificateRefs`. A native Azure Key Vault integration for the application routing Gateway API implementation is in development; until it ships, the preceding Secrets Store CSI driver workflow is the supported path.
 
-## Step 6: Validate the new path before clients see it
+## Step 6: Validate the new path before clients see them
 
 Probe both data planes by pinning DNS resolution with `curl --resolve`. Both should return `200` continuously while you run the probe in a loop for several minutes.
 
 > [!IMPORTANT]
-> Do not cut over until you have fully exercised the Gateway IP. The DNS flip in step 7 is the point at which real client traffic lands on the new data plane — anything broken on the Gateway side becomes a customer-visible outage at that moment. Defects that are easy to find by hitting `GW_IP` directly are much harder to triage once production traffic is mixed in.
+> Don't cut over until you fully exercise the Gateway IP. The DNS flip in step 7 is the point at which real client traffic lands on the new data plane—anything broken on the Gateway side becomes a customer-visible outage at that moment. Defects that are easy to find by hitting `GW_IP` directly are much harder to triage once production traffic is mixed in.
 
 ```bash
 # New Gateway path
@@ -181,20 +181,20 @@ curl -sS -o /dev/null -w '%{http_code}\n' \
   https://httpbin.contoso.com/get
 ```
 
-At minimum, verify the following against `GW_IP` (using `--resolve` or a `Host` header) before you flip DNS:
+At minimum, verify the following items against `GW_IP` (using `--resolve` or a `Host` header) before you flip DNS:
 
 * **Every hostname and route** that the original `Ingress` served, not just one happy-path URL. Routes that share a host but differ in path prefix, header match, or method must each be hit.
 * **HTTPS end-to-end** with the production certificate served by the `Gateway`. Verify the certificate chain and SAN list match what clients expect; don't rely on `--insecure`.
 * **Application behavior**, not just HTTP status codes. Submit POST bodies, exercise authentication, and confirm long-running responses (streaming, WebSockets, gRPC) work end-to-end if your workload uses them.
 * **Sustained load** for at least several minutes from a probe loop, watching for intermittent 5xx responses, latency regressions, or `Gateway`/`HTTPRoute` status conditions flapping.
-* **Upstream integrations** in a non-production configuration where possible — for example, point a staging Front Door origin or Traffic Manager endpoint at `GW_IP` and verify health probes pass.
+* **Upstream integrations** in a nonproduction configuration where possible—for example, point a staging Front Door origin or Traffic Manager endpoint at `GW_IP` and verify health probes pass.
 
-Only proceed to step 7 once every check above passes consistently. If anything fails, fix it on the Gateway side while ingress-nginx is still serving real clients — you have unlimited rollback room until DNS changes.
+Only proceed to step 7 once every preceding check passes consistently. If anything fails, fix it on the Gateway side while ingress-nginx is still serving real clients—you have unlimited rollback room until DNS changes.
 
 ## Step 7: Cut over
 
 1. Update the DNS A record for the hostname to point to `GW_IP`. Because you already lowered the TTL in step 2, drain happens within minutes.
-1. If any upstream system pins the ingress-nginx IP — for example, an Azure Front Door origin, a Traffic Manager endpoint, or a customer firewall allowlist — update it to `GW_IP` at the same time. Don't try to reassign the existing IP to the Gateway: the ingress-nginx Service's public IP is created and managed by the cluster's cloud provider, and it's deleted when the Service is removed even if you've set it to `Static`.
+1. If any upstream system pins the ingress-nginx IP—for example, an Azure Front Door origin, a Traffic Manager endpoint, or a customer firewall allow list—update it to `GW_IP` at the same time. Don't try to reassign the existing IP to the Gateway: the cluster's cloud provider creates and manages the ingress-nginx Service's public IP, and deletes it when the Service is removed even if you set it to `Static`.
 1. Watch traffic drop on ingress-nginx. Scrape the `ingress-nginx` request-rate metrics (see [Monitor the ingress-nginx controller metrics with Prometheus][app-routing-nginx-prometheus]) until requests reach zero.
 1. Keep the DNS TTL low for a few hours of observation, then raise it back to your normal value.
 
@@ -214,7 +214,7 @@ Then delete the remaining `NginxIngressController` resources:
 kubectl delete nginxingresscontrollers.approuting.kubernetes.azure.com --all
 ```
 
-Raise the DNS TTL back to its normal value once you have verified steady state.
+Raise the DNS TTL back to its normal value once you verify steady state.
 
 ## Roll back
 
