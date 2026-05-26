@@ -45,7 +45,10 @@ The application routing add-on Kubernetes Gateway API implementation deploys an 
 ### Update Azure CLI version
 
 You must use `azure-cli` version `2.86.0` or higher. Run `az --version` to find your `azure-cli` version, and run `az upgrade` to upgrade.
-* Enable the [Managed Gateway API installation][managed-gateway-api]. Use of self-managed Gateway API CRDs with the application routing add-on is unsupported.
+
+### Enable Managed Gateway API CRDs
+
+Enable the [Managed Gateway API installation][managed-gateway-api]. Use of self-managed Gateway API CRDs with the application routing add-on is unsupported.
 
 ### Enable the application routing Gateway API implementation
 
