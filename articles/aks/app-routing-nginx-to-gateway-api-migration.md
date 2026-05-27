@@ -5,7 +5,7 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 author: kingoliver
 ms.topic: how-to
-ms.date: 05/05/2026
+ms.date: 05/27/2026
 ms.author: kingoliver
 # Customer intent: As a cloud engineer, I want to migrate my AKS workloads from the ingress-nginx-based application routing add-on to the Gateway API implementation so that I'm on a supported ingress before the November 2026 ingress-nginx deadline without dropping client traffic.
 ---
@@ -28,7 +28,7 @@ There's no in-place flag that swaps the ingress-nginx load balancer IP for the G
 
 ## Key differences
 
-| | ingress-nginx add-on | Gateway API (Istio) implementation |
+| Aspect | ingress-nginx add-on | Gateway API (Istio) implementation |
 |---|---|---|
 | API | `networking.k8s.io/v1` `Ingress` | `gateway.networking.k8s.io/v1` `Gateway` and `HTTPRoute` |
 | Az CLI Enable flag | `--enable-app-routing` | `--enable-app-routing-istio` (use with `--enable-gateway-api`; the Managed Gateway API add-on is required for support) |
@@ -162,7 +162,7 @@ GW_IP=$(kubectl get gateway -n demo httpbin-gateway -o jsonpath='{.status.addres
 
 If the original `Ingress` terminated HTTPS, configure TLS on the new `Gateway` *before* you change DNS. Follow [Secure application routing Gateway API ingress traffic][app-routing-gateway-api-tls] to sync the certificate from Azure Key Vault by using the Secrets Store CSI driver, then add a TLS listener that references the resulting Kubernetes `Secret` through `certificateRefs`. A native Azure Key Vault integration for the application routing Gateway API implementation is in development; until it ships, the preceding Secrets Store CSI driver workflow is the supported path.
 
-## Step 6: Validate the new path before clients see them
+## Step 6: Validate the Gateway before flipping client traffic
 
 Probe both data planes by pinning DNS resolution with `curl --resolve`. Both should return `200` continuously while you run the probe in a loop for several minutes.
 
@@ -172,14 +172,16 @@ Probe both data planes by pinning DNS resolution with `curl --resolve`. Both sho
 ```bash
 # New Gateway path
 curl -sS -o /dev/null -w '%{http_code}\n' \
-  --resolve "httpbin.contoso.com:443:${GW_IP}" \
-  https://httpbin.contoso.com/get
+  --resolve "httpbin.contoso.com:80:${GW_IP}" \
+  http://httpbin.contoso.com/get
 
 # Old ingress-nginx path (should still work)
 curl -sS -o /dev/null -w '%{http_code}\n' \
-  --resolve "httpbin.contoso.com:443:${INGRESS_NGINX_IP}" \
-  https://httpbin.contoso.com/get
+  --resolve "httpbin.contoso.com:80:${INGRESS_NGINX_IP}" \
+  http://httpbin.contoso.com/get
 ```
+
+If you added a TLS listener in step 5, also probe HTTPS by switching the port to `443` and the scheme to `https://`.
 
 At minimum, verify the following items against `GW_IP` (using `--resolve` or a `Host` header) before you flip DNS:
 
@@ -200,7 +202,7 @@ Only proceed to step 7 once every preceding check passes consistently. If anythi
 
 ## Step 8: Clean up
 
-After traffic is stable on the Gateway API path, stop the add-on from reconciling a default `NginxIngressController` on the cluster, then delete every existing `NginxIngressController` custom resource. Disabling the add-on in step 7 stops the controller from reconciling new resources, but the `nginx` Deployment and Service it created earlier remain on the cluster until you remove the owning `NginxIngressController`.
+After traffic is stable on the Gateway API path, stop the add-on from reconciling a default `NginxIngressController` on the cluster, then delete every existing `NginxIngressController` custom resource. The `az aks approuting update --nginx None` command in this step stops the controller from reconciling new resources, but the `nginx` Deployment and Service it created earlier remain on the cluster until you remove the owning `NginxIngressController`.
 
 Update the cluster so the application routing add-on no longer manages a default ingress-nginx controller:
 
@@ -218,9 +220,9 @@ Raise the DNS TTL back to its normal value once you verify steady state.
 
 ## Roll back
 
-Both data planes can coexist, so rollback is symmetric at any point *before* you disable the ingress-nginx add-on. To roll back:
+Both data planes can coexist, so rollback is symmetric at any point *before* you disable the ingress-nginx add-on. This procedure leaves the original `Ingress` resources in place throughout the cutover, so a rollback only has to revert DNS:
 
-1. Recreate the `Ingress` resource.
+1. If you removed the `Ingress` resources after cutover, recreate them.
 1. Flip DNS back to `INGRESS_NGINX_IP` and wait for the TTL window to drain.
 1. Optionally disable the Gateway API implementation:
 
@@ -228,7 +230,7 @@ Both data planes can coexist, so rollback is symmetric at any point *before* you
     az aks update --resource-group $RG --name $CLUSTER --disable-app-routing-istio
     ```
 
-After you run `kubectl delete nginxingresscontrollers.approuting.kubernetes.azure.com`, the ingress-nginx controller is gone. Rolling back from that point requires re-enabling the add-on Default `NginxIngressController` and recreating the `Ingress`. Validate the chosen path before you disable ingress-nginx.
+After you run `kubectl delete nginxingresscontrollers.approuting.kubernetes.azure.com`, the ingress-nginx controller is gone. Rolling back from that point requires re-enabling the add-on Default `NginxIngressController` and recreating any `Ingress` resources you removed. Validate the chosen path before you disable ingress-nginx.
 
 ## Next steps
 
