@@ -41,7 +41,7 @@ The following table outlines three types of AKS upgrades, highlighting their sco
 
 When you upgrade a supported AKS cluster, you can't skip Kubernetes minor versions. You must perform all upgrades sequentially by minor version number. For example, upgrades between _1.28.x_ -> _1.29.x_ or _1.29.x_ -> _1.30.x_ are allowed. _1.28.x_ -> _1.30.x_ isn't allowed.
 
-The control plane can be up to two minor versions ahead of node pools. For example, if your control plane is at _1.30.x_, your node pools can be at _1.28.x_, _1.29.x_, or _1.30.x_.
+The control plane can be up to three minor versions ahead of node pools. For example, if your control plane is at _1.30.x_, your node pools can be at _1.28.x_, _1.29.x_, or _1.30.x_.
 
 ## Check for available AKS upgrades
 
