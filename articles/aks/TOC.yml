@@ -556,6 +556,8 @@
                 href: app-routing-gateway-api.md
               - name: Secure application routing Gateway API ingress traffic
                 href: app-routing-gateway-api-tls.md
+              - name: Migrate from application routing ingress-nginx to Gateway API
+                href: app-routing-nginx-to-gateway-api-migration.md
               - name: Advanced application routing add-on configurations (NGINX)
                 href: app-routing-nginx-configuration.md
               - name: Custom domain name and SSL certificate configuration
