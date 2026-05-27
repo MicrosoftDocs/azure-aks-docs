@@ -1,6 +1,6 @@
 ---
-title: Automatic Pod Disruption Budget management during AKS upgrades (preview)
-description: Learn how to use automatic Pod Disruption Budget management (preview) to manage Pod Disruption Budgets and unblock node drain operations during AKS cluster upgrades.
+title: Automatic Pod Disruption Budget management in AKS (preview)
+description: Learn how to use automatic Pod Disruption Budget management (preview) to manage Pod Disruption Budgets and unblock node drain operations in AKS clusters.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
@@ -12,7 +12,7 @@ ai-usage: ai-assisted
 
 ---
 
-# Automatic Pod Disruption Budget management during AKS upgrades (preview)
+# Automatic Pod Disruption Budget management in AKS (preview)
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -206,6 +206,11 @@ The following settings control how automatic PDB management behaves:
 
 The extension operates in one of two modes depending on the `enabledByDefault` setting.
 
+Two complementary controls govern which namespaces the extension acts on:
+
+- `controllerConfig.namespaces.actionedNamespaces` sets the baseline list at install time and is the easiest way to enable a known set of namespaces.
+- The `eviction-autoscaler.azure.com/enable` (or `disable`) namespace annotation lets cluster operators opt namespaces in or out at runtime without reinstalling the extension.
+
 ### Opt-in mode (default)
 
 When `enabledByDefault` is `false`, only namespaces listed in `actionedNamespaces` are enabled. You can enable additional namespaces individually by adding an annotation:
@@ -355,7 +360,6 @@ az k8s-extension delete \
 
 ## Limitations and considerations
 
-- Automatic PDB management is currently in **preview** and isn't recommended for production workloads.
 - Configuration updates require deleting and recreating the extension.
 - Automatic PDB management works with **Deployments** only. **StatefulSets aren't supported**, and using this extension with StatefulSets isn't recommended.
 - Automatic PDB management doesn't override or modify existing PDBs. It works alongside them by adjusting replica counts.
@@ -365,13 +369,14 @@ az k8s-extension delete \
 
 ## Troubleshooting
 
-| Symptom | Possible cause | Resolution |
-|---------|---------------|------------|
-| PDBs aren't created for deployments | `controllerConfig.pdb.create` is `false` (default), or the namespace isn't enabled | Set `pdb.create=true` and verify the namespace is in `actionedNamespaces` or has the opt-in annotation. |
-| Upgrade still fails with PDB eviction error | Cluster doesn't have capacity for the extra surge replicas | Enable the [cluster autoscaler](cluster-autoscaler.md) or [node auto-provisioning (NAP)](node-auto-provisioning.md), or add nodes so the scaled-up replicas have somewhere to schedule. |
-| Extension doesn't scale up during drain | The deployment's PDB already allows disruptions (`allowedDisruptions > 0`) | Automatic PDB management only acts when the PDB blocks eviction. If `allowedDisruptions` is already above zero, no scale-up is needed. |
-| Want to confirm automatic PDB management took action | Need to check status | Run `kubectl get evictionautoscalers -n <namespace> -o yaml` and inspect the status fields for scaling events. |
-| Want to see automatic PDB management events | Need to inspect scaling or PDB activity | Run `kubectl get events -n <namespace> --sort-by='.lastTimestamp'` and look for events related to automatic PDB management. |
+For symptoms, causes, and resolutions, see the AKS troubleshooting hub: [Troubleshoot Azure Kubernetes Service](/troubleshoot/azure/azure-kubernetes/welcome-azure-kubernetes).
+
+To inspect extension activity directly on the cluster, run:
+
+```bash
+kubectl get evictionautoscalers -A -o yaml
+kubectl get events -A --sort-by='.lastTimestamp'
+```
 
 ## Related content
 
