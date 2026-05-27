@@ -1,5 +1,5 @@
 ---
-title: Kubernetes Gateway API Ingress for Istio Service Mesh Add-on for Azure Kubernetes Service (AKS) (preview)
+title: Kubernetes Gateway API Ingress for Istio Service Mesh Add-on for Azure Kubernetes Service (AKS)
 description: Configure ingresses for the Istio service mesh add-on for AKS using the Kubernetes Gateway API.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -10,9 +10,7 @@ ms.reviewer: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to deploy Kubernetes Gateway API-based ingress gateways for the Istio service mesh on my cluster, so that I can efficiently manage ingress application traffic routing."
 ---
 
-# Configure Istio ingress with the Kubernetes Gateway API for Azure Kubernetes Service (AKS) (preview)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+# Configure Istio ingress with the Kubernetes Gateway API for Azure Kubernetes Service (AKS)
 
 The Istio service mesh add-on supports both [Istio's own ingress traffic management API][istio-deploy-ingress] and the Kubernetes Gateway API for ingress traffic management. You can use the Istio Gateway API [automated deployment model][istio-gateway-auto-deployment] or the [manual deployment model][istio-gateway-manual-deployment]. This article describes how to configure ingress traffic management for the Istio service mesh add-on using the Kubernetes Gateway API with the [automated deployment model][istio-gateway-auto-deployment].
 
