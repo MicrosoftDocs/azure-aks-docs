@@ -4,7 +4,7 @@ description: Learn how to configure and customize rolling upgrades for Azure Kub
 ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
-ms.date: 12/09/2025
+ms.date: 05/26/2026
 author: kaarthis
 ms.author: schaffererin
 # Customer intent: "As a cluster operator, I want to configure rolling upgrades for my AKS node pools so that I can upgrade nodes with minimal workload disruption."
@@ -52,9 +52,9 @@ AKS accepts both integer values and a percentage value for max surge. For exampl
 | Integer | `5` | Five extra nodes to surge |
 | Percentage | `50%` | Surge value of half the current node count in the pool |
 
-Max surge percent values can be a minimum of `1%` and a maximum of `100%`. A percent value is rounded up to the nearest node count. If the max surge value is higher than the required number of nodes to be upgraded, the number of nodes to be upgraded is used for the max surge value. 
+Max surge can be set to an integer or a percentage. A percent value is rounded up to the nearest node count. If the max surge value is higher than the required number of nodes to be upgraded, the number of nodes to be upgraded is used for the max surge value. 
 
-In the event that scaling to the MaxSurge value isn't possible due to quota or capacity limitations, AKS will attempt a surge of 1 automatically by default as a backup.
+If scaling to the max surge value isn't possible due to quota or capacity limitations, for agent pools with Kubernetes version >= 1.35, AKS automatically attempts a surge of 1 as a fallback. If the surge of 1 succeeds, the upgrade proceeds with 1 surge node.
 
 #### Set max surge value
 
@@ -93,7 +93,7 @@ AKS accepts both integer values and a percentage value for max unavailable. For 
 | Integer | `5` | Five nodes are cordoned from the existing nodes |
 | Percentage | `50%` | Half the current node count in the pool will be unavailable |
 
-Max unavailable percent values can be a minimum of `1%` and a maximum of `100%`. A percent value is rounded up to the nearest node count.
+The default value of `maxUnavailable` is `0`. When `maxUnavailable` is `0`, AKS requires `maxSurge` to be greater than `0`. For more details, see the [AgentPoolUpgradeSettings API reference](/rest/api/aks/agent-pools/create-or-update?view=rest-aks-2026-03-01&tabs=HTTP#agentpoolupgradesettings).
 
 #### Set max unavailable value
 
@@ -125,13 +125,39 @@ az aks nodepool upgrade \
     --max-unavailable 5
 ```
 
-### Capacity Based Surge (preview)
+### MaxUnavailable fallback (preview)
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-Set both MaxUnavailable and MaxSurge values to surge based on available capacity. With both  configurations enabled, the MaxSurge value will be attempted first. If MaxSurge value is not available due to quota or capacity, a surge of 1 node will be attempted. If a surge of 1 is not available, MaxUnavailable configuration will be attempted for an in-place upgrade. 
+When both `maxSurge` and `maxUnavailable` are greater than 0, AKS uses a fallback strategy during upgrades:
 
-The aks-preview Azure CLI extension is required to use Capacity Based Surge. MaxSurge and MaxUnavailable can be used together for a Capacity Based Surge or individually.
+1. **Attempt full surge**: AKS first attempts to surge using the configured `maxSurge` value.
+2. **Fall back to surge of 1**: If the full surge isn't possible due to quota or capacity limitations, AKS attempts a surge of 1 node instead (for agent pools with Kubernetes version >= 1.35).
+3. **Fall back to in-place upgrade**: If AKS fails to get a surge node, it falls back to an in-place upgrade using `maxUnavailable`, cordoning and draining existing nodes without adding new ones.
+
+This fallback approach ensures upgrades can proceed even when capacity is constrained, while still preferring the less disruptive surge-based approach when resources are available.
+
+The aks-preview Azure CLI extension is required to use MaxUnavailable fallback. `maxSurge` and `maxUnavailable` can be used together for fallback behavior or individually.
+
+#### Set both max surge and max unavailable values
+
+```azurecli-interactive
+# Configure fallback: try surge first, fall back to in-place upgrade if capacity is unavailable
+az aks nodepool add \
+    --name <node-pool-name> \
+    --resource-group <resource-group-name> \
+    --cluster-name <cluster-name> \
+    --max-surge 33% \
+    --max-unavailable 3
+
+# Update an existing node pool with fallback configuration
+az aks nodepool update \
+    --name <node-pool-name> \
+    --resource-group <resource-group-name> \
+    --cluster-name <cluster-name> \
+    --max-surge 33% \
+    --max-unavailable 3
+```
 
 ### Customize node drain timeout
 
