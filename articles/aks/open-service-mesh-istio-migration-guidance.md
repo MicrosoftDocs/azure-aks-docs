@@ -1,20 +1,20 @@
 ---
-title: Migration guidance for Open Service Mesh to Istio
-description: Migration guidance for Open Service Mesh configurations to Istio
-services: container-service
+title: Migration guidance from the Open Service Mesh (OSM) add-on to the Istio add-on
+description: Learn how to migrate from the Open Service Mesh (OSM) add-on to the Istio add-on for Azure Kubernetes Service (AKS).
+ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 09/25/2024
+ms.date: 05/27/2026
 ms.author: schaffererin
 author: schaffererin
-# Customer intent: "As a cloud engineer migrating microservices from Open Service Mesh to Istio, I want detailed guidance on translating OSM configurations to Istio equivalents, so that I can ensure a seamless transition and effective management of my workloads within the Istio service mesh."
+# Customer intent: "As a cloud engineer migrating microservices from the OSM add-on to the Istio add-on, I want guidance for translating OSM add-on configurations to Istio add-on equivalents, so that I can plan the changes needed for my workloads."
 ---
 
-# Migration guidance for Open Service Mesh (OSM) configurations to Istio
+# Migration guidance from the Open Service Mesh (OSM) add-on to the Istio add-on
 
 > [!IMPORTANT]
-> This article aims to provide a simplistic understanding of how to identify OSM configurations and translate them to equivalent Istio configurations for migrating workloads from OSM to Istio. This by no means, is considered to be an exhaustive detailed guide.
+> This article introduces how to identify OSM add-on configurations and translate them to equivalent Istio add-on configurations. It is not an exhaustive production migration runbook.
 
-This article provides practical guidance for mapping OSM policies to the [Istio](https://istio.io/) policies to help migrate your microservices deployments managed by OSM over to being managed by Istio. We utilize the OSM [Bookstore sample application](https://docs.openservicemesh.io/docs/getting_started/install_apps/) as a base reference for current OSM users. The following walk-through deploys the Bookstore application. The same steps are followed and explain how to apply the OSM [SMI](https://smi-spec.io/) traffic policies using the Istio equivalent.
+This article provides practical guidance for mapping OSM add-on policies to the equivalent Istio add-on policies. The source and target in this article are both managed Azure Kubernetes Service add-ons. This article does not cover migration from upstream Open Service Mesh to a self-managed or open source Istio installation. We utilize the OSM [Bookstore sample application](https://docs.openservicemesh.io/docs/getting_started/install_apps/) as a base reference for current OSM add-on users. The following walk-through deploys the Bookstore application. The same steps are followed and explain how to apply the OSM [SMI](https://smi-spec.io/) traffic policies using the Istio add-on equivalent.
 
 If you are not using OSM and are new to Istio, start with [Istio's own Getting Started guide](https://istio.io/latest/docs/setup/getting-started/) to learn how to use the Istio service mesh for your applications. If you are currently using OSM, make sure you are familiar with the OSM [Bookstore sample application](https://docs.openservicemesh.io/docs/getting_started/install_apps/) walk-through on how OSM configures traffic policies. The following walk-through does not duplicate the current documentation, and reference specific topics when relevant. You should be comfortable and fully aware of the bookstore application architecture before proceeding.
 
@@ -22,9 +22,9 @@ If you are not using OSM and are new to Istio, start with [Istio's own Getting S
 
 - An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - [Azure CLI installed](/cli/azure/install-azure-cli).
-- The OSM AKS add-on is uninstalled from your AKS cluster
+- The OSM add-on is uninstalled from your AKS cluster
 - Any existing OSM Bookstore application, including namespaces, is uninstalled and deleted from your cluster
-- [Install the Istio AKS service mesh add-on](istio-deploy-addon.md)
+- [Install the Istio add-on](istio-deploy-addon.md)
 
 ## Modifications needed to the OSM Sample Bookstore Application
 

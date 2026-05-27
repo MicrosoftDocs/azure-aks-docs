@@ -3,7 +3,7 @@ title: Deploy the Open Service Mesh add-on using Bicep in Azure Kubernetes Servi
 description: Use a Bicep template to deploy the Open Service Mesh (OSM) add-on to Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-bicep
-ms.date: 09/25/2024
+ms.date: 05/27/2026
 ms.author: schaffererin
 author: schaffererin
 # Customer intent: As a cloud developer, I want to deploy the Open Service Mesh add-on to an Azure Kubernetes Service cluster using a Bicep template, so that I can efficiently manage microservices communication and ensure proper service mesh configurations.
@@ -16,15 +16,7 @@ This article shows you how to deploy the Open Service Mesh (OSM) add-on to Azure
 [!INCLUDE [open-service-mesh-retirement](./includes/open-service-mesh-retirement.md)]
 
 > [!IMPORTANT]
-> Based on the version of Kubernetes your cluster is running, the OSM add-on installs a different version of OSM.
->
-> |Kubernetes version         | OSM version installed |
-> |---------------------------|-----------------------|
-> | 1.24.0 or greater         | 1.2.5                 |
-> | Between 1.23.5 and 1.24.0 | 1.1.3                 |
-> | Below 1.23.5              | 1.0.0                 |
->
-> Older versions of OSM may not be available for install or be actively supported if the corresponding AKS version has reached end of life. You can check the [AKS Kubernetes release calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar) for information on AKS version support windows.
+> The Kubernetes version of your cluster determines which OSM add-on component version is installed on your AKS cluster. To see which OSM add-on version maps to each AKS version, see the **AKS managed add-ons** column of the [Kubernetes component version table](./supported-kubernetes-versions.md#aks-components-breaking-changes-by-version). To verify the version installed on your cluster, inspect the `osm-controller` image after installation.
 
 [Bicep](/azure/azure-resource-manager/bicep/overview) is a domain-specific language that uses declarative syntax to deploy Azure resources. You can use Bicep in place of creating [Azure Resource Manager templates](/azure/azure-resource-manager/templates/overview) to deploy your infrastructure-as-code Azure resources.
 

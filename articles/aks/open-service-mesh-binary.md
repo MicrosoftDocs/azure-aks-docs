@@ -3,7 +3,7 @@ title: Download the OSM client Library
 description: Download and configure the Open Service Mesh (OSM) client library
 ms.topic: concept-article
 ms.custom: linux-related-content
-ms.date: 09/25/2024
+ms.date: 05/27/2026
 ms.author: schaffererin
 author: schaffererin
 zone_pivot_groups: client-operating-system
@@ -17,15 +17,7 @@ This article shows how to download the OSM client library to operate and configu
 [!INCLUDE [open-service-mesh-retirement](./includes/open-service-mesh-retirement.md)]
 
 > [!IMPORTANT]
-> Based on the version of Kubernetes your cluster is running, the OSM add-on installs a different version of OSM.
->
-> |Kubernetes version         | OSM version installed |
-> |---------------------------|-----------------------|
-> | 1.24.0 or greater         | 1.2.5                 |
-> | Between 1.23.5 and 1.24.0 | 1.1.3                 |
-> | Below 1.23.5              | 1.0.0                 |
->
-> Older versions of OSM may not be available for install or be actively supported if the corresponding AKS version has reached end of life. You can check the [AKS Kubernetes release calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar) for information on AKS version support windows.
+> The Kubernetes version of your cluster determines which OSM add-on component version is installed on your AKS cluster. To see which OSM add-on version maps to each AKS version, see the **AKS managed add-ons** column of the [Kubernetes component version table](./supported-kubernetes-versions.md#aks-components-breaking-changes-by-version). To verify the version installed on your cluster, inspect the `osm-controller` image after installation.
 
 ::: zone pivot="client-operating-system-linux"
 

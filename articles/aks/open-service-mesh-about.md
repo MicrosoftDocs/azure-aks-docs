@@ -2,7 +2,7 @@
 title: Open Service Mesh in Azure Kubernetes Service (AKS)
 description: Learn about the Open Service Mesh (OSM) add-on in Azure Kubernetes Service (AKS).
 ms.topic: concept-article
-ms.date: 09/25/2024
+ms.date: 05/27/2026
 ms.author: schaffererin
 author: schaffererin
 # Customer intent: As a Kubernetes administrator, I want to enable the Open Service Mesh add-on in my AKS cluster, so that I can enhance service communication security and observability within my microservices architecture.
@@ -23,15 +23,7 @@ Microsoft started the OSM project, but it's now governed by the [Cloud Native Co
 OSM can be added to your Azure Kubernetes Service (AKS) cluster by enabling the OSM add-on using the [Azure CLI][osm-azure-cli] or a [Bicep template][osm-bicep]. The OSM add-on provides a fully supported installation of OSM that's integrated with AKS.
 
 > [!IMPORTANT]
-> Based on the version of Kubernetes your cluster is running, the OSM add-on installs a different version of OSM.
->
-> |Kubernetes version         | OSM version installed |
-> |---------------------------|-----------------------|
-> | 1.24.0 or greater         | 1.2.5                 |
-> | Between 1.23.5 and 1.24.0 | 1.1.3                 |
-> | Below 1.23.5              | 1.0.0                 |
->
-> Older versions of OSM may not be available for install or be actively supported if the corresponding AKS version has reached end of life. You can check the [AKS Kubernetes release calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar) for information on AKS version support windows.
+> The Kubernetes version of your cluster determines which OSM add-on component version is installed on your AKS cluster. To see which OSM add-on version maps to each AKS version, see the **AKS managed add-ons** column of the [Kubernetes component version table](./supported-kubernetes-versions.md#aks-components-breaking-changes-by-version). To verify the version installed on your cluster, inspect the `osm-controller` image after installation.
 
 ## Capabilities and features
 
@@ -53,7 +45,7 @@ For more information on ingress and OSM, see [Using ingress to manage external a
 
 ## Limitations
 
-The OSM AKS add-on has the following limitations:
+The OSM add-on has the following limitations:
 
 - After installation, you must enable Iptables redirection for port IP address and port range exclusion using `kubectl patch`. For more information, see [iptables redirection][ip-tables-redirection].
 - Any pods that need access to IMDS, Azure DNS, or the Kubernetes API server must have their IP addresses added to the global list of excluded outbound IP ranges using [Global outbound IP range exclusions][global-exclusion].

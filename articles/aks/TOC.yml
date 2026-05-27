@@ -152,7 +152,7 @@
       items:
         - name: Service meshes overview
           href: servicemesh-about.md
-        - name: Istio service mesh AKS add-on
+        - name: Istio add-on
           items:
             - name: Deployment and configuration
               items:
@@ -204,11 +204,11 @@
                   href: istio-telemetry.md
                 - name: Collect metrics in Azure Managed Prometheus
                   href: istio-metrics-managed-prometheus.md
-        - name: Open Service Mesh AKS add-on
+        - name: Open Service Mesh (OSM) add-on
           items:
-            - name: About Open Service Mesh
+            - name: About the OSM add-on
               href: open-service-mesh-about.md
-            - name: Migration Guidance to Istio AKS add-on
+            - name: Migration guidance from the OSM add-on to the Istio add-on
               href: open-service-mesh-istio-migration-guidance.md
             - name: Use the Azure CLI
               href: open-service-mesh-deploy-addon-az-cli.md
@@ -216,11 +216,11 @@
               href: open-service-mesh-deploy-addon-bicep.md
             - name: Install the OSM CLI
               href: open-service-mesh-binary.md
-            - name: Open Service Mesh integrations
+            - name: OSM add-on integrations
               href: open-service-mesh-integrations.md
-            - name: Troubleshoot Open Service Mesh
+            - name: Troubleshoot the OSM add-on
               href: open-service-mesh-troubleshoot.md
-            - name: Uninstall the Open Service Mesh AKS add-on
+            - name: Uninstall the OSM add-on
               href: open-service-mesh-uninstall-add-on.md
 - name: Create and manage node pools
   items:
