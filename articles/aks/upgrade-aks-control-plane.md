@@ -4,7 +4,7 @@ description: Learn how to upgrade the control plane of an Azure Kubernetes Servi
 ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
-ms.date: 12/09/2025
+ms.date: 05/27/2025
 author: kaarthis
 ms.author: schaffererin
 # Customer intent: "As a cluster operator, I want to upgrade my AKS cluster control plane so that I can access the latest Kubernetes features and security updates while maintaining control over when my node pools are upgraded."
