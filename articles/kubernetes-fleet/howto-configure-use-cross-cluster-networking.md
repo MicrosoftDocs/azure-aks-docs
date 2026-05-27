@@ -286,21 +286,31 @@ Reviewing the changes is optional, but recommended, especially for larger cross-
 ## Clean up resources
 
 > [!NOTE]
-> In order to prevent accidental outages from a disconnected cross-cluster network, deletion of members that are part of a cross-cluster network is blocked. These members must be removed from the cross-cluster network before they can be deleted.
+> To prevent unexpected outages, member clusters joined to a cross-cluster network can't be removed from a fleet. These members must be removed from the cross-cluster network before they can be deleted.
 
 To clean up resources, first remove the members from the cross-cluster network:
 
 1. Change the cross-cluster network profile's member selector to a value that no member cluster has, then apply the change so all members are disconnected from the cross-cluster network.
 
     ```azurecli-interactive
-    az fleet clustermeshprofile create --fleet-name ${FLEET} --resource-group ${GROUP} --name ${NETWORK_PROFILE_NAME} --member-selector "mesh=none"
-    az fleet clustermeshprofile apply --fleet-name ${FLEET} --resource-group ${GROUP} --name ${NETWORK_PROFILE_NAME}
+    az fleet clustermeshprofile create \
+        --fleet-name ${FLEET} \
+        --resource-group ${GROUP} \
+        --name ${NETWORK_PROFILE_NAME} \
+        --member-selector "mesh=none"
+    az fleet clustermeshprofile apply \
+        --fleet-name ${FLEET} \
+        --resource-group ${GROUP} \
+        --name ${NETWORK_PROFILE_NAME}
     ```
 
-    Confirm the profile reports no members before continuing.
+1. Confirm the profile reports no members before continuing.
 
     ```azurecli-interactive
-    az fleet clustermeshprofile list-members --fleet-name ${FLEET} --resource-group ${GROUP} --name ${NETWORK_PROFILE_NAME}
+    az fleet clustermeshprofile list-members \
+        --fleet-name ${FLEET} \
+        --resource-group ${GROUP} \
+        --name ${NETWORK_PROFILE_NAME}
     ```
 
     ```output
@@ -313,7 +323,7 @@ To clean up resources, first remove the members from the cross-cluster network:
     az fleet clustermeshprofile delete --fleet-name ${FLEET} --resource-group ${GROUP} --name ${NETWORK_PROFILE_NAME} --yes
     ```
 
-1. Delete the member clusters from the fleet (or delete the fleet entirely with `az fleet delete`) and, when no longer needed, delete the AKS clusters and resource group.
+1. Delete the member clusters from the fleet resource (or delete the fleet resource entirely with `az fleet delete`) and, when no longer needed, delete the AKS clusters and resource group.
 
 ## Troubleshooting
 
@@ -322,10 +332,10 @@ To clean up resources, first remove the members from the cross-cluster network:
 Check the `clustermesh-apiserver` Service on each affected member cluster:
 
 ```bash
-kubectl --context=<cluster-context> -n kube-system get svc clustermesh-apiserver
+kubectl --context=cluster1 -n kube-system get svc clustermesh-apiserver
 ```
 
-If `EXTERNAL-IP` is shown as `<pending>`, as in the example output below, the Service has not been assigned an internal load balancer IP:
+If `EXTERNAL-IP` is shown as `<pending>`, as in the example, the Service has not been assigned an internal load balancer IP:
 
 ```output
 NAME                    TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
@@ -335,7 +345,7 @@ clustermesh-apiserver   LoadBalancer   10.0.221.162   <pending>     2379:31640/T
 Inspect the Service events to identify the underlying cause:
 
 ```bash
-kubectl --context=<cluster-context> -n kube-system describe svc clustermesh-apiserver
+kubectl --context=cluster1 -n kube-system describe svc clustermesh-apiserver
 ```
 
 A common cause is an `AuthorizationFailed` (HTTP 403) error, indicating that the AKS cluster identity does not have permission to read or modify the subnet that backs the cluster:
@@ -358,7 +368,7 @@ Events:
 
 Without this permission, the AKS load balancer controller can't assign an internal IP to the `clustermesh-apiserver` Service, and the cross-cluster network can't complete the connection.
 
-The AKS cluster identity normally receives a **Network Contributor** role assignment on the VNet or subnet when the cluster is created, but in some configurations this assignment isn't created. To resolve the issue, manually grant the AKS cluster identity the **Network Contributor** role on the VNet for every affected member cluster, then force a reconcile on the cluster using the `az aks update` command so the new role takes effect.
+The AKS cluster identity normally receives a **Network Contributor** role assignment on the virtual network or subnet when the cluster is created, but in some configurations this assignment isn't created. Manually grant the AKS cluster identity the **Network Contributor** role on the virtual network for every affected member cluster, then force a reconcile on the cluster using the `az aks update` command so the new role takes effect.
 
 ```azurecli-interactive
 AKS_IDENTITY=$(az aks show --resource-group ${GROUP} --name ${MEMBER_CLUSTER_1} --query "identity.principalId" -o tsv)
