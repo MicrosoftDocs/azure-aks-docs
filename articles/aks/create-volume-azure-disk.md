@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.date: 01/08/2025
 author: schaffererin
 ms.author: schaffererin
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes administrator, I want to learn how to create and manage persistent volumes using Azure Storage CSI drivers in Azure Kubernetes Service (AKS) so that I can provide scalable and reliable storage solutions for my containerized applications."
 ---
 
@@ -30,15 +31,17 @@ This article shows you how to dynamically and statically create persistent volum
 
 Storage classes define how a unit of storage is dynamically created with a persistent volume.
 
-Each AKS cluster includes four built-in storage classes, with two of them configured to work with Azure Disks:
+Each AKS cluster includes built-in storage classes that are configured to work with Azure Disks:
 
-- The _default_ storage class provisions a Standard SSD Azure Disk.
-  - Standard SSDs back Standard storage and deliver cost-effective storage while still delivering reliable performance.
-- The _managed-csi-premium_ storage class provisions a premium Azure Disk.
-  - SSD-based high-performance, low-latency disks back Premium disks. They're ideal for virtual machines (VMs) running production workloads. When you use the Azure Disk CSI driver on AKS, you can also use the `managed-csi` storage class, which is backed by Standard SSD locally redundant storage (LRS).
-- Effective starting with Kubernetes version 1.29: When you deploy AKS clusters across multiple availability zones, AKS now uses zone-redundant storage (ZRS) to create managed disks within built-in storage classes.
-  - ZRS ensures synchronous replication of your Azure managed disks across multiple Azure availability zones in your chosen region. This redundancy strategy enhances the resilience of your applications and safeguards your data against datacenter failures.
-    - However, it's important to note that ZRS comes at a higher cost compared to locally redundant storage (LRS). If cost optimization is a priority, you can create a new storage class with the LRS SKU name parameter and use it in your PVC.
+- The _default_ storage class provisions a [Standard SSD][standard-ssd] Azure Disk.
+  - [Standard SSDs][standard-ssd] back Standard storage and deliver cost-effective storage while still delivering reliable performance.
+- The _managed-csi-premium_ storage class provisions a [Premium SSD][az-premium-ssd] Azure Disk.
+  - SSD-based high-performance, low-latency disks back [Premium SSDs][az-premium-ssd]. They're ideal for virtual machines (VMs) running production workloads. When you use the Azure Disk CSI driver on AKS, you can also use the `managed-csi` storage class that is backed by [Standard SSD][standard-ssd] [locally redundant storage (LRS)][disk-redundancy].
+- Effective starting with Kubernetes version 1.35: The _managed-csi-premium-v2_ storage class provisions a [Premium SSD v2][premiumv2_lrs_disks] Azure Disk.
+  - [Premium SSD v2][premiumv2_lrs_disks] is designed for I/O-intensive enterprise workloads that require sub-millisecond disk latencies and high IOPS and throughput at a low cost. It's ideal for a broad range of workloads such as SQL Server, Oracle, MariaDB, SAP, Cassandra, MongoDB, big data and analytics, and gaming. The built-in `managed-csi-premium-v2` storage class provisions disks as [locally redundant storage (LRS)][disk-redundancy]. Premium SSD v2 has [region and zone availability requirements][premiumv2_lrs_disks]; verify that your node pool zones support Premium SSD v2 before using this storage class.
+- Effective starting with Kubernetes version 1.29: When you deploy AKS clusters across one or multiple availability zones, AKS uses [zone-redundant storage (ZRS)][disk-redundancy] to create managed disks within built-in storage classes (excluding `managed-csi-premium-v2`, which provisions LRS disks).
+  - [ZRS][disk-redundancy] ensures synchronous replication of your Azure managed disks across multiple Azure availability zones in your chosen region. This redundancy strategy enhances the resilience of your applications and safeguards your data against datacenter failures.
+    - However, it's important to note that [ZRS][disk-redundancy] comes at a higher cost compared to [locally redundant storage (LRS)][disk-redundancy]. If cost optimization is a priority, you can create a new storage class with the LRS SKU name parameter and use it in your PVC.
 
 Reducing the size of a PVC isn't supported due to the risk of data loss. You can edit an existing storage class using the `kubectl edit sc` command, or you can [create your own custom storage class](#create-custom-storage-classes-for-dynamic-pvs-with-azure-disks).
 
@@ -51,12 +54,13 @@ View the precreated storage classes using the [`kubectl get sc`][kubectl-get] co
 kubectl get sc
 ```
 
-Your output should resemble the following example output, which includes the `default` and `managed-csi-premium` storage classes that are precreated for Azure Disks:
+Your output should resemble the following example output, which includes the `default`, `managed-csi-premium`, and (on AKS version 1.35 or later) `managed-csi-premium-v2` storage classes that are precreated for Azure Disks:
 
 ```output
 NAME                  PROVISIONER               AGE
-default (default)     disk.csi.azure.com        1h
-managed-csi-premium   disk.csi.azure.com        1h
+default (default)        disk.csi.azure.com        1h
+managed-csi-premium      disk.csi.azure.com        1h
+managed-csi-premium-v2   disk.csi.azure.com        1h
 ```
 
 ## Create custom storage classes for dynamic PVs with Azure Disks
@@ -153,7 +157,7 @@ A PVC automatically provisions storage based on a storage class. In this case, a
     ```
 
    > [!TIP]
-   > To create a disk that uses premium storage, use `storageClassName: managed-csi-premium` rather than _managed-csi_.
+   > To create a disk that uses premium storage, use `storageClassName: managed-csi-premium` rather than _managed-csi_. On AKS version 1.35 or later, you can also use `storageClassName: managed-csi-premium-v2` to provision a [Premium SSD v2][premiumv2_lrs_disks] disk.
 
 1. Create the PVC using the [`kubectl apply`][kubectl-apply] command and specify your _azure-pvc.yaml_ file:
 
@@ -723,3 +727,5 @@ When you create an Azure disk for use with AKS, you can create the disk resource
 [on-demand-bursting]: /azure/virtual-machines/disk-bursting
 [customer-usage-attribution]: /azure/marketplace/azure-partner-customer-usage-attribution
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[standard-ssd]: /azure/virtual-machines/disks-types#standard-ssds
+[disk-redundancy]: /azure/virtual-machines/disks-redundancy
