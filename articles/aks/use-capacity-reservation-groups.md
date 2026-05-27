@@ -24,6 +24,7 @@ In this article, you learn how to use capacity reservation groups with node pool
 - You need the Azure CLI version 2.56 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - You need an existing [capacity reservation group](/azure/virtual-machines/capacity-reservation-associate-virtual-machine-scale-set) with at least one capacity reservation. If not, the node pool is added to the cluster with a warning and no capacity reservation group gets associated.
 - You need to [create a user-assigned managed identity with the `Contributor` role](#create-a-user-assigned-managed-identity-and-assign-it-to-an-aks-cluster) for the resource group that contains the capacity reservation group and assign the identity to your AKS cluster. System-assigned managed identities don't work for this feature.
+- The capacity reservation group must include enough capacity to meet the needs of the clusters upgrade [max surge][max-surge] configuration (ex. A 10 node cluster with a max surge of 2 nodes will run up to 12 nodes during an upgrade operation.)
 
 ### Create a user-assigned managed identity and assign it to an AKS cluster
 
@@ -72,7 +73,7 @@ In this article, you learn how to use capacity reservation groups with node pool
 
 ## Get the ID of an existing capacity reservation group
 
-- Get the ID of an existing capacity reservation group using the [`az capacity reservation group show`][az-crg-show] command and set it to an environment variable.
+Get the ID of an existing capacity reservation group using the [`az capacity reservation group show`][az-crg-show] command and set it to an environment variable.
 
     ```azurecli-interactive
     CRG_ID=$(az capacity reservation group show --capacity-reservation-group <crg-name> --resource-group <resource-group-name> --query id -o tsv)
@@ -80,15 +81,18 @@ In this article, you learn how to use capacity reservation groups with node pool
 
 ## Associate an existing capacity reservation group with a new node pool
 
-- Associate an existing capacity reservation group with a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--crg-id` flag. The following example assumes you have a CRG named "myCRG".
+Associate an existing capacity reservation group with a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--crg-id` flag. The following example assumes you have a CRG named "myCRG".
 
     ```azurecli-interactive
     az aks nodepool add --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --crg-id $CRG_ID
     ```
 
-## Associate an existing capacity reservation group with an existing node pool
+## Associate an existing capacity reservation group with an existing node pool (Preview)
 
-- Associate an existing capacity reservation group with an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--crg-id` flag.
+Associate an existing capacity reservation group with an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--crg-id` flag. This operation initiates a rolling update of the target node pool.
+
+> [!NOTE]
+> - During preview, non-zonal node pools must be scaled to zero before applying the capacity reservation group
 
     ```azurecli-interactive
     az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --crg-id $CRG_ID
@@ -117,6 +121,7 @@ To learn more about managing node pools in AKS, see [Manage node pools in Azure 
 
 <!-- LINKS -->
 [capacity-reservation-groups]:/azure/virtual-machines/capacity-reservation-associate-virtual-machine-scale-set
+[max-surge]: upgrade-aks-node-pools-rolling.md#customize-node-surge
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
