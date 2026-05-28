@@ -153,7 +153,7 @@ Once the migration is complete on your test clusters, we recommend monitoring th
 
 ## Roll back to your previous OS SKU
 
-If you experience issues during the OS SKU migration, you can roll back to your previous OS SKU. To do this, change the OS SKU field back to your previous value and resubmit the deployment, which triggers another upgrade operation and reimages the node pool to its previous OS SKU.
+If you experience issues during the OS SKU migration, you can roll back to your previous OS SKU. To do this, change the OS SKU field back to your previous value and resubmit the deployment, which triggers another upgrade operation and reimages the node pool to its previous OS SKU. If you roll back from ACL to your previous OS SKU, the node pool uses the Trusted Launch (Gen2) image variant by default unless Trusted Launch is explicitly disabled.
 
 Roll back to your previous OS SKU using the [`az aks nodepool update`](/cli/azure/aks/nodepool#az-aks-nodepool-update) command. This example rolls back from ACL to Azure Linux:
 

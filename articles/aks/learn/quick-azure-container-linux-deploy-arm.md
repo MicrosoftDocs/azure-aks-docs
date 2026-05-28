@@ -164,7 +164,7 @@ The following deployment uses an ARM template from [Azure Quickstart Templates](
   "resources": [
     {
       "type": "Microsoft.ContainerService/managedClusters",
-      "apiVersion": "2024-02-01",
+      "apiVersion": "2026-03-01",
       "name": "[parameters('clusterName')]",
       "location": "[parameters('location')]",
       "identity": {
@@ -199,7 +199,7 @@ The following deployment uses an ARM template from [Azure Quickstart Templates](
   "outputs": {
     "controlPlaneFQDN": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', parameters('clusterName')), '2024-02-01').fqdn]"
+      "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', parameters('clusterName')), '2026-03-01').fqdn]"
     }
   }
 }
@@ -213,9 +213,9 @@ For more AKS samples, see the [AKS quickstart templates](https://azure.microsoft
 
 1. Select **Deploy to Azure** to sign in and open a template.
 
-    [![Button to deploy the Resource Manager template to Azure.](../../reusable-content/ce-skilling/azure/media/template-deployments/deploy-to-azure-button.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2Fquickstarts%2Fmicrosoft.kubernetes%2Faks%2Fazuredeploy.json)
+    [![Button to deploy the Resource Manager template to Azure.](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2Fquickstarts%2Fmicrosoft.kubernetes%2Faks%2Fazuredeploy.json)
 
-1. Configure the template parameters in the **Custom deployment** page. For this quickstart, leave the default values for the _OS Disk Size GB_, _Agent Count_, _Agent VM Size_, and _OS Type_. Provide your own values for the following parameters:
+2. Configure the template parameters in the **Custom deployment** page. For this quickstart, leave the default values for the _OS Disk Size GB_, _Agent Count_, _Agent VM Size_, and _OS Type_. Provide your own values for the following parameters:
 
     - **Subscription**: Select an Azure subscription.
     - **Resource group**: Select **Create new**. Enter a unique name for the resource group, such as _myResourceGroup_, then select **OK**.
@@ -227,7 +227,7 @@ For more AKS samples, see the [AKS quickstart templates](https://azure.microsoft
     - **SSH public key source**: Select **Use existing public key**.
     - **Key pair name**: Copy and paste the _public_ part of your SSH key pair (by default, the contents of _~/.ssh/id\_rsa.pub_).
 
-1. Select **Review + Create** > **Create**.
+3. Select **Review + Create** > **Create**.
 
 It takes a few minutes to create the AKS cluster. Wait for the cluster to be successfully deployed before you move on to the next step.
 
