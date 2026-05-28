@@ -1,39 +1,43 @@
 ---
-title: Overview of AKS Automatic Clusters with Managed System Node Pools (Preview)
-description: Learn about the managed system node pools (preview) feature for Azure Kubernetes Service (AKS) Automatic clusters, including its key features, benefits, and restrictions.
-author: schaffererin
+title: Overview of AKS Automatic Clusters with Managed System Node Pools
+description: Learn about the managed system node pools feature for Azure Kubernetes Service (AKS) Automatic clusters, including its key features, benefits, and restrictions.
 ms.service: azure-kubernetes-service
-ms.custom: ignite-2025
+ms.custom: ignite-2025, build-2026
 ms.topic: overview
-ms.date: 11/12/2025
+author: schaffererin
 ms.author: schaffererin
-# Customer intent: As a cluster developer, I want to understand the managed system node pools feature for AKS Automatic clusters so that I can evaluate its benefits and limitations for my use case.
+ms.date: 05/22/2026
+
+# Customer intent: As a cluster developer, I want to understand AKS Automatic managed system node pools so that I can evaluate its benefits and limitations for my use case.
 ---
 
-# Managed system node pools (preview) on Azure Kubernetes Service (AKS) Automatic clusters
+# Overview of Azure Kubernetes Service (AKS) Automatic clusters with managed system node pools
 
-In this article, you learn about the managed system node pools (preview) feature for [Azure Kubernetes Service (AKS) Automatic clusters](../intro-aks-automatic.md). With this feature, AKS automatically manages system node pools in your cluster, including configuration, scaling, and maintenance.
+This overview explains the managed system node pools feature, which is by default enabled on new AKS Automatic clusters and only available in AKS Automatic. Managed system node pools allow you to focus on your applications while AKS manages the underlying infrastructure, including system node pools, to optimize performance and reliability.
 
-To create an AKS Automatic cluster with managed system node pools, see the [Create an Azure Kubernetes Service (AKS) Automatic cluster with managed system node pools (preview)](./aks-automatic-managed-system-node-pools.md) quickstart.
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+To create an AKS Automatic cluster with managed system node pools, see the [Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster](./quick-automatic-managed-network.md) quickstart.
 
 ## Key features and benefits
 
 The managed system node pools feature allows you to focus on your applications while AKS Automatic ensures that the underlying infrastructure is optimized for performance and reliability. Key features and benefits include:
 
 - **No operational overhead**: AKS provisions, upgrades, and scales the system node pools automatically, eliminating the need for manual intervention.
-- **Simplified cluster creation**: You don't need to track or allocate compute quotas for system node pools, as AKS handles this for you.
+- **Simplified cluster creation**: You don't need to track or allocate compute quotas for system node pools because AKS handles quotas for you.
 - **Cost efficiency**: Virtual machines (VMs) running on system node pools aren't charged to customer subscriptions, allowing you to optimize costs while maintaining high performance.
 - **Enhanced performance**: Isolating system workloads from customer applications improves reliability and ensures consistent performance backed by [Services Level Agreements (SLAs)](https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services).
+- **Managed system node pool by default**: New automatic clusters that are created enable managed system node pool by default. If you have existing automatic cluster without managed system node pools, you should recreate the cluster and migrate the workloads.
+- **Autoscaling and Node repair**: [Cluster autoscaler](../cluster-autoscaler-overview.md) is enabled for system nodes in the managed system node pool. [Node auto-repair](../node-auto-repair.md) is enabled for system nodes in the managed system node pool.
+
+[!INCLUDE [Kubernetes gateway](../includes/aks-automatic/aks-automatic-kubernetes-gateway.md)]
+
+[!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
 ## Components of managed system node pools
 
 The following table outlines the components managed by AKS in managed system node pools. AKS handles the creation, upgrading, and scaling of the system nodes where these components run.
 
-| Component | Namespace | Deployment(s) |
+| Component | Namespace | Deployment |
 |-----------|-----------|------------|
-| [Azure Monitor](/azure/azure-monitor/containers/kubernetes-monitoring-enable) | `kube-system` | `ama-logs`, `ama-metrics`, `ama-metrics-ksm`, `ama-metrics-operator-targets` |
 | [Workload identity](../workload-identity-overview.md) | `kube-system` | `azure-wi-webhook-controller-manager` |
 | [CoreDNS](../dns-concepts.md#coredns-in-azure-kubernetes-service) | `kube-system` | `coredns`, `coredns-autoscaler` |
 | [Eraser](../image-cleaner.md) | `kube-system` | `eraser-controller-manager` |
@@ -69,5 +73,5 @@ The following AKS API operations are **unsupported**:
 
 ## Next steps
 
-> [!div class="nextstepaction"]  
-> [Create an AKS Automatic cluster with managed system node pools (preview)](./aks-automatic-managed-system-node-pools.md)
+> [!div class="nextstepaction"]
+> [Create an Azure Kubernetes Service (AKS) Automatic cluster](./quick-automatic-managed-network.md)
