@@ -101,7 +101,7 @@ The Azure Linux node images are fully validated by AKS and built from source, us
 
 ### Azure Linux with OS Guard for AKS (preview) node images
 
-The Azure Linux with OS Guard for AKS node images are fully validated by AKS and built from source, using a native AKS image. Versioning for Azure Linux with OS Guard node images follow the AKS date-based format (for example: 202509.23.0). You can check the node images in the release notes and by running the [`az aks nodepool list`][az-aks-nodepool-list] command to view the `nodeImageVersion`. For more information, see [Azure Linux with OS Guard for AKS][os-guard].
+The Azure Linux with OS Guard for AKS node images are fully validated by AKS and built from source, using a native AKS image. Versioning for Azure Linux with OS Guard node images follows the AKS date-based format (for example: 202509.23.0). You can check the node images in the release notes and by running the [`az aks nodepool list`][az-aks-nodepool-list] command to view the `nodeImageVersion`. For more information, see [Azure Linux with OS Guard for AKS][os-guard].
 
 | Node image | Use case | Limitations |
 |--|--|--|
@@ -109,7 +109,7 @@ The Azure Linux with OS Guard for AKS node images are fully validated by AKS and
 
 ### Flatcar Container Linux for AKS (preview) node images
 
-The Flatcar Container Linux for AKS node images are fully validated by AKS and supported by Microsoft and the Flatcar community. Versioning for Flatcar Container Linux node images follow the AKS date-based format (for example: 202506.13.0). You can check the node images in the release notes and by using the [`az aks nodepool list`][az-aks-nodepool-list] command to view the `nodeImageVersion`. You can check the Flatcar version number (for example: Flatcar 4344.0.0) in the release notes and by running the `kubectl get nodes` command. For more information, see [Flatcar Container Linux for AKS][flatcar].
+The Flatcar Container Linux for AKS node images are fully validated by AKS and supported by Microsoft and the Flatcar community. Versioning for Flatcar Container Linux node images follows the AKS date-based format (for example: 202506.13.0). You can check the node images in the release notes and by using the [`az aks nodepool list`][az-aks-nodepool-list] command to view the `nodeImageVersion`. You can check the Flatcar version number (for example: Flatcar 4344.0.0) in the release notes and by running the `kubectl get nodes` command. For more information, see [Flatcar Container Linux for AKS][flatcar].
 
 | Node image | Use case | Limitations |
 |--|--|--|

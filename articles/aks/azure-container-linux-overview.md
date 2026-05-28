@@ -16,7 +16,7 @@ In this article, we provide an overview of Azure Container Linux (ACL), an immut
 ACL is generally available (GA) as an OS option on AKS starting AKS v1.34. You can deploy ACL node pools in a new AKS cluster, add ACL node pools to your existing clusters, and migrate existing Linux node pools to ACL.
 
 > [!NOTE]
-> ACL is the GA release of Flatcar Container Linux for AKS, which entered public preview in November 2025. OS Guard (preview) features, such as code integrity with Integrity Policy Enforcement (IPE), will be incorporated into ACL in a future release, after which OS Guard (preview) will be retired. If you need OS Guard features today, we recommend continuing to use OS Guard and migrating to ACL once those features become available.
+> ACL is the GA release of Flatcar Container Linux for AKS, which entered preview in November 2025. OS Guard (preview) features, such as code integrity with Integrity Policy Enforcement (IPE), currently aren't supported.  If you need OS Guard features today, we recommend continuing to use OS Guard and migrating to ACL once those features become available.
 
 ## Benefits of using ACL on AKS
 
@@ -77,6 +77,6 @@ Example output:
 To get started using ACL for AKS, see the following resources:
 
 - [Deploy an ACL cluster using the Azure CLI](./learn/quick-azure-container-linux-deploy-cli.md)
-- [Deploy an ACL cluster using an ARM template](./learn/quick-azure-container-linux-deploy-arm.md)
+- [Deploy an ACL cluster using an ARM template](./learn/quick-azure-container-linux-deploy-arm-template.md)
 - [Add an ACL node pool to an existing cluster](create-node-pools.md#add-a-second-node-pool-using-the-azure-cli)
 - [Migrate existing nodes to ACL](./migrate-nodes-azure-container-linux.md)

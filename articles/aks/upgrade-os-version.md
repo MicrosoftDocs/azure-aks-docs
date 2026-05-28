@@ -198,7 +198,7 @@ az aks nodepool update \
 >
 > - [FIPS](./enable-fips-nodes.md) and [CVM](./use-cvm.md) aren't supported.
 > - Ubuntu 22.04 is supported in Kubernetes versions 1.25 to 1.36.
-> - `--os-sku Ubuntu2204` is intended for roll back to Ubuntu 22.04 on your current Kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your Kubernetes version to 1.37 and above.
+> - `--os-sku Ubuntu2204` is intended for rollback to Ubuntu 22.04 on your current Kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your Kubernetes version to 1.37 and above.
 
 Roll back to `--os-sku Ubuntu2204` on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command.
 
