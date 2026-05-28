@@ -23,6 +23,7 @@ API Server VNet Integration is supported for public or private clusters. You can
 ## Prerequisites
 
 - You must have Azure CLI version 2.73.0 or later installed. You can check your version using the `az --version` command.
+- If you bring your own virtual network, review the [virtual network prerequisites](concepts-network-cni-overview.md#prerequisites).
 
 ## Limitations
 
