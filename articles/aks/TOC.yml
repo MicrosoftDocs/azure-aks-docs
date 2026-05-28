@@ -4,6 +4,16 @@
   href: what-is-aks.md
 - name: Compare AKS with other Azure container options
   href: compare-container-options-with-aks.md
+- name: AKS enabled by Azure Arc
+  items:
+    - name: AKS enabled by Azure Arc
+      href: /azure/aks/aksarc?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: What is AKS enabled by Azure Arc?
+      href: /azure/aks/aksarc/aks-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Azure Local
+      href: /azure/aks/aksarc/aks-whats-new-local?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: AKS Edge Essentials
+      href: /azure/aks/aksarc/aks-edge-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json   
 - name: Get started with AKS
   items:
     - name: Kubernetes basics
