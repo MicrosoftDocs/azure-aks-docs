@@ -92,7 +92,7 @@ Associate an existing capacity reservation group with a new node pool using the 
 Associate an existing capacity reservation group with an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--crg-id` flag.
 
 - For zonal node pools, this operation initiates a rolling update of the target node pool.
-- For non-zonal (regional) node pools in preview, first scale the node pool to zero, then apply the capacity reservation group.
+- For non-zonal (regional) node pools during the preview, first scale the node pool to zero, then apply the capacity reservation group.
 
 ### Prerequisites
 
