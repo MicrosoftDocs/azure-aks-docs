@@ -3,7 +3,7 @@ title: Upgrade Operating System (OS) Version in Azure Kubernetes Service (AKS) C
 description: Learn about support, testing, and rollback for OS versions available on Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 09/23/2025
+ms.date: 05/29/2026
 author: allyford
 ms.author: allyford
 ai-usage: ai-assisted
