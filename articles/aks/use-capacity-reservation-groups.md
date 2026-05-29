@@ -3,9 +3,9 @@ title: Assign Capacity Reservation Groups to Node Pools in Azure Kubernetes Serv
 description: Learn how to use capacity reservation groups with node pools in Azure Kubernetes Service (AKS) to guarantee allocated capacity for your node pools.  
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 07/19/2023
+ms.date: 05/29/2026
 author: schaffererin
-ms.author: schaffererin
+ms.author: swgriffith
 ms.subservice: aks-nodes
 # Customer intent: "As a Kubernetes administrator, I want to use capacity reservation groups with node pools in AKS to guarantee allocated capacity for my node pools."
 ---
