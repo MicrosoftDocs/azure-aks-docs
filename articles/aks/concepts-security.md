@@ -63,20 +63,11 @@ AKS clusters running Azure Generation 2 VMs include support for [Trusted Launch]
 
 ### Container and security optimized OS options
 
-AKS released support for two new optimized Linux OS options. [Azure Linux OS Guard (preview)](https://aka.ms/aks/azure-linux-os-guard) is Microsoft-created and optimized for Azure. OS Guard is built on top of Azure Linux with specialized configuration to support containerized workloads with security optimizations. [Flatcar Container Linux for AKS (preview)](https://aka.ms/aks/flatcar) is a CNCF-based vendor-neutral container-optimized immutable OS, best suited for running on multicloud and on-premises environments. These OS options provide increased security when compared to other Linux OS options, such as:
+Azure Container Linux (ACL) is an immutable, container-optimized OS for AKS. ACL is derived from the Flatcar Container Linux project, and builds on Flatcar's proven, container-first immutable design while layering in Azure Linux packages, servicing, and platform integration. This allows ACL to stay closely aligned with upstream Flatcar innovation while meeting Azure's production, security, and compliance requirements. To learn more about Flatcar Container Linux, see the [Flatcar documentation](https://www.flatcar.org/).
 
-- Both Azure Linux OS Guard and Flatcar Container Linux for AKS have an immutable operating system that you can't modify at runtime. All OS binaries, libraries and static configuration are read-only, and the bit-for-bit integrity is often cryptographically protected. These special purpose operating systems ship as self-contained images and come without any kind of package management or other traditional means of altering the OS. User workloads run in isolated environments like containers, sandboxed from the OS.
-- Both Azure Linux OS Guard and Flatcar Container Linux for AKS use SELinux for Mandatory Access Control.
- - Azure Linux OS Guard enforces [FIPS][FIPS] and [Trusted Launch][trusted-launch] enablement, providing improved compliance and protection against advanced and persistent attacks by combining secure boot and virtualized version of trusted platform module (vTPM).
+ACL is generally available (GA) as an OS option on AKS starting AKS v1.34. You can deploy ACL node pools in a new AKS cluster, add ACL node pools to your existing clusters, and migrate existing Linux node pools to ACL.
 
-When deciding between which container-optimized OS options to use, AKS recommends the following:
-
-- Use [**Flatcar Container Linux for AKS (preview)**](https://aka.ms/aks/flatcar) if you're looking for a vendor neutral immutable OS with cross-cloud support.
-- Use [**Azure Linux OS Guard (preview)**](https://aka.ms/aks/azure-linux-os-guard) if you're looking for an enterprise-ready immutable OS, recommended by Microsoft.
-- Use [Ubuntu](https://aka.ms/aks/supported-ubuntu-versions) if you're looking for a vendor neutral, general purpose OS with cross-cloud support.
-- Use [Azure Linux](https://aka.ms/aks/use-azure-linux) if you're looking for an enterprise-ready, general purpose OS, recommended by Microsoft.
-
-:::image type="content" source="./media/concepts-security/os-comparison.png" alt-text="Screenshot of a table that compares optimized OS options like Flatcar Container Linux for AKS and Azure Linux OS Guard to general purpose OS options like Ubuntu and Azure Linux.":::
+For more information about ACL, see [Azure Container Linux (ACL) for AKS overview](./azure-container-linux-overview.md).
 
 ### Node authorization
 

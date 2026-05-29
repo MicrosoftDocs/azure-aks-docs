@@ -96,6 +96,12 @@
                   href: automatic/quick-automatic-custom-network.md
                 - name: Private cluster
                   href: automatic/quick-automatic-private-custom-network.md
+        - name: Create an Azure Container Linux (ACL)-based AKS cluster
+          items:
+            - name: Use the Azure CLI
+              href: learn/quick-azure-container-linux-deploy-cli.md
+            - name: Use ARM template
+              href: learn/quick-azure-container-linux-deploy-arm-template.md
         - name: Create a Flatcar Container Linux-based AKS cluster
           items:
             - name: Use the Azure CLI
@@ -340,8 +346,12 @@
           href: use-azure-linux.md
         - name: Use Azure Linux with OS Guard for AKS
           href: use-azure-linux-os-guard.md
-        - name: Azure Linux AKS partner solutions
-          href: azure-linux-aks-partner-solutions.md
+    - name: Use Azure Container Linux (ACL) for AKS
+      items:
+        - name: Overview
+          href: azure-container-linux-overview.md
+        - name: Migrate nodes to ACL
+          href: migrate-nodes-azure-container-linux.md
     - name: Use Flatcar Container Linux for AKS
       items:
         - name: Use Flatcar Container Linux for AKS
