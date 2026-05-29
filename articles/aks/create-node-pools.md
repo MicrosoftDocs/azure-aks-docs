@@ -58,6 +58,7 @@ The following limitations apply when you create AKS clusters that support multip
 
 - All node pools must reside in the same virtual network.
 - You can't change the virtual machine (VM) size of a node pool after you create it.
+- You can't change the max pods setting of a node pool after you create it. To use a different max pods value, create a new node pool with the desired max pods setting, migrate workloads, and then delete the old node pool.
 - When you create multiple node pools at cluster creation time, the Kubernetes versions for the node pools must match the version set for the control plane. You can make updates after provisioning the cluster using per node pool operations.
 
 ## Create specialized node pools
