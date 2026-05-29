@@ -83,7 +83,7 @@ az aks update \
     --acns-datapath-acceleration-mode BpfVeth
 ```
 
-## Disabling eBPF Host Routing on an existing cluster
+## Disable eBPF Host Routing on an existing cluster
 
 eBPF Host Routing can be disabled independently without affecting other ACNS features. To disable it, set the flag `--acns-datapath-acceleration-mode=None`.
 
