@@ -26,7 +26,7 @@ The following table shows the node events for AKS node auto-drain and describes 
 | Reboot | The VM is scheduled for reboot. The VM's non-persistent memory is lost. | No action. |
 | Redeploy | The VM is scheduled to move to another node. The VM's ephemeral disks are lost. | Cordon and drain. |
 | Preempt | The spot VM is being deleted. The VM's ephemeral disks are lost. | Cordon and drain. |
-| Terminate | The VM is scheduled for deletion. | Cordon and drain (requires [Virtual Machine Scale Set terminate notifications](/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-terminate-notification)). |
+| Terminate | The VM is scheduled for deletion. |  No action. |
 
 > [!NOTE]
 > Redeploy and Preempt use default behavior and don't require extra configuration.
