@@ -472,6 +472,7 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 | `spec.template.spec.nodeName` | Pod scheduling |
 | `spec.template.spec.tolerations` | Pod scheduling |
 | `spec.template.spec.topologySpreadConstraints` | Pod scheduling |
+| `spec.template.spec.terminationGracePeriodSeconds` | Pod lifecycle |
 
 ## Service customization allow list fields
 
