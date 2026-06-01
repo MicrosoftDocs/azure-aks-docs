@@ -1,7 +1,7 @@
 ---
 title: "Azure Kubernetes Fleet Manager member cluster types"
 description: This article provides a conceptual overview of the different types of member clusters supported in Azure Kubernetes Fleet Manager.
-ms.date: 12/11/2025
+ms.date: 06/01/2026
 author: ealianis
 ms.author: sehobbs
 ms.service: azure-kubernetes-fleet-manager
@@ -12,26 +12,24 @@ ms.topic: concept-article
 
 Azure Kubernetes Fleet Manager supports two types of member clusters:
 
-- [Azure Kubernetes Service (AKS) clusters](/azure/aks/)
-- [Arc-enabled Kubernetes clusters](/azure/azure-arc/kubernetes/overview) (Preview).
-
-> [!IMPORTANT]
-> Azure Kubernetes Fleet Manager's support for Arc-enabled Kubernetes clusters is currently in Preview.
+- [Azure Kubernetes Service (AKS) clusters](/azure/aks/).
+- [Arc-enabled Kubernetes clusters](/azure/azure-arc/kubernetes/overview).
 
 The following table outlines which Azure Kubernetes Fleet Manager capabilities are supported for each member cluster type.
 
-| Capability | AKS cluster | Arc-enabled Kubernetes cluster |
-|------------|-------------|--------------------------------|
-| Kubernetes and node image updates |✅ GA | ❌ Unsupported |
-| Workload placement |✅ GA| ✅ Preview |
-| DNS load balancing | ✅ GA| ❌ Unsupported|
-| Managed Namespaces | ✅ Preview  | ✅ Preview  |
-| Managed Namespace RBAC | ✅ Preview  | ❌ Unsupported |
-| Non-public Azure regions | ✅ GA  | ❌ Unsupported |
+| Capability                         | AKS cluster | Arc-enabled Kubernetes cluster |
+|------------------------------------|-------------|--------------------------------|
+| Kubernetes and node image updates  | ✅ GA       | ❌ Unsupported                |
+| Cross-cluster networking           | ✅ Preview  | ❌ Unsupported                |
+| Workload placement                 | ✅ GA       | ✅ GA                         |
+| DNS load balancing                 | ✅ GA       | ❌ Unsupported                |
+| Managed Namespaces                 | ✅ Preview  | ✅ Preview                    |
+| Managed Namespace RBAC             | ✅ Preview  | ❌ Unsupported                |
+| Non-public Azure regions           | ✅ GA       | ❌ Unsupported                |
 
 ## Arc-enabled Kubernetes Clusters important considerations
 
-Depending on your environment and configuration, certain limitations may apply when connecting an Arc-enabled Kubernetes cluster to an Azure Kubernetes Fleet Manager hub. Review the following considerations:
+Depending on your environment and configuration, certain limitations may apply when connecting an Arc-enabled Kubernetes cluster to an Azure Kubernetes Fleet Manager hub. Review the following considerations.
 
 ### Cluster resource requirements
 

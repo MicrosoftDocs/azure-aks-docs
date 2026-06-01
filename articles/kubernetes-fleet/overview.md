@@ -2,7 +2,7 @@
 title: "Overview of Azure Kubernetes Fleet Manager"
 services: kubernetes-fleet
 ms.service: azure-kubernetes-fleet-manager
-ms.date: 09/15/2025
+ms.date: 06/01/2026
 ms.topic: overview
 author: sjwaight
 ms.author: simonwaight
@@ -19,13 +19,13 @@ Azure Kubernetes Fleet Manager enables at-scale management of multiple [supporte
 
 Fleet Manager supports the following scenarios:
 
-* Join AKS clusters across regions and subscriptions, as well as Arc-enabled Kubernetes clusters (preview) across clouds and on-premises as member clusters. Read [Azure Kubernetes Fleet Manager member cluster types](./concepts-member-cluster-types.md) to understand more.
+* Join AKS clusters across regions and subscriptions, as well as Arc-enabled Kubernetes clusters across clouds and on-premises as member clusters. Read [Azure Kubernetes Fleet Manager member cluster types](./concepts-member-cluster-types.md) to understand more.
 
-* Use [Fleet Manager managed namespaces](./concepts-fleet-managed-namespace.md) to enforce resource quotas, network policies, and assign role based access at the namespace level across multiple clusters.
+* Use [Fleet Managed Namespaces](./concepts-fleet-managed-namespace.md) to grant application teams access to a namespace across multiple clusters. Enforce resource quotas, network policies, and assign user access at the namespace level across multiple clusters.
 
 * Safely and consistently apply Kubernetes version and node image upgrades across multiple clusters with [update runs](./concepts-update-orchestration.md), attaching reusable update strategies to control the order and timing of cluster updates.
 
-* Include optional manual or automated approvals for update groups and stages to provide more fine-grained control over when updates are applied (preview).
+* Include optional manual or automated approvals for update groups and stages to provide more fine-grained control over when updates are applied.
 
 * Automatically trigger version upgrades when new Kubernetes or node image versions are published by defining one or more [auto-upgrade profile](./concepts-update-orchestration.md#understanding-auto-upgrade-profiles).
 
@@ -34,6 +34,8 @@ Fleet Manager supports the following scenarios:
 * Stage Kubernetes resources from Git repositories to Fleet Manager's hub cluster using [Automated Deployments](./concepts-automated-deployments.md) (preview).
 
 * Load balance incoming traffic across service endpoints on multiple AKS clusters using [DNS-based load balancing](./concepts-dns-load-balancing.md) (preview).
+
+* Simplify creating globally available services by configuring [cross-cluster networking](./concepts-cross-cluster-networking.md) for your member clusters (preview).
 
 ## Next steps
 
