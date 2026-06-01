@@ -453,6 +453,7 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 |------------|----------|
 | `metadata.labels` | Deployment labels |
 | `metadata.annotations` | Deployment annotations |
+| `spec.minReadySeconds` | Deployment readiness check |
 | `spec.replicas` | Deployment replica count |
 | `spec.template.metadata.labels` | Pod labels |
 | `spec.template.metadata.annotations` | Pod annotations |
@@ -483,6 +484,7 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 | `spec.loadBalancerClass` | Service load balancer settings |
 | `spec.externalTrafficPolicy` | Service traffic policy |
 | `spec.internalTrafficPolicy` | Service traffic policy |
+| `spec.healthCheckNodePort` | Service health probe settings |
 
 ## HorizontalPodAutoscaler (HPA) customization allow list fields
 
