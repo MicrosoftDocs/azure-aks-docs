@@ -2,10 +2,11 @@
 title: Introduction to Azure Kubernetes Service (AKS) Automatic
 description: Simplify deployment and management of container-based applications in Azure by learning about the features and benefits of Azure Kubernetes Service Automatic.
 ms.topic: overview
-ms.custom: build-2024, biannual
-ms.date: 04/13/2026
+ms.custom: build-2024, biannual, build-2026
+ms.date: 05/22/2026
 author: wangyira
 ms.author: wangamanda
+
 #Customer intent: As a cluster administrator or developer, I want to simplify AKS cluster management and deployment by using preconfigured settings, built-in best practices, and automated features for production-ready applications.
 ---
 
@@ -18,12 +19,38 @@ Azure Kubernetes Service (AKS) Automatic offers an experience that makes the mos
 - **Production ready by default**: Clusters are preconfigured for optimal production use, suitable for most applications. They offer fully managed node pools that automatically allocate and scale resources based on your workload needs. Pods are bin packed efficiently, to maximize resource utilization.
 
 - **Guaranteed pod readiness**: AKS Automatic includes a [pod readiness SLA][azure-sla] that guarantees 99.9% of qualifying pod readiness operations complete within 5 minutes. This means your workloads start running promptly during scaling events and node provisioning, giving you confidence in your application's responsiveness without manual tuning.
-  
+
 - **Built-in best practices and safeguards**: AKS Automatic clusters have a hardened default configuration, with many cluster, application, and networking security settings enabled by default. AKS automatically patches your nodes and cluster components while adhering to any planned maintenance schedules.
 
 - **Code to Kubernetes in minutes**: Go from a container image to a deployed application that adheres to best practices patterns within minutes, with access to the comprehensive capabilities of the Kubernetes API and its rich ecosystem.
 
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
+
+## Service level agreement
+
+The service level agreement (SLA) for AKS Automatic clusters includes the following components:
+
+- Pod readiness
+- Uptime
+
+For more information, see [Service Level Agreements (SLA) for Online Services][azure-sla].
+
+
+### Pod Readiness SLA
+
+AKS Automatic includes a [pod readiness SLA][azure-sla], a financially backed guarantee that 99.9% of qualifying pod readiness operations complete within 5 minutes. This SLA covers pod scheduling and node provisioning when needed.
+
+The pod readiness SLA benefits workloads that depend on predictable scaling behavior, such as:
+
+- **Web and API workloads** that need to scale out quickly during traffic spikes without degrading response times.
+- **Event-driven processing** where new consumer pods must be ready promptly to avoid message backlog.
+- **CI/CD and batch jobs** that require consistent pod startup times for reliable pipeline execution.
+
+This guarantee is exclusive to AKS Automatic and is backed by the [Microsoft Online Services SLA][azure-sla]. You don't need to configure anything to enable it and it comes included with every AKS Automatic cluster.
+
+### Uptime SLA
+
+AKS Automatic includes [uptime SLA][azure-sla], a financially backed guarantee for 99.95% availability of the Kubernetes API server. You don't need to configure anything to enable it and it comes included with every AKS Automatic cluster.
 
 ## AKS Automatic and Standard feature comparison
 
@@ -40,7 +67,7 @@ Application deployment can be streamlined using [automated deployments][automate
 | Option | AKS Automatic | AKS Standard |
 |--------|---------------|--------------|
 | Application deployment | **Optional**: <br> * Use [automated deployments][automated-deployments] to containerize applications from source control, create Kubernetes manifests, and continuous integration/continuous deployment (CI/CD) workflows. <br> * Create deployment pipelines using [GitHub Actions for Kubernetes][kubernetes-action]. <br> * Bring your own CI/CD pipeline. | **Optional**: <br> * Use [automated deployments][automated-deployments] to containerize applications from source control, create Kubernetes manifests, and continuous integration/continuous deployment (CI/CD) workflows. <br> * Create deployment pipelines using [GitHub Actions for Kubernetes][kubernetes-action]. <br> * Bring your own CI/CD pipeline. |
-| Monitoring, logging, and visualization | **Default**: <br> * [Managed Prometheus][managed-prometheus] for metric collection when using Azure CLI or the Azure portal. <br> * [Container insights][container-insights] for log collection when using Azure CLI or the Azure portal. <br> * [Azure Monitor Dashboards with Grafana](/azure/azure-monitor/visualize/visualize-use-grafana-dashboards) for visualization is built in when using the Azure portal. <br> * [Advanced Container Networking Services](advanced-container-networking-services-overview.md) container network observability for pod metrics, DNS, L4 metrics, and network flow logs when using the Azure portal. <br> **Optional**: <br> * [Managed Grafana][managed-grafana] for visualization when using Azure CLI or the Azure portal. | **Default**: [Azure Monitor Dashboards with Grafana](/azure/azure-monitor/visualize/visualize-use-grafana-dashboards) for visualization is built in when using the Azure portal. <br> **Optional**: <br> * [Managed Prometheus][managed-prometheus] for metric collection. <br> * [Managed Grafana][managed-grafana] for visualization. <br> * [Container insights][container-insights] for log collection. <br> * [Advanced Container Networking Services](advanced-container-networking-services-overview.md) container network observability for pod metrics, DNS, L4 metrics, and network flow logs.
+| Monitoring, logging, and visualization | **Default**: <br> * [Managed Prometheus][managed-prometheus] for metric collection when using Azure CLI or the Azure portal. <br> * [Container insights][container-insights] for log collection when using Azure CLI or the Azure portal. <br> * [Azure Monitor Dashboards with Grafana](/azure/azure-monitor/visualize/visualize-use-grafana-dashboards) for visualization is built in when using the Azure portal. <br> **Optional**: <br> * [Managed Grafana][managed-grafana] for visualization when using Azure CLI or the Azure portal. | **Default**: [Azure Monitor Dashboards with Grafana](/azure/azure-monitor/visualize/visualize-use-grafana-dashboards) for visualization is built in when using the Azure portal. <br> **Optional**: <br> * [Managed Prometheus][managed-prometheus] for metric collection. <br> * [Managed Grafana][managed-grafana] for visualization. <br> * [Container insights][container-insights] for log collection. <br> * [Advanced Container Networking Services](advanced-container-networking-services-overview.md) container network observability for pod metrics, DNS, L4 metrics, and network flow logs. |
 
 ### Node management, scaling, and cluster operations
 
@@ -48,7 +75,8 @@ Node management is automatically handled without the need for manual user node p
 
 | Option | AKS Automatic | AKS Standard |
 |--------|---------------|--------------|
-| Node management | **Preconfigured**: AKS Automatic manages the node pools using [Node Autoprovisioning][node-autoprovisioning]. <br> **Optional**: [AKS Automatic with managed system node pools][managed-system-node-pool] creates, scales, upgrades the system nodes and system components on your behalf and host them in the AKS subscriptions. | **Default**: You create and manage system and user node pools <br> **Optional**: AKS Standard manages user node pools using [Node Autoprovisioning][node-autoprovisioning]. |
+| System node pools | **Preconfigured**: [AKS Automatic with managed system node pools][managed-system-node-pool] creates, scales, upgrades the system nodes and system components on your behalf and hosts them in the AKS subscriptions. | **Default**: You create and manage system node pools. |
+| Node autoprovisioning | **Preconfigured**: AKS Automatic manages the node pools using [node autoprovisioning][node-autoprovisioning]. | **Optional**: AKS Standard manages user node pools using [node autoprovisioning][node-autoprovisioning]. |
 | Scaling | **Preconfigured**: AKS Automatic creates nodes based on workload requests using [Node Autoprovisioning][node-autoprovisioning]. <br> [Horizontal Pod Autoscaler (HPA)][aks-hpa], [Kubernetes Event Driven Autoscaling (KEDA)][keda], and [Vertical Pod Autoscaler (VPA)][vpa] are enabled on the cluster. | **Default:** Manual scaling of node pools. <br> **Optional**: <br> * [Cluster autoscaler][cluster-autoscaler] <br> * [Node Autoprovisioning][node-autoprovisioning] <br> * [Kubernetes Event Driven Autoscaling (KEDA)][keda] <br> * [Vertical Pod Autoscaler (VPA)][vpa] |
 | Cluster tier and Service Level Agreement (SLA) | **Preconfigured**: Standard tier cluster with up to 5,000 nodes, a [cluster uptime SLA][uptime-sla], and a [pod readiness SLA][azure-sla] that guarantees 99.9% of qualifying pod readiness operations complete within 5 minutes. |  **Default**: Free tier cluster with 10 nodes but can support up to 1,000 nodes. <br/> **Optional**: <br> * Standard tier cluster with up to 5,000 nodes and a [cluster uptime SLA][uptime-sla]. <br> * Premium tier cluster with up to 5,000 nodes, [cluster uptime SLA][uptime-sla], and [long term support][long-term-support]. |
 | Node operating system | **Preconfigured for system node pool**: [Azure Linux][azure-linux] <br> **Optional for user nodes**: <br> * [Azure Linux][azure-linux] <br> * Ubuntu | **Default**: Ubuntu <br> **Optional**: <br> * [Azure Linux][azure-linux] <br> * [Windows Server][windows-server] |
@@ -69,38 +97,26 @@ Cluster authentication and authorization use [Azure Role-based Access Control (R
 | Cluster security | **Preconfigured**: [API server virtual network integration][api-server-vnet-integration] enables network communication between the API server and the cluster nodes over a private network without requiring a private link or tunnel. | **Optional**: [API server virtual network integration][api-server-vnet-integration] enables network communication between the API server and the cluster nodes over a private network without requiring a private link or tunnel.|
 | Application security | **Preconfigured**: <br> * [Workload identity with Microsoft Entra Workload ID][workload-identity] <br> * [OpenID Connect (OIDC) cluster issuer][oidc-issuer] <br/> **Optional**:<br> * [Advanced Container Networking Services](container-network-security-wireguard-encryption-concepts.md) container network security for pod traffic with Wireguard node encryption| **Optional**: <br> * [Workload identity with Microsoft Entra Workload ID][workload-identity] <br> * [OpenID Connect (OIDC) cluster issuer][oidc-issuer] <br/> **Optional**:<br> * [Advanced Container Networking Services ](container-network-security-wireguard-encryption-concepts.md) container network security for pod traffic with Wireguard node encryption|
 | Image security | **Preconfigured**: [Image cleaner][image-cleaner] to remove unused images with vulnerabilities. | **Optional**: [Image cleaner][image-cleaner] to remove unused images with vulnerabilities. |
-| Policy enforcement | **Preconfigured**: [Deployment safeguards][deployment-safeguards] that enforce Kubernetes best practices in your AKS cluster through Azure Policy controls in enforcement mode, which cannot be turned off. <br/> **Optional**:<br> * [Advanced Container Networking Services](how-to-apply-l7-policies.md) container network security for Cilium DNS and L7 policies. | **Optional**: [Deployment safeguards][deployment-safeguards] enforce Kubernetes best practices in your AKS cluster through Azure Policy controls in enforcement mode or warning mode. <br/> **Optional**:<br> * [Advanced Container Networking Services ](how-to-apply-l7-policies.md) container network security for Cilium DNS and L7 policies |
+| Policy enforcement | **Preconfigured**: [Deployment safeguards][deployment-safeguards] that enforce Kubernetes best practices in your AKS cluster through Azure Policy controls in enforcement mode, which cannot be turned off. <br/> * [Security restrictions for managed system node pools][security-restrictions] protect managed system components and preserve the boundary between customer workloads and AKS-managed infrastructure. <br/> **Optional**:<br> * [Advanced Container Networking Services](how-to-apply-l7-policies.md) container network security for Cilium DNS and L7 policies. | **Optional**: [Deployment safeguards][deployment-safeguards] enforce Kubernetes best practices in your AKS cluster through Azure Policy controls in enforcement mode or warning mode. <br/> **Optional**:<br> * [Advanced Container Networking Services ](how-to-apply-l7-policies.md) container network security for Cilium DNS and L7 policies |
 | Managed namespaces | **Optional**: Use [Managed namespaces](./managed-namespaces.md) to create preconfigured namespaces where you can define network policies for ingress/egress, resource quotas for memory/CPU, and set-up labels/annotations. | **Optional**: Use [Managed namespaces](./managed-namespaces.md) to create preconfigured namespaces where you can define network policies for ingress/egress, resource quotas for memory/CPU, and set-up labels/annotations. |
 
 ### Networking
 
-AKS Automatic clusters use [managed Virtual Network powered by Azure CNI Overlay with Cilium][azure-cni-powered-by-cilium] for high-performance networking and robust security. Ingress is handled by [managed NGINX using the application routing add-on][app-routing], integrating seamlessly with Azure DNS and Azure Key Vault. Egress uses a [managed NAT gateway][managed-nat-gateway] for scalable outbound connections. Additionally, you have the flexibility to enable [Istio-based service mesh add-on for AKS][istio-mesh] or bring your own service mesh.
+AKS Automatic clusters use [managed Virtual Network powered by Azure CNI Overlay with Cilium][azure-cni-powered-by-cilium] for high-performance networking and robust security. Ingress is handled by [managed NGINX using the application routing add-on][app-routing], integrating seamlessly with Azure DNS and Azure Key Vault. Egress uses a [managed NAT gateway][managed-nat-gateway] for scalable outbound connections. 
 
 | Option | AKS Automatic | AKS Standard |
 |--------|---------------|--------------|
 | Virtual network | **Default**: [Managed Virtual Network using Azure CNI Overlay powered by Cilium][azure-cni-powered-by-cilium] combines the robust control plane of Azure CNI with the data plane of Cilium to provide high-performance networking and security. <br/> **Optional**: <br> * [Custom virtual network][automatic-custom-network] <br> * [Custom virtual network][automatic-private-custom-network] with private cluster. | **Default**: [Managed Virtual Network with kubenet][kubenet] <br/> **Optional**: <br> * [Azure CNI][azure-cni] <br> * [Azure CNI Overlay][azure-cni-overlay] <br> * [Azure CNI Overlay powered by Cilium][azure-cni-powered-by-cilium] <br> * [Bring your own CNI][use-byo-cni] |
-| Ingress | **Preconfigured**: [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS and Azure Key Vault. <br/> **Optional**: <br> * [Istio-based service mesh add-on for AKS][istio-deploy-ingress] ingress gateway <br> * Bring your own ingress or gateway. | **Optional**: <br> * [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS and Azure Key Vault. <br> * [Istio-based service mesh add-on for AKS][istio-deploy-ingress] ingress gateway <br> * Bring your own ingress or gateway. |
+| Ingress | **Preconfigured**: <br> * Starting on AKS 1.36, [Kubernetes Gateway API via the application routing add-on][app-routing-gateway-api] for new clusters. <br> * Older version before AKS 1.36, [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS and Azure Key Vault. <br/> **Optional**: <br> * Bring your own ingress or gateway. | **Optional**: <br> * [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS and Azure Key Vault. <br> * [Istio-based service mesh add-on for AKS][istio-deploy-ingress] ingress gateway <br> * Bring your own ingress or gateway. |
 | Egress | **Preconfigured**: [AKS managed NAT gateway][managed-nat-gateway] for a scalable outbound connection flows when used with managed virtual network <br> **Optional (with custom virtual network)**: <br> * [Azure Load Balancer][egress-load-balancer] <br> * [User-assigned NAT gateway][managed-nat-gateway] <br> * [User-defined routing (UDR)][udr] | **Default**: [Azure Load Balancer][egress-load-balancer] <br> **Optional**: <br> * [User-assigned NAT gateway][managed-nat-gateway] <br> * [AKS managed NAT gateway][userassigned-nat-gateway] <br> * [User-defined routing (UDR)][udr] |
-| Service mesh | **Optional**: <br> * [Azure Service Mesh (Istio)][istio-mesh] <br> * Bring your own service mesh. | **Optional**: <br> * [Azure Service Mesh (Istio)][istio-mesh] <br> * Bring your own service mesh. |
-
-### Pod Readiness SLA
-
-AKS Automatic includes a [pod readiness SLA][azure-sla], a financially backed guarantee that 99.9% of qualifying pod readiness operations complete within 5 minutes. This SLA covers pod scheduling and node provisioning when needed.
-
-The pod readiness SLA benefits workloads that depend on predictable scaling behavior, such as:
-
-- **Web and API workloads** that need to scale out quickly during traffic spikes without degrading response times.
-- **Event-driven processing** where new consumer pods must be ready promptly to avoid message backlog.
-- **CI/CD and batch jobs** that require consistent pod startup times for reliable pipeline execution.
-
-This guarantee is exclusive to AKS Automatic and is backed by the [Microsoft Online Services SLA][azure-sla]. You don't need to configure anything to enable it and it comes included with every AKS Automatic cluster.
+| [LocalDNS](dns-concepts.md#localdns-in-azure-kubernetes-service) | **Preconfigured** for AKS Automatic. | **Optional** for AKS Standard. |
 
 ## Next steps
 
 To learn more about AKS Automatic, follow the quickstart to create a cluster.
 
 > [!div class="nextstepaction"]
-> [Quickstart: Deploy an Azure Kubernetes Service (AKS) Automatic cluster][quickstart-aks-automatic]
+> [Create an Azure Kubernetes Service (AKS) Automatic cluster][quickstart-aks-automatic]
 
 <!-- LINKS - internal -->
 [aks-hpa]: tutorial-kubernetes-scale.md#autoscale-pods
@@ -130,12 +146,14 @@ To learn more about AKS Automatic, follow the quickstart to create a cluster.
 [azure-cni-overlay]: azure-cni-overlay.md
 [use-byo-cni]: use-byo-cni.md
 [app-routing]: app-routing.md
+[app-routing-gateway-api]: app-routing-gateway-api.md
 [istio-deploy-ingress]: istio-deploy-ingress.md
 [managed-nat-gateway]: nat-gateway.md#create-an-aks-cluster-with-a-managed-nat-gateway
 [userassigned-nat-gateway]: nat-gateway.md#create-an-aks-cluster-with-a-user-assigned-nat-gateway
 [udr]: egress-outboundtype.md#outbound-type-of-userdefinedrouting
 [egress-load-balancer]: egress-outboundtype.md#outbound-type-of-loadbalancer
 [istio-mesh]: istio-about.md
+[istio-cni]: istio-cni.md
 [automated-deployments]: automated-deployments.md
 [kubernetes-action]: kubernetes-action.md
 [managed-prometheus]: /azure/azure-monitor/essentials/prometheus-metrics-overview
@@ -143,9 +161,10 @@ To learn more about AKS Automatic, follow the quickstart to create a cluster.
 [container-insights]: /azure/azure-monitor/containers/container-insights-overview
 [uptime-sla]: free-standard-pricing-tiers.md#uptime-sla-terms-and-conditions
 [long-term-support]: long-term-support.md
-[quickstart-aks-automatic]: ./learn/quick-kubernetes-automatic-deploy.md
+[quickstart-aks-automatic]: ./automatic/quick-automatic-managed-network.md
 [automatic-custom-network]: ./automatic/quick-automatic-custom-network.md
 [automatic-private-custom-network]: ./automatic/quick-automatic-private-custom-network.md
 [azure-sla]: https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services
 [managed-system-node-pool]: ./automatic/aks-automatic-managed-system-node-pools-about.md#key-features-and-benefits
 [nrg-lockdown]: node-resource-group-lockdown.md
+[security-restrictions]: ./automatic/aks-automatic-managed-system-node-pools-about.md#security-restrictions-for-managed-system-node-pools
