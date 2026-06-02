@@ -80,7 +80,7 @@ The following sample output resembles successful creation of the resource group:
 
 Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet, user node subnet, and system node subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
 
-When using a custom virtual network with AKS Automatic, you must create an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*. AKS will delegate the subnet on your behalf. 
+When using a custom virtual network with AKS Automatic, you must create an API server subnet. AKS will delegate the subnet to  `Microsoft.ContainerService/managedClusters`on your behalf, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*. 
 
 > [!WARNING]
 > An AKS cluster reserves at least nine (9) IPs in the subnet address space. Running out of IP addresses might prevent API server scaling and cause an API server outage.
