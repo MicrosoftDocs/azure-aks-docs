@@ -4,7 +4,8 @@ description: Learn about Azure CNI Overlay networking in Azure Kubernetes Servic
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: overview
-ms.date: 05/14/2024
+ms.date: 04/16/2026
+ai-usage: ai-assisted
 author: schaffererin
 ms.author: schaffererin
 ms.custom: fasttrack-edit
@@ -70,6 +71,9 @@ When you plan IP address space for pods, consider the following factors:
 ### Kubernetes service address range
 
 The size of the service address CIDR depends on the number of cluster services that you plan to create. It must be smaller than `/12`. This range shouldn't overlap with the pod CIDR range, cluster subnet range, and IP range used in peered virtual networks and on-premises networks.
+
+> [!NOTE]
+> Starting with Kubernetes 1.33, you can extend the service IP range after cluster creation using the `ServiceCIDR` Kubernetes resource. For more information, see [Extend Service IP Ranges](https://kubernetes.io/docs/tasks/network/extend-service-ip-ranges/) in the Kubernetes documentation.
 
 ### Kubernetes service IP address for DNS
 

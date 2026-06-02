@@ -18,7 +18,7 @@ In this quickstart, you use Helm to package and run an application on AKS. For i
 
 ## Prerequisites
 
-* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * [Azure CLI][azure-cli-install] or [Azure PowerShell][azure-powershell-install] installed.
 * [Helm v3 installed][helm-install].
 
@@ -331,4 +331,5 @@ For more information about using Helm, see the [Helm documentation][helm-documen
 [helm-install]: https://helm.sh/docs/intro/install/
 [sp-delete]: kubernetes-service-principal.md#considerations-when-using-a-service-principal
 [acr-helm]: /azure/container-registry/container-registry-helm-repos
+[new-azresourcegroup]: /powershell/module/az.resources/new-azresourcegroup
 

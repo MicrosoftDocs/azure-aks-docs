@@ -2,8 +2,8 @@
 title: Securely scale your applications using the Kubernetes Event-driven Autoscaling (KEDA) add-on and workload identity
 description: Learn how to securely scale your applications using the KEDA add-on and workload identity on Azure Kubernetes Service (AKS).
 ms.service: azure-kubernetes-service
-author: qpetraroia
-ms.author: qpetraroia
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.date: 07/08/2024
 ms.custom: template-how-to
@@ -18,7 +18,7 @@ This article shows you how to securely scale your applications with the Kubernet
 
 ## Before you begin
 
-- You need an Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- You need an Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - You need the [Azure CLI installed](/cli/azure/install-azure-cli).
 - Ensure you have firewall rules configured to allow access to the Kubernetes API server. For more information, see [Outbound network and FQDN rules for Azure Kubernetes Service (AKS) clusters][aks-firewall-requirements].
 
@@ -178,7 +178,15 @@ This article shows you how to securely scale your applications with the Kubernet
 
 ## Enable Workload Identity on KEDA operator
 
-1. After creating the federated credential for the `keda-operator` ServiceAccount, you will need to manually restart the `keda-operator` pods to ensure Workload Identity environment variables are injected into the pod.
+1. After creating the federated credential for the `keda-operator` ServiceAccount, annotate the ServiceAccount with the managed identity's client ID. This tells the workload identity webhook which identity to bind to the `keda-operator` pods.
+
+    ```azurecli-interactive
+    kubectl annotate serviceaccount keda-operator \
+        azure.workload.identity/client-id=$MI_CLIENT_ID \
+        -n kube-system
+    ```
+
+1. Restart the `keda-operator` pods to ensure Workload Identity environment variables are injected into the pod.
 
     ```azurecli-interactive
     kubectl rollout restart deploy keda-operator -n kube-system
@@ -200,7 +208,7 @@ This article shows you how to securely scale your applications with the Kubernet
 
     ```text
     ---
-    AZURE_CLIENT_ID:
+    AZURE_CLIENT_ID:               xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
     AZURE_TENANT_ID:               xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
     AZURE_FEDERATED_TOKEN_FILE:    /var/run/secrets/azure/tokens/azure-identity-token
     AZURE_AUTHORITY_HOST:          https://login.microsoftonline.com/

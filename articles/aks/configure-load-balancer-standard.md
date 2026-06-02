@@ -374,7 +374,6 @@ The following annotations are supported for Kubernetes services with type `LoadB
 | `service.beta.kubernetes.io/azure-load-balancer-internal`          | `true` or `false`                   | Specify whether the load balancer should be internal. If not set, it defaults to public.                                                                                                                     |
 | `service.beta.kubernetes.io/azure-load-balancer-internal-subnet`   | Name of the subnet                  | Specify which subnet the internal load balancer should be bound to. If not set, it defaults to the subnet configured in cloud config file.                                                                   |
 | `service.beta.kubernetes.io/azure-dns-label-name`                  | Name of the DNS label on Public IPs | Specify the DNS label name for the **public** service. If it's set to an empty string, the DNS entry in the Public IP isn't used.                                                                            |
-| `service.beta.kubernetes.io/azure-shared-securityrule`             | `true` or `false`                   | Specify exposing the service through a potentially shared Azure security rule to increase service exposure, utilizing Azure [Augmented Security Rules][augmented-security-rules] in Network Security groups. |
 | `service.beta.kubernetes.io/azure-load-balancer-resource-group`    | Name of the resource group          | Specify the resource group of load balancer public IPs that aren't in the same resource group as the cluster infrastructure (node resource group).                                                           |
 | `service.beta.kubernetes.io/azure-allowed-service-tags`            | List of allowed service tags        | Specify a list of allowed [service tags][service-tags] separated by commas.                                                                                                                                  |
 | `service.beta.kubernetes.io/azure-allowed-ip-ranges`               | list of allowed IP ranges           | Specify a list of allowed IP ranges separated by comma.                                                                                                                                                      |
@@ -467,7 +466,7 @@ The following table summarizes the port-specific annotations that can be used to
 
 ## Exclude node pool from Load Balancer backend pool
 
-In certain scenarios, you may want to prevent a node pool from being part of the load balancer’s backend pool. To do this, apply the label `node.kubernetes.io/exclude-from-external-load-balancers=true` to the node pool. 
+In certain scenarios, you may want to prevent a node pool from being part of the load balancer's backend pool. To do this, apply the label `node.kubernetes.io/exclude-from-external-load-balancers=true` to the node pool. 
 
 > [!NOTE]
 > Although the label resides on individual nodes, it must be applied at the node pool level to ensure long-term persistence.
@@ -490,7 +489,6 @@ To learn more about using internal load balancer for inbound traffic, see the [A
 [kubernetes-services]: https://kubernetes.io/docs/concepts/services-networking/service/
 
 <!-- LINKS - Internal -->
-[augmented-security-rules]: /azure/virtual-network/network-security-groups-overview#augmented-security-rules
 [azure-lb-outbound-connections]: /azure/load-balancer/load-balancer-outbound-connections
 [azure-lb-outbound-preallocatedports]: /azure/load-balancer/load-balancer-outbound-connections#preallocatedports
 [azure-lb-outbound-rules-overview]: /azure/load-balancer/load-balancer-outbound-connections#outboundrules

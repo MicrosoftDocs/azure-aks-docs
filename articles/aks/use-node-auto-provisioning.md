@@ -26,7 +26,7 @@ Before you begin, review the [Overview of node auto-provisioning (NAP) in AKS](.
 The following sections explain how to enable NAP on a new or existing AKS cluster:
 
 > [!NOTE]
-> You can enable [control plane metrics](./monitor-control-plane-metrics.md) to see the logs and operations from [node auto-provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview).
+> You can enable [control plane metrics](./control-plane-metrics-monitor.md) to see the logs and operations from [node auto-provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview).
 
 ### Enable NAP on a new cluster
 
@@ -228,6 +228,49 @@ The following sections explain how to enable NAP on a new or existing AKS cluste
 
 :::zone-end
 
+## Migrate from self-hosted open-source Karpenter to managed node auto-provisioning (NAP)
+
+If Karpenter was installed from the [open source Helm chart](https://github.com/Azure/karpenter-provider-azure#installation-self-hosted-karpenter), you can still enable NAP on your cluster. These steps assume that the Karpenter Helm chart is installed.
+
+> [!IMPORTANT]
+> 
+> Ensure you're running the [latest version](https://github.com/Azure/karpenter-provider-azure/releases/latest) of Karpenter before initiating the migration. NAP is always
+> running the latest version.
+
+> [!IMPORTANT]
+> 
+> Be careful not to remove the Karpenter CRDs when performing this migration process. If the CRDs are deleted it deletes the underlying NodeClaims, which could disrupt your workloads.
+
+1. To ensure the Karpenter CRDs are not uninstalled in step 2, remove the `managed-by=Helm` labels and annotations.:
+   ```bash
+   kubectl get crds -l app.kubernetes.io/managed-by=Helm -o name | grep karpenter.azure.com | xargs -I{} kubectl patch {} --type=json -p '
+   [
+     {"op":"remove","path":"/metadata/annotations/meta.helm.sh~1release-name"},
+     {"op":"remove","path":"/metadata/annotations/meta.helm.sh~1release-namespace"},
+     {"op":"remove","path":"/metadata/labels/app.kubernetes.io~1managed-by"}
+   ]'
+   ```
+
+2. Uninstall the Helm chart to remove the Deployment, Service, Roles, and other resources used by open source Karpenter. At this point, Karpenter is no-longer reacting to scaling events, but existing nodes continue to function.
+   ```bash
+   helm uninstall karpenter -n kube-system  # If you installed Karpenter into a different namespace than kube-system, specify that here instead of kube-system
+   ```
+
+3. Enable NAP on your cluster:
+   ```bash
+   az aks update --name ${CLUSTER_NAME} --resource-group ${RESOURCE_GROUP} --node-provisioning-mode Auto --node-provisioning-default-pools None
+   ```
+
+   This command disables the default NodePools because you have existing NodePools and would like to continue using them. If you would like to enable node auto-provisioning default pools, you can omit the `--node-provisioning-default-pools None` from the `az aks update` command.
+
+4. Verify migration complete: When the `az aks update` from step 3 completes successfully, migration is done. You can also confirm that migration is done by checking the annotations on the Karpenter CRDs. You should see:
+   ```bash
+       meta.helm.sh/release-name: aks-managed-karpenter-overlay-base
+       meta.helm.sh/release-namespace: kube-system
+   ```
+
+   At this point, NAP is enabled and auto-scaling should resume.
+
 ## Monitoring Node auto-provisioning
 
 ### Retrieve Karpenter logs and status
@@ -250,7 +293,7 @@ You can retrieve logs and status updates from Karpenter to help diagnose and deb
     ```
 
 ## Node auto-provisioning metrics
-You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to see specific Karpenter metrics and operations from [node auto-provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview).
+You can enable [control plane metrics (Preview)](./control-plane-metrics-monitor.md) to see specific Karpenter metrics and operations from [node auto-provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview).
 
 ## Next steps
 

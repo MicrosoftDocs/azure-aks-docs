@@ -143,7 +143,7 @@ To take savings one step further, take advantage of Azure discounts such as Azur
 
 | Azure discount type | Details |
 |---------------------|---------|
-| [**Azure Savings Plans**](/azure/cost-management-billing/savings-plan/savings-plan-compute-overview) | • 1-3 year upfront commitment <br> • Save up to 65% compared to pay-as-you-go <br> • Flexible, with no SKU family or region restrictions <br> • Best for workloads with consistent costs with resources in various SKUs and regions |
+| [**Azure Savings Plans**](/azure/cost-management-billing/savings-plan/savings-plan-overview) | • 1-3 year upfront commitment <br> • Save up to 65% compared to pay-as-you-go <br> • Flexible, with no SKU family or region restrictions <br> • Best for workloads with consistent costs with resources in various SKUs and regions |
 | [**Reserved Instances**](/azure/cost-management-billing/reservations/save-compute-costs-reservations) | • 1-3 year upfront commitment <br> • Save up to 72% compared to pay-as-you-go <br> • Restricted to specific SKU families and regions <br> • Best for stable workloads running continuously (with no unexpected SKU or region changes) |
 | [**Azure Hybrid Benefits**](./azure-hybrid-benefit.md) | • Bring your own on-premises Windows Server and SQL Server licenses to Azure <br> • Use any qualifying on-premises licenses that have an active Software Assurance (SA) or qualifying subscription |
 

@@ -28,7 +28,7 @@ If you're looking to view or access existing Managed Fleet Namespaces you have a
 
 ## Before you begin
 
-* You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+* You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * You need a Fleet Manager with a hub cluster. If you don't have one, see [create and join at least one Azure Kubernetes Service (AKS) cluster to the fleet](./quickstart-create-fleet-and-members.md).
 * Ensure user performing steps has the [Role Based Access Control Administrator][rbac-admin] role assigned for the Fleet Manager.
 * Understand the Managed Fleet Namespace concept by [reading the overview](./concepts-fleet-managed-namespace.md).

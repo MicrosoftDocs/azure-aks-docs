@@ -208,7 +208,6 @@ The following table describes the key elements of the `issuer` configuration:
 | ---------------------------- | ----------- |
 | `url` | The OIDC issuer URL that must match the `iss` claim in JWTs. |
 | `audiences` | List of audiences that JWTs must be issued for (checked against `aud` claim). |
-| `certificateAuthority` | Optional base64-encoded root certificate bundle for Transport Layer Security (TLS) verification when connecting to the issuer URL. |
 
 ### Claim validation rules configuration
 
@@ -562,4 +561,14 @@ Create appropriate RBAC bindings for your external users, and use the cluster ad
 [monitor-resource-logs]: monitor-aks-reference.md#resource-logs
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
+[az-extension-show]: /cli/azure/extension#az-extension-show
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-aks-jwtauthenticator-add]: /cli/azure/aks/jwtauthenticator#az-aks-jwtauthenticator-add
+[az-aks-jwtauthenticator-delete]: /cli/azure/aks/jwtauthenticator#az-aks-jwtauthenticator-delete
+[az-aks-jwtauthenticator-list]: /cli/azure/aks/jwtauthenticator#az-aks-jwtauthenticator-list
+[az-aks-jwtauthenticator-show]: /cli/azure/aks/jwtauthenticator#az-aks-jwtauthenticator-show
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register

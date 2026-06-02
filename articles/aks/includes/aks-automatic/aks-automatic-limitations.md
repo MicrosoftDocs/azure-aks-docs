@@ -1,18 +1,25 @@
 ---
 ms.service: azure-kubernetes-service
 ms.topic: include
-ms.date: 10/10/2025
+ms.date: 05/22/2026
 author: wangyira
 ms.author: wangamanda
 ---
+
 ## Limitations
 
-- AKS Automatic clusters' system nodepool require deployment in Azure regions that support at least three [availability zones](/azure/reliability/regions-list), ephemeral OS disk, and Azure Linux OS.
-- You can only create AKS Automatic clusters in regions where [API Server VNet Integration](../../api-server-vnet-integration.md) is generally available (GA).
-- AKS Automatic cluster has [node resource group lockdown](/articles/aks/node-resource-group-lockdown.md) preconfigured, which does not allow changes to the MC_ resource group, preventing VNet links on the default Private DNS zone. For cross‑VNet or custom DNS scenarios, use BYO VNET and BYO Private DNS by following [Create a private Azure Kubernetes Service (AKS) Automatic cluster in a custom virtual network](../../automatic/quick-automatic-private-custom-network.md).
+The following limitations apply to AKS Automatic clusters:
 
-
-
-> [!IMPORTANT]
-> AKS Automatic tries to dynamically select a virtual machine size for the `system` node pool based on the capacity available in the subscription. Make sure your subscription has quota for 16 vCPUs of any of the following sizes in the region you're deploying the cluster to: [Standard_D4lds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series), [Standard_D4ads_v5](/azure/virtual-machines/sizes/general-purpose/dadsv5-series), [Standard_D4ds_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v4](/azure/virtual-machines/sizes/general-purpose/dv4-series), [Standard_DS3_v2](/azure/virtual-machines/sizes/general-purpose/dsv3-series), [Standard_DS12_v2](/azure/virtual-machines/sizes/memory-optimized/dv2-dsv2-series-memory), [Standard_D4alds_v6](/azure/virtual-machines/sizes/general-purpose/daldsv6-series), [Standard_D4lds_v6](/azure/virtual-machines/sizes/general-purpose/dldsv6-series), or [Standard_D4alds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series). You can [view quotas for specific VM-families and submit quota increase requests](/azure/quotas/per-vm-quota-requests) through the Azure portal.
-> If you have additional questions, learn more through the [troubleshooting docs](/troubleshoot/azure/azure-kubernetes/create-upgrade-delete/aks-automatic-troubleshoot/).
+- AKS Automatic is generally available in the following regions: `australiaeast`, `austriaeast`, `belgiumcentral`, `brazilsouth`, `canadacentral`, `centralindia`, `centralus`, `chilecentral`, `denmarkeast`, `eastasia`, `eastus`, `eastus2`, `francecentral`, `germanywestcentral`, `indonesiacentral`, `israelcentral`, `italynorth`, `japaneast`, `japanwest`, `koreacentral`, `malaysiawest`, `mexicocentral`, `newzealandnorth`, `northeurope`, `norwayeast`, `polandcentral`, `southafricanorth`, `southcentralus`, `southeastasia`, `spaincentral`, `swedencentral`, `switzerlandnorth`, `uaenorth`, `uksouth`, `westeurope`, `westus2`, `westus3`.
+  - New AKS Automatic clusters by default enable managed system node pools and [LocalDNS](../../dns-concepts.md#localdns-in-azure-kubernetes-service). You can't create AKS Automatic clusters without managed system node pools in any region.
+- AKS Automatic cluster has [node resource group lockdown](../../node-resource-group-lockdown.md) preconfigured, which doesn't allow changes to the `MC_` resource group, preventing virtual network links on the default Private DNS zone. For cross‑VNet or custom DNS scenarios, use custom network and private DNS by following [Create a private Azure Kubernetes Service (AKS) Automatic cluster in a custom virtual network](../../automatic/quick-automatic-private-custom-network.md).
+- Azure CLI version 2.86.0 or later is required. To find the version, run `az --version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/get-started-with-azure-cli).
+- The following extensions aren't supported:
+  - [Dapr](../../dapr.md)
+  - [Azure Machine Learning](/azure/machine-learning/how-to-attach-kubernetes-anywhere)
+- Windows nodes aren't supported.
+- The [Istio-based service mesh add-on for AKS](../../istio-deploy-ingress.md) isn't supported.
+- Migration between AKS base SKU and Automatic SKU isn't supported.
+- Migrations between AKS Automatic clusters without managed system node pools and AKS Automatic clusters with managed system node pools aren't supported.
+- Configuring [custom scraping of Prometheus metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration) and [log collection](/azure/azure-monitor/containers/kubernetes-data-collection-configmap) aren't supported.
+- Enable [ACNS observability](../../use-advanced-container-networking-services.md) during Automatic cluster creation isn't supported. You can enable ACNS observability after the cluster is created.

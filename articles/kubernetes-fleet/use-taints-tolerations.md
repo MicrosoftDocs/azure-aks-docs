@@ -18,7 +18,7 @@ Taints and tolerations work together to ensure that member clusters receive only
 ## Prerequisites
 
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
-* Read the conceptual overviews for [taints](./concepts-fleet.md#taints) and [tolerations](./concepts-resource-propagation.md#using-tolerations).
+* Read the conceptual overviews for [taints](./concepts-fleet.md#taints) and [tolerations](./concepts-resource-placement.md#using-tolerations).
 * You must have a Fleet Manager with a hub cluster and member clusters. If you don't have this resource, follow [Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters](quickstart-create-fleet-and-members.md).
 * You must gain access to the Kubernetes API of the hub cluster by following the steps in [Access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster](./access-fleet-hub-cluster-kubernetes-api.md).
 

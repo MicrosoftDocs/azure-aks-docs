@@ -6,7 +6,7 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
 ms.date: 05/30/2024
-ms.author: davidsmatlak
+ms.author: shasb
 ms.custom: devx-track-azurepowershell, devx-track-azurecli
 zone_pivot_groups: kubernetes-service-principal
 # Customer intent: As an AKS cluster operator, I want to learn how to create and manage a service principal, so that I can securely delegate permissions for my cluster to access necessary Azure resources.

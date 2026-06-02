@@ -60,8 +60,6 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 
 LocalDNS is configured at the node pool level in AKS, meaning you can enable or disable LocalDNS independently for each node pool in your cluster. This tailors DNS resolution behavior based on the specific requirements of different workloads or environments. To enable LocalDNS on a node pool, you need to provide a configuration file: _localdnsconfig.json_ that defines how LocalDNS should operate for that node pool.
 
-If you don't specify a custom configuration file, AKS automatically applies a default LocalDNS configuration.
-
 # [Enable](#tab/enable)
 
 > [!NOTE]
@@ -323,15 +321,15 @@ To ensure AKS nodes pick up the new Vnet DNS server settings:
 
 This process ensures the AKS Resource Provider is aware of the DNS changes and applies them to all nodes in the node pool.
 
-### DNS Resolution is blocked when using Azure CNI Powered by Cilium (ACPC) 
+### Update Cilium Network Policies to allow DNS Resolution with LocalDNS
 If you deploy Cilium Network Policies in your cluster, you must explicitly allow pod egress to the LocalDNS IP addresses.
 
 Network policies enforce a default‑deny model for destinations that aren’t specified, so DNS traffic to LocalDNS is blocked unless it’s explicitly permitted.
 
-- On ACPC <=v1.16 with k8s <=1.31, this can be achieved by a CIDR-based policy.
-- On ACPC >=v1.17 with K8s >=1.32, a CNP allowing egress to host entities can be used.
+- On Azure CNI Powered by Cilium <=v1.16 with k8s <=1.31, this can be achieved by a CIDR-based policy.
+- On Azure CNI Powered by Cilium >=v1.17 with K8s >=1.32, a Cilium Network Policy allowing egress to host entities can be used.
 
-The following CNP can be used to allow the traffic across all versions:
+The following Cilium Network Policy can be used to allow the traffic across all versions:
 ```yaml
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy

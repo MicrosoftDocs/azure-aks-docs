@@ -3,8 +3,8 @@ title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Azure
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) using PowerShell.
 ms.topic: quickstart
 ms.date: 01/11/2024
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurepowershell, mode-api
 

@@ -38,7 +38,7 @@ spec:
   imageFamily: AzureLinux
 ```
 #### FIPS compliant node image configuration
-You can enable Federal Information Process Standard (FIPS) compliant node images also. For more in FIPS in AKS, visit our [FIPS documentation](./enable-fips-nodes.md)
+You can also enable Federal Information Processing Standards (FIPS) compliant node images. For more information about FIPS in AKS, see [FIPS documentation](./enable-fips-nodes.md).
 
 The `fipsMode` field is set by default to Disabled, and can be set to the following options:
 - FIPS - select FIPS-compliant node images
@@ -176,42 +176,42 @@ spec:
     mode: Required
     vnetDNSOverrides:
       - zone: "."
-        cacheDuration: "30s"
-        forwardDestination: VnetDNS
-        forwardPolicy: Random
-        maxConcurrent: 80
-        protocol: ForceTCP
-        queryLogging: Log
-        serveStale: Immediate
-        serveStaleDuration: "100s"
-      - zone: "cluster.local"
-        cacheDuration: "40s"
+        cacheDuration: "3600s"
         forwardDestination: VnetDNS
         forwardPolicy: Sequential
-        maxConcurrent: 70
+        maxConcurrent: 1000
         protocol: PreferUDP
         queryLogging: Error
-        serveStale: Disable
-        serveStaleDuration: "30s"
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+      - zone: "cluster.local"
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: ForceTCP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
     kubeDNSOverrides:
       - zone: "."
-        cacheDuration: "30s"
-        forwardDestination: ClusterCoreDNS
-        forwardPolicy: RoundRobin
-        maxConcurrent: 100
-        protocol: PreferUDP
-        queryLogging: Log
-        serveStale: Immediate
-        serveStaleDuration: "60s"
-      - zone: "cluster.local"
-        cacheDuration: "10s"
+        cacheDuration: "3600s"
         forwardDestination: ClusterCoreDNS
         forwardPolicy: Sequential
-        maxConcurrent: 50
+        maxConcurrent: 1000
         protocol: PreferUDP
         queryLogging: Error
-        serveStale: Disable
-        serveStaleDuration: "30s"
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+      - zone: "cluster.local"
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: ForceTCP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
 ``` 
 
 ## Kubelet configuration

@@ -162,5 +162,5 @@ For enhanced security on access to AKS clusters, [integrate Microsoft Entra auth
 [az-ad-user-show]: /cli/azure/ad/user#az-ad-user-show
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [az-role-assignment-delete]: /cli/azure/role/assignment#az-role-assignment-delete
-[aad-integration]: ./azure-ad-integration-cli.md
+[aad-integration]: ./entra-id-control-plane-authentication.md
 [az-ad-group-show]: /cli/azure/ad/group#az-ad-group-show

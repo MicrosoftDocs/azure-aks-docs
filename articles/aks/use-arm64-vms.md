@@ -32,7 +32,7 @@ Before you begin, make sure you have:
 ## Limitations
 - Arm64 VMs aren't supported for Windows node pools.
 - Existing node pools can't be updated to use an Arm64 VM.
-- Federal Information Process Standard (FIPS)-enabled node pools are only supported with Arm64 SKUs when using Azure Linux 3.0+.
+- Federal Information Processing Standards (FIPS)-enabled node pools are only supported with Arm64 SKUs when using Azure Linux 3.0+.
 - Arm64 node pools aren't supported on Defender-enabled clusters with Kubernetes version 1.29.0 or lower.
 
 ## Create node pools with Arm64 VMs

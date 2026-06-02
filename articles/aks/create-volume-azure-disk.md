@@ -37,13 +37,13 @@ Each AKS cluster includes four built-in storage classes, with two of them config
 - The _managed-csi-premium_ storage class provisions a premium Azure Disk.
   - SSD-based high-performance, low-latency disks back Premium disks. They're ideal for virtual machines (VMs) running production workloads. When you use the Azure Disk CSI driver on AKS, you can also use the `managed-csi` storage class, which is backed by Standard SSD locally redundant storage (LRS).
 - Effective starting with Kubernetes version 1.29: When you deploy AKS clusters across multiple availability zones, AKS now uses zone-redundant storage (ZRS) to create managed disks within built-in storage classes.
-  - ZRS ensures synchronous replication of your Azure Managed Disks across multiple Azure availability zones in your chosen region. This redundancy strategy enhances the resilience of your applications and safeguards your data against datacenter failures.
+  - ZRS ensures synchronous replication of your Azure managed disks across multiple Azure availability zones in your chosen region. This redundancy strategy enhances the resilience of your applications and safeguards your data against datacenter failures.
     - However, it's important to note that ZRS comes at a higher cost compared to locally redundant storage (LRS). If cost optimization is a priority, you can create a new storage class with the LRS SKU name parameter and use it in your PVC.
 
 Reducing the size of a PVC isn't supported due to the risk of data loss. You can edit an existing storage class using the `kubectl edit sc` command, or you can [create your own custom storage class](#create-custom-storage-classes-for-dynamic-pvs-with-azure-disks).
 
 > [!NOTE]
-> Persistent volume claims are specified in GiB, but Azure Managed Disks are billed by SKU for a specific size. These SKUs range from 32 GiB for S4 or P4 disks to 32 TiB for S80 or P80 disks (in preview). The throughput and IOPS performance of a Premium SSD depends on both the SKU and the instance size of the nodes in the AKS cluster. For more information, see [Pricing and performance of managed disks][managed-disk-pricing-performance].
+> Persistent volume claims are specified in GiB, but Azure managed disks are billed by SKU for a specific size. These SKUs range from 32 GiB for S4 or P4 disks to 32 TiB for S80 or P80 disks (in preview). The throughput and IOPS performance of a Premium SSD depends on both the SKU and the instance size of the nodes in the AKS cluster. For more information, see [Pricing and performance of managed disks][managed-disk-pricing-performance].
 
 View the precreated storage classes using the [`kubectl get sc`][kubectl-get] command. The following example shows the precreated storage classes available within an AKS cluster:
 
@@ -51,12 +51,12 @@ View the precreated storage classes using the [`kubectl get sc`][kubectl-get] co
 kubectl get sc
 ```
 
-Your output should resemble the following example output, which includes the `default` and `managed-csi` storage classes that are precreated for Azure Disks:
+Your output should resemble the following example output, which includes the `default` and `managed-csi-premium` storage classes that are precreated for Azure Disks:
 
 ```output
-NAME                PROVISIONER                AGE
-default (default)   disk.csi.azure.com         1h
-managed-csi         disk.csi.azure.com         1h
+NAME                  PROVISIONER               AGE
+default (default)     disk.csi.azure.com        1h
+managed-csi-premium   disk.csi.azure.com        1h
 ```
 
 ## Create custom storage classes for dynamic PVs with Azure Disks
@@ -76,7 +76,7 @@ To address this scenario, you can use `volumeBindingMode: WaitForFirstConsumer`,
       name: azuredisk-csi-waitforfirstconsumer
     provisioner: disk.csi.azure.com
     parameters:
-      skuname: StandardSSD_LRS
+      skuName: StandardSSD_LRS
     allowVolumeExpansion: true
     reclaimPolicy: Delete
     volumeBindingMode: WaitForFirstConsumer
@@ -109,35 +109,47 @@ The following table includes parameters you can use to define a custom storage c
 | `LogicalSectorSize` | Logical sector size in bytes for Ultra Disk. | `512`, `4096` | No | `4096` |
 | `tags` | Azure Disk [tags][azure-tags] | Tag format: `key1=val1,key2=val2` | No | "" |
 | `diskEncryptionSetID` | Resource ID of the disk encryption set to use for [enabling encryption at rest][disk-encryption] | format: `/subscriptions/{subs-id}/resourceGroups/{rg-name}/providers/Microsoft.Compute/diskEncryptionSets/{diskEncryptionSet-name}` | No | "" |
-| `diskEncryptionType` | Encryption type of the disk encryption set. | `EncryptionAtRestWithCustomerKey` (by default), `EncryptionAtRestWithPlatformAndCustomerKeys` | No | "" |
+| `diskEncryptionType` | Encryption type of the disk encryption set. | `EncryptionAtRestWithCustomerKey` (by default), `EncryptionAtRestWithPlatformAndCustomerKeys` | No | `EncryptionAtRestWithCustomerKey` |
 | `writeAcceleratorEnabled` | [Write accelerator on Azure Disks][azure-disk-write-accelerator] | `true`, `false` | No | "" |
 | `networkAccessPolicy` | `NetworkAccessPolicy` property to prevent generation of the SAS URI for a disk or a snapshot. | `AllowAll`, `DenyAll`, `AllowPrivate` | No | `AllowAll` |
 | `diskAccessID` | Azure resource ID of the DiskAccess resource to use private endpoints on disks | | No | `` |
 | `enableBursting` | [Enable on-demand bursting][on-demand-bursting] beyond the provisioned performance target of the disk. On-demand bursting should only be applied to Premium disk and when the disk size > 512 GB. Ultra and shared disk isn't supported. Bursting is disabled by default. | `true`, `false` | No | `false` |
-| `useragent` | User agent used for [customer usage attribution][customer-usage-attribution] | | No | Generated user agent format: `driverName/driverVersion compiler/version (OS-ARCH)` |
-| `subscriptionID` | Specify Azure subscription ID where the Azure Disks is created. | Azure subscription ID | No | If not empty, `resourceGroup` must be provided. |
+| `userAgent` | User agent used for [customer usage attribution][customer-usage-attribution] | | No | Generated user agent format: `driverName/driverVersion compiler/version (OS-ARCH)` |
+| `subscriptionID` | Specify Azure subscription ID where the Azure Disks is created. If not empty, `resourceGroup` must be provided. | Azure subscription ID | No | |
 | --- | **The following parameters are only for v2** | --- | --- | --- |
-| `maxShares` | The total number of shared disk mounts allowed for the disk. Setting the value to 2 or more enables attachment replicas. | Supported values depend on the disk size. See [Share an Azure Managed Disk][share-azure-managed-disk] for supported values. | No | 1 |
+| `maxShares` | The total number of shared disk mounts allowed for the disk. Setting the value to 2 or more enables attachment replicas. | Supported values depend on the disk size. See [Share an Azure managed disk][share-azure-managed-disk] for supported values. | No | 1 |
 | `maxMountReplicaCount` | The number of replicas attachments to maintain. | This value must be in the range `[0..(maxShares - 1)]` | No | If `accessMode` is `ReadWriteMany`, the default is `0`. Otherwise, the default is `maxShares - 1` |
+
+> [!IMPORTANT]
+> The `tags` storage class parameter is applied to the managed disk when the Azure Disk CSI driver provisions the volume. After the persistent volume is created, the `PersistentVolume` spec is immutable, so editing or patching the PV to change tags or other volume attributes fails. Updating the storage class later affects only newly provisioned volumes.
+>
+> To update tags on an existing volume, change them on the underlying managed disk in Azure. This operation doesn't interrupt existing mounts, pods, or data access, and updated Azure tags aren't synchronized back to the Kubernetes PV YAML or metadata. For example:
+>
+> ```azurecli-interactive
+> az disk update \
+>     --name myManagedDisk \
+>     --resource-group MC_myResourceGroup_myAKSCluster_eastus \
+>     --set tags.abc=ABC123
+> ```
 
 ## Create a PVC with Azure Disks
 
-A PVC automatically provisions storage based on a storage class. In this case, a PVC can use one of the precreated storage classes to create a Standard or Premium Azure Managed Disk.
+A PVC automatically provisions storage based on a storage class. In this case, a PVC can use one of the precreated storage classes to create a Standard or Premium Azure managed disk.
 
-1. Create a file named `azure-pvc.yaml` and paste in the following manifest. The claim requests a disk named `azure-managed-disk` that's _5 GB_ in size with _ReadWriteOnce_ access. The _managed-csi_ storage class is specified as the storage class.
+1. Create a file named `azure-pvc.yaml` and paste in the following manifest. The claim requests a disk named `azure-managed-disk` that's _10 GB_ in size with _ReadWriteOnce_ access. The _managed-csi_ storage class is specified as the storage class.
 
     ```yaml
     apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
-        name: azure-managed-disk
+      name: azure-managed-disk
     spec:
-    accessModes:
-    - ReadWriteOnce
-    storageClassName: managed-csi
-    resources:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: managed-csi
+      resources:
         requests:
-        storage: 5Gi
+          storage: 10Gi
     ```
 
    > [!TIP]
@@ -250,10 +262,10 @@ The following table provides details for the parameters you can use to define a 
 
 | Name | Meaning | Available values | Required | Default value |
 | ---- | ------- | ---------------- | -------- | ------------- |
-| `resourceGroup` | Resource group for storing snapshot shots | EXISTING RESOURCE GROUP | No | If not specified, snapshot will be stored in the same resource group as source Azure Disks |
-| `incremental` | Take [full or incremental snapshot](/azure/virtual-machines/windows/incremental-snapshots) | `true`, `false` | No | `true` |
+| `resourceGroup` | Resource group for storing snapshots | EXISTING RESOURCE GROUP | No | If not specified, snapshot will be stored in the same resource group as source Azure Disks |
+| `incremental` | Take full or [incremental](/azure/virtual-machines/disks-incremental-snapshots) snapshots | `true`, `false` | No | `true` |
 | `tags` | Azure Disks [tags](/azure/azure-resource-manager/management/tag-resources) | Tag format: 'key1=val1,key2=val2' | No | "" |
-| `userAgent` | User agent used for [customer usage attribution](/azure/marketplace/azure-partner-customer-usage-attribution) | | No | Generated Useragent formatted `driverName/driverVersion compiler/version (OS-ARCH)` |
+| `userAgent` | User agent used for [customer usage attribution](/azure/marketplace/azure-partner-customer-usage-attribution) | | No | Generated user agent formatted `driverName/driverVersion compiler/version (OS-ARCH)` |
 | `subscriptionID` | Specify Azure subscription ID where Azure Disks will be created | Azure subscription ID | No | If not empty, `resourceGroup` must be provided, `incremental` must set as `false` |
 
 ## Create a volume snapshot from a PVC with Azure Disks
@@ -478,7 +490,7 @@ metadata:
   name: burstable-managed-csi-premium
 provisioner: disk.csi.azure.com
 parameters:
-  skuname: Premium_LRS
+  skuName: Premium_LRS
   enableBursting: "true"
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
@@ -526,7 +538,7 @@ The following table includes parameters you can use to define a custom storage c
 
 | Name | Meaning | Available values | Required | Default value |
 | ---- | ------- | ---------------- | -------- | ------------- |
-| `volumeHandle` | Azure disk URI | `/subscriptions/{sub-id}/resourcegroups/{group-name}/providers/microsoft.compute/disks/{disk-id}` | Yes | N/A |
+| `volumeHandle` | Azure disk URI | `/subscriptions/{sub-id}/resourceGroups/{group-name}/providers/microsoft.compute/disks/{disk-id}` | Yes | N/A |
 | `volumeAttributes.fsType` | Filesystem type | `ext4`, `ext3`, `ext2`, `xfs`, `btrfs` for Linux <br> `ntfs` for Windows | No | `ext4` for Linux <br> `ntfs` for Windows |
 | `volumeAttributes.partition` | Partition number of the existing disk (only supported on Linux) | `1`, `2`, `3` | No | Empty (no partition) Make sure partition format is: `-part1` |
 | `volumeAttributes.cachingMode` | [Disk host cache setting][disk-host-cache-setting] | `None`, `ReadOnly`, `ReadWrite` | No | `ReadOnly` |
@@ -563,7 +575,7 @@ When you create an Azure disk for use with AKS, you can create the disk resource
     Your output should resemble the following example output, which shows the resource ID of the disk that was created:
 
     ```output
-    /subscriptions/<subscriptionID>/resourceGroups/MC_myAKSCluster_myAKSCluster_eastus/providers/Microsoft.Compute/disks/myAKSDisk
+    /subscriptions/<subscriptionID>/resourceGroups/MC_myResourceGroup_myAKSCluster_eastus/providers/Microsoft.Compute/disks/myAKSDisk
     ```
 
 ### Create a PV and PVC that reference the Azure disk
@@ -586,7 +598,7 @@ When you create an Azure disk for use with AKS, you can create the disk resource
       storageClassName: managed-csi
       csi:
         driver: disk.csi.azure.com
-        volumeHandle: /subscriptions/<subscriptionID>/resourceGroups/MC_myAKSCluster_myAKSCluster_eastus/providers/Microsoft.Compute/disks/myAKSDisk
+        volumeHandle: /subscriptions/<subscriptionID>/resourceGroups/MC_myResourceGroup_myAKSCluster_eastus/providers/Microsoft.Compute/disks/myAKSDisk
         volumeAttributes:
           fsType: ext4
     ```

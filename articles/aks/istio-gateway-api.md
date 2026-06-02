@@ -1,5 +1,5 @@
 ---
-title: Kubernetes Gateway API Ingress for Istio Service Mesh Add-on for Azure Kubernetes Service (AKS) (preview)
+title: Kubernetes Gateway API Ingress for Istio Service Mesh Add-on for Azure Kubernetes Service (AKS)
 description: Configure ingresses for the Istio service mesh add-on for AKS using the Kubernetes Gateway API.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -10,9 +10,7 @@ ms.reviewer: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to deploy Kubernetes Gateway API-based ingress gateways for the Istio service mesh on my cluster, so that I can efficiently manage ingress application traffic routing."
 ---
 
-# Configure Istio ingress with the Kubernetes Gateway API for Azure Kubernetes Service (AKS) (preview)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+# Configure Istio ingress with the Kubernetes Gateway API for Azure Kubernetes Service (AKS)
 
 The Istio service mesh add-on supports both [Istio's own ingress traffic management API][istio-deploy-ingress] and the Kubernetes Gateway API for ingress traffic management. You can use the Istio Gateway API [automated deployment model][istio-gateway-auto-deployment] or the [manual deployment model][istio-gateway-manual-deployment]. This article describes how to configure ingress traffic management for the Istio service mesh add-on using the Kubernetes Gateway API with the [automated deployment model][istio-gateway-auto-deployment].
 
@@ -21,7 +19,7 @@ The Istio service mesh add-on supports both [Istio's own ingress traffic managem
 * The Istio service mesh add-on and the [application routing Gateway API implementation][app-routing-gateway-api] cannot be enabled simultaneously. You must disable one first and enable the other in a separate operation.
 * Using the Kubernetes Gateway API for [egress traffic management][istio-deploy-egress] with the Istio add-on is only supported for the [manual deployment model][istio-gateway-manual-deployment].
 * ConfigMap customizations for `Gateway` resources must fall within the [resource customization allow list](#configmap-customizations). Fields not on the allow list are disallowed and blocked via add-on managed webhooks. See the [Istio add-on support policy][istio-support-policy] for more information on `allowed`, `blocked`, and `supported` features.
-* Configuring HTTPS ingress access to HTTPS services - i.e. Server Name Indication (SNI) Passthrough - via the `TLSRoute` resource is currently unsupported.
+* Configuring HTTPS ingress access to HTTPS services - i.e. Server Name Indication (SNI) Passthrough - via the `TLSRoute` resource is not supported on Istio service mesh add-on revision `asm-1-29`. Support for the `TLSRoute` resource will be available for Istio service mesh add-on revision `asm-1-30` and onwards.
 
 ## Prerequisites
 
@@ -634,6 +632,29 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
     updated-per-gateway
     ```
 
+## Enable access logs for the Gateway pods
+
+`Telemetry` CRDs are installed automatically with the Istio add-on. You can use the `Telemetry API` to configure access logging for `Gateway` pods.
+
+Create the resource in the `aks-istio-system` namespace to enable access logs for all `Gateway` pods in the mesh, or in a specific namespace to enable access logs only for `Gateway` pods in that namespace.
+
+The following example shows a `Telemetry` resource that enables `Gateway` access logging:
+
+```yaml
+apiVersion: telemetry.istio.io/v1
+kind: Telemetry
+metadata:
+  name: mesh-default
+  namespace: aks-istio-system
+spec:
+  accessLogging:
+  - providers:
+    - name: envoy
+```
+
+  > [!NOTE]
+  >  The above manifest enables access logging across the entire mesh, both for `Gateway` pods as well as sidecar proxies injected by Istio. Use selectors to target specific pods. Refer to the [Istio add-on documentation][istio-telemetry] for more details on how to configure access logging with the `Telemetry API`.
+
 ## Clean up resources
 
 If you no longer need the resources created in this article, you can delete them to avoid incurring any charges.
@@ -665,6 +686,7 @@ If you no longer need the resources created in this article, you can delete them
 
 <!---LINKS--->
 [app-routing-gateway-api]: app-routing-gateway-api.md
+[istio-telemetry]: istio-telemetry.md
 [aks-csi-driver]: ./csi-secrets-store-driver.md
 [azure-internal-lb]: ./internal-lb.md
 [istio-deploy-addon]: istio-deploy-addon.md

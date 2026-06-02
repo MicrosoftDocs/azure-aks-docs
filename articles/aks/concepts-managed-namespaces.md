@@ -4,8 +4,8 @@ description: Learn how to simplify namespace management and resource isolation i
 ms.topic: overview
 ms.date: 11/18/2025
 ms.service: azure-kubernetes-service
-ms.author: jackjiang
-author: jakjang
+ms.author: davidsmatlak
+author: davidsmatlak
 ---
 
 # Overview of managed namespaces in Azure Kubernetes Service (AKS)

@@ -1,18 +1,16 @@
 ---
-title: Azure Kubernetes Service (AKS) application routing add-on with the Kubernetes Gateway API (preview)
+title: Azure Kubernetes Service (AKS) application routing add-on with the Kubernetes Gateway API
 description: Use the application routing add-on to manage ingress traffic on Azure Kubernetes Service (AKS) using the Kubernetes Gateway API.
 ms.subservice: aks-networking
 ms.custom: devx-track-azurecli, biannual
 author: nshankar
 ms.topic: how-to
-ms.date: 11/18/2025
+ms.date: 05/18/2026
 ms.author: nshankar
 # Customer intent: As a cloud engineer, I want to deploy and configure ingress on Azure Kubernetes Service with the Kubernetes Gateway API using the application routing add-on, so that I can efficiently manage HTTP/HTTPS traffic to my applications.
 ---
 
-# Configure ingress with the Kubernetes Gateway API via the application routing add-on (preview)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+# Configure ingress with the Kubernetes Gateway API via the application routing add-on
 
 [!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
 
@@ -28,34 +26,31 @@ The application routing add-on Kubernetes Gateway API implementation deploys an 
 
 ## Limitations
 
-* The application routing Gateway API implementation and the [Istio service mesh add-on][istio-addon] cannot be enabled simultaneously. You must disable one first and enable the other in a separate operation.
+* The application routing Gateway API implementation and the [Istio service mesh add-on][istio-addon] cannot be enabled simultaneously. You must disable one first and enable the other in a separate operation. When transitioning from the Istio service mesh add-on to the application routing Gateway API implementation, you must delete the Istio GatewayClass and Istio CRDs after disabling the Istio add-on. The Istio add-on installs CRDs (such as `virtualservices.networking.istio.io`, `destinationrules.networking.istio.io`, and others in the `networking.istio.io`, `security.istio.io`, `telemetry.istio.io`, and `extensions.istio.io` API groups) that are not removed when the add-on is disabled. If these CRDs remain on the cluster, the application routing Gateway API Istio control plane fails to start. Run the following command to delete them:
+
+    ```azurecli-interactive
+    kubectl delete crd $(kubectl get crd -o name | grep -E 'istio\.io')
+    kubectl delete gatewayclass istio
+    ```
+> [!NOTE]
+> If you have existing Istio custom resources (such as VirtualServices or DestinationRules), deleting the CRDs will also delete those resources. Ensure you no longer need them before proceeding.
+
 * The application routing Gateway API implementation uses the same [resource customization allow list][istio-gateway-resource-customization] as the Istio add-on for validating ConfigMap customizations for `Gateway` resources. Customizations not on the allow list are blocked via add-on managed webhooks.
 * [Azure DNS and TLS certificate management][app-routing-dns-tls] via the application routing add-on is currently not supported for the Kubernetes Gateway API. You can follow the steps in the [application routing Gateway API implementation secure ingress guide][app-routing-gateway-api-tls] to configure a `Gateway` to perform TLS termination.
-* Configuring HTTPS ingress access to HTTPS services – i.e Server Name Indication (SNI) Passthrough – via the `TLSRoute` resource is currently unsupported.
+* Configuring HTTPS ingress access to HTTPS services – i.e Server Name Indication (SNI) Passthrough – via the `TLSRoute` resource is not currently supported. Support for the `TLSRoute` resource will be available once AKS adds support for Istio 1.30, at which point your application routing Istio control plane will be automatically upgraded to that version.
 * Egress traffic management via the application routing Gateway API implementation is unsupported.
 
 ## Prerequisites
 
-* Install the `aks-preview` extension or update to the latest version of the extension using the [`az extension add`][az-extension-add] and [`az extension update`][az-extension-update] commands. if you're using Azure CLI. You must use `aks-preview` version `19.0.0b24` and later.
+### Update Azure CLI version
 
-    ```azurecli-interactive
-    # Install the aks-preview extension
-    az extension add --name aks-preview
-    
-    # Update the aks-preview extension to the latest version
-    az extension update --name aks-preview
-    ```
-* Enable the [Managed Gateway API installation][managed-gateway-api]. Use of self-managed Gateway API CRDs with the application routing add-on is unsupported.
+You must use `azure-cli` version `2.86.0` or higher. Run `az --version` to find your `azure-cli` version, and run `az upgrade` to upgrade.
 
-* Register the App Routing Gateway API preview feature flag
+### Enable Managed Gateway API CRDs
 
-- Register the `AppRoutingIstioGatewayAPIPreview` feature flag using the [`az feature register`](/cli/azure/feature#az-feature-register) command.
+Enable the [Managed Gateway API installation][managed-gateway-api]. Use of self-managed Gateway API CRDs with the application routing add-on is unsupported.
 
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "AppRoutingIstioGatewayAPIPreview"
-    ```
-
-## Enable the application routing Gateway API implementation
+### Enable the application routing Gateway API implementation
 
 Set environment variables
 

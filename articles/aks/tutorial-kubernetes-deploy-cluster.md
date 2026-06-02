@@ -250,5 +250,5 @@ In the next tutorial, you learn how to deploy Azure Container Storage on your cl
 [new-azakscluster]: /powershell/module/az.aks/new-azakscluster
 [install-azaksclitool]: /powershell/module/az.aks/install-azaksclitool
 [import-azakscredential]: /powershell/module/az.aks/import-azakscredential
-[aks-k8s-rbac]: azure-ad-rbac.md
+[aks-k8s-rbac]: kubernetes-rbac-entra-id.md
 [azd-auth-login]: /azure/developer/azure-developer-cli/reference#azd-auth-login

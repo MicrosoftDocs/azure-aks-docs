@@ -53,13 +53,16 @@ The following list describes some common use cases for AKS:
 * **[Data streaming with AKS](/azure/architecture/solution-ideas/articles/data-streaming-scenario)**: Ingest and process real-time data streams with millions of data points collected via sensors, and perform fast analyses and computations to develop insights into complex scenarios.
 * **[Using Windows containers on AKS](./windows-aks-customer-stories.md)**: Run Windows Server containers on AKS to modernize your Windows applications and infrastructure.
 
+> [!TIP]
+> If you want a fully managed experience with production-ready defaults, built-in security, and a pod readiness SLA that guarantees 99.9% of qualifying pods are ready within 5 minutes during scale-ups, consider [AKS Automatic](./intro-aks-automatic.md).
+
 ## Features of AKS
 
 The following table lists some of the key features of AKS:
 
 | Feature | Description |
 | --- | --- |
-| **Identity and security management** | • Enforce [regulatory compliance controls using Azure Policy](./security-controls-policy.md) with built-in guardrails and internet security benchmarks. <br/> • Integrate with [Kubernetes RBAC](./azure-ad-rbac.md) to limit access to cluster resources. <br/> • Use [Microsoft Entra ID](./enable-authentication-microsoft-entra-id.md) to set up Kubernetes access based on existing identity and group membership. |
+| **Identity and security management** | • Enforce [regulatory compliance controls using Azure Policy](./security-controls-policy.md) with built-in guardrails and internet security benchmarks. <br/> • Integrate with [Kubernetes RBAC](./kubernetes-rbac-entra-id.md) to limit access to cluster resources. <br/> • Use [Microsoft Entra ID](./entra-id-control-plane-authentication.md) to set up Kubernetes access based on existing identity and group membership. |
 | **Logging and monitoring** | • Integrate with [Container Insights](/azure/azure-monitor/containers/kubernetes-monitoring-enable), a feature in Azure Monitor, to monitor the health and performance of your clusters and containerized applications. <br/> • Set up [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) to collect and visualize network traffic data from your clusters. |
 | **Streamlined deployments** | • Use prebuilt cluster configurations for Kubernetes with [smart defaults](./quotas-skus-regions.md#cluster-configuration-presets-in-the-azure-portal). <br/> • Autoscale your applications using the [Kubernetes Event Driven Autoscaler (KEDA)](./keda-about.md). </br> • Use [Draft for AKS](./draft.md) to ready source code and prepare your applications for production. |
 | **Clusters and nodes** | • Connect storage to nodes and pods, upgrade cluster components, and use GPUs. <br/> • Create clusters that run multiple node pools to support mixed operating systems and Windows Server containers. <br/> • Configure automatic scaling using the [cluster autoscaler](./cluster-autoscaler.md) and [horizontal pod autoscaler](./tutorial-kubernetes-scale.md#autoscale-pods). <br/> • Deploy clusters with [confidential computing nodes](/azure/confidential-computing/confidential-nodes-aks-overview) to allow containers to run in a hardware-based trusted execution environment. |

@@ -19,8 +19,8 @@ This article walks you through the process of securing an NGINX Ingress Controll
 
 You can import the ingress TLS certificate to the cluster using one of the following methods:
 
-- **Application**: The application deployment manifest declares and mounts the provider volume. Only when you deploy the application is the certificate made available in the cluster. When you remove the application, the secret is also removed. This scenario fits development teams responsible for the application’s security infrastructure and its integration with the cluster.
-- **Ingress Controller**: The ingress deployment is modified to declare and mount the provider volume. The secret is imported when ingress pods are created. The application’s pods have no access to the TLS certificate. This scenario fits scenarios where one team (for example, IT) manages and creates infrastructure and networking components (including HTTPS TLS certificates) and other teams manage application lifecycle.
+- **Application**: The application deployment manifest declares and mounts the provider volume. Only when you deploy the application is the certificate made available in the cluster. When you remove the application, the secret is also removed. This scenario fits development teams responsible for the application's security infrastructure and its integration with the cluster.
+- **Ingress Controller**: The ingress deployment is modified to declare and mount the provider volume. The secret is imported when ingress pods are created. The application's pods have no access to the TLS certificate. This scenario fits scenarios where one team (for example, IT) manages and creates infrastructure and networking components (including HTTPS TLS certificates) and other teams manage application lifecycle.
 
 ## Prerequisites
 
@@ -129,7 +129,7 @@ Depending on your scenario, you can choose to bind the certificate to either the
 
 #### Bind certificate to application
 
-- Bind the certificate to the application using the `helm install` command. The application’s deployment references the Secrets Store CSI Driver's Azure Key Vault provider.
+- Bind the certificate to the application using the `helm install` command. The application's deployment references the Secrets Store CSI Driver's Azure Key Vault provider.
 
     ```bash
     helm install ingress-nginx/ingress-nginx --generate-name \
@@ -142,7 +142,7 @@ Depending on your scenario, you can choose to bind the certificate to either the
 
 #### Bind certificate to ingress controller
 
-1. Bind the certificate to the ingress controller using the `helm install` command. The ingress controller’s deployment references the Secrets Store CSI Driver's Azure Key Vault provider.
+1. Bind the certificate to the ingress controller using the `helm install` command. The ingress controller's deployment references the Secrets Store CSI Driver's Azure Key Vault provider.
 
     > [!NOTE]
     > 
@@ -507,7 +507,7 @@ We can now deploy a Kubernetes ingress resource referencing the secret.
 <!-- LINKS INTERNAL -->
 [csi-ss-identity-access]: ./csi-secrets-store-identity-access.md
 [aks-cluster-secrets-csi]: ./csi-secrets-store-driver.md
-[aks-akv-instance]: ./csi-secrets-store-driver.md#create-or-use-an-existing-azure-key-vault
+[aks-akv-instance]: ./csi-secrets-store-driver.md#create-new-key-vault
 [az-key-vault-certificate-import]: /cli/azure/keyvault/certificate#az-keyvault-certificate-import
 [az-keyvault-mirror-as-secret]: ./csi-secrets-store-configuration-options.md#sync-mounted-content-with-a-kubernetes-secret
 

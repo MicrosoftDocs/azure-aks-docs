@@ -62,7 +62,7 @@ To begin using Fleet Manager with Arc-enabled Kubernetes clusters:
 
 1. **Connect clusters to Azure Arc**: Connect your Kubernetes clusters to Azure Arc. For instructions, see [Connect an existing Kubernetes cluster to Azure Arc](/azure/azure-arc/kubernetes/quickstart-connect-cluster).
 2. **Create or upgrade your fleet**: Create (or upgrade) a fleet resource with a hub cluster, then join your Arc-enabled clusters. For instructions, see [Create a fleet and join member clusters](./quickstart-create-fleet-and-members.md).
-3. **Configure workload placement**: Create `ClusterResourcePlacement` resources for your applications. For guidance, see [Kubernetes resource propagation concepts](./concepts-resource-propagation.md).
+3. **Configure workload placement**: Create `ClusterResourcePlacement` resources for your applications. For guidance, see [Kubernetes resource propagation concepts](./concepts-resource-placement.md).
 
 ## Public region limitation
 

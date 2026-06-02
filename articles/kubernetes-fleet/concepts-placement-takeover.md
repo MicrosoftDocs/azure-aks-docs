@@ -276,6 +276,6 @@ At this point you must decide on how to handle the drift, by either including th
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 
 <!-- LINKS - external -->
-[learn-conceptual-crp]: ./concepts-resource-propagation.md
+[learn-conceptual-crp]: ./concepts-resource-placement.md
 [learn-conceptual-rp]: ./concepts-namespace-scoped-resource-propagation.md
 [fleet-hub-cluster]: ./access-fleet-hub-cluster-kubernetes-api.md

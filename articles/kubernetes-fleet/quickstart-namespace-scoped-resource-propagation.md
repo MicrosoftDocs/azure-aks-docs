@@ -396,7 +396,7 @@ kubectl delete namespace my-app
 To learn more about namespace-scoped resource placement, see the following resources:
 
 * [Using ResourcePlacement to deploy namespace-scoped resources](./concepts-namespace-scoped-resource-propagation.md)
-* [Using ClusterResourcePlacement to deploy cluster-scoped resources](./concepts-resource-propagation.md)
+* [Using ClusterResourcePlacement to deploy cluster-scoped resources](./concepts-resource-placement.md)
 * [Understanding resource placement status output](./howto-understand-placement.md)
 * [Use overrides to customize namespace-scoped resources](./resource-override.md)
 * [Defining a rollout strategy for resource placement](./concepts-rollout-strategy.md)

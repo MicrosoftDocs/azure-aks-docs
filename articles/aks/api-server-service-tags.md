@@ -23,7 +23,6 @@ Service tags for API server authorized IP ranges is a preview feature that allow
 
 ## Limitations
 
-- This feature isn't compatible with [API Server VNet Integration][api-server-vnet-integration].
 - Only one service tag is allowed in the `--api-server-authorized-ip-ranges` parameter. You can't specify multiple service tags.
 
 ## Install the `aks-preview` Azure CLI extension

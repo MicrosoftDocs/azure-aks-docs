@@ -1,14 +1,13 @@
 ---
-title: Kubernetes on Azure tutorial - Prepare an application for Azure Kubernetes Service (AKS)
+title: Kubernetes on Azure tutorial - Prepare an Application for Azure Kubernetes Service (AKS)
 description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to prepare and build a multi-container app with Docker Compose that you can then deploy to AKS.
 ms.topic: tutorial
 ms.date: 09/06/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: mvc, devx-track-extended-azdevcli
-
+ms.service: azure-kubernetes-service
 # Customer intent: As a developer, I want to learn how to build a container-based application so that I can deploy the app to Azure Kubernetes Service.
-
 ---
 
 # Tutorial - Prepare an application for Azure Kubernetes Service (AKS)
@@ -17,9 +16,9 @@ In this tutorial, you prepare a multi-container application to use in Kubernetes
 
 > [!div class="checklist"]
 >
-> * Clone a sample application source from GitHub.
-> * Create a container image from the sample application source.
-> * Test the multi-container application in a local Docker environment.
+> - Clone a sample application source from GitHub.
+> - Create a container image from the sample application source.
+> - Test the multi-container application in a local Docker environment.
 
 Once completed, the following application runs in your local development environment:
 
@@ -44,12 +43,19 @@ The [sample application][sample-application] used in this tutorial is a basic st
 
 :::image type="content" source="./media/container-service-kubernetes-tutorials/aks-store-architecture.png" alt-text="Screenshot of Azure Store sample architecture." lightbox="./media/container-service-kubernetes-tutorials/aks-store-architecture.png":::
 
-* **Store front**: Web application for customers to view products and place orders.
-* **Product service**: Shows product information.
-* **Order service**: Places orders.
-* **Rabbit MQ**: Message queue for an order queue.
+- **Store front**: Web application for customers to view products and place orders.
+- **Product service**: Shows product information.
+- **Order service**: Places orders.
+- **RabbitMQ**: Message queue for an order queue.
 
 ### [Git](#tab/azure-cli)
+
+1. Create a directory on your computer and switch to that directory in your terminal session, like Bash. This example uses a directory named _demorepo_ but you can use any name you want.
+
+    ```console
+    mkdir demorepo
+    cd demorepo
+    ```
 
 1. Use [git][] to clone the sample application to your development environment.
 
@@ -57,7 +63,7 @@ The [sample application][sample-application] used in this tutorial is a basic st
     git clone https://github.com/Azure-Samples/aks-store-demo.git
     ```
 
-2. Change into the cloned directory.
+1. Change into the cloned directory.
 
     ```console
     cd aks-store-demo
@@ -71,13 +77,13 @@ The [sample application][sample-application] used in this tutorial is a basic st
     mkdir aks-store-demo
     ```
 
-2. Change into the new directory to load all the files from the azd template.
+1. Change into the new directory to load all the files from the azd template.
 
     ```console
     cd aks-store-demo
     ```
 
-3. Clone the sample application into the `aks-store-demo` directory using the [`azd init`][azd-init] command with the `--template` flag set to `aks-store-demo`.
+1. Clone the sample application into the `aks-store-demo` directory using the [`azd init`][azd-init] command with the `--template` flag set to `aks-store-demo`.
 
     ```azdeveloper
     azd init --template aks-store-demo
@@ -174,13 +180,9 @@ networks:
 
 ---
 
-## Create container images and run application 
-
-### [Docker](#tab/azure-cli)
+## Create container images and run application
 
 You can use [Docker Compose][docker-compose] to automate building container images and the deployment of multi-container applications.
-
-### Docker
 
 1. Create the container image, download the RabbitMQ image, and start the application using the `docker compose` command:
 
@@ -188,7 +190,7 @@ You can use [Docker Compose][docker-compose] to automate building container imag
     docker compose -f docker-compose-quickstart.yml up -d
     ```
 
-2. View the created images using the [`docker images`][docker-images] command.
+1. View the created images using the [`docker images`][docker-images] command.
 
     ```console
     docker images
@@ -204,7 +206,7 @@ You can use [Docker Compose][docker-compose] to automate building container imag
     ...
     ```
 
-3. View the running containers using the [`docker ps`][docker-ps] command.
+1. View the running containers using the [`docker ps`][docker-ps] command.
 
     ```console
     docker ps
@@ -230,15 +232,15 @@ On this page, you can view products, add them to your cart, and then place an or
 
 ## Clean up resources
 
-Since you validated the application's functionality, you can stop and remove the running containers. ***Do not delete the container images*** - you use them in the next tutorial.
+Since you validated the application's functionality, you can stop and remove the running containers. **Do not delete the container images** because you use them in the next tutorial.
 
-* Stop and remove the container instances and resources using the [`docker-compose down`][docker-compose-down] command.
+Stop and remove the container instances and resources using the [`docker compose down`][docker-compose-down] command.
 
-    ```console
-    docker compose down
-    ```
+```console
+docker compose down
+```
 
-### [Azure Developer CLI](#tab/azure-azd)
+## Azure Developer CLI commands
 
 When you use `azd`, there are no manual container image dependencies. `azd` handles the provisioning, deployment, and clean up of your applications and clusters with the `azd up` and `azd down` commands, similar to Docker.
 
@@ -262,29 +264,29 @@ infra:
 
 ## Next steps
 
-### [Azure CLI](#tab/azure-cli) 
+### Azure CLI
 
 In this tutorial, you created a sample application, created container images for the application, and then tested the application. You learned how to:
 
 > [!div class="checklist"]
 >
-> * Clone a sample application source from GitHub.
-> * Create a container image from the sample application source.
-> * Test the multi-container application in a local Docker environment.
+> - Clone a sample application source from GitHub.
+> - Create a container image from the sample application source.
+> - Test the multi-container application in a local Docker environment.
 
 In the next tutorial, you learn how to store container images in an ACR.
 
 > [!div class="nextstepaction"]
 > [Push images to Azure Container Registry][aks-tutorial-prepare-acr]
 
-### [Azure Developer CLI](#tab/azure-azd)
+### Azure Developer CLI
 
 In this tutorial, you cloned a sample application using `azd`. You learned how to:
 
 > [!div class="checklist"]
 >
-> * Clone a sample `azd` template from GitHub.
-> * View where container images are used from the sample application source.
+> - Clone a sample `azd` template from GitHub.
+> - View where container images are used from the sample application source.
 
 In the next tutorial, you learn how to create a cluster using the `azd` template you cloned.
 

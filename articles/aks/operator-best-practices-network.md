@@ -196,6 +196,20 @@ spec:
 
 To get started with policies, see [Secure traffic between pods using network policies in Azure Kubernetes Service (AKS)][use-network-policies].
 
+## Optimize DNS resolution with LocalDNS
+
+> **Best practice guidance**
+>
+> Enable [LocalDNS](./localdns-custom.md) on your AKS node pools to improve DNS performance, reliability, and reduce load on centralized CoreDNS pods.
+
+DNS resolution is critical for service-to-service communication in Kubernetes. By default, all DNS queries from pods are sent to the centralized CoreDNS pods, which can become a bottleneck at scale. AKS offers [LocalDNS](./dns-concepts.md), which deploys a DNS proxy as a `systemd` service on each node. This proxy handles DNS queries locally, reducing network hops and resolution latency.
+
+LocalDNS also eliminates `conntrack` table entries for DNS traffic, preventing `conntrack` table exhaustion and race conditions that can cause dropped connections. Connections from the local cache to CoreDNS are upgraded to TCP, enabling connection rebalancing and faster cleanup of tracking entries.
+
+For workloads that require high DNS availability, LocalDNS supports serving stale cached responses for a configurable duration when upstream DNS is unavailable. This capability helps maintain pod connectivity and service reliability during transient DNS outages.
+
+For more information on LocalDNS architecture and capabilities, see [DNS resolution in AKS](./dns-concepts.md). For configuration instructions, see [Configure LocalDNS](./localdns-custom.md).
+
 ## Securely connect to nodes through a bastion host
 
 > **Best practice guidance**

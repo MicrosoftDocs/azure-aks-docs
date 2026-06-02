@@ -42,6 +42,16 @@ For more information about the commands, see [`az aks`](/cli/azure/aks).
 
 Minor and major upgrades of core extensions occur alongside AKS minor and major version updates to avoid introducing breaking changes and provide better reliability.
 
+### Addon to core extension migration
+
+[Azure Monitor](/azure/azure-monitor/containers/kubernetes-monitoring-overview) services, including [Container Insights](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=cli), [Managed Prometheus](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=cli), and [Application Insights](/azure/azure-monitor/containers/kubernetes-codeless?tabs=portal) are transitioning to a cluster extension based backend model. This change updates AKS monitoring [add-ons](/azure/aks/integrations) to an extension‑based management model, with no change to functionality or user experience.
+
+- This backend migration is nondisruptive and doesn't change user experience or require customer action.
+
+- There's no impact to workloads, data collection, or monitoring functionality.
+
+- Azure CLI, Azure portal, and all client experiences continue to work as expected.
+
 ### Standard extensions
 
 For information about the other cluster extensions, see the table in [Currently available extensions](cluster-extensions.md#currently-available-extensions) and the [Kubernetes apps](deploy-marketplace.md) deployed via Azure Marketplace are of the Standard Extension type.
@@ -85,6 +95,7 @@ The cluster extensions platform is supported in all regions where AKS is deploye
 | [Flux (GitOps)][gitops-overview] | Use GitOps with Flux to manage cluster configuration and application deployment. See also [supported versions of Flux (GitOps)][gitops-support] and [Tutorial: Deploy applications using GitOps with Flux v2][gitops-tutorial].|
 | [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) | Use Azure Container Storage to manage block storage on AKS clusters to store data in persistent volumes. |
 | [Azure Backup for AKS](/azure/backup/azure-kubernetes-service-backup-overview) | Use Azure Backup for AKS to protect your containerized applications and data stored in Persistent Volumes deployed in the AKS clusters. |
+| [Container Network Insights Agent][container-network-insights-agent-overview] | Use the Container Network Insights Agent—an AI-powered, evidence-based AKS cluster extension—to diagnose and troubleshoot networking issues in your AKS cluster. |
 
 You can also [select and deploy Kubernetes applications available through Marketplace](deploy-marketplace.md).
 
@@ -109,6 +120,7 @@ You can also [select and deploy Kubernetes applications available through Market
 [use-managed-identity]: ./use-managed-identity.md
 [workload-identity-overview]: workload-identity-overview.md
 [use-azure-ad-pod-identity]: use-azure-ad-pod-identity.md
+[container-network-insights-agent-overview]: ./container-network-insights-agent-overview.md
 
 <!-- EXTERNAL LINKS -->
 [arc-k8s-regions]: https://azure.microsoft.com/global-infrastructure/services/?products=azure-arc&regions=all

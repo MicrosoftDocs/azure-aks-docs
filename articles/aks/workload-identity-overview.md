@@ -1,8 +1,8 @@
 ---
 title: Use a Microsoft Entra Workload ID on Azure Kubernetes Service (AKS)
 description: Learn about Microsoft Entra Workload ID for Azure Kubernetes Service (AKS) and how to migrate your application to authenticate using this identity.  
-author: davidsmatlak
-ms.author: davidsmatlak
+author: shashankbarsin
+ms.author: shasb
 ms.topic: overview
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
@@ -14,6 +14,9 @@ ms.date: 05/28/2024
 # Use Microsoft Entra Workload ID with Azure Kubernetes Service (AKS)
 
 Workloads deployed on an AKS cluster require Microsoft Entra application credentials or managed identities to access Microsoft Entra protected resources, such as Azure Key Vault and Microsoft Graph. Microsoft Entra Workload ID integrates with the capabilities native to Kubernetes to federate with external identity providers, allowing you to assign workload identities to your workloads to authenticate and access other services and resources.
+
+> [!NOTE]
+> Workload ID covers the **pod-to-Azure** identity scenario in AKS — how applications running in pods authenticate to Microsoft Entra–protected services. For the other identity scenarios (control-plane authentication and authorization, and cluster-to-Azure managed identities), see [Access and identity options for AKS](concepts-identity.md).
 
 [Microsoft Entra Workload ID][azure-ad-workload-identity] uses [Service Account Token Volume Projection][service-account-token-volume-projection] (or a _service account_), to enable pods to use a Kubernetes identity. A Kubernetes token is issued and [OpenID Connect (OIDC) federation][oidc-federation] enables Kubernetes applications to access Azure resources securely with Microsoft Entra ID, based on annotated service accounts.
 

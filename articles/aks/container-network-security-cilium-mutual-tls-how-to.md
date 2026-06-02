@@ -27,6 +27,10 @@ This article shows you how to deploy Cilium mTLS encryption with Advanced Contai
 
 - Cilium mTLS encryption is only supported with the Azure CNI powered by Cilium. If you're using any other network plugin, Cilium mTLS encryption isn't supported. See [Configure Azure CNI Powered by Cilium](/azure/aks/azure-cni-powered-by-cilium).
 
+- Ensure your AKS cluster is running Kubernetes version 1.34.0 or later.
+
+- Ensure your cluster is using Cilium version 1.18 or later.
+
 ### Install the `aks-preview` Azure CLI extension
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]

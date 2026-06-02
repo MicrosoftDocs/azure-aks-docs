@@ -112,7 +112,7 @@ az aks nodepool add \
     --labels dept=HR costcenter=5000
 ```
 
-The following is example output from the [`az aks nodepool list`][az-aks-nodepool-list] command showing the *labelnp* node pool is *Creating* nodes with the specified *nodeLabels*:
+The following is example output from the [`az aks nodepool list`][az-aks-nodepool-list] command showing the _labelnp_ node pool is _Creating_ nodes with the specified _nodeLabels_:
 
 ```bash
 az aks nodepool list --resource-group $RESOURCE_GROUP --cluster-name $AKS_CLUSTER_NAME
@@ -174,51 +174,52 @@ kubectl get nodes --show-labels | grep -e "costcenter=6000" -e "dept=ACCT"
 
 Since the [2021-08-19 AKS release][aks-release-2021-gh], AKS stopped the ability to make changes to AKS reserved labels. Attempting to change these labels results in an error message.
 
-The following labels are AKS reserved labels. *Virtual node usage* specifies if these labels could be a supported system feature on virtual nodes. Some properties that these system features change aren't available on the virtual nodes because they require modifying the host.
+The following labels are AKS reserved labels. _Virtual node usage_ specifies if these labels could be a supported system feature on virtual nodes. Some properties that these system features change aren't available on the virtual nodes because they require modifying the host.
 
-| Label                                     | Value                          | Example/Options                                                            | Virtual node usage           |
-| ----------------------------------------- | ------------------------------ | -------------------------------------------------------------------------- | ---------------------------- |
-| `kubernetes.azure.com/agentpool`          | \<agent pool name>             | `nodepool1`                                                                | Same                         |
-| `kubernetes.io/arch`                      | \<runtime.GOARCH>              | `amd64       `                                                             | N/A                          |
-| `kubernetes.io/os`                        | \<OS Type>                     | `Linux/Windows`                                                            | Same                         |
-| `node.kubernetes.io/instance-type`        | \<VM size>                     | `Standard_NC6s_v3`                                                         | Virtual                      |
-| `topology.kubernetes.io/region`           | \<Azure region>                | `westus2`                                                                  | Same                         |
-| `topology.kubernetes.io/zone`             | \<Azure zone>                  | `0`                                                                        | Same                         |
-| `kubernetes.azure.com/cluster`            | \<MC_RgName>                   | `MC_aks_myAKSCluster_westus2`                                              | Same                         |
-| `kubernetes.azure.com/managedby`          | `aks`                          | `aks`                                                                      | N/A                          |
-| `kubernetes.azure.com/mode`               | \<mode>                        | `User` or `system`                                                         | User                         |
-| `kubernetes.azure.com/role`               | agent                          | `Agent`                                                                    | Same                         |
-| `kubernetes.azure.com/scalesetpriority`   | \<VMSS priority>               | `spot` or `regular`                                                        | N/A                          |
-| `kubernetes.io/hostname`                  | \<hostname>                    | `aks-nodepool-00000000-vmss000000`                                         | Same                         |
-| `kubernetes.azure.com/storageprofile`     | \<OS disk storage profile>     | `Managed`                                                                  | N/A                          |
-| `kubernetes.azure.com/storagetier`        | \<OS disk storage tier>        | `Premium_LRS`                                                              | N/A                          |
-| `kubernetes.azure.com/node-image-version` | \<VHD version>                 | `AKSUbuntu-1804-2020.03.05`                                                | Virtual node version         |
-| `kubernetes.azure.com/network-name`       | \<nodepool vnet name>          | `vnetName`                                                                 | Virtual node virtual network |
-| `kubernetes.azure.com/network-subnet`     | \<nodepool subnet name>        | `subnetName`                                                               | Virtual node subnet name     |
-| `kubernetes.azure.com/ppg`                | \<nodepool ppg name>           | `ppgName`                                                                  | N/A                          |
-| `kubernetes.azure.com/encrypted-set`      | \<nodepool encrypted-set name> | `encrypted-set-name`                                                       | N/A                          |
-| `kubernetes.azure.com/accelerator`        | \<accelerator>                 | `nvidia`                                                                   | N/A                          |
-| `kubernetes.azure.com/fips_enabled`       | \<is FIPS enabled?>            | `true`                                                                     | N/A                          |
-| `kubernetes.azure.com/os-sku`             | \<os/sku>                      | [Create or update OS SKU][create-or-update-os-sku]                         | Linux                        |
-| `kubernetes.azure.com/os-sku-effective`   | \<actual OS SKU chosen>        | `Ubuntu2204` or similar (never Ubuntu, always has the version specified)   | N/A                          |
-| `kubernetes.azure.com/os-sku-requested`   | \<user requested OS SKU>       | `Ubuntu`, `Ubuntu2204`, or similar (exactly matches requested sku from API) | N/A                          |
-| `kubernetes.azure.com/sku-cpu`            | \<num cpus>                    | `4`                                                                        | Same                         |
-| `kubernetes.azure.com/sku-memory`         | \<memory in GB>                | `16`                                                                       | Same                         |
-| `kubernetes.azure.com/nodepool-type`      | \<node pool type>              | `VirtualMachineScaleSets`                                                  | N/A                          |
+| Label                                                | Value                          | Example/Options                                                                                     | Virtual node usage           |
+| ---------------------------------------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `kubernetes.azure.com/agentpool`                     | \<agent pool name>             | `nodepool1`                                                                                         | Same                         |
+| `kubernetes.io/arch`                                 | \<runtime.GOARCH>              | `amd64       `                                                                                      | N/A                          |
+| `kubernetes.io/os`                                   | \<OS Type>                     | `Linux/Windows`                                                                                     | Same                         |
+| `node.kubernetes.io/instance-type`                   | \<VM size>                     | `Standard_NC6s_v3`                                                                                  | Virtual                      |
+| `topology.kubernetes.io/region`                      | \<Azure region>                | `westus2`                                                                                           | Same                         |
+| `topology.kubernetes.io/zone`                        | \<Azure zone>                  | `0`                                                                                                 | Same                         |
+| `kubernetes.azure.com/cluster`                       | \<MC_RgName>                   | `MC_aks_myAKSCluster_westus2`                                                                       | Same                         |
+| `kubernetes.azure.com/managedby`                     | `aks`                          | `aks`                                                                                               | N/A                          |
+| `kubernetes.azure.com/mode`                          | \<mode>                        | `User` or `system`                                                                                  | User                         |
+| `kubernetes.azure.com/role`                          | agent                          | `Agent`                                                                                             | Same                         |
+| `kubernetes.azure.com/scalesetpriority` (deprecated) | \<VMSS priority>               | `spot` (`regular` is not written on regular nodes). Prefer `kubernetes.azure.com/priority` instead. | N/A                          |
+| `kubernetes.azure.com/priority`                      | \<VM priority>                 | `spot` or `regular`                                                                                 | N/A                          |
+| `kubernetes.io/hostname`                             | \<hostname>                    | `aks-nodepool-00000000-vmss000000`                                                                  | Same                         |
+| `kubernetes.azure.com/storageprofile`                | \<OS disk storage profile>     | `Managed`                                                                                           | N/A                          |
+| `kubernetes.azure.com/storagetier`                   | \<OS disk storage tier>        | `Premium_LRS`                                                                                       | N/A                          |
+| `kubernetes.azure.com/node-image-version`            | \<VHD version>                 | `AKSUbuntu-1804-2020.03.05`                                                                         | Virtual node version         |
+| `kubernetes.azure.com/network-name`                  | \<nodepool vnet name>          | `vnetName`                                                                                          | Virtual node virtual network |
+| `kubernetes.azure.com/network-subnet`                | \<nodepool subnet name>        | `subnetName`                                                                                        | Virtual node subnet name     |
+| `kubernetes.azure.com/ppg`                           | \<nodepool ppg name>           | `ppgName`                                                                                           | N/A                          |
+| `kubernetes.azure.com/encrypted-set`                 | \<nodepool encrypted-set name> | `encrypted-set-name`                                                                                | N/A                          |
+| `kubernetes.azure.com/accelerator`                   | \<accelerator>                 | `nvidia`                                                                                            | N/A                          |
+| `kubernetes.azure.com/fips_enabled`                  | \<is FIPS enabled?>            | `true`                                                                                              | N/A                          |
+| `kubernetes.azure.com/os-sku`                        | \<os/sku>                      | [Create or update OS SKU][create-or-update-os-sku]                                                  | Linux                        |
+| `kubernetes.azure.com/os-sku-effective`              | \<actual OS SKU chosen>        | `Ubuntu2204` or similar (never Ubuntu, always has the version specified)                            | N/A                          |
+| `kubernetes.azure.com/os-sku-requested`              | \<user requested OS SKU>       | `Ubuntu`, `Ubuntu2204`, or similar (exactly matches requested sku from API)                         | N/A                          |
+| `kubernetes.azure.com/sku-cpu`                       | \<num cpus>                    | `4`                                                                                                 | Same                         |
+| `kubernetes.azure.com/sku-memory`                    | \<memory in GB>                | `16`                                                                                                | Same                         |
+| `kubernetes.azure.com/nodepool-type`                 | \<node pool type>              | `VirtualMachineScaleSets`                                                                           | N/A                          |
 
-* *Same* is included in places where the expected values for the labels don't differ between a standard node pool and a virtual node pool. As virtual node pods don't expose any underlying virtual machine (VM), the VM SKU values are replaced with the SKU *Virtual*.
-* *Virtual node version* refers to the current version of the [virtual Kubelet-ACI connector release][virtual-kubelet-release].
-* *Virtual node subnet name* is the name of the subnet where virtual node pods are deployed into Azure Container Instance (ACI).
-* *Virtual node virtual network* is the name of the virtual network, which contains the subnet where virtual node pods are deployed on ACI.
-* *Node Auto Provisioning (Karpenter)* nodes have additional labels corresponding to the supported [selectors][nap-labels].
-* `kubernetes.azure.com/network-name` and `kubernetes.azure.com/network-subnet` will be truncated if the underlying resource names are greater than 64 characters long.
+- _Same_ is included in places where the expected values for the labels don't differ between a standard node pool and a virtual node pool. As virtual node pods don't expose any underlying virtual machine (VM), the VM SKU values are replaced with the SKU _Virtual_.
+- _Virtual node version_ refers to the current version of the [virtual Kubelet-ACI connector release][virtual-kubelet-release].
+- _Virtual node subnet name_ is the name of the subnet where virtual node pods are deployed into Azure Container Instance (ACI).
+- _Virtual node virtual network_ is the name of the virtual network, which contains the subnet where virtual node pods are deployed on ACI.
+- _Node Auto Provisioning (Karpenter)_ nodes have additional labels corresponding to the supported [selectors][nap-labels].
+- `kubernetes.azure.com/network-name` and `kubernetes.azure.com/network-subnet` will be truncated if the underlying resource names are greater than 64 characters long.
 
 ### Reserved prefixes
 
 The following prefixes are AKS reserved prefixes and can't be used for any node:
 
-* kubernetes.azure.com/
-* kubernetes.io/
+- kubernetes.azure.com/
+- kubernetes.io/
 
 For more information on reserved prefixes, see [Kubernetes well-known labels, annotations, and taints][kubernetes-well-known-labels].
 
@@ -226,27 +227,28 @@ For more information on reserved prefixes, see [Kubernetes well-known labels, an
 
 The following labels are planned for deprecation with the release of [Kubernetes v1.24][aks-release-calendar]. You should change any label references to the recommended substitute.
 
-| Label | Recommended substitute | Maintainer |
-| --- | --- | --- |
-| failure-domain.beta.kubernetes.io/region | topology.kubernetes.io/region | [Kubernetes][kubernetes-labels]
-| failure-domain.beta.kubernetes.io/zone | topology.kubernetes.io/zone | [Kubernetes][kubernetes-labels]
-| beta.kubernetes.io/arch | kubernetes.io/arch | [Kubernetes][kubernetes-labels]
-| beta.kubernetes.io/instance-type | node.kubernetes.io/instance-type | [Kubernetes][kubernetes-labels]
-| beta.kubernetes.io/os  | kubernetes.io/os | [Kubernetes][kubernetes-labels]
-| node-role.kubernetes.io/agent* | kubernetes.azure.com/role=agent | Azure Kubernetes Service
-| kubernetes.io/role* | kubernetes.azure.com/role=agent | Azure Kubernetes Service
-| Agentpool* | kubernetes.azure.com/agentpool | Azure Kubernetes Service
-| Storageprofile* | kubernetes.azure.com/storageprofile | Azure Kubernetes Service
-| Storagetier* | kubernetes.azure.com/storagetier | Azure Kubernetes Service
-| Accelerator* | kubernetes.azure.com/accelerator | Azure Kubernetes Service
+| Label                                    | Recommended substitute              | Maintainer                      |
+| ---------------------------------------- | ----------------------------------- | ------------------------------- |
+| failure-domain.beta.kubernetes.io/region | topology.kubernetes.io/region       | [Kubernetes][kubernetes-labels] |
+| failure-domain.beta.kubernetes.io/zone   | topology.kubernetes.io/zone         | [Kubernetes][kubernetes-labels] |
+| beta.kubernetes.io/arch                  | kubernetes.io/arch                  | [Kubernetes][kubernetes-labels] |
+| beta.kubernetes.io/instance-type         | node.kubernetes.io/instance-type    | [Kubernetes][kubernetes-labels] |
+| beta.kubernetes.io/os                    | kubernetes.io/os                    | [Kubernetes][kubernetes-labels] |
+| node-role.kubernetes.io/agent\*          | kubernetes.azure.com/role=agent     | Azure Kubernetes Service        |
+| kubernetes.io/role\*                     | kubernetes.azure.com/role=agent     | Azure Kubernetes Service        |
+| Agentpool\*                              | kubernetes.azure.com/agentpool      | Azure Kubernetes Service        |
+| Storageprofile\*                         | kubernetes.azure.com/storageprofile | Azure Kubernetes Service        |
+| Storagetier\*                            | kubernetes.azure.com/storagetier    | Azure Kubernetes Service        |
+| Accelerator\*                            | kubernetes.azure.com/accelerator    | Azure Kubernetes Service        |
 
-*Newly deprecated. For more information, see the [Release Notes][aks-release-notes-gh].
+\*Newly deprecated. For more information, see the [Release Notes][aks-release-notes-gh].
 
 ## Next steps
 
 Learn more about Kubernetes labels in the [Kubernetes labels documentation][kubernetes-labels].
 
 <!-- LINKS - external -->
+
 [aks-release-2021-gh]: https://github.com/Azure/AKS/releases/tag/2021-08-19
 [aks-release-notes-gh]: https://github.com/Azure/AKS/releases
 [kubernetes-labels]: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
@@ -255,6 +257,7 @@ Learn more about Kubernetes labels in the [Kubernetes labels documentation][kube
 [virtual-kubelet-release]: https://github.com/virtual-kubelet/azure-aci/releases
 
 <!-- LINKS - internal -->
+
 [aks-release-calendar]: ./supported-kubernetes-versions.md#aks-kubernetes-release-calendar
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-nodepool-add]: /cli/azure/aks#az-aks-nodepool-add

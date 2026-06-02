@@ -1,10 +1,10 @@
 ---
 title: Use AKS plugins for GitHub Copilot for Azure
 description: Learn how to use AKS plugins in GitHub Copilot for Azure to enhance your day-to-day experience in Azure Kubernetes Service
-author: qpetraroia
+author: davidsmatlak
 ms.topic: how-to
 ms.date: 10/28/2024
-ms.author: qpetraroia
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
 ms.collection: ce-skilling-ai-copilot
 ms.update-cycle: 180-days

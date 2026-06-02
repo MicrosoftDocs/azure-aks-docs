@@ -171,7 +171,7 @@ For enhanced security, you can use a private key vault that has public network a
         --scope $KEY_VAULT_RESOURCE_ID
     ```
 
-1. Create a key in the key vault.
+1. Create a key in the key vault. Ensure `encrypt` and `decrypt` key operations are enabled.
 
     ```azurecli-interactive
     export KEY_NAME="<your-key-name>"
@@ -323,7 +323,7 @@ With customer-managed keys, you create and manage your own Azure Key Vault and e
         --scope $KEY_VAULT_RESOURCE_ID
     ```
 
-1. Create a key in the key vault.
+1. Create a key in the key vault. Ensure `encrypt` and `decrypt` key operations are enabled.
 
     ```azurecli-interactive
     export KEY_NAME="<your-key-name>"

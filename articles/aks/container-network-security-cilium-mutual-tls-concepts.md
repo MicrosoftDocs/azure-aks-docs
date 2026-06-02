@@ -31,7 +31,7 @@ The system is composed of three cooperating components:
 
 - **SPIRE** - Provides workload identity and certificate issuance.
 - **ztunnel** - Enforces mTLS in the data plane.
-- **Cilium** - Intercepts traffic and integrates identity with enforcement.
+- **Cilium** - Installs iptables rules that redirect outbound traffic to ztunnel on port 15001.
 
 Together, these components ensure that authentication and encryption happen transparently and consistently across the cluster.
 
@@ -56,19 +56,20 @@ Authentication decisions are based on workload identity rather than network loca
 - Identity remains consistent across rescheduling and scaling.
 - Trust isn't dependent on IP addressing or network topology.
 
-:::image type="content" source="./media/advanced-container-networking-services/mutual-tls-authentication-diagram.png" alt-text="Diagram of mutual-tls authentication process." lightbox="./media/advanced-container-networking-services/mutual-tls-authentication-diagram.png":::
 
 ## Encryption flow
 
 After successful authentication, traffic is protected using mutual TLS.
 
-1. Cilium agent intercepts TCP traffic.
+1. Traffic intercepted inside the pod network namespace and redirected to the local ztunnel instance. 
 2. The source ztunnel initiates an mTLS session with the destination ztunnel.
 3. Certificates are exchanged and validated.
 4. Application data is encrypted before transmission.
-5. Traffic is decrypted only at the destination node before delivery to the workload.
+5. The destination ztunnel decrypts the traffic and delivers it to the target pod. 
 
-Encryption is enforced at Layer 4 and applies to all TCP traffic between enrolled workloads.
+:::image type="content" source="./media/advanced-container-networking-services/mutual-tls-authentication-diagram.png" alt-text="Diagram of mutual-tls authentication process." lightbox="./media/advanced-container-networking-services/mutual-tls-authentication-diagram.png":::
+
+Every packet from an enrolled pod is encrypted. There is no plaintext window, and no dropped first packets. The connection is held inline by ztunnel until the mTLS tunnel is established, then traffic flows bidirectionally through an HBONE (HTTP/2 CONNECT) tunnel.
 
 ## Core components
 
@@ -104,15 +105,16 @@ Ztunnel enforces the following guarantees:
 
 By centralizing mTLS enforcement at the node level, ztunnel provides strong security properties without increasing per-pod operational overhead.
 
-### Cilium (traffic interception and wiring)
+### Cilium (redirection rules and pod enrollment)
 
 Cilium is responsible for making mTLS transparent to applications.
 
-It installs redirect rules inside each pod's network namespace and intercepts inbound and outbound TCP traffic. Instead of allowing traffic to flow directly between pods, Cilium redirects it to the local ztunnel instance for authentication and encryption.
+When a namespace is labelled with “io.cilium/mtls-enabled=true”, the Cilium agent enrolls all pods in that namespace. It enters each pod's network namespace and installs iptables rules that redirect outbound traffic to ztunnel on port 15001.  
 
 Cilium also passes workload metadata, such as the Pod UID, to ztunnel and integrates with the Cilium Operator to register workload identities with SPIRE.
 
 From the application's perspective, communication continues using standard TCP sockets. Encryption and authentication are enforced entirely underneath the application layer, requiring no code changes.
+
 
 ## Scope and trust boundaries
 

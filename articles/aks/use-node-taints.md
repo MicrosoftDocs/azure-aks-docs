@@ -131,7 +131,7 @@ This article assumes you have an existing AKS cluster. If you need an AKS cluste
 
 ### Create a cluster with a node initialization taint
 
-1. Create a cluster with a node initialization taint using the [`az aks create`][az-aks-create] command and the `--node-initialization-taints` parameter to specify `sku=gpu:NoSchedule` for the taint.
+1. Create a cluster with a node initialization taint using the [`az aks create`][az-aks-create] command and the `--node-init-taints` parameter to specify `sku=gpu:NoSchedule` for the taint.
 
     > [!IMPORTANT]
     > The node initialization taints you specify apply to all of the node pools in the cluster. To apply the initialization taint to a specific node, you can use an ARM template instead of the CLI.
@@ -150,7 +150,7 @@ This article assumes you have an existing AKS cluster. If you need an AKS cluste
 
 ### Update a cluster to add a node initialization taint
 
-1. Update a cluster to add a node initialization taint using the [`az aks update`][az-aks-update] command and the `--node-initialization-taints` parameter to specify `sku=gpu:NoSchedule` for the taint.
+1. Update a cluster to add a node initialization taint using the [`az aks update`][az-aks-update] command and the `--node-init-taints` parameter to specify `sku=gpu:NoSchedule` for the taint.
 
     > [!IMPORTANT]
      > When updating a cluster with a node initialization taint, the taints apply to all node pools in the cluster. If your nodes are using VMSS, you can view updates to node initialization taints on the node after the node's VMSS model is updated (for example, after a node image version upgrade operation). Initialization taints will not appear on your nodes until an operation that triggers a VMSS model update occurs.

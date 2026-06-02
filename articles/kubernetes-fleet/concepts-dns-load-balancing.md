@@ -1,7 +1,7 @@
 ---
 title: "Multi-cluster DNS-based load balancing with Azure Kubernetes Fleet Manager"
 description: Understand how Fleet Manager supports DNS-based load balancing for placed workloads.
-ms.date: 05/05/2025
+ms.date: 05/14/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,6 +10,8 @@ ms.topic: concept-article
 ---
 
 # Multi-cluster DNS-based load balancing with Azure Kubernetes Fleet Manager (preview)
+
+**Applies to**: :heavy_check_mark: Fleet Manager with hub cluster
 
 Azure Kubernetes Fleet Manager can be used to create and manage DNS-based multi-cluster load balancing for public-facing workloads deployed across member clusters.
 
@@ -217,4 +219,4 @@ If you wish to stop traffic routing but retain the Azure Traffic Manager and its
 [traffic-manager-overview]: /azure/traffic-manager/traffic-manager-overview
 [traffic-manager-weighted]: /azure/traffic-manager/traffic-manager-routing-methods#weighted-traffic-routing-method
 [traffic-manager-health-check]: /azure/traffic-manager/traffic-manager-monitoring#configure-endpoint-monitoring
-[concept-crp]: ./concepts-resource-propagation.md
+[concept-crp]: ./concepts-resource-placement.md

@@ -19,7 +19,7 @@ It's common to use pipelines to build and deploy images on Azure Kubernetes Serv
 
 ## Prerequisites
 
-* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * Azure CLI version 2.49.0 or later. Run `az --version` to find your version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 
 ## Limitations
