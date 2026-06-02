@@ -25,7 +25,7 @@ This article shows you how to create one or more node pools in an AKS cluster.
 
 :::zone pivot="azure-cli"
 
-- You need Azure CLI version 2.2.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- You need Azure CLI version 2.86.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 :::zone-end
 
@@ -33,11 +33,9 @@ This article shows you how to create one or more node pools in an AKS cluster.
 
 - To deploy an ARM template, you need write access on the resources you're deploying and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to deploy a virtual machine (VM), you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](/azure/role-based-access-control/built-in-roles).
 - Review the following requirements for each parameter:
-
-  - `osTYPE`: The operating system type. The default is Linux.
+  - `osType`: The operating system type. The default is Linux.
   - `osSKU`: Specifies the OS SKU used by the agent pool.
   - `count`: Number of agents (VMs) to host docker containers. Allowed values must be in the range of 0 to 1000 (inclusive) for user pools and in the range of 1 to 1000 (inclusive) for system pools. The default value is 1.
-
 - After you deploy the cluster using an ARM template, you can use Azure CLI or Azure PowerShell to connect to the cluster and deploy the sample application.
 
 :::zone-end
@@ -47,18 +45,18 @@ This article shows you how to create one or more node pools in an AKS cluster.
 The following limitations apply when you create AKS clusters that support multiple node pools:
 
 - You can delete the system node pool if you have another system node pool to take its place in the AKS cluster. Otherwise, you can't delete the system node pool.
-- System pools must contain at least one node. User node pools can contain zero or more nodes.
-- **If you create a cluster with a single node pool, the OS type must be `Linux`**. The OS SKU can be any Linux variation such as `Ubuntu` or `AzureLinux`. You can't create a cluster with a single Windows node pool. If you want to run Windows containers, you must [add a Windows node pool](#add-a-windows-server-node-pool) to the cluster after creating it with a Linux system node pool.
+- System pools must contain at least two nodes, and user node pools may contain zero or more nodes.
+- **If you create a cluster with a single node pool, the OS type must be `Linux`**. The OS SKU can be any Linux variation such as `Ubuntu`, `AzureContainerLinux`, or `AzureLinux`. You can't create a cluster with a single Windows node pool. If you want to run Windows containers, you must add a Windows node pool to the cluster after creating it with a Linux system node pool.
 - The AKS cluster must use the Standard SKU load balancer to use multiple node pools. This feature isn't supported with Basic SKU load balancers.
 - The AKS cluster must use Virtual Machine Scale Sets for the nodes.
 - The name of a node pool can only contain lowercase alphanumeric characters and must begin with a lowercase letter.
-
   - For Linux node pools, the length must be between 1-12 characters.
   - For Windows node pools, the length must be between 1-6 characters.
-
-- All node pools must reside in the same virtual network.
-- You can't change the virtual machine (VM) size of a node pool after you create it.
+- All node pools must reside in the same virtual network (VNet).
+- You can't change the VM size of a node pool after you create it.
 - When you create multiple node pools at cluster creation time, the Kubernetes versions for the node pools must match the version set for the control plane. You can make updates after provisioning the cluster using per node pool operations.
+
+[!INCLUDE [azure container linux limitations](./includes/azure-container-linux-limitations.md)]
 
 ## Create specialized node pools
 
@@ -78,28 +76,28 @@ To learn how to create specialized node pools, see the following articles:
 
 ## Set environment variables
 
-- Set the following environment variables in your shell to simplify the commands in this article. You can change the values to your preferred names.
+Set the following environment variables in your shell to simplify the commands in this article. You can change the values to your preferred names.
 
-    ```bash
-    export RESOURCE_GROUP_NAME="my-aks-rg"
-    export LOCATION="eastus"
-    export CLUSTER_NAME="my-aks-cluster"
-    export NODE_POOL_NAME="mynodepool"
-    ```
+```bash
+export RESOURCE_GROUP_NAME="my-aks-rg"
+export LOCATION="eastus"
+export CLUSTER_NAME="my-aks-cluster"
+export NODE_POOL_NAME="mynodepool"
+```
 
 ## Create a resource group
 
-- Create an Azure resource group using the [`az group create`][az-group-create] command.
+  Create an Azure resource group using the [`az group create`][az-group-create] command.
 
-    ```azurecli-interactive
-    az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
-    ```
+```azurecli-interactive
+az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
+```
 
 ## Create an AKS cluster with a single node pool using the Azure CLI
 
 If you want only one node pool in your AKS cluster, you can schedule application pods on system node pools. If you run a single system node pool for your AKS cluster in a production environment, we recommend you use at least three nodes for the node pool. If one node goes down, the redundancy is compromised. You can mitigate this risk by having more system node pool nodes.
 
-### [Create an AKS cluster with a single Ubuntu node pool](#tab/ubuntu)
+### [Single Ubuntu node pool](#tab/ubuntu)
 
 1. Create a cluster with a single Ubuntu node pool using the [`az aks create`][az-aks-create] command. This step specifies two nodes in the single node pool.
 
@@ -123,7 +121,7 @@ If you want only one node pool in your AKS cluster, you can schedule application
     az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME
     ```
 
-### [Create an AKS cluster with a single Azure Linux node pool](#tab/azure-linux)
+### [Single Azure Linux node pool](#tab/azure-linux)
 
 1. Create a cluster with a single Azure Linux node pool using the [`az aks create`][az-aks-create] command. This step specifies two nodes in the single node pool.
 
@@ -149,7 +147,30 @@ If you want only one node pool in your AKS cluster, you can schedule application
     az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME
     ```
 
-### [Create an AKS cluster with a single Azure Linux with OS Guard for AKS (preview) node pool](#tab/os-guard)
+### [Single Azure Container Linux (ACL) for AKS node pool](#tab/acl)
+
+1. Create a cluster with a single ACL node pool using the [`az aks create`](/cli/azure/aks#az-aks-create) command. The `--os-sku AzureContainerLinux` parameter configures the node pool to use ACL as the node OS. This step specifies two nodes in the single node pool.
+
+    ```azurecli-interactive
+    az aks create \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --name $CLUSTER_NAME \
+        --node-count 3 \
+        --os-sku AzureContainerLinux \
+        --location $LOCATION \
+        --load-balancer-sku standard \
+        --generate-ssh-keys
+    ```
+
+    It takes a few minutes to create the cluster.
+
+1. When the cluster is ready, get the cluster credentials using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME
+    ```
+
+### [Single Azure Linux with OS Guard for AKS (preview) node pool](#tab/os-guard)
 
 #### Install the `aks-preview` extension
 
@@ -215,7 +236,7 @@ If you want only one node pool in your AKS cluster, you can schedule application
     az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME
     ```
 
-### [Create an AKS cluster with a single Flatcar Container Linux for AKS (preview) node pool](#tab/flatcar)
+### [Single Flatcar Container Linux for AKS (preview) node pool](#tab/flatcar)
 
 #### Install the `aks-preview` extension
 
@@ -294,39 +315,58 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
 #### [Add an Ubuntu node pool](#tab/ubuntu)
 
-- Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Linux` node pool with the `Ubuntu` OS SKU that runs _three_ nodes. If you don't specify an OS SKU, AKS defaults to `Ubuntu`.
+Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Linux` node pool with the `Ubuntu` OS SKU that runs _three_ nodes. If you don't specify an OS SKU, AKS defaults to `Ubuntu`.
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group $RESOURCE_GROUP_NAME \
-        --cluster-name $CLUSTER_NAME \
-        --name $NODE_POOL_NAME \
-        --node-vm-size Standard_DS2_v2 \
-        --os-type Linux \
-        --os-sku Ubuntu \
-        --node-count 3
-    ```
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --cluster-name $CLUSTER_NAME \
+    --name $NODE_POOL_NAME \
+    --node-vm-size Standard_DS2_v2 \
+    --os-type Linux \
+    --os-sku Ubuntu \
+    --node-count 3
+```
 
-    It takes a few minutes to create the node pool.
+It takes a few minutes to create the node pool.
 
 #### [Add an Azure Linux node pool](#tab/azure-linux)
 
-- Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Linux` node pool with the `Azure Linux` OS SKU that runs _three_ nodes. If you don't specify an OS SKU, AKS defaults to `Ubuntu`.
+Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Linux` node pool with the `Azure Linux` OS SKU that runs _three_ nodes. If you don't specify an OS SKU, AKS defaults to `Ubuntu`.
 
-    For more information about Azure Linux, see [Azure Linux on AKS][azure-linux].
+For more information about Azure Linux, see [Azure Linux on AKS][azure-linux].
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group $RESOURCE_GROUP_NAME \
-        --cluster-name $CLUSTER_NAME \
-        --name $NODE_POOL_NAME \
-        --node-vm-size Standard_DS2_v2 \
-        --os-type Linux \
-        --os-sku AzureLinux \
-        --node-count 3
-    ```
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --cluster-name $CLUSTER_NAME \
+    --name $NODE_POOL_NAME \
+    --node-vm-size Standard_DS2_v2 \
+    --os-type Linux \
+    --os-sku AzureLinux \
+    --node-count 3
+```
 
-    It takes a few minutes to create the node pool.
+It takes a few minutes to create the node pool.
+
+#### [Add an Azure Container Linux (ACL) for AKS node pool](#tab/acl)
+
+Add a new node pool using the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command. The `--os-sku AzureContainerLinux` parameter configures the node pool to use ACL as the node OS. The following example creates a `Linux` node pool that runs _three_ nodes.
+
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --cluster-name $CLUSTER_NAME \
+    --name $NODE_POOL_NAME \
+    --node-vm-size Standard_DS2_v2 \
+    --os-type Linux \
+    --os-sku AzureContainerLinux \
+    --node-count 3
+```
+
+It takes a few minutes to create the node pool.
+
+For more information, see [Azure Container Linux (ACL) for AKS](azure-container-linux-overview.md).
 
 #### [Add an Azure Linux with OS Guard for AKS (preview) node pool](#tab/os-guard)
 
@@ -368,26 +408,26 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
 ##### Create the Azure Linux with OS Guard for AKS node pool
 
-- Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Linux` node pool with the `Azure Linux with OS Guard` OS SKU that runs _three_ nodes. If you don't specify an OS SKU, AKS defaults to `Ubuntu`.
+Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Linux` node pool with the `Azure Linux with OS Guard` OS SKU that runs _three_ nodes. If you don't specify an OS SKU, AKS defaults to `Ubuntu`.
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group $RESOURCE_GROUP_NAME \
-        --cluster-name $CLUSTER_NAME \
-        --name $NODE_POOL_NAME \
-        --node-vm-size Standard_DS2_v2 \
-        --os-type Linux \
-       --os-sku AzureLinuxOSGuard \
-       --node-osdisk-type Managed \
-       --enable-fips-image \
-       --enable-secure-boot \
-       --enable-vtpm \
-       --node-count 3
-    ```
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --cluster-name $CLUSTER_NAME \
+    --name $NODE_POOL_NAME \
+    --node-vm-size Standard_DS2_v2 \
+    --os-type Linux \
+    --os-sku AzureLinuxOSGuard \
+    --node-osdisk-type Managed \
+    --enable-fips-image \
+    --enable-secure-boot \
+    --enable-vtpm \
+    --node-count 3
+```
 
-    It takes a few minutes to create the node pool.
+It takes a few minutes to create the node pool.
 
-    For more information, see [Azure Linux with OS Guard for AKS][os-guard].
+For more information, see [Azure Linux with OS Guard for AKS][os-guard].
 
 #### [Add a Flatcar Container Linux for AKS (preview) node pool](#tab/flatcar)
 
@@ -429,22 +469,22 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
 ##### Create the Flatcar Container Linux for AKS node pool
 
-- Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Linux` node pool with the `flatcar` OS SKU that runs _three_ nodes. If you don't specify an OS SKU, AKS defaults to `Ubuntu`.
+Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Linux` node pool with the `flatcar` OS SKU that runs _three_ nodes. If you don't specify an OS SKU, AKS defaults to `Ubuntu`.
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group $RESOURCE_GROUP_NAME \
-        --cluster-name $CLUSTER_NAME \
-        --name $NODE_POOL_NAME \
-        --node-vm-size Standard_DS2_v2 \
-        --os-type Linux \
-        --os-sku flatcar \
-        --node-count 3
-    ```
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --cluster-name $CLUSTER_NAME \
+    --name $NODE_POOL_NAME \
+    --node-vm-size Standard_DS2_v2 \
+    --os-type Linux \
+    --os-sku flatcar \
+    --node-count 3
+```
 
-    It takes a few minutes to create the node pool.
+It takes a few minutes to create the node pool.
 
-    For more information, see [Flatcar Container Linux for AKS][flatcar].
+For more information, see [Flatcar Container Linux for AKS][flatcar].
 
 ---
 
@@ -490,47 +530,47 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
 ##### Create the Windows Server 2025 node pool
 
-- Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Windows` node pool with the `Windows2025` OS SKU that runs _three_ nodes.
+Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Windows` node pool with the `Windows2025` OS SKU that runs _three_ nodes.
 
-    For more information about Windows OS, see [Windows best practices][windows].
+For more information about Windows OS, see [Windows best practices][windows].
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group $RESOURCE_GROUP_NAME \
-        --cluster-name $CLUSTER_NAME \
-        --name $NODE_POOL_NAME \
-        --node-vm-size Standard_DS2_v2 \
-        --os-type Windows \
-        --os-sku Windows2025 \
-        --node-count 3
-    ```
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --cluster-name $CLUSTER_NAME \
+    --name $NODE_POOL_NAME \
+    --node-vm-size Standard_DS2_v2 \
+    --os-type Windows \
+    --os-sku Windows2025 \
+    --node-count 3
+```
 
 #### [Add a Windows Server 2022 node pool](#tab/ws2022)
 
-- Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Windows` node pool with the `Windows2022` OS SKU that runs _three_ nodes.
+Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Windows` node pool with the `Windows2022` OS SKU that runs _three_ nodes.
 
-    For more information about Windows OS, see [Windows best practices][windows].
+For more information about Windows OS, see [Windows best practices][windows].
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group $RESOURCE_GROUP_NAME \
-        --cluster-name $CLUSTER_NAME \
-        --name $NODE_POOL_NAME \
-        --node-vm-size Standard_DS2_v2 \
-        --os-type Windows \
-        --os-sku Windows2022 \
-        --node-count 3
-    ```
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --cluster-name $CLUSTER_NAME \
+    --name $NODE_POOL_NAME \
+    --node-vm-size Standard_DS2_v2 \
+    --os-type Windows \
+    --os-sku Windows2022 \
+    --node-count 3
+```
 
 ---
 
 ## Check the status of your node pools
 
-- Check the status of your node pools using the [`az aks nodepool list`][az-aks-nodepool-list] command and specify your resource group and cluster name.
+Check the status of your node pools using the [`az aks nodepool list`][az-aks-nodepool-list] command and specify your resource group and cluster name.
 
-    ```azurecli-interactive
-    az aks nodepool list --resource-group $RESOURCE_GROUP_NAME --cluster-name $CLUSTER_NAME
-    ```
+```azurecli-interactive
+az aks nodepool list --resource-group $RESOURCE_GROUP_NAME --cluster-name $CLUSTER_NAME
+```
 
 :::zone-end
 
@@ -542,9 +582,9 @@ If you want only one node pool in your AKS cluster, you can schedule application
 
 ### Create a `Microsoft.ContainerService/managedClusters` resource
 
-- Create a `Microsoft.ContainerService/managedClusters` resource by adding [this JSON][managedclusters] to your template.
+Create a `Microsoft.ContainerService/managedClusters` resource by adding [this JSON][managedclusters] to your template.
 
-### [Modify JSON to create a single Ubuntu node pool](#tab/ubuntu-arm)
+### [Create a single Ubuntu node pool](#tab/ubuntu-arm)
 
 - Create a single Ubuntu node pool in your AKS cluster by making the following modifications to your ARM template:
 
@@ -560,7 +600,7 @@ If you want only one node pool in your AKS cluster, you can schedule application
     }
     ```
 
-### [Modify JSON to create a single Azure Linux node pool](#tab/azure-linux-arm)
+### [Create a single Azure Linux node pool](#tab/azure-linux-arm)
 
 - Create a single Azure Linux node pool in your AKS cluster by making the following modifications to your ARM template:
 
@@ -578,7 +618,25 @@ If you want only one node pool in your AKS cluster, you can schedule application
 
     For more information about Azure Linux, see [Azure Linux on AKS][azure-linux].
 
-### [Modify JSON to create a single Azure Linux with OS Guard for AKS (preview) node pool](#tab/os-guard-arm)
+### [Create a single Azure Container Linux (ACL) for AKS node pool](#tab/acl-arm)
+
+- Create a single ACL node pool in your AKS cluster by setting `osSKU` to `AzureContainerLinux` in your ARM template:
+
+    ```json
+      "properties": {
+        "agentPoolProfiles": [
+        {
+            "count": "1",
+            "osSKU": "AzureContainerLinux",
+            "osType": "linux"
+        } 
+         ],
+    }
+    ```
+
+For more information, see [Azure Container Linux (ACL) for AKS](azure-container-linux-overview.md).
+
+### [Create a single Azure Linux with OS Guard for AKS (preview) node pool](#tab/os-guard-arm)
 
 #### Install the `aks-preview` extension
 
@@ -640,7 +698,7 @@ If you want only one node pool in your AKS cluster, you can schedule application
 
     For more information, see [Azure Linux with OS Guard for AKS][os-guard].
 
-### [Modify JSON to create a single Flatcar Container Linux for AKS (preview) node pool](#tab/flatcar-arm)
+### [Create a single Flatcar Container Linux for AKS (preview) node pool](#tab/flatcar-arm)
 
 #### Install the `aks-preview` extension
 
@@ -704,7 +762,7 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
 ### Add Linux node pools
 
-#### [Modify JSON to create multiple Ubuntu node pools](#tab/ubuntu-arm)
+#### [Create multiple Ubuntu node pools](#tab/ubuntu-arm)
 
 - Create multiple Ubuntu node pools in your AKS cluster by making the following modifications to your ARM template:
 
@@ -720,7 +778,7 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
     }
     ```
 
-#### [Modify JSON to create multiple Azure Linux node pools](#tab/azure-linux-arm)
+#### [Create multiple Azure Linux node pools](#tab/azure-linux-arm)
 
 - Create multiple Azure Linux node pools in your AKS cluster by making the following modifications to your ARM template:
 
@@ -738,7 +796,32 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
     For more information about Azure Linux, see [Azure Linux on AKS][azure-linux].
 
-#### [Modify JSON to create multiple Azure Linux with OS Guard for AKS (preview) node pools](#tab/os-guard-arm)
+#### [Create multiple Azure Container Linux (ACL) for AKS node pools](#tab/acl-arm)
+
+- Create multiple ACL node pools in your AKS cluster by making the following modifications to your ARM template:
+
+    ```json
+      "properties": {
+        "agentPoolProfiles": [
+          {
+            "count": "3",
+            "osSKU": "AzureContainerLinux",
+            "osType": "linux",
+            "name": "pool1"
+          },
+          {
+            "count": "2",
+            "osSKU": "AzureContainerLinux",
+            "osType": "linux",
+            "name": "pool2"
+          }
+        ]
+      }
+    ```
+
+For more information, see [Azure Container Linux (ACL) for AKS](azure-container-linux-overview.md).
+
+#### [Create multiple Azure Linux with OS Guard for AKS (preview) node pools](#tab/os-guard-arm)
 
 ##### Install the `aks-preview` extension
 
@@ -800,7 +883,7 @@ The cluster created in the [previous section](#create-an-aks-cluster-with-a-sing
 
 For more information, see [Azure Linux with OS Guard for AKS][os-guard].
 
-#### [Modify JSON to create multiple Flatcar Container Linux for AKS (preview) node pools](#tab/flatcar-arm)
+#### [Create multiple Flatcar Container Linux for AKS (preview) node pools](#tab/flatcar-arm)
 
 ##### Install the `aks-preview` extension
 
@@ -860,7 +943,7 @@ For more information, see [Flatcar Container Linux for AKS][flatcar].
 
 ### Add Windows Server node pools
 
-#### [Modify JSON to create multiple Windows Server 2025 (preview) node pools](#tab/ws2025-arm)
+#### [Create multiple Windows Server 2025 (preview) node pools](#tab/ws2025-arm)
 
 ##### Install the `aks-preview` extension
 
