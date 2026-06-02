@@ -3,7 +3,7 @@ title: 'Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster'
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic.
 ms.topic: quickstart
 ms.custom: build-2024, devx-track-azurecli, devx-track-bicep, ignite-2024, build-2026
-ms.date: 05/22/2026
+ms.date: 06/02/2026
 author: wangyira
 ms.author: wangamanda
 zone_pivot_groups: bicep-azure-cli-portal
@@ -49,10 +49,10 @@ zone_pivot_groups: bicep-azure-cli-portal
 
 An [Azure resource group][azure-resource-group] is a logical group in which Azure resources are deployed and managed.
 
-Create a resource group using the [`az group create`][az-group-create] command. The following example creates a resource group named _myResourceGroup_ in the _eastus_ location:
+Create a resource group using the [`az group create`][az-group-create] command. The following example creates a resource group named _myResourceGroup_ in the _canadacentral_ location:
 
 ```azurecli-interactive
-az group create --name myResourceGroup --location eastus
+az group create --name myResourceGroup --location canadacentral
 ```
 
 The following sample output resembles successful creation of the resource group:
@@ -60,7 +60,7 @@ The following sample output resembles successful creation of the resource group:
 ```output
 {
   "id": "/subscriptions/<guid>/resourceGroups/myResourceGroup",
-  "location": "eastus",
+  "location": "canadacentral",
   "managedBy": null,
   "name": "myResourceGroup",
   "properties": {
@@ -83,6 +83,7 @@ az aks create \
     --resource-group myResourceGroup \
     --name myAKSAutomaticCluster \
     --sku automatic
+    --enable-hosted-system
 ```
 
 When the deployment finishes, the output shows a `hostedSystemProfile` property with the `enabled` property set to `true`. You can also run the following command to display the `hostedSystemProfile` properties:
@@ -149,7 +150,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2026-02-01' ' = {
   name: clusterName
   location: location
   sku: {
-  name: 'Automatic'
+    name: 'Automatic'
   }
   identity: {
     type: 'SystemAssigned'
@@ -204,11 +205,13 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
     After you sign in, the following sample output shows the managed system node pools. Make sure the node status is _Ready_.
 
     ```output
-    NAME                                STATUS   ROLES   AGE     VERSION
-    aks-nodepool1-12345678-vmss000000   Ready    agent   2m26s   v1.28.5
-    aks-nodepool1-12345678-vmss000001   Ready    agent   2m26s   v1.28.5
-    aks-nodepool1-12345678-vmss000002   Ready    agent   2m26s   v1.28.5
+    NAME                           STATUS   ROLES    AGE   VERSION
+    aks-hostedpool-16652789-vms1   Ready    <none>   19m   v1.34.7
+    aks-hostedpool-16652789-vms2   Ready    <none>   19m   v1.34.7
+    aks-hostedpool-16652789-vms3   Ready    <none>   19m   v1.34.7
+    aks-system-surge-zq4d2         Ready    <none>   19m   v1.34.7
     ```
+
 
 ## Deploy the application
 
