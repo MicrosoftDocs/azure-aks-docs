@@ -28,44 +28,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
 - Make sure that the identity you're using to create your cluster has the appropriate minimum permissions. For more details on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
 - If you have more than one Azure subscription, set the subscription that you wish to use for the quickstart by calling the [Set-AzContext](/powershell/module/az.accounts/set-azcontext) cmdlet. For more information, see [Manage Azure subscriptions with Azure PowerShell](/powershell/azure/manage-subscriptions-azureps#change-the-active-subscription).
-- If you're using osSku `Windows2025`, you need to install the `aks-preview` extension and register the preview flag.
 - Specifying the `OsSKU` parameter requires PowerShell Az module version 9.2.0 or higher.
-
-### Install the `aks-preview` extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
-
-  ```azurecli-interactive
-  az extension add --name aks-preview
-  ```
-
-1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Windows Server 2025 requires a minimum of 18.0.0b40**.
-
-  ```azurecli-interactive
-  az extension update --name aks-preview
-  ```
-
-### Register the `AksWindows2025Preview` feature flag
-
-1. Register the `AksWindows2025Preview` feature flag using the [`az feature register`][az-feature-register] command.
-
-  ```azurecli-interactive
-  az feature register --name AksWindows2025Preview --namespace Microsoft.ContainerService
-  ```
-
-1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
-
-  ```azurecli-interactive
-  az feature show --name AksWindows2025Preview --namespace Microsoft.ContainerService
-  ```
-
-1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Create a resource group
 

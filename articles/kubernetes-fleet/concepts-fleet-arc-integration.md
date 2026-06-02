@@ -1,7 +1,7 @@
 ---
 title: "Azure Kubernetes Fleet Manager with Arc-enabled Kubernetes clusters"
 description: This article provides a conceptual overview of Azure Kubernetes Fleet Manager integration with Azure Arc-enabled Kubernetes clusters.
-ms.date: 02/13/2026
+ms.date: 06/01/2026
 author: ealianis
 ms.author: sehobbs
 ms.service: azure-kubernetes-fleet-manager
@@ -9,14 +9,13 @@ ms.topic: concept-article
 # Customer intent: "As a platform administrator managing hybrid and multicloud Kubernetes infrastructure, I want to understand how Azure Kubernetes Fleet Manager integrates with Arc-enabled Kubernetes clusters, so that I can centrally manage my entire fleet regardless of where clusters are running."
 ---
 
-# Azure Kubernetes Fleet Manager with Arc-enabled Kubernetes clusters (preview)
+# Azure Kubernetes Fleet Manager with Arc-enabled Kubernetes clusters
+
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 This article provides a conceptual overview of how Azure Kubernetes Fleet Manager integrates with Azure Arc-enabled Kubernetes clusters to enable unified multi-cluster management across hybrid and multicloud environments.
 
 If you're unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure Kubernetes Fleet Manager overview](./overview.md).
-
-> [!IMPORTANT]
-> Azure Kubernetes Fleet Manager's support for Arc-enabled Kubernetes clusters is currently in public preview.
 
 ## What does the integration solve?
 
