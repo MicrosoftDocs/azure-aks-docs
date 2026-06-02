@@ -6,7 +6,7 @@ ms.custom: linux-related-content
 ms.author: schaffererin
 author: schaffererin
 ms.topic: best-practice
-ms.date: 10/27/2023
+ms.date: 06/02/2026
 # Customer intent: As a Kubernetes administrator managing Windows containers, I want to implement best practices for Windows workloads in AKS, so that I can ensure optimal performance, security, and compliance in my containerized applications.
 ---
 
@@ -41,7 +41,7 @@ AKS supports two options for the Windows Server operating system: Long Term Serv
 
 1. AKS supports Long Term Servicing Channel Releases (LTSC), including Windows Server 2025 and Windows Server 2022. This channel is released every three years and is supported for five years. Customers using Long Term Support (LTS) should use Windows Server 2025.
 
-    AKS uses Windows Server 2022 as the host OS version and only supports process isolation. AKS doesn't support container images built by other versions of Windows Server. For more information, see [Windows container version compatibility](/virtualization/windowscontainers/deploy-containers/version-compatibility). Windows Server 2022 is the default OS for Kubernetes version 1.25 and later.
+    AKS uses Windows Server 2025 and Windows Server 2022 as the host OS version and only supports process isolation. AKS doesn't support container images built by other versions of Windows Server. For more information, see [Windows container version compatibility](/virtualization/windowscontainers/deploy-containers/version-compatibility). Windows Server 2022 is the default OS for Kubernetes version 1.25 and later.
 
     [!INCLUDE [windows server 2019 retirement](./includes/windows-server-2019-retirement.md)]
 

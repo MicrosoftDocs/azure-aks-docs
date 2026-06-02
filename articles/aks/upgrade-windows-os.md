@@ -4,7 +4,7 @@ description: Learn how to upgrade the OS version for Windows workloads on Azure 
 ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
-ms.date: 07/03/2025
+ms.date: 06/02/2026
 author: allyford
 ms.author: allyford
 # Customer intent: "As a cloud operations engineer, I want to upgrade the OS version for Windows workloads on Azure Kubernetes Service, so that I can ensure my applications use the latest features and security enhancements while maintaining compatibility and performance."
