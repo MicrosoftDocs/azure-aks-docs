@@ -2,7 +2,7 @@
 title: 'Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cluster in a custom virtual network'
 description: Learn how to quickly deploy a private Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic in a custom virtual network.
 ms.topic: quickstart
-ms.date: 05/22/2026
+ms.date: 06/02/2026
 author: wangyira
 ms.author: wangamanda
 zone_pivot_groups: bicep-azure-cli
@@ -40,6 +40,8 @@ In this quickstart, you learn to:
   - If there's a Network Security Group (NSG) attached to subnets, ensure that the [rules permit the following traffic](#network-security-group-rules) between the nodes and the API server, the Azure Load Balancer and the API server, and pod to pod communication.
   - If there's an Azure Firewall or other outbound restriction method or appliance, ensure the [required outbound network rules and FQDNs][outbound-rules-control-egress] are allowed.
 - AKS Automatic will [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should preregister the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. For more information, see [Azure resource providers and types][az-provider-register].
+- Uninstall the AKS-preview extension using `az extension remove -n aks-preview`. 
+
 
 [!INCLUDE [Kubernetes gateway](../includes/aks-automatic/aks-automatic-kubernetes-gateway.md)]
 
@@ -64,7 +66,7 @@ The following sample output resembles successful creation of the resource group:
 ```output
 {
   "id": "/subscriptions/<guid>/resourceGroups/automatic-rg",
-  "location": "eastus",
+  "location": "canadacentral",
   "managedBy": null,
   "name": "automatic-rg",
   "properties": {
@@ -80,7 +82,7 @@ The following sample output resembles successful creation of the resource group:
 
 Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
 
-When using a custom virtual network with AKS Automatic, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
+When using a custom virtual network with AKS Automatic, you must create an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*. AKS will delegate the subnet on your behalf. 
 
 > [!WARNING]
 > An AKS cluster reserves at least nine (9) IPs in the subnet address space. Running out of IP addresses might prevent API server scaling and cause an API server outage.
@@ -112,7 +114,7 @@ To create a private AKS Automatic cluster, use the [az aks create][az-aks-create
 > [!NOTE]
 > You can refer to the [private cluster][private-cluster] documentation for configuring other options like disabling the cluster's public FQDN and configuring the private DNS zone.
 
-:::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/create-aks.sh" highlight="5,6,7,9" interactive="cloudshell-bash":::
+:::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/create-aks.sh" highlight="5,6,7,8,10" interactive="cloudshell-bash":::
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 
@@ -152,10 +154,11 @@ To sign in, use a web browser to open the page https://microsoft.com/devicelogin
 After you sign in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
 
 ```output
-NAME                                STATUS   ROLES   AGE     VERSION
-aks-nodepool1-13213685-vmss000000   Ready    agent   2m26s   v1.28.5
-aks-nodepool1-13213685-vmss000001   Ready    agent   2m26s   v1.28.5
-aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
+NAME                           STATUS   ROLES    AGE   VERSION
+aks-hostedpool-16652789-vms1   Ready    <none>   19m   v1.34.7
+aks-hostedpool-16652789-vms2   Ready    <none>   19m   v1.34.7
+aks-hostedpool-16652789-vms3   Ready    <none>   19m   v1.34.7
+aks-system-surge-zq4d2         Ready    <none>   19m   v1.34.7
 ```
 
 :::zone-end
@@ -228,19 +231,20 @@ This Bicep file defines the AKS Automatic cluster.
 > [!NOTE]
 > You can refer to the [private cluster][private-cluster] documentation for configuring other options like disabling the clusters public FQDN and configuring the private DNS zone.
 
-:::code language="bicep" source="~/aks-samples/automatic/custom-network/private/bicep/aks.bicep" highlight="29,33,34,36,37,38,40,41,42,43,44,45":::
+:::code language="bicep" source="~/aks-samples/automatic/custom-network/private/bicep/aks.bicep" highlight="27,28,29,30,31,32,33,34,35,36,37,40,41,42,43":::
 
 Save the Bicep file **aks.bicep** to your local computer.
 
 > [!IMPORTANT]
-> The Bicep file sets the `clusterName` param to *aksAutomaticCluster*. If you want a different cluster name, make sure to update the string to your preferred cluster name.
+> The Bicep file sets the `clusterName` param to *aksPrivateAutomaticCluster*. If you want a different cluster name, make sure to update the string to your preferred cluster name.
 
-Deploy the Bicep file using the Azure CLI. You need to provide the API server subnet resource ID, the cluster subnet resource ID, and user assigned identity principal ID.
+Deploy the Bicep file using the Azure CLI. You need to provide the API server subnet resource ID, the user node subnet resource ID, the system node subnet resource ID, and user assigned managed identity resource ID.
 
 ```azurecli-interactive
 az deployment group create --resource-group <resource-group> --template-file aks.bicep \
 --parameters apiServerSubnetId=<API server subnet resource id> \
---parameters clusterSubnetId=<cluster subnet resource id> \
+--parameters nodeSubnetId=<user node subnet resource id> \
+--parameters systemNodeSubnetId=<system node subnet resource id> \
 --parameters uamiPrincipalId=<user assigned identity prinicipal id>
 ```
 
@@ -281,10 +285,11 @@ To sign in, use a web browser to open the page https://microsoft.com/devicelogin
 After you sign in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
 
 ```output
-NAME                                STATUS   ROLES   AGE     VERSION
-aks-nodepool1-13213685-vmss000000   Ready    agent   2m26s   v1.28.5
-aks-nodepool1-13213685-vmss000001   Ready    agent   2m26s   v1.28.5
-aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
+NAME                           STATUS   ROLES    AGE   VERSION
+aks-hostedpool-16652789-vms1   Ready    <none>   19m   v1.34.7
+aks-hostedpool-16652789-vms2   Ready    <none>   19m   v1.34.7
+aks-hostedpool-16652789-vms3   Ready    <none>   19m   v1.34.7
+aks-system-surge-zq4d2         Ready    <none>   19m   v1.34.7
 ```
 
 :::zone-end
