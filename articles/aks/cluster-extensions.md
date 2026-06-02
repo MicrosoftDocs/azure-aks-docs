@@ -52,6 +52,12 @@ Minor and major upgrades of core extensions occur alongside AKS minor and major 
 
 - Azure CLI, Azure portal, and all client experiences continue to work as expected.
 
+> [!NOTE]
+> - **Azure policy restrictions:** Custom Azure policies that block creation or updates to the [cluster extensions resource type](/rest/api/kubernetesconfiguration/extensions/extensions/create?view=rest-kubernetesconfiguration-extensions-2025-03-01&tabs=HTTP) must be updated or exempted.
+> - **Azure resource locks:** Azure resource locks can block management of [cluster extensions resource type](/rest/api/kubernetesconfiguration/extensions/extensions/create?view=rest-kubernetesconfiguration-extensions-2025-03-01&tabs=HTTP). 
+>
+> Refer to the [troubleshooting](https://aka.ms/k8s-extensions-tsg) documentation for mitigation details.
+
 ### Standard extensions
 
 For information about the other cluster extensions, see the table in [Currently available extensions](cluster-extensions.md#currently-available-extensions) and the [Kubernetes apps](deploy-marketplace.md) deployed via Azure Marketplace are of the Standard Extension type.
