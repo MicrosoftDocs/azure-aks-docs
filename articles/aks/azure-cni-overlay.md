@@ -24,6 +24,7 @@ This article explains the setup process, dual-stack networking configuration, an
 - An Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 - Azure CLI version 2.48.0 or later. To install or upgrade the Azure CLI, see [Install the Azure CLI](/cli/azure/install-azure-cli).
 - An existing Azure resource group. If you need to create one, see [Create resource groups](/azure/azure-resource-manager/management/manage-resource-groups-cli#create-resource-groups).
+- If you bring your own virtual network, review the [virtual network prerequisites](concepts-network-cni-overview.md#prerequisites).
 
 :::zone pivot="aks-cni-overlay-cluster-dual-stack"
 
