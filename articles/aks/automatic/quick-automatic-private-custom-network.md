@@ -186,7 +186,6 @@ All traffic within the virtual network is allowed by default. But if you added N
 
 | Destination | Source | Protocol | Port | Use |
 |--- |--- |--- |--- |--- |
-|--- |--- |--- |--- |--- |
 | APIServer Subnet CIDR   | user node subnet and system node subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
 | APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communication between the Azure Load Balancer and the API Server Subnet CIDR. |
 | Node CIDR | Node CIDR | All Protocols | All Ports | Required to enable communication between Nodes. |
