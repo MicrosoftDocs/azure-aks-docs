@@ -4,7 +4,7 @@ description: Learn how to use Deployment Safeguards to enforce best practices on
 author: schaffererin
 ms.topic: how-to
 ms.custom: build-2024, devx-track-azurecli
-ms.date: 01/29/2026
+ms.date: 06/02/2026
 ms.author: schaffererin
 ai-usage: ai-assisted
 # Customer intent: As a Kubernetes developer, I want to implement Deployment Safeguards in my AKS cluster, so that I can enforce best practices and prevent configuration issues that may compromise the stability of my applications.
@@ -16,7 +16,7 @@ This article shows you how to use Deployment Safeguards to enforce best practice
 
 ## Overview
 > [!NOTE]
-> Deployment Safeguards is turned on by default in AKS Automatic.
+> On AKS Automatic clusters, Deployment Safeguards and the baseline Pod Security Standard are enabled by default in `Enforce` mode. To opt out of enforcement for specific workloads, [exclude their namespaces](#excluding-namespaces).
 
 Throughout the development lifecycle, it is common for bugs, issues, and other problems to arise if the initial deployment of your Kubernetes resources includes misconfigurations. To ease the burden of Kubernetes development, Azure Kubernetes Service (AKS) offers Deployment Safeguards. Deployment Safeguards enforce Kubernetes best practices in your AKS cluster through Azure Policy controls.
 
@@ -260,18 +260,22 @@ az aks safeguards update --resource-group <resource-group-name> --name <cluster-
 
 ### Excluding namespaces
 
-You can also exclude certain namespaces from Deployment Safeguards. When you exclude a namespace, activity in that namespace is unaffected by Deployment Safeguards warnings or enforcement.
+You can also exclude certain namespaces from Deployment Safeguards and Pod Security Standards. When you exclude a namespace, activity in that namespace is unaffected by Deployment Safeguards warnings or enforcement.
+
+> [!NOTE]
+> On AKS Automatic clusters, you can exclude namespaces from Deployment Safeguards and Pod Security Standards, but you can't change the mode from `Enforce` to `Warn`. This restriction ensures best practices remain enforced on Automatic clusters.
 
 For example, to exclude the namespaces `ns1` and `ns2`, use a space separated list of namespaces with the `--excluded-ns` flag, as shown in the following example:
 
 ```azurecli-interactive
-az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warn --excluded-ns ns1 ns2 
+az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Enforce --excluded-ns ns1 ns2 
 ```
 
 ### Turn on Pod Security Standards
 
 >[!NOTE]
-> Azure Kubernetes Service (AKS) uses `Privileged` Pod Security Standards by default. If you want to revert to the default configuration, set the `--pss-level` flag to `Privileged`.
+> AKS Standard uses `Privileged` Pod Security Standards by default when you enable Pod Security Standards. If you want to revert to the default configuration, set the `--pss-level` flag to `Privileged`.
+> AKS Automatic enables `Baseline` Pod Security Standards by default. 
 
 To enable Pod Security Standards in Deployment Safeguards, use the `--pss-level` flag to select one of the following levels: `Baseline`, `Restricted`, or `Privileged`.
 
