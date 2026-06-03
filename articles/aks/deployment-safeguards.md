@@ -273,11 +273,10 @@ az aks safeguards update --resource-group <resource-group-name> --name <cluster-
 
 ### Turn on Pod Security Standards
 
->[!NOTE]
-> AKS Standard uses `Privileged` Pod Security Standards by default when you enable Pod Security Standards. If you want to revert to the default configuration, set the `--pss-level` flag to `Privileged`.
-> AKS Automatic enables `Baseline` Pod Security Standards by default. 
-
-To enable Pod Security Standards in Deployment Safeguards, use the `--pss-level` flag to select one of the following levels: `Baseline`, `Restricted`, or `Privileged`.
+> [!NOTE]
+> On AKS Standard clusters, Pod Security Standards default to the `Privileged` level, which doesn't enforce any restrictions. To enforce Pod Security Standards, use the `--pss-level` flag to set the level to `Baseline` or `Restricted`. To revert to the default, set `--pss-level` to `Privileged`.
+>
+> On AKS Automatic clusters, Pod Security Standards default to the `Baseline` level.
 
 ```azurecli-interactive
 az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warn --pss-level <Baseline|Restricted|Privileged>
