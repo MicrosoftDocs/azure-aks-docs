@@ -273,9 +273,6 @@ Skip this step if using Azure managed Grafana
       Namespace). (ID: [20928](https://grafana.com/grafana/dashboards/20928-kubernetes-networking-pod-flows-namespace/))
       * **Pod Flows (Workload):** shows L4/L7 packet flows to/from the specified workload (for example, Pods of a Deployment or DaemonSet). (ID: [20929](https://grafana.com/grafana/dashboards/20929-kubernetes-networking-pod-flows-workload/))
 
-    > [!NOTE] 
-    > * Depending on your Prometheus/Grafana instances' settings, some dashboard panels require specific tweaks to display all data.
-
 ## Clean up resources
 
 If you don't plan on using this application, delete the other resources you created in this article using the [`az group delete`](/cli/azure/#az-group-delete) command.
