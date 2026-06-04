@@ -560,7 +560,7 @@
         items:
           - name: Overview
             href: concepts-network-ingress.md
-          - name: Ingress with the Kubernetes Gateway API (preview)
+          - name: Ingress with the Kubernetes Gateway API
             href: managed-gateway-api.md
           - name: Use Application Gateway for Containers
             items:
