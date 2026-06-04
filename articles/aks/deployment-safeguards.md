@@ -38,6 +38,7 @@ After you configure Deployment Safeguards, it programmatically assesses your Kub
 The following table summarizes mode-specific behavior for Deployment Safeguards:
 
 | Capability | AKS Automatic | AKS Standard |
+| ---------- | ------------- | ------------ |
 | Deployment Safeguards default state | Enabled by default | Optional |
 | Safeguards level | `Enforce` by default | `Warn` or `Enforce` |
 | Change safeguards level | Generally unsupported (you can exclude namespaces, but you can't switch the cluster-wide safeguard level to `Warn`) | Supported |
