@@ -275,7 +275,6 @@ Skip this step if using Azure managed Grafana
 
     > [!NOTE] 
     > * Depending on your Prometheus/Grafana instances' settings, some dashboard panels require specific tweaks to display all data.
-    > * Cilium doesn't currently support DNS metrics/dashboards.
 
 ## Clean up resources
 
