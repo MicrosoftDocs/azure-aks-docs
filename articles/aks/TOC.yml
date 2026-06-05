@@ -377,7 +377,7 @@
       - name: Roll back node pool versions
         href: roll-back-node-pool-version.md
     - name: Automatic PDB management (preview)
-      href: automatic-pdb-management.md
+      href: automatic-pod-disruption-budget-management.md
   - name: Automate upgrades
     items:
     - name: Automatically upgrade an AKS cluster
