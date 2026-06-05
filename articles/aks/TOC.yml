@@ -13,7 +13,9 @@
     - name: Azure Local
       href: /azure/aks/aksarc/aks-whats-new-local?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: AKS Edge Essentials
-      href: /azure/aks/aksarc/aks-edge-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json   
+      href: /azure/aks/aksarc/aks-edge-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: AKS on bare metal
+      href: /azure/aks/aksarc/aks-bare-metal-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 - name: Get started with AKS
   items:
     - name: Kubernetes basics
