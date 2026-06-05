@@ -116,4 +116,4 @@ This article focused on cluster isolation. For more information about cluster op
 [k8s-namespaces]: concepts-clusters-workloads.md#namespaces
 [aks-best-practices-scheduler]: operator-best-practices-scheduler.md
 [aks-best-practices-advanced-scheduler]: operator-best-practices-advanced-scheduler.md
-[aks-best-practices-identity]: operator-best-practices-identity.md
+[aks-best-practices-identity]: concepts-cluster-authentication.md

@@ -16,7 +16,7 @@ In this quickstart, you use the [Dapr extension][dapr-overview] in an AKS or Arc
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - [Azure CLI][azure-cli-install] installed
 - An AKS cluster with:
   - [Workload identity][workload-identity] enabled

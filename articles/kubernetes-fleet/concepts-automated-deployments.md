@@ -66,6 +66,6 @@ Now that you understand the Fleet Manager Automated Deployments concepts, see an
 <!-- LINKS -->
 [fleet-deploy-hub]: ./concepts-choosing-fleet.md#fleet-manager-with-hub-cluster
 [fleet-autodeploy-howto]: ./howto-automated-deployments.md
-[concept-crp]: ./concepts-resource-propagation.md
+[concept-crp]: ./concepts-resource-placement.md
 [acr-create]: /azure/aks/cluster-container-registry-integration
 [aks-automated-deployments]: /azure/aks/automated-deployments

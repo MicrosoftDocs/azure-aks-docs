@@ -37,7 +37,7 @@ With the retirement of [Open Service Mesh][open-service-mesh-docs] (OSM) by the 
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure CLI version 2.54.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 ## Limitations
@@ -183,6 +183,8 @@ az aks approuting disable --name <ClusterName> --resource-group <ResourceGroupNa
 
 ## Next steps
 
+* Enable the [application routing Gateway API implementation][app-routing-gateway-api] to manage ingress traffic with the Kubernetes Gateway API.
+
 * [Configure custom ingress configurations][custom-ingress-configurations] shows how to create an advanced Ingress configuration and [configure a custom domain using Azure DNS to manage DNS zones and setup a secure ingress][dns-ssl-configuration].
 
 * To integrate with an Azure internal load balancer and configure a private Azure DNS zone to enable DNS resolution for the private endpoints to resolve specific domains, see [Configure internal NGINX ingress controller for Azure private DNS zone][create-nginx-private-controller].
@@ -203,6 +205,7 @@ az aks approuting disable --name <ClusterName> --resource-group <ResourceGroupNa
 [prometheus-in-grafana]: app-routing-nginx-prometheus.md
 [create-nginx-private-controller]: create-nginx-ingress-private-controller.md
 [managed-identity]: use-managed-identity.md
+[app-routing-gateway-api]: app-routing-gateway-api.md
 
 <!-- LINKS - external -->
 [kubernetes-ingress-object-overview]: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -212,3 +215,4 @@ az aks approuting disable --name <ClusterName> --resource-group <ResourceGroupNa
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [ingress-backend]: https://release-v1-2.docs.openservicemesh.io/docs/guides/traffic_management/ingress/#ingressbackend-api
+[aks-nginx-retirement]: https://blog.aks.azure.com/2025/11/13/ingress-nginx-update

@@ -42,7 +42,7 @@ You don't have to manage separate user identities and credentials for Kubernetes
 
 By default, Azure RBAC is set to deny all access, so a resource can't be accessed without permissions being granted. AKS limits SSH access to AKS worker nodes and uses AKS network policy to control access to workloads in the pods.
 
-For more information, see [Use Azure RBAC for Kubernetes authorization](/azure/aks/manage-azure-rbac) and [Secure your cluster with Azure Policy](/azure/aks/use-pod-security-on-azure-policy).
+For more information, see [Use Microsoft Entra ID authorization for the Kubernetes API](./entra-id-authorization.md) and [Secure your cluster with Azure Policy](/azure/aks/use-pod-security-on-azure-policy).
 
 #### Your responsibilities
 
@@ -167,7 +167,7 @@ Based on roles and responsibilities, assign roles to the infrastructure's role-b
 
 Suppose you need to give permissions to the cluster operators (mapped to the infrastructure operator role). All people who are assigned the infrastructure operator responsibilities belong to a Microsoft Entra group. As established in 7.1.1, this role requires the highest privilege in the cluster. Kubernetes has built-in RBAC roles, such as `cluster-admin`, that meets those requirements. You'll need to bind the Microsoft Entra group for infrastructure operator to `cluster-admin` by creating role bindings by choosing the built-in roles. If the built-in roles don't meet your requirements (for example, they might be overly permissive), you can create custom roles for your bindings.
 
-The reference implementation demonstrates the preceding example by using native Kubernetes RBAC. The same association can be accomplished with Azure RBAC. For more information, see [Control access to cluster resources using Kubernetes role-based access control and Microsoft Entra identities in Azure Kubernetes Service (AKS)](/azure/aks/azure-ad-rbac).
+The reference implementation demonstrates the preceding example by using native Kubernetes RBAC. The same association can be accomplished with Azure RBAC. For more information, see [Control access to cluster resources using Kubernetes role-based access control and Microsoft Entra identities in Azure Kubernetes Service (AKS)](/azure/aks/kubernetes-rbac-entra-id).
 
 You can choose the scope of permission at the cluster level or at the namespace level. For roles that have scoped responsibilities, such as application operators, the permissions are assigned at the namespace level for the workload.
 
@@ -248,7 +248,7 @@ It's critical that you maintain thorough documentation about the processes and p
 
 #### AKS feature support
 
-Because of AKS and Microsoft Entra integration, you can take advantage of identity management and authorization capabilities, including access management, identifier objects management, and others. For more information, see [AKS-managed Microsoft Entra integration](/azure/aks/managed-aad).
+Because of AKS and Microsoft Entra integration, you can take advantage of identity management and authorization capabilities, including access management, identifier objects management, and others. For more information, see [Microsoft Entra integration](/azure/aks/managed-aad).
 
 #### Your responsibilities
 

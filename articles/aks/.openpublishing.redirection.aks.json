@@ -6,6 +6,36 @@
             "redirect_document_id": true
         },
         {
+            "source_path_from_root": "/articles/aks/enable-authentication-microsoft-entra-id.md",
+            "redirect_url": "/azure/aks/entra-id-control-plane-authentication",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/manage-local-accounts-managed-azure-ad.md",
+            "redirect_url": "/azure/aks/local-accounts",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/azure-ad-rbac.md",
+            "redirect_url": "/azure/aks/kubernetes-rbac-entra-id",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/operator-best-practices-identity.md",
+            "redirect_url": "/azure/aks/concepts-cluster-authentication",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/concepts-kubernetes-api-authorization.md",
+            "redirect_url": "/azure/aks/concepts-cluster-authorization",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/concepts-authentication-authorization.md",
+            "redirect_url": "/azure/aks/concepts-cluster-authorization",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/acs-aks-migration.md",
             "redirect_url": "/azure/aks/aks-migration",
             "redirect_document_id": false
@@ -42,7 +72,12 @@
         },
         {
             "source_path_from_root": "/articles/aks/azure-ad-integration.md",
-            "redirect_url": "/azure/aks/azure-ad-integration-cli",
+            "redirect_url": "/azure/aks/entra-id-control-plane-authentication",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/manage-entra-id-authorization.md",
+            "redirect_url": "/azure/aks/entra-id-authorization",
             "redirect_document_id": false
         },
         {
@@ -323,7 +358,7 @@
         },
         {
             "source_path_from_root": "/articles/aks/managed-azure-ad.md",
-            "redirect_url": "/azure/aks/enable-authentication-microsoft-entra-id",
+            "redirect_url": "/azure/aks/entra-id-control-plane-authentication",
             "redirect_document_id": false
         },
         {
@@ -552,6 +587,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/app-routing-migration.md",
+            "redirect_url": "/azure/aks/app-routing-gateway-api",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/windows-container-cli.md",
             "redirect_url": "/azure/aks/learn/quick-windows-container-deploy-cli",
             "redirect_document_id": false
@@ -564,6 +604,11 @@
         {
             "source_path_from_root": "/articles/aks/windows-node-limitations.md",
             "redirect_url": "/azure/aks/windows-faq",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/use-managed-identity.md",
+            "redirect_url": "/azure/aks/managed-identity-overview",
             "redirect_document_id": false
         },
         {
@@ -745,6 +790,31 @@
         {
             "source_path_from_root": "/articles/aks/cli-agent-for-aks-troubleshoot.md",
             "redirect_url": "/azure/aks/agentic-cli-for-aks-troubleshoot",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/container-network-insight-agent-overview.md",
+            "redirect_url": "/azure/aks/container-network-insights-agent-overview",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/how-to-configure-container-network-insight-agent.md",
+            "redirect_url": "/azure/aks/how-to-configure-container-network-insights-agent",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/azure-linux-aks-partner-solutions.md",
+            "redirect_url": "/azure/aks/use-azure-linux",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/troubleshoot-container-network-insight-agent.md",
+            "redirect_url": "/azure/aks/troubleshoot-container-network-insights-agent",
+            "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/automatic/aks-automatic-managed-system-node-pools.md",
+            "redirect_url": "/azure/aks/automatic/quick-automatic-managed-network",
             "redirect_document_id": true
         }
      ]

@@ -4,8 +4,8 @@ description: Step-by-step guide on using managed namespaces in Azure Kubernetes 
 ms.topic: how-to
 ms.date: 11/18/2025
 ms.service: azure-kubernetes-service
-ms.author: jackjiang
-author: jakjang
+ms.author: davidsmatlak
+author: davidsmatlak
 zone_pivot_groups: bicep-azure-cli-portal
 ---
 
@@ -281,13 +281,13 @@ az aks namespace get-credentials --name <namespace-name> --resource-group <rg-na
 This article focused on using the managed namespaces feature to logically isolate teams and applications. You can further explore other guardrails and best practices to apply via [deployment safeguards][deployment-safeguards].
 
 <!--- External Links --->
-[create-azure-subscription]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F
+[create-azure-subscription]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [azure-portal]: https://portal.azure.com
 
 <!--- Internal Links --->
 [quick-automatic-managed-network]: automatic/quick-automatic-managed-network.md
 [deployment-safeguards]: deployment-safeguards.md
-[azure-rbac-k8s]: manage-azure-rbac.md
+[azure-rbac-k8s]: entra-id-authorization.md
 [install-azure-cli]: /cli/azure/install-azure-cli
 [aks-network-policy-options]: use-network-policies.md#network-policy-options-in-aks
 [aks-managed-namespaces-overview]: concepts-managed-namespaces.md

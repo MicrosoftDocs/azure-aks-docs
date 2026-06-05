@@ -6,7 +6,7 @@ ms.author: karler
 ms.reviewer: edburns
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 12/16/2024
+ms.date: 03/26/2026
 ms.subservice: aks-developer
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-quarkus, devx-track-javaee-quarkus-aks, devx-track-extended-java, devx-track-azurecli
 # external contributor: danieloh30
@@ -122,21 +122,21 @@ The output should look like the following example:
     "title": "Quarkus on Azure App Service",
     "completed": false,
     "order": 1,
-    "url": "https://learn.microsoft.com/en-us/azure/developer/java/eclipse-microprofile/deploy-microprofile-quarkus-java-app-with-maven-plugin"
+    "url": "https://learn.microsoft.com/azure/developer/java/eclipse-microprofile/deploy-microprofile-quarkus-java-app-with-maven-plugin"
   },
   {
     "id": 3,
     "title": "Quarkus on Azure Container Apps",
     "completed": false,
     "order": 2,
-    "url": "https://learn.microsoft.com/en-us/training/modules/deploy-java-quarkus-azure-container-app-postgres/"
+    "url": "https://learn.microsoft.com/training/modules/deploy-java-quarkus-azure-container-app-postgres/"
   },
   {
     "id": 4,
     "title": "Quarkus on Azure Functions",
     "completed": false,
     "order": 3,
-    "url": "https://learn.microsoft.com/en-us/azure/azure-functions/functions-create-first-quarkus"
+    "url": "https://learn.microsoft.com/azure/azure-functions/functions-create-first-quarkus"
   },
   {
     "id": 5,
@@ -698,21 +698,21 @@ The output should look like the following example:
     "title": "Quarkus on Azure App Service",
     "completed": false,
     "order": 1,
-    "url": "https://learn.microsoft.com/en-us/azure/developer/java/eclipse-microprofile/deploy-microprofile-quarkus-java-app-with-maven-plugin"
+    "url": "https://learn.microsoft.com/azure/developer/java/eclipse-microprofile/deploy-microprofile-quarkus-java-app-with-maven-plugin"
   },
   {
     "id": 3,
     "title": "Quarkus on Azure Container Apps",
     "completed": false,
     "order": 2,
-    "url": "https://learn.microsoft.com/en-us/training/modules/deploy-java-quarkus-azure-container-app-postgres/"
+    "url": "https://learn.microsoft.com/training/modules/deploy-java-quarkus-azure-container-app-postgres/"
   },
   {
     "id": 4,
     "title": "Quarkus on Azure Functions",
     "completed": false,
     "order": 3,
-    "url": "https://learn.microsoft.com/en-us/azure/azure-functions/functions-create-first-quarkus"
+    "url": "https://learn.microsoft.com/azure/azure-functions/functions-create-first-quarkus"
   },
   {
     "id": 5,
@@ -760,21 +760,21 @@ Closed the connection to <DB_SERVER_NAME>
     "id": 2,
     "ordering": 1,
     "title": "Quarkus on Azure App Service",
-    "url": "https://learn.microsoft.com/en-us/azure/developer/java/eclipse-microprofile/deploy-microprofile-quarkus-java-app-with-maven-plugin"
+    "url": "https://learn.microsoft.com/azure/developer/java/eclipse-microprofile/deploy-microprofile-quarkus-java-app-with-maven-plugin"
   },
   {
     "completed": false,
     "id": 3,
     "ordering": 2,
     "title": "Quarkus on Azure Container Apps",
-    "url": "https://learn.microsoft.com/en-us/training/modules/deploy-java-quarkus-azure-container-app-postgres/"
+    "url": "https://learn.microsoft.com/training/modules/deploy-java-quarkus-azure-container-app-postgres/"
   },
   {
     "completed": false,
     "id": 4,
     "ordering": 3,
     "title": "Quarkus on Azure Functions",
-    "url": "https://learn.microsoft.com/en-us/azure/azure-functions/functions-create-first-quarkus"
+    "url": "https://learn.microsoft.com/azure/azure-functions/functions-create-first-quarkus"
   },
   {
     "completed": false,

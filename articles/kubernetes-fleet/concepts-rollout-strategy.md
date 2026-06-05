@@ -306,6 +306,8 @@ Each stage in the strategy can specify:
 * **After-stage tasks** (`afterStageTasks`) either timed wait or approval requirement (optional - up to 2 tasks per stage, maximum one of each type)
 * **Max concurrency** (`maxConcurrency`) to determine the maximum number of clusters to update concurrently within the stage (optional - can be an absolute number  from 1 to the number of clusters in the stage, or a percentage from 1 to 100, fractional results are rounded down with a minimum of 1) 
 
+> [!NOTE]
+> **Strategy Limits:** Each strategy can define a maximum of 31 stages to ensure reasonable execution times.
 :::zone target="docs" pivot="cluster-scope"
 
 #### ClusterStagedUpdateRun (cluster-scoped)
@@ -428,4 +430,4 @@ A stage can have a before stage task of type approval and an after stage task ty
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 
 <!-- LINKS - external -->
-[learn-conceptual-crp]: ./concepts-resource-propagation.md
+[learn-conceptual-crp]: ./concepts-resource-placement.md

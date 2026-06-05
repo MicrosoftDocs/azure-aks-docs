@@ -186,7 +186,7 @@ If you use Azure Cloud Shell, `kubectl` is already installed. To install and run
     NAME                                STATUS   ROLES   AGE   VERSION
     aks-agentpool-38955149-vmss000000   Ready    <none>   5m53s   v1.32.7
     aks-agentpool-38955149-vmss000001   Ready    <none>   6m31s   v1.32.7
-    aks-agentpool-238955149-vmss000002   Ready    <none>   6m35s   v1.32.7
+    aks-agentpool-38955149-vmss000002   Ready    <none>   6m35s   v1.32.7
     ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
@@ -211,7 +211,7 @@ If you use Azure Cloud Shell, `kubectl` is already installed. To install `kubect
     NAME                                STATUS   ROLES   AGE   VERSION
     aks-agentpool-38955149-vmss000000   Ready    <none>   5m53s   v1.32.7
     aks-agentpool-38955149-vmss000001   Ready    <none>   6m31s   v1.32.7
-    aks-agentpool-238955149-vmss000002   Ready    <none>   6m35s   v1.32.7
+    aks-agentpool-38955149-vmss000002   Ready    <none>   6m35s   v1.32.7
     ```
 
 ---

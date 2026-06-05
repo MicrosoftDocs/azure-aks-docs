@@ -1,10 +1,11 @@
 ---
-title: Automatically drain Azure Kubernetes Service (AKS) nodes 
+title: Automatically drain Azure Kubernetes Service (AKS) nodes
 description: Learn about node auto-drain functionality and how AKS protects your workloads from scheduled VM maintenance events.
 ms.topic: concept-article
-ms.date: 01/03/2025
+ms.date: 03/30/2026
 author: davidsmatlak
 ms.author: davidsmatlak
+ai-usage: ai-assisted
 
 # Customer intent: As a cloud operations engineer, I want to implement node auto-drain in AKS, so that I can protect workloads from disruptions caused by scheduled VM maintenance events.
 ---
@@ -15,27 +16,33 @@ Node auto-drain helps you protect your node workloads from disruptions when [sch
 > [!NOTE]
 > Node auto-drain is a best effort service and can't be guaranteed to operate perfectly in all scenarios.
 
-## Monitor node auto-drain using Kubernetes events
+## Scheduled event actions
+
 The following table shows the node events for AKS node auto-drain and describes their associated actions:
 
-| Event | Description |   Action   |
+| Event | Description | Action |
 | --- | --- | --- |
-| Freeze | The underlying virtual machine (VM) is scheduled to pause for a few seconds. CPU and network connectivity may be suspended, but there's no impact on memory or open files.  | No action. |
+| Freeze | The underlying virtual machine (VM) is scheduled to pause for a few seconds. CPU and network connectivity might be suspended, but there's no impact on memory or open files. | Opt in to [pod eviction on freeze events (preview)](./node-auto-drain-evict-on-freeze.md). |
 | Reboot | The VM is scheduled for reboot. The VM's non-persistent memory is lost. | No action. |
 | Redeploy | The VM is scheduled to move to another node. The VM's ephemeral disks are lost. | Cordon and drain. |
-| Preempt | The spot VM is being deleted. The VM's ephemeral disks are lost. | Cordon and drain |
-| Terminate | The VM is scheduled for deletion.| Cordon and drain. |
-
+| Preempt | The spot VM is being deleted. The VM's ephemeral disks are lost. | Cordon and drain. |
+| Terminate | The VM is scheduled for deletion. |  No action. |
 
 > [!NOTE]
-> The set of events shown in the table and the corresponding actions are the default behavior. The default behavior doesn't require any configuration by the user and can't be disabled.
+> Redeploy and Preempt use default behavior and don't require extra configuration.
+> Freeze and Terminate require opt-in configuration:
+>
+> - Freeze: [Configure pod eviction for freeze events](./node-auto-drain-evict-on-freeze.md).
+> - Terminate: Enable [Virtual Machine Scale Set terminate notifications](/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-terminate-notification.md) as a prerequisite for AKS node auto-drain.
 
 ## Next steps
 
-Use [availability zones][availability-zones] to increase high availability with your AKS cluster workloads.
+- [Configure pod eviction for freeze events (preview)](./node-auto-drain-evict-on-freeze.md)
+- Use [availability zones][availability-zones] to increase high availability with your AKS cluster workloads.
 
 <!-- LINKS - Internal -->
 [availability-zones]: ./availability-zones.md
 [vm-updates]: /azure/virtual-machines/updates-maintenance-overview
 [scheduled-events]: /azure/virtual-machines/linux/scheduled-events
 [spot-node-pools]: ./spot-node-pool.md
+[events]: ./events.md

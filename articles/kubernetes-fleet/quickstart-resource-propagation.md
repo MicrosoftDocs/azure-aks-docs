@@ -16,7 +16,7 @@ This article describes how to use Azure Kubernetes Fleet Manager cluster resourc
 ## Prerequisites
 
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
-* Read the [conceptual overview of resource propagation](./concepts-resource-propagation.md) to understand the concepts and terminology used in this article.
+* Read the [conceptual overview of resource propagation](./concepts-resource-placement.md) to understand the concepts and terminology used in this article.
 * You need a Fleet Manager with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 * Member clusters must be [labeled](./concepts-fleet.md#labels) appropriately in the hub cluster to match the desired selection criteria. Example labels include region, environment, team, availability zones, node availability, or anything else that you want.
 * You need access to the Kubernetes API of the hub cluster. If you don't have access, see [Access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster](./access-fleet-hub-cluster-kubernetes-api.md).
@@ -25,7 +25,7 @@ This article describes how to use Azure Kubernetes Fleet Manager cluster resourc
 
 The `ClusterResourcePlacement` object is created on the hub cluster and is used to propagate resources to member clusters. It specifies the resources to propagate and the placement policy to use when you're selecting member clusters. This example demonstrates how to propagate a namespace to member clusters by using the `ClusterResourcePlacement` object with a `PickAll` placement policy.
 
-For more information, see [resource placement using Azure Kubernetes Fleet Manager cluster resource placement](./concepts-resource-propagation.md) and the open-source [KubeFleet documentation](https://kubefleet.dev/docs/concepts/crp/).
+For more information, see [resource placement using Azure Kubernetes Fleet Manager cluster resource placement](./concepts-resource-placement.md) and the open-source [KubeFleet documentation](https://kubefleet.dev/docs/concepts/crp/).
 
 ### [Azure CLI](#tab/azure-cli)
 

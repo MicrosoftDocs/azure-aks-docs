@@ -11,7 +11,7 @@ ms.topic: concept-article
 
 # Fleet Manager hub cluster overview
 
-When enabled, the Fleet Manager hub cluster serves as the central management point for Kubernetes resource propagation across member clusters using [resource placement](./concepts-resource-propagation.md).
+When enabled, the Fleet Manager hub cluster serves as the central management point for Kubernetes resource propagation across member clusters using [resource placement](./concepts-resource-placement.md).
 
 ## What are Fleet Manager hub clusters?
 

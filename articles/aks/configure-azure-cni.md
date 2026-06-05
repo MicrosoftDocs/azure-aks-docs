@@ -44,7 +44,7 @@ This article shows you how to use Container Networking Interface (CNI) networkin
 
 ## Configure networking
 
-For information on planning IP addresses, see [IP address planning for your Azure Kubernetes Service clusters](concepts-network-ip-address-planning.md).
+For information on planning IP addresses, see [IP address planning for your Azure Kubernetes Service clusters](concepts-network-ip-address-planning.md). If you bring your own virtual network, review the [virtual network prerequisites](concepts-network-cni-overview.md#prerequisites).
 
 ### [Azure portal](#tab/configure-networking-portal)
 

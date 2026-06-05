@@ -29,7 +29,7 @@ Kubernetes Center (preview) offers several key benefits, including:
 
 To use Kubernetes Center (preview), ensure you have the following prerequisites:
 
-- An active Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free/).
+- An active Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 ## Access quickstarts and documentation
 

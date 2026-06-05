@@ -2,7 +2,8 @@
 title: Concepts - AKS Legacy Container Networking Interfaces (CNI)
 description: Learn about legacy CNI networking options in Azure Kubernetes Service (AKS)
 ms.topic: concept-article
-ms.date: 05/29/2024
+ms.date: 04/16/2026
+ai-usage: ai-assisted
 author: schaffererin
 ms.author: schaffererin
 
@@ -47,7 +48,10 @@ When you create an AKS cluster, the following parameters are configurable for Az
 
 **Azure Network Plugin**: When Azure network plugin is used, the internal LoadBalancer service with "externalTrafficPolicy=Local" can't be accessed from VMs with an IP in clusterCIDR that doesn't belong to AKS cluster.
 
-**Kubernetes service address range**: This parameter is the set of virtual IPs that Kubernetes assigns to internal [services][services] in your cluster. This range can't be updated after you create your cluster. You can use any private address range that satisfies the following requirements:
+**Kubernetes service address range**: This parameter is the set of virtual IPs that Kubernetes assigns to internal [services][services] in your cluster. You can use any private address range that satisfies the following requirements:
+
+> [!NOTE]
+> Starting with Kubernetes 1.33, you can extend the service IP range after cluster creation by using the `ServiceCIDR` Kubernetes resource. For more information, see [Extend Service IP Ranges](https://kubernetes.io/docs/tasks/network/extend-service-ip-ranges/) in the Kubernetes documentation. On clusters running earlier versions, the service address range can't be updated after you create the cluster.
 
 - Must not be within the virtual network IP address range of your cluster.
 - Must not overlap with any other virtual networks with which the cluster virtual network peers.

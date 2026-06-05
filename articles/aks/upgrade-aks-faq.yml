@@ -96,7 +96,7 @@ sections:
           To trigger an AKS cluster upgrade a user must have the Azure Kubernetes Service Contributor role assigned at the cluster resource level. See the following articles for a detailed description of this role and further guidance on providing users with granular access to AKS resources:
 
           - [Azure built-in roles for Containers](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-contributor-role)
-          - [Access and identity options for Azure Kubernetes Service (AKS)](./concepts-identity.md#azure-rbac-to-authorize-access-to-the-aks-resource)
+          - [Access and identity options for Azure Kubernetes Service (AKS)](./concepts-identity.md#c-aks-resource-authorization-azure-resource-manager)
 
   - name: Backup and rollback
     questions:

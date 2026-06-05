@@ -16,7 +16,7 @@ This article shows you how to create a virtual network (VNet) and subnet, create
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have one, you can create a [free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have one, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure CLI version `2.76.0` or later. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][azure cli].
 - Read the [Overview of node auto-provisioning (NAP) in AKS](./node-auto-provisioning.md) article, which details [how NAP works](./node-auto-provisioning.md#how-does-node-auto-provisioning-work).
 - Read the [Overview of networking configurations for node auto-provisioning (NAP) in Azure Kubernetes Service (AKS)](./node-auto-provisioning-networking.md).

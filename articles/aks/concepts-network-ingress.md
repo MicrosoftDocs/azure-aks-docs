@@ -30,7 +30,7 @@ Understanding the distinction between these two approaches helps in selecting th
 
 The following table lists the feature differences between the different ingress controller options:
 
-| Feature                                           | Application Routing addon | Application Gateway for Containers       | Azure Service Mesh/Istio-based service mesh |
+| Feature                                           | Application Routing addon | Application Gateway for Containers       | Azure Service Mesh / Istio service mesh |
 |---------------------------------------------------|---------------------------|------------------------------------------|---------------------------------------------|
 | **Ingress/Gateway controller**                    | NGINX ingress controller  | Azure Application Gateway for Containers | Istio Ingress Gateway                       |
 | **API**                                           | Ingress API               | Ingress API and Gateway API              | [Istio Ingress API][istio-ingress-link]     |
@@ -38,18 +38,18 @@ The following table lists the feature differences between the different ingress 
 | **Scaling**                                       | Autoscaling               | Autoscaling                              | Autoscaling                                 |
 | **Load balancing**                                | Internal/External         | External                                 | Internal/External                           |
 | **SSL termination**                               | In-cluster                | Yes: Offloading and E2E SSL              | In-cluster                                  |
-| **mTLS**                                          | N/A                       | Yes: frontend and backend                | N/A                                         |
-| **Static IP Address**                             | N/A                       | FQDN                                     | N/A                                         |
+| **mTLS**                                          | N/A                       | Yes: frontend and backend                | Yes                                         |
+| **Static IP address**                             | Yes                       | FQDN (no static IP)                      | N/A                                         |
 | **Azure Key Vault stored SSL certificates**       | Yes                       | Yes                                      | N/A                                         |
 | **Azure DNS integration for DNS zone management** | Yes                       | Yes                                      | N/A                                         |
 
 The following table lists the different scenarios where you might use each ingress controller:
 
 | Ingress option | When to use |
-|----------------|-------------|
-| **Managed NGINX - Application Routing addon** | • In-cluster hosted, customizable, and scalable NGINX ingress controllers. </br> • Basic load balancing and routing capabilities. </br> • Internal and external load balancer configuration. </br> • Static IP address configuration. </br> • Integration with Azure Key Vault for certificate management. </br> • Integration with Azure DNS Zones for public and private DNS management. </br> • Supports the Ingress API. |
-| **Application Gateway for Containers** | • Azure hosted ingress gateway. </br> • Flexible deployment strategies managed by the controller or bring your own Application Gateway for Containers. </br> • Advanced traffic management features such as automatic retries, availability zone resiliency, mutual authentication (mTLS) to backend target, traffic splitting / weighted round robin, and autoscaling. </br> • Integration with Azure Key Vault for certificate management. </br> • Integration with Azure DNS Zones for public and private DNS management. </br> • Supports the Ingress and Gateway APIs. |
-| **Istio Ingress Gateway** | • Based on Envoy, when using with Istio for a service mesh. </br> • Advanced traffic management features such as rate limiting and circuit breaking. </br> • Support for mTLS |
+| -------------- | ----------- |
+| **Managed NGINX - Application Routing addon** | • In-cluster hosted, customizable, and scalable NGINX ingress controllers. <br> • Basic load balancing and routing capabilities. <br> • Internal and external load balancer configuration. <br> • Static IP address configuration. <br> • Integration with Azure Key Vault for certificate management. <br> • Integration with Azure DNS Zones for public and private DNS management. <br> • Supports the Ingress API. |
+| **Application Gateway for Containers** | • Azure hosted ingress gateway. <br> • Flexible deployment strategies managed by the controller or bring your own Application Gateway for Containers. <br> • Advanced traffic management features such as automatic retries, availability zone resiliency, mutual authentication (mTLS) to backend target, traffic splitting / weighted round robin, and autoscaling. <br> • Integration with Azure Key Vault for certificate management. <br> • Integration with Azure DNS Zones for public and private DNS management. <br> • Supports the Ingress and Gateway APIs. |
+| **Istio Ingress Gateway** | • Based on Envoy, when using with Istio for a service mesh. <br> • Advanced traffic management features such as rate limiting and circuit breaking. <br> • Support for mTLS. |
 
 > [!NOTE]
 > Gateway API for [Istio ingress traffic][istio-add-on-ingress] is not yet supported for the Istio add-on, but is currently under active development. 

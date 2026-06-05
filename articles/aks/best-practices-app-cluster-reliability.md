@@ -1,15 +1,17 @@
 ---
-title: Deployment and cluster reliability best practices for Azure Kubernetes Service (AKS)
-titleSuffix: Azure Kubernetes Service
-description: Learn the best practices for deployment and cluster reliability for Azure Kubernetes Service (AKS) workloads.
+title: Deployment and Cluster Reliability Best Practices for Azure Kubernetes Service (AKS)
+description: Learn the best practices for deployment and cluster reliability for Azure Kubernetes Service (AKS), including guidance for AKS Automatic and AKS Standard cluster modes.
 ms.topic: best-practice
-ms.date: 04/22/2024
+ms.date: 06/05/2026
+ms.service: azure-kubernetes-service
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: "As a Kubernetes cluster operator, I want to implement best practices for deployment and cluster reliability, so that I can ensure high availability and performance of my workloads in Azure Kubernetes Service."
 ---
 
 # Deployment and cluster reliability best practices for Azure Kubernetes Service (AKS)
+
+**Applies to**: :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
 
 This article provides best practices for cluster reliability implemented both at a deployment and cluster level for your Azure Kubernetes Service (AKS) workloads. The article is intended for cluster operators and developers who are responsible for deploying and managing applications in AKS.
 
@@ -20,12 +22,24 @@ The best practices in this article are organized into the following categories:
 | [Deployment level best practices](#deployment-level-best-practices) | • [Pod CPU and memory limits](#pod-cpu-and-memory-limits) <br/> • [Vertical Pod Autoscaler (VPA)](#vertical-pod-autoscaler-vpa) <br/> • [Pod Disruption Budgets (PDBs)](#pod-disruption-budgets-pdbs) <br/> • [High availability during upgrades](#high-availability-during-upgrades) <br/>• [Pod topology spread constraints](#pod-topology-spread-constraints) <br/> • [Readiness, liveness, and startup probes](#readiness-liveness-and-startup-probes) <br/> • [Multi-replica applications](#multi-replica-applications) |
 | [Cluster and node pool level best practices](#cluster-and-node-pool-level-best-practices) | • [Availability zones](#availability-zones) <br/> • [Cluster autoscaling](#cluster-autoscaling) <br/> • [Standard Load Balancer](#standard-load-balancer) <br/> • [System node pools](#system-node-pools) <br/> • [Upgrade configurations for node pools](#upgrade-configurations-for-node-pools) <br/>  • [Image versions](#image-versions) <br/> • [Azure CNI for dynamic IP allocation](#azure-cni-for-dynamic-ip-allocation) <br/> • [v5 SKU VMs](#v5-sku-vms) <br/> • [Do *not* use B series VMs](#do-not-use-b-series-vms) <br/> • [Premium Disks](#premium-disks) <br/> • [Container Insights](#container-insights) <br/> • [Azure Policy](#azure-policy) |
 
+## AKS cluster modes and reliability
+
+AKS supports two cluster modes: [**AKS Automatic**](./intro-aks-automatic.md) and AKS Standard. Many workload-level reliability practices apply equally to both modes, such as setting resource requests, defining Pod Disruption Budgets (PDBs), configuring probes, and running multiple replicas. However, cluster-level responsibilities differ by mode:
+
+- **AKS Automatic** provides more preconfigured reliability defaults, including managed system node pools, node autoprovisioning (NAP), automatic cluster upgrades, automatic node OS image upgrades, Standard tier, and LocalDNS.
+- **AKS Standard** provides broader direct configuration control and requires operators to explicitly enable and manage more cluster-level reliability features.
+
+For more information, see [What is AKS Automatic?](./intro-aks-automatic.md)
+
 ## Deployment level best practices
 
 The following deployment level best practices help ensure high availability and reliability for your AKS workloads. These best practices are local configurations that you can implement in the YAML files for your pods and deployments.
 
 > [!NOTE]
 > Make sure you implement these best practices every time you deploy an update to your application. If not, you might experience issues with your application's availability and reliability, such as unintentional application downtime.
+
+> [!NOTE]
+> Even when AKS Automatic provides reliability defaults at the cluster level, workload manifests still need application-specific reliability settings such as probes, replica counts, disruption budgets, and topology rules.
 
 ### Pod CPU and memory limits
 
@@ -36,6 +50,8 @@ The following deployment level best practices help ensure high availability and 
 Pod CPU and memory limits define the maximum amount of CPU and memory a pod can use. When a pod exceeds its defined limits, it gets marked for removal. For more information, see [CPU resource units in Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-cpu) and [Memory resource units in Kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory).
 
 Setting CPU and memory limits helps you maintain node health and minimizes impact to other pods on the node. Avoid setting a pod limit higher than your nodes can support. Each AKS node reserves a set amount of CPU and memory for the core Kubernetes components. If you set a pod limit higher than the node can support, your application might try to consume too many resources and negatively impact other pods on the node. Cluster administrators need to set resource quotas on a namespace that requires setting resource requests and limits. For more information, see [Enforce resource quotas in AKS](./operator-best-practices-scheduler.md#enforce-resource-quotas).
+
+Cluster administrators can also reinforce these settings with namespace-level quotas and policy controls. In AKS Automatic, Deployment Safeguards can help enforce resource-related best practices, but operators should still define workload-appropriate requests and limits explicitly. For more information, see [Enforce resource quotas in AKS](./operator-best-practices-scheduler.md#enforce-resource-quotas).
 
 In the following example pod definition file, the `resources` section sets the CPU and memory limits for the pod:
 
@@ -90,7 +106,10 @@ For more information, see [Assign CPU Resources to Containers and Pods](https://
 
 While not directly implemented through the pod YAML, the Vertical Pod Autoscaler (VPA) helps optimize resource allocation by automatically adjusting the CPU and memory requests for your pods. This ensures that your applications have the resources they need to run efficiently without overprovisioning or underprovisioning.
 
+In AKS Automatic, VPA is enabled on the cluster by default. In AKS Standard, operators choose whether to enable it.
+
 VPA operates in three modes:
+
 - **Off**: Only provides recommendations without applying changes.
 - **Auto**: Automatically updates pod resource requests during pod restarts.
 - **Initial**: Sets resource requests only during pod creation.
@@ -124,6 +143,8 @@ For more information, see [Vertical Pod Autoscaler documentation](https://github
 [Pod Disruption Budgets (PDBs)](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets) allow you to define how deployments or replica sets respond during voluntary disruptions, such as upgrade operations or accidental pod deletions. Using PDBs, you can define a minimum or maximum unavailable resource count. PDBs only affect the Eviction API for voluntary disruptions.
 
 For example, let's say you need to perform a cluster upgrade and already have a PDB defined. Before performing the cluster upgrade, the Kubernetes scheduler ensures that the minimum number of pods defined in the PDB are available. If the upgrade would cause the number of available pods to fall below the minimum defined in the PDBs, the scheduler schedules extra pods on other nodes before allowing the upgrade to proceed. If you don't set a PDB, the scheduler doesn't have any constraints on the number of pods that can be unavailable during the upgrade, which can lead to a lack of resources and potential cluster outages.
+
+Cluster-level upgrade automation in AKS Automatic reduces some operational burden, but workload availability during disruption still depends on application-level controls such as PDBs.
 
 In the following example PDB definition file, the `minAvailable` field sets the minimum number of pods that must remain available during voluntary disruptions. The value can be an absolute number (for example, *3*) or a percentage of the desired number of pods (for example, *10%*).
 
@@ -287,6 +308,8 @@ For more information, see [Rolling Updates in Kubernetes](https://kubernetes.io/
 
 You can use pod topology spread constraints to control how pods are spread across your cluster based on the topology of the nodes and spread pods across different nodes or zones to improve availability and reliability.
 
+In AKS Automatic, Deployment Safeguards can help apply some workload distribution best practices, but application-specific topology requirements should still be defined explicitly in workload manifests.
+
 The following example pod definition file shows how to use the `topologySpreadConstraints` field to spread pods across different nodes:
 
 ```yaml
@@ -314,6 +337,8 @@ For more information, see [Pod Topology Spread Constraints](https://kubernetes.i
 > **Best practice guidance**
 >
 > Configure readiness, liveness, and startup probes when applicable to improve resiliency for high loads and lower container restarts.
+
+Even when AKS Automatic provides baseline safeguards, probe configuration remains workload-specific and should still be authored in application manifests.
 
 #### Readiness probes
 
@@ -396,7 +421,7 @@ startupProbe:
 >
 > Deploy at least two replicas of your application to ensure high availability and resiliency in node-down scenarios.
 
-In Kubernetes, you can use the `replicas` field in your deployment to specify the number of pods you want to run. Running multiple instances of your application helps ensure high availability and resiliency in node-down scenarios. If you have [availability zones](#availability-zones) enabled, you can use the `replicas` field to specify the number of pods you want to run across multiple availability zones.
+In Kubernetes, you can use the `replicas` field in your deployment to specify the number of pods you want to run. Running multiple instances of your application helps ensure high availability and resiliency in node-down scenarios. AKS Automatic improves operational readiness and scaling behavior, but availability still depends on running enough replicas and using appropriate placement controls. If you have [availability zones](#availability-zones) enabled, you can use the `replicas` field to specify the number of pods you want to run across multiple availability zones.
 
 The following example pod definition file shows how to use the `replicas` field to specify the number of pods you want to run:
 
@@ -429,7 +454,7 @@ For more information, see [Recommended active-active high availability solution 
 
 ## Cluster and node pool level best practices
 
-The following cluster and node pool level best practices help ensure high availability and reliability for your AKS clusters. You can implement these best practices when creating or updating your AKS clusters.
+The following cluster and node pool level best practices help ensure high availability and reliability for your AKS clusters. You can implement these best practices when creating or updating your AKS clusters. Compared with deployment-level settings, responsibility differs more significantly between AKS Automatic and AKS Standard.
 
 ### Availability zones
 
@@ -439,6 +464,8 @@ The following cluster and node pool level best practices help ensure high availa
 
 [Availability zones](/azure/reliability/availability-zones-overview) are separated groups of datacenters within a region. These zones are close enough to have low-latency connections to each other, but far enough apart to reduce the likelihood that more than one zone is affected by local outages or weather. Using availability zones helps your data stay synchronized and accessible in zone-down scenarios. For more information, see [Running in multiple zones](https://kubernetes.io/docs/setup/best-practices/multiple-zones/).
 
+AKS Automatic simplifies day-2 operations, but it doesn't remove the need to plan topology during cluster creation where zonal deployment is part of the design.
+
 ### Cluster autoscaling
 
 > **Best practice guidance**
@@ -447,7 +474,12 @@ The following cluster and node pool level best practices help ensure high availa
 
 To keep up with application demands in AKS, you might need to adjust the number of nodes that run your workloads. The cluster autoscaler component watches for pods in your cluster that can't be scheduled because of resource constraints. When the cluster autoscaler detects issues, it scales up the number of nodes in the node pool to meet the application demand. It also regularly checks nodes for a lack of running pods and scales down the number of nodes as needed. For more information, see [Cluster autoscaling in AKS](./cluster-autoscaler-overview.md).
 
-You can use the `--enable-cluster-autoscaler` parameter when creating an AKS cluster to enable the cluster autoscaler, as shown in the following example:
+Scaling behavior differs by cluster mode:
+
+- **AKS Automatic**: Node autoprovisioning is preconfigured and workload scaling features such as HPA, KEDA, and VPA are enabled by default.
+- **AKS Standard**: Operators explicitly enable and tune cluster autoscaler, node autoprovisioning, and workload autoscaling features.
+
+For AKS Standard, you can use the `--enable-cluster-autoscaler` parameter when creating a cluster:
 
 ```azurecli-interactive
 az aks create \
@@ -465,6 +497,22 @@ az aks create \
 You can also enable the cluster autoscaler on an existing node pool and configure more granular details of the cluster autoscaler by changing the default values in the cluster-wide autoscaler profile.
 
 For more information, see [Use the cluster autoscaler in AKS](./cluster-autoscaler.md).
+
+### Ingress and egress reliability
+
+> **Best practice guidance**
+>
+> Use the cluster networking model that matches your AKS cluster mode and reliability requirements.
+
+For AKS Standard, [Standard Load Balancer](#standard-load-balancer) remains a common and recommended reliability choice for inbound and outbound traffic scenarios.
+
+For AKS Automatic, ingress and egress defaults are more managed:
+
+- Managed virtual network is preconfigured by default.
+- Managed NAT gateway is preconfigured for supported managed virtual network scenarios.
+- Managed ingress through application routing is preconfigured for supported cluster versions.
+
+If you're using AKS Standard, the following [Standard Load Balancer guidance](#standard-load-balancer) still applies:
 
 ### Standard Load Balancer
 
@@ -502,6 +550,10 @@ For more information, see [Use a standard load balancer in AKS](./load-balancer-
 
 #### Use dedicated system node pools
 
+AKS Automatic uses managed system node pools that are created, scaled, upgraded, and operated by AKS. Operator focus shifts from building system pool topology manually to validating workload placement, capacity behavior, and namespace-level controls.
+
+The following guidance still applies for AKS Standard:
+
 > **Best practice guidance**
 >
 > Use system node pools to ensure no other user applications run on the same nodes, which can cause resource scarcity and impact system pods.
@@ -514,6 +566,8 @@ Use dedicated system node pools to ensure no other user application runs on the 
 >
 > Configure the autoscaler for system node pools to set minimum and maximum scale limits for the node pool.
 
+In AKS Automatic, system node pool capacity is managed by AKS. In AKS Standard, use autoscaler configuration so that the system node pool can always scale to meet the needs of system pods.
+
 Use the autoscaler on node pools to configure the minimum and maximum scale limits for the node pool. The system node pool should always be able to scale to meet the demands of system pods. If the system node pool is unable to scale, the cluster runs out of resources to help manage scheduling, scaling, and load balancing, which can lead to an unresponsive cluster.
 
 For more information, see [Use the cluster autoscaler on node pools](./cluster-autoscaler.md#use-the-cluster-autoscaler-on-node-pools).
@@ -524,9 +578,16 @@ For more information, see [Use the cluster autoscaler on node pools](./cluster-a
 >
 > Ensure that system node pools have at least two nodes to ensure resiliency against freeze/upgrade scenarios, which can lead to nodes being restarted or shut down.
 
-System node pools are used to run system pods, such as the kube-proxy, coredns, and the Azure CNI plugin. We recommend that you ***ensure that system node pools have at least two nodes*** to ensure resiliency against freeze/upgrade scenarios, which can lead to nodes being restarted or shut down. For more information, see [Manage system node pools in AKS](./use-system-pools.md).
+In AKS Standard, system node pools should have at least two nodes to improve resilience during restart or upgrade events. In AKS Automatic, system node pool resiliency is service-managed, but workload design should still assume system components can be upgraded or moved as part of platform operations.
+
+System node pools are used to run system pods, such as the kube-proxy, coredns, and the Azure CNI plugin. We recommend that you **ensure that system node pools have at least two nodes** to ensure resiliency against freeze/upgrade scenarios, which can lead to nodes being restarted or shut down. For more information, see [Manage system node pools in AKS](./use-system-pools.md).
 
 ### Upgrade configurations for node pools
+
+Upgrade ownership differs by cluster mode:
+
+- **AKS Automatic**: Cluster upgrades use the stable channel by default, and node OS image upgrades use the NodeImage channel by default. Operator focus is on workload readiness, disruption controls, maintenance schedules, and safe rollout validation.
+- **AKS Standard**: Operators explicitly configure upgrade channels and node pool settings such as maxSurge and maxUnavailable.
 
 #### Using `maxSurge` for node pool upgrades
 
@@ -574,6 +635,8 @@ By configuring `maxUnavailable`, you can control the impact of upgrades on your 
 
 For more information, see [Upgrade node pools in AKS](./upgrade-cluster.md).
 
+#### Accelerated Networking
+
 > **Best practice guidance**
 >
 > Use Accelerated Networking to provide lower latency, reduced jitter, and decreased CPU utilization on your VMs.
@@ -598,15 +661,38 @@ Using the `latest` tag for [container images](https://kubernetes.io/docs/concept
 
 #### Node image upgrades
 
+Node image upgrade behavior differs by cluster mode:
+
+- **AKS Automatic**: Node OS image upgrades are preconfigured through the `NodeImage` channel.
+- **AKS Standard**: Operators choose manual management or an auto-upgrade channel.
+
 AKS provides multiple auto-upgrade channels for node OS image upgrades. You can use these channels to control the timing of upgrades. We recommend joining these auto-upgrade channels to ensure that your nodes are running the latest security patches and updates. For more information, see [Auto-upgrade node OS images in AKS](./auto-upgrade-node-os-image.md).
 
-### Standard tier for production workloads
+### Standard pricing tier for production workloads
 
 > **Best practice guidance**
 >
-> Use the Standard tier for product workloads for greater cluster reliability and resources, support for up to 5,000 nodes in a cluster, and Uptime SLA enabled by default. If you need LTS, consider using the Premium tier.
+> Use the Standard pricing tier for product workloads for greater cluster reliability and resources, support for up to 5,000 nodes in a cluster, and Uptime SLA enabled by default. If you need LTS, consider using the Premium tier.
 
-The Standard tier for Azure Kubernetes Service (AKS) provides a financially backed 99.9% uptime [service-level agreement (SLA)](https://www.azure.cn/en-us/support/sla/kubernetes-service/) for your production workloads. The standard tier also provides greater cluster reliability and resources, support for up to 5,000 nodes in a cluster, and Uptime SLA enabled by default. For more information, see [Pricing tiers for AKS cluster management](./free-standard-pricing-tiers.md).
+The Standard tier for Azure Kubernetes Service (AKS) provides a financially backed 99.9% uptime [service-level agreement (SLA)](https://www.azure.cn/support/sla/kubernetes-service/) for your production workloads. The standard tier also provides greater cluster reliability and resources, support for up to 5,000 nodes in a cluster, and Uptime SLA enabled by default. For more information, see [Pricing tiers for AKS cluster management](./free-standard-pricing-tiers.md).
+
+Cluster mode note:
+
+- AKS Automatic is preconfigured with Standard tier, uptime SLA, and pod readiness SLA.
+- AKS Standard defaults to Free tier unless you explicitly choose Standard or Premium.
+
+### LocalDNS for DNS reliability
+
+> **Best practice guidance**
+>
+> Enable [LocalDNS](./localdns-custom.md) on your node pools to improve DNS resolution reliability and maintain service connectivity during transient DNS outages.
+
+[LocalDNS](./dns-concepts.md) deploys a DNS proxy on each AKS node, providing low-latency, resilient DNS resolution. By resolving queries locally, LocalDNS reduces your dependence on centralized CoreDNS pods and avoids `conntrack` table exhaustion, which is a common cause of dropped DNS queries in high-throughput environments. LocalDNS also supports serving stale cached responses for a configurable duration when upstream DNS is unavailable, helping maintain pod connectivity during disruptions. For configuration instructions and best practices, see [Configure LocalDNS in AKS](./localdns-custom.md).
+
+Cluster mode note:
+
+- **AKS Automatic**: LocalDNS is preconfigured.
+- **AKS Standard**: LocalDNS is optional and must be enabled explicitly.
 
 ### Azure CNI for dynamic IP allocation
 
@@ -614,13 +700,23 @@ The Standard tier for Azure Kubernetes Service (AKS) provides a financially back
 >
 > Configure Azure CNI for dynamic IP allocation for better IP utilization and to prevent IP exhaustion for AKS clusters.
 
+For AKS Standard, Azure CNI dynamic IP allocation helps improve IP utilization and prevent IP exhaustion. For AKS Automatic, the default networking path is managed virtual network using Azure CNI Overlay powered by Cilium, with optional custom virtual network configurations in supported scenarios.
+
 The dynamic IP allocation capability in Azure CNI allocates pod IPs from a subnet separate from the subnet hosting the AKS cluster and offers the following benefits:
 
+<<<<<<< evictionpod
 * **Better IP utilization**: IPs are dynamically allocated to cluster Pods from the Pod subnet. This leads to better utilization of IPs in the cluster compared to the traditional CNI solution, which does static allocation of IPs for every node.
 * **Scalable and flexible**: Node and pod subnets can be scaled independently. A single pod subnet can be shared across multiple node pools of a cluster or across multiple AKS clusters deployed in the same VNet. You can also configure a separate pod subnet for a node pool.  
 * **High performance**: Since pods are assigned virtual network IPs, they have direct connectivity to other cluster pod and resources in the VNet. The solution supports very large clusters without any degradation in performance.
 * **Separate VNet policies for pods**: Since pods have a separate subnet, you can configure separate VNet policies for them that are different from node policies. This enables many useful scenarios such as allowing internet connectivity only for pods and not for nodes, fixing the source IP for pod in a node pool using an Azure NAT Gateway, and using NSGs to filter traffic between node pools.  
 * **Kubernetes network policies**: Both the Azure Network Policies and Calico work with this solution.
+=======
+- **Better IP utilization**: IPs are dynamically allocated to cluster Pods from the Pod subnet. This leads to better utilization of IPs in the cluster compared to the traditional CNI solution, which does static allocation of IPs for every node.
+- **Scalable and flexible**: Node and pod subnets can be scaled independently. A single pod subnet can be shared across multiple node pools of a cluster or across multiple AKS clusters deployed in the same VNet. You can also configure a separate pod subnet for a node pool.  
+- **High performance**: Since pod are assigned virtual network IPs, they have direct connectivity to other cluster pod and resources in the VNet. The solution supports very large clusters without any degradation in performance.
+- **Separate VNet policies for pods**: Since pods have a separate subnet, you can configure separate VNet policies for them that are different from node policies. This enables many useful scenarios such as allowing internet connectivity only for pods and not for nodes, fixing the source IP for pod in a node pool using an Azure NAT Gateway, and using NSGs to filter traffic between node pools.  
+- **Kubernetes network policies**: Both the Azure Network Policies and Calico work with this solution.
+>>>>>>> main
 
 For more information, see [Configure Azure CNI networking for dynamic allocation of IPs and enhanced subnet support](./configure-azure-cni-dynamic-ip-allocation.md).
 
@@ -676,7 +772,12 @@ For more information, see [Use Azure Premium SSD v2 disks on AKS](./use-premium-
 
 [Container Insights](/azure/azure-monitor/containers/container-insights-overview) is a feature of Azure Monitor that collects and analyzes container logs from AKS. You can analyze the collected data with a collection of [views](/azure/azure-monitor/containers/container-insights-analyze) and prebuilt [workbooks](/azure/azure-monitor/containers/container-insights-reports).
 
-You can enable Container Insights monitoring on your AKS cluster using various methods. The following example shows how to enable Container Insights monitoring on an existing cluster using the Azure CLI:
+Cluster mode note:
+
+- **AKS Automatic**: Container Insights is enabled by default in supported Azure CLI and Azure portal create flows.
+- **AKS Standard**: Container Insights is optional and enabled explicitly.
+
+You can enable Container Insights monitoring on your AKS cluster using various methods. The following example shows how to enable Container Insights monitoring on an existing AKS Standard cluster using the Azure CLI:
 
 ```azurecli-interactive
 az aks enable-addons -a monitoring --name myAKSCluster --resource-group myResourceGroup
@@ -692,13 +793,18 @@ For more information, see [Enable monitoring for Kubernetes clusters](/azure/azu
 
 You can apply and enforce built-in security policies on your AKS clusters using [Azure Policy](/azure/governance/policy/overview). Azure Policy helps enforce organizational standards and assess compliance at-scale. After you install the [Azure Policy add-on for AKS](/azure/governance/policy/concepts/policy-for-kubernetes), you can apply individual policy definitions or groups of policy definitions called initiatives to your clusters.
 
+Cluster mode note:
+
+- **AKS Automatic**: Deployment Safeguards and baseline Pod Security Standards are preconfigured in enforce mode.
+- **AKS Standard**: Azure Policy and Deployment Safeguards are optional and require explicit configuration.
+
 For more information, see [Secure your AKS clusters with Azure Policy](./use-azure-policy.md).
 
-## Next steps
+## Related content
 
-This article focused on best practices for deployment and cluster reliability for Azure Kubernetes Service (AKS) clusters. For more best practices, see the following articles:
+This article focused on best practices for deployment and cluster reliability for Azure Kubernetes Service (AKS) clusters. For more information on related topics, see the following articles:
 
-* [High availability and disaster recovery overview for AKS](./ha-dr-overview.md)
-* [Run AKS clusters at scale](./best-practices-performance-scale-large.md)
-* [Baseline architecture for an AKS cluster](/azure/architecture/reference-architectures/containers/aks/baseline-aks)
-
+- [What is AKS Automatic?](./intro-aks-automatic.md)
+- [High availability and disaster recovery overview for AKS](./ha-dr-overview.md)
+- [Run AKS clusters at scale](./best-practices-performance-scale-large.md)
+- [Baseline architecture for an AKS cluster](/azure/architecture/reference-architectures/containers/aks/baseline-aks)

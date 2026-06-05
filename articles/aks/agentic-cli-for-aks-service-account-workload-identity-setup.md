@@ -1,5 +1,5 @@
 ---
-title: Service account creation and workload identity setup for the Agentic CLI for Azure Kubernetes Service (AKS) (Preview)
+title: Create a Service Account and Configure Workload Identity for the Agentic CLI for Azure Kubernetes Service (AKS) (preview)
 description: Learn how to create the required service account and optionally configure workload identity for the agentic CLI for AKS to enable authentication.
 ms.topic: how-to
 ms.date: 01/29/2026
@@ -11,30 +11,33 @@ ai-usage: ai-generated
 # Customer intent: As a cluster administrator or SRE, I want to set up the required service account and optionally configure workload identity for the agentic CLI for AKS so that the agent can access cluster resources securely.
 ---
 
-# Service account creation and workload identity setup for the Agentic CLI for Azure Kubernetes Service (AKS) (preview)
+# Create a service account and configure workload identity for the agentic CLI for Azure Kubernetes Service (AKS) (preview)
 
 This article shows you how to create the **required** service account and **optionally** configure workload identity for the agentic CLI for Azure Kubernetes Service (AKS). The service account creation is **mandatory** for cluster mode deployment, while workload identity setup is optional but recommended for enhanced security when accessing Azure resources.
 
-For the main installation guide, see [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./agentic-cli-for-aks-install.md).
-
 ## Prerequisites
 
-**For service account creation (mandatory):**
-- Use the Azure CLI version 2.76 or later. To verify your Azure CLI version, use the [`az version`](/cli/azure/reference-index#az-version) command.
-- Ensure that you're signed in to the proper subscription by using the [`az account set`](/cli/azure/account#az-account-set) command.
+**Service account creation prerequisites**:
+
+- Azure CLI version 2.76 or later. Check your version using the `az version` command. To install or update, see [Install Azure CLI](/cli/azure/install-azure-cli).
+- Set your active Azure subscription using the [`az account set`](/cli/azure/account#az-account-set) command.
+
+    ```azurecli-interactive
+    az account set --subscription "your-subscription-id-or-name"
+    ```
+
 - You need sufficient permissions to create and manage Kubernetes service accounts, roles, and role bindings.
 
-**For workload identity setup (optional):**
-- Your AKS cluster must have workload identity enabled. If not enabled, follow the steps in [Enable workload identity](#verify-and-enable-workload-identity).
-- You need sufficient permissions to:
-  - Create and manage Azure managed identities
-  - Create federated identity credentials
+**Workload identity configuration prerequisites**:
+
+- [Workload identity enabled on your AKS cluster](/azure/aks/workload-identity-overview).
+- You need sufficient permissions to create and manage Azure managed identities and create federated identity credentials.
 
 ## Define variables
 
-First, set up the required variables for your environment. Replace the placeholder values with your actual cluster and Azure details:
+First, set up the required variables for your environment. Replace the placeholder values with your actual cluster and Azure details.
 
-**Required variables (for service account creation):**
+**Required variables for service account creation**:
 
 ```bash
 # Cluster information
@@ -46,7 +49,7 @@ export SERVICE_ACCOUNT_NAME="aks-mcp"
 export SERVICE_ACCOUNT_NAMESPACE="<YOUR_NAMESPACE>"  # e.g., "kube-system" or custom namespace
 ```
 
-**Additional variables (only if configuring workload identity):**
+**Additional variables (only if configuring workload identity)**:
 
 ```bash
 # Azure information for workload identity
@@ -61,80 +64,87 @@ export FEDERATED_IDENTITY_CREDENTIAL_NAME="aks-mcp-fed-identity"
 export RANDOM_ID="$(openssl rand -hex 3)"
 ```
 
-## Step 1: Create the Kubernetes service account (Mandatory)
+## Create a Kubernetes service account and assign permissions (required)
 
-This step is **required** for cluster mode deployment.
+> [!IMPORTANT]
+> The service account is **required** for the agentic CLI to authenticate with the AKS cluster in **cluster mode**.
 
 ### Create the service account
 
-Create the service account in your target namespace:
+Create the service account in your target namespace using the following command:
 
 ```bash
-kubectl create serviceaccount "${SERVICE_ACCOUNT_NAME}" -n "${SERVICE_ACCOUNT_NAMESPACE}"
+kubectl create serviceaccount "${SERVICE_ACCOUNT_NAME}" --namespace "${SERVICE_ACCOUNT_NAMESPACE}"
 ```
 
 ### Create RBAC permissions
 
 Create the necessary Role and RoleBinding for the service account with read access for aks-mcp troubleshooting. Here are two examples based on your access requirements:
 
-- **Cluster-wide read access (recommended for cluster administrators)**: Use this ClusterRoleBinding to grant read-only access to all Kubernetes resources except secrets across all namespaces. This option is recommended for cluster-level administrators or DevOps engineers who need to investigate and troubleshoot issues across the entire cluster.
+#### Cluster-wide read access (recommended for cluster administrators)
 
-   ```bash
-   cat <<EOF | kubectl apply -f -
-   apiVersion: rbac.authorization.k8s.io/v1
-   kind: ClusterRoleBinding
-   metadata:
-     name: aks-mcp-view-rolebinding
-   roleRef:
-     apiGroup: rbac.authorization.k8s.io
-     kind: ClusterRole
-     name: view
-   subjects:
-   - kind: ServiceAccount
-     name: ${SERVICE_ACCOUNT_NAME}
-     namespace: ${SERVICE_ACCOUNT_NAMESPACE}
-   EOF
-   ```
+1. Use this ClusterRoleBinding to grant read-only access to all Kubernetes resources except secrets across all namespaces. This option is recommended for cluster-level administrators or DevOps engineers who need to investigate and troubleshoot issues across the entire cluster.
 
-- **Namespace-scoped read access (for limited access scenarios)**: Use RoleBindings to grant read-only access to all Kubernetes resources except secrets in specific namespaces only. This option is suitable for teams or users who should have limited access to specific namespaces rather than the entire cluster. Repeat this RoleBinding for each namespace that requires access.
+    ```bash
+    cat <<EOF | kubectl apply -f -
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: aks-mcp-view-rolebinding
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: view
+    subjects:
+    - kind: ServiceAccount
+      name: ${SERVICE_ACCOUNT_NAME}
+      namespace: ${SERVICE_ACCOUNT_NAMESPACE}
+    EOF
+    ```
 
-   ```bash
-   cat <<EOF | kubectl apply -f -
-   apiVersion: rbac.authorization.k8s.io/v1
-   kind: RoleBinding
-   metadata:
-     name: aks-mcp-view-rolebinding
-     namespace: ${SERVICE_ACCOUNT_NAMESPACE}
-   roleRef:
-     apiGroup: rbac.authorization.k8s.io
-     kind: ClusterRole
-     name: view
-   subjects:
-   - kind: ServiceAccount
-     name: ${SERVICE_ACCOUNT_NAME}
-     namespace: ${SERVICE_ACCOUNT_NAMESPACE}
-   EOF
-   ```
+1. Verify the resources were created successfully using the following commands:
 
-### Verify the service account resources
+    ```bash
+    kubectl get serviceaccount "${SERVICE_ACCOUNT_NAME}" --namespace "${SERVICE_ACCOUNT_NAMESPACE}"
+    kubectl get clusterrolebinding aks-mcp-view-rolebinding
+    ```
 
-Verify that the resources were created successfully:
+#### Namespace-scoped read access (for limited access scenarios)
 
-```bash
-kubectl get serviceaccount "${SERVICE_ACCOUNT_NAME}" -n "${SERVICE_ACCOUNT_NAMESPACE}"
-kubectl get role aks-mcp-role -n "${SERVICE_ACCOUNT_NAMESPACE}"
-kubectl get rolebinding aks-mcp-rolebinding -n "${SERVICE_ACCOUNT_NAMESPACE}"
-```
+1. Use RoleBindings to grant read-only access to all Kubernetes resources except secrets in specific namespaces only. This option is suitable for teams or users who should have limited access to specific namespaces rather than the entire cluster. Repeat this RoleBinding for each namespace that requires access.
 
-## Step 2: Workload identity setup (Optional)
+    ```bash
+    cat <<EOF | kubectl apply -f -
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: aks-mcp-view-rolebinding
+      namespace: ${SERVICE_ACCOUNT_NAMESPACE}
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: view
+    subjects:
+    - kind: ServiceAccount
+      name: ${SERVICE_ACCOUNT_NAME}
+      namespace: ${SERVICE_ACCOUNT_NAMESPACE}
+    EOF
+    ```
+
+1. Verify the resources were created successfully using the following commands:
+
+    ```bash
+    kubectl get serviceaccount "${SERVICE_ACCOUNT_NAME}" --namespace "${SERVICE_ACCOUNT_NAMESPACE}"
+    kubectl get rolebinding aks-mcp-view-rolebinding --namespace "${SERVICE_ACCOUNT_NAMESPACE}"
+    ```
+
+## Configure workload identity for Azure resource access (optional)
 
 The following steps are **optional** but recommended if you want to enable the agentic CLI to access Azure resources securely using workload identity.
 
-### Verify and enable workload identity
-The following sections describe how to check the workload identity status, enable a workload identity, or retrieve the OIDC issuer URL.
-#### Check current workload identity status
+### Check current workload identity status
 
-Verify if workload identity is enabled on your cluster:
+Check if workload identity is already enabled on your AKS cluster using the [`az aks show`](/cli/azure/aks#az-aks-show) command.
 
 ```azurecli-interactive
 az aks show --resource-group "${RESOURCE_GROUP}" --name "${CLUSTER_NAME}" --query "securityProfile.workloadIdentity.enabled"
@@ -142,9 +152,9 @@ az aks show --resource-group "${RESOURCE_GROUP}" --name "${CLUSTER_NAME}" --quer
 
 If the output is `true`, workload identity is enabled. If `null` or `false`, you need to enable it.
 
-#### Enable workload identity (if required)
+### Enable workload identity
 
-If workload identity is not enabled, update your cluster to enable OIDC issuer and workload identity:
+Enable workload identity on your AKS cluster using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--enable-workload-identity` and `--enable-oidc-issuer` flags.
 
 ```azurecli-interactive
 az aks update \
@@ -154,9 +164,9 @@ az aks update \
     --enable-workload-identity
 ```
 
-#### Retrieve the OIDC issuer URL
+### Retrieve the OIDC issuer URL
 
-Get the OIDC issuer URL and save it to an environment variable:
+Get the OIDC issuer URL using the [`az aks show`](/cli/azure/aks#az-aks-show) command and save it to an environment variable.
 
 ```azurecli-interactive
 export AKS_OIDC_ISSUER="$(az aks show --name "${CLUSTER_NAME}" \
@@ -171,10 +181,9 @@ The environment variable should contain the issuer URL, similar to the following
 https://eastus.oic.prod-aks.azure.com/00000000-0000-0000-0000-000000000000/11111111-1111-1111-1111-111111111111/
 ```
 
-> [!NOTE]
-> This step is **optional** and only required if you want to configure workload identity for Azure resource access.
+### Create a user-assigned managed identity
 
-Create a user-assigned managed identity for Azure resource access:
+Create a user-assigned managed identity for Azure resource access using the [`az identity create`](/cli/azure/identity#az-identity-create) command.
 
 ```azurecli-interactive
 az identity create \
@@ -201,7 +210,7 @@ The following output example shows successful creation of a managed identity:
 
 ### Get the managed identity client ID
 
-Get the client ID of the managed identity and save it to an environment variable:
+Get the client ID of the managed identity using the [`az identity show`](/cli/azure/identity#az-identity-show) and save it to an environment variable.
 
 ```azurecli-interactive
 export USER_ASSIGNED_CLIENT_ID="$(az identity show \
@@ -213,7 +222,9 @@ export USER_ASSIGNED_CLIENT_ID="$(az identity show \
 
 ### Assign necessary role to managed identity
 
-Assign the necessary role to the managed identity using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. Here is an example of granting read access of the subscription to the managed identity:
+Assign the necessary roles to the managed identity using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. 
+
+The following example assigns the "Reader" role at the subscription scope, which allows the agentic CLI to read Azure resource information. Adjust the role and scope as needed for your use case.
 
 ```azurecli-interactive
 az role assignment create --role "Reader" \
@@ -221,93 +232,68 @@ az role assignment create --role "Reader" \
     --scope /subscriptions/${SUBSCRIPTION}
 ```
 
-## Step 3: Annotate the service account with workload identity (Optional)
-
-> [!NOTE]
-> This step is **optional** and only required if you created a managed identity in Step 2.
-
-Update the service account to include the annotation for workload identity:
-
-```bash
-kubectl annotate serviceaccount "${SERVICE_ACCOUNT_NAME}" \
-    -n "${SERVICE_ACCOUNT_NAMESPACE}" \
-    azure.workload.identity/client-id="${USER_ASSIGNED_CLIENT_ID}" \
-    --overwrite
-```
-
-## Step 4: Create the federated identity credential (Optional)
-
-> [!NOTE]
-> This step is **optional** and only required if you want to complete the workload identity setup.
-
-Create a federated identity credential between the managed identity, the service account issuer, and the subject:
+If you're using Azure OpenAI with Microsoft Entra ID (keyless authentication), you must also assign the "Cognitive Services User" or "Azure AI User" role on the Azure OpenAI resource:
 
 ```azurecli-interactive
-az identity federated-credential create \
-    --name "${FEDERATED_IDENTITY_CREDENTIAL_NAME}" \
-    --identity-name "${USER_ASSIGNED_IDENTITY_NAME}" \
-    --resource-group "${RESOURCE_GROUP}" \
-    --issuer "${AKS_OIDC_ISSUER}" \
-    --subject "system:serviceaccount:${SERVICE_ACCOUNT_NAMESPACE}:${SERVICE_ACCOUNT_NAME}" \
-    --audience api://AzureADTokenExchange
+# Option 1: Assign Cognitive Services User role
+az role assignment create \
+    --role "Cognitive Services User" \
+    --assignee $USER_ASSIGNED_CLIENT_ID \
+    --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.CognitiveServices/accounts/<openai-resource-name>
+
+# Option 2: Assign Azure AI User role
+az role assignment create \
+    --role "Azure AI User" \
+    --assignee $USER_ASSIGNED_CLIENT_ID \
+    --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.CognitiveServices/accounts/<openai-resource-name>
 ```
 
-> [!NOTE]
-> It takes a few seconds for the federated identity credential to propagate after it's added. If a token request is made immediately after adding the federated identity credential, the request might fail until the cache is refreshed. To avoid this issue, you can add a slight delay after adding the federated identity credential.
+Replace `<subscription-id>`, `<resource-group>`, and `<openai-resource-name>` with your actual values.
 
-## Verify the setup
-This section explains the commands to verify the service account annotation with the right workload identity
-### Check the service account annotation
+### Annotate the service account with workload identity (optional)
 
-Verify that the service account has the correct workload identity annotation:
+1. Update the service account to include the annotation for workload identity using the following command:
 
-```bash
-kubectl describe serviceaccount "${SERVICE_ACCOUNT_NAME}" -n "${SERVICE_ACCOUNT_NAMESPACE}"
-```
+    ```bash
+    kubectl annotate serviceaccount "${SERVICE_ACCOUNT_NAME}" \
+        --namespace "${SERVICE_ACCOUNT_NAMESPACE}" \
+        azure.workload.identity/client-id="${USER_ASSIGNED_CLIENT_ID}" \
+        --overwrite
+    ```
 
-You should see the annotation:
+1. Verify the service account has the correct workload identity annotation using the following command:
 
-```output
-Annotations:
-  azure.workload.identity/client-id: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-```
+    ```bash
+    kubectl describe serviceaccount "${SERVICE_ACCOUNT_NAME}" --namespace "${SERVICE_ACCOUNT_NAMESPACE}"
+    ```
 
-### Verify the federated identity credential
+### Create a federated identity credential (optional)
 
-List the federated identity credentials to confirm creation:
+1. Create a federated identity credential between the managed identity, the service account issuer, and the subject using the [`az identity federated-credential create`](/cli/azure/identity/federated-credential#az-identity-federated-credential-create) command.
 
-```azurecli-interactive
-az identity federated-credential list \
-    --identity-name "${USER_ASSIGNED_IDENTITY_NAME}" \
-    --resource-group "${RESOURCE_GROUP}"
-```
+    ```azurecli-interactive
+    az identity federated-credential create \
+        --name "${FEDERATED_IDENTITY_CREDENTIAL_NAME}" \
+        --identity-name "${USER_ASSIGNED_IDENTITY_NAME}" \
+        --resource-group "${RESOURCE_GROUP}" \
+        --issuer "${AKS_OIDC_ISSUER}" \
+        --subject "system:serviceaccount:${SERVICE_ACCOUNT_NAMESPACE}:${SERVICE_ACCOUNT_NAME}" \
+        --audience api://AzureADTokenExchange
+    ```
 
-## Next steps
+    > [!NOTE]
+    > It takes a few seconds for the federated identity credential to propagate after it's added. If a token request is made immediately after adding the federated identity credential, the request might fail until the cache is refreshed. To avoid this issue, you can add a slight delay after adding the federated identity credential.
 
-Now that you have completed the mandatory service account setup, you can proceed with the cluster mode installation:
+1. List the federated identity credentials to confirm creation using the [`az identity federated-credential list`](/cli/azure/identity/federated-credential#az-identity-federated-credential-list) command.
 
-1. Return to the [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./agentic-cli-for-aks-install.md) article
-1. Continue with the [Installation section](./agentic-cli-for-aks-install.md#installation), cluster mode tab
-1. When prompted during initialization, use the values you configured:
-   - **Service account name**: `${SERVICE_ACCOUNT_NAME}` (aks-mcp)
-   - **Namespace**: `${SERVICE_ACCOUNT_NAMESPACE}`
-   - **Managed identity client ID**: Only provide if you completed the optional workload identity setup (`${USER_ASSIGNED_CLIENT_ID}`)
-
-## Troubleshooting
-
-### Common issues and solutions
-
-- **Workload identity not enabled**: Ensure workload identity is enabled on your cluster using the verification commands above
-- **Permission denied errors**: Verify you have sufficient permissions to create managed identities and federated credentials
-- **Service account not found**: Ensure the service account was created in the correct namespace
-- **Annotation missing**: Re-run the annotation command if the workload identity client ID annotation is missing
-
-### Federated credential propagation delay
-
-If you encounter authentication issues immediately after setup, wait 1-2 minutes for the federated identity credential to propagate across Azure services.
+    ```azurecli-interactive
+    az identity federated-credential list \
+        --identity-name "${USER_ASSIGNED_IDENTITY_NAME}" \
+        --resource-group "${RESOURCE_GROUP}"
+    ```
 
 ## Related content
 
-- [Install and use the agentic CLI for Azure Kubernetes Service (AKS)](./agentic-cli-for-aks-install.md)
-- [Deploy and configure Microsoft Entra Workload ID on an Azure Kubernetes Service (AKS) cluster](/azure/aks/workload-identity-deploy-cluster)
+- [Install and use the agentic CLI for AKS](./agentic-cli-for-aks-install.md)
+- [Deploy and configure Microsoft Entra Workload ID on an AKS cluster](/azure/aks/workload-identity-deploy-cluster)
 - [Microsoft Entra Workload ID overview](/azure/aks/workload-identity-overview)

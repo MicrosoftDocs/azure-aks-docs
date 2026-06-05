@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 01/08/2026
+ms.date: 06/01/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -23,9 +23,9 @@ Fleet Manager is a regional resource. Support for region failover for disaster r
 
 ### How many clusters can I join to Fleet Manager?
 
-Fleet Manager (with or without a hub cluster) supports joining up to 200 Kubernetes clusters. Member clusters can be a mix of AKS and Arc-enabled Kubernetes.
+Fleet Manager (with or without a hub cluster) supports joining up to 1,000 Kubernetes clusters. Member clusters can be a mix of AKS and Arc-enabled Kubernetes.
 
-If you would like Fleet Manager to support more than 200 clusters, [add feedback](https://github.com/Azure/AKS/issues/5066).
+If you would like Fleet Manager to support more than 1,000 clusters, [add feedback](https://github.com/Azure/AKS/issues/5066).
 
 ### What AKS clusters can be joined as members?
 
@@ -49,9 +49,7 @@ az fleet member create \
 
 ### Relationship to Azure Arc-enabled Kubernetes
 
-Fleet Manager supports both AKS clusters and Arc-enabled Kubernetes clusters as members. Arc-enabled cluster support in preview.
-
-Track general availability of Arc-enabled cluster support via roadmap item [3410](https://github.com/Azure/AKS/issues/3410).
+Fleet Manager supports both Azure-hosted AKS clusters and Arc-enabled Kubernetes clusters as member clusters.
 
 ### Relationship to Azure Kubernetes Service clusters
 
@@ -147,7 +145,7 @@ The two most common reasons for long pending states are:
 
 * Member cluster maintenance windows: If a member cluster's maintenance window isn't open then the update run can enter a paused state. This pause can block completion of the update group or stage until the next maintenance window opens. If you wish to continue the update run, manually skip the cluster. If you skip the cluster, it's out of sync with the rest of the member clusters in the update run.
 
-* Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they'll also be unable to update.
+* Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they also can't update.
 
 ### My auto-upgrade run started, then immediately entered a pending state. Why?
 
@@ -171,7 +169,7 @@ If you want to skip the member cluster upgrades together with the gating approva
 
 ### How do I delete an approval?
 
-As in the previous question, if you want to proceed with an upgrade, you must grant the approval. If you're trying to clean up the underlying gate resource, you must delete the associated update run which deletes all gates linked to the update run.
+As in the previous question, if you want to proceed with an upgrade, you must grant the approval. If you're trying to clean up the underlying gate resource, you must delete the associated update run, which deletes all gates linked to the update run.
 
 ### Can I configure an after stage approval together with an after stage wait?
 
@@ -181,20 +179,32 @@ Yes. The after stage wait begins at the same time as the approval. Both must be 
 
 Yes. You can edit the existing strategy to include approvals. However, existing update runs that were created using the strategy aren't updated.
 
+### How can I control the order of cluster updates in an update run?
+
+Member labels and update groups are two different ways to select which clusters are included in each stage and group of your update strategy. Each member cluster can be assigned to one update group but can have multiple labels. Member labels (using `memberSelector`) offer more flexibility and support complex selection scenarios, so they're the recommended way to select fleet members for update strategies. For more information, see [Group clusters using member labels](./concepts-update-orchestration.md#group-clusters-using-member-labels-preview).
+
+### Do I need to specify groups if I set a member selector at the stage level?
+
+No. When you set `memberSelector` on a stage without defining any groups, all matching clusters are considered to as a single group. The stage's `maxConcurrency` controls how many clusters upgrade concurrently. You only need to define groups within a stage if you want to partition the matching members into parallel subsets with different concurrency settings.
+
+### What happens to update groups if I set a member selector at the group level?
+
+If you set a `memberSelector` at the group level, the group's `name` field is used only as a display identifier for status reporting and logging. The `memberSelector` takes precedence over the update group name when selecting clusters for the group.
+
 ## Cluster resource placement FAQs
 
 ### Can I select resources inside a namespace for propagation?
 
 Yes. Fleet Manager supports both cluster-scoped and namespace-scoped resource placement:
 
-* **ClusterResourcePlacement**: Propagates cluster-scoped resources and entire namespaces (including all their contents) to member clusters. For more information, see [Using ClusterResourcePlacement to deploy cluster-scoped resources](./concepts-resource-propagation.md).
+* **ClusterResourcePlacement**: Propagates cluster-scoped resources and entire namespaces (including all their contents) to member clusters. For more information, see [Using ClusterResourcePlacement to deploy cluster-scoped resources](./concepts-resource-placement.md).
 * **ResourcePlacement**: Provides fine-grained control to select and propagate specific namespace-scoped resources (such as ConfigMaps, Secrets, Deployments) within a namespace. For more information, see [Using ResourcePlacement to deploy namespace-scoped resources](./concepts-namespace-scoped-resource-propagation.md).
 
 ## Automated Deployments FAQs
 
 ### How does this compare to AKS Automated Deployments?
 
-AKS Automated Deployments supports only a single AKS cluster where the deployed workload runs. Fleet Manager's Automated Deployments stages the workload definitions on the Fleet Manager hub cluster, making them available for propagation to member clusters via [cluster resource placement](./concepts-resource-propagation.md). 
+AKS Automated Deployments supports only a single AKS cluster where the deployed workload runs. Fleet Manager's Automated Deployments stages the workload definitions on the Fleet Manager hub cluster, making them available for propagation to member clusters via [cluster resource placement](./concepts-resource-placement.md). 
 
 Fleet Manager Automated Deployments also requires the use of an existing Azure Container Registry (ACR) and Fleet Manager hub cluster namespace.
 

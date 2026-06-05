@@ -1,10 +1,10 @@
 ---
-title: Best practices for cluster security
-titleSuffix: Azure Kubernetes Service
-description: Learn the cluster operator best practices for how to manage cluster security and upgrades in Azure Kubernetes Service (AKS)
+title: Best Practices for Cluster Security in Azure Kubernetes Service (AKS)
+description: Learn cluster operator best practices for securing clusters and managing upgrades in Azure Kubernetes Service (AKS), including guidance for AKS Automatic and AKS Standard.
 ms.topic: best-practice
+ms.service: azure-kubernetes-service
 ms.custom: linux-related-content
-ms.date: 03/02/2023
+ms.date: 06/04/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 # Customer intent: As a cluster operator, I want to implement best practices for securing my Kubernetes clusters and managing upgrades, so that I can minimize security risks and ensure compliance with operational standards.
@@ -12,23 +12,43 @@ ms.author: davidsmatlak
 
 # Best practices for cluster security and upgrades in Azure Kubernetes Service (AKS)
 
+**Applies to**: :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
+
 As you manage clusters in Azure Kubernetes Service (AKS), workload and data security is a key consideration. When you run multi-tenant clusters using logical isolation, you especially need to secure resource and workload access. Minimize the risk of attack by applying the latest Kubernetes and node OS security updates.
 
 This article focuses on how to secure your AKS cluster. You learn how to:
 
 > [!div class="checklist"]
-> * Use Microsoft Entra ID and Kubernetes role-based access control (Kubernetes RBAC) to secure API server access.
-> * Secure container access to node resources.
-> * Upgrade an AKS cluster to the latest Kubernetes version.
-> * Keep nodes up to date and automatically apply security patches.
+>
+> - Use Microsoft Entra ID and Kubernetes role-based access control (Kubernetes RBAC) to secure API server access.
+> - Secure container access to node resources.
+> - Upgrade an AKS cluster to the latest Kubernetes version.
+> - Keep nodes up to date and automatically apply security patches.
 
 You can also read the best practices for [container image management][best-practices-container-image-management] and for [pod security][best-practices-pod-security].
+
+## AKS cluster mode security responsibilities
+
+AKS supports two cluster modes: [**AKS Automatic**](./intro-aks-automatic.md) and **AKS Standard**. Security objectives are the same in both modes, but implementation responsibility differs.
+
+AKS Automatic includes a hardened baseline with more preconfigured controls in supported configurations. AKS Standard provides broader direct configuration control, which increases operator responsibility for baseline setup and ongoing operations.
+
+| Area | AKS Automatic | AKS Standard |
+| ---- | ------------- | ------------ |
+| Cluster authentication and authorization baseline | More preconfigured defaults in supported configurations | Commonly configured explicitly by operators |
+| API server network hardening | More preconfigured baseline behavior in supported configurations | Explicit hardening choices by operators |
+| Policy and baseline security controls | More preconfigured defaults in supported configurations | Explicit policy enablement and mode selection |
+| Image hygiene controls | Baseline controls available in supported configurations | Explicit enablement and lifecycle ownership |
+| System node pool operations | More service-managed behavior | More operator-managed behavior |
+| Upgrade ownership | More managed upgrade defaults | Operator-selected strategy and rollout governance |
 
 ## Enable threat protection
 
 > **Best practice guidance**
 >
 > You can enable [Defender for Containers](/azure/defender-for-cloud/defender-for-containers-introduction) to help secure your containers. Defender for Containers can assess cluster configurations and provide security recommendations, run vulnerability scans, and provide real-time protection and alerting for Kubernetes nodes and clusters.
+
+This guidance applies to both modes. Even when AKS Automatic provides preconfigured security defaults, threat protection onboarding and alert-response workflows remain operational responsibilities for your team.
 
 ## Secure access to the API server and cluster nodes
 
@@ -44,9 +64,7 @@ Microsoft Entra ID provides an enterprise-ready identity management solution tha
 
 Using Kubernetes RBAC and Microsoft Entra ID-integration, you can secure the API server and provide the minimum permissions required to a scoped resource set, like a single namespace. You can grant different Microsoft Entra users or groups different Kubernetes roles. With granular permissions, you can restrict access to the API server and provide a clear audit trail of actions performed.
 
-The recommended best practice is to use *groups* to provide access to files and folders instead of individual identities. For example, use a Microsoft Entra ID *group* membership to bind users to Kubernetes roles rather than individual *users*. As a user's group membership changes, their access permissions on the AKS cluster change accordingly.
-
-Meanwhile, let's say you bind the individual user directly to a role and their job function changes. While the Microsoft Entra group memberships update, their permissions on the AKS cluster would not. In this scenario, the user ends up with more permissions than they require.
+In AKS Automatic, authorization and security baselines are more preconfigured in supported configurations, so operators focus on validation, governance, and exception handling. In AKS Standard, operators commonly configure these controls directly and maintain their lifecycle posture.
 
 For more information about Microsoft Entra integration, Kubernetes RBAC, and Azure RBAC, see [Best practices for authentication and authorization in AKS][aks-best-practices-identity].
 
@@ -78,6 +96,8 @@ spec:
         - 169.254.169.254/32
 ```
 
+In AKS Standard, make sure your selected network model and policy engine support this policy path. In AKS Automatic, apply equivalent namespace-level egress restrictions where supported in your cluster configuration.
+
 ## Secure container access to resources
 
 > **Best practice guidance**
@@ -88,7 +108,9 @@ In the same way that you should grant users or groups the minimum privileges req
 
 Using user-namespaces, you improve the host isolation and limit the lateral movement in case of container breakouts. These improvements are significant whether the pod is running as root or not.
 
-For even more granular control of container actions, you can also use built-in Linux security features such as *AppArmor* and *seccomp*.
+For even more granular control of container actions, you can also use built-in Linux security features such as _AppArmor_ and _seccomp_.
+
+Even when AKS Automatic provides hardened defaults, workload-level security controls remain application and platform team responsibilities.
 
 For more information, see [Secure container access to resources][secure-container-access].
 
@@ -100,30 +122,32 @@ For more information, see [Secure container access to resources][secure-containe
 
 Kubernetes releases new features at a quicker pace than more traditional infrastructure platforms. Kubernetes updates include:
 
-* New features
-* Bug or security fixes
+- New features
+- Bug or security fixes
 
-New features typically move through *alpha* and *beta* status before they become *stable*. Once stable, are generally available and recommended for production use. Kubernetes new feature release cycle allows you to update Kubernetes without regularly encountering breaking changes or adjusting your deployments and templates.
+New features typically move through _alpha_ and _beta_ status before they become _stable_. Once stable, are generally available and recommended for production use. Kubernetes new feature release cycle allows you to update Kubernetes without regularly encountering breaking changes or adjusting your deployments and templates.
 
 AKS supports three minor versions of Kubernetes. Once a new minor patch version is introduced, the oldest minor version and patch releases supported are retired. Minor Kubernetes updates happen on a periodic basis. To stay within support, ensure you have a governance process to check for necessary upgrades. For more information, see [Supported Kubernetes versions AKS][aks-supported-versions].
 
+In AKS Automatic, upgrade-related behavior is more preconfigured in supported configurations, and operators should focus on workload readiness validation and release governance. In AKS Standard, operators choose and govern upgrade strategy and rollout timing more directly.
+
 ### [Azure CLI](#tab/azure-cli)
 
-To check the versions that are available for your cluster, use the [az aks get-upgrades][az-aks-get-upgrades] command as shown in the following example:
+To check the versions that are available for your cluster, use the [`az aks get-upgrades`][az-aks-get-upgrades] command as shown in the following example:
 
 ```azurecli-interactive
 az aks get-upgrades --resource-group myResourceGroup --name myAKSCluster --output table
 ```
 
-You can then upgrade your AKS cluster using the [az aks upgrade][az-aks-upgrade] command. The upgrade process safely:
+You can then upgrade your AKS cluster using the [`az aks upgrade`][az-aks-upgrade] command. The upgrade process safely:
 
-* Cordons and drains one node at a time.
-* Schedules pods on remaining nodes.
-* Deploys a new node running the latest OS and Kubernetes versions.
+- Cordons and drains one node at a time.
+- Schedules pods on remaining nodes.
+- Deploys a new node running the latest OS and Kubernetes versions.
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-To check the versions that are available for your cluster, use the [Get-AzAksUpgradeProfile][get-azaksupgradeprofile] cmdlet as shown in the following example:
+To check the versions that are available for your cluster, use the [`Get-AzAksUpgradeProfile`][get-azaksupgradeprofile] cmdlet as shown in the following example:
 
 ```azurepowershell-interactive
 Get-AzAksUpgradeProfile -ResourceGroupName myResourceGroup -ClusterName myAKSCluster |
@@ -131,38 +155,26 @@ Select-Object -Property Name, ControlPlaneProfileKubernetesVersion -ExpandProper
 Format-Table -Property *
 ```
 
-You can then upgrade your AKS cluster using the [Set-AzAksCluster][set-azakscluster] command. The upgrade process safely:
+You can then upgrade your AKS cluster using the [`Set-AzAksCluster`][set-azakscluster] cmdlet. The upgrade process safely:
 
-* Cordons and drains one node at a time.
-* Schedules pods on remaining nodes.
-* Deploys a new node running the latest OS and Kubernetes versions.
+- Cordons and drains one node at a time.
+- Schedules pods on remaining nodes.
+- Deploys a new node running the latest OS and Kubernetes versions.
 
 ---
 
->[!IMPORTANT]
+> [!IMPORTANT]
 > Test new minor versions in a dev test environment and validate that your workload remains healthy with the new Kubernetes version.
 >
-> Kubernetes may deprecate APIs (like in version 1.16) that your workloads rely on. When bringing new versions into production, consider using [multiple node pools on separate versions](create-node-pools.md) and upgrade individual pools one at a time to progressively roll the update across a cluster. If running multiple clusters, upgrade one cluster at a time to progressively monitor for impact or changes.
->
-> ### [Azure CLI](#tab/azure-cli)
->
-> ```azurecli-interactive
-> az aks upgrade --resource-group myResourceGroup --name myAKSCluster --kubernetes-version KUBERNETES_VERSION
-> ```
->
-> ### [Azure PowerShell](#tab/azure-powershell)
->
-> ```azurepowershell-interactive
-> Set-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster -KubernetesVersion <KUBERNETES_VERSION>
-> ```
->
-> ---
+> Kubernetes might deprecate APIs (like in version 1.16) that your workloads rely on. When bringing new versions into production, consider using [multiple node pools on separate versions](create-node-pools.md) and upgrade individual pools one at a time to progressively roll the update across a cluster. If running multiple clusters, upgrade one cluster at a time to progressively monitor for impact or changes.
 
 For more information about upgrades in AKS, see [Supported Kubernetes versions in AKS][aks-supported-versions] and [Upgrade an AKS cluster][aks-upgrade].
 
 ## Process Linux node updates
 
 Each evening, Linux nodes in AKS get security patches through their distro update channel. This behavior is automatically configured as the nodes are deployed in an AKS cluster. To minimize disruption and potential impact to running workloads, nodes are not automatically rebooted if a security patch or kernel update requires it. For more information about how to handle node reboots, see [Apply security and kernel updates to nodes in AKS][aks-kured].
+
+In AKS Automatic, node update behavior is more preconfigured in supported configurations. In AKS Standard, operators commonly define patch and reboot governance with explicit operational controls.
 
 ### Node image upgrades
 
@@ -172,12 +184,12 @@ Unattended upgrades apply updates to the Linux node OS, but the image used to cr
 
 For Windows Server nodes, regularly perform a node image upgrade operation to safely cordon and drain pods and deploy updated nodes.
 
-<!-- EXTERNAL LINKS -->
-[k8s-apparmor]: https://kubernetes.io/docs/tutorials/clusters/apparmor/
-[seccomp]: https://kubernetes.io/docs/reference/node/seccomp/
-[kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
-[kubectl-exec]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec
-[kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
+## Related content
+
+For more information on AKS and securing your AKS cluster, see the following articles:
+
+- [AKS Automatic and AKS Standard feature comparison](./intro-aks-automatic.md#aks-automatic-and-standard-feature-comparison)
+- [Best practices for authentication and authorization in AKS][aks-best-practices-identity]
 
 <!-- INTERNAL LINKS -->
 [az-aks-get-upgrades]: /cli/azure/aks#az-aks-get-upgrades
@@ -188,12 +200,7 @@ For Windows Server nodes, regularly perform a node image upgrade operation to sa
 [aks-upgrade]: upgrade-cluster.md
 [aks-best-practices-identity]: concepts-identity.md
 [aks-kured]: node-updates-kured.md
-[aks-aad]: ./azure-ad-integration-cli.md
 [best-practices-container-image-management]: operator-best-practices-container-image-management.md
 [best-practices-pod-security]: developer-best-practices-pod-security.md
-[pod-security-contexts]: developer-best-practices-pod-security.md#secure-pod-access-to-resources
-[aks-ssh]: ssh.md
-[security-center-aks]: ../defender-for-cloud/defender-for-kubernetes-introduction.md
 [node-image-upgrade]: node-image-upgrade.md
-[workload-identity-overview]: workload-identity-overview.md
 [secure-container-access]: secure-container-access.md

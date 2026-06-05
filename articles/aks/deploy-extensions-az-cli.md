@@ -20,7 +20,7 @@ Before you begin, read about [cluster extensions](cluster-extensions.md).
 
 ## Prerequisites
 
-* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * The `Microsoft.ContainerService` and `Microsoft.KubernetesConfiguration` resource providers must be registered on your subscription. To register these providers, run the following command:
 
   ```azurecli-interactive

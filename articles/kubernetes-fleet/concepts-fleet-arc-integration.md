@@ -1,7 +1,7 @@
 ---
 title: "Azure Kubernetes Fleet Manager with Arc-enabled Kubernetes clusters"
 description: This article provides a conceptual overview of Azure Kubernetes Fleet Manager integration with Azure Arc-enabled Kubernetes clusters.
-ms.date: 02/13/2026
+ms.date: 06/03/2026
 author: ealianis
 ms.author: sehobbs
 ms.service: azure-kubernetes-fleet-manager
@@ -9,20 +9,19 @@ ms.topic: concept-article
 # Customer intent: "As a platform administrator managing hybrid and multicloud Kubernetes infrastructure, I want to understand how Azure Kubernetes Fleet Manager integrates with Arc-enabled Kubernetes clusters, so that I can centrally manage my entire fleet regardless of where clusters are running."
 ---
 
-# Azure Kubernetes Fleet Manager with Arc-enabled Kubernetes clusters (preview)
+# Azure Kubernetes Fleet Manager with Arc-enabled Kubernetes clusters
+
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 This article provides a conceptual overview of how Azure Kubernetes Fleet Manager integrates with Azure Arc-enabled Kubernetes clusters to enable unified multi-cluster management across hybrid and multicloud environments.
 
 If you're unfamiliar with Azure Kubernetes Fleet Manager, start with the [Azure Kubernetes Fleet Manager overview](./overview.md).
 
-> [!IMPORTANT]
-> Azure Kubernetes Fleet Manager's support for Arc-enabled Kubernetes clusters is currently in public preview.
-
 ## What does the integration solve?
 
 The integration between Azure Kubernetes Fleet Manager and Azure Arc-enabled Kubernetes clusters extends centralized multi-cluster resource management beyond Azure-native AKS clusters, including many of the most popular Kubernetes distributions running anywhere:
 
-- **Supported distributions**: EKS (Amazon Elastic Kubernetes Service), GKE (Google Kubernetes Engine), K3s (Lightweight Kubernetes), OCP (Red Hat OpenShift), and Rancher (RKE).
+- **Supported distributions**: [AKS on bare metal][aks-bare-metal] (preview), EKS (Amazon Elastic Kubernetes Service), GKE (Google Kubernetes Engine), K3s (Lightweight Kubernetes), OCP (Red Hat OpenShift), and Rancher (RKE).
 
 ## Key benefits and capabilities
 
@@ -62,7 +61,7 @@ To begin using Fleet Manager with Arc-enabled Kubernetes clusters:
 
 1. **Connect clusters to Azure Arc**: Connect your Kubernetes clusters to Azure Arc. For instructions, see [Connect an existing Kubernetes cluster to Azure Arc](/azure/azure-arc/kubernetes/quickstart-connect-cluster).
 2. **Create or upgrade your fleet**: Create (or upgrade) a fleet resource with a hub cluster, then join your Arc-enabled clusters. For instructions, see [Create a fleet and join member clusters](./quickstart-create-fleet-and-members.md).
-3. **Configure workload placement**: Create `ClusterResourcePlacement` resources for your applications. For guidance, see [Kubernetes resource propagation concepts](./concepts-resource-propagation.md).
+3. **Configure workload placement**: Create `ClusterResourcePlacement` resources for your applications. For guidance, see [Kubernetes resource propagation concepts](./concepts-resource-placement.md).
 
 ## Public region limitation
 
@@ -76,3 +75,4 @@ You can track the status of Azure Arc Gateway via its [official documentation][a
 
 <!-- LINKS -->
 [azure-arc-gateway]: /azure/azure-arc/kubernetes/arc-gateway-simplify-networking
+[aks-bare-metal]: https://aka.ms/aks-edge-baremetal

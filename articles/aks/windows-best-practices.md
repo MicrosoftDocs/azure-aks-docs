@@ -6,7 +6,7 @@ ms.custom: linux-related-content
 ms.author: schaffererin
 author: schaffererin
 ms.topic: best-practice
-ms.date: 10/27/2023
+ms.date: 06/02/2026
 # Customer intent: As a Kubernetes administrator managing Windows containers, I want to implement best practices for Windows workloads in AKS, so that I can ensure optimal performance, security, and compliance in my containerized applications.
 ---
 
@@ -35,13 +35,13 @@ You might want to containerize existing applications and run them using Windows 
 
 > **Best practice guidance**
 >
-> Windows Server 2022 provides improved security and performance and is the recommended OS for Windows node pools on AKS. AKS uses Windows Server 2022 as the host OS version and only supports process isolation.
+> Windows Server 2025 provides improved security and performance and is the recommended OS for Windows node pools on AKS.
 
 AKS supports two options for the Windows Server operating system: Long Term Servicing Channel Releases (LTSC) and Windows Server Annual Channel for Containers.
 
-1. AKS supports Long Term Servicing Channel Releases (LTSC), including Windows Server 2025 (preview), Windows Server 2022, and Windows Server 2019. This channel is released every three years and is supported for five years. Customers using Long Term Support (LTS) should use Windows Server 2022.
+1. AKS supports Long Term Servicing Channel Releases (LTSC), including Windows Server 2025 and Windows Server 2022. This channel is released every three years and is supported for five years. Customers using Long Term Support (LTS) should use Windows Server 2025.
 
-    AKS uses Windows Server 2019 and Windows Server 2022 as the host OS versions and only supports process isolation. AKS doesn't support container images built by other versions of Windows Server. For more information, see [Windows container version compatibility](/virtualization/windowscontainers/deploy-containers/version-compatibility). Windows Server 2022 is the default OS for Kubernetes version 1.25 and later.
+    AKS uses Windows Server 2025 and Windows Server 2022 as the host OS version and only supports process isolation. AKS doesn't support container images built by other versions of Windows Server. For more information, see [Windows container version compatibility](/virtualization/windowscontainers/deploy-containers/version-compatibility). Windows Server 2022 is the default OS for Kubernetes version 1.25 and later.
 
     [!INCLUDE [windows server 2019 retirement](./includes/windows-server-2019-retirement.md)]
 
@@ -50,6 +50,8 @@ AKS supports two options for the Windows Server operating system: Long Term Serv
 1. AKS supports [Windows Server Annual Channel for Containers](https://techcommunity.microsoft.com/t5/windows-server-news-and-best/windows-server-annual-channel-for-containers/ba-p/3866248) (preview). This channel is released annually and is supported for two years. This channel is beneficial for customers requiring increased innovation cycles and portability. The portability functionality enables the Windows Server 2022-based container image OS to run on newer versions of Windows Server host OS, such as the new annual channel release.
 
     Windows Annual Channel versions are based on the Kubernetes version of your node pool. To upgrade from one Annual Channel version to the next, [upgrade to a Kubernetes version](./upgrade-aks-cluster.md) that supports the next Annual Channel version. For more information, see [Windows Server Annual Channel for Containers on AKS][use-windows-annual].
+
+     [!INCLUDE [windows annual channel retirement](./includes/windows-annual-channel-retirement.md)]
 
 ## Monitoring
 
@@ -115,7 +117,7 @@ You can stay up to date with the availability of new monthly releases using the 
 
 ### Windows node OS version upgrades
 
-Windows has a release cadence for new versions of the OS, including Windows Server 2025 (preview), Windows Server 2022, and Windows Server 2019. When upgrading your Windows node OS version, ensure the Windows container image version matches the Windows container host version and the node pools have only one version of Windows Server.
+Windows has a release cadence for new versions of the OS, including Windows Server 2025 and Windows Server 2022. When upgrading your Windows node OS version, ensure the Windows container image version matches the Windows container host version and the node pools have only one version of Windows Server.
 
 To upgrade the Windows node OS version, you need to complete the following steps:
 
@@ -124,11 +126,6 @@ To upgrade the Windows node OS version, you need to complete the following steps
 1. Decommission the old node pool.
 
 For more information, see [Upgrade Windows Server workloads on AKS][upgrade-windows-workloads-aks].
-
-> [!NOTE]
-> Windows announced a new [Windows Server Annual Channel for Containers](https://techcommunity.microsoft.com/t5/windows-server-news-and-best/windows-server-annual-channel-for-containers/ba-p/3866248) that supports portability and mixed versions of Windows nodes and containers. This feature isn't yet supported in AKS.
->
-> To track AKS feature plans, see the [Public AKS roadmap](https://github.com/Azure/AKS/projects/1#card-90806240).
 
 ## Next steps
 

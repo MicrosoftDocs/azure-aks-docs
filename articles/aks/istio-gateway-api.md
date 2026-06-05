@@ -1,5 +1,5 @@
 ---
-title: Kubernetes Gateway API Ingress for Istio Service Mesh Add-on for Azure Kubernetes Service (AKS) (preview)
+title: Kubernetes Gateway API Ingress for Istio Service Mesh Add-on for Azure Kubernetes Service (AKS)
 description: Configure ingresses for the Istio service mesh add-on for AKS using the Kubernetes Gateway API.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -10,16 +10,16 @@ ms.reviewer: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to deploy Kubernetes Gateway API-based ingress gateways for the Istio service mesh on my cluster, so that I can efficiently manage ingress application traffic routing."
 ---
 
-# Configure Istio ingress with the Kubernetes Gateway API for Azure Kubernetes Service (AKS) (preview)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+# Configure Istio ingress with the Kubernetes Gateway API for Azure Kubernetes Service (AKS)
 
 The Istio service mesh add-on supports both [Istio's own ingress traffic management API][istio-deploy-ingress] and the Kubernetes Gateway API for ingress traffic management. You can use the Istio Gateway API [automated deployment model][istio-gateway-auto-deployment] or the [manual deployment model][istio-gateway-manual-deployment]. This article describes how to configure ingress traffic management for the Istio service mesh add-on using the Kubernetes Gateway API with the [automated deployment model][istio-gateway-auto-deployment].
 
 ## Limitations and considerations
 
-- Using the Kubernetes Gateway API for [egress traffic management][istio-deploy-egress] with the Istio service mesh add-on is only supported for the [manual deployment model][istio-gateway-manual-deployment].
-- ConfigMap customizations for `Gateway` resources must fall within the Resource customization allow list. Fields not on the allow list are disallowed and blocked via add-on managed webhooks. For more information, see the [Istio service mesh add-on support policy][istio-support-policy].
+* The Istio service mesh add-on and the [application routing Gateway API implementation][app-routing-gateway-api] cannot be enabled simultaneously. You must disable one first and enable the other in a separate operation.
+* Using the Kubernetes Gateway API for [egress traffic management][istio-deploy-egress] with the Istio add-on is only supported for the [manual deployment model][istio-gateway-manual-deployment].
+* ConfigMap customizations for `Gateway` resources must fall within the [resource customization allow list](#configmap-customizations). Fields not on the allow list are disallowed and blocked via add-on managed webhooks. See the [Istio add-on support policy][istio-support-policy] for more information on `allowed`, `blocked`, and `supported` features.
+* Configuring HTTPS ingress access to HTTPS services - i.e. Server Name Indication (SNI) Passthrough - via the `TLSRoute` resource is not supported on Istio service mesh add-on revision `asm-1-29`. Support for the `TLSRoute` resource will be available for Istio service mesh add-on revision `asm-1-30` and onwards.
 
 ## Prerequisites
 
@@ -39,10 +39,11 @@ Set the following environment variables to use throughout this article:
 
 ## Deploy sample application
 
-- Deploy the sample `httpbin` application in the `default` namespace using the [`kubectl apply`][kubectl-apply] command.
+- First, deploy the sample `httpbin` application in the `default` namespace using the [`kubectl apply`][kubectl-apply] command.
 
     ```bash
-    kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.26/samples/httpbin/httpbin.yaml
+    export ISTIO_RELEASE="release-1.27"
+    kubectl apply -f https://raw.githubusercontent.com/istio/istio/$ISTIO_RELEASE/samples/httpbin/httpbin.yaml
     ```
 
 ## Create Kubernetes Gateway and HTTPRoute
@@ -70,8 +71,7 @@ The example manifest creates an external ingress load balancer service that's ac
     apiVersion: gateway.networking.k8s.io/v1
     kind: HTTPRoute
     metadata:
-      name: http
-      namespace: default
+      name: httpbin
     spec:
       parentRefs:
       - name: httpbin-gateway
@@ -86,6 +86,9 @@ The example manifest creates an external ingress load balancer service that's ac
           port: 8000
     EOF
     ```
+
+    > [!NOTE]
+    > By default, the Istio control plane will append the `GatewayClass` name `istio` to the name of the resources that it provisions for the `Gateway`. You can annotate your `Gateway` resource with `gateway.istio.io/name-override` to override the name of the provisioned resources. The resource names must be less than `63` characters and must be a valid DNS name.
 
     > [!NOTE]
     > If you're performing a [minor revision upgrade][istio-upgrade] and have two Istio service mesh add-on revisions installed on your cluster simultaneously, the control plane for the higher minor revision takes ownership of the `Gateways` by default. You can add the `istio.io/rev` label to the `Gateway` to control which control plane revision owns it. If you add the revision label, make sure that you update it accordingly to the appropriate control plane revision before rolling back or completing the upgrade operation.
@@ -140,7 +143,7 @@ The example manifest creates an external ingress load balancer service that's ac
 
 ## Secure Istio ingress traffic with the Kubernetes Gateway API
 
-The Istio service mesh add-on supports syncing secrets from Azure Key Vault for securing Gateway API-based ingress traffic with [Transport Layer Security (TLS) termination][istio-tls-termination] or [Server Name Indication (SNI) passthrough][istio-sni-passthrough]. In the following sections, you sync secrets from Azure Key Vault onto your AKS cluster using the [Azure Key Vault provider for Secrets Store Container Storage Interface (CSI) Driver add-on][aks-csi-driver] and terminate TLS at the ingress gateway.
+The Istio service mesh add-on supports syncing secrets from Azure Key Vault for securing Gateway API-based ingress traffic with [Transport Layer Security (TLS) termination][istio-tls-termination]. In the following sections, you sync secrets from Azure Key Vault onto your AKS cluster using the [Azure Key Vault provider for Secrets Store Container Storage Interface (CSI) Driver add-on][aks-csi-driver] and terminate TLS at the ingress gateway.
 
 ## Create client/server certificates and keys
 
@@ -229,7 +232,7 @@ The Istio service mesh add-on supports syncing secrets from Azure Key Vault for 
     ```
 
     > [!NOTE]
-    > Alternatively, to reference a certificate object type directly from Azure Key Vault, use the following manifest to deploy SecretProviderClass. In this example, `test-httpbin-cert-pxf` is the name of the certificate object in Azure Key Vault.
+    > Alternatively, to reference a certificate object type directly from Azure Key Vault, use the following manifest to deploy SecretProviderClass. In this example, `test-httpbin-cert-pfx` is the name of the certificate object in Azure Key Vault.
     >
     > ```bash
     > cat <<EOF | kubectl apply -f -
@@ -400,7 +403,7 @@ The Istio service mesh add-on supports syncing secrets from Azure Key Vault for 
 
 ## Annotation customizations
 
-You can add annotations under `spec.infrastructure.annotations` to [configure load balancer settings][azure-aks-load-balancer-annotations] for the `Gateway`. For instance, to create an internal load balancer attached to a specific subnet, you can create a `Gateway` with the following annotations:
+You can add annotations under `spec.infrastructure.annotations` to [configure load balancer settings][azure-aks-load-balancer-annotations] for the `Gateway`. For instance, to create an [internal load balancer][azure-internal-lb] attached to a specific subnet, you can create a `Gateway` with the following annotations:
 
 ```yaml
 spec:
@@ -420,7 +423,10 @@ The Istio service mesh add-on supports [customizations of the resources][istio-g
 - Horizontal Pod Autoscaler (HPA)
 - Pod Disruption Budget (PDB)
 
-The [default settings for these resources][istio-gateway-class-cm] are set in the `istio-gateway-class-defaults` ConfigMap in the `aks-istio-system` namespace. This ConfigMap must have the `gateway.istio.io/defaults-for-class` label set to `istio` for the customizations to take effect for all `Gateways` with `spec.gatewayClassName: istio`. The `GatewayClass`-level ConfigMap is installed by default in the `aks-istio-system` namespace when the [Managed Gateway API installation][managed-gateway-addon] is enabled. It could take up to five minutes for the `istio-gateway-class-defaults` ConfigMap to get deployed after installing the Managed Gateway API CRDs.
+The [default settings for these resources][istio-gateway-class-cm] are set in the `istio-gateway-class-defaults` ConfigMap in the `aks-istio-system` namespace, which is provisioned by AKS when the Managed Gateway API CRDs are enabled along with the Istio add-on. This ConfigMap must have the `gateway.istio.io/defaults-for-class` label set to `istio` for the customizations to take effect for all `Gateways` with `spec.gatewayClassName: istio`. The `GatewayClass`-level ConfigMap is installed by default in the `aks-istio-system` namespace when the [Managed Gateway API installation][managed-gateway-addon] is enabled. It could take up to five minutes for the `istio-gateway-class-defaults` ConfigMap to get deployed after installing the Managed Gateway API CRDs.
+
+> [!NOTE]
+> The `istio-gateway-class-defaults` ConfigMap is provisioned and reconciled by AKS when the Managed Gateway API CRDs and the Istio add-on are enabled together. If you previously created the `istio-gateway-class-defaults` ConfigMap in the `aks-istio-system` namespace yourself, you must delete the self-managed ConfigMap instance prior to enabling the Managed Gateway API CRDs to avoid conflicts with reconciliation of the AKS-managed ConfigMap.
 
 ```bash
 kubectl get configmap istio-gateway-class-defaults -n aks-istio-system -o yaml
@@ -447,6 +453,7 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 |------------|----------|
 | `metadata.labels` | Deployment labels |
 | `metadata.annotations` | Deployment annotations |
+| `spec.minReadySeconds` | Deployment readiness check |
 | `spec.replicas` | Deployment replica count |
 | `spec.template.metadata.labels` | Pod labels |
 | `spec.template.metadata.annotations` | Pod annotations |
@@ -465,6 +472,7 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 | `spec.template.spec.nodeName` | Pod scheduling |
 | `spec.template.spec.tolerations` | Pod scheduling |
 | `spec.template.spec.topologySpreadConstraints` | Pod scheduling |
+| `spec.template.spec.terminationGracePeriodSeconds` | Pod lifecycle |
 
 ## Service customization allow list fields
 
@@ -477,6 +485,7 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 | `spec.loadBalancerClass` | Service load balancer settings |
 | `spec.externalTrafficPolicy` | Service traffic policy |
 | `spec.internalTrafficPolicy` | Service traffic policy |
+| `spec.healthCheckNodePort` | Service health probe settings |
 
 ## HorizontalPodAutoscaler (HPA) customization allow list fields
 
@@ -626,6 +635,29 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
     updated-per-gateway
     ```
 
+## Enable access logs for the Gateway pods
+
+`Telemetry` CRDs are installed automatically with the Istio add-on. You can use the `Telemetry API` to configure access logging for `Gateway` pods.
+
+Create the resource in the `aks-istio-system` namespace to enable access logs for all `Gateway` pods in the mesh, or in a specific namespace to enable access logs only for `Gateway` pods in that namespace.
+
+The following example shows a `Telemetry` resource that enables `Gateway` access logging:
+
+```yaml
+apiVersion: telemetry.istio.io/v1
+kind: Telemetry
+metadata:
+  name: mesh-default
+  namespace: aks-istio-system
+spec:
+  accessLogging:
+  - providers:
+    - name: envoy
+```
+
+  > [!NOTE]
+  >  The above manifest enables access logging across the entire mesh, both for `Gateway` pods as well as sidecar proxies injected by Istio. Use selectors to target specific pods. Refer to the [Istio add-on documentation][istio-telemetry] for more details on how to configure access logging with the `Telemetry API`.
+
 ## Clean up resources
 
 If you no longer need the resources created in this article, you can delete them to avoid incurring any charges.
@@ -656,7 +688,10 @@ If you no longer need the resources created in this article, you can delete them
 - [Deploy egress gateways for the Istio service mesh add-on][istio-deploy-egress]
 
 <!---LINKS--->
+[app-routing-gateway-api]: app-routing-gateway-api.md
+[istio-telemetry]: istio-telemetry.md
 [aks-csi-driver]: ./csi-secrets-store-driver.md
+[azure-internal-lb]: ./internal-lb.md
 [istio-deploy-addon]: istio-deploy-addon.md
 [istio-deploy-egress]: istio-deploy-egress.md
 [istio-deploy-ingress]: istio-deploy-ingress.md
@@ -670,7 +705,6 @@ If you no longer need the resources created in this article, you can delete them
 [istio-gateway-manual-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#manual-deployment
 [istio-gateway-class-cm]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#gatewayclass-defaults
 [istio-tls-termination]: https://istio.io/latest/docs/tasks/traffic-management/ingress/secure-ingress/
-[istio-sni-passthrough]: https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-sni-passthrough/
 [pdb-troubleshooting]: /troubleshoot/azure/azure-kubernetes/create-upgrade-delete/error-code-poddrainfailure
 [akv-addon]: ./csi-secrets-store-driver.md
 [akv-create]: /cli/azure/keyvault#az-keyvault-create

@@ -254,6 +254,10 @@ Ephemeral OS disks can provide dynamic IOPS and throughput for your application,
 
 [Azure Premium SSD v2](/azure/virtual-machines/disks-types#premium-ssd-v2) is designed for IO-intense enterprise workloads that require sub-millisecond disk latencies and high IOPS and throughput at a low cost. It's suited for a broad range of workloads, such as SQL server, Oracle, MariaDB, SAP, Cassandra, MongoDB, big data/analytics, gaming, and more. This disk type is the highest performing option currently available for persistent volumes.
 
+### DNS resolution performance
+
+DNS resolution latency directly affects application response times, especially for microservices architectures where services frequently resolve each other's names. Enable [LocalDNS](./localdns-custom.md) on your node pools to deploy a per-node DNS proxy that resolves queries locally, reducing network hops and avoiding `conntrack` table pressure. LocalDNS also supports cached stale responses during upstream DNS outages, which helps maintain workload connectivity. For more information, see [DNS resolution in AKS](./dns-concepts.md).
+
 ### Pod scheduling
 
 The memory and CPU resources allocated to a VM have a direct impact on the performance of the pods running on the VM. When a pod is created, it's assigned a certain amount of memory and CPU resources, which are used to run the application. If the VM doesn't have enough memory or CPU resources available, it can cause the pods to slow down or even crash. If the VM has too much memory or CPU resources available, it can cause the pods to run inefficiently, wasting resources and increasing costs. We recommend monitoring the total pod requests across your workloads against the total allocatable resources for best scheduling predictability and performance. You can also set the maximum pods per node based on your capacity planning using `--max-pods`.

@@ -107,6 +107,7 @@ AKS performs pre-upgrade validations to ensure cluster health:
 * **Quota:** Confirms enough quota for surge nodes.
 * **Subnet:** Verifies sufficient IP addresses.
 * **Certificates/service principals:** Detects expired credentials.
+* **Managed Resource Lock Check:** Checks for resource locks applied to the managed cluster resource group.
 
 These checks help to minimize upgrade failures and provide early visibility into issues.
 
@@ -118,8 +119,8 @@ If your cluster is limited by product tier or regional capacity, upgrades might 
 
 #### Recommendations to prevent or resolve
 
-* Use `maxUnavailable` to upgrade by using existing nodes instead of surging new ones. For more information, see [Customize unavailable nodes during upgrade](./upgrade-aks-cluster.md#customize-unavailable-nodes-during-upgrade).
-* Lower `maxSurge` to reduce extra capacity needs. For more information, see [Customize node surge upgrade](./upgrade-aks-cluster.md#customize-node-surge-upgrade).
+* Use `maxUnavailable` to upgrade by using existing nodes instead of surging new ones. For more information, see [Customize unavailable nodes during upgrade](./upgrade-aks-node-pools-rolling.md#customize-unavailable-nodes).
+* Lower `maxSurge` to reduce extra capacity needs. For more information, see [Customize node surge upgrade](./upgrade-aks-node-pools-rolling.md#customize-node-surge).
 * For security-only updates, use security patch reimages that don't require surge nodes. For more information, see [Apply security and kernel updates to Linux nodes in Azure Kubernetes Service](./node-updates-kured.md).
 
 ### Scenario 2: Node drain failures and PDBs
@@ -145,13 +146,14 @@ az aks upgrade \
   --resource-group $RESOURCE_GROUP_NAME \
   --kubernetes-version $KUBERNETES_VERSION \
   --enable-force-upgrade \
-  --upgrade-override-until 2023-10-01T13:00:00Z
+  --upgrade-override-until yyyy-mm-ddT13:00:00Z
 ```
 
 > [!NOTE]
+>
 > - The `upgrade-override-until` parameter defines when validation bypass ends (must be a future date/time)
-> - If not specified, the window defaults to 3 days from current time
-> - The 'Z' indicates UTC/GMT time zone
+> - If not specified, the window defaults to three days from current time
+> - The `Z` indicates UTC/GMT time zone
 
 > [!WARNING]
 > When force upgrade is enabled, it takes precedence over all other drain configurations. The undrainable node behavior settings (Option 2) will not be applied when force upgrade is active.
@@ -238,7 +240,7 @@ Automatic PDB management can also automatically create PDBs for deployments that
 1. Remove the `kubernetes.azure.com/upgrade-status: Quarantined` label:
 
     ```bash
-    kubectl label nodes <node-name> <label-name>
+    kubectl label nodes <node-name> kubernetes.azure.com/upgrade-status-
     ```
 
 1. Optionally, delete the blocked node:
@@ -272,7 +274,7 @@ Common causes of slow upgrades include:
 * Use `maxSurge=33%`, `maxUnavailable=1` for production.
 * Use `maxSurge=50%`, `maxUnavailable=2` for dev/test.
 * Use OS Security Patch for fast, targeted patching (avoids full node reimaging).
-* Enable `undrainableNodeBehavior` to avoid upgrade blockers.
+* Enable `--undrainable-node-behavior` to avoid upgrade blockers.
 
 ### Scenario 4: IP exhaustion
 

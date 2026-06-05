@@ -2,7 +2,7 @@
 title: "Overview of Azure Kubernetes Fleet Manager"
 services: kubernetes-fleet
 ms.service: azure-kubernetes-fleet-manager
-ms.date: 09/15/2025
+ms.date: 06/01/2026
 ms.topic: overview
 author: sjwaight
 ms.author: simonwaight
@@ -19,27 +19,29 @@ Azure Kubernetes Fleet Manager enables at-scale management of multiple [supporte
 
 Fleet Manager supports the following scenarios:
 
-* Join AKS clusters across regions and subscriptions, as well as Arc-enabled Kubernetes clusters (preview) across clouds and on-premises as member clusters. Read [Azure Kubernetes Fleet Manager member cluster types](./concepts-member-cluster-types.md) to understand more.
+* Join AKS clusters across regions and subscriptions, as well as Arc-enabled Kubernetes clusters across clouds and on-premises as member clusters. Read [Azure Kubernetes Fleet Manager member cluster types](./concepts-member-cluster-types.md) to understand more.
 
-* Use [Fleet Manager managed namespaces](./concepts-fleet-managed-namespace.md) to enforce resource quotas, network policies, and assign role based access at the namespace level across multiple clusters.
+* Use [Fleet Managed Namespaces](./concepts-fleet-managed-namespace.md) to grant application teams access to a namespace across multiple clusters. Enforce resource quotas, network policies, and assign user access at the namespace level across multiple clusters.
 
 * Safely and consistently apply Kubernetes version and node image upgrades across multiple clusters with [update runs](./concepts-update-orchestration.md), attaching reusable update strategies to control the order and timing of cluster updates.
 
-* Include optional manual or automated approvals for update groups and stages to provide more fine-grained control over when updates are applied (preview).
+* Include optional manual or automated approvals for update groups and stages to provide more fine-grained control over when updates are applied.
 
 * Automatically trigger version upgrades when new Kubernetes or node image versions are published by defining one or more [auto-upgrade profile](./concepts-update-orchestration.md#understanding-auto-upgrade-profiles).
 
-* Deploy a hub cluster to enable intelligent placing of Kubernetes resources across member clusters based on cluster labels and properties using Fleet Manager [cluster resource placement](./concepts-resource-propagation.md) and [namespace-scoped resource placement](./concepts-namespace-scoped-resource-propagation.md).
+* Deploy a hub cluster to enable intelligent placing of Kubernetes resources across member clusters based on cluster labels and properties using Fleet Manager [cluster resource placement](./concepts-resource-placement.md) and [namespace-scoped resource placement](./concepts-namespace-scoped-resource-propagation.md).
 
 * Stage Kubernetes resources from Git repositories to Fleet Manager's hub cluster using [Automated Deployments](./concepts-automated-deployments.md) (preview).
 
 * Load balance incoming traffic across service endpoints on multiple AKS clusters using [DNS-based load balancing](./concepts-dns-load-balancing.md) (preview).
 
+* Simplify creating globally available services by configuring [cross-cluster networking](./concepts-cross-cluster-networking.md) for your member clusters (preview).
+
 ## Next steps
 
 * [Conceptual overview of Fleets and member clusters](./concepts-fleet.md).
 * [Conceptual overview of Update orchestration across multiple member clusters](./concepts-update-orchestration.md).
-* [Conceptual overview of cluster-scoped Kubernetes resource placement from hub cluster to member clusters](./concepts-resource-propagation.md).
+* [Conceptual overview of cluster-scoped Kubernetes resource placement from hub cluster to member clusters](./concepts-resource-placement.md).
 * [Conceptual overview of namespace-scoped Kubernetes resource placement from hub cluster to member clusters](./concepts-namespace-scoped-resource-propagation.md).
 * [Conceptual overview of DNS load balancing (preview)](./concepts-l4-load-balancing.md).
 * [Create a fleet and join member clusters](./quickstart-create-fleet-and-members.md).

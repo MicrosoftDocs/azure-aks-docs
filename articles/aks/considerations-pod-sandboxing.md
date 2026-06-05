@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, ignite-2025
 ms.date: 11/18/2025
-author: jackjiang
-ms.author: jackjiang
+ms.author: davidsmatlak
+author: davidsmatlak
 ---
 
 # Pod Sandboxing considerations

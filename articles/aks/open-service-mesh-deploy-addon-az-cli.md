@@ -28,7 +28,7 @@ This article shows you how to install the Open Service Mesh (OSM) add-on on an A
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - [Azure CLI installed](/cli/azure/install-azure-cli).
 
 ## Install the OSM add-on on your cluster

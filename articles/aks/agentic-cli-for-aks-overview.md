@@ -1,5 +1,5 @@
 ---
-title: About the Agentic CLI for Azure Kubernetes Service (AKS)
+title: About the Agentic CLI for Azure Kubernetes Service (AKS) (preview)
 description: Learn about the agentic CLI for Azure Kubernetes Service (AKS) and its features, best practices, security considerations, how to get started, and more.
 ms.topic: overview
 ms.date: 10/20/2025
@@ -39,58 +39,25 @@ The agentic CLI for AKS uses AI to help you troubleshoot complex issues by provi
 
 ## Deployment modes
 
-The agentic CLI for AKS supports two deployment modes to accommodate different operational requirements and security models:
+The agentic CLI for AKS supports two deployment modes to accommodate different operational requirements and security models: **client mode** and **cluster mode**.
 
-### Client mode
+The following table summarizes ideal use cases and characteristics of each deployment mode to help you choose the best option for your environment:
 
-**Client mode** runs the agentic CLI locally on your machine using Docker containers. This mode is ideal for:
+| Mode | Description | Use cases | Key characteristics |
+| ---- | ----------- | --------- | ------------------- |
+| **Client mode** | Runs the agentic CLI locally on your machine using Docker containers. | • Development and testing environments <br> • Individual developer workflows <br> • Environments with strict cluster security policies | • Uses your local Azure CLI credentials and kubectl configuration <br> • Requires Docker to be installed and running locally <br> • Provides the same diagnostic capabilities as cluster mode |
+| **Cluster mode** | Deploys the agentic CLI as a pod within your AKS cluster using Kubernetes service accounts and workload identity. | • Production environments <br> • Shared team environments <br> • Automated workflows <br> • Enhanced security scenarios with workload identity and Azure RBAC integration | • Uses Kubernetes service accounts with workload identity for secure authentication <br> • Runs directly within the AKS cluster for optimal performance and network access <br> • Supports optional Azure RBAC integration for enhanced security |
 
-- **Development and testing environments** where you want quick, local access to cluster diagnostics.
-- **Individual developer workflows** where you prefer to run tools locally with your existing credentials.
-- **Environments with strict cluster security policies** that limit in-cluster deployments.
+## Best practices
 
-**Key characteristics:**
-- Uses your local Azure CLI credentials and kubectl configuration
-- Requires Docker to be installed and running locally
-- Provides the same diagnostic capabilities as cluster mode
-- Ideal for ad-hoc troubleshooting and development scenarios
+Keep the following best practices in mind when you use the agentic CLI for AKS:
 
-### Cluster mode
-
-**Cluster mode** deploys the agentic CLI as a pod within your AKS cluster using Kubernetes service accounts and workload identity. This mode is recommended for:
-
-- **Production environments** where you want the agent running closer to cluster resources.
-- **Shared team environments** where multiple users need consistent access to cluster diagnostics.
-- **Automated workflows** that require persistent agent availability.
-- **Enhanced security scenarios** with workload identity and Azure RBAC integration.
-
-**Key characteristics:**
-- Uses Kubernetes service accounts with workload identity for secure authentication
-- Runs directly within the AKS cluster for optimal performance and network access
-- Supports optional Azure RBAC integration for enhanced security
-- Ideal for production monitoring and shared operational workflows
-
-### Choosing the right mode
-
-| Consideration | Client Mode | Cluster Mode |
-|---------------|-------------|-------------|
-| **Deployment location** | Local machine | AKS cluster |
-| **Authentication** | Local Azure credentials | Service account + workload identity |
-| **Prerequisites** | Docker | Service account |
-| **Use case** | Development, testing | Production, shared environments |
-| **Performance** | Network dependent | Optimized cluster access |
-| **Security** | Local credential management | Azure RBAC integration |
-
-## Best practices for using the agentic CLI for AKS
-
-To maximize the effectiveness of the agentic CLI for AKS, consider the following best practices:
-
-- **Start with broad diagnostic queries:** Begin with general questions, like "What's wrong with my cluster?" Let the AI guide you to specific issues.
-- **Use descriptive problem statements:** Provide context about symptoms that you observe for better AI analysis.
-- **Review AI recommendations carefully:** Always understand the suggested solutions before you implement them.
-- **Use historical analysis:** Ask about patterns and trends in cluster behavior over time.
-- **Provide feedback:** Help improve the AI by providing feedback on the accuracy and usefulness of diagnostic responses.
-- **Use alongside traditional monitoring:** Complement AI insights with Azure Monitor and other observability tools.
+- **Start with broad diagnostic queries**: Begin with general questions, like "What's wrong with my cluster?" Let the AI guide you to specific issues.
+- **Use descriptive problem statements**: Provide context about symptoms that you observe for better AI analysis.
+- **Review AI recommendations carefully**: Understand the suggested solutions before you implement them.
+- **Use historical analysis**: Ask about patterns and trends in cluster behavior over time.
+- **Provide feedback**: Help improve the AI by providing feedback on the accuracy and usefulness of diagnostic responses.
+- **Use alongside traditional monitoring**: Complement AI insights with Azure Monitor and other observability tools.
 
 ## Security considerations
 
@@ -114,13 +81,13 @@ Keep the following security considerations in mind when you use the agentic CLI 
 - Configure proper Kubernetes RBAC permissions for the service account.
 - Enable workload identity for secure Azure resource access.
 - Consider implementing Azure RBAC integration for enhanced security controls.
-- Use network policies to control agent pod communication if required.
+- Use network policies to control agent pod communication if necessary.
 - Regular review and rotation of workload identity credentials.
 
-## Get started with the agentic CLI for AKS
+## Related content
 
-To start using the agentic CLI for AKS or to learn more, refer to the following resources:
+To learn more about the agentic CLI for AKS, see the following related articles:
 
 - [Install and use the agentic CLI for AKS](./agentic-cli-for-aks-install.md)
-- [Agentic CLI for AKS frequently asked questions (FAQ)](./agentic-cli-for-aks-faq.yml)
+- [Agentic CLI for AKS FAQ](./agentic-cli-for-aks-faq.yml)
 - [Troubleshoot the agentic CLI for AKS](./agentic-cli-for-aks-troubleshoot.md)

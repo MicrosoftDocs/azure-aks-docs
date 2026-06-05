@@ -2,8 +2,8 @@
 title: Integrate an MCP Server with the AI Toolchain Operator on Azure Kubernetes Service (AKS)
 description: Learn how to connect an AI inference service with MCP in Azure Kubernetes Service (AKS) by using the managed add-on for KAITO.
 ms.topic: how-to
-ms.author: sachidesai
-author: sachidesai
+ms.author: schaffererin
+author: schaffererin
 ms.service: azure-kubernetes-service
 ms.date: 10/1/2025
 ms.collection: ce-skilling-ai-copilot
@@ -17,11 +17,11 @@ In this article, you connect an MCP-compliant tool server with an AI toolchain o
 
 ## Model Context Protocol (MCP)
 
-As an extension of [KAITO inference with tool calling](./ai-toolchain-operator-tool-calling.md), the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) provides a standardized way to define and expose tools for language models to call. 
+As an extension of [KAITO inference with tool calling](./ai-toolchain-operator-tool-calling.md), the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) provides a standardized way to define and expose tools for language models to call.
 
 Tool calling with MCP makes it easier to connect language models to real services and actions without tightly coupling logic into the model itself. Instead of embedding every function or API call into your application code, MCP lets you run a standalone tool server that exposes standardized tools or APIs that any compatible LLM can use. This clean separation means you can update tools independently, share them across models, and manage them like any other microservice.
 
-You can bring-your-own (BYO) internal or connect external MCP servers seamlessly with your KAITO inference workspace on AKS. 
+You can bring-your-own (BYO) internal or connect external MCP servers seamlessly with your KAITO inference workspace on AKS.
 
 ## MCP with AI toolchain operator (KAITO) on AKS
 
@@ -135,7 +135,7 @@ In this guide, we create a Python virtual environment to send a tool-calling req
 
     - Connects to the Time MCP server and loads `get_current_time` tool.
     - Connects to your KAITO inference service running at `localhost:8000`.
-    - Sends an example query like “What time is it in Europe/Paris?”
+    - Sends an example query like "What time is it in Europe/Paris?"
     - Enables automatic selection and calling of the `get_current_time` tool.
 
     ```python
@@ -217,13 +217,13 @@ In this guide, we create a Python virtual environment to send a tool-calling req
     ```output
     ---------- TextMessage (user) ----------
     What time is it in Europe/Paris?
-    
+
     ---------- ToolCallRequestEvent (time-assistant) ----------
     [FunctionCall(id='chatcmpl-tool-xxxx', arguments='{"timezone": "Europe/Paris"}', name='get_current_time')]
-    
+
     ---------- ToolCallExecutionEvent (time-assistant) ----------
     [FunctionExecutionResult(content='{"timezone":"Europe/Paris","datetime":"2025-09-17T17:43:05+02:00","is_dst":true}', name='get_current_time', call_id='chatcmpl-tool-xxxx', is_error=False)]
-    
+
     ---------- ToolCallSummaryMessage (time-assistant) ----------
     The current time in Europe/Paris is 5:43 PM (CEST).
     ```

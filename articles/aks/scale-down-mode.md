@@ -5,8 +5,8 @@ description: Learn how to use Scale-down Mode in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 08/21/2023
-ms.author: qpetraroia
-author: qpetraroia
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.subservice: aks-nodes
 # Customer intent: "As a Kubernetes cluster administrator, I want to configure Scale-down Mode for my AKS cluster, so that I can choose to deallocate or delete nodes efficiently based on resource needs and cost management."
 ---

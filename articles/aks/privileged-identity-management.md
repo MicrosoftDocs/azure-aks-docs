@@ -1,5 +1,5 @@
 ---
-title: Control cluster and node access using Privileged Identity Management (PIM) with AKS-managed Microsoft Entra integration
+title: Control cluster and node access using Privileged Identity Management (PIM) with Microsoft Entra integration
 titleSuffix: Azure Kubernetes Service
 description: Learn how to access clusters and nodes using Privileged Identity Management (PIM) when integrating Microsoft Entra ID in your Azure Kubernetes Service (AKS) clusters.
 ms.topic: how-to
@@ -417,14 +417,15 @@ When `kubelogin` tries to [get tokens from the Microsoft identity platform][get-
 
 For more information, see the following articles:
 
-- [Control cluster access using Conditional Access with AKS-managed Microsoft Entra integration][conditional-access]
+- [Control cluster access using Conditional Access with Microsoft Entra integration][conditional-access]
 - [Microsoft Entra Privileged Identity Management overview][what-is-pim]
 - [Use Kubernetes role-based access control with Microsoft Entra ID in AKS][aks-rbac]
+- Use just-in-time elevation for node sign-in with Microsoft Entra ID based SSH; see [Manage SSH access on AKS cluster nodes][manage-ssh-node-access].
 
 <!-- LINKS -->
 [licensing-fundamentals]: /entra/id-governance/licensing-fundamentals
 [aad-pricing]: https://azure.microsoft.com/pricing/details/active-directory/
-[create-aks-managed-cluster]: ./enable-authentication-microsoft-entra-id.md
+[create-aks-managed-cluster]: ./entra-id-control-plane-authentication.md
 [manage-ssh-node-access]: ./manage-ssh-node-access.md
 [az-aks-show]: /cli/azure/aks#az-aks-show
 [az-group-show]: /cli/azure/group#az-group-show
@@ -442,4 +443,4 @@ For more information, see the following articles:
 [revoke-refresh-token]: /powershell/module/azuread/revoke-azureaduserallrefreshtoken
 [conditional-access]: ./access-control-managed-azure-ad.md
 [what-is-pim]: /entra/id-governance/privileged-identity-management/pim-configure
-[aks-rbac]: ./azure-ad-rbac.md
+[aks-rbac]: ./kubernetes-rbac-entra-id.md
