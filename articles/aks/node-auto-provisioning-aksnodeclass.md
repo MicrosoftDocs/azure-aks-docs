@@ -3,7 +3,7 @@ title: Configure AKSNodeClass Resources for Node Auto-Provisioning (NAP) in Azur
 description: Learn how to configure Azure-specific settings for AKS node auto-provisioning using AKSNodeClass resources.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 07/25/2025
+ms.date: 06/5/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -22,7 +22,7 @@ This article explains how to configure `AKSNodeClass` resources to define Azure-
 
 ## Image family configuration
 
-The `imageFamily` field dictates the default VM image and bootstrapping logic for nodes provisioned through the `AKSNodeClass`. If you don't specify an image family, the default is `Ubuntu2204`. GPUs are supported with both image families on compatible VM sizes.
+The `imageFamily` field dictates the default VM image and bootstrapping logic for nodes provisioned through the `AKSNodeClass`. If you don't specify an image family, the [default os version](./upgrade-os-version#supported-os-versions) according to your Kubernetes version will be used. GPUs are supported with both image families on compatible VM sizes.
 
 ### Supported image families
 
