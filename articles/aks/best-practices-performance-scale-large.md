@@ -1,12 +1,11 @@
 ---
-title: Performance and scaling best practices for large workloads in Azure Kubernetes Service (AKS)
-titleSuffix: Azure Kubernetes Service
-description: Learn the best practices for performance and scaling for large workloads in Azure Kubernetes Service (AKS).
+title: Performance and Scaling Best Practices for Large Workloads in Azure Kubernetes Service (AKS)
+description: Learn the best practices for performance and scaling for large workloads in Azure Kubernetes Service (AKS), with guidance that starts from AKS Automatic as the recommended default for most production workloads.
 ms.topic: best-practice
-ms.date: 04/17/2026
+ms.date: 06/05/2026
 author: schaffererin
 ms.author: schaffererin
-
+ms.service: azure-kubernetes-service
 # Customer intent: As a cloud architect, I want to implement performance and scaling best practices for large workloads in Kubernetes, so that I can ensure optimal resource utilization and reliability of the applications deployed in Azure Kubernetes Service.
 ---
 
@@ -14,14 +13,18 @@ ms.author: schaffererin
 
 > [!NOTE]
 > This article focuses on general best practices for **large workloads**. For best practices specific to **small to medium workloads**, see [Performance and scaling best practices for small to medium workloads in Azure Kubernetes Service (AKS)](./best-practices-performance-scale.md).
+>
+> For most production AKS workloads, start with **AKS Automatic**. AKS Automatic is the recommended production-ready default in AKS and provides preconfigured best-practice defaults for scaling, security, networking, monitoring, and upgrades. The large-scale tuning guidance in this article still applies to both AKS Automatic and AKS Standard when you operate at scale.
 
 As you deploy and maintain clusters in AKS, you can use the following best practices to help you optimize performance and scaling.
 
-Keep in mind that *large* is a relative term. Kubernetes has a multi-dimensional scale envelope, and the scale envelope for your workload depends on the resources you use. For example, a cluster with 100 nodes and thousands of pods or CRDs might be considered large. A 1,000 node cluster with 1,000 pods and various other resources might be considered small from the control plane perspective. The best signal for scale of a Kubernetes control plane is API server HTTP request success rate and latency, as that's a proxy for the amount of load on the control plane.
+Keep in mind that _large_ is a relative term. Kubernetes has a multi-dimensional scale envelope, and the scale envelope for your workload depends on the resources you use. For example, a cluster with 100 nodes and thousands of pods or CRDs might be considered large. A 1,000 node cluster with 1,000 pods and various other resources might be considered small from the control plane perspective. The best signal for scale of a Kubernetes control plane is API server HTTP request success rate and latency, as that's a proxy for the amount of load on the control plane.
 
 In this article, you learn about:
 
 > [!div class="checklist"]
+>
+> - AKS cluster mode guidance for large workloads.
 > - Node scaling.
 > - AKS and Kubernetes control plane scalability.
 > - Kubernetes client best practices, including backoff, watches, and pagination.
@@ -29,27 +32,40 @@ In this article, you learn about:
 > - Feature limitations.
 > - Networking best practices.
 
+## AKS mode guidance for large workloads
+
+AKS supports two cluster modes:
+
+- **AKS Automatic**: Recommended starting point for most production workloads. It reduces operational overhead by providing managed platform defaults for scaling, security, networking, monitoring, and upgrades.
+- **AKS Standard**: Best when you need explicit control over cluster topology, networking, autoscaling behavior, or upgrade orchestration.
+
+The large-scale performance and scaling guidance in this article applies to both cluster modes. AKS Automatic changes who owns more of the platform defaults, but it doesn't remove the need to understand control plane load, client behavior, throttling, networking limits, and upgrade headroom.
+
 ## Node scaling
 
 As you scale your AKS clusters to larger scale points, keep the following node scaling best practices in mind:
 
-- When running at-scale AKS clusters, use the [cluster autoscaler](./cluster-autoscaler.md) or [node auto-provisioning](./node-auto-provisioning.md) whenever possible to ensure dynamic scaling of nodes based on the demand for compute resources.
-- If you're scaling beyond 1,000 nodes and are *not* using the cluster autoscaler, we recommend scaling in batches of 500-700 nodes at a time. The scaling operations should have a two-minute to five-minute wait time between scale up operations to prevent Azure API throttling. For more information, see [API management: Caching and throttling policies](https://azure.microsoft.com/blog/api-management-advanced-caching-and-throttling-policies/).
-- For system node pools, use the *Standard_D16ds_v5* SKU or an equivalent core/memory VM SKU with ephemeral OS disks to provide sufficient compute resources for kube-system pods.
+- When running at-scale AKS clusters, use the [cluster autoscaler](./cluster-autoscaler.md) or [node auto-provisioning (NAP)](./node-auto-provisioning.md) whenever possible to ensure dynamic scaling of nodes based on the demand for compute resources.
+- AKS Automatic is the recommended starting point for most production workloads, but large clusters in either cluster mode still require careful node scaling, batch planning, and control plane validation.
+- If you're scaling beyond 1,000 nodes and are _not_ using the cluster autoscaler, we recommend scaling in batches of 500-700 nodes at a time. The scaling operations should have a two-to-five minute wait time between scale up operations to prevent Azure API throttling. For more information, see [API management: Caching and throttling policies](https://azure.microsoft.com/blog/api-management-advanced-caching-and-throttling-policies/).
+- For system node pools, use the _Standard_D16ds_v5_ SKU or an equivalent core/memory VM SKU with ephemeral OS disks to provide sufficient compute resources for kube-system pods.
 - Since AKS has a limit of 1,000 nodes per node pool, we recommend creating at least five user node pools to scale up to 5,000 nodes.
 
 ## AKS and Kubernetes control plane scalability
 
 In Kubernetes, all objects running in a cluster are managed by the control plane, which is managed by AKS. While AKS optimizes the Kubernetes control plane and its components for scalability and performance, it's still bound by the upstream project limits.
 
+These control plane limits and API usage patterns apply to both AKS Automatic and AKS Standard. AKS Automatic reduces operational overhead, but the control plane still has finite capacity and still needs efficient workload behavior at large scale.
+
 Kubernetes has a multi-dimensional scale envelope, with each resource type representing a dimension, and not all resources are alike in their cost. For example, Secrets are often watched by multiple controllers and pods, each of which makes an initial LIST call to sync state. Because secrets are typically large and frequently updated, they place more load on the control plane than less frequently watched resources.
 
 The more you scale the cluster within a given dimension, the less you can scale within other dimensions. For example, running hundreds of thousands of pods in an AKS cluster impacts how much pod churn rate (pod mutations per second) the control plane can support.
 
-AKS supports three control plane tiers as part of the Base SKU: Free, Standard, and Premium tier. For more information, see [Free, Standard, and Premium pricing tiers for AKS cluster management](./free-standard-pricing-tiers.md).
+AKS supports three control plane pricing tiers as part of the Base SKU: Free, Standard, and Premium tier. For more information, see [Free, Standard, and Premium pricing tiers for AKS cluster management](./free-standard-pricing-tiers.md).
 
 > [!IMPORTANT]
->  Use Standard or Premium tier for production or at-scale workloads. AKS automatically scales up the Kubernetes control plane to support the following scale limits:
+> Use the Standard or Premium pricing tier for production or at-scale workloads. AKS automatically scales up the Kubernetes control plane to support the following scale limits:
+>
 > - Up to 5,000 nodes per AKS cluster
 > - 200,000 pods per AKS cluster (with Azure CNI Overlay)
 
@@ -63,17 +79,20 @@ kubectl describe configmap large-cluster-control-plane-scaling-status -n kube-sy
 
 ## Kubernetes scale envelope and control plane considerations
 
-Kubernetes clients are application components, such as operators or monitoring agents, that run in the cluster and communicate with the kube-apiserver to read or modify resources. It's important to optimize how these clients behave to reduce the load they place on the kube-apiserver and the Kubernetes control plane. 
+Kubernetes clients are application components, such as operators or monitoring agents, that run in the cluster and communicate with the kube-apiserver to read or modify resources. It's important to optimize how these clients behave to reduce the load they place on the kube-apiserver and the Kubernetes control plane.
+
+AKS Automatic doesn't remove the need for efficient client behavior; large clusters still need watch-based patterns, pagination, backoff, and limited LIST traffic.
 
 The number of requests actively being processed by the API server at any given moment is determined by `--max-requests-inflight` and `--max-mutating-requests-inflight` flags. AKS uses the default values of 400 and 200 requests for these flags, allowing a total of 600 requests to be dispatched at a given time. As we scale the API server to larger sizes we correspondingly increase the inflight requests too.
 
-Two Kubernetes object types, [PriorityLevelConfiguration and FlowSchema (APF)](https://kubernetes.io/docs/concepts/cluster-administration/flow-control/), determine how the API server divides total request capacity across request types. AKS uses the default configuration. 
+Two Kubernetes object types, [PriorityLevelConfiguration and FlowSchema (APF)](https://kubernetes.io/docs/concepts/cluster-administration/flow-control/), determine how the API server divides total request capacity across request types. AKS uses the default configuration.
 
 Each PriorityLevelConfiguration is assigned a share of the total allowed requests. To view the PriorityLevelConfiguration objects in your cluster and their allocated request shares, run the following command.
 
 ```bash
 kubectl get --raw /metrics | grep apiserver_flowcontrol_nominal_limit_seats
 ```
+
 FlowSchema maps API server requests to a PriorityLevelConfiguration. If multiple FlowSchema objects match a request, the API server selects the one with the lowest matching precedence.
 
 The mapping of FlowSchemas to PriorityLevelConfigurations can be viewed using this command:
@@ -101,62 +120,63 @@ LIST calls issued by unoptimized clients are often one of the biggest factors li
 
 #### Use API server cache
 
-- Use `resourceVersion=0` to return results from the API server cache. This can prevent objects being fetched from etcd thereby reducing etcd load, **but it doesn't support pagination**.
+Use `resourceVersion=0` to return results from the API server cache. This can prevent objects being fetched from etcd thereby reducing etcd load, **but it doesn't support pagination**.
 
-  ```
-  /api/v1/namespaces/default/pods?resourceVersion=0
-  ```
+```
+/api/v1/namespaces/default/pods?resourceVersion=0
+```
+
 #### Efficient Kubernetes API usage
 
-- It's recommended to use the watch argument whenever possible. With no arguments the default behavior is to list objects. Refer to the example below.
+It's recommended to use the watch argument whenever possible. With no arguments the default behavior is to list objects. For example:
   
-  ```
-  /api/v1/namespaces/default/pods?watch=true
-  ```
+```
+/api/v1/namespaces/default/pods?watch=true
+```
   
-  Use watch with a `resourceVersion` set to be the most recent known value received from preceding list or watch. This is handled automatically in client-go. But verify if you are using a Kubernetes client in other languages.
+Use watch with a `resourceVersion` set to be the most recent known value received from preceding list or watch. This is handled automatically in client-go. But verify if you are using a Kubernetes client in other languages.
 
-  ```
-  /api/v1/namespaces/default/pods?watch=true&resourceVersion=<resourceversion>
-  ```
+```
+/api/v1/namespaces/default/pods?watch=true&resourceVersion=<resourceversion>
+```
 
-- If controllers or operators must use LIST calls, they should avoid polling cluster-wide resources without label or field selectors, especially in large clusters. The following examples show optimized and unoptimized LIST calls.
+If controllers or operators must use LIST calls, they should avoid polling cluster-wide resources without label or field selectors, especially in large clusters. The following examples show optimized and unoptimized LIST calls.
 
-  **Optimized LIST:**
+- **Optimized LIST**:
   
   ```
   /api/v1/namespaces/default/pods?fieldSelector=status.phase=Running
   ```
   
-  **Unoptimized LIST:**
+- **Unoptimized LIST**:
   
   ```
   /api/v1/pods
   ```
 
-- **Use pagination** to reduce the size of LIST responses if the client must fetch data from etcd. The following example uses the limit argument to restrict the response to 100 objects.
+**Use pagination** to reduce the size of LIST responses if the client must fetch data from etcd. The following example uses the limit argument to restrict the response to 100 objects.
 
-  ```
-  /api/v1/namespaces/default/pods?fieldSelector=status.phase=Running&limit=100
-  ```
+```
+/api/v1/namespaces/default/pods?fieldSelector=status.phase=Running&limit=100
+```
   
-  If you want the LIST to continue returning all the pod objects in the example above use the continue argument with limit.
+If you want the LIST to continue returning all the pod objects in the example above use the continue argument with limit.
   
-  ```
-  /api/v1/namespaces/default/pods?fieldSelector=status.phase=Running&limit=100&continue=<continue_token>
-  ```
+```
+/api/v1/namespaces/default/pods?fieldSelector=status.phase=Running&limit=100&continue=<continue_token>
+```
   
-  If kubectl is being utilized, `--chunk-size` argument can be directly applied to paginate responses.
+If kubectl is being utilized, `--chunk-size` argument can be directly applied to paginate responses.
   
-  ```bash
-  kubectl get pods -n default --chunk-size=100
-  ```
+```bash
+kubectl get pods -n default --chunk-size=100
+```
 
-- If your controllers or operators use lease updates for leader election, make sure they are resilient to transient connectivity issues by tuning `leaseDuration`, `renewDeadline`, and `retryPeriod` that are optimal for your workloads. For Kubernetes controllers that use client-go leader election, use the following formula:
- 
-  ``` 
-  lease_duration > renew_deadline > retry_period
-  ```
+If your controllers or operators use lease updates for leader election, make sure they are resilient to transient connectivity issues by tuning `leaseDuration`, `renewDeadline`, and `retryPeriod` that are optimal for your workloads. For Kubernetes controllers that use client-go leader election, use the following formula:
+
+``` 
+lease_duration > renew_deadline > retry_period
+```
 
 #### Daemonsets
 
@@ -172,6 +192,7 @@ LIST calls issued by unoptimized clients are often one of the biggest factors li
         maxSurge: 0
         maxUnavailable: 1
   ```
+
 - The RollingUpdate strategy only applies to existing DaemonSet pods. It doesn't limit the impact of adding new nodes, which creates additional DaemonSet pods, or deploying entirely new DaemonSets.
 - To prevent DaemonSets from issuing simultaneous LIST requests to the API server during startup after node scale-out or new DaemonSet deployments, implement startup jitter in the container entrypoint and configure appropriate [exponential backoff](https://pkg.go.dev/k8s.io/apimachinery/pkg/util/wait) and [retry policies](https://pkg.go.dev/k8s.io/client-go/util/retry) for 5xx or 429 responses to prevent repeated retry of large LIST requests.
   
@@ -184,6 +205,7 @@ LIST calls issued by unoptimized clients are often one of the biggest factors li
             image: <image>
             command: ["/bin/sh", "-c", "sleep $(( (RANDOM % 60) + 1 )); exec /path/to/your/app --args"]
   ```
+
 > [!NOTE]
 > You can analyze API server traffic and client behavior through Kube Audit logs. For more information, see [Troubleshoot the Kubernetes control plane](/troubleshoot/azure/azure-kubernetes/troubleshoot-apiserver-etcd).
 
@@ -203,6 +225,8 @@ LIST calls issued by unoptimized clients are often one of the biggest factors li
 ## Monitor AKS control plane metrics and logs
 
 Monitoring control plane metrics in large AKS clusters is crucial for ensuring the stability and performance of Kubernetes workloads. These metrics provide visibility into the health and behavior of critical components like the API server, etcd, controller manager, and scheduler. In large-scale environments, where resource contention and high API call volumes are common, monitoring control plane metrics helps identify bottlenecks, detect anomalies, and optimize resource usage. By analyzing these metrics, operators can proactively address issues such as API server latency, high etcd objects, or excessive control plane resource consumption, ensuring efficient cluster operation and minimizing downtime.
+
+AKS Automatic reduces operational overhead, but you still need the same visibility into control plane health, request latency, and etcd pressure when the workload is large.
 
 Azure Monitor offers comprehensive metrics and logs on the health of the control plane through [Azure Managed Prometheus](./monitor-control-plane-metrics.md#monitor-aks-control-plane-metrics-preview) and [Diagnostic settings](./monitor-control-plane-metrics.md#azure-monitor-resource-logs).
 
@@ -232,6 +256,7 @@ AKS exposes the following platform metrics in Azure Monitor for monitoring API s
 Consistently monitor `apiserver_cpu_usage_percentage` and `apiserver_memory_usage_percentage` to detect resource pressure on the API server. If `etcd_database_usage_percentage` is consistently above 50%, review the [Etcd Optimizations](#etcd-optimizations) section to reduce database size. For the full list of available metrics, see [AKS monitoring data reference](/azure/aks/monitor-aks-reference#metrics).
 
 ## Feature limitations
+
 As you scale your AKS clusters to larger scale points, keep the following feature limitations in mind:
 
 - AKS supports scaling up to 5,000 nodes by default for all Standard Tier / LTS clusters. AKS scales your cluster's control plane at runtime based on cluster size and API server resource utilization. If you can't scale up to the supported limit, enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) with the [Azure Monitor managed service for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) to monitor the control plane. To help troubleshoot scaling performance or reliability issues, see the following resources:
@@ -248,6 +273,8 @@ As you scale your AKS clusters to larger scale points, keep the following featur
 ## Azure API and platform throttling
 
 The load on a cloud application can vary over time based on factors such as the number of active users or the types of actions that users perform. If the processing requirements of the system exceed the capacity of the available resources, the system can become overloaded and suffer from poor performance and failures.
+
+AKS Automatic simplifies cluster operations, but Azure subscription and platform throttling limits still apply at scale.
 
 To handle varying load sizes in a cloud application, you can allow the application to use resources up to a specified limit and then throttle them when the limit is reached. On Azure, throttling happens at two levels. Azure Resource Manager (ARM) throttles requests for the subscription and tenant. If the request is under the throttling limits for the subscription and tenant, ARM routes the request to the resource provider. The resource provider then applies throttling limits tailored to its operations. For more information, see [ARM throttling requests](/azure/azure-resource-manager/management/request-limits-and-throttling).
 
@@ -269,11 +296,12 @@ Always upgrade your Kubernetes clusters to the latest version. Newer versions co
 As you scale your AKS clusters to larger scale points, keep the following networking best practices in mind:
 
 - Use Managed NAT for cluster egress with at least two public IPs on the NAT gateway. For more information, see [Create a managed NAT gateway for your AKS cluster](./nat-gateway.md).
+- AKS Automatic provides managed networking defaults, but you should still validate outbound paths, DNS behavior, load balancer limits, and service topology when scaling large workloads.
 - If you are using Azure Standard Load Balancer, use at least [2 Outbound Public IPs](./configure-load-balancer-standard.md#calculate-and-verify-outbound-ports-and-ips-needed). Also consider LoadBalancer service backend rule limits when planning for large clusters. Azure Standard Load Balancers support up to 10,000 backend IP configurations per frontend IP. Each type: LoadBalancer service creates one load balancing rule per exposed port and associates all cluster nodes with the load balancer backend pool. For example, exposing 5 ports for a single service will hit this limit at 2000 nodes.
 
-  ```
-  1 service * 5 ports * 2000 nodes = 10000 backend IP configurations
-  ```
+    ```
+    1 service * 5 ports * 2000 nodes = 10000 backend IP configurations
+    ```
 
 - Use Azure CNI Overlay to scale up to 200,000 pods and 5,000 nodes per cluster. For more information, see [Configure Azure CNI Overlay networking in AKS][azure-cni-overlay].
 - If your application needs direct pod-to-pod communication across clusters, use Azure CNI with dynamic IP allocation and scale up to 50,000 application pods per cluster with one routable IP per pod. For more information, see [Configure Azure CNI networking for dynamic IP allocation in AKS][azure-cni-dynamic-ip].
@@ -283,20 +311,19 @@ As you scale your AKS clusters to larger scale points, keep the following networ
 
 ## Cluster upgrade considerations and best practices
 
+AKS Automatic handles more of the upgrade lifecycle for you, but the max surge and capacity-planning guidance in this section is still important for large workloads, especially when coordinating disruptions and ensuring enough headroom.
+
+As you scale your AKS clusters to larger scale points, keep the following cluster upgrade best practices in mind:
+
 - When a cluster reaches the 5,000 node limit, cluster upgrades are blocked. This limit prevents an upgrade because there isn't available node capacity to perform rolling updates within the max surge property limit. If you have a cluster at this limit, we recommend [scaling down the cluster](./concepts-scale.md) under 3,000 nodes before attempting a cluster upgrade. This will provide extra capacity for node churn and minimize load on the control plane.
 - When upgrading clusters with more than 500 nodes, it's recommended to use a [max surge configuration](./upgrade-aks-cluster.md#set-max-surge-value) of 10-20% of the node pool's capacity. AKS configures upgrades with a default value of 10% for max surge. You can customize the max surge settings per node pool to enable a trade-off between upgrade speed and workload disruption. When you increase the max surge settings, the upgrade process completes faster, but you might experience disruptions during the upgrade process. For more information, see [Customize node surge upgrade](upgrade-aks-cluster.md#customize-node-surge-upgrade).
 - For more cluster upgrade information, see [Upgrade an AKS cluster](upgrade-cluster.md).
 
+## Related content
+
+- [What is AKS Automatic?](./intro-aks-automatic.md)
+- [Performance and scaling best practices for small to medium workloads in Azure Kubernetes Service (AKS)](./best-practices-performance-scale.md)
+
 <!-- LINKS - Internal --->
-[run-aks-at-scale]: ./operator-best-practices-run-at-scale.md
-[managed-nat-gateway]: ./nat-gateway.md
 [azure-cni-dynamic-ip]: ./configure-azure-cni-dynamic-ip-allocation.md
 [azure-cni-overlay]: ./azure-cni-overlay.md
-[pricing-tiers]: ./free-standard-pricing-tiers.md
-[cluster-autoscaler]: cluster-autoscaler.md
-[azure-npm]: /azure/virtual-network/kubernetes-network-policies
-[cluster upgrades]: upgrade-cluster.md
-[max surge]: upgrade-aks-cluster.md#customize-node-surge-upgrade
-
-<!-- LINKS - External -->
-[throttling-policies]: https://azure.microsoft.com/blog/api-management-advanced-caching-and-throttling-policies/
