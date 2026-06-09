@@ -3,7 +3,7 @@ title: 'Quickstart: Deploy an application to a new Azure Kubernetes Service (AKS
 description: Learn how to quickly deploy an application from source code to a new Azure Kubernetes Service (AKS) Automatic cluster.
 ms.topic: quickstart
 ms.custom: devx-track-azurecli, devx-track-bicepW
-ms.date: 10/10/2025
+ms.date: 05/22/2026
 author: wangyira
 ms.author: wangamanda
 # Customer intent: As a developer, I want to automate the deployment of my application to an Azure Kubernetes Service cluster from a code repository, so that I can streamline my CI/CD process and improve the efficiency of my deployment workflows.
@@ -27,6 +27,8 @@ In this quickstart, you learn to:
 
 - Have a GitHub account with the application to deploy.
 - AKS Automatic will [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should pre-register the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. See [Azure resource providers and types][az-provider-register] for more information.
+
+[!INCLUDE [Kubernetes gateway](../includes/aks-automatic/aks-automatic-kubernetes-gateway.md)]
 
 [!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 

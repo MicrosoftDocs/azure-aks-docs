@@ -2,7 +2,7 @@
 title: 'Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster in a custom virtual network'
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic in a custom virtual network.
 ms.topic: quickstart
-ms.date: 10/10/2025
+ms.date: 06/02/2026
 author: wangyira
 ms.author: wangamanda
 zone_pivot_groups: bicep-azure-cli
@@ -28,7 +28,7 @@ If you don't have an Azure account, create a [free account](https://azure.micros
 
 :::zone pivot="azure-cli"
 
-- This article requires version 2.77.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- Azure CLI version 2.86.0 or later. To find the version, run `az --version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/get-started-with-azure-cli).
 
 :::zone-end
 
@@ -38,13 +38,16 @@ If you don't have an Azure account, create a [free account](https://azure.micros
 - A virtual network with a dedicated API server subnet of at least `*/28` size that is delegated to `Microsoft.ContainerService/managedClusters`.
   - If there's a Network Security Group (NSG) attached to subnets, ensure that the NSG security rules permit the required types of communication between cluster components. For detailed requirements, see [Custom virtual network requirements][concepts-network-custom-vnet].
   - If there's an Azure Firewall or other outbound restriction method or appliance, ensure the [required outbound network rules and FQDNs][outbound-rules-control-egress] are allowed.
-- AKS Automatic will [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should pre-register the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. See [Azure resource providers and types][az-provider-register] for more information.
+- AKS Automatic will [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should pre-register the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. For more information, see [Azure resource providers and types][az-provider-register] for more information.
+- Uninstall the AKS-preview extension using `az extension remove -n aks-preview`. 
+
+[!INCLUDE [Kubernetes gateway](../includes/aks-automatic/aks-automatic-kubernetes-gateway.md)]
 
 [!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
 ## Define variables
 
-Define the following variables that will be used in the subsequent steps.
+Define the following variables that are used in the following steps.
 
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/public/sh/define-vars.sh" interactive="cloudshell-bash":::
 
@@ -61,7 +64,7 @@ The following sample output resembles successful creation of the resource group:
 ```output
 {
   "id": "/subscriptions/<guid>/resourceGroups/automatic-rg",
-  "location": "eastus",
+  "location": "canadacentral",
   "managedBy": null,
   "name": "automatic-rg",
   "properties": {
@@ -75,18 +78,18 @@ The following sample output resembles successful creation of the resource group:
 
 ## Create a virtual network
 
-Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
+Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet, user node subnet, and system node subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
 
-When using a custom virtual network with AKS Automatic, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
+When using a custom virtual network with AKS Automatic, you must create an API server subnet. AKS will delegate the subnet to  `Microsoft.ContainerService/managedClusters`on your behalf, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*. 
 
 > [!WARNING]
-> An AKS cluster reserves at least 9 IPs in the subnet address space. Running out of IP addresses may prevent API server scaling and cause an API server outage.
+> An AKS cluster reserves at least nine (9) IPs in the subnet address space. Running out of IP addresses might prevent API server scaling and cause an API server outage.
 
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/public/sh/create-vnet.sh" interactive="cloudshell-bash":::
 
 ### Network security group requirements
 
-If you have added Network Security Group (NSG) rules to restrict traffic between different subnets in your custom virtual network, ensure that the NSG security rules permit the required types of communication between cluster components.
+If you added Network Security Group (NSG) rules to restrict traffic between different subnets in your custom virtual network, ensure that the NSG security rules permit the required types of communication between cluster components.
 
 For detailed NSG requirements when using custom virtual networks with AKS clusters, see [Custom virtual network requirements][concepts-network-custom-vnet].
 
@@ -100,7 +103,7 @@ Create a managed identity using the [`az identity create`][az-identity-create] c
 
 To create an AKS Automatic cluster, use the [az aks create][az-aks-create] command.
 
-:::code language="azurecli" source="~/aks-samples/automatic/custom-network/public/sh/create-aks.sh" interactive="cloudshell-bash" highlight="5,6,7":::
+:::code language="azurecli" source="~/aks-samples/automatic/custom-network/public/sh/create-aks.sh" interactive="cloudshell-bash" highlight="5,6,7,8":::
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 
@@ -122,19 +125,20 @@ Verify the connection to your cluster using the [kubectl get][kubectl-get] comma
 kubectl get nodes
 ```
 
-The following sample output shows how you're asked to log in.
+The following sample output shows how you're asked to sign in.
 
 ```output
 To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code AAAAAAAAA to authenticate.
 ```
 
-After you log in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
+After you sign in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
 
 ```output
-NAME                                STATUS   ROLES   AGE     VERSION
-aks-nodepool1-13213685-vmss000000   Ready    agent   2m26s   v1.28.5
-aks-nodepool1-13213685-vmss000001   Ready    agent   2m26s   v1.28.5
-aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
+NAME                           STATUS   ROLES    AGE   VERSION
+aks-hostedpool-16652789-vms1   Ready    <none>   19m   v1.34.7
+aks-hostedpool-16652789-vms2   Ready    <none>   19m   v1.34.7
+aks-hostedpool-16652789-vms3   Ready    <none>   19m   v1.34.7
+aks-system-surge-zq4d2         Ready    <none>   19m   v1.34.7
 ```
 
 :::zone-end
@@ -158,7 +162,7 @@ Deploy the Bicep file using the Azure CLI.
 az deployment group create --resource-group <resource-group> --template-file virtualNetwork.bicep
 ```
 
-All traffic within the virtual network is allowed by default. If you have added Network Security Group (NSG) rules to restrict traffic between different subnets in your custom virtual network, ensure that the NSG security rules permit the required types of communication between cluster components.
+All traffic within the virtual network is allowed by default. If you added Network Security Group (NSG) rules to restrict traffic between different subnets in your custom virtual network, ensure that the NSG security rules permit the required types of communication between cluster components.
 
 For detailed NSG requirements when using custom virtual networks with AKS clusters, see [Custom virtual network requirements][concepts-network-custom-vnet].
 
@@ -201,19 +205,20 @@ az deployment group create --resource-group <resource-group> --template-file rol
 
 This Bicep file defines the AKS Automatic cluster.
 
-:::code language="bicep" source="~/aks-samples/automatic/custom-network/public/bicep/aks.bicep" highlight="29,32,33,34,36,37,38,40,41,42,43,44,45":::
+:::code language="bicep" source="~/aks-samples/automatic/custom-network/public/bicep/aks.bicep" highlight="27,28,29,30,31,32,33,34,35,36,39,40,41,42":::
 
 Save the Bicep file **aks.bicep** to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `clusterName` param to *aksAutomaticCluster*. If you want a different cluster name, make sure to update the string to your preferred cluster name.
 
-Deploy the Bicep file using the Azure CLI. You need to provide the API server subnet resource ID, the cluster subnet resource ID, and user assigned managed identity resource ID.
+Deploy the Bicep file using the Azure CLI. You need to provide the API server subnet resource ID, the user node subnet resource ID, the system node subnet resource ID, and user assigned managed identity resource ID.
 
 ```azurecli-interactive
 az deployment group create --resource-group <resource-group> --template-file aks.bicep \
 --parameters apiServerSubnetId=<API server subnet resource id> \
---parameters clusterSubnetId=<cluster subnet resource id> \
+--parameters nodeSubnetId=<user node subnet resource id> \
+--parameters systemNodeSubnetId=<system node subnet resource id> \
 --parameters uamiId=<user assigned identity id>
 ```
 
@@ -236,19 +241,20 @@ Verify the connection to your cluster using the [kubectl get][kubectl-get] comma
 kubectl get nodes
 ```
 
-The following sample output shows how you're asked to log in.
+The following sample output shows how you're asked to sign in.
 
 ```output
 To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code AAAAAAAAA to authenticate.
 ```
 
-After you log in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
+After you sign in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
 
 ```output
-NAME                                STATUS   ROLES   AGE     VERSION
-aks-nodepool1-13213685-vmss000000   Ready    agent   2m26s   v1.28.5
-aks-nodepool1-13213685-vmss000001   Ready    agent   2m26s   v1.28.5
-aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
+NAME                           STATUS   ROLES    AGE   VERSION
+aks-hostedpool-16652789-vms1   Ready    <none>   19m   v1.34.7
+aks-hostedpool-16652789-vms2   Ready    <none>   19m   v1.34.7
+aks-hostedpool-16652789-vms3   Ready    <none>   19m   v1.34.7
+aks-system-surge-zq4d2         Ready    <none>   19m   v1.34.7
 ```
 
 :::zone-end
@@ -298,7 +304,7 @@ To deploy the application, you use a manifest file to create all the objects req
 
 When the application runs, a Kubernetes service exposes the application front end to the internet. This process can take a few minutes to complete.
 
-1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command. Make sure all pods are `Running` before proceeding. If this is the first workload you deploy, it may take a few minutes for [node auto provisioning][node-auto-provisioning] to create a node pool to run the pods.
+1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command. Make sure all pods are `Running` before proceeding. If this is the first workload you deploy, it might take a few minutes for [node auto provisioning][node-auto-provisioning] to create a node pool to run the pods.
 
     ```bash
     kubectl get pods -n aks-store-demo

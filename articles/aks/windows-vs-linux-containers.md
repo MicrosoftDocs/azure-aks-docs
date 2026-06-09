@@ -25,6 +25,8 @@ Some of the major differences include:
 
 [!INCLUDE [windows server 2022 retirement](./includes/windows-server-2022-retirement.md)]
 
+[!INCLUDE [windows annual channel retirement](./includes/windows-annual-channel-retirement.md)]
+
 This article covers important considerations to keep in mind when using Windows containers instead of Linux containers in Kubernetes. For an in-depth comparison of Windows and Linux containers, see [Comparison with Linux][comparison-with-linux].
 
 ## Considerations

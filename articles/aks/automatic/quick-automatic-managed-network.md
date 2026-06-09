@@ -2,8 +2,8 @@
 title: 'Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster'
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic.
 ms.topic: quickstart
-ms.custom: build-2024, devx-track-azurecli, devx-track-bicep, ignite-2024
-ms.date: 10/10/2025
+ms.custom: build-2024, devx-track-azurecli, devx-track-bicep, ignite-2024, build-2026
+ms.date: 06/02/2026
 author: wangyira
 ms.author: wangamanda
 zone_pivot_groups: bicep-azure-cli-portal
@@ -28,7 +28,7 @@ zone_pivot_groups: bicep-azure-cli-portal
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-- Azure CLI version 2.77.0 or later. Find your version using the `az --version` command. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli). If you're using Azure Cloud Shell, the latest version is already installed there.
+- Azure CLI version 2.86.0 or later. To find the version, run `az --version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/get-started-with-azure-cli).
 - If you have multiple Azure subscriptions, select the appropriate subscription ID to bill resources to using the [`az account set`](/cli/azure/account#az-account-set) command.
 
 :::zone-end
@@ -39,6 +39,8 @@ zone_pivot_groups: bicep-azure-cli-portal
 
 :::zone-end
 
+[!INCLUDE [Kubernetes gateway](../includes/aks-automatic/aks-automatic-kubernetes-gateway.md)]
+
 [!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
 
 :::zone target="docs" pivot="azure-cli,bicep"
@@ -47,10 +49,10 @@ zone_pivot_groups: bicep-azure-cli-portal
 
 An [Azure resource group][azure-resource-group] is a logical group in which Azure resources are deployed and managed.
 
-Create a resource group using the [`az group create`][az-group-create] command. The following example creates a resource group named _myResourceGroup_ in the _eastus_ location:
+Create a resource group using the [`az group create`][az-group-create] command. The following example creates a resource group named _myResourceGroup_ in the _canadacentral_ location:
 
 ```azurecli-interactive
-az group create --name myResourceGroup --location eastus
+az group create --name myResourceGroup --location canadacentral
 ```
 
 The following sample output resembles successful creation of the resource group:
@@ -58,7 +60,7 @@ The following sample output resembles successful creation of the resource group:
 ```output
 {
   "id": "/subscriptions/<guid>/resourceGroups/myResourceGroup",
-  "location": "eastus",
+  "location": "canadacentral",
   "managedBy": null,
   "name": "myResourceGroup",
   "properties": {
@@ -81,9 +83,25 @@ az aks create \
     --resource-group myResourceGroup \
     --name myAKSAutomaticCluster \
     --sku automatic
+    --enable-hosted-system
 ```
 
-After a few minutes, the command completes and returns JSON-formatted information about the cluster.
+When the deployment finishes, the output shows a `hostedSystemProfile` property with the `enabled` property set to `true`. You can also run the following command to display the `hostedSystemProfile` properties:
+
+```azurecli-interactive
+az aks show \
+  --resource-group myResourceGroup \
+  --name myAKSAutomaticCluster \
+  --query hostedSystemProfile
+```
+
+```output
+{
+  "enabled": true,
+  "nodeSubnetId": null,
+  "systemNodeSubnetId": null
+}
+```
 
 :::zone-end
 
@@ -100,7 +118,7 @@ After a few minutes, the command completes and returns JSON-formatted informatio
 
     :::image type="content" source="../media/automatic/quick-automatic-managed-network/create-automatic-cluster-basics.png" alt-text="The screenshot of the Create - Basics Tab for an AKS Automatic cluster in the Azure portal.":::
 
-1. On the **Monitoring** tab, select your desired monitoring configurations from Azure Monitor (Container Insights), Managed Prometheus, Grafana Dashboards, Container Network Observability (ACNS), and Alerts, and then select **Next**.
+1. On the **Monitoring** tab, select your desired monitoring configurations from Azure Monitor (Container Insights), Managed Prometheus, Grafana Dashboards, and Alerts, and then select **Next**.
 
     :::image type="content" source="../media/automatic/quick-automatic-managed-network/create-automatic-cluster-monitoring.png" alt-text="The screenshot of the Monitoring Tab while creating an AKS Automatic cluster in the Azure portal.":::
 
@@ -128,20 +146,11 @@ param clusterName string = 'myAKSAutomaticCluster'
 @description('The location of the managed cluster resource.')
 param location string = resourceGroup().location
 
-resource aks 'Microsoft.ContainerService/managedClusters@2024-03-02-preview' = {
+resource aks 'Microsoft.ContainerService/managedClusters@2026-02-01' ' = {
   name: clusterName
-  location: location  
+  location: location
   sku: {
-  name: 'Automatic'
-  }
-  properties: {
-    agentPoolProfiles: [
-      {
-        name: 'systempool'
-        mode: 'System'
-  count: 3
-      }
-    ]
+    name: 'Automatic'
   }
   identity: {
     type: 'SystemAssigned'
@@ -187,20 +196,22 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
     kubectl get nodes
     ```
 
-    The following sample output shows how you're asked to log in:
+    The following sample output shows how you're asked to sign in:
 
     ```output
     To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code AAAAAAAAA to authenticate.
     ```
 
-    After you log in, the following sample output shows the managed system node pools. Make sure the node status is _Ready_.
+    After you sign in, the following sample output shows the managed system node pools. Make sure the node status is _Ready_.
 
     ```output
-    NAME                                STATUS   ROLES   AGE     VERSION
-    aks-nodepool1-12345678-vmss000000   Ready    agent   2m26s   v1.28.5
-    aks-nodepool1-12345678-vmss000001   Ready    agent   2m26s   v1.28.5
-    aks-nodepool1-12345678-vmss000002   Ready    agent   2m26s   v1.28.5
+    NAME                           STATUS   ROLES    AGE   VERSION
+    aks-hostedpool-16652789-vms1   Ready    <none>   19m   v1.34.7
+    aks-hostedpool-16652789-vms2   Ready    <none>   19m   v1.34.7
+    aks-hostedpool-16652789-vms3   Ready    <none>   19m   v1.34.7
+    aks-system-surge-zq4d2         Ready    <none>   19m   v1.34.7
     ```
+
 
 ## Deploy the application
 
@@ -247,7 +258,7 @@ To deploy the application, you use a manifest file to create all the objects req
 
 When the application runs, a Kubernetes service exposes the application front end to the internet. This process can take a few minutes to complete.
 
-1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command. Make sure all pods are `Running` before proceeding. If this is the first workload you deploy, it may take a few minutes for [node auto provisioning][node-auto-provisioning] to create a node pool to run the pods.
+1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command. Make sure all pods are `Running` before proceeding. If this is the first workload you deploy, it might take a few minutes for [node auto provisioning][node-auto-provisioning] to create a node pool to run the pods.
 
     ```bash
     kubectl get pods -n aks-store-demo

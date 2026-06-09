@@ -3,7 +3,7 @@ title: Azure Kubernetes Service (AKS) Free, Standard, and Premium Pricing Tiers
 description: Learn about the Free, Standard, and Premium pricing tiers for Azure Kubernetes Service (AKS) cluster management, including when to use each tier and how to create or update clusters using Azure CLI.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 06/07/2024
+ms.date: 05/20/2026
 author: schaffererin
 ms.author: schaffererin
 ms.custom: references_regions, devx-track-azurecli
@@ -29,9 +29,9 @@ The following table compares the Free, Standard, and Premium pricing tiers for A
 
 | Tier | When to use | Supported cluster types | Pricing | Feature comparison |
 | ---- | ----------- | ----------------------- | ------- | ------------------ |
-| Free | • Development/testing environments. <br> • Learning and evaluation scenarios. <br> • Non-production workloads. | • Development clusters or small scale testing environments. <br> • Clusters with fewer than 10 nodes. | • Free cluster management. <br> • Pay-as-you-go for resources you consume. | • Recommended for clusters with fewer than 10 nodes, but can support up to 1,000 nodes. <br> • Includes all current AKS features. |
-| Standard | • Production workloads requiring 99.9-99.95% API server uptime. <br> • Workloads needing financial service level agreement (SLA) coverage. | • Default tier for Automatic SKU clusters. <br> <br> • Enterprise-grade or production workloads. <br> • Clusters with up to 5,000 nodes. | • Pay-as-you-go for resources you consume. <br> • [Standard tier cluster management pricing details](https://azure.microsoft.com/pricing/details/kubernetes-service/). | • Uptime SLA is enabled by default. <br> • Greater cluster reliability. <br> • Supports up to 5,000 nodes in a cluster. <br> • Includes all current AKS features. |
-| Premium | • Production workloads requiring 99.9-99.95% API server uptime. <br> • Workloads requiring 24-month [Long Term Support (LTS)][long-term-support] Kubernetes version support. <br> • Regulated environments requiring extended maintenance. | • Enterprise-grade or production workloads. <br> • Clusters with up to 5,000 nodes. | • Pay-as-you-go for resources you consume. <br> • [Premium tier cluster management pricing details](https://azure.microsoft.com/pricing/details/kubernetes-service/). | • Includes all current AKS features. <br> • [Microsoft maintenance past community support][long-term-support]. |
+| Free | * Development/testing environments. <br> * Learning and evaluation scenarios. <br> * Non-production workloads. | * Development clusters or small scale testing environments. <br> * Clusters with fewer than 10 nodes. | * Free cluster management. <br> * Pay-as-you-go for resources you consume. | * Recommended for clusters with fewer than 10 nodes, but can support up to 1,000 nodes. <br> * Includes all current AKS features. |
+| Standard | * Production workloads requiring 99.9-99.95% API server uptime. <br> * Workloads needing financial service level agreement (SLA) coverage. | * Default tier for Automatic SKU clusters. <br> <br> * Enterprise-grade or production workloads. <br> * Clusters with up to 5,000 nodes. | * Pay-as-you-go for resources you consume. <br> * [Standard tier cluster management pricing details](https://azure.microsoft.com/pricing/details/kubernetes-service/). | * Uptime SLA is enabled by default. <br> * Greater cluster reliability. <br> * Supports up to 5,000 nodes in a cluster. <br> * Includes all current AKS features. |
+| Premium | * Production workloads requiring 99.9-99.95% API server uptime. <br> * Workloads requiring 24-month [Long Term Support (LTS)][long-term-support] Kubernetes version support. <br> * Regulated environments requiring extended maintenance. | * Enterprise-grade or production workloads. <br> * Clusters with up to 5,000 nodes. | * Pay-as-you-go for resources you consume. <br> * [Premium tier cluster management pricing details](https://azure.microsoft.com/pricing/details/kubernetes-service/). | * Includes all current AKS features. <br> * [Microsoft maintenance past community support][long-term-support]. |
 
 ## Uptime SLA terms and conditions
 
@@ -294,61 +294,6 @@ The following tables outline the availability of AKS pricing tiers by region:
         "tier": "Free"
       },
       "supportPlan": "KubernetesOfficial",
-      ...
-    }
-    ```
-
-## Update an existing cluster from the Base SKU to the Automatic SKU
-
-> [!IMPORTANT]
-> Make sure all the [AKS Automatic features](./intro-aks-automatic.md) are enabled on your cluster before updating.
-
-- Update an existing cluster from the Base SKU to the Automatic SKU using the [`az aks update`][az-aks-create] command with the `--sku` parameter set to `Automatic`.
-
-    ```azurecli-interactive
-    # Set environment variables
-    export RESOURCE_GROUP=<your-resource-group-name>
-    export CLUSTER_NAME=<your-aks-cluster-name>
-
-    # Update the AKS cluster
-    az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --sku Automatic
-    ```
-
-    Results:
-
-    ```output
-    {
-      ...
-      "sku": {
-        "name": "Automatic",
-        "tier": "Standard"
-      },
-      ...
-    }
-    ```
-
-## Update an existing cluster from the Automatic SKU to the Base SKU
-
-- Update an existing cluster from the Automatic SKU to the Base SKU using the [`az aks update`][az-aks-create] command with the `--sku` parameter set to `Base`.
-
-    ```azurecli-interactive
-    # Set environment variables
-    export RESOURCE_GROUP=<your-resource-group-name>
-    export CLUSTER_NAME=<your-aks-cluster-name>
-
-    # Update the AKS cluster
-    az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --sku Base
-    ```
-
-    Results:
-
-    ```output
-    {
-      ...
-      "sku": {
-        "name": "Base",
-        "tier": "Standard"
-      },
       ...
     }
     ```
