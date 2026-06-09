@@ -391,7 +391,7 @@ az identity federated-credential create \
 > It takes a few seconds for the federated identity credential to propagate after it's added. If a token request is made immediately after adding the federated identity credential, the request might fail until the cache is refreshed. To avoid this issue, you can add a slight delay after adding the federated identity credential. 
 
 > [!WARNING]
-> The audience listed above is the default and recommended audience for Microsoft Entra Workload Identity. This value is global and consistent across all Azure clouds, changing the audience value may break compatibility with existing configurations and is not recommended unless explicitly required.
+> The audience listed above is the default and recommended audience for Microsoft Entra Workload Identity. This value is global and consistent across all Azure clouds, changing the audience value may break compatibility with existing configurations and is not recommended unless explicitly required. You can explicitly request a token with a specific audience in pod configuration if required by the target tenant in sovereign environments to ensure the audience configured in your federated identity credential matches the audience used during token exchange.
 
 :::zone-end
 
@@ -410,7 +410,8 @@ resource "azurerm_federated_identity_credential" "this" {
 }
 ```
 > [!WARNING]
-> The audience listed above is the default and recommended audience for Microsoft Entra Workload Identity. This value is global and consistent across all Azure clouds, changing the audience value may break compatibility with existing configurations and is not recommended unless explicitly required.
+> The audience listed above is the default and recommended audience for Microsoft Entra Workload Identity. This value is global and consistent across all Azure clouds, changing the audience value may break compatibility with existing configurations and is not recommended unless explicitly required. You can explicitly request a token with a specific audience in pod configuration if required by the target tenant in sovereign environments to ensure the audience configured in your federated identity credential matches the audience used during token exchange.
+
 
 :::zone-end
 
