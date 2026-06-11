@@ -702,7 +702,7 @@ If you encounter issues with the Vertical Pod Autoscaler, you can troubleshoot t
 To learn more about the VPA object, see the [Vertical Pod Autoscaler API reference](./vertical-pod-autoscaler-api-reference.md).
 
 <!-- EXTERNAL LINKS -->
-[kubernetes-autoscaler-github-repo]: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/examples/hamster.yaml
+[kubernetes-autoscaler-github-repo]: https://github.com/kubernetes/autoscaler/blob/vpa-release-0.8/vertical-pod-autoscaler/examples/hamster.yaml
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-create]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#create
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
