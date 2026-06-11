@@ -1,19 +1,20 @@
 ---
-title: Azure Kubernetes Service (AKS) for Extended Zones (preview)
+title: Azure Kubernetes Service (AKS) for Extended Zones
 description: Learn how to deploy an Azure Kubernetes Service (AKS) for Azure Extended Zone cluster.
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 03/20/2025
+ms.date: 06/11/2026
 # Customer intent: As a cloud architect, I want to deploy an Azure Kubernetes Service cluster in an Extended Zone, so that I can achieve low latency and maintain data residency for my applications.
 ---
 
-# Azure Kubernetes Service (AKS) for Extended Zones (preview)
+# Azure Kubernetes Service (AKS) for Extended Zones
 
 Azure Kubernetes Service (AKS) for Extended Zones provides an extensive and sophisticated set of capabilities that make it simpler to deploy and operate a fully managed Kubernetes cluster in an Extended Zone scenario.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+> [!NOTE]
+> AKS is generally available in Azure Extended Zones for **public clusters** and **private clusters**. Other AKS features and add-ons might work, but only the features explicitly listed as supported are covered by the AKS support contract for Azure Extended Zones. The set of supported AKS features in Azure Extended Zones continues to grow as we validate more capabilities based on customer signals. For the up-to-date list, see [Service offerings for Azure Extended Zones](/azure/extended-zones/overview#service-offerings-for-azure-extended-zones).
 
 ## What are Azure Extended Zones?
 
@@ -156,13 +157,13 @@ The following ARM template deploys a new cluster in an Azure Extended Zone.
   "resources": [
     {
       "type": "Microsoft.ContainerService/managedClusters",
-      "apiVersion": "2022-05-02-preview",
+      "apiVersion": "2024-09-01",
       "name": "[parameters('clusterName')]",
       "location": "[parameters('location')]",
       "extendedLocation": {
         "name": "[parameters('edgeZoneName')]",
         "type": "EdgeZone"
-      }
+      },
       "identity": {
         "type": "SystemAssigned"
       },
@@ -216,6 +217,8 @@ LOCATION="<parent-region>" # Ensure this location corresponds to the parent regi
 
 After making sure you're logged in and using the appropriate subscription, use [`az aks create`][az-aks-create] to deploy the cluster, specifying the targeted Azure Extended Zone with the `--edge-zone` property.
 
+#### Create a public cluster
+
 ```azurecli-interactive
 # Log in to Azure
 az login
@@ -232,6 +235,20 @@ az aks create \
     --name $CLUSTER_NAME \
     --edge-zone $EXTENDED_ZONE_NAME \
     --location $LOCATION \
+    --generate-ssh-keys
+```
+
+#### Create a private cluster
+
+To deploy a [private AKS cluster](./private-clusters.md) in an Azure Extended Zone, add the `--enable-private-cluster` flag.
+
+```azurecli-interactive
+az aks create \
+    --resource-group $RG_NAME \
+    --name $CLUSTER_NAME \
+    --edge-zone $EXTENDED_ZONE_NAME \
+    --location $LOCATION \
+    --enable-private-cluster \
     --generate-ssh-keys
 ```
 
