@@ -2,7 +2,7 @@
 title: Support Policies for Azure Kubernetes Service (AKS)
 description: Learn about Azure Kubernetes Service (AKS) support policies, shared responsibility, and features that are in preview (or alpha or beta).
 ms.topic: concept-article
-ms.date: 01/29/2026
+ms.date: 06/09/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
@@ -94,6 +94,7 @@ Microsoft doesn't provide technical support for the following scenarios:
 - Stand-by and proactive scenarios. Microsoft Support provides reactive support to help solve active issues in a timely and professional manner. However, standby or proactive support to help you eliminate operational risks, increase availability, and optimize performance aren't covered. [Eligible customers](https://www.microsoft.com/unifiedsupport) can contact their account team to get nominated for [Azure Event Management service](https://devblogs.microsoft.com/premier-developer/proactively-plan-for-your-critical-event-in-azure-with-enhanced-support-and-engineering-services/). It's a paid service delivered by Microsoft support engineers that includes a proactive solution risk assessment and coverage during the event.
 - Vulnerabilities/CVEs with a vendor fix that's less than 30 days old. As long as you're running the updated VHD, you shouldn't be running any container image vulnerabilities/CVEs with a vendor fix that is over 30 days old. It's customer responsibility to update the VHD and provide filtered lists to Microsoft support. After you update your VHD, it's customer responsibility to filter the vulnerabilities/CVEs report and provide a list only with vulnerabilities/CVEs with a vendor fix that is over 30 days old. If that's the case, Microsoft support will make sure to work internally and address components with a vendor fix released more than 30 days ago. Additionally, Microsoft provides vulnerability/CVE-related support only for Microsoft-managed components. For example, AKS node images, managed container images for applications that are deployed during cluster creation or via the installation of a managed add-on. For more details about vulnerability management for AKS, visit [Vulnerability management for Azure Kubernetes Service (AKS)](concepts-vulnerability-management.md).
 - Custom code samples or scripts. While Microsoft Support _can_ provide small code samples and reviews of small code samples within a support case to demonstrate how to use features of a Microsoft product, Microsoft Support _can't_ provide custom code samples that are specific to your environment or application.
+- Microsoft Support can provide general guidance on how custom Azure Policy definitions are applied and evaluated within AKS. However, detailed troubleshooting of customer-authored custom policy logic (including Rego-based policies), such as analyzing or explaining why a specific policy allows or denies a workload, is generally outside the scope of support.
 
 ## AKS support coverage for agent nodes
 
