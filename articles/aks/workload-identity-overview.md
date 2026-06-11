@@ -282,6 +282,45 @@ All annotations are optional. If the annotation isn't specified, the default val
 | `azure.workload.identity/inject-proxy-sidecar` | Injects a proxy init container and proxy sidecar into the pod. The proxy sidecar is used to intercept token requests to IMDS and acquire a Microsoft Entra token on behalf of the user with federated identity credential. | false |
 | `azure.workload.identity/proxy-sidecar-port` | Represents the port of the proxy sidecar. | 8000 |
 
+### Use identity bindings and direct federation in the same workload
+
+A projected service account token has a single audience. When identity bindings are enabled, the identity binding webhook sets the default token referenced by `AZURE_FEDERATED_TOKEN_FILE` to the audience `api://AKSIdentityBinding`, which the identity binding proxy uses.
+
+Direct Microsoft Entra Workload ID federation (without identity bindings) requires a token with the audience `api://AzureADTokenExchange`. Reusing the identity binding token file for direct federation fails with `AADSTS700212` because the federated identity credential audience doesn't match the token audience.
+
+To use identity bindings for one managed identity and direct federation for another in the same workload, project a second service account token with the `api://AzureADTokenExchange` audience and point the direct federation code at that file:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: workload-with-ib-and-direct-fic
+  labels:
+    azure.workload.identity/use: "true"
+spec:
+  serviceAccountName: workload-sa
+  containers:
+  - name: app
+    image: <image>
+    volumeMounts:
+    - name: direct-fic-token
+      mountPath: /var/run/secrets/direct-fic
+      readOnly: true
+    env:
+    - name: DIRECT_FIC_TOKEN_FILE
+      value: /var/run/secrets/direct-fic/token
+  volumes:
+  - name: direct-fic-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          path: token
+          audience: api://AzureADTokenExchange
+          expirationSeconds: 3600
+```
+
+Use `AZURE_FEDERATED_TOKEN_FILE` for the identity binding flow and the custom token file, such as `DIRECT_FIC_TOKEN_FILE`, for the direct federated identity credential flow.
+
 ## Migrate to Microsoft Entra Workload ID
 
 You can configure clusters already running a pod-managed identity to use Microsoft Entra Workload ID using one of two ways:

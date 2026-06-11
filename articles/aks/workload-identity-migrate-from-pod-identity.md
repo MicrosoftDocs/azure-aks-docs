@@ -196,6 +196,9 @@ For all migration paths, you need to have the federated trust set up before you 
 
 If your application uses user-assigned managed identity and still relies on IMDS to get an access token you can use the migration sidecar to start migrating to Microsoft Entra Workload ID. In long-term applications, you should modify the code to use the latest Azure Identity SDKs that support client assertion.
 
+> [!NOTE]
+> A projected service account token has a single audience. Identity bindings use the audience `api://AKSIdentityBinding`, while direct workload identity federation uses `api://AzureADTokenExchange`. If a workload needs both authentication paths, use separate service accounts or add a second projected service account token volume with the required audience. For more information, see [Use identity bindings and direct federation in the same workload](workload-identity-overview.md#use-identity-bindings-and-direct-federation-in-the-same-workload).
+
 To update or deploy the workload, add the following [pod annotations][pod-annotations] to your pod specification (only if you want to use the migration sidecar):
 
 | Pod annotation | Description | Value |
