@@ -92,7 +92,7 @@ For all migration paths, you need to have the federated trust set up before you 
 **Migration approach**: Update your application code to use the latest Azure Identity SDK, then migrate to Microsoft Entra Workload ID with the updated code.
 
 > [!IMPORTANT]
-> When you update application code from managed identity token acquisition to `WorkloadIdentityCredential`, token requests must use Microsoft Entra ID v2 scopes in the format `<resource>/.default`, for example `https://management.azure.com/.default`. Do not pass only the resource URI, even if that value worked with `ManagedIdentityCredential` or an IMDS-based flow. Managed identity uses the IMDS `resource` parameter, while workload identity uses a federated client assertion flow against the Microsoft Entra v2 token endpoint and requires `scope`.
+> When you update application code from managed identity token acquisition to `WorkloadIdentityCredential`, token requests must use Microsoft Entra ID v2 scopes in the format `<resource>/.default`, for example `https://management.azure.com/.default`. Do not pass only the resource URI, even if that value worked with `ManagedIdentityCredential` or an IMDS-based flow. Managed identity uses the IMDS `resource` parameter, while workload identity uses a federated client assertion flow against the Microsoft Entra v2 token endpoint and requires `scope`. For more information about how scopes work in the v2 token endpoint, see [Get a token](/entra/identity-platform/v2-oauth2-client-creds-grant-flow#get-a-token).
 
 **Technical outcomes**:
 

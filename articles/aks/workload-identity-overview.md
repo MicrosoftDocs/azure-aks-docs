@@ -45,7 +45,7 @@ In the Azure Identity client libraries, choose one of the following approaches:
 - Create a `ChainedTokenCredential` instance that includes `WorkloadIdentityCredential`.
 - Use `WorkloadIdentityCredential` directly.
 
-When requesting tokens with `WorkloadIdentityCredential`, pass scopes using the Microsoft Entra ID v2 format `<resource>/.default`, such as `https://management.azure.com/.default`. A raw resource URI, such as `https://management.azure.com/`, can fail because workload identity uses the Microsoft Entra v2 token endpoint rather than the IMDS `resource` flow used by managed identity.
+When requesting tokens with `WorkloadIdentityCredential`, pass scopes using the Microsoft Entra ID v2 format `<resource>/.default`, such as `https://management.azure.com/.default`. A raw resource URI, such as `https://management.azure.com/`, can fail because workload identity uses the Microsoft Entra v2 token endpoint rather than the IMDS `resource` flow used by managed identity. For more information about how scopes work in the v2 token endpoint, see [Get a token](/entra/identity-platform/v2-oauth2-client-creds-grant-flow#get-a-token).
 
 The following table provides the **minimum** package version required for each language ecosystem's client library:
 
