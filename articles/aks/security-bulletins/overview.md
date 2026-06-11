@@ -22,7 +22,7 @@ These updates cover security information related to the following AKS components
 
 - Azure Kubernetes Service (AKS)
 - Azure Kubernetes Service Node Image (AKS Node Image)
-- Azure Kubernetes Service Addons (AKS add-ons)
+- Azure Kubernetes Service add-ons (AKS add-ons)
 
 ---
 
@@ -49,7 +49,7 @@ A [public disclosure](https://grahamhelton.com/blog/nodes-proxy-rce) on January 
 
 ### Affected Components
 
-#### [**AKS Addons**](#tab/aks-addons)
+#### [**AKS add-ons**](#tab/aks-addons)
 
 **Affected Versions**
 
@@ -371,7 +371,7 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 ### Affected Components
 
-#### [**AKS Addons**](#tab/aks-addons)
+#### [**AKS add-ons**](#tab/aks-addons)
 
 **Affected Versions**
 

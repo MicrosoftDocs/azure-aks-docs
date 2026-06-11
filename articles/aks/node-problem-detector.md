@@ -5,6 +5,7 @@ ms.topic: concept-article
 ms.date: 05/31/2023
 author: davidsmatlak
 ms.author: davidsmatlak
+ai-usage: ai-assisted
 
 # Customer intent: As a Kubernetes administrator, I want to utilize Node Problem Detector to monitor node health and detect issues, so that I can maintain cluster stability and promptly address any underlying problems affecting performance.
 ---
@@ -136,7 +137,7 @@ These events are also available in [Container Insights](/azure/azure-monitor/con
 
 NPD also exposes Prometheus metrics based on the node problems, which you can use for monitoring and alerting. These metrics are exposed on port 20257 of the Node IP and Prometheus can scrape them.
 
-The following example YAML shows a scrape config you can use with the [Azure Managed Prometheus add on as a DaemonSet](/azure/azure-monitor/essentials/prometheus-metrics-scrape-configuration#advanced-setup-configure-custom-prometheus-scrape-jobs-for-the-daemonset):
+The following example YAML shows a scrape config you can use with the [Azure Managed Prometheus add-on as a DaemonSet](/azure/azure-monitor/essentials/prometheus-metrics-scrape-configuration#advanced-setup-configure-custom-prometheus-scrape-jobs-for-the-daemonset):
 
 ```yaml
 kind: ConfigMap

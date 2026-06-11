@@ -6,6 +6,7 @@ author: varora24
 ms.author: vaibhavarora
 ms.topic: how-to
 ms.date: 01/26/2026
+ai-usage: ai-assisted
 # Customer intent: As a cluster operator or developer, I want to improve my DNS resolution performance and resiliency for my AKS cluster.
 ---
 
@@ -266,7 +267,7 @@ For example, if you have specific DNS needs when accessing microsoft.com, you co
 
 LocalDNS exposes Prometheus metrics that you can use for monitoring and alerting. These [metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default#coredns) are exposed on port `9253` of the Node IP and can be scraped from there.
 
-The following example YAML shows a scrape configuration you can use with the [Azure Managed Prometheus add on as a DaemonSet](/azure/azure-monitor/essentials/prometheus-metrics-scrape-configuration):
+The following example YAML shows a scrape configuration you can use with the [Azure Managed Prometheus add-on as a DaemonSet](/azure/azure-monitor/essentials/prometheus-metrics-scrape-configuration):
 
 ```yaml
 kind: ConfigMap

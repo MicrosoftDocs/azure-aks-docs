@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
+ai-usage: ai-assisted
 # Customer intent: As a cloud architect, I want to understand the ingress networking options for Azure Kubernetes Service, so that I can implement effective traffic management and load balancing strategies for my applications.
 ---
 

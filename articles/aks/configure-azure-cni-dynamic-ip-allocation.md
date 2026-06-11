@@ -9,6 +9,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 07/09/2024
 ms.custom: references_regions, devx-track-azurecli
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes administrator, I want to configure Azure CNI for dynamic IP allocation and enhanced subnet support in AKS, so that I can efficiently manage IP addresses and improve the scalability and performance of my Kubernetes clusters.
 ---
 
@@ -178,7 +179,7 @@ Learn more about networking in AKS in the following articles:
 
 * [Use a static IP address with the Azure Kubernetes Service (AKS) load balancer](static-ip.md)
 * [Use an internal load balancer with Azure Kubernetes Service (AKS)](internal-lb.md)
-* [Use the application routing addon in Azure Kubernetes Service (AKS)](app-routing.md)
+* [Use the application routing add-on in Azure Kubernetes Service (AKS)](app-routing.md)
 
 <!-- LINKS - External -->
 [github]: https://raw.githubusercontent.com/microsoft/Docker-Provider/ci_prod/kubernetes/container-azm-ms-agentconfig.yaml
@@ -187,4 +188,3 @@ Learn more about networking in AKS in the following articles:
 [azure-cni-prereq]: ./configure-azure-cni.md#prerequisites
 [azure-cni-deployment-parameters]: ./azure-cni-overview.md#deployment-parameters
 [az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
-

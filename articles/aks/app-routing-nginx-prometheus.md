@@ -7,6 +7,7 @@ author: sabbour
 ms.topic: how-to
 ms.date: 09/15/2025
 ms.author: asabbour
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes operator, I want to configure Prometheus to scrape ingress-nginx controller metrics, so that I can monitor and analyze the performance and usage of my applications effectively.
 ---
 
@@ -44,7 +45,7 @@ You can now terminate the `port-forward` process to close the forwarding.
 
 ## Configuring Azure Monitor managed service for Prometheus
 
-Azure Monitor managed service for Prometheus is a fully managed Prometheus-compatible service that supports industry standard features such as PromQL, Grafana dashboards, and Prometheus alerts. This service requires configuring the metrics addon for the Azure Monitor agent, which sends data to Prometheus. If your cluster isn't configured with the add-on, you can follow this article to configure your Azure Kubernetes Service (AKS) cluster to send data to Azure Monitor managed service for Prometheus.
+Azure Monitor managed service for Prometheus is a fully managed Prometheus-compatible service that supports industry standard features such as PromQL, Grafana dashboards, and Prometheus alerts. This service requires configuring the metrics add-on for the Azure Monitor agent, which sends data to Prometheus. If your cluster isn't configured with the add-on, you can follow this article to configure your Azure Kubernetes Service (AKS) cluster to send data to Azure Monitor managed service for Prometheus.
 
 ### Enable Service Monitor based scraping
 
@@ -151,4 +152,3 @@ Then upload the desired dashboard file and click on **Load**.
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [grafana-nginx-dashboard]: https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/grafana/dashboards/nginx.json
 [grafana-nginx-request-performance-dashboard]: https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/grafana/dashboards/request-handling-performance.json
-

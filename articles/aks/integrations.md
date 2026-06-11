@@ -6,6 +6,7 @@ ms.subservice: aks-integration
 ms.date: 05/22/2023
 author: davidsmatlak
 ms.author: davidsmatlak
+ai-usage: ai-assisted
 
 # Customer intent: As a Kubernetes administrator, I want to integrate add-ons and extensions with my Azure Kubernetes Service cluster, so that I can enhance its functionality and streamline management of resources effectively.
 ---
@@ -38,7 +39,7 @@ AKS uses the following rules for applying updates to installed add-ons:
 | keda | Use event-driven autoscaling for the applications on your AKS cluster. | [Simplified application autoscaling with Kubernetes Event-driven Autoscaling (KEDA) add-on][keda] | [GitHub][keda-repo] |
 | monitoring | Use Container Insights and Managed Prometheus monitoring with your AKS cluster. | [Container insights overview][container-insights]<br>[Managed Prometheus overview][managed-prometheus] | [GitHub][aks-repo]<br>[GitHub][managed-prometheus-repo] |
 | azure-policy | Use Azure Policy for AKS, which enables at-scale enforcements and safeguards on your clusters in a centralized, consistent manner. | [Understand Azure Policy for Kubernetes clusters][azure-policy-aks] | [GitHub][azure-policy-repo] |
-| azure-keyvault-secrets-provider | Use Azure Keyvault Secrets Provider addon.| [Use the Azure Key Vault Provider for Secrets Store CSI Driver in an AKS cluster][keyvault-secret-provider] | [GitHub][keyvault-secret-provider-repo] |
+| azure-keyvault-secrets-provider | Use Azure Keyvault Secrets Provider add-on.| [Use the Azure Key Vault Provider for Secrets Store CSI Driver in an AKS cluster][keyvault-secret-provider] | [GitHub][keyvault-secret-provider-repo] |
 | virtual-node | Use virtual nodes with your AKS cluster. | [Use virtual nodes][virtual-nodes] | [GitHub][virtual-nodes-oss-repo] |
 | open-service-mesh | Use Open Service Mesh with your AKS cluster (retired). | [Open Service Mesh AKS add-on (retired)][osm] | [GitHub][osm-repo] |
 
@@ -132,4 +133,3 @@ For more information, see [Windows AKS partner solutions][windows-aks-partner-so
 [windows-aks-partner-solutions]: windows-aks-partner-solutions.md
 [managed-prometheus]: /azure/azure-monitor/containers/container-insights-overview
 [managed-prometheus-repo]: https://github.com/Azure/prometheus-collector
-

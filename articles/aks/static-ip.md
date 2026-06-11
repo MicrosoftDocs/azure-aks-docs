@@ -8,6 +8,7 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 06/03/2024
+ai-usage: ai-assisted
 
 # Customer intent: As a cluster operator or developer, I want to create and manage static IP address resources in Azure that I can use beyond the lifecycle of an individual Kubernetes service deployed in an AKS cluster.
 
@@ -224,7 +225,7 @@ Events:
 
 ## Next steps
 
-For more control over the network traffic to your applications, use the application routing addon for AKS. For more information about the app routing addon, see [Managed NGINX ingress with the application routing add-on](app-routing.md).
+For more control over the network traffic to your applications, use the application routing add-on for AKS. For more information about the app routing add-on, see [Managed NGINX ingress with the application routing add-on](app-routing.md).
 
 <!-- LINKS - External -->
 [kubectl-describe]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe
@@ -242,4 +243,3 @@ For more control over the network traffic to your applications, use the applicat
 [az-aks-show]: /cli/azure/aks#az-aks-show
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-group-create]: /cli/azure/group#az-group-create
-

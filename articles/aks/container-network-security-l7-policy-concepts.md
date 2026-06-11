@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
 ms.date:  03/14/2024
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes administrator, I want to implement Layer 7 policies in my cluster, so that I can enhance application security and traffic management by controlling communication at a granular level based on application-specific attributes.
 ---
 
@@ -58,7 +59,7 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 *   L7 policy isn't supported by CiliumClusterwideNetworkPolicy(CCNP).
 *	L7 policy through Advanced Container Networking Services (ACNS)  isn't  compatible with L7 policies implemented via alternate methods such as Istio. The following table summarizes the supported scenarios.
  
-| Feature/Component                                  | L7 Policies using AKS, Istio - Managed addon    |
+| Feature/Component                                  | L7 Policies using AKS, Istio - Managed add-on   |
 |----------------------------------------------------|-----------|
 | K8s network policies by Azure CNI powered by Cilium | Supported |
 | L4 (FQDN) Policies by Azure CNI powered by Cilium and ACNS                | Supported |

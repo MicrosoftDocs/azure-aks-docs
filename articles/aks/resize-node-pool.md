@@ -21,6 +21,69 @@ In this article, you learn the recommended method to resize a node pool by creat
 > [!IMPORTANT]
 > This method is specific to [Virtual Machine Scale Sets][vmss-docs]-based AKS clusters. When using Virtual Machines-based node pools, you can easily update the VM sizes in an existing node pool using a single Azure CLI command and have multiple VM sizes in the same node pool. For more information, see the [Virtual Machines node pools documentation][vm-node-pools].
 
+## Resize a VMSS node pool in place (preview)
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+You can now resize the VM size (SKU) of an existing VMSS-based node pool in a single command using `az aks nodepool update --node-vm-size <new-size>`. When you trigger this update, the AKS resource provider performs a rolling upgrade by:
+
+1. Surging new nodes with the target VM size.
+2. Cordoning and draining the old nodes.
+3. Deleting the old nodes.
+
+This avoids the manual create/cordon/drain/delete workflow described in the rest of this article.
+
+### How the resize rollout works
+
+The resize rollout uses the same rolling upgrade engine as a [node image upgrade][upgrade-node-image] and a [Kubernetes version upgrade][upgrade-aks-node-pools-rolling], so it honors the following upgrade-related settings already configured on the node pool. In particular, the resize respects:
+
+* [**Max surge** (`--max-surge`)][max-surge]: Controls how many extra nodes with the target VM size are added during the rollout. A higher value resizes the pool faster but consumes more compute and IP quota; a lower value is slower but less disruptive. The AKS default is `1`, and `33%` is recommended for production node pools.
+* [**Node drain timeout** (`--drain-timeout`)][drain-timeout]: How long AKS waits for pod eviction on each old node before forcefully deleting it. The default is 30 minutes. Combine this with appropriate [PodDisruptionBudgets][pod-disruption-budget] so workloads can drain safely.
+* [**Node soak duration** (`--node-soak-duration`)][node-soak-duration]: How long AKS waits after a new node becomes Ready before moving on to the next batch. Useful for letting workloads stabilize on the new VM size before continuing the rollout.
+
+Because resize reuses the upgrade pipeline, the same prerequisites apply: ensure your subscription has enough target VM size replacement capacity and available subnet IPs for surge nodes, and that your PodDisruptionBudgets allow at least one replica to be evicted at a time, otherwise resize can be blocked during drain. For end-to-end recommendations, see [Best practices for AKS node pool upgrades][aks-production-upgrade-strategies].
+
+### Prerequisites
+
+* AKS API version `2026-01-02-preview` or later.
+* The latest version of the [aks-preview Azure CLI extension][aks-preview-extension].
+
+### Resize the node pool
+
+Use the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--node-vm-size` parameter to change the VM size of an existing VMSS-based node pool:
+
+```azurecli-interactive
+az aks nodepool update \
+    --resource-group MyResourceGroup \
+    --cluster-name MyManagedCluster \
+    --name nodepool1 \
+    --node-vm-size Standard_D4s_v3
+```
+
+### Validation and unsupported combinations
+
+The AKS resource provider validates the resize request and blocks incompatible VM size changes. The following changes are **not supported** as part of an in-place VMSS resize:
+
+* Changing the **disk controller type** (for example, SCSI to NVMe).
+* Changing the **CPU architecture** (for example, x64 to ARM64).
+* Changing **confidential computing** support (for example, enabling or disabling SNP).
+* Changing the **hypervisor generation** (for example, V1 to V2).
+* Combining the resize with a **Kubernetes version upgrade** or a **node count change** in the same operation.
+
+If your target VM size requires any of the changes above, use the manual cordon-and-drain workflow described in the following sections instead.
+
+> [!NOTE]
+> In-place resize requires surge capacity to provision new nodes with the target VM size before draining the old ones. If the node pool is configured with `--max-surge 0` (that is, `--max-unavailable` is in effect), the resize request is rejected with a `400 Bad Request`. To proceed, set `--max-surge` to at least `1` when resize using
+>```azurecli-interactive
+> az aks nodepool update \
+>     --resource-group MyResourceGroup \
+>     --cluster-name MyManagedCluster \
+>     --name nodepool1 \
+>     --node-vm-size Standard_D4s_v3 \
+>     --max-surge 33%
+>```
+> and optionally restore your original `--max-surge` and `--max-unavailable` values after the resize completes.
+
 ## Create a new node pool with the desired SKU
 
 > [!NOTE]
@@ -240,6 +303,15 @@ After resizing a node pool by cordoning and draining, learn more about [using mu
 
 <!-- LINKS -->
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[aks-preview-extension]: /cli/azure/azure-cli-extensions-list
+[upgrade-node-image]: upgrade-node-image.md
+[upgrade-aks-node-pools-rolling]: upgrade-aks-node-pools-rolling.md
+[max-surge]: upgrade-aks-node-pools-rolling.md#customize-node-surge
+[max-unavailable]: upgrade-aks-node-pools-rolling.md#customize-unavailable-nodes
+[drain-timeout]: upgrade-aks-node-pools-rolling.md#customize-node-drain-timeout
+[node-soak-duration]: upgrade-aks-node-pools-rolling.md#customize-node-soak-time
+[aks-production-upgrade-strategies]: aks-production-upgrade-strategies.md
 [new-azaksnodepool]: /powershell/module/az.aks/new-azaksnodepool
 [az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
 [remove-azaksnodepool]: /powershell/module/az.aks/remove-azaksnodepool

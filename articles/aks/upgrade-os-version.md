@@ -3,7 +3,7 @@ title: Upgrade Operating System (OS) Version in Azure Kubernetes Service (AKS) C
 description: Learn about support, testing, and rollback for OS versions available on Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 09/23/2025
+ms.date: 05/29/2026
 author: allyford
 ms.author: allyford
 ai-usage: ai-assisted
@@ -78,8 +78,7 @@ az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
     --os-sku Ubuntu \
-    --name $NODE_POOL_NAME \
-    --node-count 1
+    --name $NODE_POOL_NAME
 ```
 
 You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to migrate between any supported Linux `os-sku`. The command might fail if the target OS doesn't have a supported node image for your Kubernetes version, VM size, or FIPS enablement.
@@ -104,9 +103,7 @@ az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
     --os-sku Ubuntu2404 \
-    --kubernetes-version 1.32.0 \
-    --name $NODE_POOL_NAME \
-    --node-count 1
+    --name $NODE_POOL_NAME
 ```
 
 #### Migrate to Azure Linux 3.0
@@ -127,9 +124,7 @@ az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
     --os-sku AzureLinux3 \
-    --kubernetes-version 1.30.0 \
-    --name $NODE_POOL_NAME \
-    --node-count 1
+    --name $NODE_POOL_NAME
 ```
 
 ## Roll back your OS version
@@ -170,8 +165,7 @@ az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
     --os-sku Ubuntu \
-    --name $NODE_POOL_NAME \
-    --node-count 1
+    --name $NODE_POOL_NAME
 ```
 
 You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to migrate between any supported Linux `os-sku`. The command might fail if the target OS doesn't have a supported node image for your Kubernetes version, VM size, or FIPS enablement.
@@ -187,8 +181,7 @@ az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
     --os-sku AzureLinux \
-    --name $NODE_POOL_NAME \
-    --node-count 1
+    --name $NODE_POOL_NAME
 ```
 
 ### Roll back to Ubuntu 22.04
@@ -207,9 +200,7 @@ az aks nodepool update \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \
     --os-sku Ubuntu2204 \
-    --kubernetes-version 1.32.0 \
-    --name $NODE_POOL_NAME \
-    --node-count 1
+    --name $NODE_POOL_NAME
 ```
 
 ## Next steps
