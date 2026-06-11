@@ -5,6 +5,7 @@ ms.date: 09/09/2025
 ms.topic: overview
 author: davidsmatlak
 ms.author: davidsmatlak
+ai-usage: ai-assisted
 
 # Customer intent: As a Kubernetes administrator, I want to deploy and manage cluster extensions on Azure Kubernetes Service so that I can enhance my cluster's capabilities and streamline the lifecycle management of related applications and services.
 ---
@@ -42,7 +43,7 @@ For more information about the commands, see [`az aks`](/cli/azure/aks).
 
 Minor and major upgrades of core extensions occur alongside AKS minor and major version updates to avoid introducing breaking changes and provide better reliability.
 
-### Addon to core extension migration
+### Add-on to core extension migration
 
 [Azure Monitor](/azure/azure-monitor/containers/kubernetes-monitoring-overview) services, including [Container Insights](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=cli), [Managed Prometheus](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=cli), and [Application Insights](/azure/azure-monitor/containers/kubernetes-codeless?tabs=portal) are transitioning to a cluster extension based backend model. This change updates AKS monitoring [add-ons](/azure/aks/integrations) to an extension‑based management model, with no change to functionality or user experience.
 

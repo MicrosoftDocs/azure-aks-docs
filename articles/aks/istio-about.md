@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 04/09/2023
 ms.author: shasb
 author: shashankbarsin
+ai-usage: ai-assisted
 # Customer intent: As a cloud developer, I want to integrate an Istio-based service mesh with Azure Kubernetes Service, so that I can enhance my microservices architecture with capabilities like observability, traffic management, and security without modifying my application code.
 ---
 
@@ -46,7 +47,7 @@ This service mesh add-on uses and builds on top of open-source Istio. The add-on
 ## Limitations
 
 Istio-based service mesh add-on for AKS has the following limitations:
-* The add-on doesn't work on AKS clusters that are using [Open Service Mesh addon for AKS][open-service-mesh-about].
+* The add-on doesn't work on AKS clusters that are using [Open Service Mesh add-on for AKS][open-service-mesh-about].
 * The add-on doesn't work on AKS clusters with self-managed installations of Istio.
 * The add-on doesn't support adding pods associated with virtual nodes to be added under the mesh.
 * The add-on doesn't yet support the sidecar-less Ambient mode. Microsoft is currently contributing to Ambient workstream under Istio open source. Product integration for Ambient mode is on the roadmap and is being continuously evaluated as the Ambient workstream evolves.

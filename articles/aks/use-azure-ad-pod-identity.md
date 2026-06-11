@@ -7,6 +7,7 @@ ms.custom: devx-track-azurecli
 ms.date: 12/16/2025
 author: schaffererin
 ms.author: schaffererin
+ai-usage: ai-assisted
 # Customer intent: "As a cloud administrator, I want to implement Microsoft Entra pod-managed identities in my Azure Kubernetes Service cluster, so that I can securely manage identities and access to Azure resources for my applications."
 ---
 
@@ -119,7 +120,7 @@ You can manage your AKS cluster with either the Azure Container Networking Inter
    az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
    ```
 
-When you enable pod-managed identity on your AKS cluster, the system adds an `AzurePodIdentityException` named *aks-addon-exception* to the *kube-system* namespace. An `AzurePodIdentityException` lets pods with certain labels access the Azure Instance Metadata Service (IMDS) endpoint without interception by the NMI server. The *aks-addon-exception* allows AKS first-party addons, such as Microsoft Entra pod-managed identity, to operate without requiring you to manually configure an `AzurePodIdentityException`. Optionally, you can add, remove, and update an `AzurePodIdentityException` using:
+When you enable pod-managed identity on your AKS cluster, the system adds an `AzurePodIdentityException` named *aks-addon-exception* to the *kube-system* namespace. An `AzurePodIdentityException` lets pods with certain labels access the Azure Instance Metadata Service (IMDS) endpoint without interception by the NMI server. The *aks-addon-exception* allows AKS first-party add-ons, such as Microsoft Entra pod-managed identity, to operate without requiring you to manually configure an `AzurePodIdentityException`. Optionally, you can add, remove, and update an `AzurePodIdentityException` using:
 
 * `az aks pod-identity exception add`
 

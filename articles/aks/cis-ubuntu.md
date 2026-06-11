@@ -116,8 +116,8 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 1.3.1 | **Configure AppArmor** | | | |
 | 1.3.1.1 | Ensure AppArmor is installed | L1 | Pass | |
 | 1.3.1.2 | Ensure AppArmor is enabled in the bootloader configuration | L1 | Pass | |
-| 1.3.1.3 | Ensure all AppArmor Profiles are in enforce or complain mode | L1 | Fail | Operational impact: May block legitimate workloads and addons. |
-| 1.3.1.4 | Ensure all AppArmor Profiles are enforcing | L2 | Fail | Operational impact: May block legitimate workloads and addons. |
+| 1.3.1.3 | Ensure all AppArmor Profiles are in enforce or complain mode | L1 | Fail | Operational impact: May block legitimate workloads and add-ons. |
+| 1.3.1.4 | Ensure all AppArmor Profiles are enforcing | L2 | Fail | Operational impact: May block legitimate workloads and add-ons. |
 | 1.4 | **Configure Bootloader** | | | |
 | 1.4.1 | Ensure bootloader password is set | L1 | Pass | |
 | 1.4.2 | Ensure access to bootloader config is configured | L1 | Pass | |
@@ -324,11 +324,11 @@ The following are the results from the [CIS Ubuntu 24.04 LTS Benchmark v1.0.0][c
 | 5.3.3.4.4 | Ensure pam_unix includes use_authtok | L1 | Pass | |
 | 5.4 | **User Accounts and Environment** | | | |
 | 5.4.1 | **Configure shadow password suite parameters** | | | |
-| 5.4.1.1 | Ensure password expiration is configured | L1 | Fail | Operational impact: applying password expiration to the root user prevents nodes from joining the cluster and disrupts AKS addon functionality |
+| 5.4.1.1 | Ensure password expiration is configured | L1 | Fail | Operational impact: applying password expiration to the root user prevents nodes from joining the cluster and disrupts AKS add-on functionality |
 | 5.4.1.2 | Ensure minimum password days is configured | L2 | Manual | |
 | 5.4.1.3 | Ensure password expiration warning days is configured | L1 | Pass | |
 | 5.4.1.4 | Ensure strong password hashing algorithm is configured | L1 | Pass | |
-| 5.4.1.5 | Ensure inactive password lock is configured | L1 | Fail | Operational impact: applying inactive password locking to the root user prevents nodes from joining the cluster and disrupts AKS addon functionality |
+| 5.4.1.5 | Ensure inactive password lock is configured | L1 | Fail | Operational impact: applying inactive password locking to the root user prevents nodes from joining the cluster and disrupts AKS add-on functionality |
 | 5.4.1.6 | Ensure all users last password change date is in the past | L1 | Pass | |
 | 5.4.2 | **Configure root and system accounts and environment** | | | |
 | 5.4.2.1 | Ensure root is the only UID 0 account | L1 | Pass | |
@@ -704,11 +704,11 @@ The following are the results from [CIS Ubuntu 22.04 LTS Benchmark v3.0.0][cis-b
 | 5.3.3.4.4 | Ensure pam_unix includes use_authtok | L1 | Pass | |
 | 5.4 | **User Accounts and Environment** | | | |
 | 5.4.1 | **Configure shadow password suite parameters** | | | |
-| 5.4.1.1 | Ensure password expiration is configured | L1 | Fail | Operational impact: applying password expiration to the root user prevents nodes from joining the cluster and disrupts AKS addon functionality |
+| 5.4.1.1 | Ensure password expiration is configured | L1 | Fail | Operational impact: applying password expiration to the root user prevents nodes from joining the cluster and disrupts AKS add-on functionality |
 | 5.4.1.2 | Ensure minimum password days is configured | L2 | Manual | |
 | 5.4.1.3 | Ensure password expiration warning days is configured | L1 | Pass | |
 | 5.4.1.4 | Ensure strong password hashing algorithm is configured | L1 | Pass | |
-| 5.4.1.5 | Ensure inactive password lock is configured | L1 | Fail | Operational impact: applying inactive password locking to the root user prevents nodes from joining the cluster and disrupts AKS addon functionality |
+| 5.4.1.5 | Ensure inactive password lock is configured | L1 | Fail | Operational impact: applying inactive password locking to the root user prevents nodes from joining the cluster and disrupts AKS add-on functionality |
 | 5.4.1.6 | Ensure all users last password change date is in the past | L1 | Pass | |
 | 5.4.2.1 | Ensure root is the only UID 0 account | L1 | Pass | |
 | 5.4.2.2 | Ensure root is the only GID 0 account | L1 | Pass | |

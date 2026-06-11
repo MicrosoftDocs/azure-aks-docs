@@ -8,12 +8,13 @@ ms.author: davidsmatlak
 ms.date: 06/10/2025
 author: davidsmatlak
 ms.service: azure-kubernetes-service
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes cluster operator, I want to understand the outbound network and FQDN rules necessary to control egress traffic, so that I can enhance security and ensure proper functionality within my Azure Kubernetes Service deployment."
 ---
 
 # Outbound network and FQDN rules for Azure Kubernetes Service (AKS) clusters
 
-This article provides the necessary details that allow you to secure outbound traffic from your Azure Kubernetes Service (AKS). It contains the cluster requirements for a base AKS deployment and additional requirements for optional addons and features. You can apply this information to any outbound restriction method or appliance.
+This article provides the necessary details that allow you to secure outbound traffic from your Azure Kubernetes Service (AKS). It contains the cluster requirements for a base AKS deployment and additional requirements for optional add-ons and features. You can apply this information to any outbound restriction method or appliance.
 
 To see an example configuration using Azure Firewall, visit [Control egress traffic using Azure Firewall in AKS](limit-egress-traffic.md).
 
@@ -155,7 +156,7 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 If you choose to block/not allow these FQDNs, the nodes will only receive OS updates when you do a [node image upgrade](node-image-upgrade.md) or [cluster upgrade](upgrade-cluster.md). Keep in mind that Node Image Upgrades also come with updated packages including security fixes.
 
-## AKS features, addons, and integrations
+## AKS features, add-ons, and integrations
 
 ### Workload identity
 
@@ -188,8 +189,8 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 
 | FQDN                                          | Port      | Use      |
 |-----------------------------------------------|-----------|----------|
-| **`vault.azure.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure Key Vault server.|
-| **`*.vault.usgovcloudapi.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure Key Vault server in Azure Government.|
+| **`vault.azure.net`** | **`HTTPS:443`** | Required for CSI Secret Store add-on pods to talk to Azure Key Vault server.|
+| **`*.vault.usgovcloudapi.net`** | **`HTTPS:443`** | Required for CSI Secret Store add-on pods to talk to Azure Key Vault server in Azure Government.|
 
 ### Azure Monitor - Managed Prometheus, Container Insights, and Azure Monitor Application Insights Autoinstrumentation
 
@@ -308,7 +309,7 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 
 > [!NOTE]
 >
-> For any addons that aren't explicitly stated here, the core requirements cover it.
+> For any add-ons that aren't explicitly stated here, the core requirements cover it.
 
 
 ### Istio-based service mesh add-on

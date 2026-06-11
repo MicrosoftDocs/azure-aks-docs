@@ -26,7 +26,7 @@ Microsoft Entra integration can't be disabled after it's enabled on a cluster.
 
 ## Before you begin
 
-To install the AKS addon, verify you have the following items:
+To install the AKS add-on, verify you have the following items:
 
 - You have Azure CLI version 2.29.0 or later installed and configured. To find the version, run the `az --version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - You need `kubectl` with a minimum version of [1.18.1](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.18.md#v1181) or [`kubelogin`][kubelogin]. With the Azure CLI and the Azure PowerShell module, `kubectl` and `kubelogin` are included and automatically managed. Meaning, they're upgraded by default and running [`az aks install-cli`](/cli/azure/aks#az-aks-install-cli) isn't required or recommended. If you're using an automated pipeline, you need to manage upgrades for the correct or latest version. The difference between the minor versions of Kubernetes and `kubectl` shouldn't be more than *one* version. Otherwise, authentication issues occur on the wrong version.

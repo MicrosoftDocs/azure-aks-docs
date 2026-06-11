@@ -10,6 +10,7 @@ ms.author: davidsmatlak
 
 ms.custom: references_regions, devx-track-azurecli
 ms.subservice: aks-nodes
+ai-usage: ai-assisted
 # Customer intent: "As a cloud engineer, I want to configure an Azure Kubernetes Service cluster with virtual nodes using Azure CLI, so that I can enable seamless communication between active pods in Azure Container Instances and AKS for improved resource scaling and efficient workload management."
 ---
 
@@ -112,7 +113,7 @@ An Azure resource group is a logical group in which Azure resources are deployed
 
 For more information on managed identities, see [Use managed identities](use-managed-identity.md).
 
-## Enable the virtual nodes addon
+## Enable the virtual nodes add-on
 
 > [!NOTE]
 > If you have an existing Azure Kubernetes Service Cluster created that uses Azure CNI for the Advanced Networking you should be able to enable virtual nodes as an add-on using the CLI.
@@ -329,4 +330,3 @@ Virtual nodes are often one component of a scaling solution in AKS. For more inf
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [virtual-nodes-aks]: virtual-nodes.md
 [virtual-nodes-networking-aci]: /azure/container-instances/container-instances-virtual-network-concepts
-

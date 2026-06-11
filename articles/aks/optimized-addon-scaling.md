@@ -6,6 +6,7 @@ author: schaffererin
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 05/20/2025
+ai-usage: ai-assisted
 ---
 
 # Enable cost optimized add-on scaling on your Azure Kubernetes Service (AKS) cluster (Preview)
@@ -14,7 +15,7 @@ This article provides an overview of cost optimized add-on scaling in Azure Kube
 
 ## Overview
 
-Enabling cost optimized add-on scaling installs the [Vertical Pod Autoscaler (VPA)add-on](./vertical-pod-autoscaler.md), allowing supported add-ons to autoscale based on usage.
+Enabling cost optimized add-on scaling installs the [Vertical Pod Autoscaler (VPA) add-on](./vertical-pod-autoscaler.md), allowing supported add-ons to autoscale based on usage.
  
 This feature also allows you to customize the resource's default CPU/ memory requests and limits in Deployments and DaemonSets, the maximum and minimum allowed CPU/ memory, and the VPA update mode within VPA custom resources. For more information, see [customize the resource configuration for AKS add-ons](./customize-resource-configuration.md).
 
@@ -42,8 +43,8 @@ VPA currently supports the following modes for cost optimized add-on scaling:
 > * AKS restarts the add-on pods when enabling cost optimized add-on scaling. CoreDNS is currently the only exception to avoid potential disruptions during the restart. For more information, see [CoreDNS autoscaling behavior](./coredns-autoscale.md).
 
 > [!WARNING]
-> Make sure you have enough compute resources on the system node pool for your addons when you enable cost optimized add-on scaling. AKS recommends turning on the [cluster autoscaler](./cluster-autoscaler-overview.md) or [node autoprovision](./node-autoprovision.md) to ensure right-sizing of your compute resources automatically. 
-> Monitor for pending add-on pods when using the cost-optimized add-on scaling feature. VPA might recommend resource requests that exceed available node capacity, potentially leading to unschedulable pods. You can control this behavior by [customizing min/max values](./customize-resource-configuration.md) for requests and limits of supported addons.
+> Make sure you have enough compute resources on the system node pool for your add-ons when you enable cost optimized add-on scaling. AKS recommends turning on the [cluster autoscaler](./cluster-autoscaler-overview.md) or [node autoprovision](./node-auto-provisioning.md) to ensure right-sizing of your compute resources automatically.
+> Monitor for pending add-on pods when using the cost-optimized add-on scaling feature. VPA might recommend resource requests that exceed available node capacity, potentially leading to unschedulable pods. You can control this behavior by [customizing min/max values](./customize-resource-configuration.md) for requests and limits of supported add-ons.
 
 ## Prerequisites
 

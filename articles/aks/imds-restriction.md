@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 05/30/2025
 ms.author: yuewu2
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes administrator, I want to restrict pod access to the Azure Instance Metadata Service (IMDS) endpoint, so that I can enhance the security of my AKS cluster and prevent sensitive information leaks.
 ---
 
@@ -68,7 +69,7 @@ Host network pods have `hostNetwork` set to **true** in their specs. Host networ
 
 ## Limitations
 
-Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS restriction. If you have these add-ons installed on your cluster, you can't enable IMDS restriction. Conversely, if IMDS restriction is enabled, then you can't install these add-ons. Unsupported addons include:
+Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS restriction. If you have these add-ons installed on your cluster, you can't enable IMDS restriction. Conversely, if IMDS restriction is enabled, then you can't install these add-ons. Unsupported add-ons include:
 
 - Application gateway ingress controller
 - Azure Monitor for containers (Container Insights)
