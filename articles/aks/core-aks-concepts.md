@@ -20,7 +20,26 @@ Kubernetes is an open-source container orchestration platform for automating the
 
 ## What is AKS?
 
-AKS is a managed Kubernetes service that simplifies deploying, managing, and scaling containerized applications that use Kubernetes. For more information, see [What is Azure Kubernetes Service (AKS)?][aks-overview]
+AKS is a managed Kubernetes service that simplifies deploying, managing, and scaling containerized applications that use Kubernetes. AKS supports two cluster modes:
+
+- **AKS Automatic**, a more fully managed experience with production-ready defaults for common operational tasks.
+- **AKS Standard**, a more configurable experience for teams that want deeper control over cluster setup and operations.
+
+For more information, see [What is Azure Kubernetes Service (AKS)?][aks-overview] and [What is AKS Automatic?](./intro-aks-automatic.md)
+
+## Cluster modes
+
+In AKS, you can create clusters in either Automatic mode or Standard mode. Both modes use core Kubernetes concepts, but operational responsibility differs.
+
+- AKS Automatic is designed for teams that want reduced operational overhead. It includes preconfigured defaults for node management, scaling, security guardrails, and upgrades.
+- AKS Standard is designed for teams that want maximum flexibility and direct control over cluster configuration, node pools, scaling, networking, and operations.
+
+Use AKS Automatic when you want a production-ready baseline with less day-2 platform management. Use AKS Standard when you need custom operating patterns and deeper tuning across cluster features.
+
+For detailed capability differences, see [AKS Automatic and Standard feature comparison][automatic-standard].
+
+> [!NOTE]
+> AKS Automatic and AKS Standard differ in service-level agreement (SLA) experience. AKS Automatic includes uptime SLA and qualifying pod readiness SLA coverage by default. In AKS Standard, uptime SLA is tied to pricing tier and cluster setup. For more information, see [AKS Automatic and Standard feature comparison][automatic-standard] and [Pricing tiers for AKS cluster management](./free-standard-pricing-tiers.md).
 
 ## Cluster components
 
@@ -30,6 +49,8 @@ An AKS cluster is divided into two main components:
 - **Nodes**: Nodes are the underlying virtual machines (VMs) that run your applications.
 
 ![Screenshot that shows Kubernetes control plane and node components.](media/concepts-clusters-workloads/control-plane-and-nodes.png)
+
+These architecture concepts are the same in both [AKS cluster modes](#cluster-modes). What differs is the operational model: AKS Automatic applies more preconfigured platform operations by default, while AKS Standard gives you more direct control over how node and cluster operations are configured and managed.
 
 > [!NOTE]
 > AKS managed components have the label `kubernetes.azure.com/managedby`: `aks`.
@@ -48,6 +69,8 @@ The Azure managed control plane is composed of several components that help mana
 | `kube-controller-manager` | The controller manager ([kube-controller-manager][kube-controller-manager]) runs controller processes, such as noticing and responding when nodes go down. |
 | `cloud-controller-manager` | The cloud controller manager ([cloud-controller-manager][cloud-controller-manager]) embeds cloud-specific control logic to run controllers specific to the cloud provider. |
 
+The control plane remains Azure-managed in both AKS Automatic and AKS Standard. In both modes, Azure operates critical control plane components such as `kube-apiserver`, `etcd`, `kube-scheduler`, `kube-controller-manager`, and `cloud-controller-manager`.
+
 ### Nodes
 
 Each AKS cluster has at least one node, which is an Azure VM that runs Kubernetes node components. The following components run on each node:
@@ -59,6 +82,13 @@ Each AKS cluster has at least one node, which is an Azure VM that runs Kubernete
 | `container runtime` | The [container runtime][container-runtime] manages the execution and lifecycle of containers. |
 
 ![Screenshot that shows Azure virtual machine and supporting resources for a Kubernetes node.](media/concepts-clusters-workloads/aks-node-resource-interactions.png)
+
+Nodes run the same core Kubernetes node components in both [AKS cluster modes](#cluster-modes), including `kubelet`, `kube-proxy`, and the `container runtime`. The difference is in the default operations experience:
+
+- AKS Automatic uses preconfigured defaults for common node-related operations.
+- AKS Standard provides more flexibility to configure and operate node behavior directly.
+
+For a detailed capability comparison, see [AKS Automatic and Standard feature comparison][automatic-standard].
 
 ## Node configuration
 
@@ -91,6 +121,9 @@ A container runtime is software that executes containers and manages container i
 A _pod_ is a group of one or more containers that share the same network and storage resources and a specification for how to run the containers. Pods typically have a 1:1 mapping with a container, but you can run multiple containers in a pod.
 
 ## Node pools
+
+> [!NOTE]
+> [AKS Automatic](./intro-aks-automatic.md) preconfigures and manages system node pool behavior and node provisioning defaults. AKS Standard expects explicit node pool design and lifecycle choices. For more information, see [AKS Automatic and Standard feature comparison][automatic-standard].
 
 In AKS, nodes of the same configuration are grouped together into _node pools_. These node pools contain the underlying virtual machine scale sets and virtual machines (VMs) that run your applications.
 
@@ -125,12 +158,6 @@ The following namespaces are created by default in an AKS cluster:
 
 ![Screenshot that shows Kubernetes namespaces to logically divide resources and applications.](media/concepts-clusters-workloads/namespaces.png)
 
-## Cluster modes
-
-In AKS, you can create a cluster with the Automatic or Standard mode. AKS Automatic provides a more fully managed experience. You can manage cluster configuration, including nodes, scaling, security, and other preconfigured settings. AKS Standard provides more control over the cluster configuration, including the ability to manage node pools, scaling, and other settings.
-
-For more information, see [AKS Automatic and Standard feature comparison][automatic-standard].
-
 ## Pricing tiers
 
 AKS offers three pricing tiers for cluster management: Free, Standard, and Premium. The pricing tier you choose determines the features that are available for managing your cluster.
@@ -143,8 +170,10 @@ For more information, see [Supported Kubernetes versions in AKS][supported-kuber
 
 ## Related content
 
-For information on more core concepts for AKS, see the following resources:
+For information on AKS and AKS Automatic, see the following resources:
 
+- [Introduction to AKS Automatic](./intro-aks-automatic.md)
+- [Create an AKS Automatic cluster](./automatic/quick-automatic-managed-network.md)
 - [AKS access and identity][access-identity]
 - [AKS security][security]
 - [AKS networking][networking]

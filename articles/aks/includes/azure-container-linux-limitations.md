@@ -17,4 +17,3 @@ ms.author: schaffererin
 > - [Pod Sandboxing](/azure/aks/use-pod-sandboxing) isn't supported.
 > - [Confidential Virtual Machines (CVMs)](/azure/aks/confidential-containers-overview) aren't supported.
 > - [Generation 1 VMs](/azure/aks/aks-virtual-machine-sizes#vm-support-on-aks) aren't supported.
-> - FIPS-enabled nodes aren't supported.

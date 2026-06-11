@@ -13,7 +13,9 @@
     - name: Azure Local
       href: /azure/aks/aksarc/aks-whats-new-local?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: AKS Edge Essentials
-      href: /azure/aks/aksarc/aks-edge-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json   
+      href: /azure/aks/aksarc/aks-edge-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: AKS on bare metal
+      href: /azure/aks/aksarc/aks-bare-metal-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 - name: Get started with AKS
   items:
     - name: Kubernetes basics
@@ -398,6 +400,8 @@
         href: blue-green-node-pool-upgrade.md
       - name: Roll back node pool versions
         href: roll-back-node-pool-version.md
+    - name: Automatic PDB management (preview)
+      href: automatic-pod-disruption-budget-management.md
   - name: Automate upgrades
     items:
     - name: Automatically upgrade an AKS cluster
@@ -560,7 +564,7 @@
         items:
           - name: Overview
             href: concepts-network-ingress.md
-          - name: Ingress with the Kubernetes Gateway API (preview)
+          - name: Ingress with the Kubernetes Gateway API
             href: managed-gateway-api.md
           - name: Use Application Gateway for Containers
             items:
@@ -572,7 +576,7 @@
             items:
               - name: Application routing add-on overview
                 href: app-routing.md
-              - name: Kubernetes Gateway API with application routing (preview)
+              - name: Kubernetes Gateway API with application routing
                 href: app-routing-gateway-api.md
               - name: Secure application routing Gateway API ingress traffic
                 href: app-routing-gateway-api-tls.md
@@ -1232,6 +1236,8 @@
           href: nvidia-gpu-operator.md
         - name: GPU health checking with NPD
           href: gpu-health-monitoring.md
+        - name: Optimize GPU workloads using profiling
+          href: gpu-profiling.md
 - name: Manage and optimize costs
   items:
     - name: Cost optimization best practices
