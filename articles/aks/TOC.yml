@@ -1236,6 +1236,8 @@
           href: nvidia-gpu-operator.md
         - name: GPU health checking with NPD
           href: gpu-health-monitoring.md
+        - name: Optimize GPU workloads using profiling
+          href: gpu-profiling.md
 - name: Manage and optimize costs
   items:
     - name: Cost optimization best practices

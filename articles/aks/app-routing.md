@@ -48,6 +48,7 @@ With the retirement of [Open Service Mesh][open-service-mesh-docs] (OSM) by the 
 - All private Azure DNS zones integrated with the add-on have to be in the same resource group.
 - Editing the ingress-nginx `ConfigMap` in the `app-routing-system` namespace isn't supported.
 - The following snippet annotations are blocked and will prevent an Ingress from being configured: `load_module`, `lua_package`, `_by_lua`, `location`, `root`, `proxy_pass`, `serviceaccount`, `{`, `}`, `'`.
+- Injecting non-Microsoft-managed sidecars (for example, custom telemetry, logging, or security agents) into the ingress-nginx proxy pods managed by the add-on is not officially supported. If you choose to inject your own sidecar into a managed proxy pod, Microsoft provides only best-effort support for any issues you encounter.
 
 
 ## Enable application routing using Azure CLI
