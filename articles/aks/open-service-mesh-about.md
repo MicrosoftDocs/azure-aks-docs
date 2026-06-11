@@ -5,6 +5,7 @@ ms.topic: concept-article
 ms.date: 09/25/2024
 ms.author: schaffererin
 author: schaffererin
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes administrator, I want to enable the Open Service Mesh add-on in my AKS cluster, so that I can enhance service communication security and observability within my microservices architecture.
 ---
 
@@ -57,7 +58,7 @@ The OSM AKS add-on has the following limitations:
 
 - After installation, you must enable Iptables redirection for port IP address and port range exclusion using `kubectl patch`. For more information, see [iptables redirection][ip-tables-redirection].
 - Any pods that need access to IMDS, Azure DNS, or the Kubernetes API server must have their IP addresses added to the global list of excluded outbound IP ranges using [Global outbound IP range exclusions][global-exclusion].
-* The add-on doesn't work on AKS clusters that are using [Istio based service mesh addon for AKS][istio-about].
+* The add-on doesn't work on AKS clusters that are using [Istio-based service mesh add-on for AKS][istio-about].
 - OSM doesn't support Windows Server containers.
 
 ## Next steps

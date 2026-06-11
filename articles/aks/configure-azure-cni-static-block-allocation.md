@@ -9,6 +9,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 03/18/2024
 ms.custom: references_regions, devx-track-azurecli
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes operator, I want to configure static CIDR block allocation in Azure CNI so that I can enhance pod scalability and manage IP allocation more efficiently for large clusters."
 ---
 
@@ -184,7 +185,7 @@ Learn more about networking in AKS in the following articles:
 
 - [Use a static IP address with the Azure Kubernetes Service (AKS) load balancer](static-ip.md)
 - [Use an internal load balancer with Azure Kubernetes Service (AKS)](internal-lb.md)
-- [Use the application routing addon in Azure Kubernetes Service (AKS)](app-routing.md)
+- [Use the application routing add-on in Azure Kubernetes Service (AKS)](app-routing.md)
 
 <!-- LINKS - External -->
 [github]: https://raw.githubusercontent.com/microsoft/Docker-Provider/ci_prod/kubernetes/container-azm-ms-agentconfig.yaml

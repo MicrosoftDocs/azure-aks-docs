@@ -8,6 +8,7 @@ ms.subservice: aks-security
 ms.date: 02/02/2026
 ms.custom: devx-track-azurecli
 zone_pivot_groups: csi-secrets-store-identity-access
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes administrator, I want to configure the Azure Key Vault Secrets Store CSI Driver with identity-based access methods, so that I can securely manage secrets in my Azure Kubernetes Service (AKS) cluster.
 ---
 
@@ -370,7 +371,7 @@ A key vault certificate also contains public x509 certificate metadata. The key 
 |`cert`|The certificate, in PEM format.|No|
 |`secret`|The private key and certificate, in PEM format.|Yes|
 
-## Disable the addon on existing clusters
+## Disable the add-on on existing clusters
 
 > [!NOTE]
 > Before you disable the add-on, ensure that *no* `SecretProviderClass` is in use. Trying to disable the add-on while a `SecretProviderClass` exists results in an error.

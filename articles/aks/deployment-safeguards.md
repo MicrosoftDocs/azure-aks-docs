@@ -306,9 +306,9 @@ az aks safeguards update --resource-group <resource-group-name> --name <cluster-
 
 ### Update your Deployment Safeguard version
 
-Deployment Safeguards adhere to the [AKS addon versioning scheme][aks-component-versions]. Each new version of a Deployment Safeguard will be released as a new minor version in AKS. These updates will be communicated through the [AKS GitHub release notes][aks-release-notes] and reflected in the "Deployment Safeguards Policies" table in our documentation.
+Deployment Safeguards adhere to the [AKS add-on versioning scheme][aks-component-versions]. Each new version of a Deployment Safeguard will be released as a new minor version in AKS. These updates will be communicated through the [AKS GitHub release notes][aks-release-notes] and reflected in the "Deployment Safeguards Policies" table in our documentation.
 
-To learn more about AKS versioning and addons, refer to the following documentation: [aks-component-versions] and [aks-versioning-for-addons].
+To learn more about AKS versioning and add-ons, refer to the following documentation: [AKS component versions][aks-component-versions] and [AKS versioning for add-ons][aks-versioning-for-addons].
 
 ## Verify compliance across clusters
 

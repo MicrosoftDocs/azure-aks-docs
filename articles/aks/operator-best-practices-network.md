@@ -6,6 +6,7 @@ ms.topic: best-practice
 ms.date: 11/10/2025
 author: schaffererin
 ms.author: schaffererin
+ai-usage: ai-assisted
 # Customer intent: As a cluster operator, I want to implement best practices for network connectivity and security in Azure Kubernetes Service, so that I can ensure efficient resource management and safeguard my applications against potential security threats.
 ---
 
@@ -130,9 +131,9 @@ An *ingress controller* is a daemon that runs on an AKS node and watches for inc
 
 Ingress controllers must be scheduled on a Linux node. Indicate that the resource should run on a Linux-based node using a node selector in your YAML manifest or Helm chart deployment. For more information, see [Use node selectors to control where pods are scheduled in AKS][concepts-node-selectors].
 
-## Ingress with the application routing addon
+## Ingress with the application routing add-on
 
-The application routing addon is the recommended way to configure an Ingress controller in AKS. The application routing addon is a fully managed, ingress controller for Azure Kubernetes Service (AKS) that provides the following features:
+The application routing add-on is the recommended way to configure an Ingress controller in AKS. The application routing add-on is a fully managed, ingress controller for Azure Kubernetes Service (AKS) that provides the following features:
 
 * Easy configuration of managed NGINX Ingress controllers based on Kubernetes NGINX Ingress controller.
 
@@ -245,5 +246,4 @@ This article focused on network connectivity and security. For more information 
 [advanced-networking]: configure-azure-cni.md
 [concepts-node-selectors]: concepts-clusters-workloads.md#node-selectors
 [nodepool-upgrade]: manage-node-pools.md#upgrade-a-single-node-pool
-
 

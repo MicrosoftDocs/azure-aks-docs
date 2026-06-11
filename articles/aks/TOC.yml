@@ -570,7 +570,7 @@
             items:
               - name: Application Gateway for Containers Overview
                 href: /azure/application-gateway/for-containers/overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-              - name: Deploy Application Gateway for Containers Add-on
+              - name: Deploy Application Gateway for Containers add-on
                 href: /azure/application-gateway/for-containers/quickstart-deploy-application-gateway-for-containers-alb-controller-addon?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: Use application routing add-on
             items:
