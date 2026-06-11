@@ -1,70 +1,414 @@
 ---
-title: Migration guidance for Open Service Mesh to Istio
-description: Migration guidance for Open Service Mesh configurations to Istio
-services: container-service
+title: Migration guidance from the Open Service Mesh (OSM) add-on to the Istio add-on
+description: Learn how to migrate from the Open Service Mesh (OSM) add-on to the Istio add-on for Azure Kubernetes Service (AKS).
+ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 09/25/2024
+ms.date: 05/29/2026
 ms.author: schaffererin
 author: schaffererin
-# Customer intent: "As a cloud engineer migrating microservices from Open Service Mesh to Istio, I want detailed guidance on translating OSM configurations to Istio equivalents, so that I can ensure a seamless transition and effective management of my workloads within the Istio service mesh."
+ai-usage: ai-assisted
+# Customer intent: "As a cloud engineer migrating microservices from the OSM add-on to the Istio add-on, I want guidance for translating OSM add-on configurations to Istio add-on equivalents, so that I can plan the changes needed for my workloads."
 ---
 
-# Migration guidance for Open Service Mesh (OSM) configurations to Istio
+# Migration guidance from the Open Service Mesh (OSM) add-on to the Istio add-on
 
 > [!IMPORTANT]
-> This article aims to provide a simplistic understanding of how to identify OSM configurations and translate them to equivalent Istio configurations for migrating workloads from OSM to Istio. This by no means, is considered to be an exhaustive detailed guide.
+> This article introduces how to identify OSM add-on configurations and translate them to equivalent Istio add-on configurations. It is not an exhaustive production migration runbook.
 
-This article provides practical guidance for mapping OSM policies to the [Istio](https://istio.io/) policies to help migrate your microservices deployments managed by OSM over to being managed by Istio. We utilize the OSM [Bookstore sample application](https://docs.openservicemesh.io/docs/getting_started/install_apps/) as a base reference for current OSM users. The following walk-through deploys the Bookstore application. The same steps are followed and explain how to apply the OSM [SMI](https://smi-spec.io/) traffic policies using the Istio equivalent.
+This article maps OSM add-on policies to equivalent Istio add-on policies. The source and target in this article are both managed Azure Kubernetes Service (AKS) add-ons. It doesn't cover migration from upstream Open Service Mesh to a self-managed or open source Istio installation. It uses the OSM [Bookstore sample application](https://docs.openservicemesh.io/docs/getting_started/install_apps/) as the reference for current OSM add-on users. The article has two independent sections:
 
-If you are not using OSM and are new to Istio, start with [Istio's own Getting Started guide](https://istio.io/latest/docs/setup/getting-started/) to learn how to use the Istio service mesh for your applications. If you are currently using OSM, make sure you are familiar with the OSM [Bookstore sample application](https://docs.openservicemesh.io/docs/getting_started/install_apps/) walk-through on how OSM configures traffic policies. The following walk-through does not duplicate the current documentation, and reference specific topics when relevant. You should be comfortable and fully aware of the bookstore application architecture before proceeding.
+- [Migrate the OSM Bookstore sample to the Istio add-on](#migrate-the-osm-bookstore-sample-to-the-istio-add-on): In-place migration procedure for an existing cluster running the OSM add-on.
+- [Bookstore policy translation reference](#bookstore-policy-translation-reference): Clean-sample walkthrough that demonstrates how to translate OSM SMI policies to Istio equivalents on a fresh cluster.
+
+If you aren't using OSM and are new to the managed Istio add-on, start with [Install the Istio add-on](istio-deploy-addon.md). If you currently use OSM, review the OSM [Bookstore sample application](https://docs.openservicemesh.io/docs/getting_started/install_apps/) walk-through before you continue. The following walk-through doesn't duplicate the OSM documentation and references specific topics when relevant. Make sure you understand the Bookstore application architecture before proceeding.
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
+- An Azure subscription with an existing AKS cluster running the OSM add-on.
 - [Azure CLI installed](/cli/azure/install-azure-cli).
-- The OSM AKS add-on is uninstalled from your AKS cluster
-- Any existing OSM Bookstore application, including namespaces, is uninstalled and deleted from your cluster
-- [Install the Istio AKS service mesh add-on](istio-deploy-addon.md)
+- Access to the AKS cluster where you can enable or disable managed add-ons.
+- `kubectl` access to the cluster.
+- The OSM Bookstore sample already deployed in the `bookbuyer`, `bookthief`, `bookstore`, and `bookwarehouse` namespaces.
+- Select an Istio revision to install. Set `LOCATION` to the Azure region for your AKS cluster, then look up supported Istio revisions using the `az aks mesh get-revisions` command:
 
-## Modifications needed to the OSM Sample Bookstore Application
+    ```azurecli-interactive
+    export LOCATION=<location>
+    ```
 
-To allow for Istio to manage the OSM bookstore application, there are a couple of changes needed in the existing manifests. Those changes are with the bookstore and the mysql services.
+    ```azurecli-interactive
+    az aks mesh get-revisions --location ${LOCATION} -o table
+    ```
 
-### Bookstore Modifications
+- Set variables used throughout this article. Set `REVISION` to a revision returned by the `az aks mesh get-revisions` command:
 
-In the OSM Bookstore walk-through, the bookstore service is deployed along with another bookstore-v2 service to demonstrate how OSM provides traffic shifting. This deployed services allowed you to split the client (`bookbuyer`) traffic between multiple service endpoints. The first new concept to understand how Istio handles what they refer to as [Traffic Shifting](https://istio.io/latest/docs/tasks/traffic-management/traffic-shifting/).
+    ```azurecli-interactive
+    export RESOURCE_GROUP=<resource-group-name>
+    export CLUSTER=<cluster-name>
+    export REVISION=<revision>
+    export BOOKSTORE_NAMESPACES="bookbuyer bookthief bookstore bookwarehouse"
+    ```
 
-OSM implementation of traffic shifting is based on the [SMI Traffic Split specification](https://github.com/servicemeshinterface/smi-spec/blob/main/apis/traffic-split/v1alpha4/traffic-split.md). The SMI Traffic Split specification requires the existence of multiple top-level services that are added as backends with the desired weight metric to shift client requests from one service to another. Istio accomplishes traffic shifting using a combination of a [Virtual Service](https://istio.io/latest/docs/reference/config/networking/virtual-service/) and a [Destination Rule](https://istio.io/latest/docs/reference/config/networking/destination-rule/). It is highly recommended that you familiarize yourself with both the concepts of a virtual service and destination rule.
+## Migrate the OSM Bookstore sample to the Istio add-on
 
-Put simply, the Istio virtual service defines routing rules for clients that request the host (service name). Virtual Services allows for multiple versions of a deployment to be associated to one virtual service hostname for clients to target. Multiple deployments can be labeled for the same service, representing different versions of the application behind the same hostname. The Istio virtual service can then be configured to weight the request to a specific version of the service. The available versions of the service are configured to use the `subsets` attribute in an Istio destination rule.
+The OSM add-on and the Istio add-on can't run simultaneously on the same AKS cluster. This procedure migrates the OSM Bookstore sample without deleting the cluster, namespaces, services, or workload controllers. Running pods aren't changed in place. Existing pods keep their OSM sidecars until their controllers create replacement pods after the namespaces are labeled for the managed Istio revision.
 
-The modification made to the bookstore service and deployment for Istio removes the need to have an explicit second service to target, which the SMI Traffic Split needs. There's no need for another service account for the bookstore v2 service as well, since it's to be consolidated under the bookstore service. The original OSM [traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm-docs/release-v1.2/manifests/access/traffic-access-v1.yaml) manifest modification to Istio for both the bookstore v1 and v2 are shown in the below [Create Pods, Services, and Service Accounts](#create-pods-services-and-service-accounts) section. We demonstrate how we do traffic splitting, known as traffic shifting later in the walk-through:
+> [!WARNING]
+> This migration causes service disruption. Disabling the OSM add-on immediately removes SMI traffic policy enforcement: mTLS and access control stop being applied even though existing pods are still running. The window between disabling OSM and completing the Istio rollout leaves workloads without mesh-level security or routing policy. Any pod replacement during this window (rollout restarts, scaling events, node evictions, or crash loops) creates pods that have neither an OSM sidecar nor an Istio sidecar until the namespace is labeled and the pod is recreated again. Plan an application downtime or reduced-availability window for production workloads, and validate the full procedure in a non-production cluster first. AKS planned maintenance settings don't schedule or control this manual migration.
 
-### MySql Modifications
+The migration below uses the following cleanup sequence:
 
-Changes to the mysql stateful set are only needed in the service configuration. Under the service specification, OSM needed the `targetPort` and `appProtocol` attributes. These attributes are not needed for Istio. The following updated service for the mysqldb looks like:
+1. Save the SMI resources before disabling the OSM add-on.
+1. Disable the OSM add-on before enabling the managed Istio add-on.
+1. Remove stale OSM admission webhooks before relabeling namespaces or restarting workloads.
+1. Leave OSM and SMI CRDs in place through managed Istio enablement and workload rollout unless your own validation shows that they block enablement, admission, or rollout.
+1. Remove stale `openservicemesh.io/*` namespace markers during the label swap.
+1. Label workload namespaces with `istio.io/rev=<revision>`.
+1. Apply and verify the translated Istio resources that are safe for your existing workload names and selectors.
+1. Roll the existing workload controllers so replacement pods are created with Istio sidecars.
+1. Delete residual OSM and SMI CRDs only after the migrated pods are ready.
+
+### Verify the OSM Bookstore state
+
+Verify that the OSM add-on is enabled and the managed Istio add-on is not enabled:
+
+```azurecli-interactive
+az aks show \
+  --resource-group ${RESOURCE_GROUP} \
+  --name ${CLUSTER} \
+  --query "{openServiceMesh:addonProfiles.openServiceMesh.enabled, serviceMeshProfile:serviceMeshProfile}"
+```
+
+The `openServiceMesh.enabled` value should be `true`. The `serviceMeshProfile` value should be `null` or show `mode: disabled` before the migration starts.
+
+Verify that the OSM control plane is ready:
+
+```bash
+kubectl wait -n kube-system --for=condition=Ready pod -l app=osm-controller --timeout=10m
+kubectl wait -n kube-system --for=condition=Ready pod -l app=osm-injector --timeout=10m
+kubectl wait -n kube-system --for=condition=Ready pod -l app=osm-bootstrap --timeout=10m
+```
+
+Verify that the Bookstore pods are running and have multiple ready containers. OSM-injected pods include the `osm-init` init container and the `envoy` sidecar container.
+
+```bash
+kubectl get pods -A -o wide | grep -E '^(bookbuyer|bookstore|bookthief|bookwarehouse)'
+```
+
+The following condensed example shows Bookstore pods with multiple containers ready:
+
+```output
+bookbuyer       bookbuyer-58c7699cb7-fxzvz       2/2   Running   0   51s   10.224.0.20   aks-nodepool1-32739176-vmss000002   <none>   <none>
+bookstore       bookstore-7696584686-6zdkn       2/2   Running   0   50s   10.224.0.71   aks-nodepool1-32739176-vmss000001   <none>   <none>
+bookthief       bookthief-77bf8c9b76-vswxz       2/2   Running   0   50s   10.224.0.15   aks-nodepool1-32739176-vmss000002   <none>   <none>
+bookwarehouse   bookwarehouse-6b94d668f7-vksf4   2/2   Running   0   49s   10.224.0.82   aks-nodepool1-32739176-vmss000001   <none>   <none>
+bookwarehouse   mysql-0                          3/3   Running   0   48s   10.224.0.17   aks-nodepool1-32739176-vmss000002   <none>   <none>
+```
+
+Confirm that the injected pods include OSM containers:
+
+```bash
+for NAMESPACE in ${BOOKSTORE_NAMESPACES}; do
+  kubectl get pods -n ${NAMESPACE} \
+    -o jsonpath='{range .items[*]}{.metadata.namespace}{"/"}{.metadata.name}{"\tinit="}{range .spec.initContainers[*]}{.name}{","}{end}{"\tcontainers="}{range .spec.containers[*]}{.name}{","}{end}{"\n"}{end}'
+done
+```
+
+Verify the SMI resources used by the sample:
+
+```bash
+kubectl get traffictargets.access.smi-spec.io,httproutegroups.specs.smi-spec.io,tcproutes.specs.smi-spec.io,trafficsplits.split.smi-spec.io -A
+```
+
+Check the Bookbuyer logs before changing the mesh:
+
+```bash
+kubectl logs -n bookbuyer deploy/bookbuyer -c bookbuyer --tail=20
+```
+
+Optionally start a continuous Bookbuyer log stream to monitor application availability. Keep the stream running through namespace relabeling and workload rollout if you want the log to cover the full migration window.
+
+```bash
+BOOKBUYER_LOG=bookbuyer-migration.log
+kubectl logs -n bookbuyer deploy/bookbuyer -c bookbuyer --timestamps --since=10s -f > ${BOOKBUYER_LOG} 2>&1 &
+BOOKBUYER_LOG_PID=$!
+```
+
+### Save the SMI policy configuration
+
+Save the SMI resources before final OSM and SMI API cleanup. Use these files to plan translation and rollback.
+
+```bash
+mkdir -p osm-smi-backup
+
+kubectl get traffictargets.access.smi-spec.io -A -o yaml > osm-smi-backup/traffic-targets.yaml
+kubectl get httproutegroups.specs.smi-spec.io -A -o yaml > osm-smi-backup/http-route-groups.yaml
+kubectl get tcproutes.specs.smi-spec.io -A -o yaml > osm-smi-backup/tcp-routes.yaml
+kubectl get trafficsplits.split.smi-spec.io -A -o yaml > osm-smi-backup/traffic-splits.yaml
+```
+
+Don't rely on residual OSM webhooks, CRDs, labels, or annotations as rollback state after the add-on is disabled.
+
+Translate the saved SMI resources to Istio resources using the policy examples later in the article:
+
+| OSM resource or behavior | Istio equivalent |
+| --- | --- |
+| OSM namespace onboarding | `istio.io/rev=<revision>` namespace label |
+| OSM sidecar injection | Istio sidecar injection for the selected revision |
+| `TrafficTarget`, `HTTPRouteGroup`, and `TCPRoute` | `AuthorizationPolicy` |
+| `TrafficSplit` | `VirtualService` and `DestinationRule` |
+| OSM permissive traffic policy and mTLS settings | `PeerAuthentication` and `AuthorizationPolicy` |
+
+Apply and verify translated Istio resources for your workloads before you treat the migration as complete. The in-place Bookstore steps in this section verify the control plane change and sidecar rollout. They don't automatically apply the policy examples in the reference section, and the clean-sample manifests later in this article must be adapted before you apply them to existing namespaces.
+
+### Disable the OSM add-on
+
+Disable the OSM add-on:
+
+```azurecli-interactive
+az aks disable-addons \
+  --resource-group ${RESOURCE_GROUP} \
+  --name ${CLUSTER} \
+  --addons open-service-mesh
+```
+
+Verify that the OSM add-on is disabled:
+
+```azurecli-interactive
+az aks show \
+  --resource-group ${RESOURCE_GROUP} \
+  --name ${CLUSTER} \
+  --query "{openServiceMesh:addonProfiles.openServiceMesh.enabled, serviceMeshProfile:serviceMeshProfile}"
+```
+
+The `openServiceMesh.enabled` value should be `false` or `null`. The `serviceMeshProfile` value should remain unchanged until managed Istio is enabled.
+
+Verify that the existing Bookstore pods are still running:
+
+```bash
+kubectl get pods -n bookbuyer
+kubectl get pods -n bookthief
+kubectl get pods -n bookstore
+kubectl get pods -n bookwarehouse
+```
+
+Existing pods might still include OSM sidecars after OSM is disabled. This is expected. They are replaced when their controllers are rolled later in the procedure.
+
+### Remove residual OSM admission blockers
+
+Check whether residual OSM admission still affects a workload namespace:
+
+```bash
+kubectl run osm-admission-probe \
+  --namespace bookbuyer \
+  --image mcr.microsoft.com/oss/nginx/nginx:1.25.5 \
+  --restart Never \
+  --dry-run=server \
+  -o yaml
+```
+
+Remove the AKS OSM add-on webhook configurations. If the dry run failed because Kubernetes can't call the `osm-injector` service, this cleanup clears the admission blocker.
+
+```bash
+kubectl delete mutatingwebhookconfiguration aks-osm-webhook-osm --ignore-not-found
+kubectl delete validatingwebhookconfiguration aks-osm-validator-mesh-osm --ignore-not-found
+```
+
+Remove these webhook configurations before relabeling namespaces or restarting workloads. A broken residual OSM webhook can block pod creation for verification, workload rollout, or rollback testing.
+
+Confirm that server-side pod admission succeeds after webhook cleanup:
+
+```bash
+kubectl run osm-admission-probe \
+  --namespace bookbuyer \
+  --image mcr.microsoft.com/oss/nginx/nginx:1.25.5 \
+  --restart Never \
+  --dry-run=server \
+  -o yaml
+```
+
+Verify that no OSM admission webhooks remain:
+
+```bash
+kubectl get mutatingwebhookconfiguration,validatingwebhookconfiguration | grep -i osm || true
+```
+
+Inventory any remaining OSM and SMI CRDs before enabling managed Istio. Leave these CRDs in place unless validation shows they block enablement, admission, or rollout.
+
+```bash
+kubectl get crd | grep -E 'openservicemesh.io|smi-spec.io' || true
+```
+
+### Enable the Istio add-on and move workloads
+
+Enable the managed Istio add-on:
+
+```azurecli-interactive
+az aks mesh enable \
+  --resource-group ${RESOURCE_GROUP} \
+  --name ${CLUSTER} \
+  --revision ${REVISION}
+```
+
+Verify the managed Istio add-on state:
+
+```azurecli-interactive
+az aks show \
+  --resource-group ${RESOURCE_GROUP} \
+  --name ${CLUSTER} \
+  --query "{mode:serviceMeshProfile.mode, revisions:serviceMeshProfile.istio.revisions}"
+```
+
+The `mode` value should be `Istio`, and the revision list should include the selected revision.
+
+Wait for the Istio control plane and injector webhook:
+
+```bash
+kubectl wait -n aks-istio-system --for=condition=Ready pod -l app=istiod --timeout=10m
+kubectl get mutatingwebhookconfiguration | grep istio-sidecar-injector
+```
+
+Remove stale OSM namespace markers and label the Bookstore namespaces with the managed Istio revision. Don't use `istio-injection=enabled` with the AKS managed Istio add-on.
+
+```bash
+for NAMESPACE in ${BOOKSTORE_NAMESPACES}; do
+  kubectl label namespace ${NAMESPACE} openservicemesh.io/monitored-by- --overwrite
+  kubectl annotate namespace ${NAMESPACE} openservicemesh.io/sidecar-injection- --overwrite
+  kubectl label namespace ${NAMESPACE} istio.io/rev=${REVISION} --overwrite
+done
+```
+
+Apply and verify the translated Istio resources that are safe for your existing workload names and selectors before rolling controllers. The exact files depend on the SMI resources you saved and translated.
+
+```bash
+kubectl apply -f translated-istio-resources.yaml
+kubectl get peerauthentication,authorizationpolicy,destinationrule,virtualservice -A
+```
+
+Don't delete OSM or SMI APIs until equivalent Istio policy and routing behavior is verified for your workloads.
+
+Roll the existing controllers so Kubernetes creates replacement pods with Istio sidecars. The following order matches the sample validation flow:
+
+```bash
+kubectl rollout restart -n bookwarehouse deployment/bookwarehouse
+kubectl rollout status -n bookwarehouse deployment/bookwarehouse --timeout=10m
+
+kubectl rollout restart -n bookwarehouse statefulset/mysql
+kubectl rollout status -n bookwarehouse statefulset/mysql --timeout=10m
+
+kubectl rollout restart -n bookstore deployment/bookstore
+kubectl rollout status -n bookstore deployment/bookstore --timeout=10m
+
+kubectl rollout restart -n bookthief deployment/bookthief
+kubectl rollout status -n bookthief deployment/bookthief --timeout=10m
+
+kubectl rollout restart -n bookbuyer deployment/bookbuyer
+kubectl rollout status -n bookbuyer deployment/bookbuyer --timeout=10m
+```
+
+Verify that the replacement pods include `istio-proxy`:
+
+```bash
+for NAMESPACE in ${BOOKSTORE_NAMESPACES}; do
+  kubectl get pods -n ${NAMESPACE} \
+    -o jsonpath='{range .items[*]}{.metadata.namespace}{"/"}{.metadata.name}{"\tinit="}{range .spec.initContainers[*]}{.name}{","}{end}{"\tcontainers="}{range .spec.containers[*]}{.name}{","}{end}{"\n"}{end}'
+done
+```
+
+Check Bookbuyer after the rollout:
+
+```bash
+kubectl logs -n bookbuyer deploy/bookbuyer -c bookbuyer --tail=20
+```
+
+If a Bookbuyer log stream was started, stop it and inspect the collected samples. Confirm the timestamps cover the relabeling and rollout window before using the log as availability evidence.
+
+```bash
+kill ${BOOKBUYER_LOG_PID}
+wait ${BOOKBUYER_LOG_PID} 2>/dev/null || true
+
+grep "MAESTRO! THIS TEST FAILED!" ${BOOKBUYER_LOG} || true
+grep "MAESTRO! THIS TEST SUCCEEDED!" ${BOOKBUYER_LOG} | tail
+```
+
+After the migrated pods are ready, review the CRD inventory and delete residual OSM and SMI CRDs as final cleanup. Deleting a CRD removes all custom resources for that CRD across the cluster, not only the Bookstore sample. Don't run this cleanup until you confirm no remaining workloads depend on OSM or SMI resources.
+
+```bash
+kubectl delete crd \
+  egresses.policy.openservicemesh.io \
+  httproutegroups.specs.smi-spec.io \
+  ingressbackends.policy.openservicemesh.io \
+  meshconfigs.config.openservicemesh.io \
+  meshrootcertificates.config.openservicemesh.io \
+  retries.policy.openservicemesh.io \
+  tcproutes.specs.smi-spec.io \
+  trafficsplits.split.smi-spec.io \
+  traffictargets.access.smi-spec.io \
+  upstreamtrafficsettings.policy.openservicemesh.io \
+  --ignore-not-found
+```
+
+Verify the final add-on and residual OSM state:
+
+```azurecli-interactive
+az aks show \
+  --resource-group ${RESOURCE_GROUP} \
+  --name ${CLUSTER} \
+  --query "{openServiceMesh:addonProfiles.openServiceMesh.enabled, serviceMeshProfile:serviceMeshProfile}"
+```
+
+```bash
+kubectl get mutatingwebhookconfiguration,validatingwebhookconfiguration | grep -i osm || true
+kubectl get crd | grep -E 'openservicemesh.io|smi-spec.io' || true
+```
+
+The final AKS state should show OSM disabled and managed Istio enabled. If you removed the residual OSM and SMI CRDs, the residual OSM resource checks should return no resources.
+
+## Bookstore policy translation reference
+
+The rest of this article uses a clean Bookstore sample deployment to demonstrate how to translate OSM SMI resources and workload manifests to Istio resources. In a migration, apply the same kinds of changes to your existing manifests and roll your existing workload controllers in place instead of deleting and recreating the application.
+
+> [!NOTE]
+> Run the policy translation reference in a separate cluster or delete the existing Bookstore namespaces before running the sample deployment commands. The `kubectl create namespace` commands fail if the namespaces already exist. The target cluster must already have the managed Istio add-on enabled.
+
+To allow Istio to manage the OSM Bookstore application, update the existing Bookstore and MySQL service manifests.
+
+### Bookstore modifications
+
+Before you translate OSM traffic policy, review how Istio handles [traffic management](https://istio.io/latest/docs/tasks/traffic-management/).
+
+Istio uses a combination of a [VirtualService](https://istio.io/latest/docs/reference/config/networking/virtual-service/) and a [DestinationRule](https://istio.io/latest/docs/reference/config/networking/destination-rule/) for traffic routing. Review the concepts of a virtual service and destination rule before you continue.
+
+The Istio virtual service defines routing rules for clients that request the host, which is the service name. The destination rule defines traffic policy for that service.
+
+The Istio Bookstore service and deployment changes keep the Bookstore application behind the `bookstore` service. The Istio version of the OSM [traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm-docs/release-v1.2/manifests/access/traffic-access-v1.yaml) manifest appears in [Create pods, services, and service accounts](#create-pods-services-and-service-accounts).
+
+### MySQL modifications
+
+Changes to the MySQL StatefulSet are only needed in the service configuration. Under the service specification, OSM needed the `targetPort` and `appProtocol` attributes. These attributes aren't needed for Istio. Keep the service name as `mysql` because the Bookstore sample and the MySQL StatefulSet use that name. The following updated service looks like this example:
 
 ```yml
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysqldb
+  name: mysql
+  namespace: bookwarehouse
   labels:
-    app: mysqldb
-    service: mysqldb
+    app: mysql
+    service: mysql
 spec:
   ports:
     - port: 3306
       name: tcp
   selector:
-    app: mysqldb
+    app: mysql
+  clusterIP: None
 ```
 
-## Deploy the Modified Bookstore Application
+## Deploy the modified Bookstore application
 
-Similar to the OSM Bookstore walk-through, we start with a new install of the bookstore application.
+Similar to the OSM Bookstore walk-through, the sample starts with a new installation of the bookstore application. This sample deployment demonstrates the policy translation flow. For existing workloads, use the in-place migration pattern earlier in this article.
 
-### Create the Namespaces
+### Create the namespaces
 
 ```bash
 kubectl create namespace bookstore
@@ -75,20 +419,17 @@ kubectl create namespace bookwarehouse
 
 ### Add a namespace label for Istio sidecar injection
 
-For OSM, using the command `osm namespace add <namespace>` created the necessary annotations to the namespace for the OSM controller to add automatic sidecar injection. With Istio, you only need to just label a namespace to allow the Istio controller to be instructed to automatically inject the Envoy sidecar proxies.
+For OSM, using the command `osm namespace add <namespace>` created the necessary annotations to the namespace for the OSM controller to add automatic sidecar injection. With the managed Istio add-on, label the namespace with the installed Istio revision to allow the Istio controller to inject the Envoy sidecar proxies. The default `istio-injection=enabled` label doesn't enable sidecar injection for the Istio add-on.
 
 ```bash
-kubectl label namespace bookstore istio-injection=enabled
-kubectl label namespace bookbuyer istio-injection=enabled
-kubectl label namespace bookthief istio-injection=enabled
-kubectl label namespace bookwarehouse istio-injection=enabled
+for NAMESPACE in ${BOOKSTORE_NAMESPACES}; do
+  kubectl label namespace ${NAMESPACE} istio.io/rev=${REVISION}
+done
 ```
 
-### Deploy the Istio Virtual Service and Destination Rule for Bookstore
+### Deploy the Istio virtual service for Bookstore
 
-As mentioned earlier in the Bookstore Modification section, Istio handles traffic shifting utilizing a VirtualService weight attribute we configure later in the walk-through. We deploy the virtual service and destination rule for the bookstore service. We deploy only the bookstore version 1 even though the bookstore version 2 is deployed. The Istio virtual service is only supplying a route to the version 1 of bookstore. Different from how OSM handles traffic shifting (traffic split), OSM deployed another service for the bookstore version 2 application. OSM needed to set up traffic to be split between client requests using a TrafficSplit. When using traffic shifting with Istio, we can reference shifting traffic to multiple Kubernetes application deployments (versions) labeled for the same service.
-
-In this walk-though, the deployment of both bookstore versions (v1 & v2) is deployed at the same time. Only the version 1 is reachable due to the virtual service configuration. There is no need to deploy another service for bookstore version 2, we enable a route to the bookstore version 2 later when we update the bookstore virtual service and provide the necessary weight attribute to do traffic shifting.
+Deploy the virtual service for the `bookstore` service.
 
 ```bash
 kubectl apply -f - <<EOF
@@ -105,31 +446,12 @@ spec:
   - route:
     - destination:
         host: bookstore
-        subset: v1
----
-# Create bookstore destination rule
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: bookstore-destination
-  namespace: bookstore
-spec:
-  host: bookstore
-  subsets:
-  - name: v1
-    labels:
-      app: bookstore
-      version: v1
-  - name: v2
-    labels:
-      app: bookstore
-      version: v2
 EOF
 ```
 
-### Create Pods, Services, and Service Accounts
+### Create pods, services, and service accounts
 
-We use a single manifest file that contains the modifications discussed earlier in the walk-through to deploy the `bookbuyer`, `bookthief`, `bookstore`, `bookwarehouse`, and `mysql` applications.
+Use a single manifest file that contains the modifications discussed earlier in the walk-through to deploy the `bookbuyer`, `bookthief`, `bookstore`, `bookwarehouse`, and `mysql` applications.
 
 ```bash
 kubectl apply -f - <<EOF
@@ -287,44 +609,6 @@ spec:
             - name: IDENTITY
               value: bookstore-v1
 
----
-# Create bookstore-v2 Deployment
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: bookstore-v2
-  namespace: bookstore
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: bookstore
-      version: v2
-  template:
-    metadata:
-      labels:
-        app: bookstore
-        version: v2
-    spec:
-      serviceAccountName: bookstore
-      nodeSelector:
-        kubernetes.io/arch: amd64
-        kubernetes.io/os: linux
-      containers:
-        - name: bookstore
-          image: openservicemesh/bookstore:latest-main
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 14001
-              name: web
-          command: ["/bookstore"]
-          args: ["--port", "14001"]
-          env:
-            - name: BOOKWAREHOUSE_NAMESPACE
-              value: bookwarehouse
-            - name: IDENTITY
-              value: bookstore-v2
----
 ##################################################################################################
 # bookwarehouse service
 ##################################################################################################
@@ -390,16 +674,18 @@ metadata:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysqldb
+  name: mysql
+  namespace: bookwarehouse
   labels:
-    app: mysqldb
-    service: mysqldb
+    app: mysql
+    service: mysql
 spec:
   ports:
     - port: 3306
       name: tcp
   selector:
-    app: mysqldb
+    app: mysql
+  clusterIP: None
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -463,9 +749,9 @@ kubectl get pods,deployments,serviceaccounts,services,endpoints -n bookstore
 kubectl get pods,deployments,serviceaccounts,services,endpoints -n bookwarehouse
 ```
 
-### View the Application UIs
+### View the application UIs
 
-Similar to the original OSM walk-through, if you have the OSM repo cloned you can utilize the port forwarding scripts to view the UIs of each application [here](https://release-v1-2.docs.openservicemesh.io/docs/getting_started/install_apps/#view-the-application-uis). For now, we are only concerned to view the `bookbuyer` and `bookthief` UI.
+Similar to the original OSM walk-through, if you have the OSM repository cloned, you can use the port forwarding scripts to view the application UIs. For more information, see [View the application UIs](https://release-v1-2.docs.openservicemesh.io/docs/getting_started/install_apps/#view-the-application-uis). For now, view only the `bookbuyer` and `bookthief` UIs.
 
 ```bash
 cp .env.example .env
@@ -476,23 +762,23 @@ wait
 EOF
 ```
 
-In a browser, open up the following urls:
+In a browser, open the following URLs:
 
-http://localhost:8080 - bookbuyer
+<http://localhost:8080> - bookbuyer
 
-http://localhost:8083 - bookthief
+<http://localhost:8083> - bookthief
 
-## Configure Istio's Traffic Policies
+## Configure Istio's traffic policies
 
-To maintain continuity with the original OSM Bookstore walk-through for the translation to Istio, we discuss [OSM's Permissive Traffic Policy Mode](https://release-v1-2.docs.openservicemesh.io/docs/getting_started/traffic_policies/#permissive-traffic-policy-mode). OSM's permissive traffic policy mode was a concept of allowing or denying traffic in the mesh without any specific [SMI Traffic Access Control rule](https://github.com/servicemeshinterface/smi-spec/blob/main/apis/traffic-access/v1alpha3/traffic-access.md) deployed. The permissive traffic mode configuration existed to allow users to onboard applications into the mesh, while gaining mTLS encryption, without requiring explicit rules to allow applications in the mesh to communicate. The permissive traffic mode feature was to avoid breaking the communications of your application as soon as OSM managed it, and provide time to define your rules while ensuring that application communications was mTLS encrypted. This setting could be set to `true` or `false` via OSM's MeshConfig.
+To keep the Istio translation aligned with the original OSM Bookstore walk-through, start with [OSM's permissive traffic policy mode](https://release-v1-2.docs.openservicemesh.io/docs/getting_started/traffic_policies/#permissive-traffic-policy-mode). OSM's permissive traffic policy mode allowed or denied traffic in the mesh when no specific [SMI Traffic Access Control rule](https://github.com/servicemeshinterface/smi-spec/blob/main/apis/traffic-access/v1alpha3/traffic-access.md) was deployed. This mode let users onboard applications into the mesh and get mTLS encryption before they defined explicit allow rules. You could set this value to `true` or `false` through OSM's MeshConfig.
 
-Istio handles mTLS enforcement differently. Different from OSM, Istio's permissive mode automatically configures sidecar proxies to use mTLS but allow the service to accept both plaintext and mTLS traffic. The equivalent to OSM's permissive mode configuration is to utilize Istio's `PeerAuthentication` settings. `PeerAuthentication` can be done granularly at the namespace or for the entire mesh. For more information on Istio's enforcement of mTLS, read the [Istio Mutual TLS Migration article](https://istio.io/latest/docs/tasks/security/authentication/mtls-migration/).
+Istio handles mTLS enforcement differently. Unlike OSM, Istio's permissive mode automatically configures sidecar proxies to use mTLS and allows services to accept both plaintext and mTLS traffic. Use Istio `PeerAuthentication` settings as the equivalent to OSM's permissive mode configuration. You can configure `PeerAuthentication` for a namespace or for the entire mesh. For more information, read the [Istio Mutual TLS Migration article](https://istio.io/latest/docs/tasks/security/authentication/mtls-migration/).
 
-### Enforce Istio Strict Mode on Bookstore Namespaces
+### Enforce Istio strict mode on Bookstore namespaces
 
-It is important to remember, just like OSM's permissive mode, Istio's `PeerAuthentication` configuration is only related to the use of mTLS enforcement. Actual layer-7 policies, much like those used in OSM's HTTPRouteGroups, is handled using Istio's AuthorizationPolicy configurations you see later in the walk-through.
+Remember that, like OSM's permissive mode, Istio's `PeerAuthentication` configuration only applies to mTLS enforcement. Istio handles layer-7 policies, like those used in OSM's HTTPRouteGroups, with `AuthorizationPolicy` configurations.
 
-We granularly put the `bookbuyer`, `bookthief`, `bookstore`, and `bookwarehouse` namespaces in Istio's mTLS strict mode.
+Put the `bookbuyer`, `bookthief`, `bookstore`, and `bookwarehouse` namespaces in Istio's mTLS strict mode.
 
 ```bash
 kubectl apply -f - <<EOF
@@ -534,11 +820,11 @@ spec:
 EOF
 ```
 
-### Deploy Istio Access Control Policies
+### Deploy Istio access control policies
 
-Similar to OSM's [SMI Traffic Target](https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-access/v1alpha2/traffic-access.md) and [SMI Traffic Specs](https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-specs/v1alpha4/traffic-specs.md) resources to define access control and routing policies for the applications to communicate, Istio accomplishes these similar fine-grain controls by using `AuthorizationPolicy` configurations.
+OSM uses [SMI Traffic Target](https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-access/v1alpha2/traffic-access.md) and [SMI Traffic Specs](https://github.com/servicemeshinterface/smi-spec/blob/v0.6.0/apis/traffic-specs/v1alpha4/traffic-specs.md) resources to define access control and routing policies for application communication. Istio provides similar fine-grained controls with `AuthorizationPolicy` configurations.
 
-Let's walk through translating the bookstore TrafficTarget policy, which specifically allows the `bookbuyer` to communicate to it, with only certain layer-7 path, headers, and methods. The following is a portion of the [traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm-docs/release-v1.2/manifests/access/traffic-access-v1.yaml) manifest.
+The following example translates the bookstore TrafficTarget policy, which allows `bookbuyer` to communicate with bookstore by using specific layer-7 paths, headers, and methods. This content is a portion of the [traffic-access-v1.yaml](https://raw.githubusercontent.com/openservicemesh/osm-docs/release-v1.2/manifests/access/traffic-access-v1.yaml) manifest.
 
 ```yml
 kind: TrafficTarget
@@ -582,7 +868,7 @@ spec:
         - GET
 ```
 
-If you notice under the TrafficTarget policy, in the spec is where you can explicitly define what source service can communicate with a destination service. We can see that we are allowing the source `bookbuyer` to be authorized to communicate to the destination bookstore. If we translate the service-to-service authorization from an OSM `TrafficTarget` configuration to an Istio `AuthorizationPolicy`, it looks like this below:
+In the TrafficTarget policy, `spec.destination` defines the destination service and `spec.sources` defines the authorized source service. In this example, `bookbuyer` can communicate with bookstore. The equivalent Istio `AuthorizationPolicy` looks like this example:
 
 ```yml
 apiVersion: security.istio.io/v1beta1
@@ -598,12 +884,12 @@ spec:
   rules:
     - from:
         - source:
-            principals: ["cluster.local/ns/bookbuyer/sa/bookbuyer"]
+            serviceAccounts: ["bookbuyer/bookbuyer"]
 ```
 
-In the Istio's `AuthorizationPolicy`, you notice how the OSM TrafficTarget policy destination service is mapped to the selector label match and the namespace the service resides in. The source service is shown under the rules section where there is a source/principles attribute that maps to the service account name for the `bookbuyer` service.
+In the Istio `AuthorizationPolicy`, the OSM TrafficTarget destination service maps to the policy namespace and selector label match. The source service maps to the `source.serviceAccounts` attribute under `rules.from`.
 
-In addition to just the source/destination configuration in the OSM TrafficTarget, OSM binds the use of an HTTPRouteGroup to further define the layer-7 authorization the source has access to. We can see in just the portion of the HTTPRouteGroup below. There are two `matches` for the allowed source service.
+In addition to the source and destination configuration in the OSM TrafficTarget, OSM binds an HTTPRouteGroup to define the layer-7 authorization for the source. The following HTTPRouteGroup includes two `matches` for the allowed source service.
 
 ```yml
 apiVersion: specs.smi-spec.io/v1alpha4
@@ -626,9 +912,9 @@ spec:
         - GET
 ```
 
-There is a `match` named `books-bought` that allows the source to access path `/books-bought` using a `GET` method with host header user-agent and client-app information, and a `buy-a-book` match that uses a regex express for a path containing `.*a-book.*new` using a `GET` method.
+The `books-bought` match allows the source to access the `/books-bought` path by using the `GET` method with user-agent and client-app header information. The `buy-a-book` match uses a regular expression for a path containing `.*a-book.*new` with the `GET` method.
 
-We can define these OSM HTTPRouteGroup configurations in the rules section of the Istio `AuthorizationPolicy` shown below:
+Define these OSM HTTPRouteGroup configurations in the rules section of the Istio `AuthorizationPolicy`. Keep source, operation, and header conditions in the same rule so they don't allow separate requests on their own. Istio `AuthorizationPolicy` string fields support exact, prefix, suffix, and presence matches, not arbitrary SMI regular expressions. The following sample uses exact paths and a Go HTTP client user-agent prefix that matches the Bookstore sample. For your workloads, translate each SMI `pathRegex` and header regex to an explicit Istio match that preserves your intended access.
 
 ```yml
 apiVersion: "security.istio.io/v1beta1"
@@ -644,21 +930,26 @@ spec:
   rules:
     - from:
         - source:
-            principals: ["cluster.local/ns/bookbuyer/sa/bookbuyer"]
-        - source:
-            namespaces: ["bookbuyer"]
+            serviceAccounts: ["bookbuyer/bookbuyer"]
       to:
         - operation:
             methods: ["GET"]
-            paths: ["*/books-bought", "*/buy-a-book/new"]
-    - when:
-        - key: request.headers[User-Agent]
-          values: ["*-http-client/*"]
-        - key: request.headers[Client-App]
+            paths: ["/books-bought"]
+      when:
+        - key: request.headers[user-agent]
+          values: ["Go-http-client/*"]
+        - key: request.headers[client-app]
           values: ["bookbuyer"]
+    - from:
+        - source:
+            serviceAccounts: ["bookbuyer/bookbuyer"]
+      to:
+        - operation:
+            methods: ["GET"]
+            paths: ["/buy-a-book/new"]
 ```
 
-We can now deploy the OSM migrated traffic-access-v1.yaml manifest as understood by Istio below. There is not an `AuthorizationPolicy` for the bookthief, so the bookthief UI should stop incrementing books from bookstore v1:
+Deploy the OSM migrated traffic-access-v1.yaml manifest as an Istio `AuthorizationPolicy`. There isn't an `AuthorizationPolicy` for bookthief, so the bookthief UI should stop incrementing books from bookstore v1:
 
 ```bash
 kubectl apply -f - <<EOF
@@ -678,18 +969,23 @@ spec:
   rules:
     - from:
         - source:
-            principals: ["cluster.local/ns/bookbuyer/sa/bookbuyer"]
-        - source:
-            namespaces: ["bookbuyer"]
+            serviceAccounts: ["bookbuyer/bookbuyer"]
       to:
         - operation:
             methods: ["GET"]
-            paths: ["*/books-bought", "*/buy-a-book/new"]
-    - when:
-        - key: request.headers[User-Agent]
-          values: ["*-http-client/*"]
-        - key: request.headers[Client-App]
+            paths: ["/books-bought"]
+      when:
+        - key: request.headers[user-agent]
+          values: ["Go-http-client/*"]
+        - key: request.headers[client-app]
           values: ["bookbuyer"]
+    - from:
+        - source:
+            serviceAccounts: ["bookbuyer/bookbuyer"]
+      to:
+        - operation:
+            methods: ["GET"]
+            paths: ["/buy-a-book/new"]
 ---
 ##################################################################################################
 # bookwarehouse policy
@@ -707,9 +1003,7 @@ spec:
   rules:
     - from:
         - source:
-            principals: ["cluster.local/ns/bookstore/sa/bookstore"]
-        - source:
-            namespaces: ["bookstore"]
+            serviceAccounts: ["bookstore/bookstore"]
       to:
         - operation:
             methods: ["POST"]
@@ -730,18 +1024,16 @@ spec:
   rules:
     - from:
         - source:
-            principals: ["cluster.local/ns/bookwarehouse/sa/bookwarehouse"]
-        - source:
-            namespaces: ["bookwarehouse"]
+            serviceAccounts: ["bookwarehouse/bookwarehouse"]
       to:
          - operation:
             ports: ["3306"]
 EOF
 ```
 
-### Allowing the Bookthief Application to access Bookstore
+### Allow the Bookthief application to access Bookstore
 
-Currently there is no `AuthorizationPolicy` that allows for the bookthief to communicate with bookstore. We can deploy the following `AuthorizationPolicy` to allow the bookthief to communicate to the bookstore. You notice the addition for the rule for the bookstore policy that allows the bookthief authorization.
+No `AuthorizationPolicy` currently allows bookthief to communicate with bookstore. Deploy the following `AuthorizationPolicy` to allow bookthief to communicate with bookstore. Notice the added rule in the bookstore policy that allows bookthief access.
 
 ```bash
 kubectl apply -f - <<EOF
@@ -761,18 +1053,23 @@ spec:
   rules:
     - from:
         - source:
-            principals: ["cluster.local/ns/bookbuyer/sa/bookbuyer", "cluster.local/ns/bookthief/sa/bookthief"]
-        - source:
-            namespaces: ["bookbuyer", "bookthief"]
+            serviceAccounts: ["bookbuyer/bookbuyer", "bookthief/bookthief"]
       to:
         - operation:
             methods: ["GET"]
-            paths: ["*/books-bought", "*/buy-a-book/new"]
-    - when:
-        - key: request.headers[User-Agent]
-          values: ["*-http-client/*"]
-        - key: request.headers[Client-App]
+            paths: ["/books-bought"]
+      when:
+        - key: request.headers[user-agent]
+          values: ["Go-http-client/*"]
+        - key: request.headers[client-app]
           values: ["bookbuyer"]
+    - from:
+        - source:
+            serviceAccounts: ["bookbuyer/bookbuyer", "bookthief/bookthief"]
+      to:
+        - operation:
+            methods: ["GET"]
+            paths: ["/buy-a-book/new"]
 ---
 ##################################################################################################
 # bookwarehouse policy
@@ -790,9 +1087,7 @@ spec:
   rules:
     - from:
         - source:
-            principals: ["cluster.local/ns/bookstore/sa/bookstore"]
-        - source:
-            namespaces: ["bookstore"]
+            serviceAccounts: ["bookstore/bookstore"]
       to:
         - operation:
             methods: ["POST"]
@@ -813,62 +1108,15 @@ spec:
   rules:
     - from:
         - source:
-            principals: ["cluster.local/ns/bookwarehouse/sa/bookwarehouse"]
-        - source:
-            namespaces: ["bookwarehouse"]
+            serviceAccounts: ["bookwarehouse/bookwarehouse"]
       to:
          - operation:
             ports: ["3306"]
 EOF
 ```
 
-The bookthief UI should now be incrementing books from bookstore v1.
-
-## Configure Traffic Shifting between two Service Versions
-
-To demonstrate how to balance traffic between two versions of a Kubernetes service, known as traffic shifting in Istio. As you recall in a previous section, OSM implementation of traffic shifting relied on two distinct services being deployed and adding those service names to the backend configuration of the `TrafficTarget` policy. This deployment architecture is not needed for how Istio implements traffic shifting. With Istio, we can create multiple deployments that represent each version of the service application and shift traffic to those specific versions via the Istio `virtualservice` configuration.
-
-The currently deployed `virtualservice` only has a route rule to the v1 version of the bookstore shown below:
-
-```yml
-spec:
-  hosts:
-    - bookstore
-  http:
-    - route:
-        - destination:
-            host: bookstore
-            subset: v1
-```
-
-We update the `virtualservice` to shift 100% of the weight to the v2 version of the bookstore.
-
-```bash
-kubectl apply -f - <<EOF
-# Create bookstore virtual service
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: bookstore-virtualservice
-  namespace: bookstore
-spec:
-  hosts:
-  - bookstore
-  http:
-  - route:
-    - destination:
-        host: bookstore
-        subset: v1
-      weight: 0
-    - destination:
-        host: bookstore
-        subset: v2
-      weight: 100
-EOF
-```
-
-You should now see both the `bookbuyer` and `bookthief` UI incrementing for the `bookstore` v2 service only. You can continue to experiment by changing the `weigth` attribute to shift traffic between the two `bookstore` versions.
+The bookthief UI should now increment books from bookstore.
 
 ## Summary
 
-We hope this walk-through provided the necessary guidance on how to migrate your current OSM policies to Istio policies. Take time and review the [Istio Concepts](https://istio.io/latest/docs/concepts/) and walking through [Istio's own Getting Started guide](https://istio.io/latest/docs/setup/getting-started/) to learn how to use the Istio service mesh to manage your applications.
+This walk-through shows how to migrate OSM policies to Istio policies. To learn how to deploy and operate the managed Istio add-on on AKS, see [Install the Istio add-on](istio-deploy-addon.md). Review the upstream [Istio concepts](https://istio.io/latest/docs/concepts/) when you need background on Istio APIs and traffic management behavior.

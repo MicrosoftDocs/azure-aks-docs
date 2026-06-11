@@ -4,7 +4,7 @@ description: Learn how to configure and customize rolling upgrades for Azure Kub
 ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
-ms.date: 05/26/2026
+ms.date: 05/29/2026
 author: kaarthis
 ms.author: schaffererin
 # Customer intent: "As a cluster operator, I want to configure rolling upgrades for my AKS node pools so that I can upgrade nodes with minimal workload disruption."
@@ -172,7 +172,7 @@ If the drain timeout value elapses and pods are still running, the upgrade opera
 
 #### Set node drain timeout value
 
-Set node drain timeout (in minutes) for new or existing node pools using the [`az aks nodepool add`][az-aks-nodepool-add] or [`az aks nodepool update`][az-aks-nodepool-update] command with the `--drain-time-out` parameter.
+Set node drain timeout (in minutes) for new or existing node pools using the [`az aks nodepool add`][az-aks-nodepool-add] or [`az aks nodepool update`][az-aks-nodepool-update] command with the `--drain-timeout` parameter.
 
 ```azurecli-interactive
 # Set drain timeout for a new node pool
@@ -180,14 +180,14 @@ az aks nodepool add \
     --name <node-pool-name> \
     --resource-group <resource-group-name> \
     --cluster-name <cluster-name> \
-    --drain-time-out 100
+    --drain-timeout 100
 
 # Update drain timeout for an existing node pool
 az aks nodepool update \
     --name <node-pool-name> \
     --resource-group <resource-group-name> \
     --cluster-name <cluster-name> \
-    --drain-time-out 45
+    --drain-timeout 45
 ```
 
 ### Customize node soak time
