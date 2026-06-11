@@ -1,6 +1,6 @@
 ---
 title: Azure Kubernetes Service (AKS) for Extended Zones
-description: Learn how to deploy an Azure Kubernetes Service (AKS) for Azure Extended Zone cluster.
+description: Learn how to deploy an Azure Kubernetes Service (AKS) for Azure Extended Zones.
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -13,29 +13,13 @@ ms.date: 06/11/2026
 
 Azure Kubernetes Service (AKS) for Extended Zones provides an extensive and sophisticated set of capabilities that make it simpler to deploy and operate a fully managed Kubernetes cluster in an Extended Zone scenario.
 
-> [!NOTE]
-> AKS is generally available in Azure Extended Zones for **public clusters** and **private clusters**. Other AKS features and add-ons might work, but only the features explicitly listed as supported are covered by the AKS support contract for Azure Extended Zones. The set of supported AKS features in Azure Extended Zones continues to grow as we validate more capabilities based on customer signals. For the up-to-date list, see [Service offerings for Azure Extended Zones](/azure/extended-zones/overview#service-offerings-for-azure-extended-zones).
+AKS is generally available in Azure Extended Zones for **public clusters** and **private clusters**. For the up-to-date list of supported services and features, see [Service offerings for Azure Extended Zones](/azure/extended-zones/overview#service-offerings-for-azure-extended-zones).
 
 ## What are Azure Extended Zones?
 
 Azure Extended Zones are small-footprint extensions of Azure placed in metros, industry centers, or a specific jurisdiction to serve low latency and data residency workloads. Azure Extended Zones supports virtual machines (VMs), containers, storage, and a selected set of Azure services. They can run latency-sensitive and throughput-intensive applications close to end users and within approved data residency boundaries.
 
 Azure Extended Zones are part of the Microsoft global network that provides secure, reliable, high-bandwidth connectivity between applications that run on an Azure Extended Zone close to the user. Extended Zones address low latency and data residency by bringing all the benefits of the Azure ecosystem (access, user experience, automation, security, and more) closer to you or your jurisdiction. Azure Extended Zone sites are associated with a parent Azure region that hosts all the control plane functions associated with the services running in the extended zone.
-
-### Extended Zones use cases
-
-Azure Extended Zones enable **low latency** and **data residency** scenarios. For example, you might want to run media editing software remotely with low latency or keep your applications' data within a specific geography for privacy, regulatory, and compliance reasons.
-
-The following table highlights some of the industries and use cases where Azure Extended Zones can provide benefits:
-
-| Industry | Use cases |
-|----------|-----------|
-| Healthcare | • Remote patient care <br> • Remote clinical education <br> • Pop-up care and services |
-| Public infrastructure | • Visual detection <br> • Critical infrastructure <br> • Emergency services <br> • Surveillance and security |
-| Manufacturing | • Real-time command and control in robotics <br> • Machine vision |
-| Media and gaming | • Gaming and game streaming <br> • Media editing, streaming, and content delivery <br> • Remote rendering for mixed reality and Virtual Desktop Infrastructure scenarios |
-| Oil and gas | • Oil and gas exploration <br> • Real-time analytics and inference via artificial intelligence and machine learning |
-| Retail | • Digital in-store experiences <br> • Connected worker |
 
 For more information, see the [Azure Extended Zones overview][aez-overview].
 
