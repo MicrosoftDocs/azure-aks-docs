@@ -206,11 +206,18 @@ az aks nodepool update \
   --drain-timeout 5
 ```
 
+#### Option 3: Automatic PDB management (preview)
+
+Use the [automatic PDB management](automatic-pod-disruption-budget-management.md) extension to proactively resolve PDB-blocked drains without bypassing PDB protections or requiring manual cleanup of quarantined nodes. Automatic PDB management detects when a PDB blocks eviction on a cordoned node and temporarily scales up the deployment's replicas so the disruption budget is satisfied. After the drain completes, it scales replicas back to their original count.
+
+Automatic PDB management can also automatically create PDBs for deployments that don't have one, ensuring your workloads are protected during upgrade drains. For installation and configuration details, see [Manage Pod Disruption Budgets automatically during AKS upgrades](automatic-pod-disruption-budget-management.md).
+
 #### Recommendations to prevent drain failures
 
 * Set `maxUnavailable` in PDBs to allow at least one pod eviction
 * Increase pod replicas to meet disruption budget requirements
 * Extend drain timeout if workloads need more time. (The default is *30 minutes*.)
+* Use [automatic PDB management](automatic-pod-disruption-budget-management.md) to automate PDB creation and replica scaling during drain operations.
 * Test PDBs in staging, monitor upgrade events, and use blue-green deployments for critical workloads. For more information, see [Blue-green deployment of AKS clusters](/azure/architecture/guide/aks/blue-green-deployment-for-aks).
 
 ##### Verify undrainable nodes

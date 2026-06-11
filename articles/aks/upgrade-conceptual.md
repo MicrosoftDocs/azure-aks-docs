@@ -165,6 +165,9 @@ The upgrade completes with one quarantined node requiring manual intervention.
 - **Cluster capacity**: The surge node becomes permanent, potentially affecting cluster capacity planning
 - **Monitoring**: Track quarantined nodes through Azure Monitor or kubectl to ensure timely resolution
 
+> [!TIP]
+> To avoid the quarantine scenario entirely, you can use [automatic PDB management](automatic-pod-disruption-budget-management.md) to automatically scale up deployment replicas so PDB constraints are satisfied before drain begins. This allows eviction to proceed without blocking, eliminating the need for manual quarantine resolution.
+
 
 ## Blue-Green node pool upgrades (manual)
 
