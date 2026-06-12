@@ -12,6 +12,7 @@ ms.date: 03/07/2025
 
 # Use custom certificate authorities (CAs) in Azure Kubernetes Service (AKS)
 
+
 Custom Certificate Authority (CA) allows you to add up to 10 base64-encoded certificates to your node's trust store. This feature is often needed when certificate authorities (CAs) are required to be present on the node, like when connecting to a private registry.  
 
 This article shows you how to create custom CAs and apply them to your AKS clusters.
@@ -105,6 +106,31 @@ AKS requires certificates passed to be properly formatted and base64 encoded. Ma
 ## Restart containerd to pick up new certificates
 
 If containerd doesn't pick up new certificates, run the `systemctl restart containerd` command from the node's shell. Once containerd restarts, the container runtime should pick up the new certificates.
+
+## `enableCustomCATrust` (preview) retirement migration
+
+[!INCLUDE [custom-ca-preview-retirement](./includes/custom-ca-preview-retirement.md)]
+
+### Update your node pools to remove the Custom CA Trust property
+
+```azurecli
+az aks nodepool update \
+  --resource-group <resource-group> \
+  --cluster-name <cluster-name> \
+  --name <node-pool-name> \
+  --disable-custom-ca-trust
+```
+
+### Update your clusters to remove the Custom CA Trust property
+
+```azurecli
+az aks update \
+  --resource-group <resource-group> \
+  --name <cluster-name> \
+  --disable-custom-ca-trust
+```
+
+If you want Custom CA Trust enabled on your clusters after this retirement, use `--custom-ca-trust-certificates` and provide a path to a certificate file.
 
 ## Related content
 
