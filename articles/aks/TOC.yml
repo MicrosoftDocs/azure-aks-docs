@@ -426,6 +426,8 @@
       href: quickstart-event-grid.md
     - name: AKS Communication Manager
       href: aks-communication-manager.md
+    - name: AKS end of support notifications
+      href: aks-end-of-support-notifications.md
   - name: Upgrade FAQ
     href: upgrade-aks-faq.yml
 - name: Manage and optimize clusters
