@@ -91,6 +91,9 @@ For all migration paths, you need to have the federated trust set up before you 
 
 **Migration approach**: Update your application code to use the latest Azure Identity SDK, then migrate to Microsoft Entra Workload ID with the updated code.
 
+> [!IMPORTANT]
+> When you update application code from managed identity token acquisition to `WorkloadIdentityCredential`, token requests must use Microsoft Entra ID v2 scopes in the format `<resource>/.default`, for example `https://management.azure.com/.default`. Do not pass only the resource URI, even if that value worked with `ManagedIdentityCredential` or an IMDS-based flow. Managed identity uses the IMDS `resource` parameter, while workload identity uses a federated client assertion flow against the Microsoft Entra v2 token endpoint and requires `scope`. For more information about how scopes work in the v2 token endpoint, see [Get a token](/entra/identity-platform/v2-oauth2-client-creds-grant-flow#get-a-token).
+
 **Technical outcomes**:
 
 - Uses current Azure Identity SDK versions (no deprecation timeline).
@@ -192,6 +195,9 @@ For all migration paths, you need to have the federated trust set up before you 
 ## Deploy the workload with migration sidecar
 
 If your application uses user-assigned managed identity and still relies on IMDS to get an access token you can use the migration sidecar to start migrating to Microsoft Entra Workload ID. In long-term applications, you should modify the code to use the latest Azure Identity SDKs that support client assertion.
+
+> [!NOTE]
+> A projected service account token has a single audience. Identity bindings use the audience `api://AKSIdentityBinding`, while direct workload identity federation uses `api://AzureADTokenExchange`. If a workload needs both authentication paths, use separate service accounts or add a second projected service account token volume with the required audience. For more information, see [Use identity bindings and direct federation in the same workload](workload-identity-overview.md#use-identity-bindings-and-direct-federation-in-the-same-workload).
 
 To update or deploy the workload, add the following [pod annotations][pod-annotations] to your pod specification (only if you want to use the migration sidecar):
 
