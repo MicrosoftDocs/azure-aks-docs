@@ -7,7 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli
-ms.date: 12/16/2025
+ms.date: 06/12/2026
 zone_pivot_groups: azure-cni-overlay-create-cluster
 
 # Customer intent: "As a Kubernetes administrator, I want to understand how to configure Azure CNI Overlay networking in AKS so that I can efficiently manage IP address allocation and scale my containerized applications without running into address exhaustion issues."
@@ -132,48 +132,6 @@ The following table describes the key parameters for configuring dual-stack netw
     ```
 
 ## Create an Azure CNI Overlay AKS cluster with dual-stack networking (Windows)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-Before you create an Azure CNI Overlay AKS cluster with dual-stack networking with Windows node pools, you need to install the `aks-preview` Azure CLI extension and register the `AzureOverlayDualStackPreview` feature flag in your subscription.
-
-### Install the `aks-preview` Azure CLI extension
-
-1. Install the `aks-preview` extension by using the [`az extension add`][az-extension-add] command:
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-1. Update to the latest version of the extension by using the [`az extension update`][az-extension-update] command:
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `AzureOverlayDualStackPreview` feature flag
-
-1. Register the `AzureOverlayDualStackPreview` feature flag by using the [`az feature register`][az-feature-register] command:
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
-    ```
-
-    It takes a few minutes for the status to show `Registered`.
-
-1. Verify the registration status by using the [`az feature show`][az-feature-show] command:
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
-    ```
-
-1. When the status reflects `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`][az-provider-register] command:
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
-
-### Create a dual-stack Azure CNI Overlay AKS cluster and add a Windows node pool
 
 1. Create a cluster with Azure CNI Overlay by using the [`az aks create`][az-aks-create] command:
 
@@ -337,10 +295,5 @@ To learn more about Azure CNI Overlay networking on AKS, see the following artic
 - [Expand pod CIDR space in Azure CNI Overlay clusters](./azure-cni-overlay-pod-expand.md)
 
 <!-- LINKS - internal -->
-[az-provider-register]: /cli/azure/provider#az-provider-register
-[az-feature-register]: /cli/azure/feature#az-feature-register
-[az-feature-show]: /cli/azure/feature#az-feature-show
 [az-group-create]: /cli/azure/group#az-group-create
 [az-aks-create]: /cli/azure/aks#az-aks-create
-[az-extension-add]: /cli/azure/extension#az-extension-add
-[az-extension-update]: /cli/azure/extension#az-extension-update
