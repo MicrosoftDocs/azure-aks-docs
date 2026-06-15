@@ -5,7 +5,7 @@ description: Learn how network isolated AKS clusters work
 author: charleswool
 ms.author: yuewu2
 ms.topic: concept-article
-ms.date: 07/08/2025
+ms.date: 06/15/2026
 ai-usage: ai-assisted
 
 # Customer intent: "As a Kubernetes administrator, I want to configure a network isolated AKS cluster, so that I can enhance security by eliminating egress traffic and reducing risks of data exfiltration while managing my cluster's dependencies privately."
@@ -63,7 +63,7 @@ You also need to ensure the egress path for your AKS cluster are controlled and 
 *  `Unmanaged` channel is not supported.
 * Windows node pools are not yet supported.
 * kubenet networking is not supported.
-* BYO ACR [Domain Name Label (DNL)](/azure/container-registry/container-registry-get-started-portal?tabs=azure-cli#configure-domain-name-label-dnl-option) is not supported.
+* BYO ACR with [`authentication-as-arm`](/azure/container-registry/container-registry-disable-authentication-as-arm) disabled is not supported.
 
 > [!Caution]
 > If you are using [Node Public IP][node-public-ip] in network isolated AKS clusters, it will allow outbound traffic with outbound type `none`.
