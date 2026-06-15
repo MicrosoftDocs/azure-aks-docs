@@ -4,7 +4,7 @@ description: Learn how to upgrade the control plane of an Azure Kubernetes Servi
 ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
-ms.date: 12/09/2025
+ms.date: 05/27/2025
 author: kaarthis
 ms.author: schaffererin
 # Customer intent: "As a cluster operator, I want to upgrade my AKS cluster control plane so that I can access the latest Kubernetes features and security updates while maintaining control over when my node pools are upgraded."
@@ -41,7 +41,7 @@ The following table outlines three types of AKS upgrades, highlighting their sco
 
 When you upgrade a supported AKS cluster, you can't skip Kubernetes minor versions. You must perform all upgrades sequentially by minor version number. For example, upgrades between _1.28.x_ -> _1.29.x_ or _1.29.x_ -> _1.30.x_ are allowed. _1.28.x_ -> _1.30.x_ isn't allowed.
 
-The control plane can be up to two minor versions ahead of node pools. For example, if your control plane is at _1.30.x_, your node pools can be at _1.28.x_, _1.29.x_, or _1.30.x_.
+The control plane can be up to three minor versions ahead of node pools. For example, if your control plane is at _1.35.x_, your node pools can be at _1.32.x_, _1.33.x_, _1.34.x_, or _1.35.x_.
 
 ## Check for available AKS upgrades
 

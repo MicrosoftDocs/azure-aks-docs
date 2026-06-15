@@ -3,7 +3,7 @@ title: Create Node Pools in Azure Kubernetes Service (AKS)
 description: Learn how to create multiple node pools for a cluster in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli, build-2023, linux-related-content, annual
-ms.date: 09/26/2025
+ms.date: 06/15/2026
 author: schaffererin
 ms.author: schaffererin
 ms.subservice: aks-nodes
@@ -47,13 +47,16 @@ The following limitations apply when you create AKS clusters that support multip
 - You can delete the system node pool if you have another system node pool to take its place in the AKS cluster. Otherwise, you can't delete the system node pool.
 - System pools must contain at least two nodes, and user node pools may contain zero or more nodes.
 - **If you create a cluster with a single node pool, the OS type must be `Linux`**. The OS SKU can be any Linux variation such as `Ubuntu`, `AzureContainerLinux`, or `AzureLinux`. You can't create a cluster with a single Windows node pool. If you want to run Windows containers, you must add a Windows node pool to the cluster after creating it with a Linux system node pool.
+- **You can't enable Windows support on a cluster that was created without it.** Adding a Windows node pool to a cluster requires the `windowsProfile` to be configured during the initial cluster creation (for example, by specifying `--windows-admin-username` and `--windows-admin-password` with the Azure CLI). If a cluster was created without these parameters, attempts to add a Windows node pool fail because the cluster doesn't have a Windows profile definition. To run Windows containers on an existing Linux-only cluster, you need to recreate the cluster with Windows support enabled. For more information, see the related [feature request](https://github.com/Azure/AKS/issues/4489) on GitHub.
 - The AKS cluster must use the Standard SKU load balancer to use multiple node pools. This feature isn't supported with Basic SKU load balancers.
 - The AKS cluster must use Virtual Machine Scale Sets for the nodes.
 - The name of a node pool can only contain lowercase alphanumeric characters and must begin with a lowercase letter.
   - For Linux node pools, the length must be between 1-12 characters.
   - For Windows node pools, the length must be between 1-6 characters.
-- All node pools must reside in the same virtual network (VNet).
-- You can't change the VM size of a node pool after you create it.
+
+- All node pools must reside in the same virtual network.
+- You can't change the virtual machine (VM) size of a node pool after you create it.
+- You can't change the max pods setting of a node pool after you create it. To use a different max pods value, create a new node pool with the desired max pods setting, migrate workloads, and then delete the old node pool.
 - When you create multiple node pools at cluster creation time, the Kubernetes versions for the node pools must match the version set for the control plane. You can make updates after provisioning the cluster using per node pool operations.
 
 [!INCLUDE [azure container linux limitations](./includes/azure-container-linux-limitations.md)]
