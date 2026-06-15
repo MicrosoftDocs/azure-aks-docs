@@ -41,7 +41,7 @@ This article walks you through how to use GPU observability on AKS:
 [Inspektor Gadget](https://inspektor-gadget.io/) is an open source eBPF-based observability framework for Kubernetes. For GPU profiling, it traces Compute Unified Device Architecture (CUDA) memory allocation calls without requiring code changes, sidecars, or pod restarts.
 
 ```bash
-helm install -n gadget inspektor-gadget \
+helm upgrade --install -n gadget inspektor-gadget --create-namespace \
   oci://mcr.microsoft.com/microsoft.inspektor-gadget/helmcharts/inspektor-gadget:0.53.0-0 \
   --set gpuObservability.enabled=true \
   --set azureMonitor.enabled=true
@@ -209,22 +209,22 @@ az grafana data-source show -n $GRAFANA_NAME --data-source local-pyroscope
 ### Step 4: Connect Grafana to Azure Monitor managed service for Prometheus
 
 > [!NOTE]
-> These steps are based on [Connect Azure Monitor managed service for Prometheus to Grafana](/azure/azure-monitor/metrics/prometheus-grafana?tabs=azure-managed-grafana).
+> These steps are based on [Connect Azure Monitor managed service for Prometheus to Grafana](/azure/azure-monitor/metrics/prometheus-grafana?tabs=azure-managed-grafana). Make sure Grafana's managed identity has the **Monitoring Data Reader** role on the Azure Monitor workspace, especially if it's in a different resource group or subscription.
 
 Export the required variables:
 
 ```bash
 export AMP_NAME="<your-amp-workspace-name>"
-export RESOURCE_GROUP="<your-resource-group>"
+export AMP_RESOURCE_GROUP="<your-amp-resource-group>"
 ```
 
 > [!TIP]
-> Run `az resource list --resource-type Microsoft.Monitor/accounts -g $RESOURCE_GROUP -o table` to list Azure Monitor workspace information.
+> Run `az resource list --resource-type Microsoft.Monitor/accounts -g $AMP_RESOURCE_GROUP -o table` to list Azure Monitor workspace information. The Azure Monitor workspace is often in a different resource group than your AKS cluster and Azure Managed Grafana instance—for example, when Managed Prometheus auto-creates a workspace in a regional `MA_<region>_<…>` resource group, or when a central platform team owns a shared workspace. To search across the subscription instead, omit `-g` and run `az resource list --resource-type Microsoft.Monitor/accounts -o table`.
 
 ```bash
 # Get AMW endpoint
 AMP_ENDPOINT=$(az resource show --resource-type Microsoft.Monitor/accounts \
-  -n "$AMP_NAME" -g "$RESOURCE_GROUP" \
+  -n "$AMP_NAME" -g "$AMP_RESOURCE_GROUP" \
   --query properties.metrics.prometheusQueryEndpoint -o tsv)
 
 # Create Prometheus data source with MSI auth
@@ -250,7 +250,7 @@ az grafana data-source show -n $GRAFANA_NAME --data-source $AMP_NAME
 ### Step 5: Set up dashboards in Grafana
 
 ```bash
-  az grafana dashboard create \
+az grafana dashboard create \
   -n "$GRAFANA_NAME" \
   -g "$RESOURCE_GROUP" \
   --definition "$(curl -sSL https://raw.githubusercontent.com/inspektor-gadget/grafana-dashboards/refs/heads/main/dashboards/gpu-observability/AdvancedGPUObservability.json)"
@@ -286,8 +286,17 @@ A flame graph is a visualization of profiled call stacks. Each bar represents a 
 
 **Key rule**: The wider a bar, the more of the measured resource flows through that function.
 
+The following sample flame graphs are captured from a vLLM inference workload.
+
+:::image type="content" source="media/gpu-profiling/flame-graph-initial.png" alt-text="Screenshot of the initial collapsed flame graph view in Grafana for a vLLM workload, showing stacked bars that represent GPU memory allocation call stacks." lightbox="media/gpu-profiling/flame-graph-initial.png":::
+
 > [!TIP]
-> Use **Expand all groups** in Grafana's flame graph panel to see the full call stack without collapsing. Use the **Search** box to find specific functions or keywords.
+> Use **Expand all groups** in Grafana's flame graph panel to see the full call stack without collapsing. Use the **Search** box to find specific functions or keywords. To prevent the panel from collapsing again, pause the dashboard auto-refresh (set the refresh interval to **Off** in the top-right of the Grafana dashboard) while you inspect the expanded flame graph.
+
+:::image type="content" source="media/gpu-profiling/flame-graph-expanded.png" alt-text="Screenshot of the flame graph in Grafana for a vLLM workload after selecting Expand all groups, showing the full call stack with individual function frames for GPU memory allocations." lightbox="media/gpu-profiling/flame-graph-expanded.png":::
+
+> [!TIP]
+> Use **Focus block** to foucs on a specific allocation path.
 
 ### Read the symbols
 
@@ -330,7 +339,7 @@ Use the following steps to identify hotspots:
 * **Check self vs total**—A wide bar at the bottom with `self: 0` is just a call chain. Follow it upward until you find a bar with high self allocation.
 * **Read the call stack bottom-to-top**—The ordering tells you why the function was called. For example:
   ```
-   `<raw-address>` e.g `0x7f151`            → native code entry
+    <raw-address> e.g 0x7f151               → native code entry
     <interpreter trampoline>                → CPython dispatch
     <module>                                → script top-level
     EngineCoreProc.run_engine_core          → vLLM engine startup
