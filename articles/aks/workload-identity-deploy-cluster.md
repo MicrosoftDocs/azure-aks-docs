@@ -388,7 +388,10 @@ az identity federated-credential create \
 ```
 
 > [!NOTE]
-> It takes a few seconds for the federated identity credential to propagate after it's added. If a token request is made immediately after adding the federated identity credential, the request might fail until the cache is refreshed. To avoid this issue, you can add a slight delay after adding the federated identity credential.
+> It takes a few seconds for the federated identity credential to propagate after it's added. If a token request is made immediately after adding the federated identity credential, the request might fail until the cache is refreshed. To avoid this issue, you can add a slight delay after adding the federated identity credential. 
+
+> [!WARNING]
+> The audience listed above is the default and recommended audience for Microsoft Entra Workload Identity. This value is global and consistent across all Azure clouds, changing the audience value might break compatibility with existing configurations and isn't recommended unless explicitly required. 
 
 :::zone-end
 
@@ -406,6 +409,9 @@ resource "azurerm_federated_identity_credential" "this" {
  audience            = ["api://AzureADTokenExchange"]
 }
 ```
+> [!WARNING]
+> The audience listed above is the default and recommended audience for Microsoft Entra Workload Identity. This value is global and consistent across all Azure clouds, changing the audience value might break compatibility with existing configurations and isn't recommended unless explicitly required. 
+
 
 :::zone-end
 
