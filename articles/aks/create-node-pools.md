@@ -52,8 +52,10 @@ The following limitations apply when you create AKS clusters that support multip
 - The name of a node pool can only contain lowercase alphanumeric characters and must begin with a lowercase letter.
   - For Linux node pools, the length must be between 1-12 characters.
   - For Windows node pools, the length must be between 1-6 characters.
-- All node pools must reside in the same virtual network (VNet).
-- You can't change the VM size of a node pool after you create it.
+
+- All node pools must reside in the same virtual network.
+- You can't change the virtual machine (VM) size of a node pool after you create it.
+- You can't change the max pods setting of a node pool after you create it. To use a different max pods value, create a new node pool with the desired max pods setting, migrate workloads, and then delete the old node pool.
 - When you create multiple node pools at cluster creation time, the Kubernetes versions for the node pools must match the version set for the control plane. You can make updates after provisioning the cluster using per node pool operations.
 
 [!INCLUDE [azure container linux limitations](./includes/azure-container-linux-limitations.md)]
