@@ -40,7 +40,7 @@ The application routing add-on Kubernetes Gateway API implementation deploys an 
 * Configuring HTTPS ingress access to HTTPS services – i.e Server Name Indication (SNI) Passthrough – via the `TLSRoute` resource is not currently supported. Support for the `TLSRoute` resource will be available once AKS adds support for Istio 1.30, at which point your application routing Istio control plane will be automatically upgraded to that version.
 * Egress traffic management via the application routing Gateway API implementation is unsupported.
 * Injecting non-Microsoft-managed sidecars (for example, custom telemetry, logging, or security agents) into the Istio gateway proxy pods managed by the application routing add-on is not officially supported. If you choose to inject your own sidecar into a managed proxy pod, Microsoft provides only best-effort support for any issues you encounter.
-* Customizing access logging (or other telemetry) via the Istio `Telemetry` API is not supported. Envoy access logging is enabled by default on managed `Gateway` proxy pods, but the log format, scope, and provider cannot be changed. To customize, use Gateway API ingress on the [Istio service mesh add-on][istio-gateway-api-access-logs] instead.
+* Envoy access logging is enabled by default on Gateway proxy pods, but the log format, scope, and provider can't be customized via the Istio `Telemetry` API. To customize, use Gateway API ingress on the [Istio service mesh add-on][istio-gateway-api-access-logs] instead. 
 
 ## Prerequisites
 
