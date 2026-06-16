@@ -285,11 +285,11 @@ spec:
 - `containerLogMaxFiles`: Maximum number of container log files to retain.
 - `podPidsLimit`: Maximum number of processes allowed in any pod.
 
-## Linux OS configuration
+## Linux custom OS configuration settings
 
 The `LinuxOSConfig` section allows you to configure various kubelet parameters that affect node behavior. These parameters are typical custom OS arguments, so the NAP simply passes them through to the kubelet on the node.
 
-For more on custom Linux OS configuration settings, see our [custom node configuration documentation](./custom-node-configuration.md#linux-custom-os-configuration-settings).
+For more on custom Linux OS configuration settings, full details on default values, and considerations, see our [custom node configuration documentation](./custom-node-configuration.md#linux-custom-os-configuration-settings).
 
 > [!IMPORTANT]
 > **Configure Linux OS settings carefully**, and test any changes in nonproduction environments first.
@@ -302,23 +302,10 @@ The following settings allow you to swap the file configuration:
 spec:
   linuxOSConfig:  
     # Swap File Configuration  
-    swapFileSize: "2Gi"             # Default: (not set) | Pattern: quantity with units  
-    # Note: Requires kubelet.failSwapOn: false  
+    swapFileSize: "2Gi"             # Default: (not set) | Pattern: quantity with units Note: Requires kubelet.failSwapOn: false  
 ```
 
-### Transparent huge pages
-
-The following settings allow you to set the transparent huge page behavior:
-
-```yaml 
-spec:
-  linuxOSConfig:  
-    # Transparent Huge Pages  
-    transparentHugePageEnabled: "madvise"    # Values: always, madvise, never  
-    transparentHugePageDefrag: "defer+madvise" # Values: always, defer, defer+madvise, madvise, never  
-```
-
-### File system settings
+###  Linux file handle limits settings
 
 The following settings allow you to set file system settings:
 
@@ -328,24 +315,13 @@ spec:
     # Sysctl Settings  
     sysctls:  
       # File System Settings  
-      fsAioMaxNr: 1000000              # Range: 65536-6553500  
-      fsFileMax: 2000000               # Range: 8192-12000500  
-      fsInotifyMaxUserWatches: 1000000 # Range: 781250-2097152  
-      fsNrOpen: 1000000                # Range: 8192-20000500  
+      fsFileMax: 2000000               # Range: 8192-12000500  Default: Max of available range
+      fsInotifyMaxUserWatches: 1000000 # Range: 781250-2097152 Default: 1048576
+      fsAioMaxNr: 1000000              # Range: 65536-6553500  Default: 65536
+      fsNrOpen: 1000000                # Range: 8192-20000500  Default: 1048576
 ```
 
-### Kernel settings
-
-The following settings allow you to set kernel settings:
-
-```yaml 
-spec:
-  linuxOSConfig:
-      # Kernel Settings  
-      kernelThreadsMax: 100000         # Range: 20-513785  
-```
-
-### Network settings
+### Linux socket and network tuning settings
 
 The following settings allow you to set TCP and network settings:
 
@@ -353,37 +329,53 @@ The following settings allow you to set TCP and network settings:
 spec:
   linuxOSConfig:
       # Network Settings  
-      netCoreNetdevMaxBacklog: 5000    # Range: 1000-3240000  
-      netCoreOptmemMax: 102400         # Range: 20480-4194304  
+      netCoreSomaxconn: 65535          # Range: 4096-3240000  Default: 16384
+      netCoreNetdevMaxBacklog: 5000    # Range: 1000-3240000  Default: 1000
+      netCoreRmemMax: 134217728        # Range: 212992-134217728  Default: 1048576
+      netCoreOptmemMax: 102400         # Range: 20480-4194304     Default: 131072 
+      netCoreWmemMax: 134217728        # Range: 212992-134217728  Default: 212992
       netCoreRmemDefault: 212992       # Range: 212992-134217728  
-      netCoreRmemMax: 134217728        # Range: 212992-134217728  
-      netCoreSomaxconn: 65535          # Range: 4096-3240000  
       netCoreWmemDefault: 212992       # Range: 212992-134217728  
-      netCoreWmemMax: 134217728        # Range: 212992-134217728  
       netIPv4IPLocalPortRange: "1024 65535" # Format: "first last", first: 1024-60999, last: 32768-65535  
 
       # Neighbor Table GC Thresholds  
-      netIPv4NeighDefaultGcThresh1: 1024   # Range: 128-80000  
-      netIPv4NeighDefaultGcThresh2: 2048   # Range: 512-80000  
-      netIPv4NeighDefaultGcThresh3: 4096   # Range: 1024-80000  
+      netIPv4NeighDefaultGcThresh1: 1024   # Range: 128-80000  Default: 4096
+      netIPv4NeighDefaultGcThresh2: 2048   # Range: 512-80000  Default: 8192
+      netIPv4NeighDefaultGcThresh3: 4096   # Range: 1024-80000  Default: 16384
       # Note: thresh1 <= thresh2 <= thresh3  
 
       # Connection Tracking  
-      netNetfilterNfConntrackBuckets: 131072  # Range: 65536-524288  
-      netNetfilterNfConntrackMax: 262144       # Range: 131072-2097152  
+      netNetfilterNfConntrackBuckets: 131072  # Range: 65536-524288   Default: dynamically calculated 
+      netNetfilterNfConntrackMax: 262144       # Range: 131072-2097152 Default: dynamically calculated 
 ```
+
+### Linux worker limit settings
+
+The following settings allow you to set kernel settings:
+
+```yaml 
+spec:
+  linuxOSConfig:
+      # Kernel Settings  
+      kernelThreadsMax: 100000         # Range: 20-513785  Default: Dynamically calculated
+```
+
 
 ### Linux virtual memory settings
 
-The following settings allow you to set linux virtual memory settings:
+The following options of kernel settings that tune the operation of the linux virtual memory subsystem of the Linux kernel and the writeout of dirty data to disk:
 
 ```yaml 
 spec:
   linuxOSConfig:
       # Memory Management  
-      vmMaxMapCount: 262144          # Range: 65530-262144  
-      vmSwappiness: 60               # Range: 0-100  
-      vmVfsCachePressure: 100        # Range: 0-100
+      vmMaxMapCount: 262144          # Range: 65530-262144 Default: Max of available range 
+      vmSwappiness: 60               # Range: 0-100  Default: 60
+      vmVfsCachePressure: 100        # Range: 0-100  Default: 100
+
+      # Transparent Huge Pages  
+      transparentHugePageEnabled: "madvise"    # Values: [always, madvise, never]  Default: always
+      transparentHugePageDefrag: "defer+madvise" # Values: [always, defer, defer+madvise, madvise, never]  Default: madvise
 ```
 
 ## Azure resource tags configuration
