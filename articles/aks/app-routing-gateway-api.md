@@ -279,8 +279,7 @@ The application routing Gateway API implementation supports customization of the
 >         service.beta.kubernetes.io/port_80_health-probe_port:
 >         service.beta.kubernetes.io/port_80_health-probe_protocol:
 >         service.beta.kubernetes.io/port_80_health-probe_request-path:
-  ```
-
+> ```
 
 ## Disable the application routing Gateway API implementation
 
