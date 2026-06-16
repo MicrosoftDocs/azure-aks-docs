@@ -5,7 +5,7 @@ ms.date: 06/11/2026
 ms.custom: aks end-of-support notifications
 ms.topic: concept-article
 author: jdbencardinop
-ms.author: jubencar
+ms.author: juanbe
 ms.subservice: aks-upgrade
 # Customer intent: As a Kubernetes administrator, I want to receive notifications when my cluster's Kubernetes version is approaching end of support so that I can plan upgrades and avoid running unsupported versions.
 ---
