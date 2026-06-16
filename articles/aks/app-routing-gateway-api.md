@@ -40,6 +40,7 @@ The application routing add-on Kubernetes Gateway API implementation deploys an 
 * Configuring HTTPS ingress access to HTTPS services – i.e Server Name Indication (SNI) Passthrough – via the `TLSRoute` resource is not currently supported. Support for the `TLSRoute` resource will be available once AKS adds support for Istio 1.30, at which point your application routing Istio control plane will be automatically upgraded to that version.
 * Egress traffic management via the application routing Gateway API implementation is unsupported.
 * Injecting non-Microsoft-managed sidecars (for example, custom telemetry, logging, or security agents) into the Istio gateway proxy pods managed by the application routing add-on is not officially supported. If you choose to inject your own sidecar into a managed proxy pod, Microsoft provides only best-effort support for any issues you encounter.
+* Envoy access logging is enabled by default on Gateway proxy pods, but the log format, scope, and provider can't be customized via the Istio `Telemetry` API. To customize, use Gateway API ingress on the [Istio service mesh add-on][istio-gateway-api-access-logs] instead. 
 
 ## Prerequisites
 
@@ -227,6 +228,16 @@ You should see an `HTTP 200` response.
 > [!NOTE]
 > To secure ingress traffic with the application routing Gateway API implementation, see the [following guide][app-routing-gateway-api-tls] to sync secrets from Azure Key Vault (AKV) for securing Gateway API ingress traffic with TLS termination.
 
+## Access logging
+
+The application routing Gateway API implementation enables Envoy access logging by default on all managed `Gateway` proxy pods. Access logs are written to the proxy container's standard output in the default Envoy text format. You can view the logs by using `kubectl logs`:
+
+```bash
+kubectl logs deployment/<your-gateway-name>-approuting-istio
+```
+
+Each request that the gateway handles produces a log line containing details such as the HTTP method, path, response code, upstream service, and request and response sizes. This detail makes it easier to observe ingress traffic and troubleshoot routing issues without any additional configuration.
+
 ## Versioning and Upgrades
 
 The application routing Gateway API implementation deploys and upgrades the Istio control plane based on the AKS cluster Kubernetes version **for both minor version and patch version upgrades**.
@@ -267,6 +278,19 @@ The application routing Gateway API implementation supports customization of the
 
 > [!NOTE]
 > The `istio-gateway-class-defaults` ConfigMap is provisioned and reconciled by AKS when the Managed Gateway API CRDs and the application routing Gateway API implementation are enabled together. If you previously created the `istio-gateway-class-defaults` ConfigMap in the `aks-istio-system` namespace yourself, you must delete the self-managed ConfigMap instance prior to enabling the Managed Gateway API CRDs to avoid conflicts with reconciliation of the AKS-managed ConfigMap.
+
+> [!NOTE]
+> The application routing Gateway API implementation adds [Azure Load Balancer annotations][azure-lb-annotations] to the `Gateway` Service to configure health probes for the default `externalTrafficPolicy` setting of "Cluster." If you set `spec.externalTrafficPolicy` to "Local," you must unset the following annotations either in the GatewayClass-level ConfigMap or the per-Gateway ConfigMap:
+> ```yaml
+>  service: |
+>     spec:
+>        externalTrafficPolicy: Local
+>     metadata:
+>       annotations:
+>         service.beta.kubernetes.io/port_80_health-probe_port:
+>         service.beta.kubernetes.io/port_80_health-probe_protocol:
+>         service.beta.kubernetes.io/port_80_health-probe_request-path:
+> ```
 
 ## Disable the application routing Gateway API implementation
 
@@ -313,6 +337,7 @@ kubectl delete secretproviderclass httpbin-credential-spc
 [aks-release-tracker]: ./release-tracker.md
 [istio-addon]: istio-about.md
 [istio-gateway-resource-customization]: istio-gateway-api.md#configmap-customizations
+[istio-gateway-api-access-logs]: istio-gateway-api.md#enable-access-logs-for-the-gateway-pods
 [managed-gateway-api]: managed-gateway-api.md
 [istio-release-calendar]: istio-support-policy.md#service-mesh-add-on-release-calendar
 [istio-meshconfig]: istio-meshconfig.md#allowed-supported-and-blocked-meshconfig-values
@@ -325,3 +350,4 @@ kubectl delete secretproviderclass httpbin-credential-spc
 [aks-release-notes]: https://github.com/azure/aks/releases
 [istio-revisions]: https://istio.io/latest/blog/2021/revision-tags/
 [k8s-gateway-api]: https://gateway-api.sigs.k8s.io/
+[azure-lb-annotations]: https://cloud-provider-azure.sigs.k8s.io/topics/loadbalancer/
