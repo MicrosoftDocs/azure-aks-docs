@@ -268,6 +268,19 @@ The application routing Gateway API implementation supports customization of the
 > [!NOTE]
 > The `istio-gateway-class-defaults` ConfigMap is provisioned and reconciled by AKS when the Managed Gateway API CRDs and the application routing Gateway API implementation are enabled together. If you previously created the `istio-gateway-class-defaults` ConfigMap in the `aks-istio-system` namespace yourself, you must delete the self-managed ConfigMap instance prior to enabling the Managed Gateway API CRDs to avoid conflicts with reconciliation of the AKS-managed ConfigMap.
 
+> [!NOTE]
+> The application routing Gateway API implementation adds [Azure Load Balancer annotations][azure-lb-annotations] to the `Gateway` Service to configure health probes for the default `externalTrafficPolicy` setting of "Cluster." If you set `spec.externalTrafficPolicy` to "Local," you must unset the following annotations either in the GatewayClass-level ConfigMap or the per-Gateway ConfigMap:
+> ```yaml
+>  service: |
+>     spec:
+>        externalTrafficPolicy: Local
+>     metadata:
+>       annotations:
+>         service.beta.kubernetes.io/port_80_health-probe_port:
+>         service.beta.kubernetes.io/port_80_health-probe_protocol:
+>         service.beta.kubernetes.io/port_80_health-probe_request-path:
+> ```
+
 ## Disable the application routing Gateway API implementation
 
 Run the following command to disable the application routing Gateway API implementation:
@@ -325,3 +338,4 @@ kubectl delete secretproviderclass httpbin-credential-spc
 [aks-release-notes]: https://github.com/azure/aks/releases
 [istio-revisions]: https://istio.io/latest/blog/2021/revision-tags/
 [k8s-gateway-api]: https://gateway-api.sigs.k8s.io/
+[azure-lb-annotations]: https://cloud-provider-azure.sigs.k8s.io/topics/loadbalancer/
