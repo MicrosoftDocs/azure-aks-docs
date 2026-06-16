@@ -489,7 +489,7 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 | `spec.healthCheckNodePort` | Service health probe settings |
 
 > [!NOTE]
-> The Istio add-on adds [Azure Load Balancer annotations][azure-lb-annotations] to the `Gateway` Service to configure health probes for the default `externalTrafficPolicy` setting of "Cluster." If you set `spec.externalTrafficPolicy` to "Local," you must unset the following annotations either in the GatewayClass-level ConfigMap or the per-Gateway ConfigMap:
+> The Istio add-on adds [Azure Load Balancer annotations][azure-lb-annotations] to the `Gateway` Service to configure health probes for the default `externalTrafficPolicy` setting of "Cluster." If you set `spec.externalTrafficPolicy` to "Local," you must unset the following annotations either in the `GatewayClass`-level ConfigMap or the per-`Gateway` ConfigMap:
 > ```yaml
 >  service: |
 >     spec:
