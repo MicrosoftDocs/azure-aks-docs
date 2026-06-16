@@ -236,7 +236,7 @@ The application routing Gateway API implementation enables Envoy access logging 
 kubectl logs deployment/<your-gateway-name>-approuting-istio
 ```
 
-Each request handled by the gateway produces a log line containing details such as the HTTP method, path, response code, upstream service, and request/response sizes. This makes it easier to observe ingress traffic and troubleshoot routing issues without any additional configuration.
+Each request that the gateway handles produces a log line containing details such as the HTTP method, path, response code, upstream service, and request and response sizes. This detail makes it easier to observe ingress traffic and troubleshoot routing issues without any additional configuration.
 
 ## Versioning and Upgrades
 
