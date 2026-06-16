@@ -501,8 +501,6 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 >         service.beta.kubernetes.io/port_80_health-probe_request-path:
 > ```
 
-When setting `spec.externalTrafficPolicy` to "Local," 
-
 ## HorizontalPodAutoscaler (HPA) customization allow list fields
 
 | Field path | Description |
