@@ -230,13 +230,13 @@ You should see an `HTTP 200` response.
 
 ## Access logging
 
-The application routing Gateway API implementation enables Envoy access logging by default on all managed `Gateway` proxy pods. Access logs are written to the proxy container's standard output in the default Envoy text format and can be viewed with `kubectl logs`:
+The application routing Gateway API implementation enables Envoy access logging by default on all managed `Gateway` proxy pods. Access logs are written to the proxy container's standard output in the default Envoy text format. You can view the logs by using `kubectl logs`:
 
 ```bash
 kubectl logs deployment/<your-gateway-name>-approuting-istio
 ```
 
-Each request handled by the gateway produces a log line containing details such as the HTTP method, path, response code, upstream service, and request/response sizes. This makes it easier to observe ingress traffic and troubleshoot routing issues without any additional configuration.
+Each request that the gateway handles produces a log line containing details such as the HTTP method, path, response code, upstream service, and request and response sizes. This detail makes it easier to observe ingress traffic and troubleshoot routing issues without any additional configuration.
 
 ## Versioning and Upgrades
 
