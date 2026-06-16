@@ -294,20 +294,9 @@ For more on custom Linux OS configuration settings, full details on default valu
 > [!IMPORTANT]
 > **Configure Linux OS settings carefully**, and test any changes in nonproduction environments first.
 
-### Swap file configuration
-
-The following settings allow you to swap the file configuration:
-
-```yaml
-spec:
-  linuxOSConfig:  
-    # Swap File Configuration  
-    swapFileSize: "2Gi"             # Default: (not set) | Pattern: quantity with units Note: Requires kubelet.failSwapOn: false  
-```
-
 ###  Linux file handle limits settings
 
-The following settings allow you to set file system settings:
+Use the following settings to set the file system settings.
 
 ```yaml 
 spec:
@@ -323,7 +312,7 @@ spec:
 
 ### Linux socket and network tuning settings
 
-The following settings allow you to set TCP and network settings:
+Use the following settings to set the TCP and network setting.
 
 ```yaml 
 spec:
@@ -351,7 +340,7 @@ spec:
 
 ### Linux worker limit settings
 
-The following settings allow you to set kernel settings:
+Use the following settings to set the kernel setting.
 
 ```yaml 
 spec:
@@ -363,15 +352,18 @@ spec:
 
 ### Linux virtual memory settings
 
-The following options of kernel settings that tune the operation of the linux virtual memory subsystem of the Linux kernel and the writeout of dirty data to disk:
+Use the following options to tune the operation of the Linux virtual memory subsystem of the Linux kernel and the writeout of dirty data to disk.
 
 ```yaml 
 spec:
   linuxOSConfig:
       # Memory Management  
-      vmMaxMapCount: 262144          # Range: 65530-262144 Default: Max of available range 
-      vmSwappiness: 60               # Range: 0-100  Default: 60
+      vmMaxMapCount: 262144          # Range: 65530-262144 Default: Max of available range
       vmVfsCachePressure: 100        # Range: 0-100  Default: 100
+      vmSwappiness: 60               # Range: 0-100  Default: 60
+
+      # Swap File Configuration  
+      swapFileSize: "2Gi"             # Default: (not set) | Pattern: quantity with units Note: Requires kubelet.failSwapOn: false  
 
       # Transparent Huge Pages  
       transparentHugePageEnabled: "madvise"    # Values: [always, madvise, never]  Default: always
