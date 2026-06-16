@@ -488,6 +488,22 @@ You can modify these settings for all Istio `Gateways` at a `GatewayClass` level
 | `spec.internalTrafficPolicy` | Service traffic policy |
 | `spec.healthCheckNodePort` | Service health probe settings |
 
+> [!NOTE]
+> The Istio add-on adds [Azure Load Balancer annotations][azure-lb-annotations] to the `Gateway` Service to configure health probes for the default `externalTrafficPolicy` setting of "Cluster." If you set `spec.externalTrafficPolicy` to "Local," you must unset the following annotations either in the GatewayClass-level ConfigMap or the per-Gateway ConfigMap:
+> ```yaml
+>  service: |
+>     spec:
+>        externalTrafficPolicy: Local
+>     metadata:
+>       annotations:
+>         service.beta.kubernetes.io/port_80_health-probe_port:
+>         service.beta.kubernetes.io/port_80_health-probe_protocol:
+>         service.beta.kubernetes.io/port_80_health-probe_request-path:
+  ```
+
+
+When setting `spec.externalTrafficPolicy` to "Local," 
+
 ## HorizontalPodAutoscaler (HPA) customization allow list fields
 
 | Field path | Description |
@@ -713,3 +729,4 @@ If you no longer need the resources created in this article, you can delete them
 [akv-set-policy]: /cli/azure/keyvault#az-keyvault-set-policy
 [akv-csi-driver-set-secret]: ./csi-secrets-store-driver.md
 [kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/
+[azure-lb-annotations]: https://cloud-provider-azure.sigs.k8s.io/topics/loadbalancer/
