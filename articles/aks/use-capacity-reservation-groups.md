@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 05/29/2026
 author: schaffererin
-ms.author: swgriffith
+ms.author: stgriffi
 ms.subservice: aks-nodes
 # Customer intent: "As a Kubernetes administrator, I want to use capacity reservation groups with node pools in AKS to guarantee allocated capacity for my node pools."
 ---
@@ -75,17 +75,17 @@ In this article, you learn how to use capacity reservation groups with node pool
 
 Get the ID of an existing capacity reservation group using the [`az capacity reservation group show`][az-crg-show] command and set it to an environment variable.
 
-    ```azurecli-interactive
-    CRG_ID=$(az capacity reservation group show --capacity-reservation-group <crg-name> --resource-group <resource-group-name> --query id -o tsv)
-    ```
+```azurecli-interactive
+CRG_ID=$(az capacity reservation group show --capacity-reservation-group <crg-name> --resource-group <resource-group-name> --query id -o tsv)
+```
 
 ## Associate an existing capacity reservation group with a new node pool
 
 Associate an existing capacity reservation group with a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--crg-id` flag. The following example assumes you have a CRG named "myCRG".
 
-    ```azurecli-interactive
-    az aks nodepool add --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --crg-id $CRG_ID
-    ```
+```azurecli-interactive
+az aks nodepool add --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --crg-id $CRG_ID
+```
 
 ## Associate an existing capacity reservation group with an existing node pool (Preview)
 
