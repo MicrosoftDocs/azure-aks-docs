@@ -73,7 +73,7 @@ In this article, you learn how to use capacity reservation groups with node pool
 
 ## Get the ID of an existing capacity reservation group
 
-Get the ID of an existing capacity reservation group using the [`az capacity reservation group show`][az-crg-show] command and set it to an environment variable.
+Get the ID of an existing capacity reservation group by using the [`az capacity reservation group show`][az-crg-show] command and set it to an environment variable.
 
 ```azurecli-interactive
 CRG_ID=$(az capacity reservation group show --capacity-reservation-group <crg-name> --resource-group <resource-group-name> --query id -o tsv)
