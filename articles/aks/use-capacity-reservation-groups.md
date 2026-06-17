@@ -89,7 +89,7 @@ az aks nodepool add --resource-group <resource-group-name> --cluster-name <clust
 
 ## Associate an existing capacity reservation group with an existing node pool (Preview)
 
-Associate an existing capacity reservation group with an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--crg-id` flag.
+Associate an existing capacity reservation group with an existing node pool by using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--crg-id` flag.
 
 - For zonal node pools, this operation initiates a rolling update of the target node pool, which involves rolling cordon/drain of all nodes and reboot to apply the change.
 - For non-zonal (regional) node pools during the preview, first scale the node pool to zero, then apply the capacity reservation group.
