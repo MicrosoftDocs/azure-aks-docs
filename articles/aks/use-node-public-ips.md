@@ -188,7 +188,7 @@ The following limitations apply to dual-stack public IP prefix:
 - You must provide both an IPv4 and an IPv6 prefix. IPv6-only configurations aren't supported.
 - Node public IP configuration is immutable. To change the public IP prefixes, you must create a new node pool and migrate workloads.
 - Each node is assigned a single IPv6 public IP address.
-- This feature is not supported with AKS Automatic or node auto-provisioning.
+- This feature isn't supported with AKS Automatic or node auto-provisioning.
 - Multi-NIC node pools are not supported.
 
 ## Locate public IPs for nodes
