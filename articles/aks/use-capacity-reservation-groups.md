@@ -97,7 +97,7 @@ Associate an existing capacity reservation group with an existing node pool by u
 ### Prerequisites
 
 - Install the `aks-preview` Azure CLI extension version `20.0.0b7` or later before running this command.
-- Ensure the capacity reservation group has enough capacity for your node pool upgrade strategy. When `maxSurge > 0`, reserve extra capacity for the [max surge][max-surge] value (for example, a 10-node pool with `maxSurge` set to `2` can run up to 12 nodes during an upgrade). This extra capacity isn't required for [maxUnavailable][max-unavailable] only rollouts or regional scaled-to-zero paths.
+- Ensure the capacity reservation group has enough capacity for your node pool upgrade strategy. When `maxSurge > 0`, reserve extra capacity for the [max surge][max-surge] value. For example, a 10-node pool with `maxSurge` set to `2` can run up to 12 nodes during an upgrade. This extra capacity isn't required for [maxUnavailable][max-unavailable] only rollouts or regional scaled-to-zero paths.
 
     ```azurecli-interactive
     az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --crg-id $CRG_ID
