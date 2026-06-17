@@ -3,7 +3,7 @@ title: Use instance-level public IPs in Azure Kubernetes Service (AKS)
 description: Learn how to manage instance-level public IPs Azure Kubernetes Service (AKS)
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 10/14/2024
+ms.date: 06/17/2026
 ms.author: pahealy
 author: phealy
 # Customer intent: As a DevOps engineer, I want to configure instance-level public IPs for nodes in Azure Kubernetes Service, so that I can ensure direct connectivity for workloads, such as gaming applications, to minimize latency and optimize performance.
@@ -67,6 +67,129 @@ az aks create \
     --node-public-ip-prefix-id /subscriptions/<subscription-id>/resourceGroups/<resourceGroup>/providers/Microsoft.Network/publicIPPrefixes/<publicIPPrefixName> \
     --generate-ssh-keys
 ```
+
+## Use a dual-stack public IP prefix (preview)
+
+You can assign both IPv4 and IPv6 public IP addresses to each node in a node pool by using a dual-stack public IP prefix. This approach allows you to bring your own public IP prefixes and ensure that each node receives one IPv4 address and one IPv6 address.
+
+This feature is useful for workloads that require direct inbound or outbound connectivity over both IPv4 and IPv6 or applications operating in environments that require IPv6 compliance.
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+### Requirements
+
+To use dual-stack public IP prefixes with node public IPs, ensure the following prerequisites are met:
+
+- Your cluster is configured as a dual-stack cluster with both IPv4 and IPv6 IP families.
+- Your cluster uses Azure CNI with overlay networking.
+- You have one IPv4 public IP prefix and one IPv6 public IP prefix created in the same region as your AKS cluster.
+- Both public IP prefixes use the Standard SKU.
+- The AKS cluster identity has permission to manage the public IP prefixes. If the prefixes are in a different resource group, assign the Network Contributor role on that resource group to the cluster identity.
+
+### Register the preview features
+
+Dual-stack (IPv4 and IPv6) public IP prefix support for node public IPs is currently available in preview. Before you can use this feature, you must install or update the Azure CLI extension and register the required feature flags in your subscription.
+
+Install or update the aks-preview extension:
+
+```azurecli-interactive
+az extension add --name aks-preview --upgrade
+```
+
+Register the required preview features:
+
+```azurecli-interactive
+az feature register --namespace Microsoft.ContainerService --name AKS-EnableDualStack 
+az feature register --namespace Microsoft.ContainerService --name NodePublicIPv6PrefixPreview
+```
+
+It can take several minutes for the feature registrations to complete. To check the registration status, run:
+
+```azurecli-interactive
+az feature show --namespace Microsoft.ContainerService --name AKS-EnableDualStack --query "properties.state" 
+az feature show --namespace Microsoft.ContainerService --name NodePublicIPv6PrefixPreview --query "properties.state"
+```
+
+Wait until both features report a state of Registered before proceeding.
+
+After the feature flags are registered, refresh the resource provider to ensure the changes are applied:
+
+```azurecli-interactive
+az provider register --namespace Microsoft.ContainerService
+```
+Once the registration is complete, you can create or update a cluster to use dual-stack public IP prefixes for node public IPs.
+
+### Create public IP prefixes
+
+Create a public IP prefix for IPv4 and IPv6 using the Azure CLI.
+
+For IPv4:
+
+```azurecli-interactive
+az network public-ip prefix create \
+  --resource-group <resourceGroup> \
+  --name <ipv4PrefixName> \
+  --location <region> \
+  --length 28 \
+  --sku Standard \
+  --version IPv4
+```
+
+For IPv6:
+
+```azurecli-interactive
+az network public-ip prefix create \
+  --resource-group <resourceGroup> \
+  --name <ipv6PrefixName> \
+  --location <region> \
+  --length 124 \
+  --sku Standard \
+  --version IPv6
+```
+
+After creating the prefixes, note the resource IDs of both prefixes.
+
+### Create a new cluster with dual-stack node public IP prefixes
+
+When creating a new AKS cluster, use the `--node-public-ip-prefix-ids` parameter to specify both the IPv4 and IPv6 public IP prefixes.
+
+```azurecli-interactive
+az aks create \
+  --resource-group <resourceGroup> \
+  --name <aksClusterName> \
+  --location <region> \
+  --enable-node-public-ip \
+  --ip-families IPv4,IPv6 \
+  --network-plugin azure \
+  --network-plugin-mode overlay \
+  --node-public-ip-prefix-ids "<ipv4PrefixResourceId>,<ipv6PrefixResourceId>" \
+  --generate-ssh-keys
+```
+
+The `--node-public-ip-prefix-ids` parameter accepts a comma-separated list of public IP prefix resource IDs. The list must include one IPv4 prefix and one IPv6 prefix.
+
+### Add a node pool with dual-stack node public IP prefixes
+
+You can also add a node pool with dual-stack node public IP prefixes to an existing dual-stack cluster.
+
+```azurecli-interactive
+az aks nodepool add \
+  --resource-group <resourceGroup> \
+  --cluster-name <aksClusterName> \
+  --name <nodePoolName> \
+  --enable-node-public-ip \
+  --node-public-ip-prefix-ids "<ipv4PrefixResourceId>,<ipv6PrefixResourceId>"
+```
+
+### Limitations
+
+The following limitations apply to dual-stack public IP prefix:
+
+- You must provide both an IPv4 and an IPv6 prefix. IPv6-only configurations are not supported.
+- Node public IP configuration is immutable. To change the public IP prefixes, you must create a new node pool and migrate workloads.
+- Each node is assigned a single IPv6 public IP address.
+- This feature is not supported with AKS Automatic or node auto-provisioning.
+- Multi-NIC node pools are not supported.
 
 ## Locate public IPs for nodes
 
