@@ -2,7 +2,7 @@
 title: "Automate Upgrades of Kubernetes and Node Images Across Multiple Clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to configure automated upgrades of Kubernetes and node images across multiple clusters by using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 09/16/2025
+ms.date: 06/15/2026
 author: sjwaight
 ms.author: simonwaight
 ms.reviewer: schaffererin
@@ -20,7 +20,7 @@ Ensuring clusters are kept updated in a timely and safe fashion is a key concern
 This article covers how to use auto-upgrade profiles to automatically create and execute update runs when Azure Kubernetes Service (AKS) releases new Kubernetes or node image versions.
 
 > [!NOTE]
-> Auto-upgrade triggered update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance) that learn how update runs handle member clusters with configured planned maintenance windows.
+> Auto-upgrade triggered update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance-windows) that learn how update runs handle member clusters with configured planned maintenance windows.
 
 ## Before you begin
 
@@ -163,11 +163,9 @@ az fleet autoupgradeprofile create \
   --channel NodeImage 
 ```
 
-### Target Kubernetes minor version updates (preview)
+### Target Kubernetes minor version updates
 
-Update to a defined target Kubernetes minor version using the `--target-kubernetes-version` parameter, supplying the version in the _{major version}.{minor version}_ format (for example, 1.33). Fleet auto-upgrade automatically upgrades member clusters to the latest patch release of the specified target version when the patch is available.
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+Update to a defined target Kubernetes minor version using the `--target-kubernetes-version` parameter, supplying the version in the _{major version}.{minor version}_ format (for example, 1.33). Fleet Manager Auto-upgrade automatically upgrades member clusters to the latest patch release of the specified target version when the patch is available.
 
 > [!IMPORTANT]
 > Keep the following information in mind when using the _Target Kubernetes minor version_ channel:
@@ -304,9 +302,9 @@ Update nodes with a newly patched machine image containing security fixes and bu
 
     :::image type="content" source="./media/auto-upgrade/create-auto-upgrade-profile-node-image.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for creating auto-upgrade profile using the Node image channel." lightbox="./media/auto-upgrade/create-auto-upgrade-profile-node-image.png":::
 
-### [Target Kubernetes minor version (preview)](#tab/target-kubernetes-minor-version)
+### [Target Kubernetes minor version](#tab/target-kubernetes-minor-version)
 
-Update to a defined target Kubernetes minor version. Fleet auto-upgrade automatically upgrades member clusters to the latest patch release of the specified target version when the patch is available.
+Update to a defined target Kubernetes minor version. Fleet Manager Auto-upgrade automatically upgrades member clusters to the latest patch release of the specified target version when the patch is available.
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Multicluster update** > **Auto-upgrade profiles** > **+ Create**.
@@ -317,7 +315,7 @@ Update to a defined target Kubernetes minor version. Fleet auto-upgrade automati
       - **Status**: Select whether the auto-upgrade profile is **Enabled** or **Disabled**. Disabled auto-upgrade profiles don't trigger when new versions are released.
       - **Update sequence**: Select the update sequence of either **Stages** or **One by one**.
     - Under **Auto-upgrade triggers**:
-      - **Channel**: Select **Target Kubernetes minor version (preview)**.
+      - **Channel**: Select **Target Kubernetes minor version**.
       - **Allow LTS minor versions**: Select whether to allow Kubernetes minor versions available only for AKS long term support (LTS) clusters.
       - **Target Kubernetes minor version**: Select the Kubernetes minor version trigger. Clusters at a lower minor are updated to it first, then only patch updates are applied.
       - **Node image**: Select **Latest image** or **Consistent image**.
@@ -325,7 +323,7 @@ Update to a defined target Kubernetes minor version. Fleet auto-upgrade automati
       - If you selected an **Update sequence** using **Stages**, select an existing strategy or create a new one.
 1. Select **Create** to create the auto-upgrade profile.
 
-    :::image type="content" source="./media/auto-upgrade/create-auto-upgrade-profile-kubernetes-minor.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for creating auto-upgrade profile using the Target Kubernetes minor version (preview) channel." lightbox="./media/auto-upgrade/create-auto-upgrade-profile-kubernetes-minor.png":::
+    :::image type="content" source="./media/auto-upgrade/create-auto-upgrade-profile-kubernetes-minor.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for creating auto-upgrade profile using the Target Kubernetes minor version channel." lightbox="./media/auto-upgrade/create-auto-upgrade-profile-kubernetes-minor.png":::
 
 ---
 

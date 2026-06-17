@@ -2,22 +2,23 @@
 title: Add approvals to Azure Kubernetes Fleet Manager Update Run Strategies
 description: Add approvals to Azure Kubernetes Fleet Manager Update Strategies.
 ms.topic: how-to
-ms.date: 08/04/2025
+ms.date: 06/15/2026
 author: dvadas
 ms.author: davidvadas
 ms.service: azure-kubernetes-fleet-manager
+zone_pivot_groups: azure-portal-azure-cli
 # Customer intent: "As a platform admin managing multiple Kubernetes clusters, I want to configure approvals before and/or after some of my clusters are updated in a Fleet Manager update run."
 ---
 
-# Add approvals to Azure Kubernetes Fleet Manager Update Strategies (preview)
+# Add approvals to Azure Kubernetes Fleet Manager Update Strategies
+
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 Platform administrators often perform pre- and post-update checks when updating multiple clusters in an update run. These checks are to ensure that the clusters are ready to be updated, or that the update didn't adversely affect cluster operations.
 
 Fleet Manager provides approval gates that allow platform administrators to either manually, or via automation, perform any checks required to allow the update run to proceed. For example, an approval gate between the test and production stages of an update run means health checks can be run on test clusters to make sure it's safe to proceed to production.
 
 This article covers how to define approvals in update run and strategies, and how to approve them during update run execution.
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 ## Prerequisites
 
@@ -62,7 +63,7 @@ Approvals can be placed on any update stage or update group in an update strateg
 
 ## Configure stage and group approvals in an update strategy 
 
-### [Azure portal](#tab/azure-portal)
+:::zone target="docs" pivot="azure-portal"
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource. 
 
@@ -90,7 +91,9 @@ Approvals can be placed on any update stage or update group in an update strateg
 
 1. Select **Create**. 
 
-### [Azure CLI](#tab/cli)
+:::zone-end
+
+:::zone target="docs" pivot="azure-cli"
 
 1. Create a JSON file to define the stages and groups for the update run. Here's an example file that defines approval gates in all positions (*example-stages.json*): 
 
@@ -143,7 +146,7 @@ Approvals can be placed on any update stage or update group in an update strateg
      --stages example-stages.json 
     ```
 
----
+:::zone-end
 
 For more information, read [the guide to creating update strategies](./update-create-update-strategy.md)
 
@@ -165,7 +168,7 @@ Once an update run with a strategy containing approvals is started, the update r
 > [!NOTE]
 > Update groups execute in parallel. As such, an approval for one group affects that group only and not any others. If you want to block multiple groups, then use a single stage approval or one group approval for each of them. 
 
-### [Azure portal](#tab/azure-portal)
+:::zone target="docs" pivot="azure-portal"
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource. 
 
@@ -185,7 +188,9 @@ Once an update run with a strategy containing approvals is started, the update r
 
     :::image type="content" source="./media/update-orchestration/update-run-approval-sidebar.png" alt-text="Screenshot of the Azure portal pane for pending approvals." lightbox="./media/update-orchestration/update-run-approval-sidebar.png":::
 
-### [Azure CLI](#tab/cli)
+:::zone-end
+
+:::zone target="docs" pivot="azure-cli"
 
 1. Retrieve the update run status using the [`az fleet updaterun show`][az-fleet-updaterun-show] command. 
 
@@ -282,7 +287,7 @@ Alternatively, you can list all gates across all update runs in a fleet.
      --name aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e 
     ```
 
----
+:::zone-end
 
 ## Cleaning up
 
@@ -291,7 +296,7 @@ After your update run is complete, you may wish to clean up the gate resources t
 > [!NOTE]
 > Gates cannot be deleted directly. Instead, you must delete the update run associated with the gate. This automatically deletes **all** gates associated with the update run.
 
-### [Azure portal](#tab/azure-portal)
+:::zone target="docs" pivot="azure-portal"
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource. 
 
@@ -305,8 +310,9 @@ After your update run is complete, you may wish to clean up the gate resources t
 
 1. In the popup, select **Delete**.
 
+:::zone-end
 
-### [Azure CLI](#tab/cli)
+:::zone target="docs" pivot="azure-cli"
 
 1. Identify the update run associated with the gate that you want to delete. The update run name can be found in the gate `target.updateRunProperties.name` field.
 
@@ -321,7 +327,7 @@ After your update run is complete, you may wish to clean up the gate resources t
 
 1. All gates associated with the update run are now deleted.
 
----
+:::zone-end
 
 
 ## Next steps

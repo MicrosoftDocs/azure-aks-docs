@@ -2,14 +2,17 @@
 title: "Define reuseable update strategies for multi-clusters updates using Azure Kubernetes Fleet Manager"
 description: See how you can define staged update strategies that can be reused across multiple update runs and auto-upgrade profiles in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 05/06/2026
+ms.date: 06/15/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+zone_pivot_groups: azure-portal-azure-cli
 # Customer intent: As a Kubernetes administrator, I want to define reusable update strategies for multiple clusters, so that I can streamline and manage update processes across my fleet.
 ---
 
 # Define reusable update strategies using Azure Kubernetes Fleet Manager
+
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 Administrators can control the sequence of updates to Fleet-managed clusters by defining a series of stages and groups. They can configure when approvals and pauses should occur within those stages and groups. The entire configuration can be saved as an update strategy which can be managed independently of update runs or auto-upgrades, allowing strategies to be reused as required.
 
@@ -89,6 +92,9 @@ az fleet member update \
 
 An update strategy consists of one or more stages, where a stage can contain one or more update groups.
 
+> [!NOTE]
+> An Azure portal experience will be available prior to general availability of this capability.
+
 1. Create a JSON file to define the stages and groups for the update run. Stages run sequentially in the order they appear in the JSON file. Groups run in parallel within each stage. The following example file (*example-labels-strategy.json*) defines a strategy with two stages using `memberSelector` to select clusters by their labels and includes optional `maxConcurrency` settings:
 
     - The `staging` stage uses a stage-level `memberSelector` to select all clusters with the label `env=staging` and create one implicit group. 
@@ -156,7 +162,7 @@ Clusters can also be selected in update strategies by assigning them to a single
 ### Assign clusters to update groups
 #### Assign to group when adding member cluster to the fleet
 
-##### [Azure portal](#tab/azure-portal)
+:::zone target="docs" pivot="azure-portal"
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Member clusters** > **Add**.
@@ -169,7 +175,9 @@ Clusters can also be selected in update strategies by assigning them to a single
 
     :::image type="content" source="./media/create-update-strategy/add-members-assign-group-inline.png" alt-text="Screenshot of the Azure portal page for Azure Kubernetes Fleet Manager review and add step for member clusters." lightbox="./media/create-update-strategy/add-members-assign-group.png":::
 
-##### [Azure CLI](#tab/cli)
+:::zone-end
+
+:::zone target="docs" pivot="azure-cli"
 
 Assign a member cluster to an update group when adding the member cluster to the fleet using the [`az fleet member create`][az-fleet-member-create] command with the `--update-group` parameter set to the name of the update group.
 
@@ -182,11 +190,11 @@ az fleet member create \
     --update-group group-1a
 ```
 
----
+:::zone-end
 
 #### Assign an existing fleet member to an update group
 
-##### [Azure portal](#tab/azure-portal)
+:::zone target="docs" pivot="azure-portal"
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Member clusters**.
@@ -198,7 +206,9 @@ az fleet member create \
 
     :::image type="content" source="./media/create-update-strategy/group-name-inline.png" alt-text="Screenshot of the Azure portal page for member clusters that shows the form for updating a member cluster's group." lightbox="./media/create-update-strategy/group-name.png":::
 
-##### [Azure CLI](#tab/cli)
+:::zone-end
+
+:::zone target="docs" pivot="azure-cli"
 
 Assign an existing fleet member to an update group using the [`az fleet member update`][az-fleet-member-update] command with the `--update-group` flag set to the name of the update group.
 
@@ -210,13 +220,13 @@ az fleet member update \
  --update-group group-1
 ```
 
----
+:::zone-end
 
 ### Create an update strategy
 
 An update strategy consists of one or more stages, where a stage can contain one or more update groups.
 
-#### [Azure portal](#tab/azure-portal)
+:::zone target="docs" pivot="azure-portal"
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Multi-cluster update** > **Strategies**, then **Create**.
@@ -241,7 +251,9 @@ An update strategy consists of one or more stages, where a stage can contain one
     :::image type="content" source="./media/create-update-strategy/create-stage-choose-groups-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage, selecting update groups to include." lightbox="./media/create-update-strategy/create-stage-choose-groups.png":::
 
 
-#### [Azure CLI](#tab/cli)
+:::zone-end
+
+:::zone target="docs" pivot="azure-cli"
 
 For this scenario, we create stages and groups to match the details used for the Azure portal process.  
 
@@ -296,7 +308,7 @@ For this scenario, we create stages and groups to match the details used for the
      --stages example-stages.json
     ```
 
----
+:::zone-end
 
 ## Next steps
 

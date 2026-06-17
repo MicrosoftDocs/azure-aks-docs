@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 06/01/2026
+ms.date: 06/15/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -76,14 +76,12 @@ Supported AKS update channels:
 * **Rapid**: Updates for the most recent AKS-supported Kubernetes release (N).
 * **Stable**: Updates for Kubernetes stable channel (N-1) where 'N' is the most recent AKS-supported Kubernetes release.
 * **NodeImage**: node image VHD patched (bug and security) with a weekly release schedule.
-* **TargetKubernetesVersion (preview) (Patch)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that are available only via AKS Long-Term Support (LTS).
+* **TargetKubernetesVersion (Patch)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that are available only via AKS Long-Term Support (LTS).
+* **NodeSecurityPatch (preview)**: node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
 
 Currently unsupported AKS channels:
 
-* **SecurityPatch**: node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
-* **Unmanaged**: node image OS updates applied directly through OS in-built patching (Linux nodes only).
-
-If you're using any of the channels that Fleet Manager doesn't support, we recommend you leave those channels enabled on your AKS clusters.
+* **Unmanaged**: node image OS updates applied directly through OS in-built patching (Linux nodes only). There are currently no plans for Fleet Manager to support this option.
 
 ### The target Kubernetes minor version in my auto-upgrade profile is out of community support. What can I do?
 
@@ -92,7 +90,7 @@ You can elect to:
 * Allow Long Term Support (LTS) in the auto-upgrade profile and enable it for any clusters in your fleet you wish to retain on the specific minor. Ensure that only LTS clusters are included in the update strategy you use.
 * Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters are updated to the most recent patch in the specified Kubernetes minor when released.
 
-For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-minor-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
+For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-minor-version-updates). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
 
 > [!NOTE]
 > To review detailed information if failures occur and to understand the specific actions to take, check the auto-upgrade profile status.
