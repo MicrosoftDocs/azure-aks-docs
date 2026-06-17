@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-security
 ms.date: 07/15/2025
+ai-usage: ai-assisted
 author: allyford
 ms.author: allyford
 zone_pivot_groups: arm-azure-cli
@@ -39,7 +40,8 @@ Trusted Launch is composed of several, coordinated infrastructure technologies t
 - AKS supports Trusted Launch on kubernetes version 1.25.2 and higher.
 - Trusted Launch only supports [Azure Generation 2 VMs][azure-generation-two-virtual-machines].
 - Node pools with Windows Server operating system aren't supported.
-- Trusted Launch can't be enabled in the same node pool as [FIPS][FIPS], [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM]. For more information, see [node images documentation][node-images].
+- Trusted Launch can't be enabled in the same node pool as [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM]. For more information, see [node images documentation][node-images].
+- Trusted Launch can only be enabled in the same node pool as [FIPS][FIPS] with Ubuntu 22.04.
 - Trusted Launch doesn't support virtual node.
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
 - To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see [Skip GPU driver installation][skip-gpu-driver-install].
@@ -154,6 +156,68 @@ When you create a node pool, enabling vTPM or Secure Boot automatically sets up 
     ```
 
 2. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
+:::zone-end
+
+## Add a node pool with Trusted Launch and FIPS enabled
+
+You can enable Trusted Launch and FIPS together only for Ubuntu 22.04 node pools on Generation 2 VM sizes.
+
+For FIPS-specific operations, such as disabling FIPS on an existing node pool, see [Enable Federal Information Processing Standard (FIPS) for Azure Kubernetes Service (AKS) node pools][FIPS].
+
+:::zone target="docs" pivot="azure-cli"
+1. Add a node pool with Trusted Launch and FIPS enabled by using the [`az aks nodepool add`][az-aks-nodepool-add] command. Before running the command, review the following parameters:
+
+   * **--cluster-name**: Enter the name of the AKS cluster.
+   * **--resource-group**: Enter the name of an existing resource group to host the AKS cluster resource.
+    * **--name**: Enter a unique name for the node pool. The name of a node pool can only contain lowercase alphanumeric characters and must begin with a lowercase letter. For Linux node pools, the length must be between 1 and 11 characters.
+   * **--node-count**: The number of nodes in the Kubernetes agent pool. Default is 3.
+   * **--enable-secure-boot**: Enables Secure Boot to authenticate image signed by a trusted publisher.
+   * **--enable-vtpm**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * **--enable-fips-image**: Enables the FIPS-compliant node image for the node pool.
+
+    > [!NOTE]
+    > Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling Secure Boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
+
+    The following example deploys a node pool with vTPM, Secure Boot, and FIPS enabled on a cluster named *myAKSCluster* with three nodes:
+
+    ```azurecli-interactive
+    az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --name mynodepool --node-count 3 --enable-vtpm --enable-secure-boot --enable-fips-image
+    ```
+1. Check that your node pool uses a Trusted Launch image.
+
+    Trusted Launch nodes have the following output:
+
+    * Node image version containing both `"TL"` and `"FIPS"`.
+    * `"Security-type"` is `"Trusted Launch"`.
+
+    ```bash
+    kubectl get nodes
+    kubectl describe node {node-name} | grep -e node-image-version -e security-type
+    ```
+
+:::zone-end
+:::zone target="docs" pivot="arm"
+1. Create a template with Trusted Launch and FIPS parameters. Before creating the template, review the following parameters:
+
+   * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * **enableFips**: Enables the FIPS-compliant node image for the node pool.
+
+    In your template, provide values for `enableVTPM`, `enableSecureBoot`, and `enableFips`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
+
+    ```json
+    "properties": {
+        ...,
+        "osSKU": "Ubuntu",
+        "enableFips": true,
+        "securityProfile": {
+            "enableVTPM": "true",
+            "enableSecureBoot": "true",
+        }
+    }
+    ```
+
+1. Deploy your template with vTPM, secure boot, and FIPS enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
 
 ## Enable vTPM or secure boot on an existing Trusted Launch node pool

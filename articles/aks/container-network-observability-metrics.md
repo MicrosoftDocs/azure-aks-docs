@@ -190,13 +190,14 @@ All metrics include labels:
 
 **FIPS support (non-Cilium data planes only):**
 
-* FIPS isn't available on Ubuntu 20.04 nodes due to kernel restrictions. Use an Azure Linux node pool instead. This limitation doesn't apply to Cilium data planes. For updates, see the [AKS issue tracker](https://github.com/Azure/AKS/issues/4857).
+* FIPS isn't available on Ubuntu 20.04 nodes due to kernel restrictions. Use an Azure Linux or Ubuntu 22.04 node pool instead. This limitation doesn't apply to Cilium data planes.
 
 | Operating system | FIPS support |
 |---|---|
 | Azure Linux 3.0 | Yes |
 | Azure Linux 2.0 | Yes |
 | Ubuntu 20.04 | No |
+| Ubuntu 22.04 | Yes |
 
 **Scale:**
 
