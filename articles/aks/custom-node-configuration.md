@@ -28,7 +28,7 @@ Register the `AKSNodeCustomizationPreview` feature flag in your Azure subscripti
 
   It takes a few minutes for the status to show _Registered_.
 
-1. Verify the registration status using the [`az feature show`][az-feature-show] command.
+1. Verify the registration status by using the [`az feature show`][az-feature-show] command.
 
   ```azurecli-interactive
   az feature show --namespace "Microsoft.ContainerService" --name "AKSNodeCustomizationPreview"
