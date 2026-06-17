@@ -20,7 +20,7 @@ Customizing your node configuration allows you to adjust operating system (OS) s
 
 Register the `AKSNodeCustomizationPreview` feature flag in your Azure subscription before you use the preview `kubeReserved` and `hardEvictionThreshold` kubelet settings.
 
-1. Register the `AKSNodeCustomizationPreview` feature flag using the [`az feature register`][az-feature-register] command.
+1. Register the `AKSNodeCustomizationPreview` feature flag by using the [`az feature register`][az-feature-register] command.
 
   ```azurecli-interactive
   az feature register --namespace "Microsoft.ContainerService" --name "AKSNodeCustomizationPreview"
