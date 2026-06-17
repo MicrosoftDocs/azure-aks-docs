@@ -81,7 +81,7 @@ CRG_ID=$(az capacity reservation group show --capacity-reservation-group <crg-na
 
 ## Associate an existing capacity reservation group with a new node pool
 
-Associate an existing capacity reservation group with a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--crg-id` flag. The following example assumes you have a CRG named "myCRG".
+Associate an existing capacity reservation group with a new node pool by using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--crg-id` flag. The following example assumes you have a CRG named "myCRG".
 
 ```azurecli-interactive
 az aks nodepool add --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --crg-id $CRG_ID
