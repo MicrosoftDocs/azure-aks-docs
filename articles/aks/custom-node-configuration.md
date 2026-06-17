@@ -34,7 +34,7 @@ Register the `AKSNodeCustomizationPreview` feature flag in your Azure subscripti
   az feature show --namespace "Microsoft.ContainerService" --name "AKSNodeCustomizationPreview"
   ```
 
-1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+1. When the status shows _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider by using the [`az provider register`][az-provider-register] command.
 
   ```azurecli-interactive
   az provider register --namespace "Microsoft.ContainerService"
