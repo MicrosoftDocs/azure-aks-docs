@@ -1,21 +1,19 @@
 ---
 title: "Use Managed Fleet Namespaces with Azure Kubernetes Fleet Manager for multi-cluster multi-tenancy"
 description: This article provides a conceptual overview of multi-cluster managed namespaces using Azure Kubernetes Fleet Manager.
-ms.date: 11/12/2025
-author: audrastump
-ms.author: stumpaudra
+ms.date: 06/15/2026
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
 # Customer intent: "As a platform admin, I want to define a namespace and deploy it across selected fleet clusters so I can delegate application teams access to resources on any cluster where the namespace exists."
 ---
-# Use Managed Fleet Namespaces for multi-cluster multi-tenancy (preview)
+# Use Managed Fleet Namespaces for multi-cluster multi-tenancy
 
 **Applies to** :heavy_check_mark: Fleet Manager with hub cluster
 
 This article provides a conceptual overview of Azure Kubernetes Fleet Manager's Managed Fleet Namespaces that provide a centrally managed multi-cluster multi-tenancy solution.
  
-[!INCLUDE [preview_features_note](./includes/preview/preview-callout.md)]
-
 ## What are Managed Fleet Namespaces?
 
 When deployed on target member clusters, Managed Fleet Namespaces allow platform administrators to apply resource quotas, network policies, labels, annotations, and control access to namespace resources on each cluster. Managed Fleet Namespaces extend the capability of [Managed Kubernetes Namespace](../aks/concepts-managed-namespaces.md), which provide a way to logically isolate workloads within a single AKS cluster. 
@@ -92,7 +90,7 @@ To control access to a Managed Fleet Namespace on member clusters, use the follo
 
 For example, a developer in `team-A` which uses the `team-A` Managed Fleet Namespace would need to read and write Kubernetes resources in the namespace on the Fleet Manager hub cluster. The developer would also need to read Kubernetes objects in the `team-A` namespace on the member clusters on which it exists. So, the platform administrator would assign them **Azure Kubernetes Fleet Manager RBAC Writer** at the fleet scope and **Azure Kubernetes Fleet Manager RBAC Reader for Member Clusters** at the Managed Fleet Namespace scope for these respective requirements.
 
-During preview, access controls for Kubernetes Custom Resources (CRs) are **not** supported for these roles.
+At present, access controls for Kubernetes Custom Resources (CRs) are **not** supported for these roles.
 
 ## Next steps
 

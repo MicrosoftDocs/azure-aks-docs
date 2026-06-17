@@ -52,10 +52,11 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 | Kubernetes version | Upstream release | AKS preview | AKS GA | End of life | Platform support |
 | ------------------ | ---------------- | ----------- | ------ | ----------- | ---------------- |
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Until 1.36 GA |
-| 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Until 1.37 GA |
+| 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jul 2026 | Until 1.37 GA |
 | 1.34 | Aug 2025 | Oct 2025 | Nov 2025 | Nov 2026 | Until 1.38 GA |
 | 1.35 | Dec 2025 | Feb 2026 | Mar 2026 | Mar 2027 | Until 1.39 GA |
 | 1.36 | Apr 2026 | May 2026 | Jun 2026 | Jun 2027 | Until 1.40 GA |
+| 1.37 | Aug 2026 | Sep 2026 | Oct 2026 | Oct 2027 | Until 1.41 GA |
 
 ### LTS versions
 
@@ -70,10 +71,11 @@ You need to enable long-term support (LTS) to get extended support. For more inf
 | 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22, 2025 | Jul 2026 |
 | 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1, 2025 | Nov 2026 |
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Mar 2027 |
-| 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Jun 2027 |
+| 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jul 2026 | Jul 2027 |
 | 1.34 | Aug 2025 | Oct 2025 | Nov 2025 | Nov 2026 | Nov 2027 |
 | 1.35 | Dec 2025 | Feb 2026 | Mar 2026 | Mar 2027 | Mar 2028 |
 | 1.36 | Apr 2026 | May 2026 | Jun 2026 | Jun 2027 | Jun 2028 |
+| 1.37 | Aug 2026 | Sep 2026 | Oct 2026 | Oct 2027 | Oct 2028 |
 
 ### AKS Kubernetes release schedule Gantt chart
 
@@ -84,6 +86,33 @@ The following Gantt chart displays the current releases:
 ## AKS components breaking changes by version
 
 Note the following important changes before you upgrade to any of the available minor versions:
+
+### Kubernetes 1.36
+
+| **AKS managed add-ons (addon)** | **AKS components (ccp)** | **OS components** | **Breaking changes from Kubernetes 1.35.0** |
+| ------------------------------- | ------------------------ | ----------------- | ------------------------------------------- |
+| azuredisk-csi-linux v1.34.4 | cluster-autoscaler v1.35.0-aks-4 | **Linux - Ubuntu 24.04** | cloud-provider-node-manager-linux v1.35.5-2 → v1.36.1-2 |
+| azuredisk-csi-windows v1.34.4 | cloud-provider-controller-manager v1.36.1-2 | containerd 2.3.1-ubuntu24.04u2 | cloud-provider-node-manager-windows v1.35.5-windows-hpc-1 → v1.36.1-windows-hpc-1 |
+| azurefile-csi-linux v1.35.4 | csi-attacher v4.11.0 | kubectl not published for 1.36 yet | coredns v1.13.1-12 → v1.14.3-3 |
+| azurefile-csi-windows v1.35.4 | csi-provisioner v6.1.1 | kubelet not published for 1.36 yet | keda 2.17.3-7 → 2.19.0-6 |
+| blob-csi v1.27.6 | csi-resizer v2.1.0 | runc 1.4.3-ubuntu24.04u1 | keda-admission-webhooks 2.17.3-7 → 2.19.0-5 |
+| coredns v1.14.3-3 | csi-snapshotter v8.5.0 | **Linux - AzureLinux 3.0** | keda-metrics-apiserver 2.17.3-7 → 2.19.0-7 |
+| cilium-agent v1.18.9-260508 | snapshot-controller v8.5.0 | containerd 2.2.4-2.azl3 | microsoft-defender-low-level-collector 2.1.115 → 2.2.18 |
+| cilium-operator v1.18.9-260508 | kube-state-metrics v2.15.0-12 | kubectl not published for 1.36 yet | overlay-vpa-admission-controller v1.5.1-8 → v1.6.0-5 |
+| tigera-operator v1.40.2 | | kubelet not published for 1.36 yet | overlay-vpa-recommender v1.5.1-7 → v1.6.0-4 |
+| cloud-provider-node-manager-linux v1.36.1-2 | | **Windows - Windows2022** | overlay-vpa-updater v1.5.1-8 → v1.6.0-4 |
+| cloud-provider-node-manager-windows v1.36.1-windows-hpc-1 | | containerd v2.0.4-azure.1 | cloud-provider-controller-manager v1.35.5-2 → v1.36.1-2 |
+| metrics-server v0.8.0-13 | | | |
+| keda 2.19.0-6 | | | |
+| azure-policy v1.15.5-1 | | | |
+| open-policy-agent-gatekeeper v3.22.2-3 | | | |
+| workload-identity-webhook v1.5.1-11 | | | |
+| secrets-store-provider-azure v1.8.1-2 | | | |
+| microsoft-defender-low-level-collector 2.2.18 | | | |
+| image-cleaner v1.4.1-3 | | | |
+| overlay-vpa v1.6.0-5 | | | |
+| app-routing-operator 0.2.24 | | | |
+| karpenter 1.12.2-aks | | | |
 
 ### Kubernetes 1.35
 

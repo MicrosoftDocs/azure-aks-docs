@@ -2,7 +2,7 @@
 title: "Migrate Kubernetes updates to Azure Kubernetes Fleet Manager from Terragrunt and Terraform"
 description: "Learn how to migrate Kubernetes updates from Terragrunt and Terraform to Azure Kubernetes Fleet Manager Update Runs."  
 ms.topic: how-to
-ms.date: 12/15/2025
+ms.date: 06/15/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,6 +10,8 @@ ms.service: azure-kubernetes-fleet-manager
 ---
 
 # Migrate Kubernetes updates to Azure Kubernetes Fleet Manager from Terragrunt and Terraform
+
+**Applies to**: :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 Operators of multi-cluster environments often use Terragrunt and Terraform to manage Kubernetes updates across their clusters. Cluster update order is defined using a folder structure in a Git repository or in configuration files or scripts, using Terragrunt as the orchestration tool.
 
@@ -293,7 +295,7 @@ You can also use the Azure portal or Azure CLI to start the update run. For more
 
 Once you're familiar with update runs, you can define a [Fleet Manager Auto-upgrade profile][fleet-auto-upgrade] for your member clusters. Fleet Manager Auto-upgrade profiles automatically creates and executes update runs when AKS releases new Kubernetes versions. This means you no longer need to monitor for new Kubernetes versions and manually create update runs. 
 
-You can choose the Stable or Rapid Kubernetes release channels to automatically increment the Kubernetes minor when a new minor is released, or if you want only patch releases for a minor you can use the [Target Kubernetes minor version channel](./update-automation.md#target-kubernetes-minor-version-updates-preview) which is currently in preview.
+Choose the Stable or Rapid Kubernetes release channels to automatically increment the Kubernetes minor when a new minor is released. If you want only patch releases for a minor, use the [Target Kubernetes minor version channel][fleet-target-k8s-version].
 
 ## Related content
 
@@ -308,3 +310,4 @@ You can choose the Stable or Rapid Kubernetes release channels to automatically 
 [manage-update-run]: ./update-orchestration.md#manage-an-update-run
 [fleet-auto-upgrade]: ./update-automation.md
 [update-run-alerts]: ./howto-monitor-update-runs.md
+[fleet-target-k8s-version]: ./update-automation.md#target-kubernetes-minor-version-updates
