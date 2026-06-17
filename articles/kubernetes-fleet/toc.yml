@@ -114,10 +114,8 @@
           href: quickstart-envelope-reserved-resources.md
         - name: Use taints and tolerations
           href: use-taints-tolerations.md
-        - name: Customize cluster-scoped resources with overrides
-          href: cluster-resource-override.md
-        - name: Customize namespace-scoped resources with overrides
-          href: resource-override.md
+        - name: Use overrides to customize placed resources
+          href: howto-use-overrides-customize-resources-placement.md
         - name: Use Automated Deployments with resource placement
           href: howto-automated-deployments.md
     - name: Use Managed Fleet Namespaces for multi-cluster multi-tenancy

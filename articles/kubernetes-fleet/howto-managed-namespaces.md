@@ -4,20 +4,19 @@ description: Learn how to create Managed Fleet Namespaces to define resource quo
 author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
-ms.date: 12/19/2025
+ms.date: 06/15/2026
 ms.service: azure-kubernetes-fleet-manager
 zone_pivot_groups: azure-portal-azure-cli
 # Customer intent: "As a platform admin, I want to define a namespace and deploy it across selected fleet clusters so I can delegate application teams access to resources on any cluster where the namespace exists."
 ---
-# Create and configure Managed Fleet Namespaces (preview)
+
+# Create and configure Managed Fleet Namespaces
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 This article shows you how to use Fleet Manager to create and configure a Managed Fleet Namespace that defines resource quotas, network policies, and delegated user access for the namespaces on multiple clusters.
 
 If you're looking to view or access existing Managed Fleet Namespaces you have access to, see [view and access Managed Fleet Namespaces](./howto-managed-namespaces-access.md).
-
-[!INCLUDE [preview_features_note](./includes/preview/preview-callout.md)]
 
 ## Known limitations
 
