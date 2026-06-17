@@ -147,7 +147,7 @@ You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to up
 > - `--os-sku Windows2022`
 > - `--os-sku Windows2025`
 >
-> Instead, you need to add node pools to your cluster with the corresponding `--os-sku` you intend to use.
+> Instead, add node pools to your cluster by using the corresponding `--os-sku` you want to use. To learn more about upgrading your OS version for your Windows FIPS node pools, see [Upgrade Windows OS version][upgrade-windows-os-version].
 
 | OS SKU | Default OS version |
 |--|--|
@@ -189,9 +189,10 @@ az aks nodepool update \
 > [!NOTE]
 > Keep the following information in mind when migrating to `--os-sku Ubuntu2204`:
 >
-> - [FIPS](./enable-fips-nodes.md) and [CVM](./use-cvm.md) aren't supported.
+> - [CVM](./use-cvm.md) isn't supported.
 > - Ubuntu 22.04 is supported in Kubernetes versions 1.25 to 1.36.
 > - `--os-sku Ubuntu2204` is intended for rollback to Ubuntu 22.04 on your current Kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your Kubernetes version to 1.37 and above.
+> - If you're currently using FIPS-enabled node pools with Ubuntu 20.04, the [`az aks nodepool update`][az-aks-nodepool-update] command also works for migrating to Ubuntu 22.04 FIPS.
 
 Roll back to `--os-sku Ubuntu2204` on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command.
 
@@ -230,3 +231,4 @@ To learn more about node images, node pool upgrades, and node configurations on 
 [flatcar]: ./flatcar-container-linux-for-aks.md
 [os-guard]: ./use-azure-linux-os-guard.md
 [manage-node-pools]: ./manage-node-pools.md
+[upgrade-windows-os-version]: ./upgrade-windows-os.md
