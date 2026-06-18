@@ -101,7 +101,7 @@ The following table describes each outbound IP parameter and when to use it:
         --allocation-method Static \
         --version IPv4 \
         --zone 1 2 3 \
-        --query id \
+        --query publicIp.id \
         --output tsv)
     
     export MY_IP_PREFIX_ID=$(az network public-ip prefix create \
