@@ -137,6 +137,7 @@ The following table provides a list of add-ons and features that aren't supporte
 | Application Gateway Ingress Controller | Migration to App Gateway for Containers happens during LTS period. |
 | Open Service Mesh | OSM is deprecated.|
 | AAD Pod Identity  | Deprecated in place of Workload Identity. |
+| Azure Confidential Compute SGX (ACC SGX) | Not supported with AKS long-term support. |
 
 > [!NOTE]
 > You can't move your cluster to long-term support if any of these add-ons or features are enabled.
