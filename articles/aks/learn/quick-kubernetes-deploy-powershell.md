@@ -2,11 +2,12 @@
 title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Azure PowerShell'
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) using PowerShell.
 ms.topic: quickstart
-ms.date: 01/11/2024
+ms.date: 06/17/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurepowershell, mode-api
+ai-usage: ai-assisted
 
 # Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
 
@@ -345,7 +346,7 @@ To deploy the application, you use a manifest file to create all the objects req
 
     If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
-2. Deploy the application using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest.
+1. Deploy the application using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest.
 
     ```console
     kubectl apply -f aks-store-quickstart.yaml
@@ -376,7 +377,7 @@ When the application runs, a Kubernetes service exposes the application front en
 
 1. Check for a public IP address for the store-front application. Monitor progress using the [kubectl get service][kubectl-get] command with the `--watch` argument.
 
-    ```azurecli-interactive
+    ```console
     kubectl get service store-front --watch
     ```
 
