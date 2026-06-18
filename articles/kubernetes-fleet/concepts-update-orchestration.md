@@ -23,11 +23,11 @@ An update run represents an update being applied to a collection of AKS clusters
 
 To achieve the best results when using update runs, it's important to understand the following concepts.
 
-* **Update Strategy**: describes a reusable update sequence consisting of stages and groups of clusters. A cluster appears in a group in a stage based on the update group or member labels it's assigned. For further information, see [understanding update strategies](#understanding-update-strategies).
+* **Update Strategy**: describes a reusable update sequence consisting of stages and groups of clusters. A cluster appears in a group in a stage based on the update group it's assigned. For further information, see [understanding update strategies](#understanding-update-strategies).
 
     * **Update Stage**: an Update Strategy is divided into Update Stages, which are applied sequentially. For example, test environment clusters are in the first Update Stage, while production environment clusters go in a second Update Stage. An Update Stage contains one or more Update Groups. You can use additional controls such as maximum concurrency, wait times, and approval gates for more control over Update Stage execution.
     
-    * **Update Group**: Each Update Stage contains one or more Update Groups, which select clusters to update. Assign member clusters to Update Groups by using either the Update Group property of the cluster or the in-preview label-based matching by using [member labels](#group-clusters-using-member-labels-preview). Update Groups in an Update Stage update in parallel. 
+    * **Update Group**: Each Update Stage contains one or more Update Groups, which select clusters to update. Assign member clusters to Update Groups by using the Update Group property of the cluster. Update Groups in an Update Stage update in parallel. 
 
     > [!NOTE]
     > The maximum number of Update Groups in each Update Stage is **50**.
@@ -212,24 +212,6 @@ If you need bug fixes that come with new node images (VHD), or a consistent expe
 Administrators can control the order in which clusters are updated by building reusable Update Strategies using series of Update Stages and Groups. They can configure when approvals and pauses should occur within those stages and groups. The entire configuration can be saved as an Update Strategy which can be managed independently of Update Runs or Auto-upgrade Profiles, allowing strategies to be reused as required.
 
 :::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="A diagram showing an example update strategy containing two update stages. Each update stage contains two update groups. Each update group contains two clusters." lightbox="./media/conceptual-update-orchestration-inline.png":::
-
-### Group clusters using member labels (preview)
-
-Member labels can be used to group clusters and configure your update sequence with Kubernetes-style label selectors. This way, you can assign multiple labels to member clusters and use them for different strategies instead of being restricted to a single update group per cluster. You can group clusters in your strategy with their member labels by configuring `memberSelector` on your strategy at two levels:
-
-- **Stage level**: Selects clusters for the entire stage. When no groups are defined, all matching clusters form a single implicit group. When groups are also defined, the stage-level selector acts as a pre-filter before group-level matching is applied.
-- **Group level**: Selects clusters for a specific group within a stage, enabling parallel subsets with different concurrency limits.
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
-
-`memberSelector` uses a string-based label selector parsed using standard Kubernetes label selector syntax. Supported operators are: `=`, `==`, `!=`, `in`, `notin`, `exists`, and `!exists`.
-
-> [!NOTE]
-> We recommend using member labels instead of update groups for grouping clusters in update strategies. With member labels, you can easily manage large fleets with dynamic membership and complex grouping needs. 
->
-> Existing group name based strategies will continue to work without changes. 
-
-For instructions on assigning member labels and using `memberSelector` in a strategy, see [Create an update strategy using member selectors](./update-create-update-strategy.md#create-an-update-strategy-using-member-selectors-preview).
 
 ### Maximum concurrency (preview)
 
