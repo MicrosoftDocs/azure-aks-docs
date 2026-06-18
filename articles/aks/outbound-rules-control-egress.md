@@ -5,7 +5,7 @@ ms.subservice: aks-networking
 ms.custom: build-2024, quarterly
 ms.topic: how-to
 ms.author: davidsmatlak
-ms.date: 06/10/2025
+ms.date: 06/18/2026
 author: davidsmatlak
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
@@ -22,15 +22,15 @@ To see an example configuration using Azure Firewall, visit [Control egress traf
 
 ## Background
 
-AKS clusters are deployed on a virtual network. This network can either be customized and preconfigured by you or it can be created and managed by AKS. In either case, the cluster has **outbound**, or egress, dependencies on services outside of the virtual network.
+AKS clusters are deployed on a virtual network. You can either customize and preconfigure this network, or AKS can create and manage it. In either case, the cluster has **outbound**, or egress, dependencies on services outside of the virtual network.
 
 For management and operational purposes, nodes in an AKS cluster need to access certain ports and fully qualified domain names (FQDNs). These endpoints are required for the nodes to communicate with the API server or to download and install core Kubernetes cluster components and node security updates. For example, the cluster needs to pull container images from Microsoft Artifact Registry (MAR).
 
 The AKS outbound dependencies are almost entirely defined with FQDNs, which don't have static addresses behind them. The lack of static addresses means you can't use network security groups (NSGs) to lock down the outbound traffic from an AKS cluster. 
 
-By default, AKS clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. For outbound internet traffic, it's not recommended to set all deny rules in an NSG.
+By default, AKS clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you want to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. For outbound internet traffic, it's not recommended to set all deny rules in an NSG.
 
-A [network isolated AKS cluster][network-isolated-cluster], provides the simplest and most secure solution for setting up outbound restrictions for a cluster out of the box. A network isolated cluster pulls the images for cluster components and add-ons from a private Azure Container Registry (ACR) instance connected to the cluster instead of pulling from MAR. If the images aren't present, the private ACR pulls them from MAR and serves them via its private endpoint, eliminating the need to enable egress from the cluster to the public MAR endpoint. The cluster operator can then incrementally set up allowed outbound traffic securely over a private network for each scenario they want to enable. This way the cluster operators have complete control over designing the allowed outbound traffic from their clusters right from the start, thus allowing them to reduce the risk of data exfiltration.
+A [network isolated AKS cluster][network-isolated-cluster] provides the simplest and most secure solution for setting up outbound restrictions for a cluster. A network isolated cluster pulls the images for cluster components and add-ons from a private Azure Container Registry (ACR) instance connected to the cluster instead of pulling from MAR. If the images aren't present, the private ACR pulls them from MAR and serves them via its private endpoint, eliminating the need to enable egress from the cluster to the public MAR endpoint. The cluster operator can then incrementally set up allowed outbound traffic securely over a private network for each scenario they want to enable. This way the cluster operators have complete control over designing the allowed outbound traffic from their clusters right from the start, which reduces the risk of data exfiltration.
 
 Another solution to securing outbound addresses is using a firewall device that can control outbound traffic based on domain names. Azure Firewall can restrict outbound HTTP and HTTPS traffic based on the FQDN of the destination. You can also configure your preferred firewall and security rules to allow these required ports and addresses.
 
@@ -81,7 +81,7 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 
 | Destination Endpoint                                                             | Protocol | Port    | Use  |
 |----------------------------------------------------------------------------------|----------|---------|------|
-| **`*:1194`** <br/> *Or* <br/> [ServiceTag](/azure/virtual-network/service-tags-overview#available-service-tags) - **`AzureCloud.Region:1194`** <br/> *Or* <br/> [Regional CIDRs](/azure/virtual-network/service-tags-overview#discover-service-tags-by-using-downloadable-json-files) - **`RegionCIDRs:1194`** <br/> *Or* <br/> **`APIServerPublicIP:1194`** `(only known after cluster creation)`  | UDP           | 1194      | For tunneled secure communication between the nodes and the control plane. |
+| **`*:1194`** <br/> *Or* <br/> [ServiceTag](/azure/virtual-network/service-tags-overview#available-service-tags) - **`AzureCloud.<Region>:1194`** <br/> *Or* <br/> [Regional CIDRs](/azure/virtual-network/service-tags-overview#discover-service-tags-by-using-downloadable-json-files) - **`RegionCIDRs:1194`** <br/> *Or* <br/> **`APIServerPublicIP:1194`** `(only known after cluster creation)`  | UDP           | 1194      | For tunneled secure communication between the nodes and the control plane. |
 | **`*:9000`** <br/> *Or* <br/> [ServiceTag](/azure/virtual-network/service-tags-overview#available-service-tags) - **`AzureCloud.<Region>:9000`** <br/> *Or* <br/> [Regional CIDRs](/azure/virtual-network/service-tags-overview#discover-service-tags-by-using-downloadable-json-files) - **`RegionCIDRs:9000`** <br/> *Or* <br/> **`APIServerPublicIP:9000`** `(only known after cluster creation)`  | TCP           | 9000      | For tunneled secure communication between the nodes and the control plane. |
 | **`*:22`** <br/> *Or* <br/> [ServiceTag](/azure/virtual-network/service-tags-overview#available-service-tags) - **`AzureCloud.<Region>:22`** <br/> *Or* <br/> [Regional CIDRs](/azure/virtual-network/service-tags-overview#discover-service-tags-by-using-downloadable-json-files) - **`RegionCIDRs:22`** <br/> *Or* <br/> **`APIServerPublicIP:22`** `(only known after cluster creation)`  | TCP           | 22      | For tunneled secure communication between the nodes and the control plane. |
 | **`*:123`** or **`ntp.ubuntu.com:123`** (if using Azure Firewall network rules)  | UDP      | 123     | Required for Network Time Protocol (NTP) time synchronization on Linux nodes.                 |
@@ -160,7 +160,7 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 ### Workload identity
 
-#### Required FQDN / application rules
+#### Workload identity required FQDN / application rules
 
 | Destination FQDN                                                           | Port      | Use      |
 |----------------------------------------------------------------------------|-----------|----------|
@@ -170,14 +170,14 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 [!INCLUDE [21vianet-retirement](includes/21vianet-retirement.md)]
 
-#### Required FQDN / application rules
+#### Microsoft Defender for Containers required FQDN / application rules
 
 | FQDN                                                       | Port      | Use      |
 |------------------------------------------------------------|-----------|----------|
-| **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Microsoft Entra Authentication. |
+| **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Microsoft Entra authentication. |
 | **`*.ods.opinsights.azure.com`** <br/> **`*.ods.opinsights.azure.us`** (Azure Government) <br/> **`*.ods.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required for Microsoft Defender to upload security events to the cloud.|
 | **`*.oms.opinsights.azure.com`** <br/> **`*.oms.opinsights.azure.us`** (Azure Government) <br/> **`*.oms.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required to authenticate with Log Analytics workspaces.|
-|**`*.cloud.defender.microsoft.com`**|**`HTTPS:443`**|NEW: Required for Microsoft Defender to upload security events to the cloud.|
+|**`*.cloud.defender.microsoft.com`**|**`HTTPS:443`**|Required for Microsoft Defender to upload security events to the cloud.|
 
 ### Azure Key Vault provider for Secrets Store CSI Driver
 
@@ -185,7 +185,7 @@ If using network isolated clusters, it's recommended to set up [private endpoint
 
 If your cluster has outbound type user-defined routing and Azure Firewall, the following network rules and application rules are applicable:
 
-#### Required FQDN / application rules
+#### Azure Key Vault provider for Secrets Store CSI Driver required FQDN / application rules
 
 | FQDN                                          | Port      | Use      |
 |-----------------------------------------------|-----------|----------|
@@ -208,12 +208,12 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 
 | Endpoint| Purpose | Port |
 |:---|:---|:---|
-| **`*.ods.opinsights.azure.com`** | | 443 |
-| **`*.oms.opinsights.azure.com`** | | 443 |
-| **`dc.services.visualstudio.com`** | | 443 |
+| **`*.ods.opinsights.azure.com`** | Data ingestion | 443 |
+| **`*.oms.opinsights.azure.com`** | Azure Monitor agent (AMA) onboarding | 443 |
+| **`dc.services.visualstudio.com`** | For agent telemetry that uses Azure Public Cloud Application Insights | 443 |
 | **`*.in.applicationinsights.azure.com`** | Application Insights Autoinstrumentation. To limit the scope, can be changed to only allow endpoints in connection strings for the destination resources | 443 |
-| **`*.monitoring.azure.com`** | | 443 |
-| **`login.microsoftonline.com`** | | 443 |
+| **`*.monitoring.azure.com`** | Azure Monitor metrics ingestion endpoint | 443 |
+| **`login.microsoftonline.com`** | Required for Microsoft Entra authentication | 443 |
 | **`global.handler.control.monitor.azure.com`** | Access control service | 443 |
 | **`*.ingest.monitor.azure.com`** | Container Insights - logs ingestion endpoint (DCE) | 443 |
 | **`*.metrics.ingest.monitor.azure.com`** | Azure monitor managed service for Prometheus - metrics ingestion endpoint (DCE) | 443 |
@@ -249,7 +249,7 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 
 ### Azure Policy
 
-#### Required FQDN / application rules
+#### Azure Policy required FQDN / application rules
 
 | FQDN                                          | Port      | Use      |
 |-----------------------------------------------|-----------|----------|
@@ -275,7 +275,7 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 
 ### AKS cost analysis add-on
 
-#### Required FQDN / application rules
+#### AKS cost analysis add-on required FQDN / application rules
 
 | FQDN                                                       | Port      | Use      |
 |------------------------------------------------------------|-----------|----------|
@@ -284,7 +284,7 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 
 ## Cluster extensions
 
-### Required FQDN / application rules
+### Cluster extensions required FQDN / application rules
 
 | FQDN | Port               | Use |
 |-----------------------------------------------|-----------|----------|
@@ -292,8 +292,8 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 | **`mcr.microsoft.com, *.data.mcr.microsoft.com`** | **`HTTPS:443`** | This address is required to pull container images for installing cluster extension agents on AKS cluster.|
 |**`arcmktplaceprod.azurecr.io`**|**`HTTPS:443`**|This address is required to pull container images for installing marketplace extensions on AKS cluster.|
 | **`arcmktplaceprod.centralindia.data.azurecr.io`** | **`HTTPS:443`** | This address is for the Central India regional data endpoint and is required to pull container images for installing marketplace extensions on AKS cluster.|
-| **`arcmktplaceprod.japaneast.data.azurecr.io`** | **`HTTPS:443`** | This address is for the East Japan regional data endpoint and is required to pull container images for installing marketplace extensions on AKS cluster.|
-| **`arcmktplaceprod.westus2.data.azurecr.io`** | **`HTTPS:443`** | This address is for the West US2 regional data endpoint and is required to pull container images for installing marketplace extensions on AKS cluster.|
+| **`arcmktplaceprod.japaneast.data.azurecr.io`** | **`HTTPS:443`** | This address is for the Japan East regional data endpoint and is required to pull container images for installing marketplace extensions on AKS cluster.|
+| **`arcmktplaceprod.westus2.data.azurecr.io`** | **`HTTPS:443`** | This address is for the West US 2 regional data endpoint and is required to pull container images for installing marketplace extensions on AKS cluster.|
 | **`arcmktplaceprod.westeurope.data.azurecr.io`** | **`HTTPS:443`** | This address is for the West Europe regional data endpoint and is required to pull container images for installing marketplace extensions on AKS cluster.|
 | **`arcmktplaceprod.eastus.data.azurecr.io`** | **`HTTPS:443`** | This address is for the East US regional data endpoint and is required to pull container images for installing marketplace extensions on AKS cluster.|
 |**`*.ingestion.msftcloudes.com, *.microsoftmetrics.com`**|**`HTTPS:443`**|This address is used to send agents metrics data to Azure.|
