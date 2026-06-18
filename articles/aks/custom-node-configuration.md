@@ -3,7 +3,7 @@ title: Customize the Node Configuration for Azure Kubernetes Service (AKS) Node 
 description: Learn how to customize the configuration on Azure Kubernetes Service (AKS) cluster nodes and node pools.
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 02/25/2026
+ms.date: 06/10/2026
 ms.author: schaffererin
 author: schaffererin
 ms.subservice: aks-nodes
@@ -13,6 +13,32 @@ ms.subservice: aks-nodes
 # Customize the node configuration for Azure Kubernetes Service (AKS) node pools
 
 Customizing your node configuration allows you to adjust operating system (OS) settings or kubelet parameters to match the needs of your workloads. When you create an AKS cluster or add a node pool to your cluster, you can customize a subset of commonly used OS and kubelet settings. To configure settings beyond this subset, you can [use a daemon set to customize your needed configurations without losing AKS support for your nodes](support-policies.md#shared-responsibility).
+
+## Prerequisites for Node Customization Preview
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+Register the `AKSNodeCustomizationPreview` feature flag in your Azure subscription before you use the preview `kubeReserved` and `hardEvictionThreshold` kubelet settings.
+
+1. Register the `AKSNodeCustomizationPreview` feature flag by using the [`az feature register`][az-feature-register] command.
+
+  ```azurecli-interactive
+  az feature register --namespace "Microsoft.ContainerService" --name "AKSNodeCustomizationPreview"
+  ```
+
+  It takes a few minutes for the status to show _Registered_.
+
+1. Verify the registration status by using the [`az feature show`][az-feature-show] command.
+
+  ```azurecli-interactive
+  az feature show --namespace "Microsoft.ContainerService" --name "AKSNodeCustomizationPreview"
+  ```
+
+1. When the status shows _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider by using the [`az provider register`][az-provider-register] command.
+
+  ```azurecli-interactive
+  az provider register --namespace "Microsoft.ContainerService"
+  ```
 
 ## Create custom node configuration files for AKS node pools
 
@@ -42,6 +68,25 @@ Create a `linuxkubeletconfig.json` file with the following contents:
  "failSwapOn": false
 }
 ```
+
+To use the Node Customization Preview kubelet settings on Linux node pools, add `kubeReserved` and `hardEvictionThreshold` to your kubelet configuration file. The following example reserves CPU and memory for Kubernetes system daemons and configures kubelet hard eviction thresholds:
+
+```json
+{
+  "cpuManagerPolicy": "static",
+  "kubeReserved": {
+    "cpuMillicores": 200,
+    "memoryMB": 1024
+  },
+  "hardEvictionThreshold": {
+    "memoryAvailable": "20%",
+    "nodeFsAvailable": "10%",
+    "nodeFsInodesFree": "5%"
+  }
+}
+```
+
+Use `kubeReserved` and `hardEvictionThreshold` only on Linux node pools. Both settings require the `AKSNodeCustomizationPreview` feature flag.
 
 #### [Windows node pools](#tab/windows-node-pools)
 
@@ -93,6 +138,7 @@ Currently unsupported.
 >
 > - If you specify a configuration when creating a cluster, the configuration applies only to the nodes in the initial node pool. Any settings not configured in the JSON file retain their default values.
 > - `CustomLinuxOsConfig` isn't supported for the Windows OS type.
+> - The preview `kubeReserved` and `hardEvictionThreshold` kubelet settings are supported only for Linux node pools and require the `AKSNodeCustomizationPreview` feature flag. Complete the registration steps in [Prerequisites for Node Customization Preview](#prerequisites-for-node-customization-preview) before you create the cluster or node pool.
 
 Create a new cluster using custom configuration files using the [`az aks create`][az-aks-create] command and specifying your configuration files for the `--kubelet-config` and `--linux-os-config` parameters. The following example command creates a new cluster with the custom `./linuxkubeletconfig.json` and `./linuxosconfig.json` files:
 
@@ -107,6 +153,7 @@ az aks create --name <cluster-name> --resource-group <resource-group-name> --kub
 >
 > - When you add a Linux node pool to an existing cluster, you can specify the kubelet configuration, OS configuration, or both. When you add a Windows node pool to an existing cluster, you can only specify the kubelet configuration. If you specify a configuration when adding a node pool, the configuration applies only to the nodes in the new node pool. Any settings not configured in the JSON file retain their default values.
 > - `CustomKubeletConfig` is supported for Linux and Windows node pools.
+> - The preview `kubeReserved` and `hardEvictionThreshold` kubelet settings are supported only for Linux node pools and require the `AKSNodeCustomizationPreview` feature flag. Complete the registration steps in [Prerequisites for Node Customization Preview](#prerequisites-for-node-customization-preview) before you create the cluster or node pool.
 
 ### [Linux node pools](#tab/linux-node-pools)
 
@@ -150,6 +197,11 @@ After you apply custom node configuration, you can confirm the settings were app
 | `containerLogMaxFiles` | ≥ 2 | 5 | The maximum number of container log files that can be present for a container. |
 | `podMaxPids` | -1 to kernel PID limit | -1 (∞)| The maximum number of process IDs that can run in a Pod. |
 | [`seccompDefault`][secure-container-access] | `Unconfined`, `RuntimeDefault` | `Unconfined` | Sets the default seccomp profile for all workloads. `RuntimeDefault` uses containerd's default seccomp profile, restricting certain system calls to enhance security. Restricted syscalls fail. `Unconfined` places no restrictions on syscalls, allowing all system calls and reducing security. For more information, see the [containerd default seccomp profile](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51). This parameter is in preview. [Register][register-preview] the "KubeletDefaultSeccompProfilePreview" feature flag using the [`az feature register`][az-feature-register] command with `--namespace "Microsoft.ContainerService"`.|
+| `kubeReserved.cpuMillicores` | 1 to the node pool CPU capacity in millicores | None | Reserves CPU for Kubernetes system daemons on Linux node pools. This parameter is in preview and requires the `AKSNodeCustomizationPreview` feature flag. |
+| `kubeReserved.memoryMB` | 1 to the node pool memory capacity in MiB | None | Reserves memory for Kubernetes system daemons on Linux node pools. This parameter is in preview and requires the `AKSNodeCustomizationPreview` feature flag. |
+| `hardEvictionThreshold.memoryAvailable` | `<number>Ki`, `<number>Mi`, `<number>Gi`, or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for available memory on Linux node pools. This parameter is in preview and requires the `AKSNodeCustomizationPreview` feature flag. |
+| `hardEvictionThreshold.nodeFsAvailable` | `<number>Ki`, `<number>Mi`, `<number>Gi`, or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for available node filesystem space on Linux node pools. This parameter is in preview and requires the `AKSNodeCustomizationPreview` feature flag. |
+| `hardEvictionThreshold.nodeFsInodesFree` | `<number>` or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for free node filesystem inodes on Linux node pools. This parameter is in preview and requires the `AKSNodeCustomizationPreview` feature flag. |
 
 ### Windows kubelet custom configuration
 
@@ -240,7 +292,10 @@ Keep the following considerations in mind when customizing your node configurati
 
 - Custom node configurations are reapplied during node image upgrades.
 - Custom node configurations are preserved during scale-out operations.
-- AKS doesn't perform pre-flight validation of the custom node configuration parameters or values. Ensure that the custom node configuration parameters and values you specify are supported and valid to avoid potential issues with your cluster nodes.
+- AKS doesn't perform pre-flight validation for every custom node configuration parameter or value. Ensure that the custom node configuration parameters and values you specify are supported and valid to avoid potential issues with your cluster nodes.
+- The preview `kubeReserved` and `hardEvictionThreshold` settings are available only on Linux node pools.
+- If you configure `kubeReserved`, the values must be positive and can't exceed the CPU or memory capacity available on the target node pool.
+- If you configure `hardEvictionThreshold`, use only the supported units: `Ki`, `Mi`, `Gi`, or `%` for `memoryAvailable` and `nodeFsAvailable`, and a raw number or `%` for `nodeFsInodesFree`.
 - Default values for custom node configuration parameters often change with new operating system versions. When applying custom node configurations, review the default values for the parameters you're configuring to ensure that your custom settings are appropriate for the OS version of your cluster nodes.
 - We recommmend limiting the number of people who have permissions to modify the custom node configuration to prevent unintended consequences on cluster stability and performance. Consider using [Microsoft Entra ID authorization for the Kubernetes API](./entra-id-authorization.md) to restrict access to cluster configuration settings.
 - We recommend separating node pools with custom configurations from those without custom configurations to prevent unintended consequences on workloads that might be sensitive to certain configuration changes. For example, if you have a critical workload that requires specific kubelet settings, consider isolating that workload to a dedicated node pool with the necessary custom kubelet configuration.
@@ -256,5 +311,7 @@ Keep the following considerations in mind when customizing your node configurati
 [node-access]: node-access.md
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
 [register-preview]: /azure/azure-resource-manager/management/preview-features?tabs=azure-cli#register-preview-feature
 [secure-container-access]: secure-container-access.md
