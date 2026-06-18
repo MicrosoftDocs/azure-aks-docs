@@ -68,7 +68,7 @@ az aks create \
 > [!NOTE]
 > [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature isn't available for clusters that do not use the Cilium data plane.
  >
- > When using Advanced Container Networking Services (ACNS) on non-Cilium data planes, FIPS support isn't available on Ubuntu 20.04 nodes due to kernel restrictions. To enable FIPS in this scenario, you must use an Azure Linux node pool. This limitation is expected to be resolved with the release of Ubuntu 22 FIPS. For updates, see the [AKS issue tracker](https://github.com/Azure/AKS/issues/4857). Refer to the FIPS support matrix below:
+ > When you use Advanced Container Networking Services (ACNS) on non-Cilium data planes, FIPS support isn't available on Ubuntu 20.04 nodes due to kernel restrictions. To enable FIPS in this scenario, you must use an Ubuntu 22.04 node pool or an Azure Linux node pool. Refer to the FIPS support matrix in the following table:
  >
  
  > | Operating System | FIPS Support 
@@ -76,6 +76,7 @@ az aks create \
  > | Azure Linux 3.0 | Yes |
  > | Azure Linux 2.0 | Yes |
  > | Ubuntu 20.04 | No |
+ > | Ubuntu 22.04 | Yes |
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
