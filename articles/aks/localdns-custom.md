@@ -45,6 +45,8 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 
 - **Avoid enabling both NodeLocal DNSCache and LocalDNS**: It isn't recommended to enable both the upstream Kubernetes NodeLocal DNSCache and LocalDNS in your node pool. While AKS doesn't block this configuration, all DNS traffic is routed through LocalDNS, which might lead to unexpected behavior or reduced benefits from NodeLocal DNSCache.
 
+- **Don't impose a TCP connection cap on the upstream custom DNS server before enabling LocalDNS**: When you enable LocalDNS on a node pool, each node opens long-lived TCP connections from its local DNS proxy to the upstream resolver, instead of the short UDP exchanges used previously. If your custom DNS server (such as BIND, Unbound, Windows DNS, or a third-party appliance) is configured with a fixed limit on concurrent TCP client connections, or if you adjusted that limit based on pre-LocalDNS traffic, the new TCP connections from LocalDNS can be rejected, causing cluster-wide DNS resolution failures. Leave any TCP connection limit at a generous default before turning LocalDNS on, validate the steady-state TCP connection count from your AKS nodes after enablement, and only adjust the limit afterward with headroom for node scale-out, upgrades, and reimages.
+
 ## Prerequisites
 
 * You must have an existing AKS cluster with Kubernetes versions 1.31 and later to use LocalDNS. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
