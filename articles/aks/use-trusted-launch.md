@@ -55,10 +55,10 @@ When creating a cluster, enabling vTPM or Secure Boot automatically sets up your
 :::zone target="docs" pivot="azure-cli"
 1. Create an AKS cluster using the [az aks create][az-aks-create] command. Before running the command, review the following parameters:
 
-   * **--name**: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
-   * **--resource-group**: Enter the name of an existing resource group to host the AKS cluster resource.
-   * **--enable-secure-boot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
-   * **--enable-vtpm**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `--name`: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
+   * `--resource-group`: Enter the name of an existing resource group to host the AKS cluster resource.
+   * `--enable-secure-boot`: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * `--enable-vtpm`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
    > [!NOTE]
    > Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling Secure Boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
@@ -75,7 +75,7 @@ When creating a cluster, enabling vTPM or Secure Boot automatically sets up your
         --generate-ssh-keys
     ```
 
-2. Run the following command to get access credentials for the Kubernetes cluster. Use the [az aks get-credentials][az-aks-get-credentials] command and replace the values for the cluster name and the resource group name.
+1. Run the following command to get access credentials for the Kubernetes cluster. Use the [az aks get-credentials][az-aks-get-credentials] command and replace the values for the cluster name and the resource group name.
 
     ```azurecli
     az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
@@ -84,8 +84,8 @@ When creating a cluster, enabling vTPM or Secure Boot automatically sets up your
 :::zone target="docs" pivot="arm"
 1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
 
-   * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
-   * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `enableSecureBoot`: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
     In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
 
@@ -99,7 +99,7 @@ When creating a cluster, enabling vTPM or Secure Boot automatically sets up your
     }
     ```
 
-2. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
+1. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
 
 ## Add a node pool with Trusted Launch enabled
@@ -109,12 +109,12 @@ When you create a node pool, enabling vTPM or Secure Boot automatically sets up 
 :::zone target="docs" pivot="azure-cli"
 1. Add a node pool with Trusted Launch enabled using the [`az aks nodepool add`][az-aks-nodepool-add] command. Before running the command, review the following parameters:
 
-   * **--cluster-name**: Enter the name of the AKS cluster.
-   * **--resource-group**: Enter the name of an existing resource group to host the AKS cluster resource.
-   * **--name**: Enter a unique name for the node pool. The name of a node pool can only contain lowercase alphanumeric characters and must begin with a lowercase letter. For Linux node pools, the length must be between 1-11 characters.
-   * **--node-count**: The number of nodes in the Kubernetes agent pool. Default is 3.
-   * **--enable-secure-boot**: Enables Secure Boot to authenticate image signed by a trusted publisher.
-   * **--enable-vtpm**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `--cluster-name`: Enter the name of the AKS cluster.
+   * `--resource-group`: Enter the name of an existing resource group to host the AKS cluster resource.
+   * `--name`: Enter a unique name for the node pool. The name of a node pool can only contain lowercase alphanumeric characters and must begin with a lowercase letter. For Linux node pools, the length must be between 1 and 11 characters.
+   * `--node-count`: The number of nodes in the Kubernetes agent pool. Default is 3.
+   * `--enable-secure-boot`: Enables Secure Boot to authenticate image signed by a trusted publisher.
+   * `--enable-vtpm`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
     > [!NOTE]
     > Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling Secure Boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
@@ -124,7 +124,7 @@ When you create a node pool, enabling vTPM or Secure Boot automatically sets up 
     ```azurecli-interactive
     az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --name mynodepool --node-count 3 --enable-vtpm --enable-secure-boot
     ```
-2. Check that your node pool is using a Trusted Launch image.
+1. Check that your node pool is using a Trusted Launch image.
 
     Trusted Launch nodes have the following output:
 
@@ -140,8 +140,8 @@ When you create a node pool, enabling vTPM or Secure Boot automatically sets up 
 :::zone target="docs" pivot="arm"
 1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
 
-   * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
-   * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `enableSecureBoot`: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
     In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
 
@@ -155,7 +155,7 @@ When you create a node pool, enabling vTPM or Secure Boot automatically sets up 
     }
     ```
 
-2. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
+1. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
 
 ## Add a node pool with Trusted Launch and FIPS enabled
@@ -167,13 +167,13 @@ For FIPS-specific operations, such as disabling FIPS on an existing node pool, s
 :::zone target="docs" pivot="azure-cli"
 1. Add a node pool with Trusted Launch and FIPS enabled by using the [`az aks nodepool add`][az-aks-nodepool-add] command. Before running the command, review the following parameters:
 
-   * **--cluster-name**: Enter the name of the AKS cluster.
-   * **--resource-group**: Enter the name of an existing resource group to host the AKS cluster resource.
-    * **--name**: Enter a unique name for the node pool. The name of a node pool can only contain lowercase alphanumeric characters and must begin with a lowercase letter. For Linux node pools, the length must be between 1 and 11 characters.
-   * **--node-count**: The number of nodes in the Kubernetes agent pool. Default is 3.
-   * **--enable-secure-boot**: Enables Secure Boot to authenticate image signed by a trusted publisher.
-   * **--enable-vtpm**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
-   * **--enable-fips-image**: Enables the FIPS-compliant node image for the node pool.
+   * `--cluster-name`: Enter the name of the AKS cluster.
+   * `--resource-group`: Enter the name of an existing resource group to host the AKS cluster resource.
+   * `--name`: Enter a unique name for the node pool. The name of a node pool can only contain lowercase alphanumeric characters and must begin with a lowercase letter. For Linux node pools, the length must be between 1 and 11 characters.
+   * `--node-count`: The number of nodes in the Kubernetes agent pool. Default is 3.
+   * `--enable-secure-boot`: Enables Secure Boot to authenticate image signed by a trusted publisher.
+   * `--enable-vtpm`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `--enable-fips-image`: Enables the FIPS-compliant node image for the node pool.
 
     > [!NOTE]
     > Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling Secure Boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
@@ -199,9 +199,9 @@ For FIPS-specific operations, such as disabling FIPS on an existing node pool, s
 :::zone target="docs" pivot="arm"
 1. Create a template with Trusted Launch and FIPS parameters. Before creating the template, review the following parameters:
 
-   * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
-   * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
-   * **enableFips**: Enables the FIPS-compliant node image for the node pool.
+   * `enableSecureBoot`: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `enableFips`: Enables the FIPS-compliant node image for the node pool.
 
     In your template, provide values for `enableVTPM`, `enableSecureBoot`, and `enableFips`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
 
@@ -243,13 +243,13 @@ If your node pool doesn't currently have a Trusted Launch image, you won't be ab
 
     If your node pool doesn't currently have a Trusted Launch image, you won't be able to update the node pool to enable secure boot or vTPM.
 
-2. Update a node pool with Trusted Launch enabled using the [`az aks nodepool update`][az-aks-nodepool-update] command. Before running the command, review the following parameters:
+1. Update a node pool with Trusted Launch enabled using the [`az aks nodepool update`][az-aks-nodepool-update] command. Before running the command, review the following parameters:
 
-    * **--resource-group**: Enter the name of an existing resource group hosting your existing AKS cluster.
-    * **--cluster-name**: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
-    * **--name**: Enter the name of your node pool, such as *mynodepool*.
-    * **--enable-secure-boot**: Enables Secure Boot to authenticate that the image was signed by a trusted publisher.
-    * **--enable-vtpm**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+    * `--resource-group`: Enter the name of an existing resource group hosting your existing AKS cluster.
+    * `--cluster-name`: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
+    * `--name`: Enter the name of your node pool, such as *mynodepool*.
+    * `--enable-secure-boot`: Enables Secure Boot to authenticate that the image was signed by a trusted publisher.
+    * `--enable-vtpm`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
     > [!NOTE]
     > Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling Secure Boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
@@ -282,10 +282,10 @@ If your node pool doesn't currently have a Trusted Launch image, you won't be ab
 
     If your node pool doesn't currently have a Trusted Launch image, you won't be able to update the node pool to enable secure boot or vTPM.
 
-2. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
+1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
 
-   * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
-   * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `enableSecureBoot`: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
     In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
 
@@ -299,7 +299,7 @@ If your node pool doesn't currently have a Trusted Launch image, you won't be ab
     }
     ```
 
-3. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
+1. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
 
 ## Assign pods to nodes with Trusted Launch enabled
@@ -319,11 +319,11 @@ You can update an existing node pool to disable vTPM or secure boot. When this o
 :::zone target="docs" pivot="azure-cli"
 Update a node pool to disable secure boot or vTPM using the [`az aks nodepool update`][az-aks-nodepool-update] command. Before running the command, review the following parameters:
 
-   * **--resource-group**: Enter the name of an existing resource group hosting your existing AKS cluster.
-   * **--cluster-name**: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
-   * **--name**: Enter the name of your node pool, such as *mynodepool*.
-   * **--enable-secure-boot**: Enables Secure Boot to authenticate that the image was signed by a trusted publisher.
-   * **--enable-vtpm**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `--resource-group`: Enter the name of an existing resource group hosting your existing AKS cluster.
+   * `--cluster-name`: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
+   * `--name`: Enter the name of your node pool, such as *mynodepool*.
+   * `--enable-secure-boot`: Enables Secure Boot to authenticate that the image was signed by a trusted publisher.
+   * `--enable-vtpm`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
 To disable vTPM on an existing node pool:
 
@@ -340,8 +340,8 @@ az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup
 :::zone target="docs" pivot="arm"
 1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
 
-   * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
-   * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `enableSecureBoot`: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
     In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
 
@@ -355,7 +355,7 @@ az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup
     }
     ```
 
-2. Deploy your template with vTPM and secure boot disabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
+1. Deploy your template with vTPM and secure boot disabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
 
 ## Next steps
