@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 06/15/2026
+ms.date: 06/19/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -25,17 +25,17 @@ Fleet Manager is a regional resource. Support for region failover for disaster r
 
 Fleet Manager (with or without a hub cluster) supports joining up to 1,000 Kubernetes clusters. Member clusters can be a mix of AKS and Arc-enabled Kubernetes.
 
-If you would like Fleet Manager to support more than 1,000 clusters, [add feedback](https://github.com/Azure/AKS/issues/5066).
+If you want Fleet Manager to support more than 1,000 clusters, [add feedback](https://github.com/Azure/AKS/issues/5066).
 
-### What AKS clusters can be joined as members?
+### What Kubernetes clusters can I join as members?
 
-Fleet Manager allows appropriately authorized users to add any AKS cluster in any Azure subscription and region as long as the Azure subscription is associated with the same Microsoft Entra ID tenant as the Fleet Manager. 
+Fleet Manager allows authorized users to add any AKS, AKS Automatic, or Arc-enabled Kubernetes cluster in any Azure subscription and region as long as the Azure subscription is associated with the same Microsoft Entra ID tenant as the Fleet Manager. 
 
 ### Does Fleet Manager support managed identities?
 
 Yes, Fleet Manager supports both system-assigned and user-assigned managed identities. For more information, see the documentation on [using managed identities with Fleet Manager](./use-managed-identity.md).
 
-### What happens when the cluster identity of a joined cluster is changed?
+### What happens when I change the cluster identity of a joined cluster?
 
 Changing the identity of a member cluster breaks the communication between Fleet Manager and that member cluster. While the member agent uses the new identity to communicate with the Fleet Manager, Fleet Manager still needs to be made aware of the new identity. Run this command to resolve:
 
@@ -69,23 +69,33 @@ If you attempt to update or modify the hub cluster (which is a single node AKS c
 
 ## Multi-cluster updates - automated or manual FAQs
 
+### What clusters does multi-cluster updates support?
+
+| Cluster type                    | Supported | Details        | Roadmap |
+|---------------------------------|-----------|----------------|---------|
+| AKS in Azure                    | ✅        | Full support.  |   -  |
+| AKS Automatic                   | ⚠️        | Partially supported. You can't disable cluster-level auto-upgrade, so the cluster can update out of sequence. | [5811](https://github.com/Azure/AKS/issues/5811) |
+| AKS with NAP                    | ⚠️        | Partially supported. Only Kubernetes control plane upgrades are supported. | [5812](https://github.com/Azure/AKS/issues/5812) |
+| AKS connected clusters          | ❌        | Unsupported for AKS on bare metal, Edge Essentials, and Azure Local. | [5813](https://github.com/Azure/AKS/issues/5813) |
+| Arc-enabled Kubernetes clusters | ❌        | Unsupported. | [5813](https://github.com/Azure/AKS/issues/5813) |
+
 ### What AKS update channels does Fleet Manager support?
 
-Supported AKS update channels:
+Fleet Manager supports the following AKS update channels:
 
 * **Rapid**: Updates for the most recent AKS-supported Kubernetes release (N).
 * **Stable**: Updates for Kubernetes stable channel (N-1) where 'N' is the most recent AKS-supported Kubernetes release.
-* **NodeImage**: node image VHD patched (bug and security) with a weekly release schedule.
-* **TargetKubernetesVersion (Patch)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that are available only via AKS Long-Term Support (LTS).
-* **NodeSecurityPatch (preview)**: node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
+* **NodeImage**: Node image VHD patched (bug and security) with a weekly release schedule.
+* **TargetKubernetesVersion (Kubernetes Patch)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that are available only via AKS Long-Term Support (LTS).
+* **NodeSecurityPatch (preview)**: Node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
 
 Currently unsupported AKS channels:
 
-* **Unmanaged**: node image OS updates applied directly through OS in-built patching (Linux nodes only). There are currently no plans for Fleet Manager to support this option.
+* **Unmanaged**: Node image OS updates applied directly through OS in-built patching (Linux nodes only). There are currently no plans for Fleet Manager to support this option.
 
 ### The target Kubernetes minor version in my auto-upgrade profile is out of community support. What can I do?
 
-You can elect to:
+You can:
 
 * Allow Long Term Support (LTS) in the auto-upgrade profile and enable it for any clusters in your fleet you wish to retain on the specific minor. Ensure that only LTS clusters are included in the update strategy you use.
 * Update the auto-upgrade profile to a new target Kubernetes minor version. Clusters are updated to the most recent patch in the specified Kubernetes minor when released.
@@ -97,33 +107,33 @@ For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes
 
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 
-If you leave AKS cluster auto-upgrades enabled, then the update of that cluster is performed by either Fleet Manager or AKS cluster auto-upgrade, depending on which one runs first.
+If you leave AKS cluster auto-upgrades enabled, either Fleet Manager or AKS cluster auto-upgrade performs the update, depending on which one runs first.
 
-Fleet Manager doesn't alter the configuration of AKS cluster auto-upgrade settings.
+Fleet Manager doesn't change the configuration of AKS cluster auto-upgrade settings.
 
-If you want Fleet Manager to manage auto-upgrades, you must disable auto-upgrade on each individual member AKS cluster.
+If you want Fleet Manager to manage auto-upgrades, disable auto-upgrade on each member AKS cluster.
 
 ### AKS Cluster maintenance window support
 
-Fleet Manager honors the per-cluster maintenance window settings for each member cluster.
+Fleet Manager respects the per-cluster maintenance window settings for each member cluster.
 
-Maintenance windows don't trigger updates, nor do updates begin immediately a window opens. Maintenance windows only define when updates can be applied to a cluster.
+Maintenance windows don't trigger updates, and updates don't begin immediately when a window opens. Maintenance windows only define when updates can be applied to a cluster.
 
 For more information, see the documentation for [AKS cluster maintenance windows][aks-maintenance-windows].
 
 ### What is the scope of consistent node image upgrades?
 
-Node consistency is only guaranteed for all clusters contained in a single [update run][update-run] where the `consistent image` option is chosen.
+Node consistency is only guaranteed for all clusters contained in a single [update run][update-run] where you choose the `consistent image` option.
 
 There's no consistency guarantee for node image versions across separate update runs.
 
 ### How can I find out which node images were used in an update run?
 
-Update run has a list of the selected node images used for a run. This information is available even if the update run hasn't started.
+The update run lists the selected node images used for the run. You can access this information even if the update run hasn't started.
 
-There can be more than a single node image selected based on the different node pools operating across all clusters selected for update.
+More than one node image can be selected because different node pools operate across all clusters selected for update.
 
-You can find the images selected by using this Azure CLI command:
+To find the images selected, use this Azure CLI command:
 
 ```azurecli
 az fleet updaterun show \
@@ -137,13 +147,13 @@ You can also use the `View JSON` option in the Update Run Overview page in the A
 
 ### My update run is in a pending state for quite some time. What should I do?
 
-Fleet Manager update runs can be in a pending state for many reasons. You can view the status of an update run either via the Azure portal, or by following our [monitoring documentation](./howto-monitor-update-runs.md).
+Fleet Manager update runs can be in a pending state for many reasons. You can view the status of an update run either via the Azure portal, or by following the [monitoring documentation](./howto-monitor-update-runs.md).
 
 The two most common reasons for long pending states are:
 
-* Member cluster maintenance windows: If a member cluster's maintenance window isn't open then the update run can enter a paused state. This pause can block completion of the update group or stage until the next maintenance window opens. If you wish to continue the update run, manually skip the cluster. If you skip the cluster, it's out of sync with the rest of the member clusters in the update run.
+* Member cluster maintenance windows: If a member cluster's maintenance window isn't open, the update run enters a paused state. This pause blocks completion of the update group or stage until the next maintenance window opens. To continue the update run, manually skip the cluster. If you skip the cluster, it's out of sync with the rest of the member clusters in the update run.
 
-* Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they also can't update.
+* Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, the update run enters a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they also can't update.
 
 ### My auto-upgrade run started, then immediately entered a pending state. Why?
 
@@ -151,11 +161,11 @@ See the previous question.
 
 ### Editing my update strategy didn't change the existing update runs that used it. Why not?
 
-When an update run is created, a copy of the strategy is stored on the update run so that changes to the strategy don't affect executing update runs.
+When you create an update run, the strategy is copied to the update run so that changes to the strategy don't affect executing update runs.
 
 ### Can I preapprove an approval?
 
-No. Approvals are only available once you can verify that the member clusters are ready for upgrade or that the upgrade is completed successfully. If you want to preapprove, consider not configuring an approval in your strategy at all.
+No. You can approve an upgrade only after you verify that the member clusters are ready for upgrade or that the upgrade is completed successfully. If you want to preapprove, consider not configuring an approval in your strategy at all.
 
 ### Do approvals expire?
 
@@ -175,7 +185,7 @@ Yes. The after stage wait begins at the same time as the approval. Both must be 
 
 ### Can approvals be added to existing update strategies?
 
-Yes. You can edit the existing strategy to include approvals. However, existing update runs that were created using the strategy aren't updated.
+Yes. You can edit the existing strategy to include approvals. However, existing update runs that you created by using the strategy aren't updated.
 
 ## Cluster resource placement FAQs
 
@@ -196,7 +206,7 @@ Fleet Manager Automated Deployments also requires the use of an existing Azure C
 
 ### Can I connect to the same Git repository multiple times?
 
-Yes, you can connect to the same repository multiple times to allow you to deploy different resource or branches from the same repository.
+Yes, you can connect to the same repository multiple times to deploy different resources or branches from the same repository.
 
 ## Roadmap
 
