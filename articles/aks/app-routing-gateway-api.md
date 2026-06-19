@@ -36,8 +36,7 @@ The application routing add-on Kubernetes Gateway API implementation deploys an 
 > If you have existing Istio custom resources (such as VirtualServices or DestinationRules), deleting the CRDs will also delete those resources. Ensure you no longer need them before proceeding.
 
 * The application routing Gateway API implementation uses the same [resource customization allow list][istio-gateway-resource-customization] as the Istio add-on for validating ConfigMap customizations for `Gateway` resources. Customizations not on the allow list are blocked via add-on managed webhooks.
-* [Azure DNS and TLS certificate management][app-routing-dns-tls] via the application routing add-on is currently not supported for the Kubernetes Gateway API. You can follow the steps in the [application routing Gateway API implementation secure ingress guide][app-routing-gateway-api-tls] to configure a `Gateway` to perform TLS termination.
-* Configuring HTTPS ingress access to HTTPS services – i.e Server Name Indication (SNI) Passthrough – via the `TLSRoute` resource is not currently supported. Support for the `TLSRoute` resource will be available once AKS adds support for Istio 1.30, at which point your application routing Istio control plane will be automatically upgraded to that version.
+* Configuring HTTPS ingress access to HTTPS services – i.e., Server Name Indication (SNI) Passthrough – via the `TLSRoute` resource is not currently supported. Support for the `TLSRoute` resource will be available once AKS adds support for Istio 1.30, at which point your application routing Istio control plane will be automatically upgraded to that version.
 * Egress traffic management via the application routing Gateway API implementation is unsupported.
 * Injecting non-Microsoft-managed sidecars (for example, custom telemetry, logging, or security agents) into the Istio gateway proxy pods managed by the application routing add-on is not officially supported. If you choose to inject your own sidecar into a managed proxy pod, Microsoft provides only best-effort support for any issues you encounter.
 * Envoy access logging is enabled by default on Gateway proxy pods, but the log format, scope, and provider can't be customized via the Istio `Telemetry` API. To customize, use Gateway API ingress on the [Istio service mesh add-on][istio-gateway-api-access-logs] instead. 
@@ -226,7 +225,7 @@ curl -s -I -HHost:httpbin.example.com "http://$INGRESS_HOST/get"
 You should see an `HTTP 200` response.
 
 > [!NOTE]
-> To secure ingress traffic with the application routing Gateway API implementation, see the [following guide][app-routing-gateway-api-tls] to sync secrets from Azure Key Vault (AKV) for securing Gateway API ingress traffic with TLS termination.
+> To secure ingress traffic with the application routing Gateway API implementation and integrate with Azure DNS for hostname management, see [Configure Azure DNS and TLS with the application routing Gateway API implementation][app-routing-gateway-api-dns-tls] for the automated workflow powered by the application routing operator. For a manual TLS termination workflow that does not rely on the operator's integration, see [Secure ingress traffic with the application routing Gateway API implementation][app-routing-gateway-api-tls].
 
 ## Access logging
 
@@ -325,12 +324,13 @@ kubectl delete secretproviderclass httpbin-credential-spc
 
 ## Next steps
 
-[Secure ingress traffic with the application routing Gateway API implementation][app-routing-gateway-api-tls]
+[Configure Azure DNS and TLS with the application routing Gateway API implementation][app-routing-gateway-api-dns-tls]
+
+[Secure ingress traffic with the application routing Gateway API implementation (manual configuration)][app-routing-gateway-api-tls]
 
 <!-- LINKS - internal -->
 [annotation-customizations]: istio-gateway-api.md#annotation-customizations
 [app-routing-nginx]: app-routing.md
-[app-routing-dns-tls]: app-routing-dns-ssl.md
 [aks-lts]: long-term-support.md
 [akv-rbac-guide]: /azure/key-vault/general/rbac-guide#using-azure-rbac-secret-key-and-certificate-permissions-with-key-vault
 [azure-internal-lb]: ./internal-lb.md
@@ -345,6 +345,7 @@ kubectl delete secretproviderclass httpbin-credential-spc
 [istio-canary-upgrades]: ./istio-upgrade.md#minor-revision-upgrade
 [nginx-retirement]: ./includes/ingress-nginx-retirement.md
 [app-routing-gateway-api-tls]: ./app-routing-gateway-api-tls.md
+[app-routing-gateway-api-dns-tls]: ./app-routing-gateway-api-dns-tls.md
 
 <!-- LINKS - external -->
 [aks-release-notes]: https://github.com/azure/aks/releases

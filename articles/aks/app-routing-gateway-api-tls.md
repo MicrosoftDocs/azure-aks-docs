@@ -12,6 +12,11 @@ ms.author: nshankar
 
 # Secure ingress traffic with the application routing Gateway API implementation
 
+> [!NOTE]
+> This article describes how to **manually** configure TLS termination on a `Gateway` resource by authoring your own `SecretProviderClass`, mounting the Azure Key Vault provider for Secrets Store CSI Driver through a sample pod, and referencing the resulting Kubernetes Secret directly in the `Gateway` listener's `certificateRefs`. This approach is useful if you need full control over the certificate sync workflow or prefer to manage these resources yourself.
+>
+> For most users, the recommended path is the **automated** Azure DNS and Azure Key Vault integration powered by the Application Routing operator, which provisions and reconciles the `SecretProviderClass`, the synced Kubernetes Secret, and the listener `certificateRefs` for you based on a pair of listener `tls.options`. To use the automated workflow, see [Configure Azure DNS and TLS with the application routing Gateway API implementation][app-routing-gateway-api-dns-tls].
+
 The application routing add-on supports syncing secrets from Azure Key Vault (AKV) for securing Gateway API ingress traffic with TLS termination. Follow the steps below to create certificates and keys to terminate TLS traffic at the Gateway.
 
 ## Prerequisites
@@ -280,5 +285,6 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
 [akv-csi-driver-obtain-cert-and-keys]: ./csi-secrets-store-identity-access.md
 [akv-rbac-guide]: /azure/key-vault/general/rbac-guide#using-azure-rbac-secret-key-and-certificate-permissions-with-key-vault
 [app-routing-gateway-api]: ./app-routing-gateway-api.md
+[app-routing-gateway-api-dns-tls]: ./app-routing-gateway-api-dns-tls.md
 [managed-gateway-installation]: ./managed-gateway-api.md
 
