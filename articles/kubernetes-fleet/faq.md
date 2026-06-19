@@ -27,9 +27,9 @@ Fleet Manager (with or without a hub cluster) supports joining up to 1,000 Kuber
 
 If you want Fleet Manager to support more than 1,000 clusters, [add feedback](https://github.com/Azure/AKS/issues/5066).
 
-### What AKS clusters can I join as members?
+### What Kubernetes clusters can I join as members?
 
-Fleet Manager allows authorized users to add any AKS or Arc-enabled cluster in any Azure subscription and region as long as the Azure subscription is associated with the same Microsoft Entra ID tenant as the Fleet Manager. 
+Fleet Manager allows authorized users to add any AKS, AKS Automatic, or Arc-enabled Kubernetes cluster in any Azure subscription and region as long as the Azure subscription is associated with the same Microsoft Entra ID tenant as the Fleet Manager. 
 
 ### Does Fleet Manager support managed identities?
 
