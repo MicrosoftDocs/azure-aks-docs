@@ -6,7 +6,6 @@ ms.date: 06/19/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: how-to
 zone_pivot_groups: cluster-namespace-scope
 ---
 
