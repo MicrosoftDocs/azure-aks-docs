@@ -1,30 +1,28 @@
 ---
-title: "Understanding the status for resource placements"
-description: Learn how to read and interpret the status fields of ClusterResourcePlacement and ResourcePlacement custom resources in Azure Kubernetes Fleet Manager.
+title: "Understanding the status for Azure Kubernetes Fleet Manager resource placement"
+description: Learn how to interpret the status fields of Azure Kubernetes Fleet Manager resource placement.
 ms.topic: how-to
-ms.date: 07/10/2025
-author: zhangryan
-ms.author: zhangryan
+ms.date: 06/19/2026
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.custom: concept-article
+ms.topic: how-to
 zone_pivot_groups: cluster-namespace-scope
 ---
 
-# Understanding the status for resource placements
+# Understanding the status for Azure Kubernetes Fleet Manager resource placement
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 :::zone target="docs" pivot="cluster-scope"
 
-When you're working with Azure Kubernetes Fleet Manager, understanding the status of your `ClusterResourcePlacement` resources is crucial for monitoring deployment progress and troubleshooting issues. 
+When you work with Azure Kubernetes Fleet Manager, understanding the status of your `ClusterResourcePlacement` resources is crucial for monitoring deployment progress and troubleshooting issues. 
 
 :::zone-end
 
 :::zone target="docs" pivot="namespace-scope"
 
-When you're working with Azure Kubernetes Fleet Manager, understanding the status of your `ResourcePlacement` resources is crucial for monitoring deployment progress and troubleshooting issues. 
-> [!IMPORTANT]
-> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview.
+When you work with Azure Kubernetes Fleet Manager, understanding the status of your `ResourcePlacement` resources is crucial for monitoring deployment progress and troubleshooting issues. 
 
 :::zone-end
 
@@ -32,7 +30,14 @@ When you're working with Azure Kubernetes Fleet Manager, understanding the statu
 
 * You have a Fleet Manager with a hub cluster and one or more member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters](./quickstart-create-fleet-and-members.md).
 * You have access to the Fleet Manager hub cluster. For more information, see [Access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster](./access-fleet-hub-cluster-kubernetes-api.md).
-* You deployed at least one ClusterResourcePlacement API object to place your resources into the fleet. If you haven't, see [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
+
+:::zone target="docs" pivot="cluster-scope"
+* You deployed at least one `ClusterResourcePlacement` to distribute your resources. If you didn't, see [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"
+* You deployed at least one ResourcePlacement API object to place your resources into the fleet. If you didn't, see [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-namespace-scoped-resource-propagation.md).
+:::zone-end
 
 ## Overview of placement status structure
 
@@ -73,7 +78,7 @@ kubectl describe resourceplacement <placement-name> -n <namespace-name>
 
 :::zone-end
 
-Or to get the raw YAML output:
+To get the raw YAML output, use the following command:
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -104,7 +109,7 @@ The following sections examine each field in detail.
 
 ## Selected resources
 
-The `selectedResources` field lists all resources that the placement selects. This field allows you to check if the expected resources are included in the placement. Here's an example:
+The `selectedResources` field lists all resources that the placement selects. Use this field to check if the expected resources are included in the placement. Here's an example:
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -184,12 +189,12 @@ Each resource entry includes:
 
 The `conditions` array provides high-level status information about the entire placement. Each condition follows the Kubernetes common definition, which has the following standard fields:
 
-* **type**: The condition type (described in the following sections)
-* **status**: `True`, `False`, or `Unknown`
-* **reason**: Short reason code for the condition
-* **message**: Human-readable description
-* **lastTransitionTime**: When the condition last changed
-* **observedGeneration**: Generation of the placement when the condition was set
+* **type**: The condition type (described in the following sections).
+* **status**: `True`, `False`, or `Unknown`.
+* **reason**: Short reason code for the condition.
+* **message**: Human-readable description.
+* **lastTransitionTime**: When the condition last changed.
+* **observedGeneration**: Generation of the placement when the condition was set.
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -213,9 +218,9 @@ The following condition types are available for ResourcePlacement:
 
 Indicates whether the placement is successfully scheduled to target clusters.
 
-- **True**: All required clusters are selected according to the placement policy
-- **False**: Scheduling failed (for example, insufficient clusters available)
-- **Unknown**: Scheduling decision is pending
+- **True**: All required clusters are selected according to the placement policy.
+- **False**: Scheduling failed (for example, insufficient clusters available).
+- **Unknown**: Scheduling decision is pending.
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -259,9 +264,9 @@ conditions:
 
 Indicates whether the rollout is started across the selected clusters.
 
-- **True**: Resources started rolling out to scheduled clusters
-- **False**: Rollout isn't started yet
-- **Unknown**: Rollout decision is pending
+- **True**: Resources started rolling out to scheduled clusters.
+- **False**: Rollout isn't started yet.
+- **Unknown**: Rollout decision is pending.
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -303,9 +308,9 @@ conditions:
 
 Indicates whether resource overrides are successfully applied.
 
-- **True**: All applicable overrides are processed
-- **False**: Some overrides failed to apply
-- **Unknown**: Override processing is pending
+- **True**: All applicable overrides are processed.
+- **False**: Some overrides failed to apply.
+- **Unknown**: Override processing is pending.
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -347,11 +352,11 @@ conditions:
 
 :::zone-end
 
-Indicates whether work objects are created in the hub cluster's per-cluster namespaces.
+Indicates whether the process creates work objects in the hub cluster's per-cluster namespaces.
 
-- **True**: All work objects are synchronized
-- **False**: Work synchronization fails or is incomplete
-- **Unknown**: Work synchronization is pending
+- **True**: All work objects are synchronized.
+- **False**: Work synchronization fails or is incomplete.
+- **Unknown**: Work synchronization is pending.
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -395,9 +400,9 @@ conditions:
 
 Indicates whether all resources are successfully applied to member clusters.
 
-- **True**: All resources applied successfully to all target clusters
-- **False**: Some resources failed to apply (check `failedPlacements`)
-- **Unknown**: Apply operation is pending
+- **True**: All resources applied successfully to all target clusters.
+- **False**: Some resources failed to apply (check `failedPlacements`).
+- **Unknown**: Apply operation is pending.
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -441,9 +446,9 @@ conditions:
 
 Indicates whether the placed resources are all available and ready on member clusters.
 
-- **True**: All resources are available on all target clusters
-- **False**: Some resources aren't yet available
-- **Unknown**: Availability check is pending
+- **True**: All resources are available on all target clusters.
+- **False**: Some resources aren't yet available.
+- **Unknown**: Availability check is pending.
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -488,9 +493,9 @@ conditions:
 
 Indicates whether configuration differences are reported (when using ReportDiff strategy).
 
-- **True**: Complete diff report is available
-- **False**: Diff reporting failed or is incomplete
-- **Unknown**: Diff reporting is pending
+- **True**: Complete diff report is available.
+- **False**: Diff reporting failed or is incomplete.
+- **Unknown**: Diff reporting is pending.
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -522,7 +527,7 @@ conditions:
 
 ## Resource snapshots
 
-The `observedResourceIndex` field indicates which snapshot of resources is currently being deployed:
+The `observedResourceIndex` field indicates which snapshot of resources is currently being deployed.
 
 ```yaml
 observedResourceIndex: "1"
@@ -530,17 +535,17 @@ observedResourceIndex: "1"
 
 Fleet Manager creates resource snapshots differently depending on the rollout strategy:
 
-**For `RollingUpdate` strategy (default)**: Resource snapshots are created automatically when:
+**For `RollingUpdate` strategy (default)**: Fleet Manager automatically creates resource snapshots when:
 
 * The resource selectors change
-* The selected resources are modified
+* You modify the selected resources
 
-**For `External` strategy**: Resource snapshots aren't created automatically. Instead, they're created when you execute a staged update run with the `resourceSnapshotIndex` field omitted. This means that when you first create a placement with an `External` rollout strategy, no resource snapshots exist until you run the first staged update run.
+**For `External` strategy**: Fleet Manager doesn't automatically create resource snapshots. Instead, it creates them when you execute a staged update run and omit the `resourceSnapshotIndex` field. This condition means that when you first create a placement with an `External` rollout strategy, no resource snapshots exist until you run the first staged update run.
 
 > [!NOTE]
-> If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available. You can reference these existing snapshots when creating staged update runs.
+> If a placement previously used the `RollingUpdate` strategy and you change it to `External`, the existing resource snapshots remain available. You can reference these existing snapshots when creating staged update runs.
 
-Each snapshot has a unique index. You can view snapshots using:
+Each snapshot has a unique index. You can view snapshots by using:
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -638,7 +643,7 @@ Each cluster's status includes conditions that track the deployment lifecycle:
 
 #### ResourceScheduled
 
-Indicates whether the cluster was successfully selected for placement.
+Indicates whether the cluster is successfully selected for placement.
 
 ```yaml
 - type: ResourceScheduled
@@ -729,7 +734,7 @@ Indicates whether configuration differences are reported for this cluster.
 
 ## Failed placements
 
-When resources fail to apply to a cluster, details are recorded in the `failedPlacements` array:
+When resources fail to apply to a cluster, the system records the details in the `failedPlacements` array:
 
 ```yaml
 failedPlacements:
@@ -773,11 +778,11 @@ Each failed placement includes:
 
 * **Resource identification**: group, version, kind, name, namespace
 * **condition**: The specific failure condition
-* **envelope**: Envelope information (if applicable)
+* **envelope**: Envelope information, if applicable
 
 ## Drifted placements
 
-Fleet Manager always reports resources that drifted from their desired state:
+Fleet Manager always reports resources that drift from their desired state:
 
 ```yaml
 driftedPlacements:
@@ -832,7 +837,7 @@ Each drifted placement includes:
 
 ## Diffed placements
 
-When using the ReportDiff apply strategy, Fleet Manager reports configuration differences:
+When you use the ReportDiff apply strategy, Fleet Manager reports configuration differences.
 
 ```yaml
 diffedPlacements:
@@ -872,8 +877,8 @@ diffedPlacements:
 
 Diffed placements have a similar structure to drifted placements but are used for different scenarios:
 
-* **Drifted placements**: Used when resources are applied but then changed
-* **Diffed placements**: Used with ReportDiff strategy or when takeover conditions aren't met
+* **Drifted placements**: Use when you apply resources but then change them.
+* **Diffed placements**: Use with ReportDiff strategy or when takeover conditions aren't met.
 
 ## Monitoring placement progress
 
@@ -882,18 +887,18 @@ To effectively monitor placement progress, check these key indicators:
 :::zone target="docs" pivot="cluster-scope"
 
 1. **Resource placed**: Verify `ClusterResourcePlacementWorkSynchronized` is True
-2. **Overall health**: Look at the `ClusterResourcePlacementApplied` condition
-3. **Per-cluster status**: Review conditions for each target cluster
-4. **Failed placements**: Check for any entries in `failedPlacements` arrays
+1. **Overall health**: Look at the `ClusterResourcePlacementApplied` condition
+1. **Per-cluster status**: Review conditions for each target cluster
+1. **Failed placements**: Check for any entries in `failedPlacements` arrays
 
 :::zone-end
 
 :::zone target="docs" pivot="namespace-scope"
 
 1. **Resource placed**: Verify `ResourcePlacementWorkSynchronized` is True
-2. **Overall health**: Look at the `ResourcePlacementApplied` condition
-3. **Per-cluster status**: Review conditions for each target cluster
-4. **Failed placements**: Check for any entries in `failedPlacements` arrays
+1. **Overall health**: Look at the `ResourcePlacementApplied` condition
+1. **Per-cluster status**: Review conditions for each target cluster
+1. **Failed placements**: Check for any entries in `failedPlacements` arrays
 
 :::zone-end
 
@@ -1246,18 +1251,18 @@ status:
 
 This example shows:
 
-- **Successful scheduling**: The placement was able to find two clusters matching the placement policy
-- **Successful rollout**: All resources are deployed to both target clusters
-- **No overrides**: No resource overrides were configured or needed
-- **Synchronized work**: Work objects are created and synchronized
-- **Applied resources**: All resources are successfully applied
-- **Available resources**: All resources are running and available
-- **Clean status**: No failed, drifted, or diffed placements
+- **Successful scheduling**: The placement found two clusters that match the placement policy.
+- **Successful rollout**: All resources are deployed to both target clusters.
+- **No overrides**: No resource overrides are configured or needed.
+- **Synchronized work**: Work objects are created and synchronized.
+- **Applied resources**: All resources are successfully applied.
+- **Available resources**: All resources are running and available.
+- **Clean status**: No failed, drifted, or diffed placements.
 
 ## Related content
 
-To learn more about resource propagation, see the following resources:
+To learn more about resource placement, see the following articles:
+
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters' properties](./intelligent-resource-placement.md).
+* [Use Resource Overrides to customize deployed resources](./howto-use-overrides-customize-resources-placement.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
-* [How to do cluster resource overrides](./cluster-resource-override.md).
-* [How to do resource overrides](./resource-override.md).
