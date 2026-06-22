@@ -1,9 +1,8 @@
 ---
-title: Zone resiliency recommendations for Azure Kubernetes Service (AKS)
-titleSuffix: Azure Kubernetes Service
-description: Learn about the various recommendations for zone resiliency in Azure Kubernetes Service (AKS).
+title: Zone Resiliency Recommendations for Azure Kubernetes Service (AKS)
+description: Learn recommendations for designing and validating zone resiliency in Azure Kubernetes Service (AKS), including guidance for AKS Automatic and AKS Standard.
 ms.topic: concept-article
-ms.date: 06/05/2024
+ms.date: 06/05/2026
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -12,26 +11,52 @@ ms.service: azure-kubernetes-service
 
 # Zone resiliency recommendations for Azure Kubernetes Service (AKS)
 
+**Applies to**: :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
+
 Zone resiliency is a key part of running production-grade Kubernetes clusters. With scalability at its core, Kubernetes takes full advantage of independent infrastructure in data centers without incurring additional costs by provisioning new nodes only when necessary.
 
->[!IMPORTANT]
-> Scaling a cluster in and out, by adding or removing nodes, isn't enough to ensure application resiliency. You must gain a deeper understanding of your application and its dependencies to better plan for resiliency. AKS allows you to set up availability zones (AZs) for your clusters and node pools to ensure that your applications are resilient to failures and can continue to serve traffic even if an entire zone goes down. For more information on availability zone support features in AKS, see [Reliability in Azure Kubernetes Service (AKS)](/azure/reliability/reliability-aks).
+> [!IMPORTANT]
+> Scaling a cluster in and out by adding or removing nodes isn't enough to ensure application resiliency. You need to understand your application and dependencies to plan for resiliency. AKS supports availability zones (AZs) for clusters and node pools so applications can continue serving traffic even if an entire zone goes down. For more information, see [Reliability in Azure Kubernetes Service (AKS)](/azure/reliability/reliability-aks).
 
+In this article, you learn recommendations for zone resiliency in AKS, including how to:
 
-In this article, you learn about the various recommendations for zone resiliency in Azure Kubernetes Service (AKS), including how to:
+- Make AKS cluster components zone resilient.
+- Design stateless applications for zone failure scenarios.
+- Choose storage redundancy options.
+- Test application and platform behavior during zonal faults.
 
-* Make your AKS cluster components zone resilient
-* Design a stateless application
-* Make your storage disk decision
-* Test for availability zone (AZ) resiliency
+## AKS cluster modes and zone resiliency
+
+AKS supports two cluster modes:
+
+- **AKS Automatic**, which provides more preconfigured platform defaults.
+- **AKS Standard**, which provides broader direct operator control.
+
+Zone resiliency principles in this article apply to both cluster modes. The key difference is ownership of platform operations.
+
+| Area | AKS Automatic | AKS Standard |
+| ---- | ------------- | ------------ |
+| Cluster operations | More preconfigured defaults for production readiness | More explicit operator configuration and lifecycle control |
+| Node management and scaling | Managed system node pools and node autoprovisioning are preconfigured | Operators explicitly define and manage node pools and scaling strategy |
+| Upgrades | Automatic cluster and node OS image upgrades are preconfigured | Operators choose manual upgrades or configured upgrade channels |
+| Security baseline | Deployment safeguards and baseline Pod Security Standards are preconfigured in enforce mode | Security and policy controls are optional and explicitly configured |
+| Monitoring baseline | Managed Prometheus and Container Insights are default in Azure CLI and Azure portal creation flows | Monitoring components are optional and explicitly enabled |
+| Networking baseline | Managed virtual network defaults and managed ingress and egress patterns in supported configurations | Networking model and ingress and egress patterns are selected explicitly |
+
+For full feature behavior by mode, see AKS Automatic and AKS Standard feature comparison.
 
 ## Make your AKS cluster components zone resilient
 
-The following sections provide guidance on major decision points for making your AKS cluster components zone resilient, but they aren't exhaustive. You should consider other factors based on your specific requirements and constraints and check your other dependencies to ensure they're configured for zone resiliency.
+The following sections describe key decision points for zone resiliency in AKS. They aren't exhaustive. You should also validate zone resiliency for dependencies such as data stores, identity systems, and external services.
 
 ### Create zone redundant clusters and node pools
 
-AKS allows you to select multiple AZs during cluster and node pool creation. When you create a cluster in a region that has multiple AZs, the control plane is automatically spread across all the AZs in that region. However, the nodes in the node pool are spread across only the selected AZs. This approach ensures that the control plane and the nodes are distributed across multiple AZs, providing resiliency in case of an AZ failure. You can configure AZs by using the Azure portal, Azure CLI, or Azure Resource Manager templates.
+AKS lets you select multiple AZs during cluster and node pool creation. In regions that support multiple AZs, the control plane is automatically spread across zones. Node pool nodes are spread across the selected zones. This approach ensures that the control plane and the nodes are distributed across multiple AZs, providing resiliency in case of an AZ failure.
+
+Cluster mode guidance:
+
+- **AKS Automatic**: Many platform defaults are preconfigured. You should still validate that business-critical workloads are intentionally distributed across zones and that failure behavior meets requirements.
+- **AKS Standard**: Design node pool topology, scaling settings, and failure-domain behavior explicitly.
 
 The following example shows how to create a cluster with three nodes spread across three AZs using the Azure CLI:
 
@@ -60,16 +85,20 @@ For more information, see [Use availability zones in Azure Kubernetes Service (A
 
 ### Ensure pods are spread across AZs
 
-Starting with Kubernetes version 1.33, the default Kube-Scheduler in AKS is configured to use a `MaxSkew` value of 1 for `topology.kubernetes.io/zone` as outlined below:
+Pod placement strategy is a workload-level concern in both AKS Automatic and AKS Standard. Platform defaults don't replace workload-level topology requirements.
+
+Starting with Kubernetes version 1.33, the default Kube-Scheduler in AKS is configured to use a `MaxSkew` value of 1 for `topology.kubernetes.io/zone`:
+
 ```yml
 topologySpreadConstraints:
 - maxSkew: 1
   topologyKey: "topology.kubernetes.io/zone"
   whenUnsatisfiable: ScheduleAnyway
 ```
-This configuration deviates from the upstream default by targeting no more than a single pod difference between zones. As a result, pods are more evenly distributed across zones, reducing the likelihood that a zonal failure results in an outage of the corresponding deployment.
 
-However, if your deployment has specific topology needs, you can override the above default values by adding your own in the pod spec. You can use pod topology spread constraints based on the `zone` and `hostname` labels to spread pods across AZs within a region and across hosts within AZs.
+This configuration targets no more than a single pod difference between zones, reducing the chance that a zonal failure causes a deployment outage.
+
+If your deployment has specific topology needs, override these defaults in your pod spec. You can use pod topology spread constraints based on the `zone` and `hostname` labels to spread pods across AZs within a region and across hosts within AZs.
 
 For example, let's say you have a four-node cluster where three pods labeled `app: mypod-app` are located in `node1`, `node2`, and `node3` respectively. If you want the incoming deployment to be hosted on distinct nodes as much as possible, you can use a manifest similar to the following example:
 
@@ -98,23 +127,23 @@ spec:
       - name: pause
         image: registry.k8s.io/pause
 ```
+
 > [!NOTE]
 > If your application has strict zone spread requirements, where the expected behavior would be to leave a pod in pending state if a suitable node isn't found, you can use `whenUnsatisfiable: DoNotSchedule`. This configuration tells the scheduler to leave the pod in pending if a node in the right zone or different host doesn't exist or can't be scaled up.
 
 For more information on configuring pod distribution and understanding the implications of `MaxSkew`, see the [Kubernetes Pod Topology documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field). For example, how `nodeTaintsPolicy: Honor` affects pod distribution.
 
-
 ### Configure AZ-aware networking
 
 If you have pods that serve network traffic, you should load balance traffic across multiple AZs to ensure that your application is highly available and resilient to failures. You can use [Azure Load Balancer](/azure/load-balancer/load-balancer-overview) to distribute incoming traffic across the nodes in your AKS cluster.
 
-Azure Load Balancer supports both internal and external load balancing, and you can configure it to use a *Standard SKU* for zone-redundant load balancing. The Standard SKU is the default SKU in AKS, and it supports regional resiliency with [availability zones](/azure/reliability/reliability-load-balancer#availability-zone-support) to ensure your application isn't impacted by a region failure. In the event of a zone failure scenario, a zone-redundant Standard SKU load balancer isn't impacted by the failure and enables your deployments to continue serving traffic from the remaining zones. You can use a global load balancer, such as [Front Door](/azure/frontdoor/front-door-overview) or [Traffic Manager](/azure/traffic-manager/traffic-manager-overview), or you can use [cross-region load balancers](/azure/reliability/reliability-load-balancer#cross-region-disaster-recovery-and-business-continuity) in front of your regional AKS clusters to ensure that your application isn't impacted by regional failures. To create a Standard SKU load balancer in AKS, see [Use a standard load balancer in Azure Kubernetes Service (AKS)](./load-balancer-standard.md).
+Azure Load Balancer supports both internal and external load balancing, and you can configure it to use a _Standard SKU_ for zone-redundant load balancing. The Standard SKU is the default SKU in AKS, and it supports regional resiliency with [availability zones](/azure/reliability/reliability-load-balancer#availability-zone-support) to ensure your application isn't impacted by a region failure. In the event of a zone failure scenario, a zone-redundant Standard SKU load balancer isn't impacted by the failure and enables your deployments to continue serving traffic from the remaining zones. You can use a global load balancer, such as [Front Door](/azure/frontdoor/front-door-overview) or [Traffic Manager](/azure/traffic-manager/traffic-manager-overview), or you can use [cross-region load balancers](/azure/reliability/reliability-load-balancer#cross-region-disaster-recovery-and-business-continuity) in front of your regional AKS clusters to ensure that your application isn't impacted by regional failures. To create a Standard SKU load balancer in AKS, see [Use a standard load balancer in Azure Kubernetes Service (AKS)](./load-balancer-standard.md).
 
 To ensure that your application's network traffic is resilient to failures, you should configure AZ-aware networking for your AKS workloads. Azure offers various networking services that support AZs:
 
-* [Azure VPN Gateway](/azure/vpn-gateway/vpn-gateway-about-vpngateways): You can deploy VPN and [ExpressRoute](/azure/expressroute/designing-for-high-availability-with-expressroute) gateways in Azure AZs to enable better resiliency, scalability, and availability to virtual network gateways. For more information, see [Create a zone-redundant virtual network gateways in availability zones](/azure/vpn-gateway/create-zone-redundant-vnet-gateway).
-* [Azure Application Gateway v2](/azure/application-gateway/overview-v2): Azure Application Gateway provides a regional L7 load balancer with availability zone support. For more information, see [Direct web traffic with Azure Application Gateway](/azure/application-gateway/quick-create-cli).
-* [Azure Front Door](/azure/frontdoor/front-door-overview): Azure Front Door provides a global L7 load balancer and leverages points of presence (POPs) or Azure Content Delivery Network (CDN). For more information, see [Azure Front Door POP locations](/azure/frontdoor/edge-locations-by-region).
+- [Azure VPN Gateway](/azure/vpn-gateway/vpn-gateway-about-vpngateways): You can deploy VPN and [ExpressRoute](/azure/expressroute/designing-for-high-availability-with-expressroute) gateways in Azure AZs to enable better resiliency, scalability, and availability to virtual network gateways. For more information, see [Create a zone-redundant virtual network gateways in availability zones](/azure/vpn-gateway/create-zone-redundant-vnet-gateway).
+- [Azure Application Gateway v2](/azure/application-gateway/overview-v2): Azure Application Gateway provides a regional L7 load balancer with availability zone support. For more information, see [Direct web traffic with Azure Application Gateway](/azure/application-gateway/quick-create-cli).
+- [Azure Front Door](/azure/frontdoor/front-door-overview): Azure Front Door provides a global L7 load balancer and leverages points of presence (POPs) or Azure Content Delivery Network (CDN). For more information, see [Azure Front Door POP locations](/azure/frontdoor/edge-locations-by-region).
 
 > [!IMPORTANT]
 > With [Azure NAT Gateway](/azure/nat-gateway/nat-overview), you can create NAT gateways in specific AZs or use a zonal deployment for isolation to specific zones. NAT Gateway supports zonal deployments but not zone-redundant deployments. This might be an issue if you configure an AKS cluster with the outbound type equal to the NAT gateway and the NAT gateway is in a single zone. In this case, if the zone hosting your NAT gateway goes down, your cluster loses outbound connectivity. For more information, see [NAT Gateway and availability zones](/azure/nat-gateway/nat-overview#availability-zones).
@@ -127,38 +156,55 @@ To ensure that your container images are highly available and resilient to failu
 
 [Azure Key Vault](/azure/key-vault/general/overview) provides multiple layers of redundancy to make sure your keys and secrets remain available to your application even if individual components of the service fail, or if Azure regions or AZs are unavailable. For more information, see [Azure Key Vault availability and redundancy](/azure/key-vault/general/disaster-recovery-guidance).
 
-### Leverage autoscaling features
+### Use autoscaling features
 
 You can improve application availability and resiliency in AKS using autoscaling features, which help you achieve the following goals:
 
-* Optimize resource utilization and cost efficiency by scaling up or down based on the CPU and memory usage of your pods.
-* Enhance fault tolerance and recovery by adding more nodes or pods when a zone failure occurs.
+- Optimize resource utilization and cost efficiency by scaling up or down based on the CPU and memory usage of your pods.
+- Enhance fault tolerance and recovery by adding more nodes or pods when a zone failure occurs.
 
 You can use the [Horizontal Pod Autoscaler (HPA)](./concepts-scale.md#horizontal-pod-autoscaler) and [Cluster Autoscaler](./cluster-autoscaler-overview.md) to implement autoscaling in AKS. The HPA automatically scales the number of pods in a deployment based on observed CPU utilization, memory utilization, custom metrics, and metrics of other services. The Cluster Autoscaler automatically adjusts the number of nodes in a node pool based on pending pods and the resource requests on the pending pods.
+
+Cluster mode guidance:
+
+- **AKS Automatic**: Focus on workload requests and limits, pod distribution policies, and disruption controls so preconfigured platform scaling can recover service during zonal stress.
+- **AKS Standard**: Explicitly design node pool boundaries, scaling policy, and autoscaler settings to align with zone-aware scheduling constraints.
 
 The AKS Karpenter Provider feature enables node autoprovisioning using [Karpenter](https://karpenter.sh/) on your AKS cluster. For more information, see the [AKS Karpenter Provider feature overview](https://github.com/Azure/karpenter-provider-azure?tab=readme-ov-file#features-overview).
 
 The [Kubernetes Event-driven Autoscaling (KEDA)](https://keda.sh/) add-on for AKS applies event-driven autoscaling to scale your application based on metrics of external services to meet demand. For more information, see [Install the KEDA add-on in Azure Kubernetes Service (AKS)](./keda-deploy-add-on-cli.md).
 
-### Cluster Autoscaler and Availability Zones
+### Zone scaling strategy by AKS cluster mode
 
-When implementing **availability zones with the cluster autoscaler**, we recommend using a single node pool for each zone. You can set the `--balance-similar-node-groups` parameter to `True` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations. When this approach isn't implemented, pods can remain in a pending state during scale ups. 
+For zone-aware scale-up behavior, align your node pool model with scheduler constraints and your cluster mode.
 
-> [!NOTE]
-> **The Cluster Autoscaler is not zone-aware, and zone allocation is handled by the underlying Virtual Machine Scale Sets and not by AKS**. The above best practice becomes even more relevant when using zone-based **[pod topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)** on a single multi-az node pool, as restrictive constraints may leave pods in a pending state, especially in capacity-constrained regions or during zone-down scenarios.
+#### AKS Standard
 
-The reason for the above recommendation is that:
-  - Cluster Autoscaler performs scheduling simulations to determine whether adding a new node in a node pool can accommodate pending pods. It treats all nodes in a node pool as identical, so in a multi-AZ node pool, it cannot predict which zone the underlying Virtual Machine Scale Sets will provision the new node in. **Cluster Autoscaler cannot request nodes based on specific zones**. If the pending pod can be scheduled in the node pool, Cluster Autoscaler will scale up; however, if the new node is provisioned in a zone that violates strict topology spread constraints, the pods will remain pending and autoscaler will not continue scaling-up for the same pod.
-  
-  - AKS uses best-effort zone balancing on the underlying Virtual Machine Scale Sets (VMSS). However, in cases of zone capacity constraints or zone-down scenarios in one AZ, VMSS will retry provisioning in another zone. If allocation fails in more than one availability zone, VMSS will not create a new node in that node pool, causing the scale-up operation to fail. Cluster Autoscaler will then place the node pool in a [backoff](./cluster-autoscaler-overview.md#node-pool-in-backoff) state.
-  
-  - Also, since the zone balancing of nodes is handled by underlying Virtual Machine Scale Sets, AKS will not automatically rebalance running workloads.
-    
-Using one node pool per availability zone helps overcome these limitations. Cluster Autoscaler treats each node pool as an independent entity, giving users greater flexibility to manage zone-specific scaling behavior. With single-zone node pools, workloads remain schedulable on node pools in other zones during a zone failure, except when users explicitly define a strict zone-based **[pod topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)**.
+When using Cluster Autoscaler with availability zones, a common best practice is one node pool per zone. You can set `--balance-similar-node-groups` to `True` to maintain balanced node distribution across zones during scale-up.
+
+Why this matters:
+
+- Cluster Autoscaler simulates scheduling by node pool, not by specific zone placement.
+- In a multi-zone node pool, scale-up can place a new node in a zone that still violates strict topology spread constraints, leaving pods pending.
+- Virtual Machine Scale Sets uses best-effort zone balancing. During zone capacity constraints or zone-down events, allocation can fail and place the node pool in backoff.
+- Using one node pool per zone improves control of zone-specific scaling behavior.
+
+**The Cluster Autoscaler isn't zone-aware, and zone allocation is handled by the underlying Virtual Machine Scale Sets and not by AKS**. This best practice becomes even more relevant when using zone-based **[pod topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)** on a single multi-zone node pool, as restrictive constraints may leave pods in a pending state, especially in capacity-constrained regions or during zone-down scenarios.
+
+#### AKS Automatic
+
+AKS Automatic uses preconfigured managed node behavior and node autoprovisioning defaults. You can't assume critical workloads are zone-resilient without workload-level policy.
+
+For critical services, validate:
+
+- Pod topology spread behavior across zones.
+- Recovery behavior during zonal pressure.
+- Scheduling outcomes when strict constraints are used.
+- Application behavior when one zone becomes unavailable.
 
 ## Design a stateless application
 
-When an application is *stateless*, the application logic and data are decoupled, and the pods don't store any persistent or session data on their local disks. This design allows the application to be easily scaled up or down without worrying about data loss. Stateless applications are more resilient to failures because they can be easily replaced or rescheduled on a different node in case of a node failure.
+When an application is _stateless_, the application logic and data are decoupled, and the pods don't store any persistent or session data on their local disks. This design allows the application to be easily scaled up or down without worrying about data loss. Stateless applications are more resilient to failures because they can be easily replaced or rescheduled on a different node in case of a node failure.
 
 When designing a stateless application with AKS, you should use managed Azure services, such [Azure Databases](https://azure.microsoft.com/products/category/databases/), [Azure Managed Redis](/azure/redis/overview), or [Azure Storage](https://azure.microsoft.com/products/category/storage/) to store the application data. Using these services ensures your traffic can be moved across nodes and zones without risking data loss or impacting the user experience. You can use Kubernetes [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [Services](https://kubernetes.io/docs/concepts/services-networking/service/), and [Health Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) to manage stateless pods and ensure even distribution across zones.
 
@@ -174,8 +220,8 @@ The following table outlines pros and cons of each disk type:
 
 | Disk type | Pros | Cons |
 | --------- | ---- | ---- |
-| LRS | * Lower cost <br> * Supported for all disk sizes and regions <br> * Easy to use and provision | * Lower availability and durability <br> * Vulnerable to zonal failures <br> * Doesn't support zone or geo-replication |
-| ZRS | * Higher availability and durability <br> * More resilient to zonal failures <br> * Supports zone replication for intra-region resiliency | * Higher cost <br> * Not supported for all disk sizes and regions <br> * Requires extra configuration to enable |
+| LRS | • Lower cost <br> • Supported for all disk sizes and regions <br> • Easy to use and provision | • Lower availability and durability <br> • Vulnerable to zonal failures <br> • Doesn't support zone or geo-replication |
+| ZRS | • Higher availability and durability <br> • More resilient to zonal failures <br> • Supports zone replication for intra-region resiliency | • Higher cost <br> • Not supported for all disk sizes and regions <br> • Requires extra configuration to enable |
 
 For more information on the LRS and ZRS disk types, see [Azure Storage redundancy](/azure/storage/common/storage-redundancy#redundancy-in-the-primary-region). To provision storage disks in AKS, see [Provision Azure Disks storage in Azure Kubernetes Service (AKS)](./azure-csi-files-storage-provision.md).
 
@@ -195,7 +241,7 @@ The following table outlines pros and cons of this method:
 
 | Pros | Cons |
 | ---- | ---- |
-| * Mimics a realistic failure scenario and tests the recovery process <br> * Allows you to verify the availability and durability of your data across regions <br> * Helps you identify any potential issues or bottlenecks in your cluster configuration or application design | * Might cause temporary disruption or degradation of service for your users <br> * Requires manual intervention and coordination to drain and restore the node <br> * Might incur extra costs due to increased network traffic or storage replication |
+| • Mimics a realistic failure scenario and tests the recovery process <br> • Allows you to verify the availability and durability of your data across regions <br> • Helps you identify any potential issues or bottlenecks in your cluster configuration or application design | • Might cause temporary disruption or degradation of service for your users <br> • Requires manual intervention and coordination to drain and restore the node <br> • Might incur extra costs due to increased network traffic or storage replication |
 
 ### Method 2: Simulate an AZ failure using Azure Chaos Studio
 
@@ -205,10 +251,11 @@ The following table outlines pros and cons of this method:
 
 | Pros | Cons |
 | ---- | ---- |
-| * Provides a controlled and automated way to inject faults and monitor the results <br> * Supports various types of faults and scenarios, such as network latency, CPU stress, disk failure, etc. <br> * Integrates with Azure Monitor and other tools to collect and analyze data | * Might require extra configuration and setup to create and run experiments <br> * Might not cover all possible failure modes and edge zones that could occur during a real outage <br> * Might have limitations or restrictions on the scope and/or duration of the experiments |
+| • Provides a controlled and automated way to inject faults and monitor the results <br> • Supports various types of faults and scenarios, such as network latency, CPU stress, disk failure, etc. <br> • Integrates with Azure Monitor and other tools to collect and analyze data | • Might require extra configuration and setup to create and run experiments <br> • Might not cover all possible failure modes and edge zones that could occur during a real outage <br> • Might have limitations or restrictions on the scope and/or duration of the experiments |
 
 For more information, see [What is Azure Chaos Studio?](/azure/chaos-studio/chaos-studio-overview).
 
-## Next steps
+## Related content
 
-For more implementation details, see the [Guide to zone redundant AKS clusters and storage](https://techcommunity.microsoft.com/t5/fasttrack-for-azure/a-practical-guide-to-zone-redundant-aks-clusters-and-storage/ba-p/4036254).
+- [What is AKS Automatic?](./intro-aks-automatic.md)
+- [Guide to zone redundant AKS clusters and storage](https://techcommunity.microsoft.com/t5/fasttrack-for-azure/a-practical-guide-to-zone-redundant-aks-clusters-and-storage/ba-p/4036254)
