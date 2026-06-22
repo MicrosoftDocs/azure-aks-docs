@@ -188,7 +188,7 @@ The following limitations apply to dual-stack public IP prefix:
 - Each node is assigned a single IPv6 public IP address.
 - This feature isn't supported with AKS Automatic or node auto-provisioning.
 - Multi-NIC node pools aren't supported.
-- Cluster Autoscaler is supported, but ensure that the configured maximum node count does not exceed the number of available IP addresses in the public IP prefix, as each node requires one IP from the prefix.
+- Cluster Autoscaler is supported, but ensure that the configured maximum node count doesn't exceed the number of available IP addresses in the public IP prefix, as each node requires one IP from the prefix.
 
 ## Locate public IPs for nodes
 
