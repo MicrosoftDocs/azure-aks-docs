@@ -67,6 +67,16 @@ No. Fleet Manager's hub cluster is a Microsoft-managed resource. Microsoft autom
 
 If you attempt to update or modify the hub cluster (which is a single node AKS cluster named `hub`), a set of deny rules block your changes from being applied.
 
+### Why did my Fleet Manager hub cluster transition from Failed to Running?
+
+The Fleet Manager hub cluster is a Microsoft-managed AKS cluster created in your subscription. You don't need to take any action on the hub cluster.
+
+If there's an issue in provisioning or operating the hub cluster, it can move to a `Failed` state.
+
+Fleet Manager automatically reconciles the hub cluster as part of periodic standard service operations, which can move the hub cluster to a `Running` state.
+
+When a hub cluster is `Failed` it doesn't generate a cost, but when it moves to `Running` a cost is generated. 
+
 ## Multi-cluster updates - automated or manual FAQs
 
 ### What clusters does multi-cluster updates support?
