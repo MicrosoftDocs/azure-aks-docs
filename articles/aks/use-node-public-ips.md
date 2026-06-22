@@ -88,7 +88,7 @@ To use dual-stack public IP prefixes with node public IPs, ensure the following 
 
 ### Register the preview features
 
-Dual-stack (IPv4 and IPv6) public IP prefix support for node public IPs is currently available in preview. Before you can use this feature, you must install or update the Azure CLI extension and register the required feature flags in your subscription.
+Dual-stack (IPv4 and IPv6) public IP prefix support for node public IPs is currently available in preview. Before you can use this feature, you must install or update the Azure CLI extension and register the `NodePublicIPv6PrefixPreview` feature flags in your subscription.
 
 Install or update the aks-preview extension:
 
@@ -99,14 +99,12 @@ az extension add --name aks-preview --upgrade
 Register the required preview features:
 
 ```azurecli-interactive
-az feature register --namespace Microsoft.ContainerService --name AKS-EnableDualStack 
 az feature register --namespace Microsoft.ContainerService --name NodePublicIPv6PrefixPreview
 ```
 
 It can take several minutes for the feature registrations to complete. To check the registration status, run:
 
 ```azurecli-interactive
-az feature show --namespace Microsoft.ContainerService --name AKS-EnableDualStack --query "properties.state" 
 az feature show --namespace Microsoft.ContainerService --name NodePublicIPv6PrefixPreview --query "properties.state"
 ```
 
@@ -190,6 +188,7 @@ The following limitations apply to dual-stack public IP prefix:
 - Each node is assigned a single IPv6 public IP address.
 - This feature isn't supported with AKS Automatic or node auto-provisioning.
 - Multi-NIC node pools aren't supported.
+- Cluster Autoscaler is supported, but ensure that the configured maximum node count does not exceed the number of available IP addresses in the public IP prefix, as each node requires one IP from the prefix.
 
 ## Locate public IPs for nodes
 
