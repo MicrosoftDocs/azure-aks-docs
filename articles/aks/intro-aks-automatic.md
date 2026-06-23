@@ -3,7 +3,7 @@ title: Introduction to Azure Kubernetes Service (AKS) Automatic
 description: Simplify deployment and management of container-based applications in Azure by learning about the features and benefits of Azure Kubernetes Service Automatic.
 ms.topic: overview
 ms.custom: build-2024, biannual, build-2026
-ms.date: 05/22/2026
+ms.date: 06/23/2026
 author: wangyira
 ms.author: wangamanda
 
@@ -107,7 +107,7 @@ AKS Automatic clusters use [managed Virtual Network powered by Azure CNI Overlay
 | Option | AKS Automatic | AKS Standard |
 |--------|---------------|--------------|
 | Virtual network | **Default**: [Managed Virtual Network using Azure CNI Overlay powered by Cilium][azure-cni-powered-by-cilium] combines the robust control plane of Azure CNI with the data plane of Cilium to provide high-performance networking and security. <br/> **Optional**: <br> * [Custom virtual network][automatic-custom-network] <br> * [Custom virtual network][automatic-private-custom-network] with private cluster. | **Default**: [Managed Virtual Network with kubenet][kubenet] <br/> **Optional**: <br> * [Azure CNI][azure-cni] <br> * [Azure CNI Overlay][azure-cni-overlay] <br> * [Azure CNI Overlay powered by Cilium][azure-cni-powered-by-cilium] <br> * [Bring your own CNI][use-byo-cni] |
-| Ingress | **Preconfigured**: <br> * Starting on AKS 1.36, [Kubernetes Gateway API via the application routing add-on][app-routing-gateway-api] for new clusters. <br> * Older version before AKS 1.36, [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS and Azure Key Vault. <br/> **Optional**: <br> * Bring your own ingress or gateway. | **Optional**: <br> * [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS and Azure Key Vault. <br> * [Istio-based service mesh add-on for AKS][istio-deploy-ingress] ingress gateway <br> * Bring your own ingress or gateway.|
+| Ingress | **Default**: <br> * Starting on AKS 1.36, [Kubernetes Gateway API via the application routing add-on][app-routing-gateway-api] for new clusters. <br> * Older version before AKS 1.36, [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS and Azure Key Vault. <br/> **Optional**: <br> * [Istio CNI for Istio-based service mesh add-on][istio-cni] | **Optional**: <br> * [Kubernetes Gateway API via the application routing add-on][app-routing-gateway-api] <br> * [Istio-based service mesh add-on for AKS][istio-deploy-ingress] ingress gateway <br> * Bring your own ingress or gateway.|
 | Egress | **Preconfigured**: [AKS managed NAT gateway][managed-nat-gateway] for a scalable outbound connection flows when used with managed virtual network <br> **Optional (with custom virtual network)**: <br> * [Azure Load Balancer][egress-load-balancer] <br> * [User-assigned NAT gateway][managed-nat-gateway] <br> * [User-defined routing (UDR)][udr] | **Default**: [Azure Load Balancer][egress-load-balancer] <br> **Optional**: <br> * [User-assigned NAT gateway][managed-nat-gateway] <br> * [AKS managed NAT gateway][userassigned-nat-gateway] <br> * [User-defined routing (UDR)][udr] |
 | [LocalDNS](dns-concepts.md#localdns-in-azure-kubernetes-service) | **Preconfigured** for AKS Automatic. | **Optional** for AKS Standard. |
 

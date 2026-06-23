@@ -1,7 +1,7 @@
 ---
 ms.service: azure-kubernetes-service
 ms.topic: include
-ms.date: 05/22/2026
+ms.date: 06/23/2026
 author: wangyira
 ms.author: wangamanda
 ---
@@ -18,8 +18,5 @@ The following limitations apply to AKS Automatic clusters:
   - [Dapr](../../dapr.md)
   - [Azure Machine Learning](/azure/machine-learning/how-to-attach-kubernetes-anywhere)
 - Windows nodes aren't supported.
-- The [Istio-based service mesh add-on for AKS](../../istio-deploy-ingress.md) isn't supported.
 - Migration between AKS base SKU and Automatic SKU isn't supported.
 - Migrations between AKS Automatic clusters without managed system node pools and AKS Automatic clusters with managed system node pools aren't supported.
-- Configuring [custom scraping of Prometheus metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration) and [log collection](/azure/azure-monitor/containers/kubernetes-data-collection-configmap) aren't supported.
-- Enable [ACNS observability](../../use-advanced-container-networking-services.md) during Automatic cluster creation isn't supported. You can enable ACNS observability after the cluster is created.
