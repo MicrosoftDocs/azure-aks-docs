@@ -147,7 +147,7 @@ In previous tutorials, you used a RabbitMQ container to store orders submitted b
     ```
 
 2. Open the `aks-store-quickstart.yaml` file in a text editor.
-3. Remove the existing `rabbitmq` StatefulSet, ConfigMap, and Service sections and replace the existing `order-service` Deployment section with the following content:
+3. Remove the existing `rabbitmq` StatefulSet and Service sections and replace the existing `order-service` Deployment section with the following content:
 
     ```yaml
     apiVersion: apps/v1
@@ -174,10 +174,6 @@ In previous tutorials, you used a RabbitMQ container to store orders submitted b
             env:
             - name: ORDER_QUEUE_HOSTNAME
               value: "<REPLACE_WITH_YOUR_SB_NS_HOSTNAME>" # Example: sb-store-demo-123456.servicebus.windows.net
-            - name: ORDER_QUEUE_PORT
-              value: "5671"
-            - name: ORDER_QUEUE_TRANSPORT
-              value: "tls"
             - name: ORDER_QUEUE_USERNAME
               value: "sender"
             - name: ORDER_QUEUE_PASSWORD
@@ -230,7 +226,7 @@ In previous tutorials, you used a RabbitMQ container to store orders submitted b
     ```
 
 2. Open the `aks-store-quickstart.yaml` file in a text editor.
-3. Remove the existing `rabbitmq` Deployment, ConfigMap, and Service sections and replace the existing `order-service` Deployment section with the following content:
+3. Remove the existing `rabbitmq` Deployment and Service sections and replace the existing `order-service` Deployment section with the following content:
 
     ```YAML
     apiVersion: apps/v1
@@ -257,10 +253,6 @@ In previous tutorials, you used a RabbitMQ container to store orders submitted b
             env:
             - name: ORDER_QUEUE_HOSTNAME
               value: "<REPLACE_WITH_YOUR_SB_NS_HOSTNAME>" # Example: sb-store-demo-123456.servicebus.windows.net
-            - name: ORDER_QUEUE_PORT
-              value: "5671"
-            - name: ORDER_QUEUE_TRANSPORT
-              value: "tls"
             - name: ORDER_QUEUE_USERNAME
               value: "sender"
             - name: ORDER_QUEUE_PASSWORD
