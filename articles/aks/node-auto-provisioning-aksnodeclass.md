@@ -22,7 +22,7 @@ This article explains how to configure `AKSNodeClass` resources to define Azure-
 
 ## Image family configuration
 
-The `imageFamily` field dictates the default VM image and bootstrapping logic for nodes provisioned through the `AKSNodeClass`. If you don't specify an image family, the default os version according to your Kubernetes version will be used. GPUs are supported with both image families on compatible VM sizes. For more on default os version per Kubernetes version, see our [AKS OS Version documentation](./upgrade-os-version.md). 
+The `imageFamily` field sets the default VM image and bootstrapping logic for nodes provisioned through the `AKSNodeClass`. If you don't specify an image family, the default OS version according to your Kubernetes version is used. GPUs are supported with both image families on compatible VM sizes. For more information about the default OS version per Kubernetes version, see the [AKS OS Version documentation](./upgrade-os-version.md).
 
 ### Supported image families
 
