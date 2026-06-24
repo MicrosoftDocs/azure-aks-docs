@@ -85,7 +85,7 @@ Blue-green upgrades currently don't support the following features:
 - Using blue green strategy for updates outside of Kubernetes and node image version (ex. certificate rotation, kubelet/os configuration updates, etc)
 - [Virtual machine (VM) pools](./virtual-machines-node-pools.md)
 - [Max unavailable](./upgrade-cluster.md#customize-unavailable-nodes-during-upgrade) setting
-- [Undrainable node behavior](./upgrade-options.md#option-2-handle-undrainable-nodes-honor-pdb) and [maxBlockedNodes](./upgrade-options.md#example-configuration-with-max-blocked-nodes) setting
+- [Undrainable node behavior](./upgrade-options.md#option-2-handle-undrainable-nodes-while-honoring-pdbs) and [maxBlockedNodes](./upgrade-options.md#example-configuration-with-max-blocked-nodes) setting
 
 Keep the following considerations in mind when using blue-green upgrades:
 
