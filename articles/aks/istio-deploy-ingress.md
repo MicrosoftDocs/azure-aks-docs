@@ -3,9 +3,9 @@ title: Azure Kubernetes Service (AKS) external or internal ingresses for Istio s
 description: Deploy external or internal ingresses for Istio service mesh add-on for Azure Kubernetes Service
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-author: shashankbarsin
+author: nshankar13
 ms.date: 08/07/2023
-ms.author: shasb
+ms.author: nshankar
 # Customer intent: "As a Kubernetes administrator, I want to deploy external and internal ingress gateways for the Istio service mesh on my cluster, so that I can efficiently manage application traffic routing both inside and outside my Kubernetes environment."
 ---
 
@@ -23,7 +23,9 @@ This guide assumes you followed the [documentation][istio-deploy-addon] to enabl
 ## Enable external ingress gateway
 
 > [!NOTE]
-> If you need the ingress gateway pods scheduled onto particular nodes, you can use [AKS system nodes][aks-system-nodes] or the `azureservicemesh/istio.replica.preferred` node label. The pods have node affinities with a weighted preference of `100` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`), and a weighted preference of `50` for nodes labeled `azureservicemesh/istio.replica.preferred: true`.
+> To schedule the ingress gateway pods onto specific nodes, use the `azureservicemesh/istio.replica.preferred` node label or [AKS system nodes][aks-system-nodes]. The pods have node affinities with a weighted preference of `100` for nodes labeled `azureservicemesh/istio.replica.preferred: true` and a weighted preference of `50` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`). This configuration means that if the `azureservicemesh/istio.replica.preferred: true` label isn't found or such nodes are unschedulable, pods are instead scheduled on AKS system nodes.
+> 
+> For revisions earlier than `asm-1-30`, these weights are reversed: `100` for AKS system nodes and `50` for `azureservicemesh/istio.replica.preferred: true` nodes.
 
 Use `az aks mesh enable-ingress-gateway` to enable an externally accessible Istio ingress on your AKS cluster:
 
