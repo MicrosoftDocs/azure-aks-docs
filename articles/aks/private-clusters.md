@@ -360,6 +360,16 @@ If you want to configure custom domains that can only be resolved internally, se
 
 ## Disable a public FQDN on a private AKS cluster
 
+When creating an AKS private cluster using `--enable-private-cluster`, AKS deploys the Kubernetes API server through a private endpoint inside the virtual network. By default, AKS may still create a public DNS name (public FQDN) for the API server unless `--disable-public-fqdn` is specified. The public FQDN is only a publicly resolvable DNS name, while API communication for private clusters still occurs through the private endpoint. Using `--disable-public-fqdn` removes the public DNS name and restricts cluster management access to private connectivity methods such as VPN, ExpressRoute, VNet peering, or Bastion hosts.
+
+**Recommended Guidance:**
+
+**Keep public FQDN enabled:**
+If simpler administration is preferred, DevOps pipelines use external or Microsoft-hosted agents, engineers require remote access without VPN/private connectivity, or easier operational access to the Kubernetes API server is needed.
+
+**Disable public FQDN:**
+If strong security or compliance requirements exist, enterprise private networking is already implemented, hub-and-spoke secure networking architectures are used, or cluster operations must occur exclusively through private connectivity paths.
+
 ### Disable a public FQDN on a new cluster
 
 :::zone pivot="azure-cli"
