@@ -162,7 +162,7 @@ The default cadence means there's no planned maintenance window applied.
  > [!NOTE]
  >  Use CLI version 2.61.0 or above for the `SecurityPatch` channel.
 
-- The `SecurityPatch` channel isn't compatible with an Azure Policy that uses a `deny` effect to require customer-managed key (CMK) OS disk encryption. While applying a security patch, AKS temporarily creates a VMSS (prefixed with `copy-`) in the node resource group (`MC_`) that such a policy disallows, so the upgrade fails with a `RequestDisallowedByPolicy` error. Using a customer-managed key on your node pools is still supported with `SecurityPatch`; the conflict is only with a `deny`-effect policy. If you require an organization-wide `deny` policy for CMK OS disk encryption, use the `NodeImage` channel instead.
+- The `SecurityPatch` channel isn't compatible with an Azure Policy that uses a `deny` effect to require customer-managed keys (CMK) for OS disk encryption. While applying a security patch, AKS temporarily creates a virtual machine scale set (VMSS) (prefixed with `copy-`) in the node resource group (`MC_`) that such a policy disallows, so the upgrade fails with a `RequestDisallowedByPolicy` error. Using customer-managed keys on your node pools is still supported with `SecurityPatch`; the conflict is only with a `deny`-effect policy. If you require an organization-wide `deny` policy for CMK OS disk encryption, use the `NodeImage` channel instead.
 
 ## Node OS planned maintenance windows
 
