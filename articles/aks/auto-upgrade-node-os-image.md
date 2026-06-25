@@ -158,11 +158,11 @@ The default cadence means there's no planned maintenance window applied.
 - Currently, when you set the [cluster autoupgrade channel][Autoupgrade] to `node-image`, it also automatically sets the node OS autoupgrade channel to `NodeImage`. You can't change node OS autoupgrade channel value if your cluster autoupgrade channel is `node-image`. In order to set the node OS autoupgrade channel value, check the [cluster autoupgrade channel][Autoupgrade] value isn't `node-image`. 
 
 - The `SecurityPatch` channel isn't supported on Windows OS node pools. 
+
+- The `SecurityPatch` channel isn't compatible with an Azure Policy that uses a `deny` effect to require customer-managed keys (CMK) for OS disk encryption. While applying a security patch, AKS temporarily creates a virtual machine scale set (VMSS) (prefixed with `copy-`) in the node resource group (`MC_`) that such a policy disallows, so the upgrade fails with a `RequestDisallowedByPolicy` error. Using customer-managed keys on your node pools is still supported with `SecurityPatch`; the conflict is only with a `deny`-effect policy. If you require an organization-wide `deny` policy for CMK OS disk encryption, use the `NodeImage` channel instead.
  
  > [!NOTE]
  >  Use CLI version 2.61.0 or above for the `SecurityPatch` channel.
-
-- The `SecurityPatch` channel isn't compatible with an Azure Policy that uses a `deny` effect to require customer-managed keys (CMK) for OS disk encryption. While applying a security patch, AKS temporarily creates a virtual machine scale set (VMSS) (prefixed with `copy-`) in the node resource group (`MC_`) that such a policy disallows, so the upgrade fails with a `RequestDisallowedByPolicy` error. Using customer-managed keys on your node pools is still supported with `SecurityPatch`; the conflict is only with a `deny`-effect policy. If you require an organization-wide `deny` policy for CMK OS disk encryption, use the `NodeImage` channel instead.
 
 ## Node OS planned maintenance windows
 
