@@ -25,8 +25,8 @@ AKS provides two approaches to run NVIDIA GPU workloads. Select the approach tha
 
 | Approach | Recommended for | Components AKS manages | Components you manage |
 | --- | --- | --- | --- |
-| **AKS-managed GPU node pools** (recommended) | Most scenarios that require GPU capacity to operate consistently with other AKS node pools. | NVIDIA GPU driver, Kubernetes device plugin, DCGM metrics exporter, and GPU health signals. | Your workloads. |
-| **Self-managed GPU setup** | Scenarios that require granular control over GPU driver and device plugin versions, or that standardize on the [NVIDIA GPU Operator](./nvidia-gpu-operator.md). | The NVIDIA GPU driver only, by default. | The device plugin, metrics exporter, and GPU health tooling. |
+| **AKS-managed GPU node pools** (recommended) | Most scenarios that require GPU capacity to operate consistently with other AKS node pools. | NVIDIA GPU driver, Kubernetes device plugin, GPU metrics exporter, and GPU health signals. | Your GPU workloads. |
+| **Self-managed GPU setup** | Scenarios that require granular control over GPU driver and device plugin versions, or that standardize on the [NVIDIA GPU Operator](./nvidia-gpu-operator.md). | The NVIDIA GPU driver only, by default. | Kubernetes device plugin, GPU metrics exporter, and GPU health tooling. |
 
 > [!TIP]
 > Microsoft recommends **[AKS-managed GPU node pools](./aks-managed-gpu-nodes.md)** for most scenarios. AKS installs and maintains the NVIDIA driver, device plugin, and DCGM metrics exporter on your behalf, which reduces operational overhead and simplifies GPU node pool creation to a single step. Use the self-managed approach described in this article only when you require direct control over the device plugin or other GPU software components.
