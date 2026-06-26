@@ -19,7 +19,7 @@ ms.date: 06/26/2026
 Azure CNI Powered by Cilium combines the robust control plane of Azure Container Networking Interface (CNI) with the data plane of [Cilium](https://cilium.io/) to provide high-performance networking and security.
 
 > [!TIP]
-> **AKS Automatic** uses Azure CNI Overlay powered by Cilium as its **default virtual network** - it's preconfigured on every AKS Automatic cluster with no additional setup required. If you're using AKS Standard and want this configuration, follow the steps in this article. For more information, see [What is Azure Kubernetes Service Automatic?](intro-aks-automatic.md)
+> **AKS Automatic** uses Azure CNI Overlay powered by Cilium as its **default virtual network** - it's preconfigured on every AKS Automatic cluster with no extra setup required. If you're using AKS Standard and want this configuration, follow the steps in this article. For more information, see [What is Azure Kubernetes Service Automatic?](intro-aks-automatic.md)
 
 Azure CNI Powered by Cilium provides the following benefits by making use of eBPF programs loaded into the Linux kernel and a more efficient API object structure:
 
@@ -117,7 +117,7 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 To gain capabilities such as observability into your network traffic and security features like Fully Qualified Domain Name (FQDN) based filtering and Layer 7 based network policies on your cluster, consider enabling [Advanced Container Networking services](./advanced-container-networking-services-overview.md) on your clusters.
 
-This applies to both AKS Automatic and AKS Standard clusters. If you're using AKS Automatic, the base networking is already preconfigured - enabling ACNS adds advanced observability and security features on top of the existing Cilium networking, including FQDN filtering, L7 network policies, Wireguard encryption, and container network observability.
+This recommendation applies to both AKS Automatic and AKS Standard clusters. If you're using AKS Automatic, the base networking is already preconfigured. Enabling ACNS adds advanced observability and security features on top of the existing Cilium networking, including FQDN filtering, L7 network policies, Wireguard encryption, and container network observability.
 
 ## Cluster configuration by AKS cluster mode
 
@@ -258,7 +258,7 @@ spec:
               protocol: TCP
 ```
 
-### Which Cilium features are supported in Azure CNI Powered by Cilium? Which of those require Advanced Container Networking Services?
+### Which Cilium features does Azure CNI Powered by Cilium support? Which features require Advanced Container Networking Services?
 
 | Supported feature | Without ACNS | With ACNS |
 | ----------------- | ----------- | ---------- |
