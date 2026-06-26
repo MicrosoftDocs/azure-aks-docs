@@ -1,13 +1,13 @@
 ---
 title: Configure Azure CNI Powered by Cilium in Azure Kubernetes Service (AKS)
-description: Learn how to create an Azure Kubernetes Service (AKS) cluster with Azure CNI Powered by Cilium.
+description: Learn how to create an Azure Kubernetes Service (AKS) cluster with Azure CNI Powered by Cilium. This networking configuration is the default for AKS Automatic clusters and available as an option for AKS Standard clusters.
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli, build-2023
-ms.date: 12/16/2025
+ms.date: 06/26/2026
 # Customer intent: As a cloud architect, I want to configure an AKS cluster with Azure CNI Powered by Cilium, so that I can achieve high-performance networking and enhanced security for my containerized applications.
 ---
 
@@ -17,6 +17,9 @@ ms.date: 12/16/2025
 > [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321738)
 
 Azure CNI Powered by Cilium combines the robust control plane of Azure Container Networking Interface (CNI) with the data plane of [Cilium](https://cilium.io/) to provide high-performance networking and security.
+
+> [!TIP]
+> **AKS Automatic** uses Azure CNI Overlay powered by Cilium as its **default virtual network** - it's preconfigured on every AKS Automatic cluster with no extra setup required. If you're using AKS Standard and want this configuration, follow the steps in this article. For more information, see [What is Azure Kubernetes Service Automatic?](intro-aks-automatic.md)
 
 Azure CNI Powered by Cilium provides the following benefits by making use of eBPF programs loaded into the Linux kernel and a more efficient API object structure:
 
@@ -28,6 +31,9 @@ Azure CNI Powered by Cilium provides the following benefits by making use of eBP
 
 ## IP Address Management (IPAM) with Azure CNI Powered by Cilium
 
+> [!NOTE]
+> If you're using **AKS Automatic**, the overlay network option is the default and is preconfigured for you. The following configuration options apply to **AKS Standard** clusters only.
+
 You can deploy Azure CNI Powered by Cilium with two different methods for assigning pod IPs:
 
 - Assign IP addresses from an overlay network (similar to Azure CNI Overlay mode)
@@ -35,7 +41,9 @@ You can deploy Azure CNI Powered by Cilium with two different methods for assign
 
 If you aren't sure which option to select, read [Choose a network model](./concepts-network-azure-cni-overlay.md#choose-a-network-model)
 
-## Versions
+## Supported Kubernetes and Cilium versions
+
+The following table shows the minimum Cilium version for each Kubernetes version. These version requirements apply to both AKS Automatic and AKS Standard clusters using Azure CNI Powered by Cilium.
 
 | Kubernetes version | Minimum Cilium version |
 | ------------------ | ---------------------- |
@@ -105,9 +113,25 @@ Azure CNI powered by Cilium currently has the following limitations:
 - Cilium Endpoint Slices are supported in Kubernetes version 1.32 and above. Cilium Endpoint Slices don't support configuration of how Cilium Endpoints are grouped. Priority namespace through `cilium.io/ces-namespace` isn't supported.
 - Cilium uses Cilium identities as unique identity for provisioning endpoints, so high-churning workloads such as Spark jobs generate high count of Cilium identities. To avoid workloads hitting Cilium identity limits (65535), excluding Spark job's labels like `!spark-app-name` and `!spark-app-selector` in the Cilium configmap can significantly reduce Cilium identity generation. For more details on Cilium identity exclusion rules, check [the official Cilium label documentation](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels).
 
-## Considerations
+## Enable Advanced Container Networking Services for observability and security
 
 To gain capabilities such as observability into your network traffic and security features like Fully Qualified Domain Name (FQDN) based filtering and Layer 7 based network policies on your cluster, consider enabling [Advanced Container Networking services](./advanced-container-networking-services-overview.md) on your clusters.
+
+This recommendation applies to both AKS Automatic and AKS Standard clusters. If you're using AKS Automatic, the base networking is already preconfigured. Enabling ACNS adds advanced observability and security features on top of the existing Cilium networking, including FQDN filtering, L7 network policies, Wireguard encryption, and container network observability.
+
+## Cluster configuration by AKS cluster mode
+
+The steps required to use Azure CNI Powered by Cilium depend on your AKS cluster mode: [AKS Automatic]() or [AKS Standard]().
+
+### AKS Automatic clusters
+
+Azure CNI Overlay powered by Cilium is the default virtual network for AKS Automatic clusters. This configuration is fully managed - you don't need to provision a virtual network, select a CNI plugin, or specify a data plane. AKS Automatic also preconfigures LocalDNS, a managed NAT gateway for egress, and the application routing add-on for ingress.
+
+No configuration steps are required. If you want to add advanced observability or security features on top of the existing networking, see Advanced Container Networking Services.
+
+### AKS Standard clusters
+
+On AKS Standard, Azure CNI Powered by Cilium is an optional networking configuration. Use the steps in this article to create a cluster with the Cilium data plane. You can choose from overlay, virtual network, or node subnet IP assignment modes.
 
 ## Prerequisites
 
@@ -115,7 +139,7 @@ To gain capabilities such as observability into your network traffic and securit
 
 ## Create a new AKS Cluster with Azure CNI Powered by Cilium
 
-The following sections use the [`az aks create`][az-aks-create] command to create a cluster and assign IP addresses.
+The following sections use the [`az aks create`][az-aks-create] command to create an AKS Standard cluster and assign IP addresses. If you're using AKS Automatic, this configuration is already applied - no cluster creation steps are required for networking.
 
 ### Option 1: Assign IP addresses from an overlay network
 
@@ -166,7 +190,7 @@ az network vnet subnet create \
   -o none
 ```
 
-Create the cluster using `--network-dataplane cilium`:
+Create the cluster using the [`az aks create`](/cli/azure/aks#az_aks_create) command with `--network-dataplane cilium` to specify the Cilium data plane. Replace the values for `<clusterName>`, `<resourceGroupName>`, `<location>`, `<subscriptionId>`, and `<vnetName>`, and ensure that the `--vnet-subnet-id` and `--pod-subnet-id` values point to the correct subnets created in the previous step.
 
 ```azurecli-interactive
 az aks create \
@@ -196,6 +220,10 @@ az aks create \
 ```
 
 ## Frequently asked questions
+
+### Is Azure CNI Powered by Cilium available on AKS Automatic clusters?
+
+Yes. Azure CNI Overlay powered by Cilium is the **default virtual network** on every AKS Automatic cluster and requires no configuration. AKS Automatic also preconfigures LocalDNS and a managed NAT gateway for egress. If you want additional observability or security features such as FQDN filtering, L7 network policies, or Wireguard encryption, you can enable Advanced Container Networking Services on your AKS Automatic cluster.
 
 ### Can I customize Cilium configuration?
 
@@ -230,7 +258,7 @@ spec:
               protocol: TCP
 ```
 
-### Which Cilium features are supported in Azure managed CNI? Which of those require Advanced Container Networking Services?
+### Which Cilium features does Azure CNI Powered by Cilium support? Which features require Advanced Container Networking Services?
 
 | Supported feature | Without ACNS | With ACNS |
 | ----------------- | ----------- | ---------- |
@@ -342,7 +370,7 @@ If the AKS clusters are on [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure
 
 You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. This feature also allows you to control your IPv6 traffic with the Cilium Network Policy engine.
 
-You must have Kubernetes version 1.29 or greater.
+You must have Kubernetes version 1.29 or greater. This applies to both AKS Automatic and AKS Standard clusters.
 
 ### Set up Overlay clusters with Azure CNI Powered by Cilium
 
@@ -366,8 +394,10 @@ az aks create \
 
 ## Related content
 
-For more information about AKS networking, see the following resources:
+For more information about AKS networking and AKS Automatic, see the following resources:
 
+- [What is AKS Automatic?](intro-aks-automatic.md)
+- [Quickstart: Create an AKS Automatic cluster](./automatic/quick-automatic-managed-network.md)
 - [Upgrade Azure CNI IPAM modes and data plane technology](update-azure-cni.md).
 - [Use a static IP address with the Azure Kubernetes Service (AKS) load balancer](static-ip.md)
 - [Use an internal load balancer with Azure Kubernetes Service (AKS)](internal-lb.md)
