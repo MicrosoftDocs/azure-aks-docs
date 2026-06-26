@@ -76,13 +76,13 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 ## Self-managed GPU setup
 
 > [!TIP]
-> For the recommended managed experience, see [Create an AKS-managed GPU node pool](./aks-managed-gpu-nodes.md), in which AKS installs and maintains the driver, device plugin, and DCGM metrics exporter on your behalf. Proceed with the following steps only when you require direct control over the device plugin or other GPU software components.
+> For the recommended managed experience, see [Create an AKS-managed GPU node pool](./aks-managed-gpu-nodes.md). AKS installs and maintains the driver, device plugin, and DCGM metrics exporter on your behalf. Proceed with the following steps only when you require direct control over the device plugin or other GPU software components.
 
 The self-managed GPU setup requires you to install several NVIDIA software components, including the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file) and the GPU driver.
 
 ### NVIDIA device plugin installation
 
-NVIDIA device plugin installation is required when using GPUs in this self-managed setup. In some cases, the installation is handled automatically, such as when using the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html). Alternatively, you can manually install the NVIDIA device plugin.
+You need to install the NVIDIA device plugin when using GPUs in this self-managed setup. In some cases, the installation is handled automatically, such as when using the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html). Alternatively, you can manually install the NVIDIA device plugin.
 
 #### Manually install the NVIDIA device plugin
 
@@ -147,7 +147,7 @@ This command adds a node pool named *gpunp* to *myAKSCluster* in *myResourceGrou
 * `--max-count`: Configures the cluster autoscaler to maintain a maximum of three nodes in the node pool.
 
 > [!NOTE]
-> Taints and VM sizes can only be set for node pools during node pool creation, but you can update autoscaler settings at any time.
+> You can set taints and VM sizes only during node pool creation, but you can update autoscaler settings at any time.
 
 ---
 
