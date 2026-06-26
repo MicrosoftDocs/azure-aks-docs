@@ -296,7 +296,7 @@ All annotations are optional. If the annotation isn't specified, the default val
 
 ## Use identity bindings and direct federation in the same workload
 
-[Identity bindings][identity-bindings-concepts] are a preview feature that extends workload identity to support large-scale AKS environments. Instead of creating a federated identity credential (FIC) per cluster, identity bindings let multiple clusters share a single user-assigned managed identity using one FIC. When enabled, AKS routes pod token requests through an identity binding proxy webhook that handles token exchange on behalf of the workload.
+[Identity bindings][identity-bindings-concepts] are a preview feature that extends workload identity to support large-scale AKS environments. Instead of creating a federated identity credential (FIC) for each cluster, identity bindings let multiple clusters share a single user-assigned managed identity through one FIC. When enabled, AKS routes pod token requests through an identity binding proxy webhook that handles token exchange on behalf of the workload.
 
 A projected service account token has a single audience. When identity bindings are enabled, the identity binding webhook sets the default token referenced by `AZURE_FEDERATED_TOKEN_FILE` to the audience `api://AKSIdentityBinding`, which the identity binding proxy uses.
 
