@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 06/19/2026
+ms.date: 06/29/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -123,13 +123,17 @@ Fleet Manager doesn't change the configuration of AKS cluster auto-upgrade setti
 
 If you want Fleet Manager to manage auto-upgrades, disable auto-upgrade on each member AKS cluster.
 
-### AKS Cluster maintenance window support
+### AKS cluster maintenance window support
 
-Fleet Manager respects the per-cluster maintenance window settings for each member cluster.
+A maintenance window defines when a cluster can safely be upgraded.
 
-Maintenance windows don't trigger updates, and updates don't begin immediately when a window opens. Maintenance windows only define when updates can be applied to a cluster.
+Fleet Manager respects the [per-cluster maintenance window settings][aks-maintenance-windows] for each member cluster.
 
-For more information, see the documentation for [AKS cluster maintenance windows][aks-maintenance-windows].
+When a maintenance window opens, upgrades don't start immediately. Reasons include:
+
+* Concurrency limits: even if a maintenance window opens, a cluster might not be upgraded due to the concurrency settings for the strategy. 
+* Regular polling: Fleet Manager polls for open maintenance windows every 60 minutes, so the maximum wait time is 60 minutes from window open.
+
 
 ### What is the scope of consistent node image upgrades?
 
