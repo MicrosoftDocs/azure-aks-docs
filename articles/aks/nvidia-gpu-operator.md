@@ -45,7 +45,20 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 > [!NOTE]
 > The NVIDIA GPU Operator is not compatible with multiple OS versions on the same AKS cluster.
 
+### [Standard node pool](#tab/standard-node-pool)
+
 1. Skip automatic GPU driver installation by creating an NVIDIA GPU-enabled node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and setting the API field `--gpu-driver` to the value `none`. Setting this API field to `none` during node pool creation skips the default GPU driver installation, see [this example](gpu-cluster.md#skip-gpu-driver-installation). Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
+
+```
+az aks nodepool add \
+--resource-group myResourceGroup \
+--cluster-name myAKSCluster \
+--name gpunp \
+--node-count 1 \
+--node-vm-size Standard_NC6s_v3 \
+--node-taints sku=gpu:NoSchedule \
+--gpu-driver none
+```
 
 2. Follow the NVIDIA documentation to [Install the GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html).
 
@@ -54,6 +67,27 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 > [!NOTE]
 > There might be additional considerations to take when using the NVIDIA GPU Operator and deploying on SPOT instances. Please refer to <https://github.com/NVIDIA/gpu-operator/issues/577>
 
+### [Node Auto Provisioning node pool](#tab/nap-nodes)
+
+1. Skip automatic GPU driver installation by setting the AKSNodeClass CRD `spec.gpu.mode` field to the value `none`. Setting this AKSNodeClass field to `none` skips the default GPU driver installation, see [this example](./node-auto-provisioning-aksnodeclass.md#gpu-settings). The process replaces any existing nodes that use this AKSNodeClass CRD with a new node that has no GPU driver installed.
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: my-node-class
+spec:
+  gpu:
+    mode: 
+      none
+```
+
+1. Follow the NVIDIA documentation to [Install the GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html).
+
+1. After you install the GPU Operator, check that your [GPUs are schedulable](gpu-cluster.md#confirm-that-gpus-are-schedulable) and [run a GPU workload](gpu-cluster.md#run-a-gpu-enabled-workload).
+
+> [!NOTE]
+> There might be additional considerations to take when using the NVIDIA GPU Operator and deploying on SPOT instances. For more information, see <https://github.com/NVIDIA/gpu-operator/issues/577>.
 
 ## Next steps
 
@@ -63,6 +97,7 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 
 <!-- LINKS -->
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-nodepool-add]: /cli/azure/aks#az-aks-nodepool-add
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
