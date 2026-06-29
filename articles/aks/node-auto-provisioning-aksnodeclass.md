@@ -371,6 +371,19 @@ spec:
       transparentHugePageDefrag: "defer+madvise" # Values: [always, defer, defer+madvise, madvise, never]  Default: madvise
 ```
 
+## GPU settings
+
+The following field allows user to allow custom GPU driver installation, such as with NVIDIA GPU Operator. 
+
+```yaml 
+spec:
+  gpu:
+    mode: 
+      # acceptable values: [driver, none] default(or if not specified): driver
+      # none skips gpu driver installation, driver has NAP manage the GPU driver installation  
+      none
+```
+
 ## Azure resource tags configuration
 
 You can specify Azure resource tags that apply to all VM instances created using a particular `AKSNodeClass` resource. Tags are useful for cost tracking, resource organization, and compliance requirements.
@@ -447,6 +460,14 @@ spec:
   # - Other configurations: 110 pods
   # Range: 10-250
   maxPods: 30
+
+  # GPU driver installation (optional)
+  # Default: driver - NAP manages gpu driver installation
+  # none skips gpu driver installation
+  # Valid values: driver, none
+  gpu:
+    mode: 
+      driver
 
   # Azure resource tags (optional)
   # Applied to all VM instances created with this AKSNodeClass
