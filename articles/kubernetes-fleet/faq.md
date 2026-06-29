@@ -129,7 +129,10 @@ A maintenance window defines when a cluster can safely be upgraded.
 
 Fleet Manager respects the [per-cluster maintenance window settings][aks-maintenance-windows] for each member cluster.
 
-When a window opens, upgrades don't start immediately. Fleet Manager polls for open maintenance windows every 60 minutes. This means the maximum time you can wait for an upgrade to start is 60 minutes.
+When a maintenance window opens, upgrades don't start immediately. Reasons include:
+
+* Concurrency limits: even if a maintenance window opens a cluster may not be upgraded due to the concurrency settings for the strategy. 
+* Regular polling: Fleet Manager polls for open maintenance windows every 60 minutes, meaning the maximum wait time is 60 minutes from window open.
 
 ### What is the scope of consistent node image upgrades?
 
