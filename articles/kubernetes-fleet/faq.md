@@ -77,7 +77,7 @@ Fleet Manager automatically reconciles the hub cluster as part of periodic stand
 
 When a hub cluster is `Failed` it doesn't generate a cost, but when it moves to `Running` a cost is generated. 
 
-## Multi-cluster updates FAQs
+## Multi-cluster updates - automated or manual FAQs
 
 ### What clusters does multi-cluster updates support?
 
