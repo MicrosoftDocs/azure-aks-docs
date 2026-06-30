@@ -1,20 +1,35 @@
 ---
-title: Vertical pod autoscaling in Azure Kubernetes Service (AKS)
-description: Learn about vertical pod autoscaling in Azure Kubernetes Service (AKS) using the Vertical Pod Autoscaler (VPA).
+title: Vertical Pod Autoscaling in Azure Kubernetes Service (AKS)
+description: Learn about vertical pod autoscaling in Azure Kubernetes Service (AKS), including AKS Automatic where Vertical Pod Autoscaler (VPA) is preconfigured and AKS Standard where you configure it explicitly.
 ms.topic: overview
 ms.custom: devx-track-azurecli
 ms.date: 03/24/2026
 author: davidsmatlak
 ms.author: davidsmatlak
-
+ms.service: azure-kubernetes-service
 # Customer intent: "As an AKS administrator, I want to implement Vertical Pod Autoscaler so that I can optimize resource allocation for my containers based on usage patterns, enhancing overall cluster efficiency and performance."
 ---
 
 # Vertical pod autoscaling in Azure Kubernetes Service (AKS)
 
+**Applies to:** :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
+
 This article provides an overview of using the Vertical Pod Autoscaler (VPA) in Azure Kubernetes Service (AKS), which is based on the open source [Kubernetes](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler) version.
 
+For most production workloads, AKS Automatic is the recommended default AKS experience. AKS Automatic is production ready by default and includes VPA as a preconfigured cluster capability. In AKS Standard, you configure and manage VPA explicitly.
+
 When configured, the VPA automatically sets resource requests and limits on containers per workload based on past usage. The VPA frees up CPU and Memory for other pods and helps ensure effective utilization of your AKS clusters. The Vertical Pod Autoscaler provides recommendations for resource usage over time. To manage sudden increases in resource usage, use the [Horizontal Pod Autoscaler][horizontal-pod-autoscaling], which scales the number of pod replicas as needed.
+
+To learn more about AKS Automatic, see [What is Azure Kubernetes Service (AKS) Automatic?](./intro-aks-automatic.md)
+
+## VPA in AKS Automatic and AKS Standard
+
+VPA is available in both AKS cluster modes, but setup differs:
+
+- **AKS Automatic**: VPA is preconfigured.
+- **AKS Standard**: VPA is optional and configured explicitly.
+
+For most production scenarios, start with AKS Automatic to use production-ready defaults and reduce operational overhead.
 
 ## Benefits
 
@@ -72,19 +87,21 @@ There are four modes in which the VPA operates:
 
 ## Deployment pattern for application development
 
-If you're unfamiliar with VPA, we recommend the following deployment pattern during application development to identify its unique resource utilization characteristics, test VPA to verify it's functioning properly, and test alongside other Kubernetes components to optimize resource utilization of the cluster:
+If you're unfamiliar with VPA, use the following deployment pattern during application development to identify each application's unique resource utilization characteristics, test VPA to verify it's functioning properly, and test alongside other Kubernetes components to optimize resource utilization of the cluster:
 
 1. Set `UpdateMode = "Off"` in your production cluster and run VPA in recommendation mode so you can test and gain familiarity with VPA. `UpdateMode = "Off"` can avoid introducing a misconfiguration that can cause an outage.
-1. Establish observability first by collecting actual resource utilization telemetry over a given period of time, which helps you understand the behavior and any signs of issues from container and pod resources influenced by the workloads running on them.
+1. Establish observability first by collecting actual resource utilization telemetry over a given period of time. This telemetry helps you understand the behavior and any signs of issues from container and pod resources influenced by the workloads running on those containers and pods.
 1. Get familiar with the monitoring data to understand the performance characteristics. Based on this insight, set the desired requests/limits accordingly and then in the next deployment or upgrade.
 1. Set `updateMode` value to `Recreate`, `InPlaceOrRecreate`, or `Initial` depending on your requirements.
 
-## Next steps
+In AKS Automatic, VPA is already available as a preconfigured capability, so focus on policy and mode tuning. In AKS Standard, complete VPA setup before applying the rollout pattern.
 
-To learn how to set up the Vertical Pod Autoscaler on your AKS cluster, see [Use the Vertical Pod Autoscaler in AKS](./use-vertical-pod-autoscaler.md).
+## Related content
+
+- [Create an Azure Kubernetes Service (AKS) Automatic cluster](./automatic/quick-automatic-managed-network.md)
+- [Use the Vertical Pod Autoscaler in AKS](./use-vertical-pod-autoscaler.md)
 
 <!-- EXTERNAL LINKS -->
-[pod-disruption-budget]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
 [vpa-upstream-doc]: https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/features.md#in-place-updates-inplaceorrecreate
 [resize-container]:https://kubernetes.io/docs/tasks/configure-pod-container/resize-container-resources/
 <!-- INTERNAL LINKS -->
