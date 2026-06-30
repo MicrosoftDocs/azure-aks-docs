@@ -1,27 +1,37 @@
 ---
-title: Kubernetes Event-driven Autoscaling (KEDA)
-description: Simplified application autoscaling with Kubernetes Event-driven Autoscaling (KEDA) add-on.
+title: Kubernetes Event-Driven Autoscaling (KEDA) in Azure Kubernetes Service (AKS)
+description: Learn how to use KEDA for event-driven autoscaling in AKS, including AKS Automatic where KEDA is preconfigured by default and AKS Standard where KEDA is enabled as an add-on.
 author: tomkerkhove
 ms.topic: concept-article
 ms.date: 05/23/2025
-ms.author: tomkerkhove
+ms.service: azure-kubernetes-service
+ms.author: schaffererin
 # Customer intent: As a cloud engineer, I want to implement event-driven autoscaling in my Kubernetes environment using KEDA, so that I can optimize my application performance and resource usage while ensuring cost efficiency.
 ---
 
-# Simplified application autoscaling with Kubernetes Event-driven Autoscaling (KEDA) add-on
+# Simplified application autoscaling with Kubernetes Event-driven Autoscaling (KEDA) add-on in Azure Kubernetes Service (AKS)
 
 [!INCLUDE [change value callout](./includes/keda/change-value-callout.md)]
 
-Kubernetes Event-driven Autoscaling (KEDA) is a single-purpose and lightweight component that strives to make application autoscaling simple and is a Cloud Native Computing Federation (CNCF) Graduate project.
+Kubernetes Event-driven Autoscaling (KEDA) is a single-purpose and lightweight component that makes application autoscaling simple. It's a Cloud Native Computing Foundation (CNCF) Graduate project. KEDA uses event-driven autoscaling to scale your application to meet demand in a sustainable and cost-efficient manner with scale-to-zero.
 
-It applies event-driven autoscaling to scale your application to meet demand in a sustainable and cost-efficient manner with scale-to-zero.
+For most production workloads, AKS Automatic is the recommended default AKS experience. AKS Automatic is production ready by default and includes KEDA preconfigured on the cluster. If you use AKS Standard, you can enable KEDA by using the managed KEDA add-on.
 
-The KEDA add-on makes it even easier by deploying a managed KEDA installation, providing you with [a rich catalog of Azure KEDA scalers][keda-scalers] that you can scale your applications with on your Azure Kubernetes Services (AKS) cluster.
+To learn more about AKS Automatic, see [What is Azure Kubernetes Service (AKS) Automatic?](./intro-aks-automatic.md)
 
 > [!NOTE]
-> KEDA version 2.15+ introduces a breaking change that [removes pod identity support](https://github.com/kedacore/keda/issues/5035). We recommend moving over to workload identity for your authentication if you're using pod identity. While the KEDA managed add-on doesn't currently run KEDA version 2.15+, it will begin running it in the AKS preview version 1.32.
+> KEDA version 2.15+ introduces a breaking change that [removes pod identity support](https://github.com/kedacore/keda/issues/5035). We recommend moving over to workload identity for your authentication if you're using pod identity. While the KEDA managed add-on doesn't currently run KEDA version 2.15+, the managed add-on will begin running KEDA 2.15+ in AKS preview version 1.32.
 >
 > For more information on how to securely scale your applications with workload identity, read our [tutorial][keda-workload-identity]. To view KEDA's breaking change/deprecation policy, read their [official documentation][keda-support-policy].
+
+## KEDA in AKS Automatic and AKS Standard
+
+KEDA is available in both AKS cluster modes, but the setup path is different:
+
+- **AKS Automatic**: KEDA is preconfigured and ready to use.
+- **AKS Standard**: Enable KEDA by turning on the AKS managed add-on.
+
+For most production scenarios, start with AKS Automatic to use production-ready defaults and reduce cluster management overhead.
 
 ## Architecture
 
@@ -34,26 +44,45 @@ The KEDA add-on makes it even easier by deploying a managed KEDA installation, p
 
 Learn more about how KEDA works in the [official KEDA documentation][keda-architecture].
 
-## Installation
+## Installation and enablement
 
-KEDA can be added to your Azure Kubernetes Service (AKS) cluster by enabling the KEDA add-on using an [ARM template][keda-arm] or [Azure CLI][keda-cli].
+### AKS Automatic
 
-The KEDA add-on provides a fully supported installation of KEDA that is integrated with AKS.
+KEDA is preconfigured in AKS Automatic. No separate KEDA add-on installation step is required.
+
+### AKS Standard
+
+Enable KEDA on AKS Standard by using one of the following methods:
+
+- [Enable the KEDA add-on with Azure CLI][keda-cli]
+- [Enable the KEDA add-on with an ARM template][keda-arm]
+
+The managed KEDA add-on provides a fully supported KEDA installation integrated with AKS.
 
 ## Capabilities and features
 
 KEDA provides the following capabilities and features:
 
-- Build sustainable and cost-efficient applications with scale-to-zero
-- Scale application workloads to meet demand using [a rich catalog of Azure KEDA scalers][keda-scalers]
-- Autoscale applications with `ScaledObjects`, such as Deployments, `StatefulSets`, or any custom resource that defines `/scale` subresource
-- Autoscale job-like workloads with `ScaledJobs`
-- Use production-grade security by decoupling autoscaling authentication from workloads
-- Bring-your-own external scaler to use tailor-made autoscaling decisions
-- Integrate with [Microsoft Entra Workload ID][workload-identity] for authentication
+- Scale workloads to zero when demand drops.
+- Scale application workloads to meet demand using [Azure KEDA scalers][keda-scalers].
+- Autoscale applications by using `ScaledObjects`, such as Deployments, `StatefulSets`, or any custom resource that defines the `/scale` subresource.
+- Autoscale job-like workloads by using `ScaledJobs`.
+- Use production-grade security by decoupling autoscaling authentication from workloads.
+- Bring your own external scaler for custom autoscaling logic.
+- Integrate with [Microsoft Entra Workload ID][workload-identity] for authentication.
+
+In AKS Automatic, you get these event-driven autoscaling capabilities by default because the cluster is preconfigured with KEDA.
 
 > [!NOTE]
-> If you plan to use workload identity, [enable the workload identity add-on][workload-identity-deploy] before enabling the KEDA add-on.
+> If you plan to use workload identity on AKS Standard, [enable workload identity][workload-identity-deploy] before enabling the KEDA add-on.
+
+## Production guidance
+
+Use this guidance to choose your cluster mode:
+
+- Choose AKS Automatic when you want a production-ready default experience with KEDA preconfigured.
+- Choose AKS Standard when you need deeper cluster-level customization and explicit add-on management.
+- Use KEDA in either mode for event-driven autoscaling workloads.
 
 ## Add-on limitations
 
@@ -80,10 +109,11 @@ For GA Kubernetes versions, AKS offers full support of the corresponding KEDA mi
 - [AKS support policies][support-policies]
 - [Azure support FAQ][azure-support-faq]
 
-## Next steps
+## Related content
 
-- [Enable the KEDA add-on with an ARM template][keda-arm]
-- [Enable the KEDA add-on with the Azure CLI][keda-cli]
+- [Create an AKS Automatic cluster](./automatic/quick-automatic-managed-network.md)
+- [Enable the KEDA add-on with an ARM template (AKS Standard)][keda-arm]
+- [Enable the KEDA add-on with the Azure CLI (AKS Standard)][keda-cli]
 - [Troubleshoot KEDA add-on problems][keda-troubleshoot]
 - [Autoscale a .NET Core worker processing Azure Service Bus Queue messages][keda-sample]
 - [View the upstream KEDA docs][keda]
