@@ -36,7 +36,7 @@ Both networking models have multiple supported options for CNI plugins. The main
 
 ### Overlay networks
 
-Overlay networking is the most common networking model used in Kubernetes. Overlay networking assigns pod IPs from a separate pod CIDR that's distinct from the node subnet in the Vet. This configuration allows for simpler and often better scalability than the flat network model.
+Overlay networking is the most common networking model used in Kubernetes. Overlay networking assigns pod IPs from a separate pod CIDR that's distinct from the node subnet in the VNet. This configuration allows for simpler and often better scalability than the flat network model.
 
 In overlay networks, pods can communicate with each other directly. Traffic that leaves the cluster is Source Network Address Translated (SNAT'd) to the node's IP address. Inbound pod IP traffic is routed through a service, such as a load balancer. The pod IP address is then "hidden" behind the node's IP address. This approach reduces the number of IP addresses required for virtual networks in your clusters.
 
