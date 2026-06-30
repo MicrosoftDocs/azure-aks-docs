@@ -94,6 +94,11 @@ The following sections provide links to design and deployment information for st
 * [Create the infrastructure for deploying highly available GitHub Actions on Azure Kubernetes Service (AKS)](./github-actions-azure-files-create-infrastructure.md)
 * [Deploy and test GitHub Actions on Azure Kubernetes Service (AKS)](./github-actions-azure-files-deploy-test.md)
 
+> [!NOTE]
+> Although StatefulSets provide persistent identities and storage, [Azure Spot node pools](spot-node-pool.md) are not recommended for production-critical stateful workloads.
+> Spot VMs can be evicted with little notice when Azure reclaims capacity, resulting in abrupt node termination and potential delays in volume recovery or pod rescheduling. For >workloads that depend on persistent data and high availability, use regular node pools and appropriate storage resiliency mechanisms.
+> Azure Spot node pools should be reserved for interruptible workloads that can tolerate unexpected node loss
+
 ## Contributors
 
 *Microsoft maintains this article. The following contributors originally wrote it:*
