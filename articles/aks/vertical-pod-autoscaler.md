@@ -87,10 +87,10 @@ There are four modes in which the VPA operates:
 
 ## Deployment pattern for application development
 
-If you're unfamiliar with VPA, we recommend the following deployment pattern during application development to identify each application's unique resource utilization characteristics, test VPA to verify it's functioning properly, and test alongside other Kubernetes components to optimize resource utilization of the cluster:
+If you're unfamiliar with VPA, use the following deployment pattern during application development to identify each application's unique resource utilization characteristics, test VPA to verify it's functioning properly, and test alongside other Kubernetes components to optimize resource utilization of the cluster:
 
 1. Set `UpdateMode = "Off"` in your production cluster and run VPA in recommendation mode so you can test and gain familiarity with VPA. `UpdateMode = "Off"` can avoid introducing a misconfiguration that can cause an outage.
-1. Establish observability first by collecting actual resource utilization telemetry over a given period of time, which helps you understand the behavior and any signs of issues from container and pod resources influenced by the workloads running on those containers and pods.
+1. Establish observability first by collecting actual resource utilization telemetry over a given period of time. This telemetry helps you understand the behavior and any signs of issues from container and pod resources influenced by the workloads running on those containers and pods.
 1. Get familiar with the monitoring data to understand the performance characteristics. Based on this insight, set the desired requests/limits accordingly and then in the next deployment or upgrade.
 1. Set `updateMode` value to `Recreate`, `InPlaceOrRecreate`, or `Initial` depending on your requirements.
 
