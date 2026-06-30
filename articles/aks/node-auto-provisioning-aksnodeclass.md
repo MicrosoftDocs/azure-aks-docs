@@ -3,7 +3,7 @@ title: Configure AKSNodeClass Resources for Node Auto-Provisioning (NAP) in Azur
 description: Learn how to configure Azure-specific settings for AKS node auto-provisioning using AKSNodeClass resources.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 07/25/2025
+ms.date: 06/5/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -22,11 +22,12 @@ This article explains how to configure `AKSNodeClass` resources to define Azure-
 
 ## Image family configuration
 
-The `imageFamily` field dictates the default VM image and bootstrapping logic for nodes provisioned through the `AKSNodeClass`. If you don't specify an image family, the default is `Ubuntu2204`. GPUs are supported with both image families on compatible VM sizes.
+The `imageFamily` field sets the default VM image and bootstrapping logic for nodes provisioned through the `AKSNodeClass`. If you don't specify an image family, the default OS version according to your Kubernetes version is used. GPUs are supported with both image families on compatible VM sizes. For more information about the default OS version per Kubernetes version, see the [AKS OS Version documentation](./upgrade-os-version.md).
 
 ### Supported image families
 
-- **`Ubuntu`**: Ubuntu 22.04 Long Term Support (LTS) is the default Linux distribution for AKS nodes.
+- **`Ubuntu`**: Ubuntu is the default Linux distribution for AKS nodes.
+  - OS version defaults change based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes versions 1.25 to 1.33. Ubuntu 24.04 is default for Kubernetes versions 1.34 and later.
 - **`AzureLinux`**: Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more information, see the [Azure Linux documentation](/azure/aks/use-azure-linux)
 
 #### Example image family configuration
@@ -370,6 +371,19 @@ spec:
       transparentHugePageDefrag: "defer+madvise" # Values: [always, defer, defer+madvise, madvise, never]  Default: madvise
 ```
 
+## GPU settings
+
+The following field allows user to allow custom GPU driver installation, such as with NVIDIA GPU Operator. 
+
+```yaml 
+spec:
+  gpu:
+    mode: 
+      # acceptable values: [driver, none] default(or if not specified): driver
+      # none skips gpu driver installation, driver has NAP manage the GPU driver installation  
+      none
+```
+
 ## Azure resource tags configuration
 
 You can specify Azure resource tags that apply to all VM instances created using a particular `AKSNodeClass` resource. Tags are useful for cost tracking, resource organization, and compliance requirements.
@@ -446,6 +460,14 @@ spec:
   # - Other configurations: 110 pods
   # Range: 10-250
   maxPods: 30
+
+  # GPU driver installation (optional)
+  # Default: driver - NAP manages gpu driver installation
+  # none skips gpu driver installation
+  # Valid values: driver, none
+  gpu:
+    mode: 
+      driver
 
   # Azure resource tags (optional)
   # Applied to all VM instances created with this AKSNodeClass

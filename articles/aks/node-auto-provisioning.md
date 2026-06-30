@@ -1,6 +1,6 @@
 --- 
 title: Overview of Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS)
-description: Learn about node auto-provisioning in AKS, including how it works, prerequisites, upgrade behavior, limitations, and resources to get started.
+description: Learn about node auto-provisioning in AKS, including how it works, upgrade behavior, prerequisites, limitations, and when to use AKS Automatic as the recommended production-ready default.
 ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
@@ -14,6 +14,8 @@ author: wdarko1
 
 This article provides an overview of node auto-provisioning (NAP) in Azure Kubernetes Service (AKS), including how it works, upgrade behavior, prerequisites, limitations, and resources to get started.
 
+For most production AKS workloads, AKS Automatic is the recommended default. AKS Automatic includes NAP as a preconfigured capability and provides a production-ready operational baseline with SLA-backed pod readiness.
+
 ## What is node auto-provisioning in AKS?
 
 When you deploy workloads onto AKS, you need to select the appropriate virtual machine (VM) size as part of your node pool configuration. As your workloads become more complex, you might have different workloads with varying resource requirements, which makes it more difficult to design your VM configuration for numerous resource requests.
@@ -22,8 +24,20 @@ Node auto-provisioning (NAP) simplifies this process by automatically provisioni
 
 NAP automatically deploys, configures, and manages Karpenter on your AKS clusters and is based on the open-source [Karpenter](https://karpenter.sh) and [AKS Karpenter provider][aks-karpenter-provider] projects.
 
-> [!TIP]
-> On [AKS Automatic](./intro-aks-automatic.md) clusters, NAP is preconfigured and backed by a [pod readiness SLA](https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services) that guarantees 99.9% of qualifying pod readiness operations complete within 5 minutes. This means your workloads start running on the right-sized nodes promptly, without manual VM selection or capacity planning.
+In AKS Automatic, NAP is preconfigured by default. In AKS Standard, you enable and configure NAP explicitly.
+
+## Choose AKS Automatic or AKS Standard for NAP
+
+Use the following guidance to select your starting point:
+
+| Scenario | Recommended path | Why |
+| -------- | ---------------- | --- |
+| Most production workloads | AKS Automatic | NAP is preconfigured, pod readiness is SLA-backed, and day-2 node operations are reduced. |
+| Advanced custom platform requirements | AKS Standard with NAP | More manual control over cluster and provisioning configuration. |
+| Faster path to production with less VM planning | AKS Automatic | Reduced operational overhead for node sizing and lifecycle operations. |
+| Fine-grained platform tuning from day one | AKS Standard with NAP | Greater flexibility for custom controls and operational patterns. |
+
+For an AKS Automatic overview, see [Introduction to Azure Kubernetes Service (AKS) Automatic](./intro-aks-automatic.md).
 
 ## How does node auto-provisioning work?
 
@@ -34,10 +48,15 @@ Node auto-provisioning provisions, scales, and manages VMs (nodes) in a cluster 
 NAP uses the following key components to help manage your cluster's nodes:
 
 | Component | Description |
-|-----------|-------------|
+| --------- | ----------- |
 | `NodePool` and `AKSNodeClass` | Custom Resource Definitions (CRDs) that you create and manage to define node provisioning policies, VM specifications, and constraints for your workloads. |
 | `NodeClaims` | Managed by NAP to represent the current state of provisioned nodes that you can monitor. |
 | Workload resource requirements | CPU, memory, and other specifications from your Pods, Deployments, Jobs, and other Kubernetes resources that drive provisioning decisions. |
+
+> [!TIP]
+> On [AKS Automatic](./intro-aks-automatic.md) clusters, NAP is preconfigured and backed by a [pod readiness SLA](https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services) that guarantees 99.9% of qualifying pod readiness operations complete within 5 minutes. This means your workloads start running on the right-sized nodes promptly, without manual VM selection or capacity planning.
+>
+> For most production teams, this makes AKS Automatic the default starting point for predictable startup behavior and lower day-2 operations overhead.
 
 ## Kubernetes upgrade behavior for node auto-provisioning nodes
 
@@ -66,7 +85,12 @@ The following limitations and unsupported features apply to node auto-provisioni
 
 ## Get started with node auto-provisioning on AKS
 
-The following resources help you get started with node auto-provisioning on AKS:
+If you're starting a new production workload, begin with AKS Automatic:
+
+- [Introduction to Azure Kubernetes Service (AKS) Automatic](./intro-aks-automatic.md)
+- [Create an AKS Automatic cluster](./automatic/quick-automatic-managed-network.md)
+
+For AKS Standard or advanced NAP customization scenarios, use these resources:
 
 - [Enable or disable node auto-provisioning on an AKS cluster](./use-node-auto-provisioning.md)
 - [Use node auto-provisioning in a custom virtual network](./node-auto-provisioning-custom-vnet.md)

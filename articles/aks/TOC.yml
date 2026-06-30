@@ -376,6 +376,8 @@
       href: upgrade-cluster-components.md
     - name: Upgrade options and recommendations
       href: upgrade-options.md
+    - name: Capacity and cost planning
+      href: upgrade-capacity-cost-planning.md
     - name: Production upgrade strategies
       href: aks-production-upgrade-strategies.md
     - name: Stateful workload upgrade patterns

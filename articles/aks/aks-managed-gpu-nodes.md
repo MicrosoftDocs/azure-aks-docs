@@ -189,6 +189,74 @@ To use Azure Linux, you specify the OS SKU by setting `--os-sku` to `AzureLinux`
     ...
     ```
 
+### [Node Auto Provisioning node pool](#tab/nap-managed-node)
+
+To use Managed GPU with node auto-provisioning (NAP) nodes, add the `EnableManagedGPUExperience:"true"` tag to your `AKSNodeClass` custom resource definition (CRD) file. To learn more about configurable Azure-specific settings, see [Configure AKSNodeClass resources for NAP](./node-auto-provisioning-aksnodeclass.md).
+
+1. Add the `EnableManagedGPUExperience:"true"` value to the `tags` field of the `AKSNodeClass` CRD.
+
+   ```yaml
+    apiVersion: karpenter.azure.com/v1beta1
+     kind: AKSNodeClass
+     metadata:
+       name: managed-gpu-class
+     spec:
+       imageFamily: Ubuntu
+       tags:
+         EnableManagedGPUExperience:"true"
+   ```
+
+1. Use the following example `NodePool` CRD to enable NAP to deploy a GPU SKU.
+
+   ```yaml
+     apiVersion: karpenter.sh/v1
+     kind: NodePool
+     metadata:
+       name: managed-gpu-np
+     spec:
+       disruption:
+         consolidationPolicy: WhenEmptyOrUnderutilized
+         consolidateAfter: 30s
+       template:
+         spec:
+           nodeClassRef:
+             group: karpenter.azure.com
+             kind: AKSNodeClass
+             name: managed-gpu-class
+           requirements:
+             - key: kubernetes.io/arch
+               operator: In
+               values: ["amd64"]
+             - key: kubernetes.io/os
+               operator: In
+               values: ["linux"]
+             - key: karpenter.azure.com/sku-family
+               operator: In
+               values: ["N"]
+             - key: karpenter.azure.com/sku-gpu-manufacturer
+               operator: In
+               values: ["nvidia"]
+             - key: karpenter.sh/capacity-type
+               operator: In
+               values: ["spot", "on-demand"]
+   ```
+
+1. Deploy the `AKSNodeClass` and `NodePool` CRDs.
+
+   ```
+   kubectl apply -f managed-gpu-class.yaml
+   kubectl apply -f managed-gpu-np.yaml
+   ```
+
+1. Confirm that NAP creates a GPU node with the managed GPU feature enabled by deploying a sample workload requesting GPU resources.
+
+   To confirm that the `AKSNodeClass` and `NodePool` CRDs are deployed, deploy a GPU workload, and confirm that a managed GPU node is provisioned, use the following commands:
+    
+   ```
+   kubectl get crds
+   kubectl get nodes
+   ```
+
 ---
 
 ## Create a managed Multi-Instance GPU (MIG) node pool (preview)

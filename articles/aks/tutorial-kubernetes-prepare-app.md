@@ -98,7 +98,7 @@ The sample application you create in this tutorial uses the [*docker-compose-qui
 ```YAML
 services:
   rabbitmq:
-    image: rabbitmq:3.13.2-management-alpine
+    image: rabbitmq:4.3.2-management-alpine
     container_name: 'rabbitmq'
     restart: always
     environment:
@@ -112,8 +112,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    volumes:
-      - ./rabbitmq_enabled_plugins:/etc/rabbitmq/enabled_plugins
     networks:
       - backend_services
   order-service:
@@ -133,7 +131,6 @@ services:
       - ORDER_QUEUE_USERNAME=username
       - ORDER_QUEUE_PASSWORD=password
       - ORDER_QUEUE_NAME=orders
-      - ORDER_QUEUE_RECONNECT_LIMIT=3
     networks:
       - backend_services
     depends_on:
@@ -219,7 +216,7 @@ You can use [Docker Compose][docker-compose] to automate building container imag
     f27fe74cfd0a        aks-store-demo-product-service
     df1eaa137885        aks-store-demo-order-service
     b3ce9e496e96        aks-store-demo-store-front
-    31df28627ffa        rabbitmq:3.13.2-management-alpine
+    31df28627ffa        rabbitmq:4.3.2-management-alpine
     ```
 
 ## Test application locally

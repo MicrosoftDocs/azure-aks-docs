@@ -129,7 +129,6 @@ In these tutorials, your Azure Container Registry (ACR) instance stores the cont
 
     ```output
     statefulset.apps/rabbitmq created
-    configmap/rabbitmq-enabled-plugins created
     service/rabbitmq created
     deployment.apps/order-service created
     service/order-service created
@@ -157,7 +156,6 @@ In these tutorials, your Azure Container Registry (ACR) instance stores the cont
 
     ```output
     statefulset.apps/rabbitmq created
-    configmap/rabbitmq-enabled-plugins created
     service/rabbitmq created
     deployment.apps/order-service created
     service/order-service created
