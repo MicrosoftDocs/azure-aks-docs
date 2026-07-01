@@ -834,7 +834,7 @@ spec:
 Azure Files now supports managed identity based authentication for SMB access. This enables your applications to securely access Azure Files without storing or managing credentials.
 
 > [!NOTE]
-> Managed identity support for Azure Files in AKS is available in preview starting with AKS version 1.34 on Linux nodes.
+> Managed identity support for Azure Files in AKS is available starting with AKS version 1.34 on Linux nodes.
 
 ### Prerequisites for using managed identity to access Azure Files storage
 
