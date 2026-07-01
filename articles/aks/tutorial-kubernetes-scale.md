@@ -2,7 +2,7 @@
 title: Kubernetes on Azure tutorial - Scale applications in Azure Kubernetes Service (AKS)
 description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to scale nodes and pods and implement horizontal pod autoscaling.
 ms.topic: tutorial
-ms.date: 06/10/2024
+ms.date: 06/23/2026
 author: schaffererin
 ms.author: schaffererin
 
@@ -28,6 +28,9 @@ In this tutorial, you scale out the pods in the app, try pod autoscaling, and sc
 
 In previous tutorials, you packaged an application into a container image, uploaded the image to Azure Container Registry, created an AKS cluster, deployed an application, and used Azure Service Bus to redeploy an updated application. If you haven't completed these steps and want to follow along, start with [Tutorial 1 - Prepare application for AKS][aks-tutorial-prepare-app].
 
+This tutorial changes pod and node counts and can increase compute costs. Use an identity with permission to scale AKS workloads and node pools, such as **Contributor** or **Owner** for the resource group.
+
+
 ### [Azure CLI](#tab/azure-cli)
 
 This tutorial requires Azure CLI version 2.34.1 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
@@ -39,6 +42,12 @@ This tutorial requires Azure PowerShell version 5.9.0 or later. Run `Get-Install
 ---
 
 ## Manually scale pods
+
+### AKS desktop
+1. Edit the scaling configuration for the order-service by selecting **Scaling** > **Select Deployment: order-service** > **Edit Configuration** > **Number of Replicas: 5**.
+![Screenshot that shows editting the scale configuration of the order-service.](./media/aks-desktop-app/aks-desktop-edit-scaling.png)
+
+1. Verify that the deployment update completes before continuing.
 
 1. View the pods in your cluster using the [`kubectl get`][kubectl-get] command.
 
@@ -79,6 +88,42 @@ This tutorial requires Azure PowerShell version 5.9.0 or later. Run `Get-Install
     ```
 
 ## Autoscale pods
+
+### AKS desktop
+1. Within the Project, select the **Deploy Application** button > **Kubernetes YAML**.
+![Select the application source, Kubernetes YAML](./media/aks-desktop-app/aks-desktop-deploy-option-yaml.png)
+
+1. Copy and paste this YAML autoscaler manifest and resource limits.
+    ```yaml
+    apiVersion: autoscaling/v2
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: store-front-hpa
+    spec:
+      maxReplicas: 10 # define max replica count
+      minReplicas: 3  # define min replica count
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: store-front
+      metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 50
+    ```
+1. Select **Next** > **Deploy** > **Close**.
+  ![Screenshot that shows pasting in the YAML configuration.](./media/aks-desktop-app/aks-desktop-yaml-paste.png)
+
+1. Select **Scaling** > **Select Deployment: store-front**. You can see the scaling mode is now set to **HPA**, Replica Bounds, and CPU Usage / Target set by the configuration.
+  ![Screenshot that shows AKS desktop scaling overview showing HPA mode for the store-front deployment.](./media/aks-desktop-app/aks-desktop-auto-scaling.png)
+
+1. Verify that HPA mode is enabled and the replica bounds match the manifest values.
+
+
+### Command line
 
 To use the horizontal pod autoscaler, all containers must have defined CPU requests and limits, and pods must have specified requests. In the `aks-store-quickstart` deployment, the *front-end* container requests 1m CPU with a limit of 1000m CPU.
 
@@ -141,21 +186,31 @@ These resource requests and limits are defined for each container, as shown in t
 
     After a few minutes, with minimal load on the Azure Store Front app, the number of pod replicas decreases to three. You can use `kubectl get pods` command again to see the unneeded pods being removed.
 
+    Continue when the `TARGETS` and `REPLICAS` columns show expected autoscaling behavior for `store-front-hpa`.
+
 > [!NOTE]
 > You can enable the Kubernetes-based Event-Driven Autoscaler (KEDA) AKS add-on to your cluster to drive scaling based on the number of events needing to be processed. For more information, see [Enable simplified application autoscaling with the Kubernetes Event-Driven Autoscaling (KEDA) add-on (Preview)][keda-addon].
 
 ## Manually scale AKS nodes
+> [!NOTE]
+> If you created an AKS Automatic cluster, these steps don't apply because the cluster autoscales nodes.
 
-If you created your Kubernetes cluster using the commands in the previous tutorials, your cluster has two nodes. If you want to increase or decrease this amount, you can manually adjust the number of nodes.
+If you created your AKS Standard cluster by using the commands in the previous tutorials, your cluster has three nodes. If you want to increase or decrease this amount, you can manually adjust the number of nodes.
 
-The following example increases the number of nodes to three in the Kubernetes cluster named *myAKSCluster*. The command takes a couple of minutes to complete.
+The following example increases the number of nodes to five in the Kubernetes cluster named *myAKSCluster*. The command takes a couple of minutes to complete.
 
 ### [Azure CLI](#tab/azure-cli)
 
 * Scale your cluster nodes using the [`az aks scale`][az-aks-scale] command.
 
+    Once the cluster scales successfully, your output is similar to the following example output:
+
+  ```azurecli-interactive
+  az aks nodepool list --resource-group myResourceGroup --cluster-name myAKSCluster --query "[].{name:name,count:count}" -o table
+  ```
+
     ```azurecli-interactive
-    az aks scale --resource-group myResourceGroup --name myAKSCluster --node-count 3
+    az aks scale --resource-group myResourceGroup --name myAKSCluster --node-count 5
     ```
 
     Once the cluster successfully scales, your output will be similar to following example output:
@@ -166,7 +221,7 @@ The following example increases the number of nodes to three in the Kubernetes c
     "agentPoolProfiles": [
       {
         ...
-        "count": 3,
+        "count": 5,
         "mode": "System",
         "name": "nodepool1",
         "osDiskSizeGb": 128,
@@ -185,8 +240,14 @@ The following example increases the number of nodes to three in the Kubernetes c
 
 * Scale your cluster nodes using the [`Get-AzAksCluster`][get-azakscluster] and [`Set-AzAksCluster`][set-azakscluster] cmdlets.
 
+    Once the cluster scales successfully, your output is similar to the following example output:
+
+  ```azurepowershell-interactive
+  (Get-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster).AgentPoolProfiles | Select-Object Name,Count
+  ```
+
     ```azurepowershell-interactive
-    Get-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster | Set-AzAksCluster -NodeCount 3
+    Get-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster | Set-AzAksCluster -NodeCount 5
     ```
 
     Once the cluster successfully scales, your output will be similar to following example output:
@@ -225,6 +286,9 @@ In this tutorial, you used different scaling features in your Kubernetes cluster
 > * Manually scale Kubernetes pods that run your application.
 > * Configure autoscaling pods that run the app front end.
 > * Manually scale the Kubernetes nodes.
+
+If you're finished, select the **Delete** icon, and in the confirmation message select **Also delete the namespace**.
+![Screenshot that shows deleting the AKS desktop project by clicking on the trash icon.](./media/aks-desktop-app/aks-desktop-delete-project.png)
 
 In the next tutorial, you learn how to upgrade Kubernetes in your AKS cluster.
 

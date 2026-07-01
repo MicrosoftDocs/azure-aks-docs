@@ -156,6 +156,8 @@
           items:
             - name: Azure portal Kubernetes resource view
               href: kubernetes-portal.md
+            - name: AKS desktop Kubernetes resource view
+              href: aks-desktop-cluster-view.md
             - name: Use tags
               href: use-tags.md
             - name: Use labels
