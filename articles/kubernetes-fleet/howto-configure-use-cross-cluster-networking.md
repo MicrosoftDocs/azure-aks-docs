@@ -23,6 +23,9 @@ This article provides instructions on how to configure a cross-cluster networkin
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
+> [!NOTE]
+> Cross-cluster networking is currently available in the following regions: `westcentralus`, `eastasia`, `uksouth`, and `eastus`. Global availability across all Azure regions is expected by June 5, 2026.
+
 ## Prerequisites and limitations
 
 * A cross-cluster network can have up to 255 member clusters.
