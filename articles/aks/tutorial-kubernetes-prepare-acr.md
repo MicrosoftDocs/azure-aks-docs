@@ -27,6 +27,8 @@ In this tutorial, you deploy an ACR instance and push a container image to it. Y
 
 In the [previous tutorial][aks-tutorial-prepare-app], you cloned the application code repository and used Docker to create a container image for a simple Azure Store Front application. If you didn't create the Azure Store Front app image, return to [Tutorial 1 - Prepare an application for AKS][aks-tutorial-prepare-app].
 
+This tutorial creates billable Azure resources, including a resource group and an Azure Container Registry. To complete these steps, you need permissions to create resource groups and Azure Container Registry resources in your subscription, such as **Contributor** or **Owner**.
+
 ### [Azure CLI](#tab/azure-cli)
 
 This tutorial requires Azure CLI version 2.0.53 or later. To find the version, run the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
@@ -60,6 +62,12 @@ Before creating an ACR instance, you need a resource group. An Azure resource gr
     az group create --name $RESOURCE_GROUP --location $LOCATION
     ```
 
+1. Create an ACR instance by using the [`New-AzContainerRegistry`][new-azcontainerregistry] cmdlet and provide your own unique registry name. The _Basic_ SKU is a cost-optimized entry point for development purposes that provides a balance of storage and throughput.
+
+    ```azurecli-interactive
+    az group show --name $RESOURCE_GROUP --query name --output tsv
+    ```
+
 1. Create an ACR instance using the [`az acr create`][az-acr-create] command and provide your own unique registry name. The _Basic_ SKU is a cost-optimized entry point for development purposes that provides a balance of storage and throughput.
 
     ```azurecli-interactive
@@ -68,6 +76,12 @@ Before creating an ACR instance, you need a resource group. An Azure resource gr
       --location $LOCATION \
       --name $ACRNAME \
       --sku Basic
+    ```
+
+    Verify that the registry provisioning state is `Succeeded` before continuing:
+
+    ```azurecli-interactive
+    az acr show --name $ACRNAME --resource-group $RESOURCE_GROUP --query provisioningState --output tsv
     ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
@@ -90,10 +104,22 @@ Before creating an ACR instance, you need a resource group. An Azure resource gr
     New-AzResourceGroup -Name $RESOURCE_GROUP -Location $LOCATION
     ```
 
+    Verify that the resource group was created before continuing:
+
+    ```azurepowershell-interactive
+    Get-AzResourceGroup -Name $RESOURCE_GROUP | Select-Object -ExpandProperty ResourceGroupName
+    ```
+
 1. Create an ACR instance using the [`New-AzContainerRegistry`][new-azcontainerregistry] cmdlet and provide your own unique registry name. The _Basic_ SKU is a cost-optimized entry point for development purposes that provides a balance of storage and throughput.
 
     ```azurepowershell-interactive
     New-AzContainerRegistry -ResourceGroupName $RESOURCE_GROUP -Name $ACRNAME -Location $LOCATION -Sku Basic
+    ```
+
+    Verify that the registry provisioning state is `Succeeded` before continuing:
+
+    ```azurepowershell-interactive
+    Get-AzContainerRegistry -ResourceGroupName $RESOURCE_GROUP -Name $ACRNAME | Select-Object -ExpandProperty ProvisioningState
     ```
 
 ---
@@ -101,6 +127,12 @@ Before creating an ACR instance, you need a resource group. An Azure resource gr
 ## Build and push container images to registry
 
 Build and push the images to your ACR using the Azure CLI [`az acr build`][az-acr-build] command. The `az acr build` commands use images in the repository you cloned in the previous article [prepare an app for AKS](tutorial-kubernetes-prepare-app.md). Make sure you switch to that directory or the `build` commands fail. For example, if you created directory _demorepo_ and cloned the repository, the repository's root directory is _aks-store-demo_, so switch to the _demorepo/aks-store-demo_ directory.
+
+Before running the build commands, verify that your current directory contains the expected service folders:
+
+```azurecli-interactive
+ls ./src/order-service ./src/store-front
+```
 
 There isn't an equivalent Azure PowerShell cmdlet that builds or pushes container images to the registry. You need to use the steps for Azure CLI, but with the `ACRNAME` variable set to the value you created in PowerShell. In PowerShell you can get the value with the command `$ACRNAME`.
 
@@ -110,16 +142,18 @@ In the following example, we don't build the `product-service` image. This image
 az acr import \
   --name $ACRNAME \
   --source ghcr.io/azure-samples/aks-store-demo/product-service:latest \
-  --image aks-store-demo/product-service:latest
+  --image aks-store-demo/product-service:1.0
 
 az acr build \
   --registry $ACRNAME \
-  --image aks-store-demo/order-service:latest ./src/order-service/
+  --image aks-store-demo/order-service:1.0 ./src/order-service/
 
 az acr build \
   --registry $ACRNAME \
-  --image aks-store-demo/store-front:latest ./src/store-front/
+  --image aks-store-demo/store-front:1.0 ./src/store-front/
 ```
+
+If you get an authorization error, run `az login`, confirm the active subscription with `az account show`, and then rerun the failed command.
 
 ## List images in registry
 
@@ -188,3 +222,5 @@ In the next tutorial, you learn how to deploy a Kubernetes cluster in Azure.
 [acr-tasks]: /azure/container-registry/container-registry-tasks-overview
 [az-acr-build]: /cli/azure/acr#az-acr-build
 [az-acr-import]: /cli/azure/acr#az-acr-import
+
+
