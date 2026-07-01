@@ -18,9 +18,6 @@ This article provides an overview of node image updates for node auto-provisioni
 
 By default, NAP node pool virtual machines (VMs) are automatically updated when a new image version is available. You can configure an [AKS-managed node operating system (OS) upgrade schedule maintenance window](#node-os-upgrade-maintenance-windows-for-nap) to control when new images are picked up and applied to your NAP nodes, or [use Karpenter Node Disruption Budgets and Pod Disruption Budgets](#karpenter-node-disruption-budgets-and-pod-disruption-budgets-for-nap) to control how and when disruption occurs during upgrades.
 
-> [!NOTE]
-> NAP forces the latest image version to be picked up if the existing node image version is older than 90 days. This bypasses any existing maintenance window.
-
 ## Node OS upgrade maintenance windows for NAP
 
 You can use the [AKS planned maintenance feature](./planned-maintenance.md) with a [node OS auto-upgrade channel](./auto-upgrade-node-os-image.md) to configure a `aksManagedNodeOSUpgradeSchedule` maintenance window that controls when to perform node OS security patching scheduled by your designated node OS auto-upgrade channel.
