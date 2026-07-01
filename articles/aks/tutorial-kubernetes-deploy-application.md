@@ -2,7 +2,7 @@
 title: Kubernetes on Azure tutorial - Deploy an application to Azure Kubernetes Service (AKS)
 description: In this Azure Kubernetes Service (AKS) tutorial, you deploy a multi-container application to your cluster using images stored in Azure Container Registry.
 ms.topic: tutorial
-ms.date: 06/10/2024
+ms.date: 06/23/2026
 ms.custom: mvc, devx-track-extended-azdevcli
 ms.author: schaffererin
 author: schaffererin
@@ -15,25 +15,30 @@ author: schaffererin
 
 Kubernetes provides a distributed platform for containerized applications. You build and deploy your own applications and services into a Kubernetes cluster and let the cluster manage the availability and connectivity.
 
-In this tutorial, you deploy a sample application into a Kubernetes cluster. You learn how to:
+You can deploy the sample application in two ways:
+- Deploy directly to the AKS cluster from your workstation.
+- Deploy by using automation deployment pipelines. In Azure, you can use:
+    - [Azure Pipelines](./devops-pipeline.md)
+    - [GitHub Actions](./kubernetes-action.md)
+    - [Cloud Native GitOps](/azure/azure-arc/kubernetes/conceptual-gitops-flux2)
+
+In this tutorial, you deploy a sample application into a Kubernetes cluster directly from your workstation and manage the application by using [AKS desktop](./aks-desktop-app.md). You learn how to:
 
 > [!div class="checklist"]
 >
 > * Update a Kubernetes manifest file.
-> * Run an application in Kubernetes.
+> * Deploy an application in Kubernetes.
 > * Test the application.
-
-> [!TIP]
->
-> With AKS, you can use the following approaches for configuration management:
->
-> * **GitOps**: Enables declarations of your cluster's state to automatically apply to the cluster. To learn how to use GitOps to deploy an application with an AKS cluster, see the [prerequisites for Azure Kubernetes Service clusters][gitops-flux-tutorial-aks] in the [GitOps with Flux v2][gitops-flux-tutorial] tutorial.
->
-> * **DevOps**: Enables you to build, test, and deploy with continuous integration (CI) and continuous delivery (CD). To see examples of how to use DevOps to deploy an application with an AKS cluster, see [Build and deploy to AKS with Azure Pipelines](./devops-pipeline.md) or [GitHub Actions for deploying to Kubernetes](./kubernetes-action.md).
+> * View application health, logs, metrics, and composition in AKS desktop.
 
 ## Before you begin
 
 In previous tutorials, you packaged an application into a container image, uploaded the image to Azure Container Registry, and created a Kubernetes cluster. To complete this tutorial, you need the precreated `aks-store-quickstart.yaml` Kubernetes manifest file. This file was downloaded in the application source code from [Tutorial 1 - Prepare application for AKS][aks-tutorial-prepare-app].
+
+This tutorial creates and updates billable resources, such as LoadBalancer services. Use an identity with permissions to deploy workloads to AKS and read cluster resources.
+
+### [AKS desktop](#tab/aks-desktop)
+This tutorial requires the installation of [AKS desktop](./aks-desktop-overview.md).
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -53,61 +58,74 @@ This tutorial requires Azure Developer CLI (`azd`) version 1.5.1 or later. Check
 
 In these tutorials, your Azure Container Registry (ACR) instance stores the container images for the sample application. To deploy the application, you must update the image names in the Kubernetes manifest file to include your ACR login server name.
 
-### [Azure CLI](#tab/azure-cli)
+### [AKS desktop](#tab/aks-desktop)
 
-1. Get your login server address using the [`az acr list`][az-acr-list] command and query for your login server.
+1. Make sure you're in the cloned _aks-store-demo_ directory, and then open the `aks-store-quickstart.yaml` manifest file with a text editor.
 
-    ```azurecli-interactive
-    az acr list --resource-group myResourceGroup --query "[].{acrLoginServer:loginServer}" --output table
-    ```
-
-2. Make sure you're in the cloned *aks-store-demo* directory, and then open the `aks-store-quickstart.yaml` manifest file with a text editor.
-
-3. Update the `image` property for the containers by replacing *ghcr.io/azure-samples* with your ACR login server name.
+1. Update the `image` property for the containers by replacing _ghcr.io/azure-samples_ with your ACR login server name.
 
     ```yaml
     containers:
     ...
     - name: order-service
-      image: <acrName>.azurecr.io/aks-store-demo/order-service:latest
+      image: <acrName>.azurecr.io/aks-store-demo/order-service:1.0
     ...
     - name: product-service
-      image: <acrName>.azurecr.io/aks-store-demo/product-service:latest
+      image: <acrName>.azurecr.io/aks-store-demo/product-service:1.0
     ...
     - name: store-front
-      image: <acrName>.azurecr.io/aks-store-demo/store-front:latest
+      image: <acrName>.azurecr.io/aks-store-demo/store-front:1.0
     ...
     ```
 
-4. Save and close the file.
+### [Azure CLI](#tab/azure-cli)
+
+1. Make sure you're in the cloned _aks-store-demo_ directory, and then open the `aks-store-quickstart.yaml` manifest file with a text editor.
+
+1. Update the `image` property for the containers by replacing _ghcr.io/azure-samples_ with your ACR login server name.
+
+    ```yaml
+    containers:
+    ...
+    - name: order-service
+      image: <acrName>.azurecr.io/aks-store-demo/order-service:1.0
+    ...
+    - name: product-service
+      image: <acrName>.azurecr.io/aks-store-demo/product-service:1.0
+    ...
+    - name: store-front
+      image: <acrName>.azurecr.io/aks-store-demo/store-front:1.0
+    ...
+    ```
+
+1. Save and close the file.
+
+1. Verify that `aks-store-quickstart.yaml` is in your current directory before you continue.
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-1. Get your login server address using the [`Get-AzContainerRegistry`][get-azcontainerregistry] cmdlet and query for your login server. Make sure you replace `<acrName>` with the name of your ACR instance.
 
-    ```azurepowershell-interactive
-    (Get-AzContainerRegistry -ResourceGroupName myResourceGroup -Name $ACRNAME).LoginServer
-    ```
+1. Make sure you're in the cloned _aks-store-demo_ directory, and then open the `aks-store-quickstart.yaml` manifest file with a text editor.
 
-2. Make sure you're in the cloned *aks-store-demo* directory, and then open the `aks-store-quickstart.yaml` manifest file with a text editor.
-
-3. Update the `image` property for the containers by replacing *ghcr.io/azure-samples* with your ACR login server name.
+1. Update the `image` property for the containers by replacing _ghcr.io/azure-samples_ with your ACR login server name.
 
     ```yaml
     containers:
     ...
     - name: order-service
-      image: <acrName>.azurecr.io/aks-store-demo/order-service:latest
+      image: <acrName>.azurecr.io/aks-store-demo/order-service:1.0
     ...
     - name: product-service
-      image: <acrName>.azurecr.io/aks-store-demo/product-service:latest
+      image: <acrName>.azurecr.io/aks-store-demo/product-service:1.0
     ...
     - name: store-front
-      image: <acrName>.azurecr.io/aks-store-demo/store-front:latest
+      image: <acrName>.azurecr.io/aks-store-demo/store-front:1.0
     ...
     ```
 
-4. Save and close the file.
+1. Save and close the file.
+
+1. Verify that `aks-store-quickstart.yaml` is in your current directory before you continue.
 
 ### [Azure Developer CLI](#tab/azure-azd)
 
@@ -116,6 +134,67 @@ In these tutorials, your Azure Container Registry (ACR) instance stores the cont
 ---
 
 ## Run the application
+### [AKS desktop](#tab/aks-desktop)
+#### Deploy and manage the application by using AKS desktop
+AKS desktop is an application-focused developer portal for Azure Kubernetes Service (AKS) that simplifies application deployment and management without requiring deep Kubernetes expertise.
+
+#### Register your cluster with AKS desktop
+
+1. Make sure you're signed in to AKS desktop with the same account that has access to the AKS cluster. Once signed in, select **Add from Azure Subscription**.
+1. Enter the name of your Azure subscription if you have more than one. (Alternatively, select the arrow to open the drop-down list, and then select your Azure subscription.)
+1. Select your cluster, and then select **Register Cluster**.
+
+Continue when the cluster status appears as connected in AKS desktop.
+
+![A video demonstrating how to add a cluster to the AKS desktop app.](./media/aks-desktop-app/aks-desktop-app-add-cluster.gif)
+
+#### Create a managed Project in AKS desktop
+
+1. In AKS desktop, go to the **Projects** tab and select **Create a New Managed Project**.
+1. Configure the following Project settings:
+
+   - **Basics**:
+     - Project Name: For example, `my-dev-frontend`
+     - Subscription: `<your-subscription-name>`
+     - Cluster: `<your-cluster-name>`
+
+    > [!NOTE]
+    > When you set the Azure subscription and AKS cluster, AKS desktop checks for required cluster and subscription feature [support](./aks-desktop-install-cluster-setup.md).
+
+   - **Networking Policies**: You can leave the default settings for this quickstart or update them as needed.
+     - To expose the application publicly, change **Ingress** to `Allow all traffic`.
+
+   - **Compute Quota**: Set the values for the test application.
+        ![Screenshot that shows setting the values for compute quota.](./media/aks-desktop-app/aks-desktop-set-project-limits.png)
+   - **Access**: Add someone or delete the entry by deleting the line item.
+
+1. Under **Review**, verify the settings for your Project, and then select **Create Project**.
+
+    :::image type="content" source="./media/aks-desktop-app/aks-desktop-new-project.png" alt-text="Screenshot of creating a new Project in AKS desktop.":::
+
+#### Deploy an application
+
+1. Provide an application name, and then select **Create Application**.
+
+    :::image type="content" source="./media/aks-desktop-app/aks-desktop-deploy-app.png" alt-text="Screenshot of creating a new application in AKS desktop.":::
+
+1. Select a source for your application. For this example, select **Kubernetes YAML** > **Next**.
+![Screenshot that shows selecting application source, select Kubernetes YAML.](./media/aks-desktop-app/aks-desktop-deploy-option-yaml.png)
+
+1. Open `aks-store-quickstart.yaml`, copy and paste its contents into the editor, and then select **Next**.
+![Screenshot that shows the YAML Editor with the copied and pasted YAML.](./media/aks-desktop-app/aks-desktop-yaml-editor.png)
+
+1. Review the resources that are created, and then select **Deploy** and **Close**.
+![Screenshot that shows the Review & Deploy summary, select Deploy and Close.](./media/aks-desktop-app/aks-desktop-deploy-app-final.png)
+
+1. The resources can take a few minutes to deploy. During this time, the project status might show `Degraded` while the cluster scales.
+
+1. Check the status of application resources by selecting **Resources** and then **Workloads**.
+
+    ![Screenshot that shows the Resources tab for viewing resources and their changes.](./media/aks-desktop-app/aks-desktop-app-resources.png)
+    You can force a screen refresh by selecting the top window menu option **Navigate** > **Reload**.
+
+1. Select individual workload resources to view their details and events.
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -144,6 +223,8 @@ In these tutorials, your Azure Container Registry (ACR) instance stores the cont
     kubectl get pods
     ```
 
+    Make sure the application pods show a `Running` status before you continue.
+
 ### [Azure PowerShell](#tab/azure-powershell)
 
 1. Deploy the application using the [`kubectl apply`][kubectl-apply] command, which parses the manifest file and creates the defined Kubernetes objects.
@@ -170,6 +251,8 @@ In these tutorials, your Azure Container Registry (ACR) instance stores the cont
     ```console
     kubectl get pods
     ```
+
+    Make sure the application pods show a `Running` status before you continue.
 
 ### [Azure Developer CLI](#tab/azure-azd)
 
@@ -180,6 +263,8 @@ Deployment in `azd` is broken down into multiple stages represented by hooks. `a
     ```azdeveloper
     azd up
     ```
+
+    Continue when `azd up` finishes successfully and prints deployment output.
 
 2. Select which subscription and region to host your Azure resources.
 
@@ -197,6 +282,12 @@ Deployment in `azd` is broken down into multiple stages represented by hooks. `a
 ## Test the application
 
 When the application runs, a Kubernetes service exposes the application front end to the internet. This process can take a few minutes to complete.
+
+### AKS desktop
+1. Get the public IP address from **Resource** > **Network** > **Service: store-front** > **External IP**.
+    ![Screenshot that shows getting the public IP address for the application.](./media/aks-desktop-app/aks-desktop-networking-resources.png)
+
+1. Explore the application in AKS desktop, such as viewing logs and metrics. For more information, see [AKS desktop overview](./aks-desktop-overview.md).
 
 ### Command Line
 
@@ -240,6 +331,16 @@ Navigate to the Azure portal to find your deployment information.
 ## Clean up resources
 
 Since you validated the application's functionality, you can now remove the cluster from the application. We will deploy the application again in the next tutorial.
+
+### AKS desktop
+> [!NOTE]
+> If you want to continue to the next tutorial step, don't delete the AKS desktop project.
+
+
+If you're finished, select the **Delete** icon. In the confirmation message, select **Also delete the namespace**.
+![To delete the project, select the trash can icon](./media/aks-desktop-app/aks-desktop-delete-project.png)
+
+### Command line
 
 1. Stop and remove the container instances and resources using the `kubectl delete` command.
 

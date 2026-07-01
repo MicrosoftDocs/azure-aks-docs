@@ -504,6 +504,22 @@ The **Monitoring** tab also includes links to the [Azure managed service for Pro
 > [!TIP]
 > To access monitoring features for all AKS clusters in your subscription, on the Azure portal home page, select **Azure Monitor**.
 
+### Observe and troubleshoot applications using AKS desktop
+
+[AKS desktop](aks-desktop-overview.md) is an application-focused desktop experience for Azure Kubernetes Service (AKS) that helps you connect to clusters, view resources, deploy applications, and troubleshoot workloads without deep Kubernetes expertise.
+
+AKS desktop complements Azure Monitor and Container insights by giving application teams a single, ready-to-use place for high level day-to-day observation and troubleshooting of their induvidual application workloads, without building custom tooling or switching between tools.
+
+From an [AKS desktop Project](aks-desktop-projects.md), you can:
+
+- **View metrics** such as CPU and memory consumption for application components.
+- **Stream pod logs** in real time for debugging.
+- **Visualize dependencies** between workloads and services using the resource map.
+
+:::image type="content" source="./media/aks-desktop-app/aks-desktop-project-overview.png" alt-text="Screenshot of the Project overview in AKS desktop showing application components, metrics, and health for a project." lightbox="./media/aks-desktop-app/aks-desktop-project-overview.png":::
+
+For more information, see [AKS desktop overview](aks-desktop-overview.md).
+
 [!INCLUDE [horz-monitor-kusto-queries](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-kusto-queries.md)]
 
 [!INCLUDE [horz-monitor-alerts](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-alerts.md)]

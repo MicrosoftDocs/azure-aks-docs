@@ -151,7 +151,20 @@ sections:
           Why do I see aks-managed prefixed Helm releases on my cluster, and why does their revision count keep increasing?
         answer: |
           AKS uses Helm to deliver components to your cluster. You can safely ignore `aks-managed` prefixed Helm releases. Continuously increasing revisions on these Helm releases are expected and safe.
-     
+
+      - question: |
+          What is AKS desktop, and when should I use it?
+        answer: |
+          AKS desktop is an application-focused desktop experience for Azure Kubernetes Service (AKS) that helps you connect to clusters, view resources, deploy applications, and troubleshoot workloads without deep Kubernetes expertise.
+
+          Use AKS desktop when you want a guided UI for common AKS tasks such as:
+          - Registering and switching between AKS clusters, and viewing Kubernetes resources.
+          - Deploying and managing applications through Projects.
+          - Viewing logs, metrics, scaling, and dependency maps.
+          - Running built-in troubleshooting workflows.
+
+          To get started, see [AKS desktop overview](./aks-desktop-overview.md)
+
   - name: Quotas, limits, and region availability
     questions:
       - question: |

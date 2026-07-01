@@ -2,9 +2,11 @@
 title: Kubernetes on Azure tutorial - Create an Azure Kubernetes Service (AKS) cluster
 description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to create an AKS cluster and use kubectl to connect to the Kubernetes main node.
 ms.topic: tutorial
-ms.date: 03/05/2025
+ms.date: 06/23/2026
+ms.service: azure-kubernetes-service
 author: schaffererin
 ms.author: schaffererin
+ai-usage: ai-assisted
 
 ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell, devx-track-extended-azdevcli
 
@@ -14,7 +16,7 @@ ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell, devx-track-exte
 
 # Tutorial - Create an Azure Kubernetes Service (AKS) cluster
 
-Kubernetes provides a distributed platform for containerized applications. With Azure Kubernetes Service (AKS), you can quickly create a production ready Kubernetes cluster.
+Kubernetes provides a distributed platform for containerized applications. With Azure Kubernetes Service (AKS), you can quickly create a production-ready Kubernetes cluster.
 
 In this tutorial, you deploy a Kubernetes cluster in AKS. You learn how to:
 
@@ -27,6 +29,8 @@ In this tutorial, you deploy a Kubernetes cluster in AKS. You learn how to:
 ## Before you begin
 
 In previous tutorials, you created a container image and uploaded it to an ACR instance. Start with [Tutorial 1 - Prepare application for AKS][aks-tutorial-prepare-app] to follow along.
+
+This tutorial creates billable AKS cluster resources and requires an **Owner** or **Azure account administrator** role in your Azure subscription.
 
 * If you're using Azure CLI, this tutorial requires that you're running the Azure CLI version 2.35.0 or later. Check your version with `az --version`. To install or upgrade, see [Install Azure CLI][azure-cli-install].
 * If you're using Azure PowerShell, this tutorial requires that you're running Azure PowerShell version 5.9.0 or later. Check your version with `Get-InstalledModule -Name Az`. To install or upgrade, see [Install Azure PowerShell][azure-powershell-install].
@@ -90,16 +94,41 @@ You use the Kubernetes CLI, [`kubectl`][kubectl], to connect to your Kubernetes 
 
 AKS clusters can use [Kubernetes role-based access control (Kubernetes RBAC)][k8s-rbac], which allows you to define access to resources based on roles assigned to users. Permissions are combined when users are assigned multiple roles. Permissions can be scoped to either a single namespace or across the whole cluster. For more information, see [Control access to cluster resources using Kubernetes RBAC and Microsoft Entra ID in AKS][aks-k8s-rbac].
 
-For information about AKS resource limits and region availability, see [Quotas, virtual machine size restrictions, and region availability in AKS][quotas-skus-regions].
-
-> [!IMPORTANT]
-> This tutorial creates a three-node cluster. If you get an error message when trying to create the cluster, then you might need to request a quota increase for your Azure subscription or try a different Azure region. Alternatively, you can use fewer nodes, or omit the node VM size parameter to use the default VM size.
 
 ### [Azure CLI](#tab/azure-cli)
 
 To allow an AKS cluster to interact with other Azure resources, the Azure platform automatically creates a cluster identity. In this example, the cluster identity is [granted the right to pull images][container-registry-integration] from the ACR instance you created in the previous tutorial. To execute the command successfully, you must have an **Owner** or **Azure account administrator** role in your Azure subscription.
 
 * Create an AKS cluster using the [`az aks create`][az aks create] command. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup*. This resource group was created in the [previous tutorial][aks-tutorial-prepare-acr] in the *westus2* region. We'll continue to use the environment variable, `$ACRNAME`, that we set in the [previous tutorial][aks-tutorial-prepare-acr]. If you don't have this environment variable set, set it now to the same value you used previously.
+
+Choose one cluster option and run only the matching command block. You have two options to create an AKS cluster. See [here](./intro-aks-automatic.md) for a detailed comparison.
+
+1. **AKS Automatic** (recommended) — a fully managed Kubernetes experience that automates cluster setup, operations, and node management. Choose this option for simplified operations and to use the [AKS Desktop](./aks-desktop-app.md) application UI with recommended defaults.
+
+    Run this command block only if you chose **AKS Automatic**.
+    ```azurecli-interactive
+    az aks create \
+        --resource-group myResourceGroup \
+        --name myAKSCluster \
+        --sku automatic \
+        --attach-acr $ACRNAME
+    
+    AKS_ID=$(az aks show --resource-group myResourceGroup --name myAKSCluster --query id -o tsv)
+    ENTRA_OBJECT_ID=$(az ad signed-in-user show --query id -o tsv)
+
+    # Grant yourself admin permissions to the cluster using the Azure Kubernetes Service RBAC Cluster Admin role.
+    az role assignment create --role "Azure Kubernetes Service RBAC Cluster Admin" \
+        --assignee $ENTRA_OBJECT_ID \
+        --scope $AKS_ID
+    ```
+    
+1. **AKS Standard** — gives you full control over cluster configuration and node management. Choose this option if you need to customize cluster settings. To use [AKS Desktop](./aks-desktop-app.md) with Standard clusters, specify [additional cluster options](./aks-desktop-install-cluster-setup.md#aks-standard-clusters) at creation time.
+
+    Run this command block only if you chose **AKS Standard**.
+
+    > [!IMPORTANT]
+    > This tutorial creates a three-node cluster. If you get an error message when trying to create the cluster, then you might need to request a quota increase for your Azure subscription or try a different Azure region. Alternatively, you can use fewer nodes, or omit the node VM size parameter to use the default VM size. For information about AKS resource limits and region availability, see [Quotas, virtual machine size restrictions, and region availability in AKS][quotas-skus-regions].
+
 
     ```azurecli-interactive
     az aks create \
@@ -134,6 +163,8 @@ To avoid needing an **Owner** or **Azure account administrator** role, you can a
 ### [Azure Developer CLI](#tab/azure-azd)
 
 `azd` packages the deployment of clusters with the application itself using the `azd up` command. This command is covered in the [Deploy containerized application](tutorial-kubernetes-deploy-application.md) tutorial.
+
+If you're using this path, skip AKS cluster creation commands in this tutorial and continue to the next tutorial.
 
 ---
 
@@ -214,7 +245,7 @@ To avoid needing an **Owner** or **Azure account administrator** role, you can a
 
 ---
 
-## Next step
+## Next steps
 
 In this tutorial, you deployed a Kubernetes cluster in AKS and configured `kubectl` to connect to the cluster. You learned how to:
 
