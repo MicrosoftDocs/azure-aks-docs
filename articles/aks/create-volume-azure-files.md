@@ -769,10 +769,10 @@ For a list of supported `mountOptions`, see [NFS mount options][nfs-file-share-m
 
     Because the NFS file share is in a Premium storage account, the minimum file share size is 100 GiB. If you create a PVC with a small storage size, you might encounter an error similar to the following: _failed to create file share ... size (5)..._.
 
-### Encryption in Transit (EiT) for NFS file shares (preview)
+### Encryption in Transit (EiT) for NFS file shares
 
 > [!NOTE]
-> The EiT feature is now available in preview starting with AKS version 1.33. Ubuntu 20.04, Azure Linux, arm64 and Windows nodes aren't currently supported.
+> The EiT feature is now available starting with AKS version 1.33. Ubuntu 20.04 and Windows nodes aren't currently supported.
 >
 > The feature is supported in all Azure regions that [support SSD Azure file shares](/azure/storage/files/redundancy-premium-file-shares).
 
