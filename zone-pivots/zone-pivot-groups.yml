@@ -368,3 +368,12 @@ groups:
     title: Create cluster and key vault with Terraform
   - id: terraform-update
     title: Update cluster and key vault with Terraform
+# Owner: davidsmatlak
+- id: portal-terraform
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-portal
+    title: Azure portal
+  - id: terraform
+    title: Terraform
