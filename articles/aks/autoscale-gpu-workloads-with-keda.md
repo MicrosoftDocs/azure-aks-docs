@@ -27,7 +27,7 @@ Before proceeding, ensure your AKS cluster is configured with the following:
 
 At this point, you should have:
 
-- An AKS cluster with [NVIDIA GPU-enabled node pool(s)](./use-nvidia-gpu.md), and [GPUs confirmed as schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable).
+- An AKS cluster with [NVIDIA GPU-enabled node pools](./use-nvidia-gpu.md), and [GPUs confirmed as schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable).
 - [Azure Managed Prometheus and Grafana enabled on your AKS cluster](/azure/azure-monitor/containers/kubernetes-monitoring-enable).
  [KEDA enabled on your cluster](/azure/azure-monitor/containers/integrate-keda).
 - The User Assigned Managed Identity used by KEDA assigned the `Monitoring Data Reader` role scoped to the Azure Monitor Workspace associated with your AKS cluster.

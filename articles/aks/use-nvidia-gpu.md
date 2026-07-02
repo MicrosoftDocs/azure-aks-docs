@@ -43,7 +43,7 @@ Check available and supported VM sizes using the [`az vm list-skus`][az-vm-list-
 az vm list-skus --location <your-location> --output table
 ```
 
-For AKS node pools, we recommend a minimum size of `Standard_NC4as_T4_v3`. The NVv4 series (based on AMD GPUs) aren't supported on AKS.
+For AKS node pools, use a minimum size of `Standard_NC4as_T4_v3`. The NVv4 series (based on AMD GPUs) isn't supported on AKS.
 
 > [!NOTE]
 > GPU-enabled VMs contain specialized hardware subject to higher pricing and region availability. For more information, see the [pricing][azure-pricing] tool and [region availability][azure-availability].
