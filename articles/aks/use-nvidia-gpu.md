@@ -4,7 +4,7 @@ description: Learn how to use GPUs for high performance compute or graphics-inte
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
-ms.date: 06/25/2026
+ms.date: 07/02/2026
 author: schaffererin
 ms.author: schaffererin
 
@@ -43,7 +43,7 @@ Check available and supported VM sizes using the [`az vm list-skus`][az-vm-list-
 az vm list-skus --location <your-location> --output table
 ```
 
-For AKS node pools, we recommend a minimum size of *Standard_NC6s_v3*. The NVv4 series (based on AMD GPUs) aren't supported on AKS.
+For AKS node pools, we recommend a minimum size of `Standard_NC4as_T4_v3`. The NVv4 series (based on AMD GPUs) aren't supported on AKS.
 
 > [!NOTE]
 > GPU-enabled VMs contain specialized hardware subject to higher pricing and region availability. For more information, see the [pricing][azure-pricing] tool and [region availability][azure-availability].
@@ -100,7 +100,7 @@ az aks nodepool add \
     --cluster-name myAKSCluster \
     --name gpunp \
     --node-count 1 \
-    --node-vm-size Standard_NC6s_v3 \
+    --node-vm-size Standard_NC4as_T4_v3 \
     --node-taints sku=gpu:NoSchedule \
     --enable-cluster-autoscaler \
     --min-count 1 \
@@ -109,7 +109,7 @@ az aks nodepool add \
 
 This command adds a node pool named *gpunp* to *myAKSCluster* in *myResourceGroup* and uses parameters to configure the following node pool settings:
 
-* `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC6s_v3*.
+* `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC4as_T4_v3*.
 * `--node-taints`: Specifies a *sku=gpu:NoSchedule* taint on the node pool.
 * `--enable-cluster-autoscaler`: Enables the cluster autoscaler.
 * `--min-count`: Configures the cluster autoscaler to maintain a minimum of one node in the node pool.
@@ -131,7 +131,7 @@ az aks nodepool add \
     --name gpunp \
     --node-count 1 \
     --os-sku AzureLinux \
-    --node-vm-size Standard_NC6s_v3 \
+    --node-vm-size Standard_NC4as_T4_v3 \
     --node-taints sku=gpu:NoSchedule \
     --enable-cluster-autoscaler \
     --min-count 1 \
@@ -140,7 +140,7 @@ az aks nodepool add \
 
 This command adds a node pool named *gpunp* to *myAKSCluster* in *myResourceGroup* and uses parameters to configure the following node pool settings:
 
-* `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC6s_v3*.
+* `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC4as_T4_v3*.
 * `--node-taints`: Specifies a *sku=gpu:NoSchedule* taint on the node pool.
 * `--enable-cluster-autoscaler`: Enables the cluster autoscaler.
 * `--min-count`: Configures the cluster autoscaler to maintain a minimum of one node in the node pool.
@@ -229,7 +229,7 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
         --name gpunp \
         --node-count 1 \
         --gpu-driver none \
-        --node-vm-size Standard_NC6s_v3 \
+        --node-vm-size Standard_NC4as_T4_v3 \
         --enable-cluster-autoscaler \
         --min-count 1 \
         --max-count 3
