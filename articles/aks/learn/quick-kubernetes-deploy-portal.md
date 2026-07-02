@@ -4,9 +4,9 @@ titleSuffix: Azure Kubernetes Service
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) using the Azure portal.
 ms.topic: quickstart
 ms.date: 12/19/2025
-ms.custom: mvc, mode-ui
-ms.author: schaffererin
-author: schaffererin
+ms.custom: mvc, mode-ui, aks-getting-started
+ms.author: davidsmatlak
+author: davidsmatlak
 
 # Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run and monitor applications using the managed Kubernetes service in Azure.
 

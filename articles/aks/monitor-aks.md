@@ -5,8 +5,8 @@ ms.date: 01/20/2026
 ms.custom: horz-monitor, copilot-scenario-highlight
 ms.topic: overview
 ms.service: azure-kubernetes-service
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-monitoring
 #Customer intent: As a cloud administrator, I want to implement comprehensive monitoring for Azure Kubernetes Service (AKS) so that I can ensure performance and reliability in my critical applications and manage resource utilization effectively.
 ---

@@ -1,8 +1,8 @@
 ---
 title: Configure Azure CNI Overlay Networking in Azure Kubernetes Service (AKS)
 description: Learn how to configure Azure CNI Overlay networking in Azure Kubernetes Service (AKS), including setup, dual-stack networking, and example workload deployment.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to

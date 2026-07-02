@@ -2,6 +2,7 @@
 title: Deploy the Open Service Mesh add-on using Bicep in Azure Kubernetes Service (AKS)
 description: Use a Bicep template to deploy the Open Service Mesh (OSM) add-on to Azure Kubernetes Service (AKS).
 ms.topic: how-to
+ms.subservice: aks-networking
 ms.custom: devx-track-bicep
 ms.date: 09/25/2024
 ms.author: schaffererin

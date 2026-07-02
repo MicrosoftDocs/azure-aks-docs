@@ -4,9 +4,10 @@ description: Learn how to secure access to the API server in Azure Kubernetes Se
 ms.topic: how-to
 ms.custom: devx-track-azurecli, devx-track-azurepowershell, copilot-scenario-highlight
 ms.date: 05/19/2024
-ms.author: schaffererin
-author: schaffererin
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.subservice: aks-security
 zone_pivot_groups: api-server-authorized-ip-ranges
 # Customer intent: As a cluster operator, I want to increase the security of my cluster by limiting access to the API server to only the IP addresses that I specify.
 ---

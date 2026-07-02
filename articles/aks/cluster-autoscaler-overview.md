@@ -3,6 +3,7 @@ title: Cluster autoscaling in Azure Kubernetes Service (AKS) overview
 titleSuffix: Azure Kubernetes Service
 description: Learn about cluster autoscaling in Azure Kubernetes Service (AKS) using the cluster autoscaler.
 ms.topic: concept-article
+ms.custom: aks-scaling
 ms.date: 01/05/2024
 author: schaffererin
 ms.author: schaffererin

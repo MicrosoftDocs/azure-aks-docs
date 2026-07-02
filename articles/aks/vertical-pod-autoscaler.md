@@ -2,10 +2,10 @@
 title: Vertical Pod Autoscaling in Azure Kubernetes Service (AKS)
 description: Learn about vertical pod autoscaling in Azure Kubernetes Service (AKS), including AKS Automatic where Vertical Pod Autoscaler (VPA) is preconfigured and AKS Standard where you configure it explicitly.
 ms.topic: overview
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, aks-scaling
 ms.date: 03/24/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: "As an AKS administrator, I want to implement Vertical Pod Autoscaler so that I can optimize resource allocation for my containers based on usage patterns, enhancing overall cluster efficiency and performance."
 ---

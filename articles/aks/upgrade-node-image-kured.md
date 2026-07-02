@@ -6,8 +6,8 @@ ms.topic: how-to
 ms.custom: build-2023, linux-related-content
 ms.reviewer: mattmcinnes
 ms.date: 04/19/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 ms.subservice: aks-upgrade
 

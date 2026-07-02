@@ -2,6 +2,7 @@
 title: Configure Availability Zones in Azure Kubernetes Service (AKS)
 description: Learn how to configure availability zones in Azure Kubernetes Service (AKS) to increase the availability of your applications.
 ms.service: azure-kubernetes-service
+ms.custom: aks-reliability
 ms.topic: how-to
 ms.date: 03/26/2026
 author: schaffererin

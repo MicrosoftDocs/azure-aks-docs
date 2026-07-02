@@ -1,12 +1,12 @@
 ---
 title: Rearchitect AWS EKS web application for Azure Kubernetes Service (AKS)
 description: Understand the architectural differences and steps to replicate the AWS EKS web application workload and AWS WAF protection in Azure.
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.date: 10/31/2024
 ms.service: azure-kubernetes-service
-ms.custom: 
+ms.custom: aks-migration
     - migration
     - aws-to-azure
     - eks-to-aks

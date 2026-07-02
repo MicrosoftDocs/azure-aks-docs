@@ -5,8 +5,8 @@ ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 09/18/2023
-ms.author: schaffererin
-author: schaffererin
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.subservice: aks-developer
 # Customer intent: As a cloud developer, I want to secure access to Azure OpenAI from my AKS deployment using workload identities, so that I can implement a passwordless authentication mechanism for Azure resources and enhance the security of my applications.
 ---

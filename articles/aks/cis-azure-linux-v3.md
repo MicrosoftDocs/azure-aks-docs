@@ -1,9 +1,10 @@
 ---
 title: Center for Internet Security (CIS) Azure Linux 3.0 benchmark
 description: Learn how AKS applies the CIS benchmark with the Azure Linux 3.0 image
-author: schaffererin
-ms.author: schaffererin
-ms.service: microsoft-linux
+author: davidsmatlak
+ms.author: davidsmatlak
+ms.service: azure-kubernetes-service
+ms.subservice: aks-security
 ms.custom: linux-related-content
 ms.topic: concept-article
 ms.date: 08/26/2025

@@ -4,8 +4,8 @@ description: Learn how to manually and automatically scale node pools in Azure K
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 07/19/2023
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-nodes
 # Customer intent: "As a Kubernetes administrator, I want to scale my node pools in AKS to handle varying workloads efficiently."
 ---
