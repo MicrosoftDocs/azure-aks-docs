@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 12/16/2025
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ai-usage: ai-assisted
 # Customer intent: "As a cloud administrator, I want to implement Microsoft Entra pod-managed identities in my Azure Kubernetes Service cluster, so that I can securely manage identities and access to Azure resources for my applications."
 ---

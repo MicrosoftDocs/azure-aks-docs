@@ -1,8 +1,8 @@
 ---
 title: Reduce image pull time with Artifact Streaming on Azure Kubernetes Service (AKS) (Preview)
 description: Learn how to enable Artifact Streaming on Azure Kubernetes Service (AKS) to reduce image pull time.
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.topic: how-to

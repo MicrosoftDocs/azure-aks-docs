@@ -2,10 +2,11 @@
 title: Migration guidance from the Open Service Mesh (OSM) add-on to the Istio add-on
 description: Learn how to migrate from the Open Service Mesh (OSM) add-on to the Istio add-on for Azure Kubernetes Service (AKS).
 ms.service: azure-kubernetes-service
+ms.custom: aks-migration
 ms.topic: how-to
 ms.date: 05/29/2026
-ms.author: schaffererin
-author: schaffererin
+ms.author: davidsmatlak
+author: davidsmatlak
 ai-usage: ai-assisted
 # Customer intent: "As a cloud engineer migrating microservices from the OSM add-on to the Istio add-on, I want guidance for translating OSM add-on configurations to Istio add-on equivalents, so that I can plan the changes needed for my workloads."
 ---

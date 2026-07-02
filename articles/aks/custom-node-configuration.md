@@ -4,8 +4,8 @@ description: Learn how to customize the configuration on Azure Kubernetes Servic
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.date: 06/10/2026
-ms.author: schaffererin
-author: schaffererin
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.subservice: aks-nodes
 # Customer intent: "As a cloud engineer, I want to customize node configurations on my Kubernetes cluster, so that I can optimize performance and resource management for my specific workloads."
 ---

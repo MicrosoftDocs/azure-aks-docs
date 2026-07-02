@@ -2,6 +2,7 @@
 title: Concepts - AKS Legacy Container Networking Interfaces (CNI)
 description: Learn about legacy CNI networking options in Azure Kubernetes Service (AKS)
 ms.topic: concept-article
+ms.subservice: aks-networking
 ms.date: 04/16/2026
 ai-usage: ai-assisted
 author: schaffererin

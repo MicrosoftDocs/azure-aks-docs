@@ -2,6 +2,7 @@
 title: Concepts - Fine-tuning language models for AI and machine learning workflows
 description: Learn about how you can customize language models to use in your AI and machine learning workflows on Azure Kubernetes Service (AKS).
 ms.topic: concept-article
+ms.custom: aks-ai-ml
 ms.date: 07/15/2024
 author: schaffererin
 ms.author: schaffererin

@@ -3,9 +3,10 @@ title: Node resource reservations in Azure Kubernetes Service (AKS)
 description: Learn about node resource reservations in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.service: azure-kubernetes-service
+ms.subservice: aks-nodes
 ms.date: 06/11/2026
-ms.author: schaffererin
-author: schaffererin
+ms.author: davidsmatlak
+author: davidsmatlak
 # Customer intent: As a Kubernetes administrator, I want to understand node resource reservations in Azure Kubernetes Service, so that I can effectively manage resource allocation and optimize the performance of my clusters.
 ---
 

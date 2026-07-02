@@ -6,7 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 09/15/2025
 author: schaffererin
 ms.author: schaffererin
-ms.custom: 'stateful-workloads'
+ms.custom: 'stateful-workloads, aks-data-messaging'
 # Customer intent: As a cloud architect, I want to deploy a Valkey cluster on Azure Kubernetes Service, so that I can ensure high availability and scalability similar to the Azure Cache for Redis Premium tier while effectively utilizing availability zones.
 ---
 

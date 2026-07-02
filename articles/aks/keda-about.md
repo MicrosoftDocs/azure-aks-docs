@@ -5,6 +5,7 @@ author: tomkerkhove
 ms.topic: concept-article
 ms.date: 05/23/2025
 ms.service: azure-kubernetes-service
+ms.custom: aks-scaling
 ms.author: schaffererin
 # Customer intent: As a cloud engineer, I want to implement event-driven autoscaling in my Kubernetes environment using KEDA, so that I can optimize my application performance and resource usage while ensuring cost efficiency.
 ---

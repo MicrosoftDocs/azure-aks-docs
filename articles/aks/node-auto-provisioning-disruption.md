@@ -2,7 +2,7 @@
 title: Configure Disruption Policies for Node Auto-Provisioning (NAP) Nodes in Azure Kubernetes Service (AKS)
 description: Learn how to configure node disruption policies for node auto-provisioning (NAP) nodes in Azure Kubernetes Service (AKS) to optimize resource utilization.
 ms.topic: overview
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, aks-scaling
 ms.date: 07/25/2025
 ms.author: schaffererin
 author: schaffererin

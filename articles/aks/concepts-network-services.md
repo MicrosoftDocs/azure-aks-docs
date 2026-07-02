@@ -4,6 +4,7 @@ description: Learn about networking services in Azure Kubernetes Service (AKS), 
 ms.topic: concept-article
 ms.date: 04/08/2024
 ms.service: azure-kubernetes-service
+ms.subservice: aks-networking
 ms.custom: fasttrack-edit
 ms.author: schaffererin
 author: schaffererin

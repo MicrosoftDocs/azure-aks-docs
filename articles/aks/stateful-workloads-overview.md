@@ -4,8 +4,8 @@ description: Learn about running stateful workloads in Azure Kubernetes Service 
 ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.date: 06/13/2025
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.collection: 
  - migration
 ms.custom: 'stateful-workloads'

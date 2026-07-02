@@ -6,7 +6,7 @@ ms.date: 06/17/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
-ms.custom: devx-track-azurepowershell, mode-api
+ms.custom: devx-track-azurepowershell, mode-api, aks-getting-started
 ai-usage: ai-assisted
 
 # Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.

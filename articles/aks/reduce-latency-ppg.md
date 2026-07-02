@@ -2,9 +2,10 @@
 title: Use proximity placement groups to reduce latency for Azure Kubernetes Service (AKS) clusters
 description: Learn how to use proximity placement groups to reduce latency for your Azure Kubernetes Service (AKS) cluster workloads.
 ms.topic: how-to
+ms.subservice: aks-networking
 ms.date: 06/19/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 # Customer intent: As a cloud architect, I want to configure proximity placement groups for my Kubernetes clusters, so that I can minimize latency and enhance the performance of applications requiring low-latency communication.
 ---

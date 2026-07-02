@@ -6,8 +6,8 @@ ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 01/23/2024
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 # Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an Azure Load Balancer with a Standard SKU.
 ---
 
