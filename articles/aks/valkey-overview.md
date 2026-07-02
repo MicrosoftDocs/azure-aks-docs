@@ -26,16 +26,7 @@ For more information, see the [Valkey documentation][valkey-docs].
 
 ## Valkey solution overview
 
-This solution deploys three Valkey primary pods across two availability zones with one replica pod per primary in a third zone, running on `Standard_E64_v5` SKU nodes. We create two distinct `StatefulSet` resources with `spec.affinity` rules ensuring zone distribution for high availability.
-The following table lists key features of the proposed Valkey solution:
-
-| Valkey solution |
-| --- | --- |
-| **Memory** | Using _three_ primary nodes running on the `Standard_E64_v5` SKU. |
-| **Replication** | Adding at least _one_ replica pod per primary pod. |
-| **Zone redundancy** | Placing primary and replica pods in different availability zones. |
-
-We create two distinct [`StatefulSet`][kubernetes-stateful-sets] resources: one for the Valkey primary pods and one for the replica pods. The `spec.affinity` of the `StatefulSet` API places the primary pods in two different availability zones and the replica pods in another third availability zone.
+This solution deploys three Valkey primary pods across two availability zones with one replica pod per primary in a third zone, running on `Standard_E64_v5` SKU nodes. You create two distinct `StatefulSet` resources with `spec.affinity` rules that ensure zone distribution for high availability. You create one [StatefulSet][kubernetes-stateful-sets] for the Valkey primary pods and another for the replica pods.
 
 > [!NOTE]
 > Note that the solution suggested in this article differs from the Valkey documentation, where cluster Pods belong to a single `StatefulSet`, and the `spec.affinity` only ensures that the Pods are placed on different nodes. The automatic Valkey cluster initialization presented in the Valkey documentation doesn't ensure that the primary and replica Pods for the same shard are placed in different availability zones.
