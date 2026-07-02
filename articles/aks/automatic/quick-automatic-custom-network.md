@@ -41,6 +41,9 @@ If you don't have an Azure account, create a [free account](https://azure.micros
 - AKS Automatic will [enable Azure Policy on your AKS cluster][policy-for-kubernetes], but you should pre-register the `Microsoft.PolicyInsights` resource provider in your subscription for a smoother experience. For more information, see [Azure resource providers and types][az-provider-register] for more information.
 - Uninstall the AKS-preview extension using `az extension remove -n aks-preview`. 
 
+> [!IMPORTANT]
+> The `aks-preview` CLI extension is incompatible with AKS Automatic custom virtual network deployments. If the extension is installed, it overrides the `az aks create` command surface and hides the required `--node-subnet-id` and `--system-node-subnet-id` parameters. Using the legacy `--vnet-subnet-id` parameter instead will cause the deployment to be accepted but fail after a prolonged timeout (up to 2 hours) during node provisioning. Always remove the `aks-preview` extension before creating AKS Automatic clusters with custom virtual networks.
+
 [!INCLUDE [Kubernetes gateway](../includes/aks-automatic/aks-automatic-kubernetes-gateway.md)]
 
 [!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
