@@ -26,13 +26,12 @@ For more information, see the [Valkey documentation][valkey-docs].
 
 ## Valkey solution overview
 
-This solution deploys three Valkey primary pods across two availability zones with one replica pod per primary in a third zone, running on `Standard_E64_v5` SKU nodes. We create two distinct `StatefulSet` resources with `spec.affinity` rules ensuring zone distribution for high availability. The goal of this solution is to deploy Valkey on AKS with the same level of service as the [Azure Cache for Redis][azure-cache-for-redis] Premium tier.
+This solution deploys three Valkey primary pods across two availability zones with one replica pod per primary in a third zone, running on `Standard_E64_v5` SKU nodes. We create two distinct `StatefulSet` resources with `spec.affinity` rules ensuring zone distribution for high availability.
+The following table lists key features of the proposed Valkey solution:
 
-The following table lists key features of the Azure Cache for Redis Premium tier and the proposed Valkey solution:
-
-| Azure Cache for Redis Premium tier | Valkey solution |
+| Valkey solution |
 | --- | --- |
-| **Memory up to 1.2 TB** | Using _three_ primary nodes running on the `Standard_E64_v5` SKU. |
+| **Memory** | Using _three_ primary nodes running on the `Standard_E64_v5` SKU. |
 | **Replication** | Adding at least _one_ replica pod per primary pod. |
 | **Zone redundancy** | Placing primary and replica pods in different availability zones. |
 
