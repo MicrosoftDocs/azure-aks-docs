@@ -3,6 +3,7 @@ title: AI and ML Workloads in Azure Kubernetes Service (AKS)
 description: Learn about running AI and ML workloads in Azure Kubernetes Service (AKS), including guidance for AKS Automatic and AKS Standard.
 ms.topic: overview
 ms.service: azure-kubernetes-service
+ms.custom: aks-ai-ml
 ms.date: 06/05/2026
 author: schaffererin
 ms.author: schaffererin

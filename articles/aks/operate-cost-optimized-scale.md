@@ -4,6 +4,7 @@ description: Learn how to operate cost optimized Azure Kubernetes Service (AKS) 
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-scaling
 ms.topic: how-to
 ms.date: 03/18/2025
 # Customer intent: "As a cloud operations manager, I want to implement cost-optimized Kubernetes management practices, so that I can efficiently operate multiple AKS clusters at scale while minimizing operational costs."

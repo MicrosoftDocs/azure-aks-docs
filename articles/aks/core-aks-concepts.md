@@ -2,9 +2,10 @@
 title: Azure Kubernetes Service (AKS) Core Concepts
 description: Learn about the core concepts of Azure Kubernetes Service (AKS).
 ms.topic: concept-article
+ms.custom: aks-getting-started
 ms.date: 07/10/2024
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 # Customer intent: As a cloud architect, I want to understand the core concepts of managed Kubernetes services so that I can effectively deploy and manage containerized applications at scale in a cloud environment.
 ---
 

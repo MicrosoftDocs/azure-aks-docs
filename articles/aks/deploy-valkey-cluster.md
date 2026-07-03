@@ -7,7 +7,7 @@ ms.date: 09/15/2025
 author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-cli-or-terraform
-ms.custom: 'stateful-workloads'
+ms.custom: 'stateful-workloads, aks-data-messaging'
 # Customer intent: As a cloud engineer, I want to configure and deploy a Valkey cluster on a Kubernetes environment, so that I can ensure high availability and redundancy for my applications.
 ---
 

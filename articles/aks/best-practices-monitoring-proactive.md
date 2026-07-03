@@ -5,8 +5,8 @@ description: Learn the best practices for proactively monitoring your Azure Kube
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
 ms.date: 11/01/2024
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-monitoring
 # Customer intent: "As a cloud operations engineer, I want to implement proactive monitoring for my Kubernetes clusters, so that I can minimize downtime and improve application reliability through timely alerts and performance insights."
 ---

@@ -5,6 +5,7 @@ ms.author: schaffererin
 author: schaffererin
 ms.topic: how-to
 ms.service: azure-kubernetes-service
+ms.custom: aks-scaling
 ms.date: 05/20/2025
 ai-usage: ai-assisted
 ---

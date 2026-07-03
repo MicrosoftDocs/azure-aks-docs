@@ -3,9 +3,10 @@ title: Update application code for the event-driven workflow (EDW) workload
 description: Learn how to update the application code of the AWS EKS event-driven workflow (EDW) workload to replicate it in AKS.
 ms.topic: how-to
 ms.date: 06/20/2024
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.custom: aks-migration
 # Customer intent: As a developer migrating an event-driven workflow from AWS to Azure, I want to update the application code and implement Azure SDKs for data access and authentication, so that I can successfully replicate the workload and utilize Azure services effectively.
 ---
 

@@ -4,6 +4,7 @@ description: Learn how to spin up Kata pods to enforce compute isolation across 
 ms.topic: how-to
 ms.date: 11/18/2025
 ms.service: azure-kubernetes-service
+ms.subservice: aks-security
 ms.author: davidsmatlak
 author: davidsmatlak
 ---

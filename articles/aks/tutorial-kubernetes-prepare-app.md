@@ -3,9 +3,9 @@ title: Kubernetes on Azure tutorial - Prepare an Application for Azure Kubernete
 description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to prepare and build a multi-container app with Docker Compose that you can then deploy to AKS.
 ms.topic: tutorial
 ms.date: 09/06/2024
-author: schaffererin
-ms.author: schaffererin
-ms.custom: mvc, devx-track-extended-azdevcli
+author: davidsmatlak
+ms.author: davidsmatlak
+ms.custom: mvc, devx-track-extended-azdevcli, aks-getting-started
 ms.service: azure-kubernetes-service
 # Customer intent: As a developer, I want to learn how to build a container-based application so that I can deploy the app to Azure Kubernetes Service.
 ---

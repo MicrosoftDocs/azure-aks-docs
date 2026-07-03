@@ -2,7 +2,7 @@
 title: Configure Node Pools for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS)
 description: This article shows you how to configure node pools for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS), including SKU selectors, limits, and weights.
 ms.topic: how-to
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, aks-scaling
 ms.date: 07/25/2025
 ms.author: schaffererin
 author: schaffererin

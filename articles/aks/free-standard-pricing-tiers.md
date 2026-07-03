@@ -4,9 +4,9 @@ description: Learn about the Free, Standard, and Premium pricing tiers for Azure
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 05/20/2026
-author: schaffererin
-ms.author: schaffererin
-ms.custom: references_regions, devx-track-azurecli
+author: davidsmatlak
+ms.author: davidsmatlak
+ms.custom: references_regions, devx-track-azurecli, aks-cost
 # Customer intent: As an Azure user, I want to understand the different pricing tiers for AKS cluster management so that I can choose the right tier for my workloads and budget.
 ---
 

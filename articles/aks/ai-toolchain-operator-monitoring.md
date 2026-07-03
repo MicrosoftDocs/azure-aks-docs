@@ -5,6 +5,7 @@ ms.author: schaffererin
 author: schaffererin
 ms.topic: how-to
 ms.service: azure-kubernetes-service
+ms.custom: aks-ai-ml
 ms.date: 3/25/2025
 # Customer intent: "As a data engineer, I want to monitor and visualize inference service metrics on AKS, so that I can ensure optimal performance and resource utilization while managing AI workloads."
 ---

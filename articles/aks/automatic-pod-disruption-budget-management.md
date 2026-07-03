@@ -4,7 +4,6 @@ description: Learn how to use automatic Pod Disruption Budget management (previe
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
-ms.custom: azure-kubernetes-service
 ms.date: 03/16/2026
 author: kaarthis
 ms.author: kaarthis

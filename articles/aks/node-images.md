@@ -3,9 +3,10 @@ title: Node Images in Azure Kubernetes Service (AKS)
 description: Learn about the different node images available in Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
+ms.subservice: aks-nodes
 ms.date: 07/03/2025
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 # Customer intent: "As a Kubernetes administrator, I want to understand the available node images in Azure Kubernetes Service, so that I can select the appropriate OS version and ensure my clusters remain supported and secure."
 ---
 

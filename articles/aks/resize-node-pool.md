@@ -4,8 +4,8 @@ description: Learn how to resize node pools for a cluster in Azure Kubernetes Se
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 08/28/2025
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-nodes
 # Customer intent: As a Kubernetes cluster operator, I want to resize my node pools by cordoning and draining, so that I can efficiently manage resources and support increasing workloads.
 ---

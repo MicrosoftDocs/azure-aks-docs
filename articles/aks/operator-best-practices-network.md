@@ -3,6 +3,7 @@ title: Best practices for network resources in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn the cluster operator best practices for virtual network resources and connectivity in Azure Kubernetes Service (AKS).
 ms.topic: best-practice
+ms.subservice: aks-networking
 ms.date: 11/10/2025
 author: schaffererin
 ms.author: schaffererin

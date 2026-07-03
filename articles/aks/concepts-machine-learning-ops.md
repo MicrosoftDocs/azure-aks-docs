@@ -4,6 +4,7 @@ description: Learn about MLOps and how to apply it to AI and machine learning wo
 ms.topic: concept-article
 ms.date: 06/04/2026
 ms.service: azure-kubernetes-service
+ms.custom: aks-ai-ml
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: As a machine learning engineer, I want to implement MLOps practices in my AI workflows, so that I can automate the model lifecycle and enhance collaboration between teams for faster and more reliable deployments.

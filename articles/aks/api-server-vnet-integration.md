@@ -1,8 +1,8 @@
 ---
 title: API Server VNet Integration in Azure Kubernetes Service (AKS)
 description: Learn how to use API Server VNet Integration in Azure Kubernetes Service (AKS), including AKS Automatic where it's preconfigured and AKS Standard where you enable it explicitly.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-networking
 ms.service: azure-kubernetes-service
 ms.topic: how-to

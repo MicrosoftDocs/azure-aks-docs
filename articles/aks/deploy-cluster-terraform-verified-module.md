@@ -3,9 +3,10 @@ title: Deploy a Production-Ready Azure Kubernetes Service (AKS) Cluster using Te
 description: Learn how to deploy a production-ready Azure Kubernetes Service (AKS) cluster using Terraform with an Azure Verified Module (AVM).
 ms.topic: how-to
 ms.date: 04/07/2026
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.subservice: aks-developer
 # Customer intent: "As a cloud engineer, I want to deploy a production-ready Azure Kubernetes Service (AKS) cluster using Terraform with an Azure Verified Module (AVM) so that I can ensure a consistent, reliable, and secure Kubernetes environment."
 ---
 

@@ -4,9 +4,10 @@ description: Learn how node resource group lockdown works in AKS Automatic and A
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.service: azure-kubernetes-service
+ms.subservice: aks-security
 ms.date: 06/30/2026
-ms.author: schaffererin
-author: schaffererin
+ms.author: davidsmatlak
+author: davidsmatlak
 # Customer intent: As a Kubernetes administrator, I want to deploy a fully managed resource group with node resource group lockdown, so that I can prevent unauthorized changes to cluster resources and ensure stable operations within my AKS environment.
 ---
 

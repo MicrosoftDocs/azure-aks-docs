@@ -4,8 +4,8 @@ description: Third-party and supply chain security guidance for AKS clusters for
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.custom:
   - pci-dss
   - compliance
