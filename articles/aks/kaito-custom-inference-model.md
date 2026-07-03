@@ -2,7 +2,7 @@
 title: Onboard custom models for inferencing with the AI toolchain operator (KAITO) on Azure Kubernetes Service (AKS)
 description: Learn how to onboard custom models for inferencing with the AI toolchain operator (KAITO) on AKS.
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.custom: azure-kubernetes-service, aks-ai-ml
 ms.date: 03/27/2026
 author: schaffererin
 ms.author: schaffererin

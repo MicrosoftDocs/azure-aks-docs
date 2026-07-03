@@ -6,6 +6,7 @@ ms.date: 11/10/2025
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
+ms.subservice: aks-networking
 # Customer intent: As a Kubernetes operator, I want to integrate Open Service Mesh with Azure Kubernetes Service, so that I can manage traffic routing, observability, and security for my applications effectively while preparing for the migration to Istio.
 ---
 

@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-ai-ml
 ms.date: 10/1/2025
 # Customer intent: As an AI app developer, I want to integrate tool calling with inference services on Azure Kubernetes Service (AKS), so that my LLM-powered applications can dynamically interact with external APIs and perform real-world tasks at scale in a secure, reliable, and maintainable manner."
 ---

@@ -3,6 +3,7 @@ title: Machine Learning Operations (MLOps) Best Practices in Azure Kubernetes Se
 description: Learn MLOps best practices for AI and machine learning workflows on Azure Kubernetes Service (AKS), including guidance for AKS Automatic and AKS Standard.
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
+ms.custom: aks-ai-ml
 ms.date: 06/04/2026
 author: schaffererin
 ms.author: schaffererin

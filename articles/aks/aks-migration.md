@@ -3,9 +3,9 @@ title: Migrate to Azure Kubernetes Service (AKS)
 description: This article shows you how to migrate to Azure Kubernetes Service (AKS).
 ms.topic: concept-article
 ms.date: 06/12/2024
-author: schaffererin
-ms.author: schaffererin
-ms.custom: mvc, devx-track-azurecli
+author: davidsmatlak
+ms.author: davidsmatlak
+ms.custom: mvc, devx-track-azurecli, aks-migration
 ms.collection: 
  - migration
 # Customer intent: As a DevOps engineer, I want to migrate my applications to Azure Kubernetes Service (AKS) so that I can leverage managed services for improved scalability and reduced management overhead while ensuring high availability and business continuity during the transition.

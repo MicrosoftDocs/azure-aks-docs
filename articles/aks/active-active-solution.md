@@ -4,6 +4,7 @@ description: Learn about the recommended active-active high availability solutio
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-reliability
 ms.topic: concept-article
 ms.date: 01/30/2024
 # Customer intent: "As a cloud architect, I want to implement an active-active high availability solution using multiple Azure Kubernetes Service clusters, so that I can ensure business continuity and minimal downtime in case of a regional failure."

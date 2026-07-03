@@ -6,7 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 07/14/2025
 author: schaffererin
 ms.author: schaffererin
-ms.custom: 'stateful-workloads'
+ms.custom: 'stateful-workloads, aks-data-messaging'
 # Customer intent: "As a cloud engineer, I want to deploy Apache Airflow on Azure Kubernetes Service using Helm, so that I can efficiently manage and automate workflows in a scalable and production-grade environment."
 ---
 

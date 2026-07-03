@@ -6,6 +6,7 @@ ms.date: 06/24/2026
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-ai-ml
 # Customer intent: "As a data scientist, I want to understand the differences between small and large language models, so that I can select the appropriate model for my AI and machine learning workflows on Kubernetes."
 ---
 

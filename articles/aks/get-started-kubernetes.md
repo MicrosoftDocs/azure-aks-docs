@@ -2,9 +2,10 @@
 title: Get started with Kubernetes
 titleSuffix: Azure Kubernetes Service
 description: Learn the basics of Kubernetes so you can start deploying and managing containerized applications using Azure Kubernetes Service (AKS).
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.custom: aks-getting-started
 ms.topic: get-started
 ms.date: 06/26/2025
 

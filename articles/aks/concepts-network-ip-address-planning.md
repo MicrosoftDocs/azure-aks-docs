@@ -2,6 +2,7 @@
 title: Concepts - IP address planning in Azure Kubernetes Service (AKS)
 description: Learn about IP address planning in Azure Kubernetes Service (AKS).
 ms.topic: concept-article
+ms.subservice: aks-networking
 ms.date: 04/16/2026
 ai-usage: ai-assisted
 author: schaffererin

@@ -4,6 +4,7 @@ description: Learn how to troubleshoot common CoreDNS issues on Azure Kubernetes
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.subservice: aks-networking
 ms.topic: troubleshooting-general
 ms.date: 09/08/2025
 # Customer intent: As a cluster operator or developer, I want to troubleshoot CoreDNS issues so that I can ensure reliable DNS resolution in my AKS cluster.

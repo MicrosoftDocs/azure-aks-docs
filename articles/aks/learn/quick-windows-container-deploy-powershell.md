@@ -5,7 +5,7 @@ ms.topic: quickstart
 ms.date: 07/07/2025
 author: schaffererin
 ms.author: schaffererin
-ms.custom: devx-track-azurepowershell
+ms.custom: devx-track-azurepowershell, aks-windows
 ms.service: azure-kubernetes-service
 # Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy a Windows Server container so that I can see how to run applications running on a Windows Server container using the managed Kubernetes service in Azure.
 ---

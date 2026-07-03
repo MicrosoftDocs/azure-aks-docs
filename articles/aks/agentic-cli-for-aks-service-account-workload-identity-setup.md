@@ -3,10 +3,10 @@ title: Create a Service Account and Configure Workload Identity for the Agentic 
 description: Learn how to create the required service account and optionally configure workload identity for the agentic CLI for AKS to enable authentication.
 ms.topic: how-to
 ms.date: 01/29/2026
-author: aritragho
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
-ms.subservice: aks-monitoring
+ms.subservice: aks-developer
 ai-usage: ai-generated
 # Customer intent: As a cluster administrator or SRE, I want to set up the required service account and optionally configure workload identity for the agentic CLI for AKS so that the agent can access cluster resources securely.
 ---

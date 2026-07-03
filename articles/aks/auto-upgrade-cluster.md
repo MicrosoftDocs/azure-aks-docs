@@ -2,8 +2,8 @@
 title: Automatically Upgrade an Azure Kubernetes Service (AKS) Cluster
 description: Learn how to automatically upgrade an Azure Kubernetes Service (AKS) cluster to get the latest features and security updates. For AKS Automatic clusters, cluster upgrades are preconfigured using the stable channel. For AKS Standard clusters, select the upgrade channel that best meets your needs.
 ms.topic: how-to
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
 ms.date: 06/26/2026

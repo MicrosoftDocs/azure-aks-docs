@@ -4,6 +4,7 @@ description: Learn about a passive-cold disaster solution overview for Azure Kub
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-reliability
 ms.topic: concept-article
 ms.date: 01/30/2024
 # Customer intent: "As an IT architect, I want to implement a passive-cold disaster recovery solution in Azure Kubernetes Service, so that I can ensure business continuity and minimize application downtime during regional outages."
