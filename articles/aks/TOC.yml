@@ -492,6 +492,8 @@
               href: azure-app-configuration-settings.md
         - name: Dapr extension
           href: dapr-overview.md
+        - name: Inspektor Gadget extension
+          href: inspektor-gadget-overview.md
     - name: Stop and start an AKS cluster
       href: start-stop-cluster.md
     - name: Delete an AKS cluster
@@ -1350,6 +1352,18 @@
           href: how-to-configure-container-network-logs.md
     - name: Advanced Container Networking Services observability guide
       href: container-network-observability-guide.md
+    - name: Inspektor Gadget extension
+      items:
+        - name: Overview
+          href: inspektor-gadget-overview.md
+        - name: Install and configure
+          href: inspektor-gadget-configure.md
+        - name: Run gadgets
+          href: inspektor-gadget-run-gadgets.md
+        - name: Gadget catalog
+          href: inspektor-gadget-catalog.md
+        - name: Troubleshoot
+          href: inspektor-gadget-troubleshoot.md
     - name: Proactive monitoring best practices
       href: best-practices-monitoring-proactive.md
     - name: Configure AKS diagnostics
