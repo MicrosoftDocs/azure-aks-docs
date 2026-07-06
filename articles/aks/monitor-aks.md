@@ -26,7 +26,7 @@ For most production workloads, AKS Automatic is the recommended production-ready
 
 ## AKS Automatic monitoring defaults
 
-AKS Automatic is designed to provide a production-ready default experience for most AKS workloads. As part of that experience, AKS Automatic configures a default monitoring baseline for you.
+AKS Automatic provides a production-ready default experience for most AKS workloads. As part of that experience, AKS Automatic configures a default monitoring baseline for you.
 
 | Monitoring capability | AKS Automatic | AKS Standard |
 | --------------------- | ------------- | ------------ |
