@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 07/02/2026
-author: sachidesai
+author: sdesai345
 ms.author: sachidesai
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted

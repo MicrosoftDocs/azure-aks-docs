@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 07/02/2025
-author: sachidesai
+author: sdesai345
 ms.author: schaffererin
 
 # Customer intent: As a cluster administrator or developer, I want to deploy the NVIDIA GPU Operator on my AKS cluster, so that I can efficiently manage GPU resources and optimize workloads for advanced AI and high-performance computing applications.
@@ -47,7 +47,7 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 
 ### [Standard node pool](#tab/standard-node-pool)
 
-1. Skip automatic GPU driver installation by creating an NVIDIA GPU-enabled node pool by using the [`az aks nodepool add`][az-aks-nodepool-add] command and setting the API field `--gpu-driver` to the value `none`. Setting this API field to `none` during node pool creation skips the default GPU driver installation. For an example, see [this example](./use-nvidia-gpu.md#skip-gpu-driver-installation). This setting doesn't change any existing nodes. You can scale the node pool to zero and then back up to make the change take effect.
+1. Skip automatic GPU driver installation by creating an NVIDIA GPU-enabled node pool by using the [`az aks nodepool add`][az-aks-nodepool-add] command and setting the API field `--gpu-driver` to the value `none`. Setting this API field to `none` during node pool creation skips the default GPU driver installation. For an example, see [Skip GPU driver installation](./use-nvidia-gpu.md#skip-gpu-driver-installation). This setting doesn't change any existing nodes. You can scale the node pool to zero and then back up to make the change take effect.
 
 ```
 az aks nodepool add \
