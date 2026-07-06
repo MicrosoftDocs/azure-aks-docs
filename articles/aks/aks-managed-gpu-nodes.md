@@ -4,8 +4,8 @@ description: Learn how to provision a fully managed GPU node pool on your new or
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
-ms.date: 4/27/2026
-author: sachidesai
+ms.date: 07/02/2026
+author: sdesai345
 ms.author: sachidesai
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
@@ -117,7 +117,7 @@ To use the default Ubuntu operating system (OS) SKU, you create the node pool wi
         --cluster-name myAKSCluster \
         --name gpunp \
         --node-count 1 \
-        --node-vm-size Standard_NC6s_v3 \
+        --node-vm-size Standard_NC4as_T4_v3 \
         --node-taints sku=gpu:NoSchedule \
         --enable-managed-gpu=true
     ```
@@ -160,7 +160,7 @@ To use Azure Linux, you specify the OS SKU by setting `--os-sku` to `AzureLinux`
         --name gpunp \
         --node-count 1 \
         --os-sku AzureLinux \
-        --node-vm-size Standard_NC6s_v3 \
+        --node-vm-size Standard_NC4as_T4_v3 \
         --node-taints sku=gpu:NoSchedule \
         --enable-managed-gpu=true
     ```
@@ -399,7 +399,7 @@ az aks nodepool add \
     --cluster-name myAKSCluster \
     --name gpunp \
     --node-count 1 \
-    --node-vm-size Standard_NC6s_v3 \
+    --node-vm-size Standard_NC4as_T4_v3 \
     --node-taints sku=gpu:NoSchedule \
     --enable-managed-gpu=false
 ```
@@ -420,7 +420,7 @@ az aks nodepool add \
     --cluster-name myAKSCluster \
     --name gpunp \
     --node-count 1 \
-    --node-vm-size Standard_NC6s_v3 \
+    --node-vm-size Standard_NC4as_T4_v3 \
     --node-taints sku=gpu:NoSchedule \
     --enable-managed-gpu=false \
     --gpu-driver None
