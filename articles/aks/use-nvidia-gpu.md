@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 07/02/2026
-author: sdesai345
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 
 # Customer intent: As a cluster administrator or developer, I want to provision an Azure Kubernetes Service (AKS) cluster with GPU-enabled node pools, so that I can run high-performance, compute-intensive workloads effectively.
 ---
