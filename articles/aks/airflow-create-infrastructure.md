@@ -6,7 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 07/14/2025
 author: schaffererin
 ms.author: schaffererin
-ms.custom: 'stateful-workloads'
+ms.custom: 'stateful-workloads, aks-data-messaging'
 # Customer intent: As a cloud developer, I want to set up the necessary infrastructure for deploying Apache Airflow on Kubernetes, so that I can efficiently manage and orchestrate workflows within my applications.
 ---
 

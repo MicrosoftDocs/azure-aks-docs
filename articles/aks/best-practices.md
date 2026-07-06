@@ -3,9 +3,10 @@ title: Best Practices for Azure Kubernetes Service (AKS)
 description: Collection of cluster operator and developer best practices to build and manage applications in Azure Kubernetes Service (AKS), including guidance for AKS Automatic and AKS Standard.
 ms.topic: best-practice
 ms.date: 11/21/2023
-ms.author: schaffererin
-author: schaffererin
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.custom: aks-getting-started
 # Customer intent: As a cluster operator, I want to implement best practices for managing applications on Kubernetes, so that I can ensure security, performance, and reliability in our deployments.
 ---
 

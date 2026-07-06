@@ -2,6 +2,7 @@
 title: Open Service Mesh in Azure Kubernetes Service (AKS)
 description: Learn about the Open Service Mesh (OSM) add-on in Azure Kubernetes Service (AKS).
 ms.topic: concept-article
+ms.subservice: aks-networking
 ms.date: 09/25/2024
 ms.author: schaffererin
 author: schaffererin

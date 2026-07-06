@@ -3,10 +3,10 @@ title: Install and Use the Agentic CLI for Azure Kubernetes Service (AKS) (Previ
 description: Learn how to install, configure, and use the agentic CLI for AKS to troubleshoot clusters and get intelligent insights by using natural language.
 ms.topic: how-to
 ms.date: 10/20/2025
-author: aritragho
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
-ms.subservice: aks-monitoring
+ms.subservice: aks-developer
 zone_pivot_groups: agentic-cli-deployment-mode
 # Customer intent: As a cluster administrator or SRE, I want to install and configure the agentic CLI for AKS so that I can start troubleshooting my clusters by using natural language queries.
 ---

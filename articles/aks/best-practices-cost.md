@@ -4,9 +4,9 @@ description: Learn best practices for cost optimization in AKS, including using 
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
 ms.date: 05/26/2026
-author: schaffererin
-ms.author: schaffererin
-ms.custom: biannual
+author: davidsmatlak
+ms.author: davidsmatlak
+ms.custom: biannual, aks-cost
 # Customer intent: As a cloud architect, I want to implement cost optimization strategies in Azure Kubernetes Service, so that I can maximize resource efficiency and minimize unnecessary expenses while ensuring performance and reliability for my applications.
 ---
 

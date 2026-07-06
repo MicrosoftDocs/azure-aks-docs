@@ -2,7 +2,7 @@
 title: Configure AKSNodeClass Resources for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS)
 description: Learn how to configure Azure-specific settings for AKS node auto-provisioning using AKSNodeClass resources.
 ms.topic: how-to
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, aks-scaling
 ms.date: 06/5/2026
 ms.author: schaffererin
 author: schaffererin

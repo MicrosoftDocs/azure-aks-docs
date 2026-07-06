@@ -4,6 +4,7 @@ description: Learn how to enable Federal Information Processing Standard (FIPS) 
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.topic: how-to 
+ms.subservice: aks-security
 ms.date: 06/16/2026
 ms.custom: template-how-to, linux-related-content
 ai-usage: ai-assisted

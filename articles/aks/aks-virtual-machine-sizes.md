@@ -3,9 +3,10 @@ title: Virtual Machine (VM) Sizes, Generations, and Features for Azure Kubernete
 description: Learn about VM fundamentals on AKS, like different VM sizes, generations, features, how to check for available VM sizes, why some VM sizes might not be available, and what happens when a VM size retires.
 ms.topic: overview
 ms.service: azure-kubernetes-service
+ms.subservice: aks-nodes
 ms.date: 08/05/2025
-ms.author: schaffererin
-author: schaffererin
+ms.author: davidsmatlak
+author: davidsmatlak
 ---
 
 # Virtual machine (VM) sizes, generations, and features for Azure Kubernetes Service (AKS)

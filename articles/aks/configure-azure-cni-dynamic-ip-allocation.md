@@ -2,8 +2,8 @@
 title: Configure Azure CNI Pod Subnet - Dynamic IP Allocation and enhanced subnet support
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure Azure CNI Pod Subnet - Dynamic IP Allocation and enhanced subnet support in Azure Kubernetes Service (AKS)
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to

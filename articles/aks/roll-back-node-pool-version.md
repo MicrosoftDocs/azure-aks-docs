@@ -6,8 +6,8 @@ ms.subservice: aks-upgrade
 ms.custom: azure-kubernetes-service
 ms.date: 11/06/2024
 ai-usage: ai-assisted
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.reviewer: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to know how to roll back node pool versions in AKS so that I can recover from upgrade issues and maintain cluster stability."
 ---

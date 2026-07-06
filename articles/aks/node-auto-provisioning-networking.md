@@ -2,7 +2,7 @@
 title: Understand Networking Configurations for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS)
 description: Learn about networking configuration requirements and recommendations for AKS clusters using node auto-provisioning (NAP), including supported configurations, subnet behavior, RBAC setup, and CIDR considerations.
 ms.topic: overview
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, aks-scaling
 ms.date: 06/13/2024
 ms.author: schaffererin
 author: schaffererin

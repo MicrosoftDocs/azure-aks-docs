@@ -1,8 +1,8 @@
 ---
 title: Configure Azure CNI Powered by Cilium in Azure Kubernetes Service (AKS)
 description: Learn how to create an Azure Kubernetes Service (AKS) cluster with Azure CNI Powered by Cilium. This networking configuration is the default for AKS Automatic clusters and available as an option for AKS Standard clusters.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-networking
 ms.service: azure-kubernetes-service
 ms.topic: how-to
@@ -121,7 +121,7 @@ This recommendation applies to both AKS Automatic and AKS Standard clusters. If 
 
 ## Cluster configuration by AKS cluster mode
 
-The steps required to use Azure CNI Powered by Cilium depend on your AKS cluster mode: [AKS Automatic]() or [AKS Standard]().
+The steps required to use Azure CNI Powered by Cilium depend on your AKS cluster mode: AKS Automatic or AKS Standard.
 
 ### AKS Automatic clusters
 
