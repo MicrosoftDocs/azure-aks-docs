@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 07/02/2025
-author: sdesai345
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 
 # Customer intent: As a cluster administrator or developer, I want to deploy the NVIDIA GPU Operator on my AKS cluster, so that I can efficiently manage GPU resources and optimize workloads for advanced AI and high-performance computing applications.
 ---
