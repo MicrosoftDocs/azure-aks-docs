@@ -4,9 +4,9 @@ description: Learn how to install the NVIDIA GPU Operator for advanced GPU deplo
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
-ms.date: 04/18/2025
-author: davidsmatlak
-ms.author: davidsmatlak
+ms.date: 07/02/2025
+author: sdesai345
+ms.author: schaffererin
 
 # Customer intent: As a cluster administrator or developer, I want to deploy the NVIDIA GPU Operator on my AKS cluster, so that I can efficiently manage GPU resources and optimize workloads for advanced AI and high-performance computing applications.
 ---
@@ -47,7 +47,7 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 
 ### [Standard node pool](#tab/standard-node-pool)
 
-1. Skip automatic GPU driver installation by creating an NVIDIA GPU-enabled node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and setting the API field `--gpu-driver` to the value `none`. Setting this API field to `none` during node pool creation skips the default GPU driver installation, see [this example](gpu-cluster.md#skip-gpu-driver-installation). Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
+1. Skip automatic GPU driver installation by creating an NVIDIA GPU-enabled node pool by using the [`az aks nodepool add`][az-aks-nodepool-add] command and setting the API field `--gpu-driver` to the value `none`. Setting this API field to `none` during node pool creation skips the default GPU driver installation. For an example, see [Skip GPU driver installation](./use-nvidia-gpu.md#skip-gpu-driver-installation). This setting doesn't change any existing nodes. You can scale the node pool to zero and then back up to make the change take effect.
 
 ```
 az aks nodepool add \
@@ -55,14 +55,14 @@ az aks nodepool add \
 --cluster-name myAKSCluster \
 --name gpunp \
 --node-count 1 \
---node-vm-size Standard_NC6s_v3 \
+--node-vm-size Standard_NC4as_T4_v3 \
 --node-taints sku=gpu:NoSchedule \
 --gpu-driver none
 ```
 
 2. Follow the NVIDIA documentation to [Install the GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html).
 
-3. Now that you successfully installed the GPU Operator, you can check that your [GPUs are schedulable](gpu-cluster.md#confirm-that-gpus-are-schedulable) and [run a GPU workload](gpu-cluster.md#run-a-gpu-enabled-workload).
+1. After you install the GPU Operator, check that your [GPUs are schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable) and [run a GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload).
 
 > [!NOTE]
 > There might be additional considerations to take when using the NVIDIA GPU Operator and deploying on SPOT instances. Please refer to <https://github.com/NVIDIA/gpu-operator/issues/577>
@@ -84,7 +84,7 @@ spec:
 
 1. Follow the NVIDIA documentation to [Install the GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html).
 
-1. After you install the GPU Operator, check that your [GPUs are schedulable](gpu-cluster.md#confirm-that-gpus-are-schedulable) and [run a GPU workload](gpu-cluster.md#run-a-gpu-enabled-workload).
+1. After you install the GPU Operator, check that your [GPUs are schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable) and [run a GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload).
 
 > [!NOTE]
 > There might be additional considerations to take when using the NVIDIA GPU Operator and deploying on SPOT instances. For more information, see <https://github.com/NVIDIA/gpu-operator/issues/577>.
