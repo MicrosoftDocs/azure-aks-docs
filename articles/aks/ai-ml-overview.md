@@ -57,7 +57,7 @@ For platform strategy:
 
 - [Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)](./open-ai-quickstart.md)
 - [Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on](./ai-toolchain-operator.md)
-- [Configure and deploy a Ray cluster to accelerate ML workloads on Azure Kubernetes Service (AKS)](./deploy-ray.md)
+- [Run Ray AI workloads with Kueue on Azure Kubernetes Service (AKS)](./ray-overview.md)
 - [Build and deploy data and machine learning pipelines with Flyte on Azure Kubernetes Service (AKS)](./use-flyte.md)
 
 ## Related content
