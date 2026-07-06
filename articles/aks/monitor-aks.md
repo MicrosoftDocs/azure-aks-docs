@@ -1,7 +1,7 @@
 ---
 title: Monitor Azure Kubernetes Service (AKS)
 description: Learn how to monitor Azure Kubernetes Service (AKS) clusters using built-in monitoring capabilities and integrating with other Azure services for detailed insights into health and performance.
-ms.date: 01/20/2026
+ms.date: 07/06/2026
 ms.custom: horz-monitor, copilot-scenario-highlight
 ms.topic: overview
 ms.service: azure-kubernetes-service
@@ -13,24 +13,45 @@ ms.subservice: aks-monitoring
 
 # Monitor Azure Kubernetes Service (AKS)
 
+**Applies to**: :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
+
 AKS monitoring requires multiple levels of observability across platform metrics, Prometheus metrics, activity logs, resource logs, and container insights. AKS provides built-in monitoring capabilities and integrates with Azure Monitor, Container insights, managed service for Prometheus, and Azure Managed Grafana for comprehensive cluster health and performance monitoring.
+
+For most production workloads, AKS Automatic is the recommended production-ready default for AKS. AKS Automatic clusters include a preconfigured monitoring baseline with managed service for Prometheus for metrics collection, Container insights for log collection, and Azure Monitor dashboards with Grafana for visualization in the Azure portal. In AKS Standard, you can enable and configure the same monitoring capabilities based on your requirements.
 
 > [!TIP]
 > You can use Azure Copilot to configure monitoring on your AKS clusters in the Azure portal. For more information, see [Work with AKS clusters efficiently using Azure Copilot](/azure/copilot/work-aks-clusters#configure-monitoring-on-clusters).
 
 [!INCLUDE [horz-monitor-insights](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-insights.md)]
 
+## AKS Automatic monitoring defaults
+
+AKS Automatic is designed to provide a production-ready default experience for most AKS workloads. As part of that experience, AKS Automatic configures a default monitoring baseline for you.
+
+| Monitoring capability | AKS Automatic | AKS Standard |
+| --------------------- | ------------- | ------------ |
+| Managed service for Prometheus | Default | Optional |
+| Container insights | Default | Optional |
+| Azure Monitor dashboards with Grafana | Default in the Azure portal | Default in the Azure portal |
+| Azure Managed Grafana | Optional | Optional |
+
+Use AKS Automatic when you want the recommended production-ready AKS experience with monitoring defaults already in place. Use AKS Standard when you want to choose and configure monitoring components individually.
+
+For more information about AKS Automatic defaults, see [What is Azure Kubernetes Service (AKS) Automatic?](./intro-aks-automatic.md)
+
 ## AKS monitoring data: metrics, logs, integrations
 
 AKS generates the same kinds of monitoring data as other Azure resources as described in [Monitor data from Azure resources](/azure/azure-monitor/essentials/monitor-azure-resource#monitoring-data-from-azure-resources). For detailed information on the metrics and logs created by AKS, see the [AKS monitoring data reference](monitor-aks-reference.md).
+
+In AKS Automatic, the recommended default monitoring stack is already configured for you. In AKS Standard, you can assemble the same monitoring stack by enabling the relevant monitoring services and integrations.
 
 [Other Azure services and features](#integrations) collect other data and enable other analysis options as shown in the following diagram and table.
 
 :::image type="content" source="media/monitor-aks/aks-monitor-data-v2.png" alt-text="Diagram of monitoring data that is collected from AKS." lightbox="media/monitor-aks/aks-monitor-data-v2.png" border="false":::
 
 | Source | Description |
-|:---|:---|
-| Platform metrics | [Platform metrics](monitor-aks-reference.md#metrics) are automatically collected for AKS clusters at no cost. You can analyze these metrics using the [metrics explorer](/azure/azure-monitor/essentials/analyze-metrics) or use them to create [metric alerts](/azure/azure-monitor/alerts/alerts-types#metric-alerts).  |
+| ------ | ----------- |
+| Platform metrics | [Platform metrics](monitor-aks-reference.md#metrics) are automatically collected for AKS clusters at no cost. You can analyze these metrics using the [metrics explorer](/azure/azure-monitor/essentials/analyze-metrics) or use them to create [metric alerts](/azure/azure-monitor/alerts/alerts-types#metric-alerts). |
 | Prometheus metrics | When you [enable metric scraping](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana) for your cluster, the [managed service for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) in Azure Monitor collects [Prometheus metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default) and stores them in an [Azure Monitor workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-overview). Analyze these metrics using [prebuilt dashboards](/azure/azure-monitor/visualize/grafana-plugin#use-out-of-the-box-dashboards) in [Azure Managed Grafana](/azure/managed-grafana/overview) and with [Prometheus alerts](/azure/azure-monitor/alerts/prometheus-alerts). |
 | Activity logs | The Azure Monitor [activity log](monitor-aks-reference.md) automatically collects some data for AKS clusters at no cost. These log files track information like when a cluster is created or changes are made to a cluster configuration. To analyze activity log data with your other log data, [send activity log data to a Log Analytics workspace](/azure/azure-monitor/essentials/activity-log#send-to-log-analytics-workspace). |
 | Resource logs | Control plane logs for AKS are implemented as resource logs. [Create a diagnostic setting](#aks-control-plane-resource-logs) to [send the logs to a Log Analytics workspace](/azure/azure-monitor/logs/log-analytics-workspace-overview). In the workspace, you can analyze the logs using queries and set up alerts based on log information. |
@@ -49,6 +70,8 @@ For a list of metrics you can collect for AKS, see the [AKS monitoring data refe
 
 Metrics play an important role in monitoring clusters, identifying issues, and optimizing performance in AKS clusters. Platform metrics are captured using the out-of-the-box metrics server installed in the `kube-system` namespace, which periodically scrapes metrics from all AKS nodes served by kubelet. You should also enable managed service for Prometheus metrics to collect container metrics and Kubernetes object metrics, including object deployment state.
 
+In AKS Automatic, managed service for Prometheus is enabled by default, so you start with a production-ready metrics baseline without additional setup.
+
 You can view the [list of default managed service for Prometheus metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default).
 
 For more information, see [Collect managed service for Prometheus metrics from an AKS cluster](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana). 
@@ -57,12 +80,12 @@ For more information, see [Collect managed service for Prometheus metrics from a
 
 [!INCLUDE [horz-monitor-custom-metrics](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-non-monitor-metrics.md)]
 
-You can use the following Azure services and Azure Monitor features to monitor your AKS clusters. You enable these features when you create an AKS cluster.
+You can use the following Azure services and Azure Monitor features to monitor your AKS clusters. In AKS Automatic, the default monitoring baseline already includes managed service for Prometheus, Container insights, and Azure Monitor dashboards with Grafana. In AKS Standard, you can enable these features when you create a cluster or onboard the cluster later.
 
 In the Azure portal, use the **Integrations** tab, or use the Azure CLI, Terraform, or Azure Policy. In some cases, you can onboard your cluster to a monitoring service or feature after you create the cluster. Each service or feature might incur cost, so see the pricing information for each component before you enable it.
 
 | Service or feature | Description |
-|:---|:---|
+| ------------------ | ----------- |
 | [Container insights](/azure/azure-monitor/containers/container-insights-overview) | Uses a containerized version of the [Azure Monitor Agent](/azure/azure-monitor/agents/agents-overview) to collect `stdout` and `stderr` logs and Kubernetes events from each node in your cluster. The feature supports a [variety of monitoring scenarios for AKS clusters](/azure/azure-monitor/containers/container-insights-overview). You can enable monitoring for an AKS cluster when it's created using the [Azure CLI](../aks/learn/quick-kubernetes-deploy-cli.md), [Azure Policy](/azure/azure-monitor/containers/container-insights-enable-aks-policy), the Azure portal, or Terraform. If you don't enable Container insights when you create your cluster, see [Enable Container insights for AKS cluster](/azure/azure-monitor/containers/container-insights-enable-aks) for other options to enable it.<br><br>Container insights stores most of its data in a [Log Analytics workspace](/azure/azure-monitor/logs/log-analytics-workspace-overview). You typically use the same Log Analytics workspace as the [resource logs](monitor-aks-reference.md#resource-logs) for your cluster. For guidance on how many workspaces you should use and where to locate them, see [Design a Log Analytics workspace architecture](/azure/azure-monitor/logs/workspace-design). |
 | [Managed service for Prometheus in Azure Monitor](/azure/azure-monitor/essentials/prometheus-metrics-overview) | [Prometheus](https://prometheus.io/) is a cloud-native metrics solution from the Cloud Native Computing Foundation. It's the most common tool to use to collect and analyze metric data from Kubernetes clusters. The managed service for Prometheus in Azure Monitor is a fully managed Prometheus-compatible monitoring solution. If you don't enable the managed service for Prometheus when you create your cluster, see [Collect Prometheus metrics from an AKS cluster](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana) for other options to enable it.<br><br>The managed service for Prometheus in Azure Monitor stores its data in an [Azure Monitor workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-overview) that is [linked to a Grafana workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-manage#link-a-grafana-workspace). You can use Azure Managed Grafana to analyze the data. |
 | [Azure Managed Grafana](/azure/managed-grafana/overview) | A fully managed implementation of [Grafana](https://grafana.com/). Grafana is an open-source data visualization platform commonly used to present Prometheus data. Multiple predefined Grafana dashboards are available for monitoring Kubernetes and full-stack troubleshooting. If you don't enable Azure Managed Grafana when you create your cluster, see [Link a Grafana workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-manage#link-a-grafana-workspace). You can link it to your Azure Monitor workspace so that it can access Prometheus metrics from your cluster. |
@@ -117,7 +140,7 @@ For more information on the difference between collection modes, including how t
 If the [diagnostic settings for your cluster](monitor-aks-reference.md#resource-logs) use Azure diagnostics mode, the resource logs for AKS are stored in the [AzureDiagnostics](/azure/azure-monitor/reference/tables/azurediagnostics) table. Identify logs via the **Category** column. For a description of each category, see [AKS reference resource logs](monitor-aks-reference.md).
 
 | Description | Mode | Log query |
-|:---|:---|:---|
+| ----------- | ---- | --------- |
 | Count logs for each category | Azure diagnostics mode | `AzureDiagnostics`<br>\| `where ResourceType == "MANAGEDCLUSTERS"`<br>\| `summarize count() by Category` |
 | All API server logs | Azure diagnostics mode | `AzureDiagnostics`<br>\| `where Category == "kube-apiserver"` |
 | All kube-audit logs in a time range | Azure diagnostics mode | `let starttime = datetime("2023-02-23");`<br>`let endtime = datetime("2023-02-24");`<br>`AzureDiagnostics`<br>\| `where TimeGenerated between(starttime..endtime)`<br>\| `where Category == "kube-audit"`<br>\| `extend event = parse_json(log_s)`<br>\| `extend HttpMethod = tostring(event.verb)`<br>\| `extend User = tostring(event.user.username)`<br>\| `extend Apiserver = pod_s`<br>\| `extend SourceIP = tostring(event.sourceIPs[0])`<br>\| `project TimeGenerated, Category, HttpMethod, User, Apiserver, SourceIP, OperationName, event` |
@@ -139,7 +162,7 @@ AKS uses a Kubernetes [audit policy](https://kubernetes.io/docs/tasks/debug/debu
 The following table summarizes the key audit policy rules applied in AKS:
 
 | Audit level | Description | Example events |
-|:---|:---|:---|
+| ----------- | ----------- | -------------- |
 | **None** | High-volume, low-risk read operations | `aksService` user `get`/`list` operations, `kube-proxy` watch on endpoints/services, kubelet `get` on nodes/node status, health check URLs (`/healthz*`, `/version`, `/swagger*`) |
 | **Metadata** | System events, events resources (except creates/updates in `default`/`kube-system`), secrets, configmaps, service accounts, token reviews | Token reviews, secret/configmap access, large CRDs like `installations.operator.tigera.io` |
 | **Request** | Node and pod status updates from kubelets/nodes, delete collection operations, CRD updates for volume snapshots, read operations (`get`/`list`/`watch`) on core API groups, VPA changes | Kubelet status updates, namespace deletions, VPA checkpoint updates |
@@ -398,10 +421,12 @@ rules:
 
 Container insights collects various types of telemetry data from containers and AKS clusters to help you monitor, troubleshoot, and gain insights into your containerized applications running in your AKS clusters. For a list of tables and their detailed descriptions used by Container insights, see the [Azure Monitor table reference](/azure/azure-monitor/logs/manage-logs-tables). All the tables are available for [log queries](/azure/azure-monitor/logs/log-query-overview).
 
+In AKS Automatic, Container insights is enabled by default as part of the monitoring baseline.
+
 Use [cost optimization settings](/azure/azure-monitor/containers/container-insights-cost-config) to customize and control the metrics data collected through the Container insights agent. This feature supports the data collection settings for individual table selection, data collection intervals, and namespaces to exclude the data collection through [Azure Monitor Data Collection Rules (DCRs)](/azure/azure-monitor/essentials/data-collection-rule-overview). These settings control the volume of ingestion and reduce the monitoring costs of Container insights. You can customize Container insights collected data in the Azure portal using the following options. Selecting any options other than **All (Default)** makes the Container insights experience unavailable.
 
 | Grouping | Tables | Notes |
-| --- | --- | --- |
+| -------- | ------ | ----- |
 | All (Default) | All standard Container insights tables | Required to enable the default Container insights visualizations. |
 | Performance | Perf, InsightsMetrics | N/A |
 | Logs and events | ContainerLog or ContainerLogV2, KubeEvents, KubePodInventory | Recommended if you enabled managed service for Prometheus metrics. |
@@ -501,6 +526,8 @@ The **Monitoring** tab on the **Overview** pane for your AKS cluster resource of
 
 The **Monitoring** tab also includes links to the [Azure managed service for Prometheus](#integrations) and [Container insights](#integrations) for the cluster. You can enable these tools on the **Monitoring** tab. You might also see a banner at the top of the pane that recommends other features to improve monitoring for your cluster.
 
+In AKS Automatic, Azure Monitor dashboards with Grafana are available by default in the Azure portal experience.
+
 > [!TIP]
 > To access monitoring features for all AKS clusters in your subscription, on the Azure portal home page, select **Azure Monitor**.
 
@@ -535,7 +562,7 @@ When you [enable collection of the managed service for Prometheus metrics](#inte
 The download includes the following rules:
 
 | Level | Alerts |
-|:---|:---|
+| ----- | ------ |
 | Cluster level | `KubeCPUQuotaOvercommit`<br>`KubeMemoryQuotaOvercommit`<br>`KubeContainerOOMKilledCount`<br>`KubeClientErrors`<br>`KubePersistentVolumeFillingUp`<br>`KubePersistentVolumeInodesFillingUp`<br>`KubePersistentVolumeErrors`<br>`KubeContainerWaiting`<br>`KubeDaemonSetNotScheduled`<br>`KubeDaemonSetMisScheduled`<br>`KubeQuotaAlmostFull` |
 | Node level | `KubeNodeUnreachable`<br>`KubeNodeReadinessFlapping` |
 | Pod level | `KubePVUsageHigh`<br>`KubeDeploymentReplicasMismatch`<br>`KubeStatefulSetReplicasMismatch`<br>`KubeHpaReplicasMismatch`<br>`KubeHpaMaxedOut`<br>`KubePodCrashLooping`<br>`KubeJobStale`<br>`KubePodContainerRestart`<br>`KubePodReadyStateLow`<br>`KubePodFailedState`<br>`KubePodNotReadyByController`<br>`KubeStatefulSetGenerationMismatch`<br>`KubeJobFailed`<br>`KubeContainerAverageCPUHigh`<br>`KubeContainerAverageMemoryHigh`<br>`KubeletPodStartUpLatencyHigh` |
@@ -553,8 +580,8 @@ Most log queries compare a `DateTime` value to the present time using the `now` 
 
 The following table lists some suggested alert rules for AKS. These alerts are only examples. You can set alerts for any metric, log entry, or activity log entry listed in the [AKS monitoring data reference](monitor-aks-reference.md).
 
-| Condition | Description  |
-|:---|:---|
+| Condition | Description |
+| --------- | ----------- |
 | **CPU Usage Percentage** > **95** | Alerts when the average CPU usage across all nodes exceeds the threshold. |
 | **Memory Working Set Percentage** > **100** | Alerts when the average working set across all nodes exceeds the threshold. |
 
@@ -585,12 +612,12 @@ For Cilium data plane scenarios, the Container Network Observability feature pro
 
 Cilium exposes several metrics that Container Network Observability uses:
 
-| Metric name                    | Description                  | Extra labels          |Linux | Windows |
-|--------------------------------|------------------------------|-----------------------|-------|---------|
-| `cilium_forward_count_total` | Total forwarded packet count | `direction`           | Supported ✅ | Unsupported ❌ |
-| `cilium_forward_bytes_total` | Total forwarded byte count   | `direction`           | Supported ✅ | Unsupported ❌ |
-| `cilium_drop_count_total`    | Total dropped packet count   | `direction`, `reason` | Supported ✅ | Unsupported ❌ |
-| `cilium_drop_bytes_total`    | Total dropped byte count     | `direction`, `reason` | Supported ✅ | Unsupported ❌ |
+| Metric name | Description | Extra labels | Linux | Windows |
+| ----------- | ----------- | ------------ | ----- | ------- |
+| `cilium_forward_count_total` | Total forwarded packet count | `direction` | Supported ✅ | Unsupported ❌ |
+| `cilium_forward_bytes_total` | Total forwarded byte count | `direction` | Supported ✅ | Unsupported ❌ |
+| `cilium_drop_count_total` | Total dropped packet count | `direction`, `reason` | Supported ✅ | Unsupported ❌ |
+| `cilium_drop_bytes_total` | Total dropped byte count | `direction`, `reason` | Supported ✅ | Unsupported ❌ |
 
 #### [Non-Cilium](#tab/non-cilium)
 
@@ -600,20 +627,20 @@ For non-Cilium data plane scenarios, Container Network Observability provides me
 
 The following table outlines the generated metrics:
 
-| Metric name                                    | Description | Extra labels | Linux | Windows |
-|------------------------------------------------|-------------|--------------|-------|---------|
-| `networkobservability_forward_count`         | Total forwarded packet count | `direction` | Supported ✅ | Supported ✅ |
-| `networkobservability_forward_bytes`         | Total forwarded byte count | `direction` | Supported ✅ | Supported ✅ |
-| `networkobservability_drop_count`            | Total dropped packet count | `direction`, `reason` | Supported ✅ | Supported ✅ |
-| `networkobservability_drop_bytes`            | Total dropped byte count | `direction`, `reason` | Supported ✅ | Supported ✅ |
-| `networkobservability_tcp_state`             | TCP currently active socket count by TCP state | `state` | Supported ✅ | Supported ✅ |
+| Metric name | Description | Extra labels | Linux | Windows |
+| ----------- | ----------- | ------------ | ----- | ------- |
+| `networkobservability_forward_count` | Total forwarded packet count | `direction` | Supported ✅ | Supported ✅ |
+| `networkobservability_forward_bytes` | Total forwarded byte count | `direction` | Supported ✅ | Supported ✅ |
+| `networkobservability_drop_count` | Total dropped packet count | `direction`, `reason` | Supported ✅ | Supported ✅ |
+| `networkobservability_drop_bytes` | Total dropped byte count | `direction`, `reason` | Supported ✅ | Supported ✅ |
+| `networkobservability_tcp_state` | TCP currently active socket count by TCP state | `state` | Supported ✅ | Supported ✅ |
 | `networkobservability_tcp_connection_remote` | TCP currently active socket count by remote IP/port | `address` (IP), `port` | Supported ✅ | Unsupported ❌ |
-| `networkobservability_tcp_connection_stats`  | TCP connection statistics (example: Delayed ACKs, TCPKeepAlive, TCPSackFailures) | `statistic` | Supported ✅ | Supported ✅ |
-| `networkobservability_tcp_flag_counters`     | TCP packets count by flag | `flag` | Unsupported ❌ | Supported ✅ |
-| `networkobservability_ip_connection_stats`   | IP connection statistics | `statistic` | Supported ✅ | Unsupported ❌ |
-| `networkobservability_udp_connection_stats`  | UDP connection statistics | `statistic` | Supported ✅ | Unsupported ❌ |
-| `networkobservability_udp_active_sockets`    | UDP currently active socket count | N/A | Supported ✅ | Unsupported ❌ |
-| `networkobservability_interface_stats`       | Interface statistics | InterfaceName, `statistic` | Supported ✅ | Supported ✅ |
+| `networkobservability_tcp_connection_stats` | TCP connection statistics (example: Delayed ACKs, TCPKeepAlive, TCPSackFailures) | `statistic` | Supported ✅ | Supported ✅ |
+| `networkobservability_tcp_flag_counters` | TCP packets count by flag | `flag` | Unsupported ❌ | Supported ✅ |
+| `networkobservability_ip_connection_stats` | IP connection statistics | `statistic` | Supported ✅ | Unsupported ❌ |
+| `networkobservability_udp_connection_stats` | UDP connection statistics | `statistic` | Supported ✅ | Unsupported ❌ |
+| `networkobservability_udp_active_sockets` | UDP currently active socket count | N/A | Supported ✅ | Unsupported ❌ |
+| `networkobservability_interface_stats` | Interface statistics | InterfaceName, `statistic` | Supported ✅ | Supported ✅ |
 
 ---
 
@@ -639,6 +666,8 @@ For detailed pod-level and DNS metrics, see [Advanced Container Networking Servi
 
 ## Related content
 
+- [What is AKS Automatic?](./intro-aks-automatic.md)
+- [Create an AKS Automatic cluster](./automatic/quick-automatic-managed-network.md)
 - For a reference of the metrics, logs, and other important values created for AKS, see the [AKS monitoring data reference](monitor-aks-reference.md).
 - For general details on monitoring Azure resources, see [Monitor Azure resources using Azure Monitor](/azure/azure-monitor/essentials/monitor-azure-resource).
 - For detailed monitoring of the complete Kubernetes stack, see [Monitor Kubernetes clusters using Azure services and cloud native tools](/azure/azure-monitor/containers/monitor-kubernetes).
