@@ -37,7 +37,7 @@ This bulletin addresses a recent, broad increase in the number of Linux kernel C
 
 Key points:
 
-- **Historical CVEs recently reclassified.** Many of the newly reported CVEs are old, but Canonical has recently updated its assessments and moved a large number of Ubuntu kernel CVEs from a *deferred* state to *needs-triage* or *vulnerable*. This has resulted in a rise in scanner findings against Ubuntu node images.
+- **Historical CVEs recently reclassified.** Many of the newly reported CVEs are old, but Canonical has recently updated its assessments and moved a large number of Ubuntu kernel CVEs from a *needs-triage* (needs-evaluation) state to a vulnerable state — either *needed* (a fix is required) or *deferred* (vulnerable, but the fix is postponed). This has resulted in a rise in scanner findings against Ubuntu node images.
 
 - **We have found a large number of vulnerabilities in the Ubuntu Linux kernel.** The elevated findings are overwhelmingly concentrated in the Ubuntu kernel package rather than spread across the broader Ubuntu package ecosystem, and are seen primarily on Ubuntu 22.04.
 
@@ -50,7 +50,7 @@ Key points:
 AKS nodes run the Azure-optimized Ubuntu kernel, whose package is named **`linux-azure`**. However, most vulnerability scanners report these CVEs against the **generic `linux` package name** rather than `linux-azure`. To identify whether a reported finding belongs to this class:
 
 - Look for kernel CVEs whose affected package is reported as **`linux`** (the generic Ubuntu kernel), even though the installed package on AKS nodes is **`linux-azure`**.
-- Confirm the CVE traces back to a recent Canonical reclassification (moved from *deferred* to *needs-triage*/*vulnerable*) and check its fix status in the [Ubuntu CVE Tracker](https://ubuntu.com/security/cves).
+- Confirm the CVE traces back to a recent Canonical reclassification (moved from *needs-triage* to a vulnerable state such as *needed* or *deferred*) and check its fix status in the [Ubuntu CVE Tracker](https://ubuntu.com/security/cves).
 
 > [!NOTE]
 > Other kernel variants used by different platforms (for example, other cloud-specific flavors) may be affected by the same underlying CVEs. Those variants may **not** appear in scanner results if the scanner doesn't map their kernel name to the generic `linux` package, or if the scanner's vulnerability database isn't enriched with that specific variant. As a result, differences in reported counts across platforms can reflect scanner mapping and database enrichment rather than a real difference in patch level. Compare actual installed kernel package versions rather than raw finding counts when assessing exposure.
