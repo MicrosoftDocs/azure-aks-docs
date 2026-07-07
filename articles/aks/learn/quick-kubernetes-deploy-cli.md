@@ -130,7 +130,7 @@ az aks nodepool add \
 
 Like the cluster, we specified one node, but the default is three nodes if you don't specify a node count.
 
-After the user node pool is created, you can verify that your cluster has a system node pool and a user node pool using the [`az aks nodepool list`][az-aks-nodepool-list] command.
+After you create the user node pool, you can verify that your cluster has a system node pool and a user node pool by using the [`az aks nodepool list`][az-aks-nodepool-list] command.
 
 ```azurecli-interactive
 az aks nodepool list \
@@ -194,7 +194,7 @@ To deploy the application, you use a manifest file to create all the objects req
 > [!NOTE]
 > We don't recommend running stateful containers, such as `RabbitMQ`, without persistent storage for production. We use it here for simplicity, but we recommend using managed services, such as Azure Cosmos DB or Azure Service Bus.
 
-1. Create a file named _aks-store-quickstart.yaml_ and copy in the following manifest. Replace the two placeholders for `<defaultPassword>` with your own password. This password is used for the default user of the `RabbitMQ` instance.
+1. Create a file named _aks-store-quickstart.yaml_ and copy in the following manifest. Replace the two placeholders for `<defaultPassword>` with your own password. The default user of the `RabbitMQ` instance uses this password.
 
     ```yaml
     apiVersion: apps/v1
@@ -574,7 +574,7 @@ If you don't plan on doing the [AKS tutorial][aks-tutorial], clean up unnecessar
 az group delete --name $RESOURCE_GROUP --no-wait --yes
 ```
 
-The AKS cluster was created with a system-assigned managed identity, which is the default identity option used in this quickstart. The platform manages this identity so you don't need to manually remove it.
+You created the AKS cluster with a system-assigned managed identity, which is the default identity option in this quickstart. The platform manages this identity, so you don't need to manually remove it.
 
 ## Next steps
 
