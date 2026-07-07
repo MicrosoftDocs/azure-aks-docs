@@ -1,57 +1,56 @@
 ---
-title: Solution overview for deploying a Ray cluster on Azure Kubernetes Service (AKS)
-description: In this article, we provide an overview of deploying a Ray cluster on Azure Kubernetes Service (AKS).
+title: Run Ray AI workloads with Kueue on Azure Kubernetes Service (AKS) overview
+description: Learn how to run Ray AI workloads with Kueue admission control on Azure Kubernetes Service (AKS), including training, inference, and serving.
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 12/19/2024
-author: schaffererin
-ms.author: schaffererin
-ms.custom: 'stateful-workloads, aks-ai-ml'
-# Customer intent: "As a data scientist, I want to deploy a Ray cluster on Kubernetes, so that I can efficiently scale and manage my machine learning workloads for training models and processing data."
+ms.date: 06/26/2026
+author: feiskyer
+ms.author: peni
+ms.custom: 'stateful-workloads'
 ---
 
-# Deploy a Ray cluster on Azure Kubernetes Service (AKS) overview
+# Run Ray AI workloads with Kueue on Azure Kubernetes Service (AKS) overview
 
-In this article, you learn how to deploy a Ray cluster on Azure Kubernetes Service (AKS) using the KubeRay operator. You also learn how to use the Ray cluster to train a simple machine learning model and display the results on the Ray Dashboard.
+In this article, you learn how to run distributed AI workloads on Azure Kubernetes Service (AKS) using Ray for the compute runtime and Kueue for admission control. This solution covers the full lifecycle from infrastructure provisioning through training, batch inference, and online serving.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
 ## What is Ray?
 
-[Ray](https://docs.ray.io/en/latest/index.html#) is an open-source project developed at UC Berkeley's RISE Lab that provides a unified framework for scaling AI and Python applications. It consists of a core distributed runtime and a set of AI libraries designed to accelerate machine learning workloads.
+[Ray](https://docs.ray.io/en/latest/index.html) is an open-source framework for scaling AI and Python applications. It provides a unified runtime for distributed training, hyperparameter tuning, batch inference, and model serving, so you can scale workloads across multiple nodes without rewriting application logic.
 
-Ray simplifies the process of running compute-intensive Python tasks at scale, allowing you to seamlessly scale your applications. The framework supports various machine learning tasks, including distributed training, hyperparameter tuning, reinforcement learning, and production model serving.
-
-For more information, see the [Ray GitHub repository](https://github.com/ray-project/ray).
+Ray simplifies distributed computing by handling scheduling, fault tolerance, and resource management. The framework supports machine learning libraries like PyTorch, TensorFlow, and Hugging Face through integrations such as Ray Train, Ray Data, and Ray Serve. For more information, see the [Ray GitHub repository](https://github.com/ray-project/ray).
 
 ## What is KubeRay?
 
-[KubeRay](https://docs.ray.io/en/latest/cluster/kubernetes/getting-started.html) is an open-source Kubernetes operator for deploying and managing Ray clusters on Kubernetes. KubeRay automates the deployment, scaling, and monitoring of Ray clusters. It provides a declarative way to define Ray clusters using Kubernetes custom resources, making it easy to manage Ray clusters alongside other Kubernetes resources.
+[KubeRay](https://docs.ray.io/en/latest/cluster/kubernetes/getting-started.html) is a Kubernetes operator that manages the lifecycle of Ray clusters. It provides custom resources - `RayJob` for batch workloads and `RayService` for persistent serving endpoints - that automate cluster creation, scaling, and teardown. For more information, see the [KubeRay GitHub repository](https://github.com/ray-project/kuberay).
 
-For more information, see the [KubeRay GitHub repository](https://github.com/ray-project/kuberay).
+## What is Kueue?
 
-## Ray deployment process
+[Kueue](https://kueue.sigs.k8s.io/) is a Kubernetes-native job queueing controller that manages workload admission based on resource quotas. Instead of letting every submitted job consume resources immediately, Kueue gates admission against defined quotas - jobs that fit run, jobs that don't wait in line. For a detailed overview of Kueue concepts and configuration, see [Kueue overview on AKS](./kueue-overview.md).
 
-The deployment process consists of the following steps:
+## Solution architecture
 
-1. Use Terraform to create a local plan file to define the desired state for infrastructure required AKS infrastructure that consists of an Azure resource group, a dedicated system node pool, and a workload node pool for Ray with three nodes.
-2. Deploy a local Terraform plan to Azure.
-3. Retrieve outputs from the Terraform deployment and obtain Kubernetes credentials to the newly deployed AKS cluster.
-4. Install the Helm Ray repository and deploy KubeRay to the AKS cluster using Helm.
-5. Download and execute a [Ray Job](https://docs.ray.io/en/latest/cluster/running-applications/job-submission/index.html) YAML manifest from the Ray GitHub samples repo to perform an image classification with a [MNIST](https://github.com/cvdfoundation/mnist) dataset using [Convolutional Neural Networks (CNNs)](https://techcommunity.microsoft.com/discussions/machinelearning/what-is-convolutional-neural-network-%E2%80%94-cnn-deep-learning/4184725).
-6. Output the logs from the Ray Job to gain insight into the machine learning process performed by Ray.
+This solution combines Kueue for admission control with KubeRay for Ray cluster lifecycle management on AKS. Terraform provisions the infrastructure, Helm installs the operators from Microsoft Container Registry (MCR), and workload identity provides secure access to Azure Blob Storage without stored credentials.
+
+The deployment process consists of three modules:
+
+- **Infrastructure** — Terraform provisions the AKS cluster with GPU node pools, installs KubeRay and Kueue operators via Helm, creates Azure Blob Storage, and configures workload identity.
+- **Kueue queues** — Kubernetes manifests define ResourceFlavors (CPU and GPU node types), ClusterQueues (quotas and admission policies), and LocalQueues (namespace-scoped submission points).
+- **Workloads** — RayJob and RayService manifests submit AI workloads that Kueue admits based on available quota.
+
+Ray workloads start with `suspend: true`. Kueue evaluates quota availability and unsuspends admitted workloads, at which point KubeRay creates the Ray cluster and runs the job.
+
+## Workload examples
+
+| Example | Type | GPUs | Description |
+|---------|------|------|-------------|
+| [Fine-tune Aurora weather model](./ray-finetune-aurora.md) | RayJob | 1×A100 | LoRA fine-tune of the Microsoft Aurora weather foundation model |
+| [Train an LLM](./ray-train-llm.md) | RayJob | 4×A100 | Distributed Qwen2.5-7B LoRA fine-tune with LLaMA-Factory |
+| [Run batch inference](./ray-batch-inference.md) | RayJob | 1×A100 | vLLM offline inference with a trained LoRA adapter |
+| [Serve a model online](./ray-online-serving.md) | RayService | 1×GPU | Persistent HTTP endpoint with Ray Serve |
 
 ## Next step
 
 > [!div class="nextstepaction"]
-> [Configure and deploy a Ray cluster on Azure Kubernetes Service (AKS)](./deploy-ray.md)
-
-## Contributors
-
-*Microsoft maintains this article. The following contributors originally wrote it:*
-
-* Russell de Pina | Principal TPM
-* Ken Kilty | Principal TPM
-* Erin Schaffer | Content Developer 2
-* Adrian Joian | Principal Customer Engineer
-* Ryan Graham | Principal Technical Specialist
+> [Deploy infrastructure for Ray and Kueue on AKS](./deploy-ray-infrastructure.md)

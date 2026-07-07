@@ -74,6 +74,16 @@
       "source_path_from_root": "/articles/aks/aks-zone-resiliency.md",
       "redirect_url": "/azure/aks/reliability-zone-resiliency-recommendations",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/aks/deploy-ray.md",
+      "redirect_url": "/azure/aks/ray-overview",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/aks/deploy-ray-tuning.md",
+      "redirect_url": "/azure/aks/ray-overview",
+      "redirect_document_id": false
     }
   ]
 }
