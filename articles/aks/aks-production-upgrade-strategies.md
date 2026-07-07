@@ -41,9 +41,9 @@ To get started quickly, select one of the following scenarios that best matches 
 
 This article assumes you understand Kubernetes Deployments and Services, including the following concepts:
 
-- **Pod Disruption Budgets (PDBs)**: Tell Kubernetes the minimum number of pods that must stay running during voluntary disruptions like node upgrades. With maxUnavailable: 1, Kubernetes keeps at least your remaining pods running during drain.
+- **Pod Disruption Budgets (PDBs)**: Tell Kubernetes the minimum number of pods that must stay running during voluntary disruptions like node upgrades. With `maxUnavailable: 1`, Kubernetes keeps at least your remaining pods running during drain.
 - **Readiness probes**: Signal when a pod is ready to receive traffic. During upgrades, Kubernetes waits for readiness probes to pass before considering a pod healthy.
-- **Liveness probes**: Restart unhealthy pods automatically. During cluster upgrades, these ensure failed pods come back quickly.
+- **Liveness probes**: Restart unhealthy pods automatically. During cluster upgrades, these probes ensure failed pods come back quickly.
 - **Finalizers**: Custom logic that runs before Kubernetes deletes a resource. Long-running finalizers can block pod termination during drains.
 
 ## Choose your strategy
@@ -74,8 +74,8 @@ This article assumes you understand Kubernetes Deployments and Services, includi
 ## Scenario 1: Minimal downtime production upgrades
 
 - **Challenge**: "I need to upgrade my production cluster with less than 2 minutes of downtime during business hours."
-- **Strategy**: Use blue-green deployment with intelligent traffic shifting. Blue-green deployment runs two identical production environments (blue and green). You deploy to the inactive environment, validate it, then switch traffic atomically. If issues occur, traffic switches back to the active environment.
-- **With AKS Automatic**: This scenario is largely handled by preconfigured automatic upgrade channels and pod readiness SLA. However, if you need more control, custom validation gates, or blue-green testing strategies beyond standard automatic upgrades, you can use the following guidance:
+- **Strategy**: Use blue-green deployment with intelligent traffic shifting. Blue-green deployment runs two identical production environments (blue and green). You deploy to the inactive environment, validate it, then switch traffic atomically. If problems occur, traffic switches back to the active environment.
+- **With AKS Automatic**: Preconfigured automatic upgrade channels and pod readiness SLA handle most of this scenario. However, if you need more control, custom validation gates, or blue-green testing strategies beyond standard automatic upgrades, use the following guidance:
 
 To learn more, see [Blue-green deployment patterns](/azure/architecture/guide/aks/blue-green-deployment-for-aks) and [Azure Traffic Manager configuration](/azure/traffic-manager/traffic-manager-configure-weighted-routing-method).
 
@@ -306,15 +306,15 @@ az aks delete --resource-group production-rg --name aks-blue-cluster --yes
 
 ### Success metrics
 
-- **Downtime**: <2 minutes (DNS propagation time)
+- **Downtime**: Less than 2 minutes (DNS propagation time)
 - **Error rate**: 0% during transition
-- **Recovery time**: <5 minutes if rollback needed
+- **Recovery time**: Less than 5 minutes if rollback needed
 
 ---
 
 ## Scenario 2: Stage upgrades across environments
 
-- **Challenge**: "I need to safely test upgrades through dev/test/production with proper validation gates."
+- **Challenge**: "I need to safely test upgrades through dev, test, and production with proper validation gates."
 - **Strategy**: Use Azure Kubernetes Fleet Manager with staged rollouts.
 - **With AKS Automatic**: AKS Automatic clusters use preconfigured auto-upgrade channels by default. Azure Kubernetes Fleet Manager can orchestrate those upgrades across multiple AKS Automatic clusters in your environment, adding centralized validation gates and staged rollout control.
 
@@ -539,9 +539,9 @@ data:
 
 ## Scenario 4: Fastest security patch deployment
 
-- **Challenge**: "A critical CVE was announced. I need patches deployed across all clusters within 4 hours."
+- **Challenge**: "A critical CVE was announced. I need patches deployed across all clusters within four hours."
 - **Strategy**: Use automated node image patching with minimal disruption.
-- **With AKS Automatic**: AKS Automatic applies security patches automatically via the SecurityPatch channel enabled by default. Node OS images are updated continuously with security fixes. For emergency CVE response requiring faster-than-default patching, use the following guidance to trigger immediate patching:
+- **With AKS Automatic**: AKS Automatic applies security patches automatically through the SecurityPatch channel, which is enabled by default. Node OS images are updated continuously with security fixes. For emergency CVE response that requires faster-than-default patching, use the following guidance to trigger immediate patching:
 
 To learn more, see [Node image upgrade strategies](./node-image-upgrade.md), [Auto-upgrade channels](./auto-upgrade-cluster.md), and [Security patching best practices](/azure/aks/operator-best-practices-cluster-security).
 
@@ -631,9 +631,9 @@ curl -X POST "$SLACK_WEBHOOK" -d "{\"text\":\"Security patches deployed to produ
 
 ### Success metrics
 
-- **Deployment time**: <4 hours from CVE announcement
+- **Deployment time**: Less than four hours from CVE announcement
 - **Coverage**: 100% of nodes patched
-- **Downtime**: <5 minutes per node pool
+- **Downtime**: Less than five minutes per node pool
 
 ---
 
@@ -757,9 +757,9 @@ data:
 
 ### Success metrics
 
-- **Error rate**: <0.01% during upgrades
-- **Response time**: <10% degradation
-- **Recovery time**: <30 seconds after node replacement
+- **Error rate**: Less than 0.01% during upgrades
+- **Response time**: Less than 10% degradation
+- **Recovery time**: Less than 30 seconds after node replacement
 
 ---
 
