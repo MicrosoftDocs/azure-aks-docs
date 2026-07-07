@@ -2,11 +2,12 @@
 title: Deploy an Azure Kubernetes Service (AKS) Cluster using Azure CLI
 description: Learn how to deploy an Azure Kubernetes Service cluster (AKS) with default settings using Azure CLI and deploy a multi-container application.
 ms.topic: quickstart
-ms.date: 04/22/2026
+ms.date: 07/07/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.custom: H1Hack27Feb2017, mvc, devcenter, devx-track-azurecli, mode-api, innovation-engine, linux-related-content, quarterly, aks-getting-started
 ms.service: azure-kubernetes-service
+ai-usage: ai-assisted
 # Customer intent: As a developer or cluster operator, I want to deploy an AKS cluster and deploy an application so I can see how to run applications using the managed Kubernetes service in Azure.
 ---
 
@@ -70,7 +71,7 @@ The `RANDOM_STRING` variable stores a random 10-digit string. The `RESOURCE_GROU
 
 An [Azure resource group][azure-resource-group] is a logical group in which Azure resources are deployed and managed. When you create a resource group, you're prompted to specify a location. This location is the storage location of your resource group metadata and where your resources run in Azure if you don't specify another region during resource creation.
 
-Create a resource group using the [az group create][az-group-create] command.
+Create a resource group by using the [az group create][az-group-create] command. This command uses the `$RESOURCE_GROUP` and `$LOCATION` variables you defined earlier.
 
 ```azurecli-interactive
 az group create --name $RESOURCE_GROUP --location $LOCATION
@@ -94,7 +95,7 @@ The result looks like the following example.
 
 ## Create an AKS cluster
 
-Create an AKS cluster using the [az aks create][az-aks-create] command. The following example creates a cluster with one node and enables a system-assigned managed identity.
+Create an AKS cluster by using the [az aks create][az-aks-create] command. The following example creates a cluster with one node and enables a system-assigned managed identity. This command uses the `$RESOURCE_GROUP` and `$CLUSTER_NAME` variables you defined earlier.
 
 ```azurecli-interactive
 az aks create \
@@ -107,6 +108,12 @@ az aks create \
 When you create a new cluster, AKS automatically creates a second resource group to store the AKS resources. For more information, see [Why are two resource groups created with AKS?](../faq.yml)
 
 The cluster in this example specifies a node count of one to save time and resources. In a production environment, the recommendation is a node count of three or more nodes. The `az aks create` defaults to three nodes if you don't specify a node count.
+
+Verify that the cluster reached the `Succeeded` provisioning state by using the [az aks show][az-aks-show] command.
+
+```azurecli-interactive
+az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query provisioningState --output tsv
+```
 
 ## Add a user mode node pool
 
@@ -123,7 +130,7 @@ az aks nodepool add \
 
 Like the cluster, we specified one node, but the default is three nodes if you don't specify a node count.
 
-After the user node pool is created, you can verify that your cluster has a system node pool and a user node pool using the [`az aks nodepool list`][az-aks-nodepool-list] command.
+After you create the user node pool, you can verify that your cluster has a system node pool and a user node pool by using the [`az aks nodepool list`][az-aks-nodepool-list] command.
 
 ```azurecli-interactive
 az aks nodepool list \
@@ -177,7 +184,7 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
 
 To deploy the application, you use a manifest file to create all the objects required to run the [AKS Store application](https://github.com/Azure-Samples/aks-store-demo). A Kubernetes manifest file defines a cluster's desired state, such as which container images to run. The manifest includes the following Kubernetes deployments and services:
 
-:::image type="content" source="media/quick-kubernetes-deploy-portal/aks-store-architecture.png" alt-text="Screenshot of Azure Store sample architecture." lightbox="media/quick-kubernetes-deploy-portal/aks-store-architecture.png":::
+:::image type="content" source="media/quick-kubernetes-deploy-portal/aks-store-architecture.png" alt-text="Screenshot of AKS Store sample architecture." lightbox="media/quick-kubernetes-deploy-portal/aks-store-architecture.png":::
 
 - Store front: Web application for customers to view products and place orders.
 - Product service: Shows product information.
@@ -187,7 +194,7 @@ To deploy the application, you use a manifest file to create all the objects req
 > [!NOTE]
 > We don't recommend running stateful containers, such as `RabbitMQ`, without persistent storage for production. We use it here for simplicity, but we recommend using managed services, such as Azure Cosmos DB or Azure Service Bus.
 
-1. Create a file named _aks-store-quickstart.yaml_ and copy in the following manifest. Replace the two placeholders for `<defaultPassword>` with your own password. This password is used for the default user of the `RabbitMQ` instance.
+1. Create a file named _aks-store-quickstart.yaml_ and copy the following manifest into it. Replace the two placeholders for `<defaultPassword>` with your own password. The default user of the `RabbitMQ` instance uses this password.
 
     ```yaml
     apiVersion: apps/v1
@@ -567,7 +574,7 @@ If you don't plan on doing the [AKS tutorial][aks-tutorial], clean up unnecessar
 az group delete --name $RESOURCE_GROUP --no-wait --yes
 ```
 
-The AKS cluster was created with a system-assigned managed identity, which is the default identity option used in this quickstart. The platform manages this identity so you don't need to manually remove it.
+You created the AKS cluster with a system-assigned managed identity, which is the default identity option in this quickstart. The platform manages this identity, so you don't need to manually remove it.
 
 ## Next steps
 
@@ -588,6 +595,7 @@ To learn more about AKS and do a complete code-to-deployment example, continue t
 [aks-tutorial]: ../tutorial-kubernetes-prepare-app.md
 [azure-resource-group]: /azure/azure-resource-manager/management/overview
 [az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-group-create]: /cli/azure/group#az-group-create
