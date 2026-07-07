@@ -33,7 +33,7 @@ These updates cover security information related to the following AKS components
 
 ### Description
 
-This bulletin primarily affects AKS node pools running **Ubuntu 22.04**. If your node pools run Ubuntu 24.04 or Azure Linux, you're affected far less and can likely skip this bulletin.
+This bulletin primarily affects AKS node pools running **Ubuntu 22.04**.
 
 This bulletin addresses a recent, broad increase in the number of Linux kernel CVEs that vulnerability scanners report against AKS Ubuntu 22.04 node images. This increase reflects an **ecosystem-wide change in how Ubuntu/Canonical classifies kernel vulnerabilities**, rather than AKS-specific patch lag. AKS is actively investigating and has engaged Canonical directly.
 
