@@ -79,7 +79,7 @@ This is an ongoing investigation. AKS has engaged Canonical to obtain assessment
 
 Recommended actions to reduce exposure:
 
-- **Consider migrating to Ubuntu 24.04 or Azure Linux node pools.** Migrating is a strong way to improve your overall security posture. See [Azure Linux for AKS](../use-azure-linux.md).
+- **Consider migrating to Ubuntu 24.04 or Azure Linux node pools.** Migrating is a strong way to improve your overall security posture. Before migrating, review the [supported OS versions and their Kubernetes version compatibility](../upgrade-os-version.md#supported-os-versions). See also [Azure Linux for AKS](../use-azure-linux.md).
 - **Keep node images current.** Continue upgrading to the latest AKS Linux node image versions from the [AKS release notes][aks-release-notes]. AKS automatically incorporates Canonical kernel fixes into new node images as soon as they're published upstream, so staying current ensures you receive each fix at the earliest opportunity.
 
 Understanding the remaining findings:
