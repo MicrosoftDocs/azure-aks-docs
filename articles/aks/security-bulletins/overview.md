@@ -39,7 +39,7 @@ This bulletin addresses a recent, broad increase in the number of Linux kernel C
 
 Key points:
 
-- **Historical CVEs recently reclassified.** Many of the newly reported CVEs are old, but Canonical has recently updated its assessments and moved a large number of Ubuntu kernel CVEs from a *needs-triage* (needs-evaluation) state to a vulnerable state — either *needed* (a fix is required) or *deferred* (vulnerable, but the fix is postponed). This has resulted in a rise in scanner findings against Ubuntu node images.
+- **Historical CVEs recently reclassified.** Many of the newly reported CVEs are old, but Canonical has recently updated its assessments and moved a large number of Ubuntu kernel CVEs from a **Needs evaluation** status to a **Vulnerable** status (which also includes **Vulnerable, work in progress** and **Vulnerable, fix deferred**). This has resulted in a rise in scanner findings against Ubuntu node images. For definitions of each status, see [Canonical's CVE status reference](https://ubuntu.com/security/cves/about#statuses).
 
 - **We have found a large number of vulnerabilities in the Ubuntu Linux kernel.** The elevated findings are overwhelmingly concentrated in the Ubuntu kernel package rather than spread across the broader Ubuntu package ecosystem, and are seen primarily on Ubuntu 22.04.
 
@@ -52,8 +52,8 @@ Key points:
 AKS nodes run the Azure-optimized Ubuntu kernel, whose package is named **`linux-azure`**. However, most vulnerability scanners report these CVEs against the **generic `linux` package name** rather than `linux-azure`. To identify whether a reported finding belongs to this class:
 
 - Look for kernel CVEs whose affected package is reported as **`linux`** (the generic Ubuntu kernel), even though the installed package on AKS nodes is **`linux-azure`**.
-- For accurate manual verification, don't rely on the generic `linux` mapping. Instead, take the **exact `linux-azure` package version** installed on your node (for example, from `dpkg -l linux-image-*-azure` or `apt list --installed | grep linux-azure`) and check that CVE's status for the `linux-azure` source package directly in the [Ubuntu CVE Tracker](https://ubuntu.com/security/cves). This tells you whether your specific kernel version is actually fixed, needed, or deferred.
-- Confirm the CVE traces back to a recent Canonical reclassification (moved from *needs-triage* to a vulnerable state such as *needed* or *deferred*).
+- For accurate manual verification, don't rely on the generic `linux` mapping. Instead, take the **exact `linux-azure` package version** installed on your node (for example, from `dpkg -l linux-image-*-azure` or `apt list --installed | grep linux-azure`) and check that CVE's status for the `linux-azure` source package directly in the [Ubuntu CVE Tracker](https://ubuntu.com/security/cves). This tells you whether your specific kernel version is **Fixed**, **Vulnerable**, **Vulnerable, work in progress**, or **Vulnerable, fix deferred**.
+- Confirm the CVE traces back to a recent Canonical reclassification (moved from **Needs evaluation** to one of the **Vulnerable** statuses).
 
 > [!NOTE]
 > Other kernel variants used by different platforms (for example, other cloud-specific flavors) may be affected by the same underlying CVEs. Those variants may **not** appear in scanner results if the scanner doesn't map their kernel name to the generic `linux` package, or if the scanner's vulnerability database isn't enriched with that specific variant. This means a finding surfacing on AKS's `linux`-mapped kernel doesn't necessarily indicate a difference in patch level versus another platform. To confirm actual exposure, check the status of your exact installed `linux-azure` kernel version in the [Ubuntu CVE Tracker](https://ubuntu.com/security/cves).
