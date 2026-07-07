@@ -1164,14 +1164,22 @@
               href: open-ai-quickstart.md
             - name: Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
               href: open-ai-secure-access-quickstart.md
-        - name: Deploy a Ray cluster
+        - name: Run Ray AI workloads with Kueue
           items:
             - name: Overview
               href: ray-overview.md
-            - name: Configure and deploy a Ray cluster
-              href: deploy-ray.md
-            - name: Configure and deploy a Ray cluster for tuning
-              href: deploy-ray-tuning.md
+            - name: Deploy infrastructure
+              href: deploy-ray-infrastructure.md
+            - name: Configure Kueue queues
+              href: configure-ray-kueue-queues.md
+            - name: Fine-tune Aurora weather model
+              href: ray-finetune-aurora.md
+            - name: Train an LLM
+              href: ray-train-llm.md
+            - name: Run batch inference
+              href: ray-batch-inference.md
+            - name: Serve a model online
+              href: ray-online-serving.md
         - name: AI toolchain operator (KAITO)
           items:
             - name: Deploy an AI model using the Azure CLI
