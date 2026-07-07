@@ -54,7 +54,7 @@ AKS nodes run the Azure-optimized Ubuntu kernel, whose package is named **`linux
 - Confirm the CVE traces back to a recent Canonical reclassification (moved from *needs-triage* to a vulnerable state such as *needed* or *deferred*).
 
 > [!NOTE]
-> Other kernel variants used by different platforms (for example, other cloud-specific flavors) may be affected by the same underlying CVEs. Those variants may **not** appear in scanner results if the scanner doesn't map their kernel name to the generic `linux` package, or if the scanner's vulnerability database isn't enriched with that specific variant. As a result, differences in reported counts across platforms can reflect scanner mapping and database enrichment rather than a real difference in patch level. Compare actual installed kernel package versions rather than raw finding counts when assessing exposure.
+> Other kernel variants used by different platforms (for example, other cloud-specific flavors) may be affected by the same underlying CVEs. Those variants may **not** appear in scanner results if the scanner doesn't map their kernel name to the generic `linux` package, or if the scanner's vulnerability database isn't enriched with that specific variant. This means a finding surfacing on AKS's `linux`-mapped kernel doesn't necessarily indicate a difference in patch level versus another platform. To confirm actual exposure, check the status of your exact installed `linux-azure` kernel version in the [Ubuntu CVE Tracker](https://ubuntu.com/security/cves).
 
 This is an ongoing investigation. AKS has engaged Canonical to obtain assessment status and remediation timelines for the recently reclassified kernel CVEs, and will update this bulletin as upstream fixes and guidance become available.
 
@@ -71,7 +71,7 @@ This is an ongoing investigation. AKS has engaged Canonical to obtain assessment
 
 **Affected Versions**
 
-- AKS Ubuntu 22.04 Linux node images (which run the Azure-optimized `linux-azure` kernel) are primarily affected and may show an elevated count of Linux kernel CVE findings due to recent Canonical reclassifications. Many of these CVEs currently have no upstream fix available. Ubuntu 24.04 node images may show a smaller number of similar findings.
+- AKS Ubuntu 22.04 Linux node images (which run the Azure-optimized `linux-azure` kernel) are primarily affected and may surface additional Linux kernel CVE findings due to recent Canonical reclassifications. Many of these CVEs currently have no upstream fix available. Ubuntu 24.04 node images are affected to a lesser extent.
 
 **Resolutions**
 
@@ -83,7 +83,7 @@ Recommended actions to reduce exposure:
 Understanding the remaining findings:
 
 - **Some findings will persist until Canonical publishes a fix.** For CVEs that Canonical has reclassified as vulnerable but not yet patched, no node image upgrade or version migration will clear the finding until an upstream fix is released. These aren't caused by AKS-specific patch lag, and AKS can't remediate them ahead of Canonical.
-- **Verify exposure by exact kernel version, not raw counts.** These CVEs are typically reported against the generic Ubuntu `linux` package even though AKS nodes run `linux-azure`. For accurate verification, check the status of the exact installed `linux-azure` kernel version in the [Ubuntu CVE Tracker](https://ubuntu.com/security/cves) rather than relying on raw scanner counts, since counts are affected by how each scanner maps and enriches kernel variants.
+- **Verify exposure by exact kernel version.** These CVEs are typically reported against the generic Ubuntu `linux` package even though AKS nodes run `linux-azure`. To confirm whether your nodes are actually affected, check the status of the exact installed `linux-azure` kernel version in the [Ubuntu CVE Tracker](https://ubuntu.com/security/cves).
 - **AKS is tracking upstream remediation.** AKS has engaged Canonical for assessment status and remediation timelines and will update this bulletin as fixes become available.
 
 ---
