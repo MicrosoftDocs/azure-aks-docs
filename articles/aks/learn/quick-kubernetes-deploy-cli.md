@@ -71,7 +71,7 @@ The `RANDOM_STRING` variable stores a random 10-digit string. The `RESOURCE_GROU
 
 An [Azure resource group][azure-resource-group] is a logical group in which Azure resources are deployed and managed. When you create a resource group, you're prompted to specify a location. This location is the storage location of your resource group metadata and where your resources run in Azure if you don't specify another region during resource creation.
 
-Create a resource group using the [az group create][az-group-create] command. This command uses the `$RESOURCE_GROUP` and `$LOCATION` variables you defined earlier.
+Create a resource group by using the [az group create][az-group-create] command. This command uses the `$RESOURCE_GROUP` and `$LOCATION` variables you defined earlier.
 
 ```azurecli-interactive
 az group create --name $RESOURCE_GROUP --location $LOCATION
@@ -95,7 +95,7 @@ The result looks like the following example.
 
 ## Create an AKS cluster
 
-Create an AKS cluster using the [az aks create][az-aks-create] command. The following example creates a cluster with one node and enables a system-assigned managed identity. This command uses the `$RESOURCE_GROUP` and `$CLUSTER_NAME` variables you defined earlier.
+Create an AKS cluster by using the [az aks create][az-aks-create] command. The following example creates a cluster with one node and enables a system-assigned managed identity. This command uses the `$RESOURCE_GROUP` and `$CLUSTER_NAME` variables you defined earlier.
 
 ```azurecli-interactive
 az aks create \
@@ -109,7 +109,7 @@ When you create a new cluster, AKS automatically creates a second resource group
 
 The cluster in this example specifies a node count of one to save time and resources. In a production environment, the recommendation is a node count of three or more nodes. The `az aks create` defaults to three nodes if you don't specify a node count.
 
-Verify that the cluster reached the `Succeeded` provisioning state using the [az aks show][az-aks-show] command.
+Verify that the cluster reached the `Succeeded` provisioning state by using the [az aks show][az-aks-show] command.
 
 ```azurecli-interactive
 az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query provisioningState --output tsv
