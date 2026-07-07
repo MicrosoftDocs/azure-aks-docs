@@ -194,7 +194,7 @@ To deploy the application, you use a manifest file to create all the objects req
 > [!NOTE]
 > We don't recommend running stateful containers, such as `RabbitMQ`, without persistent storage for production. We use it here for simplicity, but we recommend using managed services, such as Azure Cosmos DB or Azure Service Bus.
 
-1. Create a file named _aks-store-quickstart.yaml_ and copy in the following manifest. Replace the two placeholders for `<defaultPassword>` with your own password. The default user of the `RabbitMQ` instance uses this password.
+1. Create a file named _aks-store-quickstart.yaml_ and copy the following manifest into it. Replace the two placeholders for `<defaultPassword>` with your own password. The default user of the `RabbitMQ` instance uses this password.
 
     ```yaml
     apiVersion: apps/v1
