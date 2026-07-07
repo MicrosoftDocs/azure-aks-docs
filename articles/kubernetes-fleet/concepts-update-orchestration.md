@@ -279,7 +279,7 @@ Result: Up to five concurrent upgrades total, distributed across groups accordin
 >
 > * When using the `TargetKubernetesVersion` channel, you must specify the target Kubernetes version using the `--target-kubernetes-version` parameter.
 >
-> * If you want to have your Node Image version upgraded, you need to create an Auto-upgrade Profile with `NodeImage` channel.
+> * If you want to upgrade your Node Image version, create an Auto-upgrade Profile with the `NodeImage` channel.
 >
 > * You can create multiple auto-upgrade profiles for the same Fleet Manager.
 
