@@ -1,8 +1,9 @@
 ---
 title: Dapr Extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes
 description: Learn more about using Dapr on your Azure Kubernetes Service (AKS) cluster to develop applications.
-author: greenie-msft
-ms.author: nigreenf
+author: shivamkm07
+ms.author: shivamkumar
+ms.reviewer: ramithar
 ms.topic: overview
 ms.subservice: dapr-aks
 ms.date: 02/05/2026
