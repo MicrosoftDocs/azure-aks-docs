@@ -1,8 +1,9 @@
 ---
 title: Migrate from Dapr OSS to the Dapr Extension for AKS
 description: Learn how to migrate your managed clusters from Dapr OSS to the Dapr extension for Azure Kubernetes Service (AKS).
-author: greenie-msft
-ms.author: nigreenf
+author: shivamkm07
+ms.author: shivamkumar
+ms.reviewer: ramithar
 ms.topic: how-to
 ms.date: 02/06/2026
 ms.subservice: dapr-aks
