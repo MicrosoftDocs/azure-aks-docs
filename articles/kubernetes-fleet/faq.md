@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 06/29/2026
+ms.date: 07/08/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -97,10 +97,10 @@ Fleet Manager supports the following AKS update channels:
 * **Stable**: Updates for Kubernetes stable channel (N-1) where 'N' is the most recent AKS-supported Kubernetes release.
 * **NodeImage**: Node image VHD patched (bug and security) with a weekly release schedule.
 * **TargetKubernetesVersion (Kubernetes Patch)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that are available only via AKS Long-Term Support (LTS).
-* **NodeSecurityPatch (preview)**: Node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
 
 Currently unsupported AKS channels:
 
+* **NodeSecurityPatch**: Node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
 * **Unmanaged**: Node image OS updates applied directly through OS in-built patching (Linux nodes only). There are currently no plans for Fleet Manager to support this option.
 
 ### The target Kubernetes minor version in my auto-upgrade profile is out of community support. What can I do?
