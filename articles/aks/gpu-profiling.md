@@ -1,5 +1,5 @@
 ﻿---
-title: Optimize GPU workloads on AKS with profiling (Preview)
+title: Optimize GPU workloads on AKS with GPU profiling (Preview)
 description: Learn how to profile GPU workloads with real-time observability and analyze flame graphs to identify memory hotspots to optimize GPU workloads.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -12,7 +12,7 @@ ai-usage: ai-assisted
 # Customer intent: As a platform engineer, I want to profile GPU workloads on AKS, so that I can identify memory allocation hotspots, optimize resource usage, and troubleshoot performance regressions in GPU based workloads.
 ---
 
-# Optimize GPU workloads on Azure Kubernetes Service (AKS) with profiling (Preview)
+# Optimize GPU workloads on Azure Kubernetes Service (AKS) with GPU profiling (Preview)
 
 GPU based workloads such as AI inference services can be memory-intensive and difficult to optimize and debug without deep visibility into what the GPU is actually doing. You might see out-of-memory (OOM) errors, unexpected latency spikes, or rising GPU memory pressure, but traditional Kubernetes metrics don't tell you *where* in the code the memory is being allocated. Profiling helps you understand the exact functions responsible for GPU memory usage.
 
@@ -25,36 +25,45 @@ This article walks you through how to use GPU observability on AKS:
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
-## Deploy advanced GPU observability - GPU memory profiling on AKS
+## Deploy GPU observability - GPU memory profiling on AKS
 
 ### Prerequisites
 
 - An AKS cluster with at least one GPU-enabled node pool.
 - [Azure CLI][install-azure-cli] version 2.72.0 or later installed. Run `az --version` to check.
+- The `k8s-extension` Azure CLI add-on installed. Run `az extension add --name k8s-extension` to install.
 - [Helm][helm-install] version 3.x or later installed. Run `helm version` to check.
 - Azure Monitor (optional, can use your own monitoring setup if preferred).
 - Azure Managed Grafana (optional, for visualization).
 
 
-### Step 1: Install Inspektor Gadget
+### Step 1: Enable GPU profiling via the Inspektor Gadget extension
 
-[Inspektor Gadget](https://inspektor-gadget.io/) is an open source eBPF-based observability framework for Kubernetes. For GPU profiling, it traces Compute Unified Device Architecture (CUDA) memory allocation calls without requiring code changes, sidecars, or pod restarts.
+[Inspektor Gadget](https://inspektor-gadget.io/) is an open source eBPF-based observability framework for Kubernetes. For GPU profiling, it traces Compute Unified Device Architecture (CUDA) memory allocation calls without requiring code changes, sidecars, or pod restarts. Enable GPU profiling on your AKS cluster by running the following extension command:
 
 ```bash
-helm upgrade --install -n gadget inspektor-gadget --create-namespace \
-  oci://mcr.microsoft.com/microsoft.inspektor-gadget/helmcharts/inspektor-gadget:0.53.0-0 \
-  --set gpuObservability.enabled=true \
-  --set azureMonitor.enabled=true
+az k8s-extension update \
+  --subscription <your-subscription-id> \
+  -g <your-resource-group> \
+  -c <your-cluster-name> \
+  -t managedClusters \
+  -n inspektor-gadget \
+  --configuration-settings gpuObservability.enabled=true \
+  --configuration-settings azureMonitor.enabled=true \
+  --yes
 ```
 
 > [!NOTE]
-> This step assumes you have already enabled Azure Monitor on your AKS cluster. If you plan to use your own Prometheus setup, remove `--set azureMonitor.enabled=true`.
+> This step assumes you have already enabled Azure Monitor on your AKS cluster. If you plan to use your own Prometheus setup, remove `--configuration-settings azureMonitor.enabled=true`.
 
 Verify that pods are running:
 
 ```bash
 kubectl get pods -n gadget -l k8s-app=gadget
 ```
+
+> [!TIP]
+> GPU memory profiling captures memory allocation events as they occur. If your workload allocates GPU memory before GPU profiling is enabled, those allocation events won't be captured. For workloads that pre-allocate GPU memory during startup, enable GPU profiling before deploying the workload, or restart the workload to capture initial memory allocation paths.
 
 ### Step 2: Enable profile visualization with Pyroscope
 
@@ -296,7 +305,7 @@ The following sample flame graphs are captured from a vLLM inference workload.
 :::image type="content" source="media/gpu-profiling/flame-graph-expanded.png" alt-text="Screenshot of the flame graph in Grafana for a vLLM workload after selecting Expand all groups, showing the full call stack with individual function frames for GPU memory allocations." lightbox="media/gpu-profiling/flame-graph-expanded.png":::
 
 > [!TIP]
-> Use **Focus block** to foucs on a specific allocation path.
+> Use **Focus block** to focus on a specific allocation path.
 
 ### Read the symbols
 
