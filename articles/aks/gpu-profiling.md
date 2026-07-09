@@ -42,15 +42,16 @@ This article walks you through how to use GPU observability on AKS:
 [Inspektor Gadget](https://inspektor-gadget.io/) is an open source eBPF-based observability framework for Kubernetes. For GPU profiling, it traces Compute Unified Device Architecture (CUDA) memory allocation calls without requiring code changes, sidecars, or pod restarts. Enable GPU profiling on your AKS cluster by running the following extension command:
 
 ```bash
-az k8s-extension update \
+az k8s-extension create \
+  --extension-type microsoft.inspektorgadget \
   --subscription <your-subscription-id> \
   -g <your-resource-group> \
   -c <your-cluster-name> \
   -t managedClusters \
+  --release-train preview \
   -n inspektor-gadget \
   --configuration-settings gpuObservability.enabled=true \
   --configuration-settings azureMonitor.enabled=true \
-  --yes
 ```
 
 > [!NOTE]
@@ -63,7 +64,7 @@ kubectl get pods -n gadget -l k8s-app=gadget
 ```
 
 > [!TIP]
-> GPU memory profiling captures memory allocation events as they occur. If your workload allocates GPU memory before GPU profiling is enabled, the profiler doesn't capture those allocation events. For workloads that pre-allocate GPU memory during startup, enable GPU profiling before deploying the workload, or restart the workload to capture initial memory allocation paths.
+> GPU memory profiling captures memory allocation events as they occur. If your workload allocates GPU memory before GPU profiling is enabled, the profiler doesn't capture those allocation events. For workloads such as vLLM that pre-allocate GPU memory during startup, enable GPU profiling before deploying the workload, or restart the workload to capture initial memory allocation paths.
 
 ### Step 2: Enable profile visualization with Pyroscope
 
