@@ -63,7 +63,7 @@ kubectl get pods -n gadget -l k8s-app=gadget
 ```
 
 > [!TIP]
-> GPU memory profiling captures memory allocation events as they occur. If your workload allocates GPU memory before GPU profiling is enabled, those allocation events won't be captured. For workloads that pre-allocate GPU memory during startup, enable GPU profiling before deploying the workload, or restart the workload to capture initial memory allocation paths.
+> GPU memory profiling captures memory allocation events as they occur. If your workload allocates GPU memory before GPU profiling is enabled, the profiler doesn't capture those allocation events. For workloads that pre-allocate GPU memory during startup, enable GPU profiling before deploying the workload, or restart the workload to capture initial memory allocation paths.
 
 ### Step 2: Enable profile visualization with Pyroscope
 
