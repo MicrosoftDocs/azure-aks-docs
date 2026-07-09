@@ -54,7 +54,7 @@ az k8s-extension update \
 ```
 
 > [!NOTE]
-> This step assumes you have already enabled Azure Monitor on your AKS cluster. If you plan to use your own Prometheus setup, remove `--configuration-settings azureMonitor.enabled=true`.
+> This step assumes you already enabled Azure Monitor on your AKS cluster. If you plan to use your own Prometheus setup, remove `--configuration-settings azureMonitor.enabled=true`.
 
 Verify that pods are running:
 
