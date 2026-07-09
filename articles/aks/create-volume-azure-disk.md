@@ -115,7 +115,8 @@ The following table includes parameters you can use to define a custom storage c
 | `diskEncryptionSetID` | Resource ID of the disk encryption set to use for [enabling encryption at rest][disk-encryption] | format: `/subscriptions/{subs-id}/resourceGroups/{rg-name}/providers/Microsoft.Compute/diskEncryptionSets/{diskEncryptionSet-name}` | No | "" |
 | `diskEncryptionType` | Encryption type of the disk encryption set. | `EncryptionAtRestWithCustomerKey` (by default), `EncryptionAtRestWithPlatformAndCustomerKeys` | No | `EncryptionAtRestWithCustomerKey` |
 | `writeAcceleratorEnabled` | [Write accelerator on Azure Disks][azure-disk-write-accelerator] | `true`, `false` | No | "" |
-| `networkAccessPolicy` | `NetworkAccessPolicy` property to prevent generation of the SAS URI for a disk or a snapshot. | `AllowAll`, `DenyAll`, `AllowPrivate` | No | `AllowAll` |
+| `networkAccessPolicy` | `NetworkAccessPolicy` property to prevent generation of the SAS URI for a disk or a snapshot. | `AllowAll`, `DenyAll`, `AllowPrivate` | No | `DenyAll` |
+| `publicNetworkAccess` | Enable or disable public access to the underlying data of a disk over the internet, even when the `networkAccessPolicy` is set to `AllowAll`. | `Enabled`, `Disabled` | No | `Disabled` |
 | `diskAccessID` | Azure resource ID of the DiskAccess resource to use private endpoints on disks | | No | `` |
 | `enableBursting` | [Enable on-demand bursting][on-demand-bursting] beyond the provisioned performance target of the disk. On-demand bursting should only be applied to Premium disk and when the disk size > 512 GB. Ultra and shared disk isn't supported. Bursting is disabled by default. | `true`, `false` | No | `false` |
 | `userAgent` | User agent used for [customer usage attribution][customer-usage-attribution] | | No | Generated user agent format: `driverName/driverVersion compiler/version (OS-ARCH)` |
