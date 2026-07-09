@@ -37,7 +37,7 @@ In this article, you learn how to use capacity reservation groups with node pool
 1. Get the ID of the user-assigned managed identity using the [`az identity show`][az-identity-show] command and set it to an environment variable.
 
     ```azurecli-interactive
-    IDENTITY_ID=$(az identity show --name <identity-name> --resource-group <resource-group-name> --query identity.id -o tsv)
+    IDENTITY_ID=$(az identity show --name <identity-name> --resource-group <resource-group-name> --query principalId -o tsv)
     ```
 
 1. Assign the `Contributor` role to the user-assigned identity using the [`az role assignment create`][az-role-assignment-create] command.
