@@ -227,9 +227,11 @@ Confirm that the sample application's product page is accessible. The expected o
 <title>Simple Bookstore App</title>
 ```
 
-## Ingress gateway service customizations
+## Ingress gateway customizations
 
 ### Annotations
+
+#### Service annotations
 
 The following annotations can be added to the Kubernetes service for the external and internal ingress gateways. See the [document on configuring public load balancers][aks-lb-configure-annotations] for more information about these annotations.
 
@@ -255,6 +257,12 @@ The add-on supports the following health probe annotations for ports `80` and `4
 - `service.beta.kubernetes.io/port_{port}_health-probe_interval`
 - `service.beta.kubernetes.io/port_{port}_health-probe_num-of-probe`
 - `service.beta.kubernetes.io/port_{port}_health-probe_request-path`
+
+#### Deployment annotations
+
+The following annotations can be added to the Kubernetes deployment for the external and internal ingress gateways:
+
+- Under `spec.template.metadata.annotations`: `proxy.istio.io/config`. This can be used to configure settings such as `gatewayTopology.numTrustedProxies`. `ProxyConfig` annotations added to the ingress gateway pod or other workloads in the mesh will override the `ProxyConfig` values set in the default MeshConfig and [shared MeshConfig][istio-meshconfig].
 
 ### External traffic policy
 
@@ -301,6 +309,7 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [istio-secure-gateway]: istio-secure-gateway.md
 [istio-scaling-guide]: istio-scale.md#scaling
 [istio-gateway-api]: istio-gateway-api.md
+[istio-meshconfig]: istio-meshconfig.md
 [istio-ingress-tsg]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-ingress-gateway
 [azure-nsg-docs]: /azure/virtual-network/network-security-groups-overview#augmented-security-rules
 [azure-service-tags]: /azure/virtual-network/service-tags-overview
