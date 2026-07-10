@@ -5,7 +5,7 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli, biannual
 author: nshankar
 ms.topic: how-to
-ms.date: 03/11/2026
+ms.date: 07/10/2026
 ms.author: nshankar
 # Customer intent: As a cloud engineer, I want to secure ingress traffic for the application routing Gateway API implementation using TLS termination.
 ---
@@ -75,14 +75,25 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     az keyvault set-policy --name $AKV_NAME --object-id $OBJECT_ID --secret-permissions get list
     ```
 
-4. Create secrets in Azure Key Vault using the certificates and keys.
+4. Create secrets in Azure Key Vault using the certificate and key files.
+
+    > [!NOTE]
+    > Steps 4 and 5 offer two mutually exclusive ways to supply the certificate to the add-on. Choose **one** option and follow only its steps:
+    >
+    > - **Option 1 – Store the certificate and key as Key Vault _secrets_.** Complete step 4 (this step), then apply the **first** `SecretProviderClass` manifest in step 5. Use this option when you have separate PEM certificate (`.crt`) and private key (`.key`) files, like the ones generated earlier in this article.
+    > - **Option 2 – Reference a Key Vault _certificate_ object directly.** Skip step 4 and apply the **second** (alternative) `SecretProviderClass` manifest in step 5. Use this option when your certificate is already stored in Key Vault as a certificate object (for example, an imported `.pfx`).
 
     ```bash
     az keyvault secret set --vault-name $AKV_NAME --name test-httpbin-key --file httpbin_certs/httpbin.example.com.key
     az keyvault secret set --vault-name $AKV_NAME --name test-httpbin-crt --file httpbin_certs/httpbin.example.com.crt
     ```
 
-5. Use the following manifest to deploy SecretProviderClass to provide Azure Key Vault specific parameters to the CSI driver.
+    > [!NOTE]
+    > Each time you rotate (change) the certificate or key, re-run this step to upload the new versions as secrets. To sync the updated values into the cluster automatically, enable autorotation on the Azure Key Vault provider for Secrets Store CSI Driver. For more information, see [Autorotation and secret sync overview][csi-secrets-store-autorotation]. If you prefer to have Key Vault manage the certificate lifecycle, use **Option 2** instead.
+
+5. Deploy a `SecretProviderClass` to provide Azure Key Vault-specific parameters to the CSI driver. Use the manifest that matches the option you chose in step 4.
+
+    **Option 1 – reference the secrets you created in step 4:**
     
     ```bash
     cat <<EOF | kubectl apply -f -
@@ -119,7 +130,7 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     EOF
     ```
 
-    Alternatively, to reference a certificate object type directly from Azure Key Vault, use the following manifest to deploy SecretProviderClass. In this example, `test-httpbin-cert-pfx` is the name of the certificate object in Azure Key Vault. Refer to [obtain certificates and keys][akv-csi-driver-obtain-cert-and-keys] section for more information. 
+    **Option 2 – reference a certificate object directly from Azure Key Vault.** You don't need step 4 for this option. In this example, `test-httpbin-cert-pfx` is the name of the certificate object in Azure Key Vault. To import an existing certificate into Key Vault as a certificate object, see [Import a certificate into Key Vault][akv-import-certificate]. For more information about the object parameters, see [obtain certificates and keys][akv-csi-driver-obtain-cert-and-keys]. 
     
     ```bash
     cat <<EOF | kubectl apply -f -
@@ -284,6 +295,8 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
 [akv-quickstart]: /azure/key-vault/general/quick-create-cli
 [akv-csi-driver-obtain-cert-and-keys]: ./csi-secrets-store-identity-access.md
 [akv-rbac-guide]: /azure/key-vault/general/rbac-guide#using-azure-rbac-secret-key-and-certificate-permissions-with-key-vault
+[csi-secrets-store-autorotation]: ./csi-secrets-store-configuration-options.md#autorotation-and-secret-sync-overview
+[akv-import-certificate]: /azure/key-vault/certificates/tutorial-import-certificate
 [app-routing-gateway-api]: ./app-routing-gateway-api.md
 [app-routing-gateway-api-dns-tls]: ./app-routing-gateway-api-dns-tls.md
 [managed-gateway-installation]: ./managed-gateway-api.md
