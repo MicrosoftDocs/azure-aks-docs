@@ -75,13 +75,23 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     az keyvault set-policy --name $AKV_NAME --object-id $OBJECT_ID --secret-permissions get list
     ```
 
-1. Create secrets in Azure Key Vault using the certificate and key files.
+4. Choose how to supply the TLS certificate.
 
-    > [!NOTE]
-    > Steps 4 and 5 offer two mutually exclusive ways to supply the certificate to the add-on. Choose **one** option and follow only its steps:
-    >
-    > - **Option 1 – Store the certificate and key as Key Vault _secrets_.** Complete step 4 (this step), then apply the **first** `SecretProviderClass` manifest in step 5. Use this option when you have separate PEM certificate (`.crt`) and private key (`.key`) files, like the ones generated earlier in this article.
-    > - **Option 2 – Reference a Key Vault _certificate_ object directly.** Skip step 4 and apply the **second** (alternative) `SecretProviderClass` manifest in step 5. Use this option when your certificate is already stored in Key Vault as a certificate object (for example, an imported `.pfx`).
+    Azure Key Vault supports different object types. For this walkthrough, choose **one** of the following end-to-end options, and then continue with the common validation and Gateway steps.
+
+    | Option | Use this option when | Key Vault stores | Kubernetes Secret result |
+    | --- | --- | --- | --- |
+    | **Option 1**: Store the certificate and key as Key Vault secrets | You have separate PEM certificate (`.crt`) and private key (`.key`) files, such as the files generated earlier in this article. | Two Key Vault secrets. | One synced Kubernetes TLS secret named `httpbin-credential`. |
+    | **Option 2**: Reference a Key Vault certificate object directly | Your certificate is already stored in Key Vault as a certificate object, such as an imported `.pfx`. | One Key Vault certificate object. | One synced Kubernetes TLS secret named `httpbin-credential`. |
+
+    > [!IMPORTANT]
+    > Don't follow both options. If you use Option 1, upload the certificate and key files as Key Vault secrets, and then apply the Option 1 `SecretProviderClass` manifest. If you use Option 2, skip the Key Vault secret upload step and apply the Option 2 `SecretProviderClass` manifest.
+
+#### Option 1: Store the certificate and key as Key Vault secrets
+
+Use this option when you have separate PEM certificate (`.crt`) and private key (`.key`) files, such as the files generated earlier in this article.
+
+1. Upload the certificate and key files as Key Vault secrets:
 
     ```bash
     az keyvault secret set --vault-name $AKV_NAME --name test-httpbin-key --file httpbin_certs/httpbin.example.com.key
@@ -91,10 +101,8 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     > [!NOTE]
     > Each time you rotate (change) the certificate or key, re-run this step to upload the new versions as secrets. To sync the updated values into the cluster automatically, enable autorotation on the Azure Key Vault provider for Secrets Store CSI Driver. For more information, see [Autorotation and secret sync overview][csi-secrets-store-autorotation]. If you prefer to have Key Vault manage the certificate lifecycle, use **Option 2** instead.
 
-1. Deploy a `SecretProviderClass` to provide Azure Key Vault-specific parameters to the CSI driver. Use the manifest that matches the option you chose in step 4.
+2. Create the `SecretProviderClass` that references the two secrets you created in Key Vault:
 
-    **Option 1 – reference the secrets you created in step 4:**
-    
     ```bash
     cat <<EOF | kubectl apply -f -
     apiVersion: secrets-store.csi.x-k8s.io/v1
@@ -130,8 +138,14 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     EOF
     ```
 
-    **Option 2 – reference a certificate object directly from Azure Key Vault.** You don't need step 4 for this option. In this example, `test-httpbin-cert-pfx` is the name of the certificate object in Azure Key Vault. To import an existing certificate into Key Vault as a certificate object, see [Import a certificate into Key Vault][akv-import-certificate]. For more information about the object parameters, see [obtain certificates and keys][akv-csi-driver-obtain-cert-and-keys]. 
-    
+#### Option 2: Reference a Key Vault certificate object directly
+
+Use this option when the certificate is already stored in Azure Key Vault as a certificate object. You don't need to upload the `.crt` and `.key` files as separate Key Vault secrets.
+
+In this example, `test-httpbin-cert-pfx` is the name of the certificate object in Azure Key Vault. To import an existing certificate into Key Vault as a certificate object, see [Import a certificate into Key Vault][akv-import-certificate]. For more information about the object parameters, see [obtain certificates and keys][akv-csi-driver-obtain-cert-and-keys].
+
+1. Create the `SecretProviderClass` that references the Key Vault certificate object:
+
     ```bash
     cat <<EOF | kubectl apply -f -
     apiVersion: secrets-store.csi.x-k8s.io/v1
@@ -167,8 +181,12 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     EOF
     ``` 
 
-6. Use the following manifest to deploy a sample pod. The secret store CSI driver requires a pod to reference the SecretProviderClass resource to ensure secrets sync from Azure Key Vault to the cluster.
-    
+#### Sync the secret to the cluster
+
+After you complete either Option 1 or Option 2, deploy a sample pod to sync the secret into the cluster. The Secrets Store CSI Driver requires a pod to reference the `SecretProviderClass` resource so that secrets sync from Azure Key Vault to the cluster.
+
+1. Use the following manifest to deploy a sample pod:
+
     ```bash
     cat <<EOF | kubectl apply -f -
     apiVersion: v1
