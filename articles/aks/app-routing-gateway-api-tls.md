@@ -75,7 +75,7 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     az keyvault set-policy --name $AKV_NAME --object-id $OBJECT_ID --secret-permissions get list
     ```
 
-4. Create secrets in Azure Key Vault using the certificate and key files.
+1. Create secrets in Azure Key Vault using the certificate and key files.
 
     > [!NOTE]
     > Steps 4 and 5 offer two mutually exclusive ways to supply the certificate to the add-on. Choose **one** option and follow only its steps:
@@ -91,7 +91,7 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     > [!NOTE]
     > Each time you rotate (change) the certificate or key, re-run this step to upload the new versions as secrets. To sync the updated values into the cluster automatically, enable autorotation on the Azure Key Vault provider for Secrets Store CSI Driver. For more information, see [Autorotation and secret sync overview][csi-secrets-store-autorotation]. If you prefer to have Key Vault manage the certificate lifecycle, use **Option 2** instead.
 
-5. Deploy a `SecretProviderClass` to provide Azure Key Vault-specific parameters to the CSI driver. Use the manifest that matches the option you chose in step 4.
+1. Deploy a `SecretProviderClass` to provide Azure Key Vault-specific parameters to the CSI driver. Use the manifest that matches the option you chose in step 4.
 
     **Option 1 – reference the secrets you created in step 4:**
     
