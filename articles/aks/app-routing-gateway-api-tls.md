@@ -75,7 +75,7 @@ openssl x509 -req -sha256 -days 365 -CA httpbin_certs/example.com.crt -CAkey htt
     az keyvault set-policy --name $AKV_NAME --object-id $OBJECT_ID --secret-permissions get list
     ```
 
-4. Choose how to supply the TLS certificate.
+1. Choose how to supply the TLS certificate.
 
     Azure Key Vault supports different object types. For this walkthrough, choose **one** of the following end-to-end options, and then continue with the common validation and Gateway steps.
 
@@ -101,7 +101,7 @@ Use this option when you have separate PEM certificate (`.crt`) and private key 
     > [!NOTE]
     > Each time you rotate (change) the certificate or key, re-run this step to upload the new versions as secrets. To sync the updated values into the cluster automatically, enable autorotation on the Azure Key Vault provider for Secrets Store CSI Driver. For more information, see [Autorotation and secret sync overview][csi-secrets-store-autorotation]. If you prefer to have Key Vault manage the certificate lifecycle, use **Option 2** instead.
 
-2. Create the `SecretProviderClass` that references the two secrets you created in Key Vault:
+1. Create the `SecretProviderClass` that references the two secrets you created in Key Vault:
 
     ```bash
     cat <<EOF | kubectl apply -f -
