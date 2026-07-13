@@ -280,8 +280,12 @@
           href: upgrade-node-pools.md
         - name: Assign capacity reservation groups to node pools
           href: use-capacity-reservation-groups.md
-        - name: Reduce image pull time with Artifact Streaming on AKS
-          href: artifact-streaming.md
+        - name: Artifact Streaming
+          items:
+            - name: Overview
+              href: artifact-streaming-overview.md
+            - name: Enable Artifact Streaming on AKS
+              href: artifact-streaming.md
         - name: Use generation 2 VMs
           href: generation-2-vms.md
         - name: Add an Azure Spot node pool
