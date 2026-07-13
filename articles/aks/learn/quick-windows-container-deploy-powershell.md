@@ -72,6 +72,7 @@ Use the following steps to create the AKS cluster with Azure PowerShell:
     ```azurepowershell-interactive
     New-AzAksCluster -ResourceGroupName myResourceGroup `
         -Name myAKSCluster `
+        -KubernetesVersion 1.33 `
         -NodeCount 2 `
         -NetworkPlugin azure `
         -NodeVmSetType VirtualMachineScaleSets `

@@ -89,6 +89,7 @@ Use the following steps to create the AKS cluster with Azure CLI:
     az aks create \
         --resource-group $MY_RESOURCE_GROUP_NAME \
         --name $MY_AKS_CLUSTER \
+        --kubernetes-version 1.33 \
         --node-count 2 \
         --enable-addons monitoring \
         --generate-ssh-keys \
