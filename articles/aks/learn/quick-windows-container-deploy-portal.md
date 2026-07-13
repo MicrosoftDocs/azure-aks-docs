@@ -55,13 +55,13 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 1. On the **Node pools** tab, configure the following settings:
     - Select **Add node pool** and enter a **Node pool name**, such as *npwin*. For a Windows node pool, the name must be *six characters or fewer*.
     - **Mode**: Select **User**.
-    - **OS SKU**: Select **Windows 2022**.
+    - **OS SKU**: Select **Windows 2025**. Windows Server 2025 requires a FIPS-enabled image, so enable FIPS for the node pool.
     - **Availability zones**: Select **None**.
     - Leave the **Enable Azure Spot instances** checkbox unchecked.
     - **Node size**: Select **Choose a size**. On the **Select a VM size** page, select **D2s_v3**, and then select **Select**.
     - Leave the default values for the remaining settings, and select **Add**.
 
-        :::image type="content" source="media/quick-windows-container-deploy-portal/add-node-pool-windows.png" alt-text="Screenshot showing how to create a node pool running Windows Server 2022." lightbox="media/quick-windows-container-deploy-portal/add-node-pool-windows.png":::
+        :::image type="content" source="media/quick-windows-container-deploy-portal/add-node-pool-windows.png" alt-text="Screenshot showing how to create a node pool running Windows Server 2025." lightbox="media/quick-windows-container-deploy-portal/add-node-pool-windows.png":::
 
 1. Select **Review + create** to run validation on the cluster configuration. After validation completes, select **Create**.
 

@@ -45,6 +45,8 @@ Add a node pool with your desired OS version to your existing cluster:
 - [Use PowerShell to add a Windows node pool](./learn/quick-windows-container-deploy-powershell.md) to an existing cluster.
 - [Use Terraform to add a Windows node pool](./learn/quick-windows-container-deploy-terraform.md) to an existing cluster.
 
+Windows Server 2025 node pools require a FIPS-enabled image. When you add a Windows Server 2025 node pool, include `--enable-fips-image` (Azure CLI) or `-EnableFIPS` (Azure PowerShell).
+
 ## Update the YAML file
 
 Node Selector is the most common and recommended option for placement of Windows pods on Windows nodes.

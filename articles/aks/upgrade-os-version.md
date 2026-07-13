@@ -34,7 +34,7 @@ Each [node image][node-images] corresponds to an OS version, which you can speci
 > - For Ubuntu, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku Ubuntu`. This will automatically update you to the latest default Ubuntu version based on your Kubernetes version.
 > - For Azure Linux, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku AzureLinux`. This will automatically update you to the latest default Azure Linux version based on your Kubernetes version.
 > - For Azure Container Linux (ACL), we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku AzureContainerLinux`. This will automatically update you to the latest default ACL version based on your Kubernetes version.
-> - For Windows, we recommend creating node pools while specifying `--os-type Windows` and `--os-sku Windows2025`. You need to manually update node pools to the next OS version when it's released.
+> - For Windows, we recommend creating node pools while specifying `--os-type Windows`, `--os-sku Windows2025`, and `--enable-fips-image` (Windows Server 2025 requires a FIPS-enabled image). You need to manually update node pools to the next OS version when it's released.
 
 | OS type | OS SKU | Supported Kubernetes versions | Default versioning |
 |--|--|--|--|
@@ -47,7 +47,7 @@ Each [node image][node-images] corresponds to an OS version, which you can speci
 | Linux | Flatcar | This OS SKU is supported in all Kubernetes versions. | Flatcar versions are upgraded through node image upgrades. For more information, see [Flatcar Container Linux for AKS][flatcar]. |
 | Linux | AzureContainerLinux | This OS SKU is supported in Kubernetes versions 1.34 and above. | Azure Container Linux versions are upgraded through node image upgrades. |
 | Windows | Windows2022 | 1.23 to 1.36 | Default for Windows OS Type in Kubernetes version 1.25 to 1.35. |
-| Windows | Windows2025 | 1.32 and above | Default for Windows OS Type in Kubernetes version 1.36 and later. |
+| Windows | Windows2025 | 1.32 and above | Default for Windows OS Type in Kubernetes version 1.36 and later. Requires a FIPS-enabled image (`--enable-fips-image`). |
 
 ## Migrate to a new OS version
 
