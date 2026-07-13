@@ -80,13 +80,13 @@ Node Selector is the most common and recommended option for placement of Windows
 
     ```output
     NAME                                STATUS   ROLES   AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION     CONTAINER-RUNTIME
-    aks-agentpool-18877473-vmss000000   Ready    agent   5h40m   v1.32.0   10.240.0.4     <none>        Ubuntu 22.04.5 LTS               5.15.0-1084-azure  containerd://1.7.27-1
-    akspoolws000000                     Ready    agent   3h15m   v1.32.0   10.240.0.208   <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
-    akspoolws000001                     Ready    agent   3h17m   v1.32.0   10.240.0.239   <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
-    akspoolws000002                     Ready    agent   3h17m   v1.32.0   10.240.1.14    <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
-    akswspool000000                     Ready    agent   5h37m   v1.32.0   10.240.0.115   <none>        Windows Server 2025 Datacenter   10.0.26100.2894    containerd://2.0.0
-    akswspool000001                     Ready    agent   5h37m   v1.32.0   10.240.0.146   <none>        Windows Server 2025 Datacenter   10.0.26100.2894    containerd://2.0.0
-    akswspool000002                     Ready    agent   5h37m   v1.32.0   10.240.0.177   <none>        Windows Server 2025 Datacenter   10.0.26100.2894    containerd://2.0.0
+    aks-agentpool-18877473-vmss000000   Ready    agent   5h40m   v1.33.12   10.240.0.4     <none>        Ubuntu 22.04.5 LTS               5.15.0-1116-azure  containerd://1.7.33-1
+    akspoolws000000                     Ready    agent   3h15m   v1.33.12   10.240.0.208   <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
+    akspoolws000001                     Ready    agent   3h17m   v1.33.12   10.240.0.239   <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
+    akspoolws000002                     Ready    agent   3h17m   v1.33.12   10.240.1.14    <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
+    akswspool000000                     Ready    agent   5h37m   v1.33.12   10.240.0.115   <none>        Windows Server 2025 Datacenter   10.0.26100.32995    containerd://2.0.4+azure
+    akswspool000001                     Ready    agent   5h37m   v1.33.12   10.240.0.146   <none>        Windows Server 2025 Datacenter   10.0.26100.32995    containerd://2.0.4+azure
+    akswspool000002                     Ready    agent   5h37m   v1.33.12   10.240.0.177   <none>        Windows Server 2025 Datacenter   10.0.26100.32995    containerd://2.0.4+azure
     ```
 
 1. Apply the updated YAML file to the existing workload using the `kubectl apply` command and specify the name of the YAML file.
