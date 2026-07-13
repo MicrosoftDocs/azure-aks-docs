@@ -4,7 +4,7 @@ description: Learn how to create and manage persistent volumes using Azure Files
 ms.topic: how-to
 ms.subservice: aks-storage
 ms.service: azure-kubernetes-service
-ms.date: 03/31/2026
+ms.date: 06/02/2026
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to learn how to create and manage persistent volumes using Azure Files CSI drivers in Azure Kubernetes Service (AKS) so that I can provide scalable and reliable storage solutions for my containerized applications."
@@ -104,7 +104,7 @@ The following table includes parameters you can use to define a custom storage c
 
 | Name | Meaning | Available values | Required | Default value |
 | ---- | ------- | ---------------- | -------- | ------------- |
-| `accountAccessTier` | [Access tier for storage account][access-tiers-overview] | Standard account can choose `Hot` or `Cool`, and Premium account can only choose `Premium`. | No | Empty. Use default setting for different storage account types. |
+| `accountAccessTier` | [Access tier for storage account][access-tiers-overview] | Standard account can choose `Hot` or `Cool`, and Premium account can only choose `Premium`. This parameter doesn't apply to provisioned v2 SKUs (`PremiumV2_*`, `StandardV2_*`), which use a per-share provisioned performance model instead. | No | Empty. Use default setting for different storage account types. |
 | `accountQuota` | Limits the quota for an account. You can specify a maximum quota in GB (102400 GB by default). If the account exceeds the specified quota, the driver skips selecting the account. | | No | `102400` |
 | `allowBlobPublicAccess` | Allow or disallow public access to all blobs or containers for storage account created by driver. | `true` or `false` | No | `false` |
 | `disableDeleteRetentionPolicy` | Specify whether disable DeleteRetentionPolicy for storage account created by driver. | `true` or `false` | No | `false` |
@@ -118,7 +118,7 @@ The following table includes parameters you can use to define a custom storage c
 | `resourceGroup` | Specify the resource group for the Azure Disks. | Existing resource group name | No | If empty, driver uses the same resource group name as current AKS cluster. |
 | `selectRandomMatchingAccount` | Determines whether to randomly select a matching account. By default, the driver always selects the first matching account in alphabetical order (Note: This driver uses account search cache, which results in uneven distribution of file creation across multiple accounts). | `true` or `false` | No | `false` |
 | `server` | Specify Azure storage account server address. | Existing server address, for example `accountname.privatelink.file.core.windows.net`. | No | If empty, driver uses default `accountname.file.core.windows.net` or other sovereign cloud account address. |
-| `shareAccessTier` | [Access tier for file share][storage-tiers] | General purpose v2 account can choose between `TransactionOptimized` (default), `Hot`, and `Cool`. Premium storage account type for file shares only. | No | Empty. Use default setting for different storage account types. |
+| `shareAccessTier` | [Access tier for file share][storage-tiers] | General purpose v2 account can choose between `TransactionOptimized` (default), `Hot`, and `Cool`. Premium storage account type for file shares only. Provisioned v2 SKUs (`PremiumV2_*`, `StandardV2_*`) don't support this parameter; setting it causes share creation to fail with `AccessTierNotSupported`. | No | Empty. Use default setting for different storage account types. |
 | `shareName` | Specify Azure file share name. | Existing or new Azure file share name. | No | If empty, driver generates an Azure file share name. |
 | `shareNamePrefix` | Specify Azure file share name prefix created by driver. | Share name can only contain lowercase letters, numbers, hyphens, and length should be fewer than 21 characters. | No | |
 | `skuName` | Azure Files storage account type (alias: `storageAccountType`) | `Standard_LRS`, `Standard_ZRS`, `Standard_GRS`, `Standard_RAGRS`, `Standard_RAGZRS`,`Premium_LRS`, `Premium_ZRS`, `StandardV2_LRS`, `StandardV2_ZRS`, `StandardV2_GRS`, `StandardV2_GZRS`, `PremiumV2_LRS`, `PremiumV2_ZRS` | No | `Standard_LRS` <br> Minimum file share size for Premium account type is 100 GB. <br> ZRS account type is supported in limited regions. <br> NFS file share only supports Premium account type. <br> Standard V2 SKU names are for [Azure Files provisioned v2 model](/azure/storage/files/understanding-billing#provisioned-v2-model). |
