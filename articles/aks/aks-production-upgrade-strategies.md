@@ -963,8 +963,8 @@ Before cutover:
 
 ### Next steps for migration
 
-- [AKS migration guidance](./migrate.md) - start here for migration planning and inventory.
-- [Blue-green node pool upgrade patterns for AKS](./upgrade-node-pool-blue-green.md) - node-pool blue/green and zero-risk upgrades.
+- [AKS migration guidance](./aks-migration.md) - start here for migration planning and inventory.
+- [Blue-green node pool upgrade patterns for AKS](./blue-green-node-pool-upgrade.md) - node-pool blue/green and zero-risk upgrades.
 
 ---
 
