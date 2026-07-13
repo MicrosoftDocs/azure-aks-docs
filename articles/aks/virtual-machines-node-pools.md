@@ -309,7 +309,7 @@ When using cluster autoscaler with Virtual Machine node pools, the behavior is a
 ```
 
 ### Register feature flag
-Register the preview feature flag `VMsAgentAutoscalePreview` using the `az feature register` command:
+Register the preview feature flag `VMsAgentPoolAutoscalePreview` using the `az feature register` command:
 
 ```azurecli-interactive
     az feature register --namespace Microsoft.ContainerService --name VMsAgentPoolAutoscalePreview
