@@ -4,9 +4,9 @@ description: Proven patterns to use for upgrading Azure Kubernetes Service (AKS)
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
-ms.date: 07/07/2026
-author: kaarthis
-ms.author: kaarthis
+ms.date: 07/13/2026
+author: schaffererin
+ms.author: schaffererin
 ms.custom: scenarios, production-ready
 ---
 
@@ -26,16 +26,16 @@ This article provides tested upgrade patterns for production AKS clusters and fo
 - Safe Kubernetes version adoption with validation gates.
 - Emergency security patching for rapid common vulnerabilities and exposures (CVE) response.
 - Application resilience patterns for seamless upgrades.
+- Migration cutover rollback with instant rollback to the source environment.
 
 These patterns are best for production environments, site reliability engineers, and platform teams that require minimal downtime, maximum safety, and advanced customization beyond AKS Automatic's preconfigured defaults.
-
----
 
 To get started quickly, select one of the following scenarios that best matches your business needs:
 
 - [Do you need an emergency upgrade?](#scenario-4-fastest-security-patch-deployment)
 - [Do you have stateful workloads?](stateful-workload-upgrades.md)
 - [New to production upgrades?](intro-aks-automatic.md)
+- [Are you migrating workloads from another cluster or environment?](#scenario-6-migration-cutover-rollback)
 
 ## Kubernetes prerequisites
 
@@ -56,6 +56,7 @@ This article assumes you understand Kubernetes Deployments and Services, includi
 | New version safety | [Canary with validation](#scenario-3-safe-kubernetes-version-intake) | Partial - AKS Automatic uses auto-upgrade channels; Azure Kubernetes Fleet Manager can orchestrate upgrades across multiple clusters | Low risk | 3-6 hours |
 | Security patches | [Automated patching](#scenario-4-fastest-security-patch-deployment) | Yes - SecurityPatch channel | <4 hours | 30-90 minutes |
 | Future-proof apps | [Resilient architecture](#scenario-5-application-architecture-for-seamless-upgrades) | Yes - complements default behavior | Zero impact | Ongoing |
+| Migration cutover safety | [Blue-green dual-cluster](#scenario-6-migration-cutover-rollback) | No - AKS Standard | seconds–minutes | Varies by workload size |
 
 ---
 
@@ -68,6 +69,7 @@ This article assumes you understand Kubernetes Deployments and Services, includi
 | **Database administrator/Data engineer** | [Stateful workload patterns](stateful-workload-upgrades.md) |
 | **App development** | [Scenario 5](#scenario-5-application-architecture-for-seamless-upgrades) |
 | **Security** | [Scenario 4](#scenario-4-fastest-security-patch-deployment) |
+| **Migration engineer** | [Scenario 6](#scenario-6-migration-cutover-rollback) |
 
 ---
 
@@ -760,6 +762,209 @@ data:
 - **Error rate**: Less than 0.01% during upgrades
 - **Response time**: Less than 10% degradation
 - **Recovery time**: Less than 30 seconds after node replacement
+
+---
+
+## Scenario 6: Migration cutover rollback
+
+- **Challenge**: "I'm migrating workloads from a source cluster, VM estate, or on-premises environment into a new AKS cluster. I need instant rollback to the source if anything goes wrong after cutover."
+- **Strategy**: Blue-green dual-cluster (source cluster = blue, new AKS cluster = green), or blue/green inside the new AKS cluster using node pools. Keep the source environment running and reachable by the same external front door (DNS, Traffic Manager, or load balancer). Perform final cutover by switching traffic to the green endpoints. If anything goes wrong, flip traffic back to blue.
+- **With AKS Automatic**: Not applicable for the dual-cluster pattern - the source environment is outside AKS. Use AKS Standard for the target cluster so you control the node pool configuration and rollback timing.
+
+> [!NOTE]
+> This scenario covers migration cutover rollback specifically - where the source environment is external to the target AKS cluster. For in-cluster version upgrade rollback, see [Scenario 1](#scenario-1-minimal-downtime-production-upgrades).
+
+### Why this works
+
+- Cutover is a single traffic switch operation at the front door or Service level.
+- The source remains intact as a production fallback - no destructive migration step occurs until you confidently decommission it.
+- You can pre-warm caches, validate behavior under real traffic, and cut back immediately when metrics cross abort thresholds.
+
+### Quick implementation
+
+```bash
+# variables (replace)
+RG="myResourceGroup"
+CLUSTER="myAksCluster"
+GREEN_POOL="greenpool"
+NODE_COUNT=3
+VM_SIZE="Standard_DS2_v2"
+
+# Step 1: Create a green node pool in the target AKS cluster
+az aks nodepool add \
+  --resource-group $RG \
+  --cluster-name $CLUSTER \
+  --name $GREEN_POOL \
+  --node-count $NODE_COUNT \
+  --node-vm-size $VM_SIZE \
+  --labels pool=green
+
+# Step 2: Get credentials
+az aks get-credentials --resource-group $RG --name $CLUSTER
+
+# Step 3: Cutover - patch the Service selector to green pods
+kubectl patch svc myapp -n production -p '{"spec":{"selector":{"app":"myapp","version":"green"}}}'
+
+# Rollback - patch selector back to blue
+kubectl patch svc myapp -n production -p '{"spec":{"selector":{"app":"myapp","version":"blue"}}}'
+```
+
+<details>
+<summary><strong>Detailed step-by-step guide</strong></summary>
+
+#### Step 1: Create a green node pool in the target AKS cluster
+
+Add a dedicated node pool so you can pin pods for the green cutover without affecting the rest of the cluster.
+
+```bash
+az aks nodepool add \
+  --resource-group $RG \
+  --cluster-name $CLUSTER \
+  --name $GREEN_POOL \
+  --node-count $NODE_COUNT \
+  --node-vm-size $VM_SIZE \
+  --labels pool=green
+```
+
+#### Step 2: Get credentials and confirm node labels
+
+```bash
+az aks get-credentials --resource-group $RG --name $CLUSTER
+
+# Confirm nodes are in the new pool
+kubectl get nodes --show-labels | grep $GREEN_POOL
+```
+
+#### Step 3: Deploy the green workload targeted to the green node pool
+
+Use a node selector (or node affinity) that targets the green pool label. AKS labels nodes with `kubernetes.azure.com/agentpool`. Confirm labels on your nodes before deploying.
+
+```yaml
+# deployment-green.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-green
+  labels:
+    app: myapp
+    version: green
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+      version: green
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: green
+    spec:
+      nodeSelector:
+        "kubernetes.azure.com/agentpool": "greenpool"
+      containers:
+      - name: myapp
+        image: myregistry.azurecr.io/myapp:green
+        ports:
+        - containerPort: 80
+```
+
+```bash
+kubectl apply -f deployment-green.yaml -n production
+kubectl rollout status deploy/myapp-green -n production
+```
+
+#### Step 4: Validate green in isolation with telemetry
+
+```bash
+# Quick pod health checks
+kubectl get pods -l app=myapp,version=green -n production
+kubectl logs -l app=myapp,version=green -n production --tail=100
+
+# Example: check cluster CPU (adjust resource ID for your cluster)
+az monitor metrics list \
+  --resource /subscriptions/<sub>/resourceGroups/$RG/providers/Microsoft.ContainerService/managedClusters/$CLUSTER \
+  --metric "CpuUsagePercentage" \
+  --interval PT1M
+```
+
+Verify application traces, request rates, and error logs in your Log Analytics workspace or Application Insights before proceeding.
+
+#### Step 5: Cutover - switch traffic via the Service selector
+
+If your Service is `type: LoadBalancer`, AKS configures an Azure Load Balancer for that Service. Switching the selector to green moves the load balancer endpoints to green pods, making the cutover nearly instantaneous.
+
+```bash
+kubectl patch svc myapp -n production -p '{"spec":{"selector":{"app":"myapp","version":"green"}}}'
+
+# Verify endpoints updated
+kubectl get endpoints myapp -n production -o wide
+```
+
+#### Step 6: Monitor immediately after cutover
+
+Watch health probes, request success rate, latency percentiles, CPU/memory, and business metrics. Keep an operator in the loop for the defined observation window.
+
+#### Step 7: Rollback - switch selector back to blue
+
+If a rollback is required, restore the Service selector to the original (blue) pods for immediate traffic reversal.
+
+```bash
+kubectl patch svc myapp -n production -p '{"spec":{"selector":{"app":"myapp","version":"blue"}}}'
+
+# Verify
+kubectl get endpoints myapp -n production -o wide
+kubectl rollout status deploy/myapp-blue -n production
+```
+
+</details>
+
+### Dual-cluster migrations (source is a separate cluster or VMs)
+
+If the source (blue) environment is a separate cluster or VMs, operate the front door externally and switch endpoints there instead of patching a Service inside the new cluster.
+
+- **Azure Traffic Manager or Front Door**: Flip endpoint priority or weight to route between source and target.
+- **DNS cutover**: Maintain the same DNS name and change the A record (short TTL) to the target cluster IP. Be aware of DNS caching.
+- **External load balancer**: Use backend pools for each cluster and toggle backend pool membership.
+
+### Rollback triggers (go/no-go metrics)
+
+Define explicit triggers that cause an immediate rollback. Tune thresholds to your SLOs.
+
+| Signal | Example threshold | Action |
+| ------ | ----------------- | ------ |
+| Error rate | 5-minute error rate > 1–3% above baseline for 5 continuous minutes | Rollback |
+| Latency | p95 > 2× baseline or exceeds SLO (e.g., p95 > 1s for 3 minutes when SLO is 500ms) | Rollback |
+| Throughput | Successful requests/minute drop >20% vs baseline for 5 minutes | Rollback |
+| Resource pressure | Pod OOMKills or node CPU saturation >90% causing request failures | Rollback |
+| Business KPI | Payment failures, checkout errors, or other critical business metric degradation | Rollback |
+
+Implement automated alarms in Azure Monitor or Application Insights to notify on-call engineers and optionally trigger runbooks that revert traffic.
+
+### Troubleshooting
+
+- **DNS propagation is slow**: Set short TTLs before cutover and validate DNS cache flush.
+- **Pods stuck terminating on source**: Check for finalizers or long shutdown hooks.
+- **Traffic not shifting**: Validate Traffic Manager health probes and endpoint configuration.
+- **Rollback fails**: Keep the source environment patched and reachable until you formally decommission it.
+
+### Success validation checklist
+
+Before cutover:
+
+- [ ] Source (blue) remains running and reachable.
+- [ ] Green environment has identical or compatible service endpoints, secrets, and config.
+- [ ] Health probes and readiness/liveness configured and tested.
+- [ ] Monitoring and alerts in place (errors, latency, resource pressure).
+- [ ] One-click or scripted rollback action ready and tested.
+- [ ] Stakeholders and on-call notified and on standby.
+
+**Expected outcome**: Instant rollback capability at all times, zero data loss, and a practiced, metric-driven cutover that leaves the source intact until you choose to decommission it.
+
+### Next steps for migration
+
+- [AKS migration guidance](./migrate.md) - start here for migration planning and inventory.
+- [Blue-green node pool upgrade patterns for AKS](./upgrade-node-pool-blue-green.md) - node-pool blue/green and zero-risk upgrades.
 
 ---
 
