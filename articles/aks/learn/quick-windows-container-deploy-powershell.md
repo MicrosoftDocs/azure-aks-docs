@@ -129,16 +129,16 @@ You use [kubectl][kubectl], the Kubernetes command-line client, to manage your K
 1. Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command, which returns a list of the cluster nodes.
 
     ```bash
-    kubectl get nodes
+    kubectl get nodes -o wide
     ```
 
     The following example output shows all the nodes in the cluster. Make sure the status of all nodes is **Ready**:
 
     ```output
-    NAME                                STATUS   ROLES   AGE   VERSION
-    aks-nodepool1-20786768-vmss000000   Ready    agent   22h   v1.27.7
-    aks-nodepool1-20786768-vmss000001   Ready    agent   22h   v1.27.7
-    aksnpwin000000                      Ready    agent   21h   v1.27.7
+    NAME                                STATUS   ROLES   AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION      CONTAINER-RUNTIME
+    aks-nodepool1-20786768-vmss000000   Ready    agent   22h   v1.33.12   10.224.0.4    <none>        Ubuntu 22.04.5 LTS               5.15.0-1116-azure   containerd://1.7.33-1
+    aks-nodepool1-20786768-vmss000001   Ready    agent   22h   v1.33.12   10.224.0.33   <none>        Ubuntu 22.04.5 LTS               5.15.0-1116-azure   containerd://1.7.33-1
+    aksnpwin000000                      Ready    agent   20h   v1.33.12   10.224.0.62   <none>        Windows Server 2025 Datacenter   10.0.26100.32995    containerd://2.0.4+azure
     ```
 
 ## Deploy the application
