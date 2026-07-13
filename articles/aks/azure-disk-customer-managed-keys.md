@@ -121,13 +121,13 @@ az aks nodepool add --cluster-name $CLUSTER_NAME --resource-group $RG_NAME --nam
 If you have already provided a disk encryption set during cluster creation, encrypting data disks with the same disk encryption set is the default option. Therefore, this step is optional. However, if you want to encrypt data disks with a different disk encryption set, you can follow these steps.
 
 > [!IMPORTANT]
-> Ensure you have the proper AKS credentials. The managed identity needs to have contributor access to the resource group where the diskencryptionset is deployed. Otherwise, you'll get an error suggesting that the managed identity does not have permissions.
+> Ensure you have the proper AKS credentials. The AKS cluster identity needs to have **Reader** access to the DiskEncryptionSet. Otherwise, you'll get an error suggesting that the managed identity does not have permissions.
 
-To assign the AKS cluster identity the Contributor role for the diskencryptionset, execute the following commands:
+To assign the AKS cluster identity the Reader role on the DiskEncryptionSet, execute the following commands:
 
 ```azurecli-interactive
-aksIdentity=$(az aks show --resource-group $RG_NAME --name $CLUSTER_NAME --query "identity.principalId")
-az role assignment create --role "Contributor" --assignee $aksIdentity --scope $diskEncryptionSetId
+aksIdentity=$(az aks show --resource-group $RG_NAME --name $CLUSTER_NAME --query "identity.principalId" -o tsv)
+az role assignment create --role "Reader" --assignee $aksIdentity --scope $diskEncryptionSetId
 ```
 
 Create a file called **byok-azure-disk.yaml** that contains the following information.  Replace *myAzureSubscriptionId*, *myResourceGroup*, and *myDiskEncrptionSetName* with your values, and apply the yaml.  Make sure to use the resource group where your DiskEncryptionSet is deployed.
