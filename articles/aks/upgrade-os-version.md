@@ -34,7 +34,7 @@ Each [node image][node-images] corresponds to an OS version, which you can speci
 > - For Ubuntu, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku Ubuntu`. This will automatically update you to the latest default Ubuntu version based on your Kubernetes version.
 > - For Azure Linux, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku AzureLinux`. This will automatically update you to the latest default Azure Linux version based on your Kubernetes version.
 > - For Azure Container Linux (ACL), we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku AzureContainerLinux`. This will automatically update you to the latest default ACL version based on your Kubernetes version.
-> - For Windows, we recommend creating node pools while specifying `--os-type Windows`, `--os-sku Windows2025`, and `--enable-fips-image` (Windows Server 2025 requires a FIPS-enabled image). You need to manually update node pools to the next OS version when it's released.
+> - For Windows, create node pools while specifying `--os-type Windows`, `--os-sku Windows2025`, and `--enable-fips-image` (Windows Server 2025 requires a FIPS-enabled image). You need to manually update node pools to the next OS version when it's released.
 
 | OS type | OS SKU | Supported Kubernetes versions | Default versioning |
 |--|--|--|--|

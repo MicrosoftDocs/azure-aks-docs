@@ -134,7 +134,7 @@ The Windows Server node images are fully validated by AKS and supported by Micro
 
 | Node image | Use case | Limitations |
 |--|--|--|
-| **Windows Server with containerd and Gen 1** | This is the standard node image for Windows node pools using a VM size that supports Generation 1. If a VM size supports both Generation 1 and Generation 2, this node image is selected if using Windows Server 2022. | N/A |
+| **Windows Server with containerd and Gen 1** | This image is the standard node image for Windows node pools that use a VM size supporting Generation 1. If a VM size supports both Generation 1 and Generation 2, the process selects this node image when you use Windows Server 2022. | N/A |
 | **Windows Server with containerd and Gen 2** | This is the standard node image for Windows node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, this node image is selected if using Windows Server 2025. | N/A |
 
 ### Windows Server Annual Channel for Containers (preview) node images

@@ -117,14 +117,14 @@ To create a Windows node pool, you need to specify a supported `OsType` and `OsS
 
 | `OsType` | `OsSku` | Default | Supported K8s versions | Details |
 |--|--|--|--|--|
-| `windows` | `Windows2025` | Default in K8s 1.36+ | 1.32+ | Updated defaults: `containerd` 2.0, Generation 2 image is used by default. FIPS is required — include `--enable-fips-image` when you create the node pool. |
+| `windows` | `Windows2025` | Default in K8s 1.36+ | 1.32+ | Updated defaults: `containerd` 2.0, Generation 2 image is used by default. FIPS is required - include `--enable-fips-image` when you create the node pool. |
 | `windows` | `Windows2022` | Default in K8s 1.25-1.35 | Not available in K8s 1.37+ | Retires in June 2028. Updated defaults: FIPS is enabled by default. |
 
 Windows Server 2025 is the default operating system for Kubernetes version 1.36 and later. Windows Server 2022 is the default for Kubernetes versions 1.25-1.35. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster.
 
 [!INCLUDE [windows server 2022 retirement](../includes/windows-server-2022-retirement.md)]
 
-- Add a Windows node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with a specified `OsType` and `OsSku`. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster. Windows Server 2025 node pools require a FIPS-enabled image, so the following command includes `--enable-fips-image`.
+- Add a Windows node pool by using the [`az aks nodepool add`][az-aks-nodepool-add] command with a specified `OsType` and `OsSku`. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster. Windows Server 2025 node pools require a FIPS-enabled image, so the following command includes `--enable-fips-image`.
 
     ```azurecli-interactive
     az aks nodepool add \

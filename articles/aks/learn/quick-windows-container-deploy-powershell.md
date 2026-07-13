@@ -99,14 +99,14 @@ To create a Windows node pool, you need to specify a supported `OsType` and `OsS
 
 | `OsType` | `OsSku` | Default | Supported K8s versions | Details |
 |--|--|--|--|--|
-| `windows` | `Windows2025` | Default in K8s 1.36+ | 1.32+ | Updated defaults: `containerd` 2.0, Generation 2 image is used by default. FIPS is required — include `-EnableFIPS` when you create the node pool. |
+| `windows` | `Windows2025` | Default in K8s 1.36+ | 1.32+ | Updated defaults: `containerd` 2.0, Generation 2 image is used by default. FIPS is required - include `-EnableFIPS` when you create the node pool. |
 | `windows` | `Windows2022` | Default in K8s 1.25-1.35 | Not available in K8s 1.37+ | Retires in June 2028. Updated defaults: FIPS is enabled by default. |
 
 Windows Server 2025 is the default operating system for Kubernetes version 1.36 and later. Windows Server 2022 is the default for Kubernetes versions 1.25-1.35. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster.
 
 [!INCLUDE [windows server 2022 retirement](../includes/windows-server-2022-retirement.md)]
 
-- Add a Windows Server node pool using the [`New-AzAksNodePool`][new-azaksnodepool] cmdlet. The following command creates a new node pool named _npwin_ and adds it to _myAKSCluster_. The command also uses the default subnet in the default virtual network created when running `New-AzAksCluster`. Windows Server 2025 node pools require a FIPS-enabled image, so the following command includes `-EnableFIPS`:
+- Add a Windows Server node pool by using the [`New-AzAksNodePool`][new-azaksnodepool] cmdlet. The following command creates a new node pool named _npwin_ and adds it to _myAKSCluster_. The command also uses the default subnet in the default virtual network created when running `New-AzAksCluster`. Windows Server 2025 node pools require a FIPS-enabled image, so the following command includes `-EnableFIPS`:
 
     ```azurepowershell-interactive
     New-AzAksNodePool -ResourceGroupName myResourceGroup `
@@ -147,7 +147,7 @@ You use [kubectl][kubectl], the Kubernetes command-line client, to manage your K
 
 A Kubernetes manifest file defines a desired state for the cluster, such as what container images to run. In this article, you use a manifest to create all objects needed to run the ASP.NET sample application in a Windows Server container. This manifest includes a [Kubernetes deployment][kubernetes-deployment] for the ASP.NET sample application and an external [Kubernetes service][kubernetes-service] to access the application from the internet.
 
-The ASP.NET sample application is provided as part of the [.NET Framework Samples][dotnet-samples] and runs in a Windows Server container. AKS requires Windows Server containers to be based on images of _Windows Server 2022_ or greater. The Kubernetes manifest file must also define a [node selector][node-selector] to tell your AKS cluster to run your ASP.NET sample application's pod on a node that can run Windows Server containers.
+The ASP.NET sample application is part of the [.NET Framework Samples][dotnet-samples] and runs in a Windows Server container. AKS requires Windows Server containers to be based on images of _Windows Server 2022_ or greater. The Kubernetes manifest file must also define a [node selector][node-selector] to tell your AKS cluster to run your ASP.NET sample application's pod on a node that can run Windows Server containers.
 
 1. Create a file named `sample.yaml` and copy in the following YAML definition:
 

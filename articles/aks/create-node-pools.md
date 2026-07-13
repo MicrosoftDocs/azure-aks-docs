@@ -497,7 +497,7 @@ For more information, see [Flatcar Container Linux for AKS][flatcar].
 
 ##### Create the Windows Server 2025 node pool
 
-Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Windows` node pool with the `Windows2025` OS SKU that runs _three_ nodes. Windows Server 2025 node pools require a FIPS-enabled image, so the command includes `--enable-fips-image`.
+Create a new node pool by using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Windows` node pool with the `Windows2025` OS SKU that runs _three_ nodes. Windows Server 2025 node pools require a FIPS-enabled image, so the command includes `--enable-fips-image`.
 
 For more information about Windows OS, see [Windows best practices][windows].
 
