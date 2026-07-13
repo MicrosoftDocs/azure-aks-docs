@@ -4,7 +4,7 @@ description: Learn about the different node images available in Azure Kubernetes
 ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
-ms.date: 07/03/2025
+ms.date: 07/13/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 # Customer intent: "As a Kubernetes administrator, I want to understand the available node images in Azure Kubernetes Service, so that I can select the appropriate OS version and ensure my clusters remain supported and secure."
@@ -19,8 +19,6 @@ This article describes the node images available for Azure Kubernetes Service (A
 [!INCLUDE [Ubuntu 22.04 retirement](./includes/ubuntu-22-04-retirement.md)]
 
 [!INCLUDE [Azure Linux 2.0 retirement](./includes/azure-linux-retirement.md)]
-
-[!INCLUDE [Windows Server 2019 retirement](./includes/windows-server-2019-retirement.md)]
 
 [!INCLUDE [Windows Server 2022 retirement](./includes/windows-server-2022-retirement.md)]
 
@@ -49,7 +47,7 @@ AKS sets a default operating system (OS) and node image during cluster and node 
 |--|--|--|
 | Not Specified | Ubuntu Linux | Ubuntu with containerd and gen 2|
 | Linux | Ubuntu Linux | Ubuntu with containerd and gen 2 |
-| Windows | Windows Server | Windows Server Long Term Servicing Channel (LTSC) with containerd and gen 1 |
+| Windows | Windows Server | Windows Server Long Term Servicing Channel (LTSC) with containerd and gen 2 |
 
 > [!NOTE]
 > You can't specify the Windows OS Type during cluster creation since the system node pool in every cluster must be Linux.
@@ -63,7 +61,7 @@ The following factors influence the default image AKS chooses for your node pool
     - [Confidential virtual machines (CVM)](./use-cvm.md)
     - [AMR64 virtual machines](./create-node-pools.md)
 - **Hypervisor generation**: Each VM size supports Generation 1, [Generation 2](./generation-2-vm.md), or both.
-    - If Generation 2 is supported, AKS defaults to using the Generation 2 node image in all OS versions except for Windows Server 2019 and Windows Server 2022.
+    - If Generation 2 is supported, AKS defaults to using the Generation 2 node image in all OS versions except for Windows Server 2022.
     - If only Generation 1 is supported, AKS defaults to using the Generation 1 node image. Generation 1 isn't supported for Azure Linux OS Guard (preview) or Flatcar Container Linux for AKS (preview).
 - **Feature enablement**: There are some features embedded into the node image. If you choose to use any of these features, your default node image changes.
   - [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md) changes the default node image for all Linux node pools.
@@ -136,7 +134,7 @@ The Windows Server node images are fully validated by AKS and supported by Micro
 
 | Node image | Use case | Limitations |
 |--|--|--|
-| **Windows Server with containerd and Gen 1** | This is the standard node image for Windows node pools using a VM size that supports Generation 1. If a VM size supports both Generation 1 and Generation 2, this node image is selected if using Windows Server 2019 or Windows Server 2022. | N/A |
+| **Windows Server with containerd and Gen 1** | This is the standard node image for Windows node pools using a VM size that supports Generation 1. If a VM size supports both Generation 1 and Generation 2, this node image is selected if using Windows Server 2022. | N/A |
 | **Windows Server with containerd and Gen 2** | This is the standard node image for Windows node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, this node image is selected if using Windows Server 2025. | N/A |
 
 ### Windows Server Annual Channel for Containers (preview) node images
