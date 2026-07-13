@@ -768,15 +768,15 @@ data:
 ## Scenario 6: Migration cutover rollback
 
 - **Challenge**: "I'm migrating workloads from a source cluster, VM estate, or on-premises environment into a new AKS cluster. I need instant rollback to the source if anything goes wrong after cutover."
-- **Strategy**: Blue-green dual-cluster (source cluster = blue, new AKS cluster = green), or blue/green inside the new AKS cluster using node pools. Keep the source environment running and reachable by the same external front door (DNS, Traffic Manager, or load balancer). Perform final cutover by switching traffic to the green endpoints. If anything goes wrong, flip traffic back to blue.
-- **With AKS Automatic**: Not applicable for the dual-cluster pattern - the source environment is outside AKS. Use AKS Standard for the target cluster so you control the node pool configuration and rollback timing.
+- **Strategy**: Use a blue-green dual-cluster (source cluster = blue, new AKS cluster = green), or use blue/green inside the new AKS cluster by using node pools. Keep the source environment running and reachable by the same external front door (DNS, Traffic Manager, or load balancer). Perform final cutover by switching traffic to the green endpoints. If anything goes wrong, flip traffic back to blue.
+- **With AKS Automatic**: This pattern doesn't apply to AKS Automatic because the source environment is outside AKS. Use AKS Standard for the target cluster so you control the node pool configuration and rollback timing.
 
 > [!NOTE]
 > This scenario covers migration cutover rollback specifically - where the source environment is external to the target AKS cluster. For in-cluster version upgrade rollback, see [Scenario 1](#scenario-1-minimal-downtime-production-upgrades).
 
 ### Why this works
 
-- Cutover is a single traffic switch operation at the front door or Service level.
+- Cutover is a single traffic switch operation at the front door or service level.
 - The source remains intact as a production fallback - no destructive migration step occurs until you confidently decommission it.
 - You can pre-warm caches, validate behavior under real traffic, and cut back immediately when metrics cross abort thresholds.
 
@@ -952,14 +952,14 @@ Implement automated alarms in Azure Monitor or Application Insights to notify on
 
 Before cutover:
 
-- [ ] Source (blue) remains running and reachable.
+- [ ] Source (blue) stays running and reachable.
 - [ ] Green environment has identical or compatible service endpoints, secrets, and config.
 - [ ] Health probes and readiness/liveness configured and tested.
-- [ ] Monitoring and alerts in place (errors, latency, resource pressure).
+- [ ] Monitoring and alerts in place for errors, latency, and resource pressure.
 - [ ] One-click or scripted rollback action ready and tested.
 - [ ] Stakeholders and on-call notified and on standby.
 
-**Expected outcome**: Instant rollback capability at all times, zero data loss, and a practiced, metric-driven cutover that leaves the source intact until you choose to decommission it.
+**Expected outcome**: Instant rollback capability at all times, zero data loss, and a practiced, metric-driven cutover that keeps the source intact until you choose to decommission it.
 
 ### Next steps for migration
 
