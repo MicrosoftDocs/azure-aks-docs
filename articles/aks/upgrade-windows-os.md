@@ -4,7 +4,7 @@ description: Learn how to upgrade the OS version for Windows workloads on Azure 
 ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
-ms.date: 06/02/2026
+ms.date: 07/13/2026
 author: allyford
 ms.author: allyford
 # Customer intent: "As a cloud operations engineer, I want to upgrade the OS version for Windows workloads on Azure Kubernetes Service, so that I can ensure my applications use the latest features and security enhancements while maintaining compatibility and performance."
@@ -17,8 +17,6 @@ When upgrading the OS version of a running Windows workload on Azure Kubernetes 
 ## Windows Server OS version support
 
 When a new Windows Server OS version is released, AKS is committed to supporting it. We recommend that you upgrade to the latest version to take advantage of the fixes, improvements, and new functionality. AKS provides a five-year support lifecycle for every Windows Server version, starting with Windows Server 2022. During this period, AKS releases a new version that supports a newer version of Windows Server OS for you to upgrade to. After the five-year lifecycle ends, you must migrate workloads to newer supported versions to ensure compatibility, security updates, and continued support from AKS.
-
-[!INCLUDE [windows server 2019 retirement](./includes/windows-server-2019-retirement.md)]
 
 [!INCLUDE [windows server 2022 retirement](./includes/windows-server-2022-retirement.md)]
 
@@ -46,6 +44,8 @@ Add a node pool with your desired OS version to your existing cluster:
 - [Use Portal to add a Windows node pool](./learn/quick-windows-container-deploy-portal.md) to an existing cluster.
 - [Use PowerShell to add a Windows node pool](./learn/quick-windows-container-deploy-powershell.md) to an existing cluster.
 - [Use Terraform to add a Windows node pool](./learn/quick-windows-container-deploy-terraform.md) to an existing cluster.
+
+Windows Server 2025 node pools require a FIPS-enabled image. When you add a Windows Server 2025 node pool, include `--enable-fips-image` (Azure CLI) or `-EnableFIPS` (Azure PowerShell).
 
 ## Update the YAML file
 
@@ -82,13 +82,13 @@ Node Selector is the most common and recommended option for placement of Windows
 
     ```output
     NAME                                STATUS   ROLES   AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION     CONTAINER-RUNTIME
-    aks-agentpool-18877473-vmss000000   Ready    agent   5h40m   v1.23.8   10.240.0.4     <none>        Ubuntu 18.04.6 LTS               5.4.0-1085-azure   containerd://1.5.11+azure-2
-    akspoolws000000                     Ready    agent   3h15m   v1.23.8   10.240.0.208   <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
-    akspoolws000001                     Ready    agent   3h17m   v1.23.8   10.240.0.239   <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
-    akspoolws000002                     Ready    agent   3h17m   v1.23.8   10.240.1.14    <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
-    akswspool000000                     Ready    agent   5h37m   v1.23.8   10.240.0.115   <none>        Windows Server 2019 Datacenter   10.0.17763.3165    containerd://1.6.6+azure
-    akswspool000001                     Ready    agent   5h37m   v1.23.8   10.240.0.146   <none>        Windows Server 2019 Datacenter   10.0.17763.3165    containerd://1.6.6+azure
-    akswspool000002                     Ready    agent   5h37m   v1.23.8   10.240.0.177   <none>        Windows Server 2019 Datacenter   10.0.17763.3165    containerd://1.6.6+azure
+    aks-agentpool-18877473-vmss000000   Ready    agent   5h40m   v1.33.12   10.240.0.4     <none>        Ubuntu 22.04.5 LTS               5.15.0-1116-azure  containerd://1.7.33-1
+    akspoolws000000                     Ready    agent   3h15m   v1.33.12   10.240.0.208   <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
+    akspoolws000001                     Ready    agent   3h17m   v1.33.12   10.240.0.239   <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
+    akspoolws000002                     Ready    agent   3h17m   v1.33.12   10.240.1.14    <none>        Windows Server 2022 Datacenter   10.0.20348.825     containerd://1.6.6+azure
+    akswspool000000                     Ready    agent   5h37m   v1.33.12   10.240.0.115   <none>        Windows Server 2025 Datacenter   10.0.26100.32995    containerd://2.0.4+azure
+    akswspool000001                     Ready    agent   5h37m   v1.33.12   10.240.0.146   <none>        Windows Server 2025 Datacenter   10.0.26100.32995    containerd://2.0.4+azure
+    akswspool000002                     Ready    agent   5h37m   v1.33.12   10.240.0.177   <none>        Windows Server 2025 Datacenter   10.0.26100.32995    containerd://2.0.4+azure
     ```
 
 1. Apply the updated YAML file to the existing workload using the `kubectl apply` command and specify the name of the YAML file.
