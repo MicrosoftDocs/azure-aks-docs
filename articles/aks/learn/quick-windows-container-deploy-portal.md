@@ -3,7 +3,7 @@ title: Deploy a Windows Server container on an Azure Kubernetes Service (AKS) cl
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in a Windows Server container in Azure Kubernetes Service (AKS) using the Azure portal.
 ms.topic: quickstart
 ms.custom: azure-kubernetes-service, aks-windows
-ms.date: 01/11/2024
+ms.date: 07/13/2026
 author: schaffererin
 ms.author: schaffererin
 
@@ -25,8 +25,6 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - [!INCLUDE [quickstarts-free-trial-note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 - If you're unfamiliar with the Azure Cloud Shell, review [Overview of Azure Cloud Shell](/azure/cloud-shell/overview).
 - Make sure that the identity you're using to create your cluster has the appropriate minimum permissions. For more details on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
-
-[!INCLUDE [windows server 2019 retirement](../includes/windows-server-2019-retirement.md)]
 
 [!INCLUDE [windows server 2022 retirement](../includes/windows-server-2022-retirement.md)]
 

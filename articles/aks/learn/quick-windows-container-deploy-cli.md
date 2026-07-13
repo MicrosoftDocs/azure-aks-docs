@@ -118,11 +118,8 @@ To create a Windows node pool, you need to specify a supported `OsType` and `OsS
 |--|--|--|--|--|
 | `windows` | `Windows2025` | Default in K8s 1.36+ | 1.32+ | Updated defaults: `containerd` 2.0, Generation 2 image is used by default. |
 | `windows` | `Windows2022` | Default in K8s 1.25-1.35 | Not available in K8s 1.37+ | Retires in June 2028. Updated defaults: FIPS is enabled by default. |
-| `windows` | `Windows2019` | Default in K8s 1.24 and below | Not available in K8s 1.33+ | Retires in March 2026. |
 
-Windows Server 2025 is the default operating system for Kubernetes version 1.36 and later. Windows Server 2022 is the default for Kubernetes versions 1.25-1.35, and Windows Server 2019 is the default for earlier versions. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster.
-
-[!INCLUDE [windows server 2019 retirement](../includes/windows-server-2019-retirement.md)]
+Windows Server 2025 is the default operating system for Kubernetes version 1.36 and later. Windows Server 2022 is the default for Kubernetes versions 1.25-1.35. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster.
 
 [!INCLUDE [windows server 2022 retirement](../includes/windows-server-2022-retirement.md)]
 
