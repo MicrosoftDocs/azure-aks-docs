@@ -3,7 +3,7 @@ title: Deploy a Windows Server container on an Azure Kubernetes Service (AKS) cl
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in a Windows Server container in Azure Kubernetes Service (AKS) using the Azure portal.
 ms.topic: quickstart
 ms.custom: azure-kubernetes-service, aks-windows
-ms.date: 01/11/2024
+ms.date: 07/13/2026
 author: schaffererin
 ms.author: schaffererin
 
@@ -25,8 +25,6 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - [!INCLUDE [quickstarts-free-trial-note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 - If you're unfamiliar with the Azure Cloud Shell, review [Overview of Azure Cloud Shell](/azure/cloud-shell/overview).
 - Make sure that the identity you're using to create your cluster has the appropriate minimum permissions. For more details on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
-
-[!INCLUDE [windows server 2019 retirement](../includes/windows-server-2019-retirement.md)]
 
 [!INCLUDE [windows server 2022 retirement](../includes/windows-server-2022-retirement.md)]
 
@@ -57,13 +55,13 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 1. On the **Node pools** tab, configure the following settings:
     - Select **Add node pool** and enter a **Node pool name**, such as *npwin*. For a Windows node pool, the name must be *six characters or fewer*.
     - **Mode**: Select **User**.
-    - **OS SKU**: Select **Windows 2022**.
+    - **OS SKU**: Select **Windows 2025**. Windows Server 2025 requires a FIPS-enabled image, so enable FIPS for the node pool.
     - **Availability zones**: Select **None**.
     - Leave the **Enable Azure Spot instances** checkbox unchecked.
     - **Node size**: Select **Choose a size**. On the **Select a VM size** page, select **D2s_v3**, and then select **Select**.
     - Leave the default values for the remaining settings, and select **Add**.
 
-        :::image type="content" source="media/quick-windows-container-deploy-portal/add-node-pool-windows.png" alt-text="Screenshot showing how to create a node pool running Windows Server 2022." lightbox="media/quick-windows-container-deploy-portal/add-node-pool-windows.png":::
+        :::image type="content" source="media/quick-windows-container-deploy-portal/add-node-pool-windows.png" alt-text="Screenshot showing how to create a node pool running Windows Server 2025." lightbox="media/quick-windows-container-deploy-portal/add-node-pool-windows.png":::
 
 1. Select **Review + create** to run validation on the cluster configuration. After validation completes, select **Create**.
 
@@ -85,18 +83,16 @@ You use [kubectl][kubectl], the Kubernetes command-line client, to manage your K
 1. Verify the connection to your cluster using the `kubectl get nodes` command, which returns a list of the cluster nodes.
 
     ```bash
-    kubectl get nodes
+    kubectl get nodes -o wide
     ```
 
     The following sample output shows all the nodes in the cluster. Make sure the status of all nodes is *Ready*:
 
     ```output
-    NAME                                STATUS   ROLES   AGE     VERSION
-    aks-agentpool-11741175-vmss000000   Ready    agent   8m17s   v1.29.9
-    aks-agentpool-11741175-vmss000001   Ready    agent   8m17s   v1.29.9
-    aksnpwin000000                      Ready    agent   8m17s   v1.29.9
-    aks-userpool-11741175-vmss000000    Ready    agent   8m17s   v1.29.9
-    aks-userpool-11741175-vmss000001    Ready    agent   8m17s   v1.29.9
+    NAME                                STATUS   ROLES   AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION      CONTAINER-RUNTIME
+    aks-nodepool1-20786768-vmss000000   Ready    agent   22h   v1.33.12   10.224.0.4    <none>        Ubuntu 22.04.5 LTS               5.15.0-1116-azure   containerd://1.7.33-1
+    aks-nodepool1-20786768-vmss000001   Ready    agent   22h   v1.33.12   10.224.0.33   <none>        Ubuntu 22.04.5 LTS               5.15.0-1116-azure   containerd://1.7.33-1
+    aksnpwin000000                      Ready    agent   20h   v1.33.12   10.224.0.62   <none>        Windows Server 2025 Datacenter   10.0.26100.32995    containerd://2.0.4+azure
     ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
@@ -111,18 +107,16 @@ You use [kubectl][kubectl], the Kubernetes command-line client, to manage your K
 1. Verify the connection to your cluster using the `kubectl get nodes` command, which returns a list of the cluster nodes.
 
     ```bash
-    kubectl get nodes
+    kubectl get nodes -o wide
     ```
 
     The following sample output shows all the nodes in the cluster. Make sure the status of all nodes is *Ready*:
 
     ```output
-    NAME                                STATUS   ROLES   AGE     VERSION
-    aks-agentpool-11741175-vmss000000   Ready    agent   8m17s   v1.29.9
-    aks-agentpool-11741175-vmss000001   Ready    agent   8m17s   v1.29.9
-    aksnpwin000000                      Ready    agent   8m17s   v1.29.9
-    aks-userpool-11741175-vmss000000    Ready    agent   8m17s   v1.29.9
-    aks-userpool-11741175-vmss000001    Ready    agent   8m17s   v1.29.9
+    NAME                                STATUS   ROLES   AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION      CONTAINER-RUNTIME
+    aks-nodepool1-20786768-vmss000000   Ready    agent   22h   v1.33.12   10.224.0.4    <none>        Ubuntu 22.04.5 LTS               5.15.0-1116-azure   containerd://1.7.33-1
+    aks-nodepool1-20786768-vmss000001   Ready    agent   22h   v1.33.12   10.224.0.33   <none>        Ubuntu 22.04.5 LTS               5.15.0-1116-azure   containerd://1.7.33-1
+    aksnpwin000000                      Ready    agent   20h   v1.33.12   10.224.0.62   <none>        Windows Server 2025 Datacenter   10.0.26100.32995    containerd://2.0.4+azure
     ```
 
 ---
