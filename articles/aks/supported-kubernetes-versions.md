@@ -89,86 +89,21 @@ Note the following important changes before you upgrade to any of the available 
 
 ### Kubernetes 1.36
 
-| **AKS managed add-ons (addon)** | **AKS components (ccp)** | **OS components** | **Breaking changes from Kubernetes 1.35.0** |
+| **AKS managed add-ons (add-on)** | **AKS components (ccp)** | **OS components** | **Breaking changes from Kubernetes 1.35.0** |
 | ------------------------------- | ------------------------ | ----------------- | ------------------------------------------- |
-| azuredisk-csi-linux v1.34.4 | cluster-autoscaler v1.35.0-aks-4 | **Linux - Ubuntu 24.04** | cloud-provider-node-manager-linux v1.35.5-2 → v1.36.1-2 |
-| azuredisk-csi-windows v1.34.4 | cloud-provider-controller-manager v1.36.1-2 | containerd 2.3.1-ubuntu24.04u2 | cloud-provider-node-manager-windows v1.35.5-windows-hpc-1 → v1.36.1-windows-hpc-1 |
-| azurefile-csi-linux v1.35.4 | csi-attacher v4.11.0 | kubectl not published for 1.36 yet | coredns v1.13.1-12 → v1.14.3-3 |
-| azurefile-csi-windows v1.35.4 | csi-provisioner v6.1.1 | kubelet not published for 1.36 yet | keda 2.17.3-7 → 2.19.0-6 |
-| blob-csi v1.27.6 | csi-resizer v2.1.0 | runc 1.4.3-ubuntu24.04u1 | keda-admission-webhooks 2.17.3-7 → 2.19.0-5 |
-| coredns v1.14.3-3 | csi-snapshotter v8.5.0 | **Linux - AzureLinux 3.0** | keda-metrics-apiserver 2.17.3-7 → 2.19.0-7 |
-| cilium-agent v1.18.9-260508 | snapshot-controller v8.5.0 | containerd 2.2.4-2.azl3 | microsoft-defender-low-level-collector 2.1.115 → 2.2.18 |
-| cilium-operator v1.18.9-260508 | kube-state-metrics v2.15.0-12 | kubectl not published for 1.36 yet | overlay-vpa-admission-controller v1.5.1-8 → v1.6.0-5 |
-| tigera-operator v1.40.2 | | kubelet not published for 1.36 yet | overlay-vpa-recommender v1.5.1-7 → v1.6.0-4 |
-| cloud-provider-node-manager-linux v1.36.1-2 | | **Windows - Windows2022** | overlay-vpa-updater v1.5.1-8 → v1.6.0-4 |
-| cloud-provider-node-manager-windows v1.36.1-windows-hpc-1 | | containerd v2.0.4-azure.1 | cloud-provider-controller-manager v1.35.5-2 → v1.36.1-2 |
-| metrics-server v0.8.0-13 | | | |
-| keda 2.19.0-6 | | | |
-| azure-policy v1.15.5-1 | | | |
-| open-policy-agent-gatekeeper v3.22.2-3 | | | |
-| workload-identity-webhook v1.5.1-11 | | | |
-| secrets-store-provider-azure v1.8.1-2 | | | |
-| microsoft-defender-low-level-collector 2.2.18 | | | |
-| image-cleaner v1.4.1-3 | | | |
-| overlay-vpa v1.6.0-5 | | | |
-| app-routing-operator 0.2.24 | | | |
-| karpenter 1.12.2-aks | | | |
+| - azuredisk-csi-linux v1.34.4 <br> - azuredisk-csi-windows v1.34.4 <br> - azurefile-csi-linux v1.35.4 <br> - azurefile-csi-windows v1.35.4 <br> - blob-csi v1.27.6 <br> - coredns v1.14.3-3 <br> - cilium-agent v1.18.9-260508 <br> - cilium-operator v1.18.9-260508 <br> - tigera-operator v1.40.2 <br> - cloud-provider-node-manager-linux v1.36.1-2 <br> - cloud-provider-node-manager-windows v1.36.1-windows-hpc-1 <br> - metrics-server v0.8.0-13 <br> - keda 2.19.0-6 <br> - azure-policy v1.15.5-1 <br> - open-policy-agent-gatekeeper v3.22.2-3 <br> - workload-identity-webhook v1.5.1-11 <br> - secrets-store-provider-azure v1.8.1-2 <br> - microsoft-defender-low-level-collector 2.2.18 <br> - image-cleaner v1.4.1-3 <br> - overlay-vpa v1.6.0-5 <br> - app-routing-operator 0.2.24 <br> - karpenter 1.12.2-aks | - cluster-autoscaler v1.35.0-aks-4 <br> - cloud-provider-controller-manager v1.36.1-2 <br> - csi-attacher v4.11.0 <br> - csi-provisioner v6.1.1 <br> - csi-resizer v2.1.0 <br> - csi-snapshotter v8.5.0 <br> - snapshot-controller v8.5.0 <br> - kube-state-metrics v2.15.0-12 | - **Linux - Ubuntu 24.04** <br> - containerd 2.3.1-ubuntu24.04u2 <br> - kubectl not published for 1.36 yet <br> - kubelet not published for 1.36 yet <br> - runc 1.4.3-ubuntu24.04u1 <br> - **Linux - AzureLinux 3.0** <br> - containerd 2.2.4-2.azl3 <br> - kubectl not published for 1.36 yet <br> - kubelet not published for 1.36 yet <br> - **Windows - Windows2022** <br> - containerd v2.0.4-azure.1 | - cloud-provider-node-manager-linux v1.35.5-2 -> v1.36.1-2 <br> - cloud-provider-node-manager-windows v1.35.5-windows-hpc-1 -> v1.36.1-windows-hpc-1 <br> - coredns v1.13.1-12 -> v1.14.3-3 <br> - keda 2.17.3-7 -> 2.19.0-6 <br> - keda-admission-webhooks 2.17.3-7 -> 2.19.0-5 <br> - keda-metrics-apiserver 2.17.3-7 -> 2.19.0-7 <br> - microsoft-defender-low-level-collector 2.1.115 -> 2.2.18 <br> - overlay-vpa-admission-controller v1.5.1-8 -> v1.6.0-5 <br> - overlay-vpa-recommender v1.5.1-7 -> v1.6.0-4 <br> - overlay-vpa-updater v1.5.1-8 -> v1.6.0-4 <br> - cloud-provider-controller-manager v1.35.5-2 -> v1.36.1-2 |
 
 ### Kubernetes 1.35
 
 | **AKS managed add-ons (add-on)** | **AKS components (ccp)** | **OS components** | **Breaking changes from Kubernetes 1.34.0** |
 | ------------------------------- | ------------------------ | ----------------- | ------------------------------------------- |
-| azuredisk-csi-linux v1.34.2 | cluster-autoscaler v1.35.0-aks-2 | **Linux - Ubuntu 22.04** | azuredisk-csi v1.33.8 → v1.34.2 |
-| azuredisk-csi-windows v1.34.2 | cloud-provider-controller-manager v1.35.1-1 | containerd 1.7.29-ubuntu22.04u1 | azurefile-csi v1.34.4 → v1.35.1 |
-| azurefile-csi-linux v1.35.1 | csi-attacher v4.11.0 | kubectl 1.35.x-ubuntu22.04u4 | cloud-provider-node-manager-linux v1.34.6-1 → v1.35.1-1 |
-| azurefile-csi-windows v1.35.1 | csi-provisioner v6.1.1 | kubelet 1.35.x-ubuntu22.04u4 | cloud-provider-node-manager-windows v1.34.3 → v1.35.1 |
-| blob-csi v1.27.3 | csi-resizer v2.1.0 | runc 1.3.3-ubuntu22.04u1 | cloud-provider-controller-manager v1.34.6-1 → v1.35.1-1 |
-| coredns v1.13.1-6 | csi-snapshotter v8.5.0 | **Linux - AzureLinux 3.0** | cluster-autoscaler v1.34.1-aks-4 → v1.35.0-aks-2 |
-| cilium-agent v1.18.6-260312 | snapshot-controller v8.5.0 | containerd 2.0.0-14.azl3 | tigera-operator v1.38.8 → v1.40.2 |
-| cilium-operator v1.18.6-260312 | kube-state-metrics v2.15.0-10 | kubectl 1.35.x-azl3 | microsoft-defender-low-level-collector 2.0.242 → 2.1.109 |
-| tigera-operator v1.40.2 | | kubelet 1.35.x-azl3 | csi-attacher v4.10.0 → v4.11.0 |
-| cloud-provider-node-manager-linux v1.35.1-1 | | **Windows - Windows2022** | csi-resizer v2.0.0 → v2.1.0 |
-| cloud-provider-node-manager-windows v1.35.1 | | containerd v2.0.4-azure.1 | csi-snapshotter v8.4.0 → v8.5.0 |
-| metrics-server v0.8.0-8 | | | csi-snapshotter v8.4.0 → v8.5.0 |
-| keda 2.17.2-3 | | | snapshot-controller v8.4.0 → v8.5.0 |
-| azure-policy 1.15.5 | | | csi-livenessprobe v2.17.0 → v2.18.0 |
-| open-policy-agent-gatekeeper v3.20.1-6 | | | csi-node-driver-registrar v2.15.0 → v2.16.0 |
-| workload-identity-webhook v1.5.1-6 | | | |
-| secrets-store-provider-azure v1.7.2 | | | |
-| microsoft-defender-low-level-collector 2.1.109 | | | |
-| image-cleaner v1.4.0-10 | | | |
-| overlay-vpa v1.5.1-5 | | | |
-| app-routing-operator 0.2.19 | | | |
-| karpenter 1.7.0-aks | | | |
+| - azuredisk-csi-linux v1.34.2 <br> - azuredisk-csi-windows v1.34.2 <br> - azurefile-csi-linux v1.35.1 <br> - azurefile-csi-windows v1.35.1 <br> - blob-csi v1.27.3 <br> - coredns v1.13.1-6 <br> - cilium-agent v1.18.6-260312 <br> - cilium-operator v1.18.6-260312 <br> - tigera-operator v1.40.2 <br> - cloud-provider-node-manager-linux v1.35.1-1 <br> - cloud-provider-node-manager-windows v1.35.1 <br> - metrics-server v0.8.0-8 <br> - keda 2.17.2-3 <br> - azure-policy 1.15.5 <br> - open-policy-agent-gatekeeper v3.20.1-6 <br> - workload-identity-webhook v1.5.1-6 <br> - secrets-store-provider-azure v1.7.2 <br> - microsoft-defender-low-level-collector 2.1.109 <br> - image-cleaner v1.4.0-10 <br> - overlay-vpa v1.5.1-5 <br> - app-routing-operator 0.2.19 <br> - karpenter 1.7.0-aks | - cluster-autoscaler v1.35.0-aks-2 <br> - cloud-provider-controller-manager v1.35.1-1 <br> - csi-attacher v4.11.0 <br> - csi-provisioner v6.1.1 <br> - csi-resizer v2.1.0 <br> - csi-snapshotter v8.5.0 <br> - snapshot-controller v8.5.0 <br> - kube-state-metrics v2.15.0-10 | - **Linux - Ubuntu 22.04** <br> - containerd 1.7.29-ubuntu22.04u1 <br> - kubectl 1.35.x-ubuntu22.04u4 <br> - kubelet 1.35.x-ubuntu22.04u4 <br> - runc 1.3.3-ubuntu22.04u1 <br> - **Linux - AzureLinux 3.0** <br> - containerd 2.0.0-14.azl3 <br> - kubectl 1.35.x-azl3 <br> - kubelet 1.35.x-azl3 <br> - **Windows - Windows2022** <br> - containerd v2.0.4-azure.1 | - azuredisk-csi v1.33.8 -> v1.34.2 <br> - azurefile-csi v1.34.4 -> v1.35.1 <br> - cloud-provider-node-manager-linux v1.34.6-1 -> v1.35.1-1 <br> - cloud-provider-node-manager-windows v1.34.3 -> v1.35.1 <br> - cloud-provider-controller-manager v1.34.6-1 -> v1.35.1-1 <br> - cluster-autoscaler v1.34.1-aks-4 -> v1.35.0-aks-2 <br> - tigera-operator v1.38.8 -> v1.40.2 <br> - microsoft-defender-low-level-collector 2.0.242 -> 2.1.109 <br> - csi-attacher v4.10.0 -> v4.11.0 <br> - csi-resizer v2.0.0 -> v2.1.0 <br> - csi-snapshotter v8.4.0 -> v8.5.0 <br> - csi-snapshotter v8.4.0 -> v8.5.0 <br> - snapshot-controller v8.4.0 -> v8.5.0 <br> - csi-livenessprobe v2.17.0 -> v2.18.0 <br> - csi-node-driver-registrar v2.15.0 -> v2.16.0 |
 
 ### Kubernetes 1.34
 
 | **AKS managed add-ons (add-on)** | **AKS components (ccp)** | **OS components** | **Breaking changes from Kubernetes 1.33.0** |
 | ------------------------------- | ------------------------ | ----------------- | ------------------------------------------- |
-| aci-connector-linux 1.6.2 | addon-override-manager master.251002.2 | **Linux - Ubuntu 22.04** | kube-egress-gateway-daemon v0.0.21 → v0.1.3 |
-| addon-resizer v1.8.23-7 | apiserver-network-proxy-server v0.31.4-3 | azure-acr-credential-provider-pmc 1.34.1-ubuntu22.04u3 | kube-egress-gateway-daemon-init v0.0.21 → v0.1.3 |
-| ai-toolchain-operator 0.6.0 | app-routing-operator 0.2.12 | containerd 1.7.29-ubuntu22.04u1 | kube-egress-gateway-cnimanager v0.0.21 → v0.1.3 |
-| aks-windows-gpu-device-plugin 0.0.19 | automatic-authz-webhook master.251112.4 | datacenter-gpu-manager-4-core 1:4.4.1-1 | kube-egress-gateway-cni v0.0.21 → v0.1.3 |
-| ama-logs-linux 3.1.31 | ccp-webhook master.251105.4 | datacenter-gpu-manager-4-proprietary 1:4.4.1-1 | kube-egress-gateway-cni-ipam v0.0.21 → v0.1.3 |
-| ama-logs-win 3.1.31 | cluster-autoscaler v1.33.1-aks-3 | kubectl 1.34.1-ubuntu22.04u4 | cloud-provider-node-manager-windows v1.33.3 → v1.34.0 |
-| app-routing-operator 0.0.3 | cost-analysis-scraper v0.0.25 | kubelet 1.34.1-ubuntu22.04u4 | cloud-provider-node-manager-linux v1.33.3 → v1.34.0 |
-| azure-monitor-metrics-cfg-reader 6.24.0-main | customer-net-probe master.250827.1 | kubernetes-cri-tools 1.32.0-ubuntu22.04u3 | metrics-server v0.7.2-10 → v0.8.0-4 |
-| azure-monitor-metrics-ksm v2.17.0 | envoy v1.35.6-master.251017.3 | nvidia-device-plugin 0.18.0-ubuntu22.04u2 | overlay-vpa v1.2.1-1 → v1.5 |
-| azure-monitor-metrics-linux 6.24.0-main | ingress-dispatcher v1.35.6-master.251017.3 | runc 1.3.3-ubuntu22.04u1 | coredns v1.12.1-7 → v1.13.1-2 |
-| azure-monitor-metrics-target-allocator | jwt-authenticator-egress master.250904.1 | **Linux - AzureLinux 3.0** | kube-egress-gateway-controller v0.0.21 → v0.1.3 |
-| azure-monitor-metrics-windows | kube-state-metrics v2.15.0-4 | azure-acr-credential-provider-pmc 1.34.1-1.azl3 | |
-| azure-npm-image v1.6.34 | kubeguard-guard v0.16.23 | containerd 2.0.0-14.azl3 | |
-| azure-npm-image-windows v1.5.5 | private-connect-balancer master.250731.2 | datacenter-gpu-manager-4-core 1:4.4.1-1 | |
-| azure-policy 1.15.1 | private-connect-router master.251105.2 | datacenter-gpu-manager-4-proprietary 1:4.4.1-1 | |
-| azure-policy-audit 1.15.1 | gpu-provisioner 0.3.7 (plugin) | dcgm-exporter 4.6.0-1.azl3 | |
-| azure-policy-webhook 1.15.1 | karpenter 1.6.5-aks (plugin) | kubectl 1.34.1-4.azl3 | |
-| certgen v0.1.9 | kms-controller master.250811.2 (plugin) | kubelet 1.34.1-4.azl3 | |
-| cilium-agent v1.18.6 | kms-operator master.250814.1 (plugin) | kubernetes-cri-tools 1.32.0-3.azl3 | |
-| cilium-envoy v1.34.10-251105 | kms-plugin-v2-plus master.251114.2 (plugin) | nvidia-container-toolkit 1.17.3 | |
-| cilium-operator-generic v1.18.6 | kube-egress-gateway-controller v0.1.3 | nvidia-device-plugin 0.18.0-2.azl3 | |
-| cloud-provider-node-manager-linux v1.34.0 | kubelet-serving-csr-approver v0.0.7 | **Windows - Windows2022** | |
-| cloud-provider-node-manager-windows v1.34.0 | live-patching-controller v0.0.16 | containerd v2.0.4-azure.1 | |
-| ... | secure-tls-bootstrap-server v0.0.9 | | |
+| - aci-connector-linux 1.6.2 <br> - addon-resizer v1.8.23-7 <br> - ai-toolchain-operator 0.6.0 <br> - aks-windows-gpu-device-plugin 0.0.19 <br> - ama-logs-linux 3.1.31 <br> - ama-logs-win 3.1.31 <br> - app-routing-operator 0.0.3 <br> - azure-monitor-metrics-cfg-reader 6.24.0-main <br> - azure-monitor-metrics-ksm v2.17.0 <br> - azure-monitor-metrics-linux 6.24.0-main <br> - azure-monitor-metrics-target-allocator <br> - azure-monitor-metrics-windows <br> - azure-npm-image v1.6.34 <br> - azure-npm-image-windows v1.5.5 <br> - azure-policy 1.15.1 <br> - azure-policy-audit 1.15.1 <br> - azure-policy-webhook 1.15.1 <br> - certgen v0.1.9 <br> - cilium-agent v1.18.6 <br> - cilium-envoy v1.34.10-251105 <br> - cilium-operator-generic v1.18.6 <br> - cloud-provider-node-manager-linux v1.34.0 <br> - cloud-provider-node-manager-windows v1.34.0 <br> - ... | - addon-override-manager master.251002.2 <br> - apiserver-network-proxy-server v0.31.4-3 <br> - app-routing-operator 0.2.12 <br> - automatic-authz-webhook master.251112.4 <br> - ccp-webhook master.251105.4 <br> - cluster-autoscaler v1.33.1-aks-3 <br> - cost-analysis-scraper v0.0.25 <br> - customer-net-probe master.250827.1 <br> - envoy v1.35.6-master.251017.3 <br> - ingress-dispatcher v1.35.6-master.251017.3 <br> - jwt-authenticator-egress master.250904.1 <br> - kube-state-metrics v2.15.0-4 <br> - kubeguard-guard v0.16.23 <br> - private-connect-balancer master.250731.2 <br> - private-connect-router master.251105.2 <br> - gpu-provisioner 0.3.7 (plugin) <br> - karpenter 1.6.5-aks (plugin) <br> - kms-controller master.250811.2 (plugin) <br> - kms-operator master.250814.1 (plugin) <br> - kms-plugin-v2-plus master.251114.2 (plugin) <br> - kube-egress-gateway-controller v0.1.3 <br> - kubelet-serving-csr-approver v0.0.7 <br> - live-patching-controller v0.0.16 <br> - secure-tls-bootstrap-server v0.0.9 | - **Linux - Ubuntu 22.04** <br> - azure-acr-credential-provider-pmc 1.34.1-ubuntu22.04u3 <br> - containerd 1.7.29-ubuntu22.04u1 <br> - datacenter-gpu-manager-4-core 1:4.4.1-1 <br> - datacenter-gpu-manager-4-proprietary 1:4.4.1-1 <br> - kubectl 1.34.1-ubuntu22.04u4 <br> - kubelet 1.34.1-ubuntu22.04u4 <br> - kubernetes-cri-tools 1.32.0-ubuntu22.04u3 <br> - nvidia-device-plugin 0.18.0-ubuntu22.04u2 <br> - runc 1.3.3-ubuntu22.04u1 <br> - **Linux - AzureLinux 3.0** <br> - azure-acr-credential-provider-pmc 1.34.1-1.azl3 <br> - containerd 2.0.0-14.azl3 <br> - datacenter-gpu-manager-4-core 1:4.4.1-1 <br> - datacenter-gpu-manager-4-proprietary 1:4.4.1-1 <br> - dcgm-exporter 4.6.0-1.azl3 <br> - kubectl 1.34.1-4.azl3 <br> - kubelet 1.34.1-4.azl3 <br> - kubernetes-cri-tools 1.32.0-3.azl3 <br> - nvidia-container-toolkit 1.17.3 <br> - nvidia-device-plugin 0.18.0-2.azl3 <br> - **Windows - Windows2022** <br> - containerd v2.0.4-azure.1 | - kube-egress-gateway-daemon v0.0.21 -> v0.1.3 <br> - kube-egress-gateway-daemon-init v0.0.21 -> v0.1.3 <br> - kube-egress-gateway-cnimanager v0.0.21 -> v0.1.3 <br> - kube-egress-gateway-cni v0.0.21 -> v0.1.3 <br> - kube-egress-gateway-cni-ipam v0.0.21 -> v0.1.3 <br> - cloud-provider-node-manager-windows v1.33.3 -> v1.34.0 <br> - cloud-provider-node-manager-linux v1.33.3 -> v1.34.0 <br> - metrics-server v0.7.2-10 -> v0.8.0-4 <br> - overlay-vpa v1.2.1-1 -> v1.5 <br> - coredns v1.12.1-7 -> v1.13.1-2 <br> - kube-egress-gateway-controller v0.0.21 -> v0.1.3 |
 
 ### Kubernetes 1.33
 
