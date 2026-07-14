@@ -90,8 +90,11 @@ Use the DiskEncryptionSet and resource groups you created on the prior steps, an
 # Retrieve the DiskEncryptionSet value and set a variable
 desIdentity=$(az disk-encryption-set show --name myDiskEncryptionSetName --resource-group myResourceGroup --query "[identity.principalId]" -o tsv)
 
-# Update security policy settings
-az keyvault set-policy --name myKeyVaultName --resource-group myResourceGroup --object-id $desIdentity --key-permissions wrapkey unwrapkey get
+# Retrieve the Key Vault resource ID and set a variable
+keyVaultId=$(az keyvault show --name myKeyVaultName --resource-group myResourceGroup --query "id" -o tsv)
+
+# Grant the DiskEncryptionSet identity access to Key Vault
+az role assignment create --assignee-object-id $desIdentity --assignee-principal-type ServicePrincipal --role "Key Vault Crypto Service Encryption User" --scope $keyVaultId
 ```
 
 ## Create a new AKS cluster and encrypt the OS disk
