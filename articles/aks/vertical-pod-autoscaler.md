@@ -46,7 +46,7 @@ The Vertical Pod Autoscaler offers the following benefits:
 
 Consider the following limitations and considerations when using the Vertical Pod Autoscaler:
 
-- VPA supports a maximum of 1,000 pods associated with `VerticalPodAutoscaler` objects per cluster.
+- VPA guarantees optimal support for up to 1,000 pods per cluster associated with `VerticalPodAutoscaler` objects. As the number of tracked pods increases, memory consumption grows across all VPA components, particularly for the recommender, which may impact scalability.
 - VPA might recommend more resources than available in the cluster, which prevents the pod from being assigned to a node and run due to insufficient resources. You can overcome this limitation by setting the _LimitRange_ to the maximum available resources per namespace, which ensures pods don't ask for more resources than specified. You can also set maximum allowed resource recommendations per pod in a `VerticalPodAutoscaler` object. The VPA can't completely overcome an insufficient node resource issue. The limit range is fixed, but the node resource usage is changed dynamically.
 - We don't recommend using VPA with the [Horizontal Pod Autoscaler (HPA)][horizontal-pod-autoscaler-overview], which scales based on the same CPU and memory usage metrics.
 - The VPA Recommender only stores up to _eight days_ of historical data.
