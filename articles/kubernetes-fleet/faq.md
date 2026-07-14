@@ -175,13 +175,13 @@ See the previous question.
 
 ### I tried generating an update run from my auto-upgrade profile, but I can't see the update run.
 
-When you manually [generate an update run from an auto-upgrade profile](./update-orchestration.md#generate-an-update-run-from-an-auto-upgrade-profile), the resulting update run can already exist.
+When you manually [generate an update run from an auto-upgrade profile](./update-orchestration.md#generate-an-update-run-from-an-auto-upgrade-profile), the resulting update run might already exist.
 
-This scenario can arise if the auto-upgrade profile automatically generated the update run, or the update run has previously been manually generated.
+This scenario can arise if the auto-upgrade profile automatically generated the update run, or if the update run was previously manually generated.
 
 The name of the generated update run is based on the auto-upgrade profile's upgrade specification which only changes when properties such as node image or Kubernetes version are updated.
 
-It's most common to see this issue in the Azure portal where the existing update run is not the most recent update run. If you run into this and can't find the update run, use the Azure CLI to generate the run to view the update run name. We expect to fix this in the Azure portal in future.
+You most commonly see this issue in the Azure portal where the existing update run isn't the most recent update run. If you run into this issue and can't find the update run, use the Azure CLI to generate the run to view the update run name. Microsoft plans to fix this issue in the Azure portal in future.
 
 If you generate an update run and it exists, the existing update run isn't modified.
  
