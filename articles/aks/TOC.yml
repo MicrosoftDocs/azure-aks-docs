@@ -424,6 +424,12 @@
     items:
     - name: Use Planned Maintenance to schedule and control upgrades
       href: planned-maintenance.md
+    - name: Node Disruption Policy
+      items:
+      - name: Overview
+        href: node-disruption-policy.md
+      - name: Configure Node Disruption Policy
+        href: use-node-disruption-policy.md
     - name: Stop cluster upgrades on API breaking changes
       href: stop-cluster-upgrade-api-breaking-changes.md
   - name: Track upgrades and releases
