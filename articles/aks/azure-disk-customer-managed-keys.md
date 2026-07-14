@@ -121,9 +121,9 @@ az aks nodepool add --cluster-name $CLUSTER_NAME --resource-group $RG_NAME --nam
 If you have already provided a disk encryption set during cluster creation, encrypting data disks with the same disk encryption set is the default option. Therefore, this step is optional. However, if you want to encrypt data disks with a different disk encryption set, you can follow these steps.
 
 > [!IMPORTANT]
-> Ensure you have the proper AKS credentials. The AKS cluster identity needs to have **Reader** access to the DiskEncryptionSet. Otherwise, you'll get an error suggesting that the managed identity does not have permissions.
+> Ensure you have the proper AKS credentials. The AKS cluster identity needs **Reader** access to the DiskEncryptionSet. Otherwise, you get an error suggesting that the managed identity doesn't have permissions.
 
-To assign the AKS cluster identity the Reader role on the DiskEncryptionSet, execute the following commands:
+To assign the AKS cluster identity the Reader role on the DiskEncryptionSet, run the following commands:
 
 ```azurecli-interactive
 aksIdentity=$(az aks show --resource-group $RG_NAME --name $CLUSTER_NAME --query "identity.principalId" -o tsv)
