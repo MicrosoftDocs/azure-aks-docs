@@ -420,7 +420,7 @@ Starting version definitions:
 
 In the preceding table, `Unsupported recovery path` indicates that the upgrade path is executed in a manner that can't be guaranteed safe and is therefore considered outside of support. AKS allows the upgrade to proceed, but it isn't supported and might carry risks.
 
-To choose the correct path, check available targets with `az aks get-upgrades --resource-group <resource-group-name> --name <cluster-name>`, review the table above and then consider the risk of upgrading versus recreating the cluster and migrating workloads.
+To choose the correct path, check available targets by running `az aks get-upgrades --resource-group <resource-group-name> --name <cluster-name>`. Review the preceding table, and then consider the risk of upgrading versus recreating the cluster and migrating workloads.
 
 
 ### Can I create a new 1.xx.x cluster during the platform support window?
