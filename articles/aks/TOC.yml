@@ -28,8 +28,6 @@
       href: core-aks-concepts.md
     - name: Advanced AKS concepts
       href: advanced-aks-concepts.md
-    - name: Compare AKS Standard and AKS Automatic
-      href: intro-aks-automatic.md
     - name: AKS Automatic with managed system node pools overview
       href: automatic/aks-automatic-managed-system-node-pools-about.md
     - name: Deploy a multi-container application to AKS
