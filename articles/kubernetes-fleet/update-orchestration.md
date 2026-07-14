@@ -2,7 +2,7 @@
 title: "Update Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to orchestrate updates across multiple clusters using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 06/15/2026
+ms.date: 07/14/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -357,6 +357,9 @@ az fleet autoupgradeprofile generate-update-run \
 ```
 
 The generated update run isn't automatically started, allowing you to review it. If you're satisfied with the generated update run, you can start and manage it by following the steps in [manage an update run](#manage-an-update-run).
+
+> [!NOTE]
+> When you manually generate an update run from an auto-upgrade profile, the resulting update run might already exist. This situation happens because the name of the update run is based on the auto-upgrade profile's upgrade specification, which only changes when properties such as the node image or Kubernetes version change. In this scenario, the existing update run isn't modified.
 
 ## Next steps
 
