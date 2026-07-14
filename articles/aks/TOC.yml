@@ -875,11 +875,13 @@
               href: api-server-service-tags.md
             - name: Trusted Access for Azure services
               href: trusted-access-feature.md
-        - name: Certificates
+        - name: Manage and rotate certificates
           items:
-            - name: Manage cluster certificates and rotation
+            - name: Overview
               href: certificate-rotation.md
-            - name: Custom certificate authorities on nodes
+            - name: Rotate certificates
+              href: rotate-certificates.md
+            - name: Use custom certificate authorities
               href: custom-certificate-authority.md
         - name: Encryption at rest (KMS etcd)
           items:
