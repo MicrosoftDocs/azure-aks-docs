@@ -2,7 +2,7 @@
 title: Concepts - CNI Networking in AKS
 description: Learn about CNI networking options in Azure Kubernetes Service (AKS)
 ms.topic: concept-article
-ms.date: 05/28/2024
+ms.date: 07/10/2026
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -100,7 +100,7 @@ Although capabilities like service endpoints or UDRs are supported, the [support
 When you're planning your network configuration for AKS, keep these requirements and considerations in mind:
 
 - The virtual network for the AKS cluster must allow outbound internet connectivity.
-- AKS clusters can't use `169.254.0.0/16` or `192.0.2.0/24` for address ranges for the Kubernetes service, pods, or cluster virtual networks. Additionally, AKS clusters with Calico CNI can't use `172.30.0.0/16` or `172.31.0.0/16` address ranges.
+- AKS clusters can't use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for address ranges for the Kubernetes service, pods, or cluster virtual networks.
 - In scenarios where you bring your own virtual network, the cluster identity that the AKS cluster uses must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network. If you want to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
   - `Microsoft.Network/virtualNetworks/subnets/join/action`
   - `Microsoft.Authorization/roleAssignments/write`
