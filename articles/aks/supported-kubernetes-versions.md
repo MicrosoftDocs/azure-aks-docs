@@ -372,6 +372,8 @@ If you're on a version that falls out of support per the [supported Kubernetes v
 - If the lowest supported AKS minor version is _1.33_ and you're on _1.32_ or older, you're outside of support.
 - If you successfully upgrade from _1.32_ to _1.33_ or higher, you're back within the support policies.
 
+Downgrades or rollback to an unsupported version are not supported. Additionally, if the further the cluster version is from the lowest supported version, the higher likelyhood of upgrade issues. In that case, creation of a new cluster and workload migration would be a better approach.
+
 ### What does it mean to be "outside of support"?
 
 "Outside of support" means:
