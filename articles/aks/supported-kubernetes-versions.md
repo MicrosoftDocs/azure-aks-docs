@@ -428,7 +428,9 @@ Examples:
 
 In the above table 'Unsupported recovery path' indicates that the upgrade path will be executed in a manner that cannot be guaranteed safe and is therefore considered outside of support. AKS will allow the upgrade to proceed, but it is not supported and may carry risks.
 
-To choose the correct path, check available targets with `az aks get-upgrades --resource-group <resource-group-name> --name <cluster-name>`, review the table above and then consider the risk of upgrading versus recreating the cluster and migrating workloads.
+In the preceding table, `Unsupported recovery path` indicates that the upgrade path is executed in a manner that can't be guaranteed safe and is therefore considered outside of support. AKS allows the upgrade to proceed, but it isn't supported and might carry risks.
+
+To choose the correct path, check available targets by running `az aks get-upgrades --resource-group <resource-group-name> --name <cluster-name>`. Review the preceding table, and then consider the risk of upgrading versus recreating the cluster and migrating workloads.
 
 
 
