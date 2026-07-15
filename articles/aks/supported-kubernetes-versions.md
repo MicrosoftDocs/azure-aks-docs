@@ -367,12 +367,12 @@ Starting with Kubernetes 1.19, the [open source community expanded support to on
 
 ### What happens when you upgrade a Kubernetes cluster with a minor version that isn't supported?
 
-If you're on the _N-3_ version or older, it means you're outside of support and need to upgrade. If your upgrade from version _N-3_ to _N-2_ succeeds, you're back within our support policies. For example:
+If you're on a version that has fallen out of support per the [supported Kubernetes versions list](#supported-kubernetes-versions), it means you're outside of support and need to upgrade. Upgrades from unsupported version to supported versions are allowed. For example:
 
-- If the oldest supported AKS minor version is _1.27_ and you're on _1.26_ or older, you're outside of support.
-- If you successfully upgrade from _1.26_ to _1.27_ or higher, you're back within our support policies.
+- If the lowest supported AKS minor version is _1.33_ and you're on _1.32_ or older, you're outside of support.
+- If you successfully upgrade from _1.32_ to _1.33_ or higher, you're back within our support policies.
 
-Downgrades aren't supported.
+Downgrades aren't supported. Also, keep in mind that the further you are from a supported version, the higher the risk of upgrade issues. It may be better in those cases to consider creating a new cluster and migrating workloads.
 
 ### What does it mean to be "outside of support"?
 
@@ -401,26 +401,34 @@ The [version skew policy](https://kubernetes.io/releases/version-skew-policy/) n
 
 ### Can I skip multiple AKS versions during a cluster upgrade?
 
-Yes, you can skip minor versions in some cases. However, if you upgrade the control plane independently from the node pools, you must satisfy Kubernetes [version skew policies](https://kubernetes.io/releases/version-skew-policy/).
+Yes, there are cases where skipping minor versions is permitted. Keep in mind, however, that Kubernetes [version skew policies](https://kubernetes.io/releases/version-skew-policy/) must be satisfied if upgrading control plane independent from node pools. Kubernetes version skew policy currently only supports N-3, so the control plane and agent pools must be within N-3 of each other.
 
 Starting version definitions:
 
-- **LTS**: A version with the AKS Long-Term Support plan enabled. See [LTS versions](#lts-versions).
-- **Unsupported LTS**: An LTS-enabled version that is past its LTS end-of-life date in the [LTS versions](#lts-versions) table.
-- **Supported non-LTS**: A version that isn't LTS but is still listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar).
-- **Unsupported non-LTS**: A version that isn't LTS and is no longer listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar).
+- **LTS**: A version with the AKS Long-Term Support plan enabled. See [LTS versions](#lts-versions)
+- **Unsupported LTS**: An LTS-enabled version that is past its LTS end-of-life date in the [LTS versions](#lts-versions) table above.
+- **Supported non-LTS**: A version that is not LTS and is still listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar) above
+- **Unsupported non-LTS**: A version that is not LTS and is no longer listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar) above
 
 | Starting version | Target version | Can skip multiple minors? | Constraint | Support statement |
 | --- | --- | --- | --- | --- |
 | LTS | Higher LTS | Yes | Target must be listed by AKS and satisfy version skew and validation checks. | Supported |
 | Unsupported LTS | Supported LTS | Conditional | Target must be listed by AKS and satisfy validation checks. | Unsupported recovery path |
-| Unsupported non-LTS | LTS | Conditional | LTS target must be listed by AKS and satisfy validation checks. | Unsupported recovery path |
+| Unsupported non-LTS | LTS | Conditional | LTS target must be listed by AKS and satisfy validation checks. Control-plane-only upgrades are not supported; a full cluster upgrade is required. | Unsupported recovery path |
 | Unsupported non-LTS | Lowest supported community version | Yes | Use the oldest supported GA target offered by AKS. | Unsupported recovery path |
 | Supported non-LTS | Higher community version | No | Upgrade one minor version at a time. | Supported |
 
-In the preceding table, `Unsupported recovery path` indicates that the upgrade path is executed in a manner that can't be guaranteed safe and is therefore considered outside of support. AKS allows the upgrade to proceed, but it isn't supported and might carry risks.
+Examples:
 
-To choose the correct path, check available targets by running `az aks get-upgrades --resource-group <resource-group-name> --name <cluster-name>`. Review the preceding table, and then consider the risk of upgrading versus recreating the cluster and migrating workloads.
+- If your cluster is on **1.29 LTS** and you want to move to **1.32 LTS**, you can skip multiple minor versions as long as **1.32 LTS** is still offered by AKS and the upgrade satisfies version skew and validation checks.
+- If your cluster is on **1.28 non-LTS** you can move to AKS LTS **1.30 LTS** using the unsupported recovery path, as long as the target version is listed by AKS, satisfies validation checks and you run a full cluster upgrade rather than 'control-plane-only'.
+- If your cluster is on supported non-LTS **1.33** and you want to move to supported non-LTS **1.35**, you can't skip directly from **1.33** to **1.35**. You must upgrade one minor version at a time, such as **1.33** to **1.34**, and then **1.34** to **1.35**.
+
+In the above table 'Unsupported recovery path' indicates that the upgrade path will be executed in a manner that cannot be guaranteed safe and is therefore considered outside of support. AKS will allow the upgrade to proceed, but it is not supported and may carry risks.
+
+To choose the correct path, check available targets with `az aks get-upgrades --resource-group <resource-group-name> --name <cluster-name>`, review the table above and then consider the risk of upgrading versus recreating the cluster and migrating workloads.
+
+
 
 
 ### Can I create a new 1.xx.x cluster during the platform support window?
