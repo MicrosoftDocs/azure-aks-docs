@@ -3,7 +3,7 @@ title: Supported Kubernetes Versions in Azure Kubernetes Service (AKS)
 description: Learn the Kubernetes version support policy and lifecycle of clusters in Azure Kubernetes Service (AKS).
 author: kaarthis
 ms.author: kaarthis
-ms.date: 07/29/2025
+ms.date: 07/15/2026
 ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.custom:
@@ -302,12 +302,12 @@ Starting with Kubernetes 1.19, the [open source community expanded support to on
 
 ### What happens when you upgrade a Kubernetes cluster with a minor version that isn't supported?
 
-If you're on the _N-3_ version or older, it means you're outside of support and need to upgrade. If your upgrade from version _N-3_ to _N-2_ succeeds, you're back within our support policies. For example:
+If your version falls out of support per the [supported Kubernetes versions list](#aks-kubernetes-release-calendar), you need to upgrade. You can upgrade from unsupported versions to supported versions. For example:
 
-- If the oldest supported AKS minor version is _1.27_ and you're on _1.26_ or older, you're outside of support.
-- If you successfully upgrade from _1.26_ to _1.27_ or higher, you're back within our support policies.
+- If the lowest supported AKS minor version is _1.33_ and you're on _1.32_ or older, you're outside of support.
+- If you successfully upgrade from _1.32_ to _1.33_ or higher, you're back within the support policies.
 
-Downgrades aren't supported.
+Downgrades or rollback to an unsupported version aren't supported. Additionally, the further the cluster version is from the lowest supported version, the higher the likelihood of upgrade problems. In that case, creation of a new cluster and workload migration would be a better approach.
 
 ### What does it mean to be "outside of support"?
 
@@ -336,23 +336,30 @@ The [version skew policy](https://kubernetes.io/releases/version-skew-policy/) n
 
 ### Can I skip multiple AKS versions during a cluster upgrade?
 
-If you upgrade a supported AKS cluster, Kubernetes minor versions can't be skipped. Kubernetes control planes [version skew policy](https://kubernetes.io/releases/version-skew-policy/) doesn't support minor version skipping. For example, upgrades between:
+Yes, you can skip minor versions in some cases. However, if you upgrade the control plane independently from the node pools, you must satisfy Kubernetes [version skew policies](https://kubernetes.io/releases/version-skew-policy/). The Kubernetes version skew policy currently supports only N-3, so the control plane and agent pools must be within N-3 of each other.
 
-| From | To | Supported? |
-| ---- | -- | ---------- |
-| 1.28.x | 1.29.x | Yes |
-| 1.27.x | 1.28.x | Yes |
-| 1.27.x | 1.29.x | No |
+- **LTS**: A version with the AKS Long-Term Support plan enabled. See [LTS versions](#lts-versions).
+- **Unsupported LTS**: An LTS-enabled version that is past its LTS end-of-life date in the [LTS versions](#lts-versions) table.
+- **Supported non-LTS**: A version that isn't LTS but is still listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar).
+- **Unsupported non-LTS**: A version that isn't LTS and is no longer listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar).
 
-For control plane version upgrades, you can go up to three minor versions for community supported versions in sequential fashion.
+| Starting version | Target version | Can skip multiple minors? | Constraint | Support statement |
+| --- | --- | --- | --- | --- |
+| LTS | Higher LTS | Yes | Target must be listed by AKS and satisfy version skew and validation checks. | Supported |
+| Unsupported LTS | Supported LTS | Conditional | Target must be listed by AKS and satisfy validation checks. | Unsupported recovery path |
+| Unsupported non-LTS | LTS | Conditional | LTS target must be listed by AKS and satisfy validation checks. Control-plane-only upgrades aren't supported; a full cluster upgrade is required. | Unsupported recovery path |
+| Unsupported non-LTS | Lowest supported community version | Yes | Use the oldest supported GA target offered by AKS. Control-plane-only upgrades aren't supported; a full cluster upgrade is required. | Unsupported recovery path |
+| Supported non-LTS | Higher community version | No | Upgrade one minor version at a time. | Supported |
 
-To upgrade from _1.27.x_ -> _1.29.x_, you need to first upgrade from _1.27.x_ -> _1.28.x_, and then you can upgrade from _1.28.x_ -> _1.29.x_.
+Examples:
 
-Starting from version 1.28, agent pool versions can be up to three versions older to control plane versions per [version skew policy](https://kubernetes.io/releases/version-skew-policy/). If your version is behind the minimum supported version, you might have to do more than one control plane upgrade operation to get to the minimum supported version. For example, if your current control plane version is _1.23.x_ and you intend to upgrade to a minimum supported version of _1.27.x_, you might need to upgrade sequentially four times from _1.23.x_ in order to get to _1.27.x_.
+- If your cluster is on **1.29 LTS** and you want to move to **1.32 LTS**, you can skip multiple minor versions as long as **1.32 LTS** is still offered by AKS and the upgrade satisfies version skew and validation checks.
+- If your cluster is on **1.28 non-LTS**, you can move to AKS LTS **1.30 LTS** by using the unsupported recovery path, as long as the target version is listed by AKS, satisfies validation checks, and you run a full cluster upgrade rather than `control-plane-only`.
+- If your cluster is on supported non-LTS **1.33** and you want to move to supported non-LTS **1.35**, you can't skip directly from **1.33** to **1.35**. You must upgrade one minor version at a time, such as **1.33** to **1.34**, and then **1.34** to **1.35**.
 
-You can also upgrade agent pool versions to the control plane minor version. In the previous example, you can upgrade the agent pool version twice: once from _1.23.x_ to _1.25.x_ (when the control plane version is at _1.25.x_) and then from _1.25.x_ to _1.27.x_ (when control plane version is at _1.27.x_). When you upgrade in-place, the same rules applicable to control plane upgrades apply.
+In the preceding table, `Unsupported recovery path` indicates that the upgrade path is executed in a manner that can't be guaranteed safe and is therefore considered outside of support. AKS allows the upgrade to proceed, but it isn't supported and might carry risks.
 
-If you're performing an upgrade from an _unsupported version_, the upgrade occurs without any guarantee of functionality and is excluded from the service-level agreements and limited warranty. Clusters running _unsupported versions_ have the flexibility of decoupling control plane upgrades with node pool upgrades. However, if your version is out of date, we recommend that you recreate the cluster.
+To choose the correct path, check available targets by running `az aks get-upgrades --resource-group <resource-group-name> --name <cluster-name>`. Review the preceding table, and then consider the risk of upgrading versus recreating the cluster and migrating workloads.
 
 ### Can I create a new 1.xx.x cluster during the platform support window?
 
