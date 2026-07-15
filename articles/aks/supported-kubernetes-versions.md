@@ -372,8 +372,6 @@ If you're on a version that falls out of support per the [supported Kubernetes v
 - If the lowest supported AKS minor version is _1.33_ and you're on _1.32_ or older, you're outside of support.
 - If you successfully upgrade from _1.32_ to _1.33_ or higher, you're back within the support policies.
 
-### I'm on a deprecated version that is out of platform support. Can I still add new node pools, or should I upgrade?
-
 ### What does it mean to be "outside of support"?
 
 "Outside of support" means:
