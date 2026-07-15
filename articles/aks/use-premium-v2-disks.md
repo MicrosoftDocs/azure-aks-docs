@@ -178,7 +178,7 @@ Events:
 
 ## Set IOPS and throughput limits
 
-After an Azure Premium SSD v2 disk has been provisioned for use with AKS, post-provisioning changes to IOPS and throughput aren't configured through AKS node pool settings or the AKS management plane.
+After you provision an Azure Premium SSD v2 disk for use with AKS, you can't configure post-provisioning changes to IOPS and throughput through AKS node pool settings or the AKS management plane.
 
 Instead, make these changes either through the Kubernetes CSI driver (for example, `disk.csi.azure.com`) by using the CSI volume modification flow (for example, `ModifyVolume` with `VolumeAttributesClass`), or directly on the managed disk by running the Azure CLI command [az disk update][az-disk-update] with the `--disk-iops-read-write` and `--disk-mbps-read-write` parameters.
 
