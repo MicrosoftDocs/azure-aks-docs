@@ -423,7 +423,7 @@ Yes, you can skip minor versions in some cases. However, if you upgrade the cont
 Examples:
 
 - If your cluster is on **1.29 LTS** and you want to move to **1.32 LTS**, you can skip multiple minor versions as long as **1.32 LTS** is still offered by AKS and the upgrade satisfies version skew and validation checks.
-- If your cluster is on **1.28 non-LTS** you can move to AKS LTS **1.30 LTS** using the unsupported recovery path, as long as the target version is listed by AKS, satisfies validation checks and you run a full cluster upgrade rather than 'control-plane-only'.
+- If your cluster is on **1.28 non-LTS**, you can move to AKS LTS **1.30 LTS** by using the unsupported recovery path, as long as the target version is listed by AKS, satisfies validation checks, and you run a full cluster upgrade rather than `control-plane-only`.
 - If your cluster is on supported non-LTS **1.33** and you want to move to supported non-LTS **1.35**, you can't skip directly from **1.33** to **1.35**. You must upgrade one minor version at a time, such as **1.33** to **1.34**, and then **1.34** to **1.35**.
 
 In the above table 'Unsupported recovery path' indicates that the upgrade path will be executed in a manner that cannot be guaranteed safe and is therefore considered outside of support. AKS will allow the upgrade to proceed, but it is not supported and may carry risks.
