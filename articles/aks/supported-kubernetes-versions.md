@@ -401,7 +401,7 @@ The [version skew policy](https://kubernetes.io/releases/version-skew-policy/) n
 
 ### Can I skip multiple AKS versions during a cluster upgrade?
 
-Yes, there are cases where skipping minor versions is permitted. Keep in mind, however, that Kubernetes [version skew policies](https://kubernetes.io/releases/version-skew-policy/) must be satisfied if upgrading control plane independent from node pools. Kubernetes version skew policy currently only supports N-3, so the control plane and agent pools must be within N-3 of each other.
+Yes, you can skip minor versions in some cases. However, if you upgrade the control plane independently from the node pools, you must satisfy Kubernetes [version skew policies](https://kubernetes.io/releases/version-skew-policy/). The Kubernetes version skew policy currently supports only N-3, so the control plane and agent pools must be within N-3 of each other.
 
 Starting version definitions:
 
