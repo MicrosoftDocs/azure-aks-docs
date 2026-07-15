@@ -401,12 +401,10 @@ The [version skew policy](https://kubernetes.io/releases/version-skew-policy/) n
 
 Yes, you can skip minor versions in some cases. However, if you upgrade the control plane independently from the node pools, you must satisfy Kubernetes [version skew policies](https://kubernetes.io/releases/version-skew-policy/). The Kubernetes version skew policy currently supports only N-3, so the control plane and agent pools must be within N-3 of each other.
 
-
 - **LTS**: A version with the AKS Long-Term Support plan enabled. See [LTS versions](#lts-versions).
 - **Unsupported LTS**: An LTS-enabled version that is past its LTS end-of-life date in the [LTS versions](#lts-versions) table.
 - **Supported non-LTS**: A version that isn't LTS but is still listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar).
 - **Unsupported non-LTS**: A version that isn't LTS and is no longer listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar).
-
 
 | Starting version | Target version | Can skip multiple minors? | Constraint | Support statement |
 | --- | --- | --- | --- | --- |
@@ -427,9 +425,6 @@ In the preceding table, `Unsupported recovery path` indicates that the upgrade p
 In the preceding table, `Unsupported recovery path` indicates that the upgrade path is executed in a manner that can't be guaranteed safe and is therefore considered outside of support. AKS allows the upgrade to proceed, but it isn't supported and might carry risks.
 
 To choose the correct path, check available targets by running `az aks get-upgrades --resource-group <resource-group-name> --name <cluster-name>`. Review the preceding table, and then consider the risk of upgrading versus recreating the cluster and migrating workloads.
-
-
-
 
 ### Can I create a new 1.xx.x cluster during the platform support window?
 
