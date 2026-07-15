@@ -75,7 +75,6 @@ To use node auto-provisioning in AKS, you need the following prerequisites:
 
 The following limitations and unsupported features apply to node auto-provisioning in AKS:
 
-- You can't enable NAP on clusters enabled with the [cluster autoscaler](./cluster-autoscaler.md).
 - Windows node pools aren't supported.
 - IPv6 clusters aren't supported.
 - [Service principals](./kubernetes-service-principal.md) aren't supported. You can use either a system-assigned or user-assigned managed identity.
