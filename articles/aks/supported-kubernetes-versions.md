@@ -408,7 +408,10 @@ Starting version definitions:
 - **LTS**: A version with the AKS Long-Term Support plan enabled. See [LTS versions](#lts-versions)
 - **Unsupported LTS**: An LTS-enabled version that is past its LTS end-of-life date in the [LTS versions](#lts-versions) table above.
 - **Supported non-LTS**: A version that is not LTS and is still listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar) above
-- **Unsupported non-LTS**: A version that is not LTS and is no longer listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar) above
+- **Unsupported LTS**: An LTS-enabled version that is past its LTS end-of-life date in the [LTS versions](#lts-versions) table.
+- **Supported non-LTS**: A version that isn't LTS and is still listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar).
+- **Unsupported non-LTS**: A version that isn't LTS and is no longer listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar).
+
 
 | Starting version | Target version | Can skip multiple minors? | Constraint | Support statement |
 | --- | --- | --- | --- | --- |
