@@ -367,7 +367,7 @@ Starting with Kubernetes 1.19, the [open source community expanded support to on
 
 ### What happens when you upgrade a Kubernetes cluster with a minor version that isn't supported?
 
-If you're on a version that has fallen out of support per the [supported Kubernetes versions list](#supported-kubernetes-versions), it means you're outside of support and need to upgrade. Upgrades from unsupported version to supported versions are allowed. For example:
+If you're on a version that falls out of support per the [supported Kubernetes versions list](#supported-kubernetes-versions), you need to upgrade. You can upgrade from unsupported versions to supported versions. For example:
 
 - If the lowest supported AKS minor version is _1.33_ and you're on _1.32_ or older, you're outside of support.
 - If you successfully upgrade from _1.32_ to _1.33_ or higher, you're back within our support policies.
