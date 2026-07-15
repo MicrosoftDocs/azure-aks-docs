@@ -416,7 +416,7 @@ Yes, you can skip minor versions in some cases. However, if you upgrade the cont
 | --- | --- | --- | --- | --- |
 | LTS | Higher LTS | Yes | Target must be listed by AKS and satisfy version skew and validation checks. | Supported |
 | Unsupported LTS | Supported LTS | Conditional | Target must be listed by AKS and satisfy validation checks. | Unsupported recovery path |
-| Unsupported non-LTS | LTS | Conditional | LTS target must be listed by AKS and satisfy validation checks. Control-plane-only upgrades are not supported; a full cluster upgrade is required. | Unsupported recovery path |
+| Unsupported non-LTS | LTS | Conditional | LTS target must be listed by AKS and satisfy validation checks. Control-plane-only upgrades aren't supported; a full cluster upgrade is required. | Unsupported recovery path |
 | Unsupported non-LTS | Lowest supported community version | Yes | Use the oldest supported GA target offered by AKS. | Unsupported recovery path |
 | Supported non-LTS | Higher community version | No | Upgrade one minor version at a time. | Supported |
 
