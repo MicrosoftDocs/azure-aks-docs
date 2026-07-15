@@ -403,7 +403,6 @@ The [version skew policy](https://kubernetes.io/releases/version-skew-policy/) n
 
 Yes, you can skip minor versions in some cases. However, if you upgrade the control plane independently from the node pools, you must satisfy Kubernetes [version skew policies](https://kubernetes.io/releases/version-skew-policy/). The Kubernetes version skew policy currently supports only N-3, so the control plane and agent pools must be within N-3 of each other.
 
-Starting version definitions:
 
 - **LTS**: A version with the AKS Long-Term Support plan enabled. See [LTS versions](#lts-versions)
 - **Unsupported LTS**: An LTS-enabled version that is past its LTS end-of-life date in the [LTS versions](#lts-versions) table above.
