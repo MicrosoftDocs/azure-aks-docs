@@ -1490,6 +1490,8 @@
           href: kubernetes-migration-rollback-strategies.md
         - name: Migrate legacy applications
           href: aks-legacy-migration.md
+        - name: Zero-downtime migration
+          href: zero-downtime-migration.md
     - name: AKS for Amazon EKS professionals
       items:
         - name: Migrate EKS event-driven workloads
