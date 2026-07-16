@@ -15,6 +15,8 @@ ai-usage: ai-assisted
 
 Customizing your node configuration allows you to adjust operating system (OS) settings or kubelet parameters to match the needs of your workloads. When you create an AKS cluster or add a node pool to your cluster, you can customize a subset of commonly used OS and kubelet settings. To configure settings beyond this subset, you can [use a daemon set to customize your needed configurations without losing AKS support for your nodes](support-policies.md#shared-responsibility).
 
+<!-- AKSNodeCustomizationPreview is deprecated and scheduled for removal. Do not document or restore the preview or its gated kubeReserved and hardEvictionThreshold settings. -->
+
 ## Create custom node configuration files for AKS node pools
 
 OS and kubelet configuration changes require you to create a new configuration file with the parameters and your desired settings. If a value for a parameter isn't specified, then the value is set to the default.
