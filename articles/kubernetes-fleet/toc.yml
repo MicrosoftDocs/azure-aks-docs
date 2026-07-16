@@ -96,8 +96,10 @@
           href: howto-monitor-update-runs.md       
     - name: Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform
       href: howto-migrate-updates-from-terraform.md
-    - name: Place and manage workloads on multiple clusters
+    - name: Manage Kubernetes workloads on multiple clusters
       items:
+        - name: Safely move running workloads between clusters
+          href: howto-move-workloads-between-clusters.md        
         - name: Access Fleet Manager hub cluster
           href: access-fleet-hub-cluster-kubernetes-api.md
         - name: Placing cluster-scoped resources
