@@ -1488,6 +1488,8 @@
           href: /azure/migrate/tutorial-app-containerization-aspnet-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: Kubernetes migration rollback strategies
           href: kubernetes-migration-rollback-strategies.md
+        - name: Migrate legacy applications
+          href: aks-legacy-migration.md
     - name: AKS for Amazon EKS professionals
       items:
         - name: Migrate EKS event-driven workloads
