@@ -43,9 +43,6 @@ In AKS, reserved memory consists of the sum of two values:
 
     For more information, see [Configure maximum pods per node in an AKS cluster][maximum-pods].
 
-> [!NOTE]
-> To customize `kubeReserved` CPU and memory values or `hardEvictionThreshold` on Linux node pools, use the preview custom node configuration settings and register the `AKSNodeCustomizationPreview` feature flag. For more information, see [Customize the node configuration for Azure Kubernetes Service (AKS) node pools][custom-node-configuration].
-
 **AKS versions prior to 1.29**
 
 * **`kubelet` daemon** has the *memory.available < 750 Mi* eviction rule by default. This rule ensures that a node has at least 750 Mi allocatable at all times. When a host is below that available memory threshold, the `kubelet` triggers the termination of one of the running pods and free up memory on the host machine.
