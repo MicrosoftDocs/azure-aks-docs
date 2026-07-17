@@ -29,7 +29,6 @@ The `imageFamily` field sets the default VM image and bootstrapping logic for no
 - **`Ubuntu`**: Ubuntu is the default Linux distribution for AKS nodes.
   - OS version defaults change based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes versions 1.25 to 1.33. Ubuntu 24.04 is default for Kubernetes versions 1.34 and later.
 - **`AzureLinux`**: Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more information, see the [Azure Linux documentation](/azure/aks/use-azure-linux)
-- **`AzureContainerLinux`**: Azure Container Linux is Microsoft's immutable, container-optimized OS for AKS workloads. For more information, see the [Azure Container Linux documentation](/azure/aks/azure-container-linux-overview).
 
 #### Example image family configuration
 
@@ -39,12 +38,7 @@ The following example configures the `AKSNodeClass` to use the `AzureLinux` imag
 spec:
   imageFamily: AzureLinux
 ```
-The following example configures the `AKSNodeClass` to use the `AzureContainerLinux` image family:
 
-```yaml
-spec:
-  imageFamily: AzureContainerLinux
-```
 #### FIPS compliant node image configuration
 You can also enable Federal Information Processing Standards (FIPS) compliant node images. For more information about FIPS in AKS, see [FIPS documentation](./enable-fips-nodes.md).
 
