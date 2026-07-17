@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 07/14/2026
+ms.date: 07/17/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -212,6 +212,10 @@ Yes. The after stage wait begins at the same time as the approval. Both must be 
 ### Can approvals be added to existing update strategies?
 
 Yes. You can edit the existing strategy to include approvals. However, existing update runs that you created by using the strategy aren't updated.
+
+### How do scheduled start gates interact with AKS cluster maintenance windows?
+
+Scheduled start gates and AKS cluster [planned maintenance windows](/azure/aks/planned-maintenance) are independent controls. Both conditions must be met before a cluster starts upgrading. For example, if a scheduled start gate completes at 2:00 AM but a cluster's maintenance window doesn't open until 6:00 AM, the cluster waits until 6:00 AM to begin its upgrade.
 
 ## Cluster resource placement FAQs
 

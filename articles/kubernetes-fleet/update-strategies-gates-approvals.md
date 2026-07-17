@@ -2,7 +2,7 @@
 title: Add approvals to Azure Kubernetes Fleet Manager Update Run Strategies
 description: Add approvals to Azure Kubernetes Fleet Manager Update Strategies.
 ms.topic: how-to
-ms.date: 06/15/2026
+ms.date: 07/17/2026
 author: dvadas
 ms.author: davidvadas
 ms.service: azure-kubernetes-fleet-manager
@@ -253,6 +253,9 @@ Once an update run with a strategy containing approvals is started, the update r
     | jq '.status.stages[] | .beforeGates + .afterGates | .[] | select(.status.state == "Pending")'
     ```
 
+    > [!NOTE]
+    > The update run status doesn't include the gate type. If your strategy uses multiple gate types (for example, both approval and scheduled start gates), this command returns all pending gates regardless of type. To filter by gate type, use the [`az fleet gate list`][az-fleet-gate-list] command with `--gate-type Approval` as shown in the following example.
+
 1. Once you find the gate that you want to approve, identify its `gateId`. Note down the last part of the gateId (after the final slash). For example, for the Pending approval in the prior example response use **aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e**.
 
 1. Grant the approval by using the [`az fleet gate approve`][az-fleet-gate-approve] command. Use the identifier that you retrieved in the previous step as the argument to –name.
@@ -269,12 +272,13 @@ Alternatively, you can list all gates across all update runs in a fleet.
 > [!NOTE]
 > The list response may be large as multiple approvals can be returned. It may be more difficult to find the gate that you want to approve this way. 
 
-1. Use the [`az fleet gate list`][az-fleet-gate-list] command, filtering for gates in **Pending** state. 
+1. Use the [`az fleet gate list`][az-fleet-gate-list] command, filtering for approval gates in **Pending** state. 
 
     ```azurecli-interactive
     az fleet gate list \ 
      --resource-group $GROUP \ 
      --fleet-name $FLEET \ 
+     --gate-type Approval \
      --state Pending 
     ```
 
@@ -332,6 +336,7 @@ After your update run is complete, you may wish to clean up the gate resources t
 
 ## Next steps
 
+* [How-to: Start a group or stage at a scheduled day and time](./update-strategies-gates-scheduled-start.md).
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
 * [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).

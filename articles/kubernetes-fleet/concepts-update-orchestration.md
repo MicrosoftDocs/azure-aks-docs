@@ -1,7 +1,7 @@
 ---
 title: "Safely update Kubernetes and node images across multiple clusters"
 description: This article describes the foundational concepts for Azure Kubernetes Fleet Manager Update Runs for safe and reliable multi-cluster updates.
-ms.date: 07/08/2026
+ms.date: 07/17/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -36,7 +36,11 @@ To achieve the best results when using update runs, it's important to understand
         
         * **Maximum Concurrency (preview)**: use the [Maximum Concurrency](#maximum-concurrency-preview) configuration to change how many clusters are upgraded in parallel. You can configure this behavior at both the Stage and Group level.
 
-        * **Approval gates**: You can configure these gates before or after each Stage or Group. Approvals pause the update run, which either automated or manual checks use to determine if it's OK to proceed. After the approval is cleared, the update run continues.
+        * **Gates**: Pause the update run until their condition is met.
+
+          * **Approval gates (preview)**: Can be configured before or after each stage or group. Approvals pause the update run, allowing either you or automations that you've set up to check that it's OK to proceed. After you or your automation grants approval, the update run will continue.
+
+          * **Scheduled start gates (preview)**: Can be configured before each stage or group. Scheduled start gates pause the update run until a specified day and time. The gate completes automatically when the scheduled time is reached, or you can manually complete it to proceed at any time.
 
 * **Auto-upgrade Profile**: automatically create and start an update run when new Kubernetes or node image versions are made available by AKS. For further information, see [understanding auto-upgrade profiles](#understanding-update-strategies).
 
