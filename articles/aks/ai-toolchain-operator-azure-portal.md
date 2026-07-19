@@ -27,13 +27,15 @@ Built on top of the open-source KAITO project, the AI toolchain operator managed
 ## Before you begin
 
 - This article assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for AKS](./concepts-clusters-workloads.md).
-- For **_all hosted model preset images_** and default resource configuration, see the [KAITO GitHub repository](https://github.com/kaito-project/kaito/tree/main/presets).
-- The AI toolchain operator add-on currently supports KAITO **version 0.6.0**. Please make a note of this in considering your choice of model from the KAITO model repository.
+- For ***the curated supported model list*** and default resource configuration, see the [KAITO GitHub document](https://kaito-project.github.io/kaito/docs/presets).
+-The AI toolchain operator add-on typically lags one release behind the latest upstream KAITO version. Please take this into consideration when choosing a model from the KAITO model repository.
+
 
 ## Limitations
 
 - `AzureLinux` and `Windows` OS SKU aren't currently supported.
 - AMD GPU virtual machine (VM) sizes aren't a supported `instanceType` in a KAITO workspace.
+- Virtual machine (VM) sizes using Nvidia GPUs older than the Ampere architecture (such as the T4, V100, M60, and K80) are not supported.
 - AI toolchain operator add-on is supported in **public** Azure regions.
 
 ## Prerequisites
