@@ -15,7 +15,7 @@ ai-usage: ai-assisted
 
 **Applies to**: :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
 
-For most production workloads, AKS Automatic is the recommended production-ready default for AKS. LocalDNS is preconfigured in AKS Automatic clusters. In AKS Standard, you can enable and configure LocalDNS per node pool.
+For most production workloads, AKS Automatic is the recommended production-ready default for AKS. LocalDNS is preconfigured in AKS Automatic clusters. In AKS Standard, LocalDNS behavior depends on the Kubernetes version and the node pool's existing LocalDNS profile. Starting with Kubernetes 1.36, AKS enables LocalDNS in `Preferred` mode when a node pool doesn't already have an explicit LocalDNS profile. This behavior applies when creating or updating a node pool, including during a Kubernetes version upgrade. To prevent automatic enablement, explicitly configure the node pool with `mode` set to `Disabled`.
 
 LocalDNS is a feature in AKS that improves DNS resolution performance and resiliency for workloads running in your cluster. By running a DNS proxy on each node, LocalDNS reduces DNS query latency, improves reliability during transient network disruptions, and provides advanced caching and forwarding controls when you need customization.
 
@@ -25,9 +25,22 @@ To learn what LocalDNS is, including architecture details and key capabilities, 
 
 | Behavior | AKS Automatic | AKS Standard |
 | -------- | ------------- | ------------- |
-| LocalDNS availability | Preconfigured by default | Optional |
+| LocalDNS availability | Preconfigured by default | Optional. Enabled in `Preferred` mode unless explicitly set to `Disabled` |
 | Typical action | Validate and monitor defaults, customize only when required | Enable, configure, and tune per node pool |
 | Production guidance | Recommended production-ready default for most AKS workloads | Use when you need full manual control of cluster configuration |
+
+> [!IMPORTANT]
+> Upgrading an AKS Standard node pool to Kubernetes 1.36 or later can activate LocalDNS if the node pool doesn't have an explicit LocalDNS profile. Activating LocalDNS changes the DNS forwarding path used by workloads.
+>
+> Before upgrading:
+>
+> 1. Check whether each node pool has an explicit LocalDNS profile.
+> 2. Verify that every custom VNet DNS server accepts DNS queries over both UDP and TCP port 53 from the AKS node subnet.
+> 3. Verify that NSGs, firewalls, NVAs, and routes permit both protocols.
+> 4. Test the change in a nonproduction node pool.
+> 5. If the network isn't ready for LocalDNS, explicitly set `mode` to `Disabled` before upgrading.
+>
+> Changing the LocalDNS mode triggers a node reimage operation.
 
 ## Best practices for LocalDNS configuration
 
@@ -67,6 +80,17 @@ You configure LocalDNS at the node pool level in AKS, so you can tailor behavior
 In AKS Automatic, LocalDNS is already preconfigured, so this section is primarily for customization.
 
 In AKS Standard, use this section to enable and configure LocalDNS.
+
+## Validate custom DNS before enabling LocalDNS
+
+If your VNet uses custom DNS servers, test both DNS transports from an AKS node before enabling LocalDNS:
+
+```bash
+dig +udp @<custom-dns-ip> <fqdn>
+dig +tcp @<custom-dns-ip> <fqdn>
+```
+
+Both commands must return a valid response. If UDP succeeds but TCP times out, don't enable LocalDNS until TCP port 53 is allowed through the complete network path and the custom DNS server is configured to accept TCP queries.
 
 ## Enable LocalDNS on a node pool
 
@@ -218,12 +242,13 @@ For production workloads in AKS Automatic, keep the preconfigured LocalDNS behav
 The following table summarizes LocalDNS behavior for each mode and Kubernetes version:
 
 | Kubernetes version | Preferred | Required | Disabled |
-| ------------------ | --------- | -------- | -------- |
+| --- | --- | --- | --- |
 | Earlier than 1.31 | Not supported | Not supported | Not supported |
-| 1.31 and later | Config validated, not installed | Installed and enforced | Config validated, not installed |
+| 1.31 through 1.35 | Configuration validated; LocalDNS isn't installed | LocalDNS installed and enforced | LocalDNS isn't installed |
+| 1.36 and later | LocalDNS installed and enabled | LocalDNS installed and enforced | LocalDNS isn't installed |
 
 > [!NOTE]
-> The `Preferred` mode currently serves as a validation-only mode. In a future Kubernetes version, this mode will transition to automatically enabling LocalDNS. For production deployments today, use `Required` mode to enable LocalDNS.
+> Starting with Kubernetes 1.36, `Preferred` enables LocalDNS. When an existing node pool has no explicit LocalDNS profile, AKS defaults the profile to `Preferred` during a node pool create or update operation, including a Kubernetes version upgrade. An explicitly configured profile, including `Disabled`, is preserved.
 
 ### Server blocks for LocalDNS
 
@@ -318,6 +343,18 @@ If DNS queries to specific domains are failing after enabling LocalDNS:
 1. Check if you have domain-specific overrides in your _localdnsconfig.json_ that might be misconfigured.
 1. Temporarily try removing domain-specific overrides and using only the default `.` configuration.
 1. Check if the issue occurs with both User Datagram Protocol (UDP) and Transmission Control Protocol (TCP) by adjusting the `protocol` setting.
+1. Check the CoreDNS logs for time-outs to the LocalDNS addresses `169.254.10.10:53` or `169.254.10.11:53`. From an affected node, test the upstream custom DNS server separately over UDP and TCP:
+   
+    ```bash
+    dig +udp @<custom-dns-ip> <fqdn>
+    dig +tcp @<custom-dns-ip> <fqdn>
+    ```
+
+    If UDP succeeds but TCP fails, verify that:
+    - The custom DNS server listens on TCP port 53.
+    - NSGs and firewalls allow TCP port 53 from the AKS node subnet.
+    - NVAs and routes don't drop or asymmetrically route TCP DNS traffic.
+   As a temporary mitigation, you can set the LocalDNS mode to `Disabled` and reimage the affected node pool. The durable solution is to support both UDP and TCP DNS traffic end to end.
 
 ### Update VNet DNS servers for LocalDNS
 
