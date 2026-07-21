@@ -18,12 +18,12 @@ Customizing your node configuration allows you to adjust operating system (OS) s
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-Register the `AKSNodeCustomizationPreview` feature flag in your Azure subscription before you use the preview `kubeReserved` and `hardEvictionThreshold` kubelet settings.
+Register the `CustomNodeConfigPreview` feature flag in your Azure subscription before you use the preview `kubeReserved` and `hardEvictionThreshold` kubelet settings.
 
-1. Register the `AKSNodeCustomizationPreview` feature flag by using the [`az feature register`][az-feature-register] command.
+1. Register the `CustomNodeConfigPreview` feature flag by using the [`az feature register`][az-feature-register] command.
 
   ```azurecli-interactive
-  az feature register --namespace "Microsoft.ContainerService" --name "AKSNodeCustomizationPreview"
+  az feature register --namespace "Microsoft.ContainerService" --name "CustomNodeConfigPreview"
   ```
 
   It takes a few minutes for the status to show _Registered_.
@@ -31,7 +31,7 @@ Register the `AKSNodeCustomizationPreview` feature flag in your Azure subscripti
 1. Verify the registration status by using the [`az feature show`][az-feature-show] command.
 
   ```azurecli-interactive
-  az feature show --namespace "Microsoft.ContainerService" --name "AKSNodeCustomizationPreview"
+  az feature show --namespace "Microsoft.ContainerService" --name "CustomNodeConfigPreview"
   ```
 
 1. When the status shows _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider by using the [`az provider register`][az-provider-register] command.
@@ -86,7 +86,7 @@ To use the Node Customization Preview kubelet settings on Linux node pools, add 
 }
 ```
 
-Use `kubeReserved` and `hardEvictionThreshold` only on Linux node pools. Both settings require the `AKSNodeCustomizationPreview` feature flag.
+Use `kubeReserved` and `hardEvictionThreshold` only on Linux node pools. Both settings require the `CustomNodeConfigPreview` feature flag.
 
 #### [Windows node pools](#tab/windows-node-pools)
 
@@ -138,7 +138,7 @@ Currently unsupported.
 >
 > - If you specify a configuration when creating a cluster, the configuration applies only to the nodes in the initial node pool. Any settings not configured in the JSON file retain their default values.
 > - `CustomLinuxOsConfig` isn't supported for the Windows OS type.
-> - The preview `kubeReserved` and `hardEvictionThreshold` kubelet settings are supported only for Linux node pools and require the `AKSNodeCustomizationPreview` feature flag. Complete the registration steps in [Prerequisites for Node Customization Preview](#prerequisites-for-node-customization-preview) before you create the cluster or node pool.
+> - The preview `kubeReserved` and `hardEvictionThreshold` kubelet settings are supported only for Linux node pools and require the `CustomNodeConfigPreview` feature flag. Complete the registration steps in [Prerequisites for Node Customization Preview](#prerequisites-for-node-customization-preview) before you create the cluster or node pool.
 
 Create a new cluster using custom configuration files using the [`az aks create`][az-aks-create] command and specifying your configuration files for the `--kubelet-config` and `--linux-os-config` parameters. The following example command creates a new cluster with the custom `./linuxkubeletconfig.json` and `./linuxosconfig.json` files:
 
@@ -153,7 +153,7 @@ az aks create --name <cluster-name> --resource-group <resource-group-name> --kub
 >
 > - When you add a Linux node pool to an existing cluster, you can specify the kubelet configuration, OS configuration, or both. When you add a Windows node pool to an existing cluster, you can only specify the kubelet configuration. If you specify a configuration when adding a node pool, the configuration applies only to the nodes in the new node pool. Any settings not configured in the JSON file retain their default values.
 > - `CustomKubeletConfig` is supported for Linux and Windows node pools.
-> - The preview `kubeReserved` and `hardEvictionThreshold` kubelet settings are supported only for Linux node pools and require the `AKSNodeCustomizationPreview` feature flag. Complete the registration steps in [Prerequisites for Node Customization Preview](#prerequisites-for-node-customization-preview) before you create the cluster or node pool.
+> - The preview `kubeReserved` and `hardEvictionThreshold` kubelet settings are supported only for Linux node pools and require the `CustomNodeConfigPreview` feature flag. Complete the registration steps in [Prerequisites for Node Customization Preview](#prerequisites-for-node-customization-preview) before you create the cluster or node pool.
 
 ### [Linux node pools](#tab/linux-node-pools)
 
@@ -197,11 +197,11 @@ After you apply custom node configuration, you can confirm the settings were app
 | `containerLogMaxFiles` | ≥ 2 | 5 | The maximum number of container log files that can be present for a container. |
 | `podMaxPids` | -1 to kernel PID limit | -1 (∞)| The maximum number of process IDs that can run in a Pod. |
 | [`seccompDefault`][secure-container-access] | `Unconfined`, `RuntimeDefault` | `Unconfined` | Sets the default seccomp profile for all workloads. `RuntimeDefault` uses containerd's default seccomp profile, restricting certain system calls to enhance security. Restricted syscalls fail. `Unconfined` places no restrictions on syscalls, allowing all system calls and reducing security. For more information, see the [containerd default seccomp profile](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51). This parameter is in preview. [Register][register-preview] the "KubeletDefaultSeccompProfilePreview" feature flag using the [`az feature register`][az-feature-register] command with `--namespace "Microsoft.ContainerService"`.|
-| `kubeReserved.cpuMillicores` | 1 to the node pool CPU capacity in millicores | None | Reserves CPU for Kubernetes system daemons on Linux node pools. This parameter is in preview and requires the `AKSNodeCustomizationPreview` feature flag. |
-| `kubeReserved.memoryMB` | 1 to the node pool memory capacity in MiB | None | Reserves memory for Kubernetes system daemons on Linux node pools. This parameter is in preview and requires the `AKSNodeCustomizationPreview` feature flag. |
-| `hardEvictionThreshold.memoryAvailable` | `<number>Ki`, `<number>Mi`, `<number>Gi`, or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for available memory on Linux node pools. This parameter is in preview and requires the `AKSNodeCustomizationPreview` feature flag. |
-| `hardEvictionThreshold.nodeFsAvailable` | `<number>Ki`, `<number>Mi`, `<number>Gi`, or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for available node filesystem space on Linux node pools. This parameter is in preview and requires the `AKSNodeCustomizationPreview` feature flag. |
-| `hardEvictionThreshold.nodeFsInodesFree` | `<number>` or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for free node filesystem inodes on Linux node pools. This parameter is in preview and requires the `AKSNodeCustomizationPreview` feature flag. |
+| `kubeReserved.cpuMillicores` | 1 to the node pool CPU capacity in millicores | None | Reserves CPU for Kubernetes system daemons on Linux node pools. This parameter is in preview and requires the `CustomNodeConfigPreview` feature flag. |
+| `kubeReserved.memoryMB` | 1 to the node pool memory capacity in MiB | None | Reserves memory for Kubernetes system daemons on Linux node pools. This parameter is in preview and requires the `CustomNodeConfigPreview` feature flag. |
+| `hardEvictionThreshold.memoryAvailable` | `<number>Ki`, `<number>Mi`, `<number>Gi`, or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for available memory on Linux node pools. This parameter is in preview and requires the `CustomNodeConfigPreview` feature flag. |
+| `hardEvictionThreshold.nodeFsAvailable` | `<number>Ki`, `<number>Mi`, `<number>Gi`, or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for available node filesystem space on Linux node pools. This parameter is in preview and requires the `CustomNodeConfigPreview` feature flag. |
+| `hardEvictionThreshold.nodeFsInodesFree` | `<number>` or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for free node filesystem inodes on Linux node pools. This parameter is in preview and requires the `CustomNodeConfigPreview` feature flag. |
 
 ### Windows kubelet custom configuration
 
