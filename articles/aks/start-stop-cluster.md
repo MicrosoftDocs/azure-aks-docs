@@ -3,7 +3,7 @@ title: Stop and start an Azure Kubernetes Service (AKS) cluster
 description: Learn how to stop and start an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
 ms.custom: aks-reliability
-ms.date: 03/04/2026
+ms.date: 07/21/2026
 author: colinmixonn
 ms.author: schaffererin
 # Customer intent: As a cloud administrator, I want to stop and start my Kubernetes clusters, so that I can optimize costs during idle periods without losing my configuration.
@@ -34,7 +34,7 @@ When using the cluster stop/start feature, the following conditions apply:
 - You can't stop clusters which use the [Node Autoprovisioning (NAP)](node-autoprovision.md) feature.
 - The cluster state of a stopped AKS cluster is preserved for up to 12 months. If your cluster is stopped for more than 12 months, you can't recover the state. For more information, see the [AKS support policies](support-policies.md).
 - You can only perform start or delete operations on a stopped AKS cluster. To perform other operations, like scaling or upgrading, you need to start your cluster first.
-- If you provisioned PrivateEndpoints linked to private clusters, they need to be deleted and recreated again when starting a stopped AKS cluster.
+- For a private link-based AKS cluster, AKS recreates the API server private endpoint when you start the cluster. AKS places the private endpoint in the subnet used by the first node pool in the cluster configuration. If you replace the initial system node pool, another node pool might become the first node pool, and AKS might place the recreated private endpoint in a different subnet.
 - Because the stop process drains all nodes, any standalone pods (i.e. pods not managed by a Deployment, StatefulSet, DaemonSet, Job, etc.) will be deleted.
 - When you start your cluster back up, the following behavior is expected:
   - The IP address of your API server may change.
