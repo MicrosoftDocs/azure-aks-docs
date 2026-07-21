@@ -24,6 +24,9 @@ The control plane or API server is in an AKS-managed Azure resource group, and y
 
 When you create a private AKS cluster, AKS creates both private and public fully qualified domain names (FQDNs) with corresponding DNS zones by default. For detailed DNS configuration options, see [Configure a private DNS zone, private DNS subzone, or custom subdomain](#configuration-options-for-private-dns).
 
+> [!NOTE]
+> AKS places the API server private endpoint in the subnet used by the first node pool in the cluster configuration. If the first node pool changes, AKS might recreate the private endpoint in a different subnet during a [cluster stop/start operation](start-stop-cluster.md#about-the-cluster-stopstart-feature).
+
 ## Region availability
 
 Private clusters are available in public regions, Azure Government, and Microsoft Azure operated by 21Vianet regions where [AKS is supported][aks-supported-regions].

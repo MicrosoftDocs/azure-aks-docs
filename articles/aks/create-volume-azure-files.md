@@ -4,7 +4,7 @@ description: Learn how to create and manage persistent volumes using Azure Files
 ms.topic: how-to
 ms.subservice: aks-storage
 ms.service: azure-kubernetes-service
-ms.date: 07/10/2026
+ms.date: 07/21/2026
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to learn how to create and manage persistent volumes using Azure Files CSI drivers in Azure Kubernetes Service (AKS) so that I can provide scalable and reliable storage solutions for my containerized applications."
@@ -139,7 +139,7 @@ The following table includes parameters you can use to define a custom storage c
 | `useDataPlaneAPI` | Specify whether to use [data plane API][data-plane-api] for file share create/delete/resize, which could solve the SRP API throttling issue because the data plane API has almost no limit, while it would fail when there's firewall or Vnet settings on storage account. The `oauth` value (supported from driver v1.33.0) uses an OAuth token for data plane API authentication. | `true`, `false`, or `oauth` | No | `false` |
 | --- | **The following parameters are only for NFS protocol** | --- | --- | --- |
 | `allowSharedKeyAccess` | Allow or disallow shared key access for the storage account created by the driver. | `true` or `false` | No | `true` |
-| `encryptInTransit` | Support [encryption in transit (EiT) for NFS shares](/azure/storage/files/encryption-in-transit-for-nfs-shares) (preview). | `true` or `false` | No | `false` |
+| `encryptInTransit` | Support [encryption in transit (EiT) for NFS shares](/azure/storage/files/encryption-in-transit-for-nfs-shares). | `true` or `false` | No | `false` |
 | `mountPermissions` | Mounted folder permissions. The default is `0777`. If set to `0`, driver doesn't perform `chmod` after mount | `0777` | No | |
 | `rootSquashType` | Specify root squashing behavior on the share. The default is `NoRootSquash` | `AllSquash`, `NoRootSquash`, `RootSquash` | No | |
 | --- | **The following parameters are only for virtual network setting (for example: NFS, private endpoint)** | --- | --- | --- |
@@ -839,7 +839,7 @@ spec:
       shareName: "{file-share-name}"
 ```
 
-## Use managed identity to access Azure Files storage (preview)
+## Use managed identity to access Azure Files storage
 
 Azure Files now supports managed identity based authentication for SMB access. This enables your applications to securely access Azure Files without storing or managing credentials.
 
@@ -937,12 +937,12 @@ spec:
         clientID: "xxxxx-xxxx-xxx-xxx-xxxxxxx"
 ```
 
-## Use workload identity to access Azure Files storage (preview)
+## Use workload identity to access Azure Files storage
 
 Azure Files now supports workload identity-based authentication for SMB access. Workload identity enables pod-level, least-privilege access to Azure Files without tying application identity to the node lifecycle.
 
 > [!NOTE]
-> Workload identity support for Azure Files in AKS is available in preview starting with AKS version 1.35.0 on Linux nodes.
+> Workload identity support for Azure Files in AKS is available starting with AKS version 1.35.0 on Linux nodes.
 
 ### Prerequisites for using workload identity to access Azure Files storage
 Before using workload identity to access Azure Files from AKS, complete the following prerequisites.
