@@ -2,10 +2,11 @@
 title: "Access the Kubernetes API for an Azure Kubernetes Fleet Manager Hub Cluster"
 description: Learn how to access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster.
 ms.topic: how-to
-ms.date: 04/01/2024
+ms.date: 07/22/2026
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-fleet-manager
+ai-usage: ai-assisted
 zone_pivot_groups: public-hub-private-hub
 # Customer intent: As a Kubernetes administrator, I want to access the Kubernetes API for my Azure Kubernetes Fleet Manager hub cluster, so that I can manage resource propagation and monitor member clusters.
 ---
@@ -24,6 +25,7 @@ If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created w
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 * You need a Kubernetes Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 * The identity (user or service principal) that you're using needs to have Microsoft.ContainerService/fleets/listCredentials/action permissions on the Kubernetes Fleet resource.
+* You have `kubelogin` installed. The hub cluster kubeconfig uses Microsoft Entra authentication, so `kubectl` relies on `kubelogin` to sign in. For more information, see [Use kubelogin to authenticate users in Azure Kubernetes Service (AKS)](../aks/kubelogin-authentication.md).
 
 :::zone-end
 
@@ -47,6 +49,7 @@ Using Azure Bastion protects your private hub cluster from exposing endpoints to
   * Microsoft.ContainerService/fleets/listCredentials/action permissions on the Kubernetes Fleet resource.
   * Microsoft.Network/bastionHosts/read	on the Bastion Resource.
   * Microsoft.Network/virtualNetworks/read on the virtual network of the private hub cluster.
+* You have `kubelogin` installed. The hub cluster kubeconfig uses Microsoft Entra authentication, so `kubectl` relies on `kubelogin` to sign in. For more information, see [Use kubelogin to authenticate users in Azure Kubernetes Service (AKS)](../aks/kubelogin-authentication.md).
 
 :::zone-end
 
@@ -78,6 +81,9 @@ Using Azure Bastion protects your private hub cluster from exposing endpoints to
     Merged "hub" as current context in /home/fleet/.kube/config
     ```
 
+   > [!NOTE]
+   > The kubeconfig that `az fleet get-credentials` generates uses Microsoft Entra authentication and defaults to device code sign-in. If your tenant enforces a Conditional Access policy that blocks the device code flow, `kubectl` commands fail to authenticate. To convert the kubeconfig to use Azure CLI authentication instead, run `kubelogin convert-kubeconfig -l azurecli`. For more information, see [Can't connect to Azure Kubernetes Fleet Manager hub cluster](/troubleshoot/azure/kubernetes-fleet/unable-connect-azure-fleet-manager).
+
 4. Set the following environment variable for the `FLEET_ID` value of the hub cluster's Kubernetes Fleet resource:
 
     ```azurecli-interactive
@@ -92,6 +98,8 @@ Using Azure Bastion protects your private hub cluster from exposing endpoints to
     * Azure Kubernetes Fleet Manager RBAC Writer
     * Azure Kubernetes Fleet Manager RBAC Admin
     * Azure Kubernetes Fleet Manager RBAC Cluster Admin
+
+   Choose the least-privileged role for your task. The Azure Kubernetes Fleet Manager RBAC Reader role is sufficient for read-only access, such as listing member clusters. The Azure Kubernetes Fleet Manager RBAC Cluster Admin role is required only for cluster-scoped write operations, such as creating namespaces or cluster-scoped resource placements. The following example uses Cluster Admin.
 
     ```azurecli-interactive
     export IDENTITY=$(az ad signed-in-user show --query "id" --output tsv)
@@ -117,6 +125,10 @@ Using Azure Bastion protects your private hub cluster from exposing endpoints to
       "type": "Microsoft.Authorization/roleAssignments"
     }
     ```
+
+   > [!NOTE]
+   > Azure role assignments can take up to 10 minutes to take effect because Azure Resource Manager caches role assignment data. Until the change propagates, `kubectl` commands might return transient `Unauthorized` (HTTP 401) or `Forbidden` (HTTP 403) errors. If access is still denied after you assign the role, wait and retry, or sign out and sign back in to refresh your access token. For more information, see [Troubleshoot Azure RBAC](/azure/role-based-access-control/troubleshooting#symptom---role-assignment-changes-are-not-being-detected).
+
 :::zone target="docs" pivot="public-hub"
 6. Verify that you can access the API server by using the `kubectl get memberclusters` command:
 
@@ -163,6 +175,7 @@ Using Azure Bastion protects your private hub cluster from exposing endpoints to
 
 * [Propagate cluster-scoped resources from a Fleet Manager hub cluster to member clusters](./quickstart-resource-propagation.md)
 * [Propagate namespace-scoped resources from a Fleet Manager hub cluster to member clusters](./quickstart-namespace-scoped-resource-propagation.md)
+* [Can't connect to Azure Kubernetes Fleet Manager hub cluster](/troubleshoot/azure/kubernetes-fleet/unable-connect-azure-fleet-manager)
 
 <!-- LINKS --->
 [az-fleet-get-credentials]: /cli/azure/fleet#az-fleet-get-credentials
