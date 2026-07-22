@@ -99,7 +99,7 @@ Using Azure Bastion protects your private hub cluster from exposing endpoints to
     * Azure Kubernetes Fleet Manager RBAC Admin
     * Azure Kubernetes Fleet Manager RBAC Cluster Admin
 
-   Choose the least-privileged role for your task. The Azure Kubernetes Fleet Manager RBAC Reader role is sufficient for read-only access, such as listing member clusters. The Azure Kubernetes Fleet Manager RBAC Cluster Admin role is required only for cluster-scoped write operations, such as creating namespaces or cluster-scoped resource placements. The following example uses Cluster Admin.
+   Choose the least-privileged role that covers the resources you need. The Azure Kubernetes Fleet Manager RBAC Reader, RBAC Writer, and RBAC Admin roles grant read-only, read/write, and administrative access to *namespaced* Kubernetes resources on the hub cluster. The Azure Kubernetes Fleet Manager RBAC Cluster Admin role also grants access to *cluster-scoped* resources and custom resources, such as `MemberCluster` and `ClusterResourcePlacement`. This article uses Cluster Admin because the verification step lists the cluster-scoped `memberclusters` resource; creating namespaces or cluster-scoped resource placements likewise requires cluster-scoped access. For a description of each role, see [Grant access to Azure Kubernetes Fleet Manager resources with Azure role-based access control](concepts-rbac.md).
 
     ```azurecli-interactive
     export IDENTITY=$(az ad signed-in-user show --query "id" --output tsv)
@@ -127,7 +127,7 @@ Using Azure Bastion protects your private hub cluster from exposing endpoints to
     ```
 
    > [!NOTE]
-   > Azure role assignments can take up to 10 minutes to take effect because Azure Resource Manager caches role assignment data. Until the change propagates, `kubectl` commands might return transient `Unauthorized` (HTTP 401) or `Forbidden` (HTTP 403) errors. If access is still denied after you assign the role, wait and retry, or sign out and sign back in to refresh your access token. For more information, see [Troubleshoot Azure RBAC](/azure/role-based-access-control/troubleshooting#symptom---role-assignment-changes-are-not-being-detected).
+   > Azure role assignments can take up to 10 minutes to take effect because Azure Resource Manager caches role assignment data. Until the change propagates, `kubectl` commands might return transient `Unauthorized` (HTTP 401) or `Forbidden` (HTTP 403) errors. A `Forbidden` response is returned by Kubernetes authorization; if it persists after the assignment propagates, confirm that your assigned role covers the resource you're accessing. If access is still denied after you assign the role, wait and retry, or sign out and sign back in to refresh your access token. For more information about role assignment propagation delays, see [Troubleshoot Azure RBAC](/azure/role-based-access-control/troubleshooting#symptom---role-assignment-changes-are-not-being-detected).
 
 :::zone target="docs" pivot="public-hub"
 6. Verify that you can access the API server by using the `kubectl get memberclusters` command:
