@@ -44,8 +44,21 @@ Private clusters are available in public regions, Azure Government, and Microsof
 
 - Azure CLI version 2.28.0 or higher. Find your version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - If using Azure Resource Manager (ARM) or the Azure REST API, the AKS API version must be _2021-05-01 or higher_.
-- To use a custom DNS server, add the Azure public IP address _168.63.129.16_ as the upstream DNS server in the custom DNS server, and make sure to add this public IP address as the _first_ DNS server. For more information about the Azure IP address, see [What is IP address 168.63.129.16?][virtual-networks-168.63.129.16]
-  - The cluster's DNS zone should be what you forward to _168.63.129.16_. You can find more information on zone names in [Azure services DNS zone configuration][az-dns-zone].
+- If you use a custom DNS server:
+    - Configure the Azure platform IP address `168.63.129.16` as an upstream DNS server and place it first in the upstream server list. For more information, see [What is IP address 168.63.129.16?](/azure/virtual-network/what-is-ip-address-168-63-129-16).
+    - Forward the cluster's private DNS zone to `168.63.129.16`. For zone-name information, see [Azure services DNS zone configuration](/azure/private-link/private-endpoint-dns#azure-services-dns-zone-configuration).
+    - Ensure that AKS nodes can reach the custom DNS server over both UDP and TCP port 53.
+    - Ensure that the custom DNS server listens and responds on both UDP and TCP port 53.
+    - Ensure that NSGs, firewalls, NVAs, and routes don't block either protocol.
+
+> [!IMPORTANT]
+> Starting with Kubernetes 1.36, LocalDNS can become active when an AKS Standard node pool without an explicit LocalDNS profile is created or upgraded. `PreferUDP` can still retry or fall back over TCP. Validate both protocols before upgrading:
+>
+> ```bash
+> dig +udp @<custom-dns-ip> <private-or-public-fqdn>
+> dig +tcp @<custom-dns-ip> <private-or-public-fqdn>
+> ```
+
 - Existing AKS clusters enabled with API Server VNet integration can have private cluster mode enabled. For more information, see [Enable or disable private cluster mode on an existing cluster with API Server VNet integration][api-server-vnet-integration].
 - If you need to enable Azure Container Registry on a private AKS cluster, [set up a private link for the container registry in the cluster virtual network (VNet)][container-registry-private-link] or set up peering between the container registry's VNet and the private cluster's VNet.
 - [kubectl](https://kubernetes.io/releases/download/) installed. You can install it locally using the [`az aks install-cli`][az-aks-install-cli] command.
