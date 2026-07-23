@@ -1486,6 +1486,8 @@
           href: /azure/migrate/tutorial-app-containerization-java-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: ASP.NET app containerization and migration
           href: /azure/migrate/tutorial-app-containerization-aspnet-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Legacy .NET / Windows app migration
+          href: migrate-legacy-dotnet-to-aks.md
         - name: Kubernetes migration rollback strategies
           href: kubernetes-migration-rollback-strategies.md
         - name: Migrate legacy applications
