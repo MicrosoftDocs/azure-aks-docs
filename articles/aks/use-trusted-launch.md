@@ -4,11 +4,11 @@ description: Learn how Trusted Launch protects the Azure Kubernetes Cluster (AKS
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-security
-ms.date: 07/15/2025
+ms.date: 07/22/2026
 ai-usage: ai-assisted
 author: allyford
 ms.author: allyford
-zone_pivot_groups: arm-azure-cli
+zone_pivot_groups: azure-cli-arm-bicep-terraform-portal
 # Customer intent: "As a Kubernetes administrator, I want to implement Trusted Launch on AKS clusters, so that I can enhance the security of my nodes against malware and ensure the integrity of the boot process."
 ---
 
@@ -37,16 +37,17 @@ Trusted Launch is composed of several, coordinated infrastructure technologies t
 
 ## Limitations
 
-- AKS supports Trusted Launch on kubernetes version 1.25.2 and higher.
+- AKS supports Trusted Launch on Kubernetes version 1.25.2 and higher.
 - Trusted Launch only supports [Azure Generation 2 VMs][azure-generation-two-virtual-machines].
 - Node pools with Windows Server operating system aren't supported.
 - Trusted Launch can't be enabled in the same node pool as [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM]. For more information, see [node images documentation][node-images].
 - Trusted Launch can only be enabled in the same node pool as [FIPS][FIPS] with Ubuntu 22.04.
 - Trusted Launch doesn't support virtual node.
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
-- To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see [Skip GPU driver installation][skip-gpu-driver-install].
-- Ephemeral OS disks can be created with trusted Launch and all regions are supported. However, not all virtual machines sizes are supported. For more information, see [Trusted Launch ephemeral OS sizes][tusted-launch-ephemeral-os-sizes].
+- To enable Secure Boot on GPU node pools using the Ubuntu operating system, you need to skip installing the GPU driver (`--gpu-driver None`). For more information, see [Skip GPU driver installation][skip-gpu-driver-install] and [Use NVIDIA GPUs on Azure Kubernetes Service (AKS)][use-nvidia-gpu]. This limitation doesn't apply for running GPU workloads with Azure Linux or Azure Container Linux operating systems.
+- Ephemeral OS disks can be created with Trusted Launch and all regions are supported. However, not all virtual machines sizes are supported. For more information, see [Trusted Launch ephemeral OS sizes][tusted-launch-ephemeral-os-sizes].
 - [Flatcar Container Linux for AKS][flatcar] doesn't support Trusted Launch on AKS.
+- Trusted Launch isn't supported through the AzureRM (`azurerm`) Terraform provider. To deploy Trusted Launch node pools, use the Azure CLI, ARM template, or Bicep instructions in this article.
 
 ## Create an AKS cluster with Trusted Launch enabled
 
@@ -84,7 +85,7 @@ When creating a cluster, enabling vTPM or Secure Boot automatically sets up your
 :::zone target="docs" pivot="arm"
 1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
 
-   * `enableSecureBoot`: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * `enableSecureBoot`: Enables secure boot to authenticate an image signed by a trusted publisher.
    * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
     In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
@@ -93,13 +94,43 @@ When creating a cluster, enabling vTPM or Secure Boot automatically sets up your
     "properties": {
         ...,
         "securityProfile": {
-            "enableVTPM": "true",
-            "enableSecureBoot": "true",
+            "enableVTPM": true,
+            "enableSecureBoot": true,
         }
     }
     ```
 
 1. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
+:::zone-end
+:::zone target="docs" pivot="bicep"
+1. Create a Bicep file with Trusted Launch parameters. Before creating the file, review the following parameters:
+
+   * `enableSecureBoot`: Enables secure boot to authenticate an image signed by a trusted publisher.
+   * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+
+    In your Bicep file, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `properties`, as shown in the following example:
+
+    ```bicep
+    properties: {
+      // ...
+      securityProfile: {
+        enableVTPM: true
+        enableSecureBoot: true
+      }
+    }
+    ```
+
+1. Deploy your Bicep file with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using a Bicep file][quick-bicep-deploy] for detailed instructions.
+:::zone-end
+:::zone target="docs" pivot="terraform"
+
+The AzureRM (`azurerm`) Terraform provider doesn't support Trusted Launch because it doesn't expose Trusted Launch node pool settings. To create an AKS cluster with Trusted Launch enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
+:::zone-end
+:::zone target="docs" pivot="azure-portal"
+
+The Azure portal **doesn't support** creating an AKS cluster with Trusted Launch enabled. To create an AKS cluster with Trusted Launch enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
 :::zone-end
 
 ## Add a node pool with Trusted Launch enabled
@@ -140,7 +171,7 @@ When you create a node pool, enabling vTPM or Secure Boot automatically sets up 
 :::zone target="docs" pivot="arm"
 1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
 
-   * `enableSecureBoot`: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * `enableSecureBoot`: Enables secure boot to authenticate an image signed by a trusted publisher.
    * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
     In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
@@ -149,13 +180,43 @@ When you create a node pool, enabling vTPM or Secure Boot automatically sets up 
     "properties": {
         ...,
         "securityProfile": {
-            "enableVTPM": "true",
-            "enableSecureBoot": "true",
+            "enableVTPM": true,
+            "enableSecureBoot": true,
         }
     }
     ```
 
 1. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
+:::zone-end
+:::zone target="docs" pivot="bicep"
+1. Create a Bicep file with Trusted Launch parameters. Before creating the file, review the following parameters:
+
+   * `enableSecureBoot`: Enables secure boot to authenticate an image signed by a trusted publisher.
+   * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+
+    In your Bicep file, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `properties`, as shown in the following example:
+
+    ```bicep
+    properties: {
+      // ...
+      securityProfile: {
+        enableVTPM: true
+        enableSecureBoot: true
+      }
+    }
+    ```
+
+1. Deploy your Bicep file with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using a Bicep file][quick-bicep-deploy] for detailed instructions.
+:::zone-end
+:::zone target="docs" pivot="terraform"
+
+The AzureRM (`azurerm`) Terraform provider doesn't support Trusted Launch because it doesn't expose Trusted Launch node pool settings. To add a node pool with Trusted Launch enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
+:::zone-end
+:::zone target="docs" pivot="azure-portal"
+
+The Azure portal **doesn't support** adding a node pool with Trusted Launch enabled. To add a node pool with Trusted Launch enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
 :::zone-end
 
 ## Add a node pool with Trusted Launch and FIPS enabled
@@ -199,7 +260,7 @@ For FIPS-specific operations, such as disabling FIPS on an existing node pool, s
 :::zone target="docs" pivot="arm"
 1. Create a template with Trusted Launch and FIPS parameters. Before creating the template, review the following parameters:
 
-   * `enableSecureBoot`: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * `enableSecureBoot`: Enables secure boot to authenticate an image signed by a trusted publisher.
    * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
    * `enableFips`: Enables the FIPS-compliant node image for the node pool.
 
@@ -211,95 +272,177 @@ For FIPS-specific operations, such as disabling FIPS on an existing node pool, s
         "osSKU": "Ubuntu",
         "enableFips": true,
         "securityProfile": {
-            "enableVTPM": "true",
-            "enableSecureBoot": "true",
+            "enableVTPM": true,
+            "enableSecureBoot": true,
         }
     }
     ```
 
 1. Deploy your template with vTPM, secure boot, and FIPS enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
+:::zone target="docs" pivot="bicep"
+1. Create a Bicep file with Trusted Launch and FIPS parameters. Before creating the file, review the following parameters:
 
-## Enable vTPM or secure boot on an existing Trusted Launch node pool
+   * `enableSecureBoot`: Enables secure boot to authenticate an image signed by a trusted publisher.
+   * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `enableFips`: Enables the FIPS-compliant node image for the node pool.
 
-You can update an existing Trusted Launch node pool to enable vTPM or secure boot. The following scenarios are supported:
-   * When creating a node pool, you only specify `--enable-secure-boot`, you can run the update command to `--enable-vtpm`
-   * When creating a node pool, you only specify `--enable-vtpm`, you can run the update command to `--enable-secure-boot`
+    In your Bicep file, provide values for `enableVTPM`, `enableSecureBoot`, and `enableFips`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `properties`, as shown in the following example:
 
-If your node pool doesn't currently have a Trusted Launch image, you won't be able to update the node pool to enable secure boot or vTPM.
-
-:::zone target="docs" pivot="azure-cli"
-1. Check that your node pool is using a Trusted Launch image.
-
-    Trusted Launch nodes have the following output:
-
-    * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
-    * `"Security-type"` should be `"Trusted Launch"`.
-
-    ```bash
-    kubectl get nodes
-    kubectl describe node {node-name} | grep -e node-image-version -e security-type
+    ```bicep
+    properties: {
+      // ...
+      osSKU: 'Ubuntu'
+      enableFips: true
+      securityProfile: {
+        enableVTPM: true
+        enableSecureBoot: true
+      }
+    }
     ```
 
-    If your node pool doesn't currently have a Trusted Launch image, you won't be able to update the node pool to enable secure boot or vTPM.
+1. Deploy your Bicep file with vTPM, secure boot, and FIPS enabled on your cluster. See [Deploy an AKS cluster using a Bicep file][quick-bicep-deploy] for detailed instructions.
+:::zone-end
+:::zone target="docs" pivot="terraform"
 
-1. Update a node pool with Trusted Launch enabled using the [`az aks nodepool update`][az-aks-nodepool-update] command. Before running the command, review the following parameters:
+The AzureRM (`azurerm`) Terraform provider doesn't support Trusted Launch because it doesn't expose Trusted Launch node pool settings. To add a node pool with Trusted Launch and FIPS enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
+:::zone-end
+:::zone target="docs" pivot="azure-portal"
+
+The Azure portal **doesn't support** adding a node pool with Trusted Launch and FIPS enabled. To add a node pool with Trusted Launch and FIPS enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
+:::zone-end
+
+## Enable vTPM or secure boot on an existing Linux node pool
+
+You can enable vTPM, secure boot, or both on an existing standard Linux node pool that uses a Trusted Launch-capable Ubuntu or Azure Linux image. The node pool doesn't need to already use a Trusted Launch image, but it must meet the existing Trusted Launch requirements and limitations.
+
+AKS reimages the node pool to a Trusted Launch image, which recreates the nodes and disrupts workloads. Perform the update during a maintenance window, and make sure your workloads tolerate node reimaging.
+
+:::zone target="docs" pivot="azure-cli"
+1. Update a node pool to enable vTPM or secure boot using the [`az aks nodepool update`][az-aks-nodepool-update] command. Before running the command, review the following parameters:
 
     * `--resource-group`: Enter the name of an existing resource group hosting your existing AKS cluster.
     * `--cluster-name`: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
     * `--name`: Enter the name of your node pool, such as *mynodepool*.
-    * `--enable-secure-boot`: Enables Secure Boot to authenticate that the image was signed by a trusted publisher.
+    * `--enable-secure-boot`: Enables secure boot to authenticate that the image was signed by a trusted publisher.
     * `--enable-vtpm`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
     > [!NOTE]
-    > Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling Secure Boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
+    > Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling secure boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
 
-    The following example updates the node pool *mynodepool* on the *myAKSCluster* in the *myResourceGroup*, and enables vTPM. In this scenario, secure boot was enabled during node pool creation:
-
-    ```azurecli-interactive
-    az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --enable-vtpm 
-    ```
-
-    The following example updates the node pool *mynodepool* on the *myAKSCluster* in the *myResourceGroup*, and enables secure boot. In this scenario, vTPM was enabled during node pool creation:
+    The following example updates the node pool *mynodepool* on *myAKSCluster* in *myResourceGroup* and enables vTPM:
 
     ```azurecli-interactive
-    az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --enable-secure-boot
+    az aks nodepool update --cluster-name myAKSCluster --resource-group myResourceGroup --name mynodepool --enable-vtpm
     ```
-    
-:::zone-end
-:::zone target="docs" pivot="arm"
-1. Check that your node pool is using a Trusted Launch image.
+
+    The following example updates the node pool *mynodepool* on *myAKSCluster* in *myResourceGroup* and enables secure boot:
+
+    ```azurecli-interactive
+    az aks nodepool update --cluster-name myAKSCluster --resource-group myResourceGroup --name mynodepool --enable-secure-boot
+    ```
+
+    The following example updates the node pool *mynodepool* on *myAKSCluster* in *myResourceGroup* and enables both vTPM and secure boot:
+
+    ```azurecli-interactive
+    az aks nodepool update \
+        --cluster-name myAKSCluster \
+        --resource-group myResourceGroup \
+        --name mynodepool \
+        --enable-vtpm \
+        --enable-secure-boot
+    ```
+
+1. After the update completes, verify that your node pool uses a Trusted Launch image.
 
     Trusted Launch nodes have the following output:
-    
+
     * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
-    * `"Security-type"` should be `"Trusted Launch"`.
+    * `"Security-type"` is `"Trusted Launch"`.
 
     ```bash
     kubectl get nodes
     kubectl describe node {node-name} | grep -e node-image-version -e security-type
     ```
 
-    If your node pool doesn't currently have a Trusted Launch image, you won't be able to update the node pool to enable secure boot or vTPM.
+:::zone-end
+:::zone target="docs" pivot="arm"
+1. Update your ARM template with Trusted Launch parameters. Before updating the template, review the following parameters:
 
-1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
-
-   * `enableSecureBoot`: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * `enableSecureBoot`: Enables secure boot to authenticate an image signed by a trusted publisher.
    * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
-    In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
+    In your template, set `enableVTPM`, `enableSecureBoot`, or both in the node pool `securityProfile`. The following example enables both vTPM and secure boot:
 
     ```json
     "properties": {
         ...,
         "securityProfile": {
-            "enableVTPM": "true",
-            "enableSecureBoot": "true",
+            "enableVTPM": true,
+            "enableSecureBoot": true,
         }
     }
     ```
 
-1. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
+1. Deploy your updated template with vTPM and secure boot enabled on your node pool. For detailed instructions, see [Deploy an AKS cluster using an ARM template][quick-ARM-deploy].
+
+1. After the deployment completes, verify that your node pool uses a Trusted Launch image.
+
+    Trusted Launch nodes have the following output:
+
+    * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
+    * `"Security-type"` is `"Trusted Launch"`.
+
+    ```bash
+    kubectl get nodes
+    kubectl describe node {node-name} | grep -e node-image-version -e security-type
+    ```
+
+:::zone-end
+:::zone target="docs" pivot="bicep"
+1. Update your Bicep file with Trusted Launch parameters. Before updating the file, review the following parameters:
+
+   * `enableSecureBoot`: Enables secure boot to authenticate an image signed by a trusted publisher.
+   * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+
+    In your Bicep file, set `enableVTPM`, `enableSecureBoot`, or both in the node pool `securityProfile`. The following example enables both vTPM and secure boot:
+
+    ```bicep
+    properties: {
+      // ...
+      securityProfile: {
+        enableVTPM: true
+        enableSecureBoot: true
+      }
+    }
+    ```
+
+1. Deploy your updated Bicep file with vTPM and secure boot enabled on your node pool. For detailed instructions, see [Deploy an AKS cluster using a Bicep file][quick-bicep-deploy].
+
+1. After the deployment completes, verify that your node pool uses a Trusted Launch image.
+
+    Trusted Launch nodes have the following output:
+
+    * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
+    * `"Security-type"` is `"Trusted Launch"`.
+
+    ```bash
+    kubectl get nodes
+    kubectl describe node {node-name} | grep -e node-image-version -e security-type
+    ```
+
+:::zone-end
+:::zone target="docs" pivot="terraform"
+
+The AzureRM (`azurerm`) Terraform provider doesn't support Trusted Launch because it doesn't expose Trusted Launch node pool settings. To enable vTPM or secure boot on an existing node pool, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
+:::zone-end
+:::zone target="docs" pivot="azure-portal"
+
+The Azure portal **doesn't support** enabling vTPM or secure boot on an existing node pool. To enable vTPM or secure boot on an existing node pool, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
 :::zone-end
 
 ## Assign pods to nodes with Trusted Launch enabled
@@ -312,50 +455,133 @@ spec:
         kubernetes.azure.com/security-type = "TrustedLaunch"
 ```
 
-## Disable vTPM or secure boot on an existing Trusted Launch node pool
+## Disable vTPM or secure boot on an existing Linux node pool
 
-You can update an existing node pool to disable vTPM or secure boot. When this occurs, you'll still remain on the Trusted Launch image. You can re-enable vTPM or secure boot at any time by updating your node pool.
+You can disable vTPM, secure boot, or both on an existing Linux node pool. If either feature remains enabled, the node pool keeps using the Trusted Launch image path. If you disable both features on a regular Ubuntu or Azure Linux node pool, AKS reimages the node pool to the corresponding non-Trusted Launch image and changes the underlying Virtual Machine Scale Set security type back to Standard.
 
 :::zone target="docs" pivot="azure-cli"
-Update a node pool to disable secure boot or vTPM using the [`az aks nodepool update`][az-aks-nodepool-update] command. Before running the command, review the following parameters:
+1. Update a node pool to disable secure boot or vTPM by using the [`az aks nodepool update`][az-aks-nodepool-update] command. Before running the command, review the following parameters:
 
    * `--resource-group`: Enter the name of an existing resource group hosting your existing AKS cluster.
    * `--cluster-name`: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
    * `--name`: Enter the name of your node pool, such as *mynodepool*.
-   * `--enable-secure-boot`: Enables Secure Boot to authenticate that the image was signed by a trusted publisher.
-   * `--enable-vtpm`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `--disable-secure-boot`: Disables secure boot.
+   * `--disable-vtpm`: Disables vTPM.
 
-To disable vTPM on an existing node pool:
+    The following example updates the node pool *mynodepool* on *myAKSCluster* in *myResourceGroup* and disables vTPM:
 
-```azurecli-interactive
-az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --disable-vtpm
-```
+    ```azurecli-interactive
+    az aks nodepool update --cluster-name myAKSCluster --resource-group myResourceGroup --name mynodepool --disable-vtpm
+    ```
 
-To disable secure boot on an existing node pool:
+    The following example updates the node pool *mynodepool* on *myAKSCluster* in *myResourceGroup* and disables secure boot:
 
-```azurecli-interactive
-az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --disable-secure-boot 
-```
+    ```azurecli-interactive
+    az aks nodepool update --cluster-name myAKSCluster --resource-group myResourceGroup --name mynodepool --disable-secure-boot
+    ```
+
+    The following example updates the node pool *mynodepool* on *myAKSCluster* in *myResourceGroup* and disables both vTPM and secure boot:
+
+    ```azurecli-interactive
+    az aks nodepool update \
+        --cluster-name myAKSCluster \
+        --resource-group myResourceGroup \
+        --name mynodepool \
+        --disable-vtpm \
+        --disable-secure-boot
+    ```
+
+1. After the update completes, verify that your node pool uses the expected image.
+
+    If either vTPM or secure boot remains enabled, Trusted Launch nodes have the following output:
+
+    * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
+    * `"Security-type"` is `"Trusted Launch"`.
+
+    If you disable both vTPM and secure boot, the node image version shouldn't contain `"TL"`, and `"Security-type"` shouldn't be `"Trusted Launch"`.
+
+    ```bash
+    kubectl get nodes
+    kubectl describe node {node-name} | grep -e node-image-version -e security-type
+    ```
 :::zone-end
 :::zone target="docs" pivot="arm"
-1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
+1. Update your ARM template with Trusted Launch parameters. Before updating the template, review the following parameters:
 
-   * `enableSecureBoot`: Enables Secure Boot to authenticate an image signed by a trusted publisher.
+   * `enableSecureBoot`: Enables secure boot to authenticate an image signed by a trusted publisher.
    * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
-    In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
+    In your template, set `enableVTPM`, `enableSecureBoot`, or both in the node pool `securityProfile`. The following example disables both vTPM and secure boot:
 
     ```json
     "properties": {
         ...,
         "securityProfile": {
-            "enableVTPM": "false",
-            "enableSecureBoot": "false",
+            "enableVTPM": false,
+            "enableSecureBoot": false,
         }
     }
     ```
 
-1. Deploy your template with vTPM and secure boot disabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
+1. Deploy your updated template with vTPM and secure boot disabled on your node pool. For detailed instructions, see [Deploy an AKS cluster using an ARM template][quick-ARM-deploy].
+
+1. After the deployment completes, verify that your node pool uses the expected image.
+
+    If either vTPM or secure boot remains enabled, Trusted Launch nodes have the following output:
+
+    * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
+    * `"Security-type"` is `"Trusted Launch"`.
+
+    If you disable both vTPM and secure boot, the node image version shouldn't contain `"TL"`, and `"Security-type"` shouldn't be `"Trusted Launch"`.
+
+    ```bash
+    kubectl get nodes
+    kubectl describe node {node-name} | grep -e node-image-version -e security-type
+    ```
+:::zone-end
+:::zone target="docs" pivot="bicep"
+1. Update your Bicep file with Trusted Launch parameters. Before updating the file, review the following parameters:
+
+   * `enableSecureBoot`: Enables secure boot to authenticate an image signed by a trusted publisher.
+   * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+
+    In your Bicep file, set `enableVTPM`, `enableSecureBoot`, or both in the node pool `securityProfile`. The following example disables both vTPM and secure boot:
+
+    ```bicep
+    properties: {
+      // ...
+      securityProfile: {
+        enableVTPM: false
+        enableSecureBoot: false
+      }
+    }
+    ```
+
+1. Deploy your updated Bicep file with vTPM and secure boot disabled on your node pool. For detailed instructions, see [Deploy an AKS cluster using a Bicep file][quick-bicep-deploy].
+
+1. After the deployment completes, verify that your node pool uses the expected image.
+
+    If either vTPM or secure boot remains enabled, Trusted Launch nodes have the following output:
+
+    * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
+    * `"Security-type"` is `"Trusted Launch"`.
+
+    If you disable both vTPM and secure boot, the node image version shouldn't contain `"TL"`, and `"Security-type"` shouldn't be `"Trusted Launch"`.
+
+    ```bash
+    kubectl get nodes
+    kubectl describe node {node-name} | grep -e node-image-version -e security-type
+    ```
+:::zone-end
+:::zone target="docs" pivot="terraform"
+
+The AzureRM (`azurerm`) Terraform provider doesn't support Trusted Launch because it doesn't expose Trusted Launch node pool settings. To disable vTPM or secure boot on an existing node pool, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
+:::zone-end
+:::zone target="docs" pivot="azure-portal"
+
+The Azure portal **doesn't support** disabling vTPM or secure boot on an existing node pool. To disable vTPM or secure boot on an existing node pool, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
 :::zone-end
 
 ## Next steps
@@ -382,11 +608,12 @@ In this article, you learned how to enable Trusted Launch. Learn more about [Tru
 [verify-secure-boot-failures]: /azure/virtual-machines/trusted-launch-faq#verify-secure-boot-failures
 [tusted-launch-ephemeral-os-sizes]: /azure/virtual-machines/ephemeral-os-disks#trusted-launch-for-ephemeral-os-disks
 [skip-gpu-driver-install]: gpu-cluster.md#skip-gpu-driver-installation
+[use-nvidia-gpu]: ./use-nvidia-gpu.md
 [FIPS]: ./enable-fips-nodes.md
 [Arm64]: ./use-arm64-vms.md
 [pod-sandboxing]: ./use-pod-sandboxing.md
 [CVM]: ./use-cvm.md
 [node-images]: ./node-images.md
 [quick-ARM-deploy]: /azure/aks/learn/quick-kubernetes-deploy-rm-template
+[quick-bicep-deploy]: /azure/aks/learn/quick-kubernetes-deploy-bicep
 [flatcar]: ./flatcar-container-linux-for-aks.md
-[os-guard]: ./azure/azure-linux/intro-azure-linux-os-guard.md
