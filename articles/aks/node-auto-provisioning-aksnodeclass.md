@@ -3,7 +3,7 @@ title: Configure AKSNodeClass Resources for Node Auto-Provisioning (NAP) in Azur
 description: Learn how to configure Azure-specific settings for AKS node auto-provisioning using AKSNodeClass resources.
 ms.topic: how-to
 ms.custom: devx-track-azurecli, aks-scaling
-ms.date: 06/5/2026
+ms.date: 07/5/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -384,6 +384,31 @@ spec:
       # none skips gpu driver installation, driver has NAP manage the GPU driver installation  
       none
 ```
+
+## Security settings
+
+### Encryption at host
+
+The following field specifies whether host-level encryption is enabled for provisioned nodes. When you set this field to `true`, NAP includes only instance options that support encryption at host.
+
+```yaml 
+spec:
+  security:
+    encryptionatHost: 
+      # acceptable values: [true, false] default(or if not specified): false  
+      false
+```
+
+For more information about host-based encryption, see [Encryption at Host documentation](./enable-host-encryption.md).
+
+### Custom-managed keys and disk encryption sets
+
+NAP supports clusters that use customer-managed keys and disk encryption sets. You enable these options at the cluster level. They don't have AKSNodeClass fields that you need to set. Make sure that your cluster identity has the proper [role-based access control (RBAC)](./aks-desktop-permissions.md):
+
+- The cluster identity has `Reader` access to the Disk Encryption Set.
+- The Disk Encryption set resource has `Key Vault Crypto Service Encryption User` access to the Azure Key Vault. 
+
+For information on customer-managed keys and disk encryption sets enabled during cluster creation, see [Customer-Managed Keys documentation](./azure-disk-customer-managed-keys.md).
 
 ## Azure resource tags configuration
 
