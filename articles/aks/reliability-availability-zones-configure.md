@@ -72,6 +72,9 @@ When you create an AKS cluster, it requires one [system node pool](/azure/aks/us
 
 You can deploy node pools in three ways: [**zone-spanning**](#zone-spanning-node-pools), [**zone-aligned**](#zone-aligned-node-pools), or [**regional** (not using availability zones)](#regional-node-pools).
 
+> [!TIP]
+> Instead of manually picking zones, you can let AKS pick them for you by using **automatic zone placement** (`--zones auto`) when you create a node pool or update an existing node pool. For details, see [Automatic zone placement for node pools in AKS (Preview)](./configure-automatic-zone-placement.md).
+
 The following diagram shows the distribution of nodes across availability zones in each of the three models:
 
 :::image type="content" source="media/availability-zones/aks-node-pools.png" alt-text="Diagram that shows AKS node distribution across availability zones in different models." lightbox="media/availability-zones/aks-node-pools.png":::
@@ -450,6 +453,7 @@ kubectl describe pod | grep -e "^Name:" -e "^Node:"
 To learn more about reliability in AKS, see the following articles:
 
 - [Reliability in AKS](/azure/reliability/reliability-aks)
+-  [Automatic zone placement for node pools in AKS (Preview)](./configure-automatic-zone-placement.md)
 - [Manage system node pools in AKS](/azure/aks/use-system-pools)
 - [Use public standard load balancers in AKS](/azure/aks/load-balancer-standard)
 - [Best practices for business continuity and disaster recovery in AKS][best-practices-multi-region]
