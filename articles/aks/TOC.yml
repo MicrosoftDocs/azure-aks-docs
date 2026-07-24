@@ -248,6 +248,12 @@
           href: aks-list-skus.md
         - name: Custom node configuration
           href: custom-node-configuration.md
+        - name: Use Prepared Image Specification (PIS)
+          items:
+            - name: Overview
+              href: prepared-image-specification-overview.md
+            - name: Create and manage a Prepared Image Specification (PIS) in AKS
+              href: prepared-image-specification.md
         - name: Abort long running operations
           href: manage-abort-operations.md
         - name: Stop/deallocate nodes with Scale-down Mode
