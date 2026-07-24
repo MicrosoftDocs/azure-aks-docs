@@ -1142,6 +1142,8 @@
         href: reliability-zone-resiliency-recommendations.md
       - name: Configure availability zones
         href: reliability-availability-zones-configure.md
+      - name: Automatic zone placement (Preview)
+        href: configure-automatic-zone-placement.md
     - name: Multi-region
       items:
       - name: Multi-region deployment models
