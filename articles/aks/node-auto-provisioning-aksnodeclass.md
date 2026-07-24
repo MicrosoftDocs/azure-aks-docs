@@ -387,9 +387,9 @@ spec:
 
 ## Security settings
 
-### Encryption at Host
+### Encryption at host
 
-The following field specifies whether host-level encryption is enabled for provisioned nodes. When this field is set to `true` NAP will only include instance options that support encryption at host.
+The following field specifies whether host-level encryption is enabled for provisioned nodes. When you set this field to `true`, NAP includes only instance options that support encryption at host.
 
 ```yaml 
 spec:
@@ -401,12 +401,12 @@ spec:
 
 ### Custom-managed keys and disk encryption sets
 
-NAP supported clusters using customer-managed keys and disk encryption sets. These are enabled at the cluster-level, and do not have AKSNodeClass fields that need to be set. Make sure that your cluster identity has the proper [role-based access control (RBAC)](https://learn.microsoft.com/azure/aks/aks-desktop-permissions?pivots=cluster-operator):
+NAP supports clusters that use customer-managed keys and disk encryption sets. You enable these options at the cluster level. They don't have AKSNodeClass fields that you need to set. Make sure that your cluster identity has the proper [role-based access control (RBAC)](https://learn.microsoft.com/azure/aks/aks-desktop-permissions?pivots=cluster-operator):
 
-- The cluster identity has `Reader` access to the Disk Encryption Set
+- The cluster identity has `Reader` access to the Disk Encryption Set.
 - The Disk Encryption set resource has `Key Vault Crypto Service Encryption User` access to the Azure Key Vault. 
 
-For information on customer-managed keys and disk encryption sets enabled during cluster create, see our [Customer-Managed Keys documentation](https://learn.microsoft.com/azure/aks/azure-disk-customer-managed-keys).
+For information on customer-managed keys and disk encryption sets enabled during cluster creation, see [Customer-Managed Keys documentation](https://learn.microsoft.com/azure/aks/azure-disk-customer-managed-keys).
 
 ## Azure resource tags configuration
 
