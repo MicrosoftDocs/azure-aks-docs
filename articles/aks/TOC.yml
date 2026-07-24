@@ -248,6 +248,12 @@
           href: aks-list-skus.md
         - name: Custom node configuration
           href: custom-node-configuration.md
+        - name: Use Prepared Image Specification (PIS)
+          items:
+            - name: Overview
+              href: prepared-image-specification-overview.md
+            - name: Create and manage a Prepared Image Specification (PIS) in AKS
+              href: prepared-image-specification.md
         - name: Abort long running operations
           href: manage-abort-operations.md
         - name: Stop/deallocate nodes with Scale-down Mode
@@ -1110,7 +1116,9 @@
             items:
                 - name: Best practices for ephemeral NVMe data disks
                   href: best-practices-storage-nvme.md
-                - name: Use Azure Container Storage with Ephemeral Disk
+                - name: Use full caching mode for ephemeral OS disks
+                  href: full-cache-ephemeral-os-disk.md
+                - name: Use Azure Container Storage with ephemeral OS disks
                   href: /azure/storage/container-storage/use-container-storage-with-local-disk?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Shared file storage
       items:
