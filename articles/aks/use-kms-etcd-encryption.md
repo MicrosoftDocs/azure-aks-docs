@@ -244,7 +244,7 @@ After you change the key ID (including changing either the key name or the key v
         --azure-keyvault-kms-key-id $NEW_KEY_ID
     ```
 
-1. Update all secrets using the `kubectl get secrets` command. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets by using the `kubectl get secrets` command. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
