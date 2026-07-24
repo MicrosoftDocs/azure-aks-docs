@@ -191,7 +191,7 @@ The following sections describe how to turn on KMS for a public key vault on a n
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     ```
 
-    When you run the command, the following error is safe to ignore:
+    When you run the command, you can safely ignore the following error:
 
     ```output
     The object has been modified; please apply your changes to the latest version and try again.
