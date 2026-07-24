@@ -185,7 +185,7 @@ The following sections describe how to turn on KMS for a public key vault on a n
         --generate-ssh-keys
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script.
+1. Update all secrets using the `kubectl get secrets` command.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -361,7 +361,7 @@ The following sections describe how to turn on KMS for a private key vault on a 
         --generate-ssh-keys
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script.
+1. Update all secrets using the `kubectl get secrets` command.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
