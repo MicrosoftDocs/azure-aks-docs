@@ -399,7 +399,7 @@ spec:
       false
 ```
 
-For more on host-based encryption visit our [Encryption at Host documentation](/enable-host-encryption.md).
+For more information about host-based encryption, see [Encryption at Host documentation](./enable-host-encryption.md).
 
 ### Custom-managed keys and disk encryption sets
 
