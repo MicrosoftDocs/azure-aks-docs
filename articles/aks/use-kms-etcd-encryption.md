@@ -172,7 +172,7 @@ The following sections describe how to turn on KMS for a public key vault on a n
 
 ### Create an AKS cluster with a public key vault and KMS
 
-1. Create an AKS cluster with a public key vault and KMS by using the [`az aks create`][az-aks-create] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-id` parameters.
+- Create an AKS cluster with a public key vault and KMS by using the [`az aks create`][az-aks-create] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-id` parameters.
 
     ```azurecli-interactive
     az aks create \
@@ -183,18 +183,6 @@ The following sections describe how to turn on KMS for a public key vault on a n
         --azure-keyvault-kms-key-vault-network-access "Public" \
         --azure-keyvault-kms-key-id $KEY_ID \
         --generate-ssh-keys
-    ```
-
-1. Update all secrets by using the `kubectl get secrets` command.
-
-    ```bash
-    kubectl get secrets --all-namespaces -o json | kubectl replace -f -
-    ```
-
-    When you run the command, you can safely ignore the following error:
-
-    ```output
-    The object has been modified; please apply your changes to the latest version and try again.
     ```
 
 ### Enable a public key vault and KMS on an existing AKS cluster
