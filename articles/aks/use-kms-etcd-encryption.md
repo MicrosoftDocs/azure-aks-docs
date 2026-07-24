@@ -387,7 +387,7 @@ The following sections describe how to turn on KMS for a private key vault on a 
         --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID
     ```
 
-1. Update all secrets using the `kubectl get secrets` command. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets by using the `kubectl get secrets` command. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
