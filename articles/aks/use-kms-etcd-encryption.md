@@ -172,7 +172,7 @@ The following sections describe how to turn on KMS for a public key vault on a n
 
 ### Create an AKS cluster with a public key vault and KMS
 
-1. Create an AKS cluster with a public key vault and KMS using the [`az aks create`][az-aks-create] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-id` parameters.
+1. Create an AKS cluster with a public key vault and KMS by using the [`az aks create`][az-aks-create] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-id` parameters.
 
     ```azurecli-interactive
     az aks create \
