@@ -399,14 +399,16 @@ spec:
       false
 ```
 
+For more on host-based encryption visit our [Encryption at Host documentation](/enable-host-encryption.md).
+
 ### Custom-managed keys and disk encryption sets
 
-NAP supports clusters that use customer-managed keys and disk encryption sets. You enable these options at the cluster level. They don't have AKSNodeClass fields that you need to set. Make sure that your cluster identity has the proper [role-based access control (RBAC)](https://learn.microsoft.com/azure/aks/aks-desktop-permissions?pivots=cluster-operator):
+NAP supports clusters that use customer-managed keys and disk encryption sets. You enable these options at the cluster level. They don't have AKSNodeClass fields that you need to set. Make sure that your cluster identity has the proper [role-based access control (RBAC)](./aks-desktop-permissions.md):
 
 - The cluster identity has `Reader` access to the Disk Encryption Set.
 - The Disk Encryption set resource has `Key Vault Crypto Service Encryption User` access to the Azure Key Vault. 
 
-For information on customer-managed keys and disk encryption sets enabled during cluster creation, see [Customer-Managed Keys documentation](https://learn.microsoft.com/azure/aks/azure-disk-customer-managed-keys).
+For information on customer-managed keys and disk encryption sets enabled during cluster creation, see [Customer-Managed Keys documentation](./azure-disk-customer-managed-keys.md).
 
 ## Azure resource tags configuration
 
