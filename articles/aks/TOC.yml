@@ -1110,7 +1110,9 @@
             items:
                 - name: Best practices for ephemeral NVMe data disks
                   href: best-practices-storage-nvme.md
-                - name: Use Azure Container Storage with Ephemeral Disk
+                - name: Use full caching mode for ephemeral OS disks
+                  href: full-cache-ephemeral-os-disk.md
+                - name: Use Azure Container Storage with ephemeral OS disks
                   href: /azure/storage/container-storage/use-container-storage-with-local-disk?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Shared file storage
       items:
