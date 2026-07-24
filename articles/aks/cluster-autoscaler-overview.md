@@ -31,7 +31,7 @@ It's a common practice to enable cluster autoscaler for nodes and either the Ver
 
 ## Best practices and considerations
 
-* When implementing **availability zones with the cluster autoscaler**, we recommend using a single node pool for each zone. You can set the `--balance-similar-node-groups` parameter to `True` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations. When this approach isn't implemented, scale down operations can disrupt the balance of nodes across zones.
+* When you implement **availability zones with the cluster autoscaler**, use a single node pool for each zone. Set the `--balance-similar-node-groups` parameter to `True` to keep a balanced distribution of nodes across zones for your workloads during scale up operations. If you don't use this approach, scale down operations can disrupt the balance of nodes across zones. For multizonal node pools, you can also let AKS pick zones dynamically by using [automatic zone placement (`--zones auto`)](./configure-automatic-zone-placement.md), which places nodes in zones that have capacity while applying a maximum instance percentage of 50% per zone. You can use automatic zone placement when you create a node pool or update an existing node pool.
 > [!NOTE]
 > The Cluster Autoscaler is not zone-aware, and zone allocation is handled by the underlying Virtual Machine Scale Sets. The above best practice becomes even more relevant when using zone-based [pod topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) on a single multi-zonal node pool, as restrictive constraints may leave pods in a pending state, especially in capacity-constrained regions or during zone-down scenarios.
 * For **clusters with more than 400 nodes**, we recommend using Azure CNI or Azure CNI Overlay.
@@ -52,7 +52,7 @@ It's a common practice to enable cluster autoscaler for nodes and either the Ver
    ```
     
 * Exercise caution when **assigning CPU/Memory requests on pods**. The cluster autoscaler scales up based on pending pods rather than CPU/Memory pressure on nodes.
-* For **clusters concurrently hosting both long-running workloads, like web apps, and short/bursty job workloads**, we recommend separating them into distinct node pools with [Affinity Rules](./operator-best-practices-advanced-scheduler.md#node-affinity)/[expanders](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#what-are-expanders).
+* For **clusters concurrently hosting both long-running workloads, like web apps, and short or bursty job workloads**, separate them into distinct node pools with [Affinity Rules](./operator-best-practices-advanced-scheduler.md#node-affinity) or [expanders](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#what-are-expanders).
 * Use [PodDisruptionBudget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) to help prevent unnecessary node drain or scale down operations. Specifying the annotation [cluster-autoscaler.kubernetes.io/safe-to-evict: "false"](https://kubernetes.io/docs/reference/labels-annotations-taints/#cluster-autoscaler-kubernetes-io-safe-to-evict) on the Pod spec will also prevent the pods from being evicted. Use this annotation with caution, as it may cause the Cluster Autoscaler encounter issues when draining a node with a running Pod that includes this annotation. 
 * In an autoscaler-enabled node pool, scale down nodes by removing workloads, instead of manually reducing the min/ max count of the node pool. This can be problematic if the node pool is already at maximum capacity or if there are active workloads running on the nodes, potentially causing unexpected behavior by the cluster autoscaler.
 * Nodes don't scale up if pods have a PriorityClass value below -10. Priority -10 is reserved for [overprovisioning pods](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-can-i-configure-overprovisioning-with-cluster-autoscaler). For more information, see [Using the cluster autoscaler with Pod Priority and Preemption](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#how-does-cluster-autoscaler-work-with-pod-priority-and-preemption).
@@ -78,7 +78,7 @@ It's important to note that the cluster autoscaler profile settings are cluster-
 
 #### Example 1: Optimizing for performance
 
-For clusters that handle substantial and bursty workloads with a primary focus on performance, we recommend increasing the `scan-interval` and decreasing the `scale-down-utilization-threshold`. These settings help batch multiple scaling operations into a single call, optimizing scaling time and the utilization of compute read/write quotas. It also helps mitigate the risk of swift scale down operations on underutilized nodes, enhancing the pod scheduling efficiency. Also increase `ok-total-unready-count`and `max-total-unready-percentage`.
+For clusters that handle substantial and bursty workloads with a primary focus on performance, increase the `scan-interval` and decrease the `scale-down-utilization-threshold`. These settings help batch multiple scaling operations into a single call, optimizing scaling time and the utilization of compute read/write quotas. They also help mitigate the risk of swift scale down operations on underutilized nodes, enhancing the pod scheduling efficiency. Also, increase `ok-total-unready-count` and `max-total-unready-percentage`.
 
 For clusters with daemonset pods, we recommend setting `ignore-daemonsets-utilization` to `true`, which effectively ignores node utilization by daemonset pods and minimizes unnecessary scale down operations. See [profile for bursty workloads](./cluster-autoscaler.md#configure-cluster-autoscaler-profile-for-bursty-workloads)
 
@@ -90,7 +90,7 @@ If you want a [cost-optimized profile](./cluster-autoscaler.md#configure-cluster
 * Increase `scale-down-utilization-threshold`, which is the utilization threshold for removing nodes.
 * Increase `max-empty-bulk-delete`, which is the maximum number of nodes that can be deleted in a single call.
 * Set `skip-nodes-with-local-storage` to false.
-* Increase `ok-total-unready-count`and `max-total-unready-percentage`.
+* Increase `ok-total-unready-count` and `max-total-unready-percentage`.
 
 ## Common issues and mitigation recommendations
 View scaling failures and scale-up not triggered events via [CLI or Portal](./cluster-autoscaler.md#retrieve-cluster-autoscaler-logs-and-status).
@@ -98,7 +98,7 @@ View scaling failures and scale-up not triggered events via [CLI or Portal](./cl
 
 | Common causes | Mitigation recommendations |
 |--------------|--------------|
-| PersistentVolume node affinity conflicts, which can arise when using the cluster autoscaler with multiple availability zones or when a pod's or persistent volume's zone differs from the node's zone. | Use one node pool per availability zone and enabling `--balance-similar-node-groups`. You can also set the [`volumeBindingMode` field to `WaitForFirstConsumer`](./azure-disk-csi.md#create-a-custom-storage-class) in the pod specification to prevent the volume from being bound to a node until a pod using the volume is created. |
+| PersistentVolume node affinity conflicts, which can arise when using the cluster autoscaler with multiple availability zones or when a pod's or persistent volume's zone differs from the node's zone. | Use one node pool per availability zone and enable `--balance-similar-node-groups`. You can also set the [`volumeBindingMode` field to `WaitForFirstConsumer`](./azure-disk-csi.md#create-a-custom-storage-class) in the pod specification to prevent the volume from being bound to a node until a pod using the volume is created. |
 | Taints and Tolerations/Node affinity conflicts | Assess the taints assigned to your nodes and review the tolerations defined in your pods. If necessary, make adjustments to the [taints and tolerations](./operator-best-practices-advanced-scheduler.md#provide-dedicated-nodes-using-taints-and-tolerations) to ensure that your pods can be efficiently scheduled on your nodes. |
 | [Restrictive Pod Topology Spread Constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) | Cluster Autoscaler runs scheduling simulations before initiating scale-up operations. If it determines that a pod cannot be scheduled on a new node due to restrictive topology spread constraints, it will not attempt to scale up. To mitigate this, consider relaxing the topology spread constraints. | 
 
