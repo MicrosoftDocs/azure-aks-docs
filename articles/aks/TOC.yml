@@ -546,6 +546,10 @@
               href: concepts-managed-namespaces.md
             - name: Use managed namespaces
               href: managed-namespaces.md
+        - name: Multi-tenancy concepts
+          href: concepts-multi-tenancy.md
+        - name: Multi-tenancy best practices
+          href: best-practices-multi-tenancy.md
     - name: Configure backup
       items:
         - name: Prerequisites
