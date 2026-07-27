@@ -545,7 +545,7 @@ After deployment and validation, access the agent through the web chat interface
    - You should see the Container Network Insights Agent chat interface.
    - If you face an internal server error, check if federated credentials are correctly configured.
 
-3. Sign in with your Microsoft Entra ID account.
+1. Sign in with your Microsoft Entra ID account.
 
 ### Start a diagnostic conversation
 
