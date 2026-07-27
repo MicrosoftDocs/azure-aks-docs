@@ -363,7 +363,7 @@ Container Network Insights Agent uses [AKS workload identity](/azure/aks/workloa
 
 ### Step 7: Create an App Registration for Entra ID authentication
 
-Create an Entra ID App Registration so users can sign in to Container Network Insights Agent using Microsoft Entra ID (MSAL) with OAuth2/OIDC. Microsoft Entra ID is the supported sign-in method for production deployments.
+Create a Microsoft Entra ID app registration so users can sign in to Container Network Insights Agent by using Microsoft Entra ID (MSAL) with OAuth2/OIDC. Microsoft Entra ID is the supported sign-in method for production deployments.
 
 To enable Microsoft Entra ID user authentication, create an app registration by using the [`az ad app create`](/cli/azure/ad/app#az-ad-app-create) command.
 
