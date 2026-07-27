@@ -313,7 +313,7 @@ The following example shows how to use the Azure RBAC permission model to grant 
             - name: KEYVAULT_URL
               value: ${KEYVAULT_URL}
             - name: SECRET_NAME
-              value: ${KEYVAULT_SECRET_NAME}
+              value: ${KEY_VAULT_SECRET_NAME}
       restartPolicy: Never
     EOF
     ```
