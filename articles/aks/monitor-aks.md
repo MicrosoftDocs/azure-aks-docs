@@ -8,6 +8,7 @@ ms.service: azure-kubernetes-service
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.subservice: aks-monitoring
+ai-usage: ai-assisted
 #Customer intent: As a cloud administrator, I want to implement comprehensive monitoring for Azure Kubernetes Service (AKS) so that I can ensure performance and reliability in my critical applications and manage resource utilization effectively.
 ---
 
@@ -621,9 +622,7 @@ Cilium exposes several metrics that Container Network Observability uses:
 
 #### [Non-Cilium](#tab/non-cilium)
 
-> **OS support and known limitations**: For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
-
-For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
+> **OS support**: For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
 
 The following table outlines the generated metrics. For the complete and up-to-date list, see [Container network metrics](container-network-observability-metrics.md).
 
