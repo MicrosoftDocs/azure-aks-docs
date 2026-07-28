@@ -283,15 +283,15 @@ az aks nodepool manual-scale delete \
 ```
 
 ## Cluster autoscaler with Virtual Machines Node Pools
-Virtual Machines node pools support [cluster autoscaler][cluster-autoscaler]. This allows autoscaling for both same VM size node pools and multiple VM size node pools. This can be enabled using the flag `--enable-cluster-autoscaler` during cluster creation, while adding a new node pool, or in updating an existing manual node pool. 
+Virtual Machines node pools support [cluster autoscaler][cluster-autoscaler]. This support allows autoscaling for both same VM size node pools and multiple VM size node pools. You can enable this feature by using the flag `--enable-cluster-autoscaler` during cluster creation, while adding a new node pool, or when updating an existing manual node pool. 
 
 When using cluster autoscaler with Virtual Machine node pools, the behavior is as follows:
 - Scale up: autoscaler responds to pending pod pressure, and can scale up the node count of a node pool with multiple VM sizes in that node pool. 
-- Scale down: a specific node is chosen by autoscaler based on the utilization of the node. you can configure `scale-down-utilization-threshold`to adjust when cluster autoscaling triggers a scaling action. See [cluster autoscaler documentation][cluster-autoscaler] for more information on configuring autoscaling. 
+- Scale down: autoscaler chooses a specific node based on the utilization of the node. You can configure `scale-down-utilization-threshold` to adjust when cluster autoscaling triggers a scaling action. See [cluster autoscaler documentation][cluster-autoscaler] for more information on configuring autoscaling.
 
 ### Limitations
 - This feature is only available in public cloud.
-- GPU nodes are not currently supported.
+- GPU nodes aren't currently supported.
 
 ### Create an AKS cluster with Virtual Machines node pools and cluster-autoscaler enabled
 - Create an AKS cluster with Virtual Machines node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"` and with the flag `--enable-cluster-autoscaler`.
