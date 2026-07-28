@@ -5,12 +5,14 @@ author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
 ms.custom: build-2025
-ms.date: 06/16/2025
+ms.date: 07/28/2026
 ms.service: azure-kubernetes-fleet-manager
 # Customer intent: As a DevOps engineer, I want to configure automated deployments using a multi-cluster strategy, so that I can build and deploy applications across multiple Kubernetes clusters while maintaining security and resource optimization.
 ---
 
 # Use Azure Kubernetes Fleet Manager Automated Deployments to drive multi-cluster resource placement (Preview)
+
+**Applies to**: :heavy_check_mark: Fleet Manager with hub cluster
 
 Azure Kubernetes Fleet Manager Automated Deployments can be used to build and deploy an application from a code repository to one or more AKS cluster in a fleet. Automated deployments simplify the process of setting up a GitHub Action workflow to build and deploy your code. Once connected, every new commit you make runs the pipeline. 
 
@@ -56,7 +58,7 @@ Create a workflow and authorize it to connect to the desired source code reposit
 
 ### Specify application image and deployment configuration
 
-To prepare an application to run on Kubernetes, you need to build it into a container image which you store in a container registry. A [Dockerfile](https://docs.docker.com/build/concepts/dockerfile/) provides instructions on how to build the container image. If your source code repository doesn't already have a Dockerfile, Automated Deployments can generate one for you.
+To prepare an application to run on Kubernetes, you need to build it into a container image that you store in a container registry. A [Dockerfile](https://docs.docker.com/build/concepts/dockerfile/) provides instructions on how to build the container image. If your source code repository doesn't already have a Dockerfile, Automated Deployments can generate one for you.
 
 #### [Use existing Dockerfile](#tab/use-existing-dockerfile)
 
@@ -143,12 +145,12 @@ Review the configuration for the repository, image, and deployment configuration
 
 :::image type="content" source="media/automated-deployments/fleet-auto-deploy-review.png" alt-text="Screenshot showing the configuration of an Automated Deployment so it can be reviewed before being submitted." lightbox="media/automated-deployments/fleet-auto-deploy-review.png" :::
 
-Select **Next** to start the process which performs these actions:
+Select **Next** to start the process, which performs these actions:
 
-1. Create federated credentials to allow the GitHub Action to:
+1. Creates federated credentials to allow the GitHub Action to:
     1. Push the built container image to the Azure Container Registry.
     1. Stage the Kubernetes manifests into the selected namespace on the Fleet Manager hub cluster.
-1. Create a pull request on the code repository with any generated files and the workflow.
+1. Creates a pull request on the code repository with any generated files and the workflow.
 
 Setup takes a few minutes, so don't navigate away from the Deploy page.
 
@@ -267,10 +269,9 @@ During preview, to configure placement of your staged workload on to member clus
 
 1. Commit the new CRP manifest and updated GitHub Action workflow file.
 
-1. Check the workload is placed according to the policy defined in the CRP definition. You check either using the Azure portal or `kubectl` at the command line.
+1. Check that the workload is placed according to the policy defined in the CRP definition. You check using either the Azure portal or `kubectl` at the command line.
 
 :::image type="content" source="media/automated-deployments/fleet-auto-deploy-check-placement.png" alt-text="Screenshot of the Fleet Manager Resource Placements showing a successfully completed placement." lightbox="media/automated-deployments/fleet-auto-deploy-check-placement.png" :::
-
 
 ## Next steps
 

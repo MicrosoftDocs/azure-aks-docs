@@ -197,6 +197,7 @@ You can define an update run using update stages to sequentially order the appli
         "stages": [
             {
                 "name": "stage1",
+                "maxAllowedFailures": "2",
                 "groups": [
                     {
                         "name": "group-1a"
@@ -214,7 +215,8 @@ You can define an update run using update stages to sequentially order the appli
                 "name": "stage2",
                 "groups": [
                     {
-                        "name": "group-2a"
+                        "name": "group-2a",
+                        "maxAllowedFailures": "1"
                     },
                     {
                         "name": "group-2b"
@@ -227,6 +229,13 @@ You can define an update run using update stages to sequentially order the appli
         ]
     }
     ```
+
+    > [!NOTE]
+    > The optional `maxAllowedFailures` field controls how many member cluster upgrade failures are tolerated at the stage or group level before the segment is marked as failed. When unset or `"0"`, any single failure stops the update run.
+    >
+    > This setting evaluates only failure count, not success rate. As a result, a group can reach `Completed` even if some or all members failed, as long as the configured threshold wasn't exceeded. After the run finishes, always review `FailureCount`, member statuses, and failure messages.
+    >
+    > Values can be a fixed integer (for example, `"2"`) or a percentage (for example, `"25%"`). For more information, see [Maximum allowed failures (preview)](./concepts-update-orchestration.md#maximum-allowed-failures-preview).
 
 1. Create an update run using the [`az fleet updaterun create`][az-fleet-updaterun-create] command with the `--stages` flag set to the name of your JSON file and your chosen values for the `--upgrade-type` and `--node-image-selection` flags. The following command creates an update run that upgrades the Kubernetes version for both control plane and node pools and uses the latest node image available for each cluster in its region.
 

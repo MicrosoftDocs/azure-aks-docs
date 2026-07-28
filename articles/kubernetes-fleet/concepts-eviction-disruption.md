@@ -1,7 +1,7 @@
 ---
 title: "Controlling eviction and disruption budgets for Azure Kubernetes Fleet Manager cluster resource placement"
 description: This article describes how to manage evictions and voluntary disruption for workloads placed by Fleet Manager's cluster resource placement.
-ms.date: 03/12/2025
+ms.date: 07/28/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,6 +10,8 @@ ms.topic: concept-article
 ---
 
 # Controlling eviction and disruption budgets for Azure Kubernetes Fleet Manager cluster resource placement (preview)
+
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 Administrators using Fleet Manager's cluster resource placement (CRP) can find they need to remove resources previously placed on member clusters, while ensuring that key resource placements aren't disrupted.
 
@@ -20,7 +22,7 @@ In this article, we explore how you can use Fleet Manager's `ClusterResourcePlac
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-beta.md)]
 
-## Evicting placed resources (preview)
+## Evict placed resources (preview)
 
 A `ClusterResourcePlacementEviction` object is used to remove resources from a member cluster once the resources are propagated from the Fleet Manager hub cluster.
 
@@ -94,7 +96,7 @@ Let's say the placement picked two clusters named `member-cluster-01` and `membe
       clusterName: member-cluster-02
     ```
 
-1. Check the specified resources are removed from `member-cluster-02` cluster:
+1. Check that the specified resources are removed from the `member-cluster-02` cluster:
 
     ```bash
     kubectl get crpe eviction-sample
@@ -107,7 +109,7 @@ Let's say the placement picked two clusters named `member-cluster-01` and `membe
     test-eviction   True    True 
     ```
     
-Now you understand how to force the removal of placed resources from clusters, let's see how you can protect key resources from eviction.
+Now that you understand how to force the removal of placed resources from clusters, let's see how you can protect key resources from eviction.
 
 ## Protect against eviction (preview)
 
@@ -196,4 +198,4 @@ Placement disruption budgets **do not protect against involuntary disruption**. 
 <!-- LINKS - external -->
 [learn-conceptual-crp]: ./concepts-resource-placement.md
 [fleet-taints]: ./use-taints-tolerations.md
-[placement-status]: ./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters
+[placement-status]: ./howto-understand-placement.md

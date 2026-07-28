@@ -35,9 +35,9 @@ This article covers how to define update strategies using groups and stages.
     export STRATEGY=<strategy-name>
     ```
 
-* If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* If you're following the Azure CLI instructions in this article, install the latest version of the Azure CLI. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.6.0 or later, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension. To install it, run the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
@@ -155,7 +155,7 @@ An update strategy consists of one or more stages, where a stage can contain one
 
 For this scenario, we create stages and groups to match the details used for the Azure portal process.  
 
-1. Create a JSON file to define the stages and groups for the update run. Stages run sequentially in the order they appear in the JSON file. Groups run in parallel within each stage, so ordering isn't important. The following example file (*example-stages.json*) defines a strategy with two stages and includes optional `maxConcurrency` settings:
+1. Create a JSON file to define the stages and groups for the update run. Stages run sequentially in the order they appear in the JSON file. Groups run in parallel within each stage, so ordering isn't important. The following example file (*example-stages.json*) defines a strategy with two stages and includes optional `maxConcurrency` and `maxAllowedFailures` settings:
 
     ```json
     {
@@ -163,14 +163,17 @@ For this scenario, we create stages and groups to match the details used for the
             {
                 "name": "stage-1",
                 "maxConcurrency": "7",
+                "maxAllowedFailures": "2",
                 "groups": [
                     {
                         "name": "group-1",
-                        "maxConcurrency": "3"
+                        "maxConcurrency": "3",
+                        "maxAllowedFailures": "1"
                     },
                     {
                         "name": "group-2",
-                        "maxConcurrency": "50%"
+                        "maxConcurrency": "50%",
+                        "maxAllowedFailures": "25%"
                     }
                 ],
                 "afterStageWaitInSeconds": 300
@@ -178,10 +181,12 @@ For this scenario, we create stages and groups to match the details used for the
             {
                 "name": "stage-2",
                 "maxConcurrency": "100%",
+                "maxAllowedFailures": "0",
                 "groups": [
                     {
                         "name": "group-3",
-                        "maxConcurrency": "2"
+                        "maxConcurrency": "2",
+                        "maxAllowedFailures": "0"
                     }
                 ]
             }
@@ -189,12 +194,25 @@ For this scenario, we create stages and groups to match the details used for the
     }
     ```
 
-    > [!NOTE]
-    > The `maxConcurrency` field is optional and controls how many clusters can upgrade concurrently at the stage or group level. Use a larger value to upgrade clusters faster across your fleet, or a smaller value for a more controlled rollout that limits the blast radius if issues arise.
-    >
-    > In this example, `stage-1` sets `maxConcurrency` to `"7"`, which allows up to `"7"` clusters in this stage to upgrade concurrently. Within `stage-1`, `group-1` limits concurrency to `"3"` clusters, which means up to `"3"` in this group can upgrade concurrently. `group-2` allows up to `"50%"` of its clusters to upgrade concurrently (for example, if the group contains 4 clusters, up to 2 can upgrade at the same time).
-    >
-    > Values can be a fixed integer (for example, `"3"`) or a percentage (for example, `"100%"`). If omitted, the system applies default values. For details on how these values are resolved and their upper limits, see [Maximum concurrency (preview)](./concepts-update-orchestration.md#maximum-concurrency-preview).
+    **`maxConcurrency`**
+
+    The `maxConcurrency` field is optional and controls how many clusters can upgrade concurrently at the stage or group level. Use a larger value to upgrade clusters faster across your fleet, or a smaller value for a more controlled rollout that limits the blast radius if problems arise.
+
+    In this example, `stage-1` sets `maxConcurrency` to `"7"`, which allows up to `"7"` clusters in this stage to upgrade concurrently. Within `stage-1`, `group-1` limits concurrency to `"3"` clusters, which means up to `"3"` in this group can upgrade concurrently. `group-2` allows up to `"50%"` of its clusters to upgrade concurrently (for example, if the group contains 4 clusters, up to 2 can upgrade at the same time).
+
+    Values can be a fixed integer (for example, `"3"`) or a percentage (for example, `"100%"`). If omitted, the system applies default values. For details on how these values are resolved and their upper limits, see [Maximum concurrency (preview)](./concepts-update-orchestration.md#maximum-concurrency-preview).
+
+    **`maxAllowedFailures`**
+
+    The `maxAllowedFailures` field is optional and controls how many member cluster upgrade failures are tolerated before the group or stage is marked as failed. By default (when unset or `"0"`), a single failure stops the entire update run.
+
+    This setting evaluates failure count only. It doesn't enforce a minimum success rate. A group or stage can therefore end in `Completed` even if some or all members failed, as long as the failure threshold wasn't exceeded when Fleet made its scheduling decisions.
+
+    In this example, `stage-1` sets `maxAllowedFailures` to `"2"`, tolerating up to two member failures across the stage. Within `stage-1`, `group-1` tolerates `"1"` failure and `group-2` tolerates `"25%"` of its members failing (for example, if the group contains 4 clusters, up to 1 failure is tolerated). `stage-2` sets `maxAllowedFailures` to `"0"`, which means any failure immediately stops the run and is often useful for production stages.
+
+    For most rollouts, prefer percentage-based values because they scale better across different group sizes. Avoid setting the value equal to the total member count unless you intentionally want effectively "never fail" behavior for that segment.
+
+    Values can be a fixed integer (for example, `"3"`) or a percentage (for example, `"25%"`). For details on how these values are resolved, see [Maximum allowed failures (preview)](./concepts-update-orchestration.md#maximum-allowed-failures-preview).
 
 1. Create a new update strategy using the [`az fleet updatestrategy create`][az-fleet-updatestrategy-create] command with the `--stages` flag set to the name of your JSON file.
 
