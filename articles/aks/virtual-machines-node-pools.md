@@ -3,7 +3,7 @@ title: Use Virtual Machines Node Pools in Azure Kubernetes Services (AKS)
 description: Learn how to add multiple Virtual Machine types of a similar family to a Virtual Machines node pool in an AKS cluster.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 04/28/2026
+ms.date: 07/28/2026
 ms.author: wilsondarko
 author: wdarko1
 
@@ -282,38 +282,16 @@ az aks nodepool manual-scale delete \
     --current-vm-sizes "Standard_D8s_v3"
 ```
 
-## Cluster autoscaler with Virtual Machines Node Pools (preview)
-Virtual Machines node pools support [cluster autoscaler][cluster-autoscaler]. This can be enabled using the flag `--enable-cluster-autoscaler` during cluster creation, while adding a new node pool, or in updating an existing manual node pool. 
+## Cluster autoscaler with Virtual Machines Node Pools
+Virtual Machines node pools support [cluster autoscaler][cluster-autoscaler]. This allows autoscaling for both same VM size node pools and multiple VM size node pools. This can be enabled using the flag `--enable-cluster-autoscaler` during cluster creation, while adding a new node pool, or in updating an existing manual node pool. 
 
 When using cluster autoscaler with Virtual Machine node pools, the behavior is as follows:
 - Scale up: autoscaler responds to pending pod pressure, and can scale up the node count of a node pool with multiple VM sizes in that node pool. 
-- Scale down: a specific node is chosen by autoscaler based on the utilization of node. you can configure `scale-down-utilization-threshold`to adjust when cluster autoscaling triggers a scaling action. See [cluster autoscaler documentation][cluster-autoscaler] for more information on configuring autoscaling. 
+- Scale down: a specific node is chosen by autoscaler based on the utilization of the node. you can configure `scale-down-utilization-threshold`to adjust when cluster autoscaling triggers a scaling action. See [cluster autoscaler documentation][cluster-autoscaler] for more information on configuring autoscaling. 
 
 ### Limitations
 - This feature is only available in public cloud.
-- GPU Nodes are not currently supported.
-- AKS preview extension version 20.0.0b8 or later.
-
-### Install the aks-preview extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-- Install or update the `aks-preview` Azure CLI extension by using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command:
-
-```azurecli-interactive
-    # Install the aks-preview extension
-    az extension add --name aks-preview
-    
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-```
-
-### Register feature flag
-Register the preview feature flag `VMsAgentAutoscalePreview` using the `az feature register` command:
-
-```azurecli-interactive
-    az feature register --namespace Microsoft.ContainerService --name VMsAgentPoolAutoscalePreview
-```
+- GPU nodes are not currently supported.
 
 ### Create an AKS cluster with Virtual Machines node pools and cluster-autoscaler enabled
 - Create an AKS cluster with Virtual Machines node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"` and with the flag `--enable-cluster-autoscaler`.
