@@ -1031,15 +1031,12 @@ Both `ResourcePlacement` and `ClusterResourcePlacement` share the same core capa
 1. **Platform admins**: Use `ClusterResourcePlacement` to deploy namespaces across the fleet.
 1. **Application teams**: Use `ResourcePlacement` to manage specific resources within those established namespaces.
 
-The following examples show how to coordinate CRP and RP:
-
-> [!NOTE]
-> The following examples use the `placement.kubernetes-fleet.io/v1beta1` API version. The `selectionScope: NamespaceOnly` field is a preview feature available in v1beta1 and isn't available in the v1 API.
+The following examples show how to coordinate CRP and RP.
 
 **Platform admin**: Create the namespace by using `ClusterResourcePlacement`:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: app-namespace-crp
@@ -1057,7 +1054,7 @@ spec:
 **Application team**: Manage specific resources within the namespace by using `ResourcePlacement`:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: app-configs-rp
