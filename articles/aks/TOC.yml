@@ -1324,6 +1324,8 @@
               href: cluster-autoscaler-overview.md
             - name: Use the cluster autoscaler on AKS
               href: cluster-autoscaler.md
+        - name: Horizontal Pod Autoscaler
+          href: horizontal-pod-autoscaler.md
         - name: Kubernetes Event-driven Autoscaler (KEDA) add-on
           items:
             - name: About Kubernetes Event-driven Autoscaler (KEDA)
