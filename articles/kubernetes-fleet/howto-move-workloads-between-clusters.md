@@ -2,7 +2,7 @@
 title: "How to move a Kubernetes workload between clusters using Azure Kubernetes Fleet Manager resource placement"
 description: Learn how to take over a Kubernetes workload on one cluster and move it to another cluster by using Azure Kubernetes Fleet Manager resource placement.
 ms.topic: how-to
-ms.date: 07/14/2026
+ms.date: 07/28/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -87,13 +87,22 @@ Now that the workload is running on a single cluster, you can migrate the worklo
 
 ## Stage the workload on Fleet Manager hub cluster
 
-Get the credentials to access the Fleet Manager hub cluster:
+ Get the kubeconfig file of the Kubernetes Fleet hub cluster by using the [`az fleet get-credentials`][az-fleet-get-credentials] command:
 
 ```azurecli-interactive
 az fleet get-credentials \
     --resource-group ${GROUP} \
     --name ${FLEET}
 ```
+
+Your output should look similar to the following.
+
+```output
+Merged "hub" as current context in /home/fleet/.kube/config
+```
+
+> [!NOTE]
+> If you receive an error of type `InvalidHubOperation` with the message indicating the fleet is hubless, add a hub cluster. For further information, see [upgrade hub cluster type](./upgrade-hub-cluster-type.md).
 
 Use the same manifest from the previous step and apply it to the Fleet Manager hub cluster:
 
@@ -192,3 +201,6 @@ By using the `applyStrategy` available with Fleet Manager's resource placement, 
 * [Understanding the status of resource placements](./howto-understand-placement.md).
 * [Intelligent cross-cluster Kubernetes resource placement](./intelligent-resource-placement.md).
 * [Fleet Manager Frequently Asked Questions (FAQs)](./faq.md).
+
+<!-- LINKS --->
+[az-fleet-get-credentials]: /cli/azure/fleet#az-fleet-get-credentials

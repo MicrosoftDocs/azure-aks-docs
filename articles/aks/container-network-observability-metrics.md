@@ -140,7 +140,7 @@ For non-Cilium data plane scenarios, container network metrics are available for
 | **networkobservability_forward_count** | Total forwarded packet count | `direction` | ✅ | ✅ |
 | **networkobservability_infiniband_counter_stats** | InfiniBand counter statistics | `statistic_name`, `device`, `port` | ✅ | ❌ |
 | **networkobservability_infiniband_status_params** | InfiniBand status parameters | `statistic_name`, `interface_name` | ✅ | ❌ |
-| **networkobservability_interface_stats** | Interface statistics (rx/tx packets, drops, etc.) | `interface_name`, `statistic_name` | ✅ | ❌ |
+| **networkobservability_interface_stats** | Interface statistics (rx/tx packets, drops, and more) | `interface_name`, `statistic_name` | ✅ | ❌ |
 | **networkobservability_ip_connection_stats** | IP connection statistics | `statistic_name` | ✅ | ❌ |
 | **networkobservability_node_apiserver_handshake_latency** | TCP handshake latency to API server | | ✅ | ❌ |
 | **networkobservability_node_apiserver_latency** | Node to API server latency | | ✅ | ❌ |
@@ -148,12 +148,12 @@ For non-Cilium data plane scenarios, container network metrics are available for
 | **networkobservability_node_connectivity_latency_seconds** | Node-to-node connectivity latency | `source_node_name`, `target_node_name` | ✅ | ✅ |
 | **networkobservability_node_connectivity_status** | Node-to-node connectivity status (ICMP/HTTP) | `source_node_name`, `target_node_name` | ✅ | ✅ |
 | **networkobservability_tcp_connection_remote** | TCP active socket count by remote IP | `address` | ✅ | ❌ |
-| **networkobservability_tcp_connection_stats** | TCP connection statistics (e.g., DelayedACKs, TCPKeepAlive, TCPSackFailures) | `statistic_name` | ✅ | ✅ |
+| **networkobservability_tcp_connection_stats** | TCP connection statistics (for example, DelayedACKs, TCPKeepAlive, TCPSackFailures) | `statistic_name` | ✅ | ✅ |
 | **networkobservability_tcp_flag_gauges** | TCP packet counts by flag | `direction`, `flag` | ❌ | ✅ |
 | **networkobservability_tcp_retransmission_count** | TCP retransmission count | | ✅ | ❌ |
 | **networkobservability_tcp_state** | TCP active socket count by state | `state` | ✅ | ❌ |
 | **networkobservability_udp_connection_stats** | UDP connection statistics | `statistic_name` | ✅ | ❌ |
-| **networkobservability_windows_hns_stats** | Windows HNS statistics (packets sent/received) | `direction` | ❌ | ✅ |
+| **networkobservability_windows_hns_stats** | Windows HNS statistics (packets sent and received) | `direction` | ❌ | ✅ |
 
 ---
 

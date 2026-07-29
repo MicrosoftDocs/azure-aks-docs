@@ -216,7 +216,7 @@ Retrieve the resource identifier for the API subnet to use later.
 API_SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-name ${FLEET} -n ${VNET-API-SUBNET-NAME} -o tsv --query id)
 ```
 
-6. Finally, create the new hub cluster, providing the necessary arguments to enable API VNet integration  
+1. Finally, create the new hub cluster, providing the necessary arguments to enable API VNet integration and a private hub cluster. 
 
 ```azurecli-interactive
 az fleet create \

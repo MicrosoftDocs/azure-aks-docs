@@ -1,20 +1,20 @@
 ---
-title: "Control cluster order for resource placement"
+title: "Use staged rollout runs to control Azure Kubernetes Fleet Manager resource placements"
 description: Learn how to use placement staged update runs to deploy Kubernetes resources to member clusters in stages and roll back to previous versions in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 03/16/2026
+ms.date: 07/28/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a DevOps engineer, I want to use staged update runs to control how workloads are deployed across multiple clusters, so that I can minimize risk and ensure reliable rollouts through progressive deployment strategies."
-zone_pivot_groups: cluster-namespace-scope
+zone_pivot_groups: azure-portal-azure-cli
 ---
 
-# Control cluster order for resource placement
+# Use staged rollout runs to control Azure Kubernetes Fleet Manager resource placements
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-Azure Kubernetes Fleet Manager placement staged update runs provide a controlled approach to deploying Kubernetes workloads across multiple member clusters using a stage-by-stage process. To minimize risk, this approach deploys to targeted clusters sequentially, with optional wait times and approval gates between stages.
+Azure Kubernetes Fleet Manager placement staged rollout runs provide a controlled approach to deploying Kubernetes workloads across multiple member clusters using a stage-by-stage process. To minimize risk, this approach deploys to targeted clusters sequentially, with optional wait times and approval gates between stages.
 
 This article shows you how to create and execute staged update runs to deploy workloads progressively and roll back to previous versions when needed.
 
@@ -22,26 +22,28 @@ Azure Kubernetes Fleet Manager supports two scopes for staged updates:
 
 - **Cluster-scoped**: Use `ClusterStagedUpdateRun` with `ClusterResourcePlacement` for fleet administrators managing infrastructure-level changes.
 - **Namespace-scoped**: Use `StagedUpdateRun` with `ResourcePlacement` for application teams managing rollouts within their specific namespaces.
-> [!IMPORTANT]
-> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview. Some features demonstrated in this article, such as `ResourceSnapshot`, are also part of the v1beta1 API and aren't available in the v1 API.
 
-The examples in this article demonstrate both approaches using tabs. Choose the tab that matches your deployment scope.
+The example in this article demonstrates using a rollout run with cluster-scoped resources. Namespace-scoped behaves exactly the same with intra-namespace resources.
 
 ## Before you begin
 
-### Prerequisites
+* [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
-* You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
+* To understand the concepts and terminology used in this article, read the [conceptual overview of staged rollout strategies](./concepts-rollout-strategy.md#staged-update-strategy).
 
-* To understand the concepts and terminology used in this article, read the [conceptual overview of staged rollout strategies](./concepts-rollout-strategy.md#staged-update-strategy-preview).
+:::zone target="docs" pivot="azure-cli"
 
-* You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* Set the following environment variables:
 
-* If you don't have the Kubernetes CLI (kubectl) already, you can install it by using this command:
+    ```bash
+    export SUBSCRIPTION_ID=<subscription>
+    export GROUP=<resource-group>
+    export FLEET=<fleet-name>
+    export MEMBER_CLUSTER_1=aks-member-1
+    export MEMBER_CLUSTER_2=aks-member-2
+    ```
 
-  ```azurecli-interactive
-  az aks install-cli
-  ```
+* You need Azure CLI installed to complete this article. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
 * You need the `fleet` Azure CLI extension. You can install it by running the following command:
 
@@ -55,1085 +57,658 @@ The examples in this article demonstrate both approaches using tabs. Choose the 
   az extension update --name fleet
   ```
 
-### Configure the demo environment
+* If you don't have the Kubernetes CLI (kubectl) already, you can install it by using this command:
 
-This demo runs on a Fleet Manager with a hub cluster and three member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
+  ```azurecli-interactive
+  az aks install-cli
+  ```
 
-This tutorial demonstrates staged update runs using a demo fleet environment with three member clusters that have the following labels:
+:::zone-end
+
+### Configure the environment
+
+This article uses a Fleet Manager with a hub cluster and two member clusters. If you don't have a Fleet Manager, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) or Azure Arc-enabled Kubernetes clusters as members.
+
+Make sure that the member clusters have the following labels so that there's a cluster in each stage of the rollout.
 
 | member name  | labels                      |
 |--------------|-----------------------------|
-| member1      | environment=canary, order=2 |
-| member2      | environment=staging         |
-| member3      | environment=canary, order=1 |
+| aks-member-1 | environment=canary          |
+| aks-member-2 | environment=staging         |
 
-These labels enable creation of stages and to control the deployment order within each stage.
+:::zone target="docs" pivot="azure-cli"
 
-Apply labels to the member clusters using the command shown.
+Apply labels to the member clusters by using the following command.
 
 ```azurecli-interactive
 az fleet member update \
-    --resource-group $GROUP \
-    --fleet-name $FLEET_NAME \
-    --name member2 \
+    --resource-group ${GROUP} \
+    --fleet-name ${FLEET} \
+    --name ${MEMBER_CLUSTER_1} \
+    --labels environment=canary
+```
+
+```azurecli-interactive
+az fleet member update \
+    --resource-group ${GROUP} \
+    --fleet-name ${FLEET} \
+    --name ${MEMBER_CLUSTER_2} \
     --labels environment=staging
 ```
 
-:::zone target="docs" pivot="cluster-scope"
+:::zone-end
 
-## Prepare Kubernetes workloads for placement
+:::zone target="docs" pivot="azure-portal"
 
-Publish Kubernetes workloads to the hub cluster so that they can be placed onto member clusters.
+1. In the Azure portal, go to your Fleet Manager.
 
-Create a Namespace and ConfigMap for the workload on the hub cluster:
+1. On the service menu, under **Settings**, select **Member clusters**.
 
-```bash
-kubectl create namespace test-namespace
-kubectl create configmap test-cm --from-literal=key=value1 -n test-namespace
-```
+1. In the member cluster list, select a cluster. Then, choose **Edit labels** in the action menu.
 
-To deploy the resources, create a `ClusterResourcePlacement`:
+1. Add the appropriate label to the member cluster, and then select **Apply**.
 
-> [!NOTE]
-> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `ClusterStagedUpdateRun`.
+1. Repeat for each member cluster.
 
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterResourcePlacement
-metadata:
-  name: example-placement
-spec:
-  resourceSelectors:
-    - group: ""
-      kind: Namespace
-      name: test-namespace
-      version: v1
-  policy:
-    placementType: PickAll
-  strategy:
-    type: External
-```
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-label-cluster.png" alt-text="A screenshot of the Azure portal showing a new label being added to an Azure Kubernetes Fleet Manager member cluster." lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-label-cluster.png":::
 
-All three clusters should be scheduled since we use the `PickAll` policy, but no resources should be deployed on the member clusters yet because we didn't create a `ClusterStagedUpdateRun`.
+:::zone-end
 
-Verify the placement is scheduled:
+## Prepare Kubernetes workload for placement
 
-```bash
-kubectl get clusterresourceplacement example-placement
-```
+In this step, you stage a Kubernetes workload on the Fleet Manager hub cluster so you can distribute it through a staged rollout onto member clusters.
 
-Your output should look similar to the following example:
+:::zone target="docs" pivot="azure-cli"
 
-```output
-NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-example-placement   1     True        1                                           51s
-```
+1. Get the kubeconfig file of the Kubernetes Fleet hub cluster by using the [`az fleet get-credentials`][az-fleet-get-credentials] command:
 
+    ```azurecli-interactive
+    az fleet get-credentials \
+        --resource-group ${GROUP} \
+        --name ${FLEET}
+    ```
+    
+    Your output should look similar to the following.
+    
+    ```output
+    Merged "hub" as current context in /home/fleet/.kube/config
+    ```
+    
+    > [!NOTE]
+    > If you receive an error of type `InvalidHubOperation` with the message indicating the fleet is hubless, add a hub cluster. For further information, see [upgrade hub cluster type](./upgrade-hub-cluster-type.md).
 
-## Create a staged update strategy
+1. Create a namespace on the Fleet Manager hub cluster.
+    
+    ```bash
+    kubectl create namespace test-app
+    ```
 
-A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
+1. Save the following YAML as `test-workload.yaml`.
 
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterStagedUpdateStrategy
-metadata:
-  name: example-strategy
-spec:
-  stages:
-    - name: staging
-      labelSelector:
-        matchLabels:
-          environment: staging
-      afterStageTasks:
-        - type: TimedWait
-          waitTime: 1m
-      maxConcurrency: 1
-    - name: canary
-      labelSelector:
-        matchLabels:
-          environment: canary
-      sortingLabelKey: order
-      beforeStageTasks:
-        - type: Approval
-      maxConcurrency: 50%
-```
-
-## Work with resource snapshots
-
-Fleet Manager creates resource snapshots when resources change if the placement has a rollout strategy of `RollingUpdate`. Each snapshot has a unique index that you can use to reference specific versions of your resources.
-
-When a placement uses the `External` rollout strategy, resource snapshots aren't created automatically. Instead, they're created when you execute a staged update run. This means that when you first create a placement with an `External` rollout strategy, no resource snapshots exist until you run the first staged update run.
-
-> [!NOTE]
-> If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available. You can reference these existing snapshots when creating staged update runs.
-
-> [!TIP]
-> For more information about resource snapshots and how they work, see [resource snapshots](./howto-understand-placement.md#resource-snapshots).
-
-### Check current resource snapshots
-
-Since the `ClusterResourcePlacement` uses the `External` strategy, no resource snapshots exist yet. Let's verify:
-
-```bash
-kubectl get clusterresourcesnapshots --show-labels
-```
-
-Your output should show no resources:
-
-```output
-No resources found
-```
-
-### Create the first resource snapshot
-
-To create the first resource snapshot, you need to create a `ClusterStagedUpdateRun` with the `resourceSnapshotIndex` field omitted. The update run controller detects that no snapshots exist and creates one automatically.
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterStagedUpdateRun
-metadata:
-  name: example-initial-run
-spec:
-  placementName: example-placement
-  stagedRolloutStrategyName: example-strategy
-  state: Run
-```
-
-After the update run completes, check the resource snapshots:
-
-```bash
-kubectl get clusterresourcesnapshots --show-labels
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                           GEN   AGE   LABELS
-example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
-```
-
-You now have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
-
-### Create a new resource snapshot
-
-Now modify the ConfigMap with a new value:
-
-```bash
-kubectl edit configmap test-cm -n test-namespace
-```
-
-Update the value from `value1` to `value2`:
-
-```bash
-kubectl get configmap test-cm -n test-namespace -o yaml
-```
-
-Your output should look similar to the following example:
-
-```yaml
-apiVersion: v1
-data:
-  key: value2 # value updated here, old value: value1
-kind: ConfigMap
-metadata:
-  creationTimestamp: ...
-  name: test-cm
-  namespace: test-namespace
-  resourceVersion: ...
-  uid: ...
-```
-
-Since the placement uses the `External` strategy, the new resource snapshot isn't created automatically. Create another `ClusterStagedUpdateRun` with the `resourceSnapshotIndex` field omitted to trigger the creation of a new snapshot:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterStagedUpdateRun
-metadata:
-  name: example-snapshot-run
-spec:
-  placementName: example-placement
-  stagedRolloutStrategyName: example-strategy
-  state: Run
-```
-
-After the update run completes, you should see two versions of resource snapshots with index 0 and 1 respectively, the latest being index 1:
-
-```bash
-kubectl get clusterresourcesnapshots --show-labels
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                           GEN   AGE    LABELS
-example-placement-0-snapshot   1     2m6s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
-example-placement-1-snapshot   1     10s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
-```
-
-The latest label is set to example-placement-1-snapshot, which contains the latest ConfigMap data:
-
-```bash
-kubectl get clusterresourcesnapshots example-placement-1-snapshot -o yaml
-```
-
-Your output should look similar to the following example:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterResourceSnapshot
-metadata:
-  annotations:
-    kubernetes-fleet.io/number-of-enveloped-object: "0"
-    kubernetes-fleet.io/number-of-resource-snapshots: "1"
-    kubernetes-fleet.io/resource-hash: 10dd7a3d1e5f9849afe956cfbac080a60671ad771e9bda7dd34415f867c75648
-  creationTimestamp: "2025-07-22T21:26:54Z"
-  generation: 1
-  labels:
-    kubernetes-fleet.io/is-latest-snapshot: "true"
-    kubernetes-fleet.io/parent-CRP: example-placement
-    kubernetes-fleet.io/resource-index: "1"
-  name: example-placement-1-snapshot
-  ownerReferences:
-  - apiVersion: placement.kubernetes-fleet.io/v1
-    blockOwnerDeletion: true
-    controller: true
-    kind: ClusterResourcePlacement
-    name: example-placement
-    uid: e7d59513-b3b6-4904-864a-c70678fd6f65
-  resourceVersion: "19994"
-  uid: 79ca0bdc-0b0a-4c40-b136-7f701e85cdb6
-spec:
-  selectedResources:
-  - apiVersion: v1
-    kind: Namespace
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
-      labels:
-        kubernetes.io/metadata.name: test-namespace
-      name: test-namespace
+      name: nginx-deployment
+      namespace: test-app
     spec:
-      finalizers:
-      - kubernetes
-  - apiVersion: v1
-    data:
-      key: value2 # latest value: value2, old value: value1
-    kind: ConfigMap
+      selector:
+        matchLabels:
+          app: nginx
+      replicas: 2
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: mcr.microsoft.com/azurelinux/base/nginx:1.28@sha256:3352a36cbcab4708883a3e77b64f64159e11e1aab358c010e1c4e465dbfb4f57
+            ports:
+            - containerPort: 80
+    ---
+    apiVersion: v1
+    kind: Service
     metadata:
-      name: test-cm
-      namespace: test-namespace
-```
+      name: nginx-service
+      namespace: test-app
+    spec:
+      selector:
+        app: nginx
+      ports:
+      - protocol: TCP
+        port: 80
+        targetPort: 80
+      type: LoadBalancer
+    ```
+
+1. Stage the test workload onto the Fleet Manager hub cluster by using `kubectl`.
+    
+    ```bash
+    kubectl apply -f test-workload.yaml
+    ```
 
-## Prepare a staged update run to rollout changes
-
-A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our ClusterResourcePlacement (CRP), we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
-
-> [!NOTE]
-> When using the `External` rollout strategy, you can omit the `resourceSnapshotIndex` field if you want to deploy the latest resources. The update run controller creates a new resource snapshot automatically when `resourceSnapshotIndex` is omitted.
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterStagedUpdateRun
-metadata:
-  name: example-run
-spec:
-  placementName: example-placement
-  resourceSnapshotIndex: "1"
-  stagedRolloutStrategyName: example-strategy
-  state: Initialize
-```
-
-The staged update run is initialized but not running:
-
-```bash
-kubectl get clusterstagedupdaterrun example-run
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True                      7s
-```
-
-## Start a staged update run
-
-To start the execution of a staged update run, you need to patch the `state` field in the spec to `Run`:
-
-```bash
-kubectl patch clusterstagedupdaterrun example-run --type merge -p '{"spec":{"state":"Run"}}'
-```
-
-> [!NOTE]
-> You can also create an update run with the `state` field set to `Run` initially, which both initialize and starts progressing the update run in a single step.
-
-The staged update run is initialized and running:
-
-```bash
-kubectl get clusterstagedupdaterrun example-run
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True                      7s
-```
-
-A more detailed look at the status after the one-minute `TimedWait` elapses:
-
-```bash
-kubectl get clusterstagedupdaterrun example-run -o yaml
-```
-
-Your output should look similar to the following example:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterStagedUpdateRun
-metadata:
-  ...
-  name: example-run
-  ...
-spec:
-  placementName: example-placement
-  resourceSnapshotIndex: "1"
-  stagedRolloutStrategyName: example-strategy
-  state: Run
-status:
-  conditions:
-  - lastTransitionTime: "2025-07-22T21:28:08Z"
-    message: ClusterStagedUpdateRun initialized successfully
-    observedGeneration: 2
-    reason: UpdateRunInitializedSuccessfully
-    status: "True" # the updateRun is initialized successfully
-    type: Initialized
-  - lastTransitionTime: "2025-07-22T21:29:53Z"
-    message: The updateRun is waiting for after-stage tasks in stage canary to complete
-    observedGeneration: 2
-    reason: UpdateRunWaiting
-    status: "False" # the updateRun is still progressing and waiting for approval
-    type: Progressing
-  deletionStageStatus:
-    clusters: [] # no clusters need to be cleaned up
-    stageName: kubernetes-fleet.io/deleteStage
-  policyObservedClusterCount: 3 # number of clusters to be updated
-  policySnapshotIndexUsed: "0"
-  resourceSnapshotIndexUsed: "1"
-  stagedUpdateStrategySnapshot: # snapshot of the strategy used for this update run
-    stages:
-    - afterStageTasks:
-      - type: TimedWait
-        waitTime: 1m0s
-      labelSelector:
-        matchLabels:
-          environment: staging
-      maxConcurrency: 1
-      name: staging
-    - beforeStageTasks:
-      - type: Approval
-      labelSelector:
-        matchLabels:
-          environment: canary
-      maxConcurrency: 50%
-      name: canary
-      sortingLabelKey: order
-  stagesStatus: # detailed status for each stage
-  - afterStageTaskStatus:
-    - conditions:
-      - lastTransitionTime: "2025-07-22T21:29:23Z"
-        message: Wait time elapsed
-        observedGeneration: 2
-        reason: StageTaskWaitTimeElapsed
-        status: "True" # the wait after-stage task has completed
-        type: WaitTimeElapsed
-      type: TimedWait
-    clusters:
-    - clusterName: member2 # stage staging contains member2 cluster only
-      conditions:
-      - lastTransitionTime: "2025-07-22T21:28:08Z"
-        message: Cluster update started
-        observedGeneration: 2
-        reason: ClusterUpdatingStarted
-        status: "True"
-        type: Started
-      - lastTransitionTime: "2025-07-22T21:28:23Z"
-        message: Cluster update completed successfully
-        observedGeneration: 2
-        reason: ClusterUpdatingSucceeded
-        status: "True" # member2 is updated successfully
-        type: Succeeded
-    conditions:
-    - lastTransitionTime: "2025-07-22T21:28:23Z"
-      message: All clusters in the stage are updated and after-stage tasks are completed
-      observedGeneration: 2
-      reason: StageUpdatingSucceeded
-      status: "False"
-      type: Progressing
-    - lastTransitionTime: "2025-07-22T21:29:23Z"
-      message: Stage update completed successfully
-      observedGeneration: 2
-      reason: StageUpdatingSucceeded
-      status: "True" # stage staging has completed successfully
-      type: Succeeded
-    endTime: "2025-07-22T21:29:23Z"
-    stageName: staging
-    startTime: "2025-07-22T21:28:08Z"
-  - beforeStageTaskStatus:
-    - approvalRequestName: example-run-before-canary # ClusterApprovalRequest name for this stage for before stage task
-      conditions:
-      - lastTransitionTime: "2025-07-22T21:29:53Z"
-        message: ClusterApprovalRequest is created
-        observedGeneration: 2
-        reason: StageTaskApprovalRequestCreated
-        status: "True"
-        type: ApprovalRequestCreated
-      type: Approval
-    conditions:
-    - lastTransitionTime: "2025-07-22T21:29:53Z"
-      message: Not all before-stage tasks are completed, waiting for approval
-      observedGeneration: 2
-      reason: StageUpdatingWaiting
-      status: "False" # stage canary is waiting for approval task completion
-      type: Progressing
-    stageName: canary
-    startTime: "2025-07-22T21:29:23Z"
-```
-
-We can see that the TimedWait period for staging stage elapses and we also see that the `ClusterApprovalRequest` object for the approval task in canary stage was created. We can check the generated `ClusterApprovalRequest` and see that no one approved it yet
-
-```bash
-kubectl get clusterapprovalrequest
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-before-canary   example-run   canary                                 2m39s
-```
-
-## Approve the staged update run
-
-We can approve the `ClusterApprovalRequest` by creating a json patch file and applying it:
-
-```bash
-cat << EOF > approval.json
-"status": {
-    "conditions": [
-        {
-            "lastTransitionTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "message": "lgtm",
-            "observedGeneration": 1,
-            "reason": "testPassed",
-            "status": "True",
-            "type": "Approved"
-        }
-    ]
-}
-EOF
-```
-> Note: Be sure the `observedGeneration` matches the generation of the approval object.
-
-Submit a patch request to approve using the JSON file created.
-
-```bash
-kubectl patch clusterapprovalrequests example-run-before-canary --type='merge' --subresource=status --patch-file approval.json
-```
-
-Then verify that you approved the request:
-
-```bash
-kubectl get clusterapprovalrequest
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                        UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-before-canary   example-run   canary   True       True               3m35s
-```
-
-The `ClusterStagedUpdateRun` now is able to proceed and complete:
-
-```bash
-kubectl get clusterstagedupdaterrun example-run
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True          True        5m28s
-```
-
-## Verify the rollout completion
-
-The `ClusterResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
-
-```bash
-kubectl get clusterresourceplacement example-placement
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-example-placement   1     True        1               True        1               8m55s
-```
-
-The ConfigMap test-cm should be deployed on all three member clusters, with latest data:
-
-```yaml
-apiVersion: v1
-data:
-  key: value2
-kind: ConfigMap
-metadata:
-  ...
-  name: test-cm
-  namespace: test-namespace
-  ...
-```
-
-## Stop a staged update run
-
-To stop the execution of a running cluster staged update run, you need to patch the `state` field in the spec to `Stop`. This action gracefully halts the update run, allowing in-progress clusters to complete their updates before stopping the entire rollout process:
-
-```bash
-kubectl patch clusterstagedupdaterun example-run --type merge -p '{"spec":{"state":"Stop"}}'
-```
-
-The staged update run is initialized and no longer running:
-
-```bash
-kubectl get clusterstagedupdaterun example-run
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True                      7s
-```
-
-A more detailed look at the status after the update run stops:
-
-```bash
-kubectl get clusterstagedupdaterun example-run -o yaml
-```
-
-Your output should look similar to the following example:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterStagedUpdateRun
-metadata:
-  ...
-  name: example-run
-  ...
-spec:
-  placementName: example-placement
-  resourceSnapshotIndex: "1"
-  stagedRolloutStrategyName: example-strategy
-  state: Stop
-status:
-  conditions:
-  - lastTransitionTime: "2025-07-22T21:28:08Z"
-    message: ClusterStagedUpdateRun initialized successfully
-    observedGeneration: 3
-    reason: UpdateRunInitializedSuccessfully
-    status: "True" # the updateRun is initialized successfully
-    type: Initialized
-  - lastTransitionTime: "2025-07-22T21:28:23Z"
-    message: The update run has been stopped
-    observedGeneration: 3
-    reason: UpdateRunStopped
-    status: "False" # the updateRun has stopped progressing
-    type: Progressing
-  deletionStageStatus:
-    clusters: [] # no clusters need to be cleaned up
-    stageName: kubernetes-fleet.io/deleteStage
-  policyObservedClusterCount: 3 # number of clusters to be updated
-  policySnapshotIndexUsed: "0"
-  resourceSnapshotIndexUsed: "1"
-  stagedUpdateStrategySnapshot: # snapshot of the strategy used for this update run
-    stages:
-    - afterStageTasks:
-      - type: TimedWait
-        waitTime: 1m0s
-      labelSelector:
-        matchLabels:
-          environment: staging
-      maxConcurrency: 1
-      name: staging
-    - beforeStageTasks:
-      - type: Approval
-      labelSelector:
-        matchLabels:
-          environment: canary
-      maxConcurrency: 50%
-      name: canary
-      sortingLabelKey: order
-  stagesStatus: # detailed status for each stage
-  - clusters:
-    - clusterName: member2 # stage staging contains member2 cluster only
-      conditions:
-      - lastTransitionTime: "2025-07-22T21:28:08Z"
-        message: Cluster update started
-        observedGeneration: 3
-        reason: ClusterUpdatingStarted
-        status: "True"
-        type: Started
-      - lastTransitionTime: "2025-07-22T21:28:23Z"
-        message: Cluster update completed successfully
-        observedGeneration: 3
-        reason: ClusterUpdatingSucceeded
-        status: "True" # member2 is updated successfully
-        type: Succeeded
-    conditions:
-    - lastTransitionTime: "2025-07-22T21:28:23Z"
-      message: All the updating clusters have finished updating, the stage is now stopped, waiting to be resumed
-      observedGeneration: 3
-      reason: StageUpdatingStopped
-      status: "False"
-      type: Progressing
-    stageName: staging
-    startTime: "2025-07-22T21:28:08Z"
-```
-
-## Deploy a second staged update run to roll back to a previous version
-
-Suppose the workload admin wants to roll back the ConfigMap change, reverting the value `value2` back to `value1`. Instead of manually updating the ConfigMap from hub, they can create a new `ClusterStagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterStagedUpdateRun
-metadata:
-  name: example-run-2
-spec:
-  placementName: example-placement
-  resourceSnapshotIndex: "0"
-  stagedRolloutStrategyName: example-strategy
-  state: Run
-```
-
-Let's check the new `ClusterStagedUpdateRun`:
-
-```bash
-kubectl get clusterstagedupdaterun
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME            PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run     example-placement   1                         0                       True          True        13m
-example-run-2   example-placement   0                         0                       True                      9s
-```
-
-After the one-minute `TimedWait` elapses, we should see the `ClusterApprovalRequest` object created for the new `ClusterStagedUpdateRun`:
-
-```bash
-kubectl get clusterapprovalrequest
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                          UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-2-before-canary   example-run-2   canary                                 75s
-example-run-before-canary     example-run     canary   True       True               14m
-```
-
-To approve the new `ClusterApprovalRequest` object, let's reuse the same `approval.json` file to patch it:
-
-```bash
-kubectl patch clusterapprovalrequests example-run-2-before-canary --type='merge' --subresource=status --patch-file approval.json
-```
-
-Verify if the new object is approved:
-
-```bash
-kubectl get clusterapprovalrequest                                                                            
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                          UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-2-before-canary   example-run-2   canary   True       True               2m7s
-example-run-before-canary     example-run     canary   True       True               15m
-```
-
-The ConfigMap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
-
-```yaml
-apiVersion: v1
-data:
-  key: value1
-kind: ConfigMap
-metadata:
-  ...
-  name: test-cm
-  namespace: test-namespace
-  ...
-```
-
-## Clean up resources
-
-When you're finished with this tutorial, you can clean up the resources you created:
-
-```bash
-kubectl delete clusterstagedupdaterun example-run example-run-2
-kubectl delete clusterstagedupdatestrategy example-strategy
-kubectl delete clusterresourceplacement example-placement
-kubectl delete namespace test-namespace
-```
 :::zone-end
 
-:::zone target="docs" pivot="namespace-scope"  
+:::zone target="docs" pivot="azure-portal"
 
-## Prepare Kubernetes workloads for placement
+1. In the Azure portal, go to your Fleet Manager.
 
-Publish Kubernetes workloads to the hub cluster so that they can be placed onto member clusters.
+1. On the service menu, under **Fleet Resources**, select **Namespaces** > **+ Create**.
 
-Create a Namespace and ConfigMap for the workload on the hub cluster:
+    > [!NOTE]
+    > If you don't see **Fleet Resources**, your Fleet Manager doesn't have a hub cluster. For further information on how to add one, see [upgrade hub cluster type](./upgrade-hub-cluster-type.md).
 
-```bash
-kubectl create namespace test-namespace
-kubectl create configmap test-cm --from-literal=key=value1 -n test-namespace
-```
+1. In the menu, select **Namespace**, enter a **Name**, and then select **Create**.
 
-Since `ResourcePlacement` is namespace-scoped, first deploy the Namespace to all member clusters using a `ClusterResourcePlacement`, specifying `NamespaceOnly` for the selection scope:
+    :::image type="content" source="./media/quickstart-resource-propagation/fleet-placement-create-namespace.png" lightbox="./media/quickstart-resource-propagation/fleet-placement-create-namespace.png" alt-text="Screenshot of the Azure portal showing a namespace called test-app being created on the Fleet Manager hub cluster.":::
 
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterResourcePlacement
-metadata:
-  name: test-namespace-placement
-spec:
-  resourceSelectors:
-    - group: ""
-      kind: Namespace
-      name: test-namespace
-      version: v1
-      selectionScope: NamespaceOnly
-  policy:
-    placementType: PickAll
-```
+    After a few moments, the page refreshes and the namespace appears in the list of namespaces on the Fleet Manager hub cluster. It's now ready to host any resources you want to distribute across member clusters.
 
-Verify the Namespace is deployed to all member clusters:
+1. At the top of the namespace list, select **+ Create** > **Apply a YAML**, and use the following samples.    
 
-```bash
-kubectl get clusterresourceplacement test-namespace-placement
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                       GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-test-namespace-placement   1     True        1               True        1               30s
-```
-
-To deploy the ConfigMap, create a namespace-scoped `ResourcePlacement`:
-
-> [!NOTE]
-> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `StagedUpdateRun`.
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ResourcePlacement
-metadata:
-  name: example-placement
-  namespace: test-namespace
-spec:
-  resourceSelectors:
-    - group: ""
-      kind: ConfigMap
-      name: test-cm
-      version: v1
-  policy:
-    placementType: PickAll
-  strategy:
-    type: External
-```
-
-All three clusters should be scheduled since we use the `PickAll` policy, but the ConfigMap shouldn't be deployed on the member clusters yet because we didn't create a `StagedUpdateRun`.
-
-Verify the placement is scheduled:
-
-```bash
-kubectl get resourceplacement example-placement -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-example-placement   1     True        1                                           51s
-```
-
-## Create a staged update strategy
-
-A `StagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: StagedUpdateStrategy
-metadata:
-  name: example-strategy
-  namespace: test-namespace
-spec:
-  stages:
-    - name: staging
-      labelSelector:
-        matchLabels:
-          environment: staging
-      afterStageTasks:
-        - type: TimedWait
-          waitTime: 1m
-      maxConcurrency: 1
-    - name: canary
-      labelSelector:
-        matchLabels:
-          environment: canary
-      sortingLabelKey: order
-      beforeStageTasks:
-        - type: Approval
-      maxConcurrency: 50%
-```
-
-## Work with resource snapshots
-
-Fleet Manager creates resource snapshots when resources change if the placement has a rollout strategy of `RollingUpdate`. Each snapshot has a unique index that you can use to reference specific versions of your resources.
-
-When a placement uses the `External` rollout strategy, resource snapshots aren't created automatically. Instead, they're created when you execute a staged update run. This means that when you first create a placement with an `External` rollout strategy, no resource snapshots exist until you run the first staged update run.
-
-> [!NOTE]
-> If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available. You can reference these existing snapshots when creating staged update runs.
-
-> [!TIP]
-> For more information about resource snapshots and how they work, see [resource snapshots](./howto-understand-placement.md#resource-snapshots).
-
-### Check current resource snapshots
-
-Since the `ResourcePlacement` uses the `External` strategy, no resource snapshots exist yet. Let's verify:
-
-```bash
-kubectl get resourcesnapshots -n test-namespace --show-labels
-```
-
-Your output should show no resources:
-
-```output
-No resources found in test-namespace namespace.
-```
-
-### Create the first resource snapshot
-
-To create the first resource snapshot, you need to create a `StagedUpdateRun` with the `resourceSnapshotIndex` field omitted. The update run controller detects that no snapshots exist and creates one automatically.
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: StagedUpdateRun
-metadata:
-  name: example-initial-run
-  namespace: test-namespace
-spec:
-  placementName: example-placement
-  stagedRolloutStrategyName: example-strategy
-  state: Run
-```
-
-After the update run completes, check the resource snapshots:
-
-```bash
-kubectl get resourcesnapshots -n test-namespace --show-labels
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                           GEN   AGE   LABELS
-example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
-```
-
-You now have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
-
-### Create a new resource snapshot
-
-Now modify the ConfigMap with a new value:
-
-```bash
-kubectl edit configmap test-cm -n test-namespace
-```
-
-Update the value from `value1` to `value2`:
-
-```bash
-kubectl get configmap test-cm -n test-namespace -o yaml
-```
-
-Your output should look similar to the following example:
-
-```yaml
-apiVersion: v1
-data:
-  key: value2 # value updated here, old value: value1
-kind: ConfigMap
-metadata:
-  creationTimestamp: ...
-  name: test-cm
-  namespace: test-namespace
-  resourceVersion: ...
-  uid: ...
-```
-
-Since the placement uses the `External` strategy, the new resource snapshot isn't created automatically. Create another `StagedUpdateRun` with the `resourceSnapshotIndex` field omitted to trigger the creation of a new snapshot:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: StagedUpdateRun
-metadata:
-  name: example-snapshot-run
-  namespace: test-namespace
-spec:
-  placementName: example-placement
-  stagedRolloutStrategyName: example-strategy
-  state: Run
-```
-
-After the update run completes, you should see two versions of resource snapshots with index 0 and 1 respectively:
-
-```bash
-kubectl get resourcesnapshots -n test-namespace --show-labels
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                           GEN   AGE    LABELS
-example-placement-0-snapshot   1     2m6s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
-example-placement-1-snapshot   1     10s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
-```
-
-The latest label is set to example-placement-1-snapshot, which contains the latest ConfigMap data:
-
-```bash
-kubectl get resourcesnapshots example-placement-1-snapshot -n test-namespace -o yaml
-```
-
-Your output should look similar to the following example:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ResourceSnapshot
-metadata:
-  annotations:
-    kubernetes-fleet.io/number-of-enveloped-object: "0"
-    kubernetes-fleet.io/number-of-resource-snapshots: "1"
-    kubernetes-fleet.io/resource-hash: 10dd7a3d1e5f9849afe956cfbac080a60671ad771e9bda7dd34415f867c75648
-  creationTimestamp: "2025-07-22T21:26:54Z"
-  generation: 1
-  labels:
-    kubernetes-fleet.io/is-latest-snapshot: "true"
-    kubernetes-fleet.io/parent-CRP: example-placement
-    kubernetes-fleet.io/resource-index: "1"
-  name: example-placement-1-snapshot
-  namespace: test-namespace
-  ownerReferences:
-  - apiVersion: placement.kubernetes-fleet.io/v1beta1
-    blockOwnerDeletion: true
-    controller: true
-    kind: ResourcePlacement
-    name: example-placement
-    uid: e7d59513-b3b6-4904-864a-c70678fd6f65
-  resourceVersion: "19994"
-  uid: 79ca0bdc-0b0a-4c40-b136-7f701e85cdb6
-spec:
-  selectedResources:
-  - apiVersion: v1
-    data:
-      key: value2 # latest value: value2, old value: value1
-    kind: ConfigMap
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
-      name: test-cm
-      namespace: test-namespace
+      name: nginx-deployment
+      namespace: test-app
+    spec:
+      selector:
+        matchLabels:
+          app: nginx
+      replicas: 2
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: mcr.microsoft.com/azurelinux/base/nginx:1.28@sha256:3352a36cbcab4708883a3e77b64f64159e11e1aab358c010e1c4e465dbfb4f57
+            ports:
+            - containerPort: 80
+    ```
+
+    ```yaml
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nginx-service
+      namespace: test-app
+    spec:
+      selector:
+        app: nginx
+      ports:
+      - protocol: TCP
+        port: 80
+        targetPort: 80
+      type: LoadBalancer
+    ```
+
+    Copy and paste the samples and apply them one at a time as shown in the following image.
+
+    :::image type="content" source="./media/quickstart-resource-propagation/fleet-placement-apply-yaml.png" lightbox="./media/quickstart-resource-propagation/fleet-placement-apply-yaml.png" alt-text="Screenshot of the Azure portal showing the Apply with YAML dialog populated with a Deployment ready to be applied to the Fleet Manager hub cluster.":::
+
+    The namespace and its workloads are now ready to be distributed to member clusters. The Deployment and Service aren't scheduled on the Fleet Manager hub cluster. 
+
+:::zone-end
+
+## Define cluster ordering using a rollout strategy
+
+Create a rollout strategy to define the order in which clusters receive the resources. You can also add more controls such as soak times and approvals before or after each stage. For further information see [Define reusable Azure Kubernetes Fleet Manager resource placement rollout strategies](./howto-placement-create-rollout-strategies.md).
+
+:::zone target="docs" pivot="azure-cli"
+
+1. Save the following YAML as `crp-two-stages-strategy.yaml`.
+
+    ```yaml
+    apiVersion: placement.kubernetes-fleet.io/v1
+    kind: ClusterStagedUpdateStrategy
+    metadata:
+      name: two-stages-strategy
+    spec:
+      stages:
+        - name: staging
+          labelSelector:
+            matchLabels:
+              environment: staging
+          afterStageTasks:
+            - type: TimedWait
+              waitTime: 4m
+        - name: canary
+          labelSelector:
+            matchLabels:
+              environment: canary
+          beforeStageTasks:
+            - type: Approval
+    ```
+
+1. Apply the strategy manifest to the Fleet Manager hub cluster. 
+
+    ```bash
+    kubectl apply -f crp-two-stages-strategy.yaml
+    ```
+
+1. Check the status of the strategy resource.
+
+    ```bash
+    kubectl get clusterstagedupdatestrategy two-stages-strategy
+    ```
+    
+    Your output should look similar to the following.
+    
+    ```output
+    NAME                  AGE
+    two-stages-strategy   47m
+    ```
+
+:::zone-end
+
+:::zone target="docs" pivot="azure-portal"
+
+Use the following process to create a strategy containing the two stages `Staging` and `Canary` with a 4 minute wait time and a pre-stage approval for the `Canary` stage.
+
+1. In the Azure portal, go to your Fleet Manager.
+
+1. On the service menu, under **Fleet Resources**, select **Resource placements** > **Staged rollout strategies**, then **Create**.
+
+1. Enter a name for the strategy.
+
+1. Select the **Strategy scope**, choosing either **Cluster-scoped** or **Namespace-scoped**.
+
+    * For **Namespace-scoped**, select the existing **Namespace** on the Fleet Manager hub cluster where the Kubernetes resources to be distributed are staged. 
+
+1. Select **Create Stage** and enter:
+    * **Stage name** - name the stage - it must be unique across all stage names in the strategy.
+    * **(Optional) Stage approvals** - select this option if you would like to wait for an approval before this stage starts or after it completes.
+    * **(Optional) Wait after stage** - select this option if you would like to define a pause before moving to the next stage.
+    * **(Optional) Wait duration** - select a predefined duration, or enter a custom value in seconds.
+    * **Cluster label selector** - choose an existing member cluster label to use to select clusters for this stage.
+    * **(Optional) Cluster ordering label** - choose an existing member cluster label to use to order the clusters within the stage.
+    * **(Optional) Stage concurrency** - set how many clusters should be updated concurrently in the current stage.
+
+    :::image type="content" source="./media/howto-placement-strategies/fleet-placement-create-strategy-add-stage.png" alt-text="A screenshot of the Azure portal showing a new stage being added to an Azure Kubernetes Fleet Manager placement staged rollout strategy." lightbox="./media/howto-placement-strategies/fleet-placement-create-strategy-add-stage.png":::
+
+    > [!NOTE]
+    > The maximum number of stages in each strategy is **31**.
+
+1. Repeat until all stages are added to the strategy. Select **Create** to create the strategy. 
+
+    :::image type="content" source="./media/howto-placement-strategies/fleet-placement-create-strategy-pending-create.png" alt-text="A screenshot of the Azure portal showing an Azure Kubernetes Fleet Manager placement staged rollout strategy with two stages that is pending creation." lightbox="./media/howto-placement-strategies/fleet-placement-create-strategy-pending-create.png":::
+
+1. The page refreshes and the list displays the newly created strategy.
+
+    :::image type="content" source="./media/howto-placement-strategies/fleet-placement-create-strategy-list-view.png" alt-text="A screenshot of the Azure portal showing a list of Azure Kubernetes Fleet Manager placement staged rollout strategies." lightbox="./media/howto-placement-strategies/fleet-placement-create-strategy-list-view.png":::
+
+:::zone-end
+
+## Pick clusters by using a resource placement
+
+Use a resource placement to select the resources to distribute and define the policy to pick which clusters receive the resources. 
+
+To use a staged rollout, set the rollout `strategy` type to `External` so you can control the resource distribution by a staged rollout that you define later.
+
+:::zone target="docs" pivot="azure-cli"
+
+1. Save the following YAML as `crp-distribute-workload-ext.yaml`.
+
+    ```yaml
+    apiVersion: placement.kubernetes-fleet.io/v1
+    kind: ClusterResourcePlacement
+    metadata:
+      name: distribute-test-app
+    spec:
+      resourceSelectors:
+        - group: ""
+          kind: Namespace
+          version: v1          
+          name: test-app
+      policy:
+        placementType: PickAll
+      strategy:
+        type: External
+    ```
+
+    > [!IMPORTANT]
+    > If you don't set the `strategy` type to `External`, the resource rollout starts as soon as you apply the manifest by using a `RollingUpdate` strategy.
+
+1. Apply the placement manifest to the Fleet Manager hub cluster. 
+
+    ```bash
+    kubectl apply -f crp-distribute-workload-ext.yaml
+    ```
+
+1. Check the status of the resource placement.
+
+    ```bash
+    kubectl get clusterresourceplacement distribute-test-app
+    ```
+    
+    Your output should look similar to the following.
+    
+    ```output
+    NAME                  GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
+    distribute-test-app   1     True        1                                           60s
+    ```
+
+:::zone-end
+
+:::zone target="docs" pivot="azure-portal"
+
+1. In the Azure portal, go to your Fleet Manager.
+
+1. On the service menu, under **Fleet Resources**, select **Resource placements** > **+ Create**.
+
+1. On the **Basics** tab, configure the following options:
+
+    - In **Placement details**, enter a name for the placement.
+    - Under **Resource details**, leave **Scope** as **Cluster-scoped** and enter the Group Version Kind (GVK) and name of the resource to distribute. In this sample, use the following values.
+
+        ```yaml
+        group: ""
+        kind: Namespace
+        version: v1          
+        name: test-app
+        ```
+
+    - In **Member cluster selection**, for **Placement type** choose **All clusters**.
+    - For **Rollout**, select **External**. Use **Staged update strategy** to select the rollout strategy you created earlier. 
+    - Leave the **Automatically start rollout** box unchecked.
+    
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-basics-tab.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-basics-tab.png" alt-text="Screenshot of the Azure portal showing the completed Basics tab for cluster-scoped resource placement that uses a staged update strategy for rollout.":::
+
+1. Select **Next** to review the resulting `ClusterResourcePlacement` manifest. You can modify the manifest if required, validate by using the **Validate (dry run)** option, or select **Review + create** to proceed to final confirmation.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-review-yaml-tab.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-review-yaml-tab.png" alt-text="Screenshot of the Azure portal showing the Review YAML tab with a passed dry run validation for cluster-scoped resource placement using an external strategy for a namespace called test-app.":::
+
+1. Select **Create** to create the rollout run, but not start it.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-review-create.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-review-create.png" alt-text="Screenshot of the Azure portal showing the Review and create tab for a cluster-scoped resource placement using a staged rollout for a namespace called test-app.":::
+
+1. The page refreshes and the **Resource placements** list displays the newly created placement. It shows the number of clusters selected and whether the fleet scheduler can fulfill the placement policy. Notice the **Rollout type** is set to **External**.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-view.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-view.png" alt-text="Screenshot of the Azure portal showing the resource placements list with a single resource placement called distribute-test-app that has an External rollout type.":::
+
+When you use the Azure portal to create a placement with a rollout strategy, it automatically creates a staged rollout run for you. 
+
+:::zone-end
+
+:::zone target="docs" pivot="azure-cli"
+
+## Use staged rollout to control distribution
+
+In this article, you create the staged rollout with a `state` of `Initialize` so that you can start the rollout when you want, rather than the run starting immediately when the manifest is applied. Set the state to `Run` to start immediately instead.
+
+1. Save the following YAML as `staged-rollout-test-app.yaml`.
+
+    ```yaml
+    apiVersion: placement.kubernetes-fleet.io/v1
+    kind: ClusterStagedUpdateRun
+    metadata:
+      name: staged-rollout-test-app
+    spec:
+      placementName: distribute-test-app
+      stagedRolloutStrategyName: two-stages-strategy
+      state: Initialize
+    ```
+
+    > [!NOTE]
+    > If you don't set the `strategy` type to `External`, the resource rollout starts as soon as you apply the manifest by using a `RollingUpdate` strategy.
+
+1. Apply the staged rollout manifest to the Fleet Manager hub cluster. 
+
+    ```bash
+    kubectl apply -f staged-rollout-test-app.yaml
+    ```
+
+1. Check the status of the rollout run resource. It's initialized but not progressing.
+
+    ```bash
+    kubectl get clusterstagedupdaterun staged-rollout-test-app
+    ```
+    
+    Your output should look similar to the following.
+
+    ```output
+    NAME                      PLACEMENT             RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
+    staged-rollout-test-app   distribute-test-app                             0                       True                                    101s
+    ```
+
+:::zone-end
+
+## Managing staged rollout progress
+
+Once you have all the resources ready, you can now control the rollout of resources across member clusters. 
+
+### Start a staged rollout
+
+:::zone target="docs" pivot="azure-cli"
+
+To start a staged rollout, patch the `state` field in the spec to `Run`.
+
+```bash
+kubectl patch clusterstagedupdaterun staged-rollout-test-app --type merge -p '{"spec":{"state":"Run"}}'
 ```
 
-## Prepare a staged update run to rollout changes
+Check the status of the rollout run resource. It's initialized but not progressing.
 
-A `StagedUpdateRun` executes the rollout of a `ResourcePlacement` following a `StagedUpdateStrategy`. To trigger the staged update run for our ResourcePlacement (RP), we create a `StagedUpdateRun` specifying the RP name, updateRun strategy name, the latest resource snapshot index ("1"), and the state as "Initialize":
+```bash
+kubectl get clusterstagedupdaterun staged-rollout-test-app
+```
+
+Your output should look similar to the following, noting that progressing is now `True`.
+
+```output
+NAME                      PLACEMENT             RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
+staged-rollout-test-app   distribute-test-app                             0                       True          True                      36m
+```
 
 > [!NOTE]
-> When using the `External` rollout strategy, you can omit the `resourceSnapshotIndex` field if you want to deploy the latest resources. The update run controller creates a new resource snapshot automatically when `resourceSnapshotIndex` is omitted.
+> When the rollout reaches a TimedWait or Approval task, the progress status changes to `False`. Use `describe` to determine the reason for the pause.
+
+View the detailed status of the rollout by describing the `ClusterStagedUpdateRun`.
+
+```bash
+kubectl describe clusterstagedupdaterun staged-rollout-test-app
+```
+
+In the response, review the `Status`, looking at the `Conditions` and `Stages Status` to understand which stage and cluster is currently being processed, or if a `TimedWait` or `Approval` task is currently active. 
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: StagedUpdateRun
-metadata:
-  name: example-run
-  namespace: test-namespace
-spec:
-  placementName: example-placement
-  resourceSnapshotIndex: "1"
-  stagedRolloutStrategyName: example-strategy
-  state: Initialize
+Name:         staged-rollout-test-app
+Namespace:
+Labels:       <none>
+Annotations:  <none>
+API Version:  placement.kubernetes-fleet.io/v1
+Kind:         ClusterStagedUpdateRun
+Metadata:
+  Creation Timestamp:  2026-07-27T04:25:14Z
+  Finalizers:
+    kubernetes-fleet.io/stagedupdaterun-finalizer
+  Generation:        3
+  Resource Version:  2684410
+  UID:               5e20d0a1-515a-4f1c-b566-89676100a968
+Spec:
+  Placement Name:                distribute-test-app
+  Resource Snapshot Index:
+  Staged Rollout Strategy Name:  two-stages-strategy
+  State:                         Run
+Status:
+  Applied Strategy:
+    Comparison Option:  PartialComparison
+    Type:               ClientSideApply
+    When To Apply:      Always
+    When To Take Over:  Always
+  Conditions:
+    Last Transition Time:  2026-07-27T04:25:14Z
+    Message:               The UpdateRun initialized successfully
+    Observed Generation:   3
+    Reason:                UpdateRunInitializedSuccessfully
+    Status:                True
+    Type:                  Initialized
+    Last Transition Time:  2026-07-27T05:01:56Z
+    Message:               The update run is making progress
+    Observed Generation:   3
+    Reason:                UpdateRunProgressing
+    Status:                True
+    Type:                  Progressing
+  Deletion Stage Status:
+    Clusters:
+    Stage Name:                   kubernetes-fleet.io/deleteStage
+  Policy Observed Cluster Count:  2
+  Policy Snapshot Index Used:     0
+  Resource Snapshot Index Used:   0
+  Staged Update Strategy Snapshot:
+    Stages:
+      After Stage Tasks:
+        Type:       TimedWait
+        Wait Time:  1h0m0s
+      Label Selector:
+        Match Labels:
+          Environment:  staging
+      Max Concurrency:  1
+      Name:             staging
+      Before Stage Tasks:
+        Type:  Approval
+      Label Selector:
+        Match Labels:
+          Environment:  canary
+      Max Concurrency:  1
+      Name:             canary
+  Stages Status:
+    After Stage Task Status:
+      Type:  TimedWait
+    Clusters:
+      Cluster Name:  aks-place-member-02-fm
+      Conditions:
+        Last Transition Time:  2026-07-27T05:01:56Z
+        Message:               Cluster update started
+        Observed Generation:   3
+        Reason:                ClusterUpdatingStarted
+        Status:                True
+        Type:                  Started
+    Conditions:
+      Last Transition Time:  2026-07-27T05:01:56Z
+      Message:               Clusters in the stage started updating
+      Observed Generation:   3
+      Reason:                StageUpdatingStarted
+      Status:                True
+      Type:                  Progressing
+    Stage Name:              staging
+    Start Time:              2026-07-27T05:01:56Z
+    Before Stage Task Status:
+      Approval Request Name:  staged-rollout-test-app-before-canary
+      Type:                   Approval
+    Clusters:
+      Cluster Name:  aks-place-member-01-fm
+    Stage Name:      canary
+Events:              <none>
 ```
 
-The staged update run is initialized but not running:
+:::zone-end
+
+:::zone target="docs" pivot="azure-portal"
+
+1. In the Azure portal, go to your Fleet Manager.
+
+1. On the service menu, under **Fleet Resources**, select **Staged rollout runs**.
+
+1. In the list, select the staged rollout run that was created automatically in the previous step, and then select **Start** in the action menu.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-start-run.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-start-run.png" alt-text="Screenshot of the Azure portal showing the staged rollout run list with a single staged rollout run that is selected.":::
+
+1. The page refreshes and the **Staged rollout runs** list displays the staged rollout run with the state of **Progressing**, with the currently running stage shown.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-progressing-run.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-progressing-run.png" alt-text="Screenshot of the Azure portal showing the staged rollout run list with a single staged rollout run that is progressing and is in the stage named staging.":::
+
+1. When the rollout reaches a `TimedWait`, the state changes to **Waiting**. You can hover over the information icon to confirm this state is due to a `TimedWait`.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-timed-wait.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-timed-wait.png" alt-text="Screenshot of the Azure portal showing the staged rollout run list with a single staged rollout run that is waiting. There is an information popup confirming the run is waiting for a timed wait to expire.":::
+
+:::zone-end
+
+### Stop a staged rollout
+
+:::zone target="docs" pivot="azure-cli"
+
+To stop a running staged rollout, patch the `state` field in the spec to `Stop`. This action gracefully halts the staged rollout run, so in-progress clusters finish their updates before the process stops.
 
 ```bash
-kubectl get stagedupdaterrun example-run -n test-namespace
+kubectl patch clusterstagedupdaterun staged-rollout-test-app --type merge -p '{"spec":{"state":"Stop"}}'
 ```
 
-Your output should look similar to the following example:
+The staged update run is initialized, but no longer running.
+
+```bash
+kubectl get clusterstagedupdaterun staged-rollout-test-app
+```
+
+Your output should look similar to the following, noting that `progressing` is now `False`.
 
 ```output
-NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True                      7s
+NAME                      PLACEMENT             RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
+staged-rollout-test-app   distribute-test-app                             0                       True          False                     46m
 ```
 
-## Start a staged update run
+:::zone-end
 
-To start the execution of a staged update run, you need to patch the `state` field in the spec to `Run`:
+:::zone target="docs" pivot="azure-portal"
+
+To stop a running staged rollout, use the following steps. This action gracefully halts the staged rollout, so in-progress clusters finish their updates before the process stops.
+
+1. In the Azure portal, go to your Fleet Manager.
+
+1. On the service menu, under **Fleet Resources**, select **Staged rollout runs**.
+
+1. In the list, select the staged rollout run that you want to stop. Then, choose **Stop** from the action menu.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-progressing-to-stop.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-progressing-to-stop.png" alt-text="Screenshot of the Azure portal showing the staged rollout run list with a single staged rollout run that is progressing.":::
+
+1. The page refreshes and the **Staged rollout runs** list displays the staged rollout run with the state of **Stopped**.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-stopped.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-stopped.png" alt-text="Screenshot of the Azure portal showing the staged rollout run list with a single staged rollout run that shows a status of stopped.":::
+
+:::zone-end
+
+You can restart the rollout by following the instructions in [Start a staged rollout](#start-a-staged-rollout).
+
+> [!NOTE]
+> You can stop a rollout at any time. In-progress clusters continue to completion. Pending approvals stay unaffected.
+
+## Clear a pending stage approval
+
+Add approval tasks before or after a stage. These tasks require an explicit action to clear.
+
+:::zone target="docs" pivot="azure-cli"
+
+When a staged rollout run reaches an approval, it creates an approval request (`ClusterApprovalRequest` or `ApprovalRequest`). You must patch this request. After you patch it, the rollout run continues.
+
+Check for any pending approvals by using the following commands.
 
 ```bash
-kubectl patch stagedupdaterrun example-run -n test-namespace --type merge -p '{"spec":{"state":"Run"}}'
+kubectl get clusterapprovalrequest
+```
+
+When checking for pending `ApprovalRequest` resources, make sure to provide the namespace in which the resources reside.
+
+```bash
+kubectl get clusterapprovalrequest -n test-app
+```
+
+If you receive a response of `No resources found`, then there are currently no cluster scoped approvals pending.
+
+If there are pending approvals, the response should look similar to the following example.
+
+```output
+NAME                                    UPDATE-RUN                STAGE    APPROVED   AGE
+staged-rollout-test-app-before-canary   staged-rollout-test-app   canary              4m13s
 ```
 
 > [!NOTE]
-> You can also create an update run with the `state` field set to `Run` initially, which both initialize and starts progressing the update run in a single step.
+> The system generates approval request resource names by using the format {update-run-name}-{before|after}-{stage-name}.
 
-The staged update run is initialized and running:
-
-```bash
-kubectl get stagedupdaterrun example-run -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True                      7s
-```
-
-After the one-minute `TimedWait` elapses, check for the approval request:
-
-```bash
-kubectl get approvalrequests -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                        STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-before-canary   example-run         canary                                 2m39s
-```
-
-## Approve the staged update run
-
-We can approve the `ApprovalRequest` by creating a json patch file and applying it:
+You can approve the `ClusterApprovalRequest` by creating a JSON patch file and applying it.
 
 ```bash
 cat << EOF > approval.json
@@ -1152,293 +727,120 @@ cat << EOF > approval.json
 EOF
 ```
 > [!NOTE]
-> Be sure the `observedGeneration` is the same as the generation of the approval object.
+> Be sure the `observedGeneration` matches the generation of the approval object. This value is typically `1`.
 
-Submit a patch request to approve using the JSON file created.
-
-```bash
-kubectl patch approvalrequests example-run-before-canary -n test-namespace --type='merge' --subresource=status --patch-file approval.json
-```
-
-Then verify that you approved the request:
+Submit a patch request to approve the request by using the JSON file you created.
 
 ```bash
-kubectl get approvalrequests -n test-namespace
+kubectl patch clusterapprovalrequests staged-rollout-test-app-before-canary --type='merge' --subresource=status --patch-file approval.json
 ```
 
-Your output should look similar to the following example:
+Verify the approval was applied to the request.
+
+```bash
+kubectl get clusterapprovalrequest staged-rollout-test-app-before-canary
+```
+
+Your output should look similar to the following. Note that `APPROVED` is set to `True`.
 
 ```output
-NAME                        STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-before-canary   example-run         canary   True       True               3m35s
+NAME                                    UPDATE-RUN                STAGE    APPROVED   AGE
+staged-rollout-test-app-before-canary   staged-rollout-test-app   canary   True       6m
 ```
 
-The `StagedUpdateRun` now is able to proceed and complete:
+The rollout run continues.
 
 ```bash
-kubectl get stagedupdaterrun example-run -n test-namespace
+kubectl get clusterstagedupdaterun staged-rollout-test-app
 ```
 
-Your output should look similar to the following example:
+Your output should look similar to the following, which shows a completed run with `SUCCEEDED` set to `True`.
 
 ```output
-NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True          True        5m28s
-```
-
-## Verify the rollout completion
-
-The `ResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
-
-```bash
-kubectl get resourceplacement example-placement -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
-example-placement   1     True        1               True        1               8m55s
-```
-
-The ConfigMap test-cm should be deployed on all three member clusters, with latest data:
-
-```yaml
-apiVersion: v1
-data:
-  key: value2
-kind: ConfigMap
-metadata:
-  ...
-  name: test-cm
-  namespace: test-namespace
-  ...
-```
-
-## Stop a staged update run
-
-To stop the execution of a running staged update run, you need to patch the `state` field in the spec to `Stop`. This action gracefully halts the update run, allowing in-progress clusters to complete their updates before stopping the entire rollout process:
-
-```bash
-kubectl patch stagedupdaterun example-run -n test-namespace --type merge -p '{"spec":{"state":"Stop"}}'
-```
-
-The staged update run is initialized and no longer running:
-
-```bash
-kubectl get stagedupdaterun example-run -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run   example-placement   1                         0                       True                      7s
-```
-
-A more detailed look at the status after the update run stops:
-
-```bash
-kubectl get stagedupdaterun example-run -n test-namespace -o yaml
-```
-
-Your output should look similar to the following example:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: StagedUpdateRun
-metadata:
-  ...
-  name: example-run
-  namespace: test-namespace
-  ...
-spec:
-  placementName: example-placement
-  resourceSnapshotIndex: "1"
-  stagedRolloutStrategyName: example-strategy
-  state: Stop
-status:
-  conditions:
-  - lastTransitionTime: "2025-07-22T21:28:08Z"
-    message: StagedUpdateRun initialized successfully
-    observedGeneration: 3
-    reason: UpdateRunInitializedSuccessfully
-    status: "True" # the updateRun is initialized successfully
-    type: Initialized
-  - lastTransitionTime: "2025-07-22T21:28:23Z"
-    message: The update run has been stopped
-    observedGeneration: 3
-    reason: UpdateRunStopped
-    status: "False" # the updateRun has stopped progressing
-    type: Progressing
-  deletionStageStatus:
-    clusters: [] # no clusters need to be cleaned up
-    stageName: kubernetes-fleet.io/deleteStage
-  policyObservedClusterCount: 3 # number of clusters to be updated
-  policySnapshotIndexUsed: "0"
-  resourceSnapshotIndexUsed: "1"
-  stagedUpdateStrategySnapshot: # snapshot of the strategy used for this update run
-    stages:
-    - afterStageTasks:
-      - type: TimedWait
-        waitTime: 1m0s
-      labelSelector:
-        matchLabels:
-          environment: staging
-      maxConcurrency: 1
-      name: staging
-    - beforeStageTasks:
-      - type: Approval
-      labelSelector:
-        matchLabels:
-          environment: canary
-      maxConcurrency: 50%
-      name: canary
-      sortingLabelKey: order
-  stagesStatus: # detailed status for each stage
-  - clusters:
-    - clusterName: member2 # stage staging contains member2 cluster only
-      conditions:
-      - lastTransitionTime: "2025-07-22T21:28:08Z"
-        message: Cluster update started
-        observedGeneration: 3
-        reason: ClusterUpdatingStarted
-        status: "True"
-        type: Started
-      - lastTransitionTime: "2025-07-22T21:28:23Z"
-        message: Cluster update completed successfully
-        observedGeneration: 3
-        reason: ClusterUpdatingSucceeded
-        status: "True" # member2 is updated successfully
-        type: Succeeded
-    conditions:
-    - lastTransitionTime: "2025-07-22T21:28:23Z"
-      message: All the updating clusters have finished updating, the stage is now stopped, waiting to be resumed
-      observedGeneration: 3
-      reason: StageUpdatingStopped
-      status: "False"
-      type: Progressing
-    stageName: staging
-    startTime: "2025-07-22T21:28:08Z"
-```
-
-## Deploy a second staged update run to roll back to a previous version
-
-Suppose the workload admin wants to roll back the ConfigMap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new `StagedUpdateRun` with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: StagedUpdateRun
-metadata:
-  name: example-run-2
-  namespace: test-namespace
-spec:
-  placementName: example-placement
-  resourceSnapshotIndex: "0"
-  stagedRolloutStrategyName: example-strategy
-  state: Run
-```
-
-Let's check the new `StagedUpdateRun`:
-
-```bash
-kubectl get stagedupdaterun -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME            PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-run     example-placement   1                         0                       True          True        13m
-example-run-2   example-placement   0                         0                       True                      9s
-```
-
-After the one-minute `TimedWait` elapses, we should see the `ApprovalRequest` object created for the new `StagedUpdateRun`:
-
-```bash
-kubectl get approvalrequests -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                          STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-2-before-canary   example-run-2       canary                                 75s
-example-run-before-canary     example-run         canary   True       True               14m
-```
-
-To approve the new `ApprovalRequest` object, let's reuse the same `approval.json` file to patch it:
-
-```bash
-kubectl patch approvalrequests example-run-2-before-canary -n test-namespace --type='merge' --subresource=status --patch-file approval.json
-```
-
-Verify if the new object is approved:
-
-```bash
-kubectl get approvalrequests -n test-namespace
-```
-
-Your output should look similar to the following example:
-
-```output
-NAME                          STAGED-UPDATE-RUN   STAGE    APPROVED   APPROVALACCEPTED   AGE
-example-run-2-before-canary   example-run-2       canary   True       True               2m7s
-example-run-before-canary     example-run         canary   True       True               15m
-```
-
-The ConfigMap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
-
-```yaml
-apiVersion: v1
-data:
-  key: value1
-kind: ConfigMap
-metadata:
-  ...
-  name: test-cm
-  namespace: test-namespace
-  ...
-```
-
-## Clean up resources
-
-When you're finished with this tutorial, you can clean up the resources you created:
-
-```bash
-kubectl delete stagedupdaterun example-run example-run-2 -n test-namespace
-kubectl delete stagedupdatestrategy example-strategy -n test-namespace
-kubectl delete resourceplacement example-placement -n test-namespace
-kubectl delete clusterresourceplacement test-namespace-placement
-kubectl delete namespace test-namespace
+NAME                      PLACEMENT             RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   PROGRESSING   SUCCEEDED   AGE
+staged-rollout-test-app   distribute-test-app                             0                       True          False         True        9m
 ```
 
 :::zone-end
 
-## Key differences between approaches
+:::zone target="docs" pivot="azure-portal"
 
-| Aspect | Cluster-Scoped | Namespace-Scoped |
-|--------|----------------|------------------|
-| **Strategy Resource** | `ClusterStagedUpdateStrategy` (short name: `csus`) | `StagedUpdateStrategy` (short name: `sus`) |
-| **Update Run Resource** | `ClusterStagedUpdateRun` (short name: `csur`) | `StagedUpdateRun` (short name: `sur`) |
-| **Target Placement** | `ClusterResourcePlacement` (short name: `crp`) | `ResourcePlacement` (short name: `rp`) |
-| **Approval Resource** | `ClusterApprovalRequest` (short name: `careq`) | `ApprovalRequest` (short name: `areq`) |
-| **Snapshot Resource** | `ClusterResourceSnapshot` | `ResourceSnapshot` |
-| **Scope** | Cluster-wide | Namespace-bound |
-| **Use Case** | Infrastructure rollouts | Application rollouts |
-| **Permissions** | Cluster-admin level | Namespace-level |
+When a staged rollout run reaches an approval, use the following process to clear the approval so the run continues.
+
+1. In the Azure portal, go to your Fleet Manager.
+
+1. On the service menu, under **Fleet Resources**, select **Staged rollout runs**.
+
+1. In the list, find the staged rollout run that has a state of **Pending approval**.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-pending-approval.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-pending-approval.png" alt-text="Screenshot of the Azure portal showing the staged rollout run list with a single staged rollout run that is pending approval.":::
+
+1. You can open the approval dialog from any of three locations:
+
+    - Inline in the staged rollout run list view (shown earlier).
+    - From the details view for the staged rollout run:
+        - From the **State** field in the Essentials section.
+        - Inline in the Stage view. 
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-detail-view-pending-approval.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-detail-view-pending-approval.png" alt-text="Screenshot of the Azure portal showing the staged rollout run detail view with two pending approval links.":::
+
+1. Select an option to open the **Approval** dialog. Enter an optional **Message** and choose **Approve**.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-approval-dialog.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-approval-dialog.png" alt-text="Screenshot of the Azure portal showing the staged rollout run approval dialog with a completed message field.":::
+
+1. The page refreshes and the **Staged rollout runs** list displays the staged rollout run with the state of **Progressing**.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-progressing-run-canary.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-progressing-run-canary.png" alt-text="Screenshot of the Azure portal showing the staged rollout run approval progressing in the canary stage after approval.":::
+
+1. The staged rollout run continues until it finishes, with the **Staged rollout runs** list displaying the staged rollout run with the state of **Succeeded**.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-run-succeeded.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-run-succeeded.png" alt-text="Screenshot of the Azure portal showing the staged rollout run that has completed successfully.":::
+
+:::zone-end
+
+## Delete a rollout run
+
+:::zone target="docs" pivot="azure-cli"
+
+Remove a staged rollout run by deleting the Kubernetes resource on the Fleet Manager hub cluster.
+
+```bash
+kubectl delete clusterstagedupdaterun staged-rollout-test-app
+```
+:::zone-end
+
+:::zone target="docs" pivot="azure-portal"
+
+1. In the Azure portal, go to your Fleet Manager.
+
+1. On the service menu, under **Fleet Resources**, select **Staged rollout runs**.
+
+1. In the list, select the staged rollout run to delete, and then choose **Delete** from the action menu.
+
+1. In the **Delete** dialog, confirm the resource is correct, and then select **Confirm delete**. Finally, choose **Delete**.
+
+    :::image type="content" source="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-delete.png" lightbox="./media/howto-placement-rollout-runs/fleet-placement-rollout-list-delete.png" alt-text="Screenshot of the Azure portal showing the Delete dialog for a selected staged rollout run.":::
+ 
+1. The page refreshes and the deleted staged rollout run is no longer present.
+
+:::zone-end
+
+> [!NOTE]
+> Deleting a completed staged rollout run doesn't remove placed resources. To remove the placed resources, you must delete the resource placement.
+
 
 ## Next steps
 
-In this article, you learned how to use staged update runs to orchestrate rollouts across member clusters. You created staged update strategies for both cluster-scoped and namespace-scoped deployments, executed progressive rollouts, and performed rollbacks to previous versions.
+In this article, you learned how to use staged rollout runs to control the distribution of resources across member clusters using resource placement.
 
-To learn more about staged update runs and related concepts, see the following resources:
+To learn more about staged rollout runs and related concepts, see the following resources:
 
 * [Defining a rollout strategy for Fleet Manager resource placement](./concepts-rollout-strategy.md)
-* [Understand status fields and conditions for Fleet Manager resource placemen](./howto-understand-placement.md)
+* [Understand status fields and conditions for Fleet Manager resource placement](./howto-understand-placement.md)
 * [View agent logs in Azure Kubernetes Fleet Manager](./view-fleet-agent-logs.md)
 
 <!-- INTERNAL LINKS -->
 [fleet-quickstart]: ./quickstart-create-fleet-and-members.md
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update
+[az-fleet-get-credentials]: /cli/azure/fleet#az-fleet-get-credentials

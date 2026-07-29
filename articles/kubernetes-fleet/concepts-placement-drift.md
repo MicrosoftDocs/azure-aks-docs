@@ -1,7 +1,7 @@
 ---
 title: "Detecting and managing workload drift with Azure Kubernetes Fleet Manager resource placement"
 description: This article describes how to use the applyStrategy property to control how Fleet Manager identifies and handles drift in workloads managed by resource placement.
-ms.date: 12/03/2025
+ms.date: 07/28/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -11,7 +11,9 @@ ms.topic: concept-article
 
 # Detecting and managing workload drift with Azure Kubernetes Fleet Manager resource placement (preview)
 
-Authorized users can make direct changes to fields on workloads placed on to member clusters. These changes cause a _drift_ between the Fleet Manager workload definition and the placed workload. These drifts can result in issues when new deployments occur, potentially leading to application outages.
+**Applies to**: :heavy_check_mark: Fleet Manager with hub cluster
+
+Authorized users can make direct changes to fields on workloads placed onto member clusters. These changes cause a _drift_ between the Fleet Manager workload definition and the placed workload. These drifts can result in issues when new deployments occur, potentially leading to application outages.
 
 In this article, we look at how you can use an `applyStrategy` property in a resource placement (cluster-scoped `ClusterResourcePlacement` or namespace-scoped `ResourcePlacement`) to determine how Fleet Manager detects and handles these drifts.
 
@@ -188,7 +190,7 @@ You can use an optional `comparisonOption` property to fine-tune how `whenToAppl
 
 ### ClusterResourcePlacement example
 
-In the following sample, if a change is found in any field (managed or unmanaged) the placement fails.
+In the following sample, if a change is found in any field (managed or unmanaged), the placement fails.
 
 ```yml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -217,7 +219,7 @@ spec:
 
 ### ResourcePlacement example
 
-In the following sample, if a change is found in any field (managed or unmanaged) the placement fails.
+In the following sample, if a change is found in any field (managed or unmanaged), the placement fails.
 
 ```yml
 apiVersion: placement.kubernetes-fleet.io/v1beta1

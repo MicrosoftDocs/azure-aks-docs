@@ -2,7 +2,7 @@
 title: "Use Resource Overrides to customize resources deployed by Azure Kubernetes Fleet Manager resource placement"
 description: This article provides an overview of how to use the resource override APIs to customize resource configurations when using Azure Kubernetes Fleet Manager resource placement.
 ms.topic: how-to
-ms.date: 06/22/2026
+ms.date: 07/23/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -634,11 +634,11 @@ spec:
 
     This example distributes resources within `test-namespace` across all clusters labeled with `env:prod` and `env:test`. As the changes are implemented, the corresponding `ResourceOverride` configurations are applied to the designated resources. The selection of a matching deployment resource, `my-deployment`, triggers the application of the configurations to the designated resources.
 
-    :::image type="content" source="./media/quickstart-resource-propagation/create-resource-propagation-inline.png" lightbox="./media/quickstart-resource-propagation/create-resource-propagation.png" alt-text="Screenshot of the Azure portal page for creating a resource placement, showing the YAML template with placeholder values.":::
+    <!-- :::image type="content" source="./media/quickstart-resource-propagation/create-resource-propagation-inline.png" lightbox="./media/quickstart-resource-propagation/create-resource-propagation.png" alt-text="Screenshot of the Azure portal page for creating a resource placement, showing the YAML template with placeholder values."::: -->
 
 1. Verify that the cluster resource placement was created successfully.
 
-    :::image type="content" source="./media/quickstart-resource-propagation/overview-cluster-resource-inline.png" lightbox="./media/quickstart-resource-propagation/overview-cluster-resource.png" alt-text="Screenshot of the Azure portal page for cluster resource placements, showing a successfully created placement.":::
+    <!-- :::image type="content" source="./media/quickstart-resource-propagation/overview-cluster-resource-inline.png" lightbox="./media/quickstart-resource-propagation/overview-cluster-resource.png" alt-text="Screenshot of the Azure portal page for cluster resource placements, showing a successfully created placement."::: -->
 
 1. Verify that the cluster resource placement is applied by selecting the CRP from the list and checking the placement status.
 
