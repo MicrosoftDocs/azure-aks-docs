@@ -278,10 +278,10 @@ spec:
           - Standard_F8s_v2
       - key: topology.kubernetes.io/zone
         operator: In
-         values:
-           - eastus-1
-           - eastus-2
-           - eastus-3
+        values:
+          - eastus-1
+          - eastus-2
+          - eastus-3
   limits:
     nodes: 10  # Maximum number of nodes this node pool can scale up to
 ```
