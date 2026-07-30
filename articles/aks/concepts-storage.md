@@ -182,7 +182,7 @@ You can use the following Azure Storage services to provide the persistent volum
 - [Azure Files](./create-volume-azure-files.md)
 - [Azure Container Storage][azure-container-storage]
 
-As noted in the [Volumes](#volumes) section, the choice of Azure Disks or Azure Files is typically determined by the need for concurrent access (Azure Files supports multiple nodes simultaneously; Azure Disk is single-node only) or the required performance tier.
+As noted in the [Volumes](#volumes) section, the choice between Azure Disks and Azure Files typically depends on the need for concurrent access (Azure Files supports multiple nodes simultaneously; Azure Disk supports single node only) or the required performance tier.
 
 ![Diagram of persistent volumes in an Azure Kubernetes Service (AKS) cluster.](media/concepts-storage/aks-storage-persistent-volume.png)
 
@@ -191,7 +191,7 @@ A cluster administrator can _statically_ create a persistent volume, or a volume
 > [!IMPORTANT]
 > Persistent volumes can't be shared by Windows and Linux pods due to differences in file system support between the two operating systems.
 
-If you want a fully managed solution for block-level access to data, consider using [Azure Container Storage][azure-container-storage]. Azure Container Storage integrates with Kubernetes, allowing dynamic and automatic provisioning of persistent volumes. Supported backing storage depends on the major version. Azure Container Storage version 2 supports local NVMe disks and Azure Elastic SAN. Version 1 supports Azure Disks, ephemeral disks (local NVMe and temporary SSD), and Azure Elastic SAN.
+If you want a fully managed solution for block-level access to data, consider using [Azure Container Storage][azure-container-storage]. Azure Container Storage integrates with Kubernetes, so you can dynamically and automatically provision persistent volumes. Supported backing storage depends on the major version. Azure Container Storage version 2 supports local NVMe disks and Azure Elastic SAN. Version 1 supports Azure Disks, ephemeral disks (local NVMe and temporary SSD), and Azure Elastic SAN.
 
 ## Storage classes
 
