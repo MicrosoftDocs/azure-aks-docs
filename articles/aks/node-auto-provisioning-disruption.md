@@ -38,7 +38,7 @@ NAP automatically discovers nodes eligible for disruption and spins up replaceme
 
 ## Expiration
 
-Expiration is a forceful disruption method that allows you to set a maximum age for your NAP nodes. Nodes are marked as expired and disrupted after reaching the age you specify for the node pool's `spec.disruption.expireAfter` value.
+Expiration is a forceful disruption method that you use to set a maximum age for your NAP nodes. Nodes are marked as expired and disrupted after reaching the age you specify for the node pool's `spec.disruption.expireAfter` value.
 
 ### Example expiration configuration
 
