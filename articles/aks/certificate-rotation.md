@@ -56,7 +56,7 @@ AKS automatically rotates the following certificates:
 
 The following limitations apply to certificate autorotation:
 
-- The cluster must use [vanilla TLS bootstrapping](https://kubernetes.io/docs/reference/access-authn-authz/kubelet-tls-bootstrapping/) or AKS secure TLS bootstrapping, which is enabled by default in all Azure regions.
+- The cluster must use [vanilla TLS bootstrapping](https://kubernetes.io/docs/reference/access-authn-authz/kubelet-tls-bootstrapping/).
 - For existing clusters, you need to upgrade the cluster to enable certificate autorotation.
 
 ## Manual certificate rotation in AKS
