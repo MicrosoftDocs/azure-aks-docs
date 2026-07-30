@@ -136,6 +136,7 @@ sections:
           - Change the node resource group name after you create the cluster.
           - Specify names for the managed resources within the node resource group.
           - Modify or delete Azure-created tags of managed resources within the node resource group.
+          - Apply [Azure resource locks](/azure/azure-resource-manager/management/lock-resources) to the node resource group or to resources within it.
 
       - question: |
           Can I modify tags and other properties of the AKS resources in the node resource group?
