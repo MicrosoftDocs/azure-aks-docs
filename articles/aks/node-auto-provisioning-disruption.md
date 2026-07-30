@@ -3,7 +3,7 @@ title: Configure Disruption Policies for Node Auto-Provisioning (NAP) Nodes in A
 description: Learn how to configure node disruption policies for node auto-provisioning (NAP) nodes in Azure Kubernetes Service (AKS) to optimize resource utilization.
 ms.topic: overview
 ms.custom: devx-track-azurecli, aks-scaling
-ms.date: 07/25/2025
+ms.date: 07/30/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -34,11 +34,11 @@ When the workloads on your nodes scale down, NAP uses disruption rules on the no
 
 ## Node disruption methods
 
-NAP automatically discovers nodes eligible for disruption and spins up replacements when needed. You can trigger disruption through automated methods like _Expiration_, _Consolidation_, and _Drift_, manual methods, or external systems.
+NAP automatically discovers nodes eligible for disruption and spins up replacements when needed. Automated graceful methods include _Consolidation_ and _Drift_. _Expiration_ is an automated forceful method. You can also trigger disruption through manual methods or external systems.
 
 ## Expiration
 
-Expiration allows you to set a maximum age for your NAP nodes. Nodes are marked as expired and disrupted after reaching the age you specify for the node pool's `spec.disruption.expireAfter` value.
+Expiration is a forceful disruption method that allows you to set a maximum age for your NAP nodes. Nodes are marked as expired and disrupted after reaching the age you specify for the node pool's `spec.disruption.expireAfter` value.
 
 ### Example expiration configuration
 
@@ -121,7 +121,11 @@ spec:
 
 ## Disruption budgets
 
-You can rate limit Karpenter's disruption by modifying the `spec.disruption.budgets` field in the node pool specification. If you leave this setting undefined, Karpenter defaults to one budget with `nodes: 10%`. Budgets consider nodes that are being deleted for any reason, and they only block Karpenter from voluntary disruptions through expiration, drift, emptiness, and consolidation.
+You can rate limit Karpenter's graceful disruption by modifying the `spec.disruption.budgets` field in the node pool specification. If you leave this setting undefined, Karpenter defaults to one budget with `nodes: 10%`. Budgets consider nodes that are being deleted for any reason, and they only block Karpenter from voluntary disruptions through drift, emptiness, and consolidation.
+
+Expiration is a forceful disruption method and isn't rate-limited by NodePool disruption budgets. Pod Disruption Budgets (PDBs) can still control application-level pod eviction during node draining unless you configure `terminationGracePeriod`, which bypasses PDBs and the `karpenter.sh/do-not-disrupt` annotation.
+
+To confine NAP disruptions to a maintenance window, set `expireAfter: Never` and rely on disruption-budget-gated drift and consolidation.
 
 When calculating if a budget blocks nodes from disruption, Karpenter counts the total nodes owned by a node pool and then subtracts nodes that are being deleted and nodes that are `NotReady`. If the budget is configured with a percentage value, such as `20%`, Karpenter calculates the number of allowed disruptions as `allowed_disruptions = roundup(total * percentage) - total_deleting - total_notready`. For multiple budgets in a node pool, Karpenter takes the minimum (most restrictive) value of each of the budgets.
 
@@ -237,7 +241,7 @@ spec:
         karpenter.sh/do-not-disrupt: "true"
 ```
 
-This annotation prevents voluntary disruption for Expiration, Consolidation, and Drift. However, it doesn't prevent disruption from external systems or manual disruption through `kubectl` or `NodePool` deletion.
+This annotation prevents voluntary disruption for Consolidation and Drift. However, it doesn't prevent forceful disruption through expiration, disruption from external systems, or manual disruption through `kubectl` or `NodePool` deletion.
 
 ### Node controls
 
