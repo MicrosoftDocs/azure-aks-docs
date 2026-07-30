@@ -6,18 +6,6 @@
   href: intro-aks-automatic.md
 - name: Compare AKS with other Azure container options
   href: compare-container-options-with-aks.md
-- name: AKS enabled by Azure Arc
-  items:
-    - name: AKS enabled by Azure Arc
-      href: /azure/aks/aksarc?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: What is AKS enabled by Azure Arc?
-      href: /azure/aks/aksarc/aks-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: Azure Local
-      href: /azure/aks/aksarc/aks-whats-new-local?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: AKS Edge Essentials
-      href: /azure/aks/aksarc/aks-edge-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: AKS on bare metal
-      href: /azure/aks/aksarc/aks-bare-metal-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 - name: Get started with AKS
   items:
     - name: Kubernetes basics
@@ -1614,6 +1602,16 @@
           href: /troubleshoot/azure/azure-kubernetes/troubleshoot-dapr-extension-installation-errors?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: GitOps
       href: /azure/azure-arc/kubernetes/tutorial-use-gitops-flux2?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+- name: AKS Hybrid and Edge
+  items:
+    - name: AKS on bare metal
+      href: /azure/aks/aksarc/aks-bare-metal-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: AKS on Azure Local (Hyperconverged)
+      href: /azure/aks/aksarc/aks-whats-new-local?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: AKS Edge Essentials
+      href: /azure/aks/aksarc/aks-edge-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: AKS on Windows Server
+      href: /aks/aksarc/overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 - name: FAQ
   href: faq.yml
 - name: Reference

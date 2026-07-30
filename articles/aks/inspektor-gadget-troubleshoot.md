@@ -237,7 +237,7 @@ unable to build kubernetes objects from release manifest: resource mapping not f
 
 **Resolution:**
 
-1. Create an Azure Policy exemption that excludes the `gadget` namespace from the restrictive policy assignment. For instructions, see [Create a policy exemption](/azure/governance/policy/how-to/exempt-resource).
+1. Create an Azure Policy exemption that excludes the `gadget` namespace from the restrictive policy assignment.
 1. After the exemption is in place, delete the stuck pods so the DaemonSet recreates them:
 
    ```bash-interactive
