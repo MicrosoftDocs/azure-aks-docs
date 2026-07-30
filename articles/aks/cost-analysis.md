@@ -7,7 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 ms.topic: how-to
 ms.custom: quarterly
-ms.date: 06/10/2025
+ms.date: 07/29/2026
 # Customer intent: As a cloud operations manager, I want to enable cost analysis on my AKS cluster so that I can gain detailed insights into resource allocation and optimize my Kubernetes spending effectively.
 ---
 
@@ -18,40 +18,42 @@ ms.date: 06/10/2025
 
 In this article, you learn how to enable cost analysis on Azure Kubernetes Service (AKS) to view detailed cost data for cluster resources.
 
-## About cost analysis
+## AKS cost analysis overview
 
 AKS clusters rely on Azure resources, such as virtual machines (VMs), virtual disks, load balancers, and public IP addresses. Multiple applications can use these resources. The resource consumption patterns often differ for each application, so their contribution toward the total cluster resource cost might also vary. Some applications might have footprints across multiple clusters, which can pose a challenge when performing cost attribution and cost management.
 
-When you enable cost analysis on your AKS cluster, you can view detailed cost allocation scoped to Kubernetes constructs, such as clusters and namespaces, and Azure Compute, Network, and Storage resources. The add-on is built on top of [OpenCost](https://www.opencost.io/), an open-source Cloud Native Computing Foundation Incubating project for usage data collection. Usage data is reconciled with your Azure invoice data to provide a comprehensive view of your AKS cluster costs directly in the Azure portal Cost Management views.
+When you enable cost analysis on your AKS cluster, you can view detailed cost allocation scoped to Kubernetes constructs, such as clusters and namespaces, and Azure Compute, Network, and Storage resources. The add-on is built on top of [OpenCost](https://www.opencost.io/), an open-source Cloud Native Computing Foundation Incubating project for usage data collection. Usage data is reconciled with your Azure invoice data to provide a comprehensive view of your AKS cluster costs directly in the Azure portal.
 
 For more information on Microsoft Cost Management, see [Start analyzing costs in Azure](/azure/cost-management-billing/costs/quick-acm-cost-analysis).
 
-After enabling the cost analysis add-on and allowing time for data to be collected, you can use the information in [Understand AKS usage and costs](./understand-aks-costs.md) to help you understand your data.
+After enabling the cost analysis add-on and allowing up to 24 hours for data to be collected, you can use the information in [Understand AKS usage and costs](./understand-aks-costs.md) to help you understand your data.
 
 ## Prerequisites
 
-* Your cluster must use the `Standard` or `Premium` tier, not the `Free` tier.
-* To view cost analysis information, you must have one of the following roles on the subscription hosting the cluster: `Owner`, `Contributor`, `Reader`, `Cost Management Contributor`, or `Cost Management Reader`.
-* [Managed identity](./use-managed-identity.md) configured on your cluster.
-* If using the Azure CLI, you need version `2.61.0` or later installed.
-* Once you have enabled cost analysis, you can't downgrade your cluster to the `Free` tier without first disabling cost analysis.
-* Access to the Azure API including Azure Resource Manager (ARM) API. For a list of fully qualified domain names (FQDNs) required, see [AKS Cost Analysis required FQDN](./outbound-rules-control-egress.md#aks-cost-analysis-add-on).
+- Your cluster must use the `Standard` or `Premium` tier, not the `Free` tier.
+- To view cost analysis information, you must have one of the following roles on the subscription hosting the cluster: `Owner`, `Contributor`, `Reader`, `Cost Management Contributor`, or `Cost Management Reader`.
+- [Managed identity](./use-managed-identity.md) configured on your cluster.
+- The [Azure Disk Container Storage Interface (CSI) driver](./csi-storage-drivers.md) enabled on your cluster.
+- If using the Azure CLI, you need version `2.61.0` or later installed.
+- Once you enable cost analysis, you can't downgrade your cluster to the `Free` tier without first disabling cost analysis.
+- Access to the Azure API including Azure Resource Manager (ARM) API. For a list of fully qualified domain names (FQDNs) required, see [AKS Cost Analysis required FQDN](./outbound-rules-control-egress.md#aks-cost-analysis-add-on).
 
 ## Limitations
 
-* Kubernetes cost views are only available for the *Enterprise Agreement* and *Microsoft Customer Agreement* Microsoft Azure offer types. For more information, see [Supported Microsoft Azure offers](/azure/cost-management-billing/costs/understand-cost-mgt-data#supported-microsoft-azure-offers).
-* Currently, virtual nodes aren't supported.
-* The AKS cost analysis add-on supports about 7,000 containers per cluster, based on the current 4-GB memory limit and subject to change.
+- Kubernetes cost views are only available for the _Enterprise Agreement_ and _Microsoft Customer Agreement_ Microsoft Azure offer types. For more information, see [Supported Microsoft Azure offers](/azure/cost-management-billing/costs/understand-cost-mgt-data#supported-microsoft-azure-offers).
+- Currently, virtual nodes aren't supported.
+- The add-on isn't available in the `usnateast`, `usnatwest`, `usseceast`, or `ussecwest` regions. For more information, see [AKS cost analysis add-on issues and troubleshooting](/troubleshoot/azure/azure-kubernetes/aks-cost-analysis-add-on-issues#cause-3-the-add-on-is-unavailable-in-your-region).
+- The AKS cost analysis add-on supports about 7,000 containers per cluster, based on the current 4-GB memory limit and subject to change.
 
 ## Enable cost analysis on your AKS cluster
 
 You can enable the cost analysis with the `--enable-cost-analysis` flag during one of the following operations:
 
-* Creating a `Standard` or `Premium` tier AKS cluster.
-* Updating an existing `Standard` or `Premium` tier AKS cluster.
-* Upgrading a `Free` cluster to `Standard` or `Premium`.
-* Upgrading a `Standard` cluster to `Premium`.
-* Downgrading a `Premium` cluster to `Standard` tier.
+- Creating a `Standard` or `Premium` tier AKS cluster.
+- Updating an existing `Standard` or `Premium` tier AKS cluster.
+- Upgrading a `Free` cluster to `Standard` or `Premium`.
+- Upgrading a `Standard` cluster to `Premium`.
+- Downgrading a `Premium` cluster to `Standard` tier.
 
 ### Enable cost analysis on a new cluster
 
@@ -70,7 +72,7 @@ Results:
 
 ```JSON
 {
-    "id": "/subscriptions/xxxxx/resourceGroups/AKSCostRGxxxx",
+    "id": "/subscriptions/xxxxx/resourceGroups/AKSCostRGxxxx/providers/Microsoft.ContainerService/managedClusters/AKSCostClusterxxxx",
     "location": "WestUS2",
     "name": "AKSCostClusterxxxx",
     "properties": {
@@ -83,7 +85,7 @@ Results:
 
 ### Enable cost analysis on an existing cluster
 
-Enable cost analysis on an existing cluster using the [`az aks update`][az-aks-update] command with the `--enable-cost-analysis` flag. The following example updates an existing AKS cluster in the `Standard` tier to enable cost analysis:
+Enable cost analysis on an existing cluster using the [`az aks update`][az-aks-update] command with the `--enable-cost-analysis` flag. The following example updates an existing AKS cluster in the `Standard` tier to enable cost analysis. Replace `$RESOURCE_GROUP` and `$CLUSTER_NAME` with your resource group and cluster names, or set them as environment variables.
 
 ```azurecli-interactive
 az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --enable-cost-analysis
@@ -95,7 +97,7 @@ Results:
 
 ```JSON
 {
-    "id": "/subscriptions/xxxxx/resourceGroups/AKSCostRGxxxx",
+    "id": "/subscriptions/xxxxx/resourceGroups/AKSCostRGxxxx/providers/Microsoft.ContainerService/managedClusters/AKSCostClusterxxxx",
     "name": "AKSCostClusterxxxx",
     "properties": {
         "provisioningState": "Succeeded"
@@ -107,13 +109,13 @@ Results:
 > An agent is deployed to the cluster when you enable the add-on. The agent consumes a small amount of CPU and Memory resources.
 
 > [!WARNING]
-> The AKS cost analysis add-on Memory usage is dependent on the number of containers deployed. You can roughly approximate Memory consumption using *200 MB + 0.5 MB per container*. The current Memory limit is set to *4 GB*, which supports approximately *7000 containers per cluster*. These estimates are subject to change.
+> The AKS cost analysis add-on Memory usage is dependent on the number of containers deployed. You can roughly approximate Memory consumption using _200 MB + 0.5 MB per container_. The current Memory limit is set to _4 GB_, which supports approximately _7,000 containers per cluster_. These estimates are subject to change.
 
 > [!NOTE]
 > Enabling the cost analysis also creates a [managed identity](/entra/identity/managed-identities-azure-resources/overview) named `cost-analysis-identity` with read access to the cluster's node resource group, and assigns it to the node pools in the cluster.
 > This is used to collect the ARM identifiers of cluster assets for reporting.
 > 
-> Since there is already a managed identity for the node pool itself, any commands on the node that use managed identities will need to [specify the identity to use](/entra/identity/managed-identities-azure-resources/managed-identities-faq#what-identity-will-imds-default-to-if-i-dont-specify-the-identity-in-the-request) rather than relying on the default.
+> Since the node pool already has a managed identity, any commands on the node that use managed identities need to [specify the identity to use](/entra/identity/managed-identities-azure-resources/managed-identities-faq#what-identity-will-imds-default-to-if-i-dont-specify-the-identity-in-the-request) instead of relying on the node pool's managed identity.
 > 
 > For example, `az login --identity --resource-id <resource ID of identity>`.
 
@@ -130,7 +132,7 @@ Results:
 
 ```JSON
 {
-    "id": "/subscriptions/xxxxx/resourceGroups/AKSCostRGxxxx",
+    "id": "/subscriptions/xxxxx/resourceGroups/AKSCostRGxxxx/providers/Microsoft.ContainerService/managedClusters/AKSCostClusterxxxx",
     "name": "AKSCostClusterxxxx",
     "properties": {
         "provisioningState": "Succeeded"
@@ -143,19 +145,25 @@ Results:
 
 ## View the cost data
 
-You can view cost allocation data in the Azure portal. For more information, see [View AKS costs in Microsoft Cost Management](/azure/cost-management-billing/costs/view-kubernetes-costs).
+You can view cost allocation data in the Azure portal.
+
+In the Azure portal, go to the Azure subscription that hosts your AKS cluster. Under Cost Management, select **Cost analysis**. In the **View** list, select the list drop-down item and then select **Kubernetes clusters**.
+
+For more information, see [View AKS costs in Microsoft Cost Management](/azure/cost-management-billing/costs/view-kubernetes-costs).
 
 ### Cost definitions
 
 In the Kubernetes namespaces and assets views, you might see any of the following charges:
 
-* **Idle charges** represent the cost of available resource capacity that isn't used by any workloads.
-* **Service charges** represent the charges associated with the service, like Uptime SLA, Microsoft Defender for Containers, etc.
-* **System charges** represent the cost of capacity reserved by AKS on each node to run system processes required by the cluster, including the kubelet and container runtime. [Learn more](./concepts-clusters-workloads.md#resource-reservations).
-* **Unallocated charges** represent the cost of resources that couldn't be allocated to namespaces.
+| Charge type | Description |
+| ----------- | ----------- |
+| Idle charges | The cost of available resource capacity that isn't used by any workloads. |
+| Service charges | The charges associated with the service, like Uptime SLA, Microsoft Defender for Containers, etc. |
+| System charges | The cost of capacity reserved by AKS on each node to run system processes required by the cluster, including the kubelet and container runtime. [Learn more](./node-resource-reservations.md#resource-reservations). |
+| Unallocated charges | The cost of resources that couldn't be allocated to namespaces. |
 
 > [!NOTE]
-> It might take *up to one day* for data to finalize. After 24 hours, any fluctuations in costs for the previous day will have stabilized.
+> Typically, the system finalizes and makes cost and usage data available within 8 to 24 hours.
 
 ## Troubleshooting
 
