@@ -223,8 +223,8 @@ For information on AKS and AKS Automatic, see the following resources:
 [resource-reservations]: ./node-resource-reservations.md
 [reservation-discounts]: /azure/cost-management-billing/reservations/save-compute-costs-reservations
 [supported-kubernetes-versions]: ./supported-kubernetes-versions.md
-[default-os-disk]: ./concepts-storage.md#default-os-disk-sizing
-[ephemeral-os-disks]: ./concepts-storage.md#ephemeral-os-disk
+[default-os-disk]: ./concepts-storage.md#default-os-disk-sizing-in-aks
+[ephemeral-os-disks]: ./concepts-storage.md#ephemeral-os-disks-in-aks
 [aks-overview]: ./what-is-aks.md
 [containerd]: https://containerd.io/
 [aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes
