@@ -91,7 +91,7 @@ az aks update \
     --enable-managed-identity
 ```
 
-After you update the cluster to use a system-assigned managed identity instead of a service principal, the control plane and pods use the system-assigned managed identity for authorization when accessing other services in Azure. Additionally, all nodes in your cluster will be reimaged so the Kubelet can immediately start using a managed identity as well. As such, this operation will cause downtime for your AKS cluster as the nodes in the node pools are cordoned, drained, and reimaged.
+After you update the cluster to use a system-assigned managed identity instead of a service principal, the control plane and pods use the system-assigned managed identity for authorization when accessing other services in Azure. All nodes in your cluster will be reimaged so the Kubelet can immediately start using a managed identity as well. This reimage operation will cause downtime for your AKS cluster as the nodes in the node pools are cordoned, drained, and reimaged. Configure Node Disruption Policy (preview) to control when operations that require node reimage are allowed in your Azure Kubernetes Service (AKS) cluster.
 
 ## Get the principal ID of a system-assigned managed identity
 
