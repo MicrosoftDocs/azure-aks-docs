@@ -18,7 +18,7 @@ Azure Kubernetes Service (AKS) clusters consist of two main components: the **co
 
 - If you're using the Azure CLI, this article requires Azure CLI version 2.34.1 or later. Use the `az --version` command to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 - If you're using Azure PowerShell, this article requires Azure PowerShell version 5.9.0 or later. Use the `Get-InstalledModule -Name Az` cmdlet to find the version. If you need to install or upgrade, see [Install Azure PowerShell][azure-powershell-install].
-- Performing upgrade operations requires the [Azure Kubernetes Service Contributor Role][aks-contributor-role] or equivalent permissions.
+- To perform upgrade operations, you need the [Azure Kubernetes Service Contributor Role][aks-contributor-role] or equivalent permissions.
 - Beta APIs are disabled by default when you upgrade to Kubernetes version 1.30 and 1.27 LTS versions.
 
 > [!WARNING]
@@ -182,11 +182,11 @@ Set-AzAksCluster -ResourceGroupName <resource-group-name> -Name <cluster-name> -
 
 ---
 
-## ## AKS control plane upgrade frequently asked questions (FAQ)
+## AKS control plane upgrade frequently asked questions (FAQ)
 
 ### Does a control-plane-only upgrade also upgrade node pools?
 
-No. A control-plane-only upgrade leaves node pools unchanged. [Cluster autoupgrade](./auto-upgrade-cluster.md#control-plane-upgrade-constraints) is different: It doesn't support control-plane-only upgrades and upgrades the control plane and all node pools together.
+No. A control-plane-only upgrade doesn't change node pools. [Cluster autoupgrade](./auto-upgrade-cluster.md#control-plane-upgrade-constraints) works differently: it doesn't support control-plane-only upgrades and upgrades the control plane and all node pools together.
 
 ### Can I upgrade node pools before the control plane?
 
@@ -212,7 +212,7 @@ Before upgrading, check for deprecated APIs using tools like [kube-no-trouble (k
 kubent
 ```
 
-The command scans resources accessible through the current kubeconfig context for deprecated Kubernetes API versions. The output groups findings by Kubernetes version and identifies each affected resource by `KIND`, `NAMESPACE`, `NAME`, and `API_VERSION`; update the source manifest for every listed resource to use a supported API version before upgrading.
+The command scans resources accessible through the current kubeconfig context for deprecated Kubernetes API versions. The output groups findings by Kubernetes version and identifies each affected resource by `KIND`, `NAMESPACE`, `NAME`, and `API_VERSION`. Update the source manifest for every listed resource to use a supported API version before upgrading.
 
 ## Related content
 
