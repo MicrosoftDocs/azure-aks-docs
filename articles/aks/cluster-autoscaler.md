@@ -242,7 +242,7 @@ az aks update \
 
 ## Retrieve cluster autoscaler logs and status
 
-You can retrieve logs and status updates from the cluster autoscaler to help diagnose and debug autoscaler events. AKS manages the cluster autoscaler on your behalf and runs it in the managed control plane. To collect its control plane logs, create an Azure Monitor diagnostic setting for the AKS cluster in the Azure portal or with `az monitor diagnostic-settings create`, and enable the `cluster-autoscaler` log category.
+You can retrieve logs and status updates from the cluster autoscaler to help diagnose and debug autoscaler events. AKS manages the cluster autoscaler on your behalf and runs it in the managed control plane. To collect its control plane logs, create an Azure Monitor diagnostic setting for the AKS cluster in the Azure portal or use `az monitor diagnostic-settings create`, and enable the `cluster-autoscaler` log category.
 
 ### [Azure CLI](#tab/azure-cli)
 
