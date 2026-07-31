@@ -55,7 +55,7 @@ az k8s-extension create \
 ```
 
 > [!NOTE]
-> This step assumes you already enabled Azure Monitor on your AKS cluster. If you plan to use your own Prometheus setup, remove `--configuration-settings azureMonitor.enabled=true`.
+> This step assumes you already enabled Azure Monitor on your AKS cluster. If you plan to use your own Prometheus setup, remove `--configuration-settings azureMonitor.enabled=true`. For details, see [How do I connect my own Prometheus instance to Inspektor Gadget?](#how-do-i-connect-my-own-prometheus-instance-to-inspektor-gadget) in the FAQ.
 
 Verify that pods are running:
 
@@ -102,6 +102,9 @@ kubectl get pods -n gadget pyroscope-0
 > If you would like to deploy a highly available Pyroscope setup, refer to the [Pyroscope microservices documentation](https://grafana.com/docs/pyroscope/latest/reference-pyroscope-architecture/deployment-modes/#microservices-mode) for configuration options.
 
 ### Step 3: Connect Pyroscope to Azure Managed Grafana
+
+> [!NOTE]
+> If you're using your own Grafana instance instead of Azure Managed Grafana, see [How do I visualize Inspector Gadget metrics in my own Grafana?](#how-do-i-visualize-inspector-gadget-metrics-in-my-own-grafana) in the FAQ.
 
 > [!TIP]
 > You can directly view your workload profiles using `kubectl port-forward -n gadget pyroscope-0 4040:4040` to connect to the Pyroscope UI.
@@ -367,6 +370,57 @@ Use the following steps to identify hotspots:
 | Optimization targets | Bars with wide self—that's where the resource is consumed |
 | Functions to ignore | Wide bars with 0 self—they just call others |
 
+## FAQ
+
+### How do I connect my own Prometheus instance to Inspektor Gadget?
+
+If you run your own Prometheus instance instead of Azure Monitor Managed Service for Prometheus, you can connect it to scrape metrics from Inspektor Gadget pods.
+
+Inspektor Gadget exposes its metrics at:
+
+| Setting | Value |
+|---|---|
+| Namespace | `gadget` |
+| Port | `2224` |
+| Path | `/metrics` |
+
+Add a scrape job to your Prometheus configuration to discover and scrape these pods:
+
+> [!TIP]
+> For Prometheus Operator deployments, you can achieve the same configuration by creating a PodMonitor with the equivalent namespace, label selector, port, and metrics path.
+
+```yaml
+scrape_configs:
+  - job_name: "inspektor-gadget"
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+            - gadget
+    relabel_configs:
+    # Only keep pods with label k8s-app=gadget
+      - source_labels: [__meta_kubernetes_pod_label_k8s_app]
+        action: keep
+        regex: gadget
+
+      # Force metrics path
+      - target_label: __metrics_path__
+        replacement: /metrics
+
+      # Force port
+      - source_labels: [__address__]
+        action: replace
+        regex: ([^:]+)(?::\d+)?
+        replacement: $1:2224
+        target_label: __address__
+```
+Verify the connection in your Prometheus UI under Status > Targets. The  inspektor-gadget  job should show its target as UP.
+
+### How do I visualize Inspector Gadget metrics in my own Grafana?
+
+Make sure your Prometheus instance is connected to Grafana as a data source. Then, import the Inspector Gadget dashboard using this JSON definition:
+
+`https://raw.githubusercontent.com/inspektor-gadget/grafana-dashboards/refs/heads/main/dashboards/gpu-observability/AdvancedGPUObservability.json`
 
 ## Next steps
 
