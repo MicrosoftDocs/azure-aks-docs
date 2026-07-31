@@ -241,12 +241,12 @@ A [Microsoft Entra managed identity][managed-identity] enables an Azure resource
 1. Access your key vault using the [`az aks show`][az-aks-show] command and the user-assigned managed identity created by the add-on. You should also retrieve the identity's `clientId`, which you use in later steps when creating a `SecretProviderClass`.
 
     ```azurecli-interactive
-  export RESOURCE_GROUP=<resource-group>
-  export CLUSTER_NAME=<cluster-name>
-  export KEYVAULT_NAME=<key-vault-name>
+    export RESOURCE_GROUP=<resource-group>
+    export CLUSTER_NAME=<cluster-name>
+    export KEYVAULT_NAME=<key-vault-name>
 
-  export IDENTITY_OBJECT_ID=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId -o tsv)
-  export USER_ASSIGNED_CLIENT_ID=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId -o tsv)
+    export IDENTITY_OBJECT_ID=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId -o tsv)
+    export USER_ASSIGNED_CLIENT_ID=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId -o tsv)
     ```
 
     Alternatively, you can create a new managed identity and assign it to your virtual machine (VM) scale set or to each VM instance in your availability set.
@@ -259,7 +259,6 @@ A [Microsoft Entra managed identity][managed-identity] enables an Azure resource
     export IDENTITY_RESOURCE_ID=$(az identity show --resource-group $RESOURCE_GROUP --name $USER_ASSIGNED_IDENTITY_NAME --query id -o tsv)
     export IDENTITY_OBJECT_ID=$(az identity show --resource-group $RESOURCE_GROUP --name $USER_ASSIGNED_IDENTITY_NAME --query principalId -o tsv)
     export USER_ASSIGNED_CLIENT_ID=$(az identity show --resource-group $RESOURCE_GROUP --name $USER_ASSIGNED_IDENTITY_NAME --query clientId -o tsv)
-
     ```
 
     For a VM scale set-based cluster, assign the identity to the VM scale set.
@@ -296,12 +295,12 @@ A [Microsoft Entra managed identity][managed-identity] enables an Azure resource
 
 1. Create a `SecretProviderClass` using the identity client ID. Make sure to use your own values for the objects to retrieve from your key vault.
 
-  The following parameters configure user-assigned managed identity access:
+    The following parameters configure user-assigned managed identity access:
 
-  - `usePodIdentity`: Set to `"false"` when using managed identity.
-  - `useVMManagedIdentity`: Set to `"true"` to enable managed identity mode.
-  - `userAssignedIdentityID`: Set to the client ID of the user-assigned managed identity.
-  - `tenantId`: Set to the tenant ID that contains the key vault.
+    - `usePodIdentity`: Set to `"false"` when using managed identity.
+    - `useVMManagedIdentity`: Set to `"true"` to enable managed identity mode.
+    - `userAssignedIdentityID`: Set to the client ID of the user-assigned managed identity.
+    - `tenantId`: Set to the tenant ID that contains the key vault.
 
     ```bash
     export KEYVAULT_TENANT_ID=$(az keyvault show --name $KEYVAULT_NAME --query properties.tenantId -o tsv)
@@ -348,8 +347,8 @@ A [Microsoft Entra managed identity][managed-identity] enables an Azure resource
 
 1. Create a pod manifest named `pod.yaml` using the following command.
 
-  ```bash
-  cat <<EOF > pod.yaml
+    ```bash
+    cat <<EOF > pod.yaml
     # This is a sample pod definition for using SecretProviderClass and the user-assigned identity to access your key vault
     kind: Pod
     apiVersion: v1
@@ -396,7 +395,7 @@ After the pod starts, the mounted content at `/mnt/secrets-store` is available. 
 1. Display a secret in the store using the following command. This example command shows the test secret `secret1`.
 
     ```bash
-  kubectl exec busybox-secrets-store-inline-user-msi -- cat /mnt/secrets-store/secret1
+    kubectl exec busybox-secrets-store-inline-user-msi -- cat /mnt/secrets-store/secret1
     ```
 
 ::: zone-end
