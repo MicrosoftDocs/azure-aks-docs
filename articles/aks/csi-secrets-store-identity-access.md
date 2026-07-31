@@ -77,7 +77,7 @@ In this security model, the AKS cluster acts as the token issuer. When the Secre
 
     > [!IMPORTANT]
     >
-    > - If your key vault is set with `--enable-rbac-authorization` and you're using `key` or `cert` type, assign the [`Key Vault Certificate User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role to give permissions.
+    > - If you set your key vault with `--enable-rbac-authorization` and you're using `key` or `cert` type, assign the [`Key Vault Certificate User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role to give permissions.
     > - If your key vault is set with `--enable-rbac-authorization` and you're using `secret` type, assign the [`Key Vault Secrets User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role.
     > - If your key vault isn't set with `--enable-rbac-authorization`, you can use the [`az keyvault set-policy`][az-keyvault-set-policy] command with the `--key-permissions get`, `--certificate-permissions get`, or `--secret-permissions get` parameter to create a key vault policy to grant access for keys, certificates, or secrets. For example:
     >
@@ -103,7 +103,7 @@ In this security model, the AKS cluster acts as the token issuer. When the Secre
     echo $AKS_OIDC_ISSUER
     ```
 
-1. Create a Kubernetes service account for the workload. Make sure to update the values for `SERVICE_ACCOUNT_NAME` and `SERVICE_ACCOUNT_NAMESPACE` with the Kubernetes service account name and its namespace.
+1. Create a Kubernetes service account for the workload. Update the values for `SERVICE_ACCOUNT_NAME` and `SERVICE_ACCOUNT_NAMESPACE` with the Kubernetes service account name and its namespace.
 
     ```bash
     export SERVICE_ACCOUNT_NAME="workload-identity-sa"  # sample name; can be changed
@@ -278,7 +278,7 @@ A [Microsoft Entra managed identity][managed-identity] enables an Azure resource
 
     > [!IMPORTANT]
     >
-    > - If your key vault is set with `--enable-rbac-authorization` and you're using `key` or `cert` type, assign the [`Key Vault Certificate User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role.
+    > - If you set your key vault with `--enable-rbac-authorization` and you're using `key` or `cert` type, assign the [`Key Vault Certificate User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role.
     > - If your key vault is set with `--enable-rbac-authorization` and you're using `secret` type, assign the [`Key Vault Secrets User`](/azure/key-vault/general/rbac-guide#azure-built-in-roles-for-key-vault-data-plane-operations) role.
     > - If your key vault isn't set with `--enable-rbac-authorization`, you can use the [`az keyvault set-policy`][az-keyvault-set-policy] command with the `--key-permissions get`, `--certificate-permissions get`, or `--secret-permissions get` parameter to create a key vault policy to grant access for keys, certificates, or secrets. For example:
     >
