@@ -27,6 +27,7 @@ This article explains how to enable a system-assigned managed identity on a new 
     az account set --subscription <subscription-id>
     ```
 
+<!-- markdownlint-disable MD044 -->
 :::zone pivot="azure-cli"
 
 - An existing Azure resource group. If you don't have one, you can create one using the [`az group create`][az-group-create] command.
@@ -41,6 +42,7 @@ This article explains how to enable a system-assigned managed identity on a new 
 
 - Azure CLI version 2.23.0 or later installed. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - To update an existing cluster to use a [system-assigned managed identity][update-system-assigned-managed-identity-on-an-existing-cluster], you need Azure CLI version 2.49.0 or later installed.
+<!-- markdownlint-enable MD044 -->
 
 :::zone pivot="terraform"
 
@@ -65,6 +67,7 @@ When you update a cluster, consider the following information:
 - The Azure CLI ensures your add-on's permission is correctly set after migrating. If you're not using the Azure CLI to perform the migrating operation, you need to handle the add-on identity's permission by yourself. For an example using an Azure Resource Manager (ARM) template, see [Assign Azure roles using ARM templates](/azure/role-based-access-control/role-assignments-template).
 - If your cluster was using `--attach-acr` to pull from images from Azure Container Registry (ACR), you need to run the `az aks update --resource-group <resource-group-name> --name <aks-cluster-name> --attach-acr <acr-resource-id>` command after updating your cluster to let the newly created kubelet used for managed identity get the permission to pull from ACR. Otherwise, you won't be able to pull from ACR after the update.
 
+<!-- markdownlint-disable MD044 -->
 :::zone pivot="azure-cli"
 
 ## Enable a system-assigned managed identity on a new AKS cluster
@@ -91,7 +94,7 @@ az aks update \
     --enable-managed-identity
 ```
 
-After you update the cluster to use a system-assigned managed identity instead of a service principal, the control plane and pods use the system-assigned managed identity for authorization when accessing other services in Azure. Kubelet continues using a service principal until you also upgrade your agent pool. You can use the `az aks nodepool upgrade --resource-group <resource-group-name> --cluster-name <aks-cluster-name> --name <node-pool-name> --node-image-only` command on your nodes to update to a managed identity. A node pool upgrade causes downtime for your AKS cluster as the nodes in the node pools are cordoned, drained, and reimaged.
+After you update the cluster to use a system-assigned managed identity instead of a service principal, the control plane and pods use the system-assigned managed identity for authorization when accessing other services in Azure. Additionally, all nodes in your cluster will be reimaged so the Kubelet can immediately start using a managed identity as well. As such, this operation will cause downtime for your AKS cluster as the nodes in the node pools are cordoned, drained, and reimaged.
 
 ## Get the principal ID of a system-assigned managed identity
 
@@ -123,6 +126,7 @@ az role assignment create \
 > It can take up to 60 minutes for the permissions granted to your cluster's managed identity to propagate.
 
 :::zone-end
+<!-- markdownlint-enable MD044 -->
 
 :::zone pivot="terraform"
 
