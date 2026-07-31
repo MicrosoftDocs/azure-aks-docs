@@ -226,7 +226,7 @@ A Private Endpoint allows you to privately connect to your Kubernetes service ob
 
 Create the private endpoint using the [`az network private-endpoint create`][az-network-private-endpoint-create] command. Replace `pls-xyz` with the Private Link Service name returned in the previous step.
 
-Set `--resource-group` to the target resource group where you want to create the private endpoint. Set `--vnet-name` and `--subnet` to the virtual network and subnet that will contain the private endpoint, and set `--private-connection-resource-id` to the Private Link Service resource ID retrieved in `AKS_PLS_ID`.
+Set `--resource-group` to the target resource group where you want to create the private endpoint. Set `--vnet-name` and `--subnet` to the virtual network and subnet that contain the private endpoint. Set `--private-connection-resource-id` to the Private Link Service resource ID retrieved in `AKS_PLS_ID`.
 
 ```azurecli-interactive
 # Create variables for the Private Link Service
@@ -312,7 +312,7 @@ Set the `service.beta.kubernetes.io/azure-load-balancer-internal-subnet` annotat
 
 ## Delete the load balancer
 
-The load balancer is deleted when all of its Kubernetes services are deleted.
+The load balancer is deleted when you delete all of its Kubernetes services.
 
 As with any Kubernetes resource, you can directly delete a service, such as `kubectl delete service internal-app`, which also deletes the underlying Azure load balancer.
 
