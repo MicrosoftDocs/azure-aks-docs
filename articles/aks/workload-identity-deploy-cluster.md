@@ -7,7 +7,7 @@ ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, innovation-engine
-ms.date: 05/28/2024
+ms.date: 07/31/2026
 zone_pivot_groups: azure-cli-or-terraform
 # Customer intent: As a cloud engineer, I want to deploy and configure an Azure Kubernetes Service cluster with workload identity so that my applications can securely authenticate to Azure resources without managing credentials directly.
 ---
@@ -27,11 +27,13 @@ In this article, you learn how to deploy and configure an Azure Kubernetes Servi
 - [!INCLUDE [quickstarts-free-trial-note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 - This article requires version 2.47.0 or later of the Azure CLI. If using Azure Cloud Shell, the latest version is already installed. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - Make sure that the identity that you're using to create your cluster has the appropriate minimum permissions. For more information, see [Access and identity options for Azure Kubernetes Service (AKS)][aks-identity-concepts].
+- Make sure that your identity has permission to create role assignments at the key vault scope, such as the [Role Based Access Control Administrator](/azure/role-based-access-control/built-in-roles/privileged#role-based-access-control-administrator) role. The Contributor and Key Vault Contributor roles can't create role assignments.
 - If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [`az account set`][az-account-set] command.
 
 :::zone pivot="terraform"
 
 - Terraform installed locally. For installation instructions, see [Install Terraform](https://developer.hashicorp.com/terraform/install).
+- The `ARM_SUBSCRIPTION_ID` environment variable set to the subscription ID where you want to create the resources. AzureRM 4.x requires the subscription ID for plan and apply operations.
 
 :::zone-end
 
@@ -42,7 +44,7 @@ In this article, you learn how to deploy and configure an Azure Kubernetes Servi
 
 ## Create the Terraform configuration file
 
-Terraform configuration files define the infrastructure that Terraform creates and manages.
+The `main.tf` file includes definitions for the AKS cluster, managed identity, federated identity credential, Azure Key Vault, and Kubernetes resources used to configure and verify Microsoft Entra Workload ID.
 
 1. Create a file named `main.tf` and add the following code to define the Terraform version and specify the Azure provider:
 
@@ -66,7 +68,6 @@ Terraform configuration files define the infrastructure that Terraform creates a
     }
     provider "azurerm" {
      features {}
-     subscription_id = var.subscription_id
     }
     data "azurerm_client_config" "current" {}
     ```
@@ -417,16 +418,16 @@ resource "azurerm_federated_identity_credential" "this" {
 
 For more information about federated identity credentials in Microsoft Entra, see [Overview of federated identity credentials in Microsoft Entra ID][federated-identity-credential].
 
-## Create a key vault with Azure RBAC authorization
+## Create an Azure Key Vault with Azure RBAC authorization
 
-The following example shows how to use the Azure role-based access control (Azure RBAC) permission model to grant the pod access to the key vault. For more information about the Azure RBAC permission model for Azure Key Vault, see [Grant permission to applications to access an Azure key vault using Azure RBAC](/azure/key-vault/general/rbac-guide).
+The following steps use the Azure role-based access control (Azure RBAC) permission model. For background, see [Grant permission to applications to access an Azure key vault using Azure RBAC](/azure/key-vault/general/rbac-guide).
 
 :::zone pivot="azure-cli"
 
 1. Create a key vault with purge protection and Azure RBAC authorization enabled using the [`az keyvault create`][az-keyvault-create] command. You can also use an existing key vault if it's configured for both purge protection and Azure RBAC authorization.
 
     ```azurecli-interactive
-    export KEYVAULT_NAME="keyvault-workload-id$RANDOM_ID" # Ensure the key vault name is between 3-24 characters
+    export KEYVAULT_NAME="kv-workload-id$RANDOM_ID"
     az keyvault create \
         --name "${KEYVAULT_NAME}" \
         --resource-group "${RESOURCE_GROUP}" \
@@ -448,22 +449,23 @@ The following example shows how to use the Azure role-based access control (Azur
 
 :::zone pivot="terraform"
 
-Add the following code to `main.tf` to create a key vault with Azure RBAC authorization:
+Add the following code to `main.tf` to create a key vault with purge protection and Azure RBAC authorization enabled:
 
 ```Terraform
 resource "azurerm_key_vault" "this" {
- name                          = local.key_vault_name
- location                      = azurerm_resource_group.this.location
- resource_group_name           = azurerm_resource_group.this.name
- tenant_id                     = data.azurerm_client_config.current.tenant_id
- sku_name                      = "standard"
- rbac_authorization_enabled    = true
+ name                       = local.key_vault_name
+ location                   = azurerm_resource_group.this.location
+ resource_group_name        = azurerm_resource_group.this.name
+ tenant_id                  = data.azurerm_client_config.current.tenant_id
+ sku_name                   = "standard"
+ enable_rbac_authorization  = true
+ purge_protection_enabled   = true
 }
 ```
 
 :::zone-end
 
-### Assign RBAC permissions for key vault management
+### Assign RBAC permissions for Azure Key Vault management
 
 :::zone pivot="azure-cli"
 
@@ -480,6 +482,9 @@ resource "azurerm_key_vault" "this" {
         --role "Key Vault Secrets Officer" \
         --scope "${KEYVAULT_RESOURCE_ID}"
     ```
+
+    > [!IMPORTANT]
+    > Azure role assignments can take up to 10 minutes to propagate. If creating the secret in the next section returns a `403` error, wait for the role assignment to propagate, and then retry the command. For more information, see [Troubleshoot Azure RBAC](/azure/role-based-access-control/troubleshooting).
 
 :::zone-end
 
@@ -508,12 +513,14 @@ resource "azurerm_role_assignment" "identity" {
 
 1. Create a secret in the key vault using the [`az keyvault secret set`][az-keyvault-secret-set] command.
 
+    Create a secret whose name is stored in the `KEYVAULT_SECRET_NAME` variable, and set its value to `Hello!` in the key vault you created.
+
     ```azurecli-interactive
     export KEYVAULT_SECRET_NAME="my-secret$RANDOM_ID"
     az keyvault secret set \
         --vault-name "${KEYVAULT_NAME}" \
         --name "${KEYVAULT_SECRET_NAME}" \
-        --value "Hello\!"
+        --value 'Hello!'
     ```
 
 1. Get the principal ID of the user-assigned managed identity and save it to an environment variable using the [`az identity show`][az-identity-show] command.
@@ -557,14 +564,19 @@ resource "azurerm_key_vault_secret" "this" {
  name         = local.secret_name
  value        = "Hello from Key Vault"
  key_vault_id = azurerm_key_vault.this.id
+
+ depends_on = [azurerm_role_assignment.user]
 }
 ```
+
+> [!IMPORTANT]
+> Azure role assignments can take up to 10 minutes to propagate. If `terraform apply` returns a `403` error while creating the secret, wait for the role assignment to propagate, and then rerun the command. For more information, see [Troubleshoot Azure RBAC](/azure/role-based-access-control/troubleshooting).
 
 :::zone-end
 
 :::zone pivot="azure-cli"
 
-## Deploy a verification pod and test access
+## Deploy a verification pod and test access (Azure CLI)
 
 1. Deploy a pod to verify that the workload identity can access the secret in the key vault. The following example uses the `ghcr.io/azure/azure-workload-identity/msal-go` image, which contains a sample application that retrieves a secret from Azure Key Vault using Microsoft Entra Workload ID:
 
@@ -619,7 +631,7 @@ resource "azurerm_key_vault_secret" "this" {
     If successful, the output should be similar to the following example:
 
     ```output
-    I0114 10:35:09.795900       1 main.go:63] "successfully got secret" secret="Hello\\!"
+    I0114 10:35:09.795900       1 main.go:63] "successfully got secret" secret="Hello!"
     ```
 
     > [!IMPORTANT]
@@ -627,7 +639,7 @@ resource "azurerm_key_vault_secret" "this" {
 
 ## Disable Microsoft Entra Workload ID on an AKS cluster
 
-Disable Microsoft Entra Workload ID on the AKS cluster where it's been enabled and configured, update the AKS cluster using the [`az aks update`][az-aks-update] command with the `--disable-workload-identity` parameter.
+To disable Microsoft Entra Workload ID on the AKS cluster where it has been enabled and configured, use the [`az aks update`][az-aks-update] command with the `--disable-workload-identity` parameter.
 
 ```azurecli-interactive
 az aks update \
@@ -640,7 +652,7 @@ az aks update \
 
 :::zone pivot="terraform"
 
-## Deploy a verification pod
+## Deploy a verification pod (Terraform)
 
 Add the following code to `main.tf` to deploy a verification pod that uses the workload identity to access the secret in the key vault:
 
@@ -668,6 +680,11 @@ resource "kubernetes_pod" "test" {
      }
    }
  }
+
+ depends_on = [
+   azurerm_federated_identity_credential.this,
+   azurerm_role_assignment.identity,
+ ]
 }
 ```
 
@@ -709,6 +726,15 @@ terraform apply
     ```bash
     kubectl logs workload-identity-test
     ```
+
+    If successful, the output should be similar to the following example:
+
+    ```output
+    I0114 10:35:09.795900       1 main.go:63] "successfully got secret" secret="Hello from Key Vault"
+    ```
+
+    > [!IMPORTANT]
+    > Azure RBAC role assignments can take up to 10 minutes to propagate. If the pod is unable to access the secret, wait for the role assignment to propagate, and then recreate the pod using the `terraform apply -replace="kubernetes_pod.test"` command. For more information, see [Troubleshoot Azure RBAC](/azure/role-based-access-control/troubleshooting).
 
 :::zone-end
 
