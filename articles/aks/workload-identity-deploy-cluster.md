@@ -639,7 +639,7 @@ resource "azurerm_key_vault_secret" "this" {
 
 ## Disable Microsoft Entra Workload ID on an AKS cluster
 
-To disable Microsoft Entra Workload ID on the AKS cluster where it has been enabled and configured, use the [`az aks update`][az-aks-update] command with the `--disable-workload-identity` parameter.
+To disable Microsoft Entra Workload ID on the AKS cluster where you enabled and configured it, use the [`az aks update`][az-aks-update] command with the `--disable-workload-identity` parameter.
 
 ```azurecli-interactive
 az aks update \
@@ -727,14 +727,14 @@ terraform apply
     kubectl logs workload-identity-test
     ```
 
-    If successful, the output should be similar to the following example:
+    If successful, the output is similar to the following example:
 
     ```output
     I0114 10:35:09.795900       1 main.go:63] "successfully got secret" secret="Hello from Key Vault"
     ```
 
     > [!IMPORTANT]
-    > Azure RBAC role assignments can take up to 10 minutes to propagate. If the pod is unable to access the secret, wait for the role assignment to propagate, and then recreate the pod using the `terraform apply -replace="kubernetes_pod.test"` command. For more information, see [Troubleshoot Azure RBAC](/azure/role-based-access-control/troubleshooting).
+    > Azure RBAC role assignments can take up to 10 minutes to propagate. If the pod can't access the secret, wait for the role assignment to propagate, and then recreate the pod by using the `terraform apply -replace="kubernetes_pod.test"` command. For more information, see [Troubleshoot Azure RBAC](/azure/role-based-access-control/troubleshooting).
 
 :::zone-end
 
