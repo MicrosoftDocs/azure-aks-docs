@@ -374,7 +374,7 @@ Use the following steps to identify hotspots:
 
 ### How do I connect my own Prometheus instance to Inspektor Gadget?
 
-If you run your own Prometheus instance instead of Azure Monitor managed Prometheus, you can connect it to Inspektor Gadget directly—no Azure Monitor integration required.
+If you run your own Prometheus instance instead of Azure Monitor Managed Service for Prometheus, you can connect it to scrape metrics from Inspektor Gadget pods.
 
 Inspektor Gadget exposes its metrics at:
 
@@ -385,6 +385,9 @@ Inspektor Gadget exposes its metrics at:
 | Path | `/metrics` |
 
 Add a scrape job to your Prometheus configuration to discover and scrape these pods:
+
+> [!TIP]
+> For Prometheus Operator deployments, you can achieve the same configuration by creating a PodMonitor with the equivalent namespace, label selector, port, and metrics path.
 
 ```yaml
 scrape_configs:
