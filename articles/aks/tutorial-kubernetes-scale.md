@@ -275,7 +275,7 @@ The following example increases the number of nodes to five in the Kubernetes cl
 
 ---
 
-You can also autoscale the nodes in your cluster. For more information, see [Use the cluster autoscaler with node pools](./cluster-autoscaler.md#use-the-cluster-autoscaler-on-node-pools).
+You can also autoscale the nodes in your cluster. For more information, see [Use the cluster autoscaler with node pools](./cluster-autoscaler.md#enable-or-disable-the-cluster-autoscaler-on-node-pools).
 
 ## Next steps
 
