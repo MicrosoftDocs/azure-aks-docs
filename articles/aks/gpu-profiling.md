@@ -103,6 +103,9 @@ kubectl get pods -n gadget pyroscope-0
 
 ### Step 3: Connect Pyroscope to Azure Managed Grafana
 
+> [!NOTE]
+> If you're using your own Grafana instance instead of Azure Managed Grafana, see [How do I visualize Inspector Gadget metrics in my own Grafana?](#how-do-i-visualize-inspector-gadget-metrics-in-my-own-grafana) in the FAQ.
+
 > [!TIP]
 > You can directly view your workload profiles using `kubectl port-forward -n gadget pyroscope-0 4040:4040` to connect to the Pyroscope UI.
 
@@ -409,6 +412,12 @@ scrape_configs:
         target_label: __address__
 ```
 Verify the connection in your Prometheus UI under Status > Targets. The  inspektor-gadget  job should show its target as UP.
+
+### How do I visualize Inspector Gadget metrics in my own Grafana?
+
+Make sure your Prometheus instance is connected to Grafana as a data source. Then, import the Inspector Gadget dashboard using this JSON definition:
+
+`https://raw.githubusercontent.com/inspektor-gadget/grafana-dashboards/refs/heads/main/dashboards/gpu-observability/AdvancedGPUObservability.json`
 
 ## Next steps
 
