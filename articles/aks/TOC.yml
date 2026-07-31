@@ -152,6 +152,8 @@
               href: use-labels.md
             - name: Use node taints
               href: use-node-taints.md
+    - name: Migrate between AKS Automatic and Base clusters
+      href: automatic/aks-automatic-sku-migration.md
     - name: Set up service mesh
       items:
         - name: Service meshes overview
