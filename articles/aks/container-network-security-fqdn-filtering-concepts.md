@@ -51,17 +51,6 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 
 ## Limitations:
 
-* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (for example, *.example.com), but you can't use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
-- Supported Pattern:
-
-    `*.example.com` - This allows traffic to all subdomains under example.com.
-
-    `app*.example.com` - This rule is more specific and only allows traffic to subdomains that start with "app" under example.com
-
-- Unsupported Pattern
-    
-    `*` This wildcard attempts to match any domain name, which isn't supported.
-
 * Kubernetes service names aren't supported.
 * Other L7 policies aren't supported.
 * FQDN pods may exhibit performance degradation when handling more than 1,000 requests per second.
