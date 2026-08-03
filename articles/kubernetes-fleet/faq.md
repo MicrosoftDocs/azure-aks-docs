@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 07/08/2026
+ms.date: 07/17/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -173,9 +173,45 @@ The two most common reasons for long pending states are:
 
 See the previous question.
 
+### I tried generating an update run from my auto-upgrade profile, but I can't see the update run.
+
+When you manually [generate an update run from an auto-upgrade profile](./update-orchestration.md#generate-an-update-run-from-an-auto-upgrade-profile), the resulting update run might already exist.
+
+This scenario can arise if the auto-upgrade profile automatically generated the update run, or if the update run was previously manually generated.
+
+The name of the generated update run is based on the auto-upgrade profile's upgrade specification which only changes when properties such as node image or Kubernetes version are updated.
+
+You most commonly see this issue in the Azure portal where the existing update run isn't the most recent update run. If you run into this issue and can't find the update run, use the Azure CLI to generate the run to view the update run name. Microsoft plans to fix this issue in the Azure portal in future.
+
+If you generate an update run and it exists, the existing update run isn't modified.
+ 
 ### Editing my update strategy didn't change the existing update runs that used it. Why not?
 
 When you create an update run, the strategy is copied to the update run so that changes to the strategy don't affect executing update runs.
+
+### How do I prevent a single cluster failure from stopping my entire update run?
+
+Use the `maxAllowedFailures` setting on your update strategy stages and groups (available starting with API version 2026-06-02-preview). This setting lets you specify how many member cluster failures are tolerated before the group or stage is marked as failed. Values can be a fixed integer (for example, `"3"`) or a percentage (for example, `"25%"`). When unset or `"0"`, a single failure stops the entire run.
+
+For more information, see [Maximum allowed failures (preview)](./concepts-update-orchestration.md#maximum-allowed-failures-preview).
+
+### Why does my update run or group show Completed even though members failed?
+
+When you set `maxAllowedFailures`, Fleet Manager evaluates only the number of failed member updates. It doesn't enforce a minimum success rate. An update run, stage, or group can therefore end in `Completed` even if some or all members failed, as long as the configured threshold isn't exceeded when Fleet Manager makes its scheduling decisions.
+
+This outcome is expected and intentional, not a bug. Always inspect `FailureCount`, member-level statuses, and failure reasons before you treat the rollout as healthy. For most update strategies, percentage-based thresholds are easier to reason about than absolute values.
+
+### What rules and limitations should I know when using maxAllowedFailures?
+
+Keep the following rules in mind:
+
+- The feature is available starting with API version 2026-06-02-preview.
+- When you unset `maxAllowedFailures` or set it to `"0"`, Fleet Manager uses fail-fast behavior and stops after the first failed member update.
+- The threshold is evaluated against failure count only. It doesn't enforce a minimum success rate.
+- A run, stage, or group can show `Completed` even when failures occur, as long as the configured threshold isn't exceeded.
+- `FailureCount` can be greater than `maxAllowedFailures` when updates run in parallel, because multiple member updates might fail before Fleet Manager stops scheduling more work.
+- Stage-level and group-level thresholds are evaluated independently, and stage-level failures aggregate across all groups in the stage.
+- For most rollouts, percentage-based thresholds are easier to reason about and scale better than fixed numbers, especially in small groups.
 
 ### Can I preapprove an approval?
 
@@ -200,6 +236,22 @@ Yes. The after stage wait begins at the same time as the approval. Both must be 
 ### Can approvals be added to existing update strategies?
 
 Yes. You can edit the existing strategy to include approvals. However, existing update runs that you created by using the strategy aren't updated.
+
+### How do scheduled start gates interact with AKS cluster maintenance windows?
+
+Scheduled start gates and AKS cluster [planned maintenance windows](/azure/aks/planned-maintenance) are independent controls. Both conditions must be met before a cluster starts upgrading. For example, if a scheduled start gate completes at 2:00 AM but a cluster's maintenance window doesn't open until 6:00 AM, the cluster waits until 6:00 AM to begin its upgrade.
+
+### How can I control the order of cluster updates in an update run?
+
+Member labels and update groups are two different ways to select which clusters are included in each stage and group of your update strategy. Each member cluster can be assigned to one update group but can have multiple labels. Member labels (using `memberSelector`) offer more flexibility and support complex selection scenarios, so they're the recommended way to select fleet members for update strategies. For more information, see [Group clusters using member labels](./concepts-update-orchestration.md#group-clusters-using-member-labels-preview).
+
+### Do I need to specify groups if I set a member selector at the stage level?
+
+No. When you set `memberSelector` on a stage without defining any groups, all matching clusters are treated as a single group. The stage's `maxConcurrency` controls how many clusters upgrade concurrently. You only need to define groups within a stage if you want to partition the matching members into parallel subsets with different concurrency settings.
+
+### What happens to update groups if I set a member selector at the group level?
+
+If you set a `memberSelector` at the group level, the group's `name` field is used only as a display identifier for status reporting and logging. The `memberSelector` takes precedence over the update group name when selecting clusters for the group.
 
 ## Cluster resource placement FAQs
 

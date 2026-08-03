@@ -571,7 +571,7 @@ In AKS Automatic, system node pool capacity is managed by AKS. In AKS Standard, 
 
 Use the autoscaler on node pools to configure the minimum and maximum scale limits for the node pool. The system node pool should always be able to scale to meet the demands of system pods. If the system node pool is unable to scale, the cluster runs out of resources to help manage scheduling, scaling, and load balancing, which can lead to an unresponsive cluster.
 
-For more information, see [Use the cluster autoscaler on node pools](./cluster-autoscaler.md#use-the-cluster-autoscaler-on-node-pools).
+For more information, see [Use the cluster autoscaler on node pools](./cluster-autoscaler.md#enable-or-disable-the-cluster-autoscaler-on-node-pools).
 
 #### At least two nodes per system node pool
 

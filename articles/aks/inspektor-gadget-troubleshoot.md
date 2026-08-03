@@ -3,7 +3,7 @@ title: Troubleshoot the Inspektor Gadget extension on AKS (preview)
 description: Troubleshoot common installation, configuration, and runtime errors with the Inspektor Gadget cluster extension on Azure Kubernetes Service (AKS).
 author: mqasimsarfraz
 ms.author: qasimsarfraz
-ms.date: 06/26/2026
+ms.date: 07/14/2026
 ms.topic: troubleshooting
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
@@ -159,6 +159,54 @@ A common mistake is omitting the `inspektor-gadget.` prefix, or setting runtime 
        --configuration-settings "inspektor-gadget.imagePullSecrets[0]=gadget-pull-secret"
    ```
 
+## Installation fails with no matches for kind PodMonitor
+
+**Symptom:** The extension reports a status with code `InstallationFailed` and a message similar to:
+
+```output
+unable to build kubernetes objects from release manifest: resource mapping not found for name: "inspektor-gadget" namespace: "gadget" from "": no matches for kind "PodMonitor" in version "azmonitoring.coreos.com/v1"
+```
+
+**Cause:** You installed the extension with `azureMonitor.enabled=true`. This setting creates a `PodMonitor` custom resource to export gadget metrics to Azure Monitor managed Prometheus. The `PodMonitor` CRD (`azmonitoring.coreos.com/v1`) is only available when the Azure Monitor metrics add-on is enabled on the cluster. If the add-on isn't enabled, Kubernetes can't find the CRD and the Helm release fails.
+
+**Resolution:**
+
+- **Option A – Enable Azure Monitor metrics on the cluster.** Enable the Azure Monitor managed Prometheus add-on so the `PodMonitor` CRD is registered, and then retry the extension installation:
+
+   ```azurecli-interactive
+   az aks update \
+       --resource-group myResourceGroup \
+       --name myAKSCluster \
+       --enable-azure-monitor-metrics
+   ```
+
+- **Option B – Disable the Azure Monitor integration.** If you don't need the managed Prometheus integration, for example because you run your own Prometheus instance, set `azureMonitor.enabled` to `false`:
+
+   ```azurecli-interactive
+   az k8s-extension create \
+       --cluster-type managedClusters \
+       --cluster-name myAKSCluster \
+       --resource-group myResourceGroup \
+       --name inspektor-gadget \
+       --extension-type microsoft.inspektorgadget \
+       --release-train preview \
+       --configuration-settings "azureMonitor.enabled=false"
+   ```
+
+   If the previous installation left the release in a failed state, delete the extension before you retry:
+
+   ```azurecli-interactive
+   az k8s-extension delete \
+       --cluster-type managedClusters \
+       --cluster-name myAKSCluster \
+       --resource-group myResourceGroup \
+       --name inspektor-gadget \
+       --yes
+   ```
+
+   > [!TIP]
+   > When you use your own Prometheus instance, configure a scrape job that targets pods in the `gadget` namespace with the label `k8s-app=gadget` on port `2224` and path `/metrics`.
+
 ## Gadget pods crash on startup with eBPF or BTF errors
 
 **Symptom:** The DaemonSet pods enter `CrashLoopBackOff`, and the logs include lines such as `no BTF found for kernel version` or `field <X> is not a known kernel type`.
@@ -189,7 +237,7 @@ A common mistake is omitting the `inspektor-gadget.` prefix, or setting runtime 
 
 **Resolution:**
 
-1. Create an Azure Policy exemption that excludes the `gadget` namespace from the restrictive policy assignment. For instructions, see [Create a policy exemption](/azure/governance/policy/how-to/exempt-resource).
+1. Create an Azure Policy exemption that excludes the `gadget` namespace from the restrictive policy assignment.
 1. After the exemption is in place, delete the stuck pods so the DaemonSet recreates them:
 
    ```bash-interactive

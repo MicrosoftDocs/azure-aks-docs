@@ -35,6 +35,7 @@ Built on top of the open-source KAITO project, the AI toolchain operator managed
 * `Windows` OS SKU is not currently supported.
 * AMD GPU VM sizes are not supported `instanceType` in a KAITO workspace.
 * AI toolchain operator add-on is supported in **public** Azure regions.
+* AKS stop and start operations (az aks stop / az aks start) aren't fully supported for clusters with active KAITO Workspaces. In some scenarios, startup operations can result in node pool reconciliation conflicts, provisioning failures, or orphaned compute resources.
 
 ## Prerequisites
 

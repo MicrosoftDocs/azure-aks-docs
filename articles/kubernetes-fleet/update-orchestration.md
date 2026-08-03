@@ -2,7 +2,7 @@
 title: "Update Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to orchestrate updates across multiple clusters using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 06/15/2026
+ms.date: 07/14/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -197,6 +197,7 @@ You can define an update run using update stages to sequentially order the appli
         "stages": [
             {
                 "name": "stage1",
+                "maxAllowedFailures": "2",
                 "groups": [
                     {
                         "name": "group-1a"
@@ -214,7 +215,8 @@ You can define an update run using update stages to sequentially order the appli
                 "name": "stage2",
                 "groups": [
                     {
-                        "name": "group-2a"
+                        "name": "group-2a",
+                        "maxAllowedFailures": "1"
                     },
                     {
                         "name": "group-2b"
@@ -227,6 +229,13 @@ You can define an update run using update stages to sequentially order the appli
         ]
     }
     ```
+
+    > [!NOTE]
+    > The optional `maxAllowedFailures` field controls how many member cluster upgrade failures are tolerated at the stage or group level before the segment is marked as failed. When unset or `"0"`, any single failure stops the update run.
+    >
+    > This setting evaluates only failure count, not success rate. As a result, a group can reach `Completed` even if some or all members failed, as long as the configured threshold wasn't exceeded. After the run finishes, always review `FailureCount`, member statuses, and failure messages.
+    >
+    > Values can be a fixed integer (for example, `"2"`) or a percentage (for example, `"25%"`). For more information, see [Maximum allowed failures (preview)](./concepts-update-orchestration.md#maximum-allowed-failures-preview).
 
 1. Create an update run using the [`az fleet updaterun create`][az-fleet-updaterun-create] command with the `--stages` flag set to the name of your JSON file and your chosen values for the `--upgrade-type` and `--node-image-selection` flags. The following command creates an update run that upgrades the Kubernetes version for both control plane and node pools and uses the latest node image available for each cluster in its region.
 
@@ -357,6 +366,9 @@ az fleet autoupgradeprofile generate-update-run \
 ```
 
 The generated update run isn't automatically started, allowing you to review it. If you're satisfied with the generated update run, you can start and manage it by following the steps in [manage an update run](#manage-an-update-run).
+
+> [!NOTE]
+> When you manually generate an update run from an auto-upgrade profile, the resulting update run might already exist. This situation happens because the name of the update run is based on the auto-upgrade profile's upgrade specification, which only changes when properties such as the node image or Kubernetes version change. In this scenario, the existing update run isn't modified.
 
 ## Next steps
 

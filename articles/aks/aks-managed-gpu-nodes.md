@@ -197,13 +197,13 @@ To use Managed GPU with node auto-provisioning (NAP) nodes, add the `EnableManag
 
    ```yaml
     apiVersion: karpenter.azure.com/v1beta1
-     kind: AKSNodeClass
-     metadata:
-       name: managed-gpu-class
-     spec:
-       imageFamily: Ubuntu
-       tags:
-         EnableManagedGPUExperience:"true"
+    kind: AKSNodeClass
+    metadata:
+      name: managed-gpu-class
+    spec:
+      imageFamily: Ubuntu
+      tags:
+        EnableManagedGPUExperience:"true"
    ```
 
 1. Use the following example `NodePool` CRD to enable NAP to deploy a GPU SKU.

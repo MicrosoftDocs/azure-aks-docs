@@ -1,7 +1,7 @@
 ---
 title: "Safely update Kubernetes and node images across multiple clusters"
 description: This article describes the foundational concepts for Azure Kubernetes Fleet Manager Update Runs for safe and reliable multi-cluster updates.
-ms.date: 07/08/2026
+ms.date: 07/17/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -23,11 +23,11 @@ An update run represents an update being applied to a collection of AKS clusters
 
 To achieve the best results when using update runs, it's important to understand the following concepts.
 
-* **Update Strategy**: describes a reusable update sequence consisting of stages and groups of clusters. A cluster appears in a group in a stage based on the update group it's assigned. For further information, see [understanding update strategies](#understanding-update-strategies).
+* **Update Strategy**: describes a reusable update sequence consisting of stages and groups of clusters. A cluster appears in a group in a stage based on the update group or member labels it's assigned. For more information, see [understanding update strategies](#understanding-update-strategies).
 
     * **Update Stage**: an Update Strategy is divided into Update Stages, which are applied sequentially. For example, test environment clusters are in the first Update Stage, while production environment clusters go in a second Update Stage. An Update Stage contains one or more Update Groups. You can use additional controls such as maximum concurrency, wait times, and approval gates for more control over Update Stage execution.
     
-    * **Update Group**: Each Update Stage contains one or more Update Groups, which select clusters to update. Assign member clusters to Update Groups by using the Update Group property of the cluster. Update Groups in an Update Stage update in parallel. 
+    * **Update Group**: Each Update Stage contains one or more Update Groups, which select clusters to update. Assign member clusters to Update Groups by using either the Update Group property of the cluster or the in-preview label-based matching by using [member labels](#group-clusters-using-member-labels-preview). Update Groups in an Update Stage update in parallel. 
 
     > [!NOTE]
     > The maximum number of Update Groups in each Update Stage is **50**.
@@ -36,7 +36,13 @@ To achieve the best results when using update runs, it's important to understand
         
         * **Maximum Concurrency (preview)**: use the [Maximum Concurrency](#maximum-concurrency-preview) configuration to change how many clusters are upgraded in parallel. You can configure this behavior at both the Stage and Group level.
 
-        * **Approval gates**: You can configure these gates before or after each Stage or Group. Approvals pause the update run, which either automated or manual checks use to determine if it's OK to proceed. After the approval is cleared, the update run continues.
+        * **Maximum allowed failures (preview)**: use the [Maximum allowed failures](#maximum-allowed-failures-preview) configuration to control how many member cluster upgrade failures are tolerated before the update run is stopped. You can configure this behavior at both the Stage and Group level.
+
+        * **Gates**: Pause the update run until their condition is met.
+
+          * **Approval gates (preview)**: Can be configured before or after each stage or group. Approvals pause the update run, allowing either you or automations that you've set up to check that it's OK to proceed. After you or your automation grants approval, the update run will continue.
+
+          * **Scheduled start gates (preview)**: Can be configured before each stage or group. Scheduled start gates pause the update run until a specified day and time. The gate completes automatically when the scheduled time is reached, or you can manually complete it to proceed at any time.
 
 * **Auto-upgrade Profile**: automatically create and start an update run when new Kubernetes or node image versions are made available by AKS. For further information, see [understanding auto-upgrade profiles](#understanding-update-strategies).
 
@@ -101,8 +107,17 @@ The failed status cascades from clusters as shown. A summary error message displ
 - **Update Group**: at least one cluster in the group failed.
 - **Member cluster**: the upgrade failed and the cluster status is set as `Failed`.
 
+When you configure [Maximum allowed failures](#maximum-allowed-failures-preview), the failure threshold affects the status of the update group, update stage, and update run. It doesn't affect an individual member cluster's status. If a member cluster upgrade fails, its status is still set to `Failed`.
+
+- If the failure count for the group or stage exceeds the configured `maxAllowedFailures` threshold, the group or stage is marked as `Failed` with a summary error message, and the update run stops progressing. If no `maxAllowedFailures` is configured (or it's set to `0`), a single failure stops the entire run.
+- If the failure count is within the `maxAllowedFailures` threshold, the update run continues upgrading subsequent members. For more information, see [Maximum allowed failures](#maximum-allowed-failures-preview).
+
 > [!NOTE]
 > Even when a cluster update fails, other in-progress cluster updates continue. The update run status shows as **Stopping** until all in-progress cluster updates finish.
+
+#### Completed status
+
+A `Completed` status means the update run reached a terminal lifecycle state. When you use [Maximum allowed failures](#maximum-allowed-failures-preview), `Completed` means the configured failure threshold wasn't exceeded when Fleet Manager decided whether to continue scheduling work. It doesn't guarantee a minimum success rate or healthy outcomes. Always inspect `FailureCount`, member states, and failure messages.
 
 ### Planned maintenance windows
 
@@ -141,6 +156,22 @@ In an Auto-upgrade Profile, you configure:
 > You can generate an update run from an auto-upgrade profile at any time using the [`az fleet autoupgradeprofile generate-update-run`][az-fleet-updaterun-generate] command. The resulting update run is based on the current AKS-published Kubernetes or node image version.
 >
 > For more information on creating an on-demand update run from an auto-upgrade profile, see [generate an update run from an auto-upgrade profile](./update-orchestration.md#generate-an-update-run-from-an-auto-upgrade-profile).
+>
+> Keep the following information in mind when using auto upgrade:
+>
+> * Auto-upgrade only updates to generally available versions of Kubernetes and doesn't update to preview versions.
+>
+> * Auto-upgrade requires the cluster's Kubernetes version to be within the [AKS support window][supported-kubernetes-versions].
+>
+> * If a cluster has no defined planned maintenance window, it's upgraded immediately when the update run reaches the cluster.
+>
+> * If you want to have your Kubernetes version upgraded, you need to create an Auto-upgrade Profile with `Rapid`, `Stable`, or `TargetKubernetesVersion` channels.
+>
+> * When using the `TargetKubernetesVersion` channel, you must specify the target Kubernetes version using the `--target-kubernetes-version` parameter.
+>
+> * If you want to upgrade your Node Image version, create an Auto-upgrade Profile with the `NodeImage` channel.
+>
+> * You can create multiple auto-upgrade profiles for the same Fleet Manager.
 
 ### Rapid channel
 
@@ -174,9 +205,7 @@ Auto-upgrade doesn't move clusters between minor Kubernetes versions when there'
 
 ### NodeImage channel
 
-Member cluster nodes are updated with a newly patched VHD containing security fixes and bug fixes on a weekly cadence. The update to the new VHD is disruptive, following maintenance windows and surge settings. No extra VHD cost is incurred when choosing this option.
-
-If you use this channel, Linux unattended upgrades are disabled by default. Node image upgrades support patch versions that are deprecated, so long as the minor Kubernetes version is still supported. Node images are AKS-tested, fully managed, and applied with safe deployment practices.
+Member cluster nodes are updated with a newly patched VHD containing security fixes and bug fixes on a weekly cadence. The update to the new VHD is disruptive, following maintenance windows and surge settings. No extra VHD cost is incurred when choosing this option. Node image upgrades support patch versions that are deprecated, so long as the minor Kubernetes version is still supported. Node images are AKS-tested, fully managed, and applied with safe deployment practices.
 
 Nodes on different operating systems are updated in accordance with the node image versions aligned to those operating systems.
 
@@ -200,6 +229,24 @@ When a cluster has agent pools that were [created from a node pool snapshot](/az
 Administrators can control the order in which clusters are updated by building reusable Update Strategies using series of Update Stages and Groups. They can configure when approvals and pauses should occur within those stages and groups. The entire configuration can be saved as an Update Strategy which can be managed independently of Update Runs or Auto-upgrade Profiles, allowing strategies to be reused as required.
 
 :::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="A diagram showing an example update strategy containing two update stages. Each update stage contains two update groups. Each update group contains two clusters." lightbox="./media/conceptual-update-orchestration-inline.png":::
+
+### Group clusters using member labels (preview)
+
+Member labels can be used to group clusters and configure your update sequence with Kubernetes-style label selectors. This way, you can assign multiple labels to member clusters and use them for different strategies instead of being restricted to a single update group per cluster. You can group clusters in your strategy with their member labels by configuring `memberSelector` on your strategy at two levels:
+
+- **Stage level**: Selects clusters for the entire stage. When no groups are defined, all matching clusters form a single implicit group. When groups are also defined, the stage-level selector acts as a pre-filter before group-level matching is applied.
+- **Group level**: Selects clusters for a specific group within a stage, enabling parallel subsets with different concurrency limits.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
+`memberSelector` uses a string-based label selector parsed using standard Kubernetes label selector syntax. Supported operators are: `=`, `==`, `!=`, `in`, `notin`, `exists`, and `!exists`.
+
+> [!NOTE]
+> We recommend using member labels instead of update groups for grouping clusters in update strategies. With member labels, you can easily manage large fleets with dynamic membership and complex grouping needs. 
+>
+> Existing group name based strategies will continue to work without changes. 
+
+For instructions on assigning member labels and using `memberSelector` in a strategy, see [Create an update strategy using member selectors](./update-create-update-strategy.md#create-an-update-strategy-using-member-selectors-preview).
 
 ### Maximum concurrency (preview)
 
@@ -265,23 +312,106 @@ A stage has 20 clusters across two groups: Group A (eight clusters) and Group B 
 
 Result: Up to five concurrent upgrades total, distributed across groups according to their individual limits.
 
+### Maximum allowed failures (preview)
+
+`Maximum allowed failures` is an optional update strategy setting that controls how Fleet Manager responds to failures during multicluster updates.
+
+By default, updates follow a fail-fast model - a single cluster failure stops further updates. When you configure `maximum allowed failures`, the update run becomes failure-tolerant, and updates continue across clusters until the specified failure threshold is reached.
+
+This setting provides a deliberate balance between early error detection and maintaining deployment momentum. Set `maximum allowed failures` at two levels:
+
+- **Stage level**: Defines the maximum number of member upgrade failures tolerated across all groups in a stage before the stage is marked as failed.
+- **Group level**: Defines the maximum number of member upgrade failures tolerated within a specific group before the group is marked as failed.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
 > [!NOTE]
+> - During preview, you can set `maxAllowedFailures` only through direct REST API calls or the Azure CLI `fleet` extension. The Azure portal doesn't support configuring `maxAllowedFailures`. If you set the field through the CLI or REST API, later editing the same update strategy or update run in the portal doesn't remove the configured values. To reset the behavior to fail-fast, set the field to `0`.
+> - When you don't specify `maxAllowedFailures` or set the value to empty, the resolved value defaults to `0`, which preserves fail-fast behavior: a single member upgrade failure immediately stops the entire update run. Existing strategies and update runs keep this behavior unless you explicitly set the field, so no migration is required.
+
+`Maximum allowed failures` accepts two value forms:
+
+- **Fixed integer**: For example, `"3"` allows up to three member cluster failures before the group or stage is marked as failed.
+- **Percentage**: For example, `"25%"` allows failures up to 25% of the member clusters. For stage-level settings, the percentage is calculated from all clusters in the stage. For group-level settings, the percentage is calculated from the clusters in that group. Percentages are resolved when the update run is created, using ceiling rounding, for example, 25% of 5 clusters resolves to 2.
+
+Fleet Manager evaluates `maxAllowedFailures` only against the count of failed member updates. It doesn't evaluate success rate, and it doesn't require any minimum number of successful members. When this setting is present, `Completed` means the configured failure threshold wasn't exceeded at the time Fleet Manager made its scheduling decisions. `Completed` doesn't mean the rollout was healthy or successful.
+
+#### Example: Completed with 0% success
+
+Suppose a group has four members and `group.maxAllowedFailures` is set to `"4"`. If all four member updates fail, the group can still be marked `Completed`. This outcome is expected and intentional, not a bug, because four failures equals the configured tolerance and therefore doesn't exceed the threshold. In other words, a group can be `Completed` even when 100% of its members failed.
+
+Only use such a threshold when that behavior matches your rollout expectations.
+
+#### Choose threshold values carefully
+
+- **Absolute values** are easy to understand, but they can produce counterintuitive results in small groups. For example, allowing `"2"` failures in a two-member group means the group can finish `Completed` even if neither member succeeded.
+- **Percentage values** scale better across different group sizes, so they're recommended for most users.
+- Avoid setting `maxAllowedFailures` equal to the total number of members unless you intentionally want effectively "never fail because of member failures" behavior. If that behavior is intentional, `100%` usually scales more clearly than a fixed number.
+- Be extra careful with small groups, where a single failure can represent a large percentage of the rollout.
+- Reevaluate the threshold as your fleet grows. A value that feels safe for five clusters might be too strict or too permissive for 500 clusters.
+
+#### Understand FailureCount
+
+The `FailureCount` fields are reporting metrics. They count failed member updates. They aren't ratios or percentages, and they aren't the same as the configured enforcement threshold.
+
+- **`UpdateRun.FailureCount`**: Total failed member updates across all stages and all groups in the run.
+- **`Stage.FailureCount`**: Total failed member updates across all groups within that stage.
+- **`Group.FailureCount`**: Total failed member updates within that group.
+
+Always review these counts together with member-level statuses, conditions, and failure messages before you decide whether the rollout outcome is acceptable.
+
+#### Why FailureCount can exceed maxAllowedFailures
+
+`maxAllowedFailures` controls Fleet Manager's decision-making about whether to continue scheduling new work. It isn't a hard upper bound on the final reported number of failures.
+
+If you allow parallel member updates by using `maxConcurrency`, several members can fail at nearly the same time before Fleet Manager observes that the threshold is exceeded and stops scheduling more work. As a result, it's possible and expected for `FailureCount` to be greater than the configured `maxAllowedFailures` value.
+
+#### How stage and group failure limits interact
+
+Group-level and stage-level `maxAllowedFailures` are evaluated independently:
+
+- Each group tracks its own failure count against its own threshold.
+- Those same group failures also roll up into the stage's `FailureCount`.
+- If either threshold is exceeded, Fleet Manager stops scheduling new work for that segment.
+- Already-started member updates might still finish, which can increase the final reported `FailureCount` after the stop decision is made.
+
+The stage-level `maxAllowedFailures` acts as the overall ceiling for failure tolerance in a stage. Even if individual groups allow higher failure counts, the stage limit takes precedence. If a group's failure count exceeds its own `maxAllowedFailures`, that group is marked as failed regardless of the stage-level setting.
+
+##### Example 1: Fixed failure limits
+
+| Setting | Value |
+|---|---|
+| `stage.maxAllowedFailures` | `"5"` |
+| `groupA.maxAllowedFailures` | `"2"` |
+| `groupB.maxAllowedFailures` | `"3"` |
+
+Result: Group A tolerates up to two failures and Group B tolerates up to three. If total failures across the stage exceed five, the stage fails.
+
+##### Example 2: Percentage-based tolerance
+
+A stage has 19 clusters across two groups: Group A with 7 clusters and Group B with 12 clusters.
+
+| Setting | Value | Resolves to |
+|---|---|---|
+| `stage.maxAllowedFailures` | `"25%"` | 5 (rounded up) |
+| `groupA.maxAllowedFailures` | `"25%"` | 2 (rounded up) |
+| `groupB.maxAllowedFailures` | `"25%"` | 3 (12 × 25% = 3) |
+
+#### Recommended and nonrecommended uses
+
+Use higher or percentage-based thresholds when you're upgrading large fleets, you expect some transient failures, or rollout progress is more important than strict fail-fast behavior.
+
+Use `0` or very small values for safety-critical rollouts, tightly controlled production stages, or any situation where you must stop and inspect after the first failure.
+
+> [!NOTE]
+> Keep the following points in mind:
 >
-> Keep the following information in mind when using auto upgrade:
->
-> * Auto-upgrade only updates to generally available versions of Kubernetes and doesn't update to preview versions.
->
-> * Auto-upgrade requires the cluster's Kubernetes version to be within the [AKS support window][supported-kubernetes-versions].
->
-> * If a cluster has no defined planned maintenance window, it's upgraded immediately when the update run reaches the cluster.
->
-> * If you want to have your Kubernetes version upgraded, you need to create an Auto-upgrade Profile with `Rapid`, `Stable`, or `TargetKubernetesVersion` channels.
->
-> * When using the `TargetKubernetesVersion` channel, you must specify the target Kubernetes version using the `--target-kubernetes-version` parameter.
->
-> * If you want to upgrade your Node Image version, create an Auto-upgrade Profile with the `NodeImage` channel.
->
-> * You can create multiple auto-upgrade profiles for the same Fleet Manager.
+> - A group can be `Completed` even if all members failed.
+> - `Completed` doesn't mean success.
+> - `FailureCount` can exceed `maxAllowedFailures` when updates run in parallel.
+> - Absolute thresholds can hide total failure in small groups.
+> - Percentage-based thresholds usually scale better.
+> - You must validate rollout outcomes by checking `FailureCount`, member states, and failure reasons.
 
 ## Next steps
 

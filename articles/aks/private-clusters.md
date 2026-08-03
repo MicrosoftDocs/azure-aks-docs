@@ -24,6 +24,9 @@ The control plane or API server is in an AKS-managed Azure resource group, and y
 
 When you create a private AKS cluster, AKS creates both private and public fully qualified domain names (FQDNs) with corresponding DNS zones by default. For detailed DNS configuration options, see [Configure a private DNS zone, private DNS subzone, or custom subdomain](#configuration-options-for-private-dns).
 
+> [!NOTE]
+> AKS places the API server private endpoint in the subnet used by the first node pool in the cluster configuration. If the first node pool changes, AKS might recreate the private endpoint in a different subnet during a [cluster stop/start operation](start-stop-cluster.md#about-the-cluster-stopstart-feature).
+
 ## Region availability
 
 Private clusters are available in public regions, Azure Government, and Microsoft Azure operated by 21Vianet regions where [AKS is supported][aks-supported-regions].
@@ -361,7 +364,7 @@ If you want to configure custom domains that can only be resolved internally, se
 
 ## Disable a public FQDN on a private AKS cluster
 
-When you create an AKS private cluster by using `--enable-private-cluster`, AKS deploys the Kubernetes API server through a private endpoint inside the virtual network. By default, AKS might still create a public DNS name (public FQDN) for the API server unless you specify `--disable-public-fqdn`. The public FQDN is only a publicly resolvable DNS name, while API communication for private clusters still occurs through the private endpoint. Using `--disable-public-fqdn` removes the public DNS name and restricts cluster management access to private connectivity methods such as VPN, ExpressRoute, VNet peering, or Bastion hosts.
+When you create a private AKS cluster by using `--enable-private-cluster`, AKS deploys the Kubernetes API server through a private endpoint inside the virtual network. By default, AKS might still create a public DNS name (public FQDN) for the API server unless you specify `--disable-public-fqdn`. The public FQDN is only a publicly resolvable DNS name, while API communication for private clusters still occurs through the private endpoint. Using `--disable-public-fqdn` removes the public DNS name and restricts cluster management access to private connectivity methods such as VPN, ExpressRoute, VNet peering, or Bastion hosts.
 
 Use the following guidance:
 

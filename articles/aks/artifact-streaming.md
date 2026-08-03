@@ -1,68 +1,42 @@
 ---
-title: Reduce image pull time with Artifact Streaming on Azure Kubernetes Service (AKS) (Preview)
-description: Learn how to enable Artifact Streaming on Azure Kubernetes Service (AKS) to reduce image pull time.
-author: davidsmatlak
-ms.author: davidsmatlak
+title: Reduce Time to Deployment with Artifact Streaming on Azure Kubernetes Service (AKS)
+description: Learn how to enable Artifact Streaming on Azure Kubernetes Service (AKS) to reduce time to deployment and idle compute time.
+author: allyford
+ms.author: allyford
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.topic: how-to
-ms.date: 11/16/2023
+ms.date: 05/05/2026
 ms.subservice: aks-nodes
-# Customer intent: As a DevOps engineer, I want to enable Artifact Streaming on Azure Kubernetes Service, so that I can reduce image pull times and improve the efficiency of my workload deployments.
 ---
 
-# Reduce image pull time with Artifact Streaming on Azure Kubernetes Service (AKS) (Preview)
+# Reduce time to deployment with Artifact Streaming on Azure Kubernetes Service (AKS) with Azure Container Registry (ACR)
 
-High performance compute workloads often involve large images, which can cause long image pull times and slow down your workload deployments. Artifact Streaming on AKS allows you to stream container images from Azure Container Registry (ACR) to AKS. AKS only pulls the necessary layers for initial pod startup, reducing the time it takes to pull images and deploy your workloads.
+Large container images can increase image pull time and delay workload deployment. [Artifact Streaming](./artifact-streaming-overview.md) allows you to stream container images from Azure Container Registry (ACR) to Azure Kubernetes Service (AKS). AKS only pulls the necessary layers for initial pod startup, reducing the time it takes to deploy your workloads.
 
-Artifact Streaming can reduce time to pod readiness by over 15%, depending on the size of the image, and it works best for images <30GB. Based on our testing, we saw reductions in pod start-up times for images <10GB from minutes to seconds. If you have a pod that needs access to a large file (>30GB), then you should mount it as a volume instead of building it as a layer. This is because if your pod requires that file to start, it congests the node. Artifact Streaming isn't ideal for read heavy images from your filesystem if you need that on startup. With Artifact Streaming, pod start-up becomes concurrent, whereas without it, pods start in serial.
-
-This article describes how to enable the Artifact Streaming feature on your AKS node pools to stream artifacts from ACR.
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-[!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
-
-[!INCLUDE [teleport retirement](./includes/teleport-retirement.md)]
-
-## Limitations
-
-* Artifact Steaming isn't supported for the following OS options: [Windows Server versions][windows-os], [Flatcar Container Linux for AKS][flatcar], and [Azure Linux with OS Guard for AKS][os-guard].
+This article describes how to enable and disable the Artifact Streaming feature on your AKS node pools to stream artifacts from ACR.
 
 ## Prerequisites
 
-* You need an existing AKS cluster with ACR integration. If you don't have one, you can create one using [Authenticate with ACR from AKS][acr-auth-aks].
-* [Enable Artifact Streaming on ACR][enable-artifact-streaming-acr].
-* This feature requires Kubernetes version 1.25 or later. To check your AKS cluster version, see [Check for available AKS cluster upgrades][aks-upgrade].
+- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- [Enable Artifact Streaming on ACR](#enable-artifact-streaming-on-acr).
+- Azure CLI version 2.87.0 or later. Run `az --version` to find your version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
+- This feature requires Kubernetes version 1.25 or later. To check your AKS cluster version, see [Check for available AKS cluster upgrades][aks-upgrade].
+- An existing AKS cluster with ACR integration. If you don't have one, you can create one using [Authenticate with ACR from AKS][acr-auth-aks].
+- The [Azure Kubernetes Service Contributor Role][aks-contributor-role] is required to modify node pool configurations.
 
-> [!NOTE]
-> Artifact Streaming is only supported on Ubuntu 22.04, Ubuntu 20.04, and Azure Linux node pools. Windows node pools aren't supported.
+## Limitations
 
-## Install the `aks-preview` CLI extension
-
-1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-## Register the `ArtifactStreamingPreview` feature flag in your subscription
-
-* Register the `ArtifactStreamingPreview` feature flag in your subscription using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace Microsoft.ContainerService --name ArtifactStreamingPreview
-    ```
+- Only images with Linux AMD64 architecture are supported.
+- Windows-based container images and ARM64 images aren't supported.
+- Only the AMD64 architecture is supported for multi-architecture images.
+- Ubuntu based node pools in AKS must use Ubuntu version 20.04 or higher.
+- Only Premium SKU ACR registries are supported.
+- CMK (Customer-Managed Keys) registries aren't supported.
+- Kubernetes `regcred`, such as `imagePullSecrets`, isn't supported. Image pulls from ACR using [non-Entra scope-mapped token credentials](/azure/container-registry/container-registry-token-based-repository-permissions) or [ACR admin user credentials](/azure/container-registry/container-registry-authentication?tabs=azure-cli#admin-account) default to non-Artifact Streaming pulls, even if the node pool and image are enabled for streaming.
+- Artifact Streaming only supports image pulls by tag. Artifact Streaming works by resolving image pulls by tag to a streaming variant of the image. If image pulls are done by digest, you can't use Artifact Streaming.
 
 ## Enable Artifact Streaming on ACR
-
-Enablement on ACR is a prerequisite for Artifact Streaming on AKS. For more information, see [Artifact Streaming on ACR](https://aka.ms/acr/artifact-streaming).
 
 1. Create an Azure resource group to hold your ACR instance using the [`az group create`][az-group-create] command.
 
@@ -70,31 +44,31 @@ Enablement on ACR is a prerequisite for Artifact Streaming on AKS. For more info
     az group create --name myStreamingTest --location westus
     ```
 
-2. Create a new premium SKU Azure Container Registry using the [`az acr create`][az-acr-create] command with the `--sku Premium` flag.
+1. Create a new Premium SKU ACR using the [`az acr create`][az-acr-create] command with the `--sku Premium` flag.
 
     ```azurecli-interactive
     az acr create --resource-group myStreamingTest --name mystreamingtest --sku Premium
     ```
 
-3. Configure the default ACR instance for your subscription using the [`az configure`][az-configure] command.
+1. Configure the default ACR instance for your subscription using the [`az configure`][az-configure] command.
 
     ```azurecli-interactive
     az configure --defaults acr="mystreamingtest"
     ```
 
-4. Push or import an image to the registry using the [`az acr import`][az-acr-import] command.
+1. Push or import an image to the registry using the [`az acr import`][az-acr-import] command.
 
     ```azurecli-interactive
-    az acr import --source docker.io/jupyter/all-spark-notebook:latest --repository jupyter/all-spark-notebook:latest
+    az acr import --source docker.io/jupyter/all-spark-notebook --repository jupyter/all-spark-notebook
     ```
 
-5. Create a streaming artifact from the image using the [`az acr artifact-streaming create`][az-acr-artifact-streaming-create] command.
+1. Create a streaming artifact from the image using the [`az acr artifact-streaming create`][az-acr-artifact-streaming-create] command.
 
     ```azurecli-interactive
     az acr artifact-streaming create --image jupyter/all-spark-notebook:latest
     ```
 
-6. Verify the generated Artifact Streaming using the [`az acr manifest list-referrers`][az-acr-manifest-list-referrers] command.
+1. Verify the generated Artifact Streaming using the [`az acr manifest list-referrers`][az-acr-manifest-list-referrers] command.
 
     ```azurecli-interactive
     az acr manifest list-referrers --name jupyter/all-spark-notebook:latest
@@ -102,53 +76,68 @@ Enablement on ACR is a prerequisite for Artifact Streaming on AKS. For more info
 
 ## Enable Artifact Streaming on AKS
 
+You can enable Artifact Streaming on new or existing node pools in your AKS cluster with ACR integration.
+
+> [!NOTE]
+> If you don't have a Premium tier ACR integrated with your AKS cluster, you can't use Artifact Streaming on AKS.
+
 ### Enable Artifact Streaming on a new node pool
 
-* Create a new node pool with Artifact Streaming enabled using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--enable-artifact-streaming`.
+Create a new AKS node pool with Artifact Streaming enabled using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--enable-artifact-streaming` flag.
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name myNodePool \
-        --enable-artifact-streaming
-    ```
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name myNodePool \
+    --enable-artifact-streaming
+```
 
 ### Enable Artifact Streaming on an existing node pool
 
-* Update an existing node pool to enable Artifact Streaming using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-artifact-streaming`.
+Enable Artifact Streaming on an existing AKS node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-artifact-streaming` flag.
 
-    ```azurecli-interactive
-    az aks nodepool update \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name myNodePool \
-        --enable-artifact-streaming
-    ```
+```azurecli-interactive
+az aks nodepool update \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name myNodePool \
+    --enable-artifact-streaming
+```
 
-## Check if Artifact Streaming is enabled
+## Disable Artifact Streaming on an existing node pool
 
-Now that you enabled Artifact Streaming on a premium ACR and connected that to an AKS node pool with Artifact Streaming enabled, any new pod deployments on this cluster with an image pull from the ACR with Artifact Streaming enabled will see reductions in image pull times.
+Disable Artifact Streaming on an existing AKS node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--disable-artifact-streaming` flag.
 
-* Check if your node pool has Artifact Streaming enabled using the [`az aks nodepool show`][az-aks-nodepool-show] command.
+```azurecli-interactive
+az aks nodepool update \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name myNodePool \
+    --disable-artifact-streaming
+```
 
-    ```azurecli-interactive
-    az aks nodepool show --resource-group myResourceGroup --cluster-name myAKSCluster --name myNodePool --query artifactStreamingProfile
-    ```
+## Check Artifact Streaming enablement status
 
-    In the output, check that the `Enabled` field is set to `true`.
+Check if Artifact Streaming is enabled on an AKS node pool using the [`az aks nodepool show`][az-aks-nodepool-show] command with the `--query` flag set to `artifactStreamingProfile`.
 
-## Next steps
+```azurecli-interactive
+az aks nodepool show \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name myNodePool \
+    --query artifactStreamingProfile
+```
 
-This article described how to enable Artifact Streaming on your AKS node pools to stream artifacts from ACR and reduce image pull time. To learn more about working with container images in AKS, see [Best practices for container image management and security in AKS][aks-image-management].
+In the output, check the `Enabled` field. `true` means Artifact Streaming is enabled, and `false` means Artifact Streaming is disabled.
+
+## Related content
+
+This article describes how to enable and disable Artifact Streaming on your AKS node pools to stream artifacts from ACR and reduce deployment times. To learn more about working with container images in AKS, see [Best practices for container image management and security in AKS][aks-image-management].
 
 <!-- LINKS -->
-[enable-artifact-streaming-acr]: #enable-artifact-streaming-on-acr
 [acr-auth-aks]: ./cluster-container-registry-integration.md
 [aks-upgrade]: ./upgrade-cluster.md
-[az-extension-add]: /cli/azure/extension#az-extension-add
-[az-extension-update]: /cli/azure/extension#az-extension-update
-[az-feature-register]: /cli/azure/feature#az-feature-register
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [aks-image-management]: ./operator-best-practices-container-image-management.md
@@ -159,6 +148,5 @@ This article described how to enable Artifact Streaming on your AKS node pools t
 [az-acr-artifact-streaming-create]: /cli/azure/acr/artifact-streaming#az-acr-artifact-streaming-create
 [az-acr-manifest-list-referrers]: /cli/azure/acr/manifest#az-acr-manifest-list-referrers
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
-[windows-os]: ./windows-best-practices.md
-[flatcar]: ./flatcar-container-linux-for-aks.md
-[os-guard]: ./use-azure-linux-os-guard.md
+[aks-contributor-role]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-contributor-role
+[azure-cli-install]: /cli/azure/install-azure-cli

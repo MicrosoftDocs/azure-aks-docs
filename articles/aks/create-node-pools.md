@@ -3,7 +3,7 @@ title: Create Node Pools in Azure Kubernetes Service (AKS)
 description: Learn how to create multiple node pools for a cluster in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli, build-2023, linux-related-content, annual
-ms.date: 06/15/2026
+ms.date: 07/13/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.subservice: aks-nodes
@@ -497,7 +497,7 @@ For more information, see [Flatcar Container Linux for AKS][flatcar].
 
 ##### Create the Windows Server 2025 node pool
 
-Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Windows` node pool with the `Windows2025` OS SKU that runs _three_ nodes.
+Create a new node pool by using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a `Windows` node pool with the `Windows2025` OS SKU that runs _three_ nodes. Windows Server 2025 node pools require a FIPS-enabled image, so the command includes `--enable-fips-image`.
 
 For more information about Windows OS, see [Windows best practices][windows].
 
@@ -509,6 +509,7 @@ az aks nodepool add \
     --node-vm-size Standard_DS2_v2 \
     --os-type Windows \
     --os-sku Windows2025 \
+    --enable-fips-image \
     --node-count 3
 ```
 

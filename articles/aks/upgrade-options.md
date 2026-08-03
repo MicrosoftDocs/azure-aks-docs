@@ -383,7 +383,6 @@ Use AKS Standard when you need advanced manual control over upgrade sequencing, 
 
 Yes. Many open-source tools integrate well with AKS upgrade processes:
 
-- [kube-no-trouble (kubent)](https://github.com/doitintl/kube-no-trouble): Scans for deprecated APIs before upgrades.
 - [Trivy](https://aquasecurity.github.io/trivy/): Security scanning for container images and Kubernetes configurations.
 - [Sonobuoy](https://sonobuoy.io/): Kubernetes conformance testing and cluster validation.
 - [kube-bench](https://github.com/aquasecurity/kube-bench): Security benchmark checks against Center for Internet Security standards.

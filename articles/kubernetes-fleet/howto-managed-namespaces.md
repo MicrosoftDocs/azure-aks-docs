@@ -4,7 +4,7 @@ description: Learn how to create Managed Fleet Namespaces to define resource quo
 author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
-ms.date: 06/15/2026
+ms.date: 07/28/2026
 ms.service: azure-kubernetes-fleet-manager
 zone_pivot_groups: azure-portal-azure-cli
 # Customer intent: "As a platform admin, I want to define a namespace and deploy it across selected fleet clusters so I can delegate application teams access to resources on any cluster where the namespace exists."
@@ -29,7 +29,7 @@ If you're looking to view or access existing Managed Fleet Namespaces you have a
 
 * You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * You need a Fleet Manager with a hub cluster. If you don't have one, see [create and join at least one Azure Kubernetes Service (AKS) cluster to the fleet](./quickstart-create-fleet-and-members.md).
-* Ensure user performing steps has the [Role Based Access Control Administrator][rbac-admin] role assigned for the Fleet Manager.
+* Ensure the user performing the steps has the [Role Based Access Control Administrator][rbac-admin] role assigned for the Fleet Manager.
 * Understand the Managed Fleet Namespace concept by [reading the overview](./concepts-fleet-managed-namespace.md).
 
 :::zone target="docs" pivot="azure-cli"
@@ -261,7 +261,7 @@ Control the flow of network traffic into and out of the namespace on each cluste
 Define which member clusters to distribute the managed namespace to by adding them as follows.
 
 * From the menu, select **+ Add**.
-* In the **Select member clusters** dialog search for the member clusters, selecting them by checking the box.
+* In the **Select member clusters** dialog, search for the member clusters and select them by checking the box.
 * Finally, choose **Select** to add the member clusters.
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-select-member-clusters.png" alt-text="Screenshot of the Azure portal showing two member clusters selected to host a new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-select-member-clusters.png":::
@@ -288,13 +288,13 @@ Once the deployment is completed, you can find the Managed Fleet Namespace in th
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-view.png" alt-text="Screenshot of the Azure portal with the new Managed Fleet Namespace listed with other namespaces on the hub cluster." lightbox="./media/managed-namespace/create-managed-fleet-namespace-view.png":::
 
-To review the rollout of the Kubernetes namespace across clusters, use [Resource placements](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters), looking for the resource placement named the same as the Managed Fleet Namespace.
+To review the rollout of the Kubernetes namespace across clusters, use [Resource placements](./quickstart-resource-propagation.md), and look for the resource placement named the same as the Managed Fleet Namespace.
 
 :::image type="content" source="./media/managed-namespace/create-managed-fleet-namespace-placement-status.png" alt-text="Screenshot of the Azure portal showing the resource placement status of the new Managed Fleet Namespace." lightbox="./media/managed-namespace/create-managed-fleet-namespace-placement-status.png":::
 
 ## Configure an existing Managed Fleet Namespace
 
-You can locate Managed Fleet Namespace from within Fleet Manager, or via Kubernetes center.
+You can locate a Managed Fleet Namespace from within Fleet Manager, or via Kubernetes center.
 
 Starting in Fleet Manager:
 
@@ -333,7 +333,7 @@ To remove member clusters:
 To add member clusters:
 
 * From the menu select **+ Add**.
-* In the **Add member clusters** dialog search for the member clusters, selecting them by checking the box.
+* In the **Add member clusters** dialog, search for the member clusters and select them by checking the box.
 * Finally, choose **Add** to add the member clusters.
 
 :::image type="content" source="./media/managed-namespace/remove-member-cluster-managed-fleet-namespace.png" alt-text="Screenshot of the Azure portal showing a single member cluster selected ready to be removed from the Managed Fleet Namespace." lightbox="./media/managed-namespace/remove-member-cluster-managed-fleet-namespace.png":::
