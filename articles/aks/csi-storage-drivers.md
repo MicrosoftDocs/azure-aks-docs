@@ -124,7 +124,7 @@ Enable the Azure Disks CSI driver on an existing cluster using the [`az aks upda
 az aks update --name myAKSCluster --resource-group myResourceGroup --enable-disk-driver
 ```
 
-It takes a few minutes to enable the Azure Disks CSI driver. After the command is completed, you can verify that the driver is enabled by checking that `diskCSIDriver` is set to `true` in the output. For example:
+It takes a few minutes to enable the Azure Disks CSI driver. After the command finishes, you can verify that the driver is enabled by checking that `diskCSIDriver` is set to `true` in the output. For example:
 
 ```output
 "storageProfile": {
