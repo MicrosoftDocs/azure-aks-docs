@@ -154,7 +154,7 @@ spec:
 
 ## Disable Artifact Streaming on an existing node pool
 
-Disable Artifact Streaming on an existing NAP managed nodes by setting the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md) to `false`. 
+Disable Artifact Streaming on existing NAP-managed nodes by setting the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md) to `false`. 
 
 ```yaml
 apiVersion: karpenter.azure.com/v1beta1
