@@ -225,10 +225,6 @@ az aks create \
 
 Yes. Azure CNI Overlay powered by Cilium is the **default virtual network** on every AKS Automatic cluster and requires no configuration. AKS Automatic also preconfigures LocalDNS and a managed NAT gateway for egress. If you want additional observability or security features such as FQDN filtering, L7 network policies, or Wireguard encryption, you can enable Advanced Container Networking Services on your AKS Automatic cluster.
 
-### Can I customize Cilium configuration?
-
-Generally no — AKS manages the Cilium configuration and most fields can't be modified. The only supported modification is [label exclusion in the Cilium ConfigMap](#can-the-cilium-configmap-be-modified). If you require more control over the Cilium configuration, we recommend that you use [AKS BYO CNI](./use-byo-cni.md) and install Cilium manually.
-
 ### Can I use `CiliumNetworkPolicy` custom resources instead of Kubernetes `NetworkPolicy` resources?
 
 L3 and L4 `CiliumNetworkPolicy` are supported and can be used alongside Kubernetes `NetworkPolicy` resources.
