@@ -137,7 +137,7 @@ In the output, check the `Enabled` field. `true` means Artifact Streaming is ena
 
 ### Enable Artifact Streaming on NAP-managed nodes
 
-Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Setting this field to `true` will enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
+Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming by using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Set this field to `true` to enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
 
 ```yaml
 apiVersion: karpenter.azure.com/v1beta1
@@ -171,7 +171,7 @@ spec:
 
 ## Check Artifact Streaming enablement status
 
-Check if Artifact Streaming is enabled on NAP-managed AKS nodes using the `kubectl get crd` command for the [AKSNodeClass](./node-auto-provisioning-aksnodeclass.md).
+Check if Artifact Streaming is enabled on NAP-managed AKS nodes by using the `kubectl get crd` command for the [AKSNodeClass](./node-auto-provisioning-aksnodeclass.md).
 
 ```azurecli-interactive
 kubectl describe crd <name of AKSNodeClass crd>
