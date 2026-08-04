@@ -462,7 +462,7 @@ To learn more about reliability in AKS, see the following articles:
 [kubernetes-well-known-labels]: https://kubernetes.io/docs/reference/labels-annotations-taints/
 
 <!-- LINKS - internal -->
-[aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes
+[aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes-in-aks
 [zones]: /azure/reliability/regions-list
 [best-practices-multi-region]: ./operator-best-practices-storage.md
 [az-aks-create]: /cli/azure/aks#az-aks-create
