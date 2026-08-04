@@ -81,6 +81,8 @@ You can enable Artifact Streaming on new or existing node pools in your AKS clus
 > [!NOTE]
 > If you don't have a Premium tier ACR integrated with your AKS cluster, you can't use Artifact Streaming on AKS.
 
+### [standard node pool](#tab/standard-node-pool)
+
 ### Enable Artifact Streaming on a new node pool
 
 Create a new AKS node pool with Artifact Streaming enabled using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--enable-artifact-streaming` flag.
@@ -130,6 +132,54 @@ az aks nodepool show \
 ```
 
 In the output, check the `Enabled` field. `true` means Artifact Streaming is enabled, and `false` means Artifact Streaming is disabled.
+
+### [Node Auto Provisioning](#tab/nap-nodes)
+
+### Enable Artifact Streaming on NAP-managed nodes
+
+Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Setting this field to `true` will enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: my-node-class
+spec:
+  # Enables artifact streaming; To use this feature container images must also enable artifact streaming on ACR
+  # Valid values: true, false; defaults to false if not specified
+  artifactStreaming:
+    enabled: 
+      true
+```
+
+## Disable Artifact Streaming on an existing node pool
+
+Disable Artifact Streaming on an existing NAP managed nodes by setting the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md) to `false`. 
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: my-node-class
+spec:
+  # Enables artifact streaming; To use this feature container images must also enable artifact streaming on ACR
+  # Valid values: true, false; defaults to false if not specified
+  artifactStreaming:
+    enabled: 
+      false
+```
+
+## Check Artifact Streaming enablement status
+
+Check if Artifact Streaming is enabled on NAP-managed AKS nodes using the `kubectl get crd` command for the [AKSNodeClass](./node-auto-provisioning-aksnodeclass.md).
+
+```azurecli-interactive
+kubectl describe crd <name of AKSNodeClass crd>
+```
+
+In the output, check the `spec.artifactStreaming.enabled` field. `true` means artifact streaming is enabled, and `false` means artifact streaming is disabled.
+
+---
 
 ## Related content
 
