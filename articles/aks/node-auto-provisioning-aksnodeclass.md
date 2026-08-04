@@ -55,9 +55,9 @@ spec:
 
 ## Artifact streaming
 
-[Artifact streaming](./artifact-streaming.md) allows container images to be streamed on demand to nodes rather than fully downloaded before starting. This speeds up the cold-start on a node through on-demand image loading.
+[Artifact streaming](./artifact-streaming.md) streams container images on demand to nodes rather than fully downloading them before starting. This approach speeds up the cold start on a node through on-demand image loading.
 
-Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Setting this field to `true` will enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
+Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming by using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Set this field to `true` to enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
 
 ```yaml
 apiVersion: karpenter.azure.com/v1beta1
@@ -73,7 +73,7 @@ spec:
 ```
 
 >[!NOTE]
-> To use artifact streaming on AKS NAP managed-nodes, artifact streaming must also be enabled in Azure Container Registry (ACR). If not set in ACR, this field will default to false.  
+> To use artifact streaming on AKS NAP managed-nodes, you must also enable artifact streaming in Azure Container Registry (ACR). If you don't set this option in ACR, the field defaults to false.  
 
 ## Virtual network (VNet) subnet configuration
 
