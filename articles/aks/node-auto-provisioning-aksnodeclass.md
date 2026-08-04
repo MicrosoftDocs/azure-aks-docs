@@ -53,6 +53,28 @@ spec:
   fipsMode: FIPS
 ```
 
+## Artifact streaming
+
+[Artifact streaming](./artifact-streaming.md) allows container images to be streamed on demand to nodes rather than fully downloaded before starting. This speeds up the cold-start on a node through on-demand image loading.
+
+Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Setting this field to `true` will enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: my-node-class
+spec:
+  # Enables artifact streaming; To use this feature container images must also enable artifact streaming on ACR
+  # Valid values: true, false; defaults to false if not specified
+  artifactStreaming:
+    enabled: 
+      true
+```
+
+>[!NOTE]
+> To use artifact streaming on AKS NAP managed-nodes, artifact streaming must also be enabled in Azure Container Registry (ACR). If not set in ACR, this field will default to false.  
+
 ## Virtual network (VNet) subnet configuration
 
 The `vnetSubnetID` field specifies which Azure VNet subnet should be used for provisioning node network interfaces. This field is optional. If you don't specify a subnet, NAP uses the default subnet configured during Karpenter installation. For more information, see [Subnet configurations for NAP](./node-auto-provisioning-networking.md#subnet-configurations-for-nap).
@@ -462,6 +484,11 @@ spec:
   # Default: Disabled
   # Valid values: FIPS, Disabled
   fipsMode: Disabled
+
+  # Artifact Streaming- allow suse of artifact streaming feature; To use this feature container images must also enable artifact streaming on ACR
+  # Valid values: true, false; defaults to false if not specified
+  artifactStreaming:
+    enabled: true
 
   # LocalDNS mode - allows use of LocalDNS feature
   # Default: Disabled
