@@ -176,6 +176,8 @@ After you create a PIS, you can reference it when you create or update a cluster
     ```
 
 ### Create a node pool using a PIS
+> [!IMPORTANT]
+> Need to assign "Azure Kubernetes Service Prepared Image Specification Reader" to the resource group when adding a nodepool to an existing cluster.
 
 1. Get the PIS version resource ID using the [`az aks prepared-image-specification version show`][az-aks-prepared-image-specification-version-show] command.
 
