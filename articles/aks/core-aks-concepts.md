@@ -227,7 +227,7 @@ For information on AKS and AKS Automatic, see the following resources:
 [ephemeral-os-disks]: ./concepts-storage.md#ephemeral-os-disks-in-aks
 [aks-overview]: ./what-is-aks.md
 [containerd]: https://containerd.io/
-[aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes
+[aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes-in-aks
 [cilium]: ./azure-cni-powered-by-cilium.md
 [windows-considerations]: ./windows-vs-linux-containers.md
 [upgrade-2019-2022]: ./upgrade-windows-os.md
