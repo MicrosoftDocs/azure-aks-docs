@@ -26,6 +26,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/azure-hpc-cache.md",
+            "redirect_url": "/azure/aks/operator-best-practices-storage",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/concepts-kubernetes-api-authorization.md",
             "redirect_url": "/azure/aks/concepts-cluster-authorization",
             "redirect_document_id": false

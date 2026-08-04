@@ -1130,8 +1130,6 @@
               href: /azure/storage/files/storage-files-netapp-comparison?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Other storage options
       items:
-        - name: Azure HPC Cache
-          href: azure-hpc-cache.md
         - name: NFS Server - static
           href: azure-nfs-volume.md
 - name: Reliability
