@@ -41,7 +41,7 @@ To get started, see:
 
 ## Horizontal Pod Autoscaler
 
-Use HPA when your workload can run multiple identical replicas and demand fluctuates. It scales on CPU/memory, application metrics (requests per second, latency), or external queue and backlog metrics. When replicas might exceed existing node capacity, use the preconfigured NAP capability in AKS Automatic or configure Cluster Autoscaler or NAP in AKS Standard.
+Use HPA when your workload can run multiple identical replicas and demand fluctuates. It scales on CPU or memory, application metrics (requests per second, latency), or external queue and backlog metrics. When replicas might exceed existing node capacity, use the preconfigured NAP capability in AKS Automatic or configure Cluster Autoscaler or NAP in AKS Standard.
 
 Don't use HPA and VPA on the same CPU or memory metrics. To use both autoscalers, use VPA in recommendation mode or configure HPA to use distinct custom metrics.
 
@@ -101,7 +101,7 @@ NAP starts with an allowed set of VM SKUs and selects capacity for pending workl
 
 AKS automatically scales control plane components based on cluster size and API server resource utilization. This guidance applies to AKS Automatic and AKS Standard. Use the Standard or Premium pricing tier for production or at-scale workloads.
 
-Kubernetes has a multidimensional scale envelope in which each resource type places different demands on the control plane. For example, secrets are often watched by multiple controllers and pods that make an initial `LIST` call, creating more control plane load than less frequently watched resources. Scaling heavily in one dimension can reduce capacity in others; for example, running hundreds of thousands of pods can reduce the pod mutation rate that the control plane supports. For recommendations, see [Kubernetes client best practices for large-scale AKS clusters](./best-practices-performance-scale-large.md#kubernetes-client-best-practices).
+Kubernetes has a multidimensional scale envelope in which each resource type places different demands on the control plane. For example, secrets are often watched by multiple controllers and pods that make an initial `LIST` call, creating more control plane load than less frequently watched resources. Scaling heavily in one dimension can reduce capacity in others. For example, running hundreds of thousands of pods can reduce the pod mutation rate that the control plane supports. For recommendations, see [Kubernetes client best practices for large-scale AKS clusters](./best-practices-performance-scale-large.md#kubernetes-client-best-practices).
 
 To check whether the control plane has scaled up, inspect the `large-cluster-control-plane-scaling-status` ConfigMap:
 
@@ -109,7 +109,7 @@ To check whether the control plane has scaled up, inspect the `large-cluster-con
 kubectl describe configmap large-cluster-control-plane-scaling-status -n kube-system
 ```
 
-The presence of this ConfigMap confirms that AKS has scaled up the control plane.
+The presence of this ConfigMap confirms that AKS scales up the control plane.
 
 ### Control plane safeguards
 
