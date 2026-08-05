@@ -2,7 +2,7 @@
 title: AKS Scaling Overview — HPA, VPA, Cluster Autoscaler, and KEDA
 description: Understand the AKS scaling options — Horizontal Pod Autoscaler, Vertical Pod Autoscaler, Cluster Autoscaler, and KEDA — and choose the right method for your workload type.
 ms.topic: overview
-ms.date: 07/23/2026
+ms.date: 08/05/2026
 author: schaffererin
 ms.author: schaffererin
 ms.custom: biannual, aks-scaling
@@ -22,8 +22,11 @@ When you run applications in Azure Kubernetes Service (AKS), you can scale pods,
 | [Horizontal Pod Autoscaler (HPA)](./horizontal-pod-autoscaler.md) | Stateless or partitionable workloads with variable demand | CPU utilization, RPS, queue depth | [When should I use Horizontal Pod Autoscaling (HPA) in Kubernetes?](./horizontal-pod-autoscaler.md#when-should-i-use-horizontal-pod-autoscaling-hpa-in-kubernetes) |
 | [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md) | Non-parallelizable workloads; right-sizing pod resource requests | CPU/memory resource usage | [Use Vertical Pod Autoscaler in AKS](./use-vertical-pod-autoscaler.md) |
 | [Cluster Autoscaler](./cluster-autoscaler-overview.md) | Node-level capacity when pods remain Pending | Pending pods | [Use Cluster Autoscaler in AKS](./cluster-autoscaler.md) |
+| [Node autoprovisioning (NAP)](./node-auto-provisioning.md) | Pending workloads that need right-sized VM capacity | Pending pod resource requirements | [Node autoprovisioning overview](./node-auto-provisioning.md) |
 | [KEDA](./keda-about.md) | Event-driven workloads; scale-to-zero required | Queue length, event backlog | [KEDA add-on overview](./keda-about.md) |
-| [ACI burst scaling](./virtual-nodes.md) | Spike handling beyond node pool capacity | Burst demand | [Create virtual nodes with Azure Container Instances](./virtual-nodes-cli.md) |
+| [ACI burst scaling](./virtual-nodes.md) | Linux workloads with burst demand that meet virtual node limitations | Burst demand | [Create virtual nodes with Azure Container Instances](./virtual-nodes-cli.md) |
+
+For most production workloads, start with AKS Automatic, which preconfigures NAP, VPA, and KEDA. In AKS Standard, you enable and configure these features explicitly.
 
 ## Manually scale pods or nodes
 
@@ -38,7 +41,9 @@ To get started, see:
 
 ## Horizontal Pod Autoscaler
 
-Use HPA when your workload can run multiple identical replicas and demand fluctuates. It scales on CPU/memory, application metrics (requests per second, latency), or external queue and backlog metrics — and should be combined with Cluster Autoscaler for node capacity.
+Use HPA when your workload can run multiple identical replicas and demand fluctuates. It scales on CPU/memory, application metrics (requests per second, latency), or external queue and backlog metrics. When replicas might exceed existing node capacity, use the preconfigured NAP capability in AKS Automatic or configure Cluster Autoscaler or NAP in AKS Standard.
+
+Don't use HPA and VPA on the same CPU or memory metrics. To use both autoscalers, use VPA in recommendation mode or configure HPA to use distinct custom metrics.
 
 :::image type="content" source="media/concepts-scale/horizontal-pod-autoscaling.png" alt-text="Screenshot of a diagram showing how the Horizontal Pod Autoscaler works with AKS." lightbox="media/concepts-scale/horizontal-pod-autoscaling.png":::
 
@@ -78,9 +83,11 @@ Scale-in operations can disrupt workloads as pods move between nodes. Run multip
 
 ## Kubernetes Event-driven Autoscaling
 
-[Kubernetes Event-driven Autoscaling](https://keda.sh/docs/2.13/concepts/) (KEDA) is an open-source component that scales workloads based on events. KEDA extends Kubernetes with custom resources, including `ScaledObject`, that describe how a workload should respond to an event source or metric.
+[Kubernetes Event-driven Autoscaling](https://keda.sh/docs/latest/concepts/) (KEDA) is an open-source component that scales workloads based on events. KEDA extends Kubernetes with custom resources, including `ScaledObject`, that describe how a workload should respond to an event source or metric.
 
 KEDA is useful for workloads that process queues, streams, messages, or other event backlogs. It can scale supported workloads to zero when no events are available and increase replicas as the backlog grows.
+
+Don't combine a KEDA `ScaledObject` with a separate HPA for the same workload. KEDA creates and uses an HPA internally, so the autoscalers would compete with each other.
 
 To get started, see the [KEDA add-on overview](./keda-about.md).
 
@@ -92,17 +99,17 @@ NAP starts with an allowed set of VM SKUs and selects capacity for pending workl
 
 ## Control plane scaling and safeguards
 
-Kubernetes has a multidimensional scale envelope in which each resource type places different demands on the control plane. For example, watches on resources such as secrets can produce list calls to the Kubernetes API server and create more control plane load than resources without watches.
+AKS automatically scales control plane components based on cluster size and API server resource utilization. This guidance applies to AKS Automatic and AKS Standard. Use the Standard or Premium pricing tier for production or at-scale workloads.
 
-Because the control plane manages resource operations across the cluster, scaling heavily in one dimension can reduce the capacity available in others. For example, running hundreds of thousands of pods can affect the pod mutation rate that the control plane supports. For recommendations, see [Kubernetes client best practices for large-scale AKS clusters](./best-practices-performance-scale-large.md#kubernetes-client-best-practices).
-
-AKS automatically scales control plane components based on signals such as the total number of cluster cores and CPU or memory pressure on control plane components.
+Kubernetes has a multidimensional scale envelope in which each resource type places different demands on the control plane. For example, secrets are often watched by multiple controllers and pods that make an initial `LIST` call, creating more control plane load than less frequently watched resources. Scaling heavily in one dimension can reduce capacity in others; for example, running hundreds of thousands of pods can reduce the pod mutation rate that the control plane supports. For recommendations, see [Kubernetes client best practices for large-scale AKS clusters](./best-practices-performance-scale-large.md#kubernetes-client-best-practices).
 
 To check whether the control plane has scaled up, inspect the `large-cluster-control-plane-scaling-status` ConfigMap:
 
 ```bash
 kubectl describe configmap large-cluster-control-plane-scaling-status -n kube-system
 ```
+
+The presence of this ConfigMap confirms that AKS has scaled up the control plane.
 
 ### Control plane safeguards
 
@@ -115,11 +122,15 @@ kubectl get flowschemas
 kubectl get prioritylevelconfigurations
 ```
 
+The guard is active when `aks-managed-apiserver-guard` appears in both command outputs.
+
 If these resources are present, see the [API server and etcd troubleshooting guide](/troubleshoot/azure/azure-kubernetes/troubleshoot-apiserver-etcd#cause-4-aks-managed-api-server-guard-was-applied) for mitigation guidance.
 
 ## Burst to Azure Container Instances (ACI)
 
 You can integrate AKS with Azure Container Instances to handle rapid increases in demand. Pod autoscaling can create more replicas than the existing node pool can support, while provisioning additional VM-based nodes can take several minutes. ACI provides compute capacity without requiring additional VM nodes.
+
+Virtual nodes (ACI-backed virtual Kubernetes nodes) support Linux pods and nodes and require an AKS cluster that uses Azure CNI networking. They don't support some common scenarios, including API server authorized IP ranges, persistent volumes and persistent volume claims, IPv6, and managed identities attached to virtual nodes. Review the [virtual node limitations](./virtual-nodes.md#limitations) before using ACI burst scaling.
 
 :::image type="content" source="media/concepts-scale/burst-scaling.png" alt-text="Screenshot of a diagram showing how Azure Container Instances works with AKS." lightbox="media/concepts-scale/burst-scaling.png":::
 
