@@ -100,7 +100,7 @@ If you want to carry out an in-place migration, the AKS service migrates your co
     ```
 
     > [!NOTE]
-    > Moving forward, all AKS Kubernetes versions will be LTS-compatible. For the latest LTS calendar, visit the [AKS Kubernetes Release Calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar). To view available LTS releases and their patches by region, see the [AKS release tracker](release-tracker.md).
+    > Moving forward, all AKS Kubernetes versions are LTS-compatible. For the latest LTS calendar, visit the [AKS Kubernetes Release Calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar-and-upcoming-versions). To view available LTS releases and their patches by region, see the [AKS release tracker](release-tracker.md).
 
 
 ## Disable long-term support on an existing cluster
@@ -157,7 +157,7 @@ Read the [AKS release notes](https://github.com/Azure/AKS/releases) to stay info
 
 ### Can I create a new AKS cluster with an LTS version after community support ends?
 
-Yes, you can create a new AKS cluster using an LTS version even after its community support period has ended, provided you have opted into LTS. However, this is only valid until the end of the LTS version's lifecycle. After that, you must upgrade to the next supported LTS version. For more details, see the [AKS Kubernetes Release Calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar).
+Yes, you can create a new AKS cluster using an LTS version even after its community support period ends, provided you opt into LTS. However, this support is only valid until the end of the LTS version's lifecycle. After that, you must upgrade to the next supported LTS version. For more details, see the [AKS Kubernetes Release Calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar-and-upcoming-versions).
 
 ### Can I enable and disable LTS on an AKS-supported version after community support ends?
 
