@@ -63,7 +63,7 @@ Private clusters are available in public regions, Azure Government, and Microsof
 - [Azure Private Link service limitations][private-link-service] apply to private clusters.
 - There's no support for Azure DevOps Microsoft-hosted Agents with private clusters. Consider using [self-hosted agents](/azure/devops/pipelines/agents/agents).
 - Deleting or modifying the private endpoint in the customer subnet causes the cluster to stop functioning.
-- Azure Private Link service is supported on Standard Load Balancer only. Basic Load Balancer isn't supported.
+- Azure Private Link service supports only Standard Load Balancer. Basic Load Balancer isn't supported.
 
 ## Hub and spoke with custom DNS for private AKS clusters
 
@@ -509,20 +509,20 @@ az aks update \
 
 ## Configuration options for private DNS
 
-You can configure private DNS settings for a private AKS cluster using the Azure CLI (with the `--private-dns-zone` parameter) or an Azure Resource Manager (ARM) template (with the `privateDNSZone` property). The following table describes the supported values for the Azure CLI `--private-dns-zone` parameter and the ARM `privateDNSZone` property:
+You can configure private DNS settings for a private AKS cluster by using Azure CLI (with the `--private-dns-zone` parameter) or an Azure Resource Manager template (with the `privateDNSZone` property). The following table describes the supported values for the Azure CLI `--private-dns-zone` parameter and the Azure Resource Manager `privateDNSZone` property:
 
 | `--private-dns-zone` / `privateDNSZone` value | Description |
 | ------------------------------------------------ | ----------- |
 | `system` | The default value when configuring a private DNS zone. If you omit `--private-dns-zone` / `privateDNSZone`, AKS creates a private DNS zone in the node resource group. |
 | `none` | If you set `--private-dns-zone` / `privateDNSZone` to `none`, AKS doesn't create a private DNS zone. |
-| `<custom-private-dns-zone-resource-id>` | To use this parameter, you need to create a private DNS zone in the following format for Azure global cloud: `privatelink.<region>.azmk8s.io` or `<subzone>.privatelink.<region>.azmk8s.io`. You need the resource ID of the private DNS zone for future use. You also need a user-assigned identity or service principal with the [Private DNS Zone Contributor][private-dns-zone-contributor-role] and [Network Contributor][network-contributor-role] roles. For clusters using API Server VNet integration, a private DNS zone supports the naming format of `private.<region>.azmk8s.io` or `<subzone>.private.<region>.azmk8s.io`. You **can't change or delete these resources after creating the cluster**, as it can cause performance issues and cluster upgrade failures. You can use `--fqdn-subdomain <subdomain>` with `<custom-private-dns-zone-resource-id>` only to provide subdomain capabilities to `privatelink.<region>.azmk8s.io`. If you're specifying a subzone, there's a 32 character limit for the `<subzone>` name. |
+| `<custom-private-dns-zone-resource-id>` | To use this parameter, create a private DNS zone in the following format for Azure global cloud: `privatelink.<region>.azmk8s.io` or `<subzone>.privatelink.<region>.azmk8s.io`. You need the resource ID of the private DNS zone for future use. You also need a user-assigned identity or service principal with the [Private DNS Zone Contributor][private-dns-zone-contributor-role] and [Network Contributor][network-contributor-role] roles. For clusters using API Server VNet integration, a private DNS zone supports the naming format of `private.<region>.azmk8s.io` or `<subzone>.private.<region>.azmk8s.io`. You **can't change or delete these resources after creating the cluster**, as it can cause performance problems and cluster upgrade failures. You can use `--fqdn-subdomain <subdomain>` with `<custom-private-dns-zone-resource-id>` only to provide subdomain capabilities to `privatelink.<region>.azmk8s.io`. If you're specifying a subzone, there's a 32 character limit for the `<subzone>` name. |
 
 ### Considerations for private DNS
 
 Keep the following considerations in mind when configuring private DNS for a private AKS cluster:
 
 - If the private DNS zone is in a different subscription than the AKS cluster, you need to register the `Microsoft.ContainerService` Azure provider in both subscriptions.
-- If your AKS cluster is configured with an Active Directory service principal, AKS doesn't support using a system-assigned managed identity with custom private DNS zone. The cluster must use [user-assigned managed identity authentication](./user-assigned-managed-identity.md).
+- If you configure your AKS cluster with an Active Directory service principal, AKS doesn't support using a system-assigned managed identity with custom private DNS zone. The cluster must use [user-assigned managed identity authentication](./user-assigned-managed-identity.md).
 
 :::zone-end
 
