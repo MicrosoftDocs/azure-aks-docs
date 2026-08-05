@@ -438,7 +438,7 @@ The **Logs and events** grouping captures the logs from the **ContainerLog** or 
 
 #### ContainerLogV2 schema
 
-> **Compatibility and configuration requirements**: ContainerLogV2 schema is recommended for new Container insights deployments using managed identity authentication via Azure Resource Manager (ARM) templates, Bicep, Terraform, Azure Policy, or the Azure portal. The schema supports the Basic logs tier for cost savings. Basic logs support simple log search alerts, but advanced alerting requires Analytics-tier logs. For aggregated or near-real-time alerting, use managed Prometheus when metrics are available, summary rules, or route selected data to the Analytics tier with transformations. For more information, see [Enable the ContainerLogV2 schema](/azure/azure-monitor/containers/container-insights-logs-schema?tabs=configure-portal#enable-the-containerlogv2-schema) and [Cost-effective alerting strategies for AKS](/azure/azure-monitor/containers/cost-effective-alerting).
+> **Compatibility and configuration requirements**: Use the ContainerLogV2 schema for new Container insights deployments that use managed identity authentication via Azure Resource Manager (ARM) templates, Bicep, Terraform, Azure Policy, or the Azure portal. The schema supports the Basic logs tier for cost savings. Basic logs support simple log search alerts, but advanced alerting requires Analytics-tier logs. For aggregated or near-real-time alerting, use managed Prometheus when metrics are available, summary rules, or route selected data to the Analytics tier with transformations. For more information, see [Enable the ContainerLogV2 schema](/azure/azure-monitor/containers/container-insights-logs-schema?tabs=configure-portal#enable-the-containerlogv2-schema) and [Cost-effective alerting strategies for AKS](/azure/azure-monitor/containers/cost-effective-alerting).
 
 Container insights in Azure Monitor provides a recommended schema for container logs, _ContainerLogV2_. The format includes the following fields for common queries to view data related to AKS and Azure Arc-enabled Kubernetes clusters:
 
@@ -536,7 +536,7 @@ In AKS Automatic, Azure Monitor dashboards with Grafana are available by default
 
 [AKS desktop](aks-desktop-overview.md) is an application-focused desktop experience for Azure Kubernetes Service (AKS) that helps you connect to clusters, view resources, deploy applications, and troubleshoot workloads without deep Kubernetes expertise.
 
-AKS desktop complements Azure Monitor and Container insights by giving application teams a single, ready-to-use place for high level day-to-day observation and troubleshooting of their individual application workloads, without building custom tooling or switching between tools.
+AKS desktop complements Azure Monitor and Container insights by giving application teams a single, ready-to-use place for high-level day-to-day observation and troubleshooting of their individual application workloads, without building custom tooling or switching between tools.
 
 From an [AKS desktop Project](aks-desktop-projects.md), you can:
 
