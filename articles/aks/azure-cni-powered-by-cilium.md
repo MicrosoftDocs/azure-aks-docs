@@ -40,7 +40,7 @@ You can use Azure CNI Powered by Cilium with three IP address management (IPAM) 
 - [Azure CNI Pod Subnet](./concepts-network-azure-cni-pod-subnet.md)
 - [Azure CNI Node Subnet](./concepts-network-legacy-cni.md#azure-cni-node-subnet), a legacy option
 
-For most scenarios, we recommend Azure CNI Overlay. If you need direct access to pod IP addresses from connected networks, use Azure CNI Pod Subnet. For more information, see [Choose an IPAM option for AKS](./concepts-network-cni-overview.md#choose-an-ipam-option-for-aks).
+For most scenarios, use Azure CNI Overlay. If you need direct access to pod IP addresses from connected networks, use Azure CNI Pod Subnet. For more information, see [Choose an IPAM option for AKS](./concepts-network-cni-overview.md#choose-an-ipam-option-for-aks).
 
 ## Supported Kubernetes and Cilium versions
 
@@ -244,7 +244,7 @@ Customers might use FQDN filtering and Layer 7 policies as part of the [Advanced
 
 ### Can I use `CiliumClusterwideNetworkPolicy`?
 
-Yes, `CiliumClusterwideNetworkPolicy` is supported.
+Yes, Azure CNI Powered by Cilium supports `CiliumClusterwideNetworkPolicy`.  
 
 The following sample policy allows ingress traffic on TCP port 80 to pods with the label `role: backend` from pods with the label `role: frontend`.
 
@@ -341,9 +341,9 @@ No, AKS doesn't configure CPU or memory limits on the Cilium `daemonset` because
 
 No, AKS clusters created with network data plane as Cilium don't use `kube-proxy`.
 
-This behavior applies to all Kubernetes versions supported by Azure CNI Powered by Cilium, with no separate AKS version constraint; the data plane upgrade is supported only on Linux clusters and requires node auto-provisioning (NAP) to be disabled during the update.
+This behavior applies to all Kubernetes versions supported by Azure CNI Powered by Cilium, with no separate AKS version constraint. The data plane upgrade is supported only on Linux clusters and requires node auto-provisioning (NAP) to be disabled during the update.
 
-If the AKS clusters are on [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md) and are upgraded to AKS clusters running Azure CNI Powered by Cilium, workloads on new nodes are created without `kube-proxy`. Workloads on existing nodes are also migrated to run without `kube-proxy` as a part of this upgrade process.
+If you upgrade AKS clusters on [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md) to AKS clusters running Azure CNI Powered by Cilium, workloads on new nodes are created without `kube-proxy`. Workloads on existing nodes are also migrated to run without `kube-proxy` as a part of this upgrade process.
 
 - **Is AKS Local DNS supported with Azure CNI Powered by Cilium?**
 
