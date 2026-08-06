@@ -1,8 +1,8 @@
 ---
 title: Monitor Azure Kubernetes Service (AKS) idle costs
 description: Learn how to monitor and optimize idle costs in the Azure Kubernetes Service (AKS) cost analysis add-on.
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 ms.topic: how-to

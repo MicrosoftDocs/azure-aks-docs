@@ -3,6 +3,7 @@ title: Windows AKS customer stories
 titleSuffix: Windows AKS customer stories
 description: Learn how customers are using Windows Containers on AKS.
 ms.topic: concept-article
+ms.custom: aks-windows
 ms.date: 04/06/2026
 author: schaffererin
 ms.author: schaffererin

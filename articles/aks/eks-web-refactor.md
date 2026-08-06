@@ -1,12 +1,12 @@
 ---
 title: Migrate Amazon Web Services (AWS) web application to Azure Kubernetes Service (AKS)
 description: Step-by-step guide on updating and migrating the AWS web application to Azure Kubernetes Service (AKS).
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.date: 10/31/2024
 ms.service: azure-kubernetes-service
-ms.custom: 
+ms.custom: aks-migration
     - migration
     - aws-to-azure
     - eks-to-aks

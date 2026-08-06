@@ -1,12 +1,13 @@
 ---
 title: Deploy an AKS cluster using the Bicep Kubernetes extension
 description: Learn how to quickly deploy a Kubernetes cluster using the Bicep Kubernetes extension and deploy an application in Azure Kubernetes Service (AKS).
-author: schaffererin
+author: davidsmatlak
 
 ms.topic: quickstart
+ms.subservice: aks-developer
 ms.custom: devx-track-bicep
 ms.date: 01/11/2024
-ms.author: schaffererin
+ms.author: davidsmatlak
 
 # Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
 

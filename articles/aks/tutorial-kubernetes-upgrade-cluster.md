@@ -6,6 +6,7 @@ ms.date: 06/10/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.subservice: aks-upgrade
 ms.custom: mvc, devx-track-azurepowershell
 # Customer intent: As a developer or IT pro, I want to learn how to upgrade an Azure Kubernetes Service (AKS) cluster so that I can use the latest version of Kubernetes and features.
 

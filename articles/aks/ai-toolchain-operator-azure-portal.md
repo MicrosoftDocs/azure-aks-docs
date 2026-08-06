@@ -6,6 +6,7 @@ ms.date: 11/04/2025
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-ai-ml
 # Customer intent: "As a data scientist, I want to deploy AI models on a Kubernetes cluster using a managed operator, so that I can streamline model management and focus on development rather than infrastructure setup."
 ---
 

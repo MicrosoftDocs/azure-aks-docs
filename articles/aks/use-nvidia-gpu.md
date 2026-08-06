@@ -4,9 +4,9 @@ description: Learn how to use GPUs for high performance compute or graphics-inte
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
-ms.date: 04/10/2023
-author: schaffererin
-ms.author: schaffererin
+ms.date: 07/02/2026
+author: davidsmatlak
+ms.author: davidsmatlak
 
 # Customer intent: As a cluster administrator or developer, I want to provision an Azure Kubernetes Service (AKS) cluster with GPU-enabled node pools, so that I can run high-performance, compute-intensive workloads effectively.
 ---
@@ -17,10 +17,21 @@ Graphical processing units (GPUs) are often used for compute-intensive workloads
 
 This article helps you provision nodes with schedulable GPUs on new and existing AKS clusters.
 
-> [!TIP]
-> For a fully managed experience where AKS installs and maintains the NVIDIA driver, device plugin, and DCGM metrics exporter for you, see [AKS-managed GPU node pools (preview)](./aks-managed-gpu-nodes.md).
-
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
+
+## Choose an approach to run GPUs on AKS
+
+AKS provides two approaches to run NVIDIA GPU workloads. Select the approach that aligns with the level of control you require over the GPU software stack and the amount of management you want AKS to perform on your behalf.
+
+| Approach | Recommended for | Components AKS manages | Components you manage |
+| --- | --- | --- | --- |
+| **AKS-managed GPU node pools** (recommended) | Most scenarios that require GPU capacity to operate consistently with other AKS node pools. | NVIDIA GPU driver, Kubernetes device plugin, GPU metrics exporter, and GPU health signals. | Your GPU workloads. |
+| **Self-managed GPU setup** | Scenarios that require granular control over GPU driver and device plugin versions, or that standardize on the [NVIDIA GPU Operator](./nvidia-gpu-operator.md). | The NVIDIA GPU driver only, by default. | Kubernetes device plugin, GPU metrics exporter, and GPU health tooling. |
+
+> [!TIP]
+> Microsoft recommends **[AKS-managed GPU node pools](./aks-managed-gpu-nodes.md)** for most scenarios. AKS installs and maintains the NVIDIA driver, device plugin, and DCGM metrics exporter on your behalf, which reduces operational overhead and simplifies GPU node pool creation to a single step. Use the self-managed approach described in this article only when you require direct control over the device plugin or other GPU software components.
+
+The remainder of this article describes the **self-managed** GPU setup. For the recommended managed experience, see [Create an AKS-managed GPU node pool](./aks-managed-gpu-nodes.md).
 
 ## Supported GPU-enabled VMs
 
@@ -32,7 +43,7 @@ Check available and supported VM sizes using the [`az vm list-skus`][az-vm-list-
 az vm list-skus --location <your-location> --output table
 ```
 
-For AKS node pools, we recommend a minimum size of *Standard_NC6s_v3*. The NVv4 series (based on AMD GPUs) aren't supported on AKS.
+For AKS node pools, use a minimum size of `Standard_NC4as_T4_v3`. The NVv4 series (based on AMD GPUs) isn't supported on AKS.
 
 > [!NOTE]
 > GPU-enabled VMs contain specialized hardware subject to higher pricing and region availability. For more information, see the [pricing][azure-pricing] tool and [region availability][azure-availability].
@@ -62,16 +73,16 @@ Get the credentials for your AKS cluster using the [`az aks get-credentials`][az
 az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 ```
 
-## Options for using NVIDIA GPUs
+## Self-managed GPU setup
 
-Using NVIDIA GPUs involves the installation of various NVIDIA software components such as the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file), GPU driver installation, and more.
+> [!TIP]
+> For the recommended managed experience, see [Create an AKS-managed GPU node pool](./aks-managed-gpu-nodes.md). AKS installs and maintains the driver, device plugin, and DCGM metrics exporter on your behalf. Proceed with the following steps only when you require direct control over the device plugin or other GPU software components.
 
-> [!NOTE]
-> By default, Microsoft automatically maintains the version of the NVIDIA drivers as part of the node image deployment, and AKS ***supports and manages*** it. While the NVIDIA drivers are installed by default on GPU capable nodes, you need to install the device plugin.
+The self-managed GPU setup requires you to install several NVIDIA software components, including the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file) and the GPU driver.
 
 ### NVIDIA device plugin installation
 
-NVIDIA device plugin installation is required when using GPUs on AKS. In some cases, the installation is handled automatically, such as when using the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html). Alternatively, you can manually install the NVIDIA device plugin.
+You need to install the NVIDIA device plugin when using GPUs in this self-managed setup. In some cases, the installation is handled automatically, such as when using the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html). Alternatively, you can manually install the NVIDIA device plugin.
 
 #### Manually install the NVIDIA device plugin
 
@@ -89,7 +100,7 @@ az aks nodepool add \
     --cluster-name myAKSCluster \
     --name gpunp \
     --node-count 1 \
-    --node-vm-size Standard_NC6s_v3 \
+    --node-vm-size Standard_NC4as_T4_v3 \
     --node-taints sku=gpu:NoSchedule \
     --enable-cluster-autoscaler \
     --min-count 1 \
@@ -98,7 +109,7 @@ az aks nodepool add \
 
 This command adds a node pool named *gpunp* to *myAKSCluster* in *myResourceGroup* and uses parameters to configure the following node pool settings:
 
-* `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC6s_v3*.
+* `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC4as_T4_v3*.
 * `--node-taints`: Specifies a *sku=gpu:NoSchedule* taint on the node pool.
 * `--enable-cluster-autoscaler`: Enables the cluster autoscaler.
 * `--min-count`: Configures the cluster autoscaler to maintain a minimum of one node in the node pool.
@@ -120,7 +131,7 @@ az aks nodepool add \
     --name gpunp \
     --node-count 1 \
     --os-sku AzureLinux \
-    --node-vm-size Standard_NC6s_v3 \
+    --node-vm-size Standard_NC4as_T4_v3 \
     --node-taints sku=gpu:NoSchedule \
     --enable-cluster-autoscaler \
     --min-count 1 \
@@ -129,14 +140,14 @@ az aks nodepool add \
 
 This command adds a node pool named *gpunp* to *myAKSCluster* in *myResourceGroup* and uses parameters to configure the following node pool settings:
 
-* `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC6s_v3*.
+* `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC4as_T4_v3*.
 * `--node-taints`: Specifies a *sku=gpu:NoSchedule* taint on the node pool.
 * `--enable-cluster-autoscaler`: Enables the cluster autoscaler.
 * `--min-count`: Configures the cluster autoscaler to maintain a minimum of one node in the node pool.
 * `--max-count`: Configures the cluster autoscaler to maintain a maximum of three nodes in the node pool.
 
 > [!NOTE]
-> Taints and VM sizes can only be set for node pools during node pool creation, but you can update autoscaler settings at any time. Certain SKUs, including A100 and H100 VM SKUs, aren't available for Azure Linux. For more information, see [GPU-optimized VM sizes in Azure][gpu-skus].
+> You can set taints and VM sizes only during node pool creation, but you can update autoscaler settings at any time.
 
 ---
 
@@ -218,7 +229,7 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
         --name gpunp \
         --node-count 1 \
         --gpu-driver none \
-        --node-vm-size Standard_NC6s_v3 \
+        --node-vm-size Standard_NC4as_T4_v3 \
         --enable-cluster-autoscaler \
         --min-count 1 \
         --max-count 3

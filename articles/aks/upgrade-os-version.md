@@ -3,7 +3,7 @@ title: Upgrade Operating System (OS) Version in Azure Kubernetes Service (AKS) C
 description: Learn about support, testing, and rollback for OS versions available on Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 05/29/2026
+ms.date: 07/13/2026
 author: allyford
 ms.author: allyford
 ai-usage: ai-assisted
@@ -34,7 +34,7 @@ Each [node image][node-images] corresponds to an OS version, which you can speci
 > - For Ubuntu, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku Ubuntu`. This will automatically update you to the latest default Ubuntu version based on your Kubernetes version.
 > - For Azure Linux, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku AzureLinux`. This will automatically update you to the latest default Azure Linux version based on your Kubernetes version.
 > - For Azure Container Linux (ACL), we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku AzureContainerLinux`. This will automatically update you to the latest default ACL version based on your Kubernetes version.
-> - For Windows, we recommend creating node pools while specifying `--os-type Windows` and `--os-sku Windows2022`. You need to manually update node pools to the next OS version when it's released.
+> - For Windows, create node pools while specifying `--os-type Windows`, `--os-sku Windows2025`, and `--enable-fips-image` (Windows Server 2025 requires a FIPS-enabled image). You need to manually update node pools to the next OS version when it's released.
 
 | OS type | OS SKU | Supported Kubernetes versions | Default versioning |
 |--|--|--|--|
@@ -46,8 +46,8 @@ Each [node image][node-images] corresponds to an OS version, which you can speci
 | Linux | AzureLinuxOSGuard | This OS SKU is supported in Kubernetes versions 1.32 and above. | Azure Linux with OS Guard versions are upgraded through node image upgrades. For more information, see [Azure Linux with OS Guard for AKS][os-guard]. |
 | Linux | Flatcar | This OS SKU is supported in all Kubernetes versions. | Flatcar versions are upgraded through node image upgrades. For more information, see [Flatcar Container Linux for AKS][flatcar]. |
 | Linux | AzureContainerLinux | This OS SKU is supported in Kubernetes versions 1.34 and above. | Azure Container Linux versions are upgraded through node image upgrades. |
-| Windows | Windows2019 | 1.14 to 1.32 | Default for Windows OS Type in Kubernetes version 1.14 to 1.24. |
-| Windows | Windows2022 | 1.23 to 1.34 | Default for Windows OS Type in Kubernetes version 1.25 to 1.34. |
+| Windows | Windows2022 | 1.23 to 1.36 | Default for Windows OS Type in Kubernetes version 1.25 to 1.35. |
+| Windows | Windows2025 | 1.32 and above | Default for Windows OS Type in Kubernetes version 1.36 and later. Requires a FIPS-enabled image (`--enable-fips-image`). |
 
 ## Migrate to a new OS version
 
@@ -67,7 +67,6 @@ Update the `os-sku` on an existing node pool using the [`az aks nodepool update`
 > [!NOTE]
 > The following values aren't supported for node pool update command:
 >
-> - `--os-sku Windows2019`
 > - `--os-sku Windows2022`
 > - `--os-sku Windows2025`
 >
@@ -143,11 +142,10 @@ You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to up
 > [!NOTE]
 > The following values aren't supported for node pool update command:
 >
-> - `--os-sku Windows2019`
 > - `--os-sku Windows2022`
 > - `--os-sku Windows2025`
 >
-> Instead, you need to add node pools to your cluster with the corresponding `--os-sku` you intend to use.
+> Instead, add node pools to your cluster by using the corresponding `--os-sku` you want to use. To learn more about upgrading your OS version for your Windows FIPS node pools, see [Upgrade Windows OS version][upgrade-windows-os-version].
 
 | OS SKU | Default OS version |
 |--|--|
@@ -189,9 +187,10 @@ az aks nodepool update \
 > [!NOTE]
 > Keep the following information in mind when migrating to `--os-sku Ubuntu2204`:
 >
-> - [FIPS](./enable-fips-nodes.md) and [CVM](./use-cvm.md) aren't supported.
+> - [CVM](./use-cvm.md) isn't supported.
 > - Ubuntu 22.04 is supported in Kubernetes versions 1.25 to 1.36.
 > - `--os-sku Ubuntu2204` is intended for rollback to Ubuntu 22.04 on your current Kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your Kubernetes version to 1.37 and above.
+> - If you're currently using FIPS-enabled node pools with Ubuntu 20.04, the [`az aks nodepool update`][az-aks-nodepool-update] command also works for migrating to Ubuntu 22.04 FIPS.
 
 Roll back to `--os-sku Ubuntu2204` on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command.
 
@@ -230,3 +229,4 @@ To learn more about node images, node pool upgrades, and node configurations on 
 [flatcar]: ./flatcar-container-linux-for-aks.md
 [os-guard]: ./use-azure-linux-os-guard.md
 [manage-node-pools]: ./manage-node-pools.md
+[upgrade-windows-os-version]: ./upgrade-windows-os.md

@@ -1,12 +1,13 @@
 ---
 title: Use Deployment Safeguards to Enforce Best Practices in Azure Kubernetes Service (AKS)
 description: Learn how to use Deployment Safeguards to enforce best practices on Azure Kubernetes Service (AKS) clusters in AKS Automatic and AKS Standard modes.
-author: schaffererin
+author: davidsmatlak
 ms.topic: how-to
 ms.custom: build-2024, devx-track-azurecli
 ms.date: 06/02/2026
-ms.author: schaffererin
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.subservice: aks-security
 ai-usage: ai-assisted
 # Customer intent: As a Kubernetes developer, I want to implement Deployment Safeguards in my AKS cluster, so that I can enforce best practices and prevent configuration issues that may compromise the stability of my applications.
 ---

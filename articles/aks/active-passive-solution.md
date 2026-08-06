@@ -4,6 +4,7 @@ description: Learn about an active-passive disaster recovery solution overview f
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-reliability
 ms.topic: concept-article
 ms.date: 01/30/2024
 # Customer intent: As a solutions architect, I want to implement an active-passive disaster recovery strategy for Azure Kubernetes Service, so that I can ensure application availability and business continuity during regional failures.

@@ -2,6 +2,7 @@
 title: Plan Networking for Azure Kubernetes Service (AKS) Workloads
 description: This article provides an overview of the networking components you need to consider when planning your Azure Kubernetes Service (AKS) workloads.
 ms.topic: overview
+ms.subservice: aks-networking
 ms.date: 03/24/2025
 author: schaffererin
 ms.author: schaffererin

@@ -3,9 +3,10 @@ title: Prepare to deploy the event-driven workflow (EDW) workload to Azure
 description: Take the necessary steps so you can deploy the EDW workload in Azure.
 ms.topic: how-to
 ms.date: 06/20/2024
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.custom: aks-migration
 # Customer intent: "As a cloud architect deploying workloads, I want to configure and deploy an event-driven workflow to Azure Kubernetes Service, so that I can utilize Azure's infrastructure and tools efficiently in my projects."
 ---
 

@@ -16,15 +16,18 @@ This article shows you how to enable Istio CNI for the Istio-based service mesh 
 
 ## Overview
 
-By default, Istio service mesh uses privileged init containers (`istio-init`) in each application pod to configure network traffic redirection to the Envoy sidecar proxy. These init containers require `NET_ADMIN` and `NET_RAW` capabilities, which are often flagged as security concerns in enterprise environments.
+Istio redirects application traffic to the Envoy sidecar proxy using one of two mechanisms:
 
-Istio CNI addresses this security concern by moving the network configuration responsibilities from individual pod init containers to a cluster-level CNI plugin. This approach:
+- **Istio CNI** (`CNIChaining`): A cluster-level CNI plugin configures traffic redirection, so application pods don't need privileged network capabilities. The `istio-validation` init container is added during sidecar injection to verify that traffic redirection is configured correctly.
+- **Init containers** (`InitContainers`): Each application pod uses a privileged `istio-init` init container that requires `NET_ADMIN` and `NET_RAW` capabilities to configure traffic redirection. These capabilities often raise security concerns in enterprise environments.
+
+Starting with revision `asm-1-30`, Istio CNI is the default redirection mechanism for new mesh installations. For revisions `asm-1-25` through `asm-1-29`, init containers remain the default and you must explicitly enable Istio CNI. Earlier revisions don't support Istio CNI.
+
+Istio CNI provides the following benefits over init containers:
 
 - **Improves security**: Removes the need for privileged network capabilities (`NET_ADMIN`, `NET_RAW`) from application workloads
 - **Simplifies pod security policies**: Application pods only require minimal capabilities
 - **Maintains functionality**: Provides the same traffic management capabilities as the traditional init container approach
-
-When Istio CNI is enabled, application pods use a minimal `istio-validation` init container that drops all capabilities instead of the privileged `istio-init` container.
 
 > [!NOTE]
 > Istio CNI is **not** a replacement for [Azure CNI](concepts-network-cni-overview.md) and will not interfere with your normal AKS networking. It is a separate plugin designed to handle Istio’s traffic redirection setup at the node level, improving security by removing the need for privileged init containers in application pods.
@@ -50,7 +53,7 @@ export RESOURCE_GROUP=<resource-group-name>
 
 ### Enable Istio CNI on a new mesh installation
 
-You can enable Istio CNI when enabling the service mesh add-on by specifying the `--proxy-redirection-mechanism` parameter:
+For revisions `asm-1-30` and later, `CNIChaining` is the default proxy redirection mechanism for new installations of the service mesh add-on. You don't need to specify any extra parameters. For revisions `asm-1-25` through `asm-1-29`, enable Istio CNI explicitly by specifying the `--proxy-redirection-mechanism` parameter:
 
 ```azurecli-interactive
 az aks mesh enable --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --proxy-redirection-mechanism CNIChaining
@@ -63,6 +66,8 @@ If you already have the Istio service mesh add-on enabled, you can switch to Ist
 ```azurecli-interactive
 az aks mesh proxy-redirection-mechanism --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --mechanism CNIChaining
 ```
+
+The `asm-1-30` default applies only to new installations, so upgrading an existing mesh doesn't change its redirection mechanism.
 
 > [!NOTE]
 > Existing pods won't automatically switch to the `istio-validation` init container. Restart your deployments after enabling Istio CNI so that pods pick up the change (for example, `kubectl rollout restart deployment/<name>`).

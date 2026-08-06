@@ -3,9 +3,10 @@ title: Migration and modernization solutions for Windows AKS
 titleSuffix: Migration and modernization solutions for Windows Server containers on AKS
 description: Read end-to-end walkthroughs of assessing your applications to find containerization and PaaS blockers.
 ms.topic: concept-article
+ms.custom: aks-migration
 ms.date: 01/31/2024
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 
 # Customer intent: "As an application administrator, I want to migrate and modernize legacy applications to Windows containers on Kubernetes, so that I can leverage cloud-native benefits and improve our deployment efficiency."
 ---

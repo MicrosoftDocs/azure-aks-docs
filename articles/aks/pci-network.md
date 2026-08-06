@@ -4,8 +4,8 @@ description: Networking considerations for an AKS cluster configured in accordan
 ms.date: 11/10/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.custom:
   - pci-dss
   - compliance

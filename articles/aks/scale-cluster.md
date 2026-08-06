@@ -2,6 +2,7 @@
 title: Manually Scale Nodes in an Azure Kubernetes Service (AKS) Cluster
 description: Manually scale the node count in your Azure Kubernetes Service (AKS) cluster with Azure CLI or PowerShell to match demand and optimize capacity.
 ms.topic: how-to
+ms.custom: aks-scaling
 ms.date: 01/22/2024
 author: schaffererin
 ms.author: schaffererin

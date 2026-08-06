@@ -1,9 +1,10 @@
 ---
 title: Understand Azure Kubernetes Service (AKS) usage and costs
 description: Understand Azure Kubernetes Service (AKS) usage and costs, including allocation, monitoring, analytics, and anomaly management.
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.custom: aks-cost
 ms.topic: how-to
 ms.date: 01/30/2025
 # Customer intent: As a cloud architect, I want to analyze and optimize my Azure Kubernetes Service usage and costs, so that I can reduce expenses and improve resource efficiency in my deployments.

@@ -1,8 +1,8 @@
 ---
 title: Customize the resource configuration for managed add-ons
 description: Learn how to customize the resource configuration for managed add-ons.
-ms.author: schaffererin
-author: schaffererin
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 05/20/2025

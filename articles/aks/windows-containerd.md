@@ -3,8 +3,8 @@ title: Create Windows Server Node Pools with containerd in Azure Kubernetes Serv
 description: Learn how to create Windows Server node pools with containerd in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.date: 09/26/2025
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-nodes
 ms.service: azure-kubernetes-service
 # Customer intent: As a Windows node pool operator, I want to create Windows Server node pools with containerd in AKS to leverage the benefits of containerd as the container runtime.

@@ -2,7 +2,7 @@
 title: Use the Vertical Pod Autoscaler in Azure Kubernetes Service (AKS)
 description: Learn how to deploy, upgrade, or disable the Vertical Pod Autoscaler on your Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, aks-scaling
 ms.date: 03/24/2026
 author: schaffererin
 ms.author: schaffererin

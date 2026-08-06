@@ -2,8 +2,8 @@
 title: Bring Your Own Container Network Interface (CNI) Plugin with Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to bring your own Container Network Interface (CNI) plugin with Azure Kubernetes Service (AKS).
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 04/16/2026

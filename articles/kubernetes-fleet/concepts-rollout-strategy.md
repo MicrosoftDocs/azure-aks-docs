@@ -1,7 +1,7 @@
 ---
 title: "Defining a rollout strategy for Azure Kubernetes Fleet Manager resource placement"
 description: This article describes how to define a rollout strategy for Fleet Manager's resource placement.
-ms.date: 12/29/2025
+ms.date: 07/28/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -27,8 +27,6 @@ Most scenarios can lead to service interruptions as workloads running on member 
 To minimize interruption, Fleet Manager's resource placement APIs allow users to configure a rollout strategy, similar to native Kubernetes deployment, to transition between changes as smoothly as possible.
 
 In this article, we cover the rollout strategy options available for both `ClusterResourcePlacement` and `ResourcePlacement`.
-> [!IMPORTANT]
-> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview.
 
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's resource placement concepts, read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
@@ -80,7 +78,7 @@ spec:
 ### ResourcePlacement example
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: rp-example
@@ -122,11 +120,9 @@ Fleet Manager uses the placement type to determine the baseline number of cluste
 
 If you use a percentage for the parameter, Fleet Manager calculates it against `N` as well.
 
-## Staged update strategy (preview)
+## Staged update strategy
 
 The staged update strategy provides fine-grained control over resource rollouts by organizing clusters into sequential stages with configurable progression rules. Unlike the rolling update strategy, staged updates are defined externally using separate custom resources that work together to orchestrate deployments.
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 ### Example deployment pattern
 
@@ -157,30 +153,17 @@ For simpler scenarios where percentage-based rollouts suffice, consider using th
 >
 > To learn how to implement staged update runs step-by-step, see [How to use ClusterStagedUpdateRun to orchestrate staged rollouts](./howto-staged-update-run.md).
 
-
 ### How staged updates work
 
-Staged updates use different custom resources depending on scope:
+Both cluster and namespace-scope placements offer their own resource types. 
 
 :::zone target="docs" pivot="cluster-scope"
 
-**For cluster-scoped placements:**
-* **ClusterResourcePlacement** - Configured with `strategy.type: External` to indicate external strategy management
-* **ClusterStagedUpdateStrategy** - Defines the stages, cluster selection, and progression rules
-* **ClusterStagedUpdateRun** - Executes the clusterStagedUpdateStrategy against a specific `ClusterResourcePlacement` and cluster resource snapshot
+#### Cluster-scoped (ClusterResourcePlacement)
 
-:::zone-end
-
-:::zone target="docs" pivot="namespace-scope"
-
-**For namespace-scoped placements:**
-* **ResourcePlacement** - Configured with `strategy.type: External` to indicate external strategy management
-* **StagedUpdateStrategy** - Defines the stages, cluster selection, and progression rules (namespace-scoped)
-* **StagedUpdateRun** - Executes the stagedUpdateStrategy against a specific `ResourcePlacement` and resource snapshot (namespace-scoped)
-
-:::zone-end
-
-:::zone target="docs" pivot="cluster-scope"
+* **ClusterResourcePlacement** - Configured with `strategy.type: External` to indicate external strategy management.
+* **ClusterStagedUpdateStrategy** - Defines the stages, cluster selection, and progression rules.
+* **ClusterStagedUpdateRun** - Executes the **ClusterStagedUpdateStrategy** against a specific `ClusterResourcePlacement` and cluster resource snapshot.
 
 #### ClusterResourcePlacement with external strategy
 
@@ -201,7 +184,7 @@ spec:
     type: External  # Rollout is controlled by ClusterStagedUpdateRun, ClusterStagedUpdateStrategy.
 ```
 
-#### ClusterStagedUpdateStrategy (cluster-scoped)
+#### ClusterStagedUpdateStrategy
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -239,10 +222,16 @@ spec:
 
 :::zone target="docs" pivot="namespace-scope"
 
+#### Namespace-scoped (ResourcePlacement)
+
+* **ResourcePlacement** - Configured with `strategy.type: External` to indicate external strategy management.
+* **StagedUpdateStrategy** - Defines the stages, cluster selection, and progression rules.
+* **StagedUpdateRun** - Executes the **StagedUpdateStrategy** against a specific `ResourcePlacement` and resource snapshot.
+
 #### ResourcePlacement with external strategy
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: my-app-placement
@@ -259,7 +248,7 @@ spec:
     type: External  # Rollout is controlled by StagedUpdateRun, StagedUpdateStrategy.
 ```
 
-#### StagedUpdateStrategy (namespace-scoped)
+#### StagedUpdateStrategy
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -308,9 +297,10 @@ Each stage in the strategy can specify:
 
 > [!NOTE]
 > **Strategy Limits:** Each strategy can define a maximum of 31 stages to ensure reasonable execution times.
+
 :::zone target="docs" pivot="cluster-scope"
 
-#### ClusterStagedUpdateRun (cluster-scoped)
+#### ClusterStagedUpdateRun
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -328,7 +318,8 @@ spec:
 :::zone-end
 
 :::zone target="docs" pivot="namespace-scope"
-#### StagedUpdateRun (namespace-scoped)
+
+#### StagedUpdateRun
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -349,17 +340,17 @@ spec:
 ### Specifying rollout
 
 The `resourceSnapshotIndex` field controls which resource snapshot version to deploy. You have several options:
-- Omit or leave empty (`""`) to use the latest snapshot, creating a new one if it doesn't already exist (shown in the example)
-- Specify an existing resource snapshot index (for example, `"2"`) to explicitly target that version
-- Specify an older resource snapshot index (for example, `"0"`) to deploy or roll back to a previous version
+
+- Omit to use the latest snapshot, creating a new one if it doesn't already exist (shown in the example).
+- Specify an existing resource snapshot index (for example, `"2"`) to explicitly target that version.
+- Specify an older resource snapshot index (for example, `"0"`) to deploy or roll back to a previous version.
 
 > [!IMPORTANT]
 > When a placement uses the `External` rollout strategy, resource snapshots aren't created automatically. They're only created when you execute a staged update run with the `resourceSnapshotIndex` field omitted. This means that when you first create a placement with an `External` rollout strategy, no resource snapshots exist until you run the first staged update run.
 >
 > If a placement was previously using the `RollingUpdate` strategy and is changed to `External`, any existing resource snapshots remain available and can be referenced when creating staged update runs.
  
-For more information on resource snapshots, see [Work with resource snapshots](./howto-staged-update-run.md#work-with-resource-snapshots).
-
+For more information on resource snapshots, see [Understanding snapshots for Azure Kubernetes Fleet Manager resource snapshots](./concepts-placement-snapshots.md).
 
 ### Understanding update run states
 
@@ -405,12 +396,12 @@ Fleet Manager processes stages sequentially:
 4. The next stage begins only after all previous after stage tasks complete
 
 > [!NOTE] 
-> An update run can abort for multiple reasons, including but not limited to:
+> An update run can stop for multiple reasons, including but not limited to:
 > - The binding spec doesn't match the update run configuration. This situation typically happens when another update run preempts the current one.
 > - Validation failures occur, such as when a cluster joins or leaves the fleet.
 > - Labels change on clusters.
 >
-> When a resource update fails on a cluster, Fleet Manager continues retrying and marks the cluster status as "stuck" (after retrying for about 5 minutes) rather than aborting the entire update run.
+> When a resource update fails on a cluster, Fleet Manager continues retrying and marks the cluster status as "stuck" (after retrying for about 5 minutes) rather than stopping the entire update run.
 
 ### Approval Requests
 
@@ -422,12 +413,26 @@ A stage can have a before stage task of type approval and an after stage task ty
 - `my-update-run-before-canary` - Before-stage approval task for the "canary" stage of update run "my-update-run"
 - `my-update-run-after-staging` - After-stage approval task for the "staging" stage of update run "my-update-run"
 
+## Key differences between cluster and namespace-scoped strategies
+
+| Aspect | Cluster-Scoped | Namespace-Scoped |
+|--------|----------------|------------------|
+| **Strategy Resource** | `ClusterStagedUpdateStrategy` (short name: `csus`) | `StagedUpdateStrategy` (short name: `sus`) |
+| **Update Run Resource** | `ClusterStagedUpdateRun` (short name: `csur`) | `StagedUpdateRun` (short name: `sur`) |
+| **Target Placement** | `ClusterResourcePlacement` (short name: `crp`) | `ResourcePlacement` (short name: `rp`) |
+| **Approval Resource** | `ClusterApprovalRequest` (short name: `careq`) | `ApprovalRequest` (short name: `areq`) |
+| **Snapshot Resource** | `ClusterResourceSnapshot` | `ResourceSnapshot` |
+| **Scope** | Cluster-wide | Namespace-bound |
+| **Use Case** | Infrastructure rollouts | Application rollouts |
+| **Permissions** | Cluster-admin level | Namespace-level |
+
 ## Next steps
 
+* [Deploy cluster-scoped resources across multiple clusters](./quickstart-resource-propagation.md).
+* [Deploy namespace-scoped resources across multiple clusters](./quickstart-namespace-scoped-resource-propagation.md)
+* [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 * [How to use ClusterStagedUpdateRun to orchestrate staged rollouts](./howto-staged-update-run.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
-* [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
-* [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 
 <!-- LINKS - external -->
 [learn-conceptual-crp]: ./concepts-resource-placement.md

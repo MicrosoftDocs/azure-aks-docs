@@ -4,7 +4,7 @@ description: Learn how to plan for capacity and costs when upgrading Azure Kuber
 ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
-ms.date: 12/09/2025
+ms.date: 07/07/2026
 author: kaarthis
 ms.author: schaffererin
 # Customer intent: "As a cluster operator, I want to understand capacity and cost implications of AKS upgrades so that I can plan resources appropriately and avoid upgrade failures."
@@ -12,7 +12,24 @@ ms.author: schaffererin
 
 # Capacity and cost planning for Azure Kubernetes Service (AKS) upgrades
 
+**Applies to**: :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
+
 When planning an upgrade for your Azure Kubernetes Service (AKS) cluster, it's essential to consider the capacity and cost implications. Proper planning ensures successful upgrades while minimizing unexpected costs and resource constraints. This article outlines key considerations for capacity and cost planning during AKS upgrades, including surge node requirements, quota management, and IP address planning.
+
+## AKS Automatic: Simplified capacity and cost management
+
+[AKS Automatic](./intro-aks-automatic.md) clusters simplify capacity and cost planning by automating most considerations discussed in this article:
+
+- **Automatic node provisioning**: AKS Automatic uses [node autoprovisioning](./node-auto-provisioning.md) to automatically size and create nodes based on your workload requirements, eliminating manual `maxSurge` tuning.
+- **Efficient bin packing**: Pods are automatically optimized to maximize resource utilization, reducing the need for temporary surge nodes and lowering upgrade costs.
+- **Automatic upgrades with optimized channels**: The stable channel (N-1 minor version) is preconfigured for balanced upgrades with predictable durations and minimal temporary infrastructure.
+- **Built-in API breaking change detection**: Upgrades automatically stop if deprecated Kubernetes APIs are detected, preventing upgrade failures.
+- **Managed system node pools**: AKS Automatic fully manages system node pools, so capacity planning focuses only on user workloads.
+
+If you're using AKS Automatic, upgrade capacity planning is mostly handled automatically. Continue reading only if you need custom surge configuration for advanced scenarios or if you're using AKS Standard clusters.
+
+> [!TIP]
+> **Using AKS Automatic?** Your cluster automatically provisions nodes and handles upgrades with built-in safeguards and cost optimization. This article covers advanced capacity planning for AKS Standard clusters or custom upgrade configurations. For AKS Automatic quickstart, see [Create an AKS Automatic cluster](./automatic/quick-automatic-managed-network.md).
 
 ## AKS upgrade requirements
 
@@ -25,10 +42,15 @@ AKS upgrades require extra compute capacity for surge nodes, which are temporary
 
 ## Surge node capacity planning
 
-During an upgrade, AKS creates surge nodes to maintain workload availability. The number of surge nodes depends on your `maxSurge` configuration, which defines how many extra nodes can be created during the upgrade. The following table outlines the surge node behavior based on different `maxSurge` settings:
+During an upgrade, AKS creates surge nodes to maintain workload availability. The number of surge nodes depends on your `maxSurge` configuration, which defines how many extra nodes can be created during the upgrade.
+
+> [!NOTE]
+> **AKS Automatic clusters**: Node provisioning is automatic and optimized. You don't manually configure `maxSurge`. This section applies to **AKS Standard clusters**.
+
+The following table outlines the surge node behavior based on different `maxSurge` settings:
 
 | `maxSurge` setting | Surge nodes created | Capacity impact |
-|--------------------|---------------------|-----------------|
+| ------------------ | ------------------- | --------------- |
 | 1 (default) | _One_ extra node | • Minimal impact <br> • Suitable for small clusters |
 | 33% | ~1/3 of node pool size | • Moderate impact <br> • Balances cost and performance <br> • Recommended for production clusters |
 | 50% | ~1/2 of node pool size | • Higher impact <br> • Faster upgrades <br> • Increased cost due to more temporary nodes |
@@ -40,6 +62,9 @@ Before initiating an upgrade, ensure that your Azure subscription has sufficient
 - **Virtual machine (VM) cores**: Current nodes + surge nodes must not exceed your VM core quota.
 - **Public IP addresses**: Each surge node might require a public IP address, depending on your network configuration.
 - **Load balancer resources**: Ensure enough backend pool capacity for surge nodes.
+
+> [!NOTE]
+> **AKS Automatic clusters**: Managed node pools and autoprovisioning are presized appropriately, which significantly reduces quota concerns. The service automatically handles most quota planning.
 
 #### Check your current quotas
 
@@ -59,9 +84,26 @@ Total IPs needed = (Current nodes + `maxSurge` nodes) × (1 + `maxPods` per node
 
 For AKS clusters using [Azure CNI](./concepts-network-azure-cni-overlay.md), ensure your subnet has capacity for all nodes, surge nodes, and their associated pods.
 
+> [!NOTE]
+> **AKS Automatic clusters**: Managed Virtual Network powered by Azure CNI Overlay with Cilium is preconfigured, and node autoprovisioning automatically considers IP address availability. You typically don't need to calculate IP addresses manually.
+
+## Upgrade cost comparison: AKS Automatic vs. AKS Standard
+
+The following table outlines how capacity and cost considerations differ between AKS Automatic and AKS Standard:
+
+| Factor | AKS Automatic | AKS Standard |
+| ------ | ------------- | ------------- |
+| Surge node sizing | Automatic (optimized by node autoprovisioning) | Manual configuration required (`maxSurge` setting) |
+| Quota planning | Minimal (presized and managed) | Required before upgrade |
+| IP address planning | Automatic (managed networking) | Required (manual calculation needed) |
+| Pod readiness SLA | 99.9% within five minutes (included) | Not included (optional uptime SLA at extra cost) |
+| Cost optimization | Built-in via efficient bin packing | Manual strategy selection |
+| Upgrade duration | Predictable (optimized stable channel) | Variable (depends on `maxSurge` configuration) |
+| System node pool management | Fully managed by AKS | Managed by you |
+
 ## Common capacity planning scenarios and solutions
 
-The following scenarios illustrate common capacity planning challenges during AKS upgrades and their solutions:
+The following scenarios apply primarily to **AKS Standard clusters** or custom upgrade configurations. **AKS Automatic users** typically don't encounter these constraints because node autoprovisioning and managed infrastructure handle capacity planning automatically.
 
 ### Scenario 1: Capacity constraints due to insufficient VM core quota
 
@@ -97,6 +139,9 @@ Solutions include:
 
 - **Request quota increase**: For persistent capacity needs, request a [quota increase](/azure/azure-portal/supportability/regional-quota-requests).
 
+> [!TIP]
+> **AKS Automatic workaround**: If you encounter this scenario, review your workload requirements. Node autoprovisioning is designed to avoid this problem, but you can also temporarily scale down noncritical workloads during planned upgrades.
+
 ### Scenario 2: IP exhaustion in subnet
 
 When your subnet lacks sufficient IP addresses for surge nodes and pods, node provisioning fails with errors like `SubnetIsFull`. Solutions include:
@@ -115,6 +160,9 @@ When your subnet lacks sufficient IP addresses for surge nodes and pods, node pr
       --max-pods 50
     ```
 
+> [!TIP]
+> **AKS Automatic avoids this**: Azure CNI Overlay powered by Cilium manages networking efficiently, significantly reducing IP exhaustion risks. If this scenario occurs, review your subnet sizing and consider the benefits of Azure CNI Overlay.
+
 ## Cost optimization strategies for AKS upgrades
 
 The following sections outline strategies to optimize costs during AKS upgrades:
@@ -130,10 +178,13 @@ The following sections outline strategies to optimize costs during AKS upgrades:
 The following table outlines priorities for different upgrade strategies, recommended settings, and trade-offs:
 
 | Priority | Recommended settings | Trade-offs |
-|----------|----------------------|------------|
+| -------- | -------------------- | ---------- |
 | Minimize cost | `maxSurge=1`, longer upgrade window | Slower upgrades |
-| Balance cost and speed | `maxSurge=33%`, [Planned Maintenance](./planned-maintenance.md) | Moderate costs and speed |
+| Balance cost and speed | `maxSurge=33%`, [Planned maintenance](./planned-maintenance.md) | Moderate costs and speed |
 | Maximize speed | `maxSurge=50%` or higher | Higher temporary costs due to more surge nodes |
+
+> [!NOTE]
+> **AKS Automatic**: Cost optimization is built-in through efficient bin packing and optimized upgrade channels. You don't need to manually balance these trade-offs - AKS Automatic handles it automatically while providing cost-efficient upgrades.
 
 ### Monitor upgrade costs
 
@@ -145,16 +196,30 @@ Track the cost associated with AKS upgrades using the following methods:
 
 ## Planning checklist for AKS upgrades
 
-Before initiating an AKS upgrade, use the following checklist to ensure proper capacity and cost planning:
+### For AKS Automatic clusters
 
-- [ ] **Quota**: Sufficient VM cores for current + surge nodes.
-- [ ] **Subnet IPs**: Enough addresses for all nodes and pods.
-- [ ] **SKU availability**: Target VM size available in region.
-- [ ] **Budget**: Allocated for temporary surge resources.
-- [ ] **Maintenance window**: Scheduled for optimal capacity availability.
+Before initiating an AKS Automatic upgrade, verify the following items:
+
+- **Workload requirements**: Understand your current and expected workload patterns for accurate node autoprovisioning.
+- **Planned maintenance (optional)**: Customize the planned maintenance schedule if you need to control upgrade timing.
+- **Budget**: Allocate budget for managed infrastructure (typically minimal during upgrades due to built-in optimization).
+- **Monitoring**: Enable Azure Monitor for visibility into upgrade progress and cluster health.
+
+### For AKS Standard clusters
+
+Before initiating an AKS Standard upgrade, use the following checklist to ensure proper capacity and cost planning:
+
+- **Quota**: Sufficient VM cores for current and surge nodes.
+- **Subnet IPs**: Enough addresses for all nodes and pods.
+- **SKU availability**: Target VM size available in region.
+- **Budget**: Allocated for temporary surge resources.
+- **Maintenance window**: Scheduled for optimal capacity availability.
+- **`maxSurge` configuration**: Set appropriate `maxSurge` value based on cost versus speed priorities.
 
 ## Related content
 
+- [What is AKS Automatic?](./intro-aks-automatic.md)
+- [Create an AKS Automatic cluster](./automatic/quick-automatic-managed-network.md)
 - [Upgrade options and recommendations](./upgrade-cluster.md)
 - [Upgrade cluster control plane](./upgrade-aks-control-plane.md)
 - [Configure node pool rolling upgrades](./upgrade-aks-node-pools-rolling.md)

@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-ai-ml
 ms.date: 10/1/2025
 ms.collection: ce-skilling-ai-copilot
 ms.update-cycle: 180-days

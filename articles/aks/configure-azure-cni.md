@@ -2,8 +2,8 @@
 title: Configure Azure CNI Networking in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure Azure CNI (advanced) networking in Azure Kubernetes Service (AKS).
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
@@ -44,7 +44,7 @@ This article shows you how to use Container Networking Interface (CNI) networkin
 
 ## Configure networking
 
-For information on planning IP addresses, see [IP address planning for your Azure Kubernetes Service clusters](concepts-network-ip-address-planning.md). If you bring your own virtual network, review the [virtual network prerequisites](concepts-network-cni-overview.md#prerequisites).
+For information on planning IP addresses, see [IP address planning for your Azure Kubernetes Service clusters](concepts-network-ip-address-planning.md). If you bring your own virtual network, review the [virtual network prerequisites](concepts-network-cni-overview.md#aks-cni-networking-prerequisites).
 
 ### [Azure portal](#tab/configure-networking-portal)
 

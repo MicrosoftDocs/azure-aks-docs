@@ -5,6 +5,7 @@ description: Learn how to move a persistent volume between Azure Kubernetes Serv
 author: schaffererin
 ms.author: schaffererin
 ms.topic: how-to
+ms.subservice: aks-storage
 ms.date: 04/08/2024
 # Customer intent: As a Kubernetes administrator, I want to move Azure Disk persistent volumes between AKS clusters across subscriptions, so that I can manage my storage resources effectively without risking data loss during the migration process.
 ---

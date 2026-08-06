@@ -4,8 +4,8 @@ description: Enhanced multifactor authentication (MFA) implementation guidance f
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.custom:
   - pci-dss
   - compliance

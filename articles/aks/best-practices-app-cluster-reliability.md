@@ -4,6 +4,7 @@ description: Learn the best practices for deployment and cluster reliability for
 ms.topic: best-practice
 ms.date: 06/05/2026
 ms.service: azure-kubernetes-service
+ms.custom: aks-reliability
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: "As a Kubernetes cluster operator, I want to implement best practices for deployment and cluster reliability, so that I can ensure high availability and performance of my workloads in Azure Kubernetes Service."
@@ -160,7 +161,7 @@ spec:
       app: myapp
 ```
 
-For more information, see [Plan for availability using PDBs](./operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets) and [Specifying a Disruption Budget for your Application](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
+For more information, see [Plan for availability using PDBs](./operator-best-practices-scheduler.md#limit-disruption-impact-by-using-pod-disruption-budgets-pdbs) and [Specifying a Disruption Budget for your Application](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
 
 To automate PDB creation for unprotected deployments and prevent PDB-related drain failures during upgrades, see [Automatic PDB management for AKS (preview)](automatic-pod-disruption-budget-management.md).
 
@@ -570,7 +571,7 @@ In AKS Automatic, system node pool capacity is managed by AKS. In AKS Standard, 
 
 Use the autoscaler on node pools to configure the minimum and maximum scale limits for the node pool. The system node pool should always be able to scale to meet the demands of system pods. If the system node pool is unable to scale, the cluster runs out of resources to help manage scheduling, scaling, and load balancing, which can lead to an unresponsive cluster.
 
-For more information, see [Use the cluster autoscaler on node pools](./cluster-autoscaler.md#use-the-cluster-autoscaler-on-node-pools).
+For more information, see [Use the cluster autoscaler on node pools](./cluster-autoscaler.md#enable-or-disable-the-cluster-autoscaler-on-node-pools).
 
 #### At least two nodes per system node pool
 

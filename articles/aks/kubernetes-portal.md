@@ -3,8 +3,8 @@ title: Access Kubernetes Resources using the Azure Portal
 description: Learn how to access and manage your Azure Kubernetes Service (AKS) resources using the Azure portal.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.author: schaffererin
-author: schaffererin
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.date: 01/26/2026
 # Customer intent: "As a cloud administrator, I want to access and manage Kubernetes resources in my Azure Kubernetes Service cluster through the Azure portal, so that I can effectively monitor and deploy applications within my infrastructure."
 ---

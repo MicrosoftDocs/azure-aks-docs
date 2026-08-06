@@ -2,7 +2,7 @@
 title: "Update Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to orchestrate updates across multiple clusters using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 06/16/2025
+ms.date: 07/14/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,10 +10,13 @@ ms.custom:
   - devx-track-azurecli
   - ignite-2023
   - build-2024
+zone_pivot_groups: azure-portal-azure-cli
 # Customer intent: "As a platform admin managing multiple Kubernetes clusters, I want to orchestrate updates across those clusters, so that I can ensure safe and consistent upgrades while minimizing downtime and complexity."
 ---
 
 # Update Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager
+
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager (Fleet) allows you to orchestrate updates across multiple clusters using update runs.
 
@@ -56,11 +59,11 @@ Update run supports two options for the cluster upgrade sequence:
 * **Control sequence of clusters using update groups and stages**: If you want to control the cluster upgrade sequence, you can structure member clusters in update groups and update stages. You can store this sequence as a template in the form of an [update strategy](./update-create-update-strategy.md). You can create update runs later using the update strategies instead of defining the sequence every time you need to create an update run.
 
 > [!NOTE]
-> Update runs honor the [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance), which explains how update runs handle member clusters configured with planned maintenance windows.
+> Update runs honor the [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance-windows), which explains how update runs handle member clusters configured with planned maintenance windows.
 
 ## Update all clusters one by one
 
-### [Azure portal](#tab/azure-portal)
+:::zone target="docs" pivot="azure-portal"
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Multi-cluster update** > **Create a run**.
@@ -85,7 +88,9 @@ Update run supports two options for the cluster upgrade sequence:
 
 1. Select **Create** to create the update run.
 
-### [Azure CLI](#tab/cli)
+:::zone-end
+
+:::zone target="docs" pivot="azure-cli"
 
 1. Create an update run using the [`az fleet updaterun create`][az-fleet-updaterun-create] command with your chosen values for the `--upgrade-type` and `--node-image-selection` flags. The following command creates an update run that upgrades the Kubernetes version for both control plane and node pools and uses the latest node image available for each cluster in its region.
 
@@ -140,13 +145,13 @@ az fleet updaterun start \
  --fleet-name $FLEET \
  --name <run-name>
 ```
----
+:::zone-end
 
 ## Update clusters using groups and stages
 
 You can define an update run using update stages to sequentially order the application of updates to different update groups. For example, a first update stage might update test environment member clusters, and a second update stage would then update production environment member clusters. You can also specify what approvals are required before or after each stage, and a wait time between the update stages. You can store this sequence as a template in the form of an [update strategy](./update-create-update-strategy.md).
 
-#### [Azure portal](#tab/azure-portal)
+:::zone target="docs" pivot="azure-portal"
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Multi-cluster update** > **Create a run**.
@@ -181,7 +186,9 @@ You can define an update run using update stages to sequentially order the appli
 
 1. In the **Multi-cluster update** menu, select the update run, and then select **Start**.
 
-#### [Azure CLI](#tab/cli)
+:::zone-end
+
+:::zone target="docs" pivot="azure-cli"
 
 1. Create a JSON file to define the stages and groups for the update run. Here's an example of input from the stages file (*example-stages.json*):
 
@@ -190,6 +197,7 @@ You can define an update run using update stages to sequentially order the appli
         "stages": [
             {
                 "name": "stage1",
+                "maxAllowedFailures": "2",
                 "groups": [
                     {
                         "name": "group-1a"
@@ -207,7 +215,8 @@ You can define an update run using update stages to sequentially order the appli
                 "name": "stage2",
                 "groups": [
                     {
-                        "name": "group-2a"
+                        "name": "group-2a",
+                        "maxAllowedFailures": "1"
                     },
                     {
                         "name": "group-2b"
@@ -220,6 +229,13 @@ You can define an update run using update stages to sequentially order the appli
         ]
     }
     ```
+
+    > [!NOTE]
+    > The optional `maxAllowedFailures` field controls how many member cluster upgrade failures are tolerated at the stage or group level before the segment is marked as failed. When unset or `"0"`, any single failure stops the update run.
+    >
+    > This setting evaluates only failure count, not success rate. As a result, a group can reach `Completed` even if some or all members failed, as long as the configured threshold wasn't exceeded. After the run finishes, always review `FailureCount`, member statuses, and failure messages.
+    >
+    > Values can be a fixed integer (for example, `"2"`) or a percentage (for example, `"25%"`). For more information, see [Maximum allowed failures (preview)](./concepts-update-orchestration.md#maximum-allowed-failures-preview).
 
 1. Create an update run using the [`az fleet updaterun create`][az-fleet-updaterun-create] command with the `--stages` flag set to the name of your JSON file and your chosen values for the `--upgrade-type` and `--node-image-selection` flags. The following command creates an update run that upgrades the Kubernetes version for both control plane and node pools and uses the latest node image available for each cluster in its region.
 
@@ -254,7 +270,7 @@ You can define an update run using update stages to sequentially order the appli
      --name run-1
     ```
 
----
+:::zone-end
 
 ## Create an update run using update strategies
 
@@ -278,7 +294,7 @@ You can create an update strategy using one of the following methods:
 
 The following sections explain how to manage an update run using the Azure portal and Azure CLI.
 
-### [Azure portal](#tab/azure-portal)
+:::zone target="docs" pivot="azure-portal"
 
 * On the **Multi-cluster update** page of the fleet resource, you can **Start** an update run that's either in **Not started** or **Failed** state:
 
@@ -294,7 +310,9 @@ The following sections explain how to manage an update run using the Azure porta
 
     You can similarly skip the upgrade at the update group or member cluster level too.
 
-### [Azure CLI](#tab/cli)
+:::zone-end
+
+:::zone target="docs" pivot="azure-cli"
 
 * You can **Start** an update run that's either in **Not started** or **Failed** state using the [`az fleet updaterun start`][az-fleet-updaterun-start] command:
 
@@ -326,7 +344,7 @@ The following sections explain how to manage an update run using the Azure porta
 
     For more information, see [conceptual overview on the update run states and skip behavior](concepts-update-orchestration.md#update-run-states) on runs/stages/groups.
 
----
+:::zone-end
 
 ## Automate update runs using auto-upgrade profiles
 
@@ -348,6 +366,9 @@ az fleet autoupgradeprofile generate-update-run \
 ```
 
 The generated update run isn't automatically started, allowing you to review it. If you're satisfied with the generated update run, you can start and manage it by following the steps in [manage an update run](#manage-an-update-run).
+
+> [!NOTE]
+> When you manually generate an update run from an auto-upgrade profile, the resulting update run might already exist. This situation happens because the name of the update run is based on the auto-upgrade profile's upgrade specification, which only changes when properties such as the node image or Kubernetes version change. In this scenario, the existing update run isn't modified.
 
 ## Next steps
 

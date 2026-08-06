@@ -3,9 +3,10 @@ title: Use Service Tags for API Server Authorized IP Ranges in Azure Kubernetes 
 description: Learn how to use service tags to specify authorized IP ranges for the API server in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.date: 05/19/2024
-ms.author: schaffererin
-author: schaffererin
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.subservice: aks-security
 # Customer intent: As a cluster operator, I want to use service tags to specify authorized IP ranges for the API server in AKS.
 ---
 

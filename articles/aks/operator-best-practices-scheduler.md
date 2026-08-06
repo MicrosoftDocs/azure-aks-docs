@@ -1,8 +1,10 @@
 ---
-title: Operator best practices - Basic scheduler features in Azure Kubernetes Services (AKS)
+title: Operator best practices - Basic scheduler features in Azure Kubernetes Service (AKS)
 description: Learn the cluster operator best practices for using basic scheduler features such as resource quotas and pod disruption budgets in Azure Kubernetes Service (AKS)
 ms.topic: best-practice
-ms.date: 03/09/2021
+ms.service: azure-kubernetes-service
+ms.custom: aks-scaling
+ms.date: 08/06/2026
 ms.author: schaffererin
 author: schaffererin
 # Customer intent: As a cluster operator, I want to implement resource quotas and pod disruption budgets in my Kubernetes environment, so that I can effectively manage resources and maintain application availability during maintenance events.
@@ -10,33 +12,33 @@ author: schaffererin
 
 # Best practices for basic scheduler features in Azure Kubernetes Service (AKS)
 
-As you manage clusters in Azure Kubernetes Service (AKS), you often need to isolate teams and workloads. The Kubernetes scheduler lets you control the distribution of compute resources, or limit the impact of maintenance events.
+As you manage clusters in Azure Kubernetes Service (AKS), you often need to isolate teams and workloads. The Kubernetes scheduler lets you control the distribution of compute resources and limit the impact of maintenance events.
 
 This best practices article focuses on basic Kubernetes scheduling features for cluster operators. In this article, you learn how to:
 
 > [!div class="checklist"]
-> * Use resource quotas to provide a fixed amount of resources to teams or workloads
-> * Limit the impact of scheduled maintenance using pod disruption budgets
+> - Use resource quotas to give teams or workloads a fixed amount of resources
+> - Limit the impact of scheduled maintenance by using pod disruption budgets
 
 ## Enforce resource quotas
 
 > **Best practice guidance**
 >
-> Plan and apply resource quotas at the namespace level. If pods don't define resource requests and limits, reject the deployment. Monitor resource usage and adjust quotas as needed.
+> Plan and apply resource quotas at the namespace level. Use quotas and limit ranges to require or provide default resource requests and limits for pods. Monitor resource usage and adjust quotas as needed.
 
-Resource requests and limits are placed in the pod specification. Requests are used by the Kubernetes scheduler at deployment time to find an available node in the cluster. Limits and requests work at the individual pod level. For more information about how to define these values, see [Define pod resource requests and limits][resource-limits].
+Set resource requests and resource limits in the pod specification. A resource request is the amount of CPU or memory that the Kubernetes scheduler uses to place a pod. A resource limit constrains how much of that resource a container can use. The system enforces CPU limits by throttling, while it enforces memory limits reactively through out-of-memory (OOM) termination. For more information, see [Define pod resource requests and limits][resource-limits].
 
-To provide a way to reserve and limit resources across a development team or project, you should use *resource quotas*. These quotas are defined on a namespace, and can be used to set quotas on the following basis:
+Use _resource quotas_ to limit aggregate resource consumption for a development team or project. Define quotas at the namespace level for:
 
-* **Compute resources**, such as CPU and memory, or GPUs.
-* **Storage resources**, including the total number of volumes or amount of disk space for a given storage class.
-* **Object count**, such as maximum number of secrets, services, or jobs can be created.
+- **Compute resources**, such as CPU and memory, or GPUs.
+- **Storage resources**, including the total number of volumes or amount of disk space for a given storage class.
+- **Object count**, such as the maximum number of secrets, services, or jobs that can be created.
 
-Kubernetes doesn't overcommit resources. Once your cumulative resource request total passes the assigned quota, all further deployments will be unsuccessful.
+The Kubernetes scheduler uses resource requests to place pods. Containers can use more CPU or memory than requested when capacity is available, and resource limits can exceed requests. A resource quota separately limits aggregate namespace consumption. If creating or updating a resource would exceed a hard quota, the API server rejects the request with an HTTP `403 Forbidden` response. You can still create a workload object such as a Deployment even when the quota prevents its controller from creating all requested pods.
 
-When you define resource quotas, all pods created in the namespace must provide limits or requests in their pod specifications. If they don't provide these values, you can reject the deployment. Instead, you can [configure default requests and limits for a namespace][configure-default-quotas].
+If a resource quota tracks CPU or memory, each new pod must specify a request or limit for that resource. Otherwise, the API server might reject the pod. You can [configure default requests and limits for a namespace][configure-default-quotas] by using a LimitRange.
 
-The following example YAML manifest named *dev-app-team-quotas.yaml* sets a hard limit of a total of *10* CPUs, *20Gi* of memory, and *10* pods:
+The following example YAML manifest named _dev-app-team-quotas.yaml_ sets a hard limit of a total of _10_ CPUs, _20Gi_ of memory, and _10_ pods:
 
 ```yaml
 apiVersion: v1
@@ -50,9 +52,11 @@ spec:
     pods: "10"
 ```
 
-This resource quota can be applied by specifying the namespace, such as *dev-apps*:
+This quota caps aggregate CPU requests at 10 CPUs, aggregate memory requests at 20Gi, and the number of nonterminal pods at 10 in the namespace.
 
-```console
+Apply this resource quota to a namespace, such as _dev-apps_:
+
+```bash
 kubectl apply -f dev-app-team-quotas.yaml --namespace dev-apps
 ```
 
@@ -60,87 +64,109 @@ Work with your application developers and owners to understand their needs and a
 
 For more information about available resource objects, scopes, and priorities, see [Resource quotas in Kubernetes][k8s-resource-quotas].
 
-## Plan for availability using pod disruption budgets
+## Limit disruption impact by using pod disruption budgets (PDBs)
 
 > **Best practice guidance**
 >
-> To maintain the availability of applications, define Pod Disruption Budgets (PDBs) to make sure that a minimum number of pods are available in the cluster.
+> Define Pod Disruption Budgets (PDBs) for replicated applications to limit concurrent voluntary evictions during events such as AKS node drains. Maintain enough healthy replicas and allow at least one disruption when the workload permits so that cluster maintenance can proceed.
 
-There are two disruptive events that cause pods to be removed:
+Disruptive events that remove pods fall into two categories:
 
 ### Involuntary disruptions
 
-*Involuntary disruptions* are events beyond the typical control of the cluster operator or application owner. Include:
-* Hardware failure on the physical machine
-* Kernel panic
-* Deletion of a node VM
+_Involuntary disruptions_ are events beyond the typical control of the cluster operator or application owner. Examples include:
 
-Involuntary disruptions can be mitigated by:
-* Using multiple replicas of your pods in a deployment.
-* Running multiple nodes in the AKS cluster.
+- Hardware failure on the physical machine
+- Kernel panic
+- Deletion of a node VM
+
+You can mitigate involuntary disruptions by:
+
+- Using multiple replicas of your pods in a deployment.
+- Running multiple nodes in the AKS cluster.
 
 ### Voluntary disruptions
 
-*Voluntary disruptions* are events requested by the cluster operator or application owner. Include:
-* Cluster upgrades
-* Updated deployment template
-* Accidentally deleting a pod
+_ Voluntary disruptions_ are events that the cluster operator or application owner requests. Examples include:
 
-Kubernetes provides *pod disruption budgets* for voluntary disruptions, letting you plan for how deployments or replica sets respond when a voluntary disruption event occurs. Using pod disruption budgets, cluster operators can define a minimum available or maximum unavailable resource count.
+- Draining a node during a cluster upgrade
+- Updating a deployment template
+- Directly deleting a pod
 
-If you upgrade a cluster or update a deployment template, the Kubernetes scheduler will schedule extra pods on other nodes before allowing voluntary disruption events to continue. The scheduler waits to reboot a node until the defined number of pods are successfully scheduled on other nodes in the cluster.
+Not all voluntary disruptions are constrained by PDBs. Directly deleting a pod or workload object bypasses PDBs, and workload controllers such as Deployments and StatefulSets aren't limited by PDBs during rolling updates. Configure the workload's rollout strategy separately to maintain availability during application updates. For more information, see [Disruptions in Kubernetes][k8s-disruptions].
 
-Let's look at an example of a replica set with five pods that run NGINX. The pods in the replica set are assigned the label `app: nginx-frontend`. During a voluntary disruption event, such as a cluster upgrade, you want to make sure at least three pods continue to run. The following YAML manifest for a *PodDisruptionBudget* object defines these requirements:
+PDBs limit concurrent voluntary evictions for selected pods through the Kubernetes Eviction API. During an [AKS rolling upgrade][aks-upgrade-conceptual], AKS adds surge capacity according to the node pool settings, cordons and drains a node, and then reimages or replaces the drained node. The Eviction API evaluates the PDB during the drain. After an eviction, the workload controller creates a replacement pod, and the scheduler places it on a node with available capacity. A restrictive PDB, insufficient healthy replicas, or insufficient cluster capacity can delay or block the drain.
 
-```yaml
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-   name: nginx-pdb
-spec:
-   minAvailable: 3
-   selector:
-    matchLabels:
-      app: nginx-frontend
-```
+### Set a minimum number of available pods
 
-You can also define a percentage, such as *60%*, which allows you to automatically compensate for the replica set scaling up the number of pods.
-
-You can define a maximum number of unavailable instances in a replica set. Again, a percentage for the maximum unavailable pods can also be defined. The following pod disruption budget YAML manifest defines that no more than two pods in the replica set be unavailable:
+Consider a ReplicaSet with five NGINX pods labeled `app: nginx-frontend`. During a voluntary disruption event, such as a cluster upgrade, at least three pods must remain available. The following `PodDisruptionBudget` manifest defines this requirement:
 
 ```yaml
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-   name: nginx-pdb
+  name: nginx-pdb
 spec:
-   maxUnavailable: 2
-   selector:
+  minAvailable: 3
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
     matchLabels:
       app: nginx-frontend
 ```
 
-Once your pod disruption budget is defined, you create it in your AKS cluster as with any other Kubernetes object:
+This budget requires at least three pods with the label `app: nginx-frontend` to remain healthy during a voluntary eviction.
 
-```console
+You can specify a percentage, such as _60%_, so the budget adjusts when the ReplicaSet scales.
+
+### Set a maximum number of unavailable pods
+
+A PDB can define either `minAvailable` or `maxUnavailable`, but not both. To constrain voluntary evictions based on unavailable pods, specify `maxUnavailable` as an integer or a percentage. The following manifest permits a voluntary eviction only when no more than two pods in the ReplicaSet would be unavailable after the eviction:
+
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nginx-pdb
+spec:
+  maxUnavailable: 2
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app: nginx-frontend
+```
+
+This budget permits a voluntary eviction only when no more than two pods with the label `app: nginx-frontend` would be unavailable after the eviction. Involuntary disruptions can still cause availability to fall below this threshold.
+
+The `AlwaysAllow` unhealthy pod eviction policy lets a drain evict running pods that aren't healthy. Without this setting, the default `IfHealthyBudget` policy can block a drain while waiting for unhealthy pods to become healthy. Use `AlwaysAllow` when drainability is more important than giving an unhealthy pod more time to recover.
+
+Save the PDB manifest you want to use as _nginx-pdb.yaml_, and then apply it to your AKS cluster:
+
+```bash
 kubectl apply -f nginx-pdb.yaml
 ```
 
-Work with your application developers and owners to understand their needs and apply the appropriate pod disruption budgets.
+Before cluster maintenance, verify that each PDB permits the expected eviction:
+
+```bash
+kubectl get poddisruptionbudgets --namespace <namespace>
+```
+
+An `ALLOWED DISRUPTIONS` value of `0` can block an AKS node drain. Work with your application developers and owners to maintain enough healthy replicas and choose a budget that balances application availability with maintenance requirements.
 
 For more information about using pod disruption budgets, see [Specify a disruption budget for your application][k8s-pdbs].
 
-## Next steps
+## Related content
 
-This article focused on basic Kubernetes scheduler features. For more information about cluster operations in AKS, see the following best practices:
+This article focuses on basic Kubernetes scheduler features. For more information about cluster operations in AKS, see the following best practices articles:
 
-* [Multi-tenancy and cluster isolation][aks-best-practices-cluster-isolation]
-* [Advanced Kubernetes scheduler features][aks-best-practices-advanced-scheduler]
-* [Authentication and authorization][aks-best-practices-identity]
+- [Multi-tenancy and cluster isolation][aks-best-practices-cluster-isolation]
+- [Advanced Kubernetes scheduler features][aks-best-practices-advanced-scheduler]
+- [Authentication and authorization][aks-best-practices-identity]
 
 <!-- EXTERNAL LINKS -->
 [k8s-resource-quotas]: https://kubernetes.io/docs/concepts/policy/resource-quotas/
 [configure-default-quotas]: https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/memory-default-namespace/
+[k8s-disruptions]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
 [k8s-pdbs]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 
 <!-- INTERNAL LINKS -->
@@ -148,4 +174,4 @@ This article focused on basic Kubernetes scheduler features. For more informatio
 [aks-best-practices-cluster-isolation]: operator-best-practices-cluster-isolation.md
 [aks-best-practices-advanced-scheduler]: operator-best-practices-advanced-scheduler.md
 [aks-best-practices-identity]: concepts-cluster-authentication.md
-[k8s-node-selector]: concepts-clusters-workloads.md#node-selectors
+[aks-upgrade-conceptual]: upgrade-conceptual.md#rolling-upgrade-behavior-in-aks

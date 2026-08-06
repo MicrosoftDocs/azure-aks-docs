@@ -133,8 +133,8 @@
         "articles/kubernetes-fleet/*": true
       },
       "manager": {
-        "articles/aks/**/*.md": "rayoflores",
-        "articles/aks/**/*.yml": "rayoflores"
+        "articles/aks/**/*.md": "kumud",
+        "articles/aks/**/*.yml": "kumud"
       },
       "featureFlags": {
         "articles/**/*.md": [

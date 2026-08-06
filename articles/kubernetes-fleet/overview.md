@@ -2,12 +2,12 @@
 title: "Overview of Azure Kubernetes Fleet Manager"
 services: kubernetes-fleet
 ms.service: azure-kubernetes-fleet-manager
-ms.date: 06/01/2026
+ms.date: 06/15/2026
 ms.topic: overview
 author: sjwaight
 ms.author: simonwaight
-description: "This article provides an overview of Azure Kubernetes Fleet Manager."
-keywords: "Kubernetes, Azure, multi-cluster, multi, containers"
+description: "Overview of Azure Kubernetes Fleet Manager which enables at-scale management of hundreds of Kubernetes clusters."
+keywords: "Kubernetes, Azure, multi-cluster, multi, containers, multi-cloud"
 # Customer intent: "As a cloud administrator, I want to manage multiple Kubernetes clusters, so that I can streamline upgrades, deployments, and resource allocation across my organization's infrastructure."
 ---
 
@@ -15,17 +15,17 @@ keywords: "Kubernetes, Azure, multi-cluster, multi, containers"
 
 Azure Kubernetes Fleet Manager enables at-scale management of multiple [supported Kubernetes clusters](./concepts-member-cluster-types.md). Fleet Manager provides platform administrators with access to automated safe multi-cluster updates, intelligent Kubernetes resource placement, and a centralized location to access monitoring data for their clusters.
 
-:::image type="content" source="./media/overview/fleet-manager-portal-overview.png" alt-text="A screenshot of the Azure Kubernetes Fleet Manager overview page in the Azure portal. The overview shows there are five Kubernetes clusters running a supported Kubernetes version. There are 78 completed update runs with 29 failures and 49 successes. Across the five Kubernetes clusters there is a spread of node images." lightbox="./media/overview/fleet-manager-portal-overview.png":::
+:::image type="content" source="./media/overview/fleet-manager-portal-overview.png" alt-text="A screenshot of the Azure Kubernetes Fleet Manager overview page in the Azure portal. The overview shows there are five Kubernetes clusters running different Kubernetes versions. There are 125 total update runs with 55 failures and 70 successes. Across the five Kubernetes clusters there is a spread of node images." lightbox="./media/overview/fleet-manager-portal-overview.png":::
 
 Fleet Manager supports the following scenarios:
 
 * Join AKS clusters across regions and subscriptions, as well as Arc-enabled Kubernetes clusters across clouds and on-premises as member clusters. Read [Azure Kubernetes Fleet Manager member cluster types](./concepts-member-cluster-types.md) to understand more.
 
-* Use [Fleet Managed Namespaces](./concepts-fleet-managed-namespace.md) to grant application teams access to a namespace across multiple clusters. Enforce resource quotas, network policies, and assign user access at the namespace level across multiple clusters.
+* Use [Managed Fleet Namespaces](./concepts-fleet-managed-namespace.md) to grant application teams access to a namespace across multiple clusters. Enforce resource quotas, network policies, and assign user access at the namespace level across multiple clusters.
 
 * Safely and consistently apply Kubernetes version and node image upgrades across multiple clusters with [update runs](./concepts-update-orchestration.md), attaching reusable update strategies to control the order and timing of cluster updates.
 
-* Include optional manual or automated approvals for update groups and stages to provide more fine-grained control over when updates are applied.
+* Include optional [manual or automated approvals](./update-strategies-gates-approvals.md) for update groups and stages to provide more fine-grained control over when updates are applied.
 
 * Automatically trigger version upgrades when new Kubernetes or node image versions are published by defining one or more [auto-upgrade profile](./concepts-update-orchestration.md#understanding-auto-upgrade-profiles).
 
@@ -33,14 +33,14 @@ Fleet Manager supports the following scenarios:
 
 * Stage Kubernetes resources from Git repositories to Fleet Manager's hub cluster using [Automated Deployments](./concepts-automated-deployments.md) (preview).
 
-* Load balance incoming traffic across service endpoints on multiple AKS clusters using [DNS-based load balancing](./concepts-dns-load-balancing.md) (preview).
+* Load balance incoming public traffic across service endpoints on multiple AKS clusters using [DNS-based load balancing](./concepts-dns-load-balancing.md) (preview).
 
 * Simplify creating globally available services by configuring [cross-cluster networking](./concepts-cross-cluster-networking.md) for your member clusters (preview).
 
 ## Next steps
 
 * [Conceptual overview of Fleets and member clusters](./concepts-fleet.md).
-* [Conceptual overview of Update orchestration across multiple member clusters](./concepts-update-orchestration.md).
+* [Conceptual overview of update orchestration across multiple member clusters](./concepts-update-orchestration.md).
 * [Conceptual overview of cluster-scoped Kubernetes resource placement from hub cluster to member clusters](./concepts-resource-placement.md).
 * [Conceptual overview of namespace-scoped Kubernetes resource placement from hub cluster to member clusters](./concepts-namespace-scoped-resource-propagation.md).
 * [Conceptual overview of DNS load balancing (preview)](./concepts-l4-load-balancing.md).

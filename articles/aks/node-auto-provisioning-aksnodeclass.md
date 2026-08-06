@@ -2,8 +2,8 @@
 title: Configure AKSNodeClass Resources for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS)
 description: Learn how to configure Azure-specific settings for AKS node auto-provisioning using AKSNodeClass resources.
 ms.topic: how-to
-ms.custom: devx-track-azurecli
-ms.date: 07/25/2025
+ms.custom: devx-track-azurecli, aks-scaling
+ms.date: 07/5/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -22,11 +22,12 @@ This article explains how to configure `AKSNodeClass` resources to define Azure-
 
 ## Image family configuration
 
-The `imageFamily` field dictates the default VM image and bootstrapping logic for nodes provisioned through the `AKSNodeClass`. If you don't specify an image family, the default is `Ubuntu2204`. GPUs are supported with both image families on compatible VM sizes.
+The `imageFamily` field sets the default VM image and bootstrapping logic for nodes provisioned through the `AKSNodeClass`. If you don't specify an image family, the default OS version according to your Kubernetes version is used. GPUs are supported with both image families on compatible VM sizes. For more information about the default OS version per Kubernetes version, see the [AKS OS Version documentation](./upgrade-os-version.md).
 
 ### Supported image families
 
-- **`Ubuntu`**: Ubuntu 22.04 Long Term Support (LTS) is the default Linux distribution for AKS nodes.
+- **`Ubuntu`**: Ubuntu is the default Linux distribution for AKS nodes.
+  - OS version defaults change based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes versions 1.25 to 1.33. Ubuntu 24.04 is default for Kubernetes versions 1.34 and later.
 - **`AzureLinux`**: Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more information, see the [Azure Linux documentation](/azure/aks/use-azure-linux)
 
 #### Example image family configuration
@@ -37,6 +38,7 @@ The following example configures the `AKSNodeClass` to use the `AzureLinux` imag
 spec:
   imageFamily: AzureLinux
 ```
+
 #### FIPS compliant node image configuration
 You can also enable Federal Information Processing Standards (FIPS) compliant node images. For more information about FIPS in AKS, see [FIPS documentation](./enable-fips-nodes.md).
 
@@ -285,6 +287,129 @@ spec:
 - `containerLogMaxFiles`: Maximum number of container log files to retain.
 - `podPidsLimit`: Maximum number of processes allowed in any pod.
 
+## Linux custom OS configuration settings
+
+The `LinuxOSConfig` section allows you to configure various kubelet parameters that affect node behavior. These parameters are typical custom OS arguments, so the NAP simply passes them through to the kubelet on the node.
+
+For more on custom Linux OS configuration settings, full details on default values, and considerations, see our [custom node configuration documentation](./custom-node-configuration.md#linux-custom-os-configuration-settings).
+
+> [!IMPORTANT]
+> **Configure Linux OS settings carefully**, and test any changes in nonproduction environments first.
+
+###  Linux file handle limits settings
+
+Use the following settings to set the file system settings.
+
+```yaml 
+spec:
+  linuxOSConfig: 
+    # Sysctl Settings  
+    sysctls:  
+      # File System Settings  
+      fsFileMax: 2000000               # Range: 8192-12000500  Default: Max of available range
+      fsInotifyMaxUserWatches: 1000000 # Range: 781250-2097152 Default: 1048576
+      fsAioMaxNr: 1000000              # Range: 65536-6553500  Default: 65536
+      fsNrOpen: 1000000                # Range: 8192-20000500  Default: 1048576
+```
+
+### Linux socket and network tuning settings
+
+Use the following settings to set the TCP and network setting.
+
+```yaml 
+spec:
+  linuxOSConfig:
+      # Network Settings  
+      netCoreSomaxconn: 65535          # Range: 4096-3240000  Default: 16384
+      netCoreNetdevMaxBacklog: 5000    # Range: 1000-3240000  Default: 1000
+      netCoreRmemMax: 134217728        # Range: 212992-134217728  Default: 1048576
+      netCoreOptmemMax: 102400         # Range: 20480-4194304     Default: 131072 
+      netCoreWmemMax: 134217728        # Range: 212992-134217728  Default: 212992
+      netCoreRmemDefault: 212992       # Range: 212992-134217728  
+      netCoreWmemDefault: 212992       # Range: 212992-134217728  
+      netIPv4IPLocalPortRange: "1024 65535" # Format: "first last", first: 1024-60999, last: 32768-65535  
+
+      # Neighbor Table GC Thresholds  
+      netIPv4NeighDefaultGcThresh1: 1024   # Range: 128-80000  Default: 4096
+      netIPv4NeighDefaultGcThresh2: 2048   # Range: 512-80000  Default: 8192
+      netIPv4NeighDefaultGcThresh3: 4096   # Range: 1024-80000  Default: 16384
+      # Note: thresh1 <= thresh2 <= thresh3  
+
+      # Connection Tracking  
+      netNetfilterNfConntrackBuckets: 131072  # Range: 65536-524288   Default: dynamically calculated 
+      netNetfilterNfConntrackMax: 262144       # Range: 131072-2097152 Default: dynamically calculated 
+```
+
+### Linux worker limit settings
+
+Use the following settings to set the kernel setting.
+
+```yaml 
+spec:
+  linuxOSConfig:
+      # Kernel Settings  
+      kernelThreadsMax: 100000         # Range: 20-513785  Default: Dynamically calculated
+```
+
+
+### Linux virtual memory settings
+
+Use the following options to tune the operation of the Linux virtual memory subsystem of the Linux kernel and the writeout of dirty data to disk.
+
+```yaml 
+spec:
+  linuxOSConfig:
+      # Memory Management  
+      vmMaxMapCount: 262144          # Range: 65530-262144 Default: Max of available range
+      vmVfsCachePressure: 100        # Range: 0-100  Default: 100
+      vmSwappiness: 60               # Range: 0-100  Default: 60
+
+      # Swap File Configuration  
+      swapFileSize: "2Gi"             # Default: (not set) | Pattern: quantity with units Note: Requires kubelet.failSwapOn: false  
+
+      # Transparent Huge Pages  
+      transparentHugePageEnabled: "madvise"    # Values: [always, madvise, never]  Default: always
+      transparentHugePageDefrag: "defer+madvise" # Values: [always, defer, defer+madvise, madvise, never]  Default: madvise
+```
+
+## GPU settings
+
+The following field allows user to allow custom GPU driver installation, such as with NVIDIA GPU Operator. 
+
+```yaml 
+spec:
+  gpu:
+    mode: 
+      # acceptable values: [driver, none] default(or if not specified): driver
+      # none skips gpu driver installation, driver has NAP manage the GPU driver installation  
+      none
+```
+
+## Security settings
+
+### Encryption at host
+
+The following field specifies whether host-level encryption is enabled for provisioned nodes. When you set this field to `true`, NAP includes only instance options that support encryption at host.
+
+```yaml 
+spec:
+  security:
+    encryptionatHost: 
+      # acceptable values: [true, false] default(or if not specified): false  
+      false
+```
+
+For more information about host-based encryption, see [Encryption at Host documentation](./enable-host-encryption.md).
+
+### Custom-managed keys and disk encryption sets
+
+NAP supports clusters that use customer-managed keys and disk encryption sets. You enable these options at the cluster level. They don't have AKSNodeClass fields that you need to set. Make sure that your cluster identity has the proper [role-based access control (RBAC)](./aks-desktop-permissions.md):
+
+- The cluster identity has `Reader` access to the Disk Encryption Set.
+- The Disk Encryption set resource has `Key Vault Crypto Service Encryption User` access to the Azure Key Vault. 
+
+For information on customer-managed keys and disk encryption sets enabled during cluster creation, see [Customer-Managed Keys documentation](./azure-disk-customer-managed-keys.md).
+
 ## Azure resource tags configuration
 
 You can specify Azure resource tags that apply to all VM instances created using a particular `AKSNodeClass` resource. Tags are useful for cost tracking, resource organization, and compliance requirements.
@@ -330,7 +455,7 @@ metadata:
 spec:
   # Image family configuration
   # Default: Ubuntu
-  # Valid values: Ubuntu, AzureLinux
+  # Valid values: Ubuntu, AzureLinux, AzureContainerLinux
   imageFamily: Ubuntu
 
   # FIPS compliant mode - allows support for FIPS-compliant node images
@@ -361,6 +486,14 @@ spec:
   # - Other configurations: 110 pods
   # Range: 10-250
   maxPods: 30
+
+  # GPU driver installation (optional)
+  # Default: driver - NAP manages gpu driver installation
+  # none skips gpu driver installation
+  # Valid values: driver, none
+  gpu:
+    mode: 
+      driver
 
   # Azure resource tags (optional)
   # Applied to all VM instances created with this AKSNodeClass

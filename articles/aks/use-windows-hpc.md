@@ -5,7 +5,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.date: 05/09/2023
 ms.topic: how-to
-ms.custom:
+ms.custom: aks-windows
   - build-2025
 # Customer intent: As a Kubernetes administrator managing Windows workloads, I want to deploy HostProcess containers, so that I can access host-level functionalities while maintaining the benefits of containerization for improved cluster management.
 ---

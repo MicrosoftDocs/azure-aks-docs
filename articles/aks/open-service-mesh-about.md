@@ -2,6 +2,7 @@
 title: Open Service Mesh in Azure Kubernetes Service (AKS)
 description: Learn about the Open Service Mesh (OSM) add-on in Azure Kubernetes Service (AKS).
 ms.topic: concept-article
+ms.subservice: aks-networking
 ms.date: 09/25/2024
 ms.author: schaffererin
 author: schaffererin
@@ -32,7 +33,7 @@ OSM can be added to your Azure Kubernetes Service (AKS) cluster by enabling the 
 > | Between 1.23.5 and 1.24.0 | 1.1.3                 |
 > | Below 1.23.5              | 1.0.0                 |
 >
-> Older versions of OSM may not be available for install or be actively supported if the corresponding AKS version has reached end of life. You can check the [AKS Kubernetes release calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar) for information on AKS version support windows.
+> Older versions of OSM might not be available for install or be actively supported if the corresponding AKS version reached end of life. You can check the [AKS Kubernetes release calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar-and-upcoming-versions) for information on AKS version support windows.
 
 ## Capabilities and features
 

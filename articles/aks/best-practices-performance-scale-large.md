@@ -3,9 +3,10 @@ title: Performance and Scaling Best Practices for Large Workloads in Azure Kuber
 description: Learn the best practices for performance and scaling for large workloads in Azure Kubernetes Service (AKS), with guidance that starts from AKS Automatic as the recommended default for most production workloads.
 ms.topic: best-practice
 ms.date: 06/05/2026
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.custom: aks-getting-started
 # Customer intent: As a cloud architect, I want to implement performance and scaling best practices for large workloads in Kubernetes, so that I can ensure optimal resource utilization and reliability of the applications deployed in Azure Kubernetes Service.
 ---
 
@@ -47,7 +48,7 @@ As you scale your AKS clusters to larger scale points, keep the following node s
 
 - When running at-scale AKS clusters, use the [cluster autoscaler](./cluster-autoscaler.md) or [node auto-provisioning (NAP)](./node-auto-provisioning.md) whenever possible to ensure dynamic scaling of nodes based on the demand for compute resources.
 - AKS Automatic is the recommended starting point for most production workloads, but large clusters in either cluster mode still require careful node scaling, batch planning, and control plane validation.
-- If you're scaling beyond 1,000 nodes and are _not_ using the cluster autoscaler, we recommend scaling in batches of 500-700 nodes at a time. The scaling operations should have a two-to-five minute wait time between scale up operations to prevent Azure API throttling. For more information, see [API management: Caching and throttling policies](https://azure.microsoft.com/blog/api-management-advanced-caching-and-throttling-policies/).
+- If you're scaling beyond 1,000 nodes and are _not_ using the cluster autoscaler, we recommend scaling in batches of 500-700 nodes at a time. The scaling operations should have a two-to-five minute wait time between scale up operations to prevent Azure API throttling.
 - For system node pools, use the _Standard_D16ds_v5_ SKU or an equivalent core/memory VM SKU with ephemeral OS disks to provide sufficient compute resources for kube-system pods.
 - Since AKS has a limit of 1,000 nodes per node pool, we recommend creating at least five user node pools to scale up to 5,000 nodes.
 

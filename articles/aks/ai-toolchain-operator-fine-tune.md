@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-ai-ml
 ms.date: 01/07/2025
 # Customer intent: "As a data scientist, I want to fine-tune and deploy a language model on a Kubernetes cluster, so that I can enhance its performance and utilize it for inferencing tasks effectively."
 ---

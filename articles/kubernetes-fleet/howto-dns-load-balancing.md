@@ -137,7 +137,7 @@ In order to complete this step, you must create your Fleet Manager with managed 
         spec:
           containers:
             - name: kuard
-              image: gcr.io/kuar-demo/kuard-amd64:blue
+              image: blauwelucht/kuard-amd64:blue
               resources:
                 requests:
                   cpu: 100m

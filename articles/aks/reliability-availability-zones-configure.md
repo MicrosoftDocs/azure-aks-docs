@@ -2,6 +2,7 @@
 title: Configure Availability Zones in Azure Kubernetes Service (AKS)
 description: Learn how to configure availability zones in Azure Kubernetes Service (AKS) to increase the availability of your applications.
 ms.service: azure-kubernetes-service
+ms.custom: aks-reliability
 ms.topic: how-to
 ms.date: 03/26/2026
 author: schaffererin
@@ -70,6 +71,9 @@ Node pools are created as virtual machine scale sets in your Azure subscription.
 When you create an AKS cluster, it requires one [system node pool](/azure/aks/use-system-pools). This node pool is created automatically and hosts critical system pods such as `CoreDNS` and `metrics-server`. You can add more [user node pools](/azure/aks/create-node-pools) to your AKS cluster to host your applications.
 
 You can deploy node pools in three ways: [**zone-spanning**](#zone-spanning-node-pools), [**zone-aligned**](#zone-aligned-node-pools), or [**regional** (not using availability zones)](#regional-node-pools).
+
+> [!TIP]
+> Instead of manually picking zones, you can let AKS pick them for you by using **automatic zone placement** (`--zones auto`) when you create a node pool or update an existing node pool. For details, see [Automatic zone placement for node pools in AKS (Preview)](./configure-automatic-zone-placement.md).
 
 The following diagram shows the distribution of nodes across availability zones in each of the three models:
 
@@ -449,6 +453,7 @@ kubectl describe pod | grep -e "^Name:" -e "^Node:"
 To learn more about reliability in AKS, see the following articles:
 
 - [Reliability in AKS](/azure/reliability/reliability-aks)
+-  [Automatic zone placement for node pools in AKS (Preview)](./configure-automatic-zone-placement.md)
 - [Manage system node pools in AKS](/azure/aks/use-system-pools)
 - [Use public standard load balancers in AKS](/azure/aks/load-balancer-standard)
 - [Best practices for business continuity and disaster recovery in AKS][best-practices-multi-region]
@@ -457,7 +462,7 @@ To learn more about reliability in AKS, see the following articles:
 [kubernetes-well-known-labels]: https://kubernetes.io/docs/reference/labels-annotations-taints/
 
 <!-- LINKS - internal -->
-[aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes
+[aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes-in-aks
 [zones]: /azure/reliability/regions-list
 [best-practices-multi-region]: ./operator-best-practices-storage.md
 [az-aks-create]: /cli/azure/aks#az-aks-create

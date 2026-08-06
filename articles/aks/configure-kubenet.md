@@ -2,8 +2,8 @@
 title: Configure kubenet networking in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure kubenet (basic) network in Azure Kubernetes Service (AKS) to deploy an AKS cluster into an existing virtual network and subnet.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
@@ -30,7 +30,7 @@ This article shows you how to use kubenet networking to create and use a virtual
 * The cluster identity used by the AKS cluster must at least have the [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) role on the subnet within your virtual network. CLI helps set the role assignment automatically. If you're using an ARM template or other clients, you need to manually set the role assignment. You must also have the appropriate permissions, such as the subscription owner, to create a cluster identity and assign it permissions. If you want to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, you need the following permissions:
   * `Microsoft.Network/virtualNetworks/subnets/join/action`
   * `Microsoft.Network/virtualNetworks/subnets/read`
-  * If you bring your own virtual network, review the [virtual network prerequisites](concepts-network-cni-overview.md#prerequisites).
+  * If you bring your own virtual network, review the [virtual network prerequisites](concepts-network-cni-overview.md#aks-cni-networking-prerequisites).
 
 > [!WARNING]
 > To use Windows Server node pools, you must use Azure CNI. The kubenet network model isn't available for Windows Server containers.

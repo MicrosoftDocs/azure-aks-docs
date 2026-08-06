@@ -3,7 +3,7 @@ title: Autoscale GPU Workloads using KEDA and NVIDIA DCGM Exporter metrics on Az
 description: Learn how to autoscale GPU-based workloads using KEDA and NVIDIA DCGM Exporter metrics on Azure Kubernetes Service (AKS).
 author: dcasati
 ms.author: sachidesai
-ms.date: 05/16/2025
+ms.date: 07/02/2026
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 # Customer intent: As a cloud engineer, I want to autoscale GPU workloads on Azure Kubernetes Service using KEDA and NVIDIA metrics, so that I can optimize resource usage and manage operational costs efficiently in response to real-time workload demands.
@@ -23,11 +23,11 @@ In this article, you learn how to autoscale GPU workloads on Azure Kubernetes Se
 Before proceeding, ensure your AKS cluster is configured with the following:
 
 - [Integrate KEDA with your Azure Kubernetes Service cluster](/azure/azure-monitor/containers/integrate-keda).
-- [Monitor GPU metrics from NVIDIA DCGM exporter with Azure Managed Prometheus and Azure Managed Grafana](/azure/aks/monitor-gpu-metrics).
+- [Monitor GPU metrics from NVIDIA DCGM exporter with Azure Managed Prometheus and Azure Managed Grafana](./monitor-gpu-metrics.md).
 
 At this point, you should have:
 
-- An AKS cluster with [NVIDIA GPU-enabled node pool(s)](./gpu-cluster.md), and [GPUs confirmed as schedulable](./gpu-cluster.md#confirm-that-gpus-are-schedulable).
+- An AKS cluster with [NVIDIA GPU-enabled node pools](./use-nvidia-gpu.md), and [GPUs confirmed as schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable).
 - [Azure Managed Prometheus and Grafana enabled on your AKS cluster](/azure/azure-monitor/containers/kubernetes-monitoring-enable).
  [KEDA enabled on your cluster](/azure/azure-monitor/containers/integrate-keda).
 - The User Assigned Managed Identity used by KEDA assigned the `Monitoring Data Reader` role scoped to the Azure Monitor Workspace associated with your AKS cluster.

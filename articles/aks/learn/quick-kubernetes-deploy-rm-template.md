@@ -6,7 +6,7 @@ ms.date: 01/12/2024
 author: davidsmatlak
 ms.author: davidsmatlak
 
-ms.custom: mvc, subject-armqs, mode-arm, devx-track-arm-template, devx-track-azurecli
+ms.custom: mvc, subject-armqs, mode-arm, devx-track-arm-template, devx-track-azurecli, aks-getting-started
 
 # Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
 

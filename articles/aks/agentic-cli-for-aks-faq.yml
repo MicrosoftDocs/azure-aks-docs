@@ -4,6 +4,9 @@ metadata:
   description: Frequently asked questions about the agentic CLI for Azure Kubernetes Service (AKS).
   keywords: frequently asked questions, faq
   ms.service: azure-kubernetes-service
+  ms.subservice: aks-developer
+  author: davidsmatlak
+  ms.author: davidsmatlak
   ms.topic: faq
   ms.date: 10/20/2025
 title: "Agentic CLI for AKS frequently asked questions"

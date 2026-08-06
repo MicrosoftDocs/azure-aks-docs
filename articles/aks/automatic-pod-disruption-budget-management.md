@@ -4,7 +4,6 @@ description: Learn how to use automatic Pod Disruption Budget management (previe
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
-ms.custom: azure-kubernetes-service
 ms.date: 03/16/2026
 author: kaarthis
 ms.author: kaarthis
@@ -16,7 +15,7 @@ ai-usage: ai-assisted
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-During [AKS cluster upgrades](upgrade-conceptual.md), nodes are drained by evicting pods so they can be reimaged or replaced. [Pod Disruption Budgets (PDBs)](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets) protect application availability during this process by limiting how many pods can be unavailable at once. However, PDBs can also [block eviction entirely](upgrade-conceptual.md#upgrade-behavior-with-restrictive-pod-disruption-budget) when they're misconfigured or when deployments don't have enough replicas to satisfy the budget. Deployments without any PDB at all have the opposite problem: nothing protects their pods from being evicted simultaneously, which risks downtime during upgrades.
+During [AKS cluster upgrades](upgrade-conceptual.md), the upgrade process drains nodes by evicting pods so it can reimage or replace the nodes. [Pod Disruption Budgets (PDBs)](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets) protect application availability during this process by limiting how many pods can be unavailable at once. However, misconfigured PDBs can also [block eviction entirely](upgrade-conceptual.md#restrictive-pod-disruption-budget-pdb-behavior) or deployments might not have enough replicas to satisfy the budget. Deployments without any PDB at all have the opposite problem: nothing protects their pods from being evicted simultaneously, which risks downtime during upgrades.
 
 Automatic PDB management is an AKS extension, based on the [open-source project](https://github.com/Azure/eviction-autoscaler), that automates PDB management during upgrades. It:
 
@@ -63,7 +62,7 @@ Automatic PDB management has two complementary behaviors: **automatic PDB creati
 
 ### Automatic PDB creation
 
-When PDB auto-creation is enabled (`controllerConfig.pdb.create=true`), the extension continuously watches for deployments that don't have a PDB. When it finds one in an enabled namespace, it creates a PDB with `minAvailable` set to the deployment's current replica count. The extension continuously reconciles auto-created PDBs, so if the deployment's replica count changes (for example, through a manual update or an external scaler), the PDB's `minAvailable` value is updated to match. This protection ensures that pods aren't evicted simultaneously during voluntary disruptions.
+When you enable PDB auto-creation (`controllerConfig.pdb.create=true`), the extension continuously watches for deployments that don't have a PDB. The extension determines a match by comparing the PDB's label selector with the deployment's pod template labels. This comparison ensures each deployment is protected only once and avoids duplicate PDBs. When it finds an unprotected deployment in an enabled namespace, it creates a PDB. For deployments without HPA or KEDA, `minAvailable` is set to the deployment's current replica count. For deployments with HPA or KEDA, `minAvailable` tracks the autoscaler's minimum replica floor so PDB behavior remains aligned with autoscaler constraints. The extension continuously reconciles auto-created PDBs, so if the deployment's replica count changes (for example, through a manual update or an external scaler), the PDB's `minAvailable` value is updated to match. This protection ensures that pods aren't evicted simultaneously during voluntary disruptions.
 
 Auto-created PDBs are managed by the extension throughout their lifecycle. For details on ownership, cleanup, and how to take manual control, see [PDB ownership and cleanup](#pdb-ownership-and-cleanup).
 
@@ -76,10 +75,10 @@ The extension monitors your cluster for situations where PDB-protected pods can'
 
 1. **AKS cordons a node** as part of the upgrade process, marking it as unschedulable.
 1. **The extension detects the cordon** and checks whether any PDB-protected pods on that node have zero allowed disruptions.
-1. **If the PDB blocks eviction**, the extension temporarily scales up the deployment's replica count. The extra replicas are scheduled on other available nodes.
+1. **If the PDB blocks eviction**, the extension temporarily scales up the deployment's replica count by the number of PDB-protected pods on cordoned nodes (up to the deployment's configured `maxSurge` limit), ensuring the surge is right-sized and you don't over-provision. The extra replicas are scheduled on other available nodes.
 1. **The PDB's allowed disruptions rise above zero**, because the total number of healthy pods now exceeds the PDB's `minAvailable` threshold.
 1. **Node drain proceeds normally.** The eviction API can now remove pods from the cordoned node without violating the PDB.
-1. **After eviction signals stop and allowed disruptions rise above zero**, the extension scales the deployment back to its original replica count. The scale-down happens automatically after a cooldown period — no manual intervention is needed.
+1. **After eviction signals stop and allowed disruptions rise above zero**, the extension scales the deployment back to its original replica count. Scale-down won't proceed if more nodes are still cordoned or if the drain is in progress. This condition prevents unnecessary churn during multi-node drains. The scale-down happens automatically after a cooldown period (default 60 seconds) with no manual intervention needed.
 
 > [!NOTE]
 > Automatic PDB management only acts on *voluntary disruptions* such as upgrade drains and manual cordon/drain operations. It doesn't respond to node failures, pod crashes, or other involuntary disruptions.
@@ -251,7 +250,7 @@ metadata:
 ```
 
 > [!NOTE]
-> Deployments that already have `maxUnavailable > 0` configured in their existing PDB are automatically skipped, because they already tolerate disruption.
+> Automatic PDB management automatically skips PDB creation for deployments that have `maxUnavailable` (other than 0) in their rolling update strategy, because such deployments already tolerate some level of downtime.
 
 ## Automatic PDB creation
 
@@ -261,7 +260,7 @@ When `controllerConfig.pdb.create` is set to `true`, the extension creates PDBs 
 - The deployment is in an enabled namespace.
 - The deployment isn't excluded via the `eviction-autoscaler.azure.com/pdb-create: "false"` annotation.
 
-Auto-created PDBs set `minAvailable` to match the deployment's current replica count (excluding any surge replicas added by the extension). This means eviction is blocked until the extension scales up the deployment, at which point the extra replicas satisfy the budget and allow drain to proceed.
+Auto-created PDBs set `minAvailable` based on the workload's scaling source. For deployments without HPA or KEDA, `minAvailable` matches the deployment's current replica count (excluding any surge replicas added by the extension). For deployments with HPA or KEDA, `minAvailable` aligns to the autoscaler's minimum replicas floor. This means eviction is blocked until the extension scales up the deployment, at which point the extra replicas satisfy the budget and allow drain to proceed.
 
 ### PDB ownership and cleanup
 

@@ -2,10 +2,11 @@
 title: Use Confidential Virtual Machines (CVMs) in Azure Kubernetes Service (AKS)
 description: Learn how to create Confidential Virtual Machine (CVM) node pools with Azure Kubernetes Service (AKS)
 ms.topic: how-to
-ms.date: 06/26/2025
+ms.date: 06/24/2026
 author: allyford
 ms.author: allyford
 ms.service: azure-kubernetes-service
+ai-usage: ai-assisted
 # Customer intent: "As a cloud engineer, I want to add a Confidential Virtual Machines node pool to my existing Kubernetes cluster, so that I can securely handle sensitive container workloads without requiring code changes."
 ---
 
@@ -71,7 +72,6 @@ The following limitations apply when adding a node pool with CVM to AKS:
 - You can't use FIPS, ARM64, Trusted Launch, or Pod Sandboxing.
 - You can't update an existing node pool to migrate to a CVM size. To migrate, you'll need to [resize your node pool][resize-your-nodepool].
 - You can't use CVMs with Windows node pools.
-- CVMs with Azure Linux is currently in preview.
 - Azure Container Linux (ACL) currently doesn't support CVM node pools in AKS.
 
 ## Prerequisites
@@ -80,47 +80,6 @@ Before you begin, make sure you have the following:
 
 - An existing AKS cluster.
 - CVM sizes must be available for your subscription in the region where the cluster is created. You must have sufficient quota to create a node pool with a CVM size.
-- If you're using Azure Linux os, you need to install the `aks-preview` extension, update the `aks-preview` extension, and register the preview feature flag. If you're using Ubuntu, you can skip these steps.
-
-### If you are using Azure Linux
-
-CVMs for Ubuntu is GA, but CVMs with Azure Linux is currently still in preview. If you would like to use CVM node pools with Azure Linux as the OS of choice, ensure you enable the extension and register the flag.
-
-#### Install `aks-preview` extension
-
-1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
-
-    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-#### Register `AzureLinuxCVMPreview` feature flag
-
-1. Register the `AzureLinuxCVMPreview` feature flag using the [`az feature register`](/cli/azure/feature#az-feature-register) command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "AzureLinuxCVMPreview"
-    ```
-
-1. Verify the registration status using the [`az feature show`](/cli/azure/feature#az-feature-show) command. It takes a few minutes for the status to show _Registered_.
-
-    ```azurecli-interactive
-    az feature show --namespace Microsoft.ContainerService --name AzureLinuxCVMPreview
-    ```
-
-1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Add a node pool with a CVM to your AKS cluster
 
@@ -137,6 +96,18 @@ az aks nodepool add \
 
 If you don't specify the `osSKU` or `osType`, AKS defaults to `--os-type Linux` and `--os-sku Ubuntu`.
 
+To create a CVM node pool that uses Azure Linux, set `--os-sku AzureLinux`.
+
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name cvmnodepool \
+    --node-count 3 \
+    --node-vm-size Standard_DC4as_v5 \
+    --os-sku AzureLinux
+```
+
 ## Upgrade an existing node pool with a CVM to Ubuntu 24.04
 
 Upgrade an existing node pool with a CVM to Ubuntu 24.04 from Ubuntu 20.04 using the [`az aks nodepool update`][az-aks-nodepool-update] command. Set the `os-sku` as `Ubuntu2404`.
@@ -148,9 +119,6 @@ az aks nodepool update \
     --name cvmnodepool \
     --os-sku Ubuntu2404
 ```
-
-> [!NOTE]
-> A node pool which is Ubuntu 24.04 with a CVM is supported from AKS cluster 1.33 version. Additionally, before Ubuntu 24.04 becomes GA, you need to register the `Ubuntu2404Preview` feature. For more information, see [`here`][Ubuntu2404Preview] to register the feature.
 
 ## Verify the node pool uses CVMs
 
@@ -232,4 +200,3 @@ In this article, you learned how to add a node pool with CVMs to an AKS cluster.
 [flatcar]: ./flatcar-container-linux-for-aks.md
 [os-guard]: ./use-azure-linux-os-guard.md
 [node-images]: ./node-images.md
-[Ubuntu2404Preview]: /azure/aks/upgrade-os-version#register-ubuntu2404preview-feature-flag

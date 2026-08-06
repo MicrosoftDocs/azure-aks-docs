@@ -49,7 +49,7 @@ For more information on using KMS, see [Using a KMS provider for data encryption
 
 The following limitations apply when you integrate KMS etcd encryption with AKS:
 
-- Deleting the key, the key vault, or the associated identity isn't supported.
+- If the key has been deleted, first verify whether it is in a soft-deleted state. If so, recover the key to allow KMS to continue using it. If the key has been permanently deleted, the KMS component cannot be running because the key is no longer available. Also, previously encrypted secret resources can no longer be decrypted and accessed. Due to this impact, cluster recreation may be required.
 - KMS etcd encryption doesn't work with system-assigned managed identity. The key vault access policy must be set before the feature is turned on. System-assigned managed identity isn't available until after the cluster is created. Consider the cycle dependency.
 - Because the firewall blocks traffic from the KMS plugin to Key Vault, two scenarios aren't supported. First, Azure Key Vault can't be configured with the firewall option _Allow public access from specific virtual networks and IP addresses_. Second, Azure Key Vault can't be configured with _Disable public access_ unless [API Server VNet Integration](api-server-vnet-integration.md) is enabled.
 - The maximum number of secrets supported by a cluster with KMS turned on is _2,000_. However, it's important to note that [KMS v2][kms-v2-support] isn't limited by this restriction and can handle a higher number of secrets.

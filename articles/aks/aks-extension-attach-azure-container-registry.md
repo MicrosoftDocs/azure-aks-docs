@@ -6,6 +6,7 @@ ms.topic: how-to
 ms.date: 07/15/2024
 ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.subservice: aks-developer
 # Customer intent: As a developer using Visual Studio Code, I want to attach my Azure Container Registry to an AKS cluster, so that I can streamline my container deployment process and manage my resources efficiently.
 ---
 

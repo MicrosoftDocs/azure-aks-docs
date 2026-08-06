@@ -4,6 +4,7 @@ description: Learn how to deploy an Azure Kubernetes Service (AKS) for Azure Ext
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-reliability
 ms.topic: how-to
 ms.date: 06/11/2026
 # Customer intent: As a cloud architect, I want to deploy an Azure Kubernetes Service cluster in an Extended Zone, so that I can achieve low latency and maintain data residency for my applications.

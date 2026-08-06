@@ -4,8 +4,8 @@ description: Learn how to upgrade a single node pool and how to upgrade the clus
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 07/19/2023
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-nodes
 # Customer intent: "As a Kubernetes administrator, I want to upgrade my node pools in AKS so that I can ensure my cluster is running the latest features and security updates."
 ---

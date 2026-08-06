@@ -6,7 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 01/07/2025
 author: schaffererin
 ms.author: schaffererin
-ms.custom: 'stateful-workloads'
+ms.custom: 'stateful-workloads, aks-data-messaging'
 # Customer intent: As a Kubernetes administrator, I want to validate the resiliency of a MongoDB cluster during an AKS node pool upgrade, so that I can ensure uninterrupted service and availability throughout the upgrade process.
 ---
 

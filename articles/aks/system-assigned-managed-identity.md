@@ -1,8 +1,8 @@
 ---
 title: Use a System-Assigned Managed Identity in Azure Kubernetes Service (AKS)
 description: This article explains how to enable a system-assigned managed identity on a new or existing AKS cluster, get the principal ID of the system-assigned managed identity, and add a role assignment for the system-assigned managed identity.
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service

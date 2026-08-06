@@ -1,8 +1,8 @@
 ---
 title: Use a Pre-Created Kubelet Managed Identity in Azure Kubernetes Service (AKS)
 description: This article explains how to enable a pre-created kubelet managed identity on a new or existing AKS cluster, get the properties of the kubelet managed identity, and add a role assignment for the kubelet managed identity.
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service

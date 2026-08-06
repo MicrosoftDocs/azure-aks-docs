@@ -81,4 +81,4 @@ The **AKS Security Patch** tab shows the [last node image security patch version
 [auto-upgrade-cluster]: auto-upgrade-cluster.md
 [auto-upgrade-node-images]: auto-upgrade-node-os-image.md
 [planned-maintenance]: planned-maintenance.md
-[aks-release-calendar]: supported-kubernetes-versions.md#aks-kubernetes-release-calendar
+[aks-release-calendar]: supported-kubernetes-versions.md#aks-kubernetes-release-calendar-and-upcoming-versions

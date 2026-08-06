@@ -3,6 +3,7 @@ title: Create the infrastructure for deploying highly available GitHub Actions o
 description: Learn how to create the infrastructure for deploying highly available GitHub Actions on Azure Kubernetes Service (AKS) using Azure Files.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
+ms.subservice: aks-storage
 ms.date: 06/13/2025
 author: schaffererin
 ms.author: schaffererin

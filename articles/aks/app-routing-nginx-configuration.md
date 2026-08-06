@@ -6,9 +6,9 @@ ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 11/21/2023
 zone_pivot_groups: app-routing-nginx-configuration
-ms.author: davidsmatlak
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
-author: davidsmatlak
+author: schaffererin
 # Customer intent: As a Kubernetes administrator, I want to configure multiple NGINX ingress controllers with the application routing add-on, so that I can manage traffic to my applications using different load balancer settings and optimize my ingress resources.
 ---
 

@@ -2,7 +2,7 @@
 title: Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on
 description: Learn how to enable the AI toolchain operator add-on on Azure Kubernetes Service (AKS) to simplify OSS AI model management and deployment.
 ms.topic: how-to
-ms.custom: azure-kubernetes-service, devx-track-azurecli
+ms.custom: azure-kubernetes-service, devx-track-azurecli, aks-ai-ml
 ms.date: 9/19/2025
 author: schaffererin
 ms.author: schaffererin
@@ -32,9 +32,10 @@ Built on top of the open-source KAITO project, the AI toolchain operator managed
 
 ## Limitations
 
-* `AzureLinux` and `Windows` OS SKU are not currently supported.
+* `Windows` OS SKU is not currently supported.
 * AMD GPU VM sizes are not supported `instanceType` in a KAITO workspace.
 * AI toolchain operator add-on is supported in **public** Azure regions.
+* AKS stop and start operations (az aks stop / az aks start) aren't fully supported for clusters with active KAITO Workspaces. In some scenarios, startup operations can result in node pool reconciliation conflicts, provisioning failures, or orphaned compute resources.
 
 ## Prerequisites
 

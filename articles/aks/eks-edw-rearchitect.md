@@ -3,9 +3,10 @@ title: Rearchitect the event-driven workflow (EDW) workload for Azure Kubernetes
 description: Learn about architectural differences for replicating the AWS EKS scaling with KEDA and Karpenter event-driven workflow (EDW) workload in AKS.
 ms.topic: how-to
 ms.date: 06/20/2024
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.custom: aks-migration
 # Customer intent: As a cloud architect, I want to rearchitect an event-driven workflow from AWS to Azure Kubernetes Service, so that I can leverage Azure services while maintaining efficiency in scaling and cost management.
 ---
 

@@ -6,8 +6,8 @@ ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 01/23/2024
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 # Customer intent: As a network administrator or DevOps engineer using AKS, I want to implement shared health probes for Services with externalTrafficPolicy set to Cluster, so that I can improve load balancer efficiency and reduce configuration complexity.
 ---
 

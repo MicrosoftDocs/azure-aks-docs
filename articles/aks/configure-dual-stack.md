@@ -2,8 +2,8 @@
 title: Configure dual-stack networking in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure dual-stack networking in Azure Kubernetes Service (AKS).
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 12/07/2023

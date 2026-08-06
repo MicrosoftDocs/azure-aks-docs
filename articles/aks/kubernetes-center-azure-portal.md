@@ -1,8 +1,8 @@
 ---
 title: Create and Manage Kubernetes resources in the Azure portal with Kubernetes Center (preview)
 description: Learn how to create and manage your Kubernetes resources directly in the Azure portal using Kubernetes Center (preview), which centralizes creation, management, and monitoring of your Kubernetes clusters.
-author: Harshaa
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 11/04/2025

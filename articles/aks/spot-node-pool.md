@@ -3,8 +3,8 @@ title: Add an Azure Spot node pool to an Azure Kubernetes Service (AKS) cluster
 description: Learn how to add an Azure Spot node pool to an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
 ms.date: 04/06/2025
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-nodes
 # Customer intent: As a Kubernetes administrator, I want to add an Azure Spot node pool to my existing AKS cluster, so that I can utilize unutilized Azure capacity for cost-effective workloads that can tolerate interruptions.
 ---

@@ -1,9 +1,10 @@
 ---
 title: Migrate Existing Nodes to Azure Container Linux (ACL) for Azure Kubernetes Service (AKS)
 description: In this Azure Linux article, you learn how to migrate nodes to Azure Container Linux (ACL) for AKS.
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
+ms.custom: aks-migration
 ms.topic: how-to
 ms.date: 04/12/2026
 ---

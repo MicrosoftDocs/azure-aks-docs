@@ -3,7 +3,7 @@ title: "Quickstart: Create an Azure Kubernetes Fleet Manager and join member clu
 description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager and join member clusters using Azure CLI.
 author: sjwaight
 ms.author: simonwaight
-ms.date: 06/01/2026
+ms.date: 07/24/2026
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: quickstart
 ms.custom:
@@ -216,15 +216,17 @@ Retrieve the resource identifier for the API subnet to use later.
 API_SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-name ${FLEET} -n ${VNET-API-SUBNET-NAME} -o tsv --query id)
 ```
 
-6. Finally, create the new hub cluster, providing the necessary arguments to enable API VNet integration  
+1. Finally, create the new hub cluster, providing the necessary arguments to enable API VNet integration and a private hub cluster. 
 
 ```azurecli-interactive
- az fleet create \
+az fleet create \
     --resource-group ${GROUP} \
     --name ${FLEET} \
     --location ${LOCATION}  \
     --enable-hub \
     --enable-managed-identity \
+    --enable-private-cluster \
+    --enable-vnet-integration \
     --agent-subnet-id ${CLUSTER_SUBNET_ID} \
     --apiserver-subnet-id ${API_SUBNET_ID} \
     --assign-identity ${UAMI_ID}

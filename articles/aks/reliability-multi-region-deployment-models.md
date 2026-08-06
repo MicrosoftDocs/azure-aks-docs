@@ -5,6 +5,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.topic: concept-article
 ms.service: azure-kubernetes-service
+ms.custom: aks-reliability
 ms.date: 07/28/2025
 # Customer intent: "As a DevOps engineer managing applications on Azure Kubernetes Service, I want to implement multi-region solutions, so that I can ensure business continuity and minimize downtime during disruptions."
 ---

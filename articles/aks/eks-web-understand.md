@@ -1,11 +1,12 @@
 ---
 title: Understand platform differences for the web application workload
 description: Learn about the key differences between the AWS and Azure platforms related to the web application hosting.
-author: schaffererin
-ms.author: schaffererin
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.date: 11/10/2025
 ms.topic: how-to
 ms.service: azure-kubernetes-service
+ms.custom: aks-migration
 # Customer intent: "As a cloud architect, I want to understand the operational differences between AWS and Azure for hosting web applications, so that I can make informed decisions when migrating workloads to the appropriate cloud platform."
 ---
 

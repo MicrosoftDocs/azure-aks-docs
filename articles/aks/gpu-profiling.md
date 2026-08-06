@@ -1,5 +1,5 @@
 ﻿---
-title: Optimize GPU workloads on AKS with profiling (Preview)
+title: Optimize GPU workloads on AKS with GPU profiling (Preview)
 description: Learn how to profile GPU workloads with real-time observability and analyze flame graphs to identify memory hotspots to optimize GPU workloads.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -12,7 +12,7 @@ ai-usage: ai-assisted
 # Customer intent: As a platform engineer, I want to profile GPU workloads on AKS, so that I can identify memory allocation hotspots, optimize resource usage, and troubleshoot performance regressions in GPU based workloads.
 ---
 
-# Optimize GPU workloads on Azure Kubernetes Service (AKS) with profiling (Preview)
+# Optimize GPU workloads on Azure Kubernetes Service (AKS) with GPU profiling (Preview)
 
 GPU based workloads such as AI inference services can be memory-intensive and difficult to optimize and debug without deep visibility into what the GPU is actually doing. You might see out-of-memory (OOM) errors, unexpected latency spikes, or rising GPU memory pressure, but traditional Kubernetes metrics don't tell you *where* in the code the memory is being allocated. Profiling helps you understand the exact functions responsible for GPU memory usage.
 
@@ -25,36 +25,46 @@ This article walks you through how to use GPU observability on AKS:
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
-## Deploy advanced GPU observability - GPU memory profiling on AKS
+## Deploy GPU observability - GPU memory profiling on AKS
 
 ### Prerequisites
 
 - An AKS cluster with at least one GPU-enabled node pool.
 - [Azure CLI][install-azure-cli] version 2.72.0 or later installed. Run `az --version` to check.
+- The `k8s-extension` Azure CLI add-on installed. Run `az extension add --name k8s-extension` to install.
 - [Helm][helm-install] version 3.x or later installed. Run `helm version` to check.
 - Azure Monitor (optional, can use your own monitoring setup if preferred).
 - Azure Managed Grafana (optional, for visualization).
 
 
-### Step 1: Install Inspektor Gadget
+### Step 1: Enable GPU profiling via the Inspektor Gadget extension
 
-[Inspektor Gadget](https://inspektor-gadget.io/) is an open source eBPF-based observability framework for Kubernetes. For GPU profiling, it traces Compute Unified Device Architecture (CUDA) memory allocation calls without requiring code changes, sidecars, or pod restarts.
+[Inspektor Gadget](https://inspektor-gadget.io/) is an open source eBPF-based observability framework for Kubernetes. For GPU profiling, it traces Compute Unified Device Architecture (CUDA) memory allocation calls without requiring code changes, sidecars, or pod restarts. Enable GPU profiling on your AKS cluster by running the following extension command:
 
 ```bash
-helm install -n gadget inspektor-gadget \
-  oci://mcr.microsoft.com/microsoft.inspektor-gadget/helmcharts/inspektor-gadget:0.53.0-0 \
-  --set gpuObservability.enabled=true \
-  --set azureMonitor.enabled=true
+az k8s-extension create \
+  --extension-type microsoft.inspektorgadget \
+  --subscription <your-subscription-id> \
+  -g <your-resource-group> \
+  -c <your-cluster-name> \
+  -t managedClusters \
+  --release-train preview \
+  -n inspektor-gadget \
+  --configuration-settings gpuObservability.enabled=true \
+  --configuration-settings azureMonitor.enabled=true \
 ```
 
 > [!NOTE]
-> This step assumes you have already enabled Azure Monitor on your AKS cluster. If you plan to use your own Prometheus setup, remove `--set azureMonitor.enabled=true`.
+> This step assumes you already enabled Azure Monitor on your AKS cluster. If you plan to use your own Prometheus setup, remove `--configuration-settings azureMonitor.enabled=true`. For details, see [How do I connect my own Prometheus instance to Inspektor Gadget?](#how-do-i-connect-my-own-prometheus-instance-to-inspektor-gadget) in the FAQ.
 
 Verify that pods are running:
 
 ```bash
 kubectl get pods -n gadget -l k8s-app=gadget
 ```
+
+> [!TIP]
+> GPU memory profiling captures memory allocation events as they occur. If your workload allocates GPU memory before GPU profiling is enabled, the profiler doesn't capture those allocation events. For workloads such as vLLM that pre-allocate GPU memory during startup, enable GPU profiling before deploying the workload, or restart the workload to capture initial memory allocation paths.
 
 ### Step 2: Enable profile visualization with Pyroscope
 
@@ -92,6 +102,9 @@ kubectl get pods -n gadget pyroscope-0
 > If you would like to deploy a highly available Pyroscope setup, refer to the [Pyroscope microservices documentation](https://grafana.com/docs/pyroscope/latest/reference-pyroscope-architecture/deployment-modes/#microservices-mode) for configuration options.
 
 ### Step 3: Connect Pyroscope to Azure Managed Grafana
+
+> [!NOTE]
+> If you're using your own Grafana instance instead of Azure Managed Grafana, see [How do I visualize Inspector Gadget metrics in my own Grafana?](#how-do-i-visualize-inspector-gadget-metrics-in-my-own-grafana) in the FAQ.
 
 > [!TIP]
 > You can directly view your workload profiles using `kubectl port-forward -n gadget pyroscope-0 4040:4040` to connect to the Pyroscope UI.
@@ -209,22 +222,22 @@ az grafana data-source show -n $GRAFANA_NAME --data-source local-pyroscope
 ### Step 4: Connect Grafana to Azure Monitor managed service for Prometheus
 
 > [!NOTE]
-> These steps are based on [Connect Azure Monitor managed service for Prometheus to Grafana](/azure/azure-monitor/metrics/prometheus-grafana?tabs=azure-managed-grafana).
+> These steps are based on [Connect Azure Monitor managed service for Prometheus to Grafana](/azure/azure-monitor/metrics/prometheus-grafana?tabs=azure-managed-grafana). Make sure Grafana's managed identity has the **Monitoring Data Reader** role on the Azure Monitor workspace, especially if it's in a different resource group or subscription.
 
 Export the required variables:
 
 ```bash
 export AMP_NAME="<your-amp-workspace-name>"
-export RESOURCE_GROUP="<your-resource-group>"
+export AMP_RESOURCE_GROUP="<your-amp-resource-group>"
 ```
 
 > [!TIP]
-> Run `az resource list --resource-type Microsoft.Monitor/accounts -g $RESOURCE_GROUP -o table` to list Azure Monitor workspace information.
+> Run `az resource list --resource-type Microsoft.Monitor/accounts -g $AMP_RESOURCE_GROUP -o table` to list Azure Monitor workspace information. The Azure Monitor workspace is often in a different resource group than your AKS cluster and Azure Managed Grafana instance—for example, when Managed Prometheus auto-creates a workspace in a regional `MA_<region>_<…>` resource group, or when a central platform team owns a shared workspace. To search across the subscription instead, omit `-g` and run `az resource list --resource-type Microsoft.Monitor/accounts -o table`.
 
 ```bash
 # Get AMW endpoint
 AMP_ENDPOINT=$(az resource show --resource-type Microsoft.Monitor/accounts \
-  -n "$AMP_NAME" -g "$RESOURCE_GROUP" \
+  -n "$AMP_NAME" -g "$AMP_RESOURCE_GROUP" \
   --query properties.metrics.prometheusQueryEndpoint -o tsv)
 
 # Create Prometheus data source with MSI auth
@@ -250,7 +263,7 @@ az grafana data-source show -n $GRAFANA_NAME --data-source $AMP_NAME
 ### Step 5: Set up dashboards in Grafana
 
 ```bash
-  az grafana dashboard create \
+az grafana dashboard create \
   -n "$GRAFANA_NAME" \
   -g "$RESOURCE_GROUP" \
   --definition "$(curl -sSL https://raw.githubusercontent.com/inspektor-gadget/grafana-dashboards/refs/heads/main/dashboards/gpu-observability/AdvancedGPUObservability.json)"
@@ -286,8 +299,17 @@ A flame graph is a visualization of profiled call stacks. Each bar represents a 
 
 **Key rule**: The wider a bar, the more of the measured resource flows through that function.
 
+The following sample flame graphs are captured from a vLLM inference workload.
+
+:::image type="content" source="media/gpu-profiling/flame-graph-initial.png" alt-text="Screenshot of the initial collapsed flame graph view in Grafana for a vLLM workload, showing stacked bars that represent GPU memory allocation call stacks." lightbox="media/gpu-profiling/flame-graph-initial.png":::
+
 > [!TIP]
-> Use **Expand all groups** in Grafana's flame graph panel to see the full call stack without collapsing. Use the **Search** box to find specific functions or keywords.
+> Use **Expand all groups** in Grafana's flame graph panel to see the full call stack without collapsing. Use the **Search** box to find specific functions or keywords. To prevent the panel from collapsing again, pause the dashboard auto-refresh (set the refresh interval to **Off** in the top-right of the Grafana dashboard) while you inspect the expanded flame graph.
+
+:::image type="content" source="media/gpu-profiling/flame-graph-expanded.png" alt-text="Screenshot of the flame graph in Grafana for a vLLM workload after selecting Expand all groups, showing the full call stack with individual function frames for GPU memory allocations." lightbox="media/gpu-profiling/flame-graph-expanded.png":::
+
+> [!TIP]
+> Use **Focus block** to focus on a specific allocation path.
 
 ### Read the symbols
 
@@ -330,7 +352,7 @@ Use the following steps to identify hotspots:
 * **Check self vs total**—A wide bar at the bottom with `self: 0` is just a call chain. Follow it upward until you find a bar with high self allocation.
 * **Read the call stack bottom-to-top**—The ordering tells you why the function was called. For example:
   ```
-   `<raw-address>` e.g `0x7f151`            → native code entry
+    <raw-address> e.g 0x7f151               → native code entry
     <interpreter trampoline>                → CPython dispatch
     <module>                                → script top-level
     EngineCoreProc.run_engine_core          → vLLM engine startup
@@ -348,6 +370,57 @@ Use the following steps to identify hotspots:
 | Optimization targets | Bars with wide self—that's where the resource is consumed |
 | Functions to ignore | Wide bars with 0 self—they just call others |
 
+## FAQ
+
+### How do I connect my own Prometheus instance to Inspektor Gadget?
+
+If you run your own Prometheus instance instead of Azure Monitor Managed Service for Prometheus, you can connect it to scrape metrics from Inspektor Gadget pods.
+
+Inspektor Gadget exposes its metrics at:
+
+| Setting | Value |
+|---|---|
+| Namespace | `gadget` |
+| Port | `2224` |
+| Path | `/metrics` |
+
+Add a scrape job to your Prometheus configuration to discover and scrape these pods:
+
+> [!TIP]
+> For Prometheus Operator deployments, you can achieve the same configuration by creating a PodMonitor with the equivalent namespace, label selector, port, and metrics path.
+
+```yaml
+scrape_configs:
+  - job_name: "inspektor-gadget"
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+            - gadget
+    relabel_configs:
+    # Only keep pods with label k8s-app=gadget
+      - source_labels: [__meta_kubernetes_pod_label_k8s_app]
+        action: keep
+        regex: gadget
+
+      # Force metrics path
+      - target_label: __metrics_path__
+        replacement: /metrics
+
+      # Force port
+      - source_labels: [__address__]
+        action: replace
+        regex: ([^:]+)(?::\d+)?
+        replacement: $1:2224
+        target_label: __address__
+```
+Verify the connection in your Prometheus UI under Status > Targets. The  inspektor-gadget  job should show its target as UP.
+
+### How do I visualize Inspector Gadget metrics in my own Grafana?
+
+Make sure your Prometheus instance is connected to Grafana as a data source. Then, import the Inspector Gadget dashboard using this JSON definition:
+
+`https://raw.githubusercontent.com/inspektor-gadget/grafana-dashboards/refs/heads/main/dashboards/gpu-observability/AdvancedGPUObservability.json`
 
 ## Next steps
 

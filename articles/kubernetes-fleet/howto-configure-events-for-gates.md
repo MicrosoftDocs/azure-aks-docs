@@ -9,7 +9,7 @@ ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a fleet administrator, I want to configure Event Grid Sytem Topics for Azure Kubernetes Fleet Manager update runs, so that I can use the events to deliver alerts or provide automation triggers."
 ---
 
-# Automate Azure Kubernetes Fleet Manager approval gates with Event Grid events (preview)
+# Automate Azure Kubernetes Fleet Manager approval gates with Event Grid events
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
@@ -17,11 +17,9 @@ Fleet Manager update run [approval gates](./update-strategies-gates-approvals.md
 
 Approval gates publish events via an Event Grid System Topic. Event subscriptions on the Topic can be used as a trigger for automations to mark pending approvals as completed. 
 
-Automations can include integration with other Azure services, or with external systems to perform actions such as raising service desk tickets, or using health check APIs to ensure cluster workloads are healthy before allowing an update run to continue.
+Automations can include integration with other Azure services, or with external systems. Examples of integrations scenarios include raising service desk tickets, or using health check APIs to ensure cluster workloads are healthy.
 
 This article provides instructions on how to configure Event Grid and event subscriptions to receive published events.
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 ## Understanding approval gate Event Grid events
 
@@ -48,7 +46,7 @@ Use the following event properties to define advanced Event Grid Event Subscript
 | data.resourceInfo.properties.target.updateRunProperties.group | "blue"           | The name of the update group where the gate is applied. Only present for groups.   |
 | data.resourceInfo.properties.target.updateRunProperties.timing | "Before" / "After" | Denotes if the gate is applied before or after the stage or group.              |
 
-A sample raw Event Grid Event follows. Most event handlers will receive only a single event, making the `data` payload available for processing.
+A sample raw Event Grid Event follows. Most event handlers receive only a single event, making the `data` payload available for processing.
 
 ```json
 [
@@ -79,7 +77,7 @@ A sample raw Event Grid Event follows. Most event handlers will receive only a s
             "operationalInfo": {
                 "resourceEventTime": "2025-09-23T02:50:21.2604165+00:00"
             },
-            "apiVersion": "2025-04-01-preview"
+            "apiVersion": "2026-06-01"
         },
         "eventType": "Microsoft.ResourceNotifications.AksResources.FleetGateCreated",
         "dataVersion": "1",
@@ -97,7 +95,7 @@ A sample raw Event Grid Event follows. Most event handlers will receive only a s
 
 * You must have an Update Strategy that contains at least one [Approval Gate](./update-strategies-gates-approvals.md).
 
-* Ensure any automation uses an identity which holds either the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role, or a custom RBAC role that includes the `Microsoft.ContainerService/fleets/gates/write` Action.
+* Ensure any automation uses an identity holding either the [Azure Kubernetes Fleet Manager Contributor][azure-rbac-fleet-manager-contributor-role] Azure RBAC role, or a custom RBAC role that includes the `Microsoft.ContainerService/fleets/gates/write` Action.
 
 * You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
@@ -138,7 +136,7 @@ az eventgrid system-topic create \
 
 ## Create event subscription
 
-In this example, we create a subscription for pending Approval Gate events originating from a specific Fleet Manager `flt-mgr-approvals-01`. The `Approval` Gate must be named `Check with sales teams` and be applied `Before` the `Dev` stage in any update run. Finally, the events are routed to an existing Azure Function which processes the events. 
+In this example, we create a subscription for pending Approval Gate events originating from a specific Fleet Manager `flt-mgr-approvals-01`. The `Approval` Gate must be named `Check with sales teams` and be applied `Before` the `Dev` stage in any update run. Finally, the events are routed to an existing Azure Function that processes the events. 
 
 Create a new subscription by using the [az eventgrid system-topic event-subscription create][azure-event-grid-sub-create] command as shown.
 

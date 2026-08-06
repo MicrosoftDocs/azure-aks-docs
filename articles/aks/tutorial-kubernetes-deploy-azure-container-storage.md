@@ -2,7 +2,7 @@
 title: Kubernetes on Azure tutorial - Use Azure Container Storage
 description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to deploy Azure Container Storage on an AKS cluster and create volumes.
 ms.topic: tutorial
-ms.date: 02/18/2026
+ms.date: 06/23/2026
 author: khdownie
 ms.author: kendownie
 ms.custom: mvc, devx-track-azurecli
@@ -17,6 +17,9 @@ This tutorial introduces Azure Container Storage and demonstrates how to deploy 
 
 Azure Container Storage simplifies the management of stateful applications in Kubernetes by offering container-native storage tailored to a variety of workloads, including databases, analytics platforms, and high-performance applications.
 
+> [!IMPORTANT]
+> This tutorial only applies to AKS Standard clusters. If you chose AKS Automatic in the [previous tutorial](./tutorial-kubernetes-deploy-cluster.md), skip this tutorial and continue to [Deploy an application in AKS](./tutorial-kubernetes-deploy-application.md).
+
 By the end of this tutorial, you will:
 
 > [!div class="checklist"]
@@ -29,11 +32,13 @@ By the end of this tutorial, you will:
 
 In previous tutorials, you created a container image, uploaded it to an ACR instance, and created an AKS cluster. Start with [Tutorial 1 - Prepare application for AKS][aks-tutorial-prepare-app] to follow along.
 
+This tutorial creates billable resources and requires permissions to update AKS cluster settings and install extensions. Use an identity with at least **Contributor** access to the resource group that contains your AKS cluster.
+
 * Confirm that your target region is supported by reviewing the [Azure Container Storage regional availability][azure-container-storage-availability].
 
 * Install the latest version of the [Azure CLI](/cli/azure/install-azure-cli) (2.83.0 or later), then sign in with `az login`. Don't use Azure Cloud Shell, because `az upgrade` isn't available.
 
-* Install the Kubernetes command-line client, `kubectl`. You can install it locally by running `az aks install-cli`.
+* Install the Kubernetes command-line client, `kubectl`. You can install it locally by running `az aks install-cli`. For other installation options, see [Install kubectl][aks-install-kubectl].
 
 > [!IMPORTANT]
 > This tutorial applies to [Azure Container Storage (version 2.x.x)][azure-container-storage], which supports local NVMe disk and Azure Elastic SAN as backing storage types. This tutorial uses local NVMe and creates a generic ephemeral volume. To use local NVMe, your VM SKU must support local NVMe data disks, such as [storage-optimized](/azure/virtual-machines/sizes/overview#storage-optimized) or [GPU-accelerated](/azure/virtual-machines/sizes/overview#gpu-accelerated) VMs.
@@ -48,6 +53,12 @@ Add or upgrade to the latest version of `k8s-extension` by running the following
 az extension add --upgrade --name k8s-extension
 ```
 
+Verify that the extension is available before continuing:
+
+```azurecli
+az extension show --name k8s-extension --query version --output tsv
+```
+
 ## Enable Azure Container Storage on your AKS cluster
 
 Run the following command to enable Azure Container Storage on an existing AKS cluster using local NVMe. Azure Container Storage installs the latest available version and updates itself automatically. Manual version selection isn't supported.
@@ -55,6 +66,8 @@ Run the following command to enable Azure Container Storage on an existing AKS c
 ```azurecli
 az aks update -n myAKSCluster -g myResourceGroup --enable-azure-container-storage ephemeralDisk
 ```
+
+If this command fails with an authorization error, run `az account show` to verify the active subscription and confirm that your identity has permission to update the AKS cluster.
 
 The deployment can take up to five minutes. When it completes, the AKS cluster has Azure Container Storage installed and the components for local NVMe storage type deployed. It also creates the default `local-csi` storage class.
 
@@ -67,6 +80,8 @@ If you're not already connected to your cluster from the previous tutorial, run 
     ```azurecli
     az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
     ```
+
+    Continue after the command reports that context entries were merged into `~/.kube/config`.
 
 2. Verify the connection by listing the cluster nodes.
 
@@ -95,7 +110,7 @@ local-csi   localdisk.csi.acstor.io   Delete          WaitForFirstConsumer   tru
 
 Create a pod using [Fio](https://github.com/axboe/fio) (Flexible I/O Tester) for benchmarking and workload simulation that uses a generic ephemeral volume.
 
-1. Use your favorite text editor to create a YAML manifest file such as `code fiopod.yaml`.
+1. Create a YAML manifest file named `fiopod.yaml`. For example, run `code fiopod.yaml`.
 
 1. Paste in the following code and save the file.
 
@@ -167,6 +182,8 @@ You won't need Azure Container Storage for the rest of this tutorial series, so 
    kubectl delete pv ephemeralvolume
    ```
 
+    If this command returns `NotFound`, continue. Generic ephemeral volumes are deleted automatically when the pod is deleted.
+
 1. Delete the extension instance.
 
    ```azurecli
@@ -191,6 +208,7 @@ In the next tutorial, you learn how to deploy an application to your cluster.
 [aks-tutorial-deploy-app]: ./tutorial-kubernetes-deploy-application.md
 [aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md
 [aks-tutorial-deploy-cluster]: ./tutorial-kubernetes-deploy-cluster.md
+[aks-install-kubectl]: /azure/aks/learn/quick-kubernetes-deploy-cli?tabs=azure-cli#install-kubectl
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
 [azure-container-storage-availability]: /azure/storage/container-storage/container-storage-introduction#regional-availability

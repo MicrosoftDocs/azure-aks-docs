@@ -1,7 +1,7 @@
 ---
 title: "Azure Kubernetes Fleet Manager member cluster types"
 description: This article provides a conceptual overview of the different types of member clusters supported in Azure Kubernetes Fleet Manager.
-ms.date: 06/01/2026
+ms.date: 06/15/2026
 author: ealianis
 ms.author: sehobbs
 ms.service: azure-kubernetes-fleet-manager
@@ -23,8 +23,8 @@ The following table outlines which Azure Kubernetes Fleet Manager capabilities a
 | Cross-cluster networking           | ✅ Preview  | ❌ Unsupported                |
 | Workload placement                 | ✅ GA       | ✅ GA                         |
 | DNS load balancing                 | ✅ GA       | ❌ Unsupported                |
-| Managed Namespaces                 | ✅ Preview  | ✅ Preview                    |
-| Managed Namespace RBAC             | ✅ Preview  | ❌ Unsupported                |
+| Managed Namespaces                 | ✅ GA       | ❌ Unsupported                |
+| Managed Namespace RBAC             | ✅ GA       | ❌ Unsupported                |
 | Non-public Azure regions           | ✅ GA       | ❌ Unsupported                |
 
 ## Arc-enabled Kubernetes Clusters important considerations
