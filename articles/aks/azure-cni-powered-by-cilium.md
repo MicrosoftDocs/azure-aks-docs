@@ -7,7 +7,7 @@ ms.subservice: aks-networking
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli, build-2023
-ms.date: 06/26/2026
+ms.date: 08/05/2026
 # Customer intent: As a cloud architect, I want to configure an AKS cluster with Azure CNI Powered by Cilium, so that I can achieve high-performance networking and enhanced security for my containerized applications.
 ---
 
@@ -34,12 +34,13 @@ Azure CNI Powered by Cilium provides the following benefits by making use of eBP
 > [!NOTE]
 > If you're using **AKS Automatic**, the overlay network option is the default and is preconfigured for you. The following configuration options apply to **AKS Standard** clusters only.
 
-You can deploy Azure CNI Powered by Cilium with two different methods for assigning pod IPs:
+You can use Azure CNI Powered by Cilium with three IP address management (IPAM) options:
 
-- Assign IP addresses from an overlay network (similar to Azure CNI Overlay mode)
-- Assign IP addresses from a virtual network (similar to existing Azure CNI with Dynamic Pod IP Assignment)
+- [Azure CNI Overlay](./concepts-network-azure-cni-overlay.md)
+- [Azure CNI Pod Subnet](./concepts-network-azure-cni-pod-subnet.md)
+- [Azure CNI Node Subnet](./concepts-network-legacy-cni.md#azure-cni-node-subnet), a legacy option
 
-If you aren't sure which option to select, read [Choose a network model](./concepts-network-azure-cni-overlay.md#choose-a-network-model)
+For most scenarios, use Azure CNI Overlay. If you need direct access to pod IP addresses from connected networks, use Azure CNI Pod Subnet. For more information, see [Choose an IPAM option for AKS](./concepts-network-cni-overview.md#choose-an-ipam-option-for-aks).
 
 ## Supported Kubernetes and Cilium versions
 
@@ -47,23 +48,26 @@ The following table shows the minimum Cilium version for each Kubernetes version
 
 | Kubernetes version | Minimum Cilium version |
 | ------------------ | ---------------------- |
-| 1.29 (LTS) | 1.14.20 |
-| 1.30 (LTS) | 1.14.20 |
 | 1.31 (LTS) | 1.16.16 |
-| 1.32 | 1.17.9 |
-| 1.33 | 1.17.9 |
+| 1.32 (LTS) | 1.17.9 |
+| 1.33 (LTS) | 1.17.9 |
 | 1.34 | 1.18.6 |
 | 1.35 | 1.18.6 |
+| 1.36 | 1.18.9 |
 
 For more information on AKS versioning and release timelines, see [Supported Kubernetes Versions](./supported-kubernetes-versions.md).
 
-## Network Policy Enforcement
+## Network policy enforcement with Cilium
 
 Cilium enforces [network policies to allow or deny traffic between pods](./operator-best-practices-network.md#control-traffic-flow-with-network-policies). With Cilium, you don't need to install a separate network policy engine such as Azure Network Policy Manager or Calico.
 
 ## Local Redirect Policy (LRP)
 
+Local Redirect Policy (LRP) redirects pod traffic destined for an IP address and port or a Kubernetes service to a backend pod on the same node.
+
 LRP is supported from Kubernetes v1.29 and above. For LRP to work with Advanced Container Networking Services (ACNS) - FQDN Filtering, the Cilium Network Policy egress labels need to match with node-local DNS cache pod labels.
+
+The following `CiliumLocalRedirectPolicy` redirects DNS traffic sent to the `kube-dns` service to node-local DNS cache pods on the same node. If your cluster uses a different DNS service name or namespace, update `serviceName` and `namespace` to match your cluster.
 
 ```yaml
 apiVersion: cilium.io/v2
@@ -73,27 +77,23 @@ metadata:
   namespace: kube-system
 spec:
   redirectFrontend:
-    addressMatcher:
-      ip: 10.96.0.10   # kube-dns ClusterIP (example)
-      toPorts:
-      - ports:
-        - port: "53"
-          protocol: UDP
-        - port: "53"
-          protocol: TCP
+    serviceMatcher:
+      serviceName: kube-dns
+      namespace: kube-system
   redirectBackend:
     localEndpointSelector:
       matchLabels:
         k8s-app: node-local-dns
     toPorts:
-    - ports:
       - port: "53"
+        name: dns
         protocol: UDP
       - port: "53"
+        name: dns-tcp
         protocol: TCP
 ```
 
-The Cilium Network Policy should match the DNS label:
+The following snippet shows the `toEndpoints` label selector in the `CiliumNetworkPolicy` egress rule, which must match the labels on the node-local DNS cache pods.
 
 ```yaml
 ...
@@ -104,20 +104,20 @@ The Cilium Network Policy should match the DNS label:
 
 ## Limitations
 
-Azure CNI powered by Cilium currently has the following limitations:
+Azure CNI Powered by Cilium currently has the following limitations:
 
 - Available only for Linux and not for Windows.
 - Network policies can't use `ipBlock` to allow access to node or pod IPs. For details and recommended workarounds, see [frequently asked questions](#frequently-asked-questions).
 - For Cilium versions 1.16 or earlier, multiple Kubernetes services can't use the same host port with different protocols (for example, TCP or UDP) ([Cilium issue #14287](https://github.com/cilium/cilium/issues/14287)).
 - Network policies aren't applied to pods using host networking (`spec.hostNetwork: true`) because these pods use the host identity instead of having individual identities.
 - Cilium Endpoint Slices are supported in Kubernetes version 1.32 and above. Cilium Endpoint Slices don't support configuration of how Cilium Endpoints are grouped. Priority namespace through `cilium.io/ces-namespace` isn't supported.
-- Cilium uses Cilium identities as unique identity for provisioning endpoints, so high-churning workloads such as Spark jobs generate high count of Cilium identities. To avoid workloads hitting Cilium identity limits (65535), excluding Spark job's labels like `!spark-app-name` and `!spark-app-selector` in the Cilium configmap can significantly reduce Cilium identity generation. For more details on Cilium identity exclusion rules, check [the official Cilium label documentation](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels).
+- Cilium uses Cilium identities as a unique identity for provisioning endpoints, so high-churning workloads such as Spark jobs generate high count of Cilium identities. To avoid workloads hitting Cilium identity limits (65535), excluding Spark job's labels like `!spark-app-name` and `!spark-app-selector` in the Cilium configmap can significantly reduce Cilium identity generation. For more details on Cilium identity exclusion rules, check [the official Cilium label documentation](https://docs.cilium.io/en/stable/operations/performance/scalability/identity-relevant-labels/#excluding-labels).
 
 ## Enable Advanced Container Networking Services for observability and security
 
 To gain capabilities such as observability into your network traffic and security features like Fully Qualified Domain Name (FQDN) based filtering and Layer 7 based network policies on your cluster, consider enabling [Advanced Container Networking services](./advanced-container-networking-services-overview.md) on your clusters.
 
-This recommendation applies to both AKS Automatic and AKS Standard clusters. If you're using AKS Automatic, the base networking is already preconfigured. Enabling ACNS adds advanced observability and security features on top of the existing Cilium networking, including FQDN filtering, L7 network policies, Wireguard encryption, and container network observability.
+This recommendation applies to both AKS Automatic and AKS Standard clusters. If you're using AKS Automatic, the base networking is already preconfigured. Enabling ACNS adds container network observability and FQDN filtering. Other ACNS features, including L7 network policies, WireGuard encryption, mTLS encryption, and eBPF Host Routing, require additional configuration. Some features also have version, operating system, or preview requirements. For more information, see the [feature support table](#which-cilium-features-does-azure-cni-powered-by-cilium-support-which-features-require-advanced-container-networking-services).
 
 ## Cluster configuration by AKS cluster mode
 
@@ -135,7 +135,18 @@ On AKS Standard, Azure CNI Powered by Cilium is an optional networking configura
 
 ## Prerequisites
 
-- You need Azure CLI version 2.48.1 or later to assign IP addresses from [an overlay network](#option-1-assign-ip-addresses-from-an-overlay-network) and [a virtual network](#option-2-assign-ip-addresses-from-a-virtual-network). You need Azure CLI version 2.69.0 or later to assign IP addresses from [the node subnet](#option-3-assign-ip-addresses-from-the-node-subnet).  Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+The required Azure CLI version varies by IP assignment method:
+
+| IP assignment method | Required Azure CLI version |
+| -------------------- | -------------------------- |
+| [Overlay network](#option-1-assign-ip-addresses-from-an-overlay-network) | 2.48.1 or later |
+| [Virtual network](#option-2-assign-ip-addresses-from-a-virtual-network) | 2.48.1 or later |
+| [Node subnet](#option-3-assign-ip-addresses-from-the-node-subnet) | 2.69.0 or later |
+
+Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+
+- Review the [AKS CNI networking prerequisites](./concepts-network-cni-overview.md#aks-cni-networking-prerequisites). Unless you use a network isolated cluster, the virtual network must allow outbound connectivity to required endpoints. Address ranges can't overlap reserved AKS ranges or connected networks, and node subnets can't be delegated.
+- To use customer-managed subnets, the cluster identity needs Network Contributor permissions, or equivalent custom permissions, on the subnets. The user creating the cluster must have permission to create the required role assignments. If you associate network security groups with the subnets, ensure that their rules allow the required node and pod traffic.
 
 ## Create a new AKS Cluster with Azure CNI Powered by Cilium
 
@@ -233,7 +244,9 @@ Customers might use FQDN filtering and Layer 7 policies as part of the [Advanced
 
 ### Can I use `CiliumClusterwideNetworkPolicy`?
 
-Yes, `CiliumClusterwideNetworkPolicy` is supported. The following sample policy YAML shows configuring an L4 rule:
+Yes, Azure CNI Powered by Cilium supports `CiliumClusterwideNetworkPolicy`.  
+
+The following sample policy allows ingress traffic on TCP port 80 to pods with the label `role: backend` from pods with the label `role: frontend`.
 
 ```yaml
 apiVersion: "cilium.io/v2"
@@ -256,19 +269,21 @@ spec:
 
 ### Which Cilium features does Azure CNI Powered by Cilium support? Which features require Advanced Container Networking Services?
 
-| Supported feature | Without ACNS | With ACNS |
-| ----------------- | ----------- | ---------- |
-| Cilium Endpoint Slices | Supported ✔️ | Supported ✔️ |
-| Kubernetes Network Policies | Supported ✔️ | Supported ✔️ |
-| Local Redirect Policy | Supported ✔️ | Supported ✔️ |
-| Cilium L3/L4 Network Policies | Supported ✔️ | Supported ✔️ |
-| Cilium Clusterwide Network Policy | Supported ✔️ | Supported ✔️ |
-| FQDN Filtering | Not supported ❌ | Supported ✔️ |
-| L7 Network Policies (HTTP/gRPC/Kafka) | Not supported ❌ | Supported ✔️ |
-| Container Network Observability (Metrics and Flow logs) | Not supported ❌ | Supported ✔️ |
-| Wireguard | Not supported ❌ | Supported ✔️ |
-| mTLS Encryption | Not supported ❌ | Supported ✔️ |
-| eBPF Host Routing | Not supported ❌ | Supported ✔️ |
+| Supported feature | Without ACNS | With ACNS | Requirements and configuration |
+| ----------------- | ------------ | --------- | ------------------------------ |
+| Cilium Endpoint Slices | Supported ✔️ | Supported ✔️ | Requires Kubernetes 1.32 or later. |
+| Kubernetes Network Policies | Supported ✔️ | Supported ✔️ | None. |
+| Local Redirect Policy | Supported ✔️ | Supported ✔️ | Requires Kubernetes 1.29 or later. |
+| Cilium L3/L4 Network Policies | Supported ✔️ | Supported ✔️ | None. |
+| Cilium Clusterwide Network Policy | Supported ✔️ | Supported ✔️ | None. |
+| FQDN filtering | Not supported ❌ | Supported ✔️ | Requires Kubernetes 1.29 or later. Enabled by default with ACNS. |
+| L7 network policies (HTTP/gRPC/Kafka) | Not supported ❌ | Supported ✔️ | Requires Kubernetes 1.29 or later and the `L7` advanced network policy option. |
+| Container Network Observability (metrics and flow logs) | Not supported ❌ | Supported ✔️ | Enabled with ACNS. |
+| WireGuard encryption | Not supported ❌ | Supported ✔️ | Requires explicit WireGuard configuration and UDP port 51871 between nodes. |
+| mTLS encryption | Not supported ❌ | Supported in preview | Requires Kubernetes 1.34 or later, Cilium 1.18 or later, preview registration, and explicit mTLS configuration. |
+| eBPF Host Routing | Not supported ❌ | Supported ✔️ | Requires Kubernetes 1.33 or later, Azure CLI 2.71 or later, Azure Linux 3.0 or Ubuntu 24.04, and explicit `BpfVeth` configuration. |
+
+For feature-specific setup instructions and limitations, see [Advanced Container Networking Services](./advanced-container-networking-services-overview.md).
 
 ### Can the Cilium ConfigMap be modified?
 
@@ -295,7 +310,7 @@ spec:
           cidr: 0.0.0.0/0 # This will still block pod and node IPs.
 ```
 
-However, when this `NetworkPolicy` is applied, Cilium blocks egress to pod and node IPs even though the IPs are within the `ipBlock` CIDR.
+Even with `cidr: 0.0.0.0/0`, Cilium blocks egress to pod and node IPs because `ipBlock` can't select those addresses.
 
 As a workaround, you can add `namespaceSelector` and `podSelector` to select pods. This example selects all pods in all namespaces:
 
@@ -322,17 +337,19 @@ It isn't currently possible to specify a `NetworkPolicy` with an `ipBlock` to al
 
 No, AKS doesn't configure CPU or memory limits on the Cilium `daemonset` because Cilium is a critical system component for pod networking and network policy enforcement.
 
-### Does Azure CNI powered by Cilium use kube-proxy?
+### Does Azure CNI Powered by Cilium use kube-proxy?
 
 No, AKS clusters created with network data plane as Cilium don't use `kube-proxy`.
 
-If the AKS clusters are on [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md) and are upgraded to AKS clusters running Azure CNI powered by Cilium, new node workloads are created without `kube-proxy`. Older workloads are also migrated to run without `kube-proxy` as a part of this upgrade process.
+This behavior applies to all Kubernetes versions supported by Azure CNI Powered by Cilium, with no separate AKS version constraint. The data plane upgrade is supported only on Linux clusters and requires node auto-provisioning (NAP) to be disabled during the update.
+
+If you upgrade AKS clusters on [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md) to AKS clusters running Azure CNI Powered by Cilium, workloads on new nodes are created without `kube-proxy`. Workloads on existing nodes are also migrated to run without `kube-proxy` as a part of this upgrade process.
 
 - **Is AKS Local DNS supported with Azure CNI Powered by Cilium?**
 
     Yes, network policies must explicitly allow pod egress to the LocalDNS IP address.
 
-    This Cilium Network Policy shows how to allow pod egress to LocalDNS IP though host entities and CIDR:
+    The following policy allows egress to the LocalDNS CIDR `169.254.10.0/24` on UDP and TCP port 53 and to the `host` entity on the same ports.
  
     ```yaml
     apiVersion: "cilium.io/v2"
@@ -364,9 +381,9 @@ If the AKS clusters are on [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure
 
 ## Dual-stack networking with Azure CNI Powered by Cilium
 
-You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. This feature also allows you to control your IPv6 traffic with the Cilium Network Policy engine.
-
 You must have Kubernetes version 1.29 or greater. This applies to both AKS Automatic and AKS Standard clusters.
+
+You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. This feature also allows you to control your IPv6 traffic with the Cilium Network Policy engine.
 
 ### Set up Overlay clusters with Azure CNI Powered by Cilium
 
@@ -397,8 +414,7 @@ For more information about AKS networking and AKS Automatic, see the following r
 - [Upgrade Azure CNI IPAM modes and data plane technology](update-azure-cni.md).
 - [Use a static IP address with the Azure Kubernetes Service (AKS) load balancer](static-ip.md)
 - [Use an internal load balancer with Azure Kubernetes Service (AKS)](internal-lb.md)
-- [Create a basic ingress controller with external network connectivity][aks-ingress-basic]
+- [Ingress concepts for Azure Kubernetes Service (AKS)](concepts-network-ingress.md)
 
 <!-- LINKS - Internal -->
-[aks-ingress-basic]: ingress-basic.md
 [az-aks-create]: /cli/azure/aks#az-aks-create

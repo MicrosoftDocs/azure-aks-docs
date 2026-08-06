@@ -1,7 +1,7 @@
 ---
 title: Monitor Azure Kubernetes Service (AKS)
 description: Learn how to monitor Azure Kubernetes Service (AKS) clusters using built-in monitoring capabilities and integrating with other Azure services for detailed insights into health and performance.
-ms.date: 07/06/2026
+ms.date: 08/05/2026
 ms.custom: horz-monitor, copilot-scenario-highlight
 ms.topic: overview
 ms.service: azure-kubernetes-service
@@ -69,7 +69,7 @@ For more information about resource types in AKS, see the [AKS monitoring data r
 
 For a list of metrics you can collect for AKS, see the [AKS monitoring data reference](monitor-aks-reference.md#metrics).
 
-Metrics play an important role in monitoring clusters, identifying issues, and optimizing performance in AKS clusters. Platform metrics are captured using the out-of-the-box metrics server installed in the `kube-system` namespace, which periodically scrapes metrics from all AKS nodes served by kubelet. You should also enable managed service for Prometheus metrics to collect container metrics and Kubernetes object metrics, including object deployment state.
+Metrics play an important role in monitoring clusters, identifying issues, and optimizing performance in AKS clusters. AKS creates platform metrics that Azure Monitor collects automatically without configuration. You should also enable managed service for Prometheus metrics to collect container metrics and Kubernetes object metrics, including object deployment state.
 
 In AKS Automatic, managed service for Prometheus is enabled by default, so you start with a production-ready metrics baseline without additional setup.
 
@@ -93,7 +93,7 @@ In the Azure portal, use the **Integrations** tab, or use the Azure CLI, Terrafo
 
 ### AKS control plane metrics monitoring (preview)
 
-> **Prerequisites and scope**: This preview feature is available for AKS clusters running Kubernetes 1.27 or later and requires the managed service for Prometheus to be enabled on your cluster. The feature currently supports Linux and Windows node pools but is not compatible with Virtual Machine Availability Sets (VMAS).
+> **Prerequisites and scope**: This preview feature requires an AKS cluster that uses managed identity authentication and has the managed service for Prometheus enabled. You must also register the `AzureMonitorMetricsControlPlanePreview` feature flag. Azure Private Link isn't supported, and you can customize only the default `ama-metrics-settings-configmap.yaml` configmap file.
 
 AKS also exposes metrics from critical control plane components like the API server, etcd, and the scheduler through the managed service for Prometheus in Azure Monitor. Currently, this feature is in preview. For more information, see [Monitor AKS control plane metrics](./control-plane-metrics-monitor.md). A subset of control plane metrics for the API server and etcd are available free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default. You can use the metrics to create alerts.
 
@@ -103,7 +103,7 @@ For the available resource log categories, their associated Log Analytics tables
 
 ### AKS control plane resource logs
 
-> **Prerequisites**: Requires a Log Analytics workspace in the same subscription as your AKS cluster. Resource logs incur ingestion and retention costs in the destination workspace. For cost optimization, use resource-specific mode and configure Basic logs tier for audit tables.
+> **Prerequisites**: Requires a Log Analytics workspace. The workspace can be in a different subscription if the person configuring the diagnostic setting has appropriate Azure role-based access control (RBAC) access to both subscriptions. For a workspace in another Microsoft Entra tenant, use Azure Lighthouse. Resource logs incur ingestion and retention costs in the destination workspace. For cost optimization, use resource-specific mode and configure Basic logs tier for audit tables. For more information, see [Diagnostic settings destinations](/azure/azure-monitor/platform/diagnostic-settings#destinations).
 
 Control plane logs for AKS clusters are implemented as [resource logs](/azure/azure-monitor/essentials/resource-logs) in Azure Monitor. Resource logs aren't collected and stored until you create a diagnostic setting to route them to at least one location. You typically send resource logs to a Log Analytics workspace, where most data for Container insights is stored.
 
@@ -438,7 +438,7 @@ The **Logs and events** grouping captures the logs from the **ContainerLog** or 
 
 #### ContainerLogV2 schema
 
-> **Compatibility and configuration requirements**: ContainerLogV2 schema is recommended for new Container insights deployments using managed identity authentication via Azure Resource Manager (ARM) templates, Bicep, Terraform, Azure Policy, or the Azure portal. The schema is compatible with Basic logs tier for cost savings and doesn't affect analytics or alerts functionality. For more information about how to enable ContainerLogV2 through either the cluster's DCR or configmap, see [Enable the ContainerLogV2 schema](/azure/azure-monitor/containers/container-insights-logs-schema?tabs=configure-portal#enable-the-containerlogv2-schema).
+> **Compatibility and configuration requirements**: Use the ContainerLogV2 schema for new Container insights deployments that use managed identity authentication via Azure Resource Manager (ARM) templates, Bicep, Terraform, Azure Policy, or the Azure portal. The schema supports the Basic logs tier for cost savings. Basic logs support simple log search alerts, but advanced alerting requires Analytics-tier logs. For aggregated or near-real-time alerting, use managed Prometheus when metrics are available, summary rules, or route selected data to the Analytics tier with transformations. For more information, see [Enable the ContainerLogV2 schema](/azure/azure-monitor/containers/container-insights-logs-schema?tabs=configure-portal#enable-the-containerlogv2-schema) and [Cost-effective alerting strategies for AKS](/azure/azure-monitor/containers/cost-effective-alerting).
 
 Container insights in Azure Monitor provides a recommended schema for container logs, _ContainerLogV2_. The format includes the following fields for common queries to view data related to AKS and Azure Arc-enabled Kubernetes clusters:
 
@@ -536,7 +536,7 @@ In AKS Automatic, Azure Monitor dashboards with Grafana are available by default
 
 [AKS desktop](aks-desktop-overview.md) is an application-focused desktop experience for Azure Kubernetes Service (AKS) that helps you connect to clusters, view resources, deploy applications, and troubleshoot workloads without deep Kubernetes expertise.
 
-AKS desktop complements Azure Monitor and Container insights by giving application teams a single, ready-to-use place for high level day-to-day observation and troubleshooting of their induvidual application workloads, without building custom tooling or switching between tools.
+AKS desktop complements Azure Monitor and Container insights by giving application teams a single, ready-to-use place for high-level day-to-day observation and troubleshooting of their individual application workloads, without building custom tooling or switching between tools.
 
 From an [AKS desktop Project](aks-desktop-projects.md), you can:
 
@@ -592,7 +592,7 @@ The following table lists some suggested alert rules for AKS. These alerts are o
 
 ## AKS node network metrics monitoring
 
-> **Version and enablement requirements**: In Kubernetes version 1.29 and later, node network metrics are enabled by default for all clusters that have Azure Monitor enabled. For earlier Kubernetes versions, you must manually enable network monitoring through cluster configuration. This feature requires Azure Monitor or Container insights to be configured on your cluster.
+> **Enablement requirements**: When you enable Azure Monitor managed service for Prometheus on your cluster, node-level network metrics are collected by default. To collect pod-level and other advanced network metrics, enable [Container Network Observability](advanced-container-networking-services-overview.md#container-network-observability).
 
 Node network metrics are crucial for maintaining a healthy and performant Kubernetes cluster. By collecting and analyzing data about network traffic, you can gain valuable insights about your cluster's operation and identify potential issues before they lead to outages or performance loss.
 
@@ -608,8 +608,6 @@ All metrics include these labels:
 #### [Cilium](#tab/cilium)
 
 > **OS support and limitations**: For Cilium data plane scenarios, the Container Network Observability feature provides metrics only for Linux node pools. Currently, Windows isn't supported for Container Network Observability metrics. Ensure your cluster has Linux node pools for full Cilium metrics availability.
-
-For Cilium data plane scenarios, the Container Network Observability feature provides metrics only for Linux. Currently, Windows isn't supported for Container Network Observability metrics.
 
 Cilium exposes several metrics that Container Network Observability uses:
 
