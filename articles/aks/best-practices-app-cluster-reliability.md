@@ -161,7 +161,7 @@ spec:
       app: myapp
 ```
 
-For more information, see [Plan for availability using PDBs](./operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets) and [Specifying a Disruption Budget for your Application](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
+For more information, see [Plan for availability using PDBs](./operator-best-practices-scheduler.md#limit-disruption-impact-by-using-pod-disruption-budgets-pdbs) and [Specifying a Disruption Budget for your Application](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
 
 To automate PDB creation for unprotected deployments and prevent PDB-related drain failures during upgrades, see [Automatic PDB management for AKS (preview)](automatic-pod-disruption-budget-management.md).
 

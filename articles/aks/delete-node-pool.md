@@ -124,7 +124,7 @@ For more information about adjusting node pool sizes in AKS, see [Resize node po
 [az-aks-delete-nodepool]: /cli/azure/aks#az-aks-nodepool-delete
 [remove-azaksnodepool]: /powershell/module/az.aks/remove-azaksnodepool
 [resize-node-pool]: ./resize-node-pool.md
-[pod-disruption-budget]: operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets
+[pod-disruption-budget]: operator-best-practices-scheduler.md#limit-disruption-impact-by-using-pod-disruption-budgets-pdbs
 [specify-disruption-budget]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 [disruptions]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
 [az-aks-nodepool-delete-machines]: /cli/azure/aks/nodepool#az-aks-nodepool-delete-machines
