@@ -198,10 +198,10 @@ curl "${API_URL}/metrics" | grep http_requests_total
 
 ### Troubleshooting
 
-- **Domain Name System (DNS) propagation is slow**: Use low time to live (TTL) values before the upgrade, and validate the DNS cache flush.
+- **Domain Name System (DNS) propagation is slow**: Use low time-to-live (TTL) values before the upgrade, and validate the DNS cache flush.
 - **Pods stuck terminating**: Check for finalizers, long shutdown hooks, or PDBs with `maxUnavailable: 0`.
 - **Traffic not shifting**: Validate Azure Load Balancer/Azure Traffic Manager configuration and health probes.
-- **Rollback fails**: Always keep the blue cluster ready until the green cluster is fully validated and the rollback window has passed.
+- **Rollback fails**: Always keep the blue cluster ready until the green cluster is fully validated and the rollback window passes.
 
 ### Frequently asked questions (FAQs)
 
@@ -250,7 +250,7 @@ az network dns record-set cname set-record \
   --cname myapp-blue.eastus2.cloudapp.azure.com
 ```
 
-**Expected outcome**: Downtime within your validated target and rapid traffic rollback capability. Preventing data loss requires workload-specific replication, write coordination, and tested recovery procedures.
+**Expected outcome**: Downtime stays within your validated target and rapid traffic rollback capability. Preventing data loss requires workload-specific replication, write coordination, and tested recovery procedures.
 
 ---
 
@@ -334,7 +334,7 @@ az fleet member create \
 
 #### Step 3: Create and run a staged update
 
-Select a target Kubernetes version that's supported by every Fleet member in the update run.
+Select a target Kubernetes version that every Fleet member supports in the update run.
 
 ```azurecli-interactive
 # Create staged update run
@@ -637,7 +637,7 @@ spec:
               command: ["/bin/sh", "-c", "sleep 15"]
 ```
 
-This Deployment runs three `resilient-api` replicas, removes unready pods from service traffic, restarts unhealthy containers, and gives terminating pods 15 seconds to drain.
+This deployment runs three `resilient-api` replicas, removes unready pods from service traffic, restarts unhealthy containers, and gives terminating pods 15 seconds to drain.
 
 #### Step 2: Configure Pod Disruption Budgets (PDBs)
 
