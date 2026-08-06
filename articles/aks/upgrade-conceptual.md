@@ -21,7 +21,7 @@ This article explains AKS upgrade mechanics and highlights where AKS Automatic a
 ## Prerequisites
 
 - Understanding of [Kubernetes upgrade best practices](./upgrade-cluster.md)
-- Familiarity with [Pod Disruption Budgets (PDBs)](./operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets)
+- Familiarity with [Pod Disruption Budgets (PDBs)](./operator-best-practices-scheduler.md#limit-disruption-impact-by-using-pod-disruption-budgets-pdbs)
 
 ## Upgrade model: AKS Automatic and AKS Standard
 
