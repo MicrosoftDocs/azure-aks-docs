@@ -3,7 +3,8 @@ title: Create an Azure Kubernetes Service (AKS) Cluster with Node Auto-Provision
 description: Learn how to create an AKS cluster with node auto-provisioning in a custom virtual network.
 ms.topic: how-to
 ms.custom: devx-track-azurecli, aks-scaling
-ms.date: 06/13/2024
+ms.date: 08/06/2026
+ai-usage: ai-assisted
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -28,12 +29,6 @@ This article shows you how to create a virtual network (VNet) and subnet, create
 
 ## Create a virtual network and subnet
 
-> [!IMPORTANT]
-> When using a custom VNet with NAP keep the following information in mind:
->
-> - You must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same VNet. The minimum supported API server subnet size is _/28_.
-> - All traffic within the VNet is allowed by default. However, if you added network security group (NSG) rules to restrict traffic between different subnets, you need to ensure you configure the proper permissions. For more information, see the [Network security group documentation][network-security-group].
-
 1. Create a VNet using the [`az network vnet create`][az-network-vnet-create] command.
 
     ```azurecli-interactive
@@ -44,15 +39,14 @@ This article shows you how to create a virtual network (VNet) and subnet, create
         --address-prefixes 172.19.0.0/16
     ```
 
-1. Create a subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command and delegate it to `Microsoft.ContainerService/managedClusters`.
+1. Create a node subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
 
     ```azurecli-interactive
     az network vnet subnet create \
         --resource-group $RG_NAME \
         --vnet-name $VNET_NAME \
         --name $SUBNET_NAME \
-        --delegations Microsoft.ContainerService/managedClusters \
-        --address-prefixes 172.19.0.0/28
+        --address-prefixes 172.19.0.0/24
     ```
 
 ## Create a managed identity and give it permissions to access the VNet
@@ -96,7 +90,7 @@ This article shows you how to create a virtual network (VNet) and subnet, create
         --network-dataplane cilium \
         --network-plugin azure \
         --network-plugin-mode overlay \
-        --vnet-subnet-id "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME/providers/Microsoft.Network/virtualNetworks/$CUSTOM_VNET_NAME/subnets/$SUBNET_NAME" \
+        --vnet-subnet-id "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$SUBNET_NAME" \
         --node-provisioning-mode Auto
     ```
 
@@ -131,6 +125,5 @@ For more information on node auto-provisioning in AKS, see the following article
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
-[network-security-group]: /azure/virtual-network/network-security-groups-overview
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 [azure cli]: /cli/azure/get-started-with-azure-cli
