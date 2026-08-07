@@ -1,36 +1,21 @@
 ---
-title: Abort an AKS long-running operation 
-description: Learn how to terminate a long running operation on an Azure Kubernetes Service cluster at the node pool or cluster level.
+title: Abort an AKS long-running operation
+description: Learn how to abort a long-running Azure resource operation on an Azure Kubernetes Service (AKS) managed cluster or node pool.
 ms.topic: how-to
-ms.date: 06/12/2024
+ms.date: 08/06/2026
 author: davidsmatlak
 ms.author: davidsmatlak
-
+ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
 ms.custom: devx-track-azurecli
 # Customer intent: As a cloud administrator managing an Azure Kubernetes Service (AKS) cluster, I want to abort long-running operations on node pools or clusters, so that I can regain control and ensure operational efficiency without being hindered by stalled tasks.
 ---
 
-# Terminate a long running operation on an Azure Kubernetes Service (AKS) cluster
+# Abort a long-running operation on an Azure Kubernetes Service (AKS) cluster
 
-Sometimes deployment or other processes running within pods on nodes in a cluster can run for periods of time longer than expected due to various reasons. You can get insight into the progress of any ongoing operation, such as create, upgrade, and scale, using any preview API version after `2024-01-02-preview` using the following az rest command:
+Azure resource operations on an AKS managed cluster or node pool, such as create, upgrade, and scale operations, can take longer than expected. You can inspect the progress of these operations and abort the latest running operation to regain control of the managed cluster or node pool. The commands in this article don't inspect or terminate Kubernetes workload deployments or processes running inside pods.
 
-```azurecli-interactive
-export ResourceID="<cluster-resource-id>"
-az rest --method get --url "https://management.azure.com$ResourceID/operations/latest?api-version=2024-01-02-preview"
-```
-
-This command provides you with a percentage that indicates how close the operation is to completion. You can use this method to get these insights for up to 50 of the latest operations on your cluster. The "percentComplete" attribute denotes the extent of completion for the ongoing operation, as shown in the following example:
-
-```bash
-"id": "/subscriptions/<subscription-id>/resourcegroups/myResourceGroup/providers/Microsoft.ContainerService/managedClusters/contoso/operations/<operation-id>",
-  "name": "<operation-id>",
-  "percentComplete": 10,
-  "startTime": "2024-04-08T18:21:31Z",
-  "status": "InProgress"
-```
-
-There is also a cli command equivalent for the above that shows the status of the most recent operation in the cluster.
+Use the [`az aks operation show-latest`](/cli/azure/aks/operation#az-aks-operation-show-latest) command to show the status of the latest operation on a managed cluster:
 
 ```azurecli-interactive
 az aks operation show-latest \
@@ -38,7 +23,7 @@ az aks operation show-latest \
     --name myCluster
 ```
 
-The following is an example output:
+The following output is an example:
 
 ```bash
 {
@@ -55,7 +40,13 @@ The following is an example output:
 }
 ```
 
-You can also run this command using the operation ID available from the above output.  The `Id` parameter denotes the operation ID to use. For example:
+The output includes the following operation details:
+
+- `percentComplete`: The reported completion percentage for the operation.
+- `startTime`: The time when the operation started.
+- `status`: The current operation status, such as `InProgress`.
+
+Use the [`az aks operation show`](/cli/azure/aks/operation#az-aks-operation-show) command and the operation ID from the preceding output to show a specific operation:
 
 ```azurecli-interactive
 az aks operation show \
@@ -64,36 +55,29 @@ az aks operation show \
     --operation-id "<operation-id>"
 ```
 
-While it's important to allow operations to gracefully terminate when they're no longer needed, there are circumstances where you need to release control of node pools and clusters with long running operations using an *abort* command.
-
-AKS support for aborting long running operations is now generally available. This feature allows you to take back control and run another operation seamlessly. This design is supported using the [Azure REST API](/rest/api/azure/) or the [Azure CLI](/cli/azure/).
-
-The abort operation supports the following scenarios:
-
-- If a long running operation is stuck or suspected to be in a bad state or failing, the operation can be aborted provided it's the last running operation on the Managed Cluster or agent pool.
-- If a long running operation is stuck or failing, that operation can be aborted.
-- An operation that was triggered in error can be aborted as long as the operation doesn't reach a terminal state first.
+Allow operations to complete gracefully when possible. You can abort the latest operation before it reaches a terminal state if the operation is stuck or failing, or if you started it in error. The ability to abort the latest running operation is generally available through the [Azure REST API](/rest/api/azure/) and the [Azure CLI](/cli/azure/).
 
 ## Before you begin
 
-- The Azure CLI version 2.47.0 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- Azure CLI version 2.85.0 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- The `aks-preview` extension, which provides the `az aks operation` commands. The extension installs automatically the first time you run an `az aks operation` command. To install it manually, run `az extension add --name aks-preview`. If the extension is already installed, update it with `az extension update --name aks-preview`.
 
-## Abort a long running operation
+## Abort a long-running operation on AKS
 
 ### [Azure CLI](#tab/azure-cli)
 
-You can use the [az aks nodepool](/cli/azure/aks/nodepool) command with the `operation-abort` argument to abort an operation on a node pool or a managed cluster.
+Use [`az aks nodepool operation-abort`](/cli/azure/aks/nodepool#az-aks-nodepool-operation-abort) to cancel the latest running operation on a node pool. Use [`az aks operation-abort`](/cli/azure/aks#az-aks-operation-abort) to cancel the latest running operation on a managed cluster.
 
-The following example terminates an operation on a node pool on a specified cluster.
+The following example cancels an operation on a node pool in a specified cluster:
 
 ```azurecli-interactive
 az aks nodepool operation-abort \
     --resource-group myResourceGroup \
     --cluster-name myAKSCluster \
-    --name myNodePool 
+    --name myNodePool
 ```
 
-The following example terminates an operation on a specified cluster.
+The following example cancels an operation on a specified cluster:
 
 ```azurecli-interactive
 az aks operation-abort \
@@ -101,35 +85,59 @@ az aks operation-abort \
     --resource-group myResourceGroup
 ```
 
-In the response, an HTTP status code of 204 is returned.
-
 ### [Azure REST API](#tab/azure-rest)
 
-You can use the Azure REST API [Abort](/rest/api/aks/managed-clusters) operation to stop an operation against the Managed Cluster.
+Use the Azure REST API to cancel the latest running operation on a node pool or managed cluster.
 
-The following example terminates a process for a specified agent pool.
-
-```rest
-/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerService/managedclusters/{resourceName}/agentPools/{agentPoolName}/abort
-```
-
-The following example terminates a process for a specified cluster.
+The following example cancels the latest running operation on a specified node pool:
 
 ```rest
-/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerService/managedclusters/{resourceName}/abort
+POST https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerService/managedclusters/{resourceName}/agentPools/{agentPoolName}/abort?api-version=2025-08-01
 ```
 
-In the response, an HTTP status code of 204 is returned.
+For more information, see [Agent Pools - Abort Latest Operation](/rest/api/aks/agent-pools/abort-latest-operation?view=rest-aks-2025-08-01&preserve-view=true).
+
+The following example cancels the latest running operation on a specified managed cluster:
+
+```rest
+POST https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ContainerService/managedclusters/{resourceName}/abort?api-version=2025-08-01
+```
+
+For more information, see [Managed Clusters - Abort Latest Operation](/rest/api/aks/managed-clusters/abort-latest-operation?view=rest-aks-2025-08-01&preserve-view=true).
+
+A successful cancel request returns `202 Accepted` when cancellation continues asynchronously or `204 No Content` when no response body is needed. If the original operation finishes before AKS can cancel it, the request returns `409 Conflict`.
 
 ---
 
-The provisioning state on the managed cluster or agent pool should be **Canceled**. Use the REST API [Get Managed Clusters](/rest/api/aks/managed-clusters/get) or [Get Agent Pools](/rest/api/aks/agent-pools/get) to verify the operation. The provisioning state should update to **Canceled** within a few seconds of the abort request being accepted. The operation status of last running operation ID on the managed cluster/agent pool, which can be retrieved by performing a GET operation against the Managed Cluster or agent pool, should show a status of **Canceling**.
+After AKS accepts the cancel request, the operation progresses through the following statuses:
 
-When you terminate an operation, it doesn't roll back to the previous state and it stops at whatever step in the operation was in-process. Once complete, the cluster provisioning state shows a **Canceled** state. If the operation happens to be a cluster upgrade, during a cancel operation it stops where it is.
+| Operation status | Meaning |
+| --- | --- |
+| `Canceling` | AKS is canceling the operation. |
+| `Canceled` | AKS finished canceling the operation. |
+
+Use the following command to check the latest managed cluster operation:
+
+```azurecli-interactive
+az aks operation show-latest \
+    --resource-group myResourceGroup \
+    --name myAKSCluster
+```
+
+To check the latest operation on a node pool, include the `--nodepool-name` parameter:
+
+```azurecli-interactive
+az aks operation show-latest \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
+    --nodepool-name myNodePool
+```
+
+Canceling an operation doesn't by itself roll back changes that AKS applied before cancellation.
 
 ## Next steps
 
-Learn more about [Container insights](/azure/azure-monitor/containers/container-insights-overview) to understand how it helps you monitor the performance and health of your Kubernetes cluster and container workloads.
+For more information about monitoring the performance and health of your Kubernetes cluster and container workloads, see [Container insights](/azure/azure-monitor/containers/container-insights-overview).
 
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
