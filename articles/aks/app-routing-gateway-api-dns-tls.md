@@ -26,7 +26,7 @@ The Application Routing operator exposes two integrations to automate the resour
 
 ### TLS integration
 
-When a `Gateway` resource uses a managed GatewayClass — either `approuting-istio` (from the [Application Routing Gateway API implementation][app-routing-gateway-api]) or `istio` (from the [Istio service mesh add-on][istio-addon]) — and a listener carries the following two TLS options, the Application Routing operator reconciles the resources needed to terminate TLS with a certificate stored in Azure Key Vault:
+When a `Gateway` resource uses a managed GatewayClass - either `approuting-istio` (from the [Application Routing Gateway API implementation][app-routing-gateway-api]) or `istio` (from the [Istio service mesh add-on][istio-addon]) - and a listener carries the following two TLS options, the Application Routing operator reconciles the resources needed to terminate TLS by using a certificate stored in Azure Key Vault:
 
 | TLS option key | Value |
 |---|---|
@@ -63,13 +63,13 @@ For each custom resource, the Application Routing operator:
 
 ## Prerequisites
 
-- An AKS cluster with **both** of the following enabled:
+- An AKS cluster with **both** of the following features enabled:
   - The [Application Routing add-on][app-routing-nginx] (`--enable-app-routing`). This add-on deploys the Application Routing operator on the cluster, which is the component that reconciles the DNS and TLS integrations documented in this article. On an existing cluster, you can also enable this feature by using [`az aks approuting enable`][az-aks-approuting-enable].
-  - A managed Istio-based Gateway API control plane for the operator to integrate with. Choose **one** of the following (the two are mutually exclusive and can't be enabled at the same time):
+  - A managed Gateway API implementation for the operator to integrate with. Choose **one** of the following (the two options are mutually exclusive and can't be enabled at the same time):
     - The [Application Routing Gateway API implementation][app-routing-gateway-api] (`--enable-app-routing-istio`), which provides the `approuting-istio` GatewayClass. On an existing cluster, you can also enable it by using [`az aks approuting gateway istio enable`][az-aks-approuting-gateway-istio-enable]. Use `gatewayClassName: approuting-istio` on your `Gateway` resources.
     - The [Istio service mesh add-on][istio-addon], which provides the `istio` GatewayClass. Use this option when you want the DNS and TLS integrations on `Gateway` resources managed by the Istio service mesh add-on, and set `gatewayClassName: istio` on those resources.
 
-  The Application Routing add-on is always required; pair it with whichever Gateway API control plane you choose. Enabling only the Application Routing add-on, without one of the Gateway API control planes, leaves the integration unavailable. You can enable these at cluster creation time on [`az aks create`][az-aks-create], or on an existing cluster by using [`az aks update`][az-aks-update] (or the `approuting` subcommands described earlier).
+  To use these integrations, enable both the Application Routing add-on (by using [`az aks approuting enable`][az-aks-approuting-enable]) and one of the managed Gateway API implementations listed previously.
 - The [Managed Gateway API installation][managed-gateway-api] enabled on the cluster.
 - The [Microsoft Entra Workload Identity][workload-identity-overview] feature enabled on the cluster, along with the [OIDC issuer][oidc-issuer-overview]. You can enable both features by using the `--enable-oidc-issuer` and `--enable-workload-identity` flags on [`az aks create`][az-aks-create] or [`az aks update`][az-aks-update].
 - The [Azure Key Vault provider for Secrets Store CSI Driver][csi-secrets-store-driver] add-on enabled on the cluster. You can enable it by using the [`az aks enable-addons`][az-aks-enable-addons] command with `--addons azure-keyvault-secrets-provider`, or by passing `--enable-kv` to [`az aks approuting enable`][az-aks-approuting-enable] or [`az aks approuting update`][az-aks-approuting-update].
