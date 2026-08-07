@@ -1,10 +1,10 @@
 ---
-title: Roll Back Node Pool Versions in Azure Kubernetes Service (AKS) (preview)
+title: Roll Back Node Pool Versions in Azure Kubernetes Service (AKS)
 description: Learn how to roll back node pool versions in Azure Kubernetes Service (AKS) to recover from upgrade issues and maintain cluster stability.
 ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.custom: azure-kubernetes-service
-ms.date: 11/06/2024
+ms.date: 08/05/2026
 ai-usage: ai-assisted
 author: schaffererin
 ms.author: schaffererin
@@ -12,29 +12,14 @@ ms.reviewer: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to know how to roll back node pool versions in AKS so that I can recover from upgrade issues and maintain cluster stability."
 ---
 
-# Roll back node pool versions in Azure Kubernetes Service (AKS) (preview)
+# Roll back node pool versions in Azure Kubernetes Service (AKS)
 
 The node pool version rollback feature in Azure Kubernetes Service (AKS) enables you to recover from unexpected behaviors after Kubernetes upgrades. If issues occur, you can roll back node pools to the previous Kubernetes version and node image combination, ensuring business continuity and minimizing downtime. This article explains when and how to use the rollback feature, its capabilities and limitations, and best practices for post-rollback actions.
 
 ## Prerequisites
 
-- Azure CLI version 2.64.0 or higher. Find your version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-- The [`aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) installed and updated to the latest version.
-- API version `2025-08-02-preview` or later.
-
-### Install the `aks-preview` Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-Install or update the `aks-preview` extension using the [`az extension add`](/cli/azure/extension#az-extension-add) and [`az extension update`](/cli/azure/extension#az-extension-update) commands.
-
-```azurecli-interactive
-# Install the aks-preview extension
-az extension add --name aks-preview
-
-# Update the aks-preview extension
-az extension update --name aks-preview
-```
+- Azure CLI version 2.88.0 or later. Find your version by using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli). The `aks-preview` extension isn't required.
+- API version `2026-04-01` or later.
 
 ## Supported features for node pool version rollback
 
@@ -54,7 +39,7 @@ Keep the following limitations in mind when using the node pool rollback feature
 
 - Limited to version changes only. Other node pool changes aren't reverted.
 - No concurrent operations allowed during rollback.
-- If configured, you must disable cluster autoupgrade before rollback. 
+- You must disable the Kubernetes automatic upgrade channel before rollback. If the node OS upgrade channel is enabled, the Kubernetes version rollback can proceed, but the previous node image might not be restored. Disable the node OS upgrade channel when you need to roll back both the Kubernetes version and node image.
 - Available only for seven days after upgrade completion.
 - Can't perform consecutive rollbacks to go back multiple versions.
 - Rollback doesn't support reverting OS SKU changes. If you changed the OS SKU of your node pool (for example, from Ubuntu to Azure Linux), the rollback attempts to restore the previous node image version, which belongs to a different OS SKU and is rejected. To revert an OS SKU change, use the [`az aks nodepool update --os-sku`](/cli/azure/aks/nodepool#az-aks-nodepool-update) command instead.
@@ -99,13 +84,55 @@ The rollback process restores all nodes in a node pool to their previous version
 > Keep the following information in mind when rolling back a node pool version:
 >
 > - Staying on older versions long-term increases security risks and might eventually prevent upgrades due to version skew limitations. Treat rollback as a temporary recovery mechanism, not a permanent solution.
-> - When using the REST API, you can call the [Get Upgrade Profile](/rest/api/aks/managed-clusters/get-upgrade-profile) API first to retrieve the recently used versions. Use this information to specify the target version in your rollback request.
+> - Rollback replaces the nodes in the node pool and can temporarily disrupt workloads. Before you start, verify that your workloads have sufficient capacity and that your Pod Disruption Budgets allow the required node disruptions.
+> - When using the REST API, you can call the [Agent Pools - Get Upgrade Profile](/rest/api/aks/agent-pools/get-upgrade-profile) API first to retrieve the recently used versions. Use this information to specify the target version in your rollback request.
 
-- Roll back a node pool version using the [`az aks nodepool rollback`](/cli/azure/aks/nodepool#az-aks-nodepool-rollback) command. The following example rolls back the node pool named `myNodePool` in the AKS cluster named `myAKSCluster` within the resource group `myResourceGroup`:
+The Azure CLI rollback command automatically selects the most recently recorded version, also known as N-1. You can't use the command to select an arbitrary Kubernetes or node image version, and you can't perform consecutive rollbacks to move through multiple previous versions.
+
+1. Review the cluster's automatic upgrade configuration.
 
     ```azurecli-interactive
-    az aks nodepool rollback --name myNodePool --resource-group myResourceGroup --cluster-name myAKSCluster
+    az aks show \
+        --name myAKSCluster \
+        --resource-group myResourceGroup \
+        --query autoUpgradeProfile
     ```
+
+    Disable the Kubernetes automatic upgrade channel before rollback. If you need to restore the previous node image, also disable the node OS upgrade channel.
+
+1. Review the available rollback target by using the [`az aks nodepool get-rollback-versions`](/cli/azure/aks/nodepool#az-aks-nodepool-get-rollback-versions) command.
+
+    ```azurecli-interactive
+    az aks nodepool get-rollback-versions \
+        --name myNodePool \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster
+    ```
+
+    If the command returns no versions, the node pool doesn't have an eligible rollback target. The node pool must have been upgraded within the previous seven days, and the recorded Kubernetes version must still be supported by AKS.
+
+1. Roll back the node pool by using the [`az aks nodepool rollback`](/cli/azure/aks/nodepool#az-aks-nodepool-rollback) command.
+
+    ```azurecli-interactive
+    az aks nodepool rollback \
+        --name myNodePool \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster
+    ```
+
+1. Verify the Kubernetes version, node image version, and provisioning state after the rollback finishes.
+
+    ```azurecli-interactive
+    az aks nodepool show \
+        --name myNodePool \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --query '{provisioningState:provisioningState,kubernetesVersion:currentOrchestratorVersion,nodeImageVersion:nodeImageVersion}'
+    ```
+
+    A successful rollback returns `Succeeded` for `provisioningState` and shows the recorded Kubernetes and node image versions.
+
+If you changed the cluster's automatic upgrade settings before the rollback, restore the intended settings after you investigate and resolve the upgrade issue.
 
 ## Monitor node pool rollback status
 
@@ -115,6 +142,18 @@ You can use the following methods to monitor the status of a node pool rollback 
 - Look up specific [upgrade-related events](./upgrade-options.md) on your cluster.
 - Subscribe to [AKS events with Azure Event Grid](./quickstart-event-grid.md).
 - If you subscribe to an automatic upgrade channel, you can use [AKS Communication Manager](./aks-communication-manager.md) for upgrade notifications.
+
+## Troubleshoot node pool rollback
+
+The following table describes common rollback issues and how to resolve them:
+
+| Issue | Cause and resolution |
+| ----- | -------------------- |
+| No rollback versions are returned. | The node pool might have no recorded upgrade, the seven-day rollback window might have expired, or the previous Kubernetes version might no longer be supported. Check the node pool's upgrade history and the [AKS Kubernetes version support policy](supported-kubernetes-versions.md). |
+| AKS reports that another operation is in progress. | Wait for the current cluster or node pool operation to finish before you retry the rollback. If you need to stop the operation, use the [`az aks nodepool operation-abort`](/cli/azure/aks/nodepool#az-aks-nodepool-operation-abort) command. |
+| The Kubernetes version rolls back, but the node image doesn't. | The node OS upgrade channel might be enabled. Disable the channel when you need to restore the previous node image. |
+| AKS rejects the previous node image version. | The node pool's OS SKU might have changed since the recorded version. Rollback doesn't support reverting OS SKU changes. Use `az aks nodepool update --os-sku` to revert the OS SKU instead. |
+| AKS rejects the previous Kubernetes version. | The recorded version might no longer be supported. Check the [AKS Kubernetes version support policy](supported-kubernetes-versions.md). |
 
 ## Post-rollback best practices
 
@@ -147,7 +186,9 @@ No, you can't roll back to a Kubernetes version that's no longer supported by AK
 
 ### Do I need to disable autoupgrade before performing a node pool rollback?
 
-Yes, if your cluster has autoupgrade enabled, you must disable it before performing a rollback. Additionally, if the cluster is included in an [update group in an Azure Kubernetes Fleet Manager autoupgrade profile](/azure/kubernetes-fleet/concepts-update-orchestration), you must remove the cluster from the update group before performing the rollback. Otherwise, the autoupgrade process might automatically upgrade your node pool again after the rollback completes.
+Yes, you must disable the Kubernetes automatic upgrade channel before performing a rollback. If you enable only the node OS upgrade channel, the Kubernetes version rollback can proceed, but the previous node image might not be restored. Disable the node OS upgrade channel when you need to roll back both the Kubernetes version and node image.
+
+If the cluster is included in an [update group in an Azure Kubernetes Fleet Manager autoupgrade profile](/azure/kubernetes-fleet/concepts-update-orchestration), you must also remove the cluster from the update group before performing the rollback. Otherwise, the autoupgrade process might automatically upgrade your node pool again after the rollback completes.
 
 ### Can I roll back after changing the OS SKU (for example, from Ubuntu to Azure Linux)?
 
