@@ -55,7 +55,14 @@ spec:
 
 ## Artifact streaming
 
-[Artifact streaming](./artifact-streaming.md) streams container images on demand to nodes rather than fully downloading them before starting. This approach speeds up the cold start on a node through on-demand image loading.
+[Artifact Streaming](./artifact-streaming-overview.md) allows you to stream container images from Azure Container Registry (ACR) to Azure Kubernetes Service (AKS). AKS only pulls the necessary layers for initial pod startup, reducing the time it takes to deploy your workloads.
+### Prerequisites
+
+- Artifact Streaming requires that you have a Premium tier ACR integrated with your AKS cluster. 
+- Artifact Streaming must be enabled in ACR.
+
+See [Artifact Streaming](./artifact-streaming.md) documentation for instructions on enabling Artifact Streaming in ACR.
+### Enable Artifact Streaming in NAP clusters
 
 Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming by using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Set this field to `true` to enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
 
@@ -485,7 +492,7 @@ spec:
   # Valid values: FIPS, Disabled
   fipsMode: Disabled
 
-  # Artifact Streaming- allow suse of artifact streaming feature; To use this feature container images must also enable artifact streaming on ACR
+  # Artifact Streaming- allows use of artifact streaming feature; To use this feature container images must also enable artifact streaming on ACR
   # Valid values: true, false; defaults to false if not specified
   artifactStreaming:
     enabled: true
