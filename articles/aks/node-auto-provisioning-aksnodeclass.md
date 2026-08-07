@@ -122,7 +122,7 @@ spec:
           operator: Gt
           values: ["128"]  # Require ephemeral disk larger than 128 GB
       nodeClassRef:
-        apiVersion: karpenter.azure.com/v1beta1
+        group: karpenter.azure.com
         kind: AKSNodeClass
         name: my-node-class
 ---
@@ -444,7 +444,7 @@ spec:
   template:
     spec:
       nodeClassRef:
-        apiVersion: karpenter.azure.com/v1beta1
+        group: karpenter.azure.com
         kind: AKSNodeClass
         name: comprehensive-example
 ---
