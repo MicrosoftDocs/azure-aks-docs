@@ -5,7 +5,7 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli, biannual
 author: jaiveerk
 ms.topic: how-to
-ms.date: 06/10/2026
+ms.date: 08/06/2026
 ms.author: jkatariya
 # Customer intent: As a cloud engineer, I want the Application Routing add-on to manage Azure DNS records and TLS certificates from Azure Key Vault for my Gateway API ingress traffic, so that I do not have to manually configure the SecretProviderClass, the synced Kubernetes Secret, the listener certificateRefs, or the external-dns deployment.
 ---
@@ -26,7 +26,7 @@ The Application Routing operator exposes two integrations to automate the resour
 
 ### TLS integration
 
-When a `Gateway` resource uses the `approuting-istio` GatewayClass and a listener carries the following two TLS options, the Application Routing operator reconciles the resources needed to terminate TLS with a certificate stored in Azure Key Vault:
+When a `Gateway` resource uses a managed GatewayClass — either `approuting-istio` (from the [Application Routing Gateway API implementation][app-routing-gateway-api]) or `istio` (from the [Istio service mesh add-on][istio-addon]) — and a listener carries the following two TLS options, the Application Routing operator reconciles the resources needed to terminate TLS with a certificate stored in Azure Key Vault:
 
 | TLS option key | Value |
 |---|---|
@@ -63,11 +63,13 @@ For each custom resource, the Application Routing operator:
 
 ## Prerequisites
 
-- An AKS cluster with **both** of the following features enabled:
+- An AKS cluster with **both** of the following enabled:
   - The [Application Routing add-on][app-routing-nginx] (`--enable-app-routing`). This add-on deploys the Application Routing operator on the cluster, which is the component that reconciles the DNS and TLS integrations documented in this article. On an existing cluster, you can also enable this feature by using [`az aks approuting enable`][az-aks-approuting-enable].
-  - The [Application Routing Gateway API implementation][app-routing-gateway-api] (`--enable-app-routing-istio`). This flag enables the Gateway API control plane (`approuting-istio` GatewayClass) that the Application Routing operator integrates with. On an existing cluster, you can also enable this feature by using [`az aks approuting gateway istio enable`][az-aks-approuting-gateway-istio-enable].
+  - A managed Istio-based Gateway API control plane for the operator to integrate with. Choose **one** of the following (the two are mutually exclusive and can't be enabled at the same time):
+    - The [Application Routing Gateway API implementation][app-routing-gateway-api] (`--enable-app-routing-istio`), which provides the `approuting-istio` GatewayClass. On an existing cluster, you can also enable it by using [`az aks approuting gateway istio enable`][az-aks-approuting-gateway-istio-enable]. Use `gatewayClassName: approuting-istio` on your `Gateway` resources.
+    - The [Istio service mesh add-on][istio-addon], which provides the `istio` GatewayClass. Use this option when you want the DNS and TLS integrations on `Gateway` resources managed by the Istio service mesh add-on, and set `gatewayClassName: istio` on those resources.
 
-  Both flags are required: enabling only one of them leaves the integration unavailable. You can enable both at cluster creation time on [`az aks create`][az-aks-create], or on an existing cluster by using [`az aks update`][az-aks-update] (or the `approuting` subcommands described earlier).
+  The Application Routing add-on is always required; pair it with whichever Gateway API control plane you choose. Enabling only the Application Routing add-on, without one of the Gateway API control planes, leaves the integration unavailable. You can enable these at cluster creation time on [`az aks create`][az-aks-create], or on an existing cluster by using [`az aks update`][az-aks-update] (or the `approuting` subcommands described earlier).
 - The [Managed Gateway API installation][managed-gateway-api] enabled on the cluster.
 - The [Microsoft Entra Workload Identity][workload-identity-overview] feature enabled on the cluster, along with the [OIDC issuer][oidc-issuer-overview]. You can enable both features by using the `--enable-oidc-issuer` and `--enable-workload-identity` flags on [`az aks create`][az-aks-create] or [`az aks update`][az-aks-update].
 - The [Azure Key Vault provider for Secrets Store CSI Driver][csi-secrets-store-driver] add-on enabled on the cluster. You can enable it by using the [`az aks enable-addons`][az-aks-enable-addons] command with `--addons azure-keyvault-secrets-provider`, or by passing `--enable-kv` to [`az aks approuting enable`][az-aks-approuting-enable] or [`az aks approuting update`][az-aks-approuting-update].
@@ -230,6 +232,9 @@ done
 ```
 
 Create a `Gateway` resource in each namespace with an HTTPS listener that references the Azure Key Vault certificate through the TLS options. Each `Gateway` uses its own sub-host of the Azure DNS zone (for example, `a.<zone>` and `b.<zone>`):
+
+> [!NOTE]
+> The examples in this article use `gatewayClassName: approuting-istio`, the GatewayClass provided by the Application Routing Gateway API implementation. If you enabled the [Istio service mesh add-on][istio-addon] instead, set `gatewayClassName: istio` on your `Gateway` resources. The DNS and TLS integrations behave identically for both managed GatewayClasses.
 
 ```bash
 for pair in "app-a:a" "app-b:b"; do
@@ -450,7 +455,7 @@ You should see an `HTTP/2 200` response. The TLS certificate the gateway present
 
 ## Limitations
 
-- The TLS integration only applies to `Gateway` resources with `gatewayClassName: approuting-istio`. Using the Application Routing add-on's DNS and TLS integrations with the [Istio service mesh add-on][istio-addon] `GatewayClass` or any other `GatewayClass` isn't yet supported.
+- The DNS and TLS integrations apply only to `Gateway` resources that use a managed GatewayClass: `approuting-istio` (the [Application Routing Gateway API implementation][app-routing-gateway-api]) or `istio` (the [Istio service mesh add-on][istio-addon]). `Gateway` resources that use any other GatewayClass aren't supported.
 - A `ClusterExternalDNS` or `ExternalDNS` custom resource can reference up to seven Azure DNS zones through `dnsZoneResourceIDs`. All zones referenced in a single custom resource must be in the same Azure subscription and resource group. They must also be all of the same type (public or private).
 - The managed `external-dns` instance doesn't automatically delete DNS records when you delete the `ClusterExternalDNS` or `ExternalDNS` custom resource. To remove orphaned records, delete them directly from the Azure DNS zone after deleting the custom resource.
 - DNS record reconciliation from `TLSRoute` resources isn't currently supported. The managed `external-dns` instance only sources records from `Gateway`, `HTTPRoute`, and `GRPCRoute` resources.
