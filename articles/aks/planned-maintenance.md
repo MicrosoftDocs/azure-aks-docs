@@ -3,11 +3,12 @@ title: Use Planned Maintenance to Schedule and Control Upgrades for Azure Kubern
 description: Learn how to use planned maintenance to schedule and control cluster and node image upgrades in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 12/19/2025
+ms.date: 08/10/2026
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
 author: schaffererin
+ai-usage: ai-assisted
 zone_pivot_groups: cli-portal-terraform-json
 # Customer intent: "As a Kubernetes administrator, I want to configure planned maintenance for my AKS cluster, so that I can schedule and control upgrades without impacting my workloads."
 ---
@@ -627,6 +628,98 @@ az aks maintenanceconfiguration delete --resource-group $RESOURCE_GROUP --cluste
 To delete a maintenance configuration, remove the corresponding block from your Terraform configuration and apply the changes using the `terraform apply` command.
 
 :::zone-end
+
+## Use a shared maintenance window (preview)
+
+Shared maintenance windows let you apply the same maintenance-window schedule across multiple AKS maintenance configurations, so related upgrade operations follow a consistent maintenance policy.
+
+Use shared maintenance windows when you want cluster auto-upgrades and node OS auto-upgrades to use the same approved maintenance schedule instead of managing each schedule independently.
+
+> [!NOTE]
+> Shared maintenance window support is in preview. Preview features are provided without a service-level agreement and aren't recommended for production workloads.
+
+Shared maintenance windows are available from the `2026-05-02-preview` AKS API version onwards. You create a shared maintenance window as a standalone resource, then link it to one or more clusters by setting the `maintenanceWindowId` field in the `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintenance configuration.
+
+Before you use a shared maintenance window, confirm that your Azure CLI or AKS preview extension version supports the shared maintenance-window commands.
+
+### Link a maintenance configuration to a shared maintenance window
+
+Install or update the `aks-preview` Azure CLI extension:
+
+```azurecli-interactive
+az extension add --name aks-preview
+az extension update --name aks-preview
+```
+
+Register the `AKSSharedMaintenanceWindowPreview` feature flag on your subscription by using the [`az feature register`][az-feature-register] command. Feature registration is subscription-scoped, so it only needs to be completed once per subscription.
+
+```azurecli-interactive
+az feature register \
+  --namespace Microsoft.ContainerService \
+  --name AKSSharedMaintenanceWindowPreview
+```
+
+Check the registration status by using the [`az feature show`][az-feature-show] command:
+
+```azurecli-interactive
+az feature show \
+  --namespace Microsoft.ContainerService \
+  --name AKSSharedMaintenanceWindowPreview \
+  --query properties.state \
+  --output tsv
+```
+
+Wait until the command returns `Registered` before you continue. Then refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`][az-provider-register] command:
+
+```azurecli-interactive
+az provider register --namespace Microsoft.ContainerService
+```
+
+Set the shared maintenance window resource ID:
+
+```azurecli-interactive
+MAINTENANCE_WINDOW_ID="/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/MyResourceGroup/providers/Microsoft.ContainerService/maintenanceWindows/myWindow"
+```
+
+Link a maintenance configuration to the shared maintenance window by using the [`az aks maintenanceconfiguration add`][az-aks-maintenanceconfiguration-add] command:
+
+```azurecli-interactive
+az aks maintenanceconfiguration add \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-name $CLUSTER_NAME \
+  --name aksManagedAutoUpgradeSchedule \
+  --maintenance-window-id $MAINTENANCE_WINDOW_ID
+```
+
+You can also link an existing maintenance configuration to a shared maintenance window by using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command:
+
+```azurecli-interactive
+az aks maintenanceconfiguration update \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-name $CLUSTER_NAME \
+  --name aksManagedNodeOSUpgradeSchedule \
+  --maintenance-window-id $MAINTENANCE_WINDOW_ID
+```
+
+When you use `--maintenance-window-id`, the schedule is defined by the referenced shared maintenance window. Don't combine `--maintenance-window-id` with inline schedule arguments such as `--schedule-type`, `--day-of-week`, `--interval-weeks`, `--duration`, `--utc-offset`, or `--start-time`.
+
+You also can't combine `--maintenance-window-id` with `--config-file`. To link a shared maintenance window by using a JSON configuration file, set the `maintenanceWindowId` property in the file instead:
+
+```json
+{
+  "properties": {
+    "maintenanceConfigurationType": "aksManagedAutoUpgradeSchedule",
+    "maintenanceWindowId": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/MyResourceGroup/providers/Microsoft.ContainerService/maintenanceWindows/myWindow"
+  }
+}
+```
+
+Apply the configuration file:
+
+```azurecli-interactive
+az aks maintenanceconfiguration add \
+  --resource-group $RESOURCE_GROUP \
+```
 
 ## Frequently asked questions (FAQ)
 
