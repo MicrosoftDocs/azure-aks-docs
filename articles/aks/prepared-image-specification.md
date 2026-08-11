@@ -256,7 +256,7 @@ After you create a PIS, you can reference it when you create or update a cluster
         --resource-group $RESOURCE_GROUP \
         --cluster-name $CLUSTER_NAME \
         --name userpool \
-        --query "{state:provisioningState, pisId:preparedImageSpecificationId}"
+        --query "{state:provisioningState, pisId:preparedImageSpecificationProfile.preparedImageSpecificationId}"
     ```
 
 ## Manage Prepared Image Specifications
