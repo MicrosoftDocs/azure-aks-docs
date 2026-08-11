@@ -640,13 +640,14 @@ Use shared maintenance windows when you want cluster auto-upgrades and node OS a
 
 Shared maintenance windows are available from the `2026-05-02-preview` AKS API version onwards. You create a shared maintenance window as a standalone resource, then link it to one or more clusters by setting the `maintenanceWindowId` field in the `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintenance configuration.
 
+:::zone pivot="azure-cli,json-file"
+
 Before you use a shared maintenance window, complete the following prerequisite steps.
 
 Install or update the `aks-preview` Azure CLI extension:
 
 ```azurecli-interactive
-az extension add --name aks-preview
-az extension update --name aks-preview
+az extension add --upgrade --name aks-preview
 ```
 
 Register the `AKSSharedMaintenanceWindowPreview` feature flag on your subscription by using the [`az feature register`][az-feature-register] command. Feature registration is subscription-scoped, so it only needs to be completed once per subscription.
@@ -727,7 +728,7 @@ az rest --method PUT \
 Set the shared maintenance window resource ID:
 
 ```azurecli-interactive
-MAINTENANCE_WINDOW_ID="/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/MyResourceGroup/providers/Microsoft.ContainerService/maintenanceWindows/myWindow"
+MAINTENANCE_WINDOW_ID="/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/MyResourceGroup/providers/Microsoft.ContainerService/maintenanceWindows/mySharedWindow"
 ```
 
 Link a maintenance configuration to the shared maintenance window by using the [`az aks maintenanceconfiguration add`][az-aks-maintenanceconfiguration-add] command:
@@ -758,7 +759,7 @@ You also can't combine `--maintenance-window-id` with `--config-file`. To link a
 {
   "properties": {
     "maintenanceConfigurationType": "aksManagedAutoUpgradeSchedule",
-    "maintenanceWindowId": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/MyResourceGroup/providers/Microsoft.ContainerService/maintenanceWindows/myWindow"
+    "maintenanceWindowId": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/MyResourceGroup/providers/Microsoft.ContainerService/maintenanceWindows/mySharedWindow"
   }
 }
 ```
@@ -804,6 +805,15 @@ az rest --method DELETE \
 
 > [!WARNING]
 > You can't delete a shared maintenance window while any maintenance configuration references it. Unlink all referencing maintenance configurations before you delete the window.
+
+:::zone-end
+
+:::zone pivot="azure-portal,terraform"
+
+> [!IMPORTANT]
+> Shared maintenance windows aren't supported in the Azure portal or Terraform during preview. Use the Azure CLI or REST API to create and manage shared maintenance windows.
+
+:::zone-end
 
 ## Frequently asked questions (FAQ)
 
