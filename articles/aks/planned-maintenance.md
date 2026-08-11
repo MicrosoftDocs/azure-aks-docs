@@ -631,7 +631,7 @@ To delete a maintenance configuration, remove the corresponding block from your 
 
 ## Use a shared maintenance window (preview)
 
-Shared maintenance windows let you apply the same maintenance window schedule across multiple AKS maintenance configurations, so related upgrade operations follow a consistent maintenance policy.
+Shared maintenance windows let you apply the same maintenance window schedule across multiple AKS maintenance configurations and managed clusters in the same region, so related upgrade operations follow a consistent maintenance policy.
 
 Use shared maintenance windows when you want cluster auto-upgrades and node OS auto-upgrades to use the same approved maintenance schedule instead of managing each schedule independently.
 
@@ -775,21 +775,12 @@ az aks maintenanceconfiguration add \
 
 ### Unlink a shared maintenance window
 
-To unlink a shared maintenance window from a maintenance configuration, delete the configuration and recreate it with an inline schedule.
+To unlink a shared maintenance window from a maintenance configuration, update the configuration with an inline schedule and omit `--maintenance-window-id`. This action converts the configuration to a standard inline maintenance configuration.
 
-Delete the linked configuration by using the [`az aks maintenanceconfiguration delete`][az-aks-maintenanceconfiguration-delete] command:
-
-```azurecli-interactive
-az aks maintenanceconfiguration delete \
-  --resource-group $RESOURCE_GROUP \
-  --cluster-name $CLUSTER_NAME \
-  --name aksManagedAutoUpgradeSchedule
-```
-
-Recreate the configuration with an inline schedule by using the [`az aks maintenanceconfiguration add`][az-aks-maintenanceconfiguration-add] command:
+Update the configuration by using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command:
 
 ```azurecli-interactive
-az aks maintenanceconfiguration add \
+az aks maintenanceconfiguration update \
   --resource-group $RESOURCE_GROUP \
   --cluster-name $CLUSTER_NAME \
   --name aksManagedAutoUpgradeSchedule \
@@ -812,7 +803,7 @@ az rest --method DELETE \
 ```
 
 > [!WARNING]
-> Before you delete a shared maintenance window, unlink it from all maintenance configurations that reference it. Deleting a window that's still referenced removes the schedule from those configurations.
+> You can't delete a shared maintenance window while any maintenance configuration references it. Unlink all referencing maintenance configurations before you delete the window.
 
 ## Frequently asked questions (FAQ)
 
