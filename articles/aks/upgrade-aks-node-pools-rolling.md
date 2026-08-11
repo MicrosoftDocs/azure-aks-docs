@@ -40,6 +40,7 @@ During a rolling upgrade, AKS performs the following operations for each node in
 > - Node surges require subscription quota for the requested max surge count for each upgrade operation. For example, a cluster that has five node pools, each with a count of four nodes, has a total of 20 nodes. If each node pool has a max surge value of 50%, extra compute and IP quota of 10 nodes (_two_ nodes × _five_ pools) is required to complete the upgrade.
 > - The max surge setting on a node pool is persistent. Subsequent Kubernetes upgrades or node version upgrades use this setting. You can change the max surge value for your node pools at any time. For production node pools, we recommend a max surge setting of 33%.
 > - If you're using Azure CNI, validate there are available IPs in the subnet to [satisfy IP requirements of Azure CNI](./configure-azure-cni.md).
+> - Azure Virtual Machine Scale Sets (VMSS) allow a maximum of 1,000 instances per scale set. If a node pool's current size plus the calculated surge count would exceed 1,000 instances, AKS rejects the upgrade before it starts. For more information, see [Node pools near the 1,000-instance limit](#node-pools-near-the-1000-instance-limit).
 
 AKS configures upgrades to surge with one extra node by default. A default value of _one_ for the max surge setting enables AKS to minimize workload disruption by creating an extra node before the cordon/drain of existing applications to replace an older versioned node. You can customize the max surge value per node pool. When you increase the max surge value, the upgrade process completes faster, but you might experience more disruptions during the upgrade process.
 
@@ -55,6 +56,22 @@ AKS accepts both integer values and a percentage value for max surge. For exampl
 Max surge can be set to an integer or a percentage. A percent value is rounded up to the nearest node count. If the max surge value is higher than the required number of nodes to be upgraded, the number of nodes to be upgraded is used for the max surge value. 
 
 If scaling to the max surge value isn't possible due to quota or capacity limitations, for agent pools with Kubernetes version >= 1.35, AKS automatically attempts a surge of 1 as a fallback. If the surge of 1 succeeds, the upgrade proceeds with 1 surge node.
+
+#### Node pools near the 1,000-instance limit
+
+Azure Virtual Machine Scale Sets enforce a maximum of 1,000 instances per scale set. When you start an upgrade, AKS checks whether the node pool's current size plus the calculated surge count would exceed this limit. If it would, AKS rejects the upgrade request upfront with an error similar to the following:
+
+```output
+Node pool 'contoso-pool' upgrade would exceed the VMSS 1000-instance limit. Current size: 995, configured maxSurge: 1%, calculated surge count: 10, resulting capacity: 1005 (limit: 1000). To proceed, use maxUnavailable instead of maxSurge, reduce the pool size below 1000 nodes, or split the pool into multiple smaller pools.
+```
+
+This validation exists because Azure Compute enforces the 1,000-instance limit at the platform level. Without this upfront check, an upgrade that would exceed the limit could start creating surge nodes and then fail partway through the operation instead of being rejected immediately.
+
+If you encounter this error, use one of the following options to proceed with the upgrade:
+
+- **Use max unavailable instead of max surge**: In-place upgrades with [max unavailable](#customize-unavailable-nodes) don't create additional surge nodes, so they aren't subject to this limit.
+- **Lower your max surge value**: A smaller max surge percentage or integer value reduces the surge count and keeps the resulting capacity under 1,000 instances.
+- **Split the node pool into multiple smaller pools**: Distributing nodes across more node pools keeps each individual scale set well under the limit. For guidance on planning pool sizes, see [Upgrade capacity and cost planning](./upgrade-capacity-cost-planning.md).
 
 #### Set max surge value
 
