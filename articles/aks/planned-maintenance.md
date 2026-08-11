@@ -631,7 +631,7 @@ To delete a maintenance configuration, remove the corresponding block from your 
 
 ## Use a shared maintenance window (preview)
 
-Shared maintenance windows let you apply the same maintenance-window schedule across multiple AKS maintenance configurations, so related upgrade operations follow a consistent maintenance policy.
+Shared maintenance windows let you apply the same maintenance window schedule across multiple AKS maintenance configurations, so related upgrade operations follow a consistent maintenance policy.
 
 Use shared maintenance windows when you want cluster auto-upgrades and node OS auto-upgrades to use the same approved maintenance schedule instead of managing each schedule independently.
 
