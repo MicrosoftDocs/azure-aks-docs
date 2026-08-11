@@ -245,6 +245,7 @@ Max blocked nodes (preview):
 - Specifies how many nodes that fail to drain are tolerated
 - Requires `undrainable-node-behavior` to be set
 - Defaults to `maxSurge` value (typically 10%) if not specified
+- Like max surge, if the calculated value is higher than the number of nodes remaining to be upgraded in the current operation, the number of nodes remaining to be upgraded is used instead
 
 ###### Prerequisites for max blocked nodes
 
