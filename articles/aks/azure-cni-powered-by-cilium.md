@@ -346,39 +346,39 @@ This behavior applies to all Kubernetes versions supported by Azure CNI Powered 
 
 If you upgrade AKS clusters on [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md) to AKS clusters running Azure CNI Powered by Cilium, workloads on new nodes are created without `kube-proxy`. Workloads on existing nodes are also migrated to run without `kube-proxy` as a part of this upgrade process.
 
-- **Is AKS Local DNS supported with Azure CNI Powered by Cilium?**
+### **Is AKS Local DNS supported with Azure CNI Powered by Cilium?**
 
-    Yes, network policies must explicitly allow pod egress to the LocalDNS IP address.
+Yes, network policies must explicitly allow pod egress to the LocalDNS IP address.
 
-    The following policy allows egress to the LocalDNS CIDR `169.254.10.0/24` on UDP and TCP port 53 and to the `host` entity on the same ports.
- 
-    ```yaml
-    apiVersion: "cilium.io/v2"
-    kind: CiliumNetworkPolicy
-    metadata:
-      name: "allow-azure-dns-egress"
-      namespace: default
-    spec:
-      endpointSelector:
-        matchLabels: {} # This selects ALL pods in the namespace
-      egress:
-        - toCIDR:
-            - 169.254.10.0/24
-          toPorts:
-            - ports:
-                - port: "53"
-                  protocol: UDP
-                - port: "53"
-                  protocol: TCP
-        - toEntities:
-            - host
-          toPorts:
-            - ports:
-                - port: "53"
-                  protocol: UDP
-                - port: "53"
-                  protocol: TCP
-    ```
+The following policy allows egress to the LocalDNS CIDR `169.254.10.0/24` on UDP and TCP port 53 and to the `host` entity on the same ports.
+
+```yaml
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-azure-dns-egress"
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels: {} # This selects ALL pods in the namespace
+  egress:
+    - toCIDR:
+        - 169.254.10.0/24
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+    - toEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+```
 
 ## Dual-stack networking with Azure CNI Powered by Cilium
 

@@ -58,7 +58,6 @@ AKS Automatic clusters include LocalDNS preconfigured. The prerequisites in this
 - This article requires Azure CLI version 2.80.0 and later. If you're using Azure Cloud Shell, the latest version is already installed.
 - LocalDNS is only supported on node pools running Azure Linux or Ubuntu 22.04 and newer.
 - The Virtual Machine (VM) SKU used for your node pool must have at least 4 vCPUs (cores) to support LocalDNS.
-- LocalDNS isn't compatible with applied Fully Qualified Domain Names (FQDN) filter policies in [Advanced Container Networking Services (ACNS)](./how-to-apply-fqdn-filtering-policies.md).
 
 ## Enable or customize LocalDNS on an AKS cluster
 
