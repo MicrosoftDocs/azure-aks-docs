@@ -160,7 +160,7 @@ Now that you understand the Azure Resource Graph data available you can use [Azu
 
     :::image type="content" source="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-03.png" alt-text="Screenshot showing the Condition tab loaded and custom log search selected in the signal name drop-down." lightbox="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-03.png":::
 
-1. In the **Logs** blade, enter the Resource Graph query you want to use to trigger an alert. You might want one of these alert patterns:
+1. In **Logs**, enter the Resource Graph query you want to use to trigger an alert. You might want one of these alert patterns:
 
     - Alert only on update runs whose final state is `Failed`.
     - Alert on update runs where failures occurred, even if the final state is `Completed`. A `Completed` state with `FailureCount > 0` usually means `maxAllowedFailures` was configured and the run stayed within that tolerance.

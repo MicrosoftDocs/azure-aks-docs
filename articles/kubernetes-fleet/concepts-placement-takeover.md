@@ -32,7 +32,7 @@ The `whenToTakeOver` property allows the following values:
 
 * `IfNoDiff`: Fleet Manager checks for configuration differences when it finds an existing workload and only applies the hub cluster workload if no configuration differences are found.
 
-* `Never`: Fleet Manager ignores existing workloads and doesn't apply the hub cluster workload. Fleet Manager still identifies matching workloads and raises an apply error, allowing you to safely check for the presence of existing workloads.
+* `Never`: Fleet Manager ignores existing workloads and doesn't apply the hub cluster workload. Fleet Manager still identifies matching workloads and raises an apply error, so you can safely check for the presence of existing workloads.
 
 ### Define which fields are used for comparison
 

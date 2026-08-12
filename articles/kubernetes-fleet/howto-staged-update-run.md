@@ -831,7 +831,7 @@ kubectl delete clusterstagedupdaterun staged-rollout-test-app
 
 ## Next steps
 
-In this article, you learned how to use staged rollout runs to control the distribution of resources across member clusters using resource placement.
+In this article, you learned how to use staged rollout runs to control the distribution of resources across member clusters by using resource placement.
 
 To learn more about staged rollout runs and related concepts, see the following resources:
 
