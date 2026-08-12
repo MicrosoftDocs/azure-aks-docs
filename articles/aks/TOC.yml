@@ -552,6 +552,8 @@
           href: /azure/backup/azure-kubernetes-service-cluster-restore?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: Manage
           href: /azure/backup/azure-kubernetes-service-cluster-manage-backups?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: List running clusters in a subscription
+      href: list-aks-clusters.md
 - name: Networking
   items:
       - name: Networking concepts
