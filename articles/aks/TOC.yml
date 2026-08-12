@@ -1404,6 +1404,8 @@
       href: kubelet-logs.md
     - name: Deploy Periscope for AKS
       href: deploy-periscope-aks.md
+    - name: Deploy CanIPull application
+      href: deploy-canipull-application-aks.md
 - name: Deploy and manage workloads
   items:
     - name: Deploy stateful workloads
