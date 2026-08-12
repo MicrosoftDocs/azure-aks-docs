@@ -676,51 +676,35 @@ az provider register --namespace Microsoft.ContainerService
 
 ### Create a shared maintenance window
 
-Create the shared maintenance window resource by using [`az rest`](/cli/azure/reference-index#az-rest) to call the `2026-05-02-preview` API. The shared maintenance window body uses the same schedule schema as the `maintenanceWindow` property in a standard maintenance configuration. For the full list of supported fields and schedule types, see [Schedule configuration types for planned maintenance](#schedule-configuration-types-for-planned-maintenance).
+Create the shared maintenance window resource by using the [`az aks maintenancewindow create`][az-aks-maintenancewindow-create] command. For the full list of supported fields and schedule types, see [Schedule configuration types for planned maintenance](#schedule-configuration-types-for-planned-maintenance).
 
 The following example creates a shared maintenance window with a weekly schedule that runs every Friday from 1:00 AM to 5:00 AM UTC:
 
 ```azurecli-interactive
-az rest --method PUT \
-  --url "https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/maintenanceWindows/mySharedWindow?api-version=2026-05-02-preview" \
-  --body '{
-    "properties": {
-      "maintenanceWindow": {
-        "schedule": {
-          "weekly": {
-            "intervalWeeks": 1,
-            "dayOfWeek": "Friday"
-          }
-        },
-        "durationHours": 4,
-        "utcOffset": "+00:00",
-        "startTime": "01:00"
-      }
-    }
-  }'
+az aks maintenancewindow create \
+  --resource-group $RESOURCE_GROUP \
+  --name mySharedWindow \
+  --schedule-type Weekly \
+  --day-of-week Friday \
+  --interval-weeks 1 \
+  --duration 4 \
+  --utc-offset=+00:00 \
+  --start-time 01:00
 ```
 
 The following example creates a shared maintenance window with a relative monthly schedule that runs on the last Sunday of every month from 1:00 AM to 5:00 AM UTC:
 
 ```azurecli-interactive
-az rest --method PUT \
-  --url "https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/maintenanceWindows/mySharedWindow?api-version=2026-05-02-preview" \
-  --body '{
-    "properties": {
-      "maintenanceWindow": {
-        "schedule": {
-          "relativeMonthly": {
-            "intervalMonths": 1,
-            "dayOfWeek": "Sunday",
-            "weekIndex": "Last"
-          }
-        },
-        "durationHours": 4,
-        "utcOffset": "+00:00",
-        "startTime": "01:00"
-      }
-    }
-  }'
+az aks maintenancewindow create \
+  --resource-group $RESOURCE_GROUP \
+  --name mySharedWindow \
+  --schedule-type RelativeMonthly \
+  --day-of-week Sunday \
+  --week-index Last \
+  --interval-months 1 \
+  --duration 4 \
+  --utc-offset=+00:00 \
+  --start-time 01:00
 ```
 
 ### Link a maintenance configuration to a shared maintenance window
@@ -796,11 +780,12 @@ az aks maintenanceconfiguration update \
 > [!NOTE]
 > Removing the link doesn't delete the shared maintenance window resource. Other maintenance configurations that reference the same window continue to use it.
 
-To delete the shared maintenance window resource itself, use [`az rest`](/cli/azure/reference-index#az-rest):
+To delete the shared maintenance window resource itself, use the [`az aks maintenancewindow delete`][az-aks-maintenancewindow-delete] command:
 
 ```azurecli-interactive
-az rest --method DELETE \
-  --url "https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/maintenanceWindows/mySharedWindow?api-version=2026-05-02-preview"
+az aks maintenancewindow delete \
+  --resource-group $RESOURCE_GROUP \
+  --name mySharedWindow
 ```
 
 > [!WARNING]
@@ -892,6 +877,8 @@ To get started with upgrading your AKS cluster, see [Upgrade options for AKS clu
 [az-aks-maintenanceconfiguration-list]: /cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-list
 [az-aks-maintenanceconfiguration-show]: /cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-show
 [az-aks-maintenanceconfiguration-delete]: /cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-delete
+[az-aks-maintenancewindow-create]: /cli/azure/aks/maintenancewindow#az-aks-maintenancewindow-create
+[az-aks-maintenancewindow-delete]: /cli/azure/aks/maintenancewindow#az-aks-maintenancewindow-delete
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-provider-register]: /cli/azure/provider#az-provider-register
