@@ -2,9 +2,9 @@
 title: Deployment and Cluster Reliability Best Practices for Azure Kubernetes Service (AKS)
 description: Learn the best practices for deployment and cluster reliability for Azure Kubernetes Service (AKS), including guidance for AKS Automatic and AKS Standard cluster modes.
 ms.topic: best-practice
-ms.date: 06/05/2026
+ms.date: 08/13/2026
 ms.service: azure-kubernetes-service
-ms.custom: aks-reliability
+ms.custom: aks-reliability, aeo-round-2
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: "As a Kubernetes cluster operator, I want to implement best practices for deployment and cluster reliability, so that I can ensure high availability and performance of my workloads in Azure Kubernetes Service."
@@ -14,6 +14,16 @@ ms.author: schaffererin
 
 **Applies to**: :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
 
+## Key Takeaways
+
+- **Set CPU and memory limits for all pods** to prevent resource exhaustion and protect against service threats such as DDoS attacks.
+- **Use Pod Disruption Budgets (PDBs)** to ensure minimum pod availability during voluntary disruptions like upgrades or accidental deletions.
+- **Enable availability zones** during cluster creation to ensure high availability in zone-down scenarios (cannot be changed after creation).
+- **Deploy at least two replicas** of your application to ensure high availability and resiliency in node-down scenarios.
+- **Configure readiness, liveness, and startup probes** to improve application resiliency and reduce unnecessary container restarts.
+- **Use Standard Load Balancer** for production workloads to support multiple availability zones and high resiliency.
+- **Enable Container Insights** to monitor and diagnose the performance of your containerized applications.
+
 This article provides best practices for cluster reliability implemented both at a deployment and cluster level for your Azure Kubernetes Service (AKS) workloads. The article is intended for cluster operators and developers who are responsible for deploying and managing applications in AKS.
 
 The best practices in this article are organized into the following categories:
@@ -21,7 +31,7 @@ The best practices in this article are organized into the following categories:
 | Category | Best practices |
 | -------- | -------------- |
 | [Deployment level best practices](#deployment-level-best-practices) | • [Pod CPU and memory limits](#pod-cpu-and-memory-limits) <br/> • [Vertical Pod Autoscaler (VPA)](#vertical-pod-autoscaler-vpa) <br/> • [Pod Disruption Budgets (PDBs)](#pod-disruption-budgets-pdbs) <br/> • [High availability during upgrades](#high-availability-during-upgrades) <br/>• [Pod topology spread constraints](#pod-topology-spread-constraints) <br/> • [Readiness, liveness, and startup probes](#readiness-liveness-and-startup-probes) <br/> • [Multi-replica applications](#multi-replica-applications) |
-| [Cluster and node pool level best practices](#cluster-and-node-pool-level-best-practices) | • [Availability zones](#availability-zones) <br/> • [Cluster autoscaling](#cluster-autoscaling) <br/> • [Standard Load Balancer](#standard-load-balancer) <br/> • [System node pools](#system-node-pools) <br/> • [Upgrade configurations for node pools](#upgrade-configurations-for-node-pools) <br/>  • [Image versions](#image-versions) <br/> • [Azure CNI for dynamic IP allocation](#azure-cni-for-dynamic-ip-allocation) <br/> • [v5 SKU VMs](#v5-sku-vms) <br/> • [Do *not* use B series VMs](#do-not-use-b-series-vms) <br/> • [Premium Disks](#premium-disks) <br/> • [Container Insights](#container-insights) <br/> • [Azure Policy](#azure-policy) |
+| [Cluster and node pool level best practices](#cluster-and-node-pool-level-best-practices) | • [Availability zones](#availability-zones) <br/> • [Cluster autoscaling](#cluster-autoscaling) <br/> • [Standard Load Balancer](#standard-load-balancer) <br/> • [System node pools](#system-node-pools) <br/> • [Upgrade configurations for node pools](#upgrade-configurations-for-node-pools) <br/>  • [Image versions](#image-versions) <br/> • [Azure CNI for dynamic IP allocation](#azure-cni-for-dynamic-ip-allocation) <br/> • [v5 SKU VMs](#v5-sku-vms) <br/> • [Do *not* use B series VMs](#do-not-use-b-series-vms) <br/> • [Azure Premium SSD](#azure-premium-ssd) <br/> • [Container Insights](#container-insights) <br/> • [Azure Policy](#azure-policy) |
 
 ## AKS cluster modes and reliability
 
@@ -729,13 +739,13 @@ For node pools in AKS, use v5 SKU VMs with ephemeral OS disks to provide suffici
 
 B series VMs are low performance and don't work well with AKS. Instead, we recommend using [v5 SKU VMs](#v5-sku-vms).
 
-### Premium Disks
+### Azure Premium SSD
 
 > **Best practice guidance**
 >
-> Use Premium Disks to achieve 99.9% availability in one virtual machine (VM).
+> Use Premium SSDs to achieve 99.9% availability in one virtual machine (VM).
 
-[Azure Premium Disks](/azure/virtual-machines/disks-types#premium-ssd-v2) offer a consistent submillisecond disk latency and high IOPS and throughout. Premium Disks are designed to provide low-latency, high-performance, and consistent disk performance for VMs.
+[Azure Premium SSD managed disks](/azure/virtual-machines/disks-types#premium-ssd-v2) offer a consistent submillisecond disk latency and high IOPS and throughout. Premium SSDs are designed to provide low-latency, high-performance, and consistent disk performance for VMs.
 
 The following example YAML manifest shows a [storage class definition](https://kubernetes.io/docs/concepts/storage/storage-classes/) for a premium disk:
 
