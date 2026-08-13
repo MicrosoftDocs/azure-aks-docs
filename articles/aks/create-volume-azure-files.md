@@ -4,7 +4,8 @@ description: Learn how to create and manage persistent volumes using Azure Files
 ms.topic: how-to
 ms.subservice: aks-storage
 ms.service: azure-kubernetes-service
-ms.date: 07/21/2026
+ms.custom: aeo-round-2
+ms.date: 08/13/2026
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to learn how to create and manage persistent volumes using Azure Files CSI drivers in Azure Kubernetes Service (AKS) so that I can provide scalable and reliable storage solutions for my containerized applications."
@@ -15,10 +16,18 @@ ms.author: schaffererin
 If multiple pods need concurrent access to the same storage volume, you can use Azure Files to connect using the [Server Message Block (SMB)][smb-overview] or [NFS protocol][nfs-overview]. This article shows you how to dynamically and statically create an Azure file share for use by multiple pods in an Azure Kubernetes Service (AKS) cluster.
 
 > [!NOTE]
-> The Azure File CSI driver only permits the mounting of SMB file shares using key-based (NTLM v2) authentication, and therefore doesn't support the maximum security profile of Azure File share settings. Mounting NFS file shares doesn't require key-based authentication.
+> The Azure Files CSI driver only permits the mounting of SMB file shares using key-based (NTLM v2) authentication, and therefore doesn't support the maximum security profile of Azure File share settings. Mounting NFS file shares doesn't require key-based authentication.
 
 > [!NOTE]
 > We recommend FIO when running benchmarking tests. For more information, see [benchmarking tools and tests](/azure/storage/files/nfs-performance#benchmarking-tools-and-tests).
+
+## Quick-start checklist
+
+1. **Verify prerequisites**: Ensure Azure CLI 2.0.59+, Azure Files CSI driver enabled, and storage account available
+1. **Choose or create a storage class**: Use built-in classes (`azurefile-csi`, `azurefile-csi-premium`) or create a custom one
+1. **Create a PersistentVolumeClaim (PVC)**: Define storage size and access mode (typically ReadWriteMany)
+1. **Create a pod**: Reference the PVC in your pod's volume configuration
+1. **Verify the mount**: Confirm the volume is mounted correctly using `kubectl describe pod`
 
 ## Prerequisites
 
@@ -119,7 +128,7 @@ The following table includes parameters you can use to define a custom storage c
 | `provisionedBandwidth` | Provisioned throughput (MiB/s) for the [Azure Files provisioned v2 model](/azure/storage/files/understanding-billing#provisioned-v2-model). Only applicable to `PremiumV2` and `StandardV2` SKUs. Supported from driver v1.33.4. | Integer string, for example `"200"`. | No | |
 | `provisionedIOPS` | Provisioned IOPS for the [Azure Files provisioned v2 model](/azure/storage/files/understanding-billing#provisioned-v2-model). Only applicable to `PremiumV2` and `StandardV2` SKUs. Supported from driver v1.33.4. | Integer string, for example `"5000"`. | No | |
 | `requireInfraEncryption` | Specify whether or not the service applies a secondary layer of encryption with platform managed keys for data at rest for storage account created by driver. | `true` or `false` | No | `false` |
-| `resourceGroup` | Specify the resource group for the Azure Disks. | Existing resource group name | No | If empty, driver uses the same resource group name as current AKS cluster. |
+| `resourceGroup` | Specify the resource group for the Azure Files storage account. | Existing resource group name | No | If empty, driver uses the same resource group name as current AKS cluster. |
 | `selectRandomMatchingAccount` | Determines whether to randomly select a matching account. By default, the driver always selects the first matching account in alphabetical order (Note: This driver uses account search cache, which results in uneven distribution of file creation across multiple accounts). | `true` or `false` | No | `false` |
 | `server` | Specify Azure storage account server address. | Existing server address, for example `accountname.privatelink.file.core.windows.net`. | No | If empty, driver uses default `accountname.file.core.windows.net` or other sovereign cloud account address. |
 | `shareAccessTier` | [Access tier for file share][storage-tiers] | General purpose v2 account can choose between `TransactionOptimized` (default), `Hot`, and `Cool`. Premium storage account type for file shares only. | No | Empty. Use default setting for different storage account types. |
@@ -463,7 +472,7 @@ The Azure Files CSI driver supports creating [snapshots of persistent volumes](h
 
 You can request a larger volume for a PVC by editing the PVC object to specify a larger size. This change triggers the expansion of the underlying volume that backs the PV. A new PV is never created to satisfy the claim. Instead, an existing volume is resized.
 
-In AKS, the built-in `managed-csi` storage class already supports expansion, so you can use the dynamic PVC you created earlier in this tutorial. The PVC requested a 100 GiB file share.
+In AKS, the built-in `azurefile-csi` storage class supports expansion. Custom storage classes must set `allowVolumeExpansion: true`. The PVC requested a 100 GiB file share.
 
 1. Verify the current size of the PVC and the filesystem inside the pod using the `kubectl exec` command to run the `df -h` command inside the pod:
 
@@ -625,13 +634,13 @@ The Azure Files CSI driver also supports Windows nodes and containers. To use Wi
 
 [Azure Files supports the NFS v4.1 protocol](/azure/storage/files/storage-files-how-to-create-nfs-shares). NFS version 4.1 support for Azure Files provides you with a fully managed NFS file system as a service built on a highly available and highly durable distributed resilient storage platform.
 
-This option is optimized for random access workloads with in-place data updates and provides full POSIX file system support. This section shows you how to use NFS shares with the Azure File CSI driver on an AKS cluster.
+This option is optimized for random access workloads with in-place data updates and provides full POSIX file system support. This section shows you how to use NFS shares with the Azure Files CSI driver on an AKS cluster.
 
 ### Prerequisites for using NFS shares with Azure Files
 
 - NFS requires SSD file shares (such as `PremiumV2_LRS`, `PremiumV2_ZRS`, `Premium_LRS`, or `Premium_ZRS`) and a virtual network-enabled storage account.
 - Your AKS cluster _control plane_ identity (that is, your AKS cluster name) is added to the [Contributor](/azure/role-based-access-control/built-in-roles#contributor) role on the VNet and NetworkSecurityGroup.
-- Your AKS cluster's service principal or managed service identity (MSI) must be added to the Contributor role to the storage account.
+- Your AKS cluster's service principal or managed identity must be added to the Contributor role on the storage account.
 
 > [!NOTE]
 > You can use a private endpoint instead of allowing access to the selected VNet.
@@ -669,7 +678,7 @@ For a list of supported `mountOptions`, see [NFS mount options][nfs-file-share-m
 ### Create NFS file share storage class
 
 > [!NOTE]
-> `vers`, `minorversion`, `sec` are configured by the Azure File CSI driver. Specifying a value in your manifest for these properties isn't supported.
+> `vers`, `minorversion`, `sec` are configured by the Azure Files CSI driver. Specifying a value in your manifest for these properties isn't supported.
 
 1. Create a file named `nfs-sc.yaml` and paste in the following manifest. Make sure to specify `protocol: nfs` in the parameters section, and adjust the `mountOptions` as needed for your workload.
 
