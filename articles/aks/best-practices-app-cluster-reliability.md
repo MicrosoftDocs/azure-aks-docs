@@ -745,7 +745,8 @@ B series VMs are low performance and don't work well with AKS. Instead, we recom
 >
 > Use Premium SSDs to achieve 99.9% availability in one virtual machine (VM).
 
-[Azure Premium SSD managed disks](/azure/virtual-machines/disks-types#premium-ssd-v2) offer a consistent submillisecond disk latency and high IOPS and throughout. Premium SSDs are designed to provide low-latency, high-performance, and consistent disk performance for VMs.
+[Azure Premium SSD managed disks](/azure/virtual-machines/disks-types#premium-ssd-v2) offer a consistent submillisecond disk latency and high IOPS and throughput. Premium SSDs are designed to provide low-latency, high-performance, and consistent disk performance for VMs.
+
 
 The following example YAML manifest shows a [storage class definition](https://kubernetes.io/docs/concepts/storage/storage-classes/) for a premium disk:
 
