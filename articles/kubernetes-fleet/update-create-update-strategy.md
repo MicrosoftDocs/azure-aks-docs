@@ -58,14 +58,14 @@ There are two ways to select which clusters are included in each stage and group
 
 ## Create an update strategy using member selectors (preview)
 
-Member labels are the recommended approach for selecting clusters in your update strategies because they provide more flexibility. For conceptual details, see [Group clusters using member labels](./concepts-update-orchestration.md#group-clusters-using-member-labels-preview).
+Use member labels to select clusters in your update strategies. They provide more flexibility. For conceptual details, see [Group clusters using member labels](./concepts-update-orchestration.md#group-clusters-using-member-labels-preview).
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 ### Apply labels on member clusters
 #### Apply labels when adding member cluster to the fleet
 
-Apply labels on your fleet members using the [`az fleet member create`][az-fleet-member-create] command. The following example applies two labels to the member cluster: `env=staging` and `tier=frontend`:
+Use the [`az fleet member create`][az-fleet-member-create] command to apply labels to your fleet members. The following example applies two labels to the member cluster: `env=staging` and `tier=frontend`:
 
 ```azurecli-interactive
 az fleet member create \
@@ -78,7 +78,7 @@ az fleet member create \
 
 #### Apply labels to an existing fleet member
 
-Apply labels on your fleet members using the [`az fleet member update`][az-fleet-member-update] command
+Use the [`az fleet member update`][az-fleet-member-update] command to apply labels to your fleet members.
 
 ```azurecli-interactive
 az fleet member update \
@@ -153,7 +153,7 @@ An update strategy consists of one or more stages, where a stage can contain one
 
 ## Create an update strategy using update groups
 
-Clusters can also be selected in update strategies by assigning them to a single update group. You can define an update strategy that assigns these update groups to stages. Within an update stage, updates are applied to each update group in parallel. Within an update group, member clusters update sequentially.
+You can select clusters in update strategies by assigning them to a single update group. Define an update strategy that assigns these update groups to stages. Within an update stage, updates are applied to each update group in parallel. Within an update group, member clusters update sequentially.
 
 > [!NOTE]
 > A fleet member can only be a part of one update group, but an update group can have multiple fleet members assigned to it.

@@ -239,12 +239,12 @@ Member labels can be used to group clusters and configure your update sequence w
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
-`memberSelector` uses a string-based label selector parsed using standard Kubernetes label selector syntax. Supported operators are: `=`, `==`, `!=`, `in`, `notin`, `exists`, and `!exists`.
+`memberSelector` uses a string-based label selector that's parsed by using standard Kubernetes label selector syntax. Supported operators are: `=`, `==`, `!=`, `in`, `notin`, `exists`, and `!exists`.
 
 > [!NOTE]
-> We recommend using member labels instead of update groups for grouping clusters in update strategies. With member labels, you can easily manage large fleets with dynamic membership and complex grouping needs. 
+> Use member labels instead of update groups to group clusters in update strategies. By using member labels, you can easily manage large fleets with dynamic membership and complex grouping needs. 
 >
-> Existing group name based strategies will continue to work without changes. 
+> Existing group name based strategies continue to work without changes. 
 
 For instructions on assigning member labels and using `memberSelector` in a strategy, see [Create an update strategy using member selectors](./update-create-update-strategy.md#create-an-update-strategy-using-member-selectors-preview).
 
