@@ -2,10 +2,10 @@
 title: AKS Scaling Overview — HPA, VPA, Cluster Autoscaler, and KEDA
 description: Understand the AKS scaling options — Horizontal Pod Autoscaler, Vertical Pod Autoscaler, Cluster Autoscaler, and KEDA — and choose the right method for your workload type.
 ms.topic: overview
-ms.date: 08/05/2026
+ms.date: 08/13/2026
 author: schaffererin
 ms.author: schaffererin
-ms.custom: biannual, aks-scaling
+ms.custom: biannual, aks-scaling, aeo-round-2
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
 # Customer intent: As a cloud architect, I want to understand the scaling options in Kubernetes, so that I can efficiently manage application performance and resource allocation in Azure Kubernetes Service (AKS).
@@ -25,6 +25,17 @@ When you run applications in Azure Kubernetes Service (AKS), you can scale pods,
 | [Node autoprovisioning (NAP)](./node-auto-provisioning.md) | Pending workloads that need right-sized VM capacity | Pending pod resource requirements | [Node autoprovisioning overview](./node-auto-provisioning.md) |
 | [KEDA](./keda-about.md) | Event-driven workloads; scale-to-zero required | Queue length, event backlog | [KEDA add-on overview](./keda-about.md) |
 | [ACI burst scaling](./virtual-nodes.md) | Linux workloads with burst demand that meet virtual node limitations | Burst demand | [Create virtual nodes with Azure Container Instances](./virtual-nodes-cli.md) |
+
+### When to use each scaling method
+
+- **Use HPA** when your workload can run multiple identical replicas and demand fluctuates based on CPU, memory, or request rate.
+- **Use VPA** when your workload can't scale horizontally (non-parallelizable) or you need to right-size resource requests for better scheduling.
+- **Use Cluster Autoscaler** when you have predefined node pools and need to add or remove nodes based on pending pod demand.
+- **Use NAP** when you want automatic VM SKU selection and node provisioning without manually configuring node pools.
+- **Use KEDA** when scaling should respond to external events (queues, streams, messages) or you need scale-to-zero capability.
+- **Use ACI burst scaling** when you need rapid capacity expansion for Linux workloads without waiting for VM provisioning (typically 2–5 minutes).
+
+### Quick recommendation
 
 For most production workloads, start with AKS Automatic, which preconfigures NAP, VPA, and KEDA. In AKS Standard, you enable and configure these features explicitly.
 
@@ -138,7 +149,7 @@ The AKS [virtual nodes](./virtual-nodes.md) component is based on [Virtual Kubel
 
 Virtual nodes use another subnet in the same virtual network as the AKS cluster. This configuration provides private network connectivity between AKS and ACI while allowing ACI to act as a logical extension of the cluster.
 
-## Next steps
+## Related content
 
 Use the following resources to implement the scaling method that fits your workload:
 
