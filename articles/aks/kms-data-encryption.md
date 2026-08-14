@@ -107,6 +107,8 @@ Enable KMS encryption with platform-managed keys on an existing AKS cluster.
 
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
+> 
+> If the `az aks update` command returns a `ReconcileAzureKeyVaultKmsError` error, run the following command to validate whether existing secrets can be read and written successfully:
 >
 > ```bash
 > kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -258,6 +260,8 @@ Enable KMS encryption with customer-managed keys using a private key vault on an
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
 >
+> If the `az aks update` command returns a `ReconcileAzureKeyVaultKmsError` error, run the following command to validate whether existing secrets can be read and written successfully:
+>
 > ```bash
 > kubectl get secrets --all-namespaces -o json | kubectl replace -f -
 > ```
@@ -403,6 +407,8 @@ Enable KMS encryption with customer-managed keys on an existing AKS cluster.
 
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
+>
+> If the `az aks update` command returns a `ReconcileAzureKeyVaultKmsError` error, run the following command to validate whether existing secrets can be read and written successfully:
 >
 > ```bash
 > kubectl get secrets --all-namespaces -o json | kubectl replace -f -
