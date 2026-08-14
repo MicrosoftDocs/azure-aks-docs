@@ -1,30 +1,29 @@
 ---
-title: Best practices for scheduler features
-titleSuffix: Azure Kubernetes Service
-description: Learn the cluster operator best practices for using advanced scheduler features such as taints and tolerations, node selectors and affinity, or inter-pod affinity and anti-affinity in Azure Kubernetes Service (AKS)
+title: Best practices for scheduler features in Azure Kubernetes Service (AKS)
+description: Learn the cluster operator best practices for using advanced scheduler features such as taints and tolerations, node selectors and affinity, or inter-pod affinity and anti-affinity in Azure Kubernetes Service (AKS).
 ms.topic: best-practice
-ms.custom: aks-scaling
-ms.date: 11/11/2022
+ms.service: azure-kubernetes-service
+ms.custom: aeo-round-2, aks-scaling
+ms.date: 08/13/2026
 ms.author: schaffererin
 author: schaffererin
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes cluster operator, I want to implement advanced scheduling strategies using taints, tolerations, and node affinity, so that I can effectively manage workload distribution and resource allocation across my AKS clusters."
 ---
 
 # Best practices for advanced scheduler features in Azure Kubernetes Service (AKS) using the kube-scheduler
 
-As you manage clusters in Azure Kubernetes Service (AKS), you often need to isolate teams and workloads. Advanced features provided by the Kubernetes scheduler let you control:
+The best practices for AKS advanced scheduler features include using taints and tolerations to dedicate nodes, node selectors and node affinity to control pod placement, and inter-pod affinity/anti-affinity to manage workload distribution across your cluster. As you manage clusters in Azure Kubernetes Service (AKS), you often need to isolate teams and workloads. Advanced features provided by the Kubernetes scheduler let you control:
 
-* Which pods can be scheduled on certain nodes.
-* How multi-pod applications can be appropriately distributed across the cluster.
+- Which pods can be scheduled on certain nodes.
+- How multi-pod applications can be appropriately distributed across the cluster.
 
 This best practices article focuses on advanced Kubernetes scheduling features for cluster operators. In this article, you learn how to:
 
-> [!div class="checklist"]
->
-> * Use taints and tolerations to limit what pods can be scheduled on nodes.
-> * Give preference to pods to run on certain nodes with node selectors or node affinity.
-> * Split apart or group together pods with inter-pod affinity or anti-affinity.
-> * Restrict scheduling of workloads that require GPUs only on nodes with schedulable GPUs.
+- Use taints and tolerations to limit what pods can be scheduled on nodes.
+- Give preference to pods to run on certain nodes with node selectors or node affinity.
+- Split apart or group together pods with inter-pod affinity or anti-affinity.
+- Restrict scheduling of workloads that require GPUs only on nodes with schedulable GPUs.
 
 If additional capabilities or ML frameworks are needed to schedule and queue batch workloads, you can [install and configure Kueue on AKS][kueue-on-aks] to ensure efficient, policy-driven scheduling in AKS clusters.
 

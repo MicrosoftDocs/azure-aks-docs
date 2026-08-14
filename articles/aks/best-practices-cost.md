@@ -3,16 +3,24 @@ title: Best Practices for Cost Optimization in Azure Kubernetes Service (AKS)
 description: Learn best practices for cost optimization in AKS, including using AKS Automatic for built-in cost optimization, FinOps practices, autoscaling, and Azure discounts.
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
-ms.date: 05/26/2026
+ms.date: 08/13/2026
 author: davidsmatlak
 ms.author: davidsmatlak
-ms.custom: biannual, aks-cost
+ms.custom: biannual, aks-cost, aeo-round-2
 # Customer intent: As a cloud architect, I want to implement cost optimization strategies in Azure Kubernetes Service, so that I can maximize resource efficiency and minimize unnecessary expenses while ensuring performance and reliability for my applications.
 ---
 
 # Best practices for cost optimization in Azure Kubernetes Service (AKS)
 
 Cost optimization is about maximizing the value of resources while minimizing unnecessary expenses within your cloud environment. This process involves identifying cost-effective configuration options and implementing best practices to improve operational efficiency. An AKS environment can be optimized to minimize cost while taking into account performance and reliability requirements.
+
+> **Quick Answer: What are the best practices for AKS cost optimization?**
+>
+> - Start with AKS Automatic for built-in cost optimization features like node auto-provisioning and workload autoscaling
+> - Enable dynamic rightsizing through VPA, HPA, and KEDA to match resources to actual demand
+> - Select cost-efficient infrastructure using Spot VMs (up to 90% savings), Arm64 processors, or Reserved Instances (up to 72% savings)
+> - Monitor spending with Microsoft Cost Management and migrate to Azure Monitor managed service for Prometheus (managed Prometheus) for lower metrics costs
+> - Leverage Azure discounts through Reservations, Azure savings plan for compute, or Hybrid Benefit for long-term workloads
 
 In this article, you learn about:
 
@@ -35,7 +43,7 @@ AKS Automatic provides the following cost optimization capabilities by default, 
 | [Node auto-provisioning (NAP)](node-auto-provisioning.md) | Automatically selects the most cost-efficient VM SKU for each workload based on actual pod resource requests. Eliminates manual node pool management and overprovisioning. |
 | Workload autoscaling (VPA, HPA, and KEDA) | All workload autoscalers are enabled by default, so pods and nodes scale dynamically to actual demand rather than peak assumptions. |
 | Efficient bin packing | Pods are scheduled to maximize node utilization, reducing the total number of nodes required to serve your workloads. |
-| Managed Prometheus | Managed Prometheus is the default metrics platform. You avoid the higher cost of Container Insights metrics without any migration effort. |
+| managed Prometheus | managed Prometheus is the default metrics platform. You avoid the higher cost of Container Insights metrics without any migration effort. |
 | [Deployment safeguards](deployment-safeguards.md) | Azure Policy controls enforce resource requests and limits on all pods in enforcement mode, preventing uncontrolled resource consumption and overprovisioning at the cluster level. |
 
 For workloads that require AKS Standard, the rest of this article describes each of these practices and how to configure them manually. Where AKS Automatic provides a practice by default, a note indicates that no extra steps are needed.
@@ -57,7 +65,7 @@ It's important to evaluate the resource requirements of your application before 
 
 | SKU family | Description | Best for |
 | ---------- | ----------- | -------- |
-| [**Azure Spot Virtual Machines**](/azure/virtual-machines/spot-vms) | Azure Spot Virtual machine scale sets back [Spot node pools](./spot-node-pool.md) and are deployed to a single fault domain with no high availability or service-level agreement (SLA) guarantees. Spot VMs let you take advantage of unutilized Azure capacity with significant discounts (up to 90% compared to pay-as-you-go prices). If Azure needs capacity back, the Azure infrastructure evicts the Spot nodes. | Dev/test environments, workloads that can handle interruptions such as batch processing jobs, and workloads with flexible execution time. |
+| [**Azure Spot Virtual Machines**](/azure/virtual-machines/spot-vms) | Azure Spot Virtual Machine Scale Sets back [Spot node pools](./spot-node-pool.md) and are deployed to a single fault domain with no high availability or service-level agreement (SLA) guarantees. Spot VMs let you take advantage of unutilized Azure capacity with significant discounts (up to 90% compared to pay-as-you-go prices). If Azure needs capacity back, the Azure infrastructure evicts the Spot nodes. | Dev/test environments, workloads that can handle interruptions such as batch processing jobs, and workloads with flexible execution time. |
 | [**Arm-based processors (Arm64)**][cobalt-arm64-vm] | Arm64 VMs are power-efficient and cost-effective without compromising on performance. With [Arm64 node pool support in AKS](./use-arm64-vms.md), you can create Arm64 Ubuntu agent nodes and mix Intel and Arm architecture nodes within a cluster. These VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads. | Web or application servers, open-source databases, cloud-native applications, gaming servers, and more. |
 | [**GPU optimized SKUs**](/azure/virtual-machines/sizes) | Depending on the nature of your workload, consider using compute-optimized, memory-optimized, storage-optimized, or GPU-optimized VM SKUs. GPU VM sizes are specialized VMs available with single, multiple, and fractional GPUs. | [GPU-enabled Linux node pools on AKS](./gpu-cluster.md) are best for compute-intensive workloads like graphics rendering, large model training, and inferencing. |
 
@@ -189,9 +197,9 @@ Complicated workloads might require several node pools with different VM size co
 
 If your workload is predictable and exists for an extended period of time, consider purchasing an [Azure Reservation](/azure/cost-management-billing/reservations/save-compute-costs-reservations) to further reduce your resource costs. Azure Reservations operate on a one-year or three-year term, offering up to 72% discount as compared to pay-as-you-go prices for compute. Reservations automatically apply to matching resources. **Best for workloads that are committed to running in the same SKUs and regions over an extended period of time**.
 
-### Azure Savings Plan
+### Azure savings plan for compute
 
-If you have consistent spend, but your use of disparate resources across SKUs and regions makes Azure Reservations infeasible, consider purchasing an [Azure Savings Plan](/azure/cost-management-billing/savings-plan/savings-plan-overview). Like Azure Reservations, Azure Savings Plans operate on a one-year or three-year term and automatically apply to any resources within benefit scope. You commit to spend a fixed hourly amount on compute resources irrespective of SKU or region. **Best for workloads that utilize different resources and/or different data center regions**.
+If you have consistent spend, but your use of disparate resources across SKUs and regions makes Azure Reservations infeasible, consider purchasing an [Azure savings plan for compute](/azure/cost-management-billing/savings-plan/savings-plan-overview). Like Azure Reservations, savings plans operate on a one-year or three-year term and automatically apply to any resources within benefit scope. You commit to spend a fixed hourly amount on compute resources irrespective of SKU or region. **Best for workloads that utilize different resources and/or different data center regions**.
 
 ### Azure Hybrid Benefit
 
