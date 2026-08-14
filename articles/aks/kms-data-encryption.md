@@ -10,17 +10,17 @@ ms.custom:
 author: shashankbarsin
 ms.author: shasb
 zone_pivot_groups: kms-key-type
-# Customer intent: As a Kubernetes administrator, I want to enable KMS data encryption in my AKS cluster so that I can encrypt Kubernetes secrets at rest with platform-managed or customer-managed keys[...]
+# Customer intent: As a Kubernetes administrator, I want to enable KMS data encryption in my AKS cluster so that I can encrypt Kubernetes secrets at rest with platform-managed or customer-managed keys.
 ---
 
 # Enable KMS data encryption in Azure Kubernetes Service (AKS) clusters (Preview)
 
-This article shows you how to enable Key Management Service (KMS) data encryption for Kubernetes secrets in Azure Kubernetes Service (AKS). KMS encryption encrypts Kubernetes secrets stored in etcd us[...]
+This article shows you how to enable Key Management Service (KMS) data encryption for Kubernetes secrets in Azure Kubernetes Service (AKS). KMS encryption encrypts Kubernetes secrets stored in etcd using Azure Key Vault keys.
 
 AKS supports two key management options:
 
 - **Platform-managed keys (PMK)**: AKS automatically creates and manages the encryption keys. This option provides the simplest setup with automatic key rotation.
-- **Customer-managed keys (CMK)**: You create and manage your own Azure Key Vault and encryption keys. This option provides full control over key lifecycle and meets compliance requirements that manda[...]
+- **Customer-managed keys (CMK)**: You create and manage your own Azure Key Vault and encryption keys. This option provides full control over key lifecycle and meets compliance requirements that mandate customer-managed keys.
 
 For more information about encryption concepts and key options, see [Data encryption at rest concepts for AKS][kms-data-encryption-concepts].
 
@@ -107,6 +107,12 @@ Enable KMS encryption with platform-managed keys on an existing AKS cluster.
 
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
+>
+> ```bash
+> kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+> ```
+>
+> If this command fails, review and fix issues with existing secrets, then retry the update command.
 
 ```azurecli-interactive
 az aks update \
@@ -139,12 +145,12 @@ The output includes the KMS configuration:
 
 ## Enable customer-managed key encryption with a private key vault
 
-For enhanced security, you can use a private key vault that has public network access disabled. AKS accesses the private key vault through the [trusted services firewall exception][keyvault-trusted-se[...]
+For enhanced security, you can use a private key vault that has public network access disabled. AKS accesses the private key vault through the [trusted services firewall exception][keyvault-trusted-services]. This section shows how to configure customer-managed keys with a private key vault.
 
 ### Create a key vault and key with trusted services access
 
 > [!NOTE]
-> This section illustrates creating a key vault with public network access initially, then enabling the firewall with trusted services bypass. This approach is for illustrative purposes only. In produ[...]
+> This section illustrates creating a key vault with public network access initially, then enabling the firewall with trusted services bypass. This approach is for illustrative purposes only. In production environments, you should create and manage your key vault as private from the start. For guidance on managing private key vaults, see [Azure Key Vault network security][keyvault-network-security].
 
 1. Create a key vault with Azure RBAC enabled.
 
@@ -251,8 +257,6 @@ Enable KMS encryption with customer-managed keys using a private key vault on an
 
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
->
-> If the `az aks update` command returns a `ReconcileAzureKeyVaultKmsError` error, run the following command to validate whether existing secrets can be read and written successfully:
 >
 > ```bash
 > kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -399,8 +403,6 @@ Enable KMS encryption with customer-managed keys on an existing AKS cluster.
 
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
->
-> If the `az aks update` command returns a `ReconcileAzureKeyVaultKmsError` error, run the following command to validate whether existing secrets can be read and written successfully:
 >
 > ```bash
 > kubectl get secrets --all-namespaces -o json | kubectl replace -f -
