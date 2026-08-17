@@ -80,7 +80,7 @@ spec:
 ```
 
 >[!NOTE]
-> To use artifact streaming on AKS NAP managed-nodes, you must also enable artifact streaming in Azure Container Registry (ACR). If you don't set this option in ACR, the field defaults to false.  
+> To use artifact streaming on AKS NAP managed nodes, you must also enable artifact streaming in Azure Container Registry (ACR). If you don't set this option in ACR, the field defaults to false.  
 
 ## Virtual network (VNet) subnet configuration
 

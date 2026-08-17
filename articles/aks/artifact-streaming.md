@@ -81,7 +81,7 @@ You can enable Artifact Streaming on new or existing node pools in your AKS clus
 > [!NOTE]
 > If you don't have a Premium tier ACR integrated with your AKS cluster, you can't use Artifact Streaming on AKS.
 
-### [standard node pool](#tab/standard-node-pool)
+### [Standard node pool](#tab/standard-node-pool)
 
 ### Enable Artifact Streaming on a new node pool
 
