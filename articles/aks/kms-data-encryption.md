@@ -114,7 +114,7 @@ Enable KMS encryption with platform-managed keys on an existing AKS cluster.
 > kubectl get secrets --all-namespaces -o json | kubectl replace -f -
 > ```
 >
-> If this command fails, review and fix any issues with existing secrets, and then try the update command again.
+> If this command fails (e.g., webhook rejection, resource not found), fix the issue and re-run the update command. A "The object has been modified" message requires no action — treat it as success.
 
 ```azurecli-interactive
 az aks update \
@@ -266,7 +266,7 @@ Enable KMS encryption with customer-managed keys using a private key vault on an
 > kubectl get secrets --all-namespaces -o json | kubectl replace -f -
 > ```
 >
-> If this command fails, review and fix any issues with existing secrets, and then try the update command again.
+> If this command fails (e.g., webhook rejection, resource not found), fix the issue and re-run the update command. A "The object has been modified" message requires no action — treat it as success.
 
 ```azurecli-interactive
 az aks update \
@@ -414,7 +414,7 @@ Enable KMS encryption with customer-managed keys on an existing AKS cluster.
 > kubectl get secrets --all-namespaces -o json | kubectl replace -f -
 > ```
 >
-> If this command fails, review and fix issues with existing secrets, and then retry the update command.
+> If this command fails (e.g., webhook rejection, resource not found), fix the issue and re-run the update command. A "The object has been modified" message requires no action — treat it as success.
 
 ```azurecli-interactive
 az aks update \
