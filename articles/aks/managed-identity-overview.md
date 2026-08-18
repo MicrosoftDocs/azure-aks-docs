@@ -1,5 +1,5 @@
 ---
-title: Overview of Managed Identities in Azure Kubernetes Service (AKS)
+title: Managed Identities in Azure Kubernetes Service (AKS) Overview
 description: This article provides an overview of managed identities in Azure Kubernetes Service (AKS), including system-assigned, user-assigned, and pre-created kubelet managed identities. It also explains how they work, role assignments, and AKS-specific managed identity features.
 author: davidsmatlak
 ms.author: davidsmatlak
@@ -9,11 +9,12 @@ ms.service: azure-kubernetes-service
 ms.custom:
   - devx-track-azurecli
   - ignite-2023
-ms.date: 07/31/2026
+  - aeo-round-2
+ms.date: 08/18/2026
 # Customer intent: "As a DevOps engineer, I want to understand the different types of managed identities available in AKS and how they can be used to securely access Azure resources."
 ---
 
-# Overview of managed identities in Azure Kubernetes Service (AKS)
+# Managed identities in Azure Kubernetes Service (AKS) overview
 
 This article provides an overview of system-assigned and user-assigned managed identities in AKS, including how they work, role assignments, and AKS-specific managed identity features.
 
