@@ -392,19 +392,8 @@ Yes. Many open-source tools integrate well with AKS upgrade processes:
 
 ### How do I validate API compatibility before upgrading?
 
-Run deprecation checks by using tools like kubent:
-
-```bash
-# Install and run API deprecation scanner
-kubectl apply -f https://github.com/doitintl/kube-no-trouble/releases/latest/download/knt-full.yaml
-
-# Check for deprecated APIs in your cluster
-kubectl run knt --image=doitintl/knt:latest --rm -it --restart=Never -- \
-  -c /kubeconfig -o json > api-deprecation-report.json
-
-# Review findings
-cat api-deprecation-report.json | jq '.[] | select(.deprecated==true)'
-```
+Read this document and check if you are using the deprecated API.
+https://kubernetes.io/docs/reference/using-api/deprecation-guide/
 
 ### What makes AKS upgrades different from other Kubernetes platforms?
 
