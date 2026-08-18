@@ -211,7 +211,7 @@ After you apply the configuration, it takes several minutes for the metrics from
 
 ## Troubleshoot control plane metrics issues
 
-Make sure that you enable the `--enable-control-plane-metrics` flag and that the `ama-metrics` pods are running.
+Ensure that you enable the `--enable-control-plane-metrics` flag and that the `ama-metrics` pods are running.
 
 > [!NOTE]
 > The [troubleshooting methods](/azure/azure-monitor/containers/prometheus-metrics-troubleshoot) for the managed service for Prometheus don't apply directly in this scenario. The components that scrape the control plane aren't included in the managed service for Prometheus add-on.
