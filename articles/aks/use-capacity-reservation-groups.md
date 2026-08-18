@@ -37,13 +37,14 @@ In this article, you learn how to use capacity reservation groups with node pool
 1. Get the ID of the user-assigned managed identity using the [`az identity show`][az-identity-show] command and set it to an environment variable.
 
     ```azurecli-interactive
-    IDENTITY_ID=$(az identity show --name <identity-name> --resource-group <resource-group-name> --query principalId -o tsv)
+    IDENTITY_PID=$(az identity show --name <identity-name> --resource-group <resource-group-name> --query principalId -o tsv)
+    IDENTITY_RID=$(az identity show --name <identity-name> --resource-group <resource-group-name> --query id -o tsv)
     ```
 
 1. Assign the `Contributor` role to the user-assigned identity using the [`az role assignment create`][az-role-assignment-create] command.
 
     ```azurecli-interactive
-    az role assignment create --assignee $IDENTITY_ID --role "Contributor" --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group-name>
+    az role assignment create --assignee $IDENTITY_PID --role "Contributor" --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group-name>
     ```
 
     It can take up to _60 minutes_ for the role assignment to propagate.
@@ -57,7 +58,7 @@ In this article, you learn how to use capacity reservation groups with node pool
         --name <cluster-name> \
         --location <location> \
         --node-vm-size <vm-size> --node-count <node-count> \
-        --assign-identity $IDENTITY_ID \
+        --assign-identity $IDENTITY_RID \
         --generate-ssh-keys
 
     # Update an existing AKS cluster to use the user-assigned managed identity
