@@ -239,7 +239,7 @@ You can disable control plane metrics at any time by using the `--disable-contro
 
    ```azurecli
    az aks update --disable-control-plane-metrics --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
-   ``
+   ```
 
 1. Remove the metrics add-on that scrapes Prometheus metrics by using the [`az aks update`](/cli/azure/aks#az-aks-update) command. Note that disabling Prometheus metrics disables metrics collection from other targets in your AKS cluster.
 
