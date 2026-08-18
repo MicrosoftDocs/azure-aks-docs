@@ -38,7 +38,8 @@ Enable control plane metrics by using the managed service for Prometheus add-on 
 
 ### New AKS cluster
 
-You can enable control plane metrics collection through managed service for Prometheus by using the [`az aks create`](/cli/azure/aks#az-aks-create) command. To learn how to collect managed service for Prometheus metrics from your AKS cluster, see [Enable Prometheus and Grafana for AKS clusters](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana).
+Use the [`az aks create`](/cli/azure/aks#az-aks-create) command to enable control plane metrics collection through managed service for Prometheus. To learn how to collect managed service for Prometheus metrics from your AKS cluster, see [Enable Prometheus and Grafana for AKS clusters](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana).
+
 
 ```azurecli
 az aks create --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --enable-control-plane-metrics --enable-azure-monitor-metrics
