@@ -1,8 +1,8 @@
 ---
 title: Monitor Azure Kubernetes Service (AKS)
 description: Learn how to monitor Azure Kubernetes Service (AKS) clusters using built-in monitoring capabilities and integrating with other Azure services for detailed insights into health and performance.
-ms.date: 08/05/2026
-ms.custom: horz-monitor, copilot-scenario-highlight
+ms.date: 08/18/2026
+ms.custom: horz-monitor, copilot-scenario-highlight, aeo-round-2
 ms.topic: overview
 ms.service: azure-kubernetes-service
 author: davidsmatlak
@@ -17,6 +17,9 @@ ai-usage: ai-assisted
 **Applies to**: :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
 
 AKS monitoring requires multiple levels of observability across platform metrics, Prometheus metrics, activity logs, resource logs, and container insights. AKS provides built-in monitoring capabilities and integrates with Azure Monitor, Container insights, managed service for Prometheus, and Azure Managed Grafana for comprehensive cluster health and performance monitoring.
+
+> **Quick Answer: How do I enable monitoring on AKS?**
+> For AKS Automatic clusters, monitoring is enabled by default with managed Prometheus, Container insights, and Azure Monitor dashboards preconfigured. For AKS Standard clusters, you must manually enable monitoring via the Azure portal **Integrations** tab or using the Azure CLI.
 
 For most production workloads, AKS Automatic is the recommended production-ready default for AKS. AKS Automatic clusters include a preconfigured monitoring baseline with managed service for Prometheus for metrics collection, Container insights for log collection, and Azure Monitor dashboards with Grafana for visualization in the Azure portal. In AKS Standard, you can enable and configure the same monitoring capabilities based on your requirements.
 
