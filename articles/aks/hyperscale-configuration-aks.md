@@ -4,7 +4,7 @@ description: Configure a hyperscale AKS cluster using a control plane scaling pr
 ms.author: schaffererin
 author: schaffererin
 ms.topic: how-to
-ms.date: 08/04/2026
+ms.date: 08/19/2026
 ms.service: azure-kubernetes-service
 # Customer intent: "As an AKS user, I want to configure my cluster with a hyperscale control plane scaling profile to ensure predictable performance for large-scale workloads."
 ---
@@ -28,9 +28,9 @@ Set the `controlPlaneScalingProfile` property on the managed cluster resource to
 
 | Scaling size | Description | Kube API Server flow control executing requests | Pod scheduling rate | Etcd storage |
 | ------------ | ----------- | ----------------------------------------------- | ------------------- | ------------ |
-| `H2` | Smallest scaling size with guaranteed capacity and predictable performance beyond standard tier defaults. | 1,750 | 200 pods per second | 6 partitions, 8 GB per partition |
-| `H4` | Provides guaranteed increased performance over `H2`. | 3,500 | 300 pods per second | 6 partitions, 8 GB per partition |
-| `H8` | Provides guaranteed increased performance over `H4`. | 7,000 | 400 pods per second | 6 partitions, 8 GB per partition |
+| `H2` | Smallest scaling size with guaranteed capacity and predictable performance beyond standard tier defaults. | 1,750 | 200 pods per second | 6 partitions, 8 GiB per partition |
+| `H4` | Provides guaranteed increased performance over `H2`. | 3,500 | 300 pods per second | 6 partitions, 8 GiB per partition |
+| `H8` | Provides guaranteed increased performance over `H4`. | 7,000 | 400 pods per second | 6 partitions, 8 GiB per partition |
 
 ### Etcd partitions and stored resources
 
@@ -80,13 +80,13 @@ Before you can enable the control plane scaling profile, ensure you have the fol
 
 ### Install or update the Azure CLI `aks-preview` extension
 
-Install the latest version of the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
+Install the latest version of the `aks-preview` extension using the `az extension add` command.
 
 ```azurecli-interactive
 az extension add --name aks-preview --allow-preview true
 ```
 
-Update the `aks-preview` extension using the [`az extension update`][az-extension-update] command.
+Update the `aks-preview` extension using the `az extension update` command.
 
 ```azurecli-interactive
 az extension update --name aks-preview --allow-preview true
@@ -101,13 +101,13 @@ az extension update --name aks-preview --allow-preview true
 
 ### Register the `ControlPlaneScalingProfilePreview` feature flag
 
-1. Register the `ControlPlaneScalingProfilePreview` feature flag on your subscription using the [`az feature register`][az-feature-register] command.
+1. Register the `ControlPlaneScalingProfilePreview` feature flag on your subscription using the `az feature register` command.
 
     ```azurecli-interactive
-    az feature --namespace "Microsoft.ContainerService" --name "ControlPlaneScalingProfilePreview"
+    az feature register --namespace "Microsoft.ContainerService" --name "ControlPlaneScalingProfilePreview"
     ```
 
-1. Verify the registration status using the [`az feature show`][az-feature-show] command.
+1. Verify the registration status using the `az feature show` command.
 
     ```azurecli-interactive
     az feature show --namespace "Microsoft.ContainerService" --name "ControlPlaneScalingProfilePreview"
@@ -115,7 +115,7 @@ az extension update --name aks-preview --allow-preview true
 
     It takes a few minutes for the feature flag to register.
 
-1. Once the status shows _Registered_, refresh the registration of the Microsoft.ContainerService resource provider using the [`az provider register`][az-provider-register] command.
+1. Once the status shows _Registered_, refresh the registration of the Microsoft.ContainerService resource provider using the `az provider register` command.
 
     ```azurecli-interactive
     az provider register --namespace "Microsoft.ContainerService"
@@ -126,7 +126,7 @@ az extension update --name aks-preview --allow-preview true
 > [!NOTE]
 > Creating a cluster with a control plane scaling profile might take longer than creating a standard cluster. Expect approximately 10 minutes for `H2`, and 20 minutes for `H4` and `H8`.
 
-Create an AKS cluster with a control plane scaling profile using the [`az aks create`][az-aks-create] command with the `--control-plane-scaling-size` parameter set to the desired [scaling size](#control-plane-scaling-sizes): `H2`, `H4`, or `H8`. The following example creates a cluster with the control plane scaling size set to `H2`:
+Create an AKS cluster with a control plane scaling profile using the `az aks create` command with the `--control-plane-scaling-size` parameter set to the desired [scaling size](#control-plane-scaling-sizes): `H2`, `H4`, or `H8`. The following example creates a cluster with the control plane scaling size set to `H2`:
 
 ```azurecli-interactive
 az aks create \
@@ -141,19 +141,18 @@ az aks create \
 
 ## Resize a control plane scaling profile using Azure CLI
 
-Resize the control plane scaling profile for an existing AKS cluster with the feature enabled by using the [`az aks update`][az-aks-update] command. Set the `--control-plane-scaling-size` parameter to the desired [scaling size](#control-plane-scaling-sizes): `H2`, `H4`, or `H8`. The following example resizes the control plane scaling profile to `H4`:
+Resize the control plane scaling profile for an existing AKS cluster with the feature enabled by using the `az aks update` command. Set the `--control-plane-scaling-size` parameter to the desired [scaling size](#control-plane-scaling-sizes): `H2`, `H4`, or `H8`. The following example resizes the control plane scaling profile to `H4`:
 
 ```azurecli-interactive
 az aks update \
     --resource-group <resource-group-name> \
     --name <cluster-name> \
-    --location <location> \
     --control-plane-scaling-size H4
 ```
 
 ## Verify the control plane scaling profile using Azure CLI
 
-Verify the control plane scaling profile for the cluster using the [`az aks show`][az-aks-show] command and query the `controlPlaneScalingProfile` property.
+Verify the control plane scaling profile for the cluster using the `az aks show` command and query the `controlPlaneScalingProfile` property.
 
 ```azurecli-interactive
 az aks show \
@@ -178,19 +177,19 @@ AKS provides several metrics to help you monitor your control plane's tier utili
 | ----- | ----------- | ---- | ---------------- | -------------------------------- |
 | API request concurrency | Current number of API Priority and Fairness execution seats the API server uses. | Count | `apiserver_flowcontrol_executing_seats`. You can filter by Priority Level. | `apiserver_flowcontrol_current_executing_seats` |
 | Pod scheduling rate | Number of scheduler attempts over time, including outcome breakdowns such as scheduled and unschedulable. | Attempts per second | `scheduler_schedule_attempts_rate`. You can filter by Result Type (scheduled or unscheduled). | `scheduler_schedule_attempts_total`, `scheduler_schedule_attempts_SCHEDULED`, `scheduler_schedule_attempts_UNSCHEDULABLE` |
-| Cluster database size | Maximum utilization of the Etcd database across instances in the control plane. | Percent | `etcd_database_usage_percentage`. You can filter by Resource type. | `apiserver_storage_size_bytes` |
+| Cluster database size | Maximum utilization of the Etcd database across instances in the control plane. | Percent | `etcd_database_usage_percentage`. You can filter by Resource type. | `etcd_mvcc_db_total_size_in_bytes` |
 
 Use these metrics to validate that your selected scaling size continues to meet your workload's demand. For example:
 
 - Sustained **API request concurrency** near the guaranteed limit for your scaling size indicates you might benefit from the next higher tier.
 - A rising rate of unschedulable pods in the **pod scheduling rate** metric can signal that scheduler throughput isn't keeping pace with pod creation.
-- **Cluster database size** approaching 100% for any etcd partition indicates you should review resource counts in that category before you hit storage limits.
+- **Cluster database size** approaching 50% for any etcd partition indicates you should review resource counts in that category before you hit storage limits.
 
 ## Best practices for hyperscale configuration in AKS
 
 Use the following best practices when you create clusters with a control plane scaling profile:
 
-- **Use Azure CNI Overlay networking**: [Azure CNI Overlay](./azure-cni-overlay.md) is recommended for clusters with a large number of pods because it helps reduce IP address consumption and supports large-scale pod networking.
+- **Use Azure CNI Overlay networking**: [Azure CNI Overlay](./azure-cni-overlay.md) is recommended for clusters with a large number of pods because it helps reduce IP address consumption and supports large-scale pod networking. Other CNIs are still supported.
 - **Avoid enabling Azure Policy for large clusters**: The [Azure Policy add-on](./use-azure-policy.md) isn't recommended for large clusters because it can increase Kubernetes API Server load and affect control plane performance at scale.
 - **Monitor Kubernetes API Server usage**: Hyperscale configuration provides guaranteed control plane capacity, but workloads should still minimize unnecessary Kubernetes API Server traffic. Avoid excessive list and watch operations where possible.
 - **Design etcd usage for 2 GB or less per partition**: Each etcd partition has a hard limit of 8 GB. Keeping usage at or below 2 GB per partition helps reduce startup time, lower latency, and avoid reaching the partition limit.

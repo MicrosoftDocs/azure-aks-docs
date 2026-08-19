@@ -1640,6 +1640,8 @@
       href: /javascript/api/overview/azure/container-service
     - name: Resource Manager template
       href: /azure/templates/microsoft.containerservice/managedclusters
+    - name: Custom node configuration parameters
+      href: custom-node-configuration-reference.md
     - name: Azure Policy built-ins
       displayName: samples, policies, definitions
       href: ./policy-reference.md
