@@ -3,9 +3,10 @@ title: Best practices for network policies in Azure Kubernetes Service (AKS)
 description: Learn best practices for designing and using network policies in Azure Kubernetes Service (AKS).
 author: schaffererin
 ms.topic: best-practice
-ms.date: 08/06/2026
+ms.date: 08/18/2026
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aeo-round-2
 ms.subservice: aks-networking
 # Customer intent: As a Kubernetes administrator, I want to implement network policies in my Azure Kubernetes Service (AKS) environment, so that I can ensure secure and controlled communication between workloads while minimizing the risk of unauthorized access and data breaches.
 ---
@@ -242,6 +243,8 @@ Azure Kubernetes Service integrates Cilium as a managed component, simplifying n
 Cilium identities extend label-based policy enforcement. Large clusters with high pod churn might encounter scalability problems because nodes must constantly update IP filters. Cilium identities map to labels and allow connections to start as soon as the identity resolves, without waiting for filter updates on each node.
 
 With Azure CNI powered by Cilium, you don't need to install a separate network policy engine such as Azure Network Policy Manager or Calico.
+
+### Create an AKS cluster with Azure CNI powered by Cilium
 
 Use the following command to create a cluster with Azure CNI powered by Cilium. The `--network-plugin-mode overlay` option configures Azure CNI Overlay networking, `--pod-cidr 192.168.0.0/16` assigns the pod IP address range, and `--network-dataplane cilium` selects Cilium as the data plane.
 

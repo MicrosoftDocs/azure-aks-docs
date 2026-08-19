@@ -520,6 +520,8 @@
           href: concepts-scale.md
         - name: Scale an AKS cluster
           href: scale-cluster.md
+        - name: Hyperscale configuration
+          href: hyperscale-configuration-aks.md
         - name: Performance and scaling best practices
           items:
             - name: For small to medium workloads
