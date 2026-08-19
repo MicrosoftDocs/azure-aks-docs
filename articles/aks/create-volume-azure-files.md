@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.subservice: aks-storage
 ms.service: azure-kubernetes-service
 ms.custom: aeo-round-2
-ms.date: 08/13/2026
+ms.date: 08/19/2026
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: "As a Kubernetes administrator, I want to learn how to create and manage persistent volumes using Azure Files CSI drivers in Azure Kubernetes Service (AKS) so that I can provide scalable and reliable storage solutions for my containerized applications."
@@ -13,7 +13,7 @@ ms.author: schaffererin
 
 # Create and manage persistent volumes (PVs) with Azure Files in Azure Kubernetes Service (AKS)
 
-If multiple pods need concurrent access to the same storage volume, you can use Azure Files to connect using the [Server Message Block (SMB)][smb-overview] or [NFS protocol][nfs-overview]. This article shows you how to dynamically and statically create an Azure file share for use by multiple pods in an Azure Kubernetes Service (AKS) cluster.
+Azure Files enables multiple pods to share persistent storage in AKS using SMB or NFS protocols, surviving pod restarts, node failures, and cluster scaling events. This article shows you how to dynamically and statically create an Azure file share for use by multiple pods in an Azure Kubernetes Service (AKS) cluster.
 
 > [!NOTE]
 > The Azure Files CSI driver only permits the mounting of SMB file shares using key-based (NTLM v2) authentication, and therefore doesn't support the maximum security profile of Azure File share settings. Mounting NFS file shares doesn't require key-based authentication.
