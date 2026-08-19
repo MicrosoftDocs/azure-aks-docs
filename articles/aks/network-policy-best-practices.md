@@ -3,7 +3,7 @@ title: Best practices for network policies in Azure Kubernetes Service (AKS)
 description: Learn best practices for designing and using network policies in Azure Kubernetes Service (AKS).
 author: schaffererin
 ms.topic: best-practice
-ms.date: 08/18/2026
+ms.date: 08/19/2026
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: aeo-round-2
@@ -246,8 +246,7 @@ With Azure CNI powered by Cilium, you don't need to install a separate network p
 
 ### Create an AKS cluster with Azure CNI powered by Cilium
 
-Use the following command to create a cluster with Azure CNI powered by Cilium. The `--network-plugin-mode overlay` option configures Azure CNI Overlay networking, `--pod-cidr 192.168.0.0/16` assigns the pod IP address range, and `--network-dataplane cilium` selects Cilium as the data plane.
-
+The following example creates an AKS cluster with Azure CNI Overlay powered by Cilium. The `--network-plugin-mode overlay` option configures Azure CNI Overlay networking, `--pod-cidr 192.168.0.0/16` assigns the pod IP address range, and `--network-dataplane cilium` selects Cilium as the data plane. Cluster creation options and address values can differ for other AKS networking configurations. Use values appropriate for your networking configuration.
 
 ```bash
 az aks create \
