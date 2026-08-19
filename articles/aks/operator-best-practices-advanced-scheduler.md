@@ -4,7 +4,7 @@ description: Learn the cluster operator best practices for using advanced schedu
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
 ms.custom: aeo-round-2, aks-scaling
-ms.date: 08/13/2026
+ms.date: 08/19/2026
 ms.author: schaffererin
 author: schaffererin
 ai-usage: ai-assisted
@@ -28,6 +28,15 @@ This best practices article focuses on advanced Kubernetes scheduling features f
 If additional capabilities or ML frameworks are needed to schedule and queue batch workloads, you can [install and configure Kueue on AKS][kueue-on-aks] to ensure efficient, policy-driven scheduling in AKS clusters.
 
 If fine-grained scheduler configuration is needed to optimize how pods and jobs prioritize specific nodes, storage resources, topology, and more, you can [configure a scheduler on AKS][config-scheduler-aks].
+
+## Comparison of scheduling features
+
+| Feature | Use case | Scheduling behavior | When to choose |
+| ------- | -------- | ------------------- | -------------- |
+| Taints and tolerations | Dedicate nodes for specific workloads (e.g., GPU nodes) | Hard restriction: pods without matching toleration cannot schedule on tainted nodes | When you need strict node isolation and want to prevent unauthorized workloads |
+| Node selectors | Simple label-based pod placement | Soft restriction: pods require matching labels, but unlabeled pods can still schedule on labeled nodes | When you need basic scheduling control with simple label matching |
+| Node affinity | Flexible node targeting with fallback options | Configurable: supports both required (hard) and preferred (soft) matching rules | When you need advanced expressions or want scheduling preferences with fallback behavior |
+| Inter-pod affinity/anti-affinity | Co-locate or separate pods based on existing pod placement | Controls pod distribution relative to other pods on nodes | When pod-to-pod relationships matter (e.g., co-locating app and cache, or spreading replicas) |
 
 ## Provide dedicated nodes using taints and tolerations
 

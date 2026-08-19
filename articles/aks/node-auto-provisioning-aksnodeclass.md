@@ -28,7 +28,7 @@ The `imageFamily` field sets the default VM image and bootstrapping logic for no
 
 - **`Ubuntu`**: Ubuntu is the default Linux distribution for AKS nodes.
   - OS version defaults change based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes versions 1.25 to 1.33. Ubuntu 24.04 is default for Kubernetes versions 1.34 and later.
-- **`AzureLinux`**: Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more information, see the [Azure Linux documentation](/azure/aks/use-azure-linux)
+- **`AzureLinux`**: Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more information, see the [Azure Linux documentation](/azure/aks/use-azure-linux).
 
 #### Example image family configuration
 
@@ -291,7 +291,7 @@ spec:
 
 The `LinuxOSConfig` section allows you to configure various kubelet parameters that affect node behavior. These parameters are typical custom OS arguments, so the NAP simply passes them through to the kubelet on the node.
 
-For more on custom Linux OS configuration settings, full details on default values, and considerations, see our [custom node configuration documentation](./custom-node-configuration.md#linux-custom-os-configuration-settings).
+For more information about custom Linux OS configuration settings, default values, and considerations, see the [custom node configuration parameters reference](./custom-node-configuration-reference.md#linux-custom-os-configuration-parameters).
 
 > [!IMPORTANT]
 > **Configure Linux OS settings carefully**, and test any changes in nonproduction environments first.
@@ -374,7 +374,7 @@ spec:
 
 ## GPU settings
 
-The following field allows user to allow custom GPU driver installation, such as with NVIDIA GPU Operator. 
+Use the following field to enable custom GPU driver installation, such as with the NVIDIA GPU Operator.
 
 ```yaml 
 spec:
@@ -403,7 +403,7 @@ For more information about host-based encryption, see [Encryption at Host docume
 
 ### Custom-managed keys and disk encryption sets
 
-NAP supports clusters that use customer-managed keys and disk encryption sets. You enable these options at the cluster level. They don't have AKSNodeClass fields that you need to set. Make sure that your cluster identity has the proper [role-based access control (RBAC)](./aks-desktop-permissions.md):
+NAP supports clusters that use customer-managed keys and disk encryption sets. Enable these options at the cluster level. They don't have `AKSNodeClass` fields that you need to set. Ensure that your cluster identity has the proper [role-based access control (RBAC)](./aks-desktop-permissions.md):
 
 - The cluster identity has `Reader` access to the Disk Encryption Set.
 - The Disk Encryption set resource has `Key Vault Crypto Service Encryption User` access to the Azure Key Vault. 
