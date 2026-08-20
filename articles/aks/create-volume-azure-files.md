@@ -5,9 +5,10 @@ ms.topic: how-to
 ms.subservice: aks-storage
 ms.service: azure-kubernetes-service
 ms.custom: aeo-round-2
-ms.date: 08/19/2026
+ms.date: 08/20/2026
 author: schaffererin
 ms.author: schaffererin
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes administrator, I want to learn how to create and manage persistent volumes using Azure Files CSI drivers in Azure Kubernetes Service (AKS) so that I can provide scalable and reliable storage solutions for my containerized applications."
 ---
 
@@ -1340,6 +1341,90 @@ To mount the Azure Files file share into your pod, you configure the volume in t
     ```bash
     kubectl describe pod mypod
     ```
+
+## Complete working example
+
+This section provides a consolidated example showing a storage class, PVC, and pod definition that work together to mount an Azure Files share. Each field includes inline comments explaining its purpose.
+
+```yaml
+# StorageClass: Defines how Azure Files shares are dynamically provisioned
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azurefile-csi-example        # Name referenced by PVCs
+provisioner: file.csi.azure.com      # Azure Files CSI driver
+reclaimPolicy: Delete                # Delete Azure file share when PV is deleted
+volumeBindingMode: Immediate         # Provision volume immediately when PVC is created
+allowVolumeExpansion: true           # Allow PVC resize without recreating
+parameters:
+  skuName: PremiumV2_LRS             # Storage SKU: PremiumV2_LRS (recommended), Premium_LRS, Standard_LRS
+  protocol: smb                       # Protocol: smb or nfs
+mountOptions:
+  - dir_mode=0755                     # Directory permissions (0755 for least privilege)
+  - file_mode=0755                    # File permissions (0755 for least privilege)
+  - uid=1000                          # User ID for mounted files
+  - gid=1000                          # Group ID for mounted files
+  - mfsymlinks                        # Enable symbolic link support
+  - cache=strict                      # Strict caching for data consistency
+  - actimeo=30                        # Attribute cache timeout in seconds
+  - nosharesock                       # Reduce reconnect race conditions
+  - nobrl                             # Disable byte range locks for POSIX compatibility
+---
+# PersistentVolumeClaim: Requests storage from the StorageClass
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: azurefile-pvc-example        # Name referenced by pods
+spec:
+  accessModes:
+    - ReadWriteMany                   # Multiple pods can read/write simultaneously
+  storageClassName: azurefile-csi-example  # Must match StorageClass name above
+  resources:
+    requests:
+      storage: 100Gi                  # Requested size (min 100Gi for Premium SKUs)
+---
+# Pod: Uses the PVC to mount the Azure Files share
+apiVersion: v1
+kind: Pod
+metadata:
+  name: azurefile-pod-example
+spec:
+  nodeSelector:
+    kubernetes.io/os: linux           # Schedule on Linux nodes
+  containers:
+    - name: app
+      image: mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+      volumeMounts:
+        - name: azure-files-volume    # Must match volume name below
+          mountPath: /mnt/azure       # Path inside container where share is mounted
+          readOnly: false             # Allow read and write access
+  volumes:
+    - name: azure-files-volume        # Volume name referenced by volumeMounts
+      persistentVolumeClaim:
+        claimName: azurefile-pvc-example  # Must match PVC name above
+```
+
+To deploy this example:
+
+```bash
+# Save the above YAML to a file named complete-example.yaml
+kubectl apply -f complete-example.yaml
+
+# Verify the resources are created
+kubectl get storageclass azurefile-csi-example
+kubectl get pvc azurefile-pvc-example
+kubectl get pod azurefile-pod-example
+
+# Verify the volume is mounted
+kubectl exec -it azurefile-pod-example -- df -h /mnt/azure
+```
 
 ## Related content
 
