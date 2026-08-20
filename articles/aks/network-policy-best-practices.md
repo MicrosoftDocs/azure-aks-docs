@@ -3,7 +3,7 @@ title: Best practices for network policies in Azure Kubernetes Service (AKS)
 description: Learn best practices for designing and using network policies in Azure Kubernetes Service (AKS).
 author: schaffererin
 ms.topic: best-practice
-ms.date: 08/19/2026
+ms.date: 08/20/2026
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: aeo-round-2
@@ -304,7 +304,7 @@ Azure Kubernetes Service offers [Advanced Container Networking Services (ACNS)](
 
 A key feature of ACNS is Container Network Security, which offers advanced security capabilities to safeguard containerized workloads. These capabilities include fully qualified domain name (FQDN) filtering and Layer 7 (L7) policies for granular control over egress traffic and application-layer communication.
 
-Container Network Security is a paid offering that requires Azure CNI powered by Cilium and Kubernetes version 1.29 or later. For pricing details, see [Advanced Container Networking Services pricing](https://azure.microsoft.com/pricing/details/advanced-container-networking-services/).
+Container Network Security is a paid offering for Linux node pools that requires Azure CNI powered by Cilium and Kubernetes version 1.29 or later. For pricing details, see [Advanced Container Networking Services pricing](https://azure.microsoft.com/pricing/details/advanced-container-networking-services/).
 
 ### Secure egress traffic with FQDN filtering
 Traditionally, Kubernetes network policies are based on IP addresses. In dynamic environments where pod IPs frequently change, these policies can be difficult to manage. [FQDN filtering](/azure/aks/container-network-security-concepts#overview-of-fqdn-filtering) lets you define policies with domain names instead of IP addresses, which simplifies traffic control.
