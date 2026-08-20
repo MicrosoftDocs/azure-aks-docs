@@ -70,7 +70,7 @@ Consider hyperscale configuration for the following scenarios:
 - **Minimum Kubernetes version**: Requires Kubernetes version 1.33.0 or later.
 - **Tooling support**: Azure CLI with the `aks-preview` extension, REST API, and ARM templates are supported. SDKs and Terraform aren't supported.
 - **Cluster quota**: The number of clusters with hyperscale configuration enabled is subject to [AKS quotas, virtual machine (VM) size restrictions, and region availability](./quotas-skus-regions.md). Currently, only one hyperscale cluster is supported per subscription per region.
-- **Feature availability**: The following regions currently don't support hyperscale configuration:
+- **Feature availability**: Hyperscale Configuration is available only in Azure public cloud regions. The following public cloud regions do not currently support Hyperscale Configuration:
     * australiacentral2
     * francecentral
     * germanywestcentral
