@@ -416,7 +416,7 @@ The CSI driver for Azure Disks supports volume cloning. To demonstrate, create a
 >
 > This limitation does not apply to **Premium SSD v2** or **Ultra Disks** which support online expansion beyond 4 TiB.
 >
-> More details about expanding disks are in the following documentation: [Expand an Azure managed disk](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/expand-disks?tabs=ubuntu#expand-an-azure-managed-disk)
+> For more information, see [Expand an Azure managed disk](/azure/virtual-machines/linux/expand-disks?tabs=ubuntu#expand-an-azure-managed-disk).
 
 You can request a larger volume for a PVC by editing the PVC object to specify a larger size. This change triggers the expansion of the underlying volume that backs the PV. A new PV is never created to satisfy the claim. Instead, an existing volume is resized.
 
