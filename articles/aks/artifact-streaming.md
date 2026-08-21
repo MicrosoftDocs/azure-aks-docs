@@ -6,7 +6,7 @@ ms.author: allyford
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.topic: how-to
-ms.date: 05/05/2026
+ms.date: 08/05/2026
 ms.subservice: aks-nodes
 ---
 
@@ -96,7 +96,7 @@ az aks nodepool add \
     --enable-artifact-streaming
 ```
 
-## Enable Artifact Streaming on an existing node pool
+### Enable Artifact Streaming on an existing node pool
 
 Enable Artifact Streaming on an existing AKS node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-artifact-streaming` flag.
 
