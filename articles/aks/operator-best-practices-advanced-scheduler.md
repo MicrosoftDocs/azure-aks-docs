@@ -4,7 +4,7 @@ description: Learn the cluster operator best practices for using advanced schedu
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
 ms.custom: aeo-round-2, aks-scaling
-ms.date: 08/19/2026
+ms.date: 08/20/2026
 ms.author: schaffererin
 author: schaffererin
 ai-usage: ai-assisted
@@ -38,10 +38,11 @@ If fine-grained scheduler configuration is needed to optimize how pods and jobs 
 | Node affinity | Flexible node targeting with fallback options | Configurable: supports both required (hard) and preferred (soft) matching rules | When you need advanced expressions or want scheduling preferences with fallback behavior |
 | Inter-pod affinity/anti-affinity | Co-locate or separate pods based on existing pod placement | Controls pod distribution relative to other pods on nodes | When pod-to-pod relationships matter (e.g., co-locating app and cache, or spreading replicas) |
 
-## Provide dedicated nodes using taints and tolerations
+## What are taints and tolerations?
 
-> **Best practice guidance:**
->
+Taints and tolerations are a Kubernetes mechanism that allows nodes to repel pods unless those pods explicitly tolerate the node's taint, providing hard isolation for dedicated workloads.
+
+> **Best Practice: Use taints and tolerations to dedicate GPU nodes**
 > Limit access for resource-intensive applications, such as ingress controllers, to specific nodes. Keep node resources available for workloads that require them, and don't allow scheduling of other workloads on the nodes.
 
 When you create your AKS cluster, you can deploy nodes with GPU support or a large number of powerful CPUs. For more information, see [Use GPUs on AKS][use-gpus-aks]. You can use these nodes for large data processing workloads such as machine learning (ML) or artificial intelligence (AI).
@@ -52,12 +53,14 @@ This support for different nodes is provided by using multiple node pools. An AK
 
 The Kubernetes scheduler uses taints and tolerations to restrict what workloads can run on nodes.
 
-* Apply a **taint** to a node to indicate only specific pods can be scheduled on them.
-* Then apply a **toleration** to a pod, allowing them to *tolerate* a node's taint.
+- Apply a **taint** to a node to indicate only specific pods can be scheduled on them.
+- Then apply a **toleration** to a pod, allowing them to _tolerate_ a node's taint.
 
 When you deploy a pod to an AKS cluster, Kubernetes only schedules pods on nodes whose taint aligns with the toleration. Taints and tolerations work together to ensure that pods aren't scheduled onto inappropriate nodes. One or more taints are applied to a node, marking the node so that it doesn't accept any pods that don't tolerate the taints.
 
-For example, assume you added a node pool in your AKS cluster for nodes with GPU support. You define name, such as *gpu*, then a value for scheduling. Setting this value to *NoSchedule* restricts the Kubernetes scheduler from scheduling pods with undefined toleration on the node.
+### How do I implement taints and tolerations in AKS?
+
+For example, assume you added a node pool in your AKS cluster for nodes with GPU support. You define name, such as _gpu_, then a value for scheduling. Setting this value to _NoSchedule_ restricts the Kubernetes scheduler from scheduling pods with undefined toleration on the node.
 
 ```azurecli-interactive
 az aks nodepool add \
@@ -109,33 +112,34 @@ You can [taint a node pool][taint-node-pool] from the AKS API to have newly scal
 
 Let's assume:
 
-1. You begin with a two-node cluster: *node1* and *node2*.
+1. You begin with a two-node cluster: _node1_ and _node2_.
 1. You upgrade the node pool.
-1. Two other nodes are created: *node3* and *node4*.
+1. Two other nodes are created: _node3_ and _node4_.
 1. The taints are passed on respectively.
-1. The original *node1* and *node2* are deleted.
+1. The original _node1_ and _node2_ are deleted.
 
 #### Clusters without Virtual Machine Scale Sets support
 
 Again, let's assume:
 
-1. You have a two-node cluster: *node1* and *node2*.
+1. You have a two-node cluster: _node1_ and _node2_.
 1. You upgrade the node pool.
-1. An extra node is created: *node3*.
-1. The taints from *node1* are applied to *node3*.
-1. *node1* is deleted.
-1. A new *node1* is created to replace to original *node1*.
-1. The *node2* taints are applied to the new *node1*.
-1. *node2* is deleted.
+1. An extra node is created: _node3_.
+1. The taints from _node1_ are applied to _node3_.
+1. _node1_ is deleted.
+1. A new _node1_ is created to replace the original _node1_.
+1. The _node2_ taints are applied to the new _node1_.
+1. _node2_ is deleted.
 
-In essence, *node1* becomes *node3*, and *node2* becomes the new *node1*.
+In essence, _node1_ becomes _node3_, and _node2_ becomes the new _node1_.
 
 When you scale a node pool in AKS, taints and tolerations don't carry over by design.
 
-## Control pod scheduling using node selectors and affinity
+## What are node selectors and node affinity?
 
-> **Best practice guidance**
->
+Node selectors and node affinity are Kubernetes features that allow pods to specify preferences for which nodes they should run on, based on node labels.
+
+> **Best Practice: Use node selectors and affinity to control pod placement by hardware type**
 > Control the scheduling of pods on nodes using node selectors, node affinity, or inter-pod affinity. These settings allow the Kubernetes scheduler to logically isolate workloads, such as by hardware in the node.
 
 Taints and tolerations logically isolate resources with a hard cut-off. If the pod doesn't tolerate a node's taint, it isn't scheduled on the node.
@@ -144,7 +148,7 @@ Alternatively, you can use node selectors. For example, you label nodes to indic
 
 Unlike tolerations, pods without a matching node selector can still be scheduled on labeled nodes. This behavior allows unused resources on the nodes to consume, but prioritizes pods that define the matching node selector.
 
-Let's look at an example of nodes with a high amount of memory. These nodes prioritize pods that request a high amount of memory. To ensure the resources don't sit idle, they also allow other pods to run. The following example command adds a node pool with the label *hardware=highmem* to the *myAKSCluster* in the *myResourceGroup*. All nodes in that node pool have this label.
+Let's look at an example of nodes with a high amount of memory. These nodes prioritize pods that request a high amount of memory. To ensure the resources don't sit idle, they also allow other pods to run. The following example command adds a node pool with the label _hardware=highmem_ to the _myAKSCluster_ in the _myResourceGroup_. All nodes in that node pool have this label.
 
 ```azurecli-interactive
 az aks nodepool add \
@@ -182,14 +186,14 @@ When you use these scheduler options, work with your application developers and 
 
 For more information about using node selectors, see [Assigning Pods to Nodes][k8s-node-selector].
 
-### Node affinity
+### What is node affinity?
 
-A node selector is a basic solution for assigning pods to a given node. *Node affinity* provides more flexibility, allowing you to define what happens if the pod can't be matched with a node. You can:
+A node selector is a basic solution for assigning pods to a given node. _Node affinity_ provides more flexibility, allowing you to define what happens if the pod can't be matched with a node. You can:
 
-* *Require* that Kubernetes scheduler matches a pod with a labeled host. Or,
-* *Prefer* a match but allow the pod to be scheduled on a different host if no match is available.
+- _Require_ that Kubernetes scheduler matches a pod with a labeled host. Or,
+- _Prefer_ a match but allow the pod to be scheduled on a different host if no match is available.
 
-The following example sets the node affinity to *requiredDuringSchedulingIgnoredDuringExecution*. This affinity requires the Kubernetes schedule to use a node with a matching label. If no node is available, the pod has to wait for scheduling to continue. To allow the pod to be scheduled on a different node, you can instead set the value to ***preferred**DuringSchedulingIgnoreDuringExecution*:
+The following example sets the node affinity to _requiredDuringSchedulingIgnoredDuringExecution_. This affinity requires the Kubernetes schedule to use a node with a matching label. If no node is available, the pod has to wait for scheduling to continue. To allow the pod to be scheduled on a different node, you can instead set the value to _preferredDuringSchedulingIgnoreDuringExecution_:
 
 ```yaml
 kind: Pod
@@ -218,18 +222,18 @@ spec:
             - highmem
 ```
 
-The *IgnoredDuringExecution* part of the setting indicates that the pod shouldn't be evicted from the node if the node labels change. The Kubernetes scheduler only uses the updated node labels for new pods being scheduled, not pods already scheduled on the nodes.
+The _IgnoredDuringExecution_ part of the setting indicates that the pod shouldn't be evicted from the node if the node labels change. The Kubernetes scheduler only uses the updated node labels for new pods being scheduled, not pods already scheduled on the nodes.
 
 For more information, see [Affinity and anti-affinity][k8s-affinity].
 
-### Inter-pod affinity and anti-affinity
+### What is inter-pod affinity and anti-affinity?
 
-One final approach for the Kubernetes scheduler to logically isolate workloads is using inter-pod affinity or anti-affinity. These settings define that pods either *shouldn't* or *should* be scheduled on a node that has an existing matching pod. By default, the Kubernetes scheduler tries to schedule multiple pods in a replica set across nodes. You can define more specific rules around this behavior.
+One final approach for the Kubernetes scheduler to logically isolate workloads is using inter-pod affinity or anti-affinity. These settings define that pods either _shouldn't_ or _should_ be scheduled on a node that has an existing matching pod. By default, the Kubernetes scheduler tries to schedule multiple pods in a replica set across nodes. You can define more specific rules around this behavior.
 
 For example, you have a web application that also uses an Azure Managed Redis resource.
 
-* You use pod anti-affinity rules to request that the Kubernetes scheduler distributes replicas across nodes.
-* You use affinity rules to ensure each web app component is scheduled on the same host as a corresponding cache.
+- You use pod anti-affinity rules to request that the Kubernetes scheduler distributes replicas across nodes.
+- You use affinity rules to ensure each web app component is scheduled on the same host as a corresponding cache.
 
 The distribution of pods across nodes looks like the following example:
 
@@ -246,9 +250,9 @@ For a complete example of this web application with Azure Managed Redis, see [Co
 
 This article focused on advanced Kubernetes scheduler features. For more information about cluster operations in AKS, see the following best practices:
 
-* [Multi-tenancy and cluster isolation][aks-best-practices-isolation]
-* [Basic Kubernetes scheduler features][aks-best-practices-scheduler]
-* [Authentication and authorization][aks-best-practices-identity]
+- [Multi-tenancy and cluster isolation][aks-best-practices-isolation]
+- [Basic Kubernetes scheduler features][aks-best-practices-scheduler]
+- [Authentication and authorization][aks-best-practices-identity]
 
 <!-- EXTERNAL LINKS -->
 [k8s-node-selector]: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
