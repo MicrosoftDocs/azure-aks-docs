@@ -556,6 +556,8 @@
           href: /azure/backup/azure-kubernetes-service-cluster-manage-backups?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: List running clusters in a subscription
       href: list-aks-clusters.md
+    - name: List pods in a cluster
+      href: list-pods-aks-cluster.md
 - name: Networking
   items:
       - name: Networking concepts
