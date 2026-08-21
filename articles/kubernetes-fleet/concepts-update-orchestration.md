@@ -140,7 +140,7 @@ Update run prioritizes upgrading clusters based on planned maintenance in the fo
   3. Cluster with no maintenance window.
   4. Cluster with a closed maintenance window. 
   
-## Understanding Auto-upgrade Profiles
+## Auto-upgrade profiles overview
 
 Use Auto-upgrade Profiles to automatically trigger Update Runs when new Kubernetes or node image versions are available for AKS.
 
