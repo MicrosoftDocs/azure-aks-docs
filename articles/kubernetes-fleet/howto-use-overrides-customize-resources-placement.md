@@ -2,7 +2,7 @@
 title: "Use Resource Overrides to customize resources deployed by Azure Kubernetes Fleet Manager resource placement"
 description: This article provides an overview of how to use the resource override APIs to customize resource configurations when using Azure Kubernetes Fleet Manager resource placement.
 ms.topic: how-to
-ms.date: 07/23/2026
+ms.date: 08/21/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -36,11 +36,12 @@ Select the scope most applicable to you from the scope type choices at the top o
 
 A `ClusterResourceOverride` has the following properties:
 
+* `placement` (optional): Specifies the `ClusterResourcePlacement` the override is associated with. 
 * `clusterResourceSelectors`: Specifies the set of cluster resources selected for overriding.
 * `policy`: Specifies the set of rules to apply to the selected cluster resources.
 
-> [!NOTE]
-> `Policy` definitions are the same for both cluster and namespace-scoped resources.
+> [!IMPORTANT]
+> If you don't specify a `placement`, the override applies to any resources that match the `clusterResourceSelectors` and that any `ClusterResourcePlacement` deploys.This condition can have unintended consequences on deployment performance, so provide a placement.
 
 The following example `ClusterRole` named `secret-reader` demonstrates how `ClusterResourceOverride` works.
 
@@ -75,6 +76,8 @@ kind: ClusterResourceOverride
 metadata:
   name: example-cro
 spec:
+  placement:
+    name: sample-placement
   clusterResourceSelectors:
     - group: rbac.authorization.k8s.io
       kind: ClusterRole
@@ -89,11 +92,12 @@ spec:
 
 A `ResourceOverride` has the following properties:
 
+* `placement` (optional): Specifies the `ResourcePlacement` the override is associated with. 
 * `resourceSelectors`: Specifies the set of resources selected for overriding.
 * `policy`: Specifies the set of rules to apply to the selected resources.
 
-> [!NOTE]
-> `Policy` definitions are the same for both cluster and namespace-scoped resources.
+> [!IMPORTANT]
+> If you don't specify a `placement`, the override applies to any resources that match the `resourceSelectors` and that any `ResourcePlacement` in the same namespace deploys. This condition can have unintended consequences on deployment performance, so provide a placement. 
 
 To demonstrate how `ResourceOverride` works, use the following example `Deployment` named `nginx-sample`.
 
@@ -131,7 +135,7 @@ A `ResourceOverride` can include one or more `resourceSelector` to choose which 
 
 You determine the namespace of the resource to override by specifying the `namespace` set in the `metadata` of the `ResourceOverride`.
 
-Using the example `Deployment`, you can see how to select it in a `ResourceOverride`.
+By using the example `Deployment`, you can see how to select it in a `ResourceOverride`.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -140,6 +144,8 @@ metadata:
   name: example-resource-override
   namespace: nginx-demo
 spec:
+  placement:
+    name: sample-placement
   resourceSelectors:
     -  group: apps
        kind: Deployment
@@ -207,6 +213,8 @@ kind: ClusterResourceOverride
 metadata:
   name: example-cro
 spec:
+  placement:
+    name: sample-placement
   clusterResourceSelectors:
     - group: rbac.authorization.k8s.io
       kind: ClusterRole
@@ -237,6 +245,8 @@ metadata:
   name: example-resource-override
   namespace: nginx-demo
 spec:
+  placement:
+    name: sample-placement
   resourceSelectors:
     -  group: apps
        kind: Deployment
@@ -271,6 +281,8 @@ kind: ClusterResourceOverride
 metadata:
   name: cro-1
 spec:
+  placement:
+    name: sample-placement
   clusterResourceSelectors:
     - group: rbac.authorization.k8s.io
       kind: ClusterRole
@@ -303,6 +315,8 @@ metadata:
   name: example-resource-override
   namespace: nginx-demo
 spec:
+  placement:
+    name: sample-placement
   resourceSelectors:
     -  group: apps
        kind: Deployment
@@ -435,7 +449,7 @@ spec:
                       env: prod
     ```
 
-    This example distributes resources across all clusters labeled with `env: prod`. As the changes are implemented, the corresponding `ClusterResourceOverride` configurations are applied to the designated clusters. The selection of a matching cluster role resource, `secret-reader`, triggers the application of the configurations to the clusters.
+    This example distributes resources across all clusters labeled with `env: prod`. As you implement the changes, the corresponding `ClusterResourceOverride` configurations apply to the designated clusters. The selection of a matching cluster role resource, `secret-reader`, triggers the application of the configurations to the clusters.
 
 1. Apply the `ClusterResourcePlacement` by using the `kubectl apply` command:
 
@@ -511,7 +525,7 @@ spec:
                       env: prod
     ```
 
-    This example distributes resources across all clusters labeled with `env: prod`. As the changes are implemented, the corresponding `ClusterResourceOverride` configurations are applied to the designated clusters. The selection of a matching cluster role resource, `secret-reader`, triggers the application of the configurations to the clusters.
+    This example distributes resources across all clusters labeled with `env: prod`. As you implement the changes, the corresponding `ClusterResourceOverride` configurations apply to the designated clusters. The selection of a matching cluster role resource, `secret-reader`, triggers the application of the configurations to the clusters.
 
 1. Verify that the cluster resource placement was created successfully.
 
@@ -554,7 +568,7 @@ spec:
                       env: test
     ```
 
-    This example distributes resources within `test-namespace` across all clusters labeled with `env:prod` and `env:test`. As the changes are implemented, the corresponding `ResourceOverride` configurations are applied to the designated resources. The selection of a matching deployment resource, `my-deployment`, triggers the application of the configurations to the designated resources.
+    This example distributes resources within `test-namespace` across all clusters labeled with `env:prod` and `env:test`. As the changes are implemented, the corresponding `ResourceOverride` configurations apply to the designated resources. The selection of a matching deployment resource, `my-deployment`, triggers the application of the configurations to the designated resources.
 
 1. Apply the `ClusterResourcePlacement` resource by using the `kubectl apply` command:
 
@@ -632,7 +646,7 @@ spec:
                       env: test
     ```
 
-    This example distributes resources within `test-namespace` across all clusters labeled with `env:prod` and `env:test`. As the changes are implemented, the corresponding `ResourceOverride` configurations are applied to the designated resources. The selection of a matching deployment resource, `my-deployment`, triggers the application of the configurations to the designated resources.
+    This example distributes resources within `test-namespace` across all clusters labeled with `env:prod` and `env:test`. As the changes are implemented, the corresponding `ResourceOverride` configurations apply to the designated resources. The selection of a matching deployment resource, `my-deployment`, triggers the application of the configurations to the designated resources.
 
     <!-- :::image type="content" source="./media/quickstart-resource-propagation/create-resource-propagation-inline.png" lightbox="./media/quickstart-resource-propagation/create-resource-propagation.png" alt-text="Screenshot of the Azure portal page for creating a resource placement, showing the YAML template with placeholder values."::: -->
 
