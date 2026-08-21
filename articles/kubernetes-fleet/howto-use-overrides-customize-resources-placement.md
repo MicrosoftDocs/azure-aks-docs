@@ -41,7 +41,7 @@ A `ClusterResourceOverride` has the following properties:
 * `policy`: Specifies the set of rules to apply to the selected cluster resources.
 
 > [!IMPORTANT]
-> If you don't specify a `placement`, the override applies to any resources that match the `clusterResourceSelectors` and that any `ClusterResourcePlacement` deploys. This condition can have unintended consequences on deployment performance, so provide a placement.
+> If you don't specify a `placement`, the override applies to any resources that match the `clusterResourceSelectors` and that any `ClusterResourcePlacement` deploys. This condition can have unintended consequences on resources and overall deployment performance, so provide a placement.
  
 The following example `ClusterRole` named `secret-reader` demonstrates how `ClusterResourceOverride` works.
 
@@ -97,7 +97,7 @@ A `ResourceOverride` has the following properties:
 * `policy`: Specifies the set of rules to apply to the selected resources.
 
 > [!IMPORTANT]
-> If you don't specify a `placement`, the override applies to any resources that match the `resourceSelectors` and that any `ResourcePlacement` in the same namespace deploys. This condition can have unintended consequences on deployment performance, so provide a placement. 
+> If you don't specify a `placement`, the override applies to any resources that match the `resourceSelectors` and that any `ResourcePlacement` in the same namespace deploys. This condition can have unintended consequences on resources and overall deployment performance, so provide a placement. 
 
 To demonstrate how `ResourceOverride` works, use the following example `Deployment` named `nginx-sample`.
 
