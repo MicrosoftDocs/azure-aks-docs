@@ -6,6 +6,7 @@ author: schaffererin
 ms.topic: how-to
 ms.date: 08/19/2026
 ms.service: azure-kubernetes-service
+ms.custom: references_regions
 # Customer intent: "As an AKS user, I want to configure my cluster with a hyperscale control plane scaling profile to ensure predictable performance for large-scale workloads."
 ---
 
