@@ -96,7 +96,7 @@ az aks nodepool add \
     --enable-artifact-streaming
 ```
 
-### Enable Artifact Streaming on an existing node pool
+## Enable Artifact Streaming on an existing node pool
 
 Enable Artifact Streaming on an existing AKS node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-artifact-streaming` flag.
 
