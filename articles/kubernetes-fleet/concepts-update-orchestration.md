@@ -1,7 +1,7 @@
 ---
 title: "Safely update Kubernetes and node images across multiple clusters"
 description: This article describes the foundational concepts for Azure Kubernetes Fleet Manager Update Runs for safe and reliable multi-cluster updates.
-ms.date: 07/17/2026
+ms.date: 08/21/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -13,7 +13,7 @@ ms.topic: concept-article
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
-Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager allows you to orchestrate updates across multiple clusters using update runs.
+Platform admins who manage large numbers of clusters often have problems staging updates for multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager allows you to orchestrate updates across multiple clusters by using update runs.
 
 Update runs consist of stages, groups, and strategies. You can apply update runs manually for one-time updates or automatically for ongoing regular updates by using auto-upgrade profiles. All update runs, both manual and automated, honor cluster [maintenance windows][aks-maintenance-windows].
 
@@ -146,7 +146,7 @@ Use Auto-upgrade Profiles to automatically trigger Update Runs when new Kubernet
 
 In an Auto-upgrade Profile, you configure:
 
-- a **Channel** ([Rapid](#rapid-channel), [Stable](#stable-channel), [TargetKubernetesVersion](#targetkubernetesversion-channel), [NodeImage](#nodeimage-channel)) which determines the type of update applied to the clusters.
+- a **Channel** ([Rapid](#rapid-channel), [Stable](#stable-channel), [TargetKubernetesVersion](#targetkubernetesversion-channel), [NodeImage](#nodeimage-channel), [SecurityPatch](#securitypatch-channel-preview) (preview)) which determines the type of update applied to the clusters.
 - an **UpdateStrategy** that configures the sequence in which the clusters are upgraded. If you don't supply a strategy, clusters update one by one sequentially.
 - the **NodeImageSelectionType** (Latest, Consistent) to specify how the node image is selected when upgrading the Kubernetes version.
 
@@ -169,7 +169,9 @@ In an Auto-upgrade Profile, you configure:
 >
 > * When using the `TargetKubernetesVersion` channel, you must specify the target Kubernetes version using the `--target-kubernetes-version` parameter.
 >
-> * If you want to upgrade your Node Image version, create an Auto-upgrade Profile with the `NodeImage` channel.
+> * If you want to upgrade your Node Image version, create an Auto-upgrade Profile with `NodeImage`, or `SecurityPatch` channels.
+>
+> * The `SecurityPatch` channel applies security patches to Linux nodes only. Windows nodes are skipped.
 >
 > * You can create multiple auto-upgrade profiles for the same Fleet Manager.
 
@@ -223,6 +225,18 @@ When a cluster has agent pools that were [created from a node pool snapshot](/az
 |----------------------|---------------------------------------------|
 | **Latest**           | Follows standard AKS upgrade behavior. The agent pool keeps its reference to the snapshot (`creationData`), and the node image isn't modified. |
 | **Consistent**       | The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool. |
+
+### SecurityPatch channel (preview)
+
+Update member cluster **Linux** nodes with **only security fixes** on a weekly cadence. [Canonical Ubuntu](https://ubuntu.com/server) and [Azure Linux](/azure/azure-linux/intro-azure-linux) make OS security patches available once a day. Microsoft tests these patches and bundles them into weekly updates to node images.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
+The SecurityPatch Auto-upgrade channel is less disruptive as it uses OS live patching when possible, minimizing node disruption while keeping nodes protected against known vulnerabilities. When live patching isn't possible a pre-patched node image is deployed instead.
+
+Only Linux-based nodes are updated when using `SecurityPatch`, and Windows-based nodes are automatically skipped.
+
+If you need bug fixes that come with new node images (VHD), or a consistent experience with Windows nodes, choose the [NodeImage](#nodeimage-channel) channel instead.
 
 ## Understanding Update Strategies
 
