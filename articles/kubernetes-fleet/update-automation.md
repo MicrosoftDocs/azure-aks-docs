@@ -24,7 +24,7 @@ This article explains how to use auto-upgrade profiles to automatically create a
 
 ## Before you begin
 
-- Read the [conceptual overview of auto-upgrade profiles](./concepts-update-orchestration.md#understanding-auto-upgrade-profiles), which explains the configurations referenced in this guide.
+- Read the [conceptual overview of auto-upgrade profiles](./concepts-update-orchestration.md#auto-upgrade-profiles-overview), which explains the configurations referenced in this guide.
 - Set up a Fleet Manager with one or more member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager and join AKS clusters as members.
 - Configure an update strategy. Use the instructions in the [update run how-to article](./update-orchestration.md#create-an-update-run-using-update-strategies). You need the update strategy resource identifier to use with an auto-upgrade profile when using the Azure CLI.
 
