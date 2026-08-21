@@ -793,6 +793,8 @@
             href: kueue-overview.md
           - name: Schedule and deploy batch jobs with Kueue
             href: deploy-batch-jobs-with-kueue.md
+          - name: Provision capacity for Kueue jobs with the cluster autoscaler
+            href: configure-kueue-with-cluster-autoscaler.md
 - name: Security
   items:
     - name: Security overview
