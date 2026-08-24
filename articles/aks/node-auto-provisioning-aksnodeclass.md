@@ -53,6 +53,36 @@ spec:
   fipsMode: FIPS
 ```
 
+## Artifact streaming
+
+[Artifact Streaming](./artifact-streaming-overview.md) allows you to stream container images from Azure Container Registry (ACR) to Azure Kubernetes Service (AKS). AKS only pulls the necessary layers for initial pod startup, reducing the time it takes to deploy your workloads.
+### Prerequisites
+
+- Artifact Streaming requires that you have a Premium tier ACR integrated with your AKS cluster. 
+- Artifact Streaming must be enabled in ACR.
+
+See [Artifact Streaming](./artifact-streaming.md) documentation for instructions on enabling Artifact Streaming in ACR.
+
+### Enable artifact streaming in NAP clusters
+
+Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming by using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Set this field to `true` to enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: my-node-class
+spec:
+  # Enables artifact streaming; To use this feature container images must also enable artifact streaming on ACR
+  # Valid values: true, false; defaults to false if not specified
+  artifactStreaming:
+    enabled: 
+      true
+```
+
+>[!NOTE]
+> To use artifact streaming on AKS NAP managed nodes, you must also enable artifact streaming in Azure Container Registry (ACR). If you don't set this option in ACR, the field defaults to false.  
+
 ## Virtual network (VNet) subnet configuration
 
 The `vnetSubnetID` field specifies which Azure VNet subnet should be used for provisioning node network interfaces. This field is optional. If you don't specify a subnet, NAP uses the default subnet configured during Karpenter installation. For more information, see [Subnet configurations for NAP](./node-auto-provisioning-networking.md#subnet-configurations-for-nap).
@@ -462,6 +492,11 @@ spec:
   # Default: Disabled
   # Valid values: FIPS, Disabled
   fipsMode: Disabled
+
+  # Artifact Streaming- allows use of artifact streaming feature; To use this feature container images must also enable artifact streaming on ACR
+  # Valid values: true, false; defaults to false if not specified
+  artifactStreaming:
+    enabled: true
 
   # LocalDNS mode - allows use of LocalDNS feature
   # Default: Disabled
