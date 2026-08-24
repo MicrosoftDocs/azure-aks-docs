@@ -62,6 +62,7 @@ spec:
 - Artifact Streaming must be enabled in ACR.
 
 See [Artifact Streaming](./artifact-streaming.md) documentation for instructions on enabling Artifact Streaming in ACR.
+
 ### Enable artifact streaming in NAP clusters
 
 Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming by using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Set this field to `true` to enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
