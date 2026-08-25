@@ -64,7 +64,7 @@ Depending on your workload needs, there are multiple compute scaling experiences
 - [InifiniBand][InifiniBand] isn't available.
 - [Node pool snapshot][node pool snapshot] isn't supported.
 - All VM sizes selected in a node pool need to be from a similar virtual machine family. For example, you can't mix an N-Series virtual machine type with a D-Series virtual machine type in the same node pool.
-- All VM sizes selected in a node pool must support the same ephemeral OS disk placement when you use ephemeral OS disks. Because `DiffDiskPlacement` is a single pool-level value, AKS can't express different placements per VM size in one node pool.
+- You need to select all VM sizes in a node pool that support the same ephemeral OS disk placement when you use ephemeral OS disks. Because `DiffDiskPlacement` is a single pool-level value, AKS can't express different placements per VM size in one node pool.
 - Virtual Machines node pools allow up to five scale profiles total per node pool. Each manual or autoscale profile specifies one VM size from the same VM family.
 - Windows node pools aren't supported.
 - Availability zones aren't supported. If your workload requires zone resiliency, use [Virtual Machine Scale Sets][VMSS orchestrate] node pools.
