@@ -2,7 +2,7 @@
 title: "Automate Upgrades of Kubernetes and Node Images Across Multiple Clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to configure automated upgrades of Kubernetes and node images across multiple clusters by using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 06/15/2026
+ms.date: 08/25/2026
 author: sjwaight
 ms.author: simonwaight
 ms.reviewer: schaffererin
@@ -233,21 +233,50 @@ az fleet autoupgradeprofile create \
 
 ## View auto-upgrade profiles
 
-List all auto-upgrade profiles for a Fleet using the [`az autoupgradeprofile list`][az-fleet-autoupgradeprofile-list] command.
+Auto-upgrade profiles are Fleet-level resources. They aren't attached directly to individual AKS clusters. To determine which profiles can update your AKS clusters, first list the Fleet members and confirm that the clusters are members of the Fleet.
 
 ```azurecli-interactive
-az fleet autoupgradeprofile list \
+az fleet member list \
   --resource-group $GROUP \
-  --fleet-name $FLEET
+  --fleet-name $FLEET \
+  --query "[].{memberName:name,clusterResourceId:clusterResourceId}" \
+  --output table
 ```
 
-Show a specific auto-upgrade profile for a Fleet using the [`az autoupgradeprofile list`][az-fleet-autoupgradeprofile-list] command with the `--name` parameter.
+List all auto-upgrade profiles for the Fleet using the [`az fleet autoupgradeprofile list`][az-fleet-autoupgradeprofile-list] command.
 
 ```azurecli-interactive
 az fleet autoupgradeprofile list \
   --resource-group $GROUP \
   --fleet-name $FLEET \
+  --output table
+```
+
+Show a specific auto-upgrade profile for the Fleet using the [`az fleet autoupgradeprofile show`][az-fleet-autoupgradeprofile-show] command. Review the channel, status, and `updateStrategyId` in the output.
+
+```azurecli-interactive
+az fleet autoupgradeprofile show \
+  --resource-group $GROUP \
+  --fleet-name $FLEET \
   --name $AUTOUPGRADEPROFILE
+```
+
+If `updateStrategyId` is empty, the profile uses the **One by one** update sequence and includes the Fleet's member clusters sequentially. If `updateStrategyId` contains a resource ID, show the referenced strategy to review the stages, groups, or member selectors that determine which Fleet members the generated update runs include.
+
+```azurecli-interactive
+PROFILE_STRATEGY_ID=$(az fleet autoupgradeprofile show \
+  --resource-group $GROUP \
+  --fleet-name $FLEET \
+  --name $AUTOUPGRADEPROFILE \
+  --query updateStrategyId \
+  --output tsv)
+
+if [[ -n "$PROFILE_STRATEGY_ID" ]]; then
+  az fleet updatestrategy show \
+    --resource-group $GROUP \
+    --fleet-name $FLEET \
+    --name "${PROFILE_STRATEGY_ID##*/}"
+fi
 ```
 
 ## Delete an auto-upgrade profile
@@ -379,9 +408,13 @@ Update Linux nodes with just security fixes, by using either live patching or a 
 
 ## View auto-upgrade profiles
 
+Auto-upgrade profiles are Fleet-level resources. They aren't attached directly to individual AKS clusters. To determine which profiles can update your AKS clusters, confirm that the clusters are members of the Fleet, and then review the Fleet's profiles and their update sequences.
+
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
-1. From the service menu, under **Settings**, select **Multicluster update** > **Auto-upgrade profiles**.
-1. Select the auto-upgrade profile that you want to view.
+1. From the service menu, select **Fleet members**, and confirm that your AKS clusters appear in the member list.
+1. Under **Settings**, select **Multicluster update** > **Auto-upgrade profiles**.
+1. Select an auto-upgrade profile to view its channel, status, and update sequence.
+1. If the update sequence is **One by one**, the profile includes the Fleet's member clusters sequentially. If the update sequence uses **Stages**, review the associated strategy's stages, groups, and member selectors to determine which Fleet members the generated update runs include.
 
 ## Delete an auto-upgrade profile
 
@@ -434,6 +467,7 @@ For more information about creating an on-demand update run from an auto-upgrade
 <!-- INTERNAL LINKS -->
 [az-fleet-autoupgradeprofile-create]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-create
 [az-fleet-autoupgradeprofile-list]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-list
+[az-fleet-autoupgradeprofile-show]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-show
 [az-fleet-autoupgradeprofile-delete]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-delete
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-fleet-updaterun-generate]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-generate-update-run
