@@ -1277,7 +1277,13 @@
         - name: GPU health checking with NPD
           href: gpu-health-monitoring.md
         - name: Optimize GPU workloads using profiling
-          href: gpu-profiling.md
+          items:
+            - name: Set up GPU profiling
+              href: gpu-profiling.md
+            - name: Analyze GPU profiling flame graphs
+              href: analyze-gpu-profiling-flame-graphs.md
+            - name: GPU profiling FAQ
+              href: gpu-profiling-faq.yml
 - name: Manage and optimize costs
   items:
     - name: Cost optimization best practices
