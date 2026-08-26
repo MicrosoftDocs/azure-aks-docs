@@ -33,7 +33,7 @@ To deploy CanIPull manually, you also need:
 
 ## Deploy CanIPull with Azure Copilot
 
-Azure Copilot can select the AKS cluster, AMD64 Linux node, and ACR login server and then deploy CanIPull for you. The diagnostic checks DNS resolution and ACR token exchange from the selected node. It doesn't select or access a repository or image.
+Azure Copilot can select the AKS cluster, AMD64 Linux node, and ACR authentication server, and then deploy CanIPull for you. The diagnostic checks DNS resolution and ACR token exchange from the selected node. It doesn't select or access a repository or image.
 
 1. In the Azure portal, open **Copilot**.
 1. Enter one of the following prompts:
@@ -43,7 +43,7 @@ Azure Copilot can select the AKS cluster, AMD64 Linux node, and ACR login server
   - `Help me test ACR token exchange from an AMD64 Linux node in my AKS cluster.`
 
 1. Select the AKS cluster and the AMD64 Linux node where you want CanIPull to run.
-1. Select the ACR instance whose login server you want to use for the DNS and token exchange checks.
+1. Select the ACR instance whose authentication server you want to use for the DNS and token exchange checks.
 1. Review the selections, and then confirm the deployment.
 1. After the deployment completes, follow the prompt to open the **Run command** pane.
 1. Review the CanIPull logs for DNS, cluster identity, and ACR token exchange results.
