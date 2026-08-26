@@ -5,7 +5,7 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli, biannual
 author: schaffererin
 ms.topic: how-to
-ms.date: 06/10/2025
+ms.date: 08/03/2026
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: As a cloud engineer, I want to deploy and configure NGINX ingress on Azure Kubernetes Service using the application routing add-on, so that I can efficiently manage HTTP/HTTPS traffic to my applications while ensuring secure access and integration with Azure DNS.
@@ -15,25 +15,25 @@ ms.service: azure-kubernetes-service
 
 [!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
 
-One way to route Hypertext Transfer Protocol (HTTP) and secure (HTTPS) traffic to applications running on an Azure Kubernetes Service (AKS) cluster is to use the [Kubernetes Ingress object][kubernetes-ingress-object-overview]. When you create an Ingress object that uses the application routing add-on NGINX Ingress classes, the add-on creates, configures, and manages one or more Ingress controllers in your AKS cluster.
+One way to route Hypertext Transfer Protocol (HTTP) and secure (HTTPS) traffic to applications running on an Azure Kubernetes Service (AKS) cluster is to use the [Kubernetes Ingress object][kubernetes-ingress-object-overview]. When you enable the application routing add-on with NGINX, it creates, configures, and manages an Ingress controller in your AKS cluster.
 
-This article shows you how to deploy and configure a basic Ingress controller in your AKS cluster.
+This article shows you how to enable the managed NGINX Ingress controller and configure an Ingress object to route traffic to an application in your AKS cluster.
 
 ## Application routing add-on with NGINX features
 
 The application routing add-on with NGINX delivers the following:
 
-* Easy configuration of managed NGINX Ingress controllers based on [Kubernetes NGINX Ingress controller][kubernetes-nginx-ingress].
-* Integration with [Azure DNS][azure-dns-overview] for public and private zone management
-* SSL termination with certificates stored in Azure Key Vault.
+- Easy configuration of managed NGINX Ingress controllers based on [Kubernetes NGINX Ingress controller][kubernetes-nginx-ingress].
+- Integration with [Azure DNS][azure-dns-overview] for public and private zone management.
+- SSL termination with certificates stored in Azure Key Vault.
 
 For other configurations, see:
 
-* [DNS and SSL configuration][dns-ssl-configuration]
-* [Application routing add-on configuration][custom-ingress-configurations]
-* [Configure internal NGIX ingress controller for Azure private DNS zone][create-nginx-private-controller].
+- [DNS and SSL configuration][dns-ssl-configuration].
+- [Application routing add-on configuration][custom-ingress-configurations].
+- [Configure internal NGINX ingress controller for Azure private DNS zone][create-nginx-private-controller].
 
-With the retirement of [Open Service Mesh][open-service-mesh-docs] (OSM) by the Cloud Native Computing Foundation (CNCF), using the application routing add-on with OSM is not recommended.
+[!INCLUDE [open-service-mesh-retirement](./includes/open-service-mesh-retirement.md)]
 
 ## Prerequisites
 
@@ -47,11 +47,24 @@ With the retirement of [Open Service Mesh][open-service-mesh-docs] (OSM) by the 
 - All global Azure DNS zones integrated with the add-on have to be in the same resource group.
 - All private Azure DNS zones integrated with the add-on have to be in the same resource group.
 - Editing the ingress-nginx `ConfigMap` in the `app-routing-system` namespace isn't supported.
-- The following snippet annotations are blocked and will prevent an Ingress from being configured: `load_module`, `lua_package`, `_by_lua`, `location`, `root`, `proxy_pass`, `serviceaccount`, `{`, `}`, `'`.
-- Injecting non-Microsoft-managed sidecars (for example, custom telemetry, logging, or security agents) into the ingress-nginx proxy pods managed by the add-on is not officially supported. If you choose to inject your own sidecar into a managed proxy pod, Microsoft provides only best-effort support for any issues you encounter.
+- If a snippet annotation value matches any of the following blocked values, the Ingress isn't configured:
 
+    | Blocked value | Effect |
+    |--|--|
+    | `load_module` | The Ingress isn't configured. |
+    | `lua_package` | The Ingress isn't configured. |
+    | `_by_lua` | The Ingress isn't configured. |
+    | `location` | The Ingress isn't configured. |
+    | `root` | The Ingress isn't configured. |
+    | `proxy_pass` | The Ingress isn't configured. |
+    | `serviceaccount` | The Ingress isn't configured. |
+    | `{` | The Ingress isn't configured. |
+    | `}` | The Ingress isn't configured. |
+    | `'` | The Ingress isn't configured. |
 
-## Enable application routing using Azure CLI
+- The add-on doesn't officially support injecting non-Microsoft-managed sidecars (for example, custom telemetry, logging, or security agents) into the ingress-nginx proxy pods that it manages. If you choose to inject your own sidecar into a managed proxy pod, Microsoft provides only best-effort support for any issues you encounter.
+
+## Enable the application routing add-on using Azure CLI
 
 ### Enable on a new cluster
 
@@ -59,9 +72,9 @@ To enable application routing on a new cluster, use the [`az aks create`][az-aks
 
 ```azurecli-interactive
 az aks create \
-    --resource-group <ResourceGroupName> \
-    --name <ClusterName> \
-    --location <Location> \
+    --resource-group <resource-group-name> \
+    --name <cluster-name> \
+    --location <location> \
     --enable-app-routing \
     --generate-ssh-keys
 ```
@@ -71,24 +84,24 @@ az aks create \
 To enable application routing on an existing cluster, use the [`az aks approuting enable`][az-aks-approuting-enable] command.
 
 ```azurecli-interactive
-az aks approuting enable --resource-group <ResourceGroupName> --name <ClusterName>
+az aks approuting enable --resource-group <resource-group-name> --name <cluster-name>
 ```
 
 ---
 
 ## Connect to your AKS cluster
 
-To connect to the Kubernetes cluster from your local computer, you use [kubectl][kubectl], the Kubernetes command-line client. You can install it locally using the [`az aks install-cli`][az-aks-install-cli] command. If you use the Azure Cloud Shell, `kubectl` is already installed.
+To connect to the Kubernetes cluster from your local computer, you use [`kubectl`][kubectl], the Kubernetes command-line client. You can install it locally using the [`az aks install-cli`][az-aks-install-cli] command. If you use the Azure Cloud Shell, `kubectl` is already installed.
 
-Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command.
+Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
 ```azurecli-interactive
-az aks get-credentials --resource-group <ResourceGroupName> --name <ClusterName>
+az aks get-credentials --resource-group <resource-group-name> --name <cluster-name>
 ```
 
 ## Deploy an application
 
-The application routing add-on uses annotations on Kubernetes Ingress objects to create the appropriate resources.
+Kubernetes Ingress objects define routing rules for an Ingress controller. Use the application routing add-on's managed Ingress class and supported annotations to configure how its controller handles traffic.
 
 1. Create the application namespace called `aks-store` to run the example pods using the `kubectl create namespace` command.
 
@@ -96,17 +109,17 @@ The application routing add-on uses annotations on Kubernetes Ingress objects to
     kubectl create namespace aks-store
     ```
 
-2. Deploy the AKS store application using the following YAML manifest file:
+1. Deploy the AKS store application using the following YAML manifest file:
 
-    ```yaml
+    ```bash
     kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/aks-store-demo/main/sample-manifests/docs/app-routing/aks-store-deployments-and-services.yaml -n aks-store
     ```
 
-  This manifest will create the necessary deployments and services for the AKS store application.
+  This manifest creates `rabbitmq`, `order-service`, `product-service`, and `store-front` Deployments and corresponding Services. The `store-front` Service exposes port 80, which the Ingress routes to in the next section.
 
 ### Create the Ingress object
 
-The application routing add-on creates an Ingress class on the cluster named *webapprouting.kubernetes.azure.com*. When you create an Ingress object with this class, it activates the add-on.
+When you enable the application routing add-on, it creates an Ingress class named _webapprouting.kubernetes.azure.com_. Specify this class in an Ingress object to use the add-on's managed NGINX Ingress controller.
 
 1. Copy the following YAML manifest into a new file named **ingress.yaml** and save the file to your local computer.
 
@@ -130,7 +143,7 @@ The application routing add-on creates an Ingress class on the cluster named *we
             pathType: Prefix
     ```
 
-2. Create the ingress resource using the [`kubectl apply`][kubectl-apply] command.
+1. Create the ingress resource using the [`kubectl apply`][kubectl-apply] command.
 
 
     ```bash
@@ -143,7 +156,7 @@ The application routing add-on creates an Ingress class on the cluster named *we
     ingress.networking.k8s.io/store-front created
     ```
 
-## Verify the managed Ingress was created
+## Verify the managed Ingress resource
 
 You can verify the managed Ingress was created using the `kubectl get ingress` command.
 
@@ -158,8 +171,7 @@ NAME          CLASS                                HOSTS   ADDRESS       PORTS  
 store-front   webapprouting.kubernetes.azure.com   *       51.8.10.109   80      110s
 ```
 
-You can verify that the AKS store works pointing your browser to the public IP address of the Ingress controller.
-Find the IP address with kubectl:
+You can verify that the AKS store works by pointing your browser to the public IP address of the Ingress controller. The following command retrieves the external IP address assigned by the load balancer to the managed NGINX ingress controller's `nginx` Service in the `app-routing-system` namespace:
 
 ```bash
 kubectl get service -n app-routing-system nginx -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
@@ -176,27 +188,23 @@ kubectl delete namespace aks-store
 To remove the application routing add-on from your cluster, use the [`az aks approuting disable`][az-aks-approuting-disable] command.
 
 ```azurecli-interactive
-az aks approuting disable --name <ClusterName> --resource-group <ResourceGroupName>
+az aks approuting disable --name <cluster-name> --resource-group <resource-group-name>
 ```
 
->[!NOTE]
-> To avoid potential disruption of traffic into the cluster when the application routing add-on is disabled, some Kubernetes resources, including *configMaps*, *secrets*, and the *deployment* that runs the controller, will remain on the cluster. These resources are in the *app-routing-system* namespace. You can remove these resources if they're no longer needed by deleting the namespace with `kubectl delete ns app-routing-system`.
+> [!NOTE]
+> To avoid potential disruption of traffic into the cluster when you disable the application routing add-on, some Kubernetes resources, including _configMaps_, _secrets_, and the _deployment_ that runs the controller, remain on the cluster. These resources are in the _app-routing-system_ namespace. You can remove these resources if they're no longer needed by deleting the namespace with `kubectl delete ns app-routing-system`.
 
-## Next steps
+## Related content
 
-* Enable the [application routing Gateway API implementation][app-routing-gateway-api] to manage ingress traffic with the Kubernetes Gateway API.
-
-* [Configure custom ingress configurations][custom-ingress-configurations] shows how to create an advanced Ingress configuration and [configure a custom domain using Azure DNS to manage DNS zones and setup a secure ingress][dns-ssl-configuration].
-
-* To integrate with an Azure internal load balancer and configure a private Azure DNS zone to enable DNS resolution for the private endpoints to resolve specific domains, see [Configure internal NGINX ingress controller for Azure private DNS zone][create-nginx-private-controller].
-
-* Learn about monitoring the ingress-nginx controller metrics included with the application routing add-on with [with Prometheus in Grafana][prometheus-in-grafana] (preview) as part of analyzing the performance and usage of your application.
+- Enable the [application routing Gateway API implementation][app-routing-gateway-api] to manage ingress traffic with the Kubernetes Gateway API.
+- [Configure custom ingress configurations][custom-ingress-configurations] shows how to create an advanced Ingress configuration. [Configure a custom domain using Azure DNS to manage DNS zones and setup a secure ingress][dns-ssl-configuration].
+- To integrate with an Azure internal load balancer and configure a private Azure DNS zone to enable DNS resolution for the private endpoints to resolve specific domains, see [Configure internal NGINX ingress controller for Azure private DNS zone][create-nginx-private-controller].
+- Learn about monitoring the ingress-nginx controller metrics included with the application routing add-on with [Prometheus in Grafana][prometheus-in-grafana] (preview) as part of analyzing the performance and usage of your application.
 
 <!-- LINKS - internal -->
 [azure-dns-overview]: /azure/dns/dns-overview
 [az-aks-approuting-enable]: /cli/azure/aks/approuting#az-aks-approuting-enable
 [az-aks-approuting-disable]: /cli/azure/aks/approuting#az-aks-approuting-disable
-[az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [install-azure-cli]: /cli/azure/install-azure-cli
@@ -210,10 +218,6 @@ az aks approuting disable --name <ClusterName> --resource-group <ResourceGroupNa
 
 <!-- LINKS - external -->
 [kubernetes-ingress-object-overview]: https://kubernetes.io/docs/concepts/services-networking/ingress/
-[osm-release]: https://github.com/openservicemesh/osm
-[open-service-mesh-docs]: https://release-v1-2.docs.openservicemesh.io/
 [kubernetes-nginx-ingress]: https://kubernetes.github.io/ingress-nginx/
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
-[kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
-[ingress-backend]: https://release-v1-2.docs.openservicemesh.io/docs/guides/traffic_management/ingress/#ingressbackend-api
-[aks-nginx-retirement]: https://blog.aks.azure.com/2025/11/13/ingress-nginx-update
+[kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/

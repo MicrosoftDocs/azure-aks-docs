@@ -150,6 +150,7 @@ export LOCATION="<your-azure-region>"
 
 - Entra ID SSH to nodes is not yet available for Windows node pool.
 - Entra ID SSH to nodes is not supported for AKS automatic because of [node resource group lockdown][nrg-lockdown] preventing role assignments.
+- Entra ID SSH to nodes is not supported for Azure Container Linux (ACL) node pools because the AADSSHLoginForLinux extension is not compatible with the immutable OS filesystem.
 
 ::: zone-end
 

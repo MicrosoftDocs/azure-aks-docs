@@ -26,7 +26,7 @@ This article shows how to download the OSM client library to operate and configu
 > | Between 1.23.5 and 1.24.0 | 1.1.3                 |
 > | Below 1.23.5              | 1.0.0                 |
 >
-> Older versions of OSM may not be available for install or be actively supported if the corresponding AKS version has reached end of life. You can check the [AKS Kubernetes release calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar) for information on AKS version support windows.
+> Older versions of OSM might not be available for install or actively supported if the corresponding AKS version reached end of life. Check the [AKS Kubernetes release calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar-and-upcoming-versions) for information on AKS version support windows.
 
 ::: zone pivot="client-operating-system-linux"
 

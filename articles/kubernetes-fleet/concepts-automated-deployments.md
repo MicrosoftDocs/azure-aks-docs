@@ -5,12 +5,14 @@ author: sjwaight
 ms.author: simonwaight
 ms.topic: overview
 ms.custom: build-2025
-ms.date: 04/22/2025
+ms.date: 07/28/2026
 ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a DevOps engineer, I want to automate deployments from my GitHub repository to multiple AKS clusters using Fleet Manager, so that I can streamline application updates and reduce manual intervention during the deployment process."
 ---
 
 # Azure Kubernetes Fleet Manager Automated Deployments (Preview)
+
+**Applies to**: :heavy_check_mark: Fleet Manager with hub cluster
 
 This article provides a conceptual overview of Fleet Manager's Automated Deployments capability. Fleet Manager Automated Deployments simplify the process of taking your application source code from a GitHub repository and deploying it across one or more AKS clusters in your fleet. Once configured, every new commit you make runs the pipeline, resulting in updates to your application wherever it's deployed in your fleet.
 
@@ -31,7 +33,7 @@ To use Fleet Manager Automated Deployments the following prerequisites must be i
 Fleet Manager Automated Deployments help with the following activities:
 
 * Securely connecting a source GitHub repository to a Fleet hub cluster without the need for an operator to handle credentials. You can connect multiple repositories or branches to a single Fleet Manager.
-* Building container images and publishing to an existing Azure Container Registry (ACR) ensuring images are located in a known registry which fleet members can access.
+* Building container images and publishing to an existing Azure Container Registry (ACR) ensuring images are located in a known registry that fleet members can access.
 * Staging resource manifests into an existing namespace on the Fleet Manager hub cluster so they're ready for [cluster resource placement (CRP)][concept-crp]. 
 
 The generated GitHub Actions workflow can be modified to meet your needs by using an editor like Visual Studio Code.

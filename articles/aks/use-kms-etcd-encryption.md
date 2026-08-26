@@ -11,6 +11,7 @@ ms.custom:
 author: shashankbarsin
 ms.author: shasb
 zone_pivot_groups: public-or-private-kv
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes administrator, I want to enable Key Management Service etcd encryption in my Azure Kubernetes Service cluster, so that I can ensure the security of sensitive data stored in etcd while maintaining control over key management and access policies.
 ---
 
@@ -171,7 +172,7 @@ The following sections describe how to turn on KMS for a public key vault on a n
 
 ### Create an AKS cluster with a public key vault and KMS
 
-- Create an AKS cluster with a public key vault and KMS using the [`az aks create`][az-aks-create] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-id` parameters.
+- Create an AKS cluster with a public key vault and KMS by using the [`az aks create`][az-aks-create] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-id` parameters.
 
     ```azurecli-interactive
     az aks create \
@@ -197,7 +198,7 @@ The following sections describe how to turn on KMS for a public key vault on a n
         --azure-keyvault-kms-key-id $KEY_ID
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets by using the `kubectl get secrets` command. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -231,7 +232,7 @@ After you change the key ID (including changing either the key name or the key v
         --azure-keyvault-kms-key-id $NEW_KEY_ID
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets by using the `kubectl get secrets` command. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -334,7 +335,7 @@ The following sections describe how to turn on KMS for a private key vault on a 
 
 ### Create an AKS cluster with a private key vault and KMS
 
-- Create an AKS cluster with a private key vault and KMS using the [`az aks create`][az-aks-create] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-id`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-vault-resource-id` parameters.
+1. Create an AKS cluster with a private key vault and KMS by using the [`az aks create`][az-aks-create] command with the `--enable-azure-keyvault-kms`, `--azure-keyvault-kms-key-id`, `--azure-keyvault-kms-key-vault-network-access`, and `--azure-keyvault-kms-key-vault-resource-id` parameters.
 
     ```azurecli-interactive
     az aks create \
@@ -346,6 +347,18 @@ The following sections describe how to turn on KMS for a private key vault on a 
         --azure-keyvault-kms-key-vault-network-access "Private" \
         --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID \
         --generate-ssh-keys
+    ```
+
+1. Update all secrets by using the `kubectl get secrets` command.
+
+    ```bash
+    kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    ```
+
+    When you run the command, you can safely ignore the following error:
+
+    ```output
+    The object has been modified; please apply your changes to the latest version and try again.
     ```
 
 ### Update an existing AKS cluster to turn on KMS etcd encryption for a private key vault
@@ -362,7 +375,7 @@ The following sections describe how to turn on KMS for a private key vault on a 
         --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets by using the `kubectl get secrets` command. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -397,7 +410,7 @@ After you change the key ID (including changing either the key name or the key v
         --azure-keyvault-kms-key-vault-resource-id $KEY_VAULT_RESOURCE_ID
     ```
 
-1. Update all secrets using the `kubectl get secrets` command to ensure the secrets created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
+1. Update all secrets by using the `kubectl get secrets` command. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the previous command to update KMS fails, still run the following command to avoid unexpected state for KMS plugin.
 
     ```bash
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -

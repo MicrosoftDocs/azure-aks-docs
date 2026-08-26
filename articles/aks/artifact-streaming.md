@@ -6,7 +6,7 @@ ms.author: allyford
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.topic: how-to
-ms.date: 05/05/2026
+ms.date: 08/05/2026
 ms.subservice: aks-nodes
 ---
 
@@ -80,6 +80,9 @@ You can enable Artifact Streaming on new or existing node pools in your AKS clus
 
 > [!NOTE]
 > If you don't have a Premium tier ACR integrated with your AKS cluster, you can't use Artifact Streaming on AKS.
+
+> [!NOTE]
+> Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming by using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Set this field to `true` to enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
 
 ### Enable Artifact Streaming on a new node pool
 

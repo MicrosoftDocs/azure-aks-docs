@@ -78,7 +78,7 @@ With the local container filesystem backed by VM memory, writing to the containe
 * Learn more about [Azure Dedicated hosts][azure-dedicated-hosts] for nodes with your AKS cluster to use hardware isolation and control over Azure platform maintenance events.
 
 <!-- EXTERNAL LINKS -->
-[kata-technical-documentation]: https://katacontainers.io/docs/
+[kata-technical-documentation]: https://kata-containers.github.io/kata-containers/
 
 <!-- INTERNAL LINKS -->
 [pod-sandboxing-overview]: use-pod-sandboxing.md

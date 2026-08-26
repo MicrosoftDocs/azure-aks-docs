@@ -7,7 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli
-ms.date: 12/16/2025
+ms.date: 07/31/2026
 zone_pivot_groups: azure-cni-overlay-create-cluster
 
 # Customer intent: "As a Kubernetes administrator, I want to understand how to configure Azure CNI Overlay networking in AKS so that I can efficiently manage IP address allocation and scale my containerized applications without running into address exhaustion issues."
@@ -24,11 +24,11 @@ This article explains the setup process, dual-stack networking configuration, an
 - An Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
 - Azure CLI version 2.48.0 or later. To install or upgrade the Azure CLI, see [Install the Azure CLI](/cli/azure/install-azure-cli).
 - An existing Azure resource group. If you need to create one, see [Create resource groups](/azure/azure-resource-manager/management/manage-resource-groups-cli#create-resource-groups).
-- If you bring your own virtual network, review the [virtual network prerequisites](concepts-network-cni-overview.md#prerequisites).
+- If you bring your own virtual network, review the [virtual network prerequisites](concepts-network-cni-overview.md#aks-cni-networking-prerequisites).
 
 :::zone pivot="aks-cni-overlay-cluster-dual-stack"
 
-For dual-stack networking, you need Kubernetes version 1.26.3 or later.
+For dual-stack networking, use a [supported Kubernetes version in AKS](/azure/aks/supported-kubernetes-versions) that's available in your region.
 
 :::zone-end
 
@@ -86,7 +86,7 @@ az aks nodepool add \
 
 ## About Azure CNI Overlay AKS clusters with dual-stack networking
 
-You can deploy your Azure CNI Overlay AKS clusters in a dual-stack mode with an Azure virtual network. In this configuration, nodes receive both an IPv4 and IPv6 address from the Azure virtual network subnet. Pods receive an IPv4 and IPv6 address from a different address space to the Azure virtual network subnet of the nodes. Network address translation (NAT) is then configured so that the pods can reach resources on the Azure virtual network. The source IP address of the traffic is NAT'd to the node's primary IP address of the same family (*IPv4 to IPv4* and *IPv6 to IPv6*).
+You can deploy your Azure CNI Overlay AKS clusters in a dual-stack mode with an Azure virtual network. In this configuration, nodes receive both an IPv4 and IPv6 address from the Azure virtual network subnet. Pods receive an IPv4 and IPv6 address from a different address space to the Azure virtual network subnet of the nodes. Network address translation (NAT) is then configured so that the pods can reach resources on the Azure virtual network. The source IP address of the traffic is NAT'd to the VM node's primary IP address of the same family (*IPv4 to IPv4* and *IPv6 to IPv6*).
 
 > [!NOTE]
 > You can also deploy dual-stack networking clusters by using Azure CNI Powered by Cilium. For more information, see [Dual-stack networking with Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md#dual-stack-networking-with-azure-cni-powered-by-cilium).
@@ -97,7 +97,7 @@ The following features aren't supported with dual-stack networking:
 
 - [Azure network policies](./use-network-policies.md)
 - [Calico network policies](./use-network-policies.md)
-- [NAT gateway](./nat-gateway.md)
+- Standard NAT Gateway, which supports only IPv4. For dual-stack egress, use StandardV2 NAT Gateway. The AKS-managed `managedNATGatewayV2` outbound type is in preview. Before using StandardV2, review its [known limitations and regional availability](/azure/nat-gateway/nat-sku#known-limitations) and [known issues](/azure/nat-gateway/nat-sku#known-issues). For configuration guidance, see [Create a managed or user-assigned NAT gateway for your AKS cluster](./nat-gateway.md).
 - [Virtual nodes add-on](./virtual-nodes.md)
 
 ## Key parameters for dual-stack networking
@@ -110,7 +110,7 @@ The following table describes the key parameters for configuring dual-stack netw
 | `--pod-cidrs` | Takes a comma-separated list of Classless Inter-Domain Routing (CIDR) notation IP ranges to assign pod IPs from. The count and order of ranges in this list must match the value provided to `--ip-families`. If you don't supply any values, the parameter uses the default value of `10.244.0.0/16,fd12:3456:789a::/64`. |
 | `--service-cidrs` | Takes a comma-separated list of CIDR notation IP ranges to assign service IPs from. The count and order of ranges in this list must match the value provided to `--ip-families`. If you don't supply any values, the parameter uses the default value of `10.0.0.0/16,fd12:3456:789a:1::/108`. The IPv6 subnet assigned to `--service-cidrs` can be no larger than `/108`. |
 
-## Create an Azure CNI Overlay AKS cluster with dual-stack networking (Linux)
+## Create a dual-stack Azure CNI Overlay AKS cluster (Linux)
 
 1. Create an Azure resource group for the cluster by using the [`az group create`][az-group-create] command:
 
@@ -131,49 +131,7 @@ The following table describes the key parameters for configuring dual-stack netw
       --generate-ssh-keys
     ```
 
-## Create an Azure CNI Overlay AKS cluster with dual-stack networking (Windows)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-Before you create an Azure CNI Overlay AKS cluster with dual-stack networking with Windows node pools, you need to install the `aks-preview` Azure CLI extension and register the `AzureOverlayDualStackPreview` feature flag in your subscription.
-
-### Install the `aks-preview` Azure CLI extension
-
-1. Install the `aks-preview` extension by using the [`az extension add`][az-extension-add] command:
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-1. Update to the latest version of the extension by using the [`az extension update`][az-extension-update] command:
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `AzureOverlayDualStackPreview` feature flag
-
-1. Register the `AzureOverlayDualStackPreview` feature flag by using the [`az feature register`][az-feature-register] command:
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
-    ```
-
-    It takes a few minutes for the status to show `Registered`.
-
-1. Verify the registration status by using the [`az feature show`][az-feature-show] command:
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
-    ```
-
-1. When the status reflects `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`][az-provider-register] command:
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
-
-### Create a dual-stack Azure CNI Overlay AKS cluster and add a Windows node pool
+## Create a dual-stack Azure CNI Overlay AKS cluster (Windows)
 
 1. Create a cluster with Azure CNI Overlay by using the [`az aks create`][az-aks-create] command:
 
@@ -201,11 +159,16 @@ Before you create an Azure CNI Overlay AKS cluster with dual-stack networking wi
 
 ---
 
-:::zone-end
-
 ## Deploy an example workload to the Azure CNI Overlay AKS cluster
 
 Deploy dual-stack AKS CNI Overlay clusters with IPv4/IPv6 addresses on virtual machine nodes. This example deploys an NGINX web server and exposes it by using a `LoadBalancer` service with both IPv4 and IPv6 addresses.
+
+Before you expose the workload, ensure an NGINX deployment is running in your cluster. If you don't already have one, create the deployment and wait for it to be ready by using the following commands:
+
+```bash-interactive
+kubectl create deployment nginx --image=nginx
+kubectl rollout status deployment/nginx
+```
 
 > [!NOTE]
 > We recommend using the application routing add-on for ingress in AKS clusters. However, for demonstration purposes, this example deploys an NGINX web server without the application routing add-on. For more information about the add-on, see [Managed NGINX ingress with the application routing add-on](app-routing.md).
@@ -213,6 +176,8 @@ Deploy dual-stack AKS CNI Overlay clusters with IPv4/IPv6 addresses on virtual m
 ### Expose the workload by using a `LoadBalancer` service
 
 Expose the NGINX deployment by using either `kubectl` commands or YAML manifests.
+
+This section assumes an NGINX deployment named `nginx` is running in your cluster. To verify the deployment exists and is ready, run `kubectl get deployment nginx` and confirm the **READY** column shows all desired replicas as ready.
 
 > [!IMPORTANT]
 > There are currently *two limitations* that pertain to IPv6 services in AKS:
@@ -222,11 +187,11 @@ Expose the NGINX deployment by using either `kubectl` commands or YAML manifests
 
 #### [kubectl deployment](#tab/kubectl)
 
-1. Expose the NGINX deployment by using the `kubectl expose deployment nginx` command:
+1. Expose the NGINX deployment by using the `kubectl expose deployment nginx` command. The first command creates an IPv4 `LoadBalancer` service. The second command creates an IPv6 `LoadBalancer` service and uses the `--overrides` JSON to set `ipFamilies` to `IPv6` and the required `externalTrafficPolicy` to `Local`:
 
     ```bash-interactive
     kubectl expose deployment nginx --name=nginx-ipv4 --port=80 --type=LoadBalancer
-    kubectl expose deployment nginx --name=nginx-ipv6 --port=80 --type=LoadBalancer --overrides='{"spec":{"ipFamilies": ["IPv6"]}}'
+    kubectl expose deployment nginx --name=nginx-ipv6 --port=80 --type=LoadBalancer --overrides='{"spec":{"externalTrafficPolicy":"Local","ipFamilies":["IPv6"]}}'
     ```
 
     Your output should show the exposed services. For example:
@@ -251,6 +216,8 @@ Expose the NGINX deployment by using either `kubectl` commands or YAML manifests
     ```
 
 1. Get the service IP by using the `kubectl get services` command and set it to an environment variable:
+
+    The command uses the JSONPath expression `{.status.loadBalancer.ingress[0].ip}` to extract the external IP address from the first entry in the service's load balancer ingress field and stores it in the `SERVICE_IP` variable.
 
     ```bash-interactive
     SERVICE_IP=$(kubectl get services nginx-ipv6 -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -287,9 +254,9 @@ Expose the NGINX deployment by using either `kubectl` commands or YAML manifests
     spec:
       externalTrafficPolicy: Cluster
       ports:
-     - port: 80
-        protocol: TCP
-        targetPort: 80
+        - port: 80
+          protocol: TCP
+          targetPort: 80
       selector:
         app: nginx
       type: LoadBalancer
@@ -303,11 +270,11 @@ Expose the NGINX deployment by using either `kubectl` commands or YAML manifests
     spec:
       externalTrafficPolicy: Local # Deploying the IPv6 service with `externalTrafficPolicy: Local`, which causes `kube-proxy` to respond to the probe on the node
       ipFamilies:
-     - IPv6
+        - IPv6
       ports:
-     - port: 80
-        protocol: TCP
-        targetPort: 80
+        - port: 80
+          protocol: TCP
+          targetPort: 80
       selector:
         app: nginx
       type: LoadBalancer
@@ -329,18 +296,15 @@ Expose the NGINX deployment by using either `kubectl` commands or YAML manifests
 
 ---
 
+:::zone-end
+
 ## Related content
 
 To learn more about Azure CNI Overlay networking on AKS, see the following articles:
 
-- [Update Azure CNI IPAM mode and data plane technology](./upgrade-azure-cni.md)
+- [Update Azure CNI IPAM mode and data plane technology](./update-azure-cni.md)
 - [Expand pod CIDR space in Azure CNI Overlay clusters](./azure-cni-overlay-pod-expand.md)
 
 <!-- LINKS - internal -->
-[az-provider-register]: /cli/azure/provider#az-provider-register
-[az-feature-register]: /cli/azure/feature#az-feature-register
-[az-feature-show]: /cli/azure/feature#az-feature-show
 [az-group-create]: /cli/azure/group#az-group-create
 [az-aks-create]: /cli/azure/aks#az-aks-create
-[az-extension-add]: /cli/azure/extension#az-extension-add
-[az-extension-update]: /cli/azure/extension#az-extension-update

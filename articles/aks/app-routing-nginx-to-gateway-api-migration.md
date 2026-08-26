@@ -34,7 +34,7 @@ There's no in-place flag that swaps the ingress-nginx load balancer IP for the G
 | Az CLI Enable flag | `--enable-app-routing` | `--enable-app-routing-istio` (use with `--enable-gateway-api`; the Managed Gateway API add-on is required for support) |
 | Class name | `webapprouting.kubernetes.azure.com` | `approuting-istio` |
 | Data plane Service | `nginx` in `app-routing-system` | `<gateway-name>-approuting-istio` in the `Gateway`'s namespace |
-| Azure DNS / Key Vault TLS wiring | Built in | Not yet supported. See [Secure application routing Gateway API ingress traffic][app-routing-gateway-api-tls] |
+| Azure DNS / Key Vault TLS wiring | Built in | [Configure Azure DNS and TLS with the Application Routing Gateway API implementation][app-routing-gateway-api-dns-tls] |
 
 ## Prerequisites
 

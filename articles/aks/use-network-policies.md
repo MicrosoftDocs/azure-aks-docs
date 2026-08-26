@@ -3,7 +3,7 @@ title: Secure Pod Traffic with Network Policies in Azure Kubernetes Service (AKS
 description: Learn how to implement network policies in AKS to control and secure pod traffic by restricting communication according to the principle of least privilege.
 author: schaffererin
 ms.author: schaffererin
-ms.date: 03/30/2026
+ms.date: 08/18/2026
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
@@ -11,6 +11,7 @@ ms.custom:
   - devx-track-azurecli
   - build-2025
   - biannual
+  - aeo-round-2
 # Customer intent: As a DevOps engineer, I want to implement network policies in Azure Kubernetes Service, so that I can control and secure pod traffic by restricting communication according to the principle of least privilege.
 ---
 
@@ -229,7 +230,7 @@ az aks update \
 
 ## Upgrade an existing cluster with Azure NPM or Calico to Cilium
 
-To upgrade an existing cluster to Azure CNI Powered by Cilium, see [Upgrade an existing cluster to Azure CNI Powered by Cilium](upgrade-aks-ipam-and-dataplane.md)
+For clusters that already use Azure CNI, update the network data plane to Cilium. Kubenet clusters must first migrate to Azure CNI Overlay and then update the network data plane to Cilium as a separate operation. Review the prerequisites and follow the steps in [Upgrade an existing cluster to Azure CNI Powered by Cilium](upgrade-aks-ipam-and-dataplane.md).
 
 ## Connect to the AKS cluster
 

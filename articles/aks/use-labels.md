@@ -258,7 +258,7 @@ Learn more about Kubernetes labels in the [Kubernetes labels documentation][kube
 
 <!-- LINKS - internal -->
 
-[aks-release-calendar]: ./supported-kubernetes-versions.md#aks-kubernetes-release-calendar
+[aks-release-calendar]: ./supported-kubernetes-versions.md#aks-kubernetes-release-calendar-and-upcoming-versions
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-nodepool-add]: /cli/azure/aks#az-aks-nodepool-add
 [az-aks-nodepool-list]: /cli/azure/aks/nodepool#az-aks-nodepool-list

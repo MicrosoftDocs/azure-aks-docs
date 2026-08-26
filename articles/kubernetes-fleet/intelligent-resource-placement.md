@@ -2,7 +2,7 @@
 title: "Intelligent Cross-Cluster Kubernetes Resource Placement Using Azure Kubernetes Fleet Manager"
 description: Learn how to use Azure Kubernetes Fleet Manager to intelligently place your workloads on target member clusters based on cost and resource availability.
 ms.topic: how-to
-ms.date: 04/02/2026
+ms.date: 07/28/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -383,15 +383,15 @@ You can view the status of a placement using either the Azure portal or the kube
 
 For details on how to view placement progress:
 
-* For `ClusterResourcePlacement`, see [Use the ClusterResourcePlacement API to propagate resources to member clusters](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters).
-* For `ResourcePlacement`, see [Use ResourcePlacement to place namespace-scoped resources](./quickstart-namespace-scoped-resource-propagation.md#use-resourceplacement-to-place-namespace-scoped-resources).
+* For `ClusterResourcePlacement`, see [Use Azure Kubernetes Fleet Manager resource placement to deploy cluster-scoped resources across multiple clusters](./quickstart-resource-propagation.md).
+* For `ResourcePlacement`, see [Use ResourcePlacement to place namespace-scoped resources](./quickstart-namespace-scoped-resource-propagation.md).
 
-## Clean up resources
+## Delete placed resources
 
-To remove a resource placement:
+To remove a resource placement and the resources on member clusters, see:
 
-* For `ClusterResourcePlacement`, see [Clean up resources](./quickstart-resource-propagation.md#clean-up-resources).
-* For `ResourcePlacement`, see [Clean up resources](./quickstart-namespace-scoped-resource-propagation.md#clean-up-resources).
+* For cluster-scoped resources, see [delete the placement to remove resources](./quickstart-resource-propagation.md#delete-the-placement-to-remove-resources).
+* For namespace-scoped resources, see [delete the placement to remove resources](./quickstart-namespace-scoped-resource-propagation.md#delete-the-placement-to-remove-resources).
 
 ## Next steps
 

@@ -47,4 +47,4 @@ For more information about Application Network version selection or keeping your
 
 <!--- LINKS --->
 [az-appnet-list-versions]: /cli/azure/appnet#az-appnet-list-versions
-[aks-release-calendar]: ../aks/supported-kubernetes-versions.md#aks-kubernetes-release-calendar
+[aks-release-calendar]: ../aks/supported-kubernetes-versions.md#aks-kubernetes-release-calendar-and-upcoming-versions

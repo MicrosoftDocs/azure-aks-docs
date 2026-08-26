@@ -24,17 +24,6 @@ This article shows you how to set up Advanced Container Networking Services with
 
 ## Limitations:
 
-* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (for example, *.example.com), but you can't use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
-- Supported Pattern:
-
-    `*.example.com` - This allows traffic to all subdomains under example.com.
-
-    `app*.example.com` - This rule is more specific and only allows traffic to subdomains that start with "app" under example.com
-
-- Unsupported Pattern
-    
-    `*` This attempt to match any domain name, which isn't supported.
-
 * Kubernetes service names aren't supported.
 * FQDN pods might exhibit performance degradation when handling more than 1,000 requests per second.
 * If Advanced Container Networking Services(ACNS) security is disabled, FQDN and L7 policies (HTTP, HTTPS, Kafka, and gRPC) will be blocked.

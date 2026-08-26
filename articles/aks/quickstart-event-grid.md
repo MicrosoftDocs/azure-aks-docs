@@ -32,7 +32,7 @@ Create an AKS cluster using the [az aks create][az-aks-create] command. The foll
 
 ```azurecli-interactive
 az group create --name MyResourceGroup --location eastus
-az aks create --resource-group yResourceGroup --name MyAKS --location eastus  --node-count 1 --generate-ssh-keys
+az aks create --resource-group MyResourceGroup --name MyAKS --location eastus  --node-count 1 --generate-ssh-keys
 ```
 
 ### [Azure PowerShell](#tab/azure-powershell)

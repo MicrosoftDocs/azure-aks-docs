@@ -84,6 +84,9 @@ Name:       aks-nodepool1-28993262-vmss000002
 
 For more information, see [Use availability zones in Azure Kubernetes Service (AKS)](./availability-zones.md).
 
+> [!TIP]
+> If you don't want to track which zones are available for each region and VM SKU, use **automatic zone placement** by specifying `--zones auto`. AKS dynamically picks zones that have capacity while applying a maximum instance percentage of 50% per zone. You can use automatic zone placement when you create a node pool or update an existing node pool. For more information, see [Automatic zone placement for node pools in AKS (Preview)](./configure-automatic-zone-placement.md).
+
 ### Ensure pods are spread across AZs
 
 Pod placement strategy is a workload-level concern in both AKS Automatic and AKS Standard. Platform defaults don't replace workload-level topology requirements.

@@ -995,4 +995,4 @@ In this article, you learned how to create an AKS cluster with a single node poo
 [use-node-taints]: ./use-node-taints.md
 [use-labels]: ./use-labels.md
 [use-tags]: ./use-tags.md
-[use-taints-tolerations]: ./operator-best-practices-advanced-scheduler.md#provide-dedicated-nodes-using-taints-and-tolerations
+[use-taints-tolerations]: ./operator-best-practices-advanced-scheduler.md#what-are-taints-and-tolerations

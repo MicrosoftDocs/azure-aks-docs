@@ -73,7 +73,7 @@ Blue-green upgrades currently support the following features:
 - Manual commit and rollback control
 - [Cluster autoscaler](./cluster-autoscaler.md)
 - [Availability zones](/azure/reliability/reliability-aks#availability-zone-support)
-- [PodDisruptionBudgets](./operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets)
+- [PodDisruptionBudgets](./operator-best-practices-scheduler.md#limit-disruption-impact-by-using-pod-disruption-budgets-pdbs)
 - [Autoupgrade channels](./auto-upgrade-cluster.md) and [Planned Maintenance windows](./planned-maintenance.md)
 - [AKS Communication Manager](./aks-communication-manager.md)
 

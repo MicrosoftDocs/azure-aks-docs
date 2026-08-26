@@ -84,7 +84,7 @@ az aks nodepool add --enable-cluster-autoscaler --min-count 1 --max-count 10 --m
 [plan-aks-design]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [aks-upgrade]: upgrade-cluster.md
 [cluster-autoscaler]: cluster-autoscaler.md
-[ephemeral-os]: concepts-storage.md#ephemeral-os-disk
+[ephemeral-os]: concepts-storage.md#ephemeral-os-disks-in-aks
 [state-billing-azure-vm]: /azure/virtual-machines/states-billing
 [spot-node-pool]: spot-node-pool.md
 

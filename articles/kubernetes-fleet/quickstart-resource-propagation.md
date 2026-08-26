@@ -1,82 +1,173 @@
 ---
 title: "Use Azure Kubernetes Fleet Manager cluster resource placement to deploy workloads across multiple clusters"
 description: This article describes how to use Azure Kubernetes Fleet Manager cluster resource placement to deploy workloads across clusters in a fleet.
-ms.date: 06/16/2025
+ms.date: 07/28/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: how-to
-# Customer intent: As a cloud architect managing multiple Kubernetes clusters, I want to deploy workloads across a fleet of clusters using resource placement strategies, so that I can optimize resource utilization and simplify application management.
+zone_pivot_groups: azure-portal-azure-cli
+# Customer intent: As a platform engineer managing multiple Kubernetes clusters, I want to deploy workloads across a fleet of clusters using resource placement strategies, so that I can optimize resource utilization and simplify application management.
 ---
 
-# Use Azure Kubernetes Fleet Manager cluster resource placement to deploy workloads across multiple clusters
+# Use Azure Kubernetes Fleet Manager resource placement to deploy cluster-scoped resources across multiple clusters
 
-This article describes how to use Azure Kubernetes Fleet Manager cluster resource placement to deploy workloads across clusters in a fleet.
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-## Prerequisites
+Azure Kubernetes Fleet Manager resource placement enables you to distribute and synchronize cluster-scoped resources - including namespaces and their child resources - across multiple clusters in your fleet. This feature simplifies multicluster deployments by ensuring consistent resource configuration across your infrastructure, reducing manual overhead, and enabling you to manage complex workloads at scale with a single source of truth. This article walks through using `ClusterResourcePlacement` to distribute a namespace and its workloads to member clusters.
+
+To distribute individual resources inside a namespace, see the [documentation on namespace-scoped resource placement](./quickstart-namespace-scoped-resource-propagation.md).
+
+You can complete the steps in this article using either the Azure portal or the Azure CLI.
+
+> [!NOTE]
+> You can use Fleet Manager's resource placement with AKS and Azure Arc-enabled Kubernetes clusters.
+
+## Before you begin
 
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
-* Read the [conceptual overview of resource propagation](./concepts-resource-placement.md) to understand the concepts and terminology used in this article.
+* Read the [conceptual overview of resource placement](./concepts-resource-placement.md) to understand the concepts and terminology used in this article.
 * You need a Fleet Manager with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
-* Member clusters must be [labeled](./concepts-fleet.md#labels) appropriately in the hub cluster to match the desired selection criteria. Example labels include region, environment, team, availability zones, node availability, or anything else that you want.
 * You need access to the Kubernetes API of the hub cluster. If you don't have access, see [Access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster](./access-fleet-hub-cluster-kubernetes-api.md).
 
-## Use ClusterResourcePlacement to place resources onto member clusters
+## Distribute a namespace and its resources onto member clusters
 
-The `ClusterResourcePlacement` object is created on the hub cluster and is used to propagate resources to member clusters. It specifies the resources to propagate and the placement policy to use when you're selecting member clusters. This example demonstrates how to propagate a namespace to member clusters by using the `ClusterResourcePlacement` object with a `PickAll` placement policy.
+Use the simple scenario of having a `Deployment` and `Service` to deploy across all clusters in the fleet. Create a namespace on your Fleet Manager hub cluster, add the workloads to it, and then use a `ClusterResourcePlacement` to distribute the namespace and all its contents to all member clusters by using the `PickAll` placement policy.
 
-For more information, see [resource placement using Azure Kubernetes Fleet Manager cluster resource placement](./concepts-resource-placement.md) and the open-source [KubeFleet documentation](https://kubefleet.dev/docs/concepts/crp/).
+:::zone target="docs" pivot="azure-cli"
 
-### [Azure CLI](#tab/azure-cli)
+1. Set the following environment variables for your subscription ID, resource group, and Kubernetes Fleet resource:
 
-1. Create a namespace to place onto the member clusters:
+    ```bash
+    export SUBSCRIPTION_ID=<subscription-id>
+    export GROUP=<resource-group-name>
+    export FLEET=<fleet-name>
+    ```
+
+1. Set the default Azure subscription by using the [`az account set`][az-account-set] command:
+
+    ```azurecli-interactive
+    az account set \
+        --subscription ${SUBSCRIPTION_ID}
+    ```
+
+1. Get the kubeconfig file of the Kubernetes Fleet hub cluster by using the [`az fleet get-credentials`][az-fleet-get-credentials] command:
+
+    ```azurecli-interactive
+    az fleet get-credentials \
+        --resource-group ${GROUP} \
+        --name ${FLEET}
+    ```
+    
+    Your output should look similar to the following.
+    
+    ```output
+    Merged "hub" as current context in /home/fleet/.kube/config
+    ```
+    
+    > [!NOTE]
+    > If you receive an error of type `InvalidHubOperation` with the message indicating the fleet is hubless, add a hub cluster. For further information, see [upgrade hub cluster type](./upgrade-hub-cluster-type.md).
+
+1. Create a namespace on the hub cluster.
+    
+    ```bash
+    kubectl create namespace test-app
+    ```
+
+1. Save the following YAML as `test-workload.yaml`.
+
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nginx-deployment
+      namespace: test-app
+    spec:
+      selector:
+        matchLabels:
+          app: nginx
+      replicas: 2
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: mcr.microsoft.com/azurelinux/base/nginx:1.28@sha256:3352a36cbcab4708883a3e77b64f64159e11e1aab358c010e1c4e465dbfb4f57
+            ports:
+            - containerPort: 80
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nginx-service
+      namespace: test-app
+    spec:
+      selector:
+        app: nginx
+      ports:
+      - protocol: TCP
+        port: 80
+        targetPort: 80
+      type: LoadBalancer
+    ```
+
+1. Stage the test workload onto the Fleet Manager hub cluster by using `kubectl`.
+    
+    ```bash
+    kubectl apply -f test-workload.yaml
+    ```
+
+1. Save the following YAML as `crp-distribute-workload.yaml`.
+
+    ```yaml
+    apiVersion: placement.kubernetes-fleet.io/v1
+    kind: ClusterResourcePlacement
+    metadata:
+      name: distribute-test-app
+    spec:
+      resourceSelectors:
+        - group: ""
+          kind: Namespace
+          version: v1          
+          name: test-app
+      policy:
+        placementType: PickAll
+    ```
+
+1. Apply the placement manifest to the Fleet Manager hub cluster. 
+
+    ```bash
+    kubectl apply -f crp-distribute-workload.yaml
+    ```
+
+    > [!NOTE]
+    > The resource rollout begins immediately the manifest is applied. An implicit `RollingUpdate` strategy is used. To learn how to have additional control over the rollout, see [defining a rollout strategy for resource placement](./concepts-rollout-strategy.md).
+
+1. Check the progress of the resource placement.
 
   ```bash
-  kubectl create namespace my-namespace
-  ```
-
-2. Create a `ClusterResourcePlacement` object and apply to the Fleet Manager hub cluster. In the following example, a `ClusterResourcePlacement` named `distribute-my-namespace` is used to deploy a namespace `my-namespace` to all member clusters by using `PickAll` placement policy:
-
-  ```yaml
-  apiVersion: placement.kubernetes-fleet.io/v1
-  kind: ClusterResourcePlacement
-  metadata:
-    name: distribute-my-namespace
-  spec:
-    resourceSelectors:
-      - group: ""
-        kind: Namespace
-        version: v1          
-        name: my-namespace
-    policy:
-      placementType: PickAll
-  ```
-
-  Apply this to the Fleet Manager hub cluster by issuing `kubectl apply -f distribute-my-namespace.yaml`, using the name of the file you created in place of `distribute-my-namespace.yaml`.
-
-3. Check the progress of the resource propagation:
-
-  ```bash
-  kubectl get clusterresourceplacement distribute-my-namespace
+  kubectl get clusterresourceplacement distribute-test-app
   ```
 
   Your output should look similar to the following example:
 
   ```output
-  NAME                       GEN   SCHEDULED   SCHEDULEDGEN   APPLIED   APPLIEDGEN   AGE
-  distribute-my-namespace    2     True        2              True      2            10s
+  NAME                   GEN   SCHEDULED   SCHEDULEDGEN   APPLIED   APPLIEDGEN   AGE
+  distribute-test-app    2     True        2              True      2            10s
   ```
 
-4. View the details of the placement object:
+1. View the details of the placement.
 
   ```bash
-  kubectl describe clusterresourceplacement distribute-my-namespace
+  kubectl describe clusterresourceplacement distribute-test-app
   ```
 
   Your output should look similar to the following example:
 
   ```output
-  Name:         distribute-my-namespace
+  Name:         distribute-test-app
   Namespace:    
   Labels:       <none>
   Annotations:  <none>
@@ -96,7 +187,7 @@ For more information, see [resource placement using Azure Kubernetes Fleet Manag
     Resource Selectors:
       Group:                 
       Kind:                  Namespace
-      Name:                  my-namespace
+      Name:                  test-app
       Version:               v1
     Revision History Limit:  10
     Strategy:
@@ -195,68 +286,144 @@ For more information, see [resource placement using Azure Kubernetes Fleet Manag
     Normal  PlacementRolloutCompleted  103s  cluster-resource-placement-controller  Resources have been applied to the selected clusters
   ````
 
-### [Azure portal](#tab/azure-portal)
+:::zone-end
 
-1. In the Azure portal, go to your Fleet Manager resource.
-1. On the service menu, under **Fleet Resources**, select **Resource placements** > **Create**.
-1. Replace the placeholder values with the following YAML, and then select **Add**.
+:::zone target="docs" pivot="azure-portal"
 
-    ```YAML
-    apiVersion: placement.kubernetes-fleet.io/v1
-    kind: ClusterResourcePlacement
+1. In the Azure portal, go to your Fleet Manager.
+
+1. On the service menu, under **Fleet Resources**, select **Namespaces** > **+ Create**.
+
+    > [!NOTE]
+    > If you don't see **Fleet Resources**, your Fleet Manager doesn't have a hub cluster. For further information on how to add one, see [upgrade hub cluster type](./upgrade-hub-cluster-type.md).
+
+1. In the menu, select **Namespace**, enter a **Name**, and then select **Create**.
+
+    :::image type="content" source="./media/quickstart-resource-propagation/fleet-placement-create-namespace.png" lightbox="./media/quickstart-resource-propagation/fleet-placement-create-namespace.png" alt-text="Screenshot of the Azure portal showing a namespace called test-app being created on the Fleet Manager hub cluster.":::
+
+    After a few moments, the page refreshes and the namespace appears in the list of namespaces on the Fleet Manager hub cluster. It's now ready to host any resources you want to distribute across member clusters.
+
+1. At the top of the namespace list, select **+ Create** > **Apply a YAML**, and use the following samples.    
+
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
-      name: distribute-my-namespace
+      name: nginx-deployment
+      namespace: test-app
     spec:
-      resourceSelectors:
-        - group: ""
-          kind: Namespace
-          version: v1          
-          name: my-namespace
-      policy:
-        placementType: PickAll
+      selector:
+        matchLabels:
+          app: nginx
+      replicas: 2
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: mcr.microsoft.com/azurelinux/base/nginx:1.28@sha256:3352a36cbcab4708883a3e77b64f64159e11e1aab358c010e1c4e465dbfb4f57
+            ports:
+            - containerPort: 80
     ```
 
-1. Verify that the cluster resource placement was created successfully.
+    ```yaml
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nginx-service
+      namespace: test-app
+    spec:
+      selector:
+        app: nginx
+      ports:
+      - protocol: TCP
+        port: 80
+        targetPort: 80
+      type: LoadBalancer
+    ```
 
-    :::image type="content" source="./media/quickstart-resource-propagation/crp-success-inline.png" lightbox="./media/quickstart-resource-propagation/crp-success.png" alt-text="Screenshot of the Azure portal pane for cluster resource placements, showing a successfully created cluster resource placement.":::
+    Copy and paste the samples and apply them one at a time as shown in the following image.
 
-1. To see more details on the placement of an individual cluster resource, select it from the list.
+    :::image type="content" source="./media/quickstart-resource-propagation/fleet-placement-apply-yaml.png" lightbox="./media/quickstart-resource-propagation/fleet-placement-apply-yaml.png" alt-text="Screenshot of the Azure portal showing the Apply with YAML dialog populated with a Deployment ready to be applied to the Fleet Manager hub cluster.":::
 
-    :::image type="content" source="./media/quickstart-resource-propagation/crp-details-inline.png" lightbox="./media/quickstart-resource-propagation/crp-details.png" alt-text="Screenshot of the Azure portal overview pane for an individual cluster resource placement, showing events and details.":::
+    The namespace and its workloads are now ready to be distributed to member clusters. The Deployment and Service aren't scheduled on the Fleet Manager hub cluster. 
 
-1. You can view additional details on the cluster resource placement's snapshots, bindings, works, and scheduling policy snapshots by using the individual tabs. For example, select the **Cluster Resources Snapshots** tab.
+1. On the service menu, under **Fleet Resources**, select **Resource placements** > **+ Create**.
 
-    :::image type="content" source="./media/quickstart-resource-propagation/crp-snapshot-inline.png" lightbox="./media/quickstart-resource-propagation/crp-snapshot.png" alt-text="Screenshot of the Azure portal page for a cluster resource placement, with the Cluster Resources Snapshots tab selected.":::
+1. On the **Basics** tab, configure the following options:
 
----
+    - In **Placement details**, enter a name for the placement.
+    - Under **Resource details**, leave **Scope** as **Cluster-scoped** and enter the Group Version Kind (GVK) and name of the resource to distribute. In this sample, use the following values.
 
-## Clean up resources
+        ```yaml
+        group: ""
+        kind: Namespace
+        version: v1          
+        name: test-app
+        ```
 
-### [Azure CLI](#tab/azure-cli)
+    - In **Member cluster selection**, for **Placement type** choose **All clusters**.
+    - For **Rollout**, leave the **Rolling update** strategy selected.
+    
+    :::image type="content" source="./media/quickstart-resource-propagation/fleet-placement-create-placement-basics-tab.png" lightbox="./media/quickstart-resource-propagation/fleet-placement-create-placement-basics-tab.png" alt-text="Screenshot of the Azure portal showing the completed Basics tab for cluster-scoped resource placement for a namespace called test-app.":::
 
-If you no longer want to use the `ClusterResourcePlacement` object, you can delete it by using the `kubectl delete` command. The following example deletes the `ClusterResourcePlacement` object named `distribute-my-namespace`:
+1. Select **Next** to review the resulting `ClusterResourcePlacement` manifest. You can modify the manifest if required, validate by using the **Validate (dry run)** option, or select **Review + create** to proceed to final confirmation.
+
+    :::image type="content" source="./media/quickstart-resource-propagation/fleet-placement-create-placement-review-yaml-tab.png" lightbox="./media/quickstart-resource-propagation/fleet-placement-create-placement-review-yaml-tab.png" alt-text="Screenshot of the Azure portal showing the Review YAML tab with a passed dry run validation for cluster-scoped resource placement for a namespace called test-app.":::
+
+1. Select **Create** to start the distribution of the namespace immediately.
+
+    :::image type="content" source="./media/quickstart-resource-propagation/fleet-placement-create-placement-review-create.png" lightbox="./media/quickstart-resource-propagation/fleet-placement-create-placement-review-create.png" alt-text="Screenshot of the Azure portal showing the Review and create tab for a cluster-scoped resource placement for a namespace called test-app.":::
+
+    > [!NOTE]
+    > The resource rollout begins immediately when you apply the resource placement by using the selected `RollingUpdate` strategy. To learn how to have additional controls over the rollout, see [defining a rollout strategy for resource placement](./concepts-rollout-strategy.md).
+
+1. The page refreshes and the **Resource placements** list displays the newly created placement. It shows the number of clusters selected and whether the fleet scheduler can fulfill the placement policy.
+
+    :::image type="content" source="./media/quickstart-resource-propagation/fleet-placement-create-placement-list-view.png" lightbox="./media/quickstart-resource-propagation/fleet-placement-create-placement-list-view.png" alt-text="Screenshot of the Azure portal showing the resource placements list with a single resource placement called distribute-test-app.":::
+
+1. View the rollout status of the placement by selecting the placement name in the list. Select individual clusters to view the resource rollout on that cluster.
+
+    :::image type="content" source="./media/quickstart-resource-propagation/fleet-placement-create-placement-rollout-details.png" lightbox="./media/quickstart-resource-propagation/fleet-placement-create-placement-rollout-details.png" alt-text="Screenshot of the Azure portal showing the detailed rollout information of a resource placement called distribute-test-app.":::
+
+On the selected Kubernetes clusters, you find the namespace, Deployment, and Service deployed and operational.
+
+:::zone-end
+
+## Delete the placement to remove resources
+
+When you delete the resource placement on the Fleet Manager hub cluster, you remove the distributed resources from selected member clusters.
+
+:::zone target="docs" pivot="azure-cli"
 
 ```bash
-kubectl delete clusterresourceplacement distribute-my-namespace
+kubectl delete clusterresourceplacement distribute-test-app
 ```
 
-### [Azure portal](#tab/azure-portal)
+:::zone-end
 
-If you no longer want to use your cluster resource placement, you can delete it from the Azure portal:
+:::zone target="docs" pivot="azure-portal"
 
 1. On the service menu, under **Fleet Resources**, select **Resource placements**.
-1. Select the cluster resource placement objects that you want to delete, and then select **Delete**.
-1. On the **Delete** tab, verify that you chose the correct objects. When you're ready, select **Confirm delete** > **Delete**.
+1. In the resource placements list, select the placement and select **Delete**.
+1. On **Delete**, verify that you chose the correct placement. When you're ready, select **Confirm delete** > **Delete**.
 
----
+    :::image type="content" source="./media/quickstart-resource-propagation/fleet-placement-delete-placement.png" lightbox="./media/quickstart-resource-propagation/fleet-placement-delete-placement.png" alt-text="Screenshot of the Azure portal showing a resource placement called distribute-test-app being deleted.":::
+
+1. The page refreshes and the placement no longer appears in the list. The resources are removed from member clusters.
+
+:::zone-end
 
 ## Related content
 
-To learn more about resource propagation, see the following resources:
+To learn more about resource placement, see the following resources:
 
+* [Deploy namespace-scoped resources across multiple clusters](./quickstart-namespace-scoped-resource-propagation.md)
 * [Understanding resource placement status output](./howto-understand-placement.md).
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters' properties](./intelligent-resource-placement.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
 * [Cluster resource placement FAQs](./faq.md#cluster-resource-placement-faqs).
-* [Open-source KubeFleet documentation](https://kubefleet.dev/docs/concepts/crp/).
+* [Open-source KubeFleet ClusterResourcePlacement documentation](https://kubefleet.dev/docs/concepts/crp/).

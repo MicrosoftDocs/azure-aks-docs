@@ -4,10 +4,10 @@ description: Learn how to authorize Kubernetes API access in Azure Kubernetes Se
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.subservice: aks-security
-ms.custom: devx-track-azurecli
-ms.date: 07/06/2026
-ms.author: shasb
-author: shashankbarsin
+ms.custom: devx-track-azurecli, aeo-round-2
+ms.date: 08/18/2026
+ms.author: schaffererin
+author: schaffererin
 ai-usage: ai-assisted
 # Customer intent: "As a cluster operator, I want to authorize access to the Kubernetes API using Microsoft Entra ID identities and granular conditions, so that I can govern cluster access at scale across many clusters from a single identity plane."
 ---
@@ -187,7 +187,9 @@ AKS provides the following built-in roles:
 
 ## Create custom roles definitions
 
-For built-in Kubernetes resources, custom role definitions reference the corresponding API group action under `Microsoft.ContainerService/managedClusters/`. The following example allows a user to only read deployments and nothing else. For the full list of possible actions, see [Microsoft.ContainerService operations](/azure/role-based-access-control/resource-provider-operations#microsoftcontainerservice). To filter access to specific custom resource (CRD) groups or kinds, see [Restrict custom resource access using ABAC conditions](#restrict-custom-resource-access-using-abac-conditions-preview) later in this article.
+For built-in Kubernetes resources, custom role definitions reference the corresponding API group action under `Microsoft.ContainerService/managedClusters/`. The following example allows a user to only read deployments and nothing else. For the full list of possible actions, see [Microsoft.ContainerService operations](/azure/role-based-access-control/resource-provider-operations#microsoftcontainerservice).
+
+For custom resources, the custom role must grant the applicable custom resource data action, such as `Microsoft.ContainerService/managedClusters/customresources/read`. A custom role alone doesn't filter access by custom resource definition (CRD) group or kind. To apply that filtering, add an Azure ABAC condition to the role assignment. For the complete procedure, see [Restrict custom resource access using ABAC conditions](#restrict-custom-resource-access-using-abac-conditions-preview).
 
 1. To create your own custom role definitions, copy the following file, replace `<YOUR-SUBSCRIPTION-ID>` with your own subscription ID, and then save it as `deploy-view.json`.
 

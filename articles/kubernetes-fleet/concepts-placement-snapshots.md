@@ -1,7 +1,7 @@
 ---
 title: "Understanding snapshots for Azure Kubernetes Fleet Manager resource placement"
 description: This article describes how Fleet Manager's cluster resource placement and resource placement manage snapshots.
-ms.date: 12/04/2025
+ms.date: 07/24/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,6 +10,8 @@ ms.topic: concept-article
 ---
 
 # Understanding snapshots for Azure Kubernetes Fleet Manager resource placement
+
+**Applies to**: :heavy_check_mark: Fleet Manager with hub cluster
 
 Fleet Manager keeps a history of the 10 most recently used placement scheduling policies, along with resource versions the placement selected. These policy and resource versions are held as snapshot objects:
 
@@ -89,9 +91,6 @@ spec:
 ### Viewing ResourceSnapshot (for ResourcePlacement)
 
 For namespace-scoped placements using `ResourcePlacement`, view `ResourceSnapshot` objects within the namespace.
-
-> [!NOTE]
-> `ResourcePlacement` uses the `placement.kubernetes-fleet.io/v1beta1` API version and is currently in preview.
 
 In this sample, we have a `ResourcePlacement` in the `my-app` namespace with updated ConfigMaps, leading to two snapshots.
 
@@ -228,4 +227,4 @@ spec:
 [learn-conceptual-crp]: ./concepts-resource-placement.md
 [learn-conceptual-rp]: ./concepts-namespace-scoped-resource-propagation.md
 [fleet-hub-cluster]: ./access-fleet-hub-cluster-kubernetes-api.md
-[crp-staged-rollouts]: ./concepts-rollout-strategy.md#staged-update-strategy-preview
+[crp-staged-rollouts]: ./concepts-rollout-strategy.md#staged-update-strategy

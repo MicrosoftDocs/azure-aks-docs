@@ -1,7 +1,7 @@
 ---
-title: Concepts - CNI Networking in AKS
-description: Learn about CNI networking options in Azure Kubernetes Service (AKS)
-ms.topic: concept-article
+title: Concepts - CNI Networking in Azure Kubernetes Service (AKS)
+description: Learn about CNI networking in AKS, including overlay and flat network models, IP address management (IPAM) options, and how to choose the right networking model for your cluster.
+ms.topic: overview
 ms.date: 07/10/2026
 author: schaffererin
 ms.author: schaffererin
@@ -13,13 +13,13 @@ ms.custom: fasttrack-edit
 
 # Azure Kubernetes Service (AKS) CNI networking overview
 
-Kubernetes uses Container Networking Interface (CNI) plugins to manage networking in Kubernetes clusters. CNI plug-ins are responsible for assigning IP addresses to pods, network routing between pods, Kubernetes service routing, and more.
+Kubernetes uses Container Networking Interface (CNI) plugins to manage networking in Kubernetes clusters. CNI plugins handle assigning IP addresses to pods, routing network traffic between pods, routing Kubernetes service traffic, and more.
 
-Azure Kubernetes Service (AKS) provides multiple CNI plugins that you can use in your clusters, depending on your networking requirements.
+Azure Kubernetes Service (AKS) provides multiple CNI networking configurations that you can use in your clusters, depending on your networking requirements. When you plan pod networking, you choose an IP address management (IPAM) option and a routing and transport technology for the network data plane.
 
 ## Networking models in AKS
 
-Choosing a CNI plugin for your AKS cluster largely depends on which networking model fits your needs best. Each model has its own advantages and disadvantages that you should consider when planning your AKS cluster.
+Choosing an IPAM option for your AKS cluster largely depends on which networking model fits your needs best. Each model has its own advantages and disadvantages that you should consider when planning your AKS cluster.
 
 AKS uses two main networking models:
 
@@ -32,40 +32,42 @@ AKS uses two main networking models:
   - Provides full VNet connectivity for pods. Pods can be directly reached via their private IP address from connected networks.
   - Requires large, non-fragmented IP address space for VNets.
 
-Both networking models have multiple supported options for CNI plugins. The main differences between the models are how pod IP addresses are assigned and how traffic leaves the cluster.
+Both networking models support multiple IPAM options. The main differences between the models are how you assign pod IP addresses and how traffic leaves the cluster.
+
+For Azure CNI, the IPAM option is separate from the network data plane. You can use the Azure CNI Powered by Cilium data plane with Azure CNI Overlay, Azure CNI Pod Subnet, or Azure CNI Node Subnet. For more information about IPAM and data-plane options, see [Plan pod networking for AKS][plan-pod-networking].
 
 ### Overlay networks
 
-Overlay networking is the most common networking model used in Kubernetes. Overlay networking assigns pod IPs from a separate pod CIDR that's distinct from the node subnet in the VNet. This configuration allows for simpler and often better scalability than the flat network model.
+Overlay networking in AKS assigns pod IP addresses from a separate pod CIDR that's distinct from the node subnet in the VNet. This configuration allows for simpler and often better scalability than the flat network model.
 
 In overlay networks, pods can communicate with each other directly. Traffic that leaves the cluster is Source Network Address Translated (SNAT'd) to the node's IP address. Inbound pod IP traffic is routed through a service, such as a load balancer. The pod IP address is then "hidden" behind the node's IP address. This approach reduces the number of IP addresses required for virtual networks in your clusters.
 
 :::image type="content" source="media/azure-cni-Overlay/azure-cni-overlay.png" alt-text="Diagram that shows two nodes, with three pods each, running in an overlay network. Pod traffic to endpoints outside the cluster is routed via network address translation.":::
 
-For overlay networking, AKS provides the [Azure CNI Overlay][azure-cni-overlay] plugin. We recommend this CNI plugin for most scenarios.
+For overlay networking, AKS provides [Azure CNI Overlay][azure-cni-overlay]. Use this IPAM option for most scenarios.
 
 ### Flat networks
 
-Unlike an overlay network, a flat network model in AKS assigns IP addresses to pods from a subnet from the same Azure virtual network as the AKS nodes. Traffic that leaves your clusters is not SNAT'd, and the pod IP address is directly exposed to the destination. This approach can be useful for some scenarios, such as when you need to expose pod IP addresses to external services.
+Unlike an overlay network, a flat network model in AKS assigns IP addresses to pods from a subnet in the same Azure virtual network as the AKS nodes. For private network traffic, the source IP address that a destination sees depends on the IPAM option. Azure CNI Pod Subnet preserves the pod IP address across connected virtual networks. With Azure CNI Node Subnet, destinations in the cluster virtual network see the pod IP address, but destinations outside the cluster virtual network see the node IP address. When internet egress is enabled, the cluster's [configured outbound method][egress-outbound-type] determines the public source IP address that internet destinations see.
 
 :::image type="content" source="media/networking-overview/azure-cni-flat-network-architecture.png" alt-text="Diagram that shows two nodes, with three pods each, running in a flat network model.":::
 
-AKS provides two CNI plugins for flat networking:
+AKS provides two Azure CNI IPAM options for flat networking:
 
-- [Azure CNI Pod Subnet][azure-cni-pod-subnet], the recommended CNI plugin for flat networking scenarios.
+- [Azure CNI Pod Subnet][azure-cni-pod-subnet], the recommended IPAM option for flat networking scenarios.
 - [Azure CNI Node Subnet][azure-cni-node-subnet], a legacy CNI model for flat networks. In general, we recommend that you use it only if you need a managed virtual network for your cluster.
 
-## Choosing a CNI plugin
+## Choose an IPAM option for AKS
 
-When you're choosing a CNI plugin, there are several factors to consider. Each networking model has its own advantages and disadvantages. The best choice for your cluster depends on your specific requirements.
+When choosing an IPAM option, consider several factors. Each networking model has its own advantages and disadvantages. The best choice for your cluster depends on your specific requirements.
 
 ### Use case comparison
 
-| CNI plugin | Networking model | Use case highlights |
+| IPAM option | Networking model | Use case highlights |
 | ---------- | ---------------- | ------------------- |
 | Azure CNI Overlay | Overlay | • Best for conserving IPs for virtual networks <br> • Maximum node count supported by API server plus 250 pods per node <br> • Simpler configuration <br> • No direct external pod IP access |
 | Azure CNI Pod Subnet | Flat | • Direct external pod access <br> • Modes for efficient IP usage for virtual networks _or_ large cluster scale support (preview) |
-| Kubenet (legacy) | Overlay | • Prioritization of IP conservation <br> • Limited scale <br> • Manual route management |
+| Kubenet (legacy) | Overlay | • Retires on March 31, 2028; [migrate to Azure CNI Overlay][update-azure-cni] before the retirement date <br> • Prioritization of IP conservation <br> • Limited scale <br> • Manual route management |
 | Azure CNI Node Subnet (legacy) | Flat | • Direct external pod access <br> • Simpler configuration <br> • Limited scale <br> • Inefficient use of IPs for virtual networks |
 
 ### Feature comparison
@@ -85,7 +87,7 @@ When you're choosing a CNI plugin, there are several factors to consider. Each n
 
 ### Support scope between network models
 
-Depending on the CNI plugin that you use, you can deploy the virtual network resources for your cluster in one of the following ways:
+Depending on the IPAM option that you use, you can deploy the virtual network resources for your cluster in one of the following ways:
 
 - The Azure platform can automatically create and configure the virtual network resources when you create an AKS cluster.
 - You can manually create and configure the virtual network resources and attach to those resources when you create your AKS cluster.
@@ -95,18 +97,33 @@ Although capabilities like service endpoints or UDRs are supported, the [support
 - If you manually create the virtual network resources for an AKS cluster, you're supported when configuring your own UDRs or service endpoints.
 - If the Azure platform automatically creates the virtual network resources for your AKS cluster, you can't manually change those AKS-managed resources to configure your own UDRs or service endpoints.
 
-## Prerequisites
+## AKS CNI networking prerequisites
 
 When you're planning your network configuration for AKS, keep these requirements and considerations in mind:
 
-- The virtual network for the AKS cluster must allow outbound internet connectivity.
-- AKS address ranges for Kubernetes services, pods, and cluster virtual networks must not overlap `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24`. For example, `172.16.0.0/12` is invalid because it includes `172.30.0.0/16` and `172.31.0.0/16`. AKS rejects overlapping pod CIDRs during cluster creation or update.
-- In scenarios where you bring your own virtual network, the cluster identity that the AKS cluster uses must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network. If you want to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
-  - `Microsoft.Network/virtualNetworks/subnets/join/action`
-  - `Microsoft.Authorization/roleAssignments/write`
-  - `Microsoft.Network/virtualNetworks/subnets/read` (needed only if you're defining your own subnets and CIDRs)
+- Unless you use a [network isolated cluster][network-isolated-cluster], the virtual network for the AKS cluster must allow outbound internet connectivity to required endpoints. Network isolated clusters can bootstrap without outbound internet connectivity.
+- AKS address ranges have the following restrictions:
+
+    | Reserved CIDR range | Applies to | Condition |
+    | --- | --- | --- |
+    | `169.254.0.0/16` | Kubernetes service, pod, and cluster virtual network address ranges | All AKS clusters |
+    | `192.0.2.0/24` | Kubernetes service, pod, and cluster virtual network address ranges | All AKS clusters |
+    | `172.30.0.0/16` | Kubernetes service, pod, and cluster virtual network address ranges | All AKS clusters |
+    | `172.31.0.0/16` | Kubernetes service, pod, and cluster virtual network address ranges | All AKS clusters |
+
+    AKS rejects pod CIDRs that overlap a reserved range during cluster creation or update. For example, `172.16.0.0/12` isn't valid because the range includes `172.30.0.0/16` and `172.31.0.0/16`.
+
+- In scenarios where you bring your own virtual network, the cluster identity that the AKS cluster uses must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network.
+- If you define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, include the following permissions:
+
+    | Permission | When required |
+    | --- | --- |
+    | `Microsoft.Network/virtualNetworks/subnets/join/action` | Always when using a custom role |
+    | `Microsoft.Authorization/roleAssignments/write` | Always when using a custom role |
+    | `Microsoft.Network/virtualNetworks/subnets/read` | Only when defining your own subnets and CIDRs |
+
 - The subnet assigned to the AKS node pool can't be a [delegated subnet][delegated-subnet].
-- AKS doesn't apply network security groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure that the security rules in the NSGs allow traffic within the node CIDR range. For more information, see [Azure network security groups overview][aks-network-nsg].
+- AKS doesn't apply network security groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure that the security rules in the NSGs allow traffic within the node CIDR range. With Azure CNI Overlay, if an NSG deny rule affects pod CIDR traffic, you must also allow traffic from the node CIDR to the pod CIDR and from the pod CIDR to the pod CIDR on all ports and protocols. For more information, see [Network security groups with Azure CNI Overlay][azure-cni-overlay-nsg].
 - Container Network Service (CNS) is a node local service within Azure Kubernetes Service CNI networking which allocates, tracks and programs networking for pods. This component sends telemetry (metrics and logs) by default out of the cluster to a Microsoft managed Application Insights endpoint to enable faster troubleshooting of any pod networking IP address assignment issues.
 
 ## Related content
@@ -122,8 +139,13 @@ When you're planning your network configuration for AKS, keep these requirements
 [aks-network-nsg]: /azure/virtual-network/network-security-groups-overview
 [azure-cni-node-subnet]: concepts-network-legacy-cni.md#azure-cni-node-subnet
 [azure-cni-overlay]: concepts-network-azure-cni-overlay.md
+[azure-cni-overlay-nsg]: concepts-network-azure-cni-overlay.md#network-security-groups
 [azure-cni-pod-subnet]: concepts-network-azure-cni-pod-subnet.md
 [delegated-subnet]: /azure/virtual-network/subnet-delegation-overview
+[egress-outbound-type]: egress-outboundtype.md
 [ip-address-planning]: concepts-network-ip-address-planning.md
 [legacy-cni-options]: concepts-network-legacy-cni.md
+[network-isolated-cluster]: concepts-network-isolated.md
+[plan-pod-networking]: plan-pod-networking.md
 [support-policies]: support-policies.md
+[update-azure-cni]: update-azure-cni.md

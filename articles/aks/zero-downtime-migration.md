@@ -5,7 +5,8 @@ author: schaffererin
 ms.author: schaffererin
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 07/16/2026
+ms.custom: aeo-round-2
+ms.date: 08/25/2026
 # Customer intent: As a platform engineer or SRE, I want to migrate existing workloads to Azure Kubernetes Service (AKS) with minimal or zero downtime so I can maintain availability during cutover.
 ---
 
@@ -15,12 +16,12 @@ This article describes practical, production-focused approaches for migrating ex
 
 Quick answer: Minimize downtime by running legacy and AKS environments in parallel, shifting traffic progressively (canary or weighted blue-green), handling state with replication or snapshots, and enforcing observability gates with a tested rollback playbook.
 
-Quick runbook:
+## Quick Runbook: 5 Steps for Zero-Downtime AKS Migration
 
 1. Provision target AKS, certificates, networking, and observability.
 1. Deploy the app with readiness and liveness probes, PodDisruptionBudget, and resource requests.
 1. Sync data with replication, CSI snapshots, or Velero.
-1. Shift traffic progressively (for example, 5% -> 50% -> 100%) by using Traffic Manager, ingress, or service mesh routing.
+1. Shift traffic progressively by using relative DNS weights with Traffic Manager or precise request percentages with ingress or service mesh routing.
 1. Validate SLO gates and decommission old infrastructure when stability criteria pass.
 
 You learn how to:
@@ -191,6 +192,10 @@ spec:
       containers:
       - name: myapp
         image: myregistry.azurecr.io/myapp:green
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
         ports:
         - containerPort: 8080
         readinessProbe:
@@ -227,6 +232,8 @@ spec:
     targetPort: 8080
   externalTrafficPolicy: Local
 ```
+
+The resource requests are examples. Size CPU and memory requests from observed workload usage and load-test results so that the target cluster represents production scheduling and capacity behavior.
 
 `externalTrafficPolicy: Local` preserves source IP but can reduce usable backend endpoints per node. For sticky-session applications, externalize session state (for example, Azure Cache for Redis) before migration to avoid affinity-related outages during traffic shifts.
 
@@ -325,7 +332,7 @@ az network traffic-manager endpoint update \
   --set properties.weight=90
 ```
 
-Continue through staged shifts, such as `50/50`, then `90/10`, then `100/0` to green.
+Continue through staged relative-weight shifts, such as `50:50` and then `10:90` for old and green. Traffic Manager chooses an endpoint for each DNS query based on these relative weights; the weights don't guarantee exact request percentages. DNS responses are cached by clients and recursive resolvers, which can skew the observed distribution. Hold each stage for at least the profile TTL plus enough time to measure representative application traffic before continuing. Use an L7 ingress or service mesh when you require precise per-request distribution.
 
 ## Cutover criteria, monitoring gates, and rollback playbook
 
@@ -346,7 +353,7 @@ Define explicit gates before each traffic increase.
 
 ### Rollback sequence
 
-1. Route traffic back to old endpoint immediately.
+1. Initiate routing back to the old endpoint. Clients can continue to use cached DNS responses until their TTL expires.
 1. Undo deployment or scale green to zero if needed.
 1. Re-validate old environment health and data integrity.
 

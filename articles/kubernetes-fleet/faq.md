@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 07/17/2026
+ms.date: 08/21/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -49,7 +49,7 @@ az fleet member create \
 
 ### Relationship to Azure Arc-enabled Kubernetes
 
-Fleet Manager supports both Azure-hosted AKS clusters and Arc-enabled Kubernetes clusters as member clusters.
+Fleet Manager supports both Azure-hosted AKS clusters and Azure Arc-enabled Kubernetes clusters as member clusters.
 
 ### Relationship to Azure Kubernetes Service clusters
 
@@ -97,10 +97,10 @@ Fleet Manager supports the following AKS update channels:
 * **Stable**: Updates for Kubernetes stable channel (N-1) where 'N' is the most recent AKS-supported Kubernetes release.
 * **NodeImage**: Node image VHD patched (bug and security) with a weekly release schedule.
 * **TargetKubernetesVersion (Kubernetes Patch)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that are available only via AKS Long-Term Support (LTS).
+* **SecurityPatch (Linux node images)**: Node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
 
 Currently unsupported AKS channels:
 
-* **NodeSecurityPatch**: Node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
 * **Unmanaged**: Node image OS updates applied directly through OS in-built patching (Linux nodes only). There are currently no plans for Fleet Manager to support this option.
 
 ### The target Kubernetes minor version in my auto-upgrade profile is out of community support. What can I do?
@@ -189,6 +189,30 @@ If you generate an update run and it exists, the existing update run isn't modif
 
 When you create an update run, the strategy is copied to the update run so that changes to the strategy don't affect executing update runs.
 
+### How do I prevent a single cluster failure from stopping my entire update run?
+
+Use the `maxAllowedFailures` setting on your update strategy stages and groups (available starting with API version 2026-06-02-preview). This setting lets you specify how many member cluster failures are tolerated before the group or stage is marked as failed. Values can be a fixed integer (for example, `"3"`) or a percentage (for example, `"25%"`). When unset or `"0"`, a single failure stops the entire run.
+
+For more information, see [Maximum allowed failures (preview)](./concepts-update-orchestration.md#maximum-allowed-failures-preview).
+
+### Why does my update run or group show Completed even though members failed?
+
+When you set `maxAllowedFailures`, Fleet Manager evaluates only the number of failed member updates. It doesn't enforce a minimum success rate. An update run, stage, or group can therefore end in `Completed` even if some or all members failed, as long as the configured threshold isn't exceeded when Fleet Manager makes its scheduling decisions.
+
+This outcome is expected and intentional, not a bug. Always inspect `FailureCount`, member-level statuses, and failure reasons before you treat the rollout as healthy. For most update strategies, percentage-based thresholds are easier to reason about than absolute values.
+
+### What rules and limitations should I know when using maxAllowedFailures?
+
+Keep the following rules in mind:
+
+- The feature is available starting with API version 2026-06-02-preview.
+- When you unset `maxAllowedFailures` or set it to `"0"`, Fleet Manager uses fail-fast behavior and stops after the first failed member update.
+- The threshold is evaluated against failure count only. It doesn't enforce a minimum success rate.
+- A run, stage, or group can show `Completed` even when failures occur, as long as the configured threshold isn't exceeded.
+- `FailureCount` can be greater than `maxAllowedFailures` when updates run in parallel, because multiple member updates might fail before Fleet Manager stops scheduling more work.
+- Stage-level and group-level thresholds are evaluated independently, and stage-level failures aggregate across all groups in the stage.
+- For most rollouts, percentage-based thresholds are easier to reason about and scale better than fixed numbers, especially in small groups.
+
 ### Can I preapprove an approval?
 
 No. You can approve an upgrade only after you verify that the member clusters are ready for upgrade or that the upgrade is completed successfully. If you want to preapprove, consider not configuring an approval in your strategy at all.
@@ -205,17 +229,29 @@ If you want to skip the member cluster upgrades together with the gating approva
 
 As in the previous question, if you want to proceed with an upgrade, you must grant the approval. If you're trying to clean up the underlying gate resource, you must delete the associated update run, which deletes all gates linked to the update run.
 
-### Can I configure an after stage approval together with an after stage wait?
+### Can I configure an after-stage approval together with an after-stage wait?
 
-Yes. The after stage wait begins at the same time as the approval. Both must be completed before the update run continues.
+Yes. The after-stage wait begins at the same time as the approval. Both must be completed before the update run continues.
 
-### Can approvals be added to existing update strategies?
+### Can I add approvals to existing update strategies?
 
 Yes. You can edit the existing strategy to include approvals. However, existing update runs that you created by using the strategy aren't updated.
 
 ### How do scheduled start gates interact with AKS cluster maintenance windows?
 
 Scheduled start gates and AKS cluster [planned maintenance windows](/azure/aks/planned-maintenance) are independent controls. Both conditions must be met before a cluster starts upgrading. For example, if a scheduled start gate completes at 2:00 AM but a cluster's maintenance window doesn't open until 6:00 AM, the cluster waits until 6:00 AM to begin its upgrade.
+
+### How can I control the order of cluster updates in an update run?
+
+Member labels and update groups are two different ways to select which clusters are included in each stage and group of your update strategy. Each member cluster can be assigned to one update group but can have multiple labels. Member labels (using `memberSelector`) offer more flexibility and support complex selection scenarios, so they're the recommended way to select fleet members for update strategies. For more information, see [Group clusters using member labels](./concepts-update-orchestration.md#group-clusters-using-member-labels-preview).
+
+### Do I need to specify groups if I set a member selector at the stage level?
+
+No. When you set `memberSelector` on a stage without defining any groups, all matching clusters are treated as a single group. The stage's `maxConcurrency` controls how many clusters upgrade concurrently. You only need to define groups within a stage if you want to partition the matching members into parallel subsets with different concurrency settings.
+
+### What happens to update groups if I set a member selector at the group level?
+
+If you set a `memberSelector` at the group level, the group's `name` field is used only as a display identifier for status reporting and logging. The `memberSelector` takes precedence over the update group name when selecting clusters for the group.
 
 ## Cluster resource placement FAQs
 
@@ -226,21 +262,9 @@ Yes. Fleet Manager supports both cluster-scoped and namespace-scoped resource pl
 * **ClusterResourcePlacement**: Propagates cluster-scoped resources and entire namespaces (including all their contents) to member clusters. For more information, see [Using ClusterResourcePlacement to deploy cluster-scoped resources](./concepts-resource-placement.md).
 * **ResourcePlacement**: Provides fine-grained control to select and propagate specific namespace-scoped resources (such as ConfigMaps, Secrets, Deployments) within a namespace. For more information, see [Using ResourcePlacement to deploy namespace-scoped resources](./concepts-namespace-scoped-resource-propagation.md).
 
-## Automated Deployments FAQs
-
-### How does this compare to AKS Automated Deployments?
-
-AKS Automated Deployments supports only a single AKS cluster where the deployed workload runs. Fleet Manager's Automated Deployments stages the workload definitions on the Fleet Manager hub cluster, making them available for propagation to member clusters via [cluster resource placement](./concepts-resource-placement.md). 
-
-Fleet Manager Automated Deployments also requires the use of an existing Azure Container Registry (ACR) and Fleet Manager hub cluster namespace.
-
-### Can I connect to the same Git repository multiple times?
-
-Yes, you can connect to the same repository multiple times to deploy different resources or branches from the same repository.
-
 ## Roadmap
 
-The roadmap for Azure Kubernetes Fleet Manager resource is available [on GitHub](https://aka.ms/kubernetes-fleet/roadmap).
+The Azure Kubernetes Fleet Manager roadmap is available [on GitHub](https://aka.ms/kubernetes-fleet/roadmap). The team welcomes feature requests, questions, and bug reports.
 
 ## Next steps
 

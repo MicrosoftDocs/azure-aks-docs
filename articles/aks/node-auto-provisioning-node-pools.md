@@ -50,6 +50,8 @@ spec:
   template:
     spec:
       nodeClassRef:
+        group: karpenter.azure.com
+        kind: AKSNodeClass
         name: default
       expireAfter: Never
       # Requirements that constrain the parameters of provisioned nodes.

@@ -4,9 +4,10 @@ description: Learn about the options for connecting to a private AKS cluster, in
 ms.topic: how-to
 ms.author: davidsmatlak
 author: davidsmatlak
-ms.date: 09/30/2025
+ms.date: 08/13/2026
 ms.service: azure-kubernetes-service
 ms.subservice: aks-security
+ms.custom: aeo-round-2
 zone_pivot_groups: private-cluster-connect
 # Customer intent: "As a cloud administrator, I want to know how to connect to a private AKS cluster so that I can manage it securely."
 ---
@@ -278,18 +279,97 @@ Once the `A` record is created, link the private DNS zone to the virtual network
 
 ## Create a VM in the same virtual network
 
-To create a VM in the same VNet as your private AKS cluster, use the [`az vm create`][az-vm-create] command with the `--vnet-name` flag to specify the VNet.
+The following steps create an Ubuntu VM in an existing subnet in the same VNet as your private AKS cluster. Before you begin, make sure that you have permission to create VMs in the VNet and access the AKS cluster.
 
-```azurecli-interactive
-az vm create \
-    --resource-group <resource-group-name> \
-    --name <vm-name> \
-    --image <image-name> \
-    --vnet-name <vm-virtual-network-name> \
-    --subnet <subnet-name> \
-    --admin-username <admin-username> \
-    --admin-password <admin-password>
-```
+1. Set the variables for your AKS cluster and the VM that you want to create.
+
+    ```azurecli-interactive
+    AKS_RESOURCE_GROUP=<aks-resource-group-name>
+    AKS_CLUSTER_NAME=<aks-cluster-name>
+    VM_NAME=<vm-name>
+    VM_ADMIN_USERNAME=<vm-admin-username>
+    ```
+
+1. Get the resource ID of the subnet used by the first AKS node pool, and then identify its parent VNet.
+
+    ```azurecli-interactive
+    AKS_SUBNET_ID=$(az aks show \
+        --resource-group $AKS_RESOURCE_GROUP \
+        --name $AKS_CLUSTER_NAME \
+        --query "agentPoolProfiles[0].vnetSubnetId" \
+        --output tsv)
+
+    VNET_ID=${AKS_SUBNET_ID%/subnets/*}
+    VNET_NAME=$(az network vnet show --ids $VNET_ID --query name --output tsv)
+    VNET_RESOURCE_GROUP=$(az network vnet show --ids $VNET_ID --query resourceGroup --output tsv)
+    ```
+
+1. List the subnets in the AKS VNet, and choose an existing subnet for the VM. Use a subnet that has enough available IP addresses and permits connectivity to the private API server. Don't deploy the VM into the AKS node subnet.
+
+    ```azurecli-interactive
+    az network vnet subnet list \
+        --resource-group $VNET_RESOURCE_GROUP \
+        --vnet-name $VNET_NAME \
+        --query "[].{Name:name, AddressPrefix:addressPrefix}" \
+        --output table
+
+    VM_SUBNET_NAME=<vm-subnet-name>
+    ```
+
+1. Create the VM in the VNet's resource group using the [`az vm create`][az-vm-create] command. This command uses SSH keys for authentication and doesn't create a public IP address.
+
+    ```azurecli-interactive
+    az vm create \
+        --resource-group $VNET_RESOURCE_GROUP \
+        --name $VM_NAME \
+        --image Ubuntu2204 \
+        --size Standard_B2s \
+        --vnet-name $VNET_NAME \
+        --subnet $VM_SUBNET_NAME \
+        --admin-username $VM_ADMIN_USERNAME \
+        --authentication-type ssh \
+        --generate-ssh-keys \
+        --public-ip-address ""
+    ```
+
+1. Connect to the VM through Azure Bastion or from a network that can reach the VM's private IP address. On the VM, install the Azure CLI, `kubectl`, and the `nslookup` utility.
+
+    ```bash
+    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+    sudo az aks install-cli
+    sudo apt-get update && sudo apt-get install --yes dnsutils
+    ```
+
+1. On the VM, set the AKS cluster variables, sign in to Azure, select the subscription that contains the cluster, and retrieve the cluster credentials.
+
+    ```azurecli-interactive
+    AKS_RESOURCE_GROUP=<aks-resource-group-name>
+    AKS_CLUSTER_NAME=<aks-cluster-name>
+
+    az login --use-device-code
+    az account set --subscription <subscription-id>
+    az aks get-credentials \
+        --resource-group $AKS_RESOURCE_GROUP \
+        --name $AKS_CLUSTER_NAME
+    ```
+
+1. Verify that the private API server fully qualified domain name (FQDN) resolves to a private IP address from the VM.
+
+    ```azurecli-interactive
+    AKS_PRIVATE_FQDN=$(az aks show \
+        --resource-group $AKS_RESOURCE_GROUP \
+        --name $AKS_CLUSTER_NAME \
+        --query privateFqdn \
+        --output tsv)
+
+    nslookup $AKS_PRIVATE_FQDN
+    ```
+
+1. Verify connectivity and authorization to the private API server.
+
+    ```bash
+    kubectl get nodes
+    ```
 
 :::zone-end
 
