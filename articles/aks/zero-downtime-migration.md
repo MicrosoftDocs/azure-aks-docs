@@ -1,20 +1,20 @@
 ---
 title: Zero-Downtime Migration to Azure Kubernetes Service (AKS)
-description: Migrate existing workloads to Azure Kubernetes Service (AKS) with minimal or zero downtime by using Blue-Green, Canary, and Rolling DNS migration strategies.
+description: Migrate workloads to Azure Kubernetes Service (AKS) or release application updates in an existing cluster with minimal or zero downtime.
 author: schaffererin
 ms.author: schaffererin
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.custom: aeo-round-2
-ms.date: 08/25/2026
-# Customer intent: As a platform engineer or SRE, I want to migrate existing workloads to Azure Kubernetes Service (AKS) with minimal or zero downtime so I can maintain availability during cutover.
+ms.date: 08/26/2026
+# Customer intent: As a platform engineer or SRE, I want to migrate workloads to Azure Kubernetes Service (AKS) or release application updates in an existing cluster with minimal or zero downtime so I can maintain availability during cutover and deployment.
 ---
 
 # Zero-downtime migration to Azure Kubernetes Service (AKS)
 
-This article describes practical, production-focused approaches for migrating existing workloads to Azure Kubernetes Service (AKS) with minimal or zero downtime.
+This article describes practical, production-focused approaches for migrating existing workloads to Azure Kubernetes Service (AKS) and releasing new application versions in an existing AKS cluster with minimal or zero downtime.
 
-Quick answer: Minimize downtime by running legacy and AKS environments in parallel, shifting traffic progressively (canary or weighted blue-green), handling state with replication or snapshots, and enforcing observability gates with a tested rollback playbook.
+Quick answer: For a migration, run the source and AKS environments in parallel and shift traffic progressively. For a recurring application release in one AKS cluster, use a rolling update, canary, or in-cluster blue-green deployment with readiness probes, controlled traffic shifts, observability gates, and a tested rollback.
 
 ## Quick Runbook: 5 Steps for Zero-Downtime AKS Migration
 
@@ -26,6 +26,7 @@ Quick answer: Minimize downtime by running legacy and AKS environments in parall
 
 You learn how to:
 
+- Release a new application version in an existing AKS cluster without replacing the cluster.
 - Compare Blue-Green, Canary, and Rolling DNS migration strategies.
 - Run a pre-migration readiness checklist with AKS-specific commands.
 - Perform a full Blue-Green cluster migration by using AKS and Azure Traffic Manager.
@@ -60,6 +61,83 @@ Use this table when you need a quick strategy recommendation by workload type.
 - Argo Rollouts or Flagger: best when you want automated progressive delivery, metric analysis, and automatic rollback.
 
 Use Traffic Manager for global DNS-level weighting and combine it with Argo Rollouts or Flagger when you need automated rollout analysis inside the cluster.
+
+## Release an application in an existing AKS cluster
+
+Recurring application releases don't require a second cluster or a DNS cutover. For a stateless application that already runs in AKS, use a Kubernetes `Deployment` with multiple replicas and a `RollingUpdate` strategy. Kubernetes creates new-version pods in the same cluster, waits for them to become ready, and then removes old-version pods gradually.
+
+The following example keeps all existing replicas available while Kubernetes starts one additional pod at a time:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  minReadySeconds: 10
+  progressDeadlineSeconds: 600
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: myapp
+        image: myregistry.azurecr.io/myapp:v2
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          periodSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 8080
+          periodSeconds: 10
+          failureThreshold: 3
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 30"]
+```
+
+Make sure the cluster has capacity for the surge pod. Apply the manifest, monitor the rollout, and verify the new image:
+
+```bash
+kubectl apply -f manifests/app-deployment.yaml
+kubectl rollout status deployment/myapp --timeout=10m
+kubectl get pods -l app=myapp -o custom-columns=NAME:.metadata.name,IMAGE:.spec.containers[0].image,READY:.status.containerStatuses[0].ready
+```
+
+For later releases, update the image and monitor the Deployment rollout:
+
+```bash
+kubectl set image deployment/myapp myapp=myregistry.azurecr.io/myapp:v3
+kubectl rollout status deployment/myapp --timeout=10m
+```
+
+Monitor error rate, latency, pod readiness, and business transactions during the rollout. If a gate fails, stop or undo the release:
+
+```bash
+kubectl rollout pause deployment/myapp
+kubectl rollout undo deployment/myapp
+kubectl rollout status deployment/myapp --timeout=10m
+```
+
+A PodDisruptionBudget protects replicas during voluntary eviction operations such as node drains, but it doesn't control how a `Deployment` replaces pods during an application rollout. Use `maxUnavailable` and `maxSurge` to control release availability. For applications that need request-level traffic percentages or automated metric analysis, run stable and canary versions in the same cluster and use an ingress controller, service mesh, Argo Rollouts, or Flagger to shift traffic progressively.
 
 ## Before you begin
 

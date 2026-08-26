@@ -3,7 +3,7 @@ title: Network security best practices for Azure Kubernetes Service (AKS)
 description: Learn how to plan network policies, service exposure, ingress security, and API server access for a production Azure Kubernetes Service (AKS) cluster.
 author: schaffererin
 ms.topic: best-practice
-ms.date: 08/25/2026
+ms.date: 08/26/2026
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: aeo-round-2
@@ -23,15 +23,47 @@ Start with private access and add public exposure only when the workload require
 
 Use the following guidance when you plan a production AKS cluster:
 
-| Network surface | Recommended approach | Security considerations |
-|-----------------|----------------------|-------------------------|
-| Services used only inside the cluster | Use a [`ClusterIP` Service](concepts-network-services.md#clusterip), which is the default Service type. | Apply ingress and egress network policies so that only authorized pods and namespaces can reach the Service's backing pods. |
-| Services used from a private network | Use an [internal `LoadBalancer` Service](internal-lb.md) or an internal ingress controller. | The private IP limits access to networks that have connectivity to the virtual network. Also restrict source networks with network security groups, firewalls, and network policies. |
-| Public non-HTTP or non-HTTPS services | Use a public `LoadBalancer` Service only when direct external access is required. | Restrict allowed source IP ranges, expose only required ports, and avoid using `NodePort` as a direct production exposure mechanism. |
-| Public HTTP or HTTPS applications | Place services behind an [ingress controller](concepts-network-ingress.md) or Gateway API implementation instead of assigning a public IP to every Service. | Centralize TLS termination, routing, authentication, and public IP management. Configure backend Services as `ClusterIP` when direct external access isn't required. |
-| Internet-facing web applications and APIs | Put an [Azure WAF](/azure/web-application-firewall/overview) in front of the ingress layer, such as with [Azure Application Gateway for Containers](/azure/application-gateway/for-containers/overview). | Use managed and custom WAF rules to help protect against common web exploits. Restrict direct access to the ingress origin so clients can't bypass the WAF. |
-| Kubernetes API server | Prefer a [private AKS cluster](private-clusters.md) when administrators and automation can connect through a private network. | A private cluster keeps API server traffic on a private endpoint. Plan DNS, VPN, ExpressRoute, peering, or a secured management host for administrative access. |
-| Public Kubernetes API server | If a public endpoint is required, configure [API server authorized IP ranges](api-server-authorized-ip-ranges.md) and use Microsoft Entra ID with least-privilege RBAC. | Allow only known management and automation source ranges. Don't leave the API server open to all source IP addresses. Consider [API Server VNet Integration](api-server-vnet-integration.md) when the design requires private network connectivity or changing public access after cluster creation. |
+### Services used only inside the cluster
+
+> **Recommendation**: Use a [`ClusterIP` Service](./concepts-network-services.md#clusterip), which is the default Service type.
+
+Apply ingress and egress network policies so that only authorized pods and namespaces can reach the Service's backing pods.
+
+### Services used from a private network
+
+> **Recommendation**: Use an [internal `LoadBalancer` Service](./internal-lb.md) or an internal ingress controller.
+
+The private IP limits access to networks that have connectivity to the virtual network. Also restrict source networks with network security groups, firewalls, and network policies.
+
+### Public non-HTTP or non-HTTPS services
+
+> **Recommendation**: Use a public `LoadBalancer` Service only when direct external access is required.
+
+Restrict allowed source IP ranges, expose only required ports, and avoid using `NodePort` as a direct production exposure mechanism.
+
+### Public HTTP or HTTPS applications
+
+> **Recommendation**: Place services behind an [ingress controller](./concepts-network-ingress.md) or Gateway API implementation instead of assigning a public IP to every Service.
+
+Centralize TLS termination, routing, authentication, and public IP management. Configure backend Services as `ClusterIP` when direct external access isn't required.
+
+### Internet-facing web applications and APIs
+
+> **Recommendation**: Put an [Azure web application firewall (WAF)](/azure/web-application-firewall/overview) in front of the ingress layer, such as with [Azure Application Gateway for Containers](/azure/application-gateway/for-containers/overview).
+
+Use managed and custom WAF rules to help protect against common web exploits. Restrict direct access to the ingress origin so clients can't bypass the WAF.
+
+### Kubernetes API server
+
+> **Recommendation**: Prefer a [private AKS cluster](./private-clusters.md) when administrators and automation can connect through a private network.
+
+A private cluster keeps API server traffic on a private endpoint. Plan DNS, VPN, ExpressRoute, peering, or a secured management host for administrative access.
+
+### Public Kubernetes API server
+
+> **Recommendation**: If a public endpoint is required, configure [API server authorized IP ranges](./api-server-authorized-ip-ranges.md) and use Microsoft Entra ID with least-privilege RBAC.
+
+Allow only known management and automation source ranges. Don't leave the API server open to all source IP addresses. Consider [API Server VNet Integration](./api-server-vnet-integration.md) when the design requires private network connectivity or changing public access after cluster creation.
 
 Inventory every inbound path before deployment and document whether it must be cluster-internal, private to connected networks, or public. Avoid parallel public paths that bypass the approved ingress and WAF layer. Reserve public IP addresses for endpoints with a documented internet-access requirement, and periodically review public `LoadBalancer`, ingress, and API server endpoints for continued need.
 
