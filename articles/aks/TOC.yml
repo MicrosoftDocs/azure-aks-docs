@@ -304,6 +304,8 @@
           href: start-stop-nodepools.md
         - name: Create proximity placement groups
           href: reduce-latency-ppg.md
+        - name: Troubleshoot agent node pools
+          href: troubleshoot-agent-pool.md
     - name: Virtual nodes
       items:
         - name: Use virtual nodes
