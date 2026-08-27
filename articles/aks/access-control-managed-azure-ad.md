@@ -8,6 +8,7 @@ ms.date: 11/10/2025
 author: shashankbarsin
 ms.author: shasb
 ms.custom: devx-track-azurecli
+ai-usage: ai-assisted
 # Customer intent: "As a cloud security administrator, I want to configure Conditional Access for my AKS clusters, so that I can manage access securely and ensure compliance for users accessing the clusters and nodes."
 ---
 
@@ -16,18 +17,20 @@ ms.custom: devx-track-azurecli
 When you integrate Microsoft Entra ID with your AKS cluster, you can use [Conditional Access][aad-conditional-access] to control access to your cluster control plane and cluster nodes. This article shows you how to enable Conditional Access on your AKS clusters for both control plane access and SSH access to nodes.
 
 > [!NOTE]
-> Microsoft Entra Conditional Access has Microsoft Entra ID P1, P2, or Governance capabilities requiring a Premium P2 SKU. For more on Microsoft Entra ID licenses and SKUs, see [Microsoft Entra ID Governance licensing fundamentals][licensing-fundamentals] and [pricing guide][aad-pricing].
+> Microsoft Entra Conditional Access requires a Microsoft Entra ID P1 license. Risk-based Conditional Access policies require Microsoft Entra ID P2. For more information, see [Microsoft Entra licensing][entra-licensing] and the [pricing guide][aad-pricing].
 
 ## Before you begin
 
-* See [Microsoft Entra integration](./managed-azure-ad.md) for an overview and setup instructions.
-* For SSH access to nodes, see [Manage SSH for secure access to Azure Kubernetes Service (AKS) nodes](./manage-ssh-node-access.md) to configure Entra ID based SSH.
+* See [Enable Microsoft Entra ID authentication for the AKS control plane](./entra-id-control-plane-authentication.md) for an overview and setup instructions.
+* For SSH access to nodes, see [Manage SSH for secure access to Azure Kubernetes Service (AKS) nodes](./manage-ssh-node-access.md) to configure Microsoft Entra ID-based SSH.
 
 ## Use Conditional Access with Microsoft Entra ID and AKS
 
 You can use Conditional Access to control access to both the AKS cluster control plane and SSH access to cluster nodes.
 
 ### Configure Conditional Access for cluster control plane access
+
+This policy applies to the **Azure Kubernetes Service Microsoft Entra Server** enterprise application, which controls access to the AKS control plane.
 
 1. In the Azure portal, go to the **Microsoft Entra ID** page and select **Enterprise applications**.
 1. Select **Conditional Access** > **Policies** > **New policy**.
@@ -57,9 +60,9 @@ After implementing your Conditional Access policy, verify that it works as expec
     az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER --overwrite-existing
     ```
 
-1. Follow the instructions to sign in.
+1. Follow the sign-in prompt to authenticate to Microsoft Entra ID and satisfy the Conditional Access policy requirements.
 
-1. View the nodes in the cluster using the `kubectl get nodes` command.
+1. View the nodes in the cluster using the [`kubectl get nodes`](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/kubectl_get_nodes/) command.
 
     ```azurecli-interactive
     kubectl get nodes
@@ -78,10 +81,11 @@ After implementing your Conditional Access policy, verify that it works as expec
 1. In the Azure portal, navigate to **Microsoft Entra ID** and select **Enterprise applications** > **Activity** > **Sign-ins**.
 
 1. Under the **Conditional Access** column you should see a status of *Success*. Select the event and then select the **Conditional Access** tab. Your Conditional Access policy will be listed.
+1. The verification succeeds when `kubectl get nodes` returns the node list and the sign-in event shows *Success*.
 
 ## Configure Conditional Access for SSH access to cluster nodes
 
-When you enable Entra ID based SSH access on your AKS cluster nodes, you can apply Conditional Access policies to control SSH access to the nodes. This provides additional security by enforcing device compliance, multifactor authentication, or other conditions before users can SSH into cluster nodes.
+When you enable Microsoft Entra ID-based SSH access on your AKS cluster nodes, you can apply Conditional Access policies to control SSH access to the nodes. This policy applies to the **Azure Linux Virtual Machine Sign-In** enterprise application, which controls SSH authentication to Linux nodes. It provides additional security by enforcing device compliance, multifactor authentication, or other conditions before users can SSH into cluster nodes.
 
 1. In the Azure portal, go to the **Microsoft Entra ID** page and select **Enterprise applications**.
 1. Select **Conditional Access** > **Policies** > **New policy**.
@@ -92,11 +96,11 @@ When you enable Entra ID based SSH access on your AKS cluster nodes, you can app
 1. Confirm your settings, set **Enable policy** to **On**, and then select **Create**.
 
 > [!NOTE]
-> For Entra ID based SSH to work with Conditional Access, ensure that your AKS cluster nodes are configured with `--ssh-access entraid`. For more information, see [Manage SSH for secure access to Azure Kubernetes Service (AKS) nodes](./manage-ssh-node-access.md).
+> For Microsoft Entra ID-based SSH to work with Conditional Access, ensure that your AKS cluster nodes are configured with `--ssh-access entraid`. For more information, see [Manage SSH for secure access to Azure Kubernetes Service (AKS) nodes](./manage-ssh-node-access.md).
 
 ### Verify Conditional Access for SSH access to nodes
 
-After implementing your Conditional Access policy for SSH access to nodes, verify that it works as expected:
+After implementing your Conditional Access policy for SSH access to Linux nodes, verify that it works as expected. You need an existing AKS cluster with Microsoft Entra ID-based SSH enabled, the node resource group name, and the name of a Linux node.
 
 1. Ensure you have the appropriate Azure RBAC permissions:
    - **Virtual Machine Administrator Login** role for admin access
@@ -108,19 +112,25 @@ After implementing your Conditional Access policy for SSH access to nodes, verif
     az extension add --name ssh
     ```
 
-1. SSH into a node using Entra ID authentication:
+1. Get the node name using the [`kubectl get nodes`](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/kubectl_get_nodes/) command. Use this name for `<node-name>` in the next step.
 
     ```azurecli-interactive
-    az ssh vm --resource-group $RESOURCE_GROUP --name <node-name>
+    kubectl get nodes
     ```
 
-1. During the authentication flow, you'll be prompted to satisfy the Conditional Access policies (e.g., device compliance, MFA).
+1. SSH into a node using Microsoft Entra ID authentication. Replace `<node-resource-group>` with the resource group that contains the AKS node and `<node-name>` with the name you retrieved in the previous step:
+
+    ```azurecli-interactive
+    az ssh vm --resource-group <node-resource-group> --name <node-name>
+    ```
+
+1. During the authentication flow, sign in with your Microsoft Entra ID credentials and satisfy the Conditional Access policy requirements, such as device compliance or multifactor authentication.
 
 1. After successful authentication that meets the Conditional Access requirements, you'll be connected to the node.
 
 1. In the Azure portal, navigate to **Microsoft Entra ID** and select **Enterprise applications** > **Activity** > **Sign-ins**.
 
-1. Find the sign-in event for **Azure Linux Virtual Machine Sign-In** and verify that under the **Conditional Access** column you see a status of *Success*.
+1. Find the sign-in event for **Azure Linux Virtual Machine Sign-In** and verify that under the **Conditional Access** column you see a status of *Success*. The verification succeeds when you connect to the node and the sign-in event shows *Success*.
 
 ## Next steps
 
@@ -128,14 +138,14 @@ For more information, see the following articles:
 
 * Use [kubelogin](https://github.com/Azure/kubelogin) to access features for Azure authentication that aren't available in kubectl.
 * [Use Privileged Identity Management (PIM) to control access to your Azure Kubernetes Service (AKS) clusters][pim-aks].
-* Configure node-side access modes that inherit Conditional Access, including Microsoft Entra ID based SSH, with [Manage SSH access on AKS cluster nodes][manage-ssh-node-access].
+* Configure node-side access modes that inherit Conditional Access, including Microsoft Entra ID-based SSH, with [Manage SSH access on AKS cluster nodes][manage-ssh-node-access].
 
 <!-- LINKS - External -->
 [aad-pricing]: https://azure.microsoft.com/pricing/details/active-directory/
 
 <!-- LINKS - Internal -->
 [aad-conditional-access]: /azure/active-directory/conditional-access/overview
-[licensing-fundamentals]: /entra/id-governance/licensing-fundamentals
+[entra-licensing]: /entra/fundamentals/licensing#microsoft-entra-conditional-access
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [pim-aks]: ./privileged-identity-management.md
 [manage-ssh-node-access]: ./manage-ssh-node-access.md
