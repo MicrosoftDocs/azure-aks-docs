@@ -3,7 +3,8 @@ title: Use Virtual Machines Node Pools in Azure Kubernetes Service (AKS)
 description: Learn how to add multiple Virtual Machine types of a similar family to a Virtual Machines node pool in an AKS cluster.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 08/07/2026
+ai-usage: ai-assisted
+ms.date: 08/27/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -58,16 +59,49 @@ Depending on your workload needs, there are multiple compute scaling experiences
 - Virtual Machines node pools: best for multiversion manual scaling and supports multiversion autoscaling. Requires specific version selection of up to five sizes per node pool.
 - [Virtual Machine Scale Sets][VMSS orchestrate]: supports single-version manual scaling and single-version autoscaling. Requires specific version selection of one size per node pool.
 
-
-
 ## Virtual Machines node pool limitations
 - VM Sizes specified in the pool must be of the same type. For example, GPU and non-GPU or x86 and ARM64 virtual machines cannot be in the same node pool.
 - [InifiniBand][InifiniBand] isn't available.
 - [Node pool snapshot][node pool snapshot] isn't supported.
 - All VM sizes selected in a node pool need to be from a similar virtual machine family. For example, you can't mix an N-Series virtual machine type with a D-Series virtual machine type in the same node pool.
+- You need to select all VM sizes in a node pool that support the same ephemeral OS disk placement when you use ephemeral OS disks. Because `DiffDiskPlacement` is a single pool-level value, AKS can't express different placements per VM size in one node pool.
 - Virtual Machines node pools allow up to five scale profiles total per node pool. Each manual or autoscale profile specifies one VM size from the same VM family.
 - Windows node pools aren't supported.
 - Availability zones aren't supported. If your workload requires zone resiliency, use [Virtual Machine Scale Sets][VMSS orchestrate] node pools.
+
+### Ephemeral OS disk placement compatibility
+
+When you add a scale profile that mixes VM sizes with different ephemeral OS disk placements, the create or update operation fails with an `InvalidParameter` error and the subcode `EphemeralOSMixedPlacementNotSupported`.
+
+Use one of the following remediation options:
+
+- Use VM sizes that share the same ephemeral OS disk placement.
+- Split VM sizes into separate node pools so each pool has one placement.
+- Use managed OS disks instead of ephemeral OS disks.
+
+#### Determine placement before you add a scale profile
+
+Before you add a VM size to a Virtual Machines node pool, check SKU capabilities in the target region and verify ephemeral OS disk placement compatibility.
+
+1. List candidate VM sizes and inspect key capabilities:
+
+    ```azurecli-interactive
+    az vm list-skus \
+        --location <region> \
+        --size Standard_D \
+        --resource-type virtualMachines \
+        --query "[].{name:name, capabilities:capabilities[?name=='EphemeralOSDiskSupported' || name=='MaxResourceVolumeMB' || name=='NvmeDiskSizeInMiB']}" \
+        --output json
+    ```
+
+1. Confirm each selected VM size supports ephemeral OS disks (`EphemeralOSDiskSupported`) and identify where local disk is available (`MaxResourceVolumeMB` for temp/resource disk and `NvmeDiskSizeInMiB` for NVMe).
+1. Group VM sizes so each Virtual Machines node pool uses a single compatible placement.
+
+For example, if one profile uses `Standard_D4ds_v5` (temp/resource disk placement) and another profile uses `Standard_D4ads_v6` (NVMe placement), keep them in separate node pools or use managed OS disks.
+
+> [!IMPORTANT]
+> **Preflight and what-if behavior**
+> No dedicated preflight API currently validates mixed ephemeral OS disk placement across scale profiles before deployment. `az deployment group what-if` (ARM what-if) doesn't guarantee detection of this node-pool compatibility conflict. The authoritative check occurs when AKS processes the create or update request and returns `EphemeralOSMixedPlacementNotSupported` if placements are incompatible.
 
 ## Prerequisites
 
