@@ -3,7 +3,8 @@ title: Azure Kubernetes Service (AKS) Core Concepts
 description: Learn about the core concepts of Azure Kubernetes Service (AKS).
 ms.topic: concept-article
 ms.custom: aks-getting-started
-ms.date: 07/10/2024
+ms.date: 07/29/2026
+ms.service: azure-kubernetes-service
 author: davidsmatlak
 ms.author: davidsmatlak
 # Customer intent: As a cloud architect, I want to understand the core concepts of managed Kubernetes services so that I can effectively deploy and manage containerized applications at scale in a cloud environment.
@@ -60,7 +61,7 @@ These architecture concepts are the same in both [AKS cluster modes](#cluster-mo
 
 ### Control plane
 
-The Azure managed control plane is composed of several components that help manage the cluster:
+The following table describes the components that make up the Azure-managed AKS control plane:
 
 | Component | Description |
 | --------- | ----------- |
@@ -74,17 +75,17 @@ The control plane remains Azure-managed in both AKS Automatic and AKS Standard. 
 
 ### Nodes
 
-Each AKS cluster has at least one node, which is an Azure VM that runs Kubernetes node components. The following components run on each node:
+Each AKS cluster has at least one node, which is an Azure VM that runs Kubernetes node components. The following table describes the Kubernetes components that run on each AKS node:
 
 | Component | Description |
 | --------- | ----------- |
 | `kubelet` | The [kubelet][kubelet] ensures that containers are running in a pod. |
-| `kube-proxy` | The [kube-proxy][kube-proxy] is a network proxy that maintains network rules on nodes. |
+| `kube-proxy` or Cilium | The [kube-proxy][kube-proxy] is a network proxy that maintains network rules on nodes. Clusters that use [Azure CNI powered by Cilium][cilium] use Cilium instead of `kube-proxy`. |
 | `container runtime` | The [container runtime][container-runtime] manages the execution and lifecycle of containers. |
 
 ![Screenshot that shows Azure virtual machine and supporting resources for a Kubernetes node.](media/concepts-clusters-workloads/aks-node-resource-interactions.png)
 
-Nodes run the same core Kubernetes node components in both [AKS cluster modes](#cluster-modes), including `kubelet`, `kube-proxy`, and the `container runtime`. The difference is in the default operations experience:
+Nodes run the same core Kubernetes node components in both [AKS cluster modes](#cluster-modes), including `kubelet` and the `container runtime`. Depending on the cluster's network data plane, nodes use either `kube-proxy` or Cilium for service routing. The difference is in the default operations experience:
 
 - AKS Automatic uses preconfigured defaults for common node-related operations.
 - AKS Standard provides more flexibility to configure and operate node behavior directly.
@@ -99,7 +100,7 @@ Configure the following settings for nodes.
 
 The _Azure VM size_ for your nodes defines CPUs, memory, size, and the storage type available, such as a high-performance solid-state drive or a regular hard-disk drive. The VM size you choose depends on the workload requirements and the number of pods that you plan to run on each node. Starting May 2025, the default VM SKU and size is dynamically selected by AKS based on available capacity and quota if the parameter is left blank during deployment. For more information, see [Supported VM sizes in Azure Kubernetes Service (AKS)][aks-vm-sizes].
 
-In AKS, the _VM image_ for your cluster's nodes is based on Ubuntu Linux, [Azure Linux](use-azure-linux.md), or Windows Server 2022. When you create an AKS cluster or scale out the number of nodes, the Azure platform automatically creates and configures the requested number of VMs. Agent nodes are billed as standard VMs. Any VM size discounts, including [Azure reservations][reservation-discounts], are automatically applied.
+AKS provides _VM images_ for supported Linux operating systems, including Ubuntu Linux, [Azure Linux](use-azure-linux.md), and [Azure Container Linux](/azure/azure-linux/azure-container-linux-overview), and supported Windows operating systems, including Windows Server 2022 and Windows Server 2025. For current OS and image availability, see [Node images in Azure Kubernetes Service][node-images]. When you create an AKS cluster or scale out the number of nodes, the Azure platform automatically creates and configures the requested number of VMs. Agent nodes are billed as standard VMs. Any VM size discounts, including [Azure reservations][reservation-discounts], are automatically applied.
 
 ### OS disks
 
@@ -111,7 +112,7 @@ AKS uses node resources to help the nodes function as part of the cluster. This 
 
 ### OS
 
-AKS supports two Linux distros: Ubuntu and Azure Linux. Ubuntu is the default Linux distro on AKS. Windows node pools are also supported on AKS with the [Long Term Servicing Channel (LTSC)][servicing-channels-comparison] as the default channel on AKS. For more information on default OS versions, see documentation on [node images][node-images].
+AKS supports multiple Linux operating systems, including Ubuntu, Azure Linux, and [Azure Container Linux](/azure/azure-linux/azure-container-linux-overview). AKS Standard uses Ubuntu by default, while [AKS Automatic](./intro-aks-automatic.md) preconfigures Azure Linux for its managed system node pool. Windows node pools are also supported on AKS with the [Long Term Servicing Channel (LTSC)][servicing-channels-comparison] as the default channel. For current OS versions and defaults, see [Node images in AKS][node-images].
 
 ### Container runtime
 
@@ -126,7 +127,7 @@ A _pod_ is a group of one or more containers that share the same network and sto
 > [!NOTE]
 > [AKS Automatic](./intro-aks-automatic.md) preconfigures and manages system node pool behavior and node provisioning defaults. AKS Standard expects explicit node pool design and lifecycle choices. For more information, see [AKS Automatic and Standard feature comparison][automatic-standard].
 
-In AKS, nodes of the same configuration are grouped together into _node pools_. These node pools contain the underlying virtual machine scale sets and virtual machines (VMs) that run your applications.
+In AKS, nodes are grouped together into _node pools_. By default, node pools use Virtual Machine Scale Sets to manage the VMs that run your applications. AKS also supports [Virtual Machines node pools][virtual-machines-node-pools], where AKS directly manages individual VMs.
 
 When you create an AKS cluster, you define the initial number of nodes and their size and version, which creates a [_system node pool_][use-system-pool]. System node pools serve the primary purpose of hosting critical system pods, such as CoreDNS (`coredns`) and konnectivity (`konnectivity-agent`).
 
@@ -136,7 +137,7 @@ For more information, see [Create node pools in AKS][create-node-pools] and [Man
 
 ## Node resource group
 
-When you create an AKS cluster in an Azure resource group, the AKS resource provider automatically creates a second resource group called the _node resource group_. This resource group contains all the infrastructure resources associated with the cluster, including VMs, virtual machine scale sets, and storage.
+When you create an AKS cluster in an Azure resource group, the AKS resource provider automatically creates a second resource group called the _node resource group_. This resource group contains all the infrastructure resources associated with the cluster, including VMs, Virtual Machine Scale Sets, and storage.
 
 For more information, see the following resources:
 
@@ -163,11 +164,20 @@ The following namespaces are created by default in an AKS cluster:
 
 AKS offers three pricing tiers for cluster management: Free, Standard, and Premium. The pricing tier you choose determines the features that are available for managing your cluster.
 
+| Pricing tier | Feature description |
+| ------------ | ------------------- |
+| Free | Includes all current AKS features. Supports up to 1,000 nodes. No financially backed uptime SLA. |
+| Standard | Uptime SLA enabled by default. Higher reliability profile. Includes all current AKS features. Supports up to 5,000 nodes. |
+| Premium | Includes all current AKS features plus [Microsoft maintenance beyond community support][long-term-support]. |
+
+> [!NOTE]
+> The Standard pricing tier is separate from AKS Standard cluster mode.
+
 For more information, see [Pricing tiers for AKS cluster management][pricing-tiers].
 
-## Supported Kubernetes versions
+## Supported Kubernetes versions in AKS
 
-For more information, see [Supported Kubernetes versions in AKS][supported-kubernetes-versions].
+To learn about supported Kubernetes versions in AKS, including the version support policy, breaking changes by version, and the deprecation policy, see [Supported Kubernetes versions in AKS][supported-kubernetes-versions].
 
 ## Related content
 
@@ -194,6 +204,7 @@ For information on AKS and AKS Automatic, see the following resources:
 [container-runtime]: https://kubernetes.io/docs/concepts/overview/components/#container-runtime
 [create-node-pools]: ./create-node-pools.md
 [manage-node-pools]: ./manage-node-pools.md
+[virtual-machines-node-pools]: ./virtual-machines-node-pools.md
 [node-resource-group]: ./faq.yml
 [custom-nrg]: ./faq.yml
 [modify-nrg-resources]: ./faq.yml
@@ -212,11 +223,12 @@ For information on AKS and AKS Automatic, see the following resources:
 [resource-reservations]: ./node-resource-reservations.md
 [reservation-discounts]: /azure/cost-management-billing/reservations/save-compute-costs-reservations
 [supported-kubernetes-versions]: ./supported-kubernetes-versions.md
-[default-os-disk]: ./concepts-storage.md#default-os-disk-sizing
-[ephemeral-os-disks]: ./concepts-storage.md#ephemeral-os-disk
+[default-os-disk]: ./concepts-storage.md#default-os-disk-sizing-in-aks
+[ephemeral-os-disks]: ./concepts-storage.md#ephemeral-os-disks-in-aks
 [aks-overview]: ./what-is-aks.md
 [containerd]: https://containerd.io/
-[aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes
+[aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes-in-aks
+[cilium]: ./azure-cni-powered-by-cilium.md
 [windows-considerations]: ./windows-vs-linux-containers.md
 [upgrade-2019-2022]: ./upgrade-windows-os.md
 [node-images]: ./node-images.md

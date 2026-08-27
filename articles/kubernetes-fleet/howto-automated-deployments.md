@@ -5,7 +5,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
 ms.custom: build-2025
-ms.date: 07/28/2026
+ms.date: 08/21/2026
 ms.service: azure-kubernetes-fleet-manager
 # Customer intent: As a DevOps engineer, I want to configure automated deployments using a multi-cluster strategy, so that I can build and deploy applications across multiple Kubernetes clusters while maintaining security and resource optimization.
 ---
@@ -145,7 +145,7 @@ Review the configuration for the repository, image, and deployment configuration
 
 :::image type="content" source="media/automated-deployments/fleet-auto-deploy-review.png" alt-text="Screenshot showing the configuration of an Automated Deployment so it can be reviewed before being submitted." lightbox="media/automated-deployments/fleet-auto-deploy-review.png" :::
 
-Select **Next** to start the process, which performs these actions:
+Select **Next** to start the process. This process performs these actions:
 
 1. Creates federated credentials to allow the GitHub Action to:
     1. Push the built container image to the Azure Container Registry.
@@ -269,7 +269,7 @@ During preview, to configure placement of your staged workload on to member clus
 
 1. Commit the new CRP manifest and updated GitHub Action workflow file.
 
-1. Check that the workload is placed according to the policy defined in the CRP definition. You check using either the Azure portal or `kubectl` at the command line.
+1. Check that the workload is placed according to the policy defined in the CRP definition. You can check by using either the Azure portal or `kubectl` at the command line.
 
 :::image type="content" source="media/automated-deployments/fleet-auto-deploy-check-placement.png" alt-text="Screenshot of the Fleet Manager Resource Placements showing a successfully completed placement." lightbox="media/automated-deployments/fleet-auto-deploy-check-placement.png" :::
 
@@ -277,7 +277,6 @@ During preview, to configure placement of your staged workload on to member clus
 
  * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
  * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
- * [Automated Deployments FAQs](./faq.md#automated-deployments-faqs).
 
 [azure-portal]: https://portal.azure.com
 [portal-fleets]: https://portal.azure.com/#browse/Microsoft.ContainerService%2Ffleets

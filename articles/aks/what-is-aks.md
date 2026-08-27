@@ -35,7 +35,7 @@ AKS offers two modes for creating and operating clusters. Use the following tabl
 | Feature | AKS Automatic | AKS Standard |
 | ------- | ------------- | ------------ |
 | **Best for** | Developer teams, new workloads, quick onboarding, and production applications | Platform teams that require full infrastructure control |
-| **Node management** | Fully managed - Azure provisions, scales, and upgrades nodes automatically using [node auto-provisioning](./node-autoprovision.md) | You create and manage node pools manually |
+| **Node management** | Fully managed - Azure provisions, scales, and upgrades nodes automatically by using [node auto-provisioning](./node-auto-provisioning.md) | You create and manage node pools manually |
 | **Security defaults** | Azure RBAC, [Workload Identity](./workload-identity-overview.md), [OIDC Issuer](./use-oidc-issuer.md), [deployment safeguards](./deployment-safeguards.md) in enforcement mode, and [Image Cleaner](./image-cleaner.md) are all on by default | Opt-in per feature |
 | **Monitoring** | Managed Prometheus, Container Insights, and Azure Monitor dashboards with Grafana are on by default | Opt-in per feature |
 | **Cluster upgrades** | Automatic via the stable channel; OS image upgrades run on the NodeImage channel | Manual by default; [automatic upgrade channel](./auto-upgrade-cluster.md) is optional |

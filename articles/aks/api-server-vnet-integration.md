@@ -39,13 +39,13 @@ API Server VNet Integration is supported for public or private clusters. You can
 ## Prerequisites
 
 - You must have Azure CLI version 2.73.0 or later installed. You can check your version using the `az --version` command.
-- If you bring your own virtual network, review the [virtual network prerequisites](concepts-network-cni-overview.md#prerequisites).
+- If you bring your own virtual network, review the [virtual network prerequisites](concepts-network-cni-overview.md#aks-cni-networking-prerequisites).
 
 ## Limitations
 
 The following limitations apply to API Server VNet Integration, whether it's preconfigured on AKS Automatic or explicitly enabled on AKS Standard:
 
-- API Server VNet Integration doesn't support [Virtual Network Encryption](/azure/virtual-network/virtual-network-encryption-overview). Clusters deployed on **v3 or earlier AKS node SKUs** (which don't support VNet Encryption) are allowed, but traffic isn't encrypted. Clusters deployed on **v4 or later AKS node SKUs** (which support VNet Encryption) are blocked because encrypted VNets are incompatible with API Server VNet Integration. For more information, see [AKS supported VM SKUs](quotas-skus-regions.md#supported-vm-sizes).
+- API Server VNet Integration doesn't support [Virtual Network Encryption](/azure/virtual-network/virtual-network-encryption-overview). Clusters deployed on **v3 or earlier AKS node SKUs** (which don't support VNet Encryption) are allowed, but traffic isn't encrypted. Clusters deployed on **v4 or later AKS node SKUs** (which support VNet Encryption) are blocked because encrypted VNets are incompatible with API Server VNet Integration. For more information, see [AKS supported VM SKUs](quotas-skus-regions.md#supported-vm-sizes-in-aks).
 - To use dual-stack networking your cluster needs Kubernetes version 1.26.3 or later, network plugin `azure` and network plugin mode `overlay`. For more information, see [Azure CNI cluster with dual-stack networking](azure-cni-overlay.md).
 
 ## Availability

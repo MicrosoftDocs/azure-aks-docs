@@ -319,7 +319,7 @@ After resizing a node pool by cordoning and draining, learn more about [using mu
 [vm-node-pools]: ./virtual-machines-node-pools.md
 [aks-support-policies]: support-policies.md#user-customization-of-agent-nodes
 [update-node-pool-mode]: use-system-pools.md#update-existing-cluster-system-and-user-node-pools
-[pod-disruption-budget]: operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets
+[pod-disruption-budget]: operator-best-practices-scheduler.md#limit-disruption-impact-by-using-pod-disruption-budgets-pdbs
 [empty-dir]: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir
 [specify-disruption-budget]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 [disruptions]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/

@@ -56,7 +56,7 @@ export FLEET=<fleet-name>
 export MEMBER_CLUSTER_1=aks-member-1
 export MEMBER_CLUSTER_2=aks-member-2
 export NETWORK_NAME=<network-name>
-export FLEET_NETWORK_PROFILE_NAME=fccnp-demo-01
+export NETWORK_PROFILE_NAME=fccnp-demo-01
 export CC_NETWORK_NAME=demo-01
 ```
 
@@ -224,7 +224,7 @@ Let's set up a new cross-cluster network by using the AKS clusters you provision
     az fleet clustermeshprofile apply \
         --what-if \
         --fleet-name ${FLEET} \
-        --resource-group ${GROUP} \
+        --resource-group ${FLEET_RESOURCE_GROUP} \
         --name ${NETWORK_PROFILE_NAME} \
         --output table
     ```
@@ -243,8 +243,8 @@ Let's set up a new cross-cluster network by using the AKS clusters you provision
     ```azurecli-interactive
     az fleet clustermeshprofile apply \
         --fleet-name ${FLEET} \
-        --resource-group ${GROUP} \
-        --name ${NETWORK_PROFILE_NAME} 
+        --resource-group ${FLEET_RESOURCE_GROUP} \
+        --name ${NETWORK_PROFILE_NAME}
     ```
     
     The cross-cluster network creation starts with the Cilium components being configured on the selected member clusters. The creation process is asynchronous, and the overall duration depends on the number of clusters being joined.
@@ -254,7 +254,7 @@ Let's set up a new cross-cluster network by using the AKS clusters you provision
     ```azurecli-interactive
     az fleet clustermeshprofile show \
         --fleet-name ${FLEET} \
-        --resource-group ${GROUP} \
+        --resource-group ${FLEET_RESOURCE_GROUP} \
         --name ${NETWORK_PROFILE_NAME} \
         --query "properties.status.state" \
         -o tsv
@@ -273,7 +273,7 @@ Let's set up a new cross-cluster network by using the AKS clusters you provision
     ```azurecli-interactive
     az fleet clustermeshprofile list-members \
         --fleet-name ${FLEET} \
-        --resource-group ${GROUP} \
+        --resource-group ${FLEET_RESOURCE_GROUP} \
         --name ${NETWORK_PROFILE_NAME} \
         --query "[].{name: name, state: meshProperties.status.state}" \
         -o table
@@ -345,14 +345,14 @@ When the member cluster states show as `Connected`, the cross-cluster network is
 
     ```azurecli-interactive
     az aks get-credentials \
-        --resource-group ${GROUP} \
+        --resource-group ${CLUSTER_RESOURCE_GROUP} \
         --name ${MEMBER_CLUSTER_1} \
         --context cluster1
     ```
     
     ```azurecli-interactive
     az aks get-credentials \
-        --resource-group ${GROUP} \
+        --resource-group ${CLUSTER_RESOURCE_GROUP} \
         --name ${MEMBER_CLUSTER_2} \
         --context cluster2
     ```
@@ -469,8 +469,8 @@ The process of adding or removing clusters from a cross-cluster network follows 
     ```azurecli-interactive
     az fleet member update \
         --fleet-name ${FLEET} \
-        --resource-group ${GROUP} \
-        --name ${MEMBER_CLUSTER_1} \
+        --resource-group ${FLEET_RESOURCE_GROUP} \
+        --name mbr-${MEMBER_CLUSTER_1} \
         --labels "network=none"
     ```
     
@@ -480,13 +480,13 @@ The process of adding or removing clusters from a cross-cluster network follows 
     az fleet clustermeshprofile apply \
         --what-if \
         --fleet-name ${FLEET} \
-        --resource-group ${GROUP} \
+        --resource-group ${FLEET_RESOURCE_GROUP} \
         --name ${NETWORK_PROFILE_NAME} \
         --output table
     ```
-    
-    As you're creating a new cross-cluster network, both clusters have an `Add` action.
-    
+
+    The `aks-member-1` cluster shows a `Remove` action as you're removing it.
+
     ```output
     Action    ClusterResourceId                   ETag        MeshMembershipState    Name
     --------  ----------------------------------  ----------  ---------------------  ----------------
@@ -501,7 +501,7 @@ The process of adding or removing clusters from a cross-cluster network follows 
     ```azurecli-interactive
     az fleet clustermeshprofile apply \
         --fleet-name ${FLEET} \
-        --resource-group ${GROUP} \
+        --resource-group ${FLEET_RESOURCE_GROUP} \
         --name ${NETWORK_PROFILE_NAME} \
         --output table
     ```
@@ -651,8 +651,8 @@ Without this permission, the AKS load balancer controller can't assign an intern
 The AKS cluster identity normally receives a **Network Contributor** role assignment on the virtual network or subnet when the cluster is created, but in some configurations this assignment isn't created. Manually grant the AKS cluster identity the **Network Contributor** role on the virtual network for every affected member cluster, then force a reconcile on the cluster using the `az aks update` command so the new role takes effect.
 
 ```azurecli-interactive
-AKS_IDENTITY=$(az aks show --resource-group ${GROUP} --name ${MEMBER_CLUSTER_1} --query "identity.principalId" -o tsv)
-VNET_ID=$(az network vnet show --resource-group ${GROUP} --name <vnet-name> --query id -o tsv)
+AKS_IDENTITY=$(az aks show --resource-group ${CLUSTER_RESOURCE_GROUP} --name ${MEMBER_CLUSTER_1} --query "identity.principalId" -o tsv)
+VNET_ID=$(az network vnet show --resource-group ${CLUSTER_RESOURCE_GROUP} --name ${NETWORK_NAME} --query id -o tsv)
 
 az role assignment create \
     --assignee-object-id ${AKS_IDENTITY} \
@@ -660,7 +660,7 @@ az role assignment create \
     --role "Network Contributor" \
     --scope ${VNET_ID}
 
-az aks update --resource-group ${GROUP} --name ${MEMBER_CLUSTER_1}
+az aks update --resource-group ${CLUSTER_RESOURCE_GROUP} --name ${MEMBER_CLUSTER_1}
 ```
 
 Once the cluster is updated with the role assignment, run `az fleet clustermeshprofile apply` again.

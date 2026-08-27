@@ -86,7 +86,7 @@ You can migrate from cluster autoscaler to node auto provisioning by using one o
 - Allow cluster autoscaler and node auto provisioning to co-exist in the same cluster.
   - This path allows a more gradual transition for existing clusters that use cluster autoscaler to move workloads to NAP-managed nodes. This path introduces more complexity and might result in overprovisioning by one or both autoscalers unless carefully managed. How to mitigate this risk is detailed in the following section.
   - The existing cluster autoscaler enabled node pools keep running, and you separate them by using taints and tolerations. Migrate workloads by changing the taints and tolerations to move from existing node pools to new NAP-managed nodes.
-  - - Follow [these steps](#path-2-run-cluster-autoscaler-and-node-auto-provisioning-side-by-side) for this path.
+  - Follow [these steps](#path-2-run-cluster-autoscaler-and-node-auto-provisioning-side-by-side) for this path.
 
 ### Pre-migration checklist
 
@@ -505,7 +505,7 @@ kubectl apply -f nodepool-default.yaml
 This step migrates workloads on existing fixed node pools to NAP managed nodes. You can ignore this step if you are using cluster autoscaler and node auto-provisioning in the same cluster.
 
 > [!NOTE]
-> Consider setting node affinity that matches your specifications in NAP's NodePool and AKSNodeClass CRDs to ensure that your workloads can tolerate the types of nodes you defined NAP to provision and that they're scheduled to the NAP-managed nodes when desired. See the [AKS node selector and affinity documentation](./operator-best-practices-advanced-scheduler.md#control-pod-scheduling-using-node-selectors-and-affinity) for best practices.
+> Consider setting node affinity that matches your specifications in NAP's NodePool and AKSNodeClass CRDs to ensure that your workloads can tolerate the types of nodes you defined NAP to provision and that they're scheduled to the NAP-managed nodes when desired. See the [AKS node selector and affinity documentation](./operator-best-practices-advanced-scheduler.md#what-are-node-selectors-and-node-affinity) for best practices.
 
 Scale down user pools gradually (keep the system pool):
 

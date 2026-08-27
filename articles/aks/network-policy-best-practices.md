@@ -1,30 +1,84 @@
 ---
-title: Best practices for network policies in Azure Kubernetes Service (AKS)
-description: Learn the best practices for how to design and use network policies in Azure Kubernetes Service (AKS).
-author: josephyostos
+title: Network security best practices for Azure Kubernetes Service (AKS)
+description: Learn how to plan network policies, service exposure, ingress security, and API server access for a production Azure Kubernetes Service (AKS) cluster.
+author: schaffererin
 ms.topic: best-practice
-ms.date: 03/27/2024
-ms.author: josephyostos
-# Customer intent: As a Kubernetes administrator, I want to implement network policies in my Azure Kubernetes Service (AKS) environment, so that I can ensure secure and controlled communication between workloads while minimizing the risk of unauthorized access and data breaches.
+ms.date: 08/26/2026
+ms.author: schaffererin
+ms.service: azure-kubernetes-service
+ms.custom: aeo-round-2
+ms.subservice: aks-networking
+# Customer intent: As a Kubernetes administrator, I want to plan network security for a production Azure Kubernetes Service (AKS) cluster, including network policies and service exposure, so that I can minimize unauthorized access and protect workloads and management endpoints.
 ---
 
-# Best practices for network policies in Azure Kubernetes Service (AKS)
-Kubernetes, by default, operates as a flat network where all pods can communicate freely with each other. This unrestricted connectivity can be convenient for developers but poses significant security risks as applications scale. Imagine an organization deploying multiple microservices, each handling sensitive data, customer transactions, or backend operations. Without any restrictions, any compromised pod could potentially access unauthorized data or disrupt services.
+# Network security best practices for Azure Kubernetes Service (AKS)
 
-To address these security concerns, [Network Policies in Kubernetes](https://kubernetes.io/docs/concepts/services-networking/network-policies/) allow administrators to control and restrict traffic between workloads. They provide a declarative way to enforce traffic rules, ensuring secure and controlled network behavior within a cluster.
+Kubernetes, by default, operates as a flat network where all pods can communicate freely with each other. This unrestricted connectivity can be convenient for developers but poses significant security risks as applications scale. Imagine an organization deploying multiple microservices, each handling sensitive data, customer transactions, or backend operations. Without any restrictions, any compromised pod could access unauthorized data or disrupt services.
 
-## What is Kubernetes Network Policy?
+Production network security requires controls for both workload communication and endpoint exposure. Use [Kubernetes network policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/) to restrict traffic between workloads, choose the least-exposed Kubernetes Service type that meets each application's requirements, and limit access to the Kubernetes API server.
 
-A Network Policy in Kubernetes is a set of rules that control how pods communicate with each other and with external services. It provides fine-grained control over network traffic, allowing administrators to enforce security and segmentation at the namespace level.
-By implementing Network Policies, you gain:
+## Plan service and cluster exposure
+
+Start with private access and add public exposure only when the workload requires it. Network policies complement, but don't replace, Kubernetes Services, ingress controls, web application firewalls (WAFs), or API server access controls.
+
+Use the following guidance when you plan a production AKS cluster:
+
+### Services used only inside the cluster
+
+> **Recommendation**: Use a [`ClusterIP` Service](./concepts-network-services.md#clusterip), which is the default Service type.
+
+Apply ingress and egress network policies so that only authorized pods and namespaces can reach the Service's backing pods.
+
+### Services used from a private network
+
+> **Recommendation**: Use an [internal `LoadBalancer` Service](./internal-lb.md) or an internal ingress controller.
+
+The private IP limits access to networks that have connectivity to the virtual network. Also restrict source networks with network security groups, firewalls, and network policies.
+
+### Public non-HTTP or non-HTTPS services
+
+> **Recommendation**: Use a public `LoadBalancer` Service only when direct external access is required.
+
+Restrict allowed source IP ranges, expose only required ports, and avoid using `NodePort` as a direct production exposure mechanism.
+
+### Public HTTP or HTTPS applications
+
+> **Recommendation**: Place services behind an [ingress controller](./concepts-network-ingress.md) or Gateway API implementation instead of assigning a public IP to every Service.
+
+Centralize TLS termination, routing, authentication, and public IP management. Configure backend Services as `ClusterIP` when direct external access isn't required.
+
+### Internet-facing web applications and APIs
+
+> **Recommendation**: Put an [Azure web application firewall (WAF)](/azure/web-application-firewall/overview) in front of the ingress layer, such as with [Azure Application Gateway for Containers](/azure/application-gateway/for-containers/overview).
+
+Use managed and custom WAF rules to help protect against common web exploits. Restrict direct access to the ingress origin so clients can't bypass the WAF.
+
+### Kubernetes API server
+
+> **Recommendation**: Prefer a [private AKS cluster](./private-clusters.md) when administrators and automation can connect through a private network.
+
+A private cluster keeps API server traffic on a private endpoint. Plan DNS, VPN, ExpressRoute, peering, or a secured management host for administrative access.
+
+### Public Kubernetes API server
+
+> **Recommendation**: If a public endpoint is required, configure [API server authorized IP ranges](./api-server-authorized-ip-ranges.md) and use Microsoft Entra ID with least-privilege RBAC.
+
+Allow only known management and automation source ranges. Don't leave the API server open to all source IP addresses. Consider [API Server VNet Integration](./api-server-vnet-integration.md) when the design requires private network connectivity or changing public access after cluster creation.
+
+Inventory every inbound path before deployment and document whether it must be cluster-internal, private to connected networks, or public. Avoid parallel public paths that bypass the approved ingress and WAF layer. Reserve public IP addresses for endpoints with a documented internet-access requirement, and periodically review public `LoadBalancer`, ingress, and API server endpoints for continued need.
+
+## What is a Kubernetes network policy?
+
+A Kubernetes network policy is a set of rules that controls how pods communicate with each other and with external services. It provides fine-grained control over network traffic, allowing administrators to enforce security and segmentation at the namespace level.
+By implementing network policies, you gain:
 
 - **Stronger security posture**: Prevent unauthorized lateral movement within the cluster.
 - **Compliance and governance**: Enforce regulatory requirements by controlling communication pathways.
 - **Reduced blast radius**: Limit the impact of a compromised workload by restricting its network access.
 
-Initially, Network Policies were designed to operate at Layer 3 (IP) and Layer 4 (TCP/UDP) of the OSI model, enabling basic control over pod-to-pod and external communications. However, advanced network policy engines like Cilium have extended Network Policies to Layer 7 (Application Layer), allowing deeper control over application traffic for modern cloud-native applications.
+Network policies initially operated at Layer 3 (IP) and Layer 4 (TCP/UDP) of the OSI model, enabling basic control over pod-to-pod and external communications. Advanced network policy engines such as Cilium extend policy enforcement to Layer 7 (application layer), allowing deeper control over application traffic for modern cloud-native applications.
 
-Network Policies are defined at the namespace level, meaning each policy applies to workloads within a specific namespace. The main components of a Network Policy include:
+Network policies are namespace-scoped, which means each policy applies to workloads within a specific namespace. The main components of a network policy include:
 
 - **Pod selector**: Defines which pods the policy applies to based on labels.
 - **Ingress rules**: Specify the allowed incoming connections.
@@ -33,56 +87,55 @@ Network Policies are defined at the namespace level, meaning each policy applies
 
 ## Foundations of building effective network policies
 
-Building effective network policies in Kubernetes isn't just about writing YAML configurations—it requires a deep understanding of your application architecture, traffic patterns, and security requirements. Without a clear picture of how workloads communicate, enforcing security policies can lead to unintended disruptions or gaps in protection. The following sections cover how to systematically approach network policy design.
+Effective network policies require understanding your application architecture, traffic patterns, and security requirements before writing configurations.
 
 ### Understanding your workload connectivity
 
 Before implementing network policies, you need visibility into how workloads communicate with each other and external services. This step ensures that policies don’t inadvertently block critical traffic while effectively limiting unnecessary exposure.
 
-- **Leverage Visibility Tools:** in addition to the network requirements provided by application team you can use tools like [Cilium Hubble](https://github.com/cilium/hubble), and [Retina](https://retina.sh/) help you analyze pod-to-pod traffic, identify which services need to communicate and define their ingress and egress dependencies. For example, a frontend might need to reach a backend API, but it shouldn’t talk directly to a database. Identify which services need to communicate and define their ingress and egress dependencies. For example, a frontend might need to reach a backend API, but it shouldn’t talk directly to a database.
+- **Use visibility tools**: In addition to the network requirements provided by the application team, use tools such as [Cilium Hubble](https://github.com/cilium/hubble) and [Retina](https://retina.sh/) to analyze pod-to-pod traffic, identify which services must communicate, and define their ingress and egress dependencies. For example, a frontend might need to reach a backend API, but it shouldn't communicate directly with a database.
 
-- **The importance of labels in network policies:** Traditionally, network security policies have relied on static IP addresses to define traffic rules. This approach is problematic in Kubernetes because pods are ephemeral—created and destroyed frequently, often with dynamically assigned IP addresses. Maintaining security rules based on constantly changing IPs would require continuous updates, making policy management inefficient and error-prone.
+- **Use labels in network policies**: Traditionally, network security policies rely on static IP addresses to define traffic rules. This approach is problematic in Kubernetes because pods are ephemeral - created and destroyed frequently, often with dynamically assigned IP addresses. Maintaining security rules based on constantly changing IPs requires continuous updates, making policy management inefficient and error-prone.
 
-Labels solve this challenge by providing a stable way to group workloads. Instead of relying on fixed IPs, Kubernetes Network Policies use labels to define security rules that remain consistent even as pods restart or shift across nodes. For example, a policy can allow communication between pods labeled `app: frontend` and `app: backend`, ensuring traffic flows as intended regardless of pod IP changes. This label-based approach is critical for achieving scalable, intent-driven network security in cloud-native environments. 
+Labels solve this challenge by providing a stable way to group workloads. Instead of relying on fixed IPs, Kubernetes network policies use labels to define security rules that remain consistent even as pods restart or shift across nodes. For example, a policy can allow communication between pods labeled `app: frontend` and `app: backend`, ensuring traffic flows as intended regardless of pod IP changes. This label-based approach is critical for achieving scalable, intent-driven network security in cloud-native environments.
 
 A well-defined labeling strategy simplifies policy management, reduces misconfigurations, and enhances security enforcement across clusters.
 
-- **Define Micro-segmentation:** Organizing workloads into security zones (e.g., frontend, backend, database) helps enforce the principle of least privilege. For instance, microservices handling customer transactions should be isolated from general-purpose applications.
+- **Define microsegmentation**: Organizing workloads into security zones, such as frontend, backend, and database zones, helps enforce the principle of least privilege. For example, isolate microservices that handle customer transactions from general-purpose applications.
 
 ### Layered security approach for Kubernetes
 
-Relying solely on basic Kubernetes Network Policies might not be sufficient for all security needs. A layered approach ensures comprehensive protection across different levels of network communication.
+Relying solely on basic Kubernetes network policies might not be sufficient for all security needs. A layered approach ensures comprehensive protection across different levels of network communication.
 
-- **(L3/L4) policies**: The foundation of network security, controlling traffic based on pod labels and namespaces at the IP, port, and protocol level.
+- **L3/L4 policies**: Control traffic based on pod labels and namespaces at the IP, port, and protocol level.
 - **FQDN-based policies**: Restrict egress traffic to specific external domains, ensuring workloads can only reach approved external services (for example: only allowing access to *microsoft.com* for API calls).
-- **Layer 7 policies**: Introduces fine-grained control over traffic by filtering requests based on HTTP methods, headers, and paths. This is useful for securing APIs and enforcing application-layer security policies.
+- **Layer 7 policies**: Filter requests based on HTTP methods, headers, and paths to secure APIs and enforce application-layer security policies.
 
-### Management of Network Policies
+### Manage network policies
 
-Who should manage network policies? This often depends on an organization’s structure and security requirements. A well-balanced approach allows both security teams and application developers to collaborate effectively.
+The teams that manage network policies depend on the organization's structure and security requirements. A balanced approach allows security teams and application developers to collaborate effectively.
 
 - **Centralized security administration**: Security or networking teams should define baseline policies to enforce global security requirements, such as default deny-all rules or compliance-driven restrictions.
 - **Developer autonomy with guardrails**: Application teams should be able to define service-specific network policies within their namespaces, enabling security while maintaining agility.
 - **Policy lifecycle management**: Regularly reviewing and updating policies ensures that security remains aligned with evolving application architectures. Observability tools can help detect policy misconfigurations and missing rules.
 
-#### Example: Securing a multi-tier web application with Network Policies
+#### Example: Secure a multi-tier web application with network policies
 
-**Step 1: Understanding workload connectivity**
+**Step 1: Understand workload connectivity**
 
-* Visibility tools: Use Cilium Hubble to observe how pods communicate.
+Use Cilium Hubble to observe how pods communicate.
 
 :::image type="content" source="./media/advanced-container-networking-services/hubble-ui.png" alt-text="Screenshot of the Hubble UI showing how the application's microservices are communicating with each other.":::
 
+Map the required connectivity:
 
-- Mapping connectivity:
+|Source	 | Destination |	Protocol | Port |
+|--------|-------------|----------|------|
+|Frontend| Backend     |	TCP | 8080 |
+|Backend | Database    |	TCP | 5432 |
+|Backend | External Payment Gateway   |	TCP | 443 |
 
-    |Source	 | Destination |	Protocol | Port |
-    |--------|-------------|----------|------|
-    |Frontend| Backend     |	TCP | 8080 |
-    |Backend | Database    |	TCP | 5432 |
-    |Backend | External Payment Gateway   |	TCP | 443 |
-
-**Step 2: Applying labels for policy enforcement**
+**Step 2: Apply labels for policy enforcement**
 
 By labeling workloads correctly, policies can remain stable even if pod IPs change.
 
@@ -90,41 +143,160 @@ By labeling workloads correctly, policies can remain stable even if pod IPs chan
 - `app: backend` for API pods.
 - `app: database` for DB pods.
 
-**Step 3: Implementing application-level Network Policies**
+**Step 3: Implement application-level network policies**
 
-In this example, we use two layers of network policies: an L3/L4 basic policy to control traffic between microservices and a fully qualified domain name (FQDN) policy to control egress traffic with external payment gateway.
+This example uses two layers of network policies: L3/L4 policies to control traffic between microservices and a fully qualified domain name (FQDN) policy to control egress traffic to an external payment gateway.
 
-| Allow frontend to communicate with backend | Allow backend to access the database | Allow backend to reach external payment API |
-|-------------------------------------------|--------------------------------------|-------------------------------------------|
-| **Policy 1: Frontend egress**<br> `to:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: backend`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 8080`<br><br> **Policy 2: Backend ingress**<br> `from:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: frontend`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 8080` | **Policy 1: Backend egress**<br> `to:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: database`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 5432`<br><br> **Policy 2: Database ingress**<br> `from:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: backend`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 5432` | **Policy 1: Backend**<br> `spec:`<br> `  endpointSelector:`<br> `    matchLabels:`<br> `      app: backend`<br> `  egress:`<br> `    - toFQDNs:`<br> `        - matchName: payments.example.com`<br> `      ports:`<br> `        - protocol: TCP`<br> `          port: 443` |
+##### Allow frontend traffic to the backend
 
-**Step 4: Managing and maintaining policies**
+Apply egress and ingress policies so that frontend pods can reach backend pods only on TCP port 8080.
 
-- Security and platform teams enforce baseline deny rules.
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-egress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: backend
+      ports:
+        - protocol: TCP
+          port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-ingress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
+      ports:
+        - protocol: TCP
+          port: 8080
+```
 
-    | Baseline policy             | Platform policy               | Security                                                                 |
-    |-----------------------------|-------------------------------|--------------------------------------------------------------------------|
-    | - Default deny all traffic  | - Allow DNS <br> - Allow Logs | - Block traffic <br> to known <br> malicious IPs <br> and domains        |
+##### Allow backend traffic to the database
 
-- Ensuring that the application's network policies comply with platform and security requirements while avoiding any policy violations.
+Apply egress and ingress policies so that backend pods can reach database pods only on TCP port 5432.
 
-    | **Baseline**              | **Platform policy**            | **Security policy**                           | **Allow frontend to communicate with backend** | **Allow backend to access the database** | **Allow backend to reach external payment API** |
-    |---------------------------|-------------------------------|-----------------------------------------------|-----------------------------------------------|-------------------------------------------|------------------------------------------------|
-    | - Default deny all traffic | - Allow DNS <br> - Allow Logs | - Block traffic to known malicious IPs and domains | **Policy 1: Frontend egress:** <br> - to: <br> &nbsp;&nbsp;- **podSelector:** <br> &nbsp;&nbsp;&nbsp;&nbsp;**matchLabels:** <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: backend <br> &nbsp;&nbsp;&nbsp;&nbsp;ports: <br> &nbsp;&nbsp;&nbsp;&nbsp;- **protocol:** TCP <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port: 8080 <br> <br> **Policy 2: Backend ingress:** <br> - from: <br> &nbsp;&nbsp;- **podSelector:** <br> &nbsp;&nbsp;&nbsp;&nbsp;**matchLabels:** <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: frontend <br> &nbsp;&nbsp;&nbsp;&nbsp;ports: <br> &nbsp;&nbsp;&nbsp;&nbsp;- **protocol:** TCP <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port: 8080 | **Policy 1: Backend egress:** <br> - to: <br> &nbsp;&nbsp;- **podSelector:** <br> &nbsp;&nbsp;&nbsp;&nbsp;**matchLabels:** <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: database <br> &nbsp;&nbsp;&nbsp;&nbsp;ports: <br> &nbsp;&nbsp;&nbsp;&nbsp;- **protocol:** TCP <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port: 5432 <br> <br> **Policy 2: Database ingress:** <br> - from: <br> &nbsp;&nbsp;- **podSelector:** <br> &nbsp;&nbsp;&nbsp;&nbsp;**matchLabels:** <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: backend <br> &nbsp;&nbsp;&nbsp;&nbsp;ports: <br> &nbsp;&nbsp;&nbsp;&nbsp;- **protocol:** TCP <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port: 5432 | **Policy 1: Backend** <br> **spec:** <br> **endpointSelector:** <br> &nbsp;&nbsp;**matchLabels:** <br> &nbsp;&nbsp;&nbsp;&nbsp;app: backend <br> **egress:** <br> - **toFQDNs:** <br> &nbsp;&nbsp;- **matchName:** payments.example.com <br> **ports:** <br> - **protocol:** TCP <br> &nbsp;&nbsp;port: 443 |
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-egress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: database
+      ports:
+        - protocol: TCP
+          port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: database-ingress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: database
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: backend
+      ports:
+        - protocol: TCP
+          port: 5432
+```
 
-    This structured approach ensures security without disrupting application functionality.
+##### Allow backend traffic to an external payment API
 
-## Azure Powered by Cilium
+Apply a Cilium network policy so that backend pods can resolve and connect to `payments.example.com` only on TCP port 443.
 
-[Azure Container Network Interface (CNI) powered by Cilium](/azure/aks/azure-cni-powered-by-cilium) leverages eBPF (extended Berkeley Packet Filter) to provide high-performance networking, observability, and security for Kubernetes workloads. Unlike traditional CNIs that rely on iptables-based packet filtering, Azure CNI powered by Cilium uses eBPF to operate at the kernel level, enabling efficient and scalable network policy enforcement. On Azure Kubernetes Service (AKS), Cilium is the only supported network policy engine, reflecting Azure’s investment in performance, scalability, and security.
-Azure Kubernetes Service integrates Cilium as a managed component, simplifying network security enforcement. Administrators can define Cilium Network Policies directly within their AKS clusters without requiring external controllers.
+```yaml
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: backend-payment-api
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels:
+      app: backend
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            "k8s:io.kubernetes.pod.namespace": kube-system
+            "k8s:k8s-app": kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchName: payments.example.com
+    - toFQDNs:
+        - matchName: payments.example.com
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+```
 
-Cilium extends the usage of labels with Identities. Large clusters with many pods might experience scale issues where constantly updating IP filters occurs with a high pod churn rate. Under the hood, Identities map to labels and allow connections to initiate as soon as the identity resolves rather than needing to update rules on nodes.
+**Step 4: Manage and maintain policies**
 
-With Azure CNI powered by Cilium you don't need to install a separate network policy engine such as Azure Network Policy Manager or Calico.
+The following table summarizes the policy layers that teams should enforce across clusters.
 
-Use the following command to create a cluster with Azure CNI powered by cilium 
+| Policy layer | Responsibility | Example control |
+|--------------|----------------|-----------------|
+| Baseline | Deny traffic that isn't explicitly allowed. | Default deny ingress and egress. |
+| Platform | Allow access to required shared services. | Allow DNS and logging traffic. |
+| Security | Block known threats and enforce organizational requirements. | Block known malicious IP addresses and domains. |
 
+Ensure that application network policies comply with the baseline, platform, and security requirements while allowing the required workload communication.
+
+## Azure CNI powered by Cilium
+
+[Azure Container Network Interface (CNI) powered by Cilium](/azure/aks/azure-cni-powered-by-cilium) uses eBPF (extended Berkeley Packet Filter) to provide high-performance networking, observability, and security for Kubernetes workloads. Unlike traditional CNIs that rely on iptables-based packet filtering, Azure CNI powered by Cilium uses eBPF to operate at the kernel level, enabling efficient and scalable network policy enforcement. Cilium is the recommended network policy engine for Linux workloads on Azure Kubernetes Service (AKS). For more information about the other supported engines and their platform support, see [Network policy options in AKS](/azure/aks/use-network-policies#network-policy-options-in-aks).
+Azure Kubernetes Service integrates Cilium as a managed component, simplifying network security enforcement. Administrators can define `CiliumNetworkPolicy` resources directly within their AKS clusters without requiring external controllers.
+
+Cilium identities extend label-based policy enforcement. Large clusters with high pod churn might encounter scalability problems because nodes must constantly update IP filters. Cilium identities map to labels and allow connections to start as soon as the identity resolves, without waiting for filter updates on each node.
+
+With Azure CNI powered by Cilium, you don't need to install a separate network policy engine such as Azure Network Policy Manager or Calico.
+
+### Create an AKS cluster with Azure CNI powered by Cilium
+
+The following example creates an AKS cluster with Azure CNI Overlay powered by Cilium. The `--network-plugin-mode overlay` option configures Azure CNI Overlay networking, `--pod-cidr 192.168.0.0/16` assigns the pod IP address range, and `--network-dataplane cilium` selects Cilium as the data plane. Cluster creation options and address values can differ for other AKS networking configurations. Use values appropriate for your networking configuration.
 
 ```bash
 az aks create \
@@ -138,16 +310,16 @@ az aks create \
   --generate-ssh-keys
 ```
 
-### Anatomy of the Cilium Network Policy
+## Cilium network policy resources and components
 
 With Azure CNI powered by Cilium, you can configure network policies natively in Kubernetes using two available formats:
 
-- **The standard `NetworkPolicy` resource**, which supports L3 and L4 policies at ingress or egress of the Pod.
+- **The standard `NetworkPolicy` resource**, which supports L3 and L4 policies at ingress or egress of the pod.
 - **The extended `CiliumNetworkPolicy` format**, which is available as a CustomResourceDefinition that supports specification of policies at Layers 3-7 for both ingress and egress.
 
-With these CRDs, we can define security policies, and Kubernetes automatically distributes these policies to all the nodes in the cluster.
+Use these custom resource definitions (CRDs) to define security policies. Kubernetes automatically distributes the policies to all nodes in the cluster.
 
-A Network Policy consists of several key components:
+A network policy consists of several key components:
 
 - **Pod selector**: Specifies which pods the policy applies to using labels.
 - **Policy types**: Determines whether the policy applies to ingress (incoming traffic), egress (outgoing traffic), or both.
@@ -176,18 +348,20 @@ A Network Policy consists of several key components:
               port: 8080
     ```
 
-## Advanced Network Policy
+## Advanced network policies with ACNS
 
-Azure Kubernetes services offers the [Advanced Container Networking Service (ACNS)](/azure/aks/advanced-container-networking-services-overview?tabs=cilium) a suite of services designed to enhance the networking capabilities of AKS clusters.
+Azure Kubernetes Service offers [Advanced Container Networking Services (ACNS)](/azure/aks/advanced-container-networking-services-overview?tabs=cilium), a suite of services designed to enhance the networking capabilities of AKS clusters.
 
-A key feature of ACNS is Container Network Security, which offers advanced security functionalities to safeguard containerized workloads. One notable aspect is the ability to implement advanced network policies, including Fully Qualified Domain Name (FQDN) filtering and Layer 7 (L7) policies, allowing for more granular control over both egress traffic and application-layer communication.
+A key feature of ACNS is Container Network Security, which offers advanced security capabilities to safeguard containerized workloads. These capabilities include fully qualified domain name (FQDN) filtering and Layer 7 (L7) policies for granular control over egress traffic and application-layer communication.
 
-### Secure Egress traffic with FQDN Filtering
-Traditionally, network policies in Kubernetes are based on IP addresses. However, in dynamic environments where pod IPs frequently change, managing such policies becomes cumbersome. [FQDN filtering](/azure/aks/container-network-security-concepts#overview-of-fqdn-filtering) simplifies this by allowing policies to be defined using domain names instead of IP addresses. This approach provides a more intuitive and user-friendly method of controlling network traffic, allowing organizations to enforce security policies with greater precision and flexibility.
+Container Network Security is a paid offering for Linux node pools that requires Azure CNI powered by Cilium and Kubernetes version 1.29 or later. For pricing details, see [Advanced Container Networking Services pricing](https://azure.microsoft.com/pricing/details/advanced-container-networking-services/).
 
-Implementing FQDN filtering in AKS clusters requires enabling ACNS and configuring the necessary policies to define allowed or blocked domains, thereby enhancing the security posture of your containerized applications.
+### Secure egress traffic with FQDN filtering
+Traditionally, Kubernetes network policies are based on IP addresses. In dynamic environments where pod IPs frequently change, these policies can be difficult to manage. [FQDN filtering](/azure/aks/container-network-security-concepts#overview-of-fqdn-filtering) lets you define policies with domain names instead of IP addresses, which simplifies traffic control.
 
-To enable Advanced Container Networking Services (ACNS) in Azure Kubernetes Service (AKS), use the flag --enable-acns
+FQDN filtering requires an AKS cluster that uses Azure CNI powered by Cilium, runs Kubernetes version 1.29 or later, and has ACNS enabled. Configure a `CiliumNetworkPolicy` to define the domains that selected pods can access.
+
+To enable Advanced Container Networking Services (ACNS) in Azure Kubernetes Service (AKS), use the `--enable-acns` flag.
 
 #### Example: Enable Advanced Container Networking Services on an existing cluster
 
@@ -197,7 +371,12 @@ az aks update \
   --name $CLUSTER_NAME \
   --enable-acns
 ```
-#### Example: Build a network policy that allows traffic to “bing.com”
+
+This command enables ACNS, including FQDN filtering, on an existing cluster that uses the Cilium data plane.
+
+#### Example: Build a network policy that allows traffic to `bing.com` and its subdomains
+
+The following policy allows selected pods to resolve and connect to `bing.com` and its subdomains. The `dns` rules permit name resolution, and the `toFQDNs` rules permit egress connections to the resolved addresses.
 
 ```yaml
 apiVersion: "cilium.io/v2"
@@ -219,14 +398,16 @@ spec:
               protocol: ANY
           rules:
             dns:
+              - matchName: "bing.com"
               - matchPattern: "*.bing.com"
     - toFQDNs:
+        - matchName: "bing.com"
         - matchPattern: "*.bing.com"
 ```
 
 ### Protection and security for APIs with L7 policies
 
-As modern applications increasingly rely on APIs for communication, securing these interactions at the network layer alone is no longer sufficient. Standard network policies operate at Layer 3 (IP) and Layer 4 (TCP/UDP), controlling which pods can communicate, but they lack visibility into the actual API requests being made.
+Layer 7 (L7) policies in AKS use `CiliumNetworkPolicy` resources to filter application traffic by attributes such as HTTP methods and paths, gRPC paths, and Kafka topics. They require ACNS on an AKS cluster that uses Azure CNI powered by Cilium. Standard network policies control traffic at Layer 3 (IP) and Layer 4 (TCP/UDP) but don't inspect these application-level attributes.
 
 Layer 7 (L7) policies provide the following benefits and features:
 
@@ -235,19 +416,23 @@ Layer 7 (L7) policies provide the following benefits and features:
 - **Compliance and auditing**: Ensure adherence to security standards by logging and controlling specific API interactions.
 - **Simplified policy management**: Avoid the operational burden of additional sidecar proxies by leveraging built-in Cilium-powered L7 controls.
 
-L7 policies AKS are enabled through ACNS and are available to customers using Azure CNI powered by Cilium. These policies support HTTP, gRPC, and Kafka protocols.
+L7 policies support HTTP, HTTPS, gRPC, and Kafka protocols.
 
-To enforce L7 policies, customers define `CiliumNetworkPolicy` resources, specifying rules for application-layer traffic control. 
-
-#### Example: Enable ACNS on an existing cluster
+#### Example: Enable ACNS and L7 policies on an existing cluster
 
 ```azurecli-interactive
 az aks update \
   --resource-group $RESOURCE_GROUP \
   --name $CLUSTER_NAME \
-  --enable-acns
+  --enable-acns \
+  --acns-advanced-networkpolicies L7
 ```
+
+This command enables ACNS and L7 policy enforcement on the existing cluster. Setting `--acns-advanced-networkpolicies` to `L7` also enables FQDN filtering.
+
 #### Example: Allow only GET requests to /api from the frontend pod to the backend service on port 8080
+
+The following policy permits selected frontend pods to send only `GET` requests to `/api` on TCP port 8080 of the selected backend endpoints.
 
 ```yaml
 apiVersion: "cilium.io/v2"
@@ -273,15 +458,18 @@ spec:
                 path: "/api"
 ```
 
-## Strategies for network policies
+## Network policy strategies for AKS workloads
 
-Securing Kubernetes workloads requires a thoughtful approach to defining and enforcing network policies. A well-designed strategy ensures that applications communicate only as intended, reducing the risk of unauthorized access, lateral movement, and potential breaches. The following sections cover key strategies for implementing effective Kubernetes Network Policies.
+The following strategies help enforce least-privilege traffic rules across AKS workloads.
 
-### Adopt a Zero-Trust model
+### Adopt a Zero Trust model
 
-By default, Kubernetes allows unrestricted communication between all pods in a cluster. A Zero-Trust approach dictates that no traffic should be trusted by default, and only explicitly allowed communication paths should be permitted. Implementing a default deny-all network policy ensures that only necessary traffic flows between workloads.
+By default, Kubernetes allows unrestricted communication between all pods in a cluster. A Zero Trust approach requires you to deny traffic by default and explicitly allow required communication paths. A default deny-all network policy ensures that only necessary traffic flows between workloads.
 
 Example of a deny-all policy:
+
+> [!IMPORTANT]
+> A default-deny egress policy also blocks DNS traffic. Before you apply this policy, define an egress policy that allows access to the DNS service used by your cluster. The required destination depends on your cluster DNS configuration, including whether the cluster uses [LocalDNS](/azure/aks/localdns-custom).
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -315,7 +503,7 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              name: team-a
+              kubernetes.io/metadata.name: team-a
 ```
 ### Microsegmentation for workload isolation
 
@@ -383,14 +571,14 @@ spec:
 ```
 This prevents the frontend from making POST or DELETE requests, limiting the attack surface.
 
-### Integrating RBAC with Network Policy management
+### Integrate RBAC with network policy management
 
 Role-based access control (RBAC) plays a crucial role in ensuring that only authorized users or teams can create, modify, or delete network policies. Without proper access controls, a misconfigured policy could either expose workloads to unauthorized access or unintentionally block critical application traffic.
 
 By leveraging Kubernetes RBAC in conjunction with network policies, organizations can enforce separation of duties between platform administrators, security teams, and application developers. A typical approach is:
 
-- Platform or security teams define baseline security policies that enforce compliance and restrict external access.
-- Application teams are granted limited permissions to create or update network policies only for their respective namespaces.
+- Define baseline security policies through platform or security teams to enforce compliance and restrict external access.
+- Grant application teams limited permissions to create or update network policies only for their respective namespaces.
 
 For example, the following RBAC policy allows developers to create and modify network policies but only within their assigned namespace:
 
@@ -406,7 +594,7 @@ rules:
     verbs: ["get", "list", "create", "update", "delete"]
 ```
 
-This role can then be bound to a specific team using a RoleBinding:
+Bind this role to a specific team by using a `RoleBinding`:
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -430,25 +618,24 @@ This approach reinforces the principle of least privilege while ensuring that ne
 ## Legacy and third-party solutions
 
 ### Azure Network Policy Manager (NPM)
-Azure Network Policy Manager (NPM) is a legacy solution for enforcing Kubernetes network policies on AKS. As we continue to evolve our networking stack, we intend to deprecate NPM soon.
+Azure Network Policy Manager (NPM) is a legacy solution for enforcing Kubernetes network policies on AKS.
 
-We strongly recommend all customers transition to Cilium Network Policy, which provides better performance, scalability, and enhanced security through eBPF-based enforcement. Cilium is the future of network policy in AKS and offers a more flexible and feature-rich alternative to NPM.
+> [!IMPORTANT]
+> Support for NPM on Windows nodes ends on September 30, 2026. Support for NPM on Linux nodes ends on September 30, 2028. After these dates, NPM is no longer supported on the corresponding operating system. For more information, see [Network policy options in AKS](/azure/aks/use-network-policies#network-policy-options-in-aks).
 
-### NetworkPolicy support for Windows nodes
-AKS doesn't natively support Kubernetes NetworkPolicy for Windows nodes out of the box. To enable network policies for Windows workloads, you can use Calico for Windows nodes, which is integrated into AKS to simplify deployment. You can enable it using the `--network-policy calico` flag when creating a cluster.
+For Linux nodes, Microsoft recommends transitioning from NPM to Cilium, which provides better performance, scalability, and enhanced security through eBPF-based enforcement. For migration guidance, see [Upgrade from Azure Network Policy Manager to Cilium](/azure/aks/migrate-from-npm-to-cilium-network-policy).
 
-Microsoft doesn't maintain the Calico images used in this integration. Our support is limited to ensuring Calico is properly integrated with AKS and functions as expected within the platform. Any issues related to Calico upstream bugs, feature requests, or troubleshooting beyond AKS integration should be directed to the Calico open-source community or Tigera, the maintainers of Calico.
+### `NetworkPolicy` support for Windows nodes
+Azure CNI powered by Cilium supports Linux nodes only. For Windows workloads, AKS supports Calico, which is integrated into AKS to simplify deployment. You can enable it using the `--network-policy calico` flag when creating a cluster. NPM also supports Windows nodes until September 30, 2026, but new subscriptions can no longer register the feature flag required to enable it.
 
-### Calico open source – Third-party solution
-Calico open source is a widely used third-party solution for enforcing Kubernetes network policies. It supports both Linux and Windows nodes and provides advanced networking and security capabilities, including network policy enforcement, workload identity, and encryption.
+### Calico open source: third-party solution
+Calico open source is a third-party solution for enforcing Kubernetes network policies on Linux and Windows nodes. Tigera maintains the Calico project and images. Microsoft support is limited to ensuring that Calico integrates with AKS and functions as expected within the platform. Direct upstream bugs, feature requests, and troubleshooting beyond AKS integration to the Calico open-source community or Tigera.
 
-While Calico is integrated with AKS for Windows network policies (`--network-policy calico`), it remains an open-source project maintained by Tigera. Microsoft doesn't maintain Calico images and provides limited support focused on ensuring proper integration with AKS. For advanced troubleshooting, feature requests, or issues beyond AKS integration, we recommend reaching out to the Calico open-source community or Tigera.
-
-For Linux nodes, we strongly recommend using Cilium for network policy enforcement. For Windows nodes, we recommend using Calico.
+For Linux nodes, Microsoft recommends using Cilium for network policy enforcement. For Windows nodes, Microsoft recommends using Calico.
 
 
 ## Conclusion 
 
 Network policies are a fundamental part of Kubernetes security, enabling organizations to control traffic flow, enforce workload isolation, and reduce the attack surface. As cloud-native environments evolve, relying solely on basic Layer 3/4 policies is no longer sufficient. Advanced solutions, such as Layer 7 filtering and FQDN-based policies, provide the granular security and flexibility needed to protect modern applications.
 
-By following best practices including zero-trust model, microsegmentation, and adopting scalable solutions like Azure managed Cilium teams can enhance security while maintaining operational efficiency. As Kubernetes networking continues to evolve, adopting modern, observability-driven approaches will be key to securing workloads effectively.
+By following practices such as a Zero Trust model and microsegmentation, and by adopting Azure CNI powered by Cilium, teams can enhance security while maintaining operational efficiency. Modern, observability-driven approaches help secure workloads as Kubernetes networking evolves.

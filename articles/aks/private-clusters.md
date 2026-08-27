@@ -4,7 +4,7 @@ description: Learn how to create a private Azure Kubernetes Service (AKS) cluste
 ms.topic: how-to
 ms.author: davidsmatlak
 author: davidsmatlak
-ms.date: 09/30/2025
+ms.date: 08/05/2026
 ms.custom: references_regions, devx-track-azurecli
 ms.service: azure-kubernetes-service
 ms.subservice: aks-security
@@ -20,7 +20,7 @@ This article helps you deploy a private link-based AKS cluster using Azure CLI o
 
 In a private cluster, the control plane or API server has internal IP addresses that are defined in the [RFC1918 - Address Allocation for Private Internet][rfc1918-document] document. By using a private cluster, you can ensure network traffic between your API server and your node pools remains only on the private network.
 
-The control plane or API server is in an AKS-managed Azure resource group, and your cluster or node pool is in your resource group. The server and the cluster or node pool can communicate with each other through the [Azure Private Link service][private-link-service] in the API server virtual network and a private endpoint exposed on the subnet of your AKS cluster.
+The control plane or API server is in an AKS-managed Azure resource group, and your cluster or node pool is in your resource group. The API server and the cluster or node pool can communicate with each other through the [Azure Private Link service][private-link-service] in the API server virtual network and a private endpoint exposed on the subnet of your AKS cluster.
 
 When you create a private AKS cluster, AKS creates both private and public fully qualified domain names (FQDNs) with corresponding DNS zones by default. For detailed DNS configuration options, see [Configure a private DNS zone, private DNS subzone, or custom subdomain](#configuration-options-for-private-dns).
 
@@ -44,8 +44,7 @@ Private clusters are available in public regions, Azure Government, and Microsof
 
 - Azure CLI version 2.28.0 or higher. Find your version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - If using Azure Resource Manager (ARM) or the Azure REST API, the AKS API version must be _2021-05-01 or higher_.
-- To use a custom DNS server, add the Azure public IP address _168.63.129.16_ as the upstream DNS server in the custom DNS server, and make sure to add this public IP address as the _first_ DNS server. For more information about the Azure IP address, see [What is IP address 168.63.129.16?][virtual-networks-168.63.129.16]
-  - The cluster's DNS zone should be what you forward to _168.63.129.16_. You can find more information on zone names in [Azure services DNS zone configuration][az-dns-zone].
+- To use a custom DNS server, configure a conditional forwarder for the cluster's private DNS zone to the Azure DNS virtual server at _168.63.129.16_. Alternatively, use Azure DNS Private Resolver in a VNet linked to the private DNS zone. For more information about the Azure IP address, see [What is IP address 168.63.129.16?][virtual-networks-168.63.129.16]. For more information on zone names, see [Azure services DNS zone configuration][az-dns-zone].
 - Existing AKS clusters enabled with API Server VNet integration can have private cluster mode enabled. For more information, see [Enable or disable private cluster mode on an existing cluster with API Server VNet integration][api-server-vnet-integration].
 - If you need to enable Azure Container Registry on a private AKS cluster, [set up a private link for the container registry in the cluster virtual network (VNet)][container-registry-private-link] or set up peering between the container registry's VNet and the private cluster's VNet.
 - [kubectl](https://kubernetes.io/releases/download/) installed. You can install it locally using the [`az aks install-cli`][az-aks-install-cli] command.
@@ -64,7 +63,7 @@ Private clusters are available in public regions, Azure Government, and Microsof
 - [Azure Private Link service limitations][private-link-service] apply to private clusters.
 - There's no support for Azure DevOps Microsoft-hosted Agents with private clusters. Consider using [self-hosted agents](/azure/devops/pipelines/agents/agents).
 - Deleting or modifying the private endpoint in the customer subnet causes the cluster to stop functioning.
-- Azure Private Link service is supported on Standard Azure Load Balancer only. Basic Azure Load Balancer isn't supported.
+- Azure Private Link service supports only Standard Load Balancer. Basic Load Balancer isn't supported.
 
 ## Hub and spoke with custom DNS for private AKS clusters
 
@@ -78,7 +77,7 @@ The following diagram illustrates a hub and spoke architecture for a private AKS
 - The private DNS zone is linked only to the VNet that the cluster nodes are attached to (3), which means that the private endpoint can only be resolved by hosts in that linked VNet. In scenarios where no custom DNS is configured on the VNet (default), it works without issue as hosts point at _168.63.129.16_ for DNS that can resolve records in the private DNS zone because of the link.
 - If you keep the default private DNS zone behavior, AKS tries to link the zone directly to the spoke VNet that hosts the cluster even when the zone is already linked to a hub VNet.
   - In spoke VNets that use custom DNS servers, this action can fail if the cluster's managed identity lacks **Network Contributor** on the spoke VNet. To prevent the failure, choose **one** of the following supported configurations:
-    - **Custom private DNS zone**: Provide an existing private zone and set `privateDNSZone` / `--private-dns-zone` to its resource ID. Link that zone to the appropriate VNet (for example, the hub VNet) and set `publicDNS` to `false` / use `--disable-public-fqdn`.
+    - **Custom private DNS zone**: Provide an existing private zone and set `privateDNSZone` / `--private-dns-zone` to its resource ID. AKS still creates a virtual network link for the spoke VNet that hosts the cluster, even when the zone is already linked to a hub VNet. Ensure the cluster managed identity has **Network Contributor** on the spoke VNet, then set `publicDNS` to `false` / use `--disable-public-fqdn`.
     - **Public DNS only**: Disable private zone creation by setting `privateDNSZone` / `--private-dns-zone` to `none` **and** leave `publicDNS` at its default value (`true`) / don't use `--disable-public-fqdn`.
 - If you're using [bring your own (BYO) route table with kubenet](./configure-kubenet.md#bring-your-own-subnet-and-route-table-with-kubenet) and BYO DNS with private clusters, cluster creation fails. You need to associate the [`RouteTable`](./configure-kubenet.md#bring-your-own-subnet-and-route-table-with-kubenet) in the node resource group to the subnet after the cluster creation failed to make the creation successful.
 
@@ -201,13 +200,14 @@ az aks create \
       }
     
       network_profile {
-        load_balancer_sku = "standard"
-        network_plugin    = "kubenet"
+        load_balancer_sku   = "standard"
+        network_plugin      = "azure"
+        network_plugin_mode = "overlay"
       }
     }
     ```
 
-1. Follow the steps to [initialize Terraform](#initialize-terraform), [format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [create a Terraform execution plan](#create-a-terraform-execution-plan), [apply the Terraform configuration](#apply-the-terraform-configuration), and [connect to the AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
+1. Follow the steps in [Initialize Terraform](#initialize-terraform), [Format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [Create a Terraform execution plan](#create-a-terraform-execution-plan), [Apply the Terraform configuration](#apply-the-terraform-configuration), and [Configure kubectl to connect to a private AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
 
 :::zone-end
 
@@ -354,7 +354,7 @@ az aks create \
     }
     ```
 
-1. Follow the steps to [initialize Terraform](#initialize-terraform), [format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [create a Terraform execution plan](#create-a-terraform-execution-plan), [apply the Terraform configuration](#apply-the-terraform-configuration), and [connect to the AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
+1. Follow the steps in [Initialize Terraform](#initialize-terraform), [Format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [Create a Terraform execution plan](#create-a-terraform-execution-plan), [Apply the Terraform configuration](#apply-the-terraform-configuration), and [Configure kubectl to connect to a private AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
 
 :::zone-end
 
@@ -368,10 +368,10 @@ When you create a private AKS cluster by using `--enable-private-cluster`, AKS d
 
 Use the following guidance:
 
-- **Keep public FQDN enabled**: If you prefer simpler administration, DevOps pipelines use external or Microsoft-hosted agents, engineers require remote access without VPN or private connectivity, or you need easier operational access to the Kubernetes API server.
-
+- **Keep public FQDN enabled**: If clients on the cluster VNet or a connected network require a publicly resolvable DNS name for the API server. A public FQDN doesn't create a public API endpoint or remove the requirement for network connectivity to the private endpoint. For DevOps pipelines, use self-hosted agents on a connected network.
 - **Disable public FQDN**: If you have strong security or compliance requirements, enterprise private networking is already implemented, hub and spoke secure networking architectures are used, or cluster operations must occur exclusively through private connectivity paths.
-### Disable a public FQDN on a new cluster
+
+### Disable a public FQDN when creating a private AKS cluster
 
 :::zone pivot="azure-cli"
 
@@ -381,7 +381,7 @@ Disable a public FQDN when creating a private AKS cluster using the [`az aks cre
 
 - `--disable-public-fqdn`: Disables the public fully qualified domain name (FQDN) for the API server.
 - `--assign-identity <resource-id>`: Specifies the managed identity to use for the cluster.
-- `--private-dns-zone [system|none]`: Specifies the private DNS zone to use for the cluster. `system` is the default value when configuring a private DNS zone. If you omit `--private-dns-zone`, AKS creates a private DNS zone in the node resource group. `none` disables the creation of a private DNS zone.
+- `--private-dns-zone system`: Specifies that AKS creates a private DNS zone in the node resource group. You can't use `none` when you disable the public FQDN because the cluster requires a private or public DNS zone for API server name resolution.
 
 ```azurecli-interactive
 az aks create \
@@ -390,7 +390,7 @@ az aks create \
     --load-balancer-sku standard \
     --enable-private-cluster \
     --assign-identity <resource-id> \
-    --private-dns-zone [system|none] \
+    --private-dns-zone system \
     --disable-public-fqdn \
     --generate-ssh-keys
 ```
@@ -437,11 +437,11 @@ az aks create \
     }
     ```
 
-1. Follow the steps to [initialize Terraform](#initialize-terraform), [format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [create a Terraform execution plan](#create-a-terraform-execution-plan), [apply the Terraform configuration](#apply-the-terraform-configuration), and [connect to the AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
+1. Follow the steps in [Initialize Terraform](#initialize-terraform), [Format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [Create a Terraform execution plan](#create-a-terraform-execution-plan), [Apply the Terraform configuration](#apply-the-terraform-configuration), and [Configure kubectl to connect to a private AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
 
 :::zone-end
 
-### Disable a public FQDN on an existing cluster
+### Disable a public FQDN on an existing private AKS cluster
 
 :::zone pivot="azure-cli"
 
@@ -509,24 +509,24 @@ az aks update \
 
 ## Configuration options for private DNS
 
-You can configure private DNS settings for a private AKS cluster using the Azure CLI (with the `--private-dns-zone` parameter) or an Azure Resource Manager (ARM) template (with the `privateDNSZone` property). The following table outlines the options available for the `--private-dns-zone` parameter / `privateDNSZone` property:
+You can configure private DNS settings for a private AKS cluster by using Azure CLI (with the `--private-dns-zone` parameter) or an Azure Resource Manager template (with the `privateDNSZone` property). The following table describes the supported values for the Azure CLI `--private-dns-zone` parameter and the Azure Resource Manager `privateDNSZone` property:
 
-| Setting | Description |
-| ------- | ----------- |
+| `--private-dns-zone` / `privateDNSZone` value | Description |
+| ------------------------------------------------ | ----------- |
 | `system` | The default value when configuring a private DNS zone. If you omit `--private-dns-zone` / `privateDNSZone`, AKS creates a private DNS zone in the node resource group. |
 | `none` | If you set `--private-dns-zone` / `privateDNSZone` to `none`, AKS doesn't create a private DNS zone. |
-| `<custom-private-dns-zone-resource-id>` | To use this parameter, you need to create a private DNS zone in the following format for Azure global cloud: `privatelink.<region>.azmk8s.io` or `<subzone>.privatelink.<region>.azmk8s.io`. You need the resource ID of the private DNS zone for future use. You also need a user-assigned identity or service principal with the [Private DNS Zone Contributor][private-dns-zone-contributor-role] and [Network Contributor][network-contributor-role] roles. For clusters using API Server VNet integration, a private DNS zone supports the naming format of `private.<region>.azmk8s.io` or `<subzone>.private.<region>.azmk8s.io`. You **can't change or delete these resources resource after creating the cluster**, as it can cause performance issues and cluster upgrade failures. You can use `--fqdn-subdomain <subdomain>` with `<custom-private-dns-zone-resource-id>` only to provide subdomain capabilities to `privatelink.<region>.azmk8s.io`. If you're specifying a subzone, there's a 32 character limit for the `<subzone>` name. |
+| `<custom-private-dns-zone-resource-id>` | To use this parameter, create a private DNS zone in the following format for Azure global cloud: `privatelink.<region>.azmk8s.io` or `<subzone>.privatelink.<region>.azmk8s.io`. You need the resource ID of the private DNS zone for future use. You also need a user-assigned identity or service principal with the [Private DNS Zone Contributor][private-dns-zone-contributor-role] and [Network Contributor][network-contributor-role] roles. For clusters using API Server VNet integration, a private DNS zone supports the naming format of `private.<region>.azmk8s.io` or `<subzone>.private.<region>.azmk8s.io`. You **can't change or delete these resources after creating the cluster**, as it can cause performance problems and cluster upgrade failures. You can use `--fqdn-subdomain <subdomain>` with `<custom-private-dns-zone-resource-id>` only to provide subdomain capabilities to `privatelink.<region>.azmk8s.io`. If you're specifying a subzone, there's a 32 character limit for the `<subzone>` name. |
 
 ### Considerations for private DNS
 
 Keep the following considerations in mind when configuring private DNS for a private AKS cluster:
 
 - If the private DNS zone is in a different subscription than the AKS cluster, you need to register the `Microsoft.ContainerService` Azure provider in both subscriptions.
-- If your AKS cluster is configured with an Active Directory service principal, AKS doesn't support using a system-assigned managed identity with custom private DNS zone. The cluster must use [user-assigned managed identity authentication](./use-managed-identity.md).
+- If you configure your AKS cluster with an Active Directory service principal, AKS doesn't support using a system-assigned managed identity with custom private DNS zone. The cluster must use [user-assigned managed identity authentication](./user-assigned-managed-identity.md).
 
 :::zone-end
 
-## Create a private AKS cluster with a private DNS zone
+## Private DNS zone: create a private AKS cluster
 
 :::zone pivot="azure-cli"
 
@@ -582,9 +582,9 @@ az aks create \
     }
     ```
 
-1. Follow the steps to [initialize Terraform](#initialize-terraform), [format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [create a Terraform execution plan](#create-a-terraform-execution-plan), [apply the Terraform configuration](#apply-the-terraform-configuration), and [connect to the AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
+1. Follow the steps in [Initialize Terraform](#initialize-terraform), [Format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [Create a Terraform execution plan](#create-a-terraform-execution-plan), [Apply the Terraform configuration](#apply-the-terraform-configuration), and [Configure kubectl to connect to a private AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
 
-## Create a private AKS cluster without a private DNS zone
+## No private DNS zone: create a private AKS cluster
 
 1. Follow steps 1-3 in [Create a private AKS cluster with advanced networking](#create-a-private-aks-cluster-with-advanced-networking) or [Create a private AKS cluster with default basic networking](#create-a-private-aks-cluster-with-default-basic-networking) to set up the Terraform configuration and create the necessary resources depending on your scenario. This example uses advanced networking.
 1. Add the following code to `main.tf` to create the AKS cluster without a private DNS zone:
@@ -615,11 +615,11 @@ az aks create \
     }
     ```
 
-1. Follow the steps to [initialize Terraform](#initialize-terraform), [format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [create a Terraform execution plan](#create-a-terraform-execution-plan), [apply the Terraform configuration](#apply-the-terraform-configuration), and [connect to the AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
+1. Follow the steps in [Initialize Terraform](#initialize-terraform), [Format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [Create a Terraform execution plan](#create-a-terraform-execution-plan), [Apply the Terraform configuration](#apply-the-terraform-configuration), and [Configure kubectl to connect to a private AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
 
 :::zone-end
 
-## Create a private AKS cluster with a custom private DNS zone or private DNS subzone
+## Custom private DNS zone or subzone: create a private AKS cluster
 
 :::zone pivot="azure-cli"
 
@@ -709,11 +709,11 @@ For custom DNS configurations, you must use a user-assigned managed identity wit
     }
     ```
 
-1. Follow the steps to [initialize Terraform](#initialize-terraform), [format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [create a Terraform execution plan](#create-a-terraform-execution-plan), [apply the Terraform configuration](#apply-the-terraform-configuration), and [connect to the AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
+1. Follow the steps in [Initialize Terraform](#initialize-terraform), [Format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [Create a Terraform execution plan](#create-a-terraform-execution-plan), [Apply the Terraform configuration](#apply-the-terraform-configuration), and [Configure kubectl to connect to a private AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
 
 :::zone-end
 
-## Create a private AKS cluster with a custom private DNS zone and custom subdomain
+## Custom private DNS zone with subdomain: create a private AKS cluster
 
 :::zone pivot="azure-cli"
 
@@ -773,7 +773,7 @@ az aks create \
     }
     ```
 
-1. Follow the steps to [initialize Terraform](#initialize-terraform), [format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [create a Terraform execution plan](#create-a-terraform-execution-plan), [apply the Terraform configuration](#apply-the-terraform-configuration), and [connect to the AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
+1. Follow the steps in [Initialize Terraform](#initialize-terraform), [Format and validate the Terraform configuration](#format-and-validate-the-terraform-configuration), [Create a Terraform execution plan](#create-a-terraform-execution-plan), [Apply the Terraform configuration](#apply-the-terraform-configuration), and [Configure kubectl to connect to a private AKS cluster](#configure-kubectl-to-connect-to-a-private-aks-cluster).
 
 :::zone-end
 
@@ -874,6 +874,8 @@ terraform apply -var="subscription_id=<your-subscription-id>"
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [`az aks install-cli`][az-aks-install-cli] command.
 
+Before you connect, make sure the client has network and DNS access to the cluster's private API endpoint. You can connect from the cluster VNet or a connected network by using options such as VNet-injected Azure Cloud Shell, Azure Bastion, VNet peering, a private endpoint, ExpressRoute, or VPN. For more information, see [Establish network connectivity to a private AKS cluster][private-cluster-connect]. If you don't have direct network connectivity, use the [`az aks command invoke`][access-private-cluster] command to run commands through the Azure API.
+
 1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
     ```azurecli-interactive
@@ -890,9 +892,9 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
 
     ```output
     NAME                                STATUS   ROLES   AGE    VERSION
-    aks-nodepool1-12345678-vmss000000   Ready    agent   3h6m   v1.15.11
-    aks-nodepool1-12345678-vmss000001   Ready    agent   3h6m   v1.15.11
-    aks-nodepool1-12345678-vmss000002   Ready    agent   3h6m   v1.15.11
+    aks-nodepool1-12345678-vmss000000   Ready    agent   3h6m   v1.36.2
+    aks-nodepool1-12345678-vmss000001   Ready    agent   3h6m   v1.36.2
+    aks-nodepool1-12345678-vmss000002   Ready    agent   3h6m   v1.36.2
     ```
 
 ## Related content
@@ -923,3 +925,4 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [private-cluster-connect]: ./private-cluster-connect.md
+[access-private-cluster]: ./access-private-cluster.md

@@ -1,77 +1,75 @@
-﻿---
-title: Optimize GPU workloads on AKS with GPU profiling (Preview)
-description: Learn how to profile GPU workloads with real-time observability and analyze flame graphs to identify memory hotspots to optimize GPU workloads.
+---
+title: Set up GPU profiling on Azure Kubernetes Service (AKS) (Preview)
+description: Learn how to set up GPU memory profiling with Inspektor Gadget, Pyroscope, Azure Managed Grafana, and Azure Monitor managed service for Prometheus on AKS.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
-ms.date: 06/01/2026
+ms.date: 08/25/2026
 author: mayasingh17
 ms.author: mayasingh
 ai-usage: ai-assisted
-# Customer intent: As a platform engineer, I want to profile GPU workloads on AKS, so that I can identify memory allocation hotspots, optimize resource usage, and troubleshoot performance regressions in GPU based workloads.
+# Customer intent: As a platform engineer, I want to set up GPU profiling on AKS, so that I can identify memory allocation hotspots and troubleshoot GPU workload performance.
 ---
 
-# Optimize GPU workloads on Azure Kubernetes Service (AKS) with GPU profiling (Preview)
+# Set up GPU profiling on Azure Kubernetes Service (AKS) (Preview)
 
-GPU based workloads such as AI inference services can be memory-intensive and difficult to optimize and debug without deep visibility into what the GPU is actually doing. You might see out-of-memory (OOM) errors, unexpected latency spikes, or rising GPU memory pressure, but traditional Kubernetes metrics don't tell you *where* in the code the memory is being allocated. Profiling helps you understand the exact functions responsible for GPU memory usage.
+GPU-based workloads, such as AI inference services, can be memory intensive and difficult to optimize without visibility into GPU activity. You might see out-of-memory (OOM) errors, unexpected latency spikes, or rising GPU memory pressure, but traditional Kubernetes metrics don't show where the code allocates memory. GPU profiling helps you identify the functions responsible for GPU memory use.
+
+This article shows you how to deploy an eBPF-based GPU observability agent, store profiles in Pyroscope, and visualize GPU memory allocations in Grafana.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-This article walks you through how to use GPU observability on AKS:
-
-1. **Deploy real-time GPU observability agent**—use eBPF-based instrumentation to trace and profile GPU memory allocations.
-1. **Read flame graphs**—learn how to interpret the profiling output to find the exact functions consuming the most GPU memory.
-
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
-## Deploy GPU observability - GPU memory profiling on AKS
-
-### Prerequisites
+## Prerequisites
 
 - An AKS cluster with at least one GPU-enabled node pool.
-- [Azure CLI][install-azure-cli] version 2.72.0 or later installed. Run `az --version` to check.
-- The `k8s-extension` Azure CLI add-on installed. Run `az extension add --name k8s-extension` to install.
-- [Helm][helm-install] version 3.x or later installed. Run `helm version` to check.
-- Azure Monitor (optional, can use your own monitoring setup if preferred).
-- Azure Managed Grafana (optional, for visualization).
+- [Azure CLI][install-azure-cli] version 2.72.0 or later. Run `az --version` to check your version.
+- The `k8s-extension` Azure CLI extension. Run `az extension add --name k8s-extension` to install it.
+- [Helm][helm-install] version 3.x or later. Run `helm version` to check your version.
+- Azure Monitor, unless you use your own monitoring setup.
+- Azure Managed Grafana, unless you use your own Grafana instance.
 
+## Step 1: Enable GPU profiling via the Inspektor Gadget extension
 
-### Step 1: Enable GPU profiling via the Inspektor Gadget extension
+[Inspektor Gadget](https://inspektor-gadget.io/) is an open-source eBPF-based observability framework for Kubernetes. For GPU profiling, it traces Compute Unified Device Architecture (CUDA) memory allocation calls without code changes, sidecars, or pod restarts.
 
-[Inspektor Gadget](https://inspektor-gadget.io/) is an open source eBPF-based observability framework for Kubernetes. For GPU profiling, it traces Compute Unified Device Architecture (CUDA) memory allocation calls without requiring code changes, sidecars, or pod restarts. Enable GPU profiling on your AKS cluster by running the following extension command:
+Enable GPU profiling on your AKS cluster:
 
-```bash
+> [!NOTE]
+> This command assumes that you enabled Azure Monitor on your AKS cluster. If you use your own Prometheus setup, remove `--configuration-settings azureMonitor.enabled=true`. For more information, see the [GPU profiling FAQ](./gpu-profiling-faq.yml).
+
+```azurecli
 az k8s-extension create \
   --extension-type microsoft.inspektorgadget \
   --subscription <your-subscription-id> \
-  -g <your-resource-group> \
-  -c <your-cluster-name> \
-  -t managedClusters \
+  --resource-group <your-resource-group> \
+  --cluster-name <your-cluster-name> \
+  --cluster-type managedClusters \
   --release-train preview \
-  -n inspektor-gadget \
+  --name inspektor-gadget \
   --configuration-settings gpuObservability.enabled=true \
-  --configuration-settings azureMonitor.enabled=true \
+  --configuration-settings azureMonitor.enabled=true
 ```
 
-> [!NOTE]
-> This step assumes you already enabled Azure Monitor on your AKS cluster. If you plan to use your own Prometheus setup, remove `--configuration-settings azureMonitor.enabled=true`.
-
-Verify that pods are running:
+Verify that the Inspektor Gadget pods are running:
 
 ```bash
 kubectl get pods -n gadget -l k8s-app=gadget
 ```
 
 > [!TIP]
-> GPU memory profiling captures memory allocation events as they occur. If your workload allocates GPU memory before GPU profiling is enabled, the profiler doesn't capture those allocation events. For workloads such as vLLM that pre-allocate GPU memory during startup, enable GPU profiling before deploying the workload, or restart the workload to capture initial memory allocation paths.
+> GPU memory profiling captures memory allocation events as they occur. If your workload allocates GPU memory before you enable profiling, the profiler doesn't capture those events. For workloads such as vLLM that preallocate GPU memory during startup, enable profiling before you deploy the workload, or restart the workload to capture the initial memory allocation paths.
 
-### Step 2: Enable profile visualization with Pyroscope
+## Step 2: Enable profile visualization with Pyroscope
 
 > [!NOTE]
-> If you have an existing Grafana/Pyroscope stack in your cluster, you can skip this step.
+> If you have an existing Grafana and Pyroscope stack in your cluster, skip this step.
 
-[Pyroscope](https://pyroscope.io/) is an open source project that lets you visualize and store performance profiles, which are needed for memory optimization and troubleshooting. Run the following command to deploy a single [Pyroscope instance to your cluster](https://grafana.com/docs/pyroscope/latest/deploy-kubernetes/helm/):
+[Pyroscope](https://pyroscope.io/) is an open-source project that visualizes and stores performance profiles for memory optimization and troubleshooting.
+
+Deploy a single [Pyroscope instance](https://grafana.com/docs/pyroscope/latest/deploy-kubernetes/helm/) to your cluster:
 
 ```bash
 helm install pyroscope -n gadget \
@@ -93,33 +91,46 @@ helm install pyroscope -n gadget \
   --set minio.enabled=false
 ```
 
-Verify that pods are running:
+Verify that the Pyroscope pod is running:
 
 ```bash
 kubectl get pods -n gadget pyroscope-0
 ```
-> [!NOTE]
-> If you would like to deploy a highly available Pyroscope setup, refer to the [Pyroscope microservices documentation](https://grafana.com/docs/pyroscope/latest/reference-pyroscope-architecture/deployment-modes/#microservices-mode) for configuration options.
 
-### Step 3: Connect Pyroscope to Azure Managed Grafana
+> [!NOTE]
+> For a highly available deployment, see the [Pyroscope microservices documentation](https://grafana.com/docs/pyroscope/latest/reference-pyroscope-architecture/deployment-modes/#microservices-mode).
+
+> [!NOTE]
+> This command stores profiles on the local filesystem, so profiling data is lost if the pod is recreated. To persist profiles across pod restarts, see the [GPU profiling FAQ](./gpu-profiling-faq.yml).
+
+## Step 3: Connect Pyroscope to Azure Managed Grafana
+
+> [!NOTE]
+> If you use your own Grafana instance, see the [GPU profiling FAQ](./gpu-profiling-faq.yml).
 
 > [!TIP]
-> You can directly view your workload profiles using `kubectl port-forward -n gadget pyroscope-0 4040:4040` to connect to the Pyroscope UI.
+> To view workload profiles directly in the Pyroscope UI, run `kubectl port-forward -n gadget pyroscope-0 4040:4040`.
 
-Connecting Pyroscope to Azure Managed Grafana enables you to visualize the GPU profiles in Grafana dashboards. We need a secure way for AMG to connect to Pyroscope running as a Kubernetes pod, so we'll establish the connection using [Azure Private Link](/azure/private-link/private-link-service-overview). Start by setting up cluster-related environment variables:
+Connect Pyroscope to Azure Managed Grafana through [Azure Private Link](/azure/private-link/private-link-service-overview).
+
+Set the cluster and Grafana environment variables:
 
 ```bash
 export RESOURCE_GROUP="<your-resource-group>"
 export AKS_CLUSTER="<your-aks-cluster-name>"
 export LOCATION="<your-aks-cluster-location>"
 export GRAFANA_NAME="<your-azure-managed-grafana-name>"
-export AKS_NODE_RG=$(az aks show -g "$RESOURCE_GROUP" -n "$AKS_CLUSTER" --query 'nodeResourceGroup' -o tsv)
+export AKS_NODE_RG=$(az aks show \
+  --resource-group "$RESOURCE_GROUP" \
+  --name "$AKS_CLUSTER" \
+  --query 'nodeResourceGroup' \
+  --output tsv)
 ```
 
 > [!TIP]
-> If you don't have an existing Azure Managed Grafana instance, run `az grafana create -n "$GRAFANA_NAME" -g "$RESOURCE_GROUP" --location "$LOCATION" -o none` to create one.
+> If you don't have an Azure Managed Grafana instance, run `az grafana create --name "$GRAFANA_NAME" --resource-group "$RESOURCE_GROUP" --location "$LOCATION" --output none`.
 
-Create a private endpoint to connect Pyroscope to Azure Managed Grafana. Export variables for the private endpoint:
+Set the private endpoint environment variables:
 
 ```bash
 export PYROSCOPE_PLS="pyroscope-pls"
@@ -132,113 +143,123 @@ Create the private link:
 > [!NOTE]
 > Creating the private link can take a few minutes.
 
-```bash
-# Check amg extension version
-ver=$(az extension show --name amg --query version -o tsv)
+```azurecli
+# Check the Azure Managed Grafana extension version.
+ver=$(az extension show --name amg --query version --output tsv)
 [[ "${ver%%.*}" -ge 3 ]] && MPE="managed-private-endpoint" || MPE="mpe"
 
-# Ensure Pyroscope PLS is present
-until az network private-link-service show -n "$PYROSCOPE_PLS" -g "$AKS_NODE_RG" -o none 2>/dev/null; do
+# Wait until the Pyroscope private link service is available.
+until az network private-link-service show \
+  --name "$PYROSCOPE_PLS" \
+  --resource-group "$AKS_NODE_RG" \
+  --output none 2>/dev/null; do
   sleep 10
 done
 
-# Get the PLS resource ID
 PYRO_PLS_ID=$(az network private-link-service show \
-  -n "$PYROSCOPE_PLS" -g "$AKS_NODE_RG" --query 'id' -o tsv)
+  --name "$PYROSCOPE_PLS" \
+  --resource-group "$AKS_NODE_RG" \
+  --query 'id' \
+  --output tsv)
 
-# Create the MPE in Grafana
 az grafana $MPE create \
   --workspace-name "$GRAFANA_NAME" \
   --resource-group "$RESOURCE_GROUP" \
   --name "$PYROSCOPE_MPE" \
   --private-link-resource-id "$PYRO_PLS_ID" \
-  --location "$LOCATION" -o none
+  --location "$LOCATION" \
+  --output none
 
-# Wait for MPE to be ready
 sleep 30
 
-# Find the pending connection created by Grafana
 PYRO_CONN=$(az network private-link-service show \
-  -n "$PYROSCOPE_PLS" -g "$AKS_NODE_RG" \
-  --query "privateEndpointConnections[?privateLinkServiceConnectionState.status=='Pending' && starts_with(name, 'grafana-${GRAFANA_NAME}')].name | [0]" -o tsv)
+  --name "$PYROSCOPE_PLS" \
+  --resource-group "$AKS_NODE_RG" \
+  --query "privateEndpointConnections[?privateLinkServiceConnectionState.status=='Pending' && starts_with(name, 'grafana-${GRAFANA_NAME}')].name | [0]" \
+  --output tsv)
 
-# Approve it
 az network private-link-service connection update \
   --name "$PYRO_CONN" \
   --service-name "$PYROSCOPE_PLS" \
   --resource-group "$AKS_NODE_RG" \
-  --connection-status Approved -o none
+  --connection-status Approved \
+  --output none
 
-# Refresh Grafana so it sees the approval
 az grafana $MPE refresh \
   --workspace-name "$GRAFANA_NAME" \
-  --resource-group "$RESOURCE_GROUP" -o none
+  --resource-group "$RESOURCE_GROUP" \
+  --output none
 
-echo "Successfully created private-link"
+echo "Successfully created private link."
 ```
 
-Create the data source in Azure Managed Grafana:
+Create the Pyroscope data source in Azure Managed Grafana:
 
-```bash
-# Check amg extension version
-ver=$(az extension show --name amg --query version -o tsv)
+```azurecli
+ver=$(az extension show --name amg --query version --output tsv)
 [[ "${ver%%.*}" -ge 3 ]] && MPE="managed-private-endpoint" || MPE="mpe"
 
-# Grab the private IP
 PYRO_IP=$(az grafana $MPE show \
   --workspace-name "$GRAFANA_NAME" \
   --resource-group "$RESOURCE_GROUP" \
   --name "$PYROSCOPE_MPE" \
-  --query 'privateLinkServicePrivateIP' -o tsv)
+  --query 'privateLinkServicePrivateIP' \
+  --output tsv)
 
-# Prepare Pyroscope URL
 export PYROSCOPE_URL="http://${PYRO_IP}:${PYROSCOPE_PORT}"
 
-# Create Pyroscope data source in Grafana
-az grafana data-source create -n "$GRAFANA_NAME" -g "$RESOURCE_GROUP" --definition "{
-  \"name\": \"local-pyroscope\",
-  \"uid\": \"local-pyroscope\",
-  \"type\": \"grafana-pyroscope-datasource\",
-  \"access\": \"proxy\",
-  \"url\": \"${PYROSCOPE_URL}\",
-  \"jsonData\": { \"keepCookies\": [\"pyroscope_git_session\"] }
-}" -o none
+az grafana data-source create \
+  --name "$GRAFANA_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
+  --definition "{
+    \"name\": \"local-pyroscope\",
+    \"uid\": \"local-pyroscope\",
+    \"type\": \"grafana-pyroscope-datasource\",
+    \"access\": \"proxy\",
+    \"url\": \"${PYROSCOPE_URL}\",
+    \"jsonData\": { \"keepCookies\": [\"pyroscope_git_session\"] }
+  }" \
+  --output none
 
-echo "Successfully created local-pyroscope data-source"
+echo "Successfully created the local-pyroscope data source."
 ```
 
-> [!NOTE]
-> If you have an existing Grafana/Pyroscope stack in your cluster, you can skip this step.
+Verify that the data source has a valid URL:
 
-Verify the data source has a valid URL:
-
-```bash
-az grafana data-source show -n $GRAFANA_NAME --data-source local-pyroscope
+```azurecli
+az grafana data-source show \
+  --name "$GRAFANA_NAME" \
+  --data-source local-pyroscope
 ```
 
-### Step 4: Connect Grafana to Azure Monitor managed service for Prometheus
+## Step 4: Connect Grafana to Azure Monitor managed service for Prometheus
 
 > [!NOTE]
-> These steps are based on [Connect Azure Monitor managed service for Prometheus to Grafana](/azure/azure-monitor/metrics/prometheus-grafana?tabs=azure-managed-grafana). Make sure Grafana's managed identity has the **Monitoring Data Reader** role on the Azure Monitor workspace, especially if it's in a different resource group or subscription.
+> These steps are based on [Connect Azure Monitor managed service for Prometheus to Grafana](/azure/azure-monitor/metrics/prometheus-grafana?tabs=azure-managed-grafana). Make sure Grafana's managed identity has the **Monitoring Data Reader** role on the Azure Monitor workspace, especially if the workspace is in a different resource group or subscription.
 
-Export the required variables:
+Set the Azure Monitor workspace environment variables:
 
 ```bash
-export AMP_NAME="<your-amp-workspace-name>"
-export AMP_RESOURCE_GROUP="<your-amp-resource-group>"
+export AMP_NAME="<your-azure-monitor-workspace-name>"
+export AMP_RESOURCE_GROUP="<your-azure-monitor-workspace-resource-group>"
 ```
 
 > [!TIP]
-> Run `az resource list --resource-type Microsoft.Monitor/accounts -g $AMP_RESOURCE_GROUP -o table` to list Azure Monitor workspace information. The Azure Monitor workspace is often in a different resource group than your AKS cluster and Azure Managed Grafana instance—for example, when Managed Prometheus auto-creates a workspace in a regional `MA_<region>_<…>` resource group, or when a central platform team owns a shared workspace. To search across the subscription instead, omit `-g` and run `az resource list --resource-type Microsoft.Monitor/accounts -o table`.
+> Run `az resource list --resource-type Microsoft.Monitor/accounts --resource-group "$AMP_RESOURCE_GROUP" --output table` to list Azure Monitor workspaces in the resource group. To search the subscription, omit `--resource-group`.
 
-```bash
-# Get AMW endpoint
-AMP_ENDPOINT=$(az resource show --resource-type Microsoft.Monitor/accounts \
-  -n "$AMP_NAME" -g "$AMP_RESOURCE_GROUP" \
-  --query properties.metrics.prometheusQueryEndpoint -o tsv)
+Create the Prometheus data source:
 
-# Create Prometheus data source with MSI auth
-az grafana data-source create -n "$GRAFANA_NAME" -g "$RESOURCE_GROUP" \
+```azurecli
+AMP_ENDPOINT=$(az resource show \
+  --resource-type Microsoft.Monitor/accounts \
+  --name "$AMP_NAME" \
+  --resource-group "$AMP_RESOURCE_GROUP" \
+  --query properties.metrics.prometheusQueryEndpoint \
+  --output tsv)
+
+az grafana data-source create \
+  --name "$GRAFANA_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
   --definition "{
     \"name\": \"$AMP_NAME\",
     \"type\": \"prometheus\",
@@ -253,130 +274,65 @@ az grafana data-source create -n "$GRAFANA_NAME" -g "$RESOURCE_GROUP" \
 
 Verify the data source:
 
-```bash
-az grafana data-source show -n $GRAFANA_NAME --data-source $AMP_NAME
+```azurecli
+az grafana data-source show \
+  --name "$GRAFANA_NAME" \
+  --data-source "$AMP_NAME"
 ```
 
-### Step 5: Set up dashboards in Grafana
+## Step 5: Set up dashboards in Grafana
 
-```bash
+Import the GPU observability dashboard:
+
+```azurecli
 az grafana dashboard create \
-  -n "$GRAFANA_NAME" \
-  -g "$RESOURCE_GROUP" \
+  --name "$GRAFANA_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
   --definition "$(curl -sSL https://raw.githubusercontent.com/inspektor-gadget/grafana-dashboards/refs/heads/main/dashboards/gpu-observability/AdvancedGPUObservability.json)"
 ```
 
-Access the dashboard at:
+Get the dashboard URL:
 
 ```bash
-GRAFANA_URL=$(az grafana show -n "$GRAFANA_NAME" -g "$RESOURCE_GROUP" --query properties.endpoint -o tsv)
+GRAFANA_URL=$(az grafana show \
+  --name "$GRAFANA_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
+  --query properties.endpoint \
+  --output tsv)
 
 echo "${GRAFANA_URL}/d/AdvancedGPUObservability"
 ```
 
-For more information about reading the flame graphs shown in Grafana, see [Reading flame graphs](#reading-flame-graphs).
+To interpret the profiling data, see [Analyze GPU profiling flame graphs](./analyze-gpu-profiling-flame-graphs.md).
 
-### Clean up resources
+## Clean up resources
 
-To remove the in-cluster GPU observability stack:
+Remove the in-cluster GPU observability stack:
 
 ```bash
-helm uninstall inspektor-gadget -n gadget
 helm uninstall pyroscope -n gadget
+az k8s-extension delete \
+  --name inspektor-gadget \
+  --cluster-name <your-cluster-name> \
+  --resource-group <your-resource-group> \
+  --cluster-type managedClusters \
+  --yes
 kubectl delete namespace gadget
 ```
 
 ## Reading flame graphs
 
-After profiling data is flowing into Pyroscope and Grafana, you'll see flame graphs showing which functions consume the most GPU memory. The following sections explain how to read these visualizations.
+To interpret profiling results and identify GPU memory hotspots, see [Analyze GPU profiling flame graphs](./analyze-gpu-profiling-flame-graphs.md).
 
-### What is a flame graph?
+## FAQ
 
-A flame graph is a visualization of profiled call stacks. Each bar represents a function, and bars are stacked to show the call chain, who called whom. The width of each bar represents the amount of the measured resource (CPU time, GPU memory allocated, and so on) that flows through that function.
-
-**Key rule**: The wider a bar, the more of the measured resource flows through that function.
-
-The following sample flame graphs are captured from a vLLM inference workload.
-
-:::image type="content" source="media/gpu-profiling/flame-graph-initial.png" alt-text="Screenshot of the initial collapsed flame graph view in Grafana for a vLLM workload, showing stacked bars that represent GPU memory allocation call stacks." lightbox="media/gpu-profiling/flame-graph-initial.png":::
-
-> [!TIP]
-> Use **Expand all groups** in Grafana's flame graph panel to see the full call stack without collapsing. Use the **Search** box to find specific functions or keywords. To prevent the panel from collapsing again, pause the dashboard auto-refresh (set the refresh interval to **Off** in the top-right of the Grafana dashboard) while you inspect the expanded flame graph.
-
-:::image type="content" source="media/gpu-profiling/flame-graph-expanded.png" alt-text="Screenshot of the flame graph in Grafana for a vLLM workload after selecting Expand all groups, showing the full call stack with individual function frames for GPU memory allocations." lightbox="media/gpu-profiling/flame-graph-expanded.png":::
-
-> [!TIP]
-> Use **Focus block** to focus on a specific allocation path.
-
-### Read the symbols
-
-Flame graph labels follow these conventions:
-
-| Symbol format | Meaning |
-|---|---|
-| `Foo` → `bar` | `class Foo: method def bar()` |
-| `Foo` → `__init__` | Constructor of class `Foo` |
-| `bar` (alone) | Standalone `def bar()` function |
-| `<interpreter trampoline>` | CPython overhead—ignore |
-| `<raw-address>` e.g `0x7f151` | Native C/CUDA code—no Python symbol available |
-
-**Examples:**
-
-- `GPUModelRunner` / `_allocate_kv_cache_tensors`—A method on a class. Reads as `class GPUModelRunner: def _allocate_kv_cache_tensors(self)`.
-- `LlamaMLP` / `__init__`—A constructor. Called when creating a `LlamaMLP(...)` object.
-- `_compile_fx_inner`—A standalone module-level function not inside any class.
-
-### Understand self vs total
-
-This understanding is the most important concept when analyzing flame graphs.
-
-- **Total**—the resource consumed by a function *plus everything it calls*. A function can have a large total but allocate nothing itself—it's just a call chain.
-- **Self**—the resource consumed *directly* by the function, excluding its children. A high self value means this function is where the resource is actually consumed.
-
-Example: GPUModelRunner._allocate_kv_cache_tensors has 55.1 GB self—it's the function that actually calls torch.empty() to create the KV cache tensors.
-
-**Navigation tips:**
-
-- **Leaf nodes** (bars with nothing above them)—their entire width is self. Start here to find allocation hotspots.
-- **Wide bar with 0 self**—an orchestrator function that just calls others. Safe to skip when hunting for allocations.
-- **Wide bar with high self**—your optimization target.
-
-### Find the biggest resource consumer
-
-Use the following steps to identify hotspots:
-
-* **Look at the widest bars at the TOP of the graph**—These are leaf functions where memory is actually being allocated, the wider the bar the more it consumes.
-* **Check self vs total**—A wide bar at the bottom with `self: 0` is just a call chain. Follow it upward until you find a bar with high self allocation.
-* **Read the call stack bottom-to-top**—The ordering tells you why the function was called. For example:
-  ```
-    <raw-address> e.g 0x7f151               → native code entry
-    <interpreter trampoline>                → CPython dispatch
-    <module>                                → script top-level
-    EngineCoreProc.run_engine_core          → vLLM engine startup
-    EngineCore.__init__                     → engine initialization
-    EngineCore._initialize_kv_caches        → KV cache setup
-    Worker.initialize_from_config           → worker setup
-    GPUModelRunner.initialize_kv_cache      → model runner
-    GPUModelRunner._allocate_kv_cache_tensors → 💥 actual allocation
-  ```
-
-| Goal | What to look for |
-|---|---|
-| What allocates the most | Widest leaf bar (top of stack) |
-| What's responsible for the most | Widest bar (bottom of stack) |
-| Optimization targets | Bars with wide self—that's where the resource is consumed |
-| Functions to ignore | Wide bars with 0 self—they just call others |
-
+For custom Prometheus and Grafana integrations and persistent Pyroscope storage, see the [GPU profiling FAQ](./gpu-profiling-faq.yml).
 
 ## Next steps
 
-- [Use NVIDIA GPU Operator on AKS](./nvidia-gpu-operator.md)
-- [AKS-managed GPU nodes (preview)](./aks-managed-gpu-nodes.md)
-- [Monitor AI inference metrics on AKS with the AI toolchain operator](./ai-toolchain-operator-monitoring.md)
-- [Grafana Pyroscope documentation](https://grafana.com/docs/pyroscope/latest/)
+- [Monitor GPU metrics on AKS](./monitor-gpu-metrics.md)
+- [Review GPU observability best practices](./best-practices-gpu-observability.md)
 
 <!-- Links -->
 [install-azure-cli]: /cli/azure/install-azure-cli
 [helm-install]: https://helm.sh/docs/intro/install/
-[azure-pricing]: https://azure.microsoft.com/pricing/calculator/
-[azure-availability]: https://azure.microsoft.com/global-infrastructure/services/?products=kubernetes-service

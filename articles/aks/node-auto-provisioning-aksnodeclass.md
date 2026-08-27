@@ -28,7 +28,7 @@ The `imageFamily` field sets the default VM image and bootstrapping logic for no
 
 - **`Ubuntu`**: Ubuntu is the default Linux distribution for AKS nodes.
   - OS version defaults change based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes versions 1.25 to 1.33. Ubuntu 24.04 is default for Kubernetes versions 1.34 and later.
-- **`AzureLinux`**: Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more information, see the [Azure Linux documentation](/azure/aks/use-azure-linux)
+- **`AzureLinux`**: Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more information, see the [Azure Linux documentation](/azure/aks/use-azure-linux).
 
 #### Example image family configuration
 
@@ -52,6 +52,36 @@ The following example configures the 'AKSNodeClass' to select FIPS-compliant nod
 spec:
   fipsMode: FIPS
 ```
+
+## Artifact streaming
+
+[Artifact Streaming](./artifact-streaming-overview.md) allows you to stream container images from Azure Container Registry (ACR) to Azure Kubernetes Service (AKS). AKS only pulls the necessary layers for initial pod startup, reducing the time it takes to deploy your workloads.
+### Prerequisites
+
+- Artifact Streaming requires that you have a Premium tier ACR integrated with your AKS cluster. 
+- Artifact Streaming must be enabled in ACR.
+
+See [Artifact Streaming](./artifact-streaming.md) documentation for instructions on enabling Artifact Streaming in ACR.
+
+### Enable artifact streaming in NAP clusters
+
+Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming by using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Set this field to `true` to enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: my-node-class
+spec:
+  # Enables artifact streaming; To use this feature container images must also enable artifact streaming on ACR
+  # Valid values: true, false; defaults to false if not specified
+  artifactStreaming:
+    enabled: 
+      true
+```
+
+>[!NOTE]
+> To use artifact streaming on AKS NAP managed nodes, you must also enable artifact streaming in Azure Container Registry (ACR). If you don't set this option in ACR, the field defaults to false.  
 
 ## Virtual network (VNet) subnet configuration
 
@@ -122,7 +152,7 @@ spec:
           operator: Gt
           values: ["128"]  # Require ephemeral disk larger than 128 GB
       nodeClassRef:
-        apiVersion: karpenter.azure.com/v1beta1
+        group: karpenter.azure.com
         kind: AKSNodeClass
         name: my-node-class
 ---
@@ -291,7 +321,7 @@ spec:
 
 The `LinuxOSConfig` section allows you to configure various kubelet parameters that affect node behavior. These parameters are typical custom OS arguments, so the NAP simply passes them through to the kubelet on the node.
 
-For more on custom Linux OS configuration settings, full details on default values, and considerations, see our [custom node configuration documentation](./custom-node-configuration.md#linux-custom-os-configuration-settings).
+For more information about custom Linux OS configuration settings, default values, and considerations, see the [custom node configuration parameters reference](./custom-node-configuration-reference.md#linux-custom-os-configuration-parameters).
 
 > [!IMPORTANT]
 > **Configure Linux OS settings carefully**, and test any changes in nonproduction environments first.
@@ -374,7 +404,7 @@ spec:
 
 ## GPU settings
 
-The following field allows user to allow custom GPU driver installation, such as with NVIDIA GPU Operator. 
+Use the following field to enable custom GPU driver installation, such as with the NVIDIA GPU Operator.
 
 ```yaml 
 spec:
@@ -403,7 +433,7 @@ For more information about host-based encryption, see [Encryption at Host docume
 
 ### Custom-managed keys and disk encryption sets
 
-NAP supports clusters that use customer-managed keys and disk encryption sets. You enable these options at the cluster level. They don't have AKSNodeClass fields that you need to set. Make sure that your cluster identity has the proper [role-based access control (RBAC)](./aks-desktop-permissions.md):
+NAP supports clusters that use customer-managed keys and disk encryption sets. Enable these options at the cluster level. They don't have `AKSNodeClass` fields that you need to set. Ensure that your cluster identity has the proper [role-based access control (RBAC)](./aks-desktop-permissions.md):
 
 - The cluster identity has `Reader` access to the Disk Encryption Set.
 - The Disk Encryption set resource has `Key Vault Crypto Service Encryption User` access to the Azure Key Vault. 
@@ -444,7 +474,7 @@ spec:
   template:
     spec:
       nodeClassRef:
-        apiVersion: karpenter.azure.com/v1beta1
+        group: karpenter.azure.com
         kind: AKSNodeClass
         name: comprehensive-example
 ---
@@ -462,6 +492,11 @@ spec:
   # Default: Disabled
   # Valid values: FIPS, Disabled
   fipsMode: Disabled
+
+  # Artifact Streaming- allows use of artifact streaming feature; To use this feature container images must also enable artifact streaming on ACR
+  # Valid values: true, false; defaults to false if not specified
+  artifactStreaming:
+    enabled: true
 
   # LocalDNS mode - allows use of LocalDNS feature
   # Default: Disabled

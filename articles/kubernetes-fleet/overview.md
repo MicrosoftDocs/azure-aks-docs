@@ -27,7 +27,7 @@ Fleet Manager supports the following scenarios:
 
 * Include optional [manual or automated approvals](./update-strategies-gates-approvals.md) for update groups and stages to provide more fine-grained control over when updates are applied.
 
-* Automatically trigger version upgrades when new Kubernetes or node image versions are published by defining one or more [auto-upgrade profile](./concepts-update-orchestration.md#understanding-auto-upgrade-profiles).
+* Automatically trigger version upgrades when new Kubernetes or node image versions are published by defining one or more [auto-upgrade profile](./concepts-update-orchestration.md#auto-upgrade-profiles-overview).
 
 * Deploy a hub cluster to enable intelligent placing of Kubernetes resources across member clusters based on cluster labels and properties using Fleet Manager [cluster resource placement](./concepts-resource-placement.md) and [namespace-scoped resource placement](./concepts-namespace-scoped-resource-propagation.md).
 

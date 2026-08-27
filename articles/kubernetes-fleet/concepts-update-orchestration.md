@@ -1,7 +1,7 @@
 ---
 title: "Safely update Kubernetes and node images across multiple clusters"
 description: This article describes the foundational concepts for Azure Kubernetes Fleet Manager Update Runs for safe and reliable multi-cluster updates.
-ms.date: 07/17/2026
+ms.date: 08/21/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -13,7 +13,7 @@ ms.topic: concept-article
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
-Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager allows you to orchestrate updates across multiple clusters using update runs.
+Platform admins who manage large numbers of clusters often have problems staging updates for multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager allows you to orchestrate updates across multiple clusters by using update runs.
 
 Update runs consist of stages, groups, and strategies. You can apply update runs manually for one-time updates or automatically for ongoing regular updates by using auto-upgrade profiles. All update runs, both manual and automated, honor cluster [maintenance windows][aks-maintenance-windows].
 
@@ -23,11 +23,11 @@ An update run represents an update being applied to a collection of AKS clusters
 
 To achieve the best results when using update runs, it's important to understand the following concepts.
 
-* **Update Strategy**: describes a reusable update sequence consisting of stages and groups of clusters. A cluster appears in a group in a stage based on the update group it's assigned. For further information, see [understanding update strategies](#understanding-update-strategies).
+* **Update Strategy**: describes a reusable update sequence consisting of stages and groups of clusters. A cluster appears in a group in a stage based on the update group or member labels it's assigned. For more information, see [understanding update strategies](#understanding-update-strategies).
 
     * **Update Stage**: an Update Strategy is divided into Update Stages, which are applied sequentially. For example, test environment clusters are in the first Update Stage, while production environment clusters go in a second Update Stage. An Update Stage contains one or more Update Groups. You can use additional controls such as maximum concurrency, wait times, and approval gates for more control over Update Stage execution.
     
-    * **Update Group**: Each Update Stage contains one or more Update Groups, which select clusters to update. Assign member clusters to Update Groups by using the Update Group property of the cluster. Update Groups in an Update Stage update in parallel. 
+    * **Update Group**: Each Update Stage contains one or more Update Groups, which select clusters to update. Assign member clusters to Update Groups by using either the Update Group property of the cluster or the in-preview label-based matching by using [member labels](#group-clusters-using-member-labels-preview). Update Groups in an Update Stage update in parallel. 
 
     > [!NOTE]
     > The maximum number of Update Groups in each Update Stage is **50**.
@@ -140,13 +140,13 @@ Update run prioritizes upgrading clusters based on planned maintenance in the fo
   3. Cluster with no maintenance window.
   4. Cluster with a closed maintenance window. 
   
-## Understanding Auto-upgrade Profiles
+## Auto-upgrade profiles overview
 
 Use Auto-upgrade Profiles to automatically trigger Update Runs when new Kubernetes or node image versions are available for AKS.
 
 In an Auto-upgrade Profile, you configure:
 
-- a **Channel** ([Rapid](#rapid-channel), [Stable](#stable-channel), [TargetKubernetesVersion](#targetkubernetesversion-channel), [NodeImage](#nodeimage-channel)) which determines the type of update applied to the clusters.
+- a **Channel** ([Rapid](#rapid-channel), [Stable](#stable-channel), [TargetKubernetesVersion](#targetkubernetesversion-channel), [NodeImage](#nodeimage-channel), [SecurityPatch](#securitypatch-channel-preview) (preview)) which determines the type of update applied to the clusters.
 - an **UpdateStrategy** that configures the sequence in which the clusters are upgraded. If you don't supply a strategy, clusters update one by one sequentially.
 - the **NodeImageSelectionType** (Latest, Consistent) to specify how the node image is selected when upgrading the Kubernetes version.
 
@@ -169,7 +169,9 @@ In an Auto-upgrade Profile, you configure:
 >
 > * When using the `TargetKubernetesVersion` channel, you must specify the target Kubernetes version using the `--target-kubernetes-version` parameter.
 >
-> * If you want to upgrade your Node Image version, create an Auto-upgrade Profile with the `NodeImage` channel.
+> * If you want to upgrade your Node Image version, create an Auto-upgrade Profile with `NodeImage`, or `SecurityPatch` channels.
+>
+> * The `SecurityPatch` channel applies security patches to Linux nodes only. Windows nodes are skipped.
 >
 > * You can create multiple auto-upgrade profiles for the same Fleet Manager.
 
@@ -224,11 +226,41 @@ When a cluster has agent pools that were [created from a node pool snapshot](/az
 | **Latest**           | Follows standard AKS upgrade behavior. The agent pool keeps its reference to the snapshot (`creationData`), and the node image isn't modified. |
 | **Consistent**       | The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool. |
 
+### SecurityPatch channel (preview)
+
+Update member cluster **Linux** nodes with **only security fixes** on a weekly cadence. [Canonical Ubuntu](https://ubuntu.com/server) and [Azure Linux](/azure/azure-linux/intro-azure-linux) make OS security patches available once a day. Microsoft tests these patches and bundles them into weekly updates to node images.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
+The SecurityPatch Auto-upgrade channel is less disruptive as it uses OS live patching when possible, minimizing node disruption while keeping nodes protected against known vulnerabilities. When live patching isn't possible a pre-patched node image is deployed instead.
+
+Only Linux-based nodes are updated when using `SecurityPatch`, and Windows-based nodes are automatically skipped.
+
+If you need bug fixes that come with new node images (VHD), or a consistent experience with Windows nodes, choose the [NodeImage](#nodeimage-channel) channel instead.
+
 ## Understanding Update Strategies
 
 Administrators can control the order in which clusters are updated by building reusable Update Strategies using series of Update Stages and Groups. They can configure when approvals and pauses should occur within those stages and groups. The entire configuration can be saved as an Update Strategy which can be managed independently of Update Runs or Auto-upgrade Profiles, allowing strategies to be reused as required.
 
 :::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="A diagram showing an example update strategy containing two update stages. Each update stage contains two update groups. Each update group contains two clusters." lightbox="./media/conceptual-update-orchestration-inline.png":::
+
+### Group clusters using member labels (preview)
+
+Member labels can be used to group clusters and configure your update sequence with Kubernetes-style label selectors. This way, you can assign multiple labels to member clusters and use them for different strategies instead of being restricted to a single update group per cluster. You can group clusters in your strategy with their member labels by configuring `memberSelector` on your strategy at two levels:
+
+- **Stage level**: Selects clusters for the entire stage. When no groups are defined, all matching clusters form a single implicit group. When groups are also defined, the stage-level selector acts as a pre-filter before group-level matching is applied.
+- **Group level**: Selects clusters for a specific group within a stage, enabling parallel subsets with different concurrency limits.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
+`memberSelector` uses a string-based label selector that's parsed by using standard Kubernetes label selector syntax. Supported operators are: `=`, `==`, `!=`, `in`, `notin`, `exists`, and `!exists`.
+
+> [!NOTE]
+> Use member labels instead of update groups to group clusters in update strategies. By using member labels, you can easily manage large fleets with dynamic membership and complex grouping needs. 
+>
+> Existing group name based strategies continue to work without changes. 
+
+For instructions on assigning member labels and using `memberSelector` in a strategy, see [Create an update strategy using member selectors](./update-create-update-strategy.md#create-an-update-strategy-using-member-selectors-preview).
 
 ### Maximum concurrency (preview)
 
