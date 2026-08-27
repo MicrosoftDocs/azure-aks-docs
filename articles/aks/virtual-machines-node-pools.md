@@ -4,7 +4,7 @@ description: Learn how to add multiple Virtual Machine types of a similar family
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ai-usage: ai-assisted
-ms.date: 08/26/2026
+ms.date: 08/27/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
