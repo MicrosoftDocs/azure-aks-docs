@@ -1,12 +1,13 @@
 ---
 title: Machine Learning Operations (MLOps) Best Practices in Azure Kubernetes Service (AKS)
-description: Learn MLOps best practices for AI and machine learning workflows on Azure Kubernetes Service (AKS), including guidance for AKS Automatic and AKS Standard.
+description: Learn MLOps and long-running batch job best practices for AI and machine learning workflows on Azure Kubernetes Service (AKS).
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
-ms.custom: aks-ai-ml
-ms.date: 07/22/2026
+ms.custom: aks-ai-ml, aeo-round-2
+ms.date: 08/26/2026
 author: schaffererin
 ms.author: schaffererin
+ai-usage: ai-assisted
 # Customer intent: As a machine learning engineer, I want to implement MLOps best practices in my AI workflows on Kubernetes, so that I can ensure consistent, scalable, and secure deployment and management of machine learning models.
 ---
 
@@ -23,6 +24,7 @@ MLOps is a set of practices for deploying, monitoring, and managing machine lear
 > - Model management and versioning
 > - Automation
 > - Scalability and resource management
+> - Long-running batch job reliability
 > - Security and compliance
 
 This article describes best practices and considerations to keep in mind when using MLOps in AKS. For more information on MLOps, see [Machine learning operations (MLOps) for AI and machine learning workflows](./concepts-machine-learning-ops.md).
@@ -102,6 +104,138 @@ Scalability and resource management are critical for ensuring that your AI pipel
 - Plan for disaster recovery by following [AKS resiliency and reliability best practices](./best-practices-app-cluster-reliability.md).
 
 AKS Automatic can reduce setup overhead for common scaling and operations patterns, while AKS Standard provides deeper control for custom scaling architectures.
+
+## Run long-running batch jobs
+
+**Key takeaway**: Run finite work as a Kubernetes `Job`, persist progress outside the pod, handle termination signals, and assume that the Job might start more than once.
+
+Node upgrades, reboots, scale-down events, resource pressure, preemption, and infrastructure failures can interrupt long-running batch jobs. A Kubernetes `Job` replaces a failed or deleted pod, but the replacement starts on another node without the previous pod's local files or process memory. Design the application to resume from durable state and safely repeat work.
+
+Use these practices for ordinary CPU, memory, or I/O-intensive batch jobs. The [gang scheduling and workload queue guidance](#use-gang-scheduling-and-workload-queues) applies when a distributed workload requires multiple workers to start together or when teams need shared quotas. A single-worker or independently parallel batch job normally doesn't need gang scheduling.
+
+### Configure checkpointing, retries, and termination
+
+The following example processes a sequence of work items and records the next item on an Azure Files persistent volume. It restores the checkpoint after a pod replacement and saves progress when the process receives `SIGTERM`:
+
+```yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: batch-checkpoints
+spec:
+  accessModes:
+  - ReadWriteMany
+  storageClassName: azurefile-csi
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: checkpointed-batch
+spec:
+  backoffLimit: 6
+  activeDeadlineSeconds: 86400
+  ttlSecondsAfterFinished: 86400
+  podFailurePolicy:
+    rules:
+    - action: Ignore
+      onPodConditions:
+      - type: DisruptionTarget
+  template:
+    metadata:
+      labels:
+        app: checkpointed-batch
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 120
+      containers:
+      - name: worker
+        image: ubuntu:24.04
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -euo pipefail
+
+          CHECKPOINT=/checkpoints/next-item
+          NEXT_ITEM=1
+
+          if [[ -f "${CHECKPOINT}" ]]; then
+            NEXT_ITEM="$(cat "${CHECKPOINT}")"
+            echo "Resuming at item ${NEXT_ITEM}."
+          fi
+
+          save_checkpoint() {
+            printf '%s\n' "${NEXT_ITEM}" > "${CHECKPOINT}.tmp"
+            mv "${CHECKPOINT}.tmp" "${CHECKPOINT}"
+            echo "Saved checkpoint for item ${NEXT_ITEM}."
+          }
+
+          terminate() {
+            echo "Received a termination signal."
+            save_checkpoint
+            exit 143
+          }
+
+          trap terminate TERM INT
+
+          while (( NEXT_ITEM <= 1000 )); do
+            echo "Processing item ${NEXT_ITEM}."
+            sleep 10
+            NEXT_ITEM=$((NEXT_ITEM + 1))
+            save_checkpoint
+          done
+
+          echo "Batch completed."
+        resources:
+          requests:
+            cpu: "1"
+            memory: 1Gi
+          limits:
+            cpu: "1"
+            memory: 1Gi
+        volumeMounts:
+        - name: checkpoints
+          mountPath: /checkpoints
+      volumes:
+      - name: checkpoints
+        persistentVolumeClaim:
+          claimName: batch-checkpoints
+```
+
+Replace the sample loop with your batch application and select storage that meets its throughput and recovery requirements. Use workload identity instead of embedded credentials when the application checkpoints directly to Azure Blob Storage or another Azure service.
+
+Apply these reliability controls deliberately:
+
+- **Checkpointing and idempotency**: Save progress at an interval that meets your recovery point objective. Store checkpoints and committed output on persistent storage, not the container file system, `emptyDir`, or node-local storage. Use atomic writes, idempotency keys, transactional output, or deduplication because the same Job program can sometimes start more than once.
+- **Restart behavior**: A Job allows `restartPolicy: Never` or `OnFailure`. With `Never`, a failed container produces a failed pod and the Job controller creates a replacement. With `OnFailure`, the kubelet can restart the container in the same pod. Use `Never` when separate failed pods and logs make diagnosis easier, and make either path safe to resume.
+- **Retry limits**: Set `backoffLimit` based on the number of transient failures the workload can tolerate. Use `podFailurePolicy` to fail immediately for known nonretryable exit codes or, as in the example, prevent voluntary disruptions from consuming the retry budget. A disruption can still stop the pod; the policy only changes how the Job counts that failure.
+- **Deadlines**: Set `activeDeadlineSeconds` when the Job must stop after a maximum total runtime. The deadline includes retries and takes precedence over `backoffLimit`. Don't set a deadline shorter than the expected runtime plus retry and recovery time. A failed Job isn't automatically restarted as a new Job.
+- **Graceful termination**: Handle `SIGTERM` in the application and set `terminationGracePeriodSeconds` long enough to stop accepting new work, finish or abandon the current unit safely, flush output, and save a checkpoint. Kubernetes sends `SIGKILL` if the process exceeds the grace period, so periodic checkpoints remain necessary.
+- **Cleanup**: Set `ttlSecondsAfterFinished` or configure CronJob history limits to prevent completed Jobs and pods from accumulating. Retain Job records long enough for log collection and incident investigation.
+
+### Plan for evictions and node maintenance
+
+Don't treat eviction blocking as the primary recovery strategy for a long-running job. For a restartable batch job, normally don't create a `PodDisruptionBudget` (PDB); the job controller creates a replacement pod after a voluntary disruption. A PDB protects only against voluntary evictions and doesn't protect against node failure, resource-pressure eviction, or preemption. A PDB that allows zero disruptions can also block node drains and delay AKS upgrades.
+
+Use a PDB only when a parallel batch workload must retain a minimum number of concurrently running workers and you have tested its drain behavior. Similarly, use `cluster-autoscaler.kubernetes.io/safe-to-evict: "false"` only for exceptional, nonrestartable work. The annotation can prevent scale-down and increase cost, but it doesn't protect against node failure or every maintenance event.
+
+AKS upgrades cordon and drain old nodes before replacing them. Configure [planned maintenance windows](./planned-maintenance.md) to align supported AKS maintenance with lower-impact periods, but keep the workload restartable because maintenance timing doesn't eliminate unplanned disruptions. For AKS Standard, run batch jobs on a dedicated user node pool when they need separate VM sizes, scaling limits, taints, or upgrade timing. Avoid Spot node pools for work that can't recover from preemption. Before node maintenance, verify that recent checkpoints are usable and that another eligible node pool has enough quota and capacity to run replacement pods.
+
+### Monitor job progress and recovery
+
+Use Kubernetes status, events, and logs together when you investigate a long-running job:
+
+```bash
+kubectl get job checkpointed-batch --watch
+kubectl describe job checkpointed-batch
+kubectl get pods -l batch.kubernetes.io/job-name=checkpointed-batch
+kubectl logs job/checkpointed-batch
+```
+
+Enable [Azure Monitor managed service for Prometheus and Container Insights](./monitor-aks.md) to retain logs and correlate job state with pod restarts, evictions, pending time, node health, and resource utilization. Instrument the application with business progress signals such as items completed, items failed, last successful checkpoint time, processing rate, retry count, and estimated completion time. Alert on a failed job, a job that exceeds its expected duration, no checkpoint within the recovery point objective, repeated pod replacements, sustained pending pods, and stalled processing throughput.
 
 ## Security and compliance
 
@@ -1614,6 +1748,10 @@ Install the Kubeflow Training Operator and submit a `PyTorchJob` or `TFJob` to m
 ### How do I manage GPU quota across multiple teams?
 
 Install Kueue and define `ClusterQueue` resources with CPU, memory, and `nvidia.com/gpu` quotas, then map each team's namespace to its assigned quota through a `LocalQueue`. Use Kueue cohorts or fair sharing when teams can borrow unused capacity. Volcano is an alternative when you require a batch scheduler with all-or-nothing worker admission. Coordinate queue priority with Kubernetes `PriorityClass` resources so latency-sensitive inference can preempt interruptible training, and ensure preemptible training jobs recover from checkpoints on persistent storage.
+
+### What are the best practices for running long-running batch jobs on AKS?
+
+Use a Kubernetes `Job` for finite work and a `CronJob` for scheduled work. Persist checkpoints and committed output outside the pod, make processing idempotent, handle `SIGTERM`, and set explicit resource requests, retry limits, deadlines, and cleanup policies. Assume node maintenance or failure can replace the pod, and test that the replacement restores its checkpoint correctly. Monitor Job status, pod events, logs, checkpoint age, throughput, and retry behavior. Ordinary restartable Jobs don't require gang scheduling or a PDB. Use those controls only when parallel workers must start together or maintain a tested minimum concurrency.
 
 ## Related content
 
