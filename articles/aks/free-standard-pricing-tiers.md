@@ -60,6 +60,9 @@ Standard and Premium tiers include uptime SLA by default:
 - **Without availability zones**: 99.9% availability of the Kubernetes API server
 - **Free tier**: best-effort uptime (no financially backed SLA)
 
+> [!NOTE]
+> When an AKS cluster is deployed in a region that supports availability zones, the AKS controlplane is automatically distributed across multiple zones by default, regardless of whether the nodepools are configured to use availability zones. For example, when an AKS cluster is deployed with the `Standard` tier in the eastus region, the controlplane is automatically configured with availability zones because the eastus region supports availability zones. 
+
 AKS Automatic clusters are preconfigured with Standard tier and include both cluster uptime SLA and pod readiness SLA coverage.
 
 For more information, see the [AKS SLA](https://azure.microsoft.com/support/legal/sla/kubernetes-service/v1_1/).
