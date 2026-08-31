@@ -13,7 +13,7 @@ ms.date: 08/26/2026
 # Use custom certificate authorities (CAs) in Azure Kubernetes Service (AKS)
 
 
-Custom Certificate Authority (CA) allows you to add up to 10 base64-encoded certificates to your node's trust store. For new clusters, the CA certificate content can't exceed 35 KB. This feature is often needed when certificate authorities (CAs) are required to be present on the node, like when connecting to a private registry.
+Custom Certificate Authority (CA) support lets you add up to 10 base64-encoded certificates to your node's trust store. For new clusters, the CA certificate content can't exceed 35 KB. You often need this feature when the node requires certificate authorities (CAs), such as when connecting to a private registry.
 
 This article shows you how to create custom CAs and apply them to your AKS clusters.
 
