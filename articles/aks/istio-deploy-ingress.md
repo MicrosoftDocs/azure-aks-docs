@@ -262,7 +262,7 @@ The add-on supports the following health probe annotations for ports `80` and `4
 
 The following annotations can be added to the Kubernetes deployment for the external and internal ingress gateways:
 
-- Under `spec.template.metadata.annotations`: `proxy.istio.io/config`. Use this annotation to configure settings such as `gatewayTopology.numTrustedProxies`. `ProxyConfig` annotations added to the ingress gateway pod or other workloads in the mesh will override the `ProxyConfig` values set in the default MeshConfig and [shared MeshConfig][istio-meshconfig].
+- Under `spec.template.metadata.annotations`: `proxy.istio.io/config`. Use this annotation to configure settings such as `gatewayTopology.numTrustedProxies`. `ProxyConfig` annotations added to the ingress gateway pod or other workloads in the mesh override the `ProxyConfig` values set in the default MeshConfig and [shared MeshConfig][istio-meshconfig].
 
 ### External traffic policy
 
