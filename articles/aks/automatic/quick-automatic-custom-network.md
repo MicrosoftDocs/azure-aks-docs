@@ -2,10 +2,11 @@
 title: 'Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster in a custom virtual network'
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic in a custom virtual network.
 ms.topic: quickstart
-ms.date: 06/02/2026
+ms.date: 08/25/2026
+ms.custom: devx-track-azurecli, devx-track-bicep, devx-track-terraform
 author: wangyira
 ms.author: wangamanda
-zone_pivot_groups: bicep-azure-cli
+zone_pivot_groups: bicep-azure-cli-terraform
 # Customer intent: As a DevOps engineer, I want to deploy an AKS Automatic cluster within a custom virtual network, so that I can leverage managed Kubernetes for my applications while ensuring optimal network configuration and security.
 ---
 
@@ -32,6 +33,15 @@ If you don't have an Azure account, create a [free account](https://azure.micros
 
 :::zone-end
 
+:::zone pivot="terraform"
+
+- [Install and configure Terraform][terraform-install-configure].
+
+> [!NOTE]
+> This sample creates the AKS Automatic cluster with the AzureRM provider's `azurerm_kubernetes_automatic_cluster` resource, which requires AzureRM provider version `v4.81` or later. For an equivalent sample that uses the AzAPI provider, see the [101-aks-automatic-custom-network-azapi](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-automatic-custom-network-azapi) sample.
+
+:::zone-end
+
 - Cluster identity with a `Network Contributor` built-in role assignment on the API server subnet.
 - Cluster identity with a `Network Contributor` built-in role assignment on the virtual network to support [Node Autoprovisioning](../node-autoprovision.md).
 - User identity accessing the cluster with [`Azure Kubernetes Service Cluster User Role`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-cluster-user-role) and [`Azure Kubernetes Service RBAC Writer`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-writer).
@@ -44,6 +54,8 @@ If you don't have an Azure account, create a [free account](https://azure.micros
 [!INCLUDE [Kubernetes gateway](../includes/aks-automatic/aks-automatic-kubernetes-gateway.md)]
 
 [!INCLUDE [Automatic limitations](../includes/aks-automatic/aks-automatic-limitations.md)]
+
+:::zone pivot="azure-cli,bicep"
 
 ## Define variables
 
@@ -73,6 +85,8 @@ The following sample output resembles successful creation of the resource group:
   "tags": null
 }
 ```
+
+:::zone-end
 
 :::zone pivot="azure-cli"
 
@@ -259,6 +273,91 @@ aks-system-surge-zq4d2         Ready    <none>   19m   v1.34.7
 
 :::zone-end
 
+:::zone pivot="terraform"
+
+## Review the Terraform code
+
+> [!NOTE]
+> The sample code for this article is located in the [Azure Terraform GitHub repo](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-automatic-custom-network). You can view the log file containing the [test results from current and previous versions of Terraform](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-automatic-custom-network/TestRecord.md).
+>
+> See more [articles and sample code showing how to use Terraform to manage Azure resources](/azure/terraform).
+
+1. Create a directory in which to test the sample Terraform code and make it the current directory.
+1. Create a file named `providers.tf` and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-automatic-custom-network/providers.tf)]
+
+1. Create a file named `main.tf` and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-automatic-custom-network/main.tf)]
+
+1. Create a file named `variables.tf` and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-automatic-custom-network/variables.tf)]
+
+1. Create a file named `outputs.tf` and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-automatic-custom-network/outputs.tf)]
+
+## Initialize Terraform
+
+Run [terraform init](https://developer.hashicorp.com/terraform/cli/commands/init) to initialize the Terraform deployment. This command downloads the Azure providers required to manage your Azure resources.
+
+```console
+terraform init -upgrade
+```
+
+## Create a Terraform execution plan
+
+Run [terraform plan](https://developer.hashicorp.com/terraform/cli/commands/plan) to create an execution plan.
+
+```console
+terraform plan -out main.tfplan
+```
+
+## Apply a Terraform execution plan
+
+Run [terraform apply](https://developer.hashicorp.com/terraform/cli/commands/apply) to apply the execution plan to your cloud infrastructure.
+
+```console
+terraform apply main.tfplan
+```
+
+Creating an AKS Automatic cluster takes several minutes to complete.
+
+## Verify the cluster
+
+1. Get the Azure resource group name and cluster name.
+
+    ```console
+    resource_group_name=$(terraform output -raw resource_group_name)
+    cluster_name=$(terraform output -raw cluster_name)
+    ```
+
+1. Run [az aks show][az-aks-show] to display the cluster and confirm it uses the `Automatic` SKU and your custom subnets.
+
+    ```azurecli
+    az aks show --resource-group $resource_group_name --name $cluster_name --query "{name:name, sku:sku, provisioningState:provisioningState, apiServerSubnet:apiServerAccessProfile.subnetId}"
+    ```
+
+## Connect to the cluster
+
+To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. You can install `kubectl` locally using the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
+
+Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command.
+
+```azurecli
+az aks get-credentials --resource-group $resource_group_name --name $cluster_name
+```
+
+Verify the connection to your cluster using the [kubectl get][kubectl-get] command.
+
+```bash
+kubectl get nodes
+```
+
+:::zone-end
+
 ## Deploy the application
 
 To deploy the application, you use a manifest file to create all the objects required to run the [AKS Store application](https://github.com/Azure-Samples/aks-store-demo). A [Kubernetes manifest file][kubernetes-deployment] defines a cluster's desired state, such as which container images to run. The manifest includes the following Kubernetes deployments and services:
@@ -338,6 +437,8 @@ When the application runs, a Kubernetes service exposes the application front en
 
 ## Delete the cluster
 
+:::zone pivot="azure-cli,bicep"
+
 If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up unnecessary resources to avoid Azure charges. Run the [az group delete][az-group-delete] command to remove the resource group, container service, and all related resources.
 
 ```azurecli-interactive
@@ -345,6 +446,24 @@ az group delete --name <resource-group> --yes --no-wait
 ```
 > [!NOTE]
 > The AKS cluster was created with a user-assigned managed identity. If you don't need that identity anymore, you can manually remove it.
+
+:::zone-end
+
+:::zone pivot="terraform"
+
+When you no longer need the resources created via Terraform, run [terraform plan](https://developer.hashicorp.com/terraform/cli/commands/plan) and specify the `destroy` flag.
+
+```console
+terraform plan -destroy -out main.destroy.tfplan
+```
+
+Run [terraform apply](https://developer.hashicorp.com/terraform/cli/commands/apply) to apply the execution plan.
+
+```console
+terraform apply main.destroy.tfplan
+```
+
+:::zone-end
 
 ## Next steps
 
@@ -372,6 +491,7 @@ To learn more about AKS Automatic, continue to the introduction.
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [az-group-create]: /cli/azure/group#az-group-create
 [az-group-delete]: /cli/azure/group#az-group-delete
 [node-auto-provisioning]: ../node-autoprovision.md
@@ -393,3 +513,4 @@ To learn more about AKS Automatic, continue to the introduction.
 [concepts-network-custom-vnet]: ../concepts-network.md#custom-virtual-network-requirements
 [az-provider-register]: /azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider
 [azure-sla]: https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services
+[terraform-install-configure]: /azure/developer/terraform/quickstart-configure
