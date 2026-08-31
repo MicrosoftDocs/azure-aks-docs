@@ -48,6 +48,18 @@ groups:
     title: Azure CLI
   - id: bicep
     title: Bicep
+- id: bicep-azure-cli-portal-terraform
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-portal
+    title: Azure portal
+  - id: azure-cli
+    title: Azure CLI
+  - id: bicep
+    title: Bicep
+  - id: terraform
+    title: Terraform
 # Owner: simonwaight
 - id: azure-portal-azure-cli
   title: Interaction type
