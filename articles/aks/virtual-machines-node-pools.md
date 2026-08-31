@@ -3,11 +3,10 @@ title: Use Virtual Machines Node Pools in Azure Kubernetes Service (AKS)
 description: Learn how to add multiple Virtual Machine types of a similar family to a Virtual Machines node pool in an AKS cluster.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ai-usage: ai-assisted
-ms.date: 08/27/2026
-ms.author: schaffererin
-author: schaffererin
-ms.service: azure-kubernetes-service
+ms.date: 07/28/2026
+ms.author: wilsondarko
+author: wdarko1
+
 # Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types. I want to minimize capacity constraints by having greater flexibility in VM size selection.
 ---
 
@@ -284,59 +283,16 @@ az aks nodepool manual-scale delete \
     --current-vm-sizes "Standard_D8s_v3"
 ```
 
-## Cluster autoscaler with Virtual Machines node pools (preview)
-Virtual Machines node pools support [cluster autoscaler][cluster-autoscaler]. This preview feature requires Azure CLI version 2.85.0 or later, the `aks-preview` extension, and registration of the `VMsAgentPoolAutoscalePreview` feature flag. After you meet these prerequisites, you can use `--enable-cluster-autoscaler` during cluster creation, while adding a new node pool, or when updating an existing manual node pool.
+## Cluster autoscaler with Virtual Machines Node Pools
+Virtual Machines node pools support [cluster autoscaler][cluster-autoscaler]. This support allows autoscaling for both same VM size node pools and multiple VM size node pools. You can enable this feature by using the flag `--enable-cluster-autoscaler` during cluster creation, while adding a new node pool, or when updating an existing manual node pool. 
 
-When you use cluster autoscaler with Virtual Machines node pools, the behavior is as follows:
-
-| Autoscaler action | Behavior |
-| --- | --- |
-| Scale up | The autoscaler responds to pending pod pressure and can increase the node count for multiple VM sizes in the node pool. |
-| Scale down | The autoscaler selects a node based on utilization. You can configure `scale-down-utilization-threshold` to adjust when the autoscaler triggers a scale-down action. For more information, see [cluster autoscaler][cluster-autoscaler]. |
+When using cluster autoscaler with Virtual Machine node pools, the behavior is as follows:
+- Scale up: autoscaler responds to pending pod pressure, and can scale up the node count of a node pool with multiple VM sizes in that node pool. 
+- Scale down: autoscaler chooses a specific node based on the utilization of the node. You can configure `scale-down-utilization-threshold` to adjust when cluster autoscaling triggers a scaling action. See [cluster autoscaler documentation][cluster-autoscaler] for more information on configuring autoscaling.
 
 ### Limitations
 - This feature is only available in public cloud.
-- GPU Nodes are not currently supported.
-- This feature requires Azure CLI version 2.85.0 or later and the `aks-preview` extension.
-
-### Install the aks-preview extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-- Install or update the `aks-preview` Azure CLI extension by using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command:
-
-```azurecli-interactive
-    # Install the aks-preview extension
-    az extension add --name aks-preview
-    
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-```
-
-### Register feature flag
-Register the preview feature flag `VMsAgentPoolAutoscalePreview` using the `az feature register` command:
-
-```azurecli-interactive
-az feature register \
-    --namespace Microsoft.ContainerService \
-    --name VMsAgentPoolAutoscalePreview
-```
-
-It takes a few minutes for the status to become `Registered`. Verify the registration status using the `az feature show` command:
-
-```azurecli-interactive
-az feature show \
-    --namespace Microsoft.ContainerService \
-    --name VMsAgentPoolAutoscalePreview \
-    --query properties.state \
-    --output tsv
-```
-
-When the status is `Registered`, refresh the `Microsoft.ContainerService` resource provider registration using the `az provider register` command:
-
-```azurecli-interactive
-az provider register --namespace Microsoft.ContainerService
-```
+- GPU nodes aren't currently supported.
 
 ## Create an AKS cluster with Virtual Machines node pools and cluster autoscaler enabled
 - Create an AKS cluster with Virtual Machines node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"` and with the flag `--enable-cluster-autoscaler`.
