@@ -115,7 +115,7 @@ If you have an existing cluster that already meets these requirements, you can s
 1. Create an Azure Kubernetes Application Network resource using the [`az appnet create`][az-appnet-create] command.
 
     > [!NOTE]
-    > After creation, an Application Network resource can't be moved to a different subscription or resource group, and a member can't be moved directly to a different Application Network. To move a member, remove it and rejoin it to the target Application Network. Choose the subscription and resource group carefully before you create these resources.
+    > After creation, an Application Network resource can't be moved to a different subscription or resource group, and a member can't be moved directly to a different Application Network. To move a member, remove it and rejoin it to the target Application Network.
 
     ```azurecli-interactive
     az appnet create --resource-group $APPNET_RG --name $APPNET_NAME --location $LOCATION  --identity-type SystemAssigned
