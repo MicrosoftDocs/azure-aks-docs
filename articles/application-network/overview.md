@@ -56,11 +56,16 @@ Application Network currently has the following limitations:
 - Switching between upgrade modes `SelfManaged` and `FullyManaged` isn't supported.
 - Currently supported only in the following regions:
   - centralus
+  - eastus
   - eastus2
+  - japaneast
+  - northcentralus
+  - northeurope
+  - southindia
+  - southeastasia
+  - westcentralus
   - westus2
   - westus3
-  - northeurope
-  - southeastasia
 - Enabling the [Istio-based service mesh add-on for AKS](/azure/aks/istio-about) isn't supported on clusters connected to Application Network.
 
 ## Related content
