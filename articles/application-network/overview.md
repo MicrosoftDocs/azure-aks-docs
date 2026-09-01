@@ -68,7 +68,7 @@ Application Network currently has the following limitations:
   - westus3
 - Enabling the [Istio-based service mesh add-on for AKS](/azure/aks/istio-about) isn't supported on clusters connected to Application Network.
 - Application Network resources can't be moved to a different subscription or resource group after creation.
-- An Application Network member resource can't be moved to a different Application Network.
+- An Application Network member resource's Application Network, location, subscription, and resource group are fixed when it joins and can't be changed afterward.
 
 ## Related content
 
