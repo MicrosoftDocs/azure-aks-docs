@@ -174,7 +174,8 @@
       },
       "sensitive-language-sl": {
         "exclude": [
-            "articles/aks/deploy-valkey-cluster.md"
+            "articles/aks/deploy-valkey-cluster.md",
+            "articles/aks/stateful-workload-upgrades.md"
         ]
       }
     }
