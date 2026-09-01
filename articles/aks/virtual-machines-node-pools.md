@@ -3,10 +3,10 @@ title: Use Virtual Machines Node Pools in Azure Kubernetes Service (AKS)
 description: Learn how to add multiple Virtual Machine types of a similar family to a Virtual Machines node pool in an AKS cluster.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 08/07/2026
-ms.author: schaffererin
-author: schaffererin
-ms.service: azure-kubernetes-service
+ms.date: 07/28/2026
+ms.author: wilsondarko
+author: wdarko1
+
 # Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types. I want to minimize capacity constraints by having greater flexibility in VM size selection.
 ---
 
@@ -58,16 +58,49 @@ Depending on your workload needs, there are multiple compute scaling experiences
 - Virtual Machines node pools: best for multiversion manual scaling and supports multiversion autoscaling. Requires specific version selection of up to five sizes per node pool.
 - [Virtual Machine Scale Sets][VMSS orchestrate]: supports single-version manual scaling and single-version autoscaling. Requires specific version selection of one size per node pool.
 
-
-
 ## Virtual Machines node pool limitations
 - VM Sizes specified in the pool must be of the same type. For example, GPU and non-GPU or x86 and ARM64 virtual machines cannot be in the same node pool.
 - [InifiniBand][InifiniBand] isn't available.
 - [Node pool snapshot][node pool snapshot] isn't supported.
 - All VM sizes selected in a node pool need to be from a similar virtual machine family. For example, you can't mix an N-Series virtual machine type with a D-Series virtual machine type in the same node pool.
+- You need to select all VM sizes in a node pool that support the same ephemeral OS disk placement when you use ephemeral OS disks. Because `DiffDiskPlacement` is a single pool-level value, AKS can't express different placements per VM size in one node pool.
 - Virtual Machines node pools allow up to five scale profiles total per node pool. Each manual or autoscale profile specifies one VM size from the same VM family.
 - Windows node pools aren't supported.
 - Availability zones aren't supported. If your workload requires zone resiliency, use [Virtual Machine Scale Sets][VMSS orchestrate] node pools.
+
+### Ephemeral OS disk placement compatibility
+
+When you add a scale profile that mixes VM sizes with different ephemeral OS disk placements, the create or update operation fails with an `InvalidParameter` error and the subcode `EphemeralOSMixedPlacementNotSupported`.
+
+Use one of the following remediation options:
+
+- Use VM sizes that share the same ephemeral OS disk placement.
+- Split VM sizes into separate node pools so each pool has one placement.
+- Use managed OS disks instead of ephemeral OS disks.
+
+#### Determine placement before you add a scale profile
+
+Before you add a VM size to a Virtual Machines node pool, check SKU capabilities in the target region and verify ephemeral OS disk placement compatibility.
+
+1. List candidate VM sizes and inspect key capabilities:
+
+    ```azurecli-interactive
+    az vm list-skus \
+        --location <region> \
+        --size Standard_D \
+        --resource-type virtualMachines \
+        --query "[].{name:name, capabilities:capabilities[?name=='EphemeralOSDiskSupported' || name=='MaxResourceVolumeMB' || name=='NvmeDiskSizeInMiB']}" \
+        --output json
+    ```
+
+1. Confirm each selected VM size supports ephemeral OS disks (`EphemeralOSDiskSupported`) and identify where local disk is available (`MaxResourceVolumeMB` for temp/resource disk and `NvmeDiskSizeInMiB` for NVMe).
+1. Group VM sizes so each Virtual Machines node pool uses a single compatible placement.
+
+For example, if one profile uses `Standard_D4ds_v5` (temp/resource disk placement) and another profile uses `Standard_D4ads_v6` (NVMe placement), keep them in separate node pools or use managed OS disks.
+
+> [!IMPORTANT]
+> **Preflight and what-if behavior**
+> No dedicated preflight API currently validates mixed ephemeral OS disk placement across scale profiles before deployment. `az deployment group what-if` (ARM what-if) doesn't guarantee detection of this node-pool compatibility conflict. The authoritative check occurs when AKS processes the create or update request and returns `EphemeralOSMixedPlacementNotSupported` if placements are incompatible.
 
 ## Prerequisites
 
@@ -250,59 +283,16 @@ az aks nodepool manual-scale delete \
     --current-vm-sizes "Standard_D8s_v3"
 ```
 
-## Cluster autoscaler with Virtual Machines node pools (preview)
-Virtual Machines node pools support [cluster autoscaler][cluster-autoscaler]. This preview feature requires Azure CLI version 2.85.0 or later, the `aks-preview` extension, and registration of the `VMsAgentPoolAutoscalePreview` feature flag. After you meet these prerequisites, you can use `--enable-cluster-autoscaler` during cluster creation, while adding a new node pool, or when updating an existing manual node pool.
+## Cluster autoscaler with Virtual Machines Node Pools
+Virtual Machines node pools support [cluster autoscaler][cluster-autoscaler]. This support allows autoscaling for both same VM size node pools and multiple VM size node pools. You can enable this feature by using the flag `--enable-cluster-autoscaler` during cluster creation, while adding a new node pool, or when updating an existing manual node pool. 
 
-When you use cluster autoscaler with Virtual Machines node pools, the behavior is as follows:
-
-| Autoscaler action | Behavior |
-| --- | --- |
-| Scale up | The autoscaler responds to pending pod pressure and can increase the node count for multiple VM sizes in the node pool. |
-| Scale down | The autoscaler selects a node based on utilization. You can configure `scale-down-utilization-threshold` to adjust when the autoscaler triggers a scale-down action. For more information, see [cluster autoscaler][cluster-autoscaler]. |
+When using cluster autoscaler with Virtual Machine node pools, the behavior is as follows:
+- Scale up: autoscaler responds to pending pod pressure, and can scale up the node count of a node pool with multiple VM sizes in that node pool. 
+- Scale down: autoscaler chooses a specific node based on the utilization of the node. You can configure `scale-down-utilization-threshold` to adjust when cluster autoscaling triggers a scaling action. See [cluster autoscaler documentation][cluster-autoscaler] for more information on configuring autoscaling.
 
 ### Limitations
 - This feature is only available in public cloud.
-- GPU Nodes are not currently supported.
-- This feature requires Azure CLI version 2.85.0 or later and the `aks-preview` extension.
-
-### Install the aks-preview extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-- Install or update the `aks-preview` Azure CLI extension by using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command:
-
-```azurecli-interactive
-    # Install the aks-preview extension
-    az extension add --name aks-preview
-    
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-```
-
-### Register feature flag
-Register the preview feature flag `VMsAgentPoolAutoscalePreview` using the `az feature register` command:
-
-```azurecli-interactive
-az feature register \
-    --namespace Microsoft.ContainerService \
-    --name VMsAgentPoolAutoscalePreview
-```
-
-It takes a few minutes for the status to become `Registered`. Verify the registration status using the `az feature show` command:
-
-```azurecli-interactive
-az feature show \
-    --namespace Microsoft.ContainerService \
-    --name VMsAgentPoolAutoscalePreview \
-    --query properties.state \
-    --output tsv
-```
-
-When the status is `Registered`, refresh the `Microsoft.ContainerService` resource provider registration using the `az provider register` command:
-
-```azurecli-interactive
-az provider register --namespace Microsoft.ContainerService
-```
+- GPU nodes aren't currently supported.
 
 ## Create an AKS cluster with Virtual Machines node pools and cluster autoscaler enabled
 - Create an AKS cluster with Virtual Machines node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"` and with the flag `--enable-cluster-autoscaler`.
