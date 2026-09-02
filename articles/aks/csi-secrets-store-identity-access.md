@@ -5,7 +5,7 @@ author: davidsmatlak
 ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
-ms.date: 07/31/2026
+ms.date: 09/02/2026
 ms.custom: devx-track-azurecli
 zone_pivot_groups: csi-secrets-store-identity-access
 ai-usage: ai-assisted
@@ -21,6 +21,7 @@ You can use one of the following access methods:
 
 - Service Connector with managed identity
 - Workload ID
+- Workload ID with identity bindings
 - User-assigned managed identity
 
 ::: zone pivot="access-with-service-connector"
@@ -41,6 +42,8 @@ You can use one of the following access methods:
 A [Microsoft Entra Workload ID][workload-identity] is an identity that an application or service uses to authenticate itself against other Azure services, such as workloads in software. The Secrets Store CSI Driver integrates with native Kubernetes capabilities to federate with external identity providers.
 
 In this security model, the AKS cluster acts as the token issuer. When the Secrets Store CSI Driver mounts the volume, it requests a Kubernetes service account token, and the Azure Key Vault provider exchanges that token for a Microsoft Entra token. The application reads the mounted files and doesn't need the Azure Identity client library or the Microsoft Authentication Library (MSAL) for this volume-mount flow. If the application independently requests Microsoft Entra tokens to call protected APIs, use Azure Identity or MSAL in the application.
+
+The Azure Key Vault provider for Secrets Store CSI Driver add-on also supports [identity bindings][identity-bindings]. Identity bindings let multiple AKS clusters use the same user-assigned managed identity (UAMI) with a single federated identity credential. This support helps you scale Key Vault access across clusters without reaching the federated identity credential limit. To configure this access method, [set up an identity binding][identity-bindings-setup] between the UAMI and each AKS cluster.
 
 > [!NOTE]
 >
@@ -446,6 +449,8 @@ If you want to configure extra configuration options or perform troubleshooting,
 [az-aks-show]: /cli/azure/aks#az-aks-show
 [az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [workload-identity]: ./workload-identity-overview.md
+[identity-bindings]: ./identity-bindings-concepts.md
+[identity-bindings-setup]: ./identity-bindings.md
 [managed-identity]:/entra/identity/managed-identities-azure-resources/overview
 [az-account-set]: /cli/azure/account#az-account-set
 [az-identity-create]: /cli/azure/identity#az-identity-create
