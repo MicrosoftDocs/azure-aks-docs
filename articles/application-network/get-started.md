@@ -114,6 +114,9 @@ If you have an existing cluster that already meets these requirements, you can s
 
 1. Create an Azure Kubernetes Application Network resource using the [`az appnet create`][az-appnet-create] command.
 
+    > [!NOTE]
+    > You can't change an Application Network resource's location, subscription, or resource group after you create it.
+
     ```azurecli-interactive
     az appnet create --resource-group $APPNET_RG --name $APPNET_NAME --location $LOCATION  --identity-type SystemAssigned
     ```
@@ -129,6 +132,9 @@ If you have an existing cluster that already meets these requirements, you can s
 ## Join an AKS cluster as a member of Azure Kubernetes Application Network
 
 When you join a member cluster to Azure Kubernetes Application Network, you can specify one of the following upgrade modes for that cluster: **fully-managed** or **self-managed**. The upgrade mode determines how minor version upgrades of Azure Kubernetes Application Network are applied to the member cluster. If you don't specify an upgrade mode during member join, it defaults to `SelfManaged`. For more information about upgrade modes, see [Configure upgrades for Azure Kubernetes Application Network members](./upgrades.md).
+
+> [!NOTE]
+> You can't change a member's parent Application Network, location, subscription, or resource group after you join it. To change any of these, remove the member and rejoin it with the new values.
 
 - Join an AKS cluster as a member of Azure Kubernetes Application Network using the [`az appnet member join`][az-appnet-member-join] command with the `--upgrade-mode` parameter set to either `FullyManaged` or `SelfManaged`. The following example shows how to join a member cluster in `SelfManaged` mode:
 
