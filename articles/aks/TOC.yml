@@ -1623,15 +1623,7 @@
     - name: GitOps
       href: /azure/azure-arc/kubernetes/tutorial-use-gitops-flux2?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 - name: AKS Hybrid and Edge
-  items:
-    - name: AKS on bare metal
-      href: /azure/aks/aksarc/aks-bare-metal-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: AKS on Azure Local (Hyperconverged)
-      href: /azure/aks/aksarc/aks-whats-new-local?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: AKS Edge Essentials
-      href: /azure/aks/aksarc/aks-edge-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: AKS on Windows Server
-      href: /aks/aksarc/overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+  href: ../aks-hybrid-edge/toc.yml
 - name: FAQ
   href: faq.yml
 - name: Reference
