@@ -1,0 +1,125 @@
+### YamlMime:Landing
+
+title: Azure Kubernetes Service (AKS) Hybrid and Edge
+summary: Azure Kubernetes Service (AKS) Hybrid and Edge extends AKS beyond Azure regions to infrastructure you own, including bare metal servers, Azure Local, Windows Server, and Windows IoT or PC-class edge devices.
+
+metadata:
+  title: Azure Kubernetes Service (AKS) Hybrid and Edge
+  description: Azure Kubernetes Service (AKS) Hybrid and Edge extends AKS beyond Azure regions to infrastructure you own, including bare metal servers, Azure Local, Windows Server, and Windows IoT or PC-class edge devices.
+  ms.service: azure-kubernetes-service-hybrid
+  ms.topic: landing-page
+  author: davidsmatlak
+  ms.author: davidsmatlak
+  ms.date: 09/01/2026
+  ms.custom: landing
+
+landingContent:
+  - title: About AKS Hybrid and Edge
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: What is AKS Hybrid and Edge?
+            url: aks-overview.md
+      - linkListType: concept
+        links:
+          - text: Create clusters
+            url: local/aks-create-clusters-cli.md
+
+  - title: Get started with AKS on bare metal
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: What is AKS on bare metal?
+            url: bare-metal/aks-bare-metal-overview.md
+      - linkListType: concept
+        links:
+          - text: Check system requirements
+            url: bare-metal/aks-bare-metal-system-requirements.md
+      - linkListType: deploy
+        links:
+          - text: Deploy an AKS on bare metal cluster
+            url: bare-metal/aks-bare-metal-create-cluster-portal.md
+
+  - title: Get started with AKS on Azure Local
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: What is AKS on Azure Local?
+            url: local/aks-local-overview.md
+          - text: What's new
+            url: local/aks-whats-new-local.md
+      - linkListType: deploy
+        links:
+          - text: Check system requirements
+            url: local/hyperconverged/network-system-requirements.md
+      - linkListType: concept
+        links:
+          - text: Cluster architecture
+            url: local/hyperconverged/cluster-architecture.md
+      - linkListType: how-to-guide
+        links:
+          - text: Create Kubernetes clusters
+            url: local/aks-create-clusters-cli.md
+
+  - title: Deploy AKS on resource-limited hardware
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: Overview
+            url: edge-essentials/aks-edge-overview.md
+      - linkListType: quickstart
+        links:
+          - text: Quickstart
+            url: edge-essentials/aks-edge-quickstart.md
+      - linkListType: concept
+        links:
+          - text: Clusters and nodes
+            url: edge-essentials/aks-edge-concept-clusters-nodes.md
+      - linkListType: how-to-guide
+        links:
+          - text: Troubleshoot
+            url: edge-essentials/aks-edge-troubleshoot-overview.md
+
+  - title: Get started with AKS on Windows Server
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: Overview of AKS on Windows Server
+            url: windows-server/overview.md
+      - linkListType: quickstart
+        links:
+          - text: Set up AKS on Windows Server
+            url: windows-server/setup.md
+      - linkListType: how-to-guide
+        links:
+          - text: Create Kubernetes clusters
+            url: local/aks-create-clusters-cli.md
+
+  - title: Manage and monitor from Azure
+    linkLists:
+      - linkListType: how-to-guide
+        links:
+          - text: Monitor Kubernetes clusters
+            url: local/hyperconverged/aks-monitor-logging.md
+          - text: Enforce threat protection using Microsoft Defender for Cloud
+            url: /azure/defender-for-cloud/defender-for-containers-deployment-overview?pivots=defender-for-container-arc
+
+  - title: Develop and debug applications with Bridge to Kubernetes
+    linkLists:
+      - linkListType: how-to-guide
+        links:
+          - text: Use Bridge to Kubernetes with Visual Studio Code
+            url:  https://code.visualstudio.com/docs/containers/bridge-to-kubernetes
+          - text: Use Bridge to Kubernetes with Visual Studio
+            url:  /visualstudio/containers/bridge-to-kubernetes?view=vs-2019
+
+  - title: Troubleshoot
+    linkLists:
+      - linkListType: how-to-guide
+        links:
+          - text: Troubleshoot AKS on Azure Local
+            url: local/hyperconverged/aks-arc-known-issues.md
+          - text: Troubleshoot AKS on Windows Server
+            url: windows-server/troubleshoot-overview.md
+          - text: Connect to nodes with SSH
+            url: windows-server/ssh-connection.md
