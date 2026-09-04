@@ -82,9 +82,9 @@ For more information, see [How network security groups filter network traffic][n
 
 ### Custom virtual network requirements
 
-When using a custom virtual network with AKS clusters, if you add network security group rules to restrict traffic between subnets, ensure that the rules allow the traffic required by your cluster configuration.
+When you use a custom virtual network with AKS clusters, if you add network security group rules to restrict traffic between subnets, ensure that the rules allow the traffic required by your cluster configuration.
 
-API Server VNet Integration is preconfigured in AKS Automatic. In AKS Standard, the feature is optional and must be enabled explicitly. When your cluster uses API Server VNet Integration, allow the following traffic:
+API Server VNet Integration is preconfigured in AKS Automatic. In AKS Standard, the feature is optional and you must enable it explicitly. When your cluster uses API Server VNet Integration, allow the following traffic:
 
 | Destination | Source | Protocol | Port | Use |
 |--- |--- |--- |--- |--- |
