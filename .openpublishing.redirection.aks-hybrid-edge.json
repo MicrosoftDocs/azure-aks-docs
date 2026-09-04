@@ -2079,6 +2079,11 @@
       "source_path": "articles/aks/aksarc/work-with-horizontal-autoscaler.md",
       "redirect_url": "/azure/aks-hybrid-edge/windows-server/work-with-horizontal-autoscaler",
       "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks/hybrid/index.md",
+      "redirect_url": "/azure/aks-hybrid-edge/",
+      "redirect_document_id": false
     }
   ]
 }
