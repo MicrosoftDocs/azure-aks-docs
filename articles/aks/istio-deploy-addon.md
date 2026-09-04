@@ -52,7 +52,11 @@ export LOCATION=<location>
 This section includes steps to install the Istio add-on during cluster creation or enable for an existing cluster using the Azure CLI. If you want to install the add-on using Bicep, see the guide for [installing an AKS cluster with the Istio service mesh add-on using Bicep][install-aks-cluster-istio-bicep]. To learn more about the Bicep resource definition for an AKS cluster, see [Bicep managedCluster reference][bicep-aks-resource-definition].
 
 > [!NOTE]
-> If you need the `istiod` and ingress/egress gateway pods scheduled onto particular nodes, you can use [AKS system nodes][aks-system-nodes] or the `azureservicemesh/istio.replica.preferred` node label. The pods have node affinities with a weighted preference of `100` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`), and a weighted preference of `50` for nodes labeled `azureservicemesh/istio.replica.preferred: true`.
+> If you need the `istiod` and ingress/egress gateway pods scheduled onto particular nodes, you can use [AKS system nodes][aks-system-nodes] or the `azureservicemesh/istio.replica.preferred` node label.
+> 
+> The ingress, egress, and gateway pods have node affinities with a weighted preference of `100` for nodes labeled `azureservicemesh/istio.replica.preferred: true` and a weighted preference of `50` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`). This configuration means that if the `azureservicemesh/istio.replica.preferred: true` label isn't found or such nodes are unschedulable, pods are instead scheduled on AKS system nodes. For revisions earlier than `asm-1-30`, these weights are reversed: `100` for AKS system nodes and `50` for `azureservicemesh/istio.replica.preferred: true` nodes.
+> 
+> The `istiod` (discovery) deployment has a weighted preference of `100` for AKS system nodes and `50` for nodes labeled `azureservicemesh/istio.replica.preferred: true`, across all revisions.
 
 ### Revision selection
 
