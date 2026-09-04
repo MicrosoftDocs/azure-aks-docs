@@ -399,3 +399,14 @@ groups:
     title: Azure portal
   - id: terraform
     title: Terraform
+# Owner: schaffererin
+- id: azure-portal-cli-powershell
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-portal
+    title: Azure portal
+  - id: azure-cli
+    title: Azure CLI
+  - id: azure-powershell
+    title: Azure PowerShell
