@@ -4,9 +4,9 @@ description: Deploy Istio-based service mesh add-on for Azure Kubernetes Service
 ms.topic: how-to
 ms.custom: devx-track-azurecli, copilot-scenario-highlight
 ms.service: azure-kubernetes-service
-ms.date: 03/28/2024
-ms.author: shasb
-author: shashankbarsin
+ms.date: 09/04/2026
+ms.author: kochhars
+author: SanyaKochhar
 # Customer intent: As a Kubernetes administrator, I want to deploy the Istio-based service mesh add-on for my Azure Kubernetes Service cluster, so that I can enhance traffic management and monitoring capabilities within my applications.
 ---
 
