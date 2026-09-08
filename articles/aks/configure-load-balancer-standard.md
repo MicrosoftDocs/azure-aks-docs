@@ -5,9 +5,10 @@ ms.subservice: aks-networking
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.topic: how-to
-ms.date: 01/23/2024
+ms.date: 09/08/2026
 ms.author: schaffererin
 author: schaffererin
+ai-usage: ai-assisted
 # Customer intent: As a cluster operator or developer, I want to configure a public standard load balancer in AKS, so that I can meet my workload needs.
 ---
 
@@ -26,11 +27,11 @@ You can customize different settings for your standard public load balancer at c
 
 ## Before you begin
 
-- Follow the steps in [Use a public standard load balancer in Azure Kubernetes Service (AKS)](./load-balancer-standard.md) to create and deploy a load balancer service in AKS.
+To create and deploy a load balancer service in AKS, follow the steps in [Use a public standard load balancer in Azure Kubernetes Service (AKS)](./load-balancer-standard.md).
 
 ## Change the inbound pool type
 
-You can reference AKS nodes in the load balancer backend pools by their IP configuration (Azure Virtual Machine Scale Sets based membership) or their IP address only. The IP address based backend pool membership provides higher efficiencies when updating services and provisioning load balancers, especially at high node counts. When combined with [NAT Gateway](./nat-gateway.md) or [user-defined routing egress](./egress-udr.md) types, provisioning of new nodes and services are more performant.
+You can reference AKS nodes in the load balancer backend pools by their IP configuration (Virtual Machine Scale Sets based membership) or their IP address only. The IP address based backend pool membership provides higher efficiencies when updating services and provisioning load balancers, especially at high node counts. When combined with [NAT Gateway](./nat-gateway.md) or [user-defined routing egress](./egress-udr.md) types, provisioning of new nodes and services is more performant.
 
 Two different pool membership types are available:
 
@@ -43,32 +44,33 @@ Make sure you meet the following requirements before changing the inbound pool t
 
 - The AKS cluster must be version 1.23 or newer.
 - The AKS cluster must be using standard load balancers and Virtual Machine Scale Sets.
+- If you use Azure Private Link Service, you use the `nodeIPConfiguration` backend pool type. Private Link Service doesn't support IP-based load balancer backend pools.
 
 ### [Create a new AKS cluster with IP-based inbound pool membership](#tab/create-cluster-ip-based)
 
-- Create an AKS cluster with IP-based inbound pool membership using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--load-balancer-backend-pool-type=nodeIP` parameter.
+Create an AKS cluster with IP-based inbound pool membership by using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--load-balancer-backend-pool-type=nodeIP` parameter.
 
-    ```azurecli-interactive
-    az aks create \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --load-balancer-backend-pool-type=nodeIP \
-        --generate-ssh-keys
-    ```
+```azurecli-interactive
+az aks create \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --load-balancer-backend-pool-type=nodeIP \
+    --generate-ssh-keys
+```
 
 ### [Update an existing AKS cluster to use IP-based inbound pool membership](#tab/update-cluster-ip-based)
 
 > [!WARNING]
 > This operation causes a temporary disruption to incoming service traffic in the cluster. The impact time increases with larger clusters that have many nodes.
 
-- Update an existing AKS cluster to use IP-based inbound pool membership using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--load-balancer-backend-pool-type=nodeIP` parameter.
+Update an existing AKS cluster to use IP-based inbound pool membership by using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--load-balancer-backend-pool-type=nodeIP` parameter.
 
-    ```azurecli-interactive
-    az aks update \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --load-balancer-backend-pool-type=nodeIP
-    ```
+```azurecli-interactive
+az aks update \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --load-balancer-backend-pool-type=nodeIP
+```
 
 ---
 
@@ -97,26 +99,26 @@ When using a _Standard_ SKU load balancer with managed outbound public IPs (whic
 
 #### [Create a new cluster with a specific number of managed outbound public IPs](#tab/create-cluster-managed-outbound-ips)
 
-- Create a new AKS cluster with a specific number of managed outbound public IPs using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--load-balancer-managed-outbound-ip-count` parameter. The following example sets the number of managed outbound public IPs to _two_.
+Create a new AKS cluster with a specific number of managed outbound public IPs by using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--load-balancer-managed-outbound-ip-count` parameter. The following example sets the number of managed outbound public IPs to _two_.
 
-    ```azurecli-interactive
-    az aks create \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --load-balancer-managed-outbound-ip-count 2 \
-        --generate-ssh-keys
-    ```
+```azurecli-interactive
+az aks create \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --load-balancer-managed-outbound-ip-count 2 \
+    --generate-ssh-keys
+```
 
 #### [Update an existing cluster to scale the number of managed outbound public IPs](#tab/update-cluster-managed-outbound-ips)
 
-- Update an existing AKS cluster to scale the number of managed outbound public IPs using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--load-balancer-managed-outbound-ip-count` parameter. The following example sets the number of managed outbound public IPs to _two_.
+Update an existing AKS cluster to scale the number of managed outbound public IPs by using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--load-balancer-managed-outbound-ip-count` parameter. The following example sets the number of managed outbound public IPs to _two_.
 
-    ```azurecli-interactive
-    az aks update \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --load-balancer-managed-outbound-ip-count 2
-    ```
+```azurecli-interactive
+az aks update \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --load-balancer-managed-outbound-ip-count 2
+```
 
 ---
 
@@ -138,26 +140,26 @@ Make sure you meet the following requirements before providing your own outbound
 
 #### [Provide your own outbound public IPs when creating a new cluster](#tab/create-cluster-custom-ips)
 
-- Create a new AKS cluster with your own outbound public IPs using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--load-balancer-outbound-ips` parameter. Make sure you replace the placeholder values with your own.
+Create a new AKS cluster with your own outbound public IPs by using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--load-balancer-outbound-ips` parameter. Replace the placeholder values with your own.
 
-    ```azurecli-interactive
-    az aks create \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --load-balancer-outbound-ips $PUBLIC_IP_ID1,$PUBLIC_IP_ID2 \
-        --generate-ssh-keys
-    ```
+```azurecli-interactive
+az aks create \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --load-balancer-outbound-ips $PUBLIC_IP_ID1,$PUBLIC_IP_ID2 \
+    --generate-ssh-keys
+```
 
 #### [Update an existing cluster to use your own outbound public IPs](#tab/update-cluster-custom-ips)
 
-- Update an existing AKS cluster to use your own outbound public IPs using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--load-balancer-outbound-ips` parameter. Make sure you replace the placeholder values with your own.
+Update an existing AKS cluster to use your own outbound public IPs by using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--load-balancer-outbound-ips` parameter. Replace the placeholder values with your own.
 
-    ```azurecli-interactive
-    az aks update \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --load-balancer-outbound-ips $PUBLIC_IP_ID1,$PUBLIC_IP_ID2
-    ```
+```azurecli-interactive
+az aks update \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --load-balancer-outbound-ips $PUBLIC_IP_ID1,$PUBLIC_IP_ID2
+```
 
 ---
 
@@ -165,26 +167,26 @@ Make sure you meet the following requirements before providing your own outbound
 
 #### [Provide your own outbound public IP prefixes when creating a new cluster](#tab/create-cluster-custom-ip-prefixes)
 
-- Create a new AKS cluster with your own outbound public IP prefixes using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--load-balancer-outbound-ip-prefixes` parameter. Make sure you replace the placeholder values with your own.
+Create a new AKS cluster with your own outbound public IP prefixes by using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--load-balancer-outbound-ip-prefixes` parameter. Replace the placeholder values with your own.
 
-    ```azurecli-interactive
-    az aks create \
-        --name $CLUSTER_NAME \
-        --resource-group $RESOURCE_GROUP \
-        --load-balancer-outbound-ip-prefixes $PUBLIC_IP_PREFIX_ID1,$PUBLIC_IP_PREFIX_ID2 \
-        --generate-ssh-keys
-    ```
+```azurecli-interactive
+az aks create \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --load-balancer-outbound-ip-prefixes $PUBLIC_IP_PREFIX_ID1,$PUBLIC_IP_PREFIX_ID2 \
+    --generate-ssh-keys
+```
 
 #### [Update an existing cluster to use your own outbound public IP prefixes](#tab/update-cluster-custom-ip-prefixes)
 
-- Update an existing AKS cluster to use your own outbound public IP prefixes using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--load-balancer-outbound-ip-prefixes` parameter. Make sure you replace the placeholder values with your own.
+Update an existing AKS cluster to use your own outbound public IP prefixes by using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--load-balancer-outbound-ip-prefixes` parameter. Replace the placeholder values with your own.
 
-    ```azurecli-interactive
-    az aks update \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --load-balancer-outbound-ip-prefixes $PUBLIC_IP_PREFIX_ID1,$PUBLIC_IP_PREFIX_ID2
-    ```
+```azurecli-interactive
+az aks update \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --load-balancer-outbound-ip-prefixes $PUBLIC_IP_PREFIX_ID1,$PUBLIC_IP_PREFIX_ID2
+```
 
 ---
 
@@ -200,20 +202,20 @@ By default, AKS sets _AllocatedOutboundPorts_ on its load balancer to `0`, which
 
 ### View the current allocated outbound ports
 
-- Get the _AllocatedOutboundPorts_ value for the AKS cluster load balancer using the [`az network lb outbound-rule list`](/cli/azure/network/lb/outbound-rule#az-network-lb-outbound-rule-list) command.
+Get the _AllocatedOutboundPorts_ value for the AKS cluster load balancer using the [`az network lb outbound-rule list`](/cli/azure/network/lb/outbound-rule#az-network-lb-outbound-rule-list) command.
 
-    ```azurecli-interactive
-    NODE_RG=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query nodeResourceGroup -o tsv)
-    az network lb outbound-rule list --resource-group $NODE_RG --lb-name kubernetes -o table
-    ```
+```azurecli-interactive
+NODE_RG=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query nodeResourceGroup -o tsv)
+az network lb outbound-rule list --resource-group $NODE_RG --lb-name kubernetes -o table
+```
 
-    The following example output shows that automatic outbound port assignment based on backend pool size is enabled for the cluster:
+The following example output shows that automatic outbound port assignment based on backend pool size is enabled for the cluster:
 
-    ```output
-    AllocatedOutboundPorts    EnableTcpReset    IdleTimeoutInMinutes    Name             Protocol    ProvisioningState    ResourceGroup
-    ------------------------  ----------------  ----------------------  ---------------  ----------  -------------------  -------------
-    0                         True              30                      aksOutboundRule  All         Succeeded            MC_myResourceGroup_myAKSCluster_eastus
-    ```
+```output
+AllocatedOutboundPorts    EnableTcpReset    IdleTimeoutInMinutes    Name             Protocol    ProvisioningState    ResourceGroup
+------------------------  ----------------  ----------------------  ---------------  ----------  -------------------  -------------
+0                         True              30                      aksOutboundRule  All         Succeeded            MC_myResourceGroup_myAKSCluster_eastus
+```
 
 ### Calculate and verify outbound ports and IPs needed
 
@@ -250,72 +252,74 @@ The following examples show how the values you set affect the number of outbound
 
 ### Set the allocated outbound ports and outbound IPs
 
-Once the values have been calculated and verified, you can apply those values using `load-balancer-outbound-ports` and either `load-balancer-managed-outbound-ip-count`, `load-balancer-outbound-ips`, or `load-balancer-outbound-ip-prefixes` when creating or updating a cluster.
+After calculating the required ports and IPs using the formula `64,000 ports per IP / <outbound ports per node> * <number of outbound IPs> = <maximum number of nodes in the cluster>`, apply those values by using `load-balancer-outbound-ports` and either `load-balancer-managed-outbound-ip-count`, `load-balancer-outbound-ips`, or `load-balancer-outbound-ip-prefixes` when creating or updating a cluster.
 
 #### [Create a new cluster with specific outbound ports and IPs](#tab/create-cluster-outbound-ports-ips)
 
-- Create a new AKS cluster with specific outbound ports and IPs using the [`az aks create`](/cli/azure/aks#az-aks-create) command. The following example sets the `--load-balancer-managed-outbound-ip-count` parameter to _7_ and the `--load-balancer-outbound-ports` parameter to _4000_:
+Create a new AKS cluster with specific outbound ports and IPs by using the [`az aks create`](/cli/azure/aks#az-aks-create) command. The following example sets the `--load-balancer-managed-outbound-ip-count` parameter to `7` and the `--load-balancer-outbound-ports` parameter to `4000`:
 
-    ```azurecli-interactive
-    az aks create \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --load-balancer-managed-outbound-ip-count 7 \
-        --load-balancer-outbound-ports 4000 \
-        --generate-ssh-keys
-    ```
+```azurecli-interactive
+az aks create \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --load-balancer-managed-outbound-ip-count 7 \
+    --load-balancer-outbound-ports 4000 \
+    --generate-ssh-keys
+```
 
 #### [Update an existing cluster with specific outbound ports and IPs](#tab/update-cluster-outbound-ports-ips)
 
-- Update an existing AKS cluster with specific outbound ports and IPs using the [`az aks update`](/cli/azure/aks#az-aks-update) command. The following example sets the `--load-balancer-managed-outbound-ip-count` parameter to _7_ and the `--load-balancer-outbound-ports` parameter to _4000_:
+Update an existing AKS cluster with specific outbound ports and IPs by using the [`az aks update`](/cli/azure/aks#az-aks-update) command. The following example sets the `--load-balancer-managed-outbound-ip-count` parameter to `7` and the `--load-balancer-outbound-ports` parameter to `4000`:
 
-    ```azurecli-interactive
-    az aks update \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --load-balancer-managed-outbound-ip-count 7 \
-        --load-balancer-outbound-ports 4000
-    ```
+```azurecli-interactive
+az aks update \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --load-balancer-managed-outbound-ip-count 7 \
+    --load-balancer-outbound-ports 4000
+```
 
 ---
 
 ## Configure the load balancer idle timeout
 
-When SNAT port resources are exhausted, outbound flows fail until existing flows release SNAT ports. Load balancer reclaims SNAT ports when the flow closes, and the AKS-configured load balancer uses a 30-minute idle timeout for reclaiming SNAT ports from idle flows. You can also use transport (for example, **`TCP keepalives`** or **`application-layer keepalives`**) to refresh an idle flow and reset this idle timeout if necessary.
+> [!WARNING]
+> Changing the values for _AllocatedOutboundPorts_ and _IdleTimeoutInMinutes_ can significantly change how the outbound rule works for your load balancer. See [Troubleshoot SNAT][troubleshoot-snat] and review the [Load balancer outbound rules][azure-lb-outbound-rules-overview] and [outbound connections in Azure][azure-lb-outbound-connections] before updating these values to fully understand the impact of your changes.
+
+When SNAT port resources run out, outbound flows stop working until existing flows release SNAT ports. The load balancer reclaims SNAT ports when a connection closes, and the AKS-configured load balancer uses a 30-minute idle timeout for reclaiming SNAT ports from idle connections. You can also use transport (for example, **`TCP keepalives`** or **`application-layer keepalives`**) to refresh an idle flow and reset this idle timeout if necessary.
+
+> [!NOTE]
+> The 30-minute idle timeout applies to the load balancer outbound rule and determines when idle outbound connections release SNAT ports. This timeout is separate from the `service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout` annotation, which configures the inbound TCP idle timeout for an individual Kubernetes `LoadBalancer` service and has a default and minimum value of 4 minutes.
 
 If you expect to have numerous short-lived connections and no long-lived connections that might have long times of idle, like using `kubectl proxy` or `kubectl port-forward`, consider using a low timeout value such as _4 minutes_. When using TCP keepalives, it's sufficient to enable them on one side of the connection. For example, it's sufficient to enable them on the server side only to reset the idle timer of the flow. It's not necessary for both sides to start TCP keepalives. Similar concepts exist for application layer, including database client-server configurations. Check the server side for what options exist for application-specific keepalives.
 
 > [!IMPORTANT]
->
 > AKS enables _TCP Reset_ on idle by default. We recommend you keep this configuration and leverage it for more predictable application behavior on your scenarios. For more information, see [Azure load balancer TCP reset](/azure/load-balancer/load-balancer-tcp-reset).
 
 When setting _IdleTimeoutInMinutes_ to a different value than the default of 30 minutes, consider how long your workloads need an outbound connection. Also consider that the default timeout value for a _Standard_ SKU load balancer used outside of AKS is _4 minutes_. An _IdleTimeoutInMinutes_ value that more accurately reflects your specific AKS workload can help decrease SNAT exhaustion caused by tying up connections no longer being used.
 
-> [!WARNING]
-> Altering the values for _AllocatedOutboundPorts_ and _IdleTimeoutInMinutes_ might significantly change the behavior of the outbound rule for your load balancer and shouldn't be done lightly. See [Troubleshoot SNAT][troubleshoot-snat] and review the [Load balancer outbound rules][azure-lb-outbound-rules-overview] and [outbound connections in Azure][azure-lb-outbound-connections] before updating these values to fully understand the impact of your changes.
-
 ### [Create a new cluster with a specific idle timeout](#tab/create-cluster-idle-timeout)
 
-- Create a new AKS cluster with a specific idle timeout using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--load-balancer-idle-timeout` parameter. The following example sets the idle timeout to _4 minutes_:
+Create a new AKS cluster with a specific idle timeout by using the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--load-balancer-idle-timeout` parameter. The following example sets the idle timeout to _4 minutes_:
 
-    ```azurecli-interactive
-    az aks create \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --load-balancer-idle-timeout 4 \
-        --generate-ssh-keys
-    ```
+```azurecli-interactive
+az aks create \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --load-balancer-idle-timeout 4 \
+    --generate-ssh-keys
+```
 
 ### [Update an existing cluster with a specific idle timeout](#tab/update-cluster-idle-timeout)
 
-- Update an existing AKS cluster with a specific idle timeout using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--load-balancer-idle-timeout` parameter. The following example sets the idle timeout to _4 minutes_:
+Update an existing AKS cluster with a specific idle timeout by using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--load-balancer-idle-timeout` parameter. The following example sets the idle timeout to _4 minutes_:
 
-    ```azurecli-interactive
-    az aks update \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --load-balancer-idle-timeout 4
-    ```
+```azurecli-interactive
+az aks update \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --load-balancer-idle-timeout 4
+```
 
 ---
 
@@ -365,19 +369,19 @@ spec:
     app: azure-vote-front
 ```
 
-## Customizations via Kubernetes Annotations
+## Customize the load balancer using Kubernetes Annotations
 
-The following annotations are supported for Kubernetes services with type `LoadBalancer`, and they only apply to **INBOUND** flows.
+The following annotations configure inbound traffic behavior on Kubernetes `LoadBalancer` services in AKS.
 
-| Annotation                                                         | Value                               | Description                                                                                                                                                                                                  |
-|--------------------------------------------------------------------|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Annotation Name | Accepted Values | Behavior |
+| --------------- | --------------- | -------- |
 | `service.beta.kubernetes.io/azure-load-balancer-internal`          | `true` or `false`                   | Specify whether the load balancer should be internal. If not set, it defaults to public.                                                                                                                     |
 | `service.beta.kubernetes.io/azure-load-balancer-internal-subnet`   | Name of the subnet                  | Specify which subnet the internal load balancer should be bound to. If not set, it defaults to the subnet configured in cloud config file.                                                                   |
 | `service.beta.kubernetes.io/azure-dns-label-name`                  | Name of the DNS label on Public IPs | Specify the DNS label name for the **public** service. If it's set to an empty string, the DNS entry in the Public IP isn't used.                                                                            |
 | `service.beta.kubernetes.io/azure-load-balancer-resource-group`    | Name of the resource group          | Specify the resource group of load balancer public IPs that aren't in the same resource group as the cluster infrastructure (node resource group).                                                           |
 | `service.beta.kubernetes.io/azure-allowed-service-tags`            | List of allowed service tags        | Specify a list of allowed [service tags][service-tags] separated by commas.                                                                                                                                  |
 | `service.beta.kubernetes.io/azure-allowed-ip-ranges`               | list of allowed IP ranges           | Specify a list of allowed IP ranges separated by comma.                                                                                                                                                      |
-| `service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout`  | TCP idle timeouts in minutes        | Specify the time in minutes for TCP connection idle timeouts to occur on the load balancer. The default and minimum value is 4. The maximum value is 30. The value must be an integer.                       |
+| `service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout`  | TCP idle timeouts in minutes        | Specify the time in minutes for TCP connection idle timeouts to occur on the load balancer. The default and minimum value is 4. The maximum value is 100. The value must be an integer.                      |
 | `service.beta.kubernetes.io/azure-load-balancer-disable-tcp-reset` | `true` or `false`                   | Specify whether the load balancer should disable TCP reset on idle timeout.                                                                                                                                  |
 | `service.beta.kubernetes.io/azure-load-balancer-ipv4`              | IPv4 address                        | Specify the IPv4 address to assign to the load balancer.                                                                                                                                                     |
 | `service.beta.kubernetes.io/azure-load-balancer-ipv6`              | IPv6 address                        | Specify the IPv6 address to assign to the load balancer.                                                                                                                                                     |
@@ -394,9 +398,9 @@ The following annotations are supported to customize the load balancer health pr
 
 | Annotation | Value | Description |
 |------------|-------|-------------|
-| `service.beta.kubernetes.io/azure-load-balancer-health-probe-interval`     | Health probe interval                                     |                                                                                                                                                                                                                       |
-| `service.beta.kubernetes.io/azure-load-balancer-health-probe-num-of-probe` | The minimum number of unhealthy responses of health probe |                                                                                                                                                                                                                       |
-| `service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path` | Request path of the health probe                          |                                                                                                                                                                                                                       |
+| `service.beta.kubernetes.io/azure-load-balancer-health-probe-interval`     | Health probe interval                                     | The amount of time in seconds between probe attempts. The default is 5 seconds.                                                                                                                                        |
+| `service.beta.kubernetes.io/azure-load-balancer-health-probe-num-of-probe` | The minimum number of unhealthy responses of health probe | The number of consecutive probe failures before the backend is considered unhealthy. The default is 2 probes.                                                                                                        |
+| `service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path` | Request path of the health probe                          | For HTTP or HTTPS probes, specify a path that begins with `/`, such as `/healthz`.                                                                                                                                      |
 | `service.beta.kubernetes.io/port_{port}_no_lb_rule`                        | true/false                                                | {port} is service port number. When set to `true`, no load balancer or health probe rules for this port are generated. Health check service shouldn't  be exposed to the public internet. |
 | `service.beta.kubernetes.io/port_{port}_no_probe_rule`                     | true/false                                                | {port} is service port number. When set to `true`, no health probe rules for this port are generated.                                                                                                                     |
 | `service.beta.kubernetes.io/port_{port}_health-probe_protocol`             | Health probe protocol                                     | {port} is service port number. Explicit protocol for the health probe for the service port {port}, overriding port.appProtocol if set.                                                                                |
@@ -421,10 +425,7 @@ Currently, the default protocol of the health probe varies among services with d
 
 ##### Health probe request path annotation
 
-Starting in Kubernetes version 1.20, the service annotation `service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path` was introduced to determine the health probe behavior.
-
-- For clusters <=1.23, `spec.ports.appProtocol` would only be used as probe protocol when `service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path` is also set.
-- For clusters >1.24,  `spec.ports.appProtocol` would be used as probe protocol and `/` would be used as default probe request path (`service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path` could be used to change to a different request path).
+Use the service annotation `service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path` to specify the health probe request path. For supported AKS versions, `spec.ports.appProtocol` determines the probe protocol. When `appProtocol` is `http` or `https`, the default probe request path is `/`.
 
 Note that the request path would be ignored when using TCP or the `spec.ports.appProtocol` is empty. The following table summarizes the default health probe behavior:
 
@@ -434,19 +435,13 @@ Note that the request path would be ignored when using TCP or the `spec.ports.ap
 | standard         | cluster                 | udp                 | any                    | any                                                                        | null                              | null                        |
 | standard         | cluster                 | tcp                 |                        | (ignored)                                                                  | tcp                               | null                        |
 | standard         | cluster                 | tcp                 | tcp                    | (ignored)                                                                  | tcp                               | null                        |
-| standard         | cluster                 | tcp                 | http/https             |                                                                            | TCP(<=1.23) or http/https(>=1.24) | null(<=1.23) or `/`(>=1.24) |
+| standard         | cluster                 | tcp                 | http/https             |                                                                            | http/https                        | `/`                         |
 | standard         | cluster                 | tcp                 | http/https             | `/custom-path`                                                             | http/https                        | `/custom-path`              |
 | standard         | cluster                 | tcp                 | unsupported protocol   | `/custom-path`                                                             | tcp                               | null                        |
-| basic            | local                   | any                 | any                    | any                                                                        | http                              | `/healthz`                  |
-| basic            | cluster                 | tcp                 |                        | (ignored)                                                                  | tcp                               | null                        |
-| basic            | cluster                 | tcp                 | tcp                    | (ignored)                                                                  | tcp                               | null                        |
-| basic            | cluster                 | tcp                 | http                   |                                                                            | TCP(<=1.23) or http/https(>=1.24) | null(<=1.23) or `/`(>=1.24) |
-| basic            | cluster                 | tcp                 | http                   | `/custom-path`                                                             | http                              | `/custom-path`              |
-| basic            | cluster                 | tcp                 | unsupported protocol   | `/custom-path`                                                             | tcp                               | null                        |
 
 ##### Health probe interval and number of probes annotations
 
-Starting in Kubernetes version 1.21, two service annotations `service.beta.kubernetes.io/azure-load-balancer-health-probe-interval` and `load-balancer-health-probe-num-of-probe` were introduced, which customize the configuration of health probe. If `service.beta.kubernetes.io/azure-load-balancer-health-probe-interval` isn't set, a default value of _5_ is applied. If `load-balancer-health-probe-num-of-probe` isn't set, a default value of _2_ is applied.
+Use the service annotations `service.beta.kubernetes.io/azure-load-balancer-health-probe-interval` and `service.beta.kubernetes.io/azure-load-balancer-health-probe-num-of-probe` to customize the health probe configuration. If you don't set `service.beta.kubernetes.io/azure-load-balancer-health-probe-interval`, the default value of 5 seconds is applied. If you don't set `service.beta.kubernetes.io/azure-load-balancer-health-probe-num-of-probe`, the default value of 2 probes is applied.
 
 ### Custom Load Balancer health probe for port
 
@@ -467,6 +462,8 @@ The following table summarizes the port-specific annotations that can be used to
 ## Exclude node pool from Load Balancer backend pool
 
 In certain scenarios, you may want to prevent a node pool from being part of the load balancer's backend pool. To do this, apply the label `node.kubernetes.io/exclude-from-external-load-balancers=true` to the node pool. 
+
+The `node.kubernetes.io/exclude-from-external-load-balancers=true` label controls whether AKS nodes in a node pool are included in the Azure Load Balancer backend pool.
 
 > [!NOTE]
 > Although the label resides on individual nodes, it must be applied at the node pool level to ensure long-term persistence.

@@ -314,7 +314,7 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [azure-nsg-docs]: /azure/virtual-network/network-security-groups-overview#augmented-security-rules
 [azure-service-tags]: /azure/virtual-network/service-tags-overview
 [external-dns]: https://kubernetes-sigs.github.io/external-dns/latest/docs/annotations/annotations/#external-dnsalphakubernetesiohostname
-[aks-lb-configure-annotations]: configure-load-balancer-standard.md#customizations-via-kubernetes-annotations
+[aks-lb-configure-annotations]: configure-load-balancer-standard.md#customize-the-load-balancer-using-kubernetes-annotations
 [kubernetes-docs-load-balancer]: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
 [aks-system-nodes]: /azure/aks/use-system-pools
 [istio-egress-gateway]: istio-deploy-egress.md

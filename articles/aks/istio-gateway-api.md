@@ -713,7 +713,7 @@ If you no longer need the resources created in this article, you can delete them
 [istio-upgrade]: istio-upgrade.md
 [managed-gateway-addon]: managed-gateway-api.md
 [annotation-customizations]: #annotation-customizations
-[azure-aks-load-balancer-annotations]: configure-load-balancer-standard.md#customizations-via-kubernetes-annotations
+[azure-aks-load-balancer-annotations]: configure-load-balancer-standard.md#customize-the-load-balancer-using-kubernetes-annotations
 [akv-rbac-guide]: /azure/key-vault/general/rbac-guide
 [istio-gateway-auto-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#automated-deployment
 [istio-gateway-manual-deployment]: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/#manual-deployment
