@@ -136,6 +136,8 @@ When creating or upgrading an AKS node pool, you can specify the upgrade strateg
 | `Rolling` (default) | Standard rolling upgrade where nodes are updated one by one. |
 | `BlueGreen` | Adds new _green_ nodes with the updated configuration to the existing node pool while keeping the original _blue_ nodes running. |
 
+During an in-progress upgrade, AKS supports switching from `BlueGreen` to `Rolling`, but not from `Rolling` to `BlueGreen`.
+
 ## Customize blue-green upgrade properties
 
 You can customize the following blue-green upgrade properties (`NodePoolBlueGreenUpgradeSettings`):
@@ -178,7 +180,7 @@ You can customize the following blue-green upgrade properties (`NodePoolBlueGree
 ## Start a blue-green upgrade for an existing node pool
 
 > [!IMPORTANT]
-> When resuming a paused upgrade, you can update the blue-green settings, but you can't change the upgrade strategy or Kubernetes version.
+> When resuming a paused upgrade, you can update the blue-green settings, but you can't change the Kubernetes version. You can switch an in-progress blue-green upgrade to the rolling strategy, but you can't switch an in-progress rolling upgrade to blue-green.
 
 - Start a blue-green upgrade for an existing node pool using the [`az aks nodepool upgrade`](/cli/azure/aks/nodepool#az-aks-nodepool-upgrade) command with the `--kubernetes-version` parameter set to your desired version. You can start a blue-green upgrade for a node pool already using the blue-green strategy or for a node pool not yet configured with blue-green strategy. The following examples demonstrate both scenarios:
 
@@ -210,6 +212,18 @@ You can customize the following blue-green upgrade properties (`NodePoolBlueGree
         --resource-group myResourceGroup
     ```
 
+## Switch an in-progress blue-green upgrade to rolling
+
+If an in-progress blue-green upgrade can't be resumed because node pool property changes would require a node reimage, you can switch the node pool upgrade strategy to rolling. AKS removes the blue-green upgrade protections and continues cleanup using the rolling upgrade behavior.
+
+```azurecli-interactive
+az aks nodepool update \
+    --name myNodePool \
+    --cluster-name myAKSCluster \
+    --resource-group myResourceGroup \
+    --upgrade-strategy Rolling
+```
+
 ## Roll back a blue-green upgrade
 
 Once an ongoing blue-green upgrade is canceled, the rollback can be initiated using the [`az aks nodepool rollback`](/cli/azure/aks/nodepool#az-aks-nodepool-rollback) command.
@@ -233,7 +247,7 @@ No, the `maxUnavailable` setting isn't applicable to blue-green upgrades. New _g
 
 ### Can blue-green upgrades be used for node pool updates beyond Kubernetes and node image version?
 
-No, the blue-green upgrade strategy is specific to Kubernetes and node image version upgrades at this time. Other changes, such as certificate rotation or kubelet and OS configuration changes cannot be executed via blue-green upgrade strategy. 
+No, the blue-green upgrade strategy is specific to Kubernetes and node image version upgrades at this time. Other changes, such as certificate rotation or kubelet and OS configuration changes can't be executed via blue-green upgrade strategy. If you need to apply changes that trigger node reimage while a blue-green upgrade is in progress, switch the node pool to the rolling upgrade strategy or revert the property changes before retrying.
 
 ### Which Kubernetes versions are compatible with blue-green upgrades?
 
