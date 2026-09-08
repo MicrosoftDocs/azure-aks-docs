@@ -5,7 +5,7 @@ author: shashankbarsin
 ms.service: azure-kubernetes-service
 ms.topic: concept-article
 ms.subservice: aks-security
-ms.date: 09/04/2026
+ms.date: 09/08/2026
 ms.author: shasb
 ai-usage: ai-assisted
 ms.custom: aeo-round-2
@@ -64,7 +64,7 @@ A deployment pipeline needs both network connectivity to the API server and auth
 
 - **Public API server:** Use [API server authorized IP ranges][authorized-ip-ranges] to allow only trusted source networks. Add the stable outbound public IP address or CIDR range of the network that hosts the deployment agent. If agent traffic passes through a firewall or NAT gateway, authorize the public egress IP address that the API server sees. Configure firewall rules to allow the agent to reach the API server FQDN.
 - **Private API server:** Place a self-hosted deployment agent or a Managed DevOps Pool in the cluster VNet, a peered VNet, or another network that can reach the private endpoint. Configure routing, network security groups, firewall rules, and private DNS resolution for the API server FQDN. Azure DevOps Microsoft-hosted agents aren't supported with private AKS clusters. For an example architecture, see [Use Azure Firewall to help protect an AKS cluster][pipeline-private-cluster].
-- **Pipeline identity:** Use a dedicated managed identity or service principal and grant only the permissions required by the deployment. If the pipeline retrieves a kubeconfig file, grant the [Azure Kubernetes Service Cluster User Role][control-kubeconfig-access]. Then authorize Kubernetes API operations separately. For clusters that use Azure RBAC for Kubernetes authorization, assign an AKS RBAC role, such as **Azure Kubernetes Service RBAC Writer**, at the narrowest practical cluster or namespace scope. For clusters that use Kubernetes RBAC, bind the Microsoft Entra identity to an appropriate Kubernetes `Role` or `ClusterRole`. For more information, see [Cluster authorization concepts][cluster-authorization].
+- **Pipeline identity:** Use [workload identity federation][pipeline-federated-identity] with a dedicated app registration or managed identity instead of storing long-lived credentials in the pipeline. Grant only the permissions required by the deployment. If the pipeline retrieves a kubeconfig file for a Microsoft Entra-integrated cluster, grant the [Azure Kubernetes Service Cluster User Role][control-kubeconfig-access], which allows credential retrieval but doesn't authorize Kubernetes API operations. Avoid cluster-admin credentials. For clusters that use Azure RBAC for Kubernetes authorization, assign an AKS RBAC role, such as **Azure Kubernetes Service RBAC Writer**, at the narrowest practical cluster or namespace scope. For clusters that use Kubernetes RBAC, use a `RoleBinding` or `ClusterRoleBinding` to grant the Microsoft Entra identity an appropriate `Role` or `ClusterRole`. For more information, see [Cluster authorization concepts][cluster-authorization].
 
 ### AKS Automatic security defaults
 
@@ -223,5 +223,6 @@ For more information on core Kubernetes and AKS concepts, see:
 [security-container-access]: ./secure-container-access.md
 [etcd-encryption-cmk]: use-kms-etcd-encryption.md
 [pipeline-private-cluster]: /azure/architecture/guide/aks/aks-firewall#scenario-details
+[pipeline-federated-identity]: /azure/devops/pipelines/library/connect-to-azure
 [control-kubeconfig-access]: control-kubeconfig-access.md
 [cluster-authorization]: concepts-cluster-authorization.md
