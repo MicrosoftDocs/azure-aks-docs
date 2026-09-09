@@ -247,7 +247,7 @@ No, the `maxUnavailable` setting isn't applicable to blue-green upgrades. New _g
 
 ### Can blue-green upgrades be used for node pool updates beyond Kubernetes and node image version?
 
-No, the blue-green upgrade strategy is specific to Kubernetes and node image version upgrades at this time. Other changes, such as certificate rotation or kubelet and OS configuration changes can't be executed via blue-green upgrade strategy. If you need to apply changes that trigger node reimage while a blue-green upgrade is in progress, switch the node pool to the rolling upgrade strategy or revert the property changes before retrying.
+No, the blue-green upgrade strategy currently supports only Kubernetes and node image version upgrades. You can't use this strategy for other changes, such as certificate rotation or kubelet and OS configuration changes. If you need to apply changes that trigger node reimage while a blue-green upgrade is in progress, switch the node pool to the rolling upgrade strategy or revert the property changes before retrying.
 
 ### Which Kubernetes versions are compatible with blue-green upgrades?
 
