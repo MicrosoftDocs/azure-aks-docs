@@ -180,7 +180,7 @@ You can customize the following blue-green upgrade properties (`NodePoolBlueGree
 ## Start a blue-green upgrade for an existing node pool
 
 > [!IMPORTANT]
-> When resuming a paused upgrade, you can update the blue-green settings, but you can't change the Kubernetes version. You can switch an in-progress blue-green upgrade to the rolling strategy, but you can't switch an in-progress rolling upgrade to blue-green.
+> When you resume a paused upgrade, you can update the blue-green settings, but you can't change the Kubernetes version. You can switch an in-progress blue-green upgrade to the rolling strategy, but you can't switch an in-progress rolling upgrade to blue-green.
 
 - Start a blue-green upgrade for an existing node pool using the [`az aks nodepool upgrade`](/cli/azure/aks/nodepool#az-aks-nodepool-upgrade) command with the `--kubernetes-version` parameter set to your desired version. You can start a blue-green upgrade for a node pool already using the blue-green strategy or for a node pool not yet configured with blue-green strategy. The following examples demonstrate both scenarios:
 
