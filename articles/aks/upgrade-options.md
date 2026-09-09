@@ -240,22 +240,12 @@ Behavior options:
 - **Schedule (default)**: Deletes blocked node and surges replacement.
 - **Cordon (recommended)**: Cordons node and labels it as `kubernetes.azure.com/upgrade-status=Quarantined`.
 
-Max blocked nodes (preview):
+Max blocked nodes:
 
 - Specifies how many nodes that fail to drain are tolerated
 - Requires `undrainable-node-behavior` to be set
 - Defaults to `maxSurge` value (typically 10%) if not specified
 - Like max surge, if the calculated value is higher than the number of nodes remaining to be upgraded in the current operation, the number of nodes remaining to be upgraded is used instead
-
-###### Prerequisites for max blocked nodes
-
-The Azure CLI `aks-preview` extension version 18.0.0b9 or later is required to use the max blocked nodes feature.
-
-```azurecli-interactive
-# Install or update the aks-preview extension
-az extension add --name aks-preview
-az extension update --name aks-preview
-```
 
 ###### Example configuration with max blocked nodes
 
