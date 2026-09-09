@@ -353,7 +353,7 @@ In the following example, we create two scheduling profiles called **scheduler-o
     --disable-upstream-kubescheduler-user-configuration
     ```
 
-2. Verify the feature is disabled using the [`az aks show`](/cli/azure/aks#az-aks-show) command.
+2. Verify the feature is disabled by running the [`az aks show`](/cli/azure/aks#az-aks-show) command.
 
     ```azurecli-interactive
     az aks show --resource-group="${RESOURCE_GROUP}" \
