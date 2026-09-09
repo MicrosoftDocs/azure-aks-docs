@@ -80,11 +80,11 @@ spec:
         - D
 ```
 
-It also creates a `system-surge` node pool that provides on-demand Linux AMD64 capacity for critical system add-ons. When a pending pod tolerates the `CriticalAddonsOnly=true:NoSchedule` taint and matches the pool requirements, NAP can provision a node from this pool. Nodes created by the pool have the `kubernetes.azure.com/mode: system` label.
+NAP also creates a `system-surge` node pool that provides on-demand Linux AMD64 capacity for critical system add-ons. When a pending pod tolerates the `CriticalAddonsOnly=true:NoSchedule` taint and matches the pool requirements, NAP can provision a node from this pool. Nodes created by the pool have the `kubernetes.azure.com/mode: system` label.
 
 ## Control the default node pools
 
-When you [create a new AKS cluster enabled with NAP using the Azure CLI](./use-node-auto-provisioning.md#enable-nap-on-a-new-cluster), you can include the `--node-provisioning-default-pools` flag to control whether AKS creates the default NAP `NodePools`. You can also use this flag with [`az aks update`](/cli/azure/aks#az-aks-update) when you enable NAP on an existing cluster.
+When you [create a new AKS cluster enabled with NAP using the Azure CLI](./use-node-auto-provisioning.md#enable-nap-on-a-new-cluster), include the `--node-provisioning-default-pools` flag to control whether AKS creates the default NAP `NodePools`. You can also use this flag with [`az aks update`](/cli/azure/aks#az-aks-update) when you enable NAP on an existing cluster.
 
 The `--node-provisioning-default-pools` flag accepts the following values:
 
