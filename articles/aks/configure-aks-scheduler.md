@@ -23,7 +23,6 @@ In this article, you learn how to deploy example scheduler profiles in Azure Kub
 
 - The Azure CLI version `2.90.0` or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - Kubernetes version `1.33` or later running on your AKS cluster.
-- The [`aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) version `18.0.0b27` or later.
 - Review the [supported advanced scheduling concepts](./concepts-scheduler-configuration.md) and in-tree scheduling plugins on AKS.
 
 
