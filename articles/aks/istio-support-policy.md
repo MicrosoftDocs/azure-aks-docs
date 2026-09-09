@@ -34,9 +34,9 @@ New minor revisions and patches are rolled out as part of AKS releases. Announce
 | asm-1-25 | Mar 2025 | May 2025 | Jan 2026 | 1.29, 1.30, 1.31, 1.32, 1.33 | 1.28, 1.29, 1.30, 1.31, 1.32, 1.33 |
 | asm-1-26 | May 2025 | July 2025 | Apr 2026 | 1.29, 1.30, 1.31, 1.32, 1.33, 1.34 | 1.28, 1.29, 1.30, 1.31, 1.32, 1.33, 1.34 |
 | asm-1-27 | Aug 2025 | Sept 2025 | May 2026 | 1.29, 1.30, 1.31, 1.32, 1.33, 1.34, 1.35 | 1.29, 1.30, 1.31, 1.32, 1.33, 1.34, 1.35 |
-| asm-1-28 | Nov 2025 | Jan 2026 | ~Aug 2026 (expected) | 1.30, 1.31, 1.32, 1.33, 1.34, 1.35 | 1.30, 1.31, 1.32, 1.33, 1.34, 1.35 |
-| asm-1-29 | Feb 2026 | Apr 2026 | ~Sept 2026 (expected) | 1.31, 1.32, 1.33, 1.34, 1.35, 1.36 | 1.31, 1.32, 1.33, 1.34, 1.35, 1.36 |
-| asm-1-30 | May 2026 | July 2026 | ~Dec 2026 (expected) | 1.32, 1.33, 1.34, 1.35, 1.36, 1.37 | 1.32, 1.33, 1.34, 1.35, 1.36, 1.37 |
+| asm-1-28 | Nov 2025 | Jan 2026 | Aug 2026 | 1.30, 1.31, 1.32, 1.33, 1.34, 1.35 | 1.30, 1.31, 1.32, 1.33, 1.34, 1.35 |
+| asm-1-29 | Feb 2026 | Apr 2026 | ~Nov 2026 (expected) | 1.31, 1.32, 1.33, 1.34, 1.35, 1.36 | 1.31, 1.32, 1.33, 1.34, 1.35, 1.36 |
+| asm-1-30 | May 2026 | July 2026 | ~Jan 2027 (expected) | 1.32, 1.33, 1.34, 1.35, 1.36, 1.37 | 1.32, 1.33, 1.34, 1.35, 1.36, 1.37 |
 
 If using an AKS [long term-support (LTS) cluster][aks-lts], a newer revision may be declared as compatible when a previous compatible Istio revision reaches end of life before the AKS LTS version's end of life. For more details, read Istio's [AKS compatibility policy](#aks-compatibility).
 
