@@ -45,7 +45,7 @@ This article provides an overview and examples of how to use kubelogin for suppo
 
 AKS clusters running Kubernetes version 1.24 or later automatically use the kubelogin exec plugin format. Clusters running Kubernetes versions earlier than 1.24 require manual conversion to this format.
 
-For most interactions with kubelogin, you use the [`convert-kubeconfig`](https://azure.github.io/kubelogin/cli/convert-kubeconfig.html) subcommand. The subcommand uses the kubeconfig file that's specified in `--kubeconfig` or in the `KUBECONFIG` environment variable to convert the final kubeconfig file to exec format based on the specified authentication method.
+For most interactions with kubelogin, use the [`convert-kubeconfig`](https://azure.github.io/kubelogin/cli/convert-kubeconfig.html) subcommand. The subcommand uses the kubeconfig file that you specify in `--kubeconfig` or in the `KUBECONFIG` environment variable to convert the final kubeconfig file to exec format based on the specified authentication method.
 
 The authentication methods that kubelogin implements are Microsoft Entra OAuth 2.0 token grant flows. Cache behavior depends on the authentication method. Device code, web browser interactive, and resource owner password credential (ROPC) authentication cache authentication records in the kubelogin cache directory. Methods such as Azure CLI and Azure Developer CLI use the cache managed by their respective command-line tool instead of the kubelogin cache.
 
@@ -87,7 +87,7 @@ The following table outlines parameters that you can use with Azure CLI authenti
 
 ## Sign in to Azure
 
-Sign in to Azure using the `az login` command.
+Sign in to Azure by using the `az login` command.
 
 ```azurecli-interactive
 az login
@@ -328,7 +328,7 @@ kubelogin convert-kubeconfig -l workloadidentity
 
 ## Convert the kubeconfig file using the Azure Developer CLI
 
-1. Sign in using the Azure Developer CLI.
+1. Sign in by using the Azure Developer CLI.
 
     ```azurecli
     azd auth login
@@ -352,7 +352,7 @@ kubelogin convert-kubeconfig -l azurepipelines
 
 ## Remove cached tokens
 
-Remove cached tokens using the [`kubelogin remove-cache-dir`](https://azure.github.io/kubelogin/cli/remove-cache-dir.html) command.
+Remove cached tokens by using the [`kubelogin remove-cache-dir`](https://azure.github.io/kubelogin/cli/remove-cache-dir.html) command.
 
 ```bash
 kubelogin remove-cache-dir
@@ -362,7 +362,7 @@ kubelogin remove-cache-dir
 
 ## Get node information
 
-Get node information using the [`kubectl get`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command.
+Get node information by using the [`kubectl get`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command.
 
 ```bash
 kubectl get nodes
