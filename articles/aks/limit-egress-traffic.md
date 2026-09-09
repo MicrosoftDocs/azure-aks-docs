@@ -112,7 +112,7 @@ The diagram shows the VNet with separate subnets for AKS and Azure Firewall befo
 
 ## Create a public IP for Azure Firewall
 
-- Create a standard SKU public IP resource using the [`az network public-ip create`][az-network-public-ip-create] command. This resource is used as the frontend IP address for the Azure Firewall. The single-IP configuration in this article is intended for testing. For production, use the [firewall frontend IP requirements](#firewall-frontend-ip-requirements) to plan SNAT capacity for your workload.
+- Create a standard SKU public IP resource using the [`az network public-ip create`][az-network-public-ip-create] command. Use this resource as the frontend IP address for the Azure Firewall. The single-IP configuration in this article is intended for testing. For production, use the [firewall frontend IP requirements](#firewall-frontend-ip-requirements) to plan SNAT capacity for your workload.
 
     ```azurecli-interactive
     az network public-ip create --resource-group $RESOURCE_GROUP --name $FW_PUBLICIP_NAME --location $LOCATION --sku "Standard"
@@ -171,7 +171,7 @@ The diagram shows Azure Firewall deployed in its subnet, with a UDR directing tr
 
 ## Configure the virtual network to use Azure Firewall as its DNS server
 
-- Configure the virtual network to use the Azure Firewall private IP address as its DNS server using the [`az network vnet update`][az-network-vnet-update] command. This configuration ensures that the AKS nodes and Azure Firewall resolve the destination FQDNs in the network rules consistently.
+- Configure the virtual network to use the Azure Firewall private IP address as its DNS server by using the [`az network vnet update`][az-network-vnet-update] command. This configuration ensures that the AKS nodes and Azure Firewall resolve the destination FQDNs in the network rules consistently.
 
     ```azurecli-interactive
     az network vnet update \
@@ -387,7 +387,7 @@ If you used authorized IP ranges for your cluster in the previous step, you need
     CURRENT_IP=$(dig @resolver1.opendns.com ANY myip.opendns.com +short)
     ```
 
-1. Add the IP address to the approved ranges using the [`az aks update`][az-aks-update] command. The `--api-server-authorized-ip-ranges` option replaces the current list, so include the firewall public IP address when you add the developer IP address.
+1. Add the IP address to the approved ranges by using the [`az aks update`][az-aks-update] command. The `--api-server-authorized-ip-ranges` option replaces the current list, so include the firewall public IP address when you add the developer IP address.
 
     ```azurecli-interactive
     az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --api-server-authorized-ip-ranges $FW_PUBLIC_IP,$CURRENT_IP/32
@@ -410,7 +410,7 @@ You can now start exposing services and deploying applications to this cluster. 
 The diagram shows inbound public traffic arriving at the firewall public IP address, being translated by the DNAT rule, and being forwarded to the public load balancer frontend IP address for the AKS service.
 
 1. Review the [AKS Store Demo quickstart](https://github.com/Azure-Samples/aks-store-demo/blob/main/aks-store-quickstart.yaml) manifest to understand the deployed components.
-1. Deploy the service using the [`kubectl apply`][kubectl-apply] command.
+1. Deploy the service by using the [`kubectl apply`][kubectl-apply] command.
 
    ```bash
    kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/aks-store-demo/main/aks-store-quickstart.yaml
@@ -418,7 +418,7 @@ The diagram shows inbound public traffic arriving at the firewall public IP addr
 
 ## Get the load balancer public frontend IP
 
-1. Get the public frontend IP address assigned to the load balancer using the [`kubectl get services`][kubectl-get] command.
+1. Get the public frontend IP address assigned to the load balancer by using the [`kubectl get services`][kubectl-get] command.
 
    ```bash
    kubectl get services
@@ -435,7 +435,7 @@ The diagram shows inbound public traffic arriving at the firewall public IP addr
    store-front       LoadBalancer   10.0.89.139    20.39.18.6    80:32271/TCP         10s
    ```
 
-1. Save the public load balancer frontend IP address using the `kubectl get svc store-front` command.
+1. Save the public load balancer frontend IP address by using the `kubectl get svc store-front` command.
 
    ```bash
    SERVICE_IP=$(kubectl get svc store-front -o jsonpath='{.status.loadBalancer.ingress[*].ip}')
@@ -445,7 +445,7 @@ The diagram shows inbound public traffic arriving at the firewall public IP addr
 
 > [!IMPORTANT]
 >
-> When you use Azure Firewall to restrict egress traffic and create a UDR to force all egress traffic, make sure you create an appropriate DNAT rule in Azure Firewall to correctly allow ingress traffic. Using Azure Firewall with a UDR breaks the ingress setup due to asymmetric routing. The issue occurs if the AKS subnet has a default route that goes to the firewall's private IP address, but you're using a public load balancer - ingress or Kubernetes service of type `loadBalancer`. In this case, the incoming load balancer traffic is received via its public IP address, but the return path goes through the firewall's private IP address. Because Azure Firewall is stateful, it drops the returning packet because Azure Firewall isn't aware of an established session. To learn how to integrate Azure Firewall with your ingress or service load balancer, see [Integrate Azure Firewall with Azure Standard Load Balancer](/azure/firewall/integrate-lb).
+> When you use Azure Firewall to restrict egress traffic and create a UDR to force all egress traffic, ensure you create an appropriate DNAT rule in Azure Firewall to correctly allow ingress traffic. Using Azure Firewall with a UDR breaks the ingress setup due to asymmetric routing. The issue occurs if the AKS subnet has a default route that goes to the firewall's private IP address, but you're using a public load balancer - ingress or Kubernetes service of type `loadBalancer`. In this case, the incoming load balancer traffic is received via its public IP address, but the return path goes through the firewall's private IP address. Because Azure Firewall is stateful, it drops the returning packet because Azure Firewall isn't aware of an established session. To learn how to integrate Azure Firewall with your ingress or service load balancer, see [Integrate Azure Firewall with Azure Standard Load Balancer](/azure/firewall/integrate-lb).
 
 To configure inbound connectivity, create a DNAT rule on Azure Firewall. To test connectivity to your cluster, the rule translates the firewall frontend public IP address to the public load balancer frontend IP address saved in `$SERVICE_IP`. You can customize the destination address. The translated port must be the exposed port for your Kubernetes service. For a topology that uses a private frontend IP address instead, configure an [internal load balancer](internal-lb.md) and use its private IP address as the translated address.
 
