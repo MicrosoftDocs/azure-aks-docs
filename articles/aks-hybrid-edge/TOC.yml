@@ -178,8 +178,6 @@
           href: local/hyperconverged/get-on-demand-logs.md
         - name: Monitoring data reference
           href: local/hyperconverged/kubernetes-monitor-metrics.md
-      - name: AKS disconnected operations
-        href: local/hyperconverged/disconnected-operations-aks.md
       - name: Use autoscaler
         href: local/hyperconverged/auto-scale-aks-arc.md
       - name: Upgrade Kubernetes clusters
@@ -309,6 +307,12 @@
         href: ./local/multi-rack/aks-customer-proxy.md
       - name: Upgrade Kubernetes cluster
         href: ./local/multi-rack/cluster-upgrade.md
+  - name: Disconnected operations
+    items:
+    - name: Overview
+      href: local/disconnected-operations/overview.md
+    - name: Create and manage a cluster
+      href: local/disconnected-operations/create-manage-cluster.md
 - name: AKS Edge Essentials
   items:
   - name: Overview

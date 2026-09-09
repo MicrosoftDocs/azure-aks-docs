@@ -84,6 +84,11 @@
       "source_path_from_root": "/articles/aks/deploy-ray-tuning.md",
       "redirect_url": "/azure/aks/ray-overview",
       "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks-hybrid-edge/local/hyperconverged/disconnected-operations-aks.md",
+      "redirect_url": "/azure/aks-hybrid-edge/local/disconnected-operations/overview",
+      "redirect_document_id": false
     }
   ]
 }
