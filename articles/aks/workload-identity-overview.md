@@ -7,7 +7,8 @@ ms.topic: overview
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
 ms.custom: build-2023
-ms.date: 06/26/2026
+ms.date: 09/04/2026
+ai-usage: ai-assisted
 # Customer intent: As a cloud developer, I want to implement Microsoft Entra Workload ID with Azure Kubernetes Service, so that my applications can authenticate securely and access Azure resources effectively without relying on managed identities.
 ---
 
@@ -229,6 +230,17 @@ The following client libraries are the **minimum** version required:
 | Java | [Microsoft Authentication Library-for-java](https://github.com/AzureAD/microsoft-authentication-library-for-java) | `ghcr.io/azure/azure-workload-identity/msal-java:latest` | [Link](https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-java) | No |
 | JavaScript | [Microsoft Authentication Library-for-js](https://github.com/AzureAD/microsoft-authentication-library-for-js) | `ghcr.io/azure/azure-workload-identity/msal-node:latest` | [Link](https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-node) | No |
 | Python | [Microsoft Authentication Library-for-python](https://github.com/AzureAD/microsoft-authentication-library-for-python) | `ghcr.io/azure/azure-workload-identity/msal-python:latest` | [Link](https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-python) | No |
+
+## Locate the projected service account token
+
+When the mutating admission webhook injects the projected service account token volume into your pod, it also sets the `AZURE_FEDERATED_TOKEN_FILE` environment variable to the path of the token file.
+
+> [!IMPORTANT]
+> Read the token path from the `AZURE_FEDERATED_TOKEN_FILE` environment variable. Don't hard-code a path such as `/var/run/secrets/azure/tokens/azure-identity-token` in your application, container image, or deployment manifests. The mount path is an implementation detail of the webhook and can change. A hard-coded path also breaks when a pod projects more than one token, such as when a workload combines [identity bindings](#use-identity-bindings-and-direct-federation-in-the-same-workload) with direct federation.
+
+The Azure Identity client libraries and MSAL read `AZURE_FEDERATED_TOKEN_FILE` for you, so applications that use `DefaultAzureCredential` or `WorkloadIdentityCredential` don't need to handle the file directly. If your application reads the token itself, for example when it builds a custom client assertion, resolve the path from the environment variable at runtime.
+
+Kubernetes refreshes the projected token in place before it expires. Read the file again each time you exchange the token for a Microsoft Entra token rather than caching its contents for the lifetime of the process.
 
 ## How it works
 
