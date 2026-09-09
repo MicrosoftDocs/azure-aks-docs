@@ -38,7 +38,7 @@ This approach addresses common pain points with manually specifying zones:
 
 ## Limitations and considerations
 
-- Automatic zone placement only supports region with availability zone support. For more information, see the [List of Azure regions][azure-regions].
+- Automatic zone placement only supports regions with availability zone support. For more information, see the [List of Azure regions][azure-regions].
 - Automatic zone placement supports creating and updating both Virtual Machine Scale Sets-based and Virtual Machines-based node pools.
 - The per-zone cap is 50% of nodes. A create or scale operation can still fail if Azure can't allocate the requested nodes while honoring the per-zone limit.
 - Automatic zone placement is intended for [zone-spanning][zone-spanning] workloads. For [zone-aligned][zone-aligned] workloads (where each node pool is pinned to a single zone), continue specifying the zone explicitly by using `--zones 1`, `--zones 2`, and so on.
