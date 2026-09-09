@@ -3,10 +3,11 @@ title: Configure Node Pools for Node Auto-Provisioning (NAP) in Azure Kubernetes
 description: This article shows you how to configure node pools for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS), including SKU selectors, limits, and weights.
 ms.topic: how-to
 ms.custom: devx-track-azurecli, aks-scaling
-ms.date: 07/25/2025
+ms.date: 09/09/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
+ai-usage: ai-assisted
 # Customer intent: As a cluster operator or developer, I want to configure node pools for my AKS clusters using node auto-provisioning, so that I can optimize resource allocation and cost efficiency for my workloads.
 ---
 
@@ -14,7 +15,9 @@ ms.service: azure-kubernetes-service
 
 This article explains how to configure node pools for node auto-provisioning (NAP) in Azure Kubernetes Service (AKS), including SKU selectors, resource limits, and priority weights. It also provides examples to help you get started.
 
-## Overview of node pools in NAP
+AKS Automatic includes NAP by default. For AKS Standard clusters, you must enable NAP before you configure its node pools.
+
+## How NAP selects VMs for node pools
 
 NAP uses virtual machine (VM) SKU requirements to decide the best VMs for pending workloads. You can configure:
 
@@ -23,9 +26,9 @@ NAP uses virtual machine (VM) SKU requirements to decide the best VMs for pendin
 - Spot or On-demand instances.
 - Architecture and capabilities requirements.
 
-The `NodePool` resource sets constraints on the nodes that NAP creates and the pods that run on those nodes. When you first install NAP, it creates a [default `NodePool`](#review-default-node-pool-configuration). You can modify this node pool or create extra node pools to suit your workload requirements.
+The `NodePool` resource sets constraints on the nodes that NAP creates and the pods that run on those nodes. When you enable NAP with the default node pool configuration set to `Auto`, it creates [default `NodePool` resources](#review-default-node-pool-configuration). You can modify these node pools or create extra node pools to suit your workload requirements.
 
-## Key behaviors of `NodePools` in NAP
+## How NAP evaluates and selects node pools
 
 When configuring `NodePools` for NAP, keep the following behaviors in mind:
 
@@ -33,7 +36,7 @@ When configuring `NodePools` for NAP, keep the following behaviors in mind:
 - NAP evaluates each configured `NodePool`.
 - NAP skips `NodePools` with taints not tolerated by a pod.
 - NAP applies startup taints to provisioned nodes but doesn't require pod toleration.
-- NAP works best with mutually exclusive `NodePools`. When multiple `NodePools` match, it uses the one with highest weight.
+- NAP works best with mutually exclusive `NodePools`, whose requirements don't overlap so that each pod matches only one pool. When multiple `NodePools` match, NAP uses the one with the highest weight.
 
 ## Review default node pool configuration
 
@@ -77,19 +80,19 @@ spec:
         - D
 ```
 
-It also creates a `system-surge` node pool, which helps to autoscale system pool nodes.
+It also creates a `system-surge` node pool that provides on-demand Linux AMD64 capacity for critical system add-ons. When a pending pod tolerates the `CriticalAddonsOnly=true:NoSchedule` taint and matches the pool requirements, NAP can provision a node from this pool. Nodes created by the pool have the `kubernetes.azure.com/mode: system` label.
 
-## Control configuration of default node pool during cluster creation
+## Control the default node pools
 
-When you [create a new AKS cluster enabled with NAP using the Azure CLI](./use-node-auto-provisioning.md#enable-nap-on-a-new-cluster), you can include the `--node-provisioning-default-pools` flag to control the configuration of the default NAP `NodePool`.
+When you [create a new AKS cluster enabled with NAP using the Azure CLI](./use-node-auto-provisioning.md#enable-nap-on-a-new-cluster), you can include the `--node-provisioning-default-pools` flag to control whether AKS creates the default NAP `NodePools`. You can also use this flag with [`az aks update`](/cli/azure/aks#az-aks-update) when you enable NAP on an existing cluster.
 
-The `--node-provisioning-default-pools` flag controls the default NAP `NodePool` configuration and accepts the following values:
+The `--node-provisioning-default-pools` flag accepts the following values:
 
 - **`Auto`** (default): Creates two standard `NodePools` for immediate use.
 - **`None`**: Doesn't create any `NodePools`. You must define your own.
 
 > [!WARNING]
-> **Changing from `Auto` to `None`**: If you change the setting from `Auto` to `None` on an existing cluster, the default `NodePools` aren't deleted automatically. You must delete them manually if you no longer need them.
+> **Changing from `Auto` to `None`**: If you change the setting from `Auto` to `None` on an existing cluster, the default `NodePools` aren't deleted automatically. Before you delete them, define suitable replacement capacity for critical system add-ons. You must delete the default `NodePools` manually if you no longer need them.
 
 ## Node pool configuration options
 
@@ -115,7 +118,7 @@ The following table lists the labels you can use in the `spec.requirements` sect
 | `karpenter.azure.com/sku-gpu-count`                   | GPU count per VM                                              | 2                               |
 | `karpenter.azure.com/sku-networking-accelerated`      | Whether the VM has accelerated networking                     | [true, false]                   |
 | `karpenter.azure.com/sku-storage-premium-capable`     | Whether the VM supports Premium IO storage                    | [true, false]                   |
-| `karpenter.azure.com/sku-storage-ephemeralos-maxsize` | Size limit for the Ephemeral operating system (OS) disk in Gb | 92                              |
+| `karpenter.azure.com/sku-storage-ephemeralos-maxsize` | Size limit for the ephemeral operating system (OS) disk in GB | 92                              |
 | `kubernetes.azure.com/sku-cpu`                        | Number of CPUs in VM                                          | 16                              |
 | `kubernetes.azure.com/sku-memory`                     | Memory in VM in MiB                                           | 131072                          |
 | `kubernetes.azure.com/cluster`                        | AKS cluster name                                              | my-cluster                      |
@@ -127,6 +130,7 @@ The following table lists the labels you can use in the `spec.requirements` sect
 | `kubernetes.io/os`                                    | Operating system                                              | linux                           |
 | `kubernetes.io/arch`                                  | CPU architecture (AMD64 or ARM64)                             | [amd64, arm64]                  |
 
+The memory selector values in this table are the MiB values reported on NAP-created nodes. Before you add a selector, inspect the labels on your nodes to confirm the value used by your cluster.
 
 #### SKU family examples
 
@@ -191,7 +195,7 @@ requirements:
 ```
 
 > [!NOTE]
-> You can find available zones for your region using the `az account list-locations --output table` Azure CLI command.
+> To list VM sizes that support availability zones in a region, use the [`az vm list-skus`](/cli/azure/vm#az-vm-list-skus) command with the `--location <region> --zone --output table` parameters. Confirm that your selected VM size supports the zones in the `NodePool` requirement.
 
 #### Architecture example
 
@@ -236,11 +240,11 @@ requirements:
 
 ### Node pool limits
 
-By default, NAP attempts to schedule your workloads within the Azure quota you have available. You can also specify the upper limit of resources that a node pool uses by specifying limits within the node pool spec. For example:
+By default, NAP attempts to schedule your workloads within the Azure quota you have available. For a dynamic node pool, you can specify aggregate resource limits across all nodes provisioned by that pool. In the following example, `cpu: "1000"` limits the pool to 1,000 vCPU cores, and `memory: 1000Gi` limits it to 1,000 gibibytes of memory:
 
 ```yaml
 spec:
-  # Resource limits constrain the total size of the cluster.
+  # Resource limits constrain the total size of the node pool.
   # Limits prevent Node Auto Provisioning from creating new instances once the limit is exceeded.
   limits:
     cpu: "1000"
@@ -249,7 +253,7 @@ spec:
 
 ### Node pool weights
 
-When you have multiple node pools defined, you can set a preference of where a workload should be scheduled by defining the relative weight in your node pool definitions. For example:
+When you have multiple node pools defined, you can set a preference for where a workload should be scheduled by defining the relative weight in your node pool definitions. The `weight` field accepts an integer from 1 through 100, and higher values give a node pool higher priority. If you omit `weight`, its value is effectively 0. For example:
 
 ```yaml
 spec:
@@ -261,7 +265,7 @@ spec:
 
 ### Static node pools
 
-Static node pools allow you to create a fixed number of nodes using the `replicas` field. With static node pools, the number of nodes will always be at least at the value in the `replicas` field, regardless of pending pod pressure. You can also set the maximum number of nodes this node pool can scale up to by setting `nodes` in the `limits` field.
+Static node pools maintain the fixed number of NAP-provisioned nodes specified in the `replicas` field, regardless of pod demand. To change the node count, explicitly scale the `NodePool`, for example by using [`kubectl scale`](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_scale/) with `nodepool static-node-pool --replicas=7`. The optional `limits.nodes` value constrains explicit scaling and temporary capacity created during node replacement. For static node pools, `nodes` is the only supported field under `limits`; you can't set CPU or memory limits.
 
 ```yaml
 apiVersion: karpenter.sh/v1
@@ -280,16 +284,16 @@ spec:
           - Standard_F8s_v2
       - key: topology.kubernetes.io/zone
         operator: In
-         values:
-           - eastus-1
-           - eastus-2
-           - eastus-3
+        values:
+          - eastus-1
+          - eastus-2
+          - eastus-3
   limits:
-    nodes: 10  # Maximum number of nodes this node pool can scale up to
+    nodes: 10
 ```
 
-> [!Note]
-> When using the `limits` field with static node pools, only the `nodes:` field can be adjustable. Resources can not be set. 
+> [!NOTE]
+> For static node pools, you can set only `nodes` in the `limits` field. You can't set resource limits or `weight`, and disruption consolidation doesn't apply. After you create a `NodePool`, you can't switch it between static and dynamic modes by adding or removing the `replicas` field.
 
 ## Next steps
 
