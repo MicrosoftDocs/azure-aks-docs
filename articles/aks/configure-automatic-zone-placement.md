@@ -23,7 +23,7 @@ When you specify `--zones auto` (or `availabilityZones: ["auto"]` in the agent p
 Automatic zone placement works as follows:
 
 1. AKS evaluates which availability zones in the target region can support the requested VM SKU.
-1. AKS initially selects up to three available zones and places nodes according to the automatic zone placement policy. By default, no single zone can contain more than 50% of the node pool.
+1. AKS initially selects up to three available zones and places nodes according to the automatic zone placement policy. No single zone can contain more than 50% of the node pool.
 1. During later scale-out operations, AKS reevaluates zone availability. If Azure adds a zone to the region or makes the VM SKU available in another zone, AKS might place new nodes in that zone when the placement policy and available capacity allow it. You don't need to update the node pool configuration.
 
 > [!IMPORTANT]
@@ -38,8 +38,9 @@ This approach addresses common pain points with manually specifying zones:
 
 ## Limitations and considerations
 
+- Automatic zone placement only supports region with availability zone support. For more information, see the [List of Azure regions][azure-regions].
 - Automatic zone placement supports creating and updating both Virtual Machine Scale Sets-based and Virtual Machines-based node pools.
-- The default per-zone cap is 50% of nodes.
+- The per-zone cap is 50% of nodes. A create or scale operation can still fail if Azure can't allocate the requested nodes while honoring the per-zone limit.
 - Automatic zone placement is intended for [zone-spanning][zone-spanning] workloads. For [zone-aligned][zone-aligned] workloads (where each node pool is pinned to a single zone), continue specifying the zone explicitly by using `--zones 1`, `--zones 2`, and so on.
 
 ## Prerequisites
@@ -47,7 +48,7 @@ This approach addresses common pain points with manually specifying zones:
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 - AKS API version `2026-01-02-preview` or later.
-- The latest version of the [aks-preview Azure CLI extension][aks-preview-extension].
+- [AKS Preview Azure CLI extension][aks-preview-extension] `22.0.0b4` or later.
 - A region that supports availability zones. For more information, see the [List of Azure regions][azure-regions].
 - The `VmssAutomaticZonePlacement` feature flag registered in your subscription. Register the feature flag by using the [`az feature register`][az-feature-register] command:
 
