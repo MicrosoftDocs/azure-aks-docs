@@ -214,7 +214,7 @@ You can customize the following blue-green upgrade properties (`NodePoolBlueGree
 
 ## Switch an in-progress blue-green upgrade to rolling
 
-If an in-progress blue-green upgrade can't be resumed because node pool property changes would require a node reimage, you can switch the node pool upgrade strategy to rolling. AKS removes the blue-green upgrade protections and continues cleanup using the rolling upgrade behavior.
+If an in-progress blue-green upgrade can't be resumed because node pool property changes would require a node reimage, you can switch the node pool upgrade strategy to rolling. AKS removes the blue-green upgrade protections and continues cleanup by using the rolling upgrade behavior.
 
 ```azurecli-interactive
 az aks nodepool update \
