@@ -84,8 +84,8 @@ Use this article to understand how LocalDNS works and why it improves DNS behavi
 | Cluster mode | LocalDNS behavior |
 | --- | --- |
 | AKS Automatic | Preconfigured |
-| AKS Standard, Kubernetes 1.31 through 1.35 | Explicitly configured per node pool |
-| AKS Standard, Kubernetes 1.36 and later | Enabled in `Preferred` mode when the node pool has no explicit LocalDNS profile; explicitly configure `Disabled` to opt out |
+| AKS Standard, Kubernetes 1.31 through 1.36 | Explicitly configured per node pool |
+| AKS Standard, Kubernetes 1.37 and later | Enabled in `Preferred` mode when the node pool has no explicit LocalDNS profile; explicitly configure `Disabled` to opt out |
 
 By using LocalDNS, you get faster and more reliable DNS resolution for your workloads, reduce the risk of DNS-related outages, and gain more control over DNS traffic in your AKS environment.
 
