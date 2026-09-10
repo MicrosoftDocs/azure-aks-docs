@@ -59,7 +59,7 @@ Install the `aks-preview` CLI extension if you don't already have it by using th
 az extension add --name aks-preview
 ```
 
-If you already have the extension installed, update it to the latest version using the [`az extension update`][az-extension-update] command.
+If you already have the extension installed, update it to the latest version by using the [`az extension update`][az-extension-update] command.
 
 ```azurecli-interactive
 az extension update --name aks-preview
