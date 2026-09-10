@@ -47,27 +47,45 @@ This approach addresses common pain points with manually specifying zones:
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-- The `aks-preview` CLI extension version 22.0.0b4 or later. If you don't have it, see [Install the `aks-preview` CLI extension](#install-the-aks-preview-cli-extension).
 - A region that supports availability zones. For more information, see the [List of Azure regions][azure-regions].
-- The `VmssAutomaticZonePlacement` feature flag registered in your subscription. Register the feature flag by using the [`az feature register`][az-feature-register] command:
+- The `aks-preview` CLI extension version 22.0.0b4 or later. If you don't have it, see [Install the `aks-preview` CLI extension](#install-the-aks-preview-cli-extension).
+- The `VmssAutomaticZonePlacement` feature flag registered in your subscription. If you haven't registered it, see [Register the `VmssAutomaticZonePlacement` feature flag](#register-the-VmssAutomaticZonePlacement-feature-flag).
 
-  ```azurecli-interactive
-  az feature register \
-    --namespace Microsoft.Compute \
-    --name VmssAutomaticZonePlacement
-  ```
+## Install the `aks-preview` CLI extension
 
-  Check the registration status by using the [`az feature show`][az-feature-show] command:
+Install the `aks-preview` CLI extension if you don't already have it using the [`az extension add`][az-extension-add] command.
 
-  ```azurecli-interactive
-  az feature show \
-    --namespace Microsoft.Compute \
-    --name VmssAutomaticZonePlacement \
-    --query properties.state \
-    --output tsv
-  ```
+```azurecli-interactive
+az extension add --name aks-preview
+```
 
-  Wait until the command returns `Registered` before you continue.
+If you already have the extension installed, update it to the latest version using the [`az extension update`][az-extension-update] command.
+
+```azurecli-interactive
+az extension update --name aks-preview
+```
+
+## Register the `VmssAutomaticZonePlacement` feature flag
+
+Register the feature flag by using the [`az feature register`][az-feature-register] command:
+
+```azurecli-interactive
+az feature register \
+  --namespace Microsoft.Compute \
+  --name VmssAutomaticZonePlacement
+```
+
+Check the registration status by using the [`az feature show`][az-feature-show] command:
+
+```azurecli-interactive
+az feature show \
+  --namespace Microsoft.Compute \
+  --name VmssAutomaticZonePlacement \
+  --query properties.state \
+  --output tsv
+```
+
+Wait until the command returns `Registered` before you continue.
 
 ## Create an AKS cluster with automatic zone placement (Preview)
 
