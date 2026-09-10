@@ -19,7 +19,9 @@ Domain Name System (DNS) resolution is a critical component in Azure Kubernetes 
 
 AKS Automatic is the recommended production-ready default for most AKS workloads. AKS Automatic clusters come preconfigured with LocalDNS to improve DNS performance, reduce conntrack pressure, and increase resiliency without requiring extra setup.
 
-On AKS Standard, LocalDNS behavior depends on the Kubernetes version and node pool configuration. For Kubernetes 1.31 through 1.35, you explicitly enable LocalDNS. Starting with Kubernetes 1.36, AKS enables LocalDNS in `Preferred` mode when a node pool doesn't already have an explicit LocalDNS profile. You can explicitly set the mode to `Disabled` to opt out.
+> [!NOTE] 
+> Starting with Kubernetes 1.37, AKS Standard defaults eligible node pools without an explicit LocalDNS profile to `Preferred` mode. In `Preferred` mode, AKS enables LocalDNS only when compatibility checks pass. If the node pool or cluster isn't compatible, LocalDNS remains disabled.
+> To opt out, explicitly set the LocalDNS mode to `Disabled`. For instructions, see [Disable LocalDNS on a Node Pool](./localdns-custom.md#disable-localdns-on-a-node-pool).
 
 For more information about AKS Automatic, see [What is AKS Automatic?](./intro-aks-automatic.md)
 
@@ -31,11 +33,9 @@ When a pod in AKS issues a DNS query, such as resolving the name of another serv
 
 This architecture ensures a balance between flexibility and operational safety in a managed environment. For details on how to customize CoreDNS in AKS, refer to the [CoreDNS customization guide](./coredns-custom.md).
 
-When LocalDNS is active, the DNS path changes depending on the pod DNS policy and LocalDNS configuration. For example, external queries can use the following path:
+When LocalDNS is active, the resolution path depends on the pod's `dnsPolicy` (`Default` or `ClusterFirst`) and on the LocalDNS server block configuration. `cluster.local` queries are forwarded to CoreDNS, and external queries are forwarded either to CoreDNS or directly to the virtual network (VNet) DNS server. For the exact forwarding behavior for each DNS policy and the default configuration, see [Server blocks for LocalDNS](./localdns-custom.md#server-blocks-for-localdns).
 
-`Workload -> CoreDNS -> LocalDNS -> custom VNet DNS`
-
-Custom VNet DNS servers must accept both UDP and TCP DNS queries from AKS nodes. Even when LocalDNS is configured with `PreferUDP`, queries can retry or fall back over TCP.
+Custom VNet DNS servers [must accept both UDP and TCP DNS queries](https://datatracker.ietf.org/doc/html/rfc7766#section-5) from AKS nodes. Even when LocalDNS is configured with `PreferUDP`, queries can retry or fall back to TCP.
 
 For information on the CoreDNS project, see [the CoreDNS upstream project page][coreDNS].
 
