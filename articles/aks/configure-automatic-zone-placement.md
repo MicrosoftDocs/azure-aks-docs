@@ -47,8 +47,7 @@ This approach addresses common pain points with manually specifying zones:
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-- AKS API version `2026-01-02-preview` or later.
-- [AKS Preview Azure CLI extension][aks-preview-extension] `22.0.0b4` or later.
+- The `aks-preview` CLI extension version 22.0.0b4 or later. If you don't have it, see [Install the `aks-preview` CLI extension](#install-the-aks-preview-cli-extension).
 - A region that supports availability zones. For more information, see the [List of Azure regions][azure-regions].
 - The `VmssAutomaticZonePlacement` feature flag registered in your subscription. Register the feature flag by using the [`az feature register`][az-feature-register] command:
 
