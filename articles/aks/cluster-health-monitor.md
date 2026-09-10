@@ -81,9 +81,9 @@ After you enable the feature, you can verify the deployment status and metric en
 
 Verify that the Cluster Health Monitor Deployment is running in `kube-system`.
 
-	```bash
-	kubectl get deployment -n kube-system  cluster-health-monitor
-	```
+```bash
+kubectl get deployment -n kube-system  cluster-health-monitor
+```
 
 ### Disable control plane and add-on monitor
 
