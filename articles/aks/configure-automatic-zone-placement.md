@@ -53,7 +53,7 @@ This approach addresses common pain points with manually specifying zones:
 
 ## Install the `aks-preview` CLI extension
 
-Install the `aks-preview` CLI extension if you don't already have it using the [`az extension add`][az-extension-add] command.
+Install the `aks-preview` CLI extension if you don't already have it by using the [`az extension add`][az-extension-add] command.
 
 ```azurecli-interactive
 az extension add --name aks-preview
