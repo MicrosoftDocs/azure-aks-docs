@@ -25,7 +25,7 @@ This article covers integration with a public load balancer on AKS. For internal
 
 ## Prerequisites
 
-- AKS supports the _Standard_ SKU Azure Load Balancer, which is used by default when you create an AKS cluster. The _Standard_ SKU gives you access to functionality such as a larger backend pool, [multiple node pools](create-node-pools.md), [Availability Zones](./reliability-availability-zones-configure.md), and is [secure by default][azure-lb]. The _Basic_ SKU was retired on September 30, 2025, and is no longer supported by AKS. If you have an existing AKS cluster that uses the _Basic_ SKU, see [Upgrade from Basic Load Balancer on AKS][upgrade-basic-lb]. For more information about Load Balancer SKUs, see [Azure Load Balancer SKU comparison][azure-lb-comparison].
+- AKS supports the _Standard_ SKU Azure Load Balancer, which is used by default when you create an AKS cluster. The _Standard_ SKU gives you access to functionality such as a larger backend pool, [multiple node pools](create-node-pools.md), [Availability Zones](./reliability-availability-zones-configure.md), and is [secure by default][azure-lb]. The _Basic_ SKU was retired on September 30, 2025, and AKS no longer supports it. If you have an existing AKS cluster that uses the _Basic_ SKU, see [Upgrade from Basic Load Balancer on AKS][upgrade-basic-lb]. For more information about Load Balancer SKUs, see [Azure Load Balancer SKU comparison][azure-lb-comparison].
 - For a full list of the supported annotations for Kubernetes services with type `LoadBalancer`, see [LoadBalancer annotations][lb-annotations].
 - This article assumes you have an AKS cluster with the _Standard_ SKU Azure Load Balancer. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or [the Azure portal][aks-quickstart-portal].
 - You need `kubectl` installed and configured to connect to your AKS cluster. To install `kubectl`, download your cluster credentials, and verify the connection, see [Connect to the cluster][aks-connect-cluster].
@@ -78,8 +78,8 @@ After you create an AKS cluster with outbound type `LoadBalancer` (default), you
 
 If you want to use a specific IP address with the load balancer, you have two options to specify the IP address:
 
-- **Set service annotations** (recommended): Use `service.beta.kubernetes.io/azure-pip-name` to specify an existing public IP resource by name. This annotation is the most efficient option and is recommended to avoid potential throttling. You can also use `service.beta.kubernetes.io/azure-load-balancer-ipv4` for an IPv4 address and `service.beta.kubernetes.io/azure-load-balancer-ipv6` for an IPv6 address. For public IP resource, resource group, and identity requirements, see [Use a static public IP address with the AKS load balancer][static-ip].
-- **Add the _LoadBalancerIP_ property to the load balancer YAML manifest**: Add the `Service.Spec.LoadBalancerIP` property to the load balancer YAML manifest. This field is deprecated following [upstream Kubernetes](https://github.com/kubernetes/kubernetes/pull/107235), and it can't support dual-stack. Current usage remains the same and existing services are expected to work without modification.
+- **Set service annotations** (recommended): Use `service.beta.kubernetes.io/azure-pip-name` to specify an existing public IP resource by name. This annotation is the most efficient option and helps you avoid potential throttling. You can also use `service.beta.kubernetes.io/azure-load-balancer-ipv4` for an IPv4 address and `service.beta.kubernetes.io/azure-load-balancer-ipv6` for an IPv6 address. For public IP resource, resource group, and identity requirements, see [Use a static public IP address with the AKS load balancer][static-ip].
+- **Add the _LoadBalancerIP_ property to the load balancer YAML manifest**: Add the `Service.Spec.LoadBalancerIP` property to the load balancer YAML manifest. This field is deprecated following [upstream Kubernetes](https://github.com/kubernetes/kubernetes/pull/107235), and it doesn't support dual-stack. Current usage remains the same and existing services are expected to work without modification.
 
 ## Deploy the load balancer service manifest
 
@@ -91,7 +91,7 @@ If you want to use a specific IP address with the load balancer, you have two op
 
     The Azure Load Balancer is configured with a new public IP that fronts the new service. Since the Azure Load Balancer can have multiple frontend IPs, each new service that you deploy gets a new dedicated frontend IP to be uniquely accessed.
 
-1. Confirm your service is created and the load balancer is configured using the [`kubectl get service`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command.
+1. Confirm your service is created and the load balancer is configured by using the [`kubectl get service`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command.
 
     ```bash
     kubectl get service public-svc
@@ -104,7 +104,7 @@ If you want to use a specific IP address with the load balancer, you have two op
     default       public-svc    LoadBalancer   10.0.39.110    203.0.113.187   80:32068/TCP    52s
     ```
 
-1. Get more detailed information about your service using the [`kubectl describe service`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe) command.
+1. Get more detailed information about your service by using the [`kubectl describe service`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe) command.
 
     ```bash
     kubectl describe service public-svc
