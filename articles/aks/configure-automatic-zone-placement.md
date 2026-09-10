@@ -194,3 +194,5 @@ aks-nodepool1-12345678-vmss000002   eastus   eastus-3
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [az-aks-show]: /cli/azure/aks#az-aks-show
 [aks-preview-extension]: /cli/azure/azure-cli-extensions-list
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
