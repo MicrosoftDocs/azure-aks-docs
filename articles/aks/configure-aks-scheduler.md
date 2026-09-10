@@ -9,7 +9,7 @@ author: sachidesai
 # Customer intent: "As a Kubernetes cluster operator, I want to implement advanced scheduling strategies using one or more configurable profiles, so that I can effectively manage workload distribution and resource allocation across my AKS clusters."
 ---
 
-# Configure advanced scheduler profiles on Azure Kubernetes Service (AKS) (preview)
+# Configure advanced scheduler profiles on Azure Kubernetes Service (AKS)
 
 In this article, you learn how to deploy example scheduler profiles in Azure Kubernetes Service (AKS) to configure advanced scheduling behavior using in-tree scheduling plugins. This guide also explains how to verify the successful application of custom scheduler profiles targeting specific node pools or the entire AKS cluster.
 
