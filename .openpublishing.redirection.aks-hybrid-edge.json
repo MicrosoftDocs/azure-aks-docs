@@ -962,7 +962,7 @@
     },
     {
       "source_path": "articles/aks/aksarc/reference/aks-edge-ps/set-aksedgearcconnection.md",
-      "redirect_url": "/azure/aks/hybrid/reference/aks-edge-ps/connect-aksedgearc",
+      "redirect_url": "/azure/aks/aksarc/reference/aks-edge-ps/connect-aksedgearc",
       "redirect_document_id": false
     },
     {
