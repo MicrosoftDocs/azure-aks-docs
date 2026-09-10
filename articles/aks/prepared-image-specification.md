@@ -24,7 +24,8 @@ This article shows you how to create and manage a PIS in AKS.
 - An existing AKS cluster running a supported Kubernetes version. If you don't have one, see [Create an AKS cluster][aks-quickstart].
 - Azure CLI version 2.85.0 or later. Run `az --version` to find your version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 - You need appropriate Azure RBAC permissions to create and manage AKS resources in your resource group.
-- Your container images must be accessible from the AKS cluster. If you use Azure Container Registry (ACR), make sure it's [integrated with your AKS cluster][acr-integrate].
+- The AKS cluster's control plane managed identity requires the **Reader** role on the resource group containing the PIS resource. Grant this role assignment before associating a node pool with a PIS version. For more information, see [Create a node pool using a PIS](#create-a-node-pool-using-a-pis).
+- Your container images must be accessible from the AKS cluster. If you use Azure Container Registry (ACR), make sure it's [integrated with your AKS cluster][acr-integrate]. If you're using a private ACR, you must also assign a managed identity to the PIS using the `--assign-identity` parameter so the build VM can authenticate during image preparation. This requires your AKS cluster to use a user-assigned managed identity. For more information, see [Create a Prepared Image Specification with cached images](#create-a-prepared-image-specification-with-cached-images).
 - The `aks-preview` CLI extension version 21.0.0b5 or later. If you don't have it, see [Install the `aks-preview` CLI extension](#install-the-aks-preview-cli-extension).
 - The `AKSPreparedImageSpecificationPreview` feature flag registered in your subscription. If you haven't registered it, see [Register the `AKSPreparedImageSpecificationPreview` feature flag](#register-the-akspreparedimagespecificationpreview-feature-flag).
 
@@ -101,6 +102,8 @@ az aks prepared-image-specification create \
 
 Create a PIS that pre-caches container images using the [`az aks prepared-image-specification create`][az-aks-prepared-image-specification-create] command.
 
+If your container images are in a private Azure Container Registry (ACR), use the `--assign-identity` parameter to specify a user-assigned managed identity that has `AcrPull` permission on the registry. The build VM uses this identity to authenticate during image preparation. Using `--assign-identity` requires your AKS cluster to be configured with a user-assigned managed identity.
+
 ```azurecli-interactive
 # Set environment variables
 RESOURCE_GROUP=<your-resource-group>
@@ -108,8 +111,29 @@ CLUSTER_NAME=<your-aks-cluster-name>
 PIS_NAME=<your-pis-name>
 LOCATION=<location>
 PIS_VERSION=v1
+KUBELET_IDENTITY_RESOURCE_ID=$(az aks show \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --query identityProfile.kubeletidentity.resourceId -o tsv)
 
-# Create a Prepared Image Specification with cached images
+# Create a Prepared Image Specification with cached images and identity for private ACR access
+az aks prepared-image-specification create \
+    --resource-group $RESOURCE_GROUP \
+    --name $PIS_NAME \
+    --version $PIS_VERSION \
+    --container-images \
+        myacr.azurecr.io/model-server:v1 \
+        myacr.azurecr.io/inference:v1 \
+    --assign-identity $KUBELET_IDENTITY_RESOURCE_ID
+```
+
+> [!NOTE]
+> If your ACR allows anonymous pull or you're using public registries, you can omit `--assign-identity`. The `--assign-identity` parameter is only required when images are in a private registry that requires authentication.
+
+For a PIS with images from a public or anonymous-pull registry:
+
+```azurecli-interactive
+# Create a Prepared Image Specification with cached images (public or anonymous-pull registry)
 az aks prepared-image-specification create \
     --resource-group $RESOURCE_GROUP \
     --name $PIS_NAME \
@@ -182,6 +206,7 @@ After you create a PIS, you can reference it when you create or update a cluster
     ```azurecli-interactive
     # Set environment variables
     RESOURCE_GROUP=<your-resource-group>
+    CLUSTER_NAME=<your-aks-cluster-name>
     PIS_NAME=<your-pis-name>
     PIS_VERSION=v1
     
@@ -192,6 +217,23 @@ After you create a PIS, you can reference it when you create or update a cluster
         --name $PIS_VERSION \
         --query id -o tsv)
     ```
+
+1. Grant the cluster's control plane managed identity **Reader** access on the resource group containing the PIS. The AKS control plane checks `Microsoft.ContainerService/preparedImageSpecifications/read` before the node pool can reference the PIS version. Use the [`az role assignment create`][az-role-assignment-create] command.
+
+    ```azurecli-interactive
+    CLUSTER_IDENTITY=$(az aks show \
+        --resource-group $RESOURCE_GROUP \
+        --name $CLUSTER_NAME \
+        --query identity.principalId -o tsv)
+
+    az role assignment create \
+        --role "Reader" \
+        --assignee $CLUSTER_IDENTITY \
+        --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP"
+    ```
+
+    > [!NOTE]
+    > Allow 30-60 seconds for the role assignment to propagate before proceeding to the next step.
 
 1. Create a new node pool that references the prepared image using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--prepared-image-specification-id` parameter.
 
@@ -214,7 +256,7 @@ After you create a PIS, you can reference it when you create or update a cluster
         --resource-group $RESOURCE_GROUP \
         --cluster-name $CLUSTER_NAME \
         --name userpool \
-        --query "{state:provisioningState, pisId:preparedImageSpecificationId}"
+        --query "{state:provisioningState, pisId:preparedImageSpecificationProfile.preparedImageSpecificationId}"
     ```
 
 ## Manage Prepared Image Specifications
@@ -474,6 +516,8 @@ If a node pool that references a PIS fails to create, verify:
 - Your subscription has sufficient quota for the requested VM SKU.
 - The requested VM SKU is supported by the prepared image.
 - The region supports the PIS feature during preview.
+- The cluster's control plane managed identity has the **Reader** role on the resource group containing the PIS. For more information, see [Create a node pool using a PIS](#create-a-node-pool-using-a-pis).
+- If using a private ACR, the PIS was created with `--assign-identity` pointing to a managed identity that has `AcrPull` on the registry. Without this, the build VM cannot authenticate and image caching fails.
 
 ### Scale operations aren't faster
 
@@ -531,3 +575,4 @@ To learn more about Prepared Image Specification, see [Prepared Image Specificat
 [az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
 [az-group-delete]: /cli/azure/group#az-group-delete
 [az-aks-prepared-image-specification-delete]: /cli/azure/aks/prepared-image-specification#az-aks-prepared-image-specification-delete
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
