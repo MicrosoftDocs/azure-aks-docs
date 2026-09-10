@@ -17,7 +17,7 @@ This article addresses upgrade experiences for Istio-based service mesh add-on f
 Announcements about the releases of new minor revisions or patches to the Istio-based service mesh add-on are published in the [AKS release notes][aks-release-notes]. To learn more about the release schedule and support for service mesh add-on revisions, read the [support policy][istio-support].
 
 > [!NOTE]
-> The service mesh add-on doesn't support automatic upgrades. On [AKS Automatic][aks-automatic] clusters, the add-on isn't upgraded with the cluster, so you must upgrade it to keep the mesh revision compatible with the cluster's Kubernetes version.
+> The service mesh add-on doesn't support automatic upgrades. On [AKS Automatic][aks-automatic] clusters, the cluster is auto-upgraded but the add-on isn't, so an out-of-date mesh revision can eventually become incompatible and block the cluster's automatic upgrade. Upgrade the add-on to keep it compatible with the cluster's Kubernetes version.
 
 ## Minor revision upgrade
 
