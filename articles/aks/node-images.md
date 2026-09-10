@@ -4,9 +4,10 @@ description: Learn about the different node images available in Azure Kubernetes
 ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
-ms.date: 07/13/2026
+ms.date: 08/06/2026
 author: davidsmatlak
 ms.author: davidsmatlak
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes administrator, I want to understand the available node images in Azure Kubernetes Service, so that I can select the appropriate OS version and ensure my clusters remain supported and secure."
 ---
 
@@ -44,8 +45,8 @@ When new node images are released, it can take up to two weeks for the updates t
 AKS sets a default operating system (OS) and node image during cluster and node pool creation. OS Type can be used to filter between Linux or Windows. 
 
 | OS Type | Default OS | Default node image |
-|--|--|--|
-| Not Specified | Ubuntu Linux | Ubuntu with containerd and gen 2|
+| -- | -- | -- |
+| Not Specified | Ubuntu Linux | Ubuntu with containerd and gen 2 |
 | Linux | Ubuntu Linux | Ubuntu with containerd and gen 2 |
 | Windows | Windows Server | Windows Server Long Term Servicing Channel (LTSC) with containerd and gen 2 |
 
@@ -78,8 +79,8 @@ The following factors influence the default image AKS chooses for your node pool
 The Ubuntu node images are fully validated by AKS and supported by Microsoft, Canonical, and the Ubuntu community. AKS won't retire an Ubuntu version before the end of Canonical's support lifecycle.
 
 | Node image | Use case | Limitations |
-|--|--|--|
-| **Ubuntu with containerd and Gen 1** | This is the standard node image for Ubuntu node pools using a VM size that only supports Generation 1. | N/A |
+| -- | -- | -- |
+| **Ubuntu with containerd and Gen 1** | This image is the standard node image for Ubuntu node pools that use a VM size that supports only Generation 1. | Ubuntu 26.04 doesn't support this image. |
 | **Ubuntu with containerd and Gen 2** | This is the standard node image for Ubuntu node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, this node image is selected. | N/A |
 | **Ubuntu with containerd and FIPS** | This node image is a variant of the default node image for customers that enable [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md). These images support both Generation 1 and Generation 2. | Not yet supported for Ubuntu 24.04+. Can't be combined with Arm64 or CVM. |
 | **Ubuntu with containerd and Arm64** | This is a variant of the default node image for customers that use a VM size that supports [Arm64](./use-arm64-vms.md). These images support Generation 2 only. | Can't be combined with FIPS, CVM, or Trusted Launch. |
@@ -91,7 +92,7 @@ The Ubuntu node images are fully validated by AKS and supported by Microsoft, Ca
 The Azure Linux node images are fully validated by AKS and built from source, using a native AKS image.
 
 | Node image | Use case | Limitations |
-|--|--|--|
+| -- | -- | -- |
 | **Azure Linux with containerd and Gen 1** | This is the standard node image for Azure Linux node pools using a VM size that only supports Generation 1. | N/A |
 | **Azure Linux with containerd and Gen 2** | This is the standard node image for Azure Linux node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, node image is selected. | N/A |
 | **Azure Linux with containerd and FIPS** | This is a variant of the default node image for customers that enable [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md). These images support both Generation 1 and Generation 2. | Can't be combined with Trusted Launch, or Pod Sandboxing. Azure Linux supports a separate image for FIPS and ARM64. |
@@ -105,16 +106,16 @@ The Azure Linux node images are fully validated by AKS and built from source, us
 The Azure Linux with OS Guard for AKS node images are fully validated by AKS and built from source, using a native AKS image. Versioning for Azure Linux with OS Guard node images follows the AKS date-based format (for example: 202509.23.0). You can check the node images in the release notes and by running the [`az aks nodepool list`][az-aks-nodepool-list] command to view the `nodeImageVersion`. For more information, see [Azure Linux with OS Guard for AKS][os-guard].
 
 | Node image | Use case | Limitations |
-|--|--|--|
-| **Azure Linux with OS Guard with containerd, Gen 2, FIPS, and Trusted Launch** | This is the standard node image for Azure Linux with OS Guard for AKS node pools using a VM size. If you use a VM size that supports Gen 1 only, you won't be able to use Azure Linux with OS Guard.| N/A |
+| -- | -- | -- |
+| **Azure Linux with OS Guard with containerd, Gen 2, FIPS, and Trusted Launch** | This image is the standard node image for Azure Linux with OS Guard for AKS node pools that use a VM size. If you use a VM size that supports Gen 1 only, you can't use Azure Linux with OS Guard. | N/A |
 
 ### Flatcar Container Linux for AKS (preview) node images
 
 The Flatcar Container Linux for AKS node images are fully validated by AKS and supported by Microsoft and the Flatcar community. Versioning for Flatcar Container Linux node images follows the AKS date-based format (for example: 202506.13.0). You can check the node images in the release notes and by using the [`az aks nodepool list`][az-aks-nodepool-list] command to view the `nodeImageVersion`. You can check the Flatcar version number (for example: Flatcar 4344.0.0) in the release notes and by running the `kubectl get nodes` command. For more information, see [Flatcar Container Linux for AKS][flatcar].
 
 | Node image | Use case | Limitations |
-|--|--|--|
-| **Flatcar Container Linux with containerd and Gen 2** | This is the standard node image for Flatcar Container Linux for AKS node pools using a VM size. If you use a VM size that supports Gen 1 only, you won't be able to use Flatcar OS.| N/A |
+| -- | -- | -- |
+| **Flatcar Container Linux with containerd and Gen 2** | This image is the standard node image for Flatcar Container Linux for AKS node pools that use a VM size. If you use a VM size that supports Gen 1 only, you can't use Flatcar OS. | N/A |
 | **Flatcar Container Linux with containerd and Arm64** | This is a variant of the default node image for customers that use a VM size that supports [Arm64](./use-arm64-vms.md). These images support Generation 2 only. | N/A |
 
 ### Azure Container Linux (ACL) node images
@@ -135,14 +136,14 @@ The Windows Server node images are fully validated by AKS and supported by Micro
 ### Windows Server Long Term Servicing Channel (LTSC) node images
 
 | Node image | Use case | Limitations |
-|--|--|--|
+| -- | -- | -- |
 | **Windows Server with containerd and Gen 1** | This image is the standard node image for Windows node pools that use a VM size supporting Generation 1. If a VM size supports both Generation 1 and Generation 2, the process selects this node image when you use Windows Server 2022. | N/A |
 | **Windows Server with containerd and Gen 2** | This is the standard node image for Windows node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, this node image is selected if using Windows Server 2025. | N/A |
 
 ### Windows Server Annual Channel for Containers (preview) node images
 
 | Node image | Use case | Limitations |
-|--|--|--|
+| -- | -- | -- |
 | **Windows Server with containerd and Gen 1** | This is the standard node image for Windows node pools using a VM size that only supports Generation 1. If a VM size supports both Generation 1 and Generation 2, this node image is selected. | N/A |
 | **Windows Server with containerd and Gen 2** | This is the standard node image for Windows node pools using a VM size that supports Generation 2. | N/A |
 
@@ -160,21 +161,10 @@ To learn more about node images, node pool upgrades, and node configurations on 
 <!-- LINKS - internal -->
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
 [github-schedule]: ./node-upgrade-github-actions.md
-[upgrade-aks-node-images]: ./node-image-upgrade.md
-[use-windows-annual]: ./windows-annual-channel.md
 [aks-core-concepts]: ./core-aks-concepts.md
 [custom-node-configuration]: ./custom-node-configuration.md
-[use-cvm]: ./use-cvm.md
-[create-node-pools]: ./create-node-pools.md
-[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
-[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [az-aks-nodepool-list]: /cli/azure/aks/nodepool#az-aks-nodepool-list
 [os-guard]: ./use-azure-linux-os-guard.md
 [flatcar]: ./flatcar-container-linux-for-aks.md
-[az-feature-register]: /cli/azure/feature#az-feature-register
-[az-feature-show]: /cli/azure/feature#az-feature-show
-[az-provider-register]: /cli/azure/provider#az-provider-register
 
 <!-- LINKS - external -->
-[aks-release-notes]: https://github.com/Azure/AKS/releases
-[aks-release-tracker]: https://releases.aks.azure.com/
