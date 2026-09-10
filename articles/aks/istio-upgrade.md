@@ -16,6 +16,9 @@ This article addresses upgrade experiences for Istio-based service mesh add-on f
 
 Announcements about the releases of new minor revisions or patches to the Istio-based service mesh add-on are published in the [AKS release notes][aks-release-notes]. To learn more about the release schedule and support for service mesh add-on revisions, read the [support policy][istio-support].
 
+> [!NOTE]
+> The service mesh add-on doesn't support automatic upgrades. On [AKS Automatic][aks-automatic] clusters, the add-on isn't upgraded with the cluster, so you must upgrade it to keep the mesh revision compatible with the cluster's Kubernetes version.
+
 ## Minor revision upgrade
 
 Istio add-on allows upgrading the minor revision using [canary upgrade process][istio-canary-upstream]. When an upgrade is initiated, the control plane of the new (canary) revision is deployed alongside the initial (stable) revision's control plane. You can then manually roll over data plane workloads while using monitoring tools to track the health of workloads during this process. If you don't observe any issues with the health of your workloads, you can complete the upgrade so that only the new revision remains on the cluster. Else, you can roll back to the previous revision of Istio.
@@ -272,6 +275,7 @@ If you have customized [horizontal pod autoscaling (HPA) settings for Istiod or 
 
 <!-- LINKS - Internal -->
 [istio-support]: ./istio-support-policy.md#versioning-and-support-policy
+[aks-automatic]: ./intro-aks-automatic.md
 [istio-support-calendar]: ./istio-support-policy.md#service-mesh-add-on-release-calendar
 [meshconfig]: ./istio-meshconfig.md
 [meshconfig-canary-upgrade]: ./istio-meshconfig.md#mesh-configuration-and-upgrades
