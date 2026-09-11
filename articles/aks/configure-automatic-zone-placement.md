@@ -23,7 +23,7 @@ When you specify `--zones auto` (or `availabilityZones: ["auto"]` in the agent p
 Automatic zone placement works as follows:
 
 1. AKS evaluates which availability zones in the target region can support the requested VM SKU.
-1. AKS initially selects up to three available zones and places nodes according to the automatic zone placement policy. By default, no single zone can contain more than 50% of the node pool.
+1. AKS initially selects up to three available zones and places nodes according to the automatic zone placement policy. No single zone can contain more than 50% of the node pool.
 1. During later scale-out operations, AKS reevaluates zone availability. If Azure adds a zone to the region or makes the VM SKU available in another zone, AKS might place new nodes in that zone when the placement policy and available capacity allow it. You don't need to update the node pool configuration.
 
 > [!IMPORTANT]
@@ -38,36 +38,54 @@ This approach addresses common pain points with manually specifying zones:
 
 ## Limitations and considerations
 
+- Automatic zone placement only supports regions with availability zone support. For more information, see the [List of Azure regions][azure-regions].
 - Automatic zone placement supports creating and updating both Virtual Machine Scale Sets-based and Virtual Machines-based node pools.
-- The default per-zone cap is 50% of nodes.
+- The per-zone cap is 50% of nodes. A create or scale operation can still fail if Azure can't allocate the requested nodes while honoring the per-zone limit.
 - Automatic zone placement is intended for [zone-spanning][zone-spanning] workloads. For [zone-aligned][zone-aligned] workloads (where each node pool is pinned to a single zone), continue specifying the zone explicitly by using `--zones 1`, `--zones 2`, and so on.
 
 ## Prerequisites
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-- AKS API version `2026-01-02-preview` or later.
-- The latest version of the [aks-preview Azure CLI extension][aks-preview-extension].
 - A region that supports availability zones. For more information, see the [List of Azure regions][azure-regions].
-- The `VmssAutomaticZonePlacement` feature flag registered in your subscription. Register the feature flag by using the [`az feature register`][az-feature-register] command:
+- The `aks-preview` CLI extension version 22.0.0b4 or later. If you don't have it, see [Install the `aks-preview` CLI extension](#install-the-aks-preview-cli-extension).
+- The `VmssAutomaticZonePlacement` feature flag registered in your subscription. If you haven't registered it, see [Register the `VmssAutomaticZonePlacement` feature flag](#register-the-vmssautomaticzoneplacement-feature-flag).
 
-  ```azurecli-interactive
-  az feature register \
-    --namespace Microsoft.Compute \
-    --name VmssAutomaticZonePlacement
-  ```
+## Install the `aks-preview` CLI extension
 
-  Check the registration status by using the [`az feature show`][az-feature-show] command:
+Install the `aks-preview` CLI extension if you don't already have it by using the [`az extension add`][az-extension-add] command.
 
-  ```azurecli-interactive
-  az feature show \
-    --namespace Microsoft.Compute \
-    --name VmssAutomaticZonePlacement \
-    --query properties.state \
-    --output tsv
-  ```
+```azurecli-interactive
+az extension add --name aks-preview
+```
 
-  Wait until the command returns `Registered` before you continue.
+If you already have the extension installed, update it to the latest version by using the [`az extension update`][az-extension-update] command.
+
+```azurecli-interactive
+az extension update --name aks-preview
+```
+
+## Register the `VmssAutomaticZonePlacement` feature flag
+
+Register the feature flag by using the [`az feature register`][az-feature-register] command:
+
+```azurecli-interactive
+az feature register \
+  --namespace Microsoft.Compute \
+  --name VmssAutomaticZonePlacement
+```
+
+Check the registration status by using the [`az feature show`][az-feature-show] command:
+
+```azurecli-interactive
+az feature show \
+  --namespace Microsoft.Compute \
+  --name VmssAutomaticZonePlacement \
+  --query properties.state \
+  --output tsv
+```
+
+Wait until the command returns `Registered` before you continue.
 
 ## Create an AKS cluster with automatic zone placement (Preview)
 
@@ -176,3 +194,5 @@ aks-nodepool1-12345678-vmss000002   eastus   eastus-3
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [az-aks-show]: /cli/azure/aks#az-aks-show
 [aks-preview-extension]: /cli/azure/azure-cli-extensions-list
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
