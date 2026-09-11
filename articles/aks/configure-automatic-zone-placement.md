@@ -49,7 +49,7 @@ This approach addresses common pain points with manually specifying zones:
 
 - A region that supports availability zones. For more information, see the [List of Azure regions][azure-regions].
 - The `aks-preview` CLI extension version 22.0.0b4 or later. If you don't have it, see [Install the `aks-preview` CLI extension](#install-the-aks-preview-cli-extension).
-- The `VmssAutomaticZonePlacement` feature flag registered in your subscription. If you haven't registered it, see [Register the `VmssAutomaticZonePlacement` feature flag](#register-the-VmssAutomaticZonePlacement-feature-flag).
+- The `VmssAutomaticZonePlacement` feature flag registered in your subscription. If you haven't registered it, see [Register the `VmssAutomaticZonePlacement` feature flag](#register-the-vmssautomaticzoneplacement-feature-flag).
 
 ## Install the `aks-preview` CLI extension
 
