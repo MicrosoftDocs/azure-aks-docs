@@ -12,6 +12,8 @@ ms.service: azure-kubernetes-service
 
 # Azure Linux with OS Guard (preview) for Azure Kubernetes Service (AKS) overview
 
+[!INCLUDE [os-guard-preview-retirement](includes/os-guard-preview-retirement.md)]
+
 This article provides an overview of Azure Linux with OS Guard (preview) on Azure Kubernetes Service (AKS), including key features, region availability, and resources to get started.
 
 ## What is Azure Linux with OS Guard?
