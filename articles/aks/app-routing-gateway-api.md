@@ -44,7 +44,7 @@ Consider alternatives when you require capabilities outside current support in t
 
 ## Limitations
 
-- Request header and body size limits aren't configurable through this implementation because Gateway API has no standard fields for these settings and `EnvoyFilter` isn't supported.
+- You can't configure request header and body size limits through this implementation because Gateway API has no standard fields for these settings and `EnvoyFilter` isn't supported.
 
     If you need these settings when migrating from ingress-nginx, consider [Gateway API ingress with the Istio service mesh add-on](istio-gateway-api.md). You can use `Gateway` and `HTTPRoute` without application sidecars and apply a gateway-scoped [`EnvoyFilter`](https://istio.io/latest/docs/reference/config/networking/envoy-filter/) to configure these limits. Issues caused by `EnvoyFilter` configuration are [outside Azure support](istio-about.md#limitations).
 
