@@ -39,10 +39,16 @@ Use this implementation as your default ingress path when you want:
 
 Consider alternatives when you require capabilities outside current support in this article, such as:
 
-- Full Istio service mesh behavior with sidecar-based traffic management and broader Istio CRD usage.
-- Features currently listed as unsupported, such as TLSRoute-based SNI passthrough.
+- Service mesh traffic management.
+- Features listed in [Limitations](#limitations), such as TLSRoute-based SNI passthrough.
 
 ## Limitations
+
+- Request header and body size limits aren't configurable through this implementation because Gateway API has no standard fields for these settings and `EnvoyFilter` isn't supported.
+
+    If you need these settings when migrating from ingress-nginx, consider [Gateway API ingress with the Istio service mesh add-on](istio-gateway-api.md). You can use `Gateway` and `HTTPRoute` without application sidecars and apply a gateway-scoped [`EnvoyFilter`](https://istio.io/latest/docs/reference/config/networking/envoy-filter/) to configure these limits. Issues caused by `EnvoyFilter` configuration are [outside Azure support](istio-about.md#limitations).
+
+    Test each replacement for an nginx annotation or snippet against your Istio revision. For example, [Envoy's buffer filter](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/buffer_filter.html) enforces a body size limit by holding the full request body in memory before forwarding it. It doesn't spill to disk.
 
 - You can't enable the application routing Gateway API implementation and the [Istio service mesh add-on][istio-addon] at the same time. You must disable one first and enable the other in a separate operation. When transitioning from the Istio service mesh add-on to the application routing Gateway API implementation, you must delete the Istio GatewayClass and Istio CRDs after disabling the Istio add-on. The Istio add-on installs CRDs (such as `virtualservices.networking.istio.io`, `destinationrules.networking.istio.io`, and others in the `networking.istio.io`, `security.istio.io`, `telemetry.istio.io`, and `extensions.istio.io` API groups) that aren't removed when the add-on is disabled. If these CRDs remain on the cluster, the application routing Gateway API Istio control plane fails to start. Run the following command to delete them:
 
