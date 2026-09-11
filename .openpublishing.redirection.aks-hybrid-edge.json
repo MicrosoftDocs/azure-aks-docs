@@ -231,6 +231,11 @@
       "redirect_document_id": false
     },
     {
+      "source_path": "articles/aks/hybrid/reference/ps/install-akshci.md",
+      "redirect_url": "/azure/aks/aksarc/reference/ps/install-akshci",
+      "redirect_document_id": false
+    },
+    {
       "source_path": "articles/aks/aksarc/reference/ps/install-akshciadauth.md",
       "redirect_url": "/previous-versions/azure/aks/aksarc/reference/ps/install-akshciadauth",
       "redirect_document_id": false
@@ -268,6 +273,11 @@
     {
       "source_path": "articles/aks/aksarc/reference/ps/new-akshcicluster.md",
       "redirect_url": "/previous-versions/azure/aks/aksarc/reference/ps/new-akshcicluster",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks/hybrid/reference/ps/new-akshcicluster.md",
+      "redirect_url": "/azure/aks/aksarc/reference/ps/new-akshcicluster",
       "redirect_document_id": false
     },
     {
@@ -393,6 +403,11 @@
     {
       "source_path": "articles/aks/aksarc/reference/ps/uninstall-akshci.md",
       "redirect_url": "/previous-versions/azure/aks/aksarc/reference/ps/uninstall-akshci",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks/hybrid/reference/ps/uninstall-akshci.md",
+      "redirect_url": "/azure/aks/aksarc/reference/ps/uninstall-akshci",
       "redirect_document_id": false
     },
     {
@@ -798,6 +813,11 @@
     {
       "source_path": "articles/aks/aksarc/azure-hybrid-benefit.md",
       "redirect_url": "/azure/aks/aksarc/pricing",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks/hybrid/azure-hybrid-benefit.md",
+      "redirect_url": "/azure/aks/aksarc/azure-hybrid-benefit",
       "redirect_document_id": false
     },
     {
