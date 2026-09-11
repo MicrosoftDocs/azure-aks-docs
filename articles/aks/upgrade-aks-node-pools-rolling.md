@@ -19,7 +19,7 @@ A rolling upgrade strategy upgrades nodes one at a time (or a few at a time), mi
 - Ensure your control plane is already upgraded to the target Kubernetes version. You can't upgrade node pools to a version higher than the control plane. For more information, see [Upgrade the AKS cluster control plane](./upgrade-aks-control-plane.md).
 - If you're using the Azure CLI, this article requires Azure CLI version 2.34.1 or later. Use the `az --version` command to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 - You need the `Microsoft.ContainerService/managedClusters/agentPools/write` RBAC role permission to configure rolling upgrades for AKS node pools.
-- If you're upgrading an AKS Standard node pool to Kubernetes 1.36 or later, review its LocalDNS profile. A node pool without an explicit profile can have LocalDNS enabled during the upgrade. If you use custom VNet DNS, verify that the DNS server and complete network path support both TCP and UDP port 53. For more information, see [Configure LocalDNS in AKS](localdns-custom).
+- If you're upgrading an AKS Standard node pool to Kubernetes 1.37 or later, review its LocalDNS profile. A node pool without an explicit profile can have LocalDNS enabled during the upgrade. If you use custom virtual network DNS, verify that the DNS server and complete network path support both TCP and UDP port 53. For more information, see [Configure LocalDNS in AKS](./localdns-custom.md).
 
 > [!IMPORTANT]
 > LocalDNS activation changes the DNS forwarding path used by workloads. Test both UDP and TCP DNS resolution from an AKS node before upgrading:
