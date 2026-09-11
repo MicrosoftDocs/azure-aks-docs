@@ -44,9 +44,9 @@ Consider alternatives when you require capabilities outside current support in t
 
 ## Limitations
 
-- You can't configure request header and body size limits through this implementation because Gateway API has no standard fields for these settings and `EnvoyFilter` isn't supported.
+- You can't configure request header and body size limits, Lua scripts, or local and global rate limiting through this implementation. Gateway API has no standard fields for these features, and the add-on doesn't support `EnvoyFilter`.
 
-    If you need these settings when migrating from ingress-nginx, consider [Gateway API ingress with the Istio service mesh add-on](istio-gateway-api.md). You can use `Gateway` and `HTTPRoute` without application sidecars and apply a gateway-scoped [`EnvoyFilter`](https://istio.io/latest/docs/reference/config/networking/envoy-filter/) to configure these limits. Issues caused by `EnvoyFilter` configuration are [outside Azure support](istio-about.md#limitations).
+    If you need these features when migrating from ingress-nginx, consider [Gateway API ingress with the Istio service mesh add-on](istio-gateway-api.md). You can use `Gateway`, `HTTPRoute`, and other Gateway API resources without application sidecars and apply a gateway-scoped [`EnvoyFilter`](https://istio.io/latest/docs/reference/config/networking/envoy-filter/) to configure them. Issues caused by `EnvoyFilter` configuration are [outside Azure support](istio-about.md#limitations).
 
     Test each replacement for an nginx annotation or snippet against your Istio revision. For example, [Envoy's buffer filter](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/buffer_filter.html) enforces a body size limit by holding the full request body in memory before forwarding it. It doesn't spill to disk.
 
