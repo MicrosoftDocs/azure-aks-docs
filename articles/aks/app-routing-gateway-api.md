@@ -44,7 +44,7 @@ Consider alternatives when you require capabilities outside current support in t
 
 ## Limitations
 
-- You can't configure request header and body size limits, Lua scripts, or local and global rate limiting through this implementation. Gateway API has no standard fields for these features, and the add-on doesn't support `EnvoyFilter`.
+- You can't configure request header and body size limits, Lua scripts, or local and global rate limiting through this implementation. Gateway API has no standard fields for these features, and the App Routing Gateway API implementation doesn't support `EnvoyFilter`.
 
     If you need these features when migrating from ingress-nginx, consider [Gateway API ingress with the Istio service mesh add-on](istio-gateway-api.md). You can use `Gateway`, `HTTPRoute`, and other Gateway API resources without application sidecars and apply a gateway-scoped [`EnvoyFilter`](https://istio.io/latest/docs/reference/config/networking/envoy-filter/) to configure them. Issues caused by `EnvoyFilter` configuration are [outside Azure support](istio-about.md#limitations).
 
