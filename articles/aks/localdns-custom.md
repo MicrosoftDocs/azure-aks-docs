@@ -59,7 +59,7 @@ After `Preferred` mode resolves to enabled on an existing node pool, AKS keeps L
 > 1. Test the change in a non-production node pool.
 > 1. If the network isn't ready for LocalDNS, explicitly set `mode` to `Disabled` before upgrading.
 >
-> Changing the LocalDNS mode triggers a node reimage operation. Reimaged nodes are unavailable while they're reimaged and don't serve workload traffic during that time, so plan the change during a maintenance window and make sure your workloads have enough replicas and pod disruption budgets to tolerate the rolling reimage.
+> Changing the LocalDNS mode triggers a node reimage operation. Reimaged nodes are unavailable while they're reimaged and don't serve workload traffic during that time, so plan the change during a maintenance window and ensure your workloads have enough replicas and pod disruption budgets to tolerate the rolling reimage.
 
 ## Best practices for LocalDNS configuration
 
@@ -398,7 +398,7 @@ Network policies enforce a default‑deny model for destinations that aren’t s
 - On Azure CNI Powered by Cilium <=v1.16 with k8s <=1.31, this can be achieved by a CIDR-based policy.
 - On Azure CNI Powered by Cilium >=v1.17 with K8s >=1.32, a Cilium Network Policy allowing egress to host entities can be used.
 
-For a Cilium Network Policy that allows the traffic across all versions, see [Is AKS Local DNS supported with Azure CNI Powered by Cilium?](./azure-cni-powered-by-cilium.md#is-aks-local-dns-supported-with-azure-cni-powered-by-cilium).
+For a Cilium network policy that allows the traffic across all versions, see [Is AKS Local DNS supported with Azure CNI Powered by Cilium?](./azure-cni-powered-by-cilium.md#is-aks-local-dns-supported-with-azure-cni-powered-by-cilium)
 
 ## Related content
 
