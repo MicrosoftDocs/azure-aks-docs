@@ -38,7 +38,7 @@ NAP automatically discovers nodes eligible for disruption and spins up replaceme
 
 ## Expiration
 
-Expiration is a forceful disruption method that you use to set a maximum age for your NAP nodes. Nodes are marked as expired and disrupted after reaching the age you specify for the node pool's `spec.disruption.expireAfter` value.
+Expiration is a forceful disruption method that you use to set a maximum age for your NAP nodes. Nodes are marked as expired and disrupted after reaching the age you specify for the node pool's `spec.template.spec.expireAfter` value.
 
 ### Example expiration configuration
 
@@ -46,8 +46,9 @@ The following example shows how to set the expiration time for NAP nodes to 24 h
 
 ```yaml
 spec:
-  disruption:
-    expireAfter: 24h  # Expire nodes after 24 hours
+  template:
+    spec:
+      expireAfter: 24h  # Expire nodes after 24 hours
 ```
 
 ## Consolidation
@@ -189,9 +190,11 @@ kind: NodePool
 metadata:
   name: default
 spec:
+  template:
+    spec:
+      expireAfter: 720h # 30 * 24h = 720h
   disruption:
     consolidationPolicy: WhenEmptyOrUnderutilized
-    expireAfter: 720h # 30 * 24h = 720h
     budgets:
     - nodes: "20%"      # Allow 20% of nodes to be disrupted
     - nodes: "5"        # Cap at maximum 5 nodes
