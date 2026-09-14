@@ -39,10 +39,16 @@ Use this implementation as your default ingress path when you want:
 
 Consider alternatives when you require capabilities outside current support in this article, such as:
 
-- Full Istio service mesh behavior with sidecar-based traffic management and broader Istio CRD usage.
-- Features currently listed as unsupported, such as TLSRoute-based SNI passthrough.
+- Service mesh traffic management.
+- Features listed in [Limitations](#limitations).
 
 ## Limitations
+
+- You can't configure request header and body size limits, Lua scripts, or local and global rate limiting through this implementation. Gateway API has no standard fields for these features, and the App Routing Gateway API implementation doesn't support `EnvoyFilter`.
+
+    If you need these features when migrating from ingress-nginx, consider [Gateway API ingress with the Istio service mesh add-on](istio-gateway-api.md). You can use `Gateway`, `HTTPRoute`, and other Gateway API resources without injecting sidecars into your workloads and apply a gateway-scoped [`EnvoyFilter`](https://istio.io/latest/docs/reference/config/networking/envoy-filter/) to configure them. Issues caused by `EnvoyFilter` configuration are [outside Azure support](istio-about.md#limitations). If you choose the Istio service mesh add-on, you must initiate and complete [canary upgrades][istio-canary-upgrades] for minor revision updates, even when using it only for ingress.
+
+    Test each replacement for an nginx annotation or snippet against your Istio revision. For example, [Envoy's buffer filter](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/buffer_filter.html) enforces a body size limit by holding the full request body in memory before forwarding it. It doesn't spill to disk.
 
 - You can't enable the application routing Gateway API implementation and the [Istio service mesh add-on][istio-addon] at the same time. You must disable one first and enable the other in a separate operation. When transitioning from the Istio service mesh add-on to the application routing Gateway API implementation, you must delete the Istio GatewayClass and Istio CRDs after disabling the Istio add-on. The Istio add-on installs CRDs (such as `virtualservices.networking.istio.io`, `destinationrules.networking.istio.io`, and others in the `networking.istio.io`, `security.istio.io`, `telemetry.istio.io`, and `extensions.istio.io` API groups) that aren't removed when the add-on is disabled. If these CRDs remain on the cluster, the application routing Gateway API Istio control plane fails to start. Run the following command to delete them:
 
@@ -55,7 +61,6 @@ Consider alternatives when you require capabilities outside current support in t
     > If you have existing Istio custom resources (such as VirtualServices or DestinationRules), deleting the CRDs also deletes those resources. Ensure you no longer need them before proceeding.
 
 - The application routing Gateway API implementation uses the same [resource customization allow list][istio-gateway-resource-customization] as the Istio add-on for validating ConfigMap customizations for `Gateway` resources. Add-on managed webhooks block customizations that aren't on the allow list.
-- Configuring HTTPS ingress access to HTTPS services (for example, Server Name Indication (SNI) Passthrough) via the `TLSRoute` resource isn't currently supported. Support for the `TLSRoute` resource will be available once AKS adds support for Istio 1.30, at which point your application routing Istio control plane is automatically upgraded to that version.
 - Egress traffic management via the application routing Gateway API implementation isn't supported.
 - Injecting non-Microsoft-managed sidecars (for example, custom telemetry, logging, or security agents) into the Istio gateway proxy pods managed by the application routing add-on isn't officially supported. If you choose to inject your own sidecar into a managed proxy pod, Microsoft provides only best-effort support for any issues you encounter.
 - Envoy access logging is enabled by default on Gateway proxy pods, but the log format, scope, and provider can't be customized via the Istio `Telemetry` API. To customize, use Gateway API ingress on the [Istio service mesh add-on][istio-gateway-api-access-logs] instead.

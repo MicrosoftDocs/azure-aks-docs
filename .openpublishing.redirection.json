@@ -89,6 +89,21 @@
       "source_path": "articles/aks-hybrid-edge/local/hyperconverged/disconnected-operations-aks.md",
       "redirect_url": "/azure/aks-hybrid-edge/local/disconnected-operations/overview",
       "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks-hybrid-edge/local/hyperconverged/kube-apiserver-log-overflow.md",
+      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/aks-arc-known-issues",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks-hybrid-edge/local/hyperconverged/cluster-upgrade-status.md",
+      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/aks-arc-known-issues",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks-hybrid-edge/local/hyperconverged/storage-provision-issue.md",
+      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/aks-arc-known-issues",
+      "redirect_document_id": false
     }
   ]
 }

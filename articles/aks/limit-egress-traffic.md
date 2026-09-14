@@ -2,7 +2,7 @@
 title: Limit Network Traffic with Azure Firewall in Azure Kubernetes Service (AKS)
 description: Learn how to control egress traffic with Azure Firewall to set restrictions for outbound network connections in AKS clusters.
 ms.subservice: aks-networking
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, devx-track-terraform
 ms.topic: how-to
 ms.author: schaffererin
 ms.date: 09/09/2026
@@ -16,6 +16,17 @@ ai-usage: ai-assisted
 # Limit network traffic with Azure Firewall in Azure Kubernetes Service (AKS)
 
 This article shows you how to use the [outbound network and fully qualified domain name (FQDN) rules for AKS clusters][outbound-fqdn-rules] to control egress traffic using Azure Firewall. To simplify this configuration, Azure Firewall provides an Azure Kubernetes Service (`AzureKubernetesService`) FQDN tag that restricts outbound traffic from the AKS cluster.
+
+:::zone pivot="terraform"
+
+## Prerequisites
+
+- An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/) before you begin.
+- [Install and configure Terraform][terraform-install-configure].
+- Azure CLI installed and signed in with `az login`, used to verify the deployment. [Install Azure CLI][install-azurecli] if you don't already have it.
+- `kubectl` installed to connect to the cluster. If you use Azure Cloud Shell, `kubectl` is already installed. To install it locally, use the [`az aks install-cli`][az-aks-installcli] command.
+
+:::zone-end
 
 ## Firewall frontend IP requirements
 
@@ -51,6 +62,8 @@ Key components of this architecture include:
   - You can protect access to the AKS control plane using [API server authorized IP ranges](./api-server-authorized-ip-ranges.md), including the firewall public frontend IP address.
 - **Internal traffic**:
   - You can use an [internal load balancer](internal-lb.md) for internal traffic, which you could isolate on its own subnet, instead of or alongside a [public load balancer](load-balancer-standard.md).
+
+:::zone pivot="system,user"
 
 ## Configure environment variables
 
@@ -180,6 +193,8 @@ The diagram shows Azure Firewall deployed in its subnet, with a UDR directing tr
         --dns-servers $FW_PRIVATE_IP
     ```
 
+:::zone-end
+
 ## UDR requirements for AKS egress through Azure Firewall
 
 Azure automatically routes traffic between Azure subnets, VNets, and on-premises networks. To modify default routing, create a route table with the following requirements:
@@ -200,6 +215,8 @@ Azure automatically routes traffic between Azure subnets, VNets, and on-premises
 
 For more information, see [Outbound rules for Azure Load Balancer](/azure/load-balancer/outbound-rules#scenario6out).
 
+:::zone pivot="system,user"
+
 ## Create a route with a hop to Azure Firewall
 
 1. Create an empty route table using the [`az network route-table create`][az-network-route-table-create] command. The route table defines the Azure Firewall as the next hop. Each subnet can have _zero_ or _one_ route table associated to it.
@@ -218,6 +235,8 @@ For more information, see [Outbound rules for Azure Load Balancer](/azure/load-b
 
 For information on how to override Azure's default system routes or add more routes to a subnet's route table, see the [Virtual network route table documentation](/azure/virtual-network/virtual-networks-udr-overview#user-defined).
 
+:::zone-end
+
 ## Required outbound rules for AKS egress through Azure Firewall
 
 > [!NOTE]
@@ -229,6 +248,8 @@ The following network rules allow the egress traffic used in this article:
 - The first and second network rules allow access to pull containers from GitHub Container Registry (`ghcr.io`) and Docker Hub (`docker.io`).
 
 AKS clusters that use the konnectivity agent, including the cluster created in this article, don't require outbound access on TCP port 9000 or UDP port 1194. Nodes provisioned after March 2021 also don't require outbound NTP access on UDP port 123. For the rules required by other cluster configurations and Azure clouds, see [outbound network and FQDN rules for AKS clusters][outbound-fqdn-rules].
+
+:::zone pivot="system,user"
 
 ## Create network rules on Azure Firewall
 
@@ -280,6 +301,8 @@ You define the outbound type to use the UDR that already exists on the subnet. T
 > You can add extra features to the cluster deployment, such as [**private clusters**](private-clusters.md).
 >
 > For API server authorized IP ranges setup and developer access considerations, see the [firewall frontend IP requirements](#firewall-frontend-ip-requirements) section.
+
+:::zone-end
 
 ---
 
@@ -377,6 +400,111 @@ If you don't have user-assigned identities, follow the steps in this section. If
 
 :::zone-end
 
+:::zone pivot="terraform"
+
+## Review the Terraform code
+
+> [!NOTE]
+> The sample code for this article is in the [Azure Terraform GitHub repository][terraform-sample]. You can view the [test results log for current and previous versions of Terraform][terraform-sample-testrecord].
+>
+> See more [articles and sample code showing how to use Terraform to manage Azure resources](/azure/terraform).
+
+The Terraform sample deploys the following resources:
+
+- An **Azure virtual network** with two subnets: one for the AKS cluster nodes, and a dedicated `AzureFirewallSubnet` for Azure Firewall.
+- A **standard SKU public IP address** and an **Azure Firewall** (`AZFW_VNet` SKU, `Standard` tier) that uses an **Azure Firewall Policy** with DNS proxy enabled.
+- A **firewall policy rule collection group** that contains the network and application rules required for AKS egress: network rules for the API server ports (TCP/9000, UDP/1194), NTP (`ntp.ubuntu.com` on UDP/123), GitHub Container Registry, and Docker Hub, plus an application rule that uses the `AzureKubernetesService` FQDN tag on ports 80 and 443.
+- A **route table** with a default route (`0.0.0.0/0`) that points to the firewall's private IP address as a virtual appliance next hop, and a route that sends the firewall's own public IP address directly to the internet to avoid asymmetric routing. The route table is associated with the AKS subnet only.
+- An **AKS cluster** that uses a system-assigned managed identity, the `azure` network plugin, the `userDefinedRouting` outbound type, and `api_server_access_profile.authorized_ip_ranges` restricted to the firewall's public IP address.
+- A **role assignment** that grants the AKS cluster's managed identity the `Network Contributor` role on the resource group, so the cluster can manage the networking resources it depends on.
+
+The sample doesn't create a demo workload, a DNAT rule, or a load balancer service. After you verify the cluster, use `kubectl` to deploy your own application, and then follow the guidance earlier in this article to add a DNAT rule on Azure Firewall if you need inbound connectivity.
+
+1. Create a directory to test the sample Terraform code, and make it the current directory.
+1. Create a file named `main.tf` and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-network-traffic/main.tf)]
+
+## Initialize Terraform
+
+Run [`terraform init`](https://developer.hashicorp.com/terraform/cli/commands/init) to initialize the Terraform deployment. This command downloads the `azurerm` provider required to manage your Azure resources.
+
+```console
+terraform init -upgrade
+```
+
+## Format and validate the configuration
+
+Run [`terraform fmt`](https://developer.hashicorp.com/terraform/cli/commands/fmt) to format the configuration file, and [`terraform validate`](https://developer.hashicorp.com/terraform/cli/commands/validate) to confirm the configuration is syntactically valid.
+
+```console
+terraform fmt
+terraform validate
+```
+
+## Create a Terraform execution plan
+
+Run [`terraform plan`](https://developer.hashicorp.com/terraform/cli/commands/plan) to create an execution plan.
+
+```console
+terraform plan -out main.tfplan
+```
+
+## Apply a Terraform execution plan
+
+Run [`terraform apply`](https://developer.hashicorp.com/terraform/cli/commands/apply) to apply the execution plan to your Azure subscription.
+
+```console
+terraform apply main.tfplan
+```
+
+Creating the virtual network, Azure Firewall, and AKS cluster takes several minutes to complete.
+
+## Verify egress, firewall, and route configuration
+
+1. Get the resource group name, cluster name, and firewall public IP address from the Terraform outputs.
+
+    ```console
+    RESOURCE_GROUP=$(terraform output -raw resource_group_name)
+    CLUSTER_NAME=$(terraform output -raw aks_cluster_name)
+    FW_PUBLIC_IP=$(terraform output -raw firewall_public_ip)
+    ```
+
+1. Confirm the cluster uses the `userDefinedRouting` outbound type and is restricted to the firewall's public IP address by using the [`az aks show`][az-aks-show] command.
+
+    ```azurecli-interactive
+    az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query "{outboundType:networkProfile.outboundType, authorizedIpRanges:apiServerAccessProfile.authorizedIpRanges}"
+    ```
+
+1. Confirm the AKS subnet's route table sends default traffic to the firewall's private IP address. Get the route table name by using the [`az network route-table list`][az-network-route-table-list] command, and then list its routes by using the [`az network route-table route list`][az-network-route-table-route-list] command.
+
+    ```azurecli-interactive
+    ROUTE_TABLE_NAME=$(az network route-table list --resource-group $RESOURCE_GROUP --query "[0].name" -o tsv)
+    az network route-table route list --resource-group $RESOURCE_GROUP --route-table-name $ROUTE_TABLE_NAME --output table
+    ```
+
+1. Confirm the network and application rules are in place. Get the firewall policy name by using the [`az network firewall policy list`][az-network-firewall-policy-list] command, and then show the rule collection group by using the [`az network firewall policy rule-collection-group show`][az-network-firewall-policy-rule-collection-group-show] command.
+
+    ```azurecli-interactive
+    FW_POLICY_NAME=$(az network firewall policy list --resource-group $RESOURCE_GROUP --query "[0].name" -o tsv)
+    az network firewall policy rule-collection-group show --resource-group $RESOURCE_GROUP --policy-name $FW_POLICY_NAME --name aks-egress-rules --query "ruleCollections[].name" -o tsv
+    ```
+
+## Connect to the cluster
+
+Configure `kubectl` to connect to your cluster by using the [`az aks get-credentials`][az-aks-get-credentials] command, and then verify the connection by using the [`kubectl get nodes`][kubectl-get] command.
+
+```azurecli-interactive
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
+kubectl get nodes
+```
+
+Outbound traffic from the cluster now routes through Azure Firewall. The firewall policy allows the required AKS endpoints and blocks all other outbound connections by default.
+
+:::zone-end
+
+:::zone pivot="system,user"
+
 ## Enable developer access to the API server
 
 If you used authorized IP ranges for your cluster in the previous step, you need to add your developer tooling IP addresses to the AKS cluster list of approved IP ranges so you access the API server from there. You can also configure a jumpbox with the needed tooling inside a separate subnet in the firewall's VNet.
@@ -463,15 +591,42 @@ To configure inbound connectivity, create a DNAT rule on Azure Firewall. To test
 
     On this page, you can view products, add them to your cart, and then place an order.
 
+:::zone-end
+
 ## Clean up resources
 
 If you no longer need the resources created in this article, you can delete them to avoid incurring future costs.
+
+:::zone pivot="system,user"
 
 - Delete the AKS resource group using the [`az group delete`][az-group-delete] command.
 
     ```azurecli-interactive
     az group delete --name $RESOURCE_GROUP
     ```
+
+:::zone-end
+
+:::zone pivot="terraform"
+
+Azure Firewall bills hourly whether or not it's actively processing traffic, in addition to data processing charges. Don't leave the firewall (or the rest of this sample) running longer than you need.
+
+> [!WARNING]
+> If you're working with existing or production resources in the same working directory, review the execution plan carefully before you destroy. Running `terraform destroy` removes every resource tracked in the Terraform state file for this configuration, including the virtual network, subnets, Azure Firewall, firewall policy and rules, route table, AKS cluster, and the role assignment. Avoid running it against shared infrastructure unless you're certain it's safe to remove.
+
+Run [`terraform plan`](https://developer.hashicorp.com/terraform/cli/commands/plan) with the `-destroy` flag to review what Terraform removes.
+
+```console
+terraform plan -destroy -out main.destroy.tfplan
+```
+
+Run [`terraform apply`](https://developer.hashicorp.com/terraform/cli/commands/apply) to apply the destroy plan and remove all resources created by this sample, including Azure Firewall.
+
+```console
+terraform apply main.destroy.tfplan
+```
+
+:::zone-end
 
 ## Related content
 
@@ -501,5 +656,15 @@ If you no longer need the resources created in this article, you can delete them
 [Use a pre-created kubelet managed identity]: use-managed-identity.md#create-a-kubelet-managed-identity
 [az-identity-create]: /cli/azure/identity#az_identity_create
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-aks-show]: /cli/azure/aks#az-aks-show
+[az-aks-installcli]: /cli/azure/aks#az-aks-install-cli
+[az-network-route-table-list]: /cli/azure/network/route-table#az-network-route-table-list
+[az-network-route-table-route-list]: /cli/azure/network/route-table/route#az-network-route-table-route-list
+[az-network-firewall-policy-list]: /cli/azure/network/firewall/policy#az-network-firewall-policy-list
+[az-network-firewall-policy-rule-collection-group-show]: /cli/azure/network/firewall/policy/rule-collection-group#az-network-firewall-policy-rule-collection-group-show
+[install-azurecli]: /cli/azure/install-azure-cli
+[terraform-install-configure]: /azure/developer/terraform/quickstart-configure
 [kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/
 [kubectl-get]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/
+[terraform-sample]: https://github.com/Azure/terraform/tree/master/quickstart/101-aks-network-traffic
+[terraform-sample-testrecord]: https://github.com/Azure/terraform/blob/master/quickstart/101-aks-network-traffic/TestRecord.md
