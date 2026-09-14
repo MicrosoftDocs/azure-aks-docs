@@ -69,6 +69,16 @@ groups:
     title: Azure portal
   - id: azure-cli
     title: Azure CLI
+- id: azure-portal-azure-cli-terraform
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-portal
+    title: Azure portal
+  - id: azure-cli
+    title: Azure CLI
+  - id: terraform
+    title: Terraform
 - id: azure-cli-or-terraform
   title: Interaction type
   prompt: Select how you want to interact with Azure
