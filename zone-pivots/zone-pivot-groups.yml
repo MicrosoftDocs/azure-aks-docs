@@ -145,13 +145,15 @@ groups:
     title: Managed identity
 #Owner: shashankbarsin
 - id: network-isolated-acr-type
-  title: Choose Azure Container Registry (ACR) mode
-  prompt: Choose an access method
+  title: Choose a deployment method
+  prompt: Select how you want to deploy the network isolated cluster
   pivots:
   - id: aks-managed-acr
-    title: AKS-managed Azure Container Registry
+    title: Azure CLI (AKS-managed ACR)
   - id: byo-acr
-    title: Bring your own (BYO) Azure Container Registry
+    title: Azure CLI (BYO ACR)
+  - id: terraform
+    title: Terraform (AKS-managed ACR)
 - id: external-idp-authn-type
   title: Choose an external identity provider authentication type
   prompt: Choose an authentication type
