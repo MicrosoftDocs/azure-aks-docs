@@ -14,7 +14,7 @@ ms.reviewer: schaffererin
 
 The Istio service mesh add-on supports both [Istio's own ingress traffic management API][istio-deploy-ingress] and the Kubernetes Gateway API for ingress traffic management. You can use the Istio Gateway API [automated deployment model][istio-gateway-auto-deployment] or the [manual deployment model][istio-gateway-manual-deployment]. This article describes how to configure ingress traffic management for the Istio service mesh add-on using the Kubernetes Gateway API with the [automated deployment model][istio-gateway-auto-deployment].
 
-You can use this setup for ingress without adding sidecars to your applications. The managed Istio control plane and gateway proxies still run.
+You can use this setup for ingress without adding sidecars to your applications. The managed Istio control plane and gateway proxies still run. You must initiate and complete [canary upgrades](istio-upgrade.md#minor-revision-upgrade) for minor revision updates, even when using the add-on only for ingress.
 
 ## Limitations and considerations
 
