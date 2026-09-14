@@ -296,13 +296,15 @@ groups:
     title: Azure portal
 # Owner: schaffererin
 - id: limit-egress-traffic
-  title: Choose a managed identity type
-  prompt: Choose a managed identity type
+  title: Choose an interaction method
+  prompt: Select how you want to interact with Azure
   pivots:
   - id: system
-    title: System-assigned managed identity
+    title: Azure CLI (system-assigned identity)
   - id: user
-    title: User-assigned managed identity
+    title: Azure CLI (user-assigned identity)
+  - id: terraform
+    title: Terraform
 - id: use-advanced-container-networking-services
   title: Choose a data plane option
   prompt: Choose a data plane option
