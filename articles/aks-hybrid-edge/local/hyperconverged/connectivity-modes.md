@@ -47,3 +47,4 @@ The connectivity status of a cluster is determined by the time of the latest hea
 
 - [Azure Arc connectivity modes](/azure//azure-arc/kubernetes/conceptual-connectivity-modes)
 - [Create and manage Kubernetes clusters on-premises using Azure CLI](../aks-create-clusters-cli.md)
+- [Impact to clusters when Arc resource bridge is deleted or recovered](azure-arc-resource-bridge-deleted-recovered.md)

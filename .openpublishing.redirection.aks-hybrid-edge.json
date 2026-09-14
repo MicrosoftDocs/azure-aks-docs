@@ -1407,7 +1407,7 @@
     },
     {
       "source_path": "articles/aks/aksarc/cluster-upgrade-status.md",
-      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/cluster-upgrade-status",
+      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/aks-arc-known-issues",
       "redirect_document_id": false
     },
     {
@@ -1552,7 +1552,7 @@
     },
     {
       "source_path": "articles/aks/aksarc/kube-apiserver-log-overflow.md",
-      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/kube-apiserver-log-overflow",
+      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/aks-arc-known-issues",
       "redirect_document_id": false
     },
     {
@@ -1627,7 +1627,7 @@
     },
     {
       "source_path": "articles/aks/aksarc/storage-provision-issue.md",
-      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/storage-provision-issue",
+      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/aks-arc-known-issues",
       "redirect_document_id": false
     },
     {
