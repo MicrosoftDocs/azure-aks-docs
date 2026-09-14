@@ -105,7 +105,7 @@ AKS accepts both integer values and a percentage value for max unavailable. For 
 | Integer | `5` | Five nodes are cordoned from the existing nodes |
 | Percentage | `50%` | Half the current node count in the pool will be unavailable |
 
-The default value of `maxUnavailable` is `0`. When `maxUnavailable` is `0`, AKS requires `maxSurge` to be greater than `0`. For more details, see the [AgentPoolUpgradeSettings API reference](/rest/api/aks/agent-pools/create-or-update?view=rest-aks-2026-03-01&tabs=HTTP#agentpoolupgradesettings).
+The default value of `maxUnavailable` is `0`. When `maxUnavailable` is `0`, AKS requires `maxSurge` to be greater than `0`. For more details, see the [AgentPoolUpgradeSettings API reference](/rest/api/aks/agent-pools/create-or-update?tabs=HTTP#agentpoolupgradesettings).
 
 Like max surge, if the max unavailable value is higher than the number of nodes remaining to be upgraded in the current operation, the number of nodes remaining to be upgraded is used for the max unavailable value instead. This condition can occur, for example, when an upgrade operation resumes after only some nodes in the pool were previously upgraded.
 
