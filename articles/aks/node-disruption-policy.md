@@ -229,10 +229,9 @@ Node Disruption Policy **triggers reimage** when you attach a Capacity Reservati
 |----|---|---|
 | No Capacity Reservation Group attached | Capacity Reservation Group attached | Yes |
 
-### Operations not yet covered by Node Disruption Policy
+### Operations covered by Node Disruption Policy on Kubernetes 1.37 and later
 
-The following configuration changes require node reimage but **aren't yet covered by Node Disruption Policy**. A future Kubernetes minor version update will cover these changes as this change introduces new behavior.  
-After making these configuration changes, you must manually run [`az aks nodepool upgrade`][az-aks-nodepool-upgrade] with `--node-image-only` to apply the changes to your nodes.
+On Kubernetes 1.37 and later, Node Disruption Policy covers the following configuration changes that require node reimage. On Kubernetes 1.36 and earlier, you must manually run [`az aks nodepool upgrade`][az-aks-nodepool-upgrade] with `--node-image-only` after making these configuration changes to apply them to your nodes.
 
 - **[SSH configuration][manage-ssh-access] changes**: Changing SSH access methods (Disabled SSH, Entra ID based SSH, or Local User SSH) or updating SSH public keys on node pools.
 - **[IMDS restriction][imds-restriction] changes**: Enabling or disabling Instance Metadata Service (IMDS) restriction to block pod access to the IMDS endpoint.

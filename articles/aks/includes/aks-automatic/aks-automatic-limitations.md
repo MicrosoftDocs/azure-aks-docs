@@ -19,4 +19,4 @@ The following limitations apply to AKS Automatic clusters:
   - [Azure Machine Learning](/azure/machine-learning/how-to-attach-kubernetes-anywhere)
 - Windows nodes aren't supported.
 - Migration from AKS base SKU to automatic SKU isn't supported.
-- Migrations between AKS Automatic clusters without managed system node pools and AKS Automatic clusters with managed system node pools aren't supported.
+- Migration from an existing AKS Automatic cluster without managed system node pools to AKS Automatic with managed system node pools is supported in preview in regions where managed system node pools are generally available. Migration from AKS Automatic with managed system node pools back to AKS Automatic without managed system node pools isn't supported.
