@@ -66,7 +66,6 @@ Depending on your workload needs, there are multiple compute scaling experiences
 - You need to select all VM sizes in a node pool that support the same ephemeral OS disk placement when you use ephemeral OS disks. Because `DiffDiskPlacement` is a single pool-level value, AKS can't express different placements per VM size in one node pool.
 - Virtual Machines node pools allow up to five scale profiles total per node pool. Each manual or autoscale profile specifies one VM size from the same VM family.
 - Windows node pools aren't supported.
-- Availability zones aren't supported. If your workload requires zone resiliency, use [Virtual Machine Scale Sets][VMSS orchestrate] node pools.
 
 ### Ephemeral OS disk placement compatibility
 
