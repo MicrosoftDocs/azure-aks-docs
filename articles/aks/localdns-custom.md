@@ -17,7 +17,9 @@ ai-usage: ai-assisted
 
 For most production workloads, AKS Automatic is the recommended production-ready default for AKS. LocalDNS is preconfigured in AKS Automatic clusters. In AKS Standard, LocalDNS behavior depends on the Kubernetes version and the node pool's existing LocalDNS profile.
 
-Starting with Kubernetes 1.37, AKS Standard defaults eligible node pools without an explicit LocalDNS profile to `Preferred` mode. In `Preferred` mode, AKS enables LocalDNS only when compatibility checks pass. If the node pool or cluster isn't compatible, LocalDNS remains disabled. This defaulting applies when you create or update a node pool, including during a Kubernetes version upgrade. AKS preserves an explicitly configured profile, including `Disabled`. To opt out, explicitly set the LocalDNS `mode` to `Disabled`. For instructions, see [Disable LocalDNS on a node pool](#disable-localdns-on-a-node-pool).
+> [!NOTE] 
+> Starting with Kubernetes 1.37, AKS Standard applies the `Preferred` LocalDNS mode by default to eligible node pools that don't have an explicitly configured LocalDNS profile. In `Preferred` mode, AKS enables LocalDNS only if the node pool and cluster pass the required compatibility checks. If the checks fail, LocalDNS remains disabled. Explicitly configured profiles take precedence over this default, so a node pool explicitly set to `Disabled` remains disabled.
+> To prevent LocalDNS from being enabled, explicitly set the LocalDNS mode to Disabled. For instructions, see [Disable LocalDNS on a Node Pool](./localdns-custom.md#disable-localdns-on-a-node-pool).
 
 LocalDNS is a feature in AKS that improves DNS resolution performance and resiliency for workloads running in your cluster. By running a DNS proxy on each node, LocalDNS reduces DNS query latency, improves reliability during transient network disruptions, and provides advanced caching and forwarding controls when you need customization.
 
