@@ -3,7 +3,7 @@ title: Plan Networking for Azure Kubernetes Service (AKS) Workloads
 description: This article provides an overview of the networking components you need to consider when planning your Azure Kubernetes Service (AKS) workloads.
 ms.topic: overview
 ms.subservice: aks-networking
-ms.date: 03/24/2025
+ms.date: 09/15/2026
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: I want to understand the networking options available for my control plane, nodes, pods, and applications in Azure Kubernetes Service (AKS) to effectively plan and optimize my workloads.
@@ -25,6 +25,9 @@ Each component has its own networking requirements, considerations, and options.
 - [Plan application networking for Azure Kubernetes Service (AKS)](./plan-application-networking.md)
 
 Each article poses a question to help guide your planning, and then provides options, recommendations, and best practices.
+
+> [!NOTE]
+> You can share subnets for API server, system node pool and agent node pool resources between multiple clusters. You must ensure sufficient IP addresses are allocated to avoid issues.
 
 ## Related content
 

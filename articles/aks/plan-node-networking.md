@@ -31,6 +31,9 @@ When setting up node networking, you can choose between **Load Balancer**, **NAT
 
 Our **general recommendation** is to use a **Load Balancer**. If you have a **high volume of outbound connections**, consider using a **NAT Gateway** for better SNAT port management. If you have any **custom egress needs (Azure Firewall, NVA, etc.)**, you might want to explore **User Defined Routing (UDR)**.
 
+> [!NOTE]
+> You can share subnets for system and agent node pools between multiple clusters. You must ensure sufficient IP addresses are allocated to avoid issues.
+
 ## Related content
 
 - [Plan control plane networking for Azure Kubernetes Service (AKS)](./plan-control-plane-networking.md)

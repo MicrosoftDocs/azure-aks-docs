@@ -22,6 +22,9 @@ For specific guidance on IP address planning for individual CNI options, see the
 
 Your Azure VNet subnet must be large enough to accommodate your cluster, which depends on whether you're using an [overlay network](#overlay-networks) or a [flat network](#flat-networks).
 
+> [!NOTE]
+> If you intend to share API, system and agent node pool subnets between multiple clusters you must ensure sufficient IP addresses are allocated to avoid issues.
+
 ### Overlay networks
 
 With overlay networks, like [Azure CNI Overlay][azure-cni-overlay], your subnet needs to be large enough to assign IPs to your nodes. Pods are assigned IPs from a separate, private CIDR range and won't require VNet IPs. The VNet subnet you use for your cluster can be smaller than with flat networks.
