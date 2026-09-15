@@ -16,7 +16,7 @@ ai-usage: ai-assisted
 
 Running NVIDIA GPU workloads on Azure Kubernetes Service (AKS) traditionally requires you to install and maintain the NVIDIA GPU driver, Kubernetes device plugin, and a GPU metrics exporter on each GPU node. These components enable GPU scheduling, container-level GPU access, and telemetry, but installing them manually or through the [NVIDIA GPU Operator](./nvidia-gpu-operator.md) adds operational overhead.
 
-With fully managed GPU nodes (preview), AKS installs and maintains the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) for you. GPU node pool creation becomes a single step, and GPU capacity behaves like any other AKS node pool. You can use managed GPU nodes with manually created GPU node pools and with node auto-provisioning (NAP), including AKS Automatic clusters.
+By using fully managed GPU nodes (preview), AKS installs and maintains the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) for you. GPU node pool creation becomes a single step, and GPU capacity behaves like any other AKS node pool. You can use managed GPU nodes with manually created GPU node pools and with node auto-provisioning (NAP), including AKS Automatic clusters.
 
 You configure a managed GPU node pool through two fields under `gpuProfile.nvidia`:
 
