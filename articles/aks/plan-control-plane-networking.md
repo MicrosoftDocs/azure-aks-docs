@@ -43,10 +43,10 @@ With API Server VNet Integration:
 
 Our **general recommendation** is to use a **public cluster**, as it simplifies the networking setup and allows for easier access to the API server. However, if you have **specific security or compliance requirements**, a **private cluster** might be more appropriate.
 
-We recommend enabling [API Server VNet Integration](#api-server-vnet-integration) for both public and private clusters to enhance security and simplify network management.
+To enhance security and simplify network management, enable [API Server VNet Integration](#api-server-vnet-integration) for both public and private clusters.
 
 > [!NOTE]
-> You can share subnets for API server, system node pool and agent node pool resources between multiple clusters. You must ensure sufficient IP addresses are allocated to avoid issues.
+> You can share subnets for the API server, system node pool, and agent node pool resources between multiple clusters. You must ensure sufficient IP addresses are allocated to avoid issues.
 
 ## Related content
 

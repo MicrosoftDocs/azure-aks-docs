@@ -27,7 +27,7 @@ Each component has its own networking requirements, considerations, and options.
 Each article poses a question to help guide your planning, and then provides options, recommendations, and best practices.
 
 > [!NOTE]
-> You can share subnets for API server, system node pool and agent node pool resources between multiple clusters. You must ensure sufficient IP addresses are allocated to avoid issues.
+> You can share subnets for API server, system node pool, and agent node pool resources between multiple clusters. Ensure you allocate sufficient IP addresses to avoid issues.
 
 ## Related content
 

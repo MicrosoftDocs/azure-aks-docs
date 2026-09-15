@@ -23,7 +23,7 @@ For specific guidance on IP address planning for individual CNI options, see the
 Your Azure VNet subnet must be large enough to accommodate your cluster, which depends on whether you're using an [overlay network](#overlay-networks) or a [flat network](#flat-networks).
 
 > [!NOTE]
-> If you intend to share API, system and agent node pool subnets between multiple clusters you must ensure sufficient IP addresses are allocated to avoid issues.
+> To share API, system, and agent node pool subnets between multiple clusters, ensure you allocate enough IP addresses to avoid issues.
 
 ### Overlay networks
 
