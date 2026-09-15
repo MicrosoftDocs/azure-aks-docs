@@ -402,8 +402,6 @@ groups:
     title: Update cluster and key vault with Azure CLI
   - id: terraform-create
     title: Create cluster and key vault with Terraform
-  - id: terraform-update
-    title: Update cluster and key vault with Terraform
 # Owner: davidsmatlak
 - id: portal-terraform
   title: Interaction type
