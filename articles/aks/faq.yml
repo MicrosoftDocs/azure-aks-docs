@@ -5,7 +5,7 @@ metadata:
   keywords: frequently asked questions, faq
   ms.service: azure-kubernetes-service
   ms.topic: faq
-  ms.date: 11/06/2023
+  ms.date: 09/15/2026
 title: "AKS frequently asked questions"
 summary: |
     This article provides answers to some of the most common questions about Azure Kubernetes Service (AKS).
@@ -257,6 +257,11 @@ sections:
 
   - name: Networking
     questions:
+      - question: |
+          Can I add more than a single AKS cluster to the same subnets?
+        answer: |
+          Yes, you can share subnets between clusters as long as you provision 3 subnets (one each for API server, system and agent node pool). Each subnet should have enough IP addresses to accommodate the nodes of the clusters you intend to provision. AKS clusters that share subnets must carefully manage IP address allocation to avoid conflicts.
+ 
       - question: |
           How does the managed control plane communicate with my nodes?
         answer: |
