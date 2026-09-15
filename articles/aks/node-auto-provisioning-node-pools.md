@@ -21,7 +21,7 @@ NAP uses virtual machine (VM) SKU requirements to decide the best VMs for pendin
 - SKU families and specific instance types.
 - Resource limits and priorities.
 - Spot or On-demand instances.
-- Architecture and capabilities requirements.
+- Architecture, GPU, and other capabilities requirements.
 
 The `NodePool` resource sets constraints on the nodes that NAP creates and the pods that run on those nodes. When you first install NAP, it creates a [default `NodePool`](#review-default-node-pool-configuration). You can modify this node pool or create extra node pools to suit your workload requirements.
 
@@ -150,6 +150,24 @@ requirements:
   - D
   - F
 ```
+
+#### GPU SKU example
+
+To provision NVIDIA GPU nodes with NAP, create a `NodePool` that selects GPU-enabled VM sizes. The following example allows NAP to select N-series NVIDIA GPU SKUs:
+
+```yaml
+requirements:
+- key: karpenter.azure.com/sku-family
+  operator: In
+  values:
+  - N
+- key: karpenter.azure.com/sku-gpu-manufacturer
+  operator: In
+  values:
+  - nvidia
+```
+
+If you want AKS to install and manage the NVIDIA GPU driver, device plugin, Data Center GPU Manager (DCGM) metrics exporter, and GPU health signals on NAP-provisioned GPU nodes, configure managed GPU in the referenced `AKSNodeClass`. For more information, see [Create an AKS-managed GPU node pool](./aks-managed-gpu-nodes.md#node-auto-provisioning-node-pool).
 
 #### SKU name examples
 
