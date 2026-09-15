@@ -3,7 +3,7 @@ title: Assign Capacity Reservation Groups to Node Pools in Azure Kubernetes Serv
 description: Learn how to use capacity reservation groups with node pools in Azure Kubernetes Service (AKS) to guarantee allocated capacity for your node pools.  
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 05/29/2026
+ms.date: 09/14/2026
 author: schaffererin
 ms.author: stgriffi
 ms.subservice: aks-nodes
@@ -24,6 +24,11 @@ In this article, you learn how to use capacity reservation groups with node pool
 - You need the Azure CLI version 2.56 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - You need an existing [capacity reservation group](/azure/virtual-machines/capacity-reservation-associate-virtual-machine-scale-set) with at least one capacity reservation. If not, the node pool is added to the cluster with a warning and no capacity reservation group gets associated.
 - You need to [create a user-assigned managed identity with the `Contributor` role](#create-a-user-assigned-managed-identity-and-assign-it-to-an-aks-cluster) for the resource group that contains the capacity reservation group and assign the identity to your AKS cluster. System-assigned managed identities don't work for this feature.
+
+> [!IMPORTANT]
+> For shared or cross-subscription capacity reservation groups, the user or service principal running the AKS command must have `Microsoft.Compute/capacityReservationGroups/write` permission on the linked capacity reservation group. The granular shared capacity reservation group consumer permissions used for virtual machines, such as `Microsoft.Compute/capacityReservationGroups/deploy/action`, aren't currently sufficient for associating an AKS node pool with a capacity reservation group.
+>
+> Permissions assigned to the AKS cluster's managed identity don't replace this caller authorization check. The cluster managed identity still needs the required permissions on the resource group that contains the capacity reservation group, as described in this article.
 
 
 ### Create a user-assigned managed identity and assign it to an AKS cluster
@@ -102,6 +107,8 @@ Associate an existing capacity reservation group with an existing node pool by u
     ```azurecli-interactive
     az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --crg-id $CRG_ID
     ```
+
+    If the command fails with `LinkedAuthorizationFailed` and references `Microsoft.Compute/capacityReservationGroups/write`, grant that permission to the signed-in user or service principal running the command on the target capacity reservation group.
 
 ## Associate an existing capacity reservation group with a system node pool
 
