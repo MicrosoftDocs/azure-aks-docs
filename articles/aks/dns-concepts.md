@@ -22,7 +22,7 @@ AKS Automatic is the recommended production-ready default for most AKS workloads
 > [!NOTE] 
 > Starting with Kubernetes 1.37, AKS Standard applies the Preferred LocalDNS mode by default to eligible node pools that don't have an explicitly configured LocalDNS profile. In Preferred mode, AKS enables LocalDNS only if the node pool and cluster pass the required compatibility checks. If the checks fail, LocalDNS remains disabled. Explicitly configured profiles take precedence over this default, so a node pool explicitly set to Disabled remains disabled.
 
-To prevent LocalDNS from being enabled, explicitly set the LocalDNS mode to Disabled. For instructions, see [Disable LocalDNS on a Node Pool](https://github.com/MicrosoftDocs/azure-aks-docs-pr/pull/3570/localdns-custom.md#disable-localdns-on-a-node-pool).
+To prevent LocalDNS from being enabled, explicitly set the LocalDNS mode to Disabled. For instructions, see [Disable LocalDNS on a Node Pool](./localdns-custom.md#disable-localdns-on-a-node-pool).
 > To opt out, explicitly set the LocalDNS mode to `Disabled`. For instructions, see [Disable LocalDNS on a Node Pool](./localdns-custom.md#disable-localdns-on-a-node-pool).
 
 For more information about AKS Automatic, see [What is AKS Automatic?](./intro-aks-automatic.md)
