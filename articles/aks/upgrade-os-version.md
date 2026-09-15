@@ -98,6 +98,7 @@ Ubuntu 26.04 is available in preview in Kubernetes version 1.36 and later. Use U
 > - Ubuntu 26.04 requires a VM size that supports Generation 2 VMs.
 > - Ubuntu 26.04 uses minimal node images for AMD64 and Arm64.
 > - [FIPS](./enable-fips-nodes.md), [Confidential VM](./use-cvm.md), and [Trusted Launch](./use-trusted-launch.md) aren't supported.
+> - You need the preview Azure CLI version 21.0.0b14 or later installed and configured. To find your CLI version, run `az --version`. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 #### Install the `aks-preview` Azure CLI extension
 
@@ -125,7 +126,7 @@ Register the `Ubuntu2604Preview` feature flag in your Azure subscription before 
         --name Ubuntu2604Preview
     ```
 
-    It takes a few minutes for the status to show _Registered_.
+    It takes a few minutes for the status to show *Registered*.
 
 1. Verify the registration status by using the [`az feature show`][az-feature-show] command.
 
@@ -136,7 +137,7 @@ Register the `Ubuntu2604Preview` feature flag in your Azure subscription before 
         --query properties.state
     ```
 
-1. When the status shows _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider by using the [`az provider register`][az-provider-register] command.
+1. When the status shows *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [`az provider register`][az-provider-register] command.
 
     ```azurecli-interactive
     az provider register --namespace Microsoft.ContainerService
