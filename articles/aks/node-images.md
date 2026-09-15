@@ -15,6 +15,8 @@ ai-usage: ai-assisted
 
 This article describes the node images available for Azure Kubernetes Service (AKS) nodes.
 
+[!INCLUDE [os-guard-preview-retirement](includes/os-guard-preview-retirement.md)]
+
 [!INCLUDE [Ubuntu 20.04 retirement](./includes/ubuntu-20-04-retirement.md)]
 
 [!INCLUDE [Ubuntu 22.04 retirement](./includes/ubuntu-22-04-retirement.md)]

@@ -19,6 +19,8 @@ ai-usage: ai-assisted
 
 In this article, you learn how to create AKS node pools using Confidential VM sizes.
 
+[!INCLUDE [os-guard-preview-retirement](includes/os-guard-preview-retirement.md)]
+
 ## AKS supported confidential VM sizes
 
 Azure offers a choice of [Trusted Execution Environment (TEE)][TEE] options from both AMD and Intel. These TEEs allow you to create Confidential VM environments with excellent price-to-performance ratios, all without requiring any code changes.
