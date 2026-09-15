@@ -3,11 +3,12 @@ title: Azure Kubernetes Service (AKS) Application Routing Add-On with the Kubern
 description: Use the application routing add-on to manage ingress traffic on Azure Kubernetes Service (AKS) using the Kubernetes Gateway API.
 ms.subservice: aks-networking
 ms.service: azure-kubernetes-service
-ms.custom: devx-track-azurecli, biannual
+ms.custom: devx-track-azurecli, devx-track-terraform, biannual
 author: nshankar
 ms.topic: how-to
-ms.date: 07/01/2026
+ms.date: 08/31/2026
 ms.author: nshankar
+zone_pivot_groups: azure-cli-or-terraform
 # Customer intent: As a cloud engineer, I want to deploy and configure ingress on Azure Kubernetes Service with the Kubernetes Gateway API using the application routing add-on, so that I can efficiently manage HTTP/HTTPS traffic to my applications.
 ---
 
@@ -66,6 +67,8 @@ Consider alternatives when you require capabilities outside current support in t
 - Envoy access logging is enabled by default on Gateway proxy pods, but the log format, scope, and provider can't be customized via the Istio `Telemetry` API. To customize, use Gateway API ingress on the [Istio service mesh add-on][istio-gateway-api-access-logs] instead.
 
 ## Prerequisites
+
+:::zone pivot="azure-cli"
 
 ### Update Azure CLI version
 
@@ -267,6 +270,170 @@ You should see an `HTTP 200` response.
 > [!NOTE]
 > To secure ingress traffic with the application routing Gateway API implementation and integrate with Azure DNS for hostname management, see [Configure Azure DNS and TLS with the application routing Gateway API implementation][app-routing-gateway-api-dns-tls] for the automated workflow powered by the application routing operator. For a manual TLS termination workflow that does not rely on the operator's integration, see [Secure ingress traffic with the application routing Gateway API implementation][app-routing-gateway-api-tls].
 
+:::zone-end
+
+:::zone pivot="terraform"
+
+To use Terraform to create an AKS cluster with the application routing Gateway API implementation enabled, you need:
+
+- [Terraform][terraform-on-azure] version `1.9.0` or later installed.
+- Azure CLI installed and authenticated. Run `az --version` to find your `azure-cli` version, and run `az upgrade` to upgrade. You use the Azure CLI to connect to the cluster after Terraform creates it.
+- [kubectl][kubectl-overview] installed. You can install it locally by using the [`az aks install-cli`][az-aks-install-cli] command. You use `kubectl` to deploy the sample application and Gateway API resources.
+
+## Deploy an AKS cluster with the application routing Gateway API implementation using Terraform
+
+This section shows how to use Terraform to deploy an AKS cluster with the [Managed Gateway API installation][managed-gateway-api] and the application routing Gateway API implementation enabled.
+
+> [!NOTE]
+> The sample code for this section is located in the [Azure Terraform GitHub repo](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-application-routing-gateway-api). You can view the log file containing the [test results from current and previous versions of Terraform](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-application-routing-gateway-api/TestRecord.md).
+>
+> See more [articles and sample code showing how to use Terraform to manage Azure resources](/azure/terraform).
+
+This sample deploys:
+
+- A resource group.
+- An AKS cluster that uses the Azure CNI network plugin and a standard load balancer.
+- The Managed Gateway API installation and the application routing Gateway API implementation, both enabled on the cluster through the AzAPI provider. Enabling both settings makes the AKS-managed `approuting-istio` GatewayClass available on the cluster.
+
+1. Create a directory to test and run the sample Terraform code, and make it the current directory.
+
+1. Create a file named `main.tf`, and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-application-routing-gateway-api/main.tf)]
+
+1. Initialize Terraform by running the [`terraform init`][terraform-init] command. This command downloads the Azure providers required to manage Azure resources with Terraform.
+
+    ```console
+    terraform init
+    ```
+
+1. Format and validate the configuration by running the `terraform fmt` and `terraform validate` commands.
+
+    ```console
+    terraform fmt
+    terraform validate
+    ```
+
+1. Create a Terraform execution plan by running the [`terraform plan`][terraform-plan] command. This command shows you the resources that Terraform creates or modifies in your Azure subscription.
+
+    ```console
+    terraform plan
+    ```
+
+1. Apply the Terraform execution plan by running the [`terraform apply`][terraform-apply] command. This command creates the resources defined in your `main.tf` file in your Azure subscription. When prompted, enter `yes` to confirm.
+
+    ```console
+    terraform apply
+    ```
+
+### Connect to the AKS cluster using Terraform
+
+1. Get the resource group and cluster names from the Terraform outputs.
+
+    ```console
+    terraform output -raw resource_group_name
+    terraform output -raw cluster_name
+    ```
+
+1. Configure `kubectl` to connect to your cluster by using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them. Replace `<resource-group-name>` and `<cluster-name>` with the values from the previous step. Alternatively, run `terraform output -raw get_credentials_command` to get the full, ready-to-run command.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group <resource-group-name> --name <cluster-name>
+    ```
+
+1. Verify the cluster is running by running the `kubectl get nodes` command.
+
+    ```bash
+    kubectl get nodes
+    ```
+
+### Verify the Gateway API configuration by using Terraform
+
+1. Confirm the `istiod` pods are running in the `aks-istio-system` namespace.
+
+    ```bash
+    kubectl get pods -n aks-istio-system
+    ```
+
+1. Confirm that the `approuting-istio` GatewayClass exists and is accepted.
+
+    ```bash
+    kubectl get gatewayclass
+    ```
+
+    The `approuting-istio` GatewayClass should return `True` in the `ACCEPTED` column.
+
+## Configure ingress by using a Kubernetes Gateway with Terraform
+
+### Deploy the sample application by using Terraform
+
+Deploy the sample `httpbin` application in the `default` namespace:
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.27/samples/httpbin/httpbin.yaml
+```
+
+Verify that the `httpbin` pod and service are available:
+
+```bash
+kubectl get pods -l app=httpbin
+kubectl get svc httpbin
+```
+
+### Create the Gateway and HTTPRoute resources using Terraform
+
+The application routing Gateway API implementation sample includes a `Gateway` manifest that creates an HTTP listener on port 80 and uses the AKS-managed `approuting-istio` GatewayClass.
+
+1. Create a file named `gateway.yaml`, and insert the following code:
+    :::code language="yaml" source="~/terraform_samples/quickstart/101-aks-application-routing-gateway-api/gateway.yaml":::
+
+1. Apply the `Gateway` configuration:
+
+    ```bash
+    kubectl apply -f gateway.yaml
+    ```
+
+    The sample also includes an `HTTPRoute` manifest that routes requests for `httpbin.example.com/get` to the `httpbin` service on port `8000`.
+
+1. Create a file named `httproute.yaml`, and insert the following code:
+    :::code language="yaml" source="~/terraform_samples/quickstart/101-aks-application-routing-gateway-api/httproute.yaml":::
+
+1. Apply the `HTTPRoute` configuration:
+
+    ```bash
+    kubectl apply -f httproute.yaml
+    ```
+
+> [!NOTE]
+> The preceding example creates an external ingress load balancer service that's accessible from outside the cluster. You can add [annotations][annotation-customizations] to create an [internal load balancer][azure-internal-lb] and customize other load balancer settings.
+
+Verify that a `Deployment`, `Service`, `HorizontalPodAutoscaler`, and `PodDisruptionBudget` get created for `httpbin-gateway`:
+
+```bash
+kubectl get deployment httpbin-gateway-approuting-istio
+kubectl get service httpbin-gateway-approuting-istio
+kubectl get hpa httpbin-gateway-approuting-istio
+kubectl get pdb httpbin-gateway-approuting-istio
+```
+
+### Send a request to the sample application using Terraform
+
+Wait for the Gateway to report a `Programmed` condition, then get its external address:
+
+```bash
+kubectl wait --for=condition=programmed gateways.gateway.networking.k8s.io httpbin-gateway
+export INGRESS_HOST=$(kubectl get gateways.gateway.networking.k8s.io httpbin-gateway -ojsonpath='{.status.addresses[0].value}')
+```
+
+Then, send a request to `httpbin` through the Gateway:
+
+```bash
+curl -s -I -HHost:httpbin.example.com "http://$INGRESS_HOST/get"
+```
+
+You should see an `HTTP 200` response.
+
+:::zone-end
+
 ## Access logging
 
 The application routing Gateway API implementation enables Envoy access logging by default on all managed `Gateway` proxy pods. Access logs are written to the proxy container's standard output in the default Envoy text format. You can view the logs by using `kubectl logs`:
@@ -338,6 +505,8 @@ The application routing Gateway API implementation supports customization of the
 >         service.beta.kubernetes.io/port_80_health-probe_request-path:
 > ```
 
+:::zone pivot="azure-cli"
+
 ## Disable the application routing Gateway API implementation
 
 Run the following command to disable the application routing Gateway API implementation:
@@ -369,6 +538,33 @@ kubectl delete pod secrets-store-sync-httpbin
 kubectl delete secretproviderclass httpbin-credential-spc
 ```
 
+:::zone-end
+
+:::zone pivot="terraform"
+
+## Clean up resources by using Terraform
+
+In this section, you deployed a namespace-scoped sample application and Gateway API resources. If you no longer need these Kubernetes resources, delete them before you remove the underlying Azure infrastructure.
+
+Delete the `HTTPRoute`, `Gateway`, and sample application by using the `kubectl delete` command:
+
+```bash
+kubectl delete -f httproute.yaml
+kubectl delete -f gateway.yaml
+kubectl delete -f https://raw.githubusercontent.com/istio/istio/release-1.27/samples/httpbin/httpbin.yaml
+```
+
+> [!WARNING]
+> The following command removes the resource group, the AKS cluster, and all other resources associated with the resource group created for this sample. If you deployed other resources inside this resource group, the command deletes them too.
+
+Remove the Azure resources created by Terraform by using the [`terraform destroy`][terraform-destroy] command. When prompted, enter `yes` to confirm.
+
+```console
+terraform destroy
+```
+
+:::zone-end
+
 ## Related content
 
 - [What is Azure Kubernetes Service (AKS) Automatic?](./intro-aks-automatic.md)
@@ -390,9 +586,17 @@ kubectl delete secretproviderclass httpbin-credential-spc
 [istio-canary-upgrades]: ./istio-upgrade.md#minor-revision-upgrade
 [app-routing-gateway-api-tls]: ./app-routing-gateway-api-tls.md
 [app-routing-gateway-api-dns-tls]: ./app-routing-gateway-api-dns-tls.md
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[terraform-on-azure]: /azure/developer/terraform/overview
 
 <!-- LINKS - external -->
 [aks-release-notes]: https://github.com/azure/aks/releases
 [istio-revisions]: https://istio.io/latest/blog/2021/revision-tags/
 [k8s-gateway-api]: https://gateway-api.sigs.k8s.io/
 [azure-lb-annotations]: https://cloud-provider-azure.sigs.k8s.io/topics/loadbalancer/
+[kubectl-overview]: https://kubernetes.io/docs/reference/kubectl/
+[terraform-init]: https://www.terraform.io/docs/commands/init.html
+[terraform-plan]: https://www.terraform.io/docs/commands/plan.html
+[terraform-apply]: https://www.terraform.io/docs/commands/apply.html
+[terraform-destroy]: https://www.terraform.io/docs/commands/destroy.html
