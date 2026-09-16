@@ -141,6 +141,26 @@ In AKS Standard, tune upgrade controls directly:
 > [!NOTE]
 > Before you upgrade, check for API breaking changes and review the [AKS release notes](https://github.com/Azure/AKS/releases) to avoid disruptions.
 
+## Validate LocalDNS and custom DNS before upgrading to Kubernetes 1.37
+
+Starting with Kubernetes 1.37, AKS defaults an AKS Standard node pool that doesn't have an explicit LocalDNS profile to `Preferred` mode, and enables LocalDNS when the node pool passes the compatibility checks. This change affects the workload DNS path and can expose existing custom DNS or firewall configurations that support UDP port 53 but not TCP port 53.
+
+Before upgrading a node pool to Kubernetes 1.37 or later:
+
+1. Check whether the node pool has an explicit LocalDNS profile.
+1. Test the custom virtual network DNS server from an AKS node over both UDP and TCP.
+
+    ```bash
+    dig +udp @<custom-dns-ip> <fqdn>
+    dig +tcp @<custom-dns-ip> <fqdn>
+    ```
+
+1. Verify that NSGs, firewalls, NVAs, and routes permit both UDP and TCP port 53.
+1. Upgrade a non-production node pool first and monitor CoreDNS and LocalDNS errors.
+1. If the DNS path isn't ready for LocalDNS, explicitly configure `mode` as `Disabled` before upgrading.
+
+For configuration and opt-out instructions, see [Configure LocalDNS in AKS](./localdns-custom.md).
+
 ## Validations used in the upgrade process
 
 AKS performs pre-upgrade validations to ensure cluster health:
