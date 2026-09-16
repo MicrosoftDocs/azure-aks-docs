@@ -6,7 +6,8 @@ author: schaffererin
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.custom: aks-ai-ml
-ms.date: 3/25/2025
+ms.date: 9/12/2026
+ai-usage: ai-assisted
 # Customer intent: "As a data engineer, I want to monitor and visualize inference service metrics on AKS, so that I can ensure optimal performance and resource utilization while managing AI workloads."
 ---
 
@@ -16,7 +17,7 @@ Monitoring and observability play a key role in maintaining high performance and
 
 The Kubernetes AI Toolchain Operator (KAITO) is a managed add-on for AKS that simplifies deployment and operations for AI models in your AKS cluster.
 
-In [KAITO version 0.4.4](https://github.com/kaito-project/kaito/releases/tag/v0.4.4) and later versions, the vLLM inference runtime is enabled by default in the AKS managed add-on. [vLLM](https://docs.vllm.ai/en/latest/) is a library for language model inference and serving. It surfaces key system performance, resource usage, and request processing for [Prometheus metrics](https://docs.vllm.ai/en/latest/design/v1/metrics.html) that you can use to evaluate your KAITO inference deployments.
+The vLLM inference runtime is enabled by default in the AKS managed add-on. [vLLM](https://docs.vllm.ai/en/latest/) is a library for language model inference and serving. It surfaces key system performance, resource usage, and request processing for [Prometheus metrics](https://docs.vllm.ai/en/latest/design/v1/metrics.html) that you can use to evaluate your KAITO inference deployments.
 
 In this article, you'll learn how to monitor and visualize vLLM inference metrics using the AI toolchain operator add-on with Azure Managed Prometheus and Azure Managed Grafana on your AKS cluster.
 
@@ -30,7 +31,7 @@ In this article, you'll learn how to monitor and visualize vLLM inference metric
 
 * Install and configure kubectl, the Kubernetes command-line client. For more information, see [Install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 * Enable the [AI toolchain operator add-on](./ai-toolchain-operator.md) in your AKS cluster.
-* If you already have the AI toolchain operator add-on enabled, update your AKS cluster to the latest version to run KAITO v0.4.4 or later.
+* If you already have the AI toolchain operator add-on enabled, update your AKS cluster to the latest version.
 * Enable [the managed service for Prometheus and Azure Managed Grafana](/azure/azure-monitor/containers/kubernetes-monitoring-enable) in your AKS cluster.
 * Have permissions to [create or update Azure Managed Grafana instances](/azure/managed-grafana/how-to-manage-access-permissions-users-identities) in your Azure subscription.
 
@@ -41,7 +42,7 @@ In this example, you collect metrics for the [Qwen-2.5-coder-7B-instruct languag
 1. Start by applying the following KAITO workspace custom resource to your cluster:
 
     ```azurecli
-    kubectl apply -f https://raw.githubusercontent.com/Azure/kaito/main/examples/inference/kaito_workspace_qwen_2.5_coder_7b-instruct.yaml
+    kubectl apply -f https://raw.githubusercontent.com/kaito-project/kaito/main/examples/inference/kaito_workspace_qwen_2.5_coder_7b-instruct.yaml
     ```
 
 1. Track the live resource changes in your KAITO workspace:

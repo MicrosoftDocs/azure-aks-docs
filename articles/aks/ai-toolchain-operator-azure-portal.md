@@ -2,7 +2,8 @@
 title: Deploy an AI Model on Azure Kubernetes Service (AKS) with the AI Toolchain Operator in the Azure Portal (Preview)
 description: Learn how to deploy an AI model on Azure Kubernetes Service (AKS) using the AI Toolchain Operator in the Azure portal (Preview).
 ms.topic: how-to
-ms.date: 11/04/2025
+ms.date: 09/12/2026
+ai-usage: ai-assisted
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -27,13 +28,14 @@ Built on top of the open-source KAITO project, the AI toolchain operator managed
 ## Before you begin
 
 - This article assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for AKS](./concepts-clusters-workloads.md).
-- For **_all hosted model preset images_** and default resource configuration, see the [KAITO GitHub repository](https://github.com/kaito-project/kaito/tree/main/presets).
-- The AI toolchain operator add-on currently supports KAITO **version 0.6.0**. Please make a note of this in considering your choice of model from the KAITO model repository.
+- For **_the curated supported model list_** and default resource configuration, see the [KAITO GitHub document](https://kaito-project.github.io/kaito/docs/presets).
+- The AI toolchain operator add-on typically lags one release behind the latest upstream KAITO version. Take this condition into consideration when choosing a model from the KAITO model repository.
 
 ## Limitations
 
-- `AzureLinux` and `Windows` OS SKU aren't currently supported.
+- `Windows` OS SKU isn't currently supported.
 - AMD GPU virtual machine (VM) sizes aren't a supported `instanceType` in a KAITO workspace.
+- Virtual machine (VM) sizes using NVIDIA GPUs older than the Ampere architecture (such as the T4, V100, M60, and K80) aren't supported. KAITO requires NVIDIA GPUs with CUDA compute capability 8.0 or later.
 - AI toolchain operator add-on is supported in **public** Azure regions.
 
 ## Prerequisites

@@ -3,7 +3,8 @@ title: Onboard custom models for inferencing with the AI toolchain operator (KAI
 description: Learn how to onboard custom models for inferencing with the AI toolchain operator (KAITO) on AKS.
 ms.topic: how-to
 ms.custom: azure-kubernetes-service, aks-ai-ml
-ms.date: 03/27/2026
+ms.date: 09/12/2026
+ai-usage: ai-assisted
 author: schaffererin
 ms.author: schaffererin
 
@@ -12,7 +13,7 @@ ms.author: schaffererin
 
 # Onboard custom models for inferencing with the AI toolchain operator (KAITO) on Azure Kubernetes Service (AKS)
 
-As an AI engineer or developer, you might have to prototype and deploy AI workloads with a range of different model weights. AKS provides the option to deploy inferencing workloads using open-source presets supported out-of-box and managed in the KAITO [model registry](https://github.com/kaito-project/kaito/tree/main/presets) or to dynamically download from the [HuggingFace registry](https://huggingface.co/models) at runtime onto your AKS cluster.
+As an AI engineer or developer, you might need to prototype and deploy AI workloads with a range of different model weights. AKS provides the option to deploy inferencing workloads by using open-source presets that the KAITO [model catalog](https://kaito-project.github.io/kaito/docs/presets) supports and manages out of the box, or to dynamically download models from the [HuggingFace registry](https://huggingface.co/models) at runtime onto your AKS cluster.
 
 In this article, you learn how to onboard a sample HuggingFace model for inferencing with the AI toolchain operator add-on without having to manage custom images on Azure Kubernetes Service (AKS).
 
@@ -20,7 +21,7 @@ In this article, you learn how to onboard a sample HuggingFace model for inferen
 
 - An Azure account with an active subscription. If you don't have an account, you can [create one for free](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - An AKS cluster with the AI toolchain operator add-on enabled. For more information, see [Enable KAITO on an AKS cluster](./ai-toolchain-operator.md#enable-the-ai-toolchain-operator-add-on-on-an-aks-cluster).
-- This example deployment requires quota for the `Standard_NCads_A100_v4` virtual machine (VM) family in your Azure subscription. If you don't have quota for this VM family, please [request a quota increase](/azure/quotas/quickstart-increase-quota-portal).
+- Quota for the `Standard_NVadsA10_v5` virtual machine (VM) family in your Azure subscription. If you don't have quota for this VM family, [request a quota increase](/azure/quotas/quickstart-increase-quota-portal).
 
     > [!NOTE]
     > Currently, only the HuggingFace runtime supports inference with the KAITO custom model deployment template.
@@ -47,8 +48,8 @@ In this example, we use the [HuggingFaceTB SmolLM2-1.7B-Instruct](https://huggin
 
    - `instanceType`: The VM size for your inference service deployment. For larger model sizes you can choose a VM in the [`Standard_NCads_A100_v4`](/azure/virtual-machines/sizes/gpu-accelerated/nca100v4-series) family with higher memory capacity.
    - `MODEL_ID`: Your model's specific HuggingFace identifier, which can be found after `https://huggingface.co/` in the model card URL.
-   - `"--torch_dtype"`: Set to `"float16"` for compatibility with V100 GPUs. For A100, H100 or newer GPUs, use `"bfloat16"`.
-   - For this example, we use `Standard_NC24ads_A100_v4` as the instance type and the [HuggingFaceTB SmolLM2-1.7B-Instruct](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct) model.
+   - `"--torch_dtype"`: Set to `"bfloat16"`, which is supported on all GPU SKUs that KAITO supports.
+   - For this example, use `Standard_NV36ads_A10_v5` as the instance type and the [HuggingFaceTB SmolLM2-1.7B-Instruct](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct) model.
 
     ```yml
     apiVersion: kaito.sh/v1beta1
@@ -56,7 +57,7 @@ In this example, we use the [HuggingFaceTB SmolLM2-1.7B-Instruct](https://huggin
     metadata:
       name: workspace-custom-llm
     resource:
-      instanceType: "Standard_NC24ads_A100_v4" # Required VM SKU based on model requirements
+      instanceType: "Standard_NV36ads_A10_v5" # Required VM SKU based on model requirements
       labelSelector:
         matchLabels:
           apps: custom-llm
@@ -181,7 +182,7 @@ kubectl delete workspace workspace-custom-llm
 
 ## Next steps
 
-In this article, you learned how to onboard a HuggingFace model for inferencing with the AI toolchain operator add-on directly to your AKS cluster. To learn more about AI and machine learning on AKS, see the following articles:
+In this article, you learned how to onboard a Hugging Face model for inferencing with the AI toolchain operator add-on directly to your AKS cluster. To learn more about AI and machine learning on AKS, see the following articles:
 
 - [Fine tune a language model with KAITO on Azure Kubernetes Service (AKS)](./ai-toolchain-operator-fine-tune.md)
 - [Deploy a Ray cluster on Azure Kubernetes Service (AKS)](./ray-overview.md)
