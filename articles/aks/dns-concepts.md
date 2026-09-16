@@ -39,7 +39,7 @@ When LocalDNS is active, the resolution path depends on the pod's `dnsPolicy` (`
 
 LocalDNS runs as a `systemd` unit on the node, so it receives the query before CoreDNS does. `cluster.local` queries are forwarded to CoreDNS, and external queries are forwarded either to CoreDNS or directly to the virtual network (VNet) DNS server. For the exact forwarding behavior for each DNS policy and the default configuration, see [Server blocks for LocalDNS](./localdns-custom.md#server-blocks-for-localdns).
 
-Custom VNet DNS servers [must accept both UDP and TCP DNS queries](https://datatracker.ietf.org/doc/html/rfc7766#section-5) from AKS nodes. Even when LocalDNS is configured with `PreferUDP`, queries can retry or fall back to TCP.
+Custom VNet DNS servers [must accept both UDP and TCP DNS queries](https://datatracker.ietf.org/doc/html/rfc7766#section-5) from AKS nodes. With `PreferUDP`, LocalDNS retries over TCP when a UDP response is truncated.
 
 For information on the CoreDNS project, see [the CoreDNS upstream project page][coreDNS].
 
@@ -89,7 +89,7 @@ Use this article to understand how LocalDNS works and why it improves DNS behavi
 | --- | --- |
 | AKS Automatic | Preconfigured |
 | AKS Standard, Kubernetes 1.31 through 1.36 | Explicitly configured per node pool |
-| AKS Standard, Kubernetes 1.37 and later | Enabled in `Preferred` mode when the node pool has no explicit LocalDNS profile; explicitly configure `Disabled` to opt out |
+| AKS Standard, Kubernetes 1.37 and later | Defaults eligible node pools to `Preferred` when no explicit LocalDNS profile exists. LocalDNS is enabled only when compatibility checks pass. Explicit profiles, including `Disabled`, are preserved. |
 
 By using LocalDNS, you get faster and more reliable DNS resolution for your workloads, reduce the risk of DNS-related outages, and gain more control over DNS traffic in your AKS environment.
 

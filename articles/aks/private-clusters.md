@@ -60,7 +60,7 @@ Private clusters are available in public regions, Azure Government, and Microsof
 :::zone-end
 
 > [!IMPORTANT]
-> Starting with Kubernetes 1.37, LocalDNS can become active when an eligible AKS Standard node pool without an explicit LocalDNS profile is created or upgraded. With `PreferUDP`, LocalDNS retries over TCP when a UDP response is truncated. Validate both protocols before upgrading:
+> Starting with Kubernetes 1.37, LocalDNS can become active when an eligible AKS Standard node pool without an explicit LocalDNS profile is created or upgraded. By using `PreferUDP`, LocalDNS retries over TCP when a UDP response is truncated. Validate both protocols before upgrading:
 >
 > ```bash
 > dig +udp @<custom-dns-ip> <private-or-public-fqdn>
