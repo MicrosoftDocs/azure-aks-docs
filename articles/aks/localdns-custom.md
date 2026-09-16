@@ -63,7 +63,7 @@ Once AKS enables LocalDNS in `Preferred` mode, it remains enabled during subsequ
 > 1. Test the change in a non-production node pool.
 > 1. If the network isn't ready for LocalDNS, explicitly set `mode` to `Disabled` before upgrading.
 >
-> Updating the LocalDNS profile on an existing node pool triggers a node reimage when the resulting profile differs from the current profile. This includes changing the mode to `Disabled`. Plan for temporary node unavailability and configure workload replicas and pod disruption budgets accordingly.
+> Updating the LocalDNS profile on an existing node pool triggers a node reimage when the resulting profile differs from the current profile. This condition includes changing the mode to `Disabled`. Plan for temporary node unavailability and configure workload replicas and pod disruption budgets accordingly.
 
 ## Best practices for LocalDNS configuration
 
