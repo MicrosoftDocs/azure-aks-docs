@@ -17,7 +17,7 @@ This article addresses upgrade experiences for Istio-based service mesh add-on f
 Announcements about the releases of new minor revisions or patches to the Istio-based service mesh add-on are published in the [AKS release notes][aks-release-notes]. To learn more about the release schedule and support for service mesh add-on revisions, read the [support policy][istio-support].
 
 > [!NOTE]
-> The service mesh add-on doesn't support automatic upgrades. On [AKS Automatic][aks-automatic] clusters, the cluster is auto-upgraded but the add-on isn't, so an out-of-date mesh revision can eventually become incompatible and block the cluster's automatic upgrade. Upgrade the add-on to keep it compatible with the cluster's Kubernetes version.
+> The service mesh add-on doesn't support automatic upgrades. On clusters that are auto-upgraded, an out-of-date mesh revision can eventually become incompatible and block the cluster's automatic upgrade. Upgrade the add-on to keep it compatible with the cluster's Kubernetes version.
 
 ## Minor revision upgrade
 
@@ -275,7 +275,6 @@ If you have customized [horizontal pod autoscaling (HPA) settings for Istiod or 
 
 <!-- LINKS - Internal -->
 [istio-support]: ./istio-support-policy.md#versioning-and-support-policy
-[aks-automatic]: ./intro-aks-automatic.md
 [istio-support-calendar]: ./istio-support-policy.md#service-mesh-add-on-release-calendar
 [meshconfig]: ./istio-meshconfig.md
 [meshconfig-canary-upgrade]: ./istio-meshconfig.md#mesh-configuration-and-upgrades
