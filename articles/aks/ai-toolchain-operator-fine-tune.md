@@ -6,7 +6,8 @@ ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: aks-ai-ml
-ms.date: 01/07/2025
+ms.date: 09/12/2026
+ai-usage: ai-assisted
 # Customer intent: "As a data scientist, I want to fine-tune and deploy a language model on a Kubernetes cluster, so that I can enhance its performance and utilize it for inferencing tasks effectively."
 ---
 
@@ -20,7 +21,7 @@ This article shows you how to fine-tune and deploy a language model inferencing 
 * [Test the inference service endpoint](#test-the-model-inference-service-endpoint).
 * [Clean up resources](#clean-up-resources).
 
-The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies the deployment and operations for AI models on your AKS clusters. Starting with [KAITO version 0.3.1](https://github.com/kaito-project/kaito/releases/tag/v0.3.1) and above, you can use the AKS managed add-on to fine-tune supported foundation models with new data and enhance the accuracy of your AI models. To learn more about parameter efficient fine-tuning methods and their use cases, see [Concepts - Fine-tuning language models for AI and machine learning workflows on AKS][fine-tuning-kaito].
+The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies the deployment and operations for AI models on your AKS clusters. You can use the AKS managed add-on to fine-tune supported foundation models with new data and enhance the accuracy of your AI models. To learn more about parameter efficient fine-tuning methods and their use cases, see [Concepts - Fine-tuning language models for AI and machine learning workflows on AKS][fine-tuning-kaito].
 
 ## Before you begin
 
@@ -32,7 +33,7 @@ The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies th
 * The Kubernetes command-line client, kubectl, installed and configured. For more information, see [Install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 * Configure [Azure Container Registry (ACR) integration][acr-integration] of a new or existing ACR with your AKS cluster.
 * Install the [AI toolchain operator add-on][ai-toolchain-operator] on your AKS cluster.
-* If you already have the AI toolchain operator add-on installed, update your AKS cluster to the latest version to run KAITO v0.3.1+ and ensure that the AI toolchain operator add-on feature flag is enabled.
+* If you already have the AI toolchain operator add-on installed, update your AKS cluster to the latest version and ensure that the AI toolchain operator add-on feature flag is enabled.
 
 ## Export environmental variables
 
@@ -61,25 +62,25 @@ kubectl create secret docker-registry myregistrysecret --docker-server=$ACR_NAME
 In this example, you fine-tune the [Phi-3-mini small language model](https://huggingface.co/docs/transformers/main/en/model_doc/phi3) using the qLoRA tuning method by applying the following Phi-3-mini KAITO fine-tuning workspace CRD:
 
 ```yaml
-apiVersion: kaito.sh/v1alpha1
+apiVersion: kaito.sh/v1beta1
 kind: Workspace
 metadata:
-     name: workspace-tuning-phi-3-mini
+  name: workspace-tuning-phi-3-mini
 resource:
-     instanceType: "Standard_NC24ads_A100_v4"
-     labelSelector:
-          matchLabels:
-                apps: tuning-phi-3-mini-pycoder
+  instanceType: "Standard_NC24ads_A100_v4"
+  labelSelector:
+    matchLabels:
+      apps: tuning-phi-3-mini-pycoder
 tuning:
-     preset:
-         name: phi3mini128kinst
+  preset:
+    name: phi-3-mini-128k-instruct
   method: qlora
   input:
-      urls:
-          - "myDatasetURL"
+    urls:
+      - "myDatasetURL"
   output:
-      image: "$ACR_NAME.azurecr.io/$REPOSITORY:$VERSION"
-      imagePushSecret: myregistrysecret
+    image: "$ACR_NAME.azurecr.io/$REPOSITORY:$VERSION"
+    imagePushSecret: myregistrysecret
 ```
 
 This example uses a public dataset specified by a URL in the input. If choosing an image as the source of your fine-tuning data, please refer to the [KAITO fine-tuning API](https://github.com/kaito-project/kaito/tree/main) specification to adjust the input to pull an image from your ACR.
@@ -122,12 +123,12 @@ Now, you use the Phi-3-mini adapter image created in the previous section for a 
 The KAITO inference workspace CRD below consists of the following resources and adapter(s) to deploy on your AKS cluster:
 
 ```yaml
-apiVersion: kaito.sh/v1alpha1
+apiVersion: kaito.sh/v1beta1
 kind: Workspace
 metadata:
   name: workspace-phi-3-mini-adapter
 resource:
-  instanceType: "Standard_NC6s_v3"
+  instanceType: "Standard_NC24ads_A100_v4"
   labelSelector:
     matchLabels:
       apps: phi-3-adapter
@@ -135,12 +136,12 @@ inference:
   preset:
     name: "phi-3-mini-128k-instruct"
   adapters:
-    -source:
-       name: kubernetes-adapter
-       image: $ACR_NAME.azurecr.io/$REPOSITORY:$VERSION
-       imagePullSecrets:
-             - myregistrysecret
-     strength: "1.0"
+    - source:
+        name: kubernetes-adapter
+        image: $ACR_NAME.azurecr.io/$REPOSITORY:$VERSION
+        imagePullSecrets:
+          - myregistrysecret
+      strength: "1.0"
 ```
 
 > [!NOTE]
@@ -161,8 +162,8 @@ inference:
     Your output should look similar to the following example output:
 
     ```output
-    NAME                          INSTANCE          RESOURCE READY  INFERENCE READY  JOB STARTED  WORKSPACE SUCCEEDED  AGE
-    workspace-phi-3-mini-adapter  Standard_NC6s_v3  True            True                          True                 5m 47s
+    NAME                          INSTANCE                   RESOURCE READY  INFERENCE READY  JOB STARTED  WORKSPACE SUCCEEDED  AGE
+    workspace-phi-3-mini-adapter  Standard_NC24ads_A100_v4   True            True                          True                 5m 47s
     ```
 
 1. Check the status of your inferencing workload pods using the `kubectl get pods` command.

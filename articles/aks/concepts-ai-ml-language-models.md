@@ -2,7 +2,8 @@
 title: Concepts - Small and Large Language Models
 description: Learn about small and large language models, when to use each model type, and how to run AI and machine learning workflows on Azure Kubernetes Service (AKS), with AKS Automatic as the recommended production default for most workloads.
 ms.topic: concept-article
-ms.date: 06/24/2026
+ms.date: 09/14/2026
+ai-usage: ai-assisted
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -24,7 +25,7 @@ _Conventional language models_ have been used in supervised settings for researc
 
 The size of a language model is determined by its number of parameters, or _weights_, that determine how the model processes input data and generates output. Parameters are learned during the training process by adjusting the weights within layers of the model to minimize the difference between the model's predictions and the actual data. The more parameters a model has, the more complex and expressive it is, but also the more computationally expensive it is to train and use.
 
-In general, **small language models** have _fewer than 10 billion parameters_, and **large language models** have _more than 10 billion parameters_. For example, the new Microsoft Phi-3 model family has three versions with different sizes: mini (3.8 billion parameters), small (7 billion parameters), and medium (14 billion parameters).
+In general, **small language models** have _fewer than 10 billion parameters_, and **large language models** have _more than 10 billion parameters_. For example, the Microsoft Phi-4 model family includes versions with different sizes: Phi-4-mini (3.8 billion parameters) and Phi-4 (14 billion parameters).
 
 ## When to use small language models
 
@@ -50,9 +51,8 @@ The following table lists some popular, high-performance small language models:
 
 | Model family | Model sizes (Number of parameters) | Software license |
 | ------------ | ---------------------------------- | ---------------- |
-| Microsoft Phi-3 | Phi-3-mini (3.8 billion), Phi-3-small (7 billion) | MIT license |
-| Microsoft Phi-2 | Phi-2 (2.7 billion) | MIT license |
-| Falcon | Falcon-7B (7 billion) | Apache 2.0 license |
+| Microsoft Phi-4 | Phi-4-mini (3.8 billion) | MIT license |
+| Google Gemma | Gemma-4-E2B (2 billion), Gemma-4-E4B (4 billion) | Apache 2.0 license |
 
 ## When to use large language models
 
@@ -76,8 +76,8 @@ The following table lists some popular, high-performance large language models:
 
 | Model family | Model sizes (Number of parameters) | Software license |
 | ------------ | ---------------------------------- | ---------------- |
-| Microsoft Phi-3 | Phi-3-medium (14 billion) | MIT license |
-| Falcon | Falcon-40B (40 billion) | Apache 2.0 license |
+| Microsoft Phi-4 | Phi-4 (14 billion) | MIT license |
+| Google Gemma | Gemma-4-31B (31 billion) | Apache 2.0 license |
 
 ## Experiment with small and large language models on AKS
 
@@ -117,5 +117,5 @@ To learn more about containerized AI and machine learning workloads on AKS, see 
 [ai-toolchain-operator]: ./ai-toolchain-operator.md
 [forecast-energy-usage]: https://azure.github.io/Cloud-Native/60DaysOfIA/forecasting-energy-usage-with-intelligent-apps-1/
 [flyte-aks]: ./use-flyte.md
-[kaito-repo]: https://github.com/Azure/kaito/tree/main/presets
+[kaito-repo]: https://kaito-project.github.io/kaito/docs/presets
 [fine-tune-language-models]: ./concepts-fine-tune-language-models.md
