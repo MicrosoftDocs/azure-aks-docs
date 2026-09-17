@@ -103,7 +103,7 @@ export CLUSTER=<cluster-name>
 export RESOURCE_GROUP=<resource-group-name>
 
 # Enable the application routing Gateway API implementation during AKS Standard cluster creation
-az aks create --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --enable-app-routing-istio
+az aks create --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --enable-gateway-api --enable-app-routing-istio
 ```
 
 ### Enable for an existing cluster
@@ -116,7 +116,7 @@ export CLUSTER=<cluster-name>
 export RESOURCE_GROUP=<resource-group-name>
 
 # Enable the application routing Gateway API implementation for an existing cluster
-az aks update --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --enable-app-routing-istio
+az aks update --resource-group ${RESOURCE_GROUP} --name ${CLUSTER} --enable-gateway-api --enable-app-routing-istio
 ```
 
 You should see `istiod` pods in the `aks-istio-system` namespace:
