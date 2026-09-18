@@ -31,7 +31,7 @@ In this article, you provision a managed GPU node pool, optionally enable MIG, v
 
 - This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 - You need the Azure CLI version 2.85.0 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-- You need to [install and upgrade to latest version of the `aks-preview` extension](#install-the-aks-preview-cli-extension).
+- You need to [install and upgrade to latest version of the `aks-preview` extension](#install-the-aks-preview-cli-extension). Version 19.0.0b29 or later is required.
 - Get the credentials for your AKS cluster with [`az aks get-credentials`][az-aks-get-credentials] before running the `kubectl` examples in this article.
 
 ## Managed GPU components
@@ -68,17 +68,7 @@ Together, they produce three install profiles:
 
 ### Install the `aks-preview` CLI extension
 
-1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command. Version 19.0.0b29 or later is required.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-1. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
+[!INCLUDE [aks-preview-cli-extension](includes/aks-preview-cli-extension.md)]
 
 ### Register the `ManagedGPUExperiencePreview` feature flag
 
