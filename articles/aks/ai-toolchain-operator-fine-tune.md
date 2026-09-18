@@ -91,7 +91,7 @@ This example uses a public dataset specified by a URL in the input. If choosing 
 1. Apply the KAITO fine-tuning workspace CRD using the `kubectl apply` command.
 
     ```bash
-    kubectl apply workspace-tuning-phi-3-mini.yaml
+    kubectl apply -f workspace-tuning-phi-3-mini.yaml
     ```
 
 1. Track the readiness of your GPU resources, fine-tuning job, and workspace using the `kubectl get workspace` command.
