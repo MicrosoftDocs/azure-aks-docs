@@ -5,7 +5,7 @@ ms.subservice: aks-networking
 author: schaffererin
 ms.author: schaffererin
 ms.topic: how-to
-ms.date: 07/06/2026
+ms.date: 09/18/2026
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
 # Customer intent: As a cluster operator or developer, I want to improve my DNS resolution performance and resiliency for my AKS cluster.
@@ -32,6 +32,8 @@ To learn what LocalDNS is, including architecture details and key capabilities, 
 | LocalDNS availability | Preconfigured by default | Kubernetes 1.31 through 1.36: off unless you enable it. Kubernetes 1.37 and later: defaulted to `Preferred` mode and enabled when compatibility checks pass, unless the node pool explicitly sets `Disabled` |
 | Typical action | Validate and monitor defaults, customize only when required | Kubernetes 1.31 through 1.36: enable, configure, and tune per node pool. Kubernetes 1.37 and later: review the profile before upgrading and opt out if your DNS path isn't ready |
 | Production guidance | Recommended production-ready default for most AKS workloads | Use when you need full manual control of cluster configuration |
+| Configuration surface | Cluster defaults, or a _localdnsconfig.json_ file per node pool | A _localdnsconfig.json_ file per node pool. For node pools that node auto-provisioning (NAP) manages, use `spec.localDNS` in the `AKSNodeClass` instead |
+| Effect on existing nodes when the profile changes | Node reimage for managed node pools. Node replacement through drift for NAP-managed nodes | Node reimage for managed node pools. Node replacement through drift for NAP-managed nodes |
 
 ### Compatibility checks for `Preferred` mode
 
@@ -84,6 +86,7 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 - **Use Infrastructure as Code (IaC)**: Store your _localdnsconfig.json_ file in your infrastructure repository and include it in your AKS deployment templates.
 - **Network configuration for TCP forwarding**: When using TCP for DNS forwarding to VnetDNS, ensure that your Network Security Groups (NSGs), firewalls, or Network Virtual Appliances (NVAs) don't block TCP traffic between CoreDNS/LocalDNS and VnetDNS servers.
 - **Avoid enabling both NodeLocal DNSCache and LocalDNS**: It isn't recommended to enable both the upstream Kubernetes NodeLocal DNSCache and LocalDNS in your node pool. While AKS doesn't block this configuration, all DNS traffic is routed through LocalDNS, which might lead to unexpected behavior or reduced benefits from NodeLocal DNSCache.
+- **Plan for node churn on NAP clusters**: On clusters that use node auto-provisioning (NAP), any change to `spec.localDNS` in the `AKSNodeClass` drifts and replaces every node that NAP provisioned from that node class. Define pod disruption budgets and a `NodePool` disruption budget before you make the change, and consider confining the change to a maintenance window by using the `schedule` and `duration` budget fields. For more information, see [Update the LocalDNS configuration on an existing AKSNodeClass](./node-auto-provisioning-aksnodeclass.md#update-the-localdns-configuration-on-an-existing-aksnodeclass).
 - **Don't impose a TCP connection cap on the upstream custom DNS server before enabling LocalDNS**: When you enable LocalDNS on a node pool, each node opens long-lived TCP connections from its local DNS proxy to the upstream resolver, instead of the short UDP exchanges used previously. If your custom DNS server (such as BIND, Unbound, Windows DNS, or a third-party appliance) is configured with a fixed limit on concurrent TCP client connections, or if you adjusted that limit based on pre-LocalDNS traffic, the new TCP connections from LocalDNS can be rejected, causing cluster-wide DNS resolution failures. Leave any TCP connection limit at a generous default before turning LocalDNS on, validate the steady-state TCP connection count from your AKS nodes after enablement, and only adjust the limit afterward with headroom for node scale-out, upgrades, and reimages.
 
 ## Prerequisites
@@ -135,11 +138,13 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 
 > [!IMPORTANT]
 > Enabling LocalDNS on a node pool initiates a reimage operation on all nodes within that pool. This process can cause temporary disruption to running workloads and might lead to application downtime if not properly managed. You should plan for potential service interruptions and ensure that the applications are configured for high availability or have appropriate disruption budgets in place before enabling this setting.
+>
+> This reimage behavior applies to AKS managed node pools. On node pools that node auto-provisioning (NAP) manages, changing LocalDNS in the `AKSNodeClass` replaces the existing nodes through drift instead of reimaging them. For more information, see [Update the LocalDNS configuration on an existing AKSNodeClass](./node-auto-provisioning-aksnodeclass.md#update-the-localdns-configuration-on-an-existing-aksnodeclass).
 
 ## Disable LocalDNS on a node pool
 
 > [!NOTE]
-> If you're using Node Auto-Provisioning (NAP), see [LocalDNS configuration](./node-auto-provisioning-aksnodeclass.md#localdns-configuration) for instructions on how to disable LocalDNS with NAP.
+> If you're using Node Auto-Provisioning (NAP), see [LocalDNS configuration](./node-auto-provisioning-aksnodeclass.md#localdns-configuration) for instructions on how to disable LocalDNS with NAP. Setting `mode` to `Disabled` on an `AKSNodeClass` that currently has LocalDNS enabled drifts and replaces the existing nodes. For more information, see [Update the LocalDNS configuration on an existing AKSNodeClass](./node-auto-provisioning-aksnodeclass.md#update-the-localdns-configuration-on-an-existing-aksnodeclass).
 
 Disabling LocalDNS is an advanced operation and is generally not recommended for AKS Automatic production defaults unless you have a validated exception.
 
