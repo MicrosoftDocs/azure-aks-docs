@@ -94,7 +94,7 @@ The Kubernetes versions included in the 2508 release are: 1.29.12, 1.29.13, 1.30
 
 The following Kubernetes cluster deployment and management capabilities are available:
 
-- **Disk space exhaustion**: Fixed [issues due to disk space exhaustion on control plane VMs caused by accumulation of kube-apiserver audit logs](hyperconverged/kube-apiserver-log-overflow.md).  
+- **Disk space exhaustion**: Fixed issues due to disk space exhaustion on control plane VMs caused by accumulation of kube-apiserver audit logs.
 - **Cluster upgrade**: Fixed AKS cluster and node pool create, scale, and upgrade issues due to unavailability of AKS VM images.
 - **AKS Telemetry pod issue**: Fixed an issue in which the AKS telemetry pod consumed excess CPU and memory.
 - **New checks**: Added new checks during cluster and node pool operations. These improvements allow the system to proactively detect and handle scenarios where there are insufficient IP addresses in the IP pool.

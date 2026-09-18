@@ -65,9 +65,12 @@ The following table describes each outbound IP parameter and when to use it:
 
 ### Create an AKS cluster with a managed StandardV2 NAT gateway (`managedNATGatewayV2`)
 
+`managedNATGatewayV2` uses the StandardV2 NAT Gateway SKU. For details on the differences and enhancements compared to the Standard NAT Gateway SKU, see the [Azure NAT Gateway SKUs](/azure/nat-gateway/nat-sku#sku-comparison).
+The following section describes how to create an AKS cluster using `managedNATGatewayV2`.
+
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-- Create an AKS cluster with a managed StandardV2 NAT gateway using the [`az aks create`][az-aks-create] command with the `--outbound-type managedNATGateway`, `--nat-gateway-outbound-ips`, `--nat-gateway-outbound-ip-prefixes`, `--nat-gateway-managed-outbound-ip-count`, `--nat-gateway-managed-outbound-ipv6-count`, and `--nat-gateway-idle-timeout` parameters.
+- Create an AKS cluster with a managed StandardV2 NAT gateway by using the [`az aks create`][az-aks-create] command with the `--outbound-type managedNATGatewayV2`, `--nat-gateway-outbound-ips`, `--nat-gateway-outbound-ip-prefixes`, `--nat-gateway-managed-outbound-ip-count`, `--nat-gateway-managed-outbound-ipv6-count`, and `--nat-gateway-idle-timeout` parameters.
 - When you configure outbound IPs for a `managedNATgatewayV2`, use **one of the following approaches**. You can't use both Azure-managed and customer-defined outbound IPs.
   - **Azure-managed IPs**: Use `--nat-gateway-managed-ip-outbound-count` and `--nat-gateway-managed-outbound-ipv6-count` to have Azure automatically allocate and manage the outbound public IPs on your behalf.
   - **Customer-defined IPs**: Use `--nat-gateway-outbound-ips` and `--nat-gateway-outbound-ip-prefixes` to bring your own pre-provisioned public IP addresses or prefixes, giving you full control over the specific addresses used for outbound traffic. StandardV2 NAT Gateway requires the use of new StandardV2 public IPs. Existing Standard SKU Public IPs don't work with StandardV2 NAT gateway.

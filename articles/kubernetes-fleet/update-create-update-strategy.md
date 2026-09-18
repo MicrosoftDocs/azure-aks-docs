@@ -6,7 +6,8 @@ ms.date: 06/15/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-zone_pivot_groups: azure-portal-azure-cli
+ms.custom: devx-track-terraform
+zone_pivot_groups: azure-portal-azure-cli-terraform
 # Customer intent: As a Kubernetes administrator, I want to define reusable update strategies for multiple clusters, so that I can streamline and manage update processes across my fleet.
 ---
 
@@ -48,6 +49,26 @@ This article covers how to define update strategies using groups and stages.
   ```azurecli-interactive
   az extension update --name fleet
   ```
+
+:::zone target="docs" pivot="terraform"
+
+* [Install and configure Terraform][terraform-install-configure].
+* Install the latest version of the Azure CLI. To install or upgrade, see [Install the Azure CLI][azure-cli-install]. You use the Azure CLI to verify the update strategy that Terraform creates.
+* You also need the `fleet` Azure CLI extension. To install it, run the following command:
+
+  ```azurecli-interactive
+  az extension add --name fleet
+  ```
+
+  Run the [`az extension update`][az-extension-update] command to update to the latest version of the extension.
+
+  ```azurecli-interactive
+  az extension update --name fleet
+  ```
+
+* The Terraform sample used in this article creates its own resource group and an Azure Kubernetes Fleet Manager without a hub cluster. It doesn't join any AKS clusters as Fleet members. The sample's update strategy references the update group names `group-1`, `group-2`, and `group-3`. To have the strategy apply to real update runs, [assign existing Fleet member clusters](#assign-clusters-to-update-groups) to those update group names, or edit the sample's `group` blocks to match your own update group names.
+
+:::zone-end
 
 ## Select clusters for your strategy
 
@@ -177,7 +198,7 @@ You can select clusters in update strategies by assigning them to a single updat
 
 :::zone-end
 
-:::zone target="docs" pivot="azure-cli"
+:::zone target="docs" pivot="azure-cli,terraform"
 
 Assign a member cluster to an update group when adding the member cluster to the fleet using the [`az fleet member create`][az-fleet-member-create] command with the `--update-group` parameter set to the name of the update group.
 
@@ -208,7 +229,7 @@ az fleet member create \
 
 :::zone-end
 
-:::zone target="docs" pivot="azure-cli"
+:::zone target="docs" pivot="azure-cli,terraform"
 
 Assign an existing fleet member to an update group using the [`az fleet member update`][az-fleet-member-update] command with the `--update-group` flag set to the name of the update group.
 
@@ -328,6 +349,112 @@ For this scenario, we create stages and groups to match the details used for the
 
 :::zone-end
 
+:::zone target="docs" pivot="terraform"
+
+The Terraform sample in this section creates the same two-stage strategy shape shown in the preceding Azure CLI example: `stage-1` contains `group-1` and `group-2`, which update in parallel and are followed by a 300-second wait, and then `stage-2` updates `group-3`. Unlike the CLI JSON example, the sample doesn't set `maxConcurrency` or `maxAllowedFailures` on any stage or group, so Fleet applies its default values. To add these settings, extend the `stage` and `group` blocks in `main.tf` with the corresponding `azurerm_kubernetes_fleet_update_strategy` arguments.
+
+#### Review the Terraform code
+
+> [!NOTE]
+> The sample code for this article is located in the [Azure Terraform GitHub repo](https://github.com/Azure/terraform/tree/master/quickstart/201-aks-fleet-update-strategy). View the log file containing the [test results from current and previous versions of Terraform](https://github.com/Azure/terraform/tree/master/quickstart/201-aks-fleet-update-strategy/TestRecord.md).
+>
+> See more [articles and sample code showing how to use Terraform to manage Azure resources](/azure/terraform).
+
+1. Create a directory to test the sample Terraform code, and make it the current directory.
+1. Create a file named `providers.tf`, and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/201-aks-fleet-update-strategy/providers.tf)]
+
+1. Create a file named `variables.tf`, and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/201-aks-fleet-update-strategy/variables.tf)]
+
+1. Create a file named `main.tf`, and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/201-aks-fleet-update-strategy/main.tf)]
+
+1. Create a file named `outputs.tf`, and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/201-aks-fleet-update-strategy/outputs.tf)]
+
+1. Copy the sample's `terraform.tfvars.example` file to `terraform.tfvars` in the same directory, and then edit the values for the Azure region, resource group name, Fleet name, update strategy name, and tags you want to use.
+
+    ```console
+    cp terraform.tfvars.example terraform.tfvars
+    ```
+
+#### Initialize, validate, and apply the configuration
+
+Run [terraform init](https://developer.hashicorp.com/terraform/cli/commands/init) to initialize the Terraform deployment. This command downloads the Azure providers required to manage your Azure resources.
+
+```console
+terraform init
+```
+
+Run [terraform fmt](https://developer.hashicorp.com/terraform/cli/commands/fmt) to format the configuration files consistently.
+
+```console
+terraform fmt
+```
+
+Run [terraform validate](https://developer.hashicorp.com/terraform/cli/commands/validate) to confirm that the configuration files are syntactically valid.
+
+```console
+terraform validate
+```
+
+Run [terraform plan](https://developer.hashicorp.com/terraform/cli/commands/plan) to create an execution plan.
+
+```console
+terraform plan -out main.tfplan
+```
+
+Run [terraform apply](https://developer.hashicorp.com/terraform/cli/commands/apply) to apply the execution plan to your cloud infrastructure.
+
+```console
+terraform apply main.tfplan
+```
+
+#### Verify the update strategy
+
+Get the resource group and Fleet Manager names from the Terraform outputs, and extract the strategy name from the `update_strategy_id` output.
+
+```console
+resource_group_name=$(terraform output -raw resource_group_name)
+fleet_manager_name=$(terraform output -raw fleet_manager_name)
+update_strategy_name=$(terraform output -raw update_strategy_id | awk -F'/' '{print $NF}')
+```
+
+Show the strategy's stages and groups by using the [`az fleet updatestrategy show`][az-fleet-updatestrategy-show] command.
+
+```azurecli-interactive
+az fleet updatestrategy show \
+  --resource-group $resource_group_name \
+  --fleet-name $fleet_manager_name \
+  --name $update_strategy_name
+```
+
+The command output's `stages` array shows `stage-1` with `group-1` and `group-2` and an `afterStageWaitInSeconds` value of `300`, followed by `stage-2` with `group-3`, matching the strategy defined in `main.tf`.
+
+#### Clean up resources
+
+Run [terraform plan](https://developer.hashicorp.com/terraform/cli/commands/plan) with the `-destroy` flag to create a destroy execution plan.
+
+```console
+terraform plan -destroy -out main.destroy.tfplan
+```
+
+Run [terraform apply](https://developer.hashicorp.com/terraform/cli/commands/apply) to apply the destroy plan.
+
+```console
+terraform apply main.destroy.tfplan
+```
+
+> [!WARNING]
+> This command deletes the update strategy, the Azure Kubernetes Fleet Manager, and the resource group created by this sample, not just the strategy. Confirm the resource group doesn't contain other resources you want to keep before you run this command.
+
+:::zone-end
+
 ## Next steps
 
 You can use an update strategy as part of a manual update run or an auto-upgrade profile. See:
@@ -344,3 +471,5 @@ You can use an update strategy as part of a manual update run or an auto-upgrade
 [az-fleet-member-create]: /cli/azure/fleet/member#az-fleet-member-create
 [az-fleet-member-update]: /cli/azure/fleet/member#az-fleet-member-update
 [az-fleet-updatestrategy-create]: /cli/azure/fleet/updatestrategy#az-fleet-updatestrategy-create
+[az-fleet-updatestrategy-show]: /cli/azure/fleet/updatestrategy#az-fleet-updatestrategy-show
+[terraform-install-configure]: /azure/developer/terraform/quickstart-configure

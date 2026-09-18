@@ -3,7 +3,7 @@ title: Secure Pod Traffic with Network Policies in Azure Kubernetes Service (AKS
 description: Learn how to implement network policies in AKS to control and secure pod traffic by restricting communication according to the principle of least privilege.
 author: schaffererin
 ms.author: schaffererin
-ms.date: 08/18/2026
+ms.date: 08/31/2026
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
@@ -12,6 +12,7 @@ ms.custom:
   - build-2025
   - biannual
   - aeo-round-2
+zone_pivot_groups: azure-cli-or-terraform
 # Customer intent: As a DevOps engineer, I want to implement network policies in Azure Kubernetes Service, so that I can control and secure pod traffic by restricting communication according to the principle of least privilege.
 ---
 
@@ -27,7 +28,7 @@ To find AKS clusters with Linux node pools using Azure Network Policy Manager (N
 
 [!INCLUDE [kubenet-retirement](./includes/kubenet-retirement.md)]
 
-Install a network policy engine and create Kubernetes network policies to control the flow of traffic between pods in AKS clusters.
+Install a network policy engine and create Kubernetes network policies to control the flow of traffic between pods in AKS clusters by using the Azure CLI or Terraform.
 
 ## Overview of network policy
 
@@ -89,9 +90,23 @@ To restrict what sources can send traffic to a load balancer service, use `spec.
 
 ## Before you begin
 
+:::zone pivot="azure-cli"
+
 You need the Azure CLI version 2.0.61 or later installed and configured. Find the version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 Instead of using a system-assigned identity, you can also use a user-assigned identity. For more information, see [Use managed identities](use-managed-identity.md).
+
+:::zone-end
+
+:::zone pivot="terraform"
+
+- [Terraform installed](https://developer.hashicorp.com/terraform/install), version 1.6 or later.
+- Azure CLI installed and authenticated. Find the version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli]. You use the Azure CLI to connect to the cluster after Terraform creates it.
+- [kubectl](https://kubernetes.io/releases/download/) installed. You can install it locally using the [`az aks install-cli`][az-aks-install-cli] command. You use `kubectl` to verify the network policy behavior.
+
+:::zone-end
+
+:::zone pivot="azure-cli"
 
 ## Create an AKS cluster with Azure Network Policy Manager (Linux)
 
@@ -396,6 +411,184 @@ If you followed this article's steps to create an AKS cluster, use the [`az grou
 az group delete --resource-group $RESOURCE_GROUP --no-wait --yes
 ```
 
+:::zone-end
+
+:::zone pivot="terraform"
+
+## Create an AKS cluster with Cilium network policy using Terraform
+
+This section shows how to use Terraform to deploy an AKS cluster that uses [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md) for networking and network policy enforcement, and then use a Kubernetes `NetworkPolicy` resource to control pod-to-pod traffic.
+
+> [!NOTE]
+> The sample code for this section is located in the [Azure Terraform GitHub repo](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-network-policy-cilium). You can view the log file containing the [test results from current and previous versions of Terraform](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-network-policy-cilium/TestRecord.md).
+>
+> See more [articles and sample code showing how to use Terraform to manage Azure resources](/azure/terraform).
+
+This sample deploys:
+
+- A resource group.
+- An AKS cluster that uses Azure CNI Overlay networking with Cilium as the network policy engine and network dataplane.
+
+1. Create a directory to test and run the sample Terraform code, and make it the current directory.
+
+1. Create a file named `main.tf`, and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-network-policy-cilium/main.tf)]
+
+1. Initialize Terraform by running the [`terraform init`][terraform-init] command. This command downloads the Azure provider required to manage Azure resources with Terraform.
+
+    ```console
+    terraform init
+    ```
+
+1. Format and validate the configuration by running the `terraform fmt` and `terraform validate` commands.
+
+    ```console
+    terraform fmt
+    terraform validate
+    ```
+
+1. Create a Terraform execution plan by running the [`terraform plan`][terraform-plan] command. This command shows you the resources that Terraform creates or modifies in your Azure subscription.
+
+    ```console
+    terraform plan
+    ```
+
+1. Apply the Terraform execution plan by running the [`terraform apply`][terraform-apply] command. This command creates the resources defined in your `main.tf` file in your Azure subscription.
+
+    ```console
+    terraform apply
+    ```
+
+## Connect to the AKS cluster using Terraform
+
+1. Install the Kubernetes command-line tool by running the [`az aks install-cli`][az-aks-install-cli] command, and then verify the installation.
+
+    ```azurecli-interactive
+    az aks install-cli
+    kubectl version --client
+    ```
+
+1. Configure `kubectl` to connect to your cluster by running the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+
+    ```azurecli-interactive
+    az aks get-credentials \
+        --resource-group rg-aks-network-policy-example \
+        --name aks-network-policy-example
+    ```
+
+1. Verify the cluster is running by running the `kubectl get nodes` command.
+
+    ```bash
+    kubectl get nodes
+    ```
+
+## Verify network policy setup using Terraform
+
+To verify the network policy setup, create a sample application and set traffic rules.
+
+1. Create a namespace named `demo` to run the sample pods by using the `kubectl create namespace` command.
+
+    ```bash
+    kubectl create namespace demo
+    ```
+
+1. Create a pod named `server` to serve on TCP port 80 by running the [`kubectl run`][kubectl-run] command.
+
+    ```bash
+    kubectl run server \
+      -n demo \
+      --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 \
+      --labels="app=server" \
+      --port=80 \
+      --command -- /agnhost serve-hostname --tcp --http=false --port "80"
+    ```
+
+1. Create a pod named `client` to run Bash by using the `kubectl run` command.
+
+    ```bash
+    kubectl run -it client \
+      -n demo \
+      --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 \
+      --command -- bash
+    ```
+
+1. In a separate window, get the IP address of the `server` pod by using the `kubectl get pod` command.
+
+    ```bash
+    kubectl get pod --output=wide -n demo
+    ```
+
+    Use the `server` pod IP address when you test connectivity from the `client` shell in the next section.
+
+## Test connectivity with network policies using Terraform
+
+The sample includes a Kubernetes `NetworkPolicy` manifest that allows ingress traffic to pods labeled `app=server` only from pods labeled `app=client` on TCP port 80.
+
+1. Create a file named `network-policy.yaml`, and insert the following code:
+    :::code language="yaml" source="~/terraform_samples/quickstart/101-aks-network-policy-cilium/network-policy.yaml":::
+
+1. Apply the network policy by using the [`kubectl apply`][kubectl-apply] command.
+
+    ```bash
+    kubectl apply -f network-policy.yaml
+    ```
+
+1. In the `client` shell, test connectivity to the server by using the following `/agnhost` command:
+
+    ```bash
+    /agnhost connect <server-ip>:80 --timeout=3s --protocol=tcp
+    ```
+
+    Connectivity is blocked because the server is labeled with `app=server`, but the client isn't labeled. Your output should resemble the following example output:
+
+    ```output
+    TIMEOUT
+    ```
+
+1. Label the `client` and verify connectivity with the server by using the `kubectl label` command.
+
+    ```bash
+    kubectl label pod client -n demo app=client
+    ```
+
+1. In the `client` shell, test connectivity to the server again by using the same `/agnhost` command:
+
+    ```bash
+    /agnhost connect <server-ip>:80 --timeout=3s --protocol=tcp
+    ```
+
+    If the connection is successful, there's no output.
+
+1. Verify the network policy by using the `kubectl get networkpolicy` and `kubectl describe networkpolicy` commands.
+
+    ```bash
+    kubectl get networkpolicy -n demo
+    kubectl describe networkpolicy demo-policy -n demo
+    ```
+
+    The output shows that pods labeled `app=server` are selected, ingress traffic is allowed on TCP port 80, and only pods labeled `app=client` can initiate connections.
+
+## Clean up resources by using Terraform
+
+In this section, you created a namespace, two pods, and a network policy. If you no longer need these Kubernetes resources, delete them before you remove the underlying Azure infrastructure.
+
+Use the [`kubectl delete`][kubectl-delete] command to delete the resources.
+
+```bash
+kubectl delete namespace demo
+```
+
+> [!WARNING]
+> The following command removes the resource group, the AKS cluster, and all other resources associated with the resource group created for this sample. If you deployed other resources inside this resource group, the command deletes them too.
+
+Remove the Azure resources by using the [`terraform destroy`][terraform-destroy] command.
+
+```console
+terraform destroy
+```
+
+:::zone-end
+
 ## Related content
 
 - [Network concepts for applications in Azure Kubernetes Service (AKS)][concepts-network]
@@ -409,10 +602,15 @@ az group delete --resource-group $RESOURCE_GROUP --no-wait --yes
 [tigera]: https://www.tigera.io/
 [calico-support]: https://www.tigera.io/tigera-products/calico/
 [calico-self-managed]: https://docs.tigera.io/calico/latest/getting-started/kubernetes/managed-public-cloud/aks-migrate
+[terraform-init]: https://www.terraform.io/docs/commands/init.html
+[terraform-plan]: https://www.terraform.io/docs/commands/plan.html
+[terraform-apply]: https://www.terraform.io/docs/commands/apply.html
+[terraform-destroy]: https://www.terraform.io/docs/commands/destroy.html
 
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [concepts-network]: concepts-network.md
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show

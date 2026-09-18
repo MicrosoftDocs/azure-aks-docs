@@ -13,6 +13,9 @@ ms.custom: conceptual, hyperconverged
 
 # Connectivity modes in AKS on Azure Local
 
+> [!NOTE]
+> This article describes the connectivity states of a standard, cloud-connected AKS on Azure Local cluster. It's not the same as [disconnected operations](../disconnected-operations/overview.md), which is a distinct Azure Local deployment mode with its own local control plane for running AKS without any connection to the Azure public cloud.
+
 AKS on Azure Local requires connectivity to Azure in order to use features such as Kubernetes cluster upgrades, and identity and access options such as Azure Entra ID. Also, Azure Arc agents on the AKS cluster must remain connected to enable functionality such as [configuring (GitOps)](/azure/azure-arc/kubernetes/conceptual-gitops-flux2), Arc extensions, and [cluster connect](/azure/azure-arc/kubernetes/conceptual-cluster-connect). Since AKS on Azure Local clusters deployed at the edge might not always have stable network access, the Kubernetes cluster might occasionally be unable to reach Azure when it operates in a semi-connected state.
 
 ## Understand connectivity modes
@@ -44,3 +47,4 @@ The connectivity status of a cluster is determined by the time of the latest hea
 
 - [Azure Arc connectivity modes](/azure//azure-arc/kubernetes/conceptual-connectivity-modes)
 - [Create and manage Kubernetes clusters on-premises using Azure CLI](../aks-create-clusters-cli.md)
+- [Impact to clusters when Arc resource bridge is deleted or recovered](azure-arc-resource-bridge-deleted-recovered.md)

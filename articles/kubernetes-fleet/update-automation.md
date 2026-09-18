@@ -7,7 +7,8 @@ author: sjwaight
 ms.author: simonwaight
 ms.reviewer: schaffererin
 ms.service: azure-kubernetes-fleet-manager
-zone_pivot_groups: azure-portal-azure-cli
+ms.custom: devx-track-terraform
+zone_pivot_groups: azure-portal-azure-cli-terraform
 # Customer intent: "As a platform admin managing multiple Kubernetes clusters, I want to automate upgrades of Kubernetes and node images using auto-upgrade profiles, so that I can ensure safe and consistent updates without manual intervention."
 ---
 
@@ -53,6 +54,26 @@ This article explains how to use auto-upgrade profiles to automatically create a
   ```azurecli-interactive
   az extension update --name fleet
   ```
+
+:::zone-end
+
+:::zone target="docs" pivot="terraform"
+
+- [Install and configure Terraform][terraform-install-configure].
+- Install latest Azure CLI version. To install or upgrade, see [Install the Azure CLI][azure-cli-install]. You use the Azure CLI to verify the auto-upgrade profile that Terraform creates.
+- Install the latest `fleet` Azure CLI extension. Use the [`az extension add`](/cli/azure/extension#az-extension-add) command to install the extension.
+
+  ```azurecli-interactive
+  az extension add --name fleet
+  ```
+
+  Use the [`az extension update`](/cli/azure/extension#az-extension-update) command to update to the latest version of the extension.
+
+  ```azurecli-interactive
+  az extension update --name fleet
+  ```
+
+- The Terraform sample used in this article creates its own resource group and Azure Kubernetes Fleet Manager, and it doesn't join any AKS clusters as Fleet members. To exercise the resulting auto-upgrade profile against real update runs, join existing AKS clusters as members of the Fleet after you apply the sample. For more information, see the [quickstart][fleet-quickstart].
 
 :::zone-end
 
@@ -295,6 +316,121 @@ az fleet autoupgradeprofile delete \
 
 :::zone-end
 
+:::zone target="docs" pivot="terraform"
+
+## Create auto-upgrade profiles
+
+The Terraform sample in this section creates a resource group, an Azure Kubernetes Fleet Manager (without a hub cluster), and a Fleet auto-upgrade profile. By default, the profile uses the `Stable` channel with `Latest` node image selection and is enabled. Set the `auto_upgrade_channel`, `node_image_selection`, `auto_upgrade_disabled`, `target_kubernetes_version`, and `long_term_support` variables to match the channel and options described in the previous sections. The sample doesn't set an update strategy, so the resulting profile always uses the **One by one** update sequence.
+
+### Review the Terraform code
+
+> [!NOTE]
+> The sample code for this article is located in the [Azure Terraform GitHub repo](https://github.com/Azure/terraform/tree/master/quickstart/201-aks-fleet-update-automation). View the log file containing the [test results from current and previous versions of Terraform](https://github.com/Azure/terraform/tree/master/quickstart/201-aks-fleet-update-automation/TestRecord.md).
+>
+> See more [articles and sample code showing how to use Terraform to manage Azure resources](/azure/terraform).
+
+1. Create a directory to test the sample Terraform code, and make it the current directory.
+1. Create a file named `providers.tf`, and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/201-aks-fleet-update-automation/providers.tf)]
+
+1. Create a file named `variables.tf`, and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/201-aks-fleet-update-automation/variables.tf)]
+
+1. Create a file named `main.tf`, and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/201-aks-fleet-update-automation/main.tf)]
+
+1. Create a file named `outputs.tf`, and insert the following code:
+
+    [!code-terraform[master](~/terraform_samples/quickstart/201-aks-fleet-update-automation/outputs.tf)]
+
+1. Copy the sample's `terraform.tfvars.example` file to `terraform.tfvars` in the same directory, and then edit the values to match the auto-upgrade channel, node image selection, and other options you want.
+
+    ```console
+    cp terraform.tfvars.example terraform.tfvars
+    ```
+
+### Initialize, validate, and apply the configuration
+
+Run [terraform init](https://developer.hashicorp.com/terraform/cli/commands/init) to initialize the Terraform deployment. This command downloads the Azure providers required to manage your Azure resources.
+
+```console
+terraform init
+```
+
+Run [terraform fmt](https://developer.hashicorp.com/terraform/cli/commands/fmt) to format the configuration files consistently.
+
+```console
+terraform fmt
+```
+
+Run [terraform validate](https://developer.hashicorp.com/terraform/cli/commands/validate) to confirm that the configuration files are syntactically valid.
+
+```console
+terraform validate
+```
+
+Run [terraform plan](https://developer.hashicorp.com/terraform/cli/commands/plan) to create an execution plan.
+
+```console
+terraform plan -out main.tfplan
+```
+
+Run [terraform apply](https://developer.hashicorp.com/terraform/cli/commands/apply) to apply the execution plan to your cloud infrastructure.
+
+```console
+terraform apply main.tfplan
+```
+
+## View auto-upgrade profiles
+
+Get the resource group, Fleet Manager, and auto-upgrade profile names from the Terraform outputs.
+
+```console
+resource_group_name=$(terraform output -raw resource_group_name)
+fleet_manager_name=$(terraform output -raw fleet_manager_name)
+auto_upgrade_profile_name=$(terraform output -raw auto_upgrade_profile_name)
+```
+
+Show the auto-upgrade profile's channel, status, and update sequence by using the [`az fleet autoupgradeprofile show`][az-fleet-autoupgradeprofile-show] command.
+
+```azurecli-interactive
+az fleet autoupgradeprofile show \
+  --resource-group $resource_group_name \
+  --fleet-name $fleet_manager_name \
+  --name $auto_upgrade_profile_name
+```
+
+The sample doesn't set an update strategy, so `updateStrategyId` in the output is empty and the profile updates the Fleet's member clusters sequentially using the **One by one** update sequence. List the current Fleet members with the following command.
+
+```azurecli-interactive
+az fleet member list \
+  --resource-group $resource_group_name \
+  --fleet-name $fleet_manager_name \
+  --output table
+```
+
+## Delete an auto-upgrade profile
+
+Run [terraform plan](https://developer.hashicorp.com/terraform/cli/commands/plan) with the `-destroy` flag to create a destroy execution plan.
+
+```console
+terraform plan -destroy -out main.destroy.tfplan
+```
+
+Run [terraform apply](https://developer.hashicorp.com/terraform/cli/commands/apply) to apply the destroy plan.
+
+```console
+terraform apply main.destroy.tfplan
+```
+
+> [!WARNING]
+> This command deletes the auto-upgrade profile, the Azure Kubernetes Fleet Manager, and the resource group created by this sample, not just the profile. If you joined AKS clusters as members of the Fleet, remove them as Fleet members first. Confirm the resource group doesn't contain other resources you want to keep before you run this command.
+
+:::zone-end
+
 :::zone target="docs" pivot="azure-portal"
 
 ## Create auto-upgrade profiles
@@ -471,6 +607,7 @@ For more information about creating an on-demand update run from an auto-upgrade
 [az-fleet-autoupgradeprofile-delete]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-delete
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-fleet-updaterun-generate]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-generate-update-run
+[terraform-install-configure]: /azure/developer/terraform/quickstart-configure
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md

@@ -1,30 +1,30 @@
 ---
-title: Concepts - Azure CNI Pod Subnet networking in AKS
+title: Concepts - Azure CNI Pod Subnet networking in Azure Kubernetes Service (AKS)
 description: Learn about Azure CNI Pod Subnet, dynamic IP allocation mode, and static block allocation mode in Azure Kubernetes Service (AKS).
 ms.topic: concept-article
+ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
-ms.date: 05/21/2024
+ms.date: 09/10/2026
 author: schaffererin
 ms.author: schaffererin
 ms.custom: references_regions
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes administrator, I want to understand Azure CNI Pod Subnet networking options, so that I can effectively manage IP address allocation and optimize network performance in my AKS clusters."
 ---
 
 # Azure Container Networking Interface (CNI) Pod Subnet
 
-Azure CNI Pod Subnet assigns IP addresses to pods from a separate subnet from your cluster Nodes. This feature is available in two modes: Dynamic IP Allocation and Static Block Allocation.
+In Azure Kubernetes Service (AKS), Azure CNI Pod Subnet assigns IP addresses to pods from a separate subnet from your cluster nodes. This feature is available in two modes: Dynamic IP Allocation and Static Block Allocation.
 
 ## Prerequisites
 
 > [!NOTE]
 > When using Static Block Allocation of CIDRs, exposing an application as a Private Link Service using a Kubernetes Load Balancer Service isn't supported.
 
-- Review the [prerequisites][azure-cni-prereq] for configuring basic Azure CNI networking in AKS, as the same prerequisites apply to this article.
-- Review the [deployment parameters][azure-cni-deployment-parameters] for configuring basic Azure CNI networking in AKS, as the same parameters apply.
+- Review the [AKS CNI networking prerequisites][aks-cni-networking-prerequisites].
+- Review the configuration guidance for [Dynamic IP Allocation][configure-dynamic-ip-allocation] and [Static Block Allocation][configure-static-block-allocation].
 - AKS Engine and DIY clusters aren't supported.
-- Azure CLI version `2.37.0` or later and the `aks-preview` extension version `2.0.0b2` or later.
-- Register the subscription-level feature flag for your subscription: 'Microsoft.ContainerService/AzureVnetScalePreview'.
-
+- Use Azure CLI version `2.75.0` or later to configure Static Block Allocation.
 
 ## Dynamic IP allocation mode
 
@@ -34,9 +34,14 @@ The Dynamic IP Allocation mode offers the following benefits:
 
 - **Better IP utilization**: IPs are dynamically allocated to cluster Pods from the Pod subnet. This leads to better utilization of IPs in the cluster compared to the traditional CNI solution, which does static allocation of IPs for every node.
 - **Scalable and flexible**: Node and pod subnets can be scaled independently. A single pod subnet can be shared across multiple node pools of a cluster or across multiple AKS clusters deployed in the same VNet. You can also configure a separate pod subnet for a node pool.  
-- **High performance**: Since pods are assigned VNet IPs, they have direct connectivity to other cluster pods and resources in the VNet. The solution supports very large clusters without any degradation in performance.
+- **High performance**: Since pods are assigned VNet IPs, they have direct connectivity to other cluster pods and resources in the VNet.
 - **Separate VNet policies for pods**: Since pods have a separate subnet, you can configure separate VNet policies for them that are different from node policies. This enables many useful scenarios, such as allowing internet connectivity only for pods and not for nodes, fixing the source IP for pod in a node pool using an Azure NAT Gateway, and using network security groups (NSGs) to filter traffic between node pools.  
-- **Kubernetes network policies**: Both the Azure Network Policies and Calico work with this mode.
+- **Kubernetes network policies**: For Linux node pools, use Azure CNI Powered by Cilium. For Windows node pools, use Calico. New subscriptions can't enable Azure Network Policy Manager (NPM). Azure NPM support ends on September 30, 2026, for Windows and September 30, 2028, for Linux. For more information, see [Network policies in AKS][network-policies].
+
+### Limitations
+
+- The maximum supported pod subnet size is `/16`. Large clusters can also be limited to approximately 65,000 pods by the Azure address mapping limit. For larger-scale scenarios, use Static Block Allocation.
+- Azure CNI Pod Subnet with Dynamic IP Allocation isn't supported with [node auto-provisioning (NAP)][nap-networking].
 
 ### Plan IP addressing
 
@@ -56,16 +61,16 @@ The Static Block Allocation mode offers the following benefits:
 - **Flexibility**: Node and pod subnets can be scaled independently. A single pod subnet can be shared across multiple node pools of a cluster or across multiple AKS clusters deployed in the same VNet. You can also configure a separate pod subnet for a node pool.  
 - **High performance**: Since pods are assigned virtual network IPs, they have direct connectivity to other cluster pods and resources in the VNet.
 - **Separate VNet policies for pods**: Since pods have a separate subnet, you can configure separate VNet policies for them that are different from node policies. This enables many useful scenarios such as allowing internet connectivity only for pods and not for nodes, fixing the source IP for pod in a node pool using an Azure NAT Gateway, and using NSGs to filter traffic between node pools.  
-- **Kubernetes network policies**: Cilium, Azure NPM, and Calico work with this solution.
+- **Kubernetes network policies**: For Linux node pools, use Azure CNI Powered by Cilium. For Windows node pools, use Calico. New subscriptions can't enable Azure NPM. Azure NPM support ends on September 30, 2026, for Windows and September 30, 2028, for Linux. For more information, see [Network policies in AKS][network-policies].
 
 ### Limitations
 
 Below are some of the limitations of using Azure CNI Static Block allocation:
 - Minimum Kubernetes Version required is 1.28.
 - Maximum subnet size supported is x.x.x.x/12 ~ 1 million IPs.
-- Windows 2019 nodes are not supported in Azure CNI Pod Subnet
+- Windows Server 2019 nodes aren't supported in Azure CNI Pod Subnet.
 - Only a single mode of operation can be used per subnet. If a subnet uses Static Block allocation mode, it cannot use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
-- Only supported in new clusters or when adding node pools with a different subnet to existing clusters. Migrating or updating existing clusters or node pools is not supported.
+- In-place migration or updates of existing node pools aren't supported. To migrate an existing cluster from Dynamic IP Allocation to Static Block Allocation, [add a Static Block Allocation node pool on a new subnet and move the workloads][migrate-to-static-block].
 - Across all the CIDR blocks assigned to a node in the node pool, one IP will be selected as the primary IP of the node. Thus, for network administrators selecting the `--max-pods` value try to use the calculation below to best serve your needs and have optimal usage of IPs in the subnet:
 
 `max_pods = (N * 16) - 1` where `N` is any positive integer and `N` > 0
@@ -99,6 +104,9 @@ IP address planning for Kubernetes services remains unchanged.
 <!-- LINKS - External -->
 
 <!-- LINKS - Internal -->
-[azure-cni-prereq]: ./configure-azure-cni.md#prerequisites
-[azure-cni-deployment-parameters]: ./azure-cni-overview.md#deployment-parameters
-[az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
+[aks-cni-networking-prerequisites]: ./concepts-network-cni-overview.md#aks-cni-networking-prerequisites
+[configure-dynamic-ip-allocation]: ./configure-azure-cni-dynamic-ip-allocation.md
+[configure-static-block-allocation]: ./configure-azure-cni-static-block-allocation.md
+[migrate-to-static-block]: ./configure-azure-cni-static-block-allocation.md#migrating-from-pod-subnet---dynamic-ip-allocation-to-pod-subnet---static-block-allocation
+[nap-networking]: ./node-auto-provisioning-networking.md#supported-networking-configurations-for-nap
+[network-policies]: ./use-network-policies.md

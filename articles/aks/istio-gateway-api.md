@@ -14,18 +14,21 @@ ms.reviewer: schaffererin
 
 The Istio service mesh add-on supports both [Istio's own ingress traffic management API][istio-deploy-ingress] and the Kubernetes Gateway API for ingress traffic management. You can use the Istio Gateway API [automated deployment model][istio-gateway-auto-deployment] or the [manual deployment model][istio-gateway-manual-deployment]. This article describes how to configure ingress traffic management for the Istio service mesh add-on using the Kubernetes Gateway API with the [automated deployment model][istio-gateway-auto-deployment].
 
+You can use this setup for ingress without adding sidecars to your applications. The managed Istio control plane and gateway proxies still run. You must initiate and complete [canary upgrades](istio-upgrade.md#minor-revision-upgrade) for minor revision updates, even when using the add-on only for ingress.
+
 ## Limitations and considerations
 
 * The Istio service mesh add-on and the [application routing Gateway API implementation][app-routing-gateway-api] cannot be enabled simultaneously. You must disable one first and enable the other in a separate operation.
 * Using the Kubernetes Gateway API for [egress traffic management][istio-deploy-egress] with the Istio add-on is only supported for the [manual deployment model][istio-gateway-manual-deployment].
 * ConfigMap customizations for `Gateway` resources must fall within the [resource customization allow list](#configmap-customizations). Fields not on the allow list are disallowed and blocked via add-on managed webhooks. See the [Istio add-on support policy][istio-support-policy] for more information on `allowed`, `blocked`, and `supported` features.
+* The add-on allows `EnvoyFilter` resources, but Azure support doesn't cover issues caused by their configuration. See the [Istio add-on limitations](istio-about.md#limitations) and [support policy][istio-support-policy].
 * Configuring HTTPS ingress access to HTTPS services - i.e. Server Name Indication (SNI) Passthrough - via the `TLSRoute` resource is not supported on Istio service mesh add-on revision `asm-1-29`. Support for the `TLSRoute` resource will be available for Istio service mesh add-on revision `asm-1-30` and onwards.
 * Injecting non-Microsoft-managed sidecars (for example, custom telemetry, logging, or security agents) into the Istio ingress gateway proxy pods managed by the add-on is not officially supported. If you choose to inject your own sidecar into a managed proxy pod, Microsoft provides only best-effort support for any issues you encounter.
 
 ## Prerequisites
 
 - Enable the [Managed Gateway API][managed-gateway-addon] on your AKS cluster.
-- Install the Istio service mesh add-on revision `asm-1-26` or higher. Follow the [installation guide][istio-deploy-addon] if you don't have the Istio service mesh add-on installed yet, or the [upgrade guide][istio-upgrade] if you're on a lower minor revision.
+- Install the Istio service mesh add-on revision `asm-1-26` or higher. Follow the [installation guide][istio-deploy-addon] if you don't have the Istio service mesh add-on installed yet, or the [upgrade guide][istio-upgrade] if you're on a lower minor revision. If you're using the add-on only for ingress, skip the [sidecar injection steps](istio-deploy-addon.md#enable-sidecar-injection) in the installation guide.
 
 ## Set environment variables
 
