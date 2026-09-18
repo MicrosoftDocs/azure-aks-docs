@@ -69,6 +69,16 @@ groups:
     title: Azure portal
   - id: azure-cli
     title: Azure CLI
+- id: azure-portal-azure-cli-terraform
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-portal
+    title: Azure portal
+  - id: azure-cli
+    title: Azure CLI
+  - id: terraform
+    title: Terraform
 - id: azure-cli-or-terraform
   title: Interaction type
   prompt: Select how you want to interact with Azure
@@ -135,13 +145,15 @@ groups:
     title: Managed identity
 #Owner: shashankbarsin
 - id: network-isolated-acr-type
-  title: Choose Azure Container Registry (ACR) mode
-  prompt: Choose an access method
+  title: Choose a deployment method
+  prompt: Select how you want to deploy the network isolated cluster
   pivots:
   - id: aks-managed-acr
-    title: AKS-managed Azure Container Registry
+    title: Azure CLI (AKS-managed ACR)
   - id: byo-acr
-    title: Bring your own (BYO) Azure Container Registry
+    title: Azure CLI (BYO ACR)
+  - id: terraform
+    title: Terraform (AKS-managed ACR)
 - id: external-idp-authn-type
   title: Choose an external identity provider authentication type
   prompt: Choose an authentication type
@@ -286,13 +298,15 @@ groups:
     title: Azure portal
 # Owner: schaffererin
 - id: limit-egress-traffic
-  title: Choose a managed identity type
-  prompt: Choose a managed identity type
+  title: Choose an interaction method
+  prompt: Select how you want to interact with Azure
   pivots:
   - id: system
-    title: System-assigned managed identity
+    title: Azure CLI (system-assigned identity)
   - id: user
-    title: User-assigned managed identity
+    title: Azure CLI (user-assigned identity)
+  - id: terraform
+    title: Terraform
 - id: use-advanced-container-networking-services
   title: Choose a data plane option
   prompt: Choose a data plane option
@@ -388,8 +402,6 @@ groups:
     title: Update cluster and key vault with Azure CLI
   - id: terraform-create
     title: Create cluster and key vault with Terraform
-  - id: terraform-update
-    title: Update cluster and key vault with Terraform
 # Owner: davidsmatlak
 - id: portal-terraform
   title: Interaction type

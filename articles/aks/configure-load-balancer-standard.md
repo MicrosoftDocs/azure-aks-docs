@@ -369,7 +369,7 @@ spec:
     app: azure-vote-front
 ```
 
-## Customize the load balancer using Kubernetes Annotations
+## Customize the load balancer using Kubernetes annotations
 
 The following annotations configure inbound traffic behavior on Kubernetes `LoadBalancer` services in AKS.
 

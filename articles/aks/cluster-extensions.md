@@ -24,7 +24,7 @@ There are two categories of cluster extensions, _Core_ and _Standard_ that can b
 
 ### Core extensions
 
-Core Kubernetes extensions have broader region availability, a more integrated AKS experience, and release alignment to AKS version releases. Azure Backup is a core extension.
+Core Kubernetes extensions have broader region availability, a more integrated AKS experience, and release alignment to AKS version releases. Azure Backup and Azure Monitoring for Containers are core extensions.
 
 #### AKS native experience
 
@@ -78,7 +78,7 @@ az k8s-extension create \
 
 ## Cluster extension requirements
 
-The cluster extensions platform is supported in all regions where AKS is deployed, except Qatar Central and US air gapped clouds. Although the platform is available in all regions, check the region availability for individual extensions.
+The cluster extensions platform is supported in all regions where AKS is deployed. Although the platform is available in all regions, check the region availability for individual extensions.
 
 > [!IMPORTANT]
 > Ensure that your AKS cluster is created with a managed identity, as cluster extensions don't work with service principal-based clusters.
@@ -95,20 +95,45 @@ The cluster extensions platform is supported in all regions where AKS is deploye
 
 ## Currently available extensions
 
-| Extension | Description |
-| --------- | ----------- |
-| [Dapr][dapr-overview] | `Dapr` is a portable, event-driven runtime that makes it easy for any developer to build resilient, stateless, and stateful applications that run on cloud and edge. |
-| [Azure App Configuration][app-config-overview] | Use Azure App Configuration to centrally manage application settings and feature flags. |
-| [Azure Machine Learning][azure-ml-overview] | Use Azure Kubernetes Service clusters to train, inference, and manage machine learning models in Azure Machine Learning. |
-| [Flux (GitOps)][gitops-overview] | Use GitOps with Flux to manage cluster configuration and application deployment. See also [supported versions of Flux (GitOps)][gitops-support] and [Tutorial: Deploy applications using GitOps with Flux v2][gitops-tutorial].|
-| [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) | Use Azure Container Storage to manage block storage on AKS clusters to store data in persistent volumes. |
-| [Azure Backup for AKS](/azure/backup/azure-kubernetes-service-backup-overview) | Use Azure Backup for AKS to protect your containerized applications and data stored in Persistent Volumes deployed in the AKS clusters. |
-| [Container Network Insights Agent][container-network-insights-agent-overview] | Use the Container Network Insights Agent—an AI-powered, evidence-based AKS cluster extension—to diagnose and troubleshoot networking issues in your AKS cluster. |
+Extension support for security, identity, networking, and deployment readiness capabilities varies by extension. The following table provides the current support status for each capability. Use it to determine whether an extension meets your organization's operational and governance requirements.
+
+- Federal Information Processing Standard (FIPS) 140-3 is a US government standard that defines minimum security requirements for cryptographic modules in information technology products and systems.
+- [Workload Identity][workload-identity-overview] is essential for secure identity management and IMDS restriction, to protect against credential theft.
+- [Private Link][private-link-overview] is critical for network isolation, preventing unauthorized access and allowing extensions to function in Network Isolated AKS Clusters.​
+- [Deployment Safeguards][deployment-safeguards-overview] enforce best practices on an Azure Kubernetes Service (AKS) cluster.​
+- [Pod Security Standards (PSS)][pss-overview] define three different policies to broadly cover the security spectrum. PSS-Baseline provides a minimally restrictive policy which prevents known privilege escalations. 
+
+### Legend
+| Symbol | Meaning |
+|---------|---------|
+| ✅ | Supported |
+| ❌ | Not Supported |
+| N/R | Not Required |
+
+### Extension capability matrix
+
+| Extension | Description | PSS - Baseline | FIPS | Deployment Safeguards | Workload Identity | Private Link |
+|-----------|-------------|:------------:|:----:|:--------------------:|:----------------:|:------------:|
+| [Azure App Configuration][app-config-overview] | Centralized management of application settings and feature flags. | ✅ | ❌ | ✅ | ✅ | ✅ |
+| [Azure Machine Learning][azure-ml-overview] | Train, deploy, and manage machine learning workloads on AKS. | ❌ | ❌ | ❌ | ❌ | ✅ |
+| [Dapr][dapr-overview] | Event-driven application runtime for cloud and edge workloads. | ✅ | ❌ | ❌ | ✅ | ✅ |
+| [Azure Backup for AKS](/azure/backup/azure-kubernetes-service-backup-overview) | Backup and restore protection for persistent volumes. **(Core Extension)**| ✅ | ❌ | ✅ | ✅ | ✅ |
+| [Flux (GitOps)][gitops-overview] | GitOps-based configuration and application deployment management. | ✅ | ❌ | ✅ | ❌ | ✅ |
+| [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) | Persistent storage for AKS workloads. | ✅ | ❌ | ✅ | N/R | ❌ |
+| Service Connector | Simplifies secure connectivity between AKS workloads and Azure services. | ✅ | ❌ | ✅ | ✅ | N/R |
+| [Azure Monitor - Container Insights](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=azure-cli#enable-container-insights-and-logging-on-an-aks-cluster) | Log collection and monitoring for AKS clusters and containers. **(Core Extension)**| ❌ | ❌ | ❌ | ❌ | ✅ |
+| [Azure Monitor - Prometheus](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=azure-cli#enable-prometheus-metrics-on-an-aks-cluster) | Prometheus-compatible metrics collection for AKS. **(Core Extension)**| ✅ | ❌ | ✅ | N/R | ✅ |
+| [Azure Monitor - App Monitoring](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=azure-cli#enable-container-insights-and-logging-on-an-aks-cluster) | Application performance monitoring and telemetry collection. **(Core Extension)**| ❌ | ❌ | ❌ | ❌ | ❌ |
+| [Argo CD][argo-cd-overview] | GitOps-based continuous delivery for Kubernetes applications. | ✅ | ❌ | ✅ | ✅ | ❌ |
+
 
 You can also [select and deploy Kubernetes applications available through Marketplace](deploy-marketplace.md).
 
 > [!NOTE]
 > Cluster extensions provide a platform for different extensions to be installed and managed on an AKS cluster. If you're facing issues while using any of these extensions, open a support ticket with the respective service.
+
+> [!NOTE]
+> Not every capability is relevant to every extension. Extensions marked as Not Required continue to follow applicable AKS security requirements. The status simply indicates the capability isn't needed for the extension's intended functionality.
 
 ## Next steps
 
@@ -129,6 +154,10 @@ You can also [select and deploy Kubernetes applications available through Market
 [workload-identity-overview]: workload-identity-overview.md
 [use-azure-ad-pod-identity]: use-azure-ad-pod-identity.md
 [container-network-insights-agent-overview]: ./container-network-insights-agent-overview.md
+[argo-cd-overview]: /azure/azure-arc/kubernetes/tutorial-use-gitops-argocd
+[private-link-overview]: /azure/aks/concepts-network-isolated#how-a-network-isolated-cluster-works​
+[deployment-safeguards-overview]: /azure/aks/deployment-safeguards
 
 <!-- EXTERNAL LINKS -->
 [arc-k8s-regions]: https://azure.microsoft.com/global-infrastructure/services/?products=azure-arc&regions=all
+[pss-overview]: https://kubernetes.io/docs/concepts/security/pod-security-standards/

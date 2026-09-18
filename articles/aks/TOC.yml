@@ -598,6 +598,8 @@
                 href: /azure/application-gateway/for-containers/overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
               - name: Deploy Application Gateway for Containers add-on
                 href: /azure/application-gateway/for-containers/quickstart-deploy-application-gateway-for-containers-alb-controller-addon?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+              - name: Deploy ALB Controller using Terraform
+                href: deploy-application-gateway-for-containers-alb-controller-terraform.md
           - name: Use application routing add-on
             items:
               - name: Application routing add-on overview
@@ -1016,6 +1018,8 @@
       items:
         - name: Container threat protection overview
           href: /azure/defender-for-cloud/defender-for-containers-introduction?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Enable Defender for Containers using Terraform
+          href: enable-defender-for-containers-terraform.md
         - name: Runtime alerts for Kubernetes clusters
           href: /azure/defender-for-cloud/alerts-containers?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: Detect binary drift in running containers

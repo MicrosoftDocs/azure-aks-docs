@@ -174,16 +174,16 @@ az aks maintenanceconfiguration list \
         --node-disruption-policy Block
     ```
 
-## Operations that require manual node pool upgrade
+## Operations that require manual node pool upgrade on Kubernetes 1.36 and earlier
 
-Some operations that Node Disruption Policy **doesn't control** require a manual node pool upgrade after any configuration changes. These operations include:
+On Kubernetes 1.37 and later, Node Disruption Policy covers the following configuration changes. On Kubernetes 1.36 and earlier, these changes require a manual node pool upgrade:
 
 - SSH configuration changes, such as changing SSH access methods or updating SSH public keys.
 - IMDS restriction changes, such as enabling or disabling IMDS restriction.
 - Bootstrap profile ACR name changes for network isolated clusters.
 - Outbound type changes, such as changing cluster egress routing.
 
-For these operations, you must manually run the [`az aks nodepool upgrade`](/cli/azure/aks/nodepool#az-aks-nodepool-upgrade) command after making the configuration change. For example:
+On Kubernetes 1.36 and earlier, manually run the [`az aks nodepool upgrade`](/cli/azure/aks/nodepool#az-aks-nodepool-upgrade) command after making the configuration change. For example:
 
 ```azurecli-interactive
 az aks nodepool upgrade \

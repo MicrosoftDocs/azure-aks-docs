@@ -178,8 +178,6 @@
           href: local/hyperconverged/get-on-demand-logs.md
         - name: Monitoring data reference
           href: local/hyperconverged/kubernetes-monitor-metrics.md
-      - name: AKS disconnected operations
-        href: local/hyperconverged/disconnected-operations-aks.md
       - name: Use autoscaler
         href: local/hyperconverged/auto-scale-aks-arc.md
       - name: Upgrade Kubernetes clusters
@@ -212,6 +210,8 @@
           href: local/hyperconverged/disable-windows-nodepool.md
         - name: Infrastructure operation failures
           href: local/hyperconverged/infrastructure-operation-failures.md
+        - name: Impact to clusters when Arc resource bridge is deleted or recovered
+          href: local/hyperconverged/azure-arc-resource-bridge-deleted-recovered.md
         - name: Networking
           items:
           - name: General network validation errors
@@ -242,14 +242,8 @@
           href: local/hyperconverged/cluster-create-fails-after-azure-local-upgrade.md
         - name: Can't create AKS cluster with GPU-enabled default node pool
           href: local/hyperconverged/gpu-enabled-cluster-issue.md
-        - name: Storage provisioning issue in cluster and node pool creation
-          href: local/hyperconverged/storage-provision-issue.md
         - name: Deleted AKS cluster still visible on Azure portal
           href: local/hyperconverged/deleted-cluster-visible.md
-        - name: Disk space exhaustion on control plane VMs
-          href: local/hyperconverged/kube-apiserver-log-overflow.md
-        - name: Cluster status stuck during upgrade
-          href: local/hyperconverged/cluster-upgrade-status.md
     - name: Security
       items:
       - name: Security book - recommendations and best practices
@@ -309,6 +303,12 @@
         href: ./local/multi-rack/aks-customer-proxy.md
       - name: Upgrade Kubernetes cluster
         href: ./local/multi-rack/cluster-upgrade.md
+  - name: Disconnected operations
+    items:
+    - name: Overview
+      href: local/disconnected-operations/overview.md
+    - name: Create and manage a cluster
+      href: local/disconnected-operations/create-manage-cluster.md
 - name: AKS Edge Essentials
   items:
   - name: Overview
