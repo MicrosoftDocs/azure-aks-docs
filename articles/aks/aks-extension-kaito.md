@@ -31,7 +31,7 @@ In this article, you learn how to use the AI toolchain operator (KAITO) add-on i
 ## Create a KAITO workspace
 
 When creating a KAITO workspace, you can either deploy the default workspace CRD directly into your AKS cluster or save the CRD and customize it for your needs.
-    
+
 1. In the Kubernetes tab, under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Create KAITO workspace**.
 2. Find and select the model you want to deploy.
 3. Select **Deploy default workspace CRD** or **Customize workspace CRD**.
@@ -42,7 +42,7 @@ When creating a KAITO workspace, you can either deploy the default workspace CRD
 
 ## Manage KAITO models
 
-The **Manage KAITO models** page allows you to see all models deployed in your AKS cluster along with their status (*ongoing*, *successful*, or *failed*). 
+The **Manage KAITO models** page shows all models deployed in your AKS cluster along with their status (*ongoing*, *successful*, or *failed*). 
 
 1. In the Kubernetes tab, under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Manage KAITO models**.
 2. From this page, you can choose to perform one of the following actions:
@@ -75,13 +75,13 @@ For more information, see [AKS extension for Visual Studio Code features][aks-vs
 2. For each deployed model, select **Delete Workspace** to clear all allocated resources created by the inference deployment.
 
 ## Product support and feedback
-    
+
 If you have a question or want to offer product feedback, please open an issue on the [AKS extension GitHub repository][aks-vscode-github].
-    
+
 ## Next steps
-    
+
 To learn more about other AKS add-ons and extensions, see [Add-ons, extensions, and other integrations for AKS][aks-addons].
-    
+
 <!---LINKS--->
 [install-aks-vscode]: ./aks-extension-vs-code.md#installation
 [aks-vscode-features]: https://code.visualstudio.com/docs/azure/aksextensions#_features
