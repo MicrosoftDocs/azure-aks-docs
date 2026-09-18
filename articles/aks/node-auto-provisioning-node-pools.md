@@ -167,7 +167,7 @@ requirements:
   - nvidia
 ```
 
-If you want AKS to install and manage the NVIDIA GPU driver, device plugin, Data Center GPU Manager (DCGM) metrics exporter, and GPU health signals on NAP-provisioned GPU nodes, configure managed GPU in the referenced `AKSNodeClass`. For more information, see [Create an AKS-managed GPU node pool](./aks-managed-gpu-nodes.md#node-auto-provisioning-node-pool).
+If you want AKS to install and manage the NVIDIA GPU driver, device plugin, Data Center GPU Manager (DCGM) metrics exporter, and GPU health signals on NAP-provisioned GPU nodes, configure managed GPU in the referenced `AKSNodeClass`. For more information, see [Create an AKS-managed GPU node pool](./aks-managed-gpu-nodes.md#create-an-aks-managed-gpu-node-pool-preview).
 
 #### SKU name examples
 
