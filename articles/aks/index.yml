@@ -49,6 +49,8 @@ landingContent:
         links:
           - text: Create a Linux cluster
             url: ./learn/quick-kubernetes-deploy-cli.md
+          - text: Create a GPU Linux cluster
+            url: ./learn/quick-create-gpu-linux-cluster-cli.md
           - text: Create a Windows cluster
             url: ./learn/quick-windows-container-deploy-cli.md
       - linkListType: tutorial

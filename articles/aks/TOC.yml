@@ -86,6 +86,23 @@
               href: learn/quick-kubernetes-deploy-rm-template.md
             - name: Use Terraform
               href: learn/quick-kubernetes-deploy-terraform.md
+        - name: Create a GPU Linux-based AKS cluster
+          items:
+            - name: Use the Azure CLI
+              href: learn/quick-create-gpu-linux-cluster-cli.md
+        - name: Create a Linux-based AKS Automatic cluster
+          items:
+            - name: From a code repository
+              href: automatic/quick-automatic-from-code.md
+            - name: Inside a managed virtual network
+              href: automatic/quick-automatic-managed-network.md
+            - name: Inside a custom virtual network
+              expanded: true
+              items:
+                - name: Public cluster
+                  href: automatic/quick-automatic-custom-network.md
+                - name: Private cluster
+                  href: automatic/quick-automatic-private-custom-network.md
         - name: Create an Azure Container Linux (ACL)-based AKS cluster
           items:
             - name: Use the Azure CLI
