@@ -42,7 +42,7 @@ When creating a KAITO workspace, you can either deploy the default workspace CRD
 
 ## Manage KAITO models
 
-The **Manage KAITO models** page allows you to see all models deployed in your AKS cluster along with their status (*ongoing*, *successful*, or *failed*).
+The **Manage KAITO models** page shows all models deployed in your AKS cluster along with their status (*ongoing*, *successful*, or *failed*). 
 
 1. In the Kubernetes tab, under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Manage KAITO models**.
 2. From this page, you can choose to perform one of the following actions:
