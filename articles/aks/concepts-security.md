@@ -5,7 +5,7 @@ author: shashankbarsin
 ms.service: azure-kubernetes-service
 ms.topic: concept-article
 ms.subservice: aks-security
-ms.date: 09/08/2026
+ms.date: 09/11/2026
 ms.author: shasb
 ai-usage: ai-assisted
 ms.custom: aeo-round-2
@@ -29,6 +29,8 @@ Kubernetes includes security components, such as _pod security standards_ and _S
 AKS supports two cluster modes: [AKS Automatic](./intro-aks-automatic.md) and AKS Standard. The security concepts in this article apply to both modes unless otherwise noted. AKS Automatic includes a hardened security baseline with several controls preconfigured by default, while AKS Standard provides more configuration flexibility.
 
 This article introduces the core concepts that secure your applications in AKS.
+
+For a prescriptive checklist of security best practices to configure for your deployment, see [Secure your Azure Kubernetes Service (AKS) deployment](secure-aks.md).
 
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 

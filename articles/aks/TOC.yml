@@ -803,8 +803,8 @@
   items:
     - name: Security overview
       href: concepts-security.md
-    - name: Security baseline
-      href: /security/benchmark/azure/baselines/aks-security-baseline?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Secure your AKS deployment
+      href: secure-aks.md
     - name: Identity and access
       items:
         - name: Access and identity overview

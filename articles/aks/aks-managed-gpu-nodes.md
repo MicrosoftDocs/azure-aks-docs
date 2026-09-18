@@ -16,7 +16,7 @@ ai-usage: ai-assisted
 
 Running NVIDIA GPU workloads on Azure Kubernetes Service (AKS) traditionally requires you to install and maintain the NVIDIA GPU driver, Kubernetes device plugin, and a GPU metrics exporter on each GPU node. These components enable GPU scheduling, container-level GPU access, and telemetry, but installing them manually or through the [NVIDIA GPU Operator](./nvidia-gpu-operator.md) adds operational overhead.
 
-With fully managed GPU nodes (preview), AKS installs and maintains the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) for you. GPU node pool creation becomes a single step, and GPU capacity behaves like any other AKS node pool.
+By using fully managed GPU nodes (preview), AKS installs and maintains the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) for you. GPU node pool creation becomes a single step, and GPU capacity behaves like any other AKS node pool. You can use managed GPU nodes with manually created GPU node pools and with node auto-provisioning (NAP), including AKS Automatic clusters.
 
 You configure a managed GPU node pool through two fields under `gpuProfile.nvidia`:
 
@@ -96,7 +96,7 @@ az feature register --namespace Microsoft.ContainerService --name ManagedGPUExpe
 - Migrating your existing [multi-instance GPU](./gpu-multi-instance.md) node pools to use this feature isn't supported.
 - In-place upgrades from an existing NVIDIA GPU node pool to a managed GPU node pool aren't supported. To migrate, cordon and drain your existing GPU nodes, then redeploy your workloads to a new GPU node pool created with `--enable-managed-gpu=true`. For more information, see [Resize node pools on AKS](./resize-node-pool.md).
 - The `managementMode`, `migStrategy`, and `driver` fields under `gpuProfile` are immutable after node pool creation. To change these values, create a new node pool.
-- Cluster autoscaler isn't supported on managed GPU node pools during preview. Scale these pools manually.
+- Cluster autoscaler isn't supported on manually created managed GPU node pools during preview. Scale these pools manually, or use NAP for auto-provisioned GPU capacity.
 
 > [!NOTE]
 > GPU-enabled VMs contain specialized hardware subject to higher pricing and region availability. For more information, see the [pricing][azure-pricing] tool and [region availability][azure-availability].
@@ -104,6 +104,8 @@ az feature register --namespace Microsoft.ContainerService --name ManagedGPUExpe
 ## Create an AKS-managed GPU node pool (preview)
 
 Add a managed GPU node pool to an existing AKS cluster by passing `--enable-managed-gpu=true` to [`az aks nodepool add`][az-aks-nodepool-add]. AKS sets `gpuProfile.nvidia.managementMode` to `Managed` and installs the GPU driver, device plugin, and DCGM metrics exporter automatically.
+
+For AKS Automatic or AKS Standard clusters that use NAP, configure the managed GPU stack on the `AKSNodeClass` instead of using `az aks nodepool add`.
 
 ### [Ubuntu Linux node pool (default SKU)](#tab/add-ubuntu-gpu-node-pool)
 
@@ -189,72 +191,74 @@ To use Azure Linux, you specify the OS SKU by setting `--os-sku` to `AzureLinux`
     ...
     ```
 
-### [Node Auto Provisioning node pool](#tab/nap-managed-node)
+### [Node auto-provisioning node pool](#tab/nap-managed-node)
 
-To use Managed GPU with node auto-provisioning (NAP) nodes, add the `EnableManagedGPUExperience:"true"` tag to your `AKSNodeClass` custom resource definition (CRD) file. To learn more about configurable Azure-specific settings, see [Configure AKSNodeClass resources for NAP](./node-auto-provisioning-aksnodeclass.md).
+To use managed GPU nodes with node auto-provisioning (NAP), add the `EnableManagedGPUExperience: "true"` tag to your `AKSNodeClass` custom resource definition (CRD). Then create a `NodePool` that selects NVIDIA GPU-enabled VM sizes. This configuration applies to AKS Automatic clusters, where NAP is enabled by default, and to AKS Standard clusters with NAP enabled.
 
-1. Add the `EnableManagedGPUExperience:"true"` value to the `tags` field of the `AKSNodeClass` CRD.
+To learn more about configurable Azure-specific settings, see [Configure AKSNodeClass resources for NAP](./node-auto-provisioning-aksnodeclass.md).
+
+1. Create an `AKSNodeClass` CRD with the `EnableManagedGPUExperience: "true"` value in the `tags` field.
 
    ```yaml
-    apiVersion: karpenter.azure.com/v1beta1
-    kind: AKSNodeClass
-    metadata:
-      name: managed-gpu-class
-    spec:
-      imageFamily: Ubuntu
-      tags:
-        EnableManagedGPUExperience:"true"
+   apiVersion: karpenter.azure.com/v1beta1
+   kind: AKSNodeClass
+   metadata:
+     name: managed-gpu-class
+   spec:
+     imageFamily: Ubuntu
+     tags:
+       EnableManagedGPUExperience: "true"
    ```
 
-1. Use the following example `NodePool` CRD to enable NAP to deploy a GPU SKU.
+1. Create a `NodePool` CRD that allows NAP to deploy NVIDIA GPU SKUs.
 
    ```yaml
-     apiVersion: karpenter.sh/v1
-     kind: NodePool
-     metadata:
-       name: managed-gpu-np
-     spec:
-       disruption:
-         consolidationPolicy: WhenEmptyOrUnderutilized
-         consolidateAfter: 30s
-       template:
-         spec:
-           nodeClassRef:
-             group: karpenter.azure.com
-             kind: AKSNodeClass
-             name: managed-gpu-class
-           requirements:
-             - key: kubernetes.io/arch
-               operator: In
-               values: ["amd64"]
-             - key: kubernetes.io/os
-               operator: In
-               values: ["linux"]
-             - key: karpenter.azure.com/sku-family
-               operator: In
-               values: ["N"]
-             - key: karpenter.azure.com/sku-gpu-manufacturer
-               operator: In
-               values: ["nvidia"]
-             - key: karpenter.sh/capacity-type
-               operator: In
-               values: ["spot", "on-demand"]
+   apiVersion: karpenter.sh/v1
+   kind: NodePool
+   metadata:
+     name: managed-gpu-np
+   spec:
+     disruption:
+       consolidationPolicy: WhenEmptyOrUnderutilized
+       consolidateAfter: 30s
+     template:
+       spec:
+         nodeClassRef:
+           group: karpenter.azure.com
+           kind: AKSNodeClass
+           name: managed-gpu-class
+         requirements:
+           - key: kubernetes.io/arch
+             operator: In
+             values: ["amd64"]
+           - key: kubernetes.io/os
+             operator: In
+             values: ["linux"]
+           - key: karpenter.azure.com/sku-family
+             operator: In
+             values: ["N"]
+           - key: karpenter.azure.com/sku-gpu-manufacturer
+             operator: In
+             values: ["nvidia"]
+           - key: karpenter.sh/capacity-type
+             operator: In
+             values: ["spot", "on-demand"]
    ```
 
 1. Deploy the `AKSNodeClass` and `NodePool` CRDs.
 
-   ```
+   ```bash
    kubectl apply -f managed-gpu-class.yaml
    kubectl apply -f managed-gpu-np.yaml
    ```
 
-1. Confirm that NAP creates a GPU node with the managed GPU feature enabled by deploying a sample workload requesting GPU resources.
+1. Deploy a sample workload that requests GPU resources. NAP provisions a matching GPU node when the pod is pending.
 
-   To confirm that the `AKSNodeClass` and `NodePool` CRDs are deployed, deploy a GPU workload, and confirm that a managed GPU node is provisioned, use the following commands:
-    
-   ```
-   kubectl get crds
-   kubectl get nodes
+1. Confirm that the `AKSNodeClass` and `NodePool` resources are deployed and the managed GPU label is applied to the NAP-provisioned node.
+
+   ```bash
+   kubectl get aksnodeclasses.karpenter.azure.com,nodepools.karpenter.sh
+   kubectl get nodes -L kubernetes.azure.com/dcgm-exporter
    ```
 
 ---
@@ -383,7 +387,7 @@ az aks nodepool scale \
 ```
 
 > [!IMPORTANT]
-> During preview, managed GPU node pools don't support the cluster autoscaler. Scale these pools manually.
+> During preview, manually created managed GPU node pools don't support the cluster autoscaler. Scale these pools manually, or use NAP for auto-provisioned GPU capacity.
 
 ## Alternative install profiles
 
