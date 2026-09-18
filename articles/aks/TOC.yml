@@ -1282,6 +1282,8 @@
           href: nvidia-gpu-operator.md
         - name: GPU health checking with NPD
           href: gpu-health-monitoring.md
+        - name: Use Confidential GPUs
+          href: use-confidential-gpus.md
         - name: Optimize GPU workloads using profiling
           items:
             - name: Set up GPU profiling
