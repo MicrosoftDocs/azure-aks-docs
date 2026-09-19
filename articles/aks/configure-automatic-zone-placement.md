@@ -53,17 +53,7 @@ This approach addresses common pain points with manually specifying zones:
 
 ## Install the `aks-preview` CLI extension
 
-Install the `aks-preview` CLI extension if you don't already have it by using the [`az extension add`][az-extension-add] command.
-
-```azurecli-interactive
-az extension add --name aks-preview
-```
-
-If you already have the extension installed, update it to the latest version by using the [`az extension update`][az-extension-update] command.
-
-```azurecli-interactive
-az extension update --name aks-preview
-```
+[!INCLUDE [aks-preview-cli-extension](includes/aks-preview-cli-extension.md)]
 
 ## Register the `VmssAutomaticZonePlacement` feature flag
 
@@ -154,7 +144,7 @@ az aks show \
  --output tsv
 ```
 
-You can also use `kubectl` to confirm node distribution across zones.  
+You can also use `kubectl` to confirm node distribution across zones.
 
 ```bash
 kubectl get nodes -o custom-columns='NAME:metadata.name, REGION:metadata.labels.topology\.kubernetes\.io/region, ZONE:metadata.labels.topology\.kubernetes\.io/zone'
