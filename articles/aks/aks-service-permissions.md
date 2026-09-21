@@ -4,7 +4,7 @@ titleSuffix: Azure Kubernetes Service
 description: Reference for the Azure permissions required by the identity creating an AKS cluster, the cluster identity at runtime, and AKS node access.
 ms.topic: reference
 ms.subservice: aks-security
-ms.date: 04/19/2026
+ms.date: 09/21/2026
 author: shashankbarsin
 ms.author: shasb
 ai-usage: ai-assisted
@@ -29,8 +29,24 @@ The following permissions are needed by the identity creating and operating the 
 > | `Microsoft.Network/applicationGateways/read` <br/> `Microsoft.Network/applicationGateways/write` <br/> `Microsoft.Network/virtualNetworks/subnets/join/action` | Required to configure application gateways and join the subnet. |
 > | `Microsoft.Network/virtualNetworks/subnets/join/action` | Required to configure the Network Security Group for the subnet when using a custom VNET.|
 > | `Microsoft.Network/publicIPAddresses/join/action` <br/> `Microsoft.Network/publicIPPrefixes/join/action` | Required to configure the outbound public IPs on the Standard Load Balancer. |
-> | `Microsoft.OperationalInsights/workspaces/sharedkeys/read` <br/> `Microsoft.OperationalInsights/workspaces/read` <br/> `Microsoft.OperationsManagement/solutions/write` <br/> `Microsoft.OperationsManagement/solutions/read` <br/> `Microsoft.ManagedIdentity/userAssignedIdentities/assign/action` | Required to create and update Log Analytics workspaces and Azure monitoring for containers. |
+> | `Microsoft.OperationalInsights/workspaces/sharedKeys/action` <br/> `Microsoft.OperationalInsights/workspaces/read` <br/> `Microsoft.OperationsManagement/solutions/write` <br/> `Microsoft.OperationsManagement/solutions/read` <br/> `Microsoft.ManagedIdentity/userAssignedIdentities/assign/action` | Required to create and update Log Analytics workspaces and Azure monitoring for containers. See [Linked workspace permissions](#linked-workspace-permissions). |
 > | `Microsoft.Network/virtualNetworks/joinLoadBalancer/action` | Required to configure the IP-based Load Balancer Backend Pools. |
+
+### Linked workspace permissions
+
+Azure Resource Manager (ARM) checks for `Microsoft.OperationalInsights/workspaces/sharedKeys/action` when an AKS managed-cluster create or update request includes a Log Analytics workspace reference in one of these profiles:
+
+- Container Insights: the `addonProfiles.omsagent` add-on profile.
+- Defender for Containers: the `securityProfile.defender` security profile.
+- Legacy Defender configuration: the `securityProfile.azureDefender` security profile.
+
+This requirement also applies to Kubernetes-version upgrades submitted as managed-cluster create-or-update requests that include these workspace references, even when the workspace reference is unchanged. These requests are authorized through `Microsoft.ContainerService/managedClusters/write`.
+
+Assign an appropriate role containing `Microsoft.OperationalInsights/workspaces/sharedKeys/action` to the user, service principal, or managed identity submitting the request. Use the specific linked Log Analytics workspace as the recommended least-privilege scope. An applicable role assignment inherited from a parent scope can also satisfy the check. Permissions granted only on the AKS cluster don't grant access to the linked workspace.
+
+`Microsoft.OperationalInsights/workspaces/sharedKeys/read` alone isn't sufficient. This requirement applies to the identity submitting the request, not the cluster or kubelet identity. The other permissions in the preceding table still apply as relevant to your configuration.
+
+If the linked-workspace authorization check fails, ARM can return `403 LinkedAuthorizationFailed` before AKS begins processing the operation.
 
 ## AKS cluster identity permissions
 
