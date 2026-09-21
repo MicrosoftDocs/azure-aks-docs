@@ -68,7 +68,7 @@ When an entire region becomes unavailable, the pods in the cluster are no longer
 
 ### Kubernetes node pools (Regional)
 
-Occasionally, localized failure can occur to compute resources, such as power becoming unavailable in a single rack of Azure servers. To protect your AKS nodes from becoming a single point regional failure, use [Azure Availability Zones](./availability-zones.md). Availability zones ensure that AKS nodes in each availability zone are physically separated from those defined in another availability zones.
+Occasionally, localized failure can occur to compute resources, such as power becoming unavailable in a single rack of Azure servers. To protect your AKS nodes in this active-active solution from becoming a single point regional failure, use [Azure Availability Zones](./availability-zones.md). Availability zones ensure that AKS nodes in each availability zone are physically separated from those defined in another availability zone.
 
 ### Kubernetes node pools (Global)
 
@@ -84,4 +84,3 @@ If you're considering a different solution, see the following articles:
 
 - [Active passive disaster recovery solution overview for Azure Kubernetes Service (AKS)](./active-passive-solution.md)
 - [Passive cold solution overview for Azure Kubernetes Service (AKS)](./passive-cold-solution.md)
-
