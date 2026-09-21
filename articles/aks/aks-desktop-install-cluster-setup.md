@@ -25,8 +25,8 @@ AKS desktop supports Standard and Automatic (recommended) AKS clusters. However,
 ## Prerequisites
 
 - An Azure subscription. If you don't have one, create a [free Azure account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
-- Azure CLI version 2.64.0 or later. Check your version with [`az --version`](/cli/azure/reference-index#az-version) and [install or upgrade](/cli/azure/install-azure-cli) as needed.
-- The `aks-preview` Azure CLI extension. You can install the extension using the `az extension add --name aks-preview` command.
+- Azure CLI version 2.64.0 or later. Check your version using the [`az --version`](/cli/azure/reference-index#az-version) command. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+- The `aks-preview` Azure CLI extension. Install it using the `az extension add --name aks-preview` command. For more information, see [Manage Azure CLI extensions](/cli/azure/azure-cli-extensions-overview).
 - Permissions to create resources in Azure (Contributor role or Owner role on the target resource group).
 - **Azure Kubernetes Service RBAC Cluster Admin** role on the target AKS cluster to grant users access to Projects.
 
