@@ -515,6 +515,8 @@ terraform apply main.destroy.tfplan
 
 In this quickstart, you deployed a private Kubernetes cluster using [AKS Automatic][what-is-aks-automatic] inside a custom virtual network and then deployed a simple multi-container application to it. This sample application is for demo purposes only and doesn't represent all the best practices for Kubernetes applications. For guidance on creating full solutions with AKS for production, see [AKS solution guidance][aks-solution-guidance].
 
+Because this cluster is private, its API server has no public IP address. To connect to and manage the cluster, see [Options for connecting to the private cluster][connect-private-cluster]. For other private cluster configuration options, see the [private cluster][private-cluster] documentation.
+
 To learn more about AKS Automatic, continue to the introduction.
 
 > [!div class="nextstepaction"]
