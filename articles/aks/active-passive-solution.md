@@ -21,7 +21,7 @@ This guide outlines an active-passive disaster recovery solution for AKS. Within
 
 ## Active-passive solution overview
 
-In this disaster recovery approach, we have two independent AKS clusters being deployed in two Azure regions. However, only one of the clusters is actively serving traffic at any one time. The secondary cluster (not actively serving traffic) contains the same configuration and application data as the primary cluster but doesn’t accept any traffic unless directed by Azure Front Door traffic manager.
+In this disaster recovery approach, we have two independent AKS clusters being deployed in two Azure regions. However, only one of the clusters is actively serving traffic at any one time. The secondary cluster (not actively serving traffic) contains the same configuration and application data as the primary cluster but doesn't accept any traffic unless directed by Azure Front Door traffic manager.
 
 ## Scenarios and configurations
 
@@ -67,7 +67,7 @@ When an entire region becomes unavailable, the pods in the cluster are no longer
 
 ### Kubernetes node pools (Regional)
 
-Occasionally, localized failure can occur to compute resources, such as power becoming unavailable in a single rack of Azure servers. To protect your AKS nodes from becoming a single point regional failure, use [Azure Availability Zones](./availability-zones.md). Availability zones ensure that AKS nodes in each availability zone are physically separated from those defined in another availability zones.
+Occasionally, localized failure can occur to compute resources, such as power becoming unavailable in a single rack of Azure servers. To protect your AKS nodes in this active-passive solution from becoming a single point regional failure, use [Azure Availability Zones](./availability-zones.md). Availability zones ensure that AKS nodes in each availability zone are physically separated from those defined in another availability zone.
 
 ### Kubernetes node pools (Global)
 
@@ -83,4 +83,3 @@ If you're considering a different solution, see the following articles:
 
 - [Active active high availability solution overview for Azure Kubernetes Service (AKS)](./active-active-solution.md)
 - [Passive cold solution overview for Azure Kubernetes Service (AKS)](./passive-cold-solution.md)
-
