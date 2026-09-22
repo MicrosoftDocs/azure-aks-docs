@@ -242,9 +242,9 @@ az aks update \
 
 ## Use ProvisioningRequest with the cluster autoscaler
 
-The Kueue `ProvisioningRequest` AdmissionCheck keeps a workload suspended until the requested capacity is available. With the `best-effort-atomic-scale-up` provisioning class, the cluster autoscaler attempts to add all the capacity required for the workload in a single scale-up operation before Kueue admits the workload.
+`ProvisioningRequest` allows the cluster autoscaler to treat a group of pods as a single scheduling unit. With the `best-effort-atomic-scale-up` provisioning class, the cluster autoscaler attempts to add all the required capacity in a single scale-up operation. If the operation fails, the cluster autoscaler removes any partially provisioned nodes and retries. Workload queueing systems can use an admission check to wait until the request reports that capacity is provisioned before admitting the workload.
 
-For an end-to-end example that integrates Kueue with the cluster autoscaler and `ProvisioningRequest`, see [Configure Kueue with the cluster autoscaler on AKS](./configure-kueue-with-cluster-autoscaler.md).
+For an end-to-end example of using `ProvisioningRequest` with the cluster autoscaler and Kueue admission control, see [Configure Kueue with the cluster autoscaler on AKS](./configure-kueue-with-cluster-autoscaler.md).
 
 ## Retrieve cluster autoscaler logs and status
 
